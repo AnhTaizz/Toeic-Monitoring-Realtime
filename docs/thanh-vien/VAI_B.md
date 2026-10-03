@@ -87,7 +87,7 @@ Lịch gợi ý: 03/10 B1 · 04/10 B2 (3h) + B3 (1h) · 05/10 B2 (1h) + B3 (2h) 
 
 **Xong khi:** kết nối WS có xác thực với server thật; tắt server thì giao diện khóa và thử lại có giới hạn; đóng app không còn tiến trình Java treo (phần đầu của IT03).
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 03–04/10, code `75d4b9f` trên `feat/t1-b2-network-heartbeat-ui`: **PARTIAL / BLOCKED BY T1-A2**. RealtimeClient + MonitoringTransport, fragment parsing, heartbeat 2s, backoff giới hạn, scope/ACK guard, khóa container UI và shutdown đã cài; 28 test realtime MOCK PASS (70/70 toàn repo), `mvn test`/`mvn package` PASS 5/5 module. Default opener fail-closed vì QD-03/endpoint/auth chưa có; không tự chọn header/AUTH. State schema chờ C, không cài C3. Tiếp theo: A chốt credential/endpoint/scope/error; B cài opener WS mới + re-auth, chạy smoke server-off/reconnect và GUI thật. GUI/LAN NOT RUN. Evidence: `evidence/t1-b2/2026-10-04-verification.md`; tracker giữ nguyên.
 
 ### T1-B3 · Màn giám thị tối thiểu
 `4h` · phụ thuộc: T1-B2, T1-A3 · review: A

@@ -100,3 +100,24 @@ HEAD đối chiếu: `ceb8131a558660057cf62c46f2466db8515b9b4e`. Chỉ cập nh�
 | C reviewed A | NOT RUN | Cùng lý do |
 
 Bằng chứng và giới hạn xác nhận: `evidence/stage1/2026-10-03-merge-readiness.md`. Không thay đổi trạng thái 27 test chính thức hay TRACKER.json. Ready to merge: NO.
+
+## T1-B2 — kiểm 03/10, ghi nhận 04/10/2026
+
+Code SHA: `75d4b9fc794c4a1939b47bcdd990ffc0def52164`, base main `34a7835`. Windows 11 x64 / Oracle JDK 21.0.8 / Maven 3.9.11, gọi từ WSL; người chạy Codex Agent. Không dùng PostgreSQL/server thật trong phiên này. Evidence tổng: `evidence/t1-b2/2026-10-04-verification.md`.
+
+| Kiểm tra | Kết quả | Bằng chứng / giới hạn |
+|---|---|---|
+| mvn test | PASS — 5/5 module, 70/70 test, 0 failure/error/skipped | `evidence/t1-b2/2026-10-03-mvn-test.txt`; realtime 28/28 MOCK |
+| mvn package | PASS — 5/5 module, 70/70 test, fat JAR client tạo được | `evidence/t1-b2/2026-10-03-mvn-package.txt`; shade cảnh báo module-info/MANIFEST trùng |
+| Fragment >=2 phần, parse chỉ last=true; request(1) mỗi fragment; message quá lớn | PASS — MOCK | RealtimeClientTest; không phải socket server thật |
+| Heartbeat 2s khi CONNECTED; không gửi sau disconnect/close, không tích lũy khi write kẹt | PASS — MOCK, thời gian ảo | RealtimeClientTest + MockScheduler |
+| Mất connection → RECONNECTING; delay tăng/cap; hết 4 retry → FAILED | PASS — MOCK | Test budget 1+4 lần mở, không sleep dài |
+| Reconnect dùng socket mới; bỏ fragment/ACK/callback cũ; lỗi auth không retry | PASS — MOCK | Hook opener được gọi lại; chưa chứng minh re-auth thật |
+| close hủy heartbeat/retry/handshake, abort socket, close opener, shutdown executor | PASS — MOCK + executor thật | Test worker thật dùng awaitTermination; không phải đóng GUI thật |
+| ConnectionState → UI model khóa/mở | PASS — model | Container JavaFX cập nhật qua Platform.runLater; thao tác GUI NOT RUN |
+| JSON malformed/type lạ/thiếu trường/sai scope/ACK lệch không crash listener | PASS — MOCK | Message bị từ chối bằng thông báo cố định, message hợp lệ tiếp theo vẫn nhận |
+| WS real authenticated, heartbeat server receipt, server-off/reconnect/re-auth | BLOCKED BY T1-A2 | QD-03/endpoint/auth chưa có; không tự bịa contract |
+| Login server thật trong phiên B2 | NOT RUN | Không chạy lại smoke T1-A1; kết quả lịch sử giữ nguyên |
+| GUI manual / LAN máy thứ hai / shutdown app GUI | NOT RUN | Không có công cụ điều khiển GUI hay máy thứ hai thật |
+
+Không đổi trạng thái IT03/AT02 hoặc 27 case chính thức bằng test MOCK; TRACKER.json giữ nguyên. T1-B2 **PARTIAL / BLOCKED BY T1-A2**.

@@ -77,7 +77,7 @@ AutoCloseable onConnectionState(Consumer<ConnectionState> listener);
 AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> listener);
 ```
 
-- C phụ thuộc interface này, không dùng raw WebSocket. Subscription trả `AutoCloseable` để gỡ listener; callback chạy trên luồng transport, bên UI phải marshal về FX thread.
+- C phụ thuộc interface này, không dùng raw WebSocket. Subscription trả `AutoCloseable` để gỡ listener; callback không bảo đảm chạy trên FX thread (state có thể phát từ luồng gọi hoặc worker), bên UI luôn marshal về FX thread.
 - `send` hiện chấp nhận envelope v0 `PROCESS_OBSERVED`/`HEARTBEAT` theo fixture MOCK đã có. Scope do server cấp phải truyền qua `Session`, không tự tạo scope trong production; login hiện trả scope rỗng nên chưa thể lập phiên monitoring thật.
 - Future `send` thành công chỉ nghĩa là ghi lên socket; **không phải ACK/DB commit**. ACK `ACCEPTED` khớp requestId/type/attemptId/traceId mới chuyển tới `onMessage`. Không replay tự động event, không giữ ACK pending qua reconnect. C3 quản lý eventId, queue, retry/payload và cách đối soát ACK; retry phải giữ nguyên ID/nội dung.
 - State/full/delta chưa có schema thực trong PROTOCOL, nên cùng phương thức `send` sẽ nhận envelope state sau khi C chốt type/payload và B cập nhật danh sách validation. Hiện gửi type state chưa hỗ trợ bị từ chối; chưa tuyên bố state integration PASS.
