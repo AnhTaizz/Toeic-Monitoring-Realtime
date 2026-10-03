@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 03/10/2026 — đã có Maven multi-module, login Spring Boot/PostgreSQL, JavaFX hai role và ProcessHandle spike trên `feat/stage1-project-skeleton`; tracker vẫn giữ TODO chờ người dùng xác nhận.
+Cập nhật lần cuối: 03/10/2026 — review-fix PR #1 tại `961feca`: client từ chối response login 2xx sai JSON/schema bằng lỗi có kiểm soát; `mvn test` và `mvn package` PASS, 5 module và 42/42 test. GUI manual/LAN máy thứ hai NOT RUN; tracker vẫn giữ TODO chờ người dùng xác nhận.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
@@ -14,13 +14,15 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
-| A | _chưa gán_ | Chờ kiểm LAN/review T1-A1 | T1-A1 đạt build/reset/login local | T1-A2: xác thực REST/WS và QD-03 | `feat/stage1-project-skeleton` |
-| B | _chưa gán_ | Chờ kiểm GUI/máy thứ hai T1-B1 | T1-B1 có HTTP nền, hai role, app-image local | T1-B2: adapter WS/heartbeat | `feat/stage1-project-skeleton` |
-| C | _chưa gán_ | Chờ review T1-C1 | Contract v0 MOCK + probe ProcessHandle thật | T1-C2: collector polling | `feat/stage1-project-skeleton` |
+| A | _chưa gán_ | Chờ kiểm LAN/review T1-A1 | Build/test review PASS; reset/login local có evidence phiên trước | Hoàn tất kiểm LAN và review trước quyết định merge PR #1 | `feat/stage1-project-skeleton` |
+| B | _chưa gán_ | Chờ kiểm GUI/máy thứ hai T1-B1 | Review-fix response sai; 39/39 client test PASS; app-image có evidence phiên trước | Thao tác GUI end-to-end và kiểm máy thứ hai | `feat/stage1-project-skeleton` |
+| C | _chưa gán_ | Chờ review T1-C1 | Unit test PASS; contract v0 MOCK + probe ProcessHandle có evidence phiên trước | Review T1-C1 trước quyết định merge PR #1 | `feat/stage1-project-skeleton` |
 
 ## Đang bị chặn
 
-_Chưa có._
+- GUI manual end-to-end: **NOT RUN** — phiên Agent có terminal Windows/WSL, không có công cụ thao tác GUI thật. Cần người dùng chạy candidate/proctor/sai mật khẩu/server tắt.
+- LAN second-machine test: **NOT RUN** — chưa có máy Windows thứ hai thật được cung cấp cho phiên này; không thay bằng localhost.
+- Review chéo A/B/C còn chờ nhóm xác nhận. PR #1 chưa merge; schema protocol và status tracker không đổi.
 
 Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì — hạn`.
 
