@@ -89,7 +89,7 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 **Xong khi:** mở và đóng ứng dụng demo thì tập process thay đổi tương ứng; đăng nhập bằng giám thị thì collector không chạy; phần đầu của MT01.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** Đã viết collector fixed-delay, policy, snapshot và nút demo cục bộ chỉ cho candidate. 47/47 test toàn dự án PASS, package PASS; có test process Java thật xuất hiện/thoát. Chờ B review và thao tác GUI Edge/proctor/logout. Login chưa cấp attempt nên không tự bật monitoring thật. Bằng chứng: `evidence/stage1/2026-10-03-collector.md`.
 
 ### T1-C3 · Event, retry và queue có giới hạn
 `4h` · phụ thuộc: T1-C2, T1-B2 (interface), T1-A3 · review: B

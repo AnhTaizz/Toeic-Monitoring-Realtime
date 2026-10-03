@@ -1,6 +1,8 @@
 package vn.edu.toeic.client;
 
+import java.time.Duration;
 import java.util.concurrent.CompletionException;
+import java.util.stream.Collectors;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -14,10 +16,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import vn.edu.toeic.monitoring.PollingProcessCollector;
+import vn.edu.toeic.monitoring.ProcessPolicy;
+import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.protocol.auth.LoginResponse;
 
 public final class ToeicClientApplication extends Application {
     private final LoginApiClient loginApiClient = new LoginApiClient();
+    private PollingProcessCollector collector;
 
     @Override
     public void start(Stage stage) {
@@ -83,9 +89,49 @@ public final class ToeicClientApplication extends Application {
         Label identity = new Label(response.user().displayName() + " · " + response.user().username());
         Label detail = new Label(viewModel.description());
         Button logout = new Button("Đăng xuất");
-        logout.setOnAction(event -> stage.setScene(loginScene(stage)));
+        logout.setOnAction(event -> {
+            stopCollector();
+            stage.setScene(loginScene(stage));
+        });
 
         VBox content = new VBox(16, title, identity, detail, logout);
+        if (Role.CANDIDATE.name().equals(response.user().role())) {
+            Label monitoring = new Label("Demo monitoring cục bộ, chưa gửi server. Không phải phiên thi thật.");
+            monitoring.setWrapText(true);
+            Button toggle = new Button("Bắt đầu demo collector");
+            toggle.setOnAction(event -> {
+                if (collector != null && collector.isRunning()) {
+                    stopCollector();
+                    toggle.setText("Bắt đầu demo collector");
+                    monitoring.setText("Collector đã dừng.");
+                    return;
+                }
+                try {
+                    long millis = Long.parseLong(System.getProperty("toeic.monitoring.pollMillis", "1000"));
+                    PollingProcessCollector next = new PollingProcessCollector(ProcessPolicy.demo(), Duration.ofMillis(millis));
+                    collector = next;
+                    next.start(Role.CANDIDATE, snapshot -> Platform.runLater(() -> {
+                        if (collector != next || !next.isRunning()) { return; }
+                        String names = snapshot.processes().stream()
+                                .map(process -> process.processName() + " (PID " + process.key().pid() + ")"
+                                        + (process.missingMetadata() ? " [thiếu metadata]" : ""))
+                                .sorted().collect(Collectors.joining(", "));
+                        monitoring.setText("Quan sát cục bộ: " + (names.isEmpty() ? "không thấy process thuộc policy" : names)
+                                + "\nProcess thiếu metadata: " + snapshot.unreadableCount()
+                                + ". Chưa gửi server.");
+                    }), failure -> Platform.runLater(() -> {
+                        if (collector == next && next.isRunning()) {
+                            monitoring.setText("Không đọc được process ở lần quét này; sẽ thử lại.");
+                        }
+                    }));
+                    toggle.setText("Dừng demo collector");
+                } catch (RuntimeException exception) {
+                    stopCollector();
+                    monitoring.setText("Không bật được collector. Kiểm tra chu kỳ quét phải là số ms lớn hơn 0.");
+                }
+            });
+            content.getChildren().addAll(toggle, monitoring);
+        }
         content.setPadding(new Insets(36));
         content.setAlignment(Pos.TOP_CENTER);
         BorderPane root = new BorderPane(content);
@@ -104,6 +150,14 @@ public final class ToeicClientApplication extends Application {
 
     @Override
     public void stop() {
+        stopCollector();
         loginApiClient.close();
+    }
+
+    private void stopCollector() {
+        if (collector != null) {
+            collector.stop();
+            collector = null;
+        }
     }
 }

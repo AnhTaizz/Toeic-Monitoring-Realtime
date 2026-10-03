@@ -1,6 +1,6 @@
 # TOEIC Monitoring Realtime
 
-Xương sống kỹ thuật chặng 1 gồm Spring Boot server, JavaFX client hai role, PostgreSQL và spike `ProcessHandle`. Phạm vi hiện tại mới có đăng nhập; WebSocket, collector polling và nghiệp vụ thi thuộc các task sau.
+Xương sống kỹ thuật chặng 1 gồm Spring Boot server, JavaFX client hai role, PostgreSQL và collector `ProcessHandle`. Hiện có đăng nhập và demo collector cục bộ trên màn thí sinh; WebSocket và nghiệp vụ thi thuộc các task sau.
 
 ## Yêu cầu môi trường
 

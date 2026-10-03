@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 03/10/2026 — verification cuối PR #1 tại HEAD `ceb8131`: description đã phản ánh 42/42 test PASS và package PASS từ lượt review-fix; source không đổi. GUI/LAN NOT RUN, cross-review chưa đủ xác nhận thực tế. Ready to merge: NO; tracker giữ nguyên.
+Cập nhật lần cuối: 03/10/2026 — T1-C2 đã triển khai trên working tree từ HEAD `79fd185`, nhánh `feat/stage1-lam`: 47/47 test PASS, package PASS. Demo collector cục bộ; GUI/LAN và B review vẫn chờ. Tracker giữ nguyên. Các mục PR #1 bên dưới là ghi nhận phiên trước.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
@@ -16,7 +16,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Chờ kiểm LAN/review T1-A1 | Build/test review PASS; reset/login local có evidence phiên trước | Hoàn tất kiểm LAN và review trước quyết định merge PR #1 | `feat/stage1-project-skeleton` |
 | B | _chưa gán_ | Chờ kiểm GUI/máy thứ hai T1-B1 | Review-fix response sai; 39/39 client test PASS; app-image có evidence phiên trước | Thao tác GUI end-to-end và kiểm máy thứ hai | `feat/stage1-project-skeleton` |
-| C | _chưa gán_ | Chờ review T1-C1 | Unit test PASS; contract v0 MOCK + probe ProcessHandle có evidence phiên trước | Review T1-C1 trước quyết định merge PR #1 | `feat/stage1-project-skeleton` |
+| C | _chưa gán_ | T1-C2: collector và demo JavaFX đã triển khai, chờ B review/GUI | Bộ test 47/47 PASS; test process Java thật xuất hiện/thoát PASS | Kiểm demo Edge, proctor, logout; nhận adapter B để làm T1-C3 | `feat/stage1-lam` |
 
 ## Đang bị chặn
 

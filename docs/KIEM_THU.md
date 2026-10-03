@@ -100,3 +100,18 @@ HEAD đối chiếu: `ceb8131a558660057cf62c46f2466db8515b9b4e`. Chỉ cập nh�
 | C reviewed A | NOT RUN | Cùng lý do |
 
 Bằng chứng và giới hạn xác nhận: `evidence/stage1/2026-10-03-merge-readiness.md`. Không thay đổi trạng thái 27 test chính thức hay TRACKER.json. Ready to merge: NO.
+
+## T1-C2 collector — 03/10/2026
+
+Code: working tree trên HEAD 79fd1855b9aa70bca932a26502d43cbd69d9580a, nhánh feat/stage1-lam. Windows, Temurin JDK 21.0.10+7. Bằng chứng: evidence/stage1/2026-10-03-collector.md.
+
+| Kiểm tra | Kết quả |
+|---|---|
+| mvn test -B -ntp | PASS 47/47; collector mới 5/5, observation 1/1, client 39/39, auth 2/2 |
+| mvn package -DskipTests -B -ntp | PASS, tạo fat JAR; test đã chạy riêng trước |
+| Process Java thật xuất hiện/thoát | PASS tự động với ProcessBuilder, collector đọc OS thật |
+| Policy/metadata/role/stop/lỗi quét | PASS tự động; fixture đánh dấu MOCK |
+| Demo GUI Edge, proctor, logout, đóng cửa sổ | NOT RUN |
+| MT01 toàn bộ, server monitoring, mạng | NOT RUN; phần event/full snapshot thuộc task sau |
+
+Các trạng thái case chính thức và tracker chưa thay đổi. B cần review collector và phần nối JavaFX.

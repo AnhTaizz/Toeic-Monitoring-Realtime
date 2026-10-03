@@ -68,3 +68,23 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - Cross-review A→B, B→C, C→A: NOT RUN/chưa đủ xác nhận thực tế. Người dùng trả lời “Oke rồi”; đã hỏi làm rõ cả ba lượt có review code tại ceb8131, hiểu code và không thấy blocker hay chưa. Chưa có câu trả lời rõ cho lượt hỏi lại tại thời điểm ghi bằng chứng; không tự gán review PASS.
 - Bằng chứng: `evidence/stage1/2026-10-03-merge-readiness.md`; log build trước vẫn ở `evidence/stage1/2026-10-03-review-build.txt`. Không có screenshot/log GUI hoặc LAN mới.
 - Kết luận: Ready to merge NO; còn GUI end-to-end, LAN máy thứ hai và xác nhận cross-review. Không sửa source/PROTOCOL/TRACKER; không merge PR hoặc push main; task.txt giữ nguyên ngoài commit.
+
+## 2026-10-03 · C · T1-C2 collector
+- Đã làm: collector fixed-delay ngoài UI, policy v1, snapshot với khóa session/PID/start và chất lượng metadata; nút demo cục bộ chỉ trên màn candidate, dừng khi logout/đóng app. Chạm JavaFX của B để ghép demo; không đổi protocol mạng.
+- Code: working tree trên HEAD 79fd1855b9aa70bca932a26502d43cbd69d9580a, nhánh feat/stage1-lam; chưa commit.
+- Đã kiểm: mvn test -B -ntp PASS 47/47; mvn package -DskipTests -B -ntp PASS. 5 test collector gồm process Java thật xuất hiện/thoát; còn lại fixture MOCK và kiểm worker/role/lỗi.
+- Bằng chứng: evidence/stage1/2026-10-03-collector.md và các báo cáo Surefire đi kèm.
+- Còn dở: GUI Edge/proctor/logout chưa thao tác; chưa có attempt hợp lệ hoặc adapter B nên chỉ chạy demo cục bộ, chưa gửi server. MT01 tổng thể chưa chạy; tracker không đổi.
+- Tiếp theo: B review và kiểm GUI; nhận interface mạng để làm T1-C3. Hướng dẫn đọc code/chạy: docs/thanh-vien/T1-C2_GIAI_THICH.md.
+
+## 2026-10-03 · sửa lệnh cấu hình collector trên PowerShell
+- Đặt đối số -Dtoeic.monitoring.pollMillis=500 trong dấu nháy ở T1-C2_GIAI_THICH.md để PowerShell không tách sai tên property.
+- Đã kiểm bằng Java -XshowSettings:properties -version: property toeic.monitoring.pollMillis nhận đúng 500. Không cần build lại; chưa mở GUI trong lượt này.
+
+## 2026-10-03 · bỏ tài liệu giải thích riêng theo yêu cầu
+- Đã xóa file T1-C2_GIAI_THICH.md và gỡ tham chiếu trong README/VAI_C. Các mục nhật ký trước là lịch sử tại thời điểm file còn tồn tại.
+- Phần giải thích cho người dùng sẽ nằm trong chat; code không đổi.
+
+## 2026-10-03 · gọn tên lớp thư viện
+- Thêm import Objects trong PollingProcessCollector và Collectors trong ToeicClientApplication; bỏ tên package đầy đủ ở lời gọi, sắp lại nhóm import client.
+- Kiểm tra: Maven compile offline với cache đã có, BUILD SUCCESS, 5/5 module. Chỉ đổi cách viết tên lớp, không đổi logic.
