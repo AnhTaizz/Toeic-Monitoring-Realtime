@@ -77,6 +77,17 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - Còn dở: GUI Edge/proctor/logout chưa thao tác; chưa có attempt hợp lệ hoặc adapter B nên chỉ chạy demo cục bộ, chưa gửi server. MT01 tổng thể chưa chạy; tracker không đổi.
 - Tiếp theo: B review và kiểm GUI; nhận interface mạng để làm T1-C3. Hướng dẫn đọc code/chạy: docs/thanh-vien/T1-C2_GIAI_THICH.md.
 
+## 2026-10-03 · cấu hình DB demo cục bộ
+- Đã tạo .env được gitignore, DB toeic/user toeic/host 127.0.0.1/port 5433; mật khẩu demo đã điền, không ghi giá trị vào nhật ký.
+- Thêm scripts/start-server.ps1 để nạp .env vào process rồi chạy server JAR; cập nhật README và env mẫu. Script qua PowerShell parser; chưa chạy server.
+- Docker Desktop engine hiện không khả dụng, kể cả kiểm tra ngoài sandbox; chưa khởi tạo DB hoặc xác nhận seed tài khoản trong DB. Người dùng mở Docker Desktop rồi chạy compose và script server.
+- Seed code đã có candidate1/candidate2/proctor1; tạo khi server khởi động, chỉ thêm nếu chưa tồn tại. Không reset DB hoặc ghi đè mật khẩu tài khoản cũ.
+
+## 2026-10-03 · sửa lỗi startup timezone DB
+- Log người dùng: DB healthy, PostgreSQL từ chối TimeZone Asia/Saigon lúc JDBC mở kết nối.
+- Sửa scripts/start-server.ps1: truyền đối số Java -Duser.timezone=UTC (đặt trong dấu nháy để PowerShell giữ nguyên); không đổi timezone Windows, không reset DB, không cần build lại JAR.
+- Đã chạy script: server khởi động thành công trên 8080, readiness ACCEPTING_TRAFFIC; HTTP login candidate1/candidate2/proctor1 đều thành công với role CANDIDATE/CANDIDATE/PROCTOR. Không ghi token vào bằng chứng.
+
 ## 2026-10-03 · sửa lệnh cấu hình collector trên PowerShell
 - Đặt đối số -Dtoeic.monitoring.pollMillis=500 trong dấu nháy ở T1-C2_GIAI_THICH.md để PowerShell không tách sai tên property.
 - Đã kiểm bằng Java -XshowSettings:properties -version: property toeic.monitoring.pollMillis nhận đúng 500. Không cần build lại; chưa mở GUI trong lượt này.
@@ -88,3 +99,9 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 ## 2026-10-03 · gọn tên lớp thư viện
 - Thêm import Objects trong PollingProcessCollector và Collectors trong ToeicClientApplication; bỏ tên package đầy đủ ở lời gọi, sắp lại nhóm import client.
 - Kiểm tra: Maven compile offline với cache đã có, BUILD SUCCESS, 5/5 module. Chỉ đổi cách viết tên lớp, không đổi logic.
+
+## 2026-10-03 · chốt hai commit theo kế hoạch người dùng duyệt
+- Commit collector: 6c3cddf, feat(monitoring): add polling collector and candidate demo. Các dòng chưa commit phía trên mô tả thời điểm triển khai/đo trước khi commit.
+- Commit tiếp theo gom scripts/start-server.ps1, .env.example, lệnh server trong README và ghi nhận cấu hình/timezone ở nhật ký.
+- Đã rà diff và kiểm mật khẩu DB hiện tại không xuất hiện trong phần chọn commit; .env được gitignore. Không thay tracker, không push.
+- Sử dụng kết quả test đã chạy ở phiên triển khai (47/47 PASS) và compile PASS sau sửa import; không chạy lại test trong lượt chỉ tạo commit.

@@ -13,7 +13,7 @@ Xương sống kỹ thuật chặng 1 gồm Spring Boot server, JavaFX client ha
 
 1. Chép `.env.example` thành `.env` và đổi `DB_PASSWORD`.
 2. Khởi động DB: `docker compose up -d --wait`.
-3. Nạp các biến `DB_*` từ `.env` vào terminal, rồi chạy server: `mvn -pl server -am spring-boot:run`.
+3. Sau `mvn package`, chạy server và tự nạp `.env`: `powershell -ExecutionPolicy Bypass -File scripts/start-server.ps1`.
 4. Ở terminal khác, chạy client: `mvn -pl client -am javafx:run`.
 
 Client đọc URL mặc định từ biến `TOEIC_SERVER_URL` hoặc system property `toeic.server.url`; người dùng cũng có thể sửa URL ngay trên màn đăng nhập. Server lắng nghe `0.0.0.0:8080` mặc định để máy khác trong LAN gọi được.
