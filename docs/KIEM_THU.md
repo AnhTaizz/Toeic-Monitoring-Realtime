@@ -100,3 +100,25 @@ HEAD đối chiếu: `ceb8131a558660057cf62c46f2466db8515b9b4e`. Chỉ cập nh�
 | C reviewed A | NOT RUN | Cùng lý do |
 
 Bằng chứng và giới hạn xác nhận: `evidence/stage1/2026-10-03-merge-readiness.md`. Không thay đổi trạng thái 27 test chính thức hay TRACKER.json. Ready to merge: NO.
+
+## T1-A2 — 04/10/2026
+
+Code: `7ac62c4d0bc5120ba10f887efbe5478a693d6385`, base main `34a7835`. Windows 11 x64 / Oracle JDK 21.0.8 / Maven 3.9.11; PostgreSQL 18 Docker. Người chạy: Codex Agent. Evidence: `evidence/t1-a2/2026-10-04-verification.md`.
+
+| Kiểm tra | Trạng thái | Evidence/giới hạn |
+|---|---|---|
+| mvn test | PASS — 91/91, 5/5 module, 0 failure/error/skipped | `2026-10-04-mvn-test.txt`; 49 tests mới ngoài baseline 42 |
+| mvn package | PASS — 91/91, 5/5 module, JAR production | `2026-10-04-mvn-package.txt`; Mockito dynamic-agent/CDS và shade warnings |
+| Valid/invalid/expired/exact expiry/revoked/disabled session | PASS | SessionAuthenticationTest; REST/handshake/message network cases; expired/revoked còn kiểm JDBC thật |
+| Login public, protected REST thiếu/sai bearer 401, principal đúng user | PASS — real HTTP | AuthenticatedNetworkTest dùng session store MOCK; PostgreSQL smoke /auth/me thật |
+| Role đúng/sai 403; own/foreign/proctor scope, check-before-business | PASS — unit + real HTTP/WS | Scope provider MOCK ghi rõ; production deny unknown/all unassigned attempts, không invent data |
+| WS missing/invalid/malformed/expired/revoked/disabled header reject | PASS — real java.net.http.WebSocket/Spring | AuthenticatedNetworkTest; thiếu/sai/expired/revoked còn kiểm PostgreSQL smoke |
+| Header handshake, heartbeat/ACK correlation, fragmented heartbeat | PASS — real network | Java21 raw WS + Spring/Tomcat; không chứng minh event commit/presence |
+| JSON sai/type lạ/foreign scope không crash; client khác còn hoạt động | PASS — real network | Controlled ERROR; client tiếp tục nhận heartbeat ACK |
+| Revalidate WS mỗi message, revoke/expiry/disabled → ERROR + close1008 | PASS — real network | MOCK store; PostgreSQL smoke kiểm revoke trên active socket |
+| Concurrent send protection | PASS — MOCK raw session, worker thật/latch | ConcurrentRealtimeSendTest kiểm max 1 raw writer với hai caller trùng thời điểm |
+| PostgreSQL production smoke | PASS | Script dùng app production, JDBC/Flyway/session thật; không H2, không load test MOCK configuration |
+| Token/password không log hoặc reflected trong ERROR | PASS | OutputCapture network test + diff/evidence secret scan; không in credential trong assertion output |
+| GUI/LAN, B2 real integration, event DB/presence | NOT RUN | Ngoài task A2; nhánh B2 chưa đổi/merge, A3/C3/A4 chưa cài |
+
+AT02 mới kiểm các thành phần auth/role/scope/WS của A2; endpoint import/start thật chưa có, nên không đánh PASS toàn bộ case AT02 hoặc 27 cases bằng test fixture. TRACKER.json giữ nguyên. Optional clean FAIL vì app-image EXE bị Windows khóa; không ảnh hưởng test/package PASS và không kill process người dùng.
