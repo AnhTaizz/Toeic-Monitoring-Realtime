@@ -79,7 +79,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** AT02 chạy được (chưa login, sai role, WS thiếu token đều bị từ chối); một thí sinh gửi message với `attemptId` của người khác bị từ chối.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 04/10, T1-A2 code-complete tại `7ac62c4` trên `feat/t1-a2-authenticated-websocket`: Bearer REST/WS, session SHA-256 lookup/revalidate, role/scope guards, raw `/ws/v1/realtime`, heartbeat ACK/ERROR và send decorator đã cài. Mvn test/package PASS 91/91, 5/5 module; PostgreSQL production smoke PASS. QD-03/PROTOCOL đã chốt; review C chưa chạy, không ghi duyệt thay C. Production scope deny unknown vì chưa có schema attempt; own/proctor assignments chỉ MOCK trong test. B2 cần phiên tích hợp riêng, không sửa/merge B2 trong task A2. Không cài A3/A4/C3, không đổi TRACKER.json. Git merge kết quả xem report/evidence phiên này.
 
 ### T1-A3 · Lưu event và đẩy cảnh báo cho giám thị
 `4h` · phụ thuộc: T1-A2, T1-C1 · review: C

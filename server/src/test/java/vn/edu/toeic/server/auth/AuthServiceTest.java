@@ -72,6 +72,7 @@ class AuthServiceTest {
 
     private static final class CapturingSessionStore implements LoginSessionStore {
         private String tokenHash;
+        @Override public Optional<StoredSession> findByTokenHash(String tokenHash) { return Optional.empty(); }
 
         @Override
         public void create(long userId, String tokenHash, Instant issuedAt, Instant expiresAt) {

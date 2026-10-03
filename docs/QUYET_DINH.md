@@ -18,7 +18,6 @@ Ghi lại lựa chọn đã chốt để sau này không phải tranh luận l�
 
 | Mã | Cần quyết | Ai quyết | Hạn | Task |
 |---|---|---|---|---|
-| QD-03 | Cách gửi credential cho HTTP và WebSocket | A | 04/10 | T1-A2 |
 | QD-06 | Cách chạy test trên PostgreSQL thật (DB test cục bộ hay container) | A | 12/10 | T2-A4 |
 | QD-07 | Định dạng audio và cách đóng gói tài nguyên | B | 08/10 | T1-B4 |
 | QD-09 | Quy tắc chấm điểm nội bộ (câu sai, câu trống) | A | 12/10 | T2-A3 |
@@ -27,6 +26,16 @@ Ghi lại lựa chọn đã chốt để sau này không phải tranh luận l�
 Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 
 ## Đã chốt
+
+## QD-03 · Bearer header cho REST và WebSocket handshake
+- Ngày: 2026-10-04 · Người quyết: A theo task T1-A2 · Review C: chưa diễn ra trong phiên Agent, không ghi duyệt thay C.
+- Lựa chọn: `Authorization: Bearer <token>` cho REST `/api/**` sau login và raw WS `ws://<server>:<port>/ws/v1/realtime`. Token chỉ xuất hiện ở login JSON body và header truyền qua mạng; không log, không lưu raw trong DB/session attributes, không dùng URL query.
+- Lý do: cùng semantics REST, handshake từ chối ngay credential không hợp lệ; Java 21 WebSocket.Builder thực sự gửi được header và Spring/Tomcat đọc/xác thực được.
+- Alternative đã cân nhắc: AUTH message đầu tiên sau upgrade; không chọn vì header hoạt động qua network thật, không cần giữ socket chưa xác thực. Không dùng subprotocol/query để mang token.
+- Evidence: AuthenticatedNetworkTest dùng real HTTP/WS với MOCK session/scope store; smoke `scripts/smoke-a2.ps1` dùng production Spring app + PostgreSQL thật, login → Bearer handshake → heartbeat/ACK, reject thiếu/sai/expired/revoked và kiểm revoke trên WS đang mở. Log sạch và SHA ở `evidence/t1-a2/2026-10-04-verification.md`.
+- Hệ quả cho B: mỗi reconnect mở socket mới và gửi Authorization header lại; handle HTTP 401/503; ERROR UNAUTHORIZED trên WS đi kèm close 1008. Heartbeat unscoped chỉ là transport khi login scope rỗng; B cần cho phép attemptId null và đọc heartbeat ACK/ERROR, không tạo scope giả. Chi tiết field ở PROTOCOL.
+- Scope: production AttemptScopeAuthorizer deny unknown/all attempts chưa được cấp; own/proctor assignment chỉ MOCK trong test tới khi có schema thật. Heartbeat ACK không phải event commit/presence.
+- Liên quan: T1-A2, T1-B2, AT02. Không đổi TRACKER.json, không sửa nhánh B2 hay triển khai A3/A4.
 
 ## QD-01 · Phiên bản nền tảng chặng 1
 - Ngày: 2026-10-03 · Người quyết: A + B · Review: C

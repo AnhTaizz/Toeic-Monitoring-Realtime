@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 04/10/2026 — T1-B2 **PARTIAL / BLOCKED BY T1-A2** trên `feat/t1-b2-network-heartbeat-ui`, code `75d4b9f`. Main mới nhất là merge PR #1 `34a7835`. Adapter/state machine, heartbeat/backoff/fragment/shutdown và model khóa UI được kiểm bằng MOCK; `mvn test` và `mvn package` PASS 70/70, 5/5 module (lượt chạy 03/10). Chưa có authenticated WS thật; GUI/LAN NOT RUN, tracker giữ nguyên.
+Cập nhật lần cuối: 04/10/2026 — đang tích hợp B2 với main A2 `f62c732` (PR #2 đã merge). Evidence B2 MOCK lịch sử tại `evidence/t1-b2/2026-10-04-verification.md`; chưa chạy integration mới.  T1-A2 code-complete tại `7ac62c4` trên `feat/t1-a2-authenticated-websocket`, base main merge PR #1 `34a7835`. Bearer REST/WS, QD-03 và heartbeat/ACK transport đã cài; `mvn test` và `mvn package` PASS 91/91, 5/5 module. PostgreSQL production smoke PASS. Nhánh B2 riêng chưa tích hợp/merge; tracker giữ nguyên.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
@@ -14,18 +14,19 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
-| A | _chưa gán_ | Còn kiểm LAN/review T1-A1; T1-A2 chưa có trên main | Build/test review PASS; reset/login local có evidence phiên trước | Kiểm LAN/review và chốt QD-03/endpoint/auth/scope cho T1-A2 | `feat/stage1-project-skeleton` |
-| B | _chưa gán_ | T1-B2 PARTIAL / BLOCKED BY T1-A2 | Adapter + 28 test realtime MOCK PASS; tổng Maven 70/70; interface MonitoringTransport | Nhận contract A2, cài opener xác thực thật; smoke server-off/re-auth và GUI | `feat/t1-b2-network-heartbeat-ui` |
-| C | _chưa gán_ | Còn review T1-C1 | Unit test PASS; contract v0 MOCK + probe ProcessHandle có evidence phiên trước | Review T1-C1; dùng interface B giao khi làm C3 | `feat/stage1-project-skeleton` |
+| A | _chưa gán_ | T1-A2 code-complete; handoff B2 | 49 test mới + PostgreSQL/WS production smoke PASS; QD-03 chốt | B tích hợp contract; review C còn chờ, không tự làm A3 | `feat/t1-a2-authenticated-websocket` |
+| B | _chưa gán_ | T1-B2 đang tích hợp contract A2 trên nhánh riêng | Adapter/mock tests/interface có ở `edd50cf`, chưa trên main | Đồng bộ main A2, cài opener Bearer, ACK/ERROR và unscoped heartbeat; GUI thật | `feat/t1-b2-network-heartbeat-ui` |
+| C | _chưa gán_ | Còn review T1-C1; chưa chạy review A2 trong phiên | Unit test/probe có evidence lịch sử | Review auth/WS A2; event persistence/queue chờ task A3/C3 | `feat/stage1-project-skeleton` |
 
 ## Đang bị chặn
 
 - GUI manual end-to-end: **NOT RUN** — phiên Agent có terminal Windows/WSL, không có công cụ thao tác GUI thật. Cần người dùng chạy candidate/proctor/sai mật khẩu/server tắt.
 - LAN second-machine test: **NOT RUN** — chưa có máy Windows thứ hai thật được cung cấp cho phiên này; không thay bằng localhost.
-- Review chéo: **NOT RUN trong phiên B2/chưa có xác nhận mới**. Cần A review adapter B2; không ghi PASS thay reviewer. Giới hạn review trước merge được giữ trong evidence lịch sử.
-- PR #1 đã merge trên main `34a7835`; GUI/LAN còn thiếu bằng chứng như nhật ký lịch sử. Schema protocol và status tracker không đổi.
-- [03/10] B bị chặn phần authenticated real-WS integration — QD-03 còn trong bảng chờ, PROTOCOL chưa có endpoint/cách gửi credential, server chưa có WS handler, không thấy branch/PR A2 làm source of truth — cần A chốt T1-A2 trước gate 04/10. Không tự chọn auth/endpoint.
-- Evidence B2: `evidence/t1-b2/2026-10-04-verification.md`, `2026-10-03-mvn-test.txt`, `2026-10-03-mvn-package.txt`; tất cả socket fixture đều MOCK. Chưa kiểm login/server thật, heartbeat server receipt, server-off GUI hay re-auth thật trong phiên này.
+- Review C→A2: **NOT RUN trong phiên Agent**; không ghi duyệt thay thành viên. Task.txt cho phép merge A2 khi các checks kỹ thuật/PR mergeability PASS; trạng thái Git cuối xem report.
+- PR #1 đã merge trên main `34a7835`; các mục GUI/LAN thiếu chứng cứ lịch sử vẫn NOT RUN.
+- A2 không còn blocker auth/WS: đã kiểm header handshake trên Spring/Tomcat + Java21 và PostgreSQL thật. Scope provider production hiện deny mọi attempt chưa có assignment; đây là giới hạn có chủ đích khi schema attempt chưa cài, không dùng scope MOCK production.
+- B2 vẫn cần phiên tích hợp riêng: hook production, heartbeat/ACK attemptId null, ERROR handling, server-off/re-auth/GUI. Không coi A2 network smoke là B2 acceptance hoặc event/presence đã xong.
+- Bằng chứng A2: `evidence/t1-a2/2026-10-04-verification.md`. TRACKER.json giữ nguyên.
 
 Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì — hạn`.
 
@@ -33,9 +34,9 @@ Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì
 
 | Hạn | Ai cung cấp → ai dùng | Nội dung | Trạng thái |
 |---|---|---|---|
-| 03/10, giờ đầu | C + mẫu auth của A → A, B | Login, role/attempt scope, WS event/ACK/heartbeat v0 | Login đã chạy; WS là MOCK rõ nhãn |
-| 04/10 | B → C | Interface collector → network | Đã cài MonitoringTransport; xem README. Gửi event theo fixture MOCK; type/payload state chờ C chốt, real transport chờ A2 |
-| 04/10 | A → B | Cách gửi credential HTTP/WS, phạm vi subscription | Chưa có |
+| 03/10, giờ đầu | C + mẫu auth của A → A, B | Login, role/attempt scope, WS event/ACK/heartbeat v0 | Login + heartbeat transport/ACK thật; event/state vẫn MOCK/CHƯA CÓ |
+| 04/10 | B → C | Interface collector → network | MonitoringTransport đã cài trên B2; main A2 được merge vào B2, real integration đang làm |
+| 04/10 | A → B | Cách gửi credential HTTP/WS, phạm vi subscription | QD-03 chốt Bearer header; /ws/v1/realtime; unscoped transport heartbeat; subscription/assignment nghiệp vụ chưa cài |
 | 09/10 | A → B, C | Import đề, answers/revision, requestId, writerEpoch, deadline/state, mã lỗi | Chưa có |
 | 12/10 | A → B | Trạng thái đã chốt, takeover writer, state khi reconnect | Chưa có |
 | 16/10 | A + B → C | Audio manifest, READY/start/interrupted | Chưa có |

@@ -1,0 +1,9 @@
+Security scan 2026-10-04
+Code SHA: 7ac62c4d0bc5120ba10f887efbe5478a693d6385
+Checked 36 changed/source/documentation/evidence files against main base and local credential values.
+Findings: 0
+Patterns: literal bearer >=30 chars, private keys, private machine paths; local DB/seed credential value comparison.
+MOCK/dev-only seed and credential fixtures allowed; no raw runtime token printed.
+Client source / protocol source / tracker / nguon unchanged.
+.env and task.txt remain outside commits.
+PASS
