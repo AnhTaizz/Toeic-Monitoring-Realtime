@@ -92,11 +92,11 @@ public final class ToeicClientApplication extends Application {
         stage.setScene(new Scene(root, 720, 480));
     }
 
-    private static String userMessage(Throwable failure) {
+    static String userMessage(Throwable failure) {
         Throwable cause = failure instanceof CompletionException && failure.getCause() != null
                 ? failure.getCause()
                 : failure;
-        if (cause instanceof LoginFailedException) {
+        if (cause instanceof LoginFailedException || cause instanceof InvalidServerResponseException) {
             return cause.getMessage();
         }
         return "Không kết nối được tới server. Hãy kiểm tra địa chỉ và mạng.";

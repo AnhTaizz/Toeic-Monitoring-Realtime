@@ -1,6 +1,10 @@
 package vn.edu.toeic.client;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.Strictness;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -13,10 +17,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import vn.edu.toeic.protocol.auth.LoginRequest;
 import vn.edu.toeic.protocol.auth.LoginResponse;
+import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.protocol.error.ApiErrorResponse;
 
 public final class LoginApiClient implements AutoCloseable {
     private final Gson gson = new Gson();
+    private final Gson responseGson = new GsonBuilder().setStrictness(Strictness.STRICT).create();
     private final ExecutorService executor;
     private final HttpClient httpClient;
 
@@ -69,7 +75,23 @@ public final class LoginApiClient implements AutoCloseable {
 
     private LoginResponse parseResponse(HttpResponse<String> response) {
         if (response.statusCode() >= 200 && response.statusCode() < 300) {
-            return gson.fromJson(response.body(), LoginResponse.class);
+            try {
+                JsonObject body = responseGson.fromJson(response.body(), JsonObject.class);
+                if (body == null || !body.has("user") || !body.get("user").isJsonObject()) {
+                    throw new InvalidServerResponseException();
+                }
+                requiredString(body, "protocolVersion");
+                requiredString(body, "token");
+                requiredString(body, "tokenType");
+                JsonObject user = body.getAsJsonObject("user");
+                requiredString(user, "username");
+                requiredString(user, "displayName");
+                Role.valueOf(requiredString(user, "role"));
+                return responseGson.fromJson(body, LoginResponse.class);
+            } catch (RuntimeException ignored) {
+                // Không giữ cause từ parser: thông báo lỗi có thể chứa JSON/token của server.
+                throw new InvalidServerResponseException();
+            }
         }
 
         String message = "Đăng nhập thất bại";
@@ -82,6 +104,15 @@ public final class LoginApiClient implements AutoCloseable {
             // Phản hồi không đúng contract: giữ thông báo chung, không làm rớt UI.
         }
         throw new LoginFailedException(response.statusCode(), message);
+    }
+
+    private static String requiredString(JsonObject object, String name) {
+        JsonElement value = object.get(name);
+        if (value == null || !value.isJsonPrimitive() || !value.getAsJsonPrimitive().isString()
+                || value.getAsString().isBlank()) {
+            throw new InvalidServerResponseException();
+        }
+        return value.getAsString();
     }
 
     @Override
