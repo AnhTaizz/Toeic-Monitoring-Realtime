@@ -1,6 +1,7 @@
 package vn.edu.toeic.client;
 
 import java.util.concurrent.CompletionException;
+import java.util.function.Consumer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -15,9 +16,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import vn.edu.toeic.protocol.auth.LoginResponse;
+import vn.edu.toeic.client.realtime.ConnectionViewModel;
+import vn.edu.toeic.client.realtime.ConnectionState;
+import vn.edu.toeic.client.realtime.RealtimeClient;
 
 public final class ToeicClientApplication extends Application {
     private final LoginApiClient loginApiClient = new LoginApiClient();
+    private final RealtimeClient realtimeClient = new RealtimeClient();
+    private AutoCloseable connectionSubscription;
+    private long viewGeneration;
 
     @Override
     public void start(Stage stage) {
@@ -82,10 +89,29 @@ public final class ToeicClientApplication extends Application {
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
         Label identity = new Label(response.user().displayName() + " · " + response.user().username());
         Label detail = new Label(viewModel.description());
+        Label connectionStatus = new Label();
+        connectionStatus.setWrapText(true);
+        Label availability = new Label("Kết nối thời gian thực chưa sẵn sàng.");
+        // This container is the lock boundary for future network-dependent controls.
+        VBox networkControls = new VBox(12, detail);
+        long currentView = ++viewGeneration;
+        Consumer<ConnectionState> updateConnection = state -> {
+            if (currentView != viewGeneration) return;
+            ConnectionViewModel connection = ConnectionViewModel.from(state);
+            connectionStatus.setText(connection.status());
+            networkControls.setDisable(connection.networkLocked());
+        };
+        connectionSubscription = realtimeClient.onConnectionState(
+                state -> Platform.runLater(() -> updateConnection.accept(state)));
+        updateConnection.accept(realtimeClient.connectionState());
         Button logout = new Button("Đăng xuất");
-        logout.setOnAction(event -> stage.setScene(loginScene(stage)));
+        logout.setOnAction(event -> {
+            releaseConnectionView();
+            realtimeClient.disconnect();
+            stage.setScene(loginScene(stage));
+        });
 
-        VBox content = new VBox(16, title, identity, detail, logout);
+        VBox content = new VBox(16, title, identity, connectionStatus, availability, networkControls, logout);
         content.setPadding(new Insets(36));
         content.setAlignment(Pos.TOP_CENTER);
         BorderPane root = new BorderPane(content);
@@ -104,6 +130,15 @@ public final class ToeicClientApplication extends Application {
 
     @Override
     public void stop() {
-        loginApiClient.close();
+        releaseConnectionView();
+        try { realtimeClient.close(); } finally { loginApiClient.close(); }
+    }
+
+    private void releaseConnectionView() {
+        viewGeneration++;
+        if (connectionSubscription != null) {
+            try { connectionSubscription.close(); } catch (Exception ignored) { }
+            connectionSubscription = null;
+        }
     }
 }
