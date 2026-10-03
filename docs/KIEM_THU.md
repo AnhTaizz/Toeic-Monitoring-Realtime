@@ -82,3 +82,21 @@ Code được kiểm: `961feca789fa8d9e3ded554d0ecb21fccbe43d47`. `mvn test` ch�
 | LAN second-machine test | NOT RUN — chưa có máy Windows thứ hai thật | Cùng smoke evidence |
 
 Reset/migration PostgreSQL, HTTP login thật vào server, app-image và probe ProcessHandle không chạy lại trong phiên review; kết quả lịch sử ở các dòng acceptance phía trên vẫn thuộc phiên trước. Kiểm tra source xác nhận sendAsync/Platform.runLater/stop() vẫn giữ; chưa thay cho test tương tác GUI.
+
+## Verification cuối trước merge PR #1 — 03/10/2026
+
+HEAD đối chiếu: `ceb8131a558660057cf62c46f2466db8515b9b4e`. Chỉ cập nhật docs/evidence, không chạy lại build/test. Source không đổi so với code đã kiểm tại `961feca`; 42/42 PASS và package PASS tiếp tục trỏ tới log lượt chạy thật trước.
+
+| Kiểm tra | Trạng thái | Lý do / bằng chứng |
+|---|---|---|
+| PR description phản ánh 42/42 test, package và review-fix | PASS | GitHub update PR #1 thành công; không còn dòng 7/7 tests cũ |
+| Candidate GUI | NOT RUN | Không có công cụ thao tác GUI thật |
+| Proctor GUI | NOT RUN | Cùng lý do |
+| Wrong-password GUI | NOT RUN | Cùng lý do |
+| Server-off / bad URL GUI | NOT RUN | Cùng lý do |
+| Candidate/proctor/wrong password qua LAN máy thứ hai | NOT RUN | Không có máy Windows thứ hai thật được cung cấp |
+| A reviewed B | NOT RUN | Chưa đủ xác nhận review thực tế; GitHub chưa có review/comment |
+| B reviewed C | NOT RUN | Cùng lý do |
+| C reviewed A | NOT RUN | Cùng lý do |
+
+Bằng chứng và giới hạn xác nhận: `evidence/stage1/2026-10-03-merge-readiness.md`. Không thay đổi trạng thái 27 test chính thức hay TRACKER.json. Ready to merge: NO.
