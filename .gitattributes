@@ -1,0 +1,24 @@
+# Git tự chuẩn hóa xuống dòng cho file text, tránh diff giả giữa các máy
+* text=auto
+
+# Script phải giữ đúng kiểu xuống dòng thì mới chạy được
+mvnw        text eol=lf
+*.sh        text eol=lf
+*.cmd       text eol=crlf
+*.bat       text eol=crlf
+*.ps1       text eol=crlf
+
+# File nhị phân: không chuẩn hóa, không diff
+*.jar       binary
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.mp3       binary
+*.wav       binary
+*.ogg       binary
+*.pdf       binary
+*.docx      binary
+*.xlsx      binary
+*.pptx      binary

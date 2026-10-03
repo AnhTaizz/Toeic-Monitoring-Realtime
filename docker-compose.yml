@@ -1,0 +1,31 @@
+# Môi trường phát triển: chỉ chứa PostgreSQL.
+# Server Spring Boot và client JavaFX chạy trực tiếp trên máy bằng Maven, không chạy trong container.
+#
+#   Bật:    docker compose up -d
+#   Tắt:    docker compose down
+#   Reset:  docker compose down -v   (xóa toàn bộ dữ liệu DB)
+#
+# Giá trị lấy từ file .env (chép từ .env.example).
+
+services:
+  db:
+    image: postgres:18
+    container_name: toeic-db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-toeic}
+      POSTGRES_USER: ${DB_USER:-toeic}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Chua co DB_PASSWORD - chep .env.example thanh .env}
+    ports:
+      # Chỉ mở cho chính máy chạy server. Client trong LAN đi qua server, không nối thẳng vào DB.
+      - "127.0.0.1:${DB_PORT:-5432}:5432"
+    volumes:
+      # Image postgres từ bản 18 đặt dữ liệu trong /var/lib/postgresql/<major>/, nên mount ở thư mục cha
+      - toeic-pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-toeic} -d ${DB_NAME:-toeic}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  toeic-pgdata:

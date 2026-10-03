@@ -1,0 +1,40 @@
+# Tài liệu làm việc của nhóm
+
+Thư mục này là nơi ghi lại việc đang làm, để bất kỳ ai (hoặc Claude) mở project lên đều biết đang ở đâu và làm tiếp cái gì. Bộ kế hoạch gốc nằm ở `Ke_hoach_LT_Mang_5_chang/` và không thay đổi hằng ngày; các file ở đây thì có.
+
+## File nào dùng để làm gì
+
+| File | Nội dung | Ai cập nhật | Khi nào |
+|---|---|---|---|
+| [TIEN_DO.md](TIEN_DO.md) | Đang ở chặng nào, mỗi người đang làm gì, bước tiếp theo, đang bị chặn bởi gì | Cả ba | Cuối mỗi buổi làm |
+| [NHAT_KY.md](NHAT_KY.md) | Nhật ký từng buổi: đã làm gì, commit nào, còn dở gì | Người vừa làm | Cuối mỗi buổi làm |
+| [QUYET_DINH.md](QUYET_DINH.md) | Các quyết định kỹ thuật đã chốt và đang chờ chốt | Người ra quyết định, reviewer duyệt | Khi chốt một lựa chọn |
+| [PROTOCOL.md](PROTOCOL.md) | Danh mục endpoint và message đang dùng thật | C (monitoring), A (auth, thi) | Khi thêm hoặc đổi message |
+| [KIEM_THU.md](KIEM_THU.md) | Trạng thái 27 test case và nơi lưu bằng chứng | Owner của test | Khi chạy test |
+| [thanh-vien/VAI_A.md](thanh-vien/VAI_A.md) | Task và hướng dẫn cho vai A (server, DB, giao dịch) | A | Ghi chú làm dở |
+| [thanh-vien/VAI_B.md](thanh-vien/VAI_B.md) | Task và hướng dẫn cho vai B (JavaFX, audio, đóng gói) | B | Ghi chú làm dở |
+| [thanh-vien/VAI_C.md](thanh-vien/VAI_C.md) | Task và hướng dẫn cho vai C (monitoring, thực nghiệm) | C | Ghi chú làm dở |
+
+Trạng thái chính thức của từng task (TODO/đang làm/xong, giờ thực tế, bằng chứng) vẫn nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`. Các file ở đây không lặp lại trạng thái đó.
+
+## Bắt đầu một buổi làm
+
+1. Đọc [TIEN_DO.md](TIEN_DO.md): xem dòng của mình và mục "Đang bị chặn".
+2. Đọc mục cuối cùng của mình trong [NHAT_KY.md](NHAT_KY.md) để biết lần trước dừng ở đâu.
+3. Mở file vai của mình, tìm task đang làm, đọc "Ghi chú làm dở".
+4. Nếu task phụ thuộc contract của người khác, xem [PROTOCOL.md](PROTOCOL.md) đã có mẫu chưa.
+
+## Kết thúc một buổi làm
+
+1. Commit code (kể cả đang dở, trên nhánh riêng).
+2. Thêm một mục vào [NHAT_KY.md](NHAT_KY.md).
+3. Sửa dòng của mình trong [TIEN_DO.md](TIEN_DO.md).
+4. Nếu task chưa xong, ghi vào "Ghi chú làm dở" của task đó trong file vai: đang dừng ở bước nào, cái gì chưa chạy.
+5. Nếu task xong và có bằng chứng thật, cập nhật `TRACKER.json` (`status`, `actual_hours`, `evidence`).
+6. Nếu có chốt lựa chọn kỹ thuật, ghi vào [QUYET_DINH.md](QUYET_DINH.md). Nếu có đổi message, sửa [PROTOCOL.md](PROTOCOL.md) và báo người dùng message đó.
+
+## Quy ước
+
+- Bằng chứng là thứ kiểm tra lại được: commit SHA, tên test đã chạy, đường dẫn file log. "Đã thử thấy ổn" không phải bằng chứng.
+- Dữ liệu giả ghi nhãn `MOCK`.
+- Không ghi kết quả chưa đo, không ghi Passed cho test chưa chạy.

@@ -1,0 +1,106 @@
+# ===== Maven / Java =====
+target/
+*.class
+*.jar
+*.war
+# Giữ lại Maven Wrapper để máy khác build được mà không cần cài Maven
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties.bak
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+.flattened-pom.xml
+# JVM crash dump
+hs_err_pid*.log
+replay_pid*.log
+
+# ===== Đóng gói client (jpackage / jlink) =====
+*.msi
+*.exe
+*.dmg
+*.pkg
+*.deb
+*.rpm
+dist/
+installer-out/
+jpackage-out/
+
+# ===== Cấu hình cục bộ và bí mật =====
+# Mỗi máy tự tạo từ file mẫu (*.example); không commit mật khẩu DB, JWT secret, IP máy cá nhân
+.env
+.env.*
+!.env.example
+application-local.properties
+application-local.yml
+application-local.yaml
+application-secret.properties
+application-secret.yml
+client-local.properties
+*.jks
+*.p12
+*.pfx
+*.keystore
+*.pem
+*.key
+
+# ===== Log và file chạy tạm =====
+logs/
+*.log
+*.log.*
+*.pid
+*.tmp
+*.bak
+*.swp
+
+# ===== PostgreSQL cục bộ =====
+pgdata/
+postgres-data/
+*.dump
+*.backup
+
+# ===== IDE =====
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+# Eclipse / STS
+.classpath
+.project
+.settings/
+.factorypath
+.apt_generated/
+.springBeans
+.sts4-cache/
+bin/
+# NetBeans
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
+nb-configuration.xml
+# VS Code
+.vscode/
+*.code-workspace
+
+# ===== Python (chỉ dùng phân tích CSV, vẽ biểu đồ) =====
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# ===== Claude Code =====
+.claude/settings.local.json
+
+# ===== Hệ điều hành =====
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

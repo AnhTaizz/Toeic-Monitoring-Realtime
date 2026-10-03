@@ -1,0 +1,57 @@
+# Trạng thái kiểm thử
+
+Mô tả đầy đủ từng case (cách gây tình huống, kết quả bắt buộc) ở `Ke_hoach_LT_Mang_5_chang/03_KIEM_THU_VA_THUC_NGHIEM.md`. File này chỉ theo dõi đã chạy chưa và bằng chứng ở đâu.
+
+Trạng thái dùng: `NOT RUN`, `PASS`, `FAIL`, `BLOCKED`. Chỉ ghi `PASS` khi đã chạy thật và có bằng chứng.
+
+Mỗi lần chạy ghi đủ: commit SHA, OS/JDK/PostgreSQL, cấu hình, lệnh hoặc bước chạy, kết quả mong đợi, kết quả thật, log hoặc ảnh, người chạy. Lưu bằng chứng vào thư mục `evidence/<testId>/` (tạo khi có lần chạy đầu tiên).
+
+## Answer / Submission
+
+| ID | Tóm tắt | Owner / review | Task | Trạng thái | SHA | Bằng chứng |
+|---|---|---|---|---|---|---|
+| AT01 | Thí sinh B không đọc/sửa được bài của A, trước và sau khi nộp | A / C | T2-A4, T3-A4 | NOT RUN | | |
+| AT02 | Chưa login hoặc sai role gọi import/start; WS thiếu token | A / C | T1-A2, T2-A1 | NOT RUN | | |
+| AT03 | Revision 42 rồi 41: bản cũ không ghi đè | A / C | T2-A2 | NOT RUN | | |
+| AT04 | Cùng revision cùng nội dung, khác nội dung, đổi thứ tự key | A / C | T2-A2 | NOT RUN | | |
+| AT05 | requestId lặp; rollback không ACK thành công | A / C | T2-A2, T4-A1 | NOT RUN | | |
+| AT06 | Autosave cũ đến sau submit không đổi bài đã chốt | A / C | T2-A3 | NOT RUN | | |
+| AT07 | Chờ khóa qua deadline: quyết định theo giờ sau khóa | A / C | T2-A4 | NOT RUN | | |
+| AT08 | Submit lặp, timeout, save đến gần nhau: một kết quả, chấm một lần | A / C | T2-A3, T4-A1 | NOT RUN | | |
+| AT09 | Request của writer cũ không ghi được sau takeover | A / C | T2-A4 | NOT RUN | | |
+| AT10 | Không nhận đáp án sau khi chốt hoặc sau deadline | A / C | T2-A4 | NOT RUN | | |
+| AT11 | Server 40 / client 42, mất ACK, reconnect, mở app mới | B / A | T2-B4, T4-B1 | NOT RUN | | |
+
+## Monitoring
+
+| ID | Tóm tắt | Owner / review | Task | Trạng thái | SHA | Bằng chứng |
+|---|---|---|---|---|---|---|
+| MT01 | Full snapshot hợp lệ; event không lặp mỗi poll; collector không chạy trên giám thị | C / B | T1-C2/C3, T2-C1/C2 | NOT RUN | | |
+| MT02 | Replay cùng message sau mất ACK | C / B | T3-C3 | NOT RUN | | |
+| MT03 | Thiếu một delta → UNSYNCED, yêu cầu full | C / B | T3-C3 | NOT RUN | | |
+| MT04 | Delta epoch cũ không sửa state epoch mới | C / B | T3-C3/C4 | NOT RUN | | |
+| MT05 | Restart collector hoặc server → cần epoch và full mới | C / B | T3-C3/C4 | NOT RUN | | |
+| MT06 | Không lùi state; full và delta cho cùng state và event set | C / B | T3-C3 | NOT RUN | | |
+| MT07 | Event muộn, queue tràn; snapshot mới không xóa gap | C / B | T2-C2 | NOT RUN | | |
+| MT08 | Kill client → server tự chuyển UNKNOWN | C / B | T2-C2 | NOT RUN | | |
+
+## Listening và tích hợp
+
+| ID | Tóm tắt | Owner / review | Task | Trạng thái | SHA | Bằng chứng |
+|---|---|---|---|---|---|---|
+| LT01 | Thiếu audio hoặc sai checksum → không READY | B / A | T3-B1 | NOT RUN | | |
+| LT02 | Start lặp không phát lại; lỗi media khóa và ghi gián đoạn | B / A | T3-B2/B3 | NOT RUN | | |
+| LT03 | Mất mạng giữa audio; mở lại không tự phát hay resume | B / A | T3-B3 | NOT RUN | | |
+| LT04 | Tổ chức lại: attempt mới, dữ liệu và deadline cũ giữ nguyên | B / A | T3-B4, T3-A2 | NOT RUN | | |
+| IT01 | Chạy từ package trên máy không có IDE, đường dẫn có dấu | B / A | T1-B4, T3-B5, T5-B1 | NOT RUN | | |
+| IT02 | 2 thí sinh + 1 giám thị; một client gửi JSON sai hoặc rớt | A / C | T3-A4, T4-B1 | NOT RUN | | |
+| IT03 | Mạng hoặc quét chậm, UI vẫn phản hồi; đóng app dọn worker | B / A | T1-B2, T4-B1 | NOT RUN | | |
+| IT04 | DB hoặc server tắt giữa lúc xử lý; khởi động lại | A / C | T3-A3, T4-A1, T4-B1 | NOT RUN | | |
+
+## Thực nghiệm
+
+| Mã | Nội dung | Ai chạy | Task | Trạng thái | Nơi lưu raw |
+|---|---|---|---|---|---|
+| E1 | Polling 250/500/1.000/2.000 ms, 3 lần lặp (12 run) | B chạy, C cấp harness và phân tích | T4-B2, T4-C3 | NOT RUN | |
+| E2 | Full snapshot vs delta, 3 trace × 3 lần × 2 chế độ (18 run) | C | T4-C2 | NOT RUN | |
+| Tải | 1/5/10 client giả lập, 3 lần mỗi mức (9 run) | A | T4-A2 | NOT RUN | |

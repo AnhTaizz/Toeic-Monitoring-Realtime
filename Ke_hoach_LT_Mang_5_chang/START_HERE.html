@@ -1,0 +1,1775 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Kế hoạch BTL Lập trình mạng • 03–31/10/2026</title><style>
+:root{--navy:#15334b;--teal:#006f76;--ink:#243747;--muted:#5c6b78;--line:#d7e1e7;--paper:#fff;--wash:#f3f7fa}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:76px}body{margin:0;font-family:Segoe UI,Arial,sans-serif;font-size:16px;line-height:1.6;color:var(--ink);background:var(--wash)}.top{background:var(--navy);color:white;padding:32px max(24px,calc((100vw - 1280px)/2));}.eyebrow{letter-spacing:.14em;font-size:12px;font-weight:700;color:#9cd9dc}.top h1{margin:6px 0 8px;font-size:32px;line-height:1.3}.top p{margin:0;max-width:920px;color:#d4e3ec}.badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}.badge{border:1px solid #557486;border-radius:6px;padding:5px 11px;font-size:13px}.nav{position:sticky;top:0;z-index:2;background:#fff;border-bottom:1px solid var(--line);padding:12px max(24px,calc((100vw - 1280px)/2));display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:14px}.nav a{font-weight:600;color:var(--teal);text-decoration:none}.nav button{margin-left:auto;cursor:pointer;border:1px solid var(--line);background:var(--wash);padding:6px 12px;border-radius:5px;color:var(--navy)}main{max-width:1344px;margin:24px auto;padding:0 24px}.document{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:30px 36px;margin-bottom:30px;overflow:hidden}.document>h1{font-size:25px;line-height:1.35;color:var(--navy);margin-top:0}.document h2{color:var(--navy);font-size:23px;line-height:1.35;border-top:2px solid #c9e1e4;padding-top:26px;margin-top:40px}.document h3{font-size:18px;line-height:1.4;color:var(--teal);margin-top:28px}.document h1,.document h2,.document h3{break-after:avoid}.document p{margin:12px 0}.document strong{color:#14394e}blockquote{margin:20px 0;background:#edf6f7;border-left:4px solid var(--teal);padding:8px 18px;border-radius:0 6px 6px 0}.tablewrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:6px}table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.5}thead{background:#eaf1f5;color:var(--navy)}th,td{padding:11px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);border-right:1px solid #e5ecef}th:last-child,td:last-child{border-right:0}tr:last-child td{border-bottom:0}tbody tr:nth-child(even){background:#fafcfd}th{font-weight:700}table.backlog{min-width:960px;table-layout:fixed}table.backlog th:nth-child(1){width:8%}table.backlog th:nth-child(2){width:20%}table.backlog th:nth-child(3){width:9%}table.backlog th:nth-child(4){width:6%}table.backlog th:nth-child(5){width:19%}table.backlog th:nth-child(6){width:38%}code{font-family:Consolas,monospace;font-size:.9em;background:#eff3f6;padding:2px 4px;border-radius:3px;overflow-wrap:anywhere}pre{background:#112d40;color:#edf4fa;padding:18px;border-radius:6px;overflow-x:auto}pre code{background:none;color:inherit;padding:0}a{color:var(--teal);overflow-wrap:anywhere}li{margin:7px 0}.sources{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:25px 36px;margin-bottom:30px}.footer{font-size:13px;color:var(--muted);padding:0 6px 30px}@media(max-width:700px){.top{padding:24px}.top h1{font-size:26px}main{padding:0 12px}.document{padding:22px 18px}.nav{padding:10px 18px;gap:12px}.nav button{margin-left:0}table{min-width:650px}.document h2{font-size:21px}}@media print{@page{size:A4 landscape;margin:14mm}body{font-size:10pt;background:#fff}.top{padding:0 0 16px;background:white;color:#15334b}.top p,.eyebrow{color:#243747}.badges,.nav,.footer{display:none}main{margin:0;padding:0;max-width:none}.document{border:0;border-radius:0;padding:0;overflow:visible;break-before:page}.document:first-child{break-before:auto}table{font-size:8.5pt;line-height:1.35}table.backlog{min-width:0}th,td{padding:6px 7px}thead{display:table-header-group}tr{break-inside:avoid}.tablewrap{overflow:visible;border:0}.document h2{margin-top:20px;padding-top:14px;font-size:17pt}.document h3{font-size:13pt}a{color:inherit;text-decoration:none}.sources{break-before:page;border:0;padding:0}}
+</style></head><body><header class="top"><div class="eyebrow">BTL LẬP TRÌNH MẠNG · NHÓM 3 NGƯỜI</div><h1>Kế hoạch triển khai TOEIC Monitor</h1><p>Từ prototype mạng và monitoring đến lượt thi, thực nghiệm và bàn giao. Bản kế hoạch có điều kiện về công suất, bám deadline 31/10/2026.</p><div class="badges"><span class="badge">03–31/10 · 5 chặng</span><span class="badge">75 task · 246 giờ dự kiến</span><span class="badge">A / B / C · Có review chéo</span><span class="badge">Trạng thái: chưa triển khai</span></div></header><nav class="nav" aria-label="Mục lục"><a href="#plan">01 · Kế hoạch & giao việc</a><a href="#contracts">02 · Hợp đồng</a><a href="#tests">03 · Test & thực nghiệm</a><a href="#sources">Nguồn & tệp sửa</a><button onclick="window.print()">In / Lưu PDF</button></nav><main><section id="plan" class="document"><h1>KẾ HOẠCH TRIỂN KHAI BTL LẬP TRÌNH MẠNG</h1>
+<p><strong>Hệ thống thi TOEIC Client–Server có hỗ trợ giám sát hành vi theo thời gian thực</strong><br>Nhóm 3 người • Kế hoạch v1.0 • Lập tối 02/10/2026 • Thực hiện 03–31/10/2026 • Giờ Việt Nam (UTC+7)</p>
+<blockquote>
+<p>Đây là bộ kế hoạch giao việc. Chưa có source ứng dụng, bộ cài, bài đo hoặc test đã chạy. Mọi task bắt đầu ở TODO. ZIP này không phải bộ nộp cuối kỳ.</p>
+</blockquote>
+<h2>1. Khả thi, công suất và căn cứ</h2>
+<p><strong>Với giả định ban đầu 15 giờ/người/tuần, chưa đủ cơ sở cam kết toàn bộ phạm vi đã chốt.</strong> Từ 03 đến hết 31/10 chỉ có 29 ngày: tổng 186,43 giờ công cho 3 người; giữ 20% dự phòng còn <strong>149,14 giờ có thể giao việc</strong>. Không thể tính thành 5 × 7 ngày hoặc 225 giờ.</p>
+<p>Backlog đầy đủ bên dưới ước lượng <strong>246 giờ công</strong>, gồm học, tự test, review, tích hợp, viết tài liệu và thực nghiệm, chưa tính dự phòng. Để giữ tối thiểu 20% dự phòng cần 307,5 giờ gross, tương đương <strong>24,75 giờ/người/tuần</strong>. Lấy mốc lập kế hoạch <strong>25 giờ/người/tuần</strong> (khoảng 3,6 giờ/ngày bình quân), không coi nhóm đã đồng ý tăng giờ. Khi đó có 310,71 giờ gross và 64,71 giờ còn trống, bằng 20,83% công suất.</p>
+<p>Đây là <strong>ước lượng có điều kiện, độ tin cậy ban đầu thấp</strong>, vì nhóm chưa rõ kinh nghiệm JavaFX/Security/WS. 25 giờ cũng không bảo đảm hoàn thành; phải đo giờ thực tế ở chặng 1 và dự báo lại ngày 08/10. Không bù thiếu bằng làm thêm không ghi nhận hoặc bỏ test tính đúng.</p>
+<h3>Hai phương án công suất</h3>
+<table>
+<thead>
+<tr>
+<th>Phương án</th>
+<th align="right">Giờ giao việc cả nhóm</th>
+<th align="right">Dự phòng tối thiểu</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Giữ 15 giờ/người/tuần</td>
+<td align="right">Tối đa 149,14</td>
+<td align="right">37,29</td>
+<td>Chỉ cam kết prototype sớm và quyết định phạm vi lại; thiếu khoảng 96,86 giờ so với backlog đầy đủ</td>
+</tr>
+<tr>
+<td>Đề xuất 25 giờ/người/tuần</td>
+<td align="right">246,00</td>
+<td align="right">64,71 còn lại</td>
+<td>Kế hoạch 5 chặng dưới đây; cần xác nhận khả năng thực hiện của từng người</td>
+</tr>
+</tbody></table>
+<p>Nếu chỉ giữ 15 giờ: trong chặng 1 giới hạn khoảng 10 giờ/người cho login → process thật → event lưu DB → giám thị → thử package. Demo có thể phải lùi từ 06 sang 08/10 và chưa đủ mọi test lỗi. Không triển khai delta ở bản chính; xin thầy duyệt Reading + monitoring làm sản phẩm cơ sở, chuyển Listening thành spike/future work nếu cần. <strong>Đây là thay đổi phạm vi cần trao đổi, chưa tự coi là đã được duyệt.</strong> Chỉ cắt focus/đồ họa/admin nâng cao không tiết kiệm được 96,86 giờ, vì chúng vốn chưa có trong backlog. Nếu thầy vẫn yêu cầu Listening và nhóm không tăng giờ, lịch hiện tại chưa khả thi; phải thương lượng scope/thời hạn, không lập một cam kết giả.</p>
+<h3>Giả định giới hạn để giữ kế hoạch nhỏ</h3>
+<ul>
+<li>A/B/C là vai trò tạm; không gán Tài hoặc người khác khi chưa có thông tin. A mạnh backend hơn, B nhận JavaFX, C nhận monitoring; mỗi người vẫn có phần code/test/báo cáo riêng.</li>
+<li>Một OS mục tiêu trước (Windows x64 của nhóm), một ca thi mẫu, một đề Reading/Listening rút gọn khoảng 10–20 câu và audio ngắn. Không hứa đủ 200 câu hoặc chuẩn hóa điểm TOEIC chính thức; chấm số đúng/điểm nội bộ được mô tả rõ.</li>
+<li>Tối thiểu hai máy để kiểm chứng package/LAN; hướng tới 2 thí sinh + 1 giám thị thật. Có thể chạy nhiều instance trên cùng máy để tích hợp nhưng phải ghi topology.</li>
+<li>Java + JavaFX, Spring Boot chia module, PostgreSQL, Maven, HTTP/REST + WebSocket chuẩn/JSON, ProcessHandle polling giữ nguyên. Python chỉ phân tích nếu cần. Khóa phiên bản tương thích sau spike 03/10, không dùng kế hoạch này để khẳng định phiên bản đã kiểm thử.</li>
+<li>Không thêm React, C#, Python agent, broker, microservices, Kubernetes, webcam, USB, khóa OS, streaming audio hay AI chấm bài. Không xây editor đề phức tạp, đăng ký tài khoản công khai hoặc quản trị nhiều ca nâng cao.</li>
+<li>Dữ liệu đề/audio tự tạo hoặc được phép sử dụng. Chỉ thu metadata process cần chính sách; quyền đọc thiếu phải lộ rõ. Process bị quan sát là tín hiệu nghi vấn, không chứng minh người dùng gian lận.</li>
+</ul>
+<h3>Nguồn và cách sử dụng</h3>
+<table>
+<thead>
+<tr>
+<th>Nguồn trong <code>nguon/</code></th>
+<th>Nội dung có căn cứ</th>
+<th>Cách đưa vào kế hoạch</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Instruction.md §§1, 3, 5–9, 13, 16</td>
+<td>Network/concurrency/error handling; novelty có bằng chứng; báo cáo dạng paper; số liệu thật; tỷ trọng đề xuất</td>
+<td>Task có contract/test/evidence; báo cáo viết từng chặng. Không suy ra bảo đảm điểm A+</td>
+</tr>
+<tr>
+<td>Topics.md §4.6 và §§4.7–8</td>
+<td>Thi qua mạng thuộc ứng dụng Client–Server; chức năng là các ví dụ; trọng tâm vai trò mạng</td>
+<td>Không coi mọi dòng ví dụ là bắt buộc; không đưa queue vì nó xuất hiện trong ví dụ auto-grader</td>
+</tr>
+<tr>
+<td>README_mon_hoc.md</td>
+<td>Mẫu cấu trúc mô tả, build/run/test, contribution</td>
+<td>Là checklist điền theo sản phẩm thật, không giữ trạng thái Done/Passed mẫu</td>
+</tr>
+<tr>
+<td>Submission.md §§1–4, trích nguyên bản từ final-project(1).zip</td>
+<td>23:59 ngày 31/10/2026; báo cáo Compilatio; nguồn chạy được; Source/Report bàn giao lớp trưởng qua USB</td>
+<td>Lịch kết thúc trước hạn. Instruction còn nói Google Drive; hỏi lại kênh cuối, ưu tiên chuẩn bị bộ cụ thể theo Submission và không bỏ qua thông báo mới</td>
+</tr>
+<tr>
+<td>Transcript phần I [00:44], [03:17–04:44], [30:28–31:01]</td>
+<td>Thu hẹp lời hứa recovery; giám sát hành vi; prototype login/detect tuần sau; nghiên cứu so sánh phương pháp</td>
+<td>Demo mạng/monitoring sớm, giới hạn quan sát công khai, note khảo sát từ chặng 1</td>
+</tr>
+<tr>
+<td>Transcript phần II (trang 12–17)</td>
+<td>Định hướng tổng hợp do người biên soạn trình bày</td>
+<td>Chỉ tham khảo, không biến thành nguyên văn hoặc yêu cầu bắt buộc của thầy</td>
+</tr>
+<tr>
+<td>Yeu_cau_lap_ke_hoach.txt và quyết định đã chốt trong cuộc trao đổi</td>
+<td>Stack, 3 hợp đồng, 3 sửa đổi cuối, cách phân công</td>
+<td>Là ràng buộc của nhóm; được chuẩn hóa tại 02_HOP_DONG.md</td>
+</tr>
+</tbody></table>
+<p>Rubric được Instruction gọi là <strong>“Đánh giá đề xuất”</strong>: problem/functionality 20%, network/implementation 25%, novelty 15%, experiment 15%, report 10%, demo 15%. Do đó ưu tiên giao tiếp đúng và có số liệu, không đầu tư giao diện phụ để thay đóng góp kỹ thuật.</p>
+<h3>Ba thông tin cần nhóm xác nhận trong 03/10</h3>
+<ol>
+<li>Mỗi người thực sự dành được bao nhiêu giờ/tuần, ai đã từng làm JavaFX/Spring/SQL transaction? Dựa vào đó gán tên vào A/B/C và duyệt hoặc giảm backlog 246 giờ.</li>
+<li>Gặp thầy ngày/giờ nào trong tuần 05–11/10, có ít nhất hai máy Windows để thử và trình diễn không?</li>
+<li>Thầy chấp nhận phạm vi TOEIC rút gọn, hướng đóng góp protocol/polling và chính sách Listening gián đoạn này chưa; kênh nộp cuối dùng Submission/USB hay bổ sung Drive?</li>
+</ol>
+<p>Kế hoạch vẫn có thể dùng ngay trong khi chờ trả lời. Các ô chưa xác nhận giữ trạng thái “chưa xác nhận”, không thay bằng một giả định đã được phê duyệt.</p>
+<h2>2. Lịch 5 tuần/chặng theo ngày thực tế</h2>
+<p><strong>“Tuần 1–5” là nhãn chặng, không phải năm tuần trọn vẹn.</strong> P0 = tính đúng/demo cốt lõi; P1 = hoàn thiện phạm vi và bằng chứng; P2 = ứng viên cải tiến có thể loại khỏi release.</p>
+<table>
+<thead>
+<tr>
+<th>Chặng</th>
+<th>Ngày (2026)</th>
+<th>Mục tiêu/đầu ra tích hợp</th>
+<th>Điều kiện qua</th>
+<th>Ưu tiên</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tuần 1</td>
+<td>03–08/10 (6 ngày)</td>
+<td>Prototype login hai role, WS xác thực, process thật, event DB, dashboard, heartbeat; package và spike audio</td>
+<td>Luồng nhỏ mục tiêu 06/10; ngày 08/10 chạy trên máy khác, replay event không trùng, mất heartbeat hiển thị UNKNOWN</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Tuần 2</td>
+<td>09–15/10 (7 ngày)</td>
+<td>Reading rút gọn, import, full snapshot, autosave/submit/timeout và phiên ghi</td>
+<td>End-to-end + AT01–AT11; khóa qua deadline, request phiên cũ và revision đảo thứ tự đều đúng</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Tuần 3</td>
+<td>16–22/10 (7 ngày)</td>
+<td>Listening chính sách giới hạn; thử delta; installer</td>
+<td>Gate delta ngày 20/10; audio lỗi/reconnect không tự replay; full snapshot luôn có đường chạy ổn định</td>
+<td>P0 cho correctness; P1 Listening; P2 delta</td>
+</tr>
+<tr>
+<td>Tuần 4</td>
+<td>23–27/10 (5 ngày)</td>
+<td>Thực nghiệm tái lập, nhiều client, regression, báo cáo Results/Discussion</td>
+<td>Có raw/config/SHA và tách giả lập/desktop; claim khớp bằng chứng; 27/10 đóng băng chức năng</td>
+<td>P1; sửa lỗi P0</td>
+</tr>
+<tr>
+<td>Tuần 5</td>
+<td>28–31/10 (4 ngày)</td>
+<td>Máy sạch, báo cáo cuối/Compilatio, luyện demo, bàn giao</td>
+<td>Mục tiêu giao 30/10; ngày 31 buffer; bộ Source/Report chạy được và đã nhận trước 23:59</td>
+<td>P0</td>
+</tr>
+</tbody></table>
+<h2>3. Phân công chi tiết: một backlog duy nhất</h2>
+<p>A sở hữu nghiệp vụ/DB và server network. B sở hữu JavaFX, adapter mạng client, UI giám thị, audio/đóng gói. C sở hữu <strong>cả collector lẫn module đồng bộ monitoring phía server</strong>, replayer và định nghĩa phép đo. Nhờ đó A không phải viết mọi endpoint; B nhận chạy polling, A chạy tải và tranh chấp, C chạy so sánh truyền dữ liệu.</p>
+<p>Giờ của task gồm học cần thiết, triển khai, tự test và ghi note ngắn. Giờ reviewer không gộp ẩn vào owner: mỗi người có task <code>Tn-xR</code> 2 giờ/chặng. Trong đó 1 giờ review, 1 giờ phân cho contract/checkpoint tích hợp; buổi tích hợp 15 phút với 3 người tiêu tốn 0,75 giờ công. Reviewer luân vòng: C xem A, A xem B, B xem C. Task báo cáo, đo và package có giờ riêng; nếu tự test/review không đủ, dùng dự phòng và cập nhật forecast.</p>
+<p>“Contract đầu buổi” nghĩa là producer cung cấp mẫu trước khi hoàn thành implementation; người dùng contract làm với fixture ghi rõ MOCK và phải nối thật trước gate. Không lấy fixture làm bằng chứng đã tích hợp.</p>
+<h3>Tuần/chặng 1</h3>
+<table>
+<thead>
+<tr>
+<th>Mã</th>
+<th>Công việc / đầu ra</th>
+<th>Owner → Review</th>
+<th align="right">Giờ owner</th>
+<th>Phụ thuộc</th>
+<th>Nghiệm thu quan sát được</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T1-A1</td>
+<td>Khởi tạo server, DB và tài khoản mẫu</td>
+<td>A → C</td>
+<td align="right">4</td>
+<td>—</td>
+<td>Maven build được; schema khởi tạo lại được; login đúng/sai trả kết quả; ghi phiên bản môi trường. Bao gồm học cấu hình Spring/DB.</td>
+</tr>
+<tr>
+<td>T1-A2</td>
+<td>Xác thực REST và WebSocket</td>
+<td>A → C</td>
+<td align="right">4</td>
+<td>T1-A1; T1-C1 (contract đầu buổi)</td>
+<td>Token/phiên gắn người dùng; WS thiếu/sai credential bị từ chối; kiểm tra role và attempt scope cho message; không ghi token vào log.</td>
+</tr>
+<tr>
+<td>T1-A3</td>
+<td>Lưu event và đẩy cảnh báo giám thị</td>
+<td>A → C</td>
+<td align="right">4</td>
+<td>T1-A2; T1-C1</td>
+<td>EventId chống trùng; commit rồi ACK/push; giám thị lấy lại timeline sau reconnect; lỗi DB không báo lưu thành công.</td>
+</tr>
+<tr>
+<td>T1-A4</td>
+<td>Presence và tích hợp prototype</td>
+<td>A → C</td>
+<td align="right">3</td>
+<td>T1-A2; T1-B2</td>
+<td>Heartbeat timeout chuyển UNKNOWN; lưu lastSeen/detectedAt; ngắt một client không làm client khác chết; chốt luồng demo và log server.</td>
+</tr>
+<tr>
+<td>T1-AR</td>
+<td>Review chéo phần B, chốt contract và tích hợp ngắn</td>
+<td>A → C</td>
+<td align="right">2</td>
+<td>Các đầu ra T1-B* theo buổi; không chờ hết chặng</td>
+<td>A ghi nhận review có bằng chứng cho phần B; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của A đã nằm ở đây.</td>
+</tr>
+<tr>
+<td>T1-B1</td>
+<td>JavaFX shell, login, hai role</td>
+<td>B → A</td>
+<td align="right">4</td>
+<td>T1-A1 (contract login đầu buổi)</td>
+<td>Hai tài khoản mở đúng giao diện; lỗi login hiển thị; tác vụ HTTP không chặn UI; bao gồm học JavaFX và callback.</td>
+</tr>
+<tr>
+<td>T1-B2</td>
+<td>Adapter mạng, heartbeat và khóa UI</td>
+<td>B → A</td>
+<td align="right">4</td>
+<td>T1-B1; T1-A2 (contract sớm)</td>
+<td>WS xác thực được; reconnect có giới hạn/backoff; khi phát hiện mất kết nối khóa thao tác; đóng app hủy worker; test bằng server thật.</td>
+</tr>
+<tr>
+<td>T1-B3</td>
+<td>Màn giám thị tối thiểu</td>
+<td>B → A</td>
+<td align="right">4</td>
+<td>T1-B2; T1-A3</td>
+<td>Danh sách thí sinh, ONLINE/UNKNOWN, timeline; cảnh báo theo eventId không nhân đôi; trạng thái stale hiển thị riêng; nối collector qua interface.</td>
+</tr>
+<tr>
+<td>T1-B4</td>
+<td>Spike đóng gói Windows và audio</td>
+<td>B → A</td>
+<td align="right">3</td>
+<td>T1-B1; T1-B2</td>
+<td>Ưu tiên tạo app-image có runtime; chạy login/cảnh báo trên máy thứ hai; thử audio mẫu. Ghi codec/đường dẫn lỗi; installer hoàn thiện ở T3-B5.</td>
+</tr>
+<tr>
+<td>T1-BR</td>
+<td>Review chéo phần C, chốt contract và tích hợp ngắn</td>
+<td>B → A</td>
+<td align="right">2</td>
+<td>Các đầu ra T1-C* theo buổi; không chờ hết chặng</td>
+<td>B ghi nhận review có bằng chứng cho phần C; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của B đã nằm ở đây.</td>
+</tr>
+<tr>
+<td>T1-C1</td>
+<td>Chốt message v0 và khảo sát ProcessHandle</td>
+<td>C → B</td>
+<td align="right">4</td>
+<td>—</td>
+<td>Trong giờ đầu phát mẫu login/event/heartbeat; thử process bình thường trên máy đích; ghi trường bị thiếu/quyền hạn. Contract dùng MOCK ghi nhãn rõ.</td>
+</tr>
+<tr>
+<td>T1-C2</td>
+<td>Collector polling chạy ngoài UI</td>
+<td>C → B</td>
+<td align="right">4</td>
+<td>T1-C1</td>
+<td>Quét mặc định 1.000 ms; nhận diện tập process theo policy; thử mở/đóng ứng dụng kiểm soát; không chạy collector trên role giám thị; có start/stop sạch.</td>
+</tr>
+<tr>
+<td>T1-C3</td>
+<td>Event, retry và queue có giới hạn</td>
+<td>C → B</td>
+<td align="right">4</td>
+<td>T1-C2; T1-B2 (interface); T1-A3</td>
+<td>EventId ổn định qua retry; một lần xuất hiện không tạo cảnh báo ở mọi poll; queue tràn được ghi nhận; gửi vào server thật, không chỉ in console.</td>
+</tr>
+<tr>
+<td>T1-C4</td>
+<td>Log đo và note lựa chọn monitoring</td>
+<td>C → B</td>
+<td align="right">3</td>
+<td>T1-C1; T1-C3</td>
+<td>Có schema log, bộ đếm payload hai chiều và traceId; bảng ít nhất 2 cách thu thập từ tài liệu chính thức, phân biệt khảo sát với cách đã chạy; chưa ghi số đo giả.</td>
+</tr>
+<tr>
+<td>T1-CR</td>
+<td>Review chéo phần A, chốt contract và tích hợp ngắn</td>
+<td>C → B</td>
+<td align="right">2</td>
+<td>Các đầu ra T1-A* theo buổi; không chờ hết chặng</td>
+<td>C ghi nhận review có bằng chứng cho phần A; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của C đã nằm ở đây.</td>
+</tr>
+</tbody></table>
+<h3>Tuần/chặng 2</h3>
+<table>
+<thead>
+<tr>
+<th>Mã</th>
+<th>Công việc / đầu ra</th>
+<th>Owner → Review</th>
+<th align="right">Giờ owner</th>
+<th>Phụ thuộc</th>
+<th>Nghiệm thu quan sát được</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T2-A1</td>
+<td>Import JSON và mở ca thi</td>
+<td>A → C</td>
+<td align="right">4</td>
+<td>T1-A2</td>
+<td>Kiểm tra ID trùng, đáp án thuộc câu, nhóm Reading/audio manifest; request của giám thị tạo được ca mẫu; không phát đáp án đúng xuống client.</td>
+</tr>
+<tr>
+<td>T2-A2</td>
+<td>Autosave full answers theo revision</td>
+<td>A → C</td>
+<td align="right">4</td>
+<td>T2-A1</td>
+<td>Khóa attempt; kiểm tra quyền/writerEpoch/clock_timestamp sau khóa; cùng revision khác nội dung bị từ chối; ACK sau commit; hoàn tất AT03–AT05.</td>
+</tr>
+<tr>
+<td>T2-A3</td>
+<td>Submit, timeout và chấm điểm một lần</td>
+<td>A → C</td>
+<td align="right">4</td>
+<td>T2-A2</td>
+<td>Submit mang answers cuối; timeout dùng cùng khóa; committed result bất biến; kiểm thử AT06–AT08; câu sai/trống có quy tắc chấm rõ.</td>
+</tr>
+<tr>
+<td>T2-A4</td>
+<td>Phiên ghi và kiểm thử tranh chấp PostgreSQL</td>
+<td>A → C</td>
+<td align="right">4</td>
+<td>T2-A2; T2-A3</td>
+<td>Chuyển writerEpoch dùng cùng khóa; request cũ đang đợi không ghi sau phiên mới; AT01/AT07/AT09/AT10 trên PostgreSQL thật, dùng barrier/latch để tái lập.</td>
+</tr>
+<tr>
+<td>T2-A5</td>
+<td>Tài liệu giao dịch và bằng chứng quyền</td>
+<td>A → C</td>
+<td align="right">2</td>
+<td>T2-A4</td>
+<td>Ghi flow lưu/nộp/hết giờ, mẫu response, log decisionAt/savedRevision; giải thích lock wait và cache chống trùng không bỏ qua authorization.</td>
+</tr>
+<tr>
+<td>T2-AR</td>
+<td>Review chéo phần B, chốt contract và tích hợp ngắn</td>
+<td>A → C</td>
+<td align="right">2</td>
+<td>Các đầu ra T2-B* theo buổi; không chờ hết chặng</td>
+<td>A ghi nhận review có bằng chứng cho phần B; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của A đã nằm ở đây.</td>
+</tr>
+<tr>
+<td>T2-B1</td>
+<td>Reading theo nhóm đoạn văn/câu hỏi</td>
+<td>B → A</td>
+<td align="right">4</td>
+<td>T2-A1 (schema trước triển khai)</td>
+<td>Hiển thị đề mẫu, chọn/đổi/xóa đáp án; một model answers chuẩn; không có correctOption trong DTO client; giao diện xử lý đề sai hợp lý.</td>
+</tr>
+<tr>
+<td>T2-B2</td>
+<td>Autosave model và trạng thái lưu</td>
+<td>B → A</td>
+<td align="right">4</td>
+<td>T2-B1; T2-A2 (contract)</td>
+<td>Revision tăng theo thay đổi; debounce có cấu hình; hiển thị đã lưu/chờ/lỗi theo ACK; snapshot bất biến cho retry; UI không đơ khi request chậm.</td>
+</tr>
+<tr>
+<td>T2-B3</td>
+<td>Nộp và đồng hồ thi phía client</td>
+<td>B → A</td>
+<td align="right">4</td>
+<td>T2-B2; T2-A3</td>
+<td>Khóa chỉnh sửa khi nộp; payload cuối cố định; retry nguyên ID/revision/answers; nhận trạng thái đã chốt; hết giờ UI không tự kéo dài deadline server.</td>
+</tr>
+<tr>
+<td>T2-B4</td>
+<td>Reconnect Reading và mở lại ứng dụng</td>
+<td>B → A</td>
+<td align="right">4</td>
+<td>T2-B3; T2-A4</td>
+<td>Cùng writer còn hợp lệ không giảm revision; khác writer bắt đầu từ answers/revision/state server; test trường hợp server 40/client 42; xung đột có thông báo.</td>
+</tr>
+<tr>
+<td>T2-B5</td>
+<td>Tiến độ trên giám thị và note UX</td>
+<td>B → A</td>
+<td align="right">2</td>
+<td>T2-B4; T1-B3</td>
+<td>Màn giám thị hiển thị tiến độ đã được server xác nhận; trạng thái chờ lưu không bị gọi là đã lưu; ảnh/log minh họa luồng thật.</td>
+</tr>
+<tr>
+<td>T2-BR</td>
+<td>Review chéo phần C, chốt contract và tích hợp ngắn</td>
+<td>B → A</td>
+<td align="right">2</td>
+<td>Các đầu ra T2-C* theo buổi; không chờ hết chặng</td>
+<td>B ghi nhận review có bằng chứng cho phần C; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của B đã nằm ở đây.</td>
+</tr>
+<tr>
+<td>T2-C1</td>
+<td>Full snapshot baseline v1</td>
+<td>C → B</td>
+<td align="right">4</td>
+<td>T1-C3; T1-A4</td>
+<td>Cài server handler monitoring trong module riêng do C sở hữu; epoch đầu yêu cầu full; phạm vi process giống bản delta; state không viết lại lịch sử event.</td>
+</tr>
+<tr>
+<td>T2-C2</td>
+<td>Heartbeat, event muộn và khoảng trống</td>
+<td>C → B</td>
+<td align="right">4</td>
+<td>T2-C1</td>
+<td>Kill client dẫn tới UNKNOWN; event đến muộn chỉ thêm lịch sử; snapshot mới không xóa gap; queue tràn có counter; test MT01/MT07/MT08.</td>
+</tr>
+<tr>
+<td>T2-C3</td>
+<td>Recorder/replayer và oracle trạng thái</td>
+<td>C → B</td>
+<td align="right">4</td>
+<td>T2-C1</td>
+<td>Replay trace nhỏ biết kết quả; canonical state và event set xác định; hỗ trợ duplicate/reorder/gap; tool chạy headless, ghi rõ không phải desktop thật.</td>
+</tr>
+<tr>
+<td>T2-C4</td>
+<td>Lịch phát process thử nghiệm và kiểm tra quan sát</td>
+<td>C → B</td>
+<td align="right">4</td>
+<td>T2-C3</td>
+<td>Harness ghi launch/exit và mốc đơn điệu; process sống ngắn/dài, lịch lệch pha; thử ground truth; log cả process không đọc đủ metadata, không tính là sạch.</td>
+</tr>
+<tr>
+<td>T2-C5</td>
+<td>Ghi phương pháp baseline và protocol</td>
+<td>C → B</td>
+<td align="right">2</td>
+<td>T2-C2; T2-C4</td>
+<td>Ghi policyVersion, process key, scope đo, giới hạn quyền/PID reuse; đầu vào benchmark và định nghĩa miss/latency sẵn để review.</td>
+</tr>
+<tr>
+<td>T2-CR</td>
+<td>Review chéo phần A, chốt contract và tích hợp ngắn</td>
+<td>C → B</td>
+<td align="right">2</td>
+<td>Các đầu ra T2-A* theo buổi; không chờ hết chặng</td>
+<td>C ghi nhận review có bằng chứng cho phần A; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của C đã nằm ở đây.</td>
+</tr>
+</tbody></table>
+<h3>Tuần/chặng 3</h3>
+<table>
+<thead>
+<tr>
+<th>Mã</th>
+<th>Công việc / đầu ra</th>
+<th>Owner → Review</th>
+<th align="right">Giờ owner</th>
+<th>Phụ thuộc</th>
+<th>Nghiệm thu quan sát được</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T3-A1</td>
+<td>API tài nguyên audio và READY</td>
+<td>A → C</td>
+<td align="right">4</td>
+<td>T2-A1; T1-B4</td>
+<td>Manifest kích thước/checksum; resource chỉ cấp cho ca được phép; READY được kiểm tra; ca chưa đủ điều kiện không start; không đưa khóa chấm vào gói tài nguyên.</td>
+</tr>
+<tr>
+<td>T3-A2</td>
+<td>Start/gián đoạn Listening và lượt thi mới</td>
+<td>A → C</td>
+<td align="right">4</td>
+<td>T3-A1; T2-A3</td>
+<td>Server phát lệnh start có ID; không tự start lại khi retry; nhận gián đoạn, giữ dữ liệu lượt cũ; tạo lượt mới có quyền giám thị; deadline cũ không tăng.</td>
+</tr>
+<tr>
+<td>T3-A3</td>
+<td>Hỗ trợ điểm tích hợp delta và lỗi server</td>
+<td>A → C</td>
+<td align="right">4</td>
+<td>T2-A4; T2-C1</td>
+<td>Cung cấp epoch/persistence hook; phối hợp reconnect khi server restart; lỗi DB không ACK thành công; review scope auth của state/event; không xây lại collector của C.</td>
+</tr>
+<tr>
+<td>T3-A4</td>
+<td>Regression giao dịch và nhiều client</td>
+<td>A → C</td>
+<td align="right">4</td>
+<td>T3-A2; T3-A3; T3-C4</td>
+<td>Hai thí sinh + giám thị; gửi chéo attempt bị chặn; đồng thời save/submit/timeout; WS malformed không ảnh hưởng client khác; log tái lập được.</td>
+</tr>
+<tr>
+<td>T3-A5</td>
+<td>Báo cáo network/concurrency</td>
+<td>A → C</td>
+<td align="right">2</td>
+<td>T3-A4</td>
+<td>Bản nháp architecture, communication, authorization và transaction; giải thích rõ framework cung cấp gì, nhóm tự làm gì; gắn evidence thật.</td>
+</tr>
+<tr>
+<td>T3-AR</td>
+<td>Review chéo phần B, chốt contract và tích hợp ngắn</td>
+<td>A → C</td>
+<td align="right">2</td>
+<td>Các đầu ra T3-B* theo buổi; không chờ hết chặng</td>
+<td>A ghi nhận review có bằng chứng cho phần B; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của A đã nằm ở đây.</td>
+</tr>
+<tr>
+<td>T3-B1</td>
+<td>Tải audio, checksum và thử loa</td>
+<td>B → A</td>
+<td align="right">4</td>
+<td>T1-B4; T3-A1 (contract)</td>
+<td>File thiếu/hỏng chặn READY; đường dẫn có dấu/khoảng trắng thử trong package; có audio mẫu trước thi; task mạng/tệp ngoài UI.</td>
+</tr>
+<tr>
+<td>T3-B2</td>
+<td>Phát Listening từ lệnh server</td>
+<td>B → A</td>
+<td align="right">4</td>
+<td>T3-B1; T3-A2</td>
+<td>Start ID trùng không phát lại; ghi local playbackStarted; đoạn nghe và câu hỏi khớp; chỉ mô phỏng phạm vi đã chọn, không hứa đồng bộ audio tuyệt đối.</td>
+</tr>
+<tr>
+<td>T3-B3</td>
+<td>Gián đoạn và phục hồi UI đúng chính sách</td>
+<td>B → A</td>
+<td align="right">4</td>
+<td>T3-B2; T2-B4</td>
+<td>Mất kết nối đã phát hiện/lỗi player: dừng, khóa, ghi interrupted; reconnect/mở lại không tự tiếp tục hoặc nghe lại; không ảnh hưởng chính sách Reading.</td>
+</tr>
+<tr>
+<td>T3-B4</td>
+<td>UI giám thị điều khiển ca tối thiểu</td>
+<td>B → A</td>
+<td align="right">4</td>
+<td>T3-B3; T3-A2</td>
+<td>Import/tạo ca, READY, start, xem kết quả và đánh dấu lượt cần tổ chức lại; các quyền bị kiểm tra server; không thêm quản trị ngân hàng câu hỏi.</td>
+</tr>
+<tr>
+<td>T3-B5</td>
+<td>Installer và audio trên máy thứ hai</td>
+<td>B → A</td>
+<td align="right">2</td>
+<td>T3-B4</td>
+<td>Đóng gói runtime/tài nguyên; thử cài/gỡ/chạy không IDE; ghi build SHA và OS; lỗi đóng gói phải có ticket, không gọi app-image là installer đã xong.</td>
+</tr>
+<tr>
+<td>T3-BR</td>
+<td>Review chéo phần C, chốt contract và tích hợp ngắn</td>
+<td>B → A</td>
+<td align="right">2</td>
+<td>Các đầu ra T3-C* theo buổi; không chờ hết chặng</td>
+<td>B ghi nhận review có bằng chứng cho phần C; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của B đã nằm ở đây.</td>
+</tr>
+<tr>
+<td>T3-C1</td>
+<td>Encoder delta phía collector</td>
+<td>C → B</td>
+<td align="right">4</td>
+<td>T2-C1; T2-C3</td>
+<td>Sequence/baseSequence, state theo epoch; delta từ đúng base; snapshot đối soát chung lịch; cùng policy/scope với baseline; encoder có test trace nhỏ.</td>
+</tr>
+<tr>
+<td>T3-C2</td>
+<td>Reducer delta phía server</td>
+<td>C → B</td>
+<td align="right">4</td>
+<td>T3-C1; T3-A3 (hook trước)</td>
+<td>Áp dụng tuần tự; duplicate không áp dụng lại; thiếu chuỗi UNSYNCED; snapshot mới không bị delta cũ sửa; C tự viết handler/test module monitoring.</td>
+</tr>
+<tr>
+<td>T3-C3</td>
+<td>Replay độ đúng và faults</td>
+<td>C → B</td>
+<td align="right">4</td>
+<td>T3-C2; T2-C3</td>
+<td>MT02–MT06 pass với message trùng/thiếu/đảo thứ tự/reconnect; so state và event set theo version; ít đổi/nhiều đổi/reconnect đều có trace.</td>
+</tr>
+<tr>
+<td>T3-C4</td>
+<td>Thử tích hợp delta rồi quyết định giữ/cắt</td>
+<td>C → B</td>
+<td align="right">4</td>
+<td>T3-C3; T3-A3</td>
+<td>Chạy live hai desktop; stale epoch, mất ACK, client restart; chốt gate ngày 20/10. Nếu fail, phần giờ còn lại ổn định full snapshot và lưu failure trace.</td>
+</tr>
+<tr>
+<td>T3-C5</td>
+<td>Báo cáo đồng bộ và giới hạn</td>
+<td>C → B</td>
+<td align="right">2</td>
+<td>T3-C4</td>
+<td>Ghi state/event tách biệt, gap không phục hồi, baseline fallback; nếu gate fail ghi rõ delta là thử nghiệm, không mô tả production-ready.</td>
+</tr>
+<tr>
+<td>T3-CR</td>
+<td>Review chéo phần A, chốt contract và tích hợp ngắn</td>
+<td>C → B</td>
+<td align="right">2</td>
+<td>Các đầu ra T3-A* theo buổi; không chờ hết chặng</td>
+<td>C ghi nhận review có bằng chứng cho phần A; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của C đã nằm ở đây.</td>
+</tr>
+</tbody></table>
+<h3>Tuần/chặng 4</h3>
+<table>
+<thead>
+<tr>
+<th>Mã</th>
+<th>Công việc / đầu ra</th>
+<th>Owner → Review</th>
+<th align="right">Giờ owner</th>
+<th>Phụ thuộc</th>
+<th>Nghiệm thu quan sát được</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T4-A1</td>
+<td>Chạy bộ tranh chấp và lỗi persistence</td>
+<td>A → C</td>
+<td align="right">4</td>
+<td>T3-A4</td>
+<td>Lưu kết quả AT01–AT11 cùng fixture/seed; kiểm tra DB failure và timeout; sửa lỗi trong phạm vi đã có, không mở chức năng.</td>
+</tr>
+<tr>
+<td>T4-A2</td>
+<td>Đo tải 1/5/10 client giả lập</td>
+<td>A → C</td>
+<td align="right">4</td>
+<td>T4-A1; T3-C4</td>
+<td>Ba lần lặp mỗi mức, log thông số máy; concurrency/error/RTT/server CPU-memory; dừng tăng tải khi lỗi, không gọi 10 client giả là 10 desktop.</td>
+</tr>
+<tr>
+<td>T4-A3</td>
+<td>Phân tích server và viết phần phương pháp</td>
+<td>A → C</td>
+<td align="right">4</td>
+<td>T4-A2; T3-A5</td>
+<td>Bảng kết quả thật, cấu hình test, giải thích giao dịch/chờ khóa; rà quyền khi final và retry cache; ghi nguồn thư viện/kế thừa.</td>
+</tr>
+<tr>
+<td>T4-AR</td>
+<td>Review chéo phần B, chốt contract và tích hợp ngắn</td>
+<td>A → C</td>
+<td align="right">2</td>
+<td>Các đầu ra T4-B* theo buổi; không chờ hết chặng</td>
+<td>A ghi nhận review có bằng chứng cho phần B; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của A đã nằm ở đây.</td>
+</tr>
+<tr>
+<td>T4-B1</td>
+<td>Regression desktop trên máy khác</td>
+<td>B → A</td>
+<td align="right">4</td>
+<td>T3-B5; T3-A4</td>
+<td>Installer, Reading, Listening, restart và ngắt mạng; log UI/audio, OS và build; AT11, LT01–LT04, IT01–IT04.</td>
+</tr>
+<tr>
+<td>T4-B2</td>
+<td>Chạy polling benchmark với C cung cấp harness</td>
+<td>B → A</td>
+<td align="right">4</td>
+<td>T4-B1; T4-C1</td>
+<td>4 chu kỳ, 3 lần lặp, cùng kịch bản/pha khởi chạy; B chịu trách nhiệm chạy desktop thật và lưu raw; C review phương pháp trong slot review.</td>
+</tr>
+<tr>
+<td>T4-B3</td>
+<td>Viết Implementation và hướng dẫn chạy</td>
+<td>B → A</td>
+<td align="right">4</td>
+<td>T4-B1; T3-B4</td>
+<td>Ảnh màn hình từ bản thật; README cài/run/test và chính sách gián đoạn; phần nhóm câu Reading/audio; video dự phòng có ngày/build rõ.</td>
+</tr>
+<tr>
+<td>T4-BR</td>
+<td>Review chéo phần C, chốt contract và tích hợp ngắn</td>
+<td>B → A</td>
+<td align="right">2</td>
+<td>Các đầu ra T4-C* theo buổi; không chờ hết chặng</td>
+<td>B ghi nhận review có bằng chứng cho phần C; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của B đã nằm ở đây.</td>
+</tr>
+<tr>
+<td>T4-C1</td>
+<td>Chốt bộ dữ liệu và kiểm tra phép đo</td>
+<td>C → B</td>
+<td align="right">4</td>
+<td>T2-C4; T3-C4</td>
+<td>Kiểm checksum traces, encoder/tổng byte, run metadata, CPU normalization; warmup/seed/lịch snapshot; giao harness polling cho B trước 24/10.</td>
+</tr>
+<tr>
+<td>T4-C2</td>
+<td>Chạy full-vs-delta hoặc benchmark baseline</td>
+<td>C → B</td>
+<td align="right">4</td>
+<td>T4-C1</td>
+<td>Gate pass: 2 mode x 3 trace x 3 lần; correctness trước efficiency; gate fail: full/reconnect và bảng lỗi delta, không so hiệu suất như bản đúng.</td>
+</tr>
+<tr>
+<td>T4-C3</td>
+<td>Phân tích monitoring và đóng góp</td>
+<td>C → B</td>
+<td align="right">4</td>
+<td>T4-C2; T4-B2</td>
+<td>Tách state bytes/tổng bytes, polling miss và chi phí; vẽ biểu đồ từ raw; kết luận cả trường hợp delta không lợi; bảng contribution-evidence không tự bảo đảm novelty.</td>
+</tr>
+<tr>
+<td>T4-CR</td>
+<td>Review chéo phần A, chốt contract và tích hợp ngắn</td>
+<td>C → B</td>
+<td align="right">2</td>
+<td>Các đầu ra T4-A* theo buổi; không chờ hết chặng</td>
+<td>C ghi nhận review có bằng chứng cho phần A; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của C đã nằm ở đây.</td>
+</tr>
+</tbody></table>
+<h3>Tuần/chặng 5</h3>
+<table>
+<thead>
+<tr>
+<th>Mã</th>
+<th>Công việc / đầu ra</th>
+<th>Owner → Review</th>
+<th align="right">Giờ owner</th>
+<th>Phụ thuộc</th>
+<th>Nghiệm thu quan sát được</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T5-A1</td>
+<td>Ghép và rà báo cáo kỹ thuật</td>
+<td>A → C</td>
+<td align="right">3</td>
+<td>T4-A3; T4-B3; T4-C3</td>
+<td>Ghép phần A/B/C theo Instruction mục 8; thống nhất các claim với số liệu; Abstract/Conclusion viết sau Results; không tự điền kết quả chưa đo.</td>
+</tr>
+<tr>
+<td>T5-A2</td>
+<td>Compilatio và rà trích dẫn</td>
+<td>A → C</td>
+<td align="right">3</td>
+<td>T5-A1</td>
+<td>Nộp bản báo cáo qua tài khoản nhóm, lưu kết quả; xử lý nguồn/trích dẫn đúng; dùng ngưỡng theo tài liệu môn; không lách kiểm tra. Thời gian chờ hệ thống không tính giờ công.</td>
+</tr>
+<tr>
+<td>T5-A3</td>
+<td>Chốt gói và bàn giao trước hạn</td>
+<td>A → C</td>
+<td align="right">3</td>
+<td>T5-A2; T5-B2; T5-C2</td>
+<td>Tên Source/Report, đúng bản Compilatio, danh sách file và checksum; bàn giao lớp trưởng ngày 30/10 mục tiêu; 31/10 chỉ buffer có xác nhận nhận file.</td>
+</tr>
+<tr>
+<td>T5-AR</td>
+<td>Review chéo phần B, chốt contract và tích hợp ngắn</td>
+<td>A → C</td>
+<td align="right">2</td>
+<td>Các đầu ra T5-B* theo buổi; không chờ hết chặng</td>
+<td>A ghi nhận review có bằng chứng cho phần B; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của A đã nằm ở đây.</td>
+</tr>
+<tr>
+<td>T5-B1</td>
+<td>Máy sạch theo README</td>
+<td>B → A</td>
+<td align="right">3</td>
+<td>T4-B3; T5-A1</td>
+<td>Người thử không dựa IDE; build server, DB, cài client, login/thi/monitoring; ghi bước lỗi và sửa hướng dẫn; không coi máy cùng tác giả đã cài sẵn là máy sạch.</td>
+</tr>
+<tr>
+<td>T5-B2</td>
+<td>Chốt release client và tài nguyên</td>
+<td>B → A</td>
+<td align="right">3</td>
+<td>T5-B1</td>
+<td>Installer/app runtime, đề/audio hợp lệ, cấu hình mẫu; checksum, phiên bản; bỏ credential thật và đường dẫn cá nhân; chạy smoke sau lần đóng gói cuối.</td>
+</tr>
+<tr>
+<td>T5-B3</td>
+<td>Luyện demo và bảo vệ client/network</td>
+<td>B → A</td>
+<td align="right">3</td>
+<td>T5-B2; T5-A1</td>
+<td>Kịch bản 5–7 phút, thao tác thật, video dự phòng; B giải thích UI threads/audio/revision; A giải thích flow B, C hỏi lỗi phiên để review chéo.</td>
+</tr>
+<tr>
+<td>T5-BR</td>
+<td>Review chéo phần C, chốt contract và tích hợp ngắn</td>
+<td>B → A</td>
+<td align="right">2</td>
+<td>Các đầu ra T5-C* theo buổi; không chờ hết chặng</td>
+<td>B ghi nhận review có bằng chứng cho phần C; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của B đã nằm ở đây.</td>
+</tr>
+<tr>
+<td>T5-C1</td>
+<td>Tái lập một run và kiểm tra evidence</td>
+<td>C → B</td>
+<td align="right">3</td>
+<td>T4-C3</td>
+<td>Từ command/seed tạo lại một trace/run, đối chiếu định nghĩa metric; không yêu cầu số hiệu năng giống tuyệt đối; khóa raw và đánh dấu excluded run có lý do.</td>
+</tr>
+<tr>
+<td>T5-C2</td>
+<td>Rà contribution và mục giới hạn</td>
+<td>C → B</td>
+<td align="right">3</td>
+<td>T5-C1; T5-A1</td>
+<td>Mỗi claim trỏ test/log/chart/SHA; đối chiếu nguồn trực tiếp với phần tổng hợp; riêng delta fail không tuyên bố đã tối ưu; hoàn thiện phụ lục protocol.</td>
+</tr>
+<tr>
+<td>T5-C3</td>
+<td>Luyện bảo vệ monitoring và luồng chung</td>
+<td>C → B</td>
+<td align="right">3</td>
+<td>T5-C2; T5-B3</td>
+<td>C giải thích bỏ sót polling, state/history, ACK/epoch/bytes; A và B lần lượt giải thích lại; lưu câu chưa trả lời và sửa trước chốt gói.</td>
+</tr>
+<tr>
+<td>T5-CR</td>
+<td>Review chéo phần A, chốt contract và tích hợp ngắn</td>
+<td>C → B</td>
+<td align="right">2</td>
+<td>Các đầu ra T5-A* theo buổi; không chờ hết chặng</td>
+<td>C ghi nhận review có bằng chứng cho phần A; 1 giờ đọc PR/test/doc, 1 giờ chia các checkpoint tích hợp/giải thích. Reviewer của task này xác nhận ghi chú. Các phút phối hợp của C đã nằm ở đây.</td>
+</tr>
+</tbody></table>
+<h3>Điểm bàn giao contract</h3>
+<table>
+<thead>
+<tr>
+<th>Hạn nội bộ</th>
+<th>Producer → Consumer</th>
+<th>Bản phải thống nhất</th>
+<th>Kiểm tra tích hợp</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>03/10, trong giờ đầu</td>
+<td>C + mẫu auth A → B/A</td>
+<td>Login, role/attempt scope, WS event/ACK/heartbeat v0; lỗi và traceId</td>
+<td>Đọc cùng mẫu, không cần chờ server hoàn chỉnh</td>
+</tr>
+<tr>
+<td>04/10 trước buổi ghép</td>
+<td>B → C; A → B</td>
+<td>Interface collector→network; HTTP/WS credential, subscription scope</td>
+<td>Event kiểm soát đi qua adapter thật</td>
+</tr>
+<tr>
+<td>09/10 đầu buổi</td>
+<td>A → B/C</td>
+<td>Import đề, answers/revision, requestId, writerEpoch, deadline/state và lỗi</td>
+<td>Fixture khớp DTO, không có correct answers trên client</td>
+</tr>
+<tr>
+<td>12/10</td>
+<td>A → B</td>
+<td>Trả trạng thái đã chốt, takeover writer, reconnect state</td>
+<td>Tích hợp Reading rồi inject delayed autosave</td>
+</tr>
+<tr>
+<td>16/10 đầu buổi</td>
+<td>A + B → C</td>
+<td>Audio manifest, READY/start/interrupted, policy Listening</td>
+<td>Một audio trong package, lỗi checksum chặn start</td>
+</tr>
+<tr>
+<td>16/10; khóa 18/10</td>
+<td>C → A/B</td>
+<td>Monitoring epoch/base/sequence, state/event độc lập, metric definition</td>
+<td>Replayer dùng chung input và oracle</td>
+</tr>
+</tbody></table>
+<p>Chỉ thay contract khi owner ghi thay đổi + reviewer duyệt + consumer cập nhật fixture trong cùng nhánh tích hợp. Không thêm schema registry hoặc hệ thống phức tạp cho việc này.</p>
+<h2>4. Tổng giờ, dự phòng và phân tải</h2>
+<p>Công suất một chặng = số ngày × giờ/tuần ÷ 7. Số dưới làm tròn 2 chữ số; tổng tính từ số chưa làm tròn.</p>
+<table>
+<thead>
+<tr>
+<th>Chặng</th>
+<th align="right">Ngày</th>
+<th align="right">Trần việc/người ở 15h/tuần, đã trừ 20%</th>
+<th align="right">Gross/người ở 25h/tuần</th>
+<th align="right">A giao</th>
+<th align="right">B giao</th>
+<th align="right">C giao</th>
+<th align="right">Dư mỗi người ở 25h</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T1</td>
+<td align="right">6</td>
+<td align="right">10,29</td>
+<td align="right">21,43</td>
+<td align="right">17</td>
+<td align="right">17</td>
+<td align="right">17</td>
+<td align="right">4,43</td>
+</tr>
+<tr>
+<td>T2</td>
+<td align="right">7</td>
+<td align="right">12,00</td>
+<td align="right">25,00</td>
+<td align="right">20</td>
+<td align="right">20</td>
+<td align="right">20</td>
+<td align="right">5,00</td>
+</tr>
+<tr>
+<td>T3</td>
+<td align="right">7</td>
+<td align="right">12,00</td>
+<td align="right">25,00</td>
+<td align="right">20</td>
+<td align="right">20</td>
+<td align="right">20</td>
+<td align="right">5,00</td>
+</tr>
+<tr>
+<td>T4</td>
+<td align="right">5</td>
+<td align="right">8,57</td>
+<td align="right">17,86</td>
+<td align="right">14</td>
+<td align="right">14</td>
+<td align="right">14</td>
+<td align="right">3,86</td>
+</tr>
+<tr>
+<td>T5</td>
+<td align="right">4</td>
+<td align="right">6,86</td>
+<td align="right">14,29</td>
+<td align="right">11</td>
+<td align="right">11</td>
+<td align="right">11</td>
+<td align="right">3,29</td>
+</tr>
+<tr>
+<td><strong>Tổng</strong></td>
+<td align="right"><strong>29</strong></td>
+<td align="right"><strong>49,71</strong></td>
+<td align="right"><strong>103,57</strong></td>
+<td align="right"><strong>82</strong></td>
+<td align="right"><strong>82</strong></td>
+<td align="right"><strong>82</strong></td>
+<td align="right"><strong>21,57</strong></td>
+</tr>
+</tbody></table>
+<p>82 giờ/người gồm <strong>72 giờ task kỹ thuật/học/tự test/tài liệu/đo</strong> và <strong>10 giờ review/checkpoint</strong>. Tổng 246 giờ. Dự phòng 64,71 giờ cả nhóm không phải backlog chức năng mới; dành lỗi package, học thiếu, sửa race, lượt chạy bị hỏng và nộp bài. Thời gian báo cáo đã có T1 note → T2/T3 draft → T4 results → T5 ghép và rà.</p>
+<p>Tải số học bằng nhau nhưng rủi ro không bằng nhau: A dễ mắc ở giao dịch, B ở audio/package, C ở state sync. Điều chỉnh đã áp dụng: C tự làm reducer server; B viết UI giám thị và chạy polling; A chạy tải; chia viết báo cáo theo module. Không chuyển mọi “việc lẻ” sang C.</p>
+<p>Ngày 08/10 mỗi người cập nhật actual_hours và remaining_estimate. Nếu giờ đã dùng + giờ còn lại vượt 80% gross còn khả dụng, lấy việc tùy chọn ra trước khi tiêu dự phòng. Không tự san nhiệm vụ làm người khác quá tải; đổi owner cụ thể trong tracker và giữ reviewer khác người.</p>
+<h2>5. Chặng đầu theo ngày/buổi và demo với thầy</h2>
+<h3>24 giờ đầu: 03/10</h3>
+<table>
+<thead>
+<tr>
+<th>Người</th>
+<th>Buổi tập trung 4 giờ</th>
+<th>Đầu ra giao ngay</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>T1-A1: DB/seed, server boot, login mẫu; thống nhất mẫu auth trong giờ đầu với C</td>
+<td>Lệnh chạy server, tài khoản test, schema/reset, login response</td>
+</tr>
+<tr>
+<td>B</td>
+<td>T1-B1: shell JavaFX/login/role; 45 phút cuối thử tạo app-image để phát hiện trở ngại sớm</td>
+<td>Cửa sổ chạy được, HTTP ngoài UI, log lỗi package nếu có</td>
+</tr>
+<tr>
+<td>C</td>
+<td>T1-C1: mẫu protocol giờ đầu; ProcessHandle probe trên máy đích; note trường bị thiếu</td>
+<td>Message v0, tên một ứng dụng thực sự quan sát được, giới hạn quyền</td>
+</tr>
+</tbody></table>
+<p>Slot review/checkpoint đầu tiên 15 phút/người nằm trong T1-xR, ngoài 4 giờ task nói trên. A xác nhận công suất/ngày gặp thầy; B xác nhận máy thứ hai; C tổng hợp câu hỏi phạm vi. Chưa biết IP thật thì để cấu hình, không hard-code localhost làm cách chạy LAN.</p>
+<h3>Phân bố giờ task chặng 1</h3>
+<p>Đây là lịch mục tiêu 25 giờ/tuần. Mỗi task 4 giờ chia được thành hai buổi 2 giờ. Phần T1-xR phân 0,25 giờ ngày 03; 0,5 ngày 04; 0,5 ngày 06; 0,75 ngày 08, đủ 2 giờ/người.</p>
+<table>
+<thead>
+<tr>
+<th>Ngày</th>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+<th>Kết quả tích hợp</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>03/10</td>
+<td>A1 4h</td>
+<td>B1 4h, gồm package spike</td>
+<td>C1 4h</td>
+<td>Login/schema/message thống nhất; biết process có đọc được</td>
+</tr>
+<tr>
+<td>04/10</td>
+<td>A2 4h</td>
+<td>B2 3h + B3 1h khung dashboard</td>
+<td>C2 4h</td>
+<td>Hai role kết nối WS có auth; collector nối interface</td>
+</tr>
+<tr>
+<td>05/10</td>
+<td>A3 3h</td>
+<td>B2 1h + B3 2h</td>
+<td>C3 3h</td>
+<td>Process → server lưu → giám thị nhận cảnh báo đầu tiên</td>
+</tr>
+<tr>
+<td>06/10</td>
+<td>A3 1h + A4 1h</td>
+<td>B3 1h + B4 1h package</td>
+<td>C3 1h + C4 1h log</td>
+<td>Demo nhỏ; disconnect/heartbeat thử với cấu hình ngắn; mang package sang máy khác nếu spike đã qua</td>
+</tr>
+<tr>
+<td>07/10</td>
+<td>A4 1h</td>
+<td>B4 1h</td>
+<td>C4 1h</td>
+<td>Hoàn thiện timeout/lỗi, chạy máy khác, audio mẫu</td>
+</tr>
+<tr>
+<td>08/10</td>
+<td>A4 1h</td>
+<td>B4 1h</td>
+<td>C4 1h</td>
+<td>Gate prototype, báo cáo trở ngại và forecast; diễn tập 5–7 phút</td>
+</tr>
+<tr>
+<td><strong>Tổng task + review</strong></td>
+<td><strong>15 + 2 = 17h</strong></td>
+<td><strong>15 + 2 = 17h</strong></td>
+<td><strong>15 + 2 = 17h</strong></td>
+<td>Dự phòng khoảng 4,43h/người chưa xếp</td>
+</tr>
+</tbody></table>
+<p><strong>Demo tối thiểu phải có:</strong> backend + DB chạy; 1 thí sinh và 1 giám thị đăng nhập thật; mở ứng dụng được quan sát; event được DB commit rồi lên dashboard; mất liên lạc chuyển trạng thái; package chạy trên máy khác. Mốc 06/10 là mục tiêu luồng nhỏ, gate 08/10 mới kiểm đủ. Nếu thầy gặp trước khi gate xong, trình bày chính xác phần còn thiếu.</p>
+<p><strong>Nếu còn giờ trong task/dự phòng nhỏ:</strong> thử 2 thí sinh; gửi lại event cùng ID; phát 1 audio mẫu; chụp log ACK và event count. Chưa mở rộng sang UI thi đầy đủ hoặc dashboard đẹp trong chặng 1.</p>
+<p><strong>Nếu bị chặn:</strong> collector không đọc tên process thì chọn một ứng dụng kiểm soát đọc được và công bố giới hạn; fixture chỉ minh họa protocol với nhãn MOCK. Nếu package lỗi, demo từ IDE được nhưng ghi “chưa qua gate package”, kèm lỗi và người xử lý. Nếu mạng buổi gặp lỗi, dùng video quay từ lần chạy thật có ngày/build; không nhận đó là demo live. Không có thành phần chạy thì trình bày thiết kế + log lỗi + spike, không mô phỏng kết quả như đã chạy.</p>
+<h3>Kịch bản 6 phút (co giãn 5–7 phút)</h3>
+<table>
+<thead>
+<tr>
+<th>Phút</th>
+<th>Người</th>
+<th>Nội dung và thao tác</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0:00–0:45</td>
+<td>A</td>
+<td>Bài toán: thi rút gọn, server chốt bài, process là tín hiệu nghi vấn; mục tiêu buổi này</td>
+</tr>
+<tr>
+<td>0:45–1:30</td>
+<td>C</td>
+<td>Một hình kiến trúc: client thí sinh → server/DB → giám thị; HTTP và WS; chưa có recovery toàn diện</td>
+</tr>
+<tr>
+<td>1:30–3:20</td>
+<td>B</td>
+<td>Mở package, hai tài khoản; mở ứng dụng thử; chỉ ra event trên giám thị</td>
+</tr>
+<tr>
+<td>3:20–4:10</td>
+<td>C</td>
+<td>Cho xem eventId trong log/DB; ngắt client và chờ timeout, giải thích UNKNOWN không phải gian lận</td>
+</tr>
+<tr>
+<td>4:10–5:00</td>
+<td>A</td>
+<td>Đã chạy gì/chưa chạy gì; 2 luồng rủi ro đang kiểm: chốt đáp án và đồng bộ monitoring</td>
+</tr>
+<tr>
+<td>5:00–6:00</td>
+<td>A chủ trì, B/C trả lời phần mình</td>
+<td>Xin ý kiến phạm vi rút gọn, đóng góp polling/delta, chính sách Listening; chốt việc tuần tới</td>
+</tr>
+</tbody></table>
+<p>Chỉ cần 1 trang kiến trúc, 1 trang tiến độ và app/log thật. Không dành giờ tạo bộ slide dài. Người nói không phải người duy nhất biết phần đó; đổi người giải thích khi tập bảo vệ.</p>
+<h2>6. Tích hợp, kiểm thử và mốc cắt</h2>
+<p>03/10 ghép contract; 04/10 thử WS; 06 và 08/10 demo. Các chặng sau ghép 10, 12, 15; 17, 19, 20, 22; 24, 27; 29 và 30/10. Mỗi checkpoint 10–15 phút/người nằm trong slot review; thời gian chạy/sửa bằng chứng nằm trong task chức năng hoặc test tương ứng. Mỗi người ghi ngắn: SHA, scenario, thực tế, lỗi, owner sửa.</p>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Chủ trì / reviewer</th>
+<th>Bằng chứng để qua</th>
+<th>Khi không qua</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>04/10 nền tảng</td>
+<td>B / A</td>
+<td>JavaFX build/package spike, WS auth, ProcessHandle probe</td>
+<td>Dừng chỉnh UI; dùng dự phòng để sửa đúng blocker, không đổi cả stack</td>
+</tr>
+<tr>
+<td>08/10 prototype</td>
+<td>A / C</td>
+<td>Event commit/ACK, không trùng, heartbeat, package máy khác</td>
+<td>Bỏ tính năng phụ vốn chưa giao; tính lại giờ. Nếu vẫn 15h, xin thu hẹp scope ngay</td>
+</tr>
+<tr>
+<td>15/10 exam correctness</td>
+<td>A / C</td>
+<td>AT01–AT11 đủ bằng chứng, Reading đầy đủ một lượt, full state ổn định</td>
+<td>Tạm dừng delta, C hỗ trợ harness/race; không gọi save thành công khi chưa commit</td>
+</tr>
+<tr>
+<td><strong>20/10 delta correctness</strong></td>
+<td>C / B</td>
+<td>MT02–MT06, oracle state/event bằng baseline, fault/reconnect hợp lệ</td>
+<td>Tắt delta ở cấu hình mặc định; phần giờ T3-C4/C5 còn lại ghi failure và ổn định full; không kéo gate sang tuần cuối</td>
+</tr>
+<tr>
+<td>22/10 Listening/package</td>
+<td>B / A</td>
+<td>LT01–LT04 và máy thứ hai; full snapshot usable</td>
+<td>Nếu không thể sửa bằng buffer, báo phạm vi Listening chưa đạt và xin điều chỉnh; không tự nhận complete</td>
+</tr>
+<tr>
+<td>27/10 feature freeze</td>
+<td>C / B</td>
+<td>Raw/config + bản report Results; không có lỗi mất đáp án/phân quyền chưa xử lý</td>
+<td>Chỉ sửa lỗi P0 và tài liệu; không thêm tối ưu hay UI</td>
+</tr>
+<tr>
+<td>30/10 release</td>
+<td>A / C</td>
+<td>Source/Report, Compilatio, smoke máy sạch, người nhận xác nhận</td>
+<td>Dùng 31/10 làm buffer; không bỏ test quan trọng để kịp tuyên bố chạy</td>
+</tr>
+</tbody></table>
+<p>Thứ tự cắt: (1) focus; (2) lệnh cảnh báo tùy biến; (3) admin nâng cao/UI trang trí; (4) tối ưu phụ và tăng số client; (5) delta khỏi bản chính khi gate fail hoặc lợi ích không đủ; (6) Listening chỉ thu hẹp sau trao đổi lại vì thuộc scope đã chốt. 1–3 đã nằm ngoài backlog này, nên không được tính thêm “giờ tiết kiệm” khi cắt lần nữa. Không cắt quyền truy cập, revision, deadline, epoch, ACK sau commit hoặc kiểm chứng package.</p>
+<p>Full snapshot là lựa chọn vận hành nếu delta sai, không tái lập được hoặc lợi ích không đáng chi phí CPU/độ trễ/độ phức tạp. Delta đúng nhưng không có lợi vẫn là kết quả có thể báo cáo; không ép đổi kết luận. Khi delta fail, giữ bằng chứng polling trade-off và cơ chế giữ state/event đúng qua lỗi. <strong>Mức đủ của Novelty phải được thầy xác nhận; thử nghiệm thất bại tự nó không hoàn thành mục Novelty.</strong></p>
+<p>Checklist kỹ thuật chi tiết ở 03_KIEM_THU_VA_THUC_NGHIEM.md; hợp đồng chuẩn ở 02_HOP_DONG.md. Không chờ toàn bộ test hoàn thành mới ghép: happy path nhỏ từ T1 rồi thêm fault tests quanh luồng đang chạy.</p>
+<h2>7. Checklist bàn giao và trách nhiệm</h2>
+<p>Các mục dưới là điều kiện cần kiểm, chưa đánh dấu hoàn thành.</p>
+<table>
+<thead>
+<tr>
+<th>Hạng mục</th>
+<th>Owner / reviewer</th>
+<th>Điều kiện bàn giao</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Source, dependencies, cấu hình</td>
+<td>A / C</td>
+<td>Source build được; pin phiên bản; schema/migration/reset; env mẫu; không có bí mật thật</td>
+</tr>
+<tr>
+<td>Dữ liệu và bộ cài</td>
+<td>B / A</td>
+<td>JSON/audio có quyền sử dụng, checksum; tài khoản demo; installer Windows và runtime; hướng dẫn LAN/firewall/port</td>
+</tr>
+<tr>
+<td>README</td>
+<td>B / A</td>
+<td>Kiến trúc, requirements, install, DB, run server/client/nhiều client, test, đo, limitations; người khác chạy theo được</td>
+</tr>
+<tr>
+<td>Contract và ảnh/sơ đồ</td>
+<td>C / B</td>
+<td>Message/errors, auth, save/submit/timeout, epochs; hình kiến trúc và sequence khớp implementation</td>
+</tr>
+<tr>
+<td>Log, raw, summary, chart</td>
+<td>C / B</td>
+<td>Mỗi run có config/SHA/máy/seed/thời gian; file raw không chỉnh số; phân biệt simulation và desktop; không có kết quả bịa</td>
+</tr>
+<tr>
+<td>Báo cáo</td>
+<td>A ghép / C rà</td>
+<td>A viết server/network/concurrency; B viết client/audio/package; C viết experiment/monitoring; cùng hiểu kết quả</td>
+</tr>
+<tr>
+<td>Nội dung paper</td>
+<td>A / C</td>
+<td>Title, Abstract, Keywords, Intro, Related Work, Problem, Approach, Architecture, Network, Implementation, Setup, Results, Discussion, Contributions, Limitations, Future Work, Conclusion, References, Appendix</td>
+</tr>
+<tr>
+<td>Compilatio</td>
+<td>A / C</td>
+<td>1 báo cáo; tên NhomXX_TOEICMonitor_Report.docx; đúng ngưỡng hướng dẫn học phần; giữ bản và kết quả kiểm tra; không tự ghi Passed</td>
+</tr>
+<tr>
+<td>Source/Report cuối</td>
+<td>A / C</td>
+<td>NhomXX_TOEICMonitor/Source và /Report; ghi liên hệ bản nguồn NhomXX_TOEICMonitor_Source nếu dùng thư mục riêng; đúng report đã nộp</td>
+</tr>
+<tr>
+<td>Kênh giao</td>
+<td>A / C</td>
+<td>Theo Submission: lớp trưởng thu vào USB; xác nhận thông báo mới và Drive nếu được yêu cầu; có biên nhận/mốc bàn giao</td>
+</tr>
+<tr>
+<td>Luyện bảo vệ</td>
+<td>B / A</td>
+<td>A giải thích lock/deadline/auth, B giải thích UI/revision/audio, C giải thích monitoring/đo; mỗi người vẽ lại flow của người khác</td>
+</tr>
+</tbody></table>
+<p>Instruction §10 ghi “Similarity + Plagiarism ≤20%”, các mục sau rút gọn thành “Similarity ≤20%”. Giữ nguyên căn cứ môn, đối chiếu chỉ số hệ thống/thông báo giảng viên, không tự diễn giải thành cách vượt kiểm tra. Nộp Compilatio mục tiêu 29/10 để còn xử lý vấn đề trước 30–31/10.</p>
+<p><strong>Tình trạng lúc lập kế hoạch:</strong> chưa xác nhận tên người/ngày gặp thầy/công suất tăng; chưa có code hay bằng chứng test. Việc kế tiếp là A/B/C bắt đầu đúng buổi 03/10 và ghi giờ thực tế, không viết thêm một vòng kiến trúc tổng thể.</p>
+</section>
+<section id="contracts" class="document"><h1>HỢP ĐỒNG TRIỂN KHAI ĐÃ CHỐT</h1>
+<p>Phiên bản 1.0 · Dùng để viết task/test, chưa phải xác nhận implementation. Các giá trị timeout/giới hạn dưới đây là cấu hình thử nghiệm khởi đầu của kế hoạch; phải ghi lại giá trị thực khi đo.</p>
+<h2>1. Ranh giới thành phần và quyền</h2>
+<table>
+<thead>
+<tr>
+<th>Thành phần</th>
+<th>Trách nhiệm</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>JavaFX candidate</td>
+<td>Làm bài, answers model, audio; worker mạng và monitoring ngoài UI thread</td>
+<td>B; collector do C cung cấp</td>
+</tr>
+<tr>
+<td>JavaFX proctor</td>
+<td>Danh sách thí sinh, trạng thái, tiến độ đã lưu, timeline; thao tác ca theo quyền</td>
+<td>B</td>
+</tr>
+<tr>
+<td>Server application</td>
+<td>Auth, quyền, đề/ca/lượt thi, điểm/deadline, HTTP/WS session</td>
+<td>A</td>
+</tr>
+<tr>
+<td>Server monitoring module</td>
+<td>Nhận state/event, epoch/sequence, chống trùng, dữ liệu giám sát</td>
+<td>C; A cung cấp persistence/auth hook</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>Trạng thái authoritative, answers, kết quả, event và khóa theo attempt</td>
+<td>A</td>
+</tr>
+</tbody></table>
+<p>Một project desktop, hai giao diện; collector chỉ bật trên role candidate, trong phiên giám sát hợp lệ. Role do server quyết định. Client không được tự khai role để vượt quyền. Mỗi request và WS message ràng buộc người dùng, ca thi và attempt. Giám thị chỉ đọc/điều khiển ca được giao, thí sinh chỉ đọc/ghi lượt được cấp.</p>
+<p>Kiểm tra auth và scope <strong>trước mọi response có dữ liệu</strong>, kể cả cache chống trùng, bài đã chốt hoặc event resend. Dùng lỗi không lộ thông tin lượt người khác; người chưa đăng nhập nhận lỗi xác thực. Mở được màn giám thị không chứng minh có quyền server.</p>
+<p>HTTP dùng cho login, import/ca thi, đề/audio, lưu/nộp, đọc trạng thái và timeline. WS chuẩn/JSON dùng cho heartbeat, monitoring, start/status/cảnh báo. Xác thực khi mở WS và kiểm tra scope khi xử lý message. Không dùng Socket.IO nói chuyện với raw WebSocket/TCP. Credential không nằm trong log hoặc URL query. Cách credential cụ thể khóa tại T1-A2, không thêm hệ thống SSO/refresh token phức tạp.</p>
+<p>Khung dữ liệu có <code>protocolVersion</code>, <code>type</code>, <code>messageId</code>/<code>requestId</code>, <code>attemptId</code>, dữ liệu nghiệp vụ và correlation ID. <code>attemptId</code> được server cấp khi join/chuẩn bị thi để monitoring có thể chạy trước start; không phải cứ có attempt là được lưu đáp án. Server duy trì trạng thái chuẩn bị/đang thi/đã chốt, cùng trạng thái giám sát và cờ gián đoạn Listening riêng.</p>
+<p>Giới hạn request, message và queue có cấu hình; JSON sai/type lạ/ID không thuộc ca phải được từ chối mà không làm rớt toàn bộ server. Không log mật khẩu, token, nội dung clipboard hoặc lịch sử duyệt web. Định dạng mã lỗi được khóa ở contract v0, có các nhóm rõ như unauthorized/forbidden, invalid input/state, stale revision/writer/epoch, conflict, expired, retryable server error.</p>
+<h2>2. Lưu đáp án, nộp, timeout</h2>
+<h3>Mẫu payload mang tính hợp đồng</h3>
+<pre><code class="language-json">{
+  &quot;requestId&quot;: &quot;sample-request-42&quot;,
+  &quot;attemptId&quot;: &quot;sample-attempt-A&quot;,
+  &quot;writerEpoch&quot;: 3,
+  &quot;answerRevision&quot;: 42,
+  &quot;answers&quot;: {&quot;q1&quot;: &quot;b&quot;, &quot;q2&quot;: &quot;d&quot;}
+}
+</code></pre>
+<p>Đây là dữ liệu minh họa, không phải request từng gửi thành công. Autosave gửi <strong>toàn bộ answers</strong>; bỏ lựa chọn phải phản ánh trong toàn bộ map. Server kiểm tra question/option thuộc đúng đề của attempt, không tin điểm do client gửi. Correct answers nằm ở server.</p>
+<h3>Thứ tự quyết định phía server</h3>
+<ol>
+<li>Xác thực; kiểm tra quyền truy cập attempt trước khi đọc/trả kết quả có dữ liệu, kể cả idempotency cache.</li>
+<li>Trong transaction, lấy khóa bản ghi attempt mà save/submit/timeout/takeover cùng dùng.</li>
+<li>Với thao tác ghi, kiểm tra <code>writerEpoch</code> sau khi đã lấy khóa. Phiên cũ không được ghi; không dùng kết quả kiểm tra trước thời gian chờ khóa làm bằng chứng phiên còn hợp lệ.</li>
+<li>Nếu đã chốt: không sửa. Trả trạng thái/kết quả trong phạm vi được xem, hoặc lỗi phiên theo hợp đồng; dù trả lại kết quả cũ cũng không được bỏ qua auth.</li>
+<li>Nếu đang thi: chạy một truy vấn riêng lấy <strong><code>clock_timestamp()</code> một lần</strong> sau khóa, lưu <code>decisionAt</code>. Chỉ nhận answers mới nếu <code>decisionAt &lt; deadlineAt</code>, đúng phase và không bị khóa do Listening gián đoạn.</li>
+<li>Kiểm tra requestId/revision/nội dung hợp lệ; cập nhật hoặc từ chối theo bảng dưới. Submit hợp lệ lưu bộ answers cuối và chốt/chấm trong cùng transaction. Timeout không nhận answers client mới mà chốt bản đã lưu.</li>
+<li>Commit trước ACK thành công. Transaction rollback/lỗi DB không được ACK “đã lưu/đã nộp”. Nếu response mất sau commit, retry phải trả trạng thái đúng, không chấm lại hoặc ghi đè.</li>
+</ol>
+<p>Tài liệu PostgreSQL §9.9.5 phân biệt giờ thực khi gọi <code>clock_timestamp()</code> với thời điểm bắt đầu transaction của <code>CURRENT_TIMESTAMP</code>/<code>now()</code>. Do đó không lấy giờ trước khi chờ khóa. Nguồn: <a href="https://www.postgresql.org/docs/current/functions-datetime.html#FUNCTIONS-DATETIME-CURRENT">PostgreSQL Date/Time Functions</a>, đối chiếu 02/10/2026. Quy tắc chọn thời điểm sau khóa là quyết định của nhóm.</p>
+<p>Request gửi trước deadline nhưng kiểm tra sau deadline bị từ chối nhận đáp án mới. Request kiểm tra trước deadline rồi commit sau deadline được chấp nhận nếu transaction thành công. Không có grace period ngầm. Task timeout dù chạy chậm cũng không mở lại khả năng ghi sau deadline; endpoint vẫn kiểm tra thời hạn.</p>
+<h3>Revision và retry</h3>
+<table>
+<thead>
+<tr>
+<th>Tình huống</th>
+<th>Kết quả phải có</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Revision mới hơn, payload hợp lệ, còn quyền và thời hạn</td>
+<td>Lưu toàn bộ map và savedRevision trong cùng giao dịch</td>
+</tr>
+<tr>
+<td>Cùng revision, cùng nội dung chuẩn hóa</td>
+<td>Không ghi hai lần; trả revision/state đã xác nhận</td>
+</tr>
+<tr>
+<td>Cùng revision, nội dung khác</td>
+<td>CONFLICT, không tự chọn một bản</td>
+</tr>
+<tr>
+<td>Revision thấp hơn savedRevision</td>
+<td>STALE, không ghi đè; submit stale không tự chốt bằng bản cũ</td>
+</tr>
+<tr>
+<td>Cùng requestId và đúng payload</td>
+<td>Idempotent; vẫn kiểm quyền trước trả kết quả</td>
+</tr>
+<tr>
+<td>Cùng requestId, payload khác</td>
+<td>CONFLICT; không tái sử dụng ID để làm thao tác mới</td>
+</tr>
+<tr>
+<td>Bài đã chốt</td>
+<td>Không thay đổi answers/điểm, kể cả retry muộn</td>
+</tr>
+</tbody></table>
+<p>So sánh nội dung theo biểu diễn chuẩn (cùng map có thể khác thứ tự key JSON). Không so chuỗi JSON thô rồi tự coi đổi thứ tự key là đổi đáp án. Request retry giữ nguyên requestId, epoch, revision và answers. Bấm submit khóa chỉnh sửa và chụp payload cố định trước gửi. Khi save đang chờ và submit tới trước, submit mang bộ cuối nên không phụ thuộc save đó hoàn thành; save muộn bị chặn vì bài đã chốt.</p>
+<h3>Reconnect và chuyển phiên ghi</h3>
+<table>
+<thead>
+<tr>
+<th>Trường hợp</th>
+<th>Xử lý</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cùng lần chạy ứng dụng, cùng writer còn hợp lệ</td>
+<td>Lấy answers, savedRevision, state/deadline từ server để đối chiếu; không giảm revision cục bộ; retry chưa rõ kết quả giữ payload nguyên vẹn</td>
+</tr>
+<tr>
+<td>Server đã lưu đúng revision/nội dung đang chờ</td>
+<td>Đánh dấu đã lưu; bỏ pending đã được xác nhận</td>
+</tr>
+<tr>
+<td>Local revision cao hơn server</td>
+<td>Giữ local; chỉ retry/gửi bản hợp lệ trong cùng writer, còn thời hạn; không gán lại số 40 rồi tái dùng 41/42</td>
+</tr>
+<tr>
+<td>Cùng revision nhưng nội dung khác</td>
+<td>Báo conflict; khóa gửi tự động cho tới khi lấy lại trạng thái rõ ràng, không tự merge</td>
+</tr>
+<tr>
+<td>Server mới hơn local</td>
+<td>Nạp state server làm mốc authoritative trước sửa tiếp; không tái dùng revision cũ</td>
+</tr>
+<tr>
+<td>Khởi động lại hoặc được cấp writer mới</td>
+<td>Lấy answers/revision/state server; bỏ pending của writer cũ; không tự gửi local cache cũ</td>
+</tr>
+<tr>
+<td>Listening gián đoạn</td>
+<td>Không dùng chính sách tiếp tục Reading để tự nghe lại hoặc tự resume</td>
+</tr>
+</tbody></table>
+<p><code>writerEpoch</code> tăng khi cấp quyền cho lần ghi mới. Chuyển phiên và mọi cập nhật khóa cùng attempt. Nếu request cũ lấy khóa trước và commit trước khi takeover, nó được xem là xảy ra trước takeover; nếu phiên mới đã kích hoạt xong, request cũ xử lý sau bắt buộc bị từ chối. Đây là ranh giới tuần tự rõ ràng, không hứa hủy một transaction đã commit.</p>
+<p>Một kết nối WS mới <strong>không tự động</strong> có nghĩa writer mới: reconnect cùng lần chạy có thể giữ writer còn hợp lệ. <code>writerEpoch</code> và <code>syncEpoch</code> có mục đích khác nhau.</p>
+<h2>3. Monitoring: trạng thái khác lịch sử</h2>
+<p>Baseline vận hành là full snapshot. Delta là ứng viên, chưa là cải tiến được chứng minh. Cả hai dùng cùng tập <strong>process liên quan policy được quan sát được</strong>; không lấy baseline gửi mọi process nhưng delta vừa lọc vừa giảm payload.</p>
+<p>Collector quét bằng ProcessHandle với polling; mặc định thử 1.000 ms, thay đổi trong thí nghiệm. Quét xong mới xếp lịch theo chính sách được ghi; không chồng vô hạn các vòng quét. Timestamp quan sát của client không trở thành bằng chứng đồng hồ các máy đã đồng bộ.</p>
+<p>Khóa process gồm collector identity + PID + thời điểm start nếu đọc được. Nếu thiếu start/name, đánh dấu chất lượng dữ liệu và giới hạn phân biệt PID tái sử dụng. Không tuyên bố nhận diện hoàn hảo; benchmark có process điều khiển được và ghi trường nào quan sát được. Process không đọc được metadata không được diễn giải thành “không vi phạm”.</p>
+<table>
+<thead>
+<tr>
+<th>Trường</th>
+<th>Trách nhiệm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>attemptId</td>
+<td>Lượt thi/phiên chuẩn bị được phép giám sát</td>
+</tr>
+<tr>
+<td>collectorSessionId</td>
+<td>Một lần khởi chạy collector, khác attempt và khác writer</td>
+</tr>
+<tr>
+<td>syncEpoch</td>
+<td>Thế hệ đồng bộ server cấp, đổi khi kết nối giám sát lại</td>
+</tr>
+<tr>
+<td>sequence</td>
+<td>Thứ tự state trong epoch</td>
+</tr>
+<tr>
+<td>baseSequence</td>
+<td>State mà delta dùng làm gốc</td>
+</tr>
+<tr>
+<td>messageId</td>
+<td>Nhận diện state message retry</td>
+</tr>
+<tr>
+<td>eventId</td>
+<td>Nhận diện một sự kiện lịch sử ổn định khi retry</td>
+</tr>
+<tr>
+<td>policyVersion</td>
+<td>Chính sách lọc/cảnh báo để replay và so sánh công bằng</td>
+</tr>
+</tbody></table>
+<h3>Quy tắc reducer state</h3>
+<ol>
+<li>Xác thực collector/attempt và epoch đang active trước áp dụng; epoch đầu nhận full snapshot mới, ví dụ sequence=1. Chưa có full hợp lệ thì UNSYNCED.</li>
+<li>Delta chỉ hợp lệ khi <code>baseSequence == currentSequence</code> và <code>sequence == currentSequence + 1</code>.</li>
+<li>Message đã áp dụng với cùng ID/sequence/nội dung được ACK lại; không sửa state hai lần. Cùng sequence/ID khác nội dung là lỗi. Message cũ không nằm cửa sổ dedup chỉ được bỏ/stale, không được áp lại.</li>
+<li>Thiếu chuỗi/đảo thứ tự làm mất base: đánh dấu UNSYNCED, giữ last-known state với nhãn stale, yêu cầu full. Không dựng state mới bằng phỏng đoán delta bị thiếu.</li>
+<li>Full snapshot ở sequence cao hơn trong epoch hợp lệ có thể thay thế state làm điểm đối soát; không lùi sequence. ACK state sau khi trạng thái authoritative tương ứng đã được chấp nhận; ghi rõ durability của state trong implementation.</li>
+<li>Sau reconnect, server cấp syncEpoch mới; client bỏ delta pending của epoch cũ, quét full mới, chờ ACK rồi mới gửi delta. Server reject epoch cũ. Server restart làm session cũ không còn hợp lệ; client phải resync, không tiếp tục state đoán từ RAM đã mất.</li>
+</ol>
+<p>Quyết định thứ tự “publish epoch mới, accept full mới, vô hiệu epoch cũ” phải được tuần tự hóa theo attempt/collector trong module monitoring. Đây là task reducer, không xây một distributed coordinator.</p>
+<h3>Luồng lịch sử event</h3>
+<p>Cảnh báo được sinh theo <strong>cùng một quy tắc quan sát</strong> cho full và delta: một event cho một lần process bị quan sát là xuất hiện trong policy; không tạo thêm ở mỗi poll chỉ vì vẫn còn chạy. Việc một process biến mất rồi xuất hiện giữa hai lần poll có thể không được biết. Thông báo cho người xem phải nói “quan sát thấy”, không tự khẳng định thời điểm mở chính xác.</p>
+<p>Event có eventId ổn định; server kiểm tra quyền/association lịch sử, lưu chống trùng, commit rồi ACK và báo giám thị. Event cũ được retry trong phạm vi được cấp phép của collector/lượt đó, có nhãn đến muộn; không dùng epoch cũ như quyền cập nhật state. Không cho người dùng khác gắn event vào attempt không thuộc quyền. Giám thị reconnect đọc timeline từ DB để không phụ thuộc nhận đủ push.</p>
+<p>Client có queue RAM giới hạn, retry có giới hạn/backoff; không xây hàng đợi bền vững trên đĩa trong MVP. Giá trị khởi đầu để thử: heartbeat 2 giây, server timeout 6 giây; queue tối đa 500 event. Đây là tham số cấu hình phải kiểm chứng, không là cam kết phát hiện đúng trong 6 giây mọi môi trường. Khi quá tải ghi droppedCount, khoảng thời gian biết được và đánh dấu gap lúc có thể gửi.</p>
+<p>Client bị kill không thể tự gửi MONITORING_GAP. Server lưu lastSeenAt và timeoutDetectedAt, đánh dấu <strong>không còn xác nhận được monitoring</strong> sau thiếu heartbeat. Không biết chính xác monitoring dừng lúc nào; không suy diễn vi phạm từ disconnect. Snapshot mới phục hồi state hiện tại nhưng không phục hồi mọi sự kiện trong khoảng trống. Gap đã ghi không bị xóa khi trở lại ONLINE.</p>
+<h2>4. Listening trong MVP</h2>
+<table>
+<thead>
+<tr>
+<th>Tình huống</th>
+<th>Chính sách</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chuẩn bị</td>
+<td>Tải đầy đủ, đối chiếu manifest/checksum; test audio mẫu và thiết bị phát</td>
+</tr>
+<tr>
+<td>File thiếu/hỏng hoặc test phát lỗi</td>
+<td>Không READY; hiển thị nguyên nhân, cho tải lại trước thi</td>
+</tr>
+<tr>
+<td>Bắt đầu</td>
+<td>Server cấp lệnh start có ID và thời hạn; client phát cục bộ, ghi playbackStarted; message start trùng không nghe lại</td>
+</tr>
+<tr>
+<td>Mất kết nối được phát hiện/lỗi audio</td>
+<td>Dừng audio, khóa thao tác, đánh dấu gián đoạn; giữ log; không dùng timestamp client để xin thêm giờ</td>
+</tr>
+<tr>
+<td>Reconnect hoặc mở app lại</td>
+<td>Không tự phát từ đầu và không tự resume; giữ cờ gián đoạn phía server khi đã ghi nhận</td>
+</tr>
+<tr>
+<td>Client bị kill</td>
+<td>Server heartbeat timeout; lúc client quay lại không được bypass chính sách để nghe lại</td>
+</tr>
+<tr>
+<td>Xử lý tiếp</td>
+<td>Giám thị đánh dấu cần tổ chức lại; nếu tổ chức lại thì cấp attempt mới; không sửa deadline hoặc reset answers của attempt cũ</td>
+</tr>
+<tr>
+<td>Lượt cũ hết giờ</td>
+<td>Chốt answers server đã lưu, kèm trạng thái gián đoạn để không trình bày như kết quả thi bình thường</td>
+</tr>
+</tbody></table>
+<p>Khóa UI là phản hồi người dùng; server vẫn phải kiểm phase/writer/deadline/cờ gián đoạn khi ghi. Trong khoảng chưa phát hiện mất mạng, hệ thống không biết chắc trạng thái client; giới hạn heartbeat phải được công khai. Không hứa đồng bộ sample audio tuyệt đối giữa các máy hoặc phục hồi sau mất điện.</p>
+<h2>5. Các điều bất biến để review</h2>
+<ul>
+<li>Không ai đọc/sửa bài người khác qua bất kỳ nhánh retry/final/cache nào.</li>
+<li>Không ACK save/submit/event đã lưu khi transaction chưa commit thành công.</li>
+<li>Không ghi đáp án sau chốt; không ghi theo writer đã bị thay thế sau takeover hoàn tất.</li>
+<li>Không dùng <code>now()</code> như giờ thực sau lock wait; không tái dùng revision cho payload khác.</li>
+<li>Delta không làm lùi state hoặc biến gap thành lịch sử đã quan sát đầy đủ.</li>
+<li>Full và delta khác cách truyền state; không khác tập process/quy tắc event/độ tin cậy.</li>
+<li>Listening gián đoạn không được tự nghe lại; monitoring giám thị không chạy nhầm trên máy proctor.</li>
+</ul>
+<p>Mỗi thay đổi sau bản này phải gắn một test và reviewer. Không thay đổi stack hoặc bổ sung chức năng để né một test chưa qua.</p>
+</section>
+<section id="tests" class="document"><h1>KIỂM THỬ VÀ THỰC NGHIỆM</h1>
+<p><strong>Tất cả case dưới đây đang NOT RUN.</strong> Đây là thiết kế kiểm thử và mẫu thu bằng chứng. Không có bảng số liệu giả hoặc nhãn Passed trong gói kế hoạch.</p>
+<h2>1. Bằng chứng tối thiểu của một test</h2>
+<p>Ghi testId, runId, git SHA, OS/JDK/PostgreSQL/library version, cấu hình, bước chạy hoặc command, expected, actual, status, log/ảnh/query kiểm tra và người chạy. Với test tranh chấp dùng latch/barrier hoặc khóa DB chủ động để tái lập thứ tự; không chỉ “bấm nhiều lần thấy ổn”. Dùng PostgreSQL thật cho semantics khóa/thời gian; test thuần reducer có thể chạy độc lập.</p>
+<p>Test đơn vị + tích hợp phải bám rủi ro. Ghép happy path trước rồi thêm lỗi; không đợi xây toàn bộ harness mới chạy hệ thống. Người thực hiện và reviewer theo task trong 01_KE_HOACH.md; test không có giờ công độc lập ngoài backlog đó.</p>
+<h2>2. Bộ test Answer/Submission</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cách gây tình huống</th>
+<th>Kết quả bắt buộc</th>
+<th>Owner / review; task</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AT01</td>
+<td>Thí sinh B gọi save/submit/result/retry cache của A, trước và sau khi A nộp</td>
+<td>Không đọc/sửa dữ liệu A; trạng thái chốt không mở lỗ hổng; WS scope cũng kiểm</td>
+<td>A/C; T2-A4, T3-A4</td>
+</tr>
+<tr>
+<td>AT02</td>
+<td>Chưa login hoặc role candidate gọi import/start/retest; thiếu token WS</td>
+<td>Bị từ chối; không có dữ liệu ca ngoài quyền</td>
+<td>A/C; T1-A2, T2-A1</td>
+</tr>
+<tr>
+<td>AT03</td>
+<td>Gửi revision 42 rồi 41; sửa/clear lựa chọn trong toàn bộ map</td>
+<td>41 không ghi đè; full map được lưu đúng khi revision hợp lệ</td>
+<td>A/C; T2-A2</td>
+</tr>
+<tr>
+<td>AT04</td>
+<td>Cùng revision/nội dung hai lần; cùng revision khác nội dung; cùng map đổi thứ tự key</td>
+<td>Retry đúng là idempotent; payload khác conflict; đổi key order không gây conflict giả</td>
+<td>A/C; T2-A2</td>
+</tr>
+<tr>
+<td>AT05</td>
+<td>RequestId lặp cùng/khác payload; cố làm DB rollback</td>
+<td>Payload khác bị từ chối; rollback không ACK thành công; retry sau commit không ghi lần hai</td>
+<td>A/C; T2-A2, T4-A1</td>
+</tr>
+<tr>
+<td>AT06</td>
+<td>Giữ autosave cũ, gửi submit mang answers cuối rồi thả save</td>
+<td>Result phản ánh answers submit hợp lệ; save muộn không thay đổi bài đã chốt</td>
+<td>A/C; T2-A3</td>
+</tr>
+<tr>
+<td>AT07</td>
+<td>Transaction khác giữ khóa tới sau deadline; request bắt đầu trước deadline chờ khóa</td>
+<td>decisionAt sau khóa &gt;= deadline; không nhận answers mới; log có mốc quyết định</td>
+<td>A/C; T2-A4</td>
+</tr>
+<tr>
+<td>AT08</td>
+<td>Submit lặp, timeout và save đến gần nhau; thêm case kiểm tra trước hạn nhưng commit sau hạn</td>
+<td>Một kết quả bất biến theo thứ tự khóa/decisionAt; không chấm hai lần; chốt timeout từ bản đã lưu</td>
+<td>A/C; T2-A3, T4-A1</td>
+</tr>
+<tr>
+<td>AT09</td>
+<td>Request writer cũ đã vào handler nhưng dừng trước lấy khóa; kích hoạt writer mới và commit; thả request cũ</td>
+<td>Epoch được kiểm lại sau khóa; writer cũ không ghi. Thử thêm thứ tự ngược để xác nhận ghi trước takeover là hợp lệ</td>
+<td>A/C; T2-A4</td>
+</tr>
+<tr>
+<td>AT10</td>
+<td>Save/submit cố sửa answers sau final hoặc sau deadline khi job timeout chưa chạy</td>
+<td>Không nhận answers mới; query chỉ trả dữ liệu trong quyền; timeout trễ không làm trễ deadline logic</td>
+<td>A/C; T2-A4</td>
+</tr>
+<tr>
+<td>AT11</td>
+<td>Server 40/local 42; mất ACK; reconnect cùng app; sau đó mở app mới hoặc takeover</td>
+<td>Cùng writer giữ payload/revision; writer mới lấy cả answers/revision/state; không tự replay cache cũ</td>
+<td>B/A; T2-B4, T4-B1</td>
+</tr>
+</tbody></table>
+<p>Mỗi test deadline đặt thời gian kiểm soát đủ lớn để không phụ thuộc thao tác thủ công; kết luận dựa trên <code>decisionAt</code>/DB state. Không dùng chỉnh giờ máy client để giả định đã kiểm giờ server.</p>
+<h2>3. Bộ test Monitoring Synchronization</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cách gây tình huống</th>
+<th>Kết quả bắt buộc</th>
+<th>Owner / review; task</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MT01</td>
+<td>Join trước start, full snapshot hợp lệ; mở/đóng process kiểm soát</td>
+<td>State và lịch sử rõ; process role proctor không bị collector thu; event không lặp mỗi poll</td>
+<td>C/B; T1-C2/C3, T2-C1/C2</td>
+</tr>
+<tr>
+<td>MT02</td>
+<td>Replay cùng event/state message sau khi mất ACK</td>
+<td>EventId duy nhất; state không áp hai lần; cùng ID khác payload báo protocol conflict</td>
+<td>C/B; T3-C3</td>
+</tr>
+<tr>
+<td>MT03</td>
+<td>Bỏ một delta hoặc đưa delta cần base cao tới trước</td>
+<td>UNSYNCED/stale; yêu cầu full; không đoán phần thiếu</td>
+<td>C/B; T3-C3</td>
+</tr>
+<tr>
+<td>MT04</td>
+<td>Full S20 thuộc epoch mới rồi phát lại delta D11 epoch cũ</td>
+<td>State không thay đổi bởi D11; full epoch mới là gốc</td>
+<td>C/B; T3-C3/C4</td>
+</tr>
+<tr>
+<td>MT05</td>
+<td>Khởi động lại collector/client hoặc server; gửi sequence/collector cũ</td>
+<td>Cần epoch/full mới; collector không còn quyền không sửa state hiện tại</td>
+<td>C/B; T3-C3/C4</td>
+</tr>
+<tr>
+<td>MT06</td>
+<td>Full đối soát số cao, snapshot số thấp, cùng seq khác payload; replay 3 loại trace</td>
+<td>Không lùi state; lỗi rõ; tại version so sánh full và delta cho cùng canonical state/event set</td>
+<td>C/B; T3-C3</td>
+</tr>
+<tr>
+<td>MT07</td>
+<td>Event muộn sau reconnect và queue tràn; rồi gửi snapshot mới</td>
+<td>Event hợp lệ chỉ thêm history; duplicate không thêm; dropped/gap không bị snapshot xóa</td>
+<td>C/B; T2-C2</td>
+</tr>
+<tr>
+<td>MT08</td>
+<td>Kill ứng dụng/đứt mạng, không cho client gửi thông báo cuối</td>
+<td>Server timeout sang UNKNOWN, lưu lastSeen/timeoutDetected; không khẳng định thời điểm monitoring dừng hoặc mọi hành vi đã biết</td>
+<td>C/B; T2-C2</td>
+</tr>
+</tbody></table>
+<p>Oracle độ đúng: với cùng chuỗi quan sát, full và delta khi đã đồng bộ ở cùng version phải có cùng tập process chuẩn hóa. Lịch sử event so sánh theo eventId/nội dung của quy tắc chung, không theo thứ tự đến mạng. Khi có gap, so sánh trạng thái UNKNOWN/UNSYNCED được mong đợi, không so state stale như thể state hiện tại là thật.</p>
+<h2>4. Listening và tích hợp/package</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Tình huống</th>
+<th>Kết quả bắt buộc</th>
+<th>Owner / review; task</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LT01</td>
+<td>Thiếu audio, tải chưa xong, checksum hỏng</td>
+<td>Không READY/start; lỗi rõ; tải lại chỉ trong chuẩn bị</td>
+<td>B/A; T3-B1</td>
+</tr>
+<tr>
+<td>LT02</td>
+<td>Start message lặp hoặc lỗi media/thiết bị</td>
+<td>Không phát từ đầu hai lần; playback error khóa và ghi gián đoạn</td>
+<td>B/A; T3-B2/B3</td>
+</tr>
+<tr>
+<td>LT03</td>
+<td>Mất mạng giữa audio; kill/mở lại; reconnect</td>
+<td>Dừng khi phát hiện gián đoạn; không tự replay/resume; trạng thái server tương ứng</td>
+<td>B/A; T3-B3</td>
+</tr>
+<tr>
+<td>LT04</td>
+<td>Giám thị tổ chức lại và lượt cũ hết giờ</td>
+<td>Attempt mới có ID mới; dữ liệu/deadline cũ giữ; không sửa âm thầm</td>
+<td>B/A; T3-B4, T3-A2</td>
+</tr>
+<tr>
+<td>IT01</td>
+<td>Chạy từ package trên máy không có IDE, đường dẫn có dấu/khoảng trắng</td>
+<td>Login, audio, runtime và config hoạt động; ghi OS và dependencies cần thật</td>
+<td>B/A; T1-B4, T3-B5, T5-B1</td>
+</tr>
+<tr>
+<td>IT02</td>
+<td>2 thí sinh + 1 giám thị, một client gửi JSON sai hoặc disconnect</td>
+<td>Client khác còn hoạt động; scope/role không lẫn; cảnh báo theo đúng attempt</td>
+<td>A/C; T3-A4; B/A T4-B1</td>
+</tr>
+<tr>
+<td>IT03</td>
+<td>Làm network/scan chậm khi đổi câu/resize; đóng app</td>
+<td>UI vẫn phản hồi; không gọi scan/network trên UI thread; worker được dọn</td>
+<td>B/A; T1-B2, T4-B1</td>
+</tr>
+<tr>
+<td>IT04</td>
+<td>DB/server tắt ở lúc event/save đang xử lý; khởi động lại</td>
+<td>Không ACK giả; retry/reload theo state authoritative; dashboard lấy lại history; server mới resync monitoring</td>
+<td>A/C; T3-A3, T4-A1; B/A T4-B1</td>
+</tr>
+</tbody></table>
+<h2>5. Hai thực nghiệm độc lập</h2>
+<h3>E1. Trade-off chu kỳ polling</h3>
+<p><strong>Câu hỏi:</strong> trong dữ liệu thử, giảm chu kỳ quét làm detection latency/miss rate/CPU thay đổi ra sao? Đây là so sánh tham số của ProcessHandle polling, không được gọi là đã benchmark mọi phương pháp monitoring.</p>
+<ul>
+<li>4 chu kỳ: 250/500/1.000/2.000 ms. Giữ nguyên máy, JVM, policy, logic event và chế độ full snapshot.</li>
+<li>Mỗi run có 15 giây warmup, 120 giây đo; 3 lần lặp mỗi chu kỳ, tổng 12 run, khoảng 27 phút chạy thuần chưa tính setup/phân tích. Ngân sách chạy/phân tích nằm ở T2-C4, T4-B2, T4-C1/C3.</li>
+<li>Harness khởi chạy process kiểm soát với 3 độ dài mục tiêu: 200 ms, 800 ms, 3.000 ms; tối thiểu 10 lần mỗi độ dài/run, pha bắt đầu so với polling lệch nhau theo seed. Lưu thời gian sống thực đo, không giả định đúng tuyệt đối theo sleep yêu cầu.</li>
+<li>Ghi ground truth từ harness launch/exit trên cùng máy, cùng nguồn monotonic clock; startup điều khiển được có thể dùng tín hiệu “ready” của process thử để biết cửa sổ quan sát. Không lấy chính collector làm ground truth của nó.</li>
+<li>Chỉ đưa sự kiện nằm trọn cửa sổ đo vào mẫu; ghi rõ mẫu bị loại. Công bố các trường metadata không đọc được và cách xử lý, không âm thầm loại để tăng tỷ lệ phát hiện.</li>
+<li>Metrics: số event ground-truth/đã phát hiện/missed, miss rate theo độ dài, detection latency p50/p95 trên các event phát hiện được, CPU process/collector và memory. Missed event không được gán latency=0. Ghi thêm run không đo được thay vì tự điền.</li>
+<li>CPU định nghĩa rõ: <code>ΔCPU_time / Δwall_time ×100%</code> là phần trăm một core; nếu chia thêm số core thì báo riêng là chuẩn hóa toàn máy. Peak RSS hoặc JVM heap phải ghi rõ loại, không đổi lẫn hai khái niệm.</li>
+</ul>
+<p>Nhận định dự kiến chỉ là giả thuyết: poll nhanh có thể giảm bỏ sót process ngắn, đổi lấy nhiều CPU. Không có mục tiêu giảm tài nguyên hay tỷ lệ phát hiện cam kết trước đo. C có bảng khảo sát OS event API/cách liệt kê process khác bằng tài liệu; nếu chưa triển khai, gọi đúng là khảo sát, không điền số đo cho chúng.</p>
+<h3>E2. Full snapshot so với snapshot + delta</h3>
+<p>Chỉ chạy so sánh hiệu suất của delta sau gate correctness. Baseline không bị cố ý làm yếu: hai mode cùng lọc process, cùng event dedup, cùng auth/ACK/heartbeat/retry/resync, cùng compression setting và lịch heartbeat.</p>
+<table>
+<thead>
+<tr>
+<th>Yếu tố</th>
+<th>Quy định</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Input</td>
+<td>Cùng trace snapshot chuẩn hóa, checksum và seed</td>
+</tr>
+<tr>
+<td>Polling</td>
+<td>Cố định 1.000 ms cho phép so sánh này, hoặc một giá trị được chọn và khóa trước run</td>
+</tr>
+<tr>
+<td>Snapshot</td>
+<td>Full mỗi tick ở baseline; delta mode full đầu epoch + delta + full đối soát định kỳ 30 giây thử nghiệm</td>
+</tr>
+<tr>
+<td>Tick không thay đổi</td>
+<td>Delta không cần gửi state payload mới nếu contract cho phép; heartbeat vẫn như baseline; nêu rõ đây là phần khác biệt trong truyền state</td>
+</tr>
+<tr>
+<td>Quy tắc event</td>
+<td>Cùng quan sát đầu vào và logic; không gom cảnh báo chỉ ở delta</td>
+</tr>
+<tr>
+<td>Độ tin cậy</td>
+<td>Cùng ACK, bounded retry, reconnect và thông báo gap; tính mọi resync/retry</td>
+</tr>
+<tr>
+<td>Mạng/process</td>
+<td>Cùng topology, ứng dụng nền và giới hạn client; metadata máy được ghi</td>
+</tr>
+<tr>
+<td>Input có lỗi</td>
+<td>Duplicate/drop/reorder/reconnect được dựng bằng harness; không gọi đó là tỷ lệ packet loss đo từ mạng thật</td>
+</tr>
+</tbody></table>
+<p>Tối thiểu 3 trace, mỗi trace 120 giây, 3 lần lặp/mode: <strong>18 run</strong>, cộng warmup 15 giây/run khoảng 40,5 phút chạy thuần. Trace (1) ít thay đổi, (2) nhiều process thay đổi, (3) reconnect ở lịch định trước, chẳng hạn giây 40–45 và 80–85. Cấu hình chính xác lưu kèm. Đảo thứ tự full/delta giữa các lần lặp để giảm ảnh hưởng JVM/cache/nhiệt máy.</p>
+<p>Trước run đo, replay kiểm oracle tại mọi version so sánh; có bất kỳ mismatch không giải thích được thì loại delta khỏi kết luận hiệu suất vận hành, giữ failure trace. Sau replay có ít nhất một cặp run live trên desktop thật để kiểm đường collector→network→server→giám thị.</p>
+<p><strong>Các số phải báo cáo:</strong></p>
+<ol>
+<li>State data bytes (snapshot/delta outbound), state-control bytes (ACK/resync của luồng này) và tổng state stream hai chiều. Quy định rõ byte UTF-8 đã serialize, không đếm ký tự Java hoặc dung lượng object.</li>
+<li><strong>Tổng byte ứng dụng hai chiều cho cùng cửa sổ và cùng phạm vi endpoint</strong>, gồm state, history event, ACK, heartbeat, retry, auth/handshake payload và đồng bộ lại. Ghi cả direction/category để không đếm cùng frame hai lần. Log bộ đếm application payload là phạm vi chính; không gọi là TCP/IP bandwidth.</li>
+<li>Nếu session không chứa download audio/HTTP làm bài thì ghi “monitoring session only”; đó không phải tổng chi phí một kỳ thi. Run hỗn hợp chỉ gọi tổng hệ thống khi đã đo cả HTTP lẫn WS của các thành phần liên quan.</li>
+<li>CPU client/server, memory, throughput sự kiện hợp lệ và latency rõ định nghĩa. Báo số theo từng run cùng thống kê tóm tắt; 3 lần lặp là thí nghiệm sinh viên nhỏ, không khẳng định tổng quát rộng.</li>
+</ol>
+<p>Nếu capture wire bytes bổ sung, ghi rõ overhead WebSocket/TLS/TCP/IP và cách lọc flow; không bắt buộc làm capture để qua MVP. Tải audio ban đầu báo riêng, không trộn vào cửa sổ truyền monitoring để làm tỷ lệ đẹp.</p>
+<h3>Đo thời gian không trừ hai đồng hồ chưa đồng bộ</h3>
+<ul>
+<li>Polling latency: harness và collector cùng máy/clock monotonic.</li>
+<li>RTT nhận ACK: client lấy chênh lệch monotonic trước send và khi nhận ACK cùng requestId; không gọi RTT này là one-way network latency.</li>
+<li>Thời gian server xử lý/commit: lấy span monotonic cùng tiến trình server, tách lock wait nếu có log.</li>
+<li>Độ trễ tới màn hình giám thị: có thể chạy hai client trên cùng máy dùng nguồn thời gian chung được kiểm chứng hoặc harness điều phối có ACK từ giám thị; ghi nó là round-trip/upper-bound tùy cách đo. Với hai máy chưa đồng bộ, không trừ observedAt phía candidate với renderedAt phía proctor.</li>
+<li>Nếu không đủ instrumentation cho một chỉ số, bỏ claim chỉ số đó, giữ RTT và span nội bộ đo được.</li>
+</ul>
+<h3>Tải đồng thời tối thiểu bổ sung</h3>
+<p>A chạy headless clients 1/5/10 kết nối, mỗi mức 3 run 120 giây + warmup 15 giây (9 run, khoảng 20,25 phút thuần). Thử save có tốc độ được khóa theo kịch bản và monitoring; ghi tỷ lệ thành công/lỗi, response RTT, CPU/memory. B chạy 2 candidate desktop + 1 proctor riêng để xác nhận UX; không suy ra 10 client giả lập = 10 ứng dụng JavaFX thật. Không đặt mục tiêu 200 client.</p>
+<p>Giới hạn dừng do tài nguyên/lỗi phải được ghi; nếu mức 10 không chạy nổi, báo mức đo cuối và nguyên nhân, không xóa run thất bại. Thời gian chuẩn bị/harness/cleaning mới là phần lớn công sức, đã có task riêng; số phút chạy thuần không phải ước lượng toàn bộ thí nghiệm.</p>
+<h2>6. Đầu ra thực nghiệm cần tạo khi triển khai</h2>
+<p>Chưa có các file kết quả này trong ZIP; danh sách dưới là mẫu cấu trúc bàn giao sau khi thực hiện:</p>
+<ul>
+<li><code>run-metadata.json</code>: runId, SHA, máy/OS/runtime, mode, policyVersion, pollMs, seed, trace checksum, thời gian và phạm vi byte.</li>
+<li><code>events.csv</code>: observed/received/ack correlation, revision/sequence, trạng thái, loại message, size; timestamp có tên miền đồng hồ.</li>
+<li><code>resources.csv</code>: thời gian lấy mẫu, CPU-time, wall-time, heap/RSS đúng loại, PID/process role.</li>
+<li><code>summary.csv</code>: một dòng/run, số mẫu, miss, latency, bytes theo loại, CPU/memory và run status.</li>
+<li><code>reproduce.md</code>: command thực đã chạy, fixtures, điều kiện môi trường; <code>failures/</code>: trace lỗi và expected/actual.</li>
+</ul>
+<p>Không đưa sẵn dòng số ngẫu nhiên vào các bảng như thể là kết quả. Tách raw bất biến khỏi summary do script tính. C review định nghĩa số đo, B review khả năng tái lập, A đối chiếu số request/server state.</p>
+<h2>7. Đóng góp và bằng chứng để bảo vệ</h2>
+<table>
+<thead>
+<tr>
+<th>Claim ứng viên</th>
+<th>Bằng chứng cần có</th>
+<th>Giới hạn kết luận</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Đồng bộ delta đúng trong điều kiện đã thử</td>
+<td>Reducer, replay oracle, MT02–MT06 và trace fault</td>
+<td>Không khẳng định phục hồi đủ lịch sử hoặc chống client bị sửa</td>
+</tr>
+<tr>
+<td>Delta giảm payload</td>
+<td>State stream + application total cùng điều kiện, CPU/latency đối chiếu</td>
+<td>Nếu chỉ giảm state bytes nhưng tổng gần như không đổi, nói đúng như vậy</td>
+</tr>
+<tr>
+<td>Lựa chọn polling có cơ sở</td>
+<td>E1, ground truth, miss theo độ dài, CPU/latency</td>
+<td>Chọn cho môi trường thử, không gọi là thuật toán tối ưu toàn cục</td>
+</tr>
+<tr>
+<td>Lưu/nộp có quy tắc nhất quán</td>
+<td>AT06–AT10 trên DB thật, writer takeover, auth tests</td>
+<td>Engineering contribution cần thầy đánh giá, không tự coi dùng transaction là novelty đủ</td>
+</tr>
+</tbody></table>
+<p>Nếu delta sai: release full snapshot; báo nguyên nhân và failure trace. Vẫn còn bằng chứng lựa chọn polling và xử lý mạng/lượt thi, nhưng hỏi thầy xem đóng góp đó đủ chưa. Không biến một thử nghiệm thất bại thành lời bảo đảm điểm. Nếu delta đúng nhưng không có lợi: báo kết quả âm, giữ baseline phù hợp vận hành.</p>
+</section><section class="sources" id="sources"><h2>Nguồn và tệp có thể chỉnh sửa</h2><p>Mở Markdown hoặc JSON để cập nhật. Các bản nguồn dưới đây được giữ nguyên.</p><ul><li><a href="README.md">README.md</a></li><li><a href="01_KE_HOACH.md">01_KE_HOACH.md</a></li><li><a href="02_HOP_DONG.md">02_HOP_DONG.md</a></li><li><a href="03_KIEM_THU_VA_THUC_NGHIEM.md">03_KIEM_THU_VA_THUC_NGHIEM.md</a></li><li><a href="TRACKER.json">TRACKER.json</a></li><li><a href="nguon/Yeu_cau_lap_ke_hoach.txt">nguon/Yeu_cau_lap_ke_hoach.txt</a></li><li><a href="nguon/README_mon_hoc.md">nguon/README_mon_hoc.md</a></li><li><a href="nguon/Topics.md">nguon/Topics.md</a></li><li><a href="nguon/Instruction.md">nguon/Instruction.md</a></li><li><a href="nguon/Submission.md">nguon/Submission.md</a></li><li><a href="nguon/Transcript_va_dinh_huong_de_tai_LT_Mang_v2.pdf">nguon/Transcript_va_dinh_huong_de_tai_LT_Mang_v2.pdf</a></li><li><a href="SHA256SUMS.txt">SHA256SUMS.txt</a></li></ul></section><p class="footer">Kế hoạch v1.0 · Mọi task TODO; mọi test NOT RUN. Bộ này phục vụ giao việc, chưa phải source hay báo cáo sản phẩm đã hoàn thành.</p></main><script>document.querySelectorAll('table').forEach(t=>{if(t.querySelector('th')?.textContent==='Mã')t.classList.add('backlog');const d=document.createElement('div');d.className='tablewrap';t.parentNode.insertBefore(d,t);d.appendChild(t)});</script></body></html>

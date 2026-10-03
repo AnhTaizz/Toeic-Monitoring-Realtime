@@ -1,0 +1,201 @@
+Bạn là Technical Lead phụ trách lập kế hoạch và điều phối nhóm 3 sinh viên thực hiện bài tập lớn môn Lập trình mạng.
+
+Hãy lập kế hoạch triển khai chi tiết theo 5 tuần/chặng, phân công hợp lý cho 3 người và bảo đảm tuần tới có một prototype nhỏ để trao đổi với giảng viên.
+
+Nhiệm vụ hiện tại là lập kế hoạch; chưa viết code. Không mở lại việc chọn stack nếu không phát hiện trở ngại kỹ thuật cụ thể.
+
+**1. Bối cảnh và nguồn yêu cầu**
+
+Đề tài: “Xây dựng hệ thống thi TOEIC trên máy tính theo mô hình Client–Server có hỗ trợ giám sát hành vi thí sinh theo thời gian thực”.
+
+Nhóm có 3 người, nền tảng Java và Python; chưa học C#. Không mặc định đã thành thạo JavaFX, Spring Security, WebSocket hoặc lập trình đồng thời.
+
+Đọc các tài liệu tôi cung cấp: README.md, Topics.md, Instruction.md, Submission.md và transcript trao đổi với thầy, nếu có.
+
+Phân biệt:
+- Yêu cầu môn học.
+- Nhận xét/gợi ý trực tiếp của thầy.
+- Phần định hướng tổng hợp.
+- Các quyết định thiết kế của nhóm dưới đây.
+
+Không biến mọi chức năng minh họa trong Topics thành chức năng bắt buộc. Không khẳng định một kế hoạch bảo đảm điểm A+.
+
+Thông tin thời gian đã biết:
+- Ngày lập kế hoạch ban đầu: 02/10/2026.
+- Deadline trong Submission.md: 23:59 ngày 31/10/2026.
+- Nhóm muốn trình bày kế hoạch theo 5 tuần, nhưng thực tế không đủ 5 tuần trọn vẹn.
+
+Hãy thể hiện rõ sự chênh lệch này. Có thể chia thành 5 chặng mang nhãn Tuần 1–5, với ngày bắt đầu/kết thúc thực tế; không kéo lịch qua deadline hoặc xếp công việc vào ngày đã qua. Nếu ngày bắt đầu thực tế khác, điều chỉnh lịch theo ngày đó.
+
+Chưa biết ngày gặp thầy chính xác: ưu tiên có demo tối thiểu trong 3–4 ngày làm việc đầu tiên và bản trình bày rõ ràng vào cuối chặng đầu.
+
+Nếu chưa có số giờ thực tế, tạm lập kế hoạch với 15 giờ/người/tuần, ghi rõ đây là giả định cần xác nhận. Tính cả thời gian học, review, tích hợp, kiểm thử và báo cáo; chừa khoảng 20% công suất cho lỗi và phát sinh. Nếu phạm vi không vừa, chỉ ra phần cần cắt hoặc công suất cần bổ sung.
+
+**2. Kiến trúc và stack đã thống nhất**
+
+- Desktop: Java + JavaFX; một project có giao diện thí sinh và giám thị theo vai trò.
+- Backend: Java + Spring Boot, một ứng dụng chia module.
+- Database: PostgreSQL.
+- Giao tiếp: HTTP/REST + WebSocket chuẩn, JSON.
+- Monitoring: Java ProcessHandle, polling trên máy thí sinh.
+- Build: Maven; kiểm chứng đóng gói desktop sớm.
+- Python: phân tích CSV, vẽ biểu đồ thực nghiệm nếu cần.
+
+Không thêm C#, React, Python agent, microservices, broker hoặc Kubernetes trong kế hoạch cơ sở.
+
+Monitoring và tác vụ mạng không được chặn luồng giao diện. Server kiểm tra quyền từng thao tác; đổi giao diện theo vai trò không thay thế phân quyền.
+
+Một ứng dụng có hai vai trò không có nghĩa monitoring chạy trên máy giám thị. Chỉ kích hoạt thu thập trong phiên thí sinh phù hợp.
+
+**3. Phạm vi sản phẩm**
+
+Phần chính:
+- Đăng nhập, phân quyền thí sinh/giám thị.
+- Import đề JSON có kiểm tra hợp lệ, tạo một ca thi.
+- Nhận đề, làm bài, lưu đáp án, nộp bài, chấm điểm phía server.
+- Reading theo nhóm câu hỏi/đoạn văn.
+- Listening bằng audio tải trước và phát cục bộ.
+- Monitoring process trước và trong khi thi.
+- Giám thị xem trạng thái kết nối, tiến độ và timeline cảnh báo.
+- Nhiều client, heartbeat, timeout, validation, xử lý gửi trùng và lỗi mạng.
+- Có bộ cài, dữ liệu mẫu và README để chạy trên máy khác.
+
+Phần có thể cắt:
+- Mất focus.
+- Lệnh cảnh báo tùy biến từ giám thị.
+- Giao diện quản trị nâng cao.
+- Các tối ưu chưa chứng minh được lợi ích.
+
+Ngoài phạm vi:
+- Webcam, USB, khóa hệ điều hành.
+- Chống sửa client hoàn chỉnh.
+- Phục hồi đầy đủ sau mất điện.
+- Streaming audio trực tiếp.
+- AI chấm bài và các loại kỳ thi khác.
+
+Monitoring cung cấp tín hiệu nghi vấn; không cam kết chống gian lận tuyệt đối. Nếu chỉ mô phỏng một phần TOEIC, mô tả đúng phạm vi, không gọi mọi dạng bài tiếng Anh là chuẩn TOEIC.
+
+**4. Các hợp đồng kỹ thuật phải đưa vào task và test**
+
+A. Lưu đáp án – nộp bài – hết giờ:
+- Autosave gửi toàn bộ bộ đáp án, có requestId và answerRevision.
+- Revision mới hợp lệ được cập nhật; revision cũ không ghi đè.
+- Cùng revision nhưng khác nội dung phải bị từ chối.
+- Request nộp chứa bộ đáp án cuối cùng; retry giữ nguyên payload.
+- Xác thực và kiểm tra quyền trước mọi nhánh trả dữ liệu, kể cả bài đã chốt hoặc request trùng.
+- Autosave, submit, timeout phối hợp bằng khóa/giao dịch trên cùng lượt thi.
+- Kiểm tra phiên được phép ghi tại điểm cập nhật; request đang chờ của phiên cũ không được ghi sau khi phiên mới thay thế.
+- Server quyết định deadline. Lấy clock_timestamp() một lần sau khi thực sự lấy khóa; không dùng now()/CURRENT_TIMESTAMP như thể đó là thời gian sau khi chờ khóa.
+- ACK thành công chỉ sau commit.
+- Sau khi chốt, không nhận thay đổi đáp án.
+- Khi mở lại ứng dụng, lấy cả bộ đáp án đã lưu, revision và trạng thái lượt thi.
+- Khi reconnect trong cùng lần chạy, không giảm revision cục bộ hoặc tái sử dụng revision cho nội dung khác.
+
+B. Monitoring:
+- Full snapshot là baseline và phương án vận hành dự phòng.
+- Snapshot + delta là ứng viên cải tiến, chỉ đưa vào bản chính khi qua test độ đúng.
+- Phân biệt trạng thái process hiện tại với lịch sử quan sát.
+- Có collectorSessionId, syncEpoch, sequence/baseSequence và messageId với trách nhiệm rõ.
+- Epoch mới bắt đầu bằng full snapshot; delta cũ không được sửa trạng thái mới.
+- Thiếu chuỗi thì đánh dấu UNSYNCED và yêu cầu đồng bộ lại.
+- Event lịch sử có eventId ổn định, chống trùng, ACK sau commit.
+- Queue có giới hạn; công khai trường hợp mất dữ liệu.
+- Server đánh dấu mất khả năng xác nhận monitoring khi thiếu heartbeat; không trông chờ client bị tắt tự báo lỗi.
+- Snapshot không khôi phục được mọi sự kiện đã xảy ra trong khoảng gián đoạn.
+
+C. Listening:
+- Kiểm tra tải đủ và checksum trước READY; thử audio mẫu.
+- Mất kết nối được phát hiện hoặc lỗi phát: dừng audio, khóa thao tác, ghi nhận gián đoạn.
+- Không tự phát lại từ đầu hoặc tự tiếp tục sau reconnect.
+- Giám thị có thể tổ chức lượt thi mới; không âm thầm kéo dài hay đặt lại lượt cũ.
+- Phiên bản đầu chưa hỗ trợ tiếp tục Listening sau gián đoạn.
+
+Chuyển các hợp đồng trên thành các task vừa sức và tiêu chí kiểm thử; không biến mỗi trường dữ liệu thành một hệ thống phức tạp riêng.
+
+**5. Mục tiêu demo tuần tới**
+
+Ưu tiên luồng:
+1. Khởi động backend và database.
+2. Thí sinh đăng nhập bằng JavaFX.
+3. Giám thị đăng nhập ở một client khác và thấy trạng thái thí sinh.
+4. Monitoring phát hiện một ứng dụng trong danh sách hạn chế.
+5. Server lưu sự kiện rồi hiển thị cảnh báo cho giám thị.
+6. Ngắt kết nối để thấy trạng thái chuyển phù hợp.
+7. Chạy được từ bản đóng gói trên máy khác.
+
+Chưa cần hệ thống TOEIC hoàn chỉnh để đạt mốc này.
+
+Hãy chia thành:
+- Demo tối thiểu phải có.
+- Demo tốt hơn nếu còn thời gian.
+- Phương án trình bày nếu một thành phần bị chặn: nêu đúng phần đã chạy, log, thử nghiệm và trở ngại; không giả số liệu hoặc giả chức năng.
+
+Chuẩn bị một kịch bản trình bày 5–7 phút cho thầy: bài toán, kiến trúc, demo, giới hạn và câu hỏi xin ý kiến. Không mặc định cần làm một bộ slide lớn.
+
+**6. Nguyên tắc chia việc cho 3 người**
+
+Gọi thành viên A, B, C vì chưa có tên/năng lực chi tiết. Mỗi người đều cần phần kỹ thuật có thể giải thích và bảo vệ.
+
+Có thể xuất phát từ:
+- A: backend, trạng thái bài thi, persistence và giao tiếp phía server.
+- B: JavaFX, luồng làm bài, audio và tích hợp phía client.
+- C: monitoring, protocol thực nghiệm và công cụ đo.
+
+Đây chỉ là điểm xuất phát. Hãy phân bổ màn giám thị, đóng gói, test và báo cáo theo tải thực tế; tránh dồn mọi việc còn lại cho C hoặc mọi tích hợp cho A.
+
+Yêu cầu:
+- Mỗi task có đúng một người chịu trách nhiệm chính.
+- Có người review/hỗ trợ cụ thể, không ghi chung “cả nhóm”.
+- Mỗi người tự test và ghi tài liệu cho module mình làm.
+- Phân công báo cáo theo phần kỹ thuật, không dành một người chỉ viết báo cáo.
+- Có review chéo để cả ba hiểu luồng toàn hệ thống.
+- Công việc phải chạy song song được thông qua API/message mẫu và dữ liệu giả lập được ghi rõ.
+- Chỉ rõ người cung cấp contract, người sử dụng và thời điểm phải thống nhất.
+- Có lịch tích hợp đều đặn, không đợi mỗi người làm xong toàn bộ module.
+- Chia task đủ nhỏ để có đầu ra kiểm tra được sau một buổi hoặc khoảng 2–4 giờ; task lớn phải tách.
+
+**7. Thực nghiệm và cách bảo vệ đóng góp**
+
+Hai thí nghiệm tách biệt:
+
+A. Polling:
+- Thử một số chu kỳ như 250/500/1.000/2.000 ms.
+- Đo CPU, độ trễ và tỷ lệ bỏ sót trên các kịch bản đã định nghĩa.
+- Không mặc định quét nhanh hơn luôn tốt hơn.
+
+B. Full snapshot so với snapshot + delta:
+- Cùng dữ liệu quan sát, phạm vi process, chu kỳ quét và quy tắc cảnh báo.
+- Cùng yêu cầu độ tin cậy.
+- Kiểm tra độ đúng trước khi đo hiệu quả.
+- Đo byte của luồng trạng thái và tổng byte ứng dụng, gồm event, ACK, heartbeat và đồng bộ lại.
+- Có kịch bản ít thay đổi, nhiều thay đổi và reconnect.
+- Phân biệt client giả lập để tạo tải với client desktop thực tế.
+- Giải thích cách đo thời gian giữa các máy; không tự trừ timestamp chưa đồng bộ.
+
+Nêu mức thực nghiệm tối thiểu phù hợp công suất nhóm. Không đặt mục tiêu 200 client hoặc kết quả giảm tài nguyên tùy ý rồi coi là cam kết.
+
+Nếu delta không đúng hoặc không có lợi, giữ full snapshot và báo cáo trung thực. Tuy nhiên, phải nói rõ khi đó nhóm còn bằng chứng đóng góp nào; không mặc định một thử nghiệm thất bại tự động đáp ứng toàn bộ mục Novelty.
+
+**8. Định dạng đầu ra bắt buộc**
+
+Hãy trả một kế hoạch có thể dùng để giao việc, theo thứ tự:
+
+1. Kết luận về khả thi, các giả định và những điểm phải xác nhận.
+2. Bảng 5 tuần/chặng với ngày thực tế, mục tiêu, đầu ra tích hợp, tiêu chí hoàn thành và mức ưu tiên.
+3. Bảng phân công chi tiết A/B/C theo từng chặng. Mỗi task có:
+   - Mã task.
+   - Công việc/đầu ra cụ thể.
+   - Owner và reviewer.
+   - Ước lượng giờ.
+   - Phụ thuộc.
+   - Tiêu chí nghiệm thu quan sát được.
+4. Tổng giờ mỗi người theo từng chặng, tính cả học/review/test/tài liệu và dự phòng. Chỉ ra nơi quá tải và điều chỉnh.
+5. Kế hoạch chặng đầu chi tiết từng ngày/buổi, gồm việc 24 giờ đầu của từng người và kịch bản demo với thầy.
+6. Các mốc kiểm thử/tích hợp, mốc cắt phạm vi, thứ tự cắt và điều kiện giữ full snapshot.
+7. Checklist bàn giao: source, cấu hình, dữ liệu mẫu, bộ cài, README, log/CSV thực nghiệm, báo cáo, Compilatio và luyện bảo vệ.
+
+Không tạo thêm nhiều bảng lặp lại cùng một backlog. Không viết “hoàn thành backend/frontend” hoặc “test toàn hệ thống” mà không chỉ rõ đầu ra.
+
+Nếu thiếu thông tin, chỉ hỏi tối đa 3 câu có thể làm thay đổi phân công hoặc lịch. Vẫn cung cấp kế hoạch tạm dựa trên giả định đã ghi, không dừng ở việc hỏi.
+
+Hãy bắt đầu bằng đánh giá công suất thực tế, rồi đưa ra kế hoạch đủ cụ thể để cả ba người biết buổi làm việc tiếp theo phải làm gì.
