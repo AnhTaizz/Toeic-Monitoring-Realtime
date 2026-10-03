@@ -17,6 +17,11 @@ import vn.edu.toeic.protocol.error.ApiErrorResponse;
 class ApiExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiExceptionHandler.class);
 
+    @ExceptionHandler(AccessDeniedException.class)
+    ResponseEntity<ApiErrorResponse> accessDenied(AccessDeniedException exception) {
+        return error(HttpStatus.valueOf(exception.status()), exception.code(), exception.getMessage(), false, null);
+    }
+
     @ExceptionHandler(InvalidCredentialsException.class)
     ResponseEntity<ApiErrorResponse> invalidCredentials(InvalidCredentialsException exception) {
         return error(
@@ -41,7 +46,7 @@ class ApiExceptionHandler {
     @ExceptionHandler(Exception.class)
     ResponseEntity<ApiErrorResponse> unexpected(Exception exception, WebRequest request) {
         String traceId = UUID.randomUUID().toString();
-        LOGGER.error("Lỗi server chưa xử lý, traceId={}", traceId, exception);
+        LOGGER.error("Lỗi server chưa xử lý, traceId={}, loại={}", traceId, exception.getClass().getSimpleName());
         return error(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 ErrorCode.RETRYABLE_SERVER_ERROR,

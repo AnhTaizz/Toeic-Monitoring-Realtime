@@ -3,8 +3,10 @@ package vn.edu.toeic.server.auth;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Optional;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import vn.edu.toeic.protocol.Role;
 
 @Repository
 public class JdbcLoginSessionStore implements LoginSessionStore {
@@ -12,6 +14,22 @@ public class JdbcLoginSessionStore implements LoginSessionStore {
 
     public JdbcLoginSessionStore(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
+    }
+
+    @Override
+    public Optional<StoredSession> findByTokenHash(String tokenHash) {
+        return jdbcClient.sql("""
+                SELECT u.id, u.username, u.role, u.enabled, s.expires_at, s.revoked_at
+                FROM login_sessions s JOIN user_accounts u ON u.id = s.user_id
+                WHERE s.token_hash = :tokenHash
+                """)
+                .param("tokenHash", tokenHash)
+                .query((rs, row) -> {
+                    OffsetDateTime revokedAt = rs.getObject("revoked_at", OffsetDateTime.class);
+                    return new StoredSession(new AuthenticatedUser(rs.getLong("id"), rs.getString("username"),
+                            Role.valueOf(rs.getString("role"))), rs.getObject("expires_at", OffsetDateTime.class).toInstant(),
+                            revokedAt == null ? null : revokedAt.toInstant(), rs.getBoolean("enabled"));
+                }).optional();
     }
 
     @Override

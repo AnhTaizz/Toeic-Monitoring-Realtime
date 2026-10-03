@@ -1,14 +1,10 @@
 package vn.edu.toeic.server.auth;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
-import java.util.HexFormat;
 import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -51,7 +47,7 @@ public class AuthService {
         Instant issuedAt = clock.instant();
         Instant expiresAt = issuedAt.plus(SESSION_DURATION);
         String token = newToken();
-        loginSessionStore.create(account.id(), sha256(token), issuedAt, expiresAt);
+        loginSessionStore.create(account.id(), TokenHash.sha256(token), issuedAt, expiresAt);
 
         return new LoginResponse(
                 Protocol.VERSION,
@@ -80,12 +76,4 @@ public class AuthService {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
     }
 
-    private static String sha256(String value) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            return HexFormat.of().formatHex(digest.digest(value.getBytes(StandardCharsets.UTF_8)));
-        } catch (NoSuchAlgorithmException exception) {
-            throw new IllegalStateException("JDK không hỗ trợ SHA-256", exception);
-        }
-    }
 }
