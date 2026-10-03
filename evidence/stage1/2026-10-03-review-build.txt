@@ -1,0 +1,43 @@
+Code fix SHA: 961feca789fa8d9e3ded554d0ecb21fccbe43d47
+Environment: Windows 11 x64; Oracle JDK 21.0.8; Maven 3.9.11
+mvn test: starting ad3ba93 + code patch later committed at the SHA above
+mvn package: executed at the code fix SHA above
+Generated excerpts from local Maven logs; machine paths omitted.
+
+=== mvn test ===
+[INFO] Running vn.edu.toeic.server.auth.AuthServiceTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.447 s -- in vn.edu.toeic.server.auth.AuthServiceTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Running vn.edu.toeic.client.LoginApiClientTest
+[INFO] Tests run: 39, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.349 s -- in vn.edu.toeic.client.LoginApiClientTest
+[INFO] Tests run: 39, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Running vn.edu.toeic.monitoring.ProcessObservationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.206 s -- in vn.edu.toeic.monitoring.ProcessObservationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] TOEIC Monitoring Realtime .......................... SUCCESS [  0.004 s]
+[INFO] TOEIC Protocol ..................................... SUCCESS [  1.877 s]
+[INFO] TOEIC Server ....................................... SUCCESS [  6.189 s]
+[INFO] TOEIC JavaFX Client ................................ SUCCESS [  9.004 s]
+[INFO] TOEIC ProcessHandle Spike .......................... SUCCESS [  1.725 s]
+[INFO] BUILD SUCCESS
+[INFO] Total time:  19.482 s
+[INFO] Finished at: 2026-10-03T18:30:00+07:00
+
+=== mvn package ===
+[INFO] Running vn.edu.toeic.server.auth.AuthServiceTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.504 s -- in vn.edu.toeic.server.auth.AuthServiceTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Running vn.edu.toeic.client.LoginApiClientTest
+[INFO] Tests run: 39, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.404 s -- in vn.edu.toeic.client.LoginApiClientTest
+[INFO] Tests run: 39, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Running vn.edu.toeic.monitoring.ProcessObservationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.242 s -- in vn.edu.toeic.monitoring.ProcessObservationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] TOEIC Monitoring Realtime .......................... SUCCESS [  0.010 s]
+[INFO] TOEIC Protocol ..................................... SUCCESS [  5.595 s]
+[INFO] TOEIC Server ....................................... SUCCESS [ 13.151 s]
+[INFO] TOEIC JavaFX Client ................................ SUCCESS [ 18.851 s]
+[INFO] TOEIC ProcessHandle Spike .......................... SUCCESS [  3.184 s]
+[INFO] BUILD SUCCESS
+[INFO] Total time:  41.357 s
+[INFO] Finished at: 2026-10-03T18:32:15+07:00

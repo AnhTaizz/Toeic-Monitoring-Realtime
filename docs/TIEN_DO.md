@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 03/10/2026 — có `.gitignore`, `.gitattributes` và `docker-compose.yml` cho PostgreSQL (đề xuất, chờ A chốt QD-01/QD-06); chưa có source.
+Cập nhật lần cuối: 03/10/2026 — verification cuối PR #1 tại HEAD `ceb8131`: description đã phản ánh 42/42 test PASS và package PASS từ lượt review-fix; source không đổi. GUI/LAN NOT RUN, cross-review chưa đủ xác nhận thực tế. Ready to merge: NO; tracker giữ nguyên.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
@@ -14,13 +14,16 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
-| A | _chưa gán_ | — | — | T1-A1: dựng server, schema, tài khoản mẫu | — |
-| B | _chưa gán_ | — | — | T1-B1: khung JavaFX, login hai role | — |
-| C | _chưa gán_ | — | — | T1-C1: phát mẫu message v0 trong giờ đầu | — |
+| A | _chưa gán_ | Chờ kiểm LAN/review T1-A1 | Build/test review PASS; reset/login local có evidence phiên trước | Hoàn tất kiểm LAN và review trước quyết định merge PR #1 | `feat/stage1-project-skeleton` |
+| B | _chưa gán_ | Chờ kiểm GUI/máy thứ hai T1-B1 | Review-fix response sai; 39/39 client test PASS; app-image có evidence phiên trước | Thao tác GUI end-to-end và kiểm máy thứ hai | `feat/stage1-project-skeleton` |
+| C | _chưa gán_ | Chờ review T1-C1 | Unit test PASS; contract v0 MOCK + probe ProcessHandle có evidence phiên trước | Review T1-C1 trước quyết định merge PR #1 | `feat/stage1-project-skeleton` |
 
 ## Đang bị chặn
 
-_Chưa có._
+- GUI manual end-to-end: **NOT RUN** — phiên Agent có terminal Windows/WSL, không có công cụ thao tác GUI thật. Cần người dùng chạy candidate/proctor/sai mật khẩu/server tắt.
+- LAN second-machine test: **NOT RUN** — chưa có máy Windows thứ hai thật được cung cấp cho phiên này; không thay bằng localhost.
+- Review chéo A→B, B→C, C→A: **NOT RUN/chưa đủ xác nhận**. GitHub có 0 review/0 comment; câu “Oke rồi” đang chờ làm rõ cả ba lượt đã review thực tế và không có blocker. Không ghi PASS thay reviewer.
+- PR #1 description đã cập nhật (42/42 test, commits review-fix); Ready to merge: **NO**. Schema protocol và status tracker không đổi. Bằng chứng cuối: `evidence/stage1/2026-10-03-merge-readiness.md`.
 
 Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì — hạn`.
 
@@ -28,7 +31,7 @@ Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì
 
 | Hạn | Ai cung cấp → ai dùng | Nội dung | Trạng thái |
 |---|---|---|---|
-| 03/10, giờ đầu | C + mẫu auth của A → A, B | Login, role/attempt scope, WS event/ACK/heartbeat v0 | Chưa có |
+| 03/10, giờ đầu | C + mẫu auth của A → A, B | Login, role/attempt scope, WS event/ACK/heartbeat v0 | Login đã chạy; WS là MOCK rõ nhãn |
 | 04/10 | B → C | Interface collector → network | Chưa có |
 | 04/10 | A → B | Cách gửi credential HTTP/WS, phạm vi subscription | Chưa có |
 | 09/10 | A → B, C | Import đề, answers/revision, requestId, writerEpoch, deadline/state, mã lỗi | Chưa có |

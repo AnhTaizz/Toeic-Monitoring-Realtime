@@ -1,0 +1,74 @@
+package vn.edu.toeic.server.auth;
+
+import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import vn.edu.toeic.protocol.ErrorCode;
+import vn.edu.toeic.protocol.Protocol;
+import vn.edu.toeic.protocol.error.ApiErrorResponse;
+
+@RestControllerAdvice
+class ApiExceptionHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiExceptionHandler.class);
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    ResponseEntity<ApiErrorResponse> invalidCredentials(InvalidCredentialsException exception) {
+        return error(
+                HttpStatus.UNAUTHORIZED,
+                ErrorCode.UNAUTHORIZED,
+                exception.getMessage(),
+                false,
+                exception.requestId());
+    }
+
+    @ExceptionHandler({InvalidLoginRequestException.class, HttpMessageNotReadableException.class})
+    ResponseEntity<ApiErrorResponse> invalidInput(Exception exception) {
+        String message = exception instanceof InvalidLoginRequestException
+                ? exception.getMessage()
+                : "JSON không hợp lệ";
+        String requestId = exception instanceof InvalidLoginRequestException invalid
+                ? invalid.requestId()
+                : null;
+        return error(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, message, false, requestId);
+    }
+
+    @ExceptionHandler(Exception.class)
+    ResponseEntity<ApiErrorResponse> unexpected(Exception exception, WebRequest request) {
+        String traceId = UUID.randomUUID().toString();
+        LOGGER.error("Lỗi server chưa xử lý, traceId={}", traceId, exception);
+        return error(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ErrorCode.RETRYABLE_SERVER_ERROR,
+                "Server tạm thời không xử lý được yêu cầu",
+                true,
+                null,
+                traceId);
+    }
+
+    private ResponseEntity<ApiErrorResponse> error(
+            HttpStatus status, ErrorCode code, String message, boolean retryable, String requestId) {
+        return error(status, code, message, retryable, requestId, UUID.randomUUID().toString());
+    }
+
+    private ResponseEntity<ApiErrorResponse> error(
+            HttpStatus status,
+            ErrorCode code,
+            String message,
+            boolean retryable,
+            String requestId,
+            String traceId) {
+        ApiErrorResponse body = new ApiErrorResponse(
+                Protocol.VERSION,
+                "ERROR",
+                requestId,
+                traceId,
+                new ApiErrorResponse.ErrorDetail(code.name(), message, retryable));
+        return ResponseEntity.status(status).body(body);
+    }
+}
