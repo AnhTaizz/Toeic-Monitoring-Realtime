@@ -55,3 +55,14 @@ Mỗi lần chạy ghi đủ: commit SHA, OS/JDK/PostgreSQL, cấu hình, lệnh
 | E1 | Polling 250/500/1.000/2.000 ms, 3 lần lặp (12 run) | B chạy, C cấp harness và phân tích | T4-B2, T4-C3 | NOT RUN | |
 | E2 | Full snapshot vs delta, 3 trace × 3 lần × 2 chế độ (18 run) | C | T4-C2 | NOT RUN | |
 | Tải | 1/5/10 client giả lập, 3 lần mỗi mức (9 run) | A | T4-A2 | NOT RUN | |
+
+## Kiểm tra acceptance chặng 1 (ngoài 27 case chính thức)
+
+Các kiểm tra dưới đây không thay đổi trạng thái AT/MT/LT/IT ở trên.
+
+| Ngày | Phạm vi | SHA | Môi trường | Kết quả | Bằng chứng |
+|---|---|---|---|---|---|
+| 03/10/2026 | Maven build + unit test T1-A1/B1/C1 | `864f701` | Windows 11, JDK 21.0.8, Maven 3.9.11 | PASS, 5 module; 7/7 test | `evidence/stage1/2026-10-03-skeleton-smoke.md` |
+| 03/10/2026 | Reset PostgreSQL, Flyway V1, login candidate/proctor/sai | code sau đó commit tại `bb48376` | PostgreSQL 18.6 Docker | PASS; 200/200/401 | `evidence/stage1/2026-10-03-skeleton-smoke.md` |
+| 03/10/2026 | ProcessHandle probe | `1f012c4` | Windows 11, user thường | PASS có giới hạn; 133/200 process thiếu metadata | `evidence/stage1/2026-10-03-skeleton-smoke.md` |
+| 03/10/2026 | Windows app-image local | `864f701` | JDK/jpackage 21.0.8 | PASS local; chưa chạy máy thứ hai | `evidence/stage1/2026-10-03-skeleton-smoke.md` |

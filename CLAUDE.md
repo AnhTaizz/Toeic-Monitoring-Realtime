@@ -118,4 +118,48 @@ Chi tiết ở `02_HOP_DONG.md`; đây là danh sách để tự kiểm mỗi l�
 
 ## Cấu trúc và lệnh
 
-Chưa có source. Khi scaffold (T1-A1, T1-B1), cập nhật mục này với: cấu trúc thư mục thật, phiên bản đã khóa, lệnh build, lệnh chạy server, lệnh chạy client, lệnh chạy test, cách khởi tạo/reset DB. Chỉ ghi lệnh đã chạy được.
+### Cấu trúc source
+
+| Module | Nội dung |
+|---|---|
+| `protocol/` | DTO login, error code và envelope message v0 dùng chung |
+| `server/` | Spring Boot REST, JDBC/Flyway, user/session và seed tài khoản mẫu |
+| `client/` | Một JavaFX app; login HTTP nền và hai màn hình theo role server trả |
+| `monitoring-spike/` | Chương trình khảo sát `ProcessHandle` độc lập |
+
+### Phiên bản đã khóa và chạy thật
+
+- Oracle JDK 21.0.8; target source/release Java 21.
+- JavaFX 21.0.12 LTS; Spring Boot 4.1.1; PostgreSQL 18 (container đã chạy 18.6).
+- Maven 3.9.11; Docker 29.4.3; Docker Compose 5.1.3; Windows 11 x64.
+
+### Lệnh đã chạy thành công
+
+```powershell
+# Build và unit test toàn bộ
+mvn test
+mvn package
+
+# DB (cần .env tạo từ .env.example)
+docker compose up -d --wait
+docker compose down -v
+docker compose up -d --wait
+
+# Server: nạp DB_NAME/DB_USER/DB_PASSWORD/DB_PORT từ .env vào terminal trước
+java -jar server\target\server-0.1.0-SNAPSHOT.jar
+
+# Probe ProcessHandle
+mvn --% -q -pl monitoring-spike exec:java -Dexec.args=--limit=200
+
+# Tạo app-image Windows sau mvn package
+jpackage --type app-image --dest jpackage-out --name ToeicMonitor --input client\target `
+  --main-jar client-0.1.0-SNAPSHOT-all.jar --main-class vn.edu.toeic.client.Launcher `
+  --app-version 0.1.0 --vendor "TOEIC Monitor Team"
+
+# Chạy client đã đóng gói
+.\jpackage-out\ToeicMonitor\ToeicMonitor.exe
+```
+
+`scripts/reset-db.ps1 -Force` đóng gói đúng chuỗi `config --volumes` → `down -v` → `up -d --wait` thành một lệnh và từ chối chạy nếu compose có volume khác `toeic-pgdata`. Chuỗi lệnh Docker bên trên đã chạy thật; script wrapper chưa chạy riêng trong phiên này.
+
+Tài khoản phát triển `MOCK`: `candidate1`, `candidate2`, `proctor1`; mật khẩu mặc định `ChangeMe123!`, có thể đổi bằng `TOEIC_SEED_PASSWORD`. Không dùng các credential này ngoài môi trường phát triển.

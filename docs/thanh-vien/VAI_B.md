@@ -64,7 +64,7 @@ Lịch gợi ý: 03/10 B1 · 04/10 B2 (3h) + B3 (1h) · 05/10 B2 (1h) + B3 (2h) 
 
 **Xong khi:** hai tài khoản khác role mở ra hai giao diện khác nhau; sai mật khẩu hiện lỗi; cửa sổ không đơ khi server phản hồi chậm.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** HTTP chạy nền, route hai role và app-image local đã kiểm ngày 03/10; còn thao tác GUI end-to-end và chạy trên máy thứ hai trước gate đóng gói.
 
 ### T1-B2 · Adapter mạng, heartbeat và khóa giao diện
 `4h` · phụ thuộc: T1-B1, T1-A2 (contract) · review: A

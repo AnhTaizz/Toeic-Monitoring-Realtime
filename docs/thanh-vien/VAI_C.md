@@ -67,7 +67,7 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 **Xong khi:** A và B đã nhận mẫu message; bạn nêu được tên một ứng dụng thật sự quan sát được và danh sách trường bị thiếu.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** Đã có contract v0 (message WS ghi rõ MOCK), probe thật và policy v1; chờ B review. Trên 200 process đầu có 133 process thiếu cả command/start/user.
 
 ### T1-C2 · Collector polling chạy ngoài luồng giao diện
 `4h` · phụ thuộc: T1-C1 · review: B

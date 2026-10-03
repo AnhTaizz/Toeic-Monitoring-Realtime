@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 03/10/2026 — có `.gitignore`, `.gitattributes` và `docker-compose.yml` cho PostgreSQL (đề xuất, chờ A chốt QD-01/QD-06); chưa có source.
+Cập nhật lần cuối: 03/10/2026 — đã có Maven multi-module, login Spring Boot/PostgreSQL, JavaFX hai role và ProcessHandle spike trên `feat/stage1-project-skeleton`; tracker vẫn giữ TODO chờ người dùng xác nhận.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
@@ -14,9 +14,9 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
-| A | _chưa gán_ | — | — | T1-A1: dựng server, schema, tài khoản mẫu | — |
-| B | _chưa gán_ | — | — | T1-B1: khung JavaFX, login hai role | — |
-| C | _chưa gán_ | — | — | T1-C1: phát mẫu message v0 trong giờ đầu | — |
+| A | _chưa gán_ | Chờ kiểm LAN/review T1-A1 | T1-A1 đạt build/reset/login local | T1-A2: xác thực REST/WS và QD-03 | `feat/stage1-project-skeleton` |
+| B | _chưa gán_ | Chờ kiểm GUI/máy thứ hai T1-B1 | T1-B1 có HTTP nền, hai role, app-image local | T1-B2: adapter WS/heartbeat | `feat/stage1-project-skeleton` |
+| C | _chưa gán_ | Chờ review T1-C1 | Contract v0 MOCK + probe ProcessHandle thật | T1-C2: collector polling | `feat/stage1-project-skeleton` |
 
 ## Đang bị chặn
 
@@ -28,7 +28,7 @@ Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì
 
 | Hạn | Ai cung cấp → ai dùng | Nội dung | Trạng thái |
 |---|---|---|---|
-| 03/10, giờ đầu | C + mẫu auth của A → A, B | Login, role/attempt scope, WS event/ACK/heartbeat v0 | Chưa có |
+| 03/10, giờ đầu | C + mẫu auth của A → A, B | Login, role/attempt scope, WS event/ACK/heartbeat v0 | Login đã chạy; WS là MOCK rõ nhãn |
 | 04/10 | B → C | Interface collector → network | Chưa có |
 | 04/10 | A → B | Cách gửi credential HTTP/WS, phạm vi subscription | Chưa có |
 | 09/10 | A → B, C | Import đề, answers/revision, requestId, writerEpoch, deadline/state, mã lỗi | Chưa có |

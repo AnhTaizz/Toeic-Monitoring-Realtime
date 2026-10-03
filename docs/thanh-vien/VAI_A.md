@@ -58,7 +58,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** `mvn` build được; chạy lệnh reset rồi khởi động lại vẫn login được; login sai trả lỗi; B gọi được từ máy khác.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** Code/build/reset DB/login local đã đạt ngày 03/10 trên nhánh `feat/stage1-project-skeleton`; còn kiểm gọi từ máy LAN thứ hai và review C trước khi xin cập nhật tracker.
 
 ### T1-A2 · Xác thực REST và WebSocket
 `4h` · phụ thuộc: T1-A1, T1-C1 (contract) · review: C
