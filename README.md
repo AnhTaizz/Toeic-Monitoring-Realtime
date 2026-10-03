@@ -73,7 +73,7 @@ Kiểm thử mặc định có real HTTP/WS trên Spring/Tomcat và `java.net.ht
 
 ```powershell
 docker compose up -d --wait
-mvn clean test
+mvn test
 mvn package
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-a2.ps1
 ```

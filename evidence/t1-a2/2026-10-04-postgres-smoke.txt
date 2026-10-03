@@ -1,0 +1,11 @@
+Code SHA: 7ac62c4d0bc5120ba10f887efbe5478a693d6385
+Command: scripts/smoke-a2.ps1 (JDK 21, UTC, random local port)
+PostgreSQL: 18.6 / production JDBC + Flyway; no MOCK scope/session store.
+Credentials loaded from local .env into process, never printed.
+
+PASS PostgreSQL login + session hash + REST auth + missing/invalid WS token rejection
+PASS real java.net.http.WebSocket Authorization header + HEARTBEAT -> ACK
+PASS production deny unknown scope + malformed JSON isolation
+PASS PostgreSQL revoked session rejects REST/handshake and active WS messages
+PASS PostgreSQL expired token rejects REST/handshake
+A2 PostgreSQL smoke PASS; no token/password printed; no attempt fixtures installed in production

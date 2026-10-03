@@ -1,6 +1,6 @@
 # Protocol đang dùng
 
-**Trạng thái: v0 đã chốt cho login; message WebSocket bên dưới là MOCK cho tới khi T1-A2/T1-C3 nối server thật.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây.
+**Trạng thái: v0 đã cài login, Bearer REST/WS auth, HEARTBEAT/ACK/ERROR transport T1-A2. PROCESS_OBSERVED và các message nghiệp vụ vẫn MOCK/CHƯA CÓ cho tới T1-A3/T1-C3.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây.
 
 Owner: C (monitoring, khung message chung), A (auth, ca thi, lưu/nộp). Người dùng: B.
 
@@ -93,6 +93,7 @@ ACK thành công chỉ được phát sau khi thao tác tương ứng đã đư�
 | Method + đường dẫn | Ai gọi | Request | Response | Lỗi | Task | Trạng thái |
 |---|---|---|---|---|---|---|
 | `POST /api/v1/auth/login` | Thí sinh, giám thị | `requestId`, `username`, `password` | `protocolVersion`, `requestId`, `traceId`, `token`, `tokenType`, `expiresAt`, `user`, `attemptScope` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 500 `RETRYABLE_SERVER_ERROR` | T1-A1 | Đã cài |
+| `GET /api/v1/auth/me` | Người đã login | Header Bearer | `protocolVersion`, `traceId`, `user: {userId, username, role}`, `attemptScope: []` | 401 `UNAUTHORIZED`; 503 `RETRYABLE_SERVER_ERROR` khi không lookup được session | T1-A2 | Đã cài |
 | _timeline của một thí sinh_ | Giám thị | | | | T1-A3 | Chưa có |
 | _import đề / tạo ca_ | Giám thị | | | | T2-A1 | Chưa có |
 | _lấy đề (không có đáp án đúng)_ | Thí sinh | | | | T2-A1 | Chưa có |
@@ -129,13 +130,15 @@ Request/response login mẫu (`MOCK` về giá trị ID/token, đúng schema cod
 }
 ```
 
-Token chỉ trả trong JSON body của login. Cách gửi credential cho các request HTTP/WS sau login vẫn chờ QD-03/T1-A2; không đặt token trong URL query.
+Token chỉ trả trong JSON body của login. Request HTTP `/api/**` sau login và WS handshake đều dùng `Authorization: Bearer <token>` theo QD-03. Login POST vẫn public. Client không tự khai role; session/user DB quyết định identity và role. Token raw không lưu DB hay session attributes/log; lookup bằng SHA-256. Token expired/revoked hoặc user disabled đều UNAUTHORIZED.
 
 ## Danh mục message WebSocket
 
 | `type` | Hướng | Payload | ACK | Task | Trạng thái |
 |---|---|---|---|---|---|
-| _heartbeat_ | client → server | | | T1-C1, T1-A4 | Chưa có |
+| `HEARTBEAT` | client → server | `sentAt` bắt buộc; `collectorSessionId` optional | ACK transport | T1-A2 | Đã cài; chưa có presence T1-A4 |
+| `ACK` (heartbeat) | server → client | `status: ACCEPTED`, `acknowledgedType: HEARTBEAT` | Không | T1-A2 | Đã cài |
+| `ERROR` | server → client | `code`, `message`, `retryable` | Không | T1-A2 | Đã cài |
 | _event process_ | thí sinh → server | | Sau khi commit | T1-C3, T1-A3 | Chưa có |
 | _cảnh báo_ | server → giám thị | | | T1-A3, T1-B3 | Chưa có |
 | _presence (ONLINE/UNKNOWN)_ | server → giám thị | | | T1-A4 | Chưa có |
@@ -194,3 +197,60 @@ Giá trị thử nghiệm theo hợp đồng, phải ghi lại giá trị thật
 | Ngày | Thay đổi | Ai | Ai đã cập nhật theo |
 |---|---|---|---|
 | 03/10/2026 | Chốt login REST, envelope/message MOCK v0 và mã lỗi v0 cho T1-A1/T1-C1 | A + C | Client T1-B1 |
+| 04/10/2026 | QD-03 Bearer header; endpoint WS thật, heartbeat transport/ACK/ERROR, auth/role/scope guard | A (T1-A2) | B2 cần tích hợp ở phiên riêng; chưa sửa nhánh B2 |
+
+## Contract T1-A2 và handoff cho B2
+
+### Kết nối và credential
+
+- URL: `ws://<server>:<port>/ws/v1/realtime`; mặc định port 8080. HTTPS deployment dùng `wss://`. Không thêm `/api` vào path WS.
+- Handshake header: `Authorization: Bearer <token>` (scheme Bearer không phân biệt hoa/thường). Chỉ nhận một header, một khoảng trắng giữa scheme/token; token opaque do login cấp. Thiếu/sai/malformed/expired/revoked/disabled → HTTP 401, `WWW-Authenticate: Bearer`, không upgrade.
+- Endpoint WS không nhận query; kể cả header hợp lệ kèm query cũng bị 401. Không dùng URL query, subprotocol hay message AUTH để gửi token.
+- Mỗi reconnect tạo WS mới và gửi header auth lại. Server giữ user và **hash** session trong attributes; mỗi message tra DB lại để kiểm expiry/revoke/enabled/current role. Phiên bị vô hiệu → ERROR UNAUTHORIZED rồi close 1008. Lookup session tạm thời lỗi → handshake 503 hoặc WS ERROR RETRYABLE_SERVER_ERROR; không trả stack trace.
+- REST `/api/**` ngoại trừ POST login dùng cùng Bearer semantics và identity/principal. Token trong query `token`/`access_token` bị từ chối; sai role/scope → 403 FORBIDDEN. Không tự bật browser CORS wildcard.
+
+### Trường nhận ở T1-A2
+
+| Trường | Quy tắc |
+|---|---|
+| protocolVersion | Bắt buộc string `v0` |
+| type | Bắt buộc string; hiện chỉ HEARTBEAT được ACK |
+| messageId | Bắt buộc, 1–128 ký tự `[A-Za-z0-9_.:-]` |
+| traceId | Bắt buộc, cùng giới hạn ID; ACK giữ correlation |
+| requestId | Có thể thiếu/null, khi đó dùng messageId; nếu có phải bằng messageId |
+| attemptId | HEARTBEAT có thể thiếu/null. Nếu có phải là ID hợp lệ và được AttemptScopeAuthorizer cho phép |
+| payload | HEARTBEAT bắt buộc object, `sentAt` là string ISO-8601 Instant; `collectorSessionId` optional, nếu có là ID hợp lệ |
+
+Giới hạn text message/buffer: 65.536 byte mặc định, configurable; send timeout 5.000ms. Message vượt giới hạn container có thể bị đóng 1009; binary không được hỗ trợ. JSON sai/type lạ/thiếu trường trong giới hạn → ERROR INVALID_INPUT chỉ tới session đó; kết nối vẫn nhận heartbeat tiếp theo.
+
+**Heartbeat thiếu attemptId chỉ là transport ping của phiên authenticated**, dùng khi login chưa cấp attempt (scope hiện rỗng). Nó không ghi presence/ONLINE/UNKNOWN, không bật collector và không cấp quyền truy cập attempt. Nếu có attemptId, auth → scope check → ACK. Production scope provider hiện deny mọi attempt vì chưa có schema/assignment. Own/proctor scope allowed chỉ được chứng minh bằng provider **MOCK trong test**, không cài fixture vào production.
+
+### HEARTBEAT/ACK đã cài
+
+Các ID/thời gian dưới đây là giá trị minh họa; shape được kiểm qua network thật:
+
+```json
+{"protocolVersion":"v0","type":"HEARTBEAT","messageId":"sample-hb-001","requestId":"sample-hb-001","attemptId":null,"traceId":"sample-trace-001","payload":{"sentAt":"2026-10-04T00:00:00Z"}}
+```
+
+```json
+{"protocolVersion":"v0","type":"ACK","messageId":"server-generated-id","requestId":"sample-hb-001","attemptId":null,"traceId":"sample-trace-001","payload":{"status":"ACCEPTED","acknowledgedType":"HEARTBEAT"}}
+```
+
+ACK heartbeat xác nhận transport đã nhận/chấp nhận message; **không phải ACK event persistence/DB commit**. PROCESS_OBSERVED chưa cài: kiểm candidate role/scope trước khi từ chối INVALID_INPUT, tuyệt đối không ACK success event. Full/delta và message khác cũng chưa được hỗ trợ.
+
+### ERROR envelope WS đã cài
+
+```json
+{"protocolVersion":"v0","type":"ERROR","messageId":"server-generated-id","requestId":"sample-hb-001","attemptId":"sample-foreign-attempt","traceId":"sample-trace-001","payload":{"code":"FORBIDDEN","message":"Không có quyền thực hiện thao tác này","retryable":false}}
+```
+
+ERROR dùng payload trực tiếp `{code,message,retryable}`; khác REST lỗi có top-level `error`. Với JSON lỗi chưa đọc được ID, requestId/attemptId có thể null và traceId do server tạo. Không phản chiếu raw JSON/parser cause. Chưa biết type → INVALID_INPUT; foreign/unknown attempt → FORBIDDEN, không tiết lộ attempt có tồn tại hay không.
+
+### B cần đổi ở phiên B2
+
+1. Đồng bộ main A2 vào nhánh B2 riêng; thay default blocked ConnectionOpener bằng `HttpClient.newWebSocketBuilder().header("Authorization", "Bearer " + token).buildAsync(url, listener)`.
+2. Hook phải sở hữu/dọn HttpClient/executor; future mở WS hoàn thành sau handshake hợp lệ. 401 ánh xạ lỗi auth không retry vô hạn; reconnect luôn gửi credential lại. 503/network error đi qua backoff giới hạn.
+3. Cho phép heartbeat/ACK attemptId null khi scope login rỗng; không invent scope/attempt. Không coi unscoped heartbeat là monitoring được cấp quyền.
+4. Theo dõi ACK HEARTBEAT và xử lý ERROR payload/correlation; parser B hiện chỉ nhận event ACK nên cần cập nhật. Khi UNAUTHORIZED/1008: khóa UI/yêu cầu login lại. Không coi socket write là ACK/commit.
+5. Giữ PROCESS_OBSERVED/state integration chờ A3/C3. Phiên A2 không sửa/merge nhánh B2, không kiểm GUI thay B.
