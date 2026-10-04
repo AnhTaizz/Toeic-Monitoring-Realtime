@@ -104,7 +104,7 @@ Lịch gợi ý: 03/10 B1 · 04/10 B2 (3h) + B3 (1h) · 05/10 B2 (1h) + B3 (2h) 
 
 **Xong khi:** mở ứng dụng bị hạn chế trên máy thí sinh → một dòng cảnh báo xuất hiện; kill client thí sinh → UNKNOWN; tắt mở lại màn giám thị vẫn đủ timeline, không dòng nào nhân đôi.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** B3 chưa triển khai. Handoff A4 ngày04/10: GET `/api/v1/monitoring/attempts` trả roster identity+PresenceSnapshot chỉ ACTIVE assigned; GET `.../{attemptId}/interruptions` trả history heartbeat timeout. Push MONITOR_PRESENCE cùng item schema, giữ revision lớn nhất theo attempt; MONITOR_WARNING và events timeline A3 không đổi, dedupe attempt/event. Mở WS/buffer rồi tải HTTP, đọc lại sau handshake/reconnect; refresh roster để bỏ scope bị thu hồi, hiện dữ liệu cũ khi dashboard offline. History gộp gapId và refresh recoveredAt. UNKNOWN/NOT_SEEN không gọi gian lận. A4 đã thêm lease heartbeat vào RealtimeClient/MonitoringTransport và CandidateMonitoringSession, B3 không tự invent collector/start. Schema mẫu ở PROTOCOL mục T1-A4; evidence `evidence/t1-a4/2026-10-04-verification.md`. GUI/LAN/human review NOT RUN.
 
 ### T1-B4 · Thử đóng gói Windows và audio
 `3h` · phụ thuộc: T1-B1, T1-B2 · review: A

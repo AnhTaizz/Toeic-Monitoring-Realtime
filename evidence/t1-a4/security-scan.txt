@@ -1,0 +1,8 @@
+Security / packaging / source correspondence scan: PASS
+Files inspected: 38
+Changed source/script checksums identical to tested isolated build: 21
+Actual local DB/seed credentials in added content: absent (unchanged pre-existing public defaults are not new secret additions).
+Raw bearer credentials/private absolute paths/NUL in inspected content: absent; negative TEST fixtures are test-only.
+Evidence normalized UTF8 without BOM; workspace/user/JDK paths sanitized.
+.env/task.txt tracked: NO; TRACKER/nguon/plans01-03 and migrations V1-V3 changed: NO.
+Production JAR excludes Test/Smoke classes and client test-scope dependency: PASS.

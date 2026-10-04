@@ -1,0 +1,37 @@
+14:23:04.242 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+14:23:04.430 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "a4_test_2e24acbfdc82494ebf2338b1bee3aceb"."flyway_schema_history" does not exist yet
+14:23:04.439 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 4 migrations (execution time 00:00.055s)
+14:23:04.474 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "a4_test_2e24acbfdc82494ebf2338b1bee3aceb"."flyway_schema_history" ...
+14:23:04.592 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "a4_test_2e24acbfdc82494ebf2338b1bee3aceb": << Empty Schema >>
+14:23:04.618 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "a4_test_2e24acbfdc82494ebf2338b1bee3aceb" to version "1 - auth schema"
+14:23:04.696 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "a4_test_2e24acbfdc82494ebf2338b1bee3aceb" to version "2 - monitoring events"
+14:23:04.769 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "a4_test_2e24acbfdc82494ebf2338b1bee3aceb" to version "3 - monitoring gaps"
+14:23:04.821 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 3 migrations to schema "a4_test_2e24acbfdc82494ebf2338b1bee3aceb", now at version v3 (execution time 00:00.090s)
+PASS REAL PostgreSQL18 V3->V4; runtime timeout700ms/scan25ms/heartbeat100ms; production defaults6000/500/2000ms
+2026-10-04T14:23:15.672Z  INFO 12396 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-04T14:23:15.681Z  INFO 12396 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+PASS REAL roster role/auth/assigned ACTIVE filtering; never-seen UNKNOWN/NOT_SEEN/null lastSeen; interruption history scope
+PASS REAL separate owned client JVM hard-kill pid=27844 -> A UNKNOWN/history once; B ONLINE/event commit/ACK unaffected; MOCK process observation; assigned/foreign push isolation
+PASS REAL recovery retains stable interruption ID/recoveredAt; same collector on socket reconnect; expired old socket cannot make live association UNKNOWN
+PASS REAL malformed/role/foreign/CLOSED/unknown heartbeat rejection without refresh; token revoke and association cleanup; no timeout gap for NOT_SEEN
+powershell : PRESENCE_SCAN retryable failure; no success push
+At line:2 char:1
++ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-a4. ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (PRESENCE_SCAN r...no success push:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+PRESENCE_SCAN retryable failure; no success push
+PRESENCE_SCAN retryable failure; no success push
+PRESENCE_SCAN retryable failure; no success push
+PRESENCE_SCAN retryable failure; no success push
+PRESENCE_SCAN retryable failure; no success push
+PASS REAL deferred PostgreSQL COMMIT failure: heartbeat ERROR/no ACK/state/push; timeout rollback/no history/push, scheduler retries, other candidate stays ONLINE; recovery commits one interruption
+PASS REAL CLOSED attempt removes live association without fabricated heartbeat gap
+2026-10-04T14:23:28.120Z  INFO 12396 --- [toeic-server] [.1-51423-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-04T14:23:28.122Z  INFO 12396 --- [toeic-server] [.1-51423-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+PASS REAL Stop unbinds heartbeat, unscoped pings cannot refresh; offline roster/history recovery; server restart UNKNOWN/SERVER_RESTART without fabricated timeout gap; new scoped heartbeat ONLINE
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS REAL presence/collector/delivery/transport/child-reader worker cleanup; hard kill touched only owned TEST process
+Owned A4 TEST schema removed; public/dev data and shared PostgreSQL untouched
+A4 REAL integration PASS; hard-kill REAL owned JVM; snapshots MOCK; GUI/LAN/human C review NOT RUN; B3 pending

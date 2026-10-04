@@ -77,3 +77,12 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Hệ quả: metadata hồi phục có thể phát thêm event dù process thực chưa đổi. PID reuse với start luôn null có thể không phân biệt nếu không quan sát được khoảng vắng. Scan lỗi không coi là tập rỗng; polling vẫn có thể bỏ sót process sống giữa hai poll. Hai giới hạn này không được diễn giải thành “máy sạch”.
 - Kiểm chứng: MonitoringDeliveryTest missingStart/PID reuse/scan failure; PROTOCOL C3, evidence/t1-c3/2026-10-04-verification.md.
 - Liên quan: T1-C3; không thay contract state/reducer chặng2.
+
+## QD-10 · Presence theo heartbeat trong một server JVM
+
+- Ngày: 2026-10-04 · Người quyết: A theo task T1-A4 · Human C review: NOT RUN.
+- Lựa chọn: tổng hợp association socket/collector còn heartbeat hợp lệ theo attempt, deadline đơn điệu trong JVM; snapshot và revision cùng interruption lưu PostgreSQL V4. Default6s/scan500ms, tối đa4096attempt/8socket mỗi attempt; khóa theo attempt và DB CAS, push sau commit ngoài lock.
+- Lý do: socket cũ đóng không được làm UNKNOWN socket mới đang sống; chỉ dựa close frame không phát hiện hard-kill. UTC là timestamp hiển thị/lịch sử, wall clock chỉnh không quyết định deadline. Revision giúp B3 bỏ HTTP/WS update cũ dù push có thể đến lệch thứ tự.
+- Startup: persisted ONLINE → UNKNOWN/SERVER_RESTART, tăng revision trước phục vụ; không dùng nanoTime JVM cũ, không bịa downtime gap/time. Heartbeat mới phục hồi ONLINE; interruption trước đó được giữ và ghi recoveredAt.
+- Phạm vi: một server JVM writer trên schema. Không full syncEpoch/reducer hay nhiều server writer; ONLINE xác nhận liên lạc, UNKNOWN không kết luận gian lận. Overflow V3 client-reported tách server-detected HEARTBEAT_TIMEOUT V4.
+- Kiểm chứng: fake ticker/wall-clock/latch/association unit; REAL PostgreSQL/B2/C3/hard-kill/multi-client/reconnect/COMMIT failure/restart/cleanup. Contract PROTOCOL T1-A4; evidence/t1-a4/2026-10-04-verification.md. B3 dashboard/parser và GUI/LAN NOT RUN.

@@ -1,6 +1,6 @@
 # TOEIC Monitoring Realtime
 
-Xương sống kỹ thuật chặng 1 gồm Spring Boot server, JavaFX client hai role, PostgreSQL và spike `ProcessHandle`. A2/B2 đã có xác thực và realtime; C2/A3/C3 đã nối collector → event → queue/retry → DB/ACK, cảnh báo proctor và timeline. B3 dashboard, A4 presence và nghiệp vụ thi vẫn còn các task sau.
+Xương sống kỹ thuật chặng 1 gồm Spring Boot server, JavaFX client hai role, PostgreSQL và spike `ProcessHandle`. A2/B2 đã có xác thực và realtime; C2/A3/C3 đã nối collector → event → queue/retry → DB/ACK, cảnh báo proctor và timeline. A4 có scoped heartbeat, presence/timeout/history và roster cho giám thị. B3 dashboard và nghiệp vụ thi vẫn còn các task sau.
 
 ## Yêu cầu môi trường
 
@@ -102,7 +102,7 @@ Script đọc .env vào process, không reset DB, không in credential; harness 
 - WebSocket: `ws://<server>:8080/ws/v1/realtime` (dùng `wss://` khi server triển khai TLS). Header handshake cũng là `Authorization: Bearer <token>`; endpoint không nhận query. Không log/password/token trong URL. Kết nối mới/reconnect phải gửi lại credential.
 - Server lookup SHA-256 trong `login_sessions`, kiểm expires/revoked/user enabled; WS kiểm lại mỗi message. 401 là thiếu/sai/hết hạn/revoked credential, 403 là sai role/scope. Session bị vô hiệu trên WS nhận ERROR UNAUTHORIZED rồi đóng 1008.
 - `AuthenticatedUser`/principal lấy từ DB; `AuthorizationService.requireRole` và `requireAttempt` chạy trước nghiệp vụ. A3 dùng assignment JDBC: candidate sở hữu/proctor được phân công vào attempt ACTIVE. Không có assignment thì scope rỗng; không tự cấp lượt khi login.
-- Heartbeat không có attemptId là ping transport cho phiên authenticated, chưa chứng minh presence. Có attemptId thì bắt buộc scope hợp lệ. ACK heartbeat chỉ xác nhận nhận heartbeat; ACK event/gap sau transaction COMMIT. State/delta chưa cài.
+- Heartbeat không có attemptId là ping transport cho phiên authenticated, chưa chứng minh monitoring. A4 scoped heartbeat bắt buộc candidate ACTIVE scope và collectorSessionId, ACK sau presence COMMIT; event/gap ACK sau COMMIT tương ứng. State/delta chưa cài.
 - Envelope mẫu, field bắt buộc, ACK/ERROR và handoff cho B2 ở [PROTOCOL](docs/PROTOCOL.md). B cần cho phép heartbeat/ACK unscoped, cài opener header auth, xử lý ERROR và auth lại khi reconnect. B2 đã consume contract trong phiên riêng sau khi PR #2 merge; thao tác Git cuối xem report.
 - WS giới hạn message/buffer 65.536 byte và send timeout 5.000ms qua `WS_MAX_MESSAGE_BYTES`, `WS_SEND_BUFFER_BYTES`, `WS_SEND_TIMEOUT_MS`. Tất cả send đi qua `ConcurrentWebSocketSessionDecorator`.
 
@@ -178,3 +178,32 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-c3.ps1
 ```
 
 Smoke C3 dùng production Spring/PostgreSQL/B2/C3/C2 Windows, schema TEST UUID riêng tự cleanup, Edge profile tạm riêng. Mất ACK SIMULATED ở observer của harness; overflow/reconnect snapshots MOCK, còn HTTP/WS/DB/ACK REAL. Không tắt/reset PostgreSQL chung. Server có dependency client **test-scope** chỉ cho harness, không đưa client vào server JAR production. Evidence: `evidence/t1-c3/2026-10-04-verification.md`. MT01 PARTIAL, GUI/LAN/human B review NOT RUN; T2-C2 gap/state/event muộn còn riêng.
+
+## T1-A4 — heartbeat đúng phiên và presence
+
+Login chỉ mở kết nối. Khi candidate chọn lượt ACTIVE và nhấn bắt đầu, coordinator lấy collectorSessionId thật từ C2 rồi gắn heartbeat B2 vào lượt đó. Mặc định gửi mỗi 2 giây và gửi đầu ngay nếu đã kết nối. Stop/logout/switch gỡ binding; reconnect cùng run giữ collector, collector đã Stop không tự bật lại. Ping không gắn attempt vẫn ACK nhưng không làm ONLINE.
+
+Server nhận và commit heartbeat hợp lệ thì ONLINE, lưu lastSeenAt UTC. Không association nào còn heartbeat hợp lệ trong 6 giây thì UNKNOWN/HEARTBEAT_TIMEOUT, lưu một interruption. Quay lại ONLINE giữ lịch sử và cập nhật recoveredAt. Không có message STOP: dừng chỉ được server nhận ra khi hết timeout. UNKNOWN là mất xác nhận liên lạc, không phải cảnh báo gian lận hoặc process. Restart server chuyển ONLINE cũ thành UNKNOWN/SERVER_RESTART trước khi phục vụ; không bịa thời điểm ngắt hoặc tạo timeout gap giả.
+
+| Cấu hình | Mặc định | Dùng cho |
+|---|---:|---|
+| JVM client `toeic.realtime.heartbeatMillis` | 2000 | Chu kỳ heartbeat |
+| ENV server `MONITORING_TIMEOUT_MS` | 6000 | Deadline heartbeat |
+| `MONITORING_TIMEOUT_SCAN_MS` | 500 | Chu kỳ quét |
+| `MONITORING_PRESENCE_MAX_ATTEMPTS` | 4096 | Số attempt hiện được theo dõi trong RAM |
+| `MONITORING_ASSOCIATIONS_PER_ATTEMPT` | 8 | Số socket còn được theo dõi mỗi attempt |
+
+PowerShell phải đặt property Java trong dấu nháy, ví dụ:
+
+```powershell
+java '-Dtoeic.realtime.heartbeatMillis=2000' -jar client\target\client-0.1.0-SNAPSHOT-all.jar
+mvn test
+mvn package
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-a4.ps1
+```
+
+Nếu server đang chạy giữ khóa JAR trên Windows, dừng server của mình trước khi đóng gói lại, hoặc build checkout riêng. Phiên A4 dùng checkout build riêng để giữ server/client người dùng đang chạy; ứng dụng đang chạy chưa tự chuyển sang code mới. Migration V4 được Flyway áp dụng khi khởi động bản mới, không reset database.
+
+Smoke A4 dùng TEST schema UUID riêng, timeout700ms/scan25ms/heartbeat100ms; PostgreSQL/Spring/HTTP/WS/B2/C3 thật, nguồn process MOCK. Hai candidate ONLINE, hard-kill JVM do test tạo → A UNKNOWN trong khi B vẫn gửi event/ACK; proctor đúng assignment nhận presence, proctor khác không nhận; A quay lại giữ history. Có kiểm COMMIT failure thật, Stop/unscoped, reconnect/socket cũ, roster/history khi proctor offline, server restart và worker cleanup. Không kill Java/Edge người dùng, không tắt/reset DB chung. Smoke C3 vẫn kiểm ProcessHandle/Edge thật.
+
+B3 dùng `GET /api/v1/monitoring/attempts`, `GET /api/v1/monitoring/attempts/{attemptId}/interruptions`, push `MONITOR_PRESENCE`; event `MONITOR_WARNING`/timeline A3 giữ nguyên. Schema và quy tắc revision/HTTP-WS recovery ở [PROTOCOL](docs/PROTOCOL.md). Dashboard/parser B3, GUI/LAN và human C review NOT RUN; không gọi toàn prototype PASS. Evidence: [A4 verification](evidence/t1-a4/2026-10-04-verification.md).

@@ -1,0 +1,18 @@
+14:29:53.505 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+14:29:53.659 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "c3_test_5d93a2ee08bc4e1bbdafbb292f61b572"."flyway_schema_history" does not exist yet
+14:29:53.667 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 4 migrations (execution time 00:00.045s)
+14:29:53.698 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "c3_test_5d93a2ee08bc4e1bbdafbb292f61b572"."flyway_schema_history" ...
+14:29:53.803 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "c3_test_5d93a2ee08bc4e1bbdafbb292f61b572": << Empty Schema >>
+14:29:53.827 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c3_test_5d93a2ee08bc4e1bbdafbb292f61b572" to version "1 - auth schema"
+14:29:53.896 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c3_test_5d93a2ee08bc4e1bbdafbb292f61b572" to version "2 - monitoring events"
+14:29:53.955 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 2 migrations to schema "c3_test_5d93a2ee08bc4e1bbdafbb292f61b572", now at version v2 (execution time 00:00.059s)
+PASS REAL PostgreSQL18 V2->V3; TEST assignments only; no shared DB reset
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS REAL Windows ProcessHandle/owned Edge open-close -> production C2/C3/B2 -> DB/ACK; SIMULATED first event ACK loss -> row1/warning1; real offline proctor timeline
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS REAL owned server stop/restart + B2 reconnect; MOCK snapshot pending delivered exactly once; no reconnect loop in C3
+PASS MOCK overflow capacity1 -> REAL gap persistence/commit ACK; DB COMMIT rollback/retry; SIMULATED gap ACK loss; stable dedup; next accumulator + heartbeat
+PASS REAL gap auth/role/foreign/CLOSED/unknown scope; gap never changes process state; warning/timeline process contract unchanged
+PASS collector/delivery/transport workers terminated; callbacks/subscriptions cleaned; no queue across logout/app kill
+TEST schema removed; shared PostgreSQL/dev tables untouched
+C3 REAL integration PASS; GUI/LAN/human B review NOT RUN; MT01 PARTIAL until B3

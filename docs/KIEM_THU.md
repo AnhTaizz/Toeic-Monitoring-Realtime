@@ -33,7 +33,7 @@ Mỗi lần chạy ghi đủ: commit SHA, OS/JDK/PostgreSQL, cấu hình, lệnh
 | MT05 | Restart collector hoặc server → cần epoch và full mới | C / B | T3-C3/C4 | NOT RUN | | |
 | MT06 | Không lùi state; full và delta cho cùng state và event set | C / B | T3-C3 | NOT RUN | | |
 | MT07 | Event muộn, queue tràn; snapshot mới không xóa gap | C / B | T2-C2 | NOT RUN | | |
-| MT08 | Kill client → server tự chuyển UNKNOWN | C / B | T2-C2 | NOT RUN | | |
+| MT08 | Kill client → server tự chuyển UNKNOWN | C / B | T2-C2 | PARTIAL — server A4 PASS; GUI B3 NOT RUN | base `99b4f39` + A4, SHA trong evidence | `evidence/t1-a4/2026-10-04-verification.md`; hard-kill JVM riêng, timeout/history/multi-client thật; không full/state chặng2 |
 
 ## Listening và tích hợp
 
@@ -234,3 +234,23 @@ Base main `74d2704`. Windows11/Temurin21.0.10/Maven3.9.15/PostgreSQL18.6. Baseli
 | Human B review, GUI manual, LAN máy2 | NOT RUN | Không giả Agent/headless review thành review thành viên |
 
 MT01 vẫn PARTIAL tới B3; A4 presence chưa làm. Không thực nghiệmE1, không full/delta/reducer/đề thi, không đổi TRACKER hoặc nguồn01–03. Lượt unit đầu có một assertion gap retry sai giả định thứ tự slot; đã sửa test theo việc event dùng được slot lúc gap backoff, final PASS ở trên. Không dùng lượt lỗi làm chứng cứ PASS.
+
+## T1-A4 — 04/10/2026
+
+Base main99b4f39. Windows11/Temurin21.0.10/Maven3.9.15/PostgreSQL18.6; người chạy Codex Agent. Baseline chạy lại20:48:02 UTC+7 PASS253. Final mvn test21:26:27 và package21:28:28 PASS277/277, client166/server110/spike1, 24 lượt mới; test/package ở checkout build riêng vì JAR dev đang được server người dùng giữ. Source checksum đối chiếu ở security-scan, code không thay bởi checkout. Test và package cùng code hành vi; package bổ sung import IOException tương đương thay FQN trong harness cleanup. Evidence `evidence/t1-a4/2026-10-04-verification.md`.
+
+| Kiểm tra | Kết quả thật | Giới hạn |
+|---|---|---|
+| Scoped lease start/stop/reconnect/old callback, unscoped/proctor/malformed | PASS | Unit MOCK và HTTP/WS thật; không thao tác GUI |
+| Deadline6s fake ticker, wall-clock jump, CAS/race có latch, association bounded/cleanup | PASS | Service MOCK store/clock; không đo LAN |
+| PostgreSQL V3→V4, roster role/ACTIVE scope, history permission | PASS REAL | Schema TEST UUID; public vẫn V3 vì giữ server đang chạy |
+| Hai candidate B2/C3, hard-kill JVM A riêng, B ONLINE/event/ACK | PASS REAL | Process snapshot MOCK; hard-kill thật, không gọi graceful close là kill |
+| Assigned/foreign MONITOR_PRESENCE, old socket, recoveredAt + stable gapId | PASS REAL | WS test giám thị, không GUI dashboard |
+| Deferred COMMIT failure heartbeat/timeout, rollback/no fake ACK/push/gap, retry | PASS REAL | TEST constraint trigger; không tắt/reset DB dùng chung |
+| Token revoke/CLOSED cleanup, Stop→timeout, offline roster/history, server restart | PASS REAL | Restart server do test sở hữu, không server dev |
+| Presence/collector/delivery/B2/child-reader cleanup | PASS REAL | Final run hết workers; thư mục Edge từ lượt hồi quy lỗi còn riêng bên dưới |
+| A3 regression | PASS REAL | Event/duplicate/conflict/concurrency/deferred COMMIT/live scope/timeline giữ contract |
+| C3 regression | PASS REAL | Windows ProcessHandle/owned Edge thật; ACK loss SIMULATED, overflow source MOCK → gap REAL |
+| GUI/LAN/package máy khác/human C review | NOT RUN | B3 còn dashboard/parser/HTTP recovery; chưa nghiệm thu toàn prototype |
+
+Lượt đầu decorator test phát hiện Gson không serialize Instant; đã thêm adapter ISO UTC và chạy lại PASS. Hồi quy đầu A3 dùng scoped ping không collector, chỉnh sang unscoped đúng mục đích transport. Hồi quy đầu C3 lỗi khóa profile Edge sau exit, thêm bounded cleanup retry; lượt final PASS. Lệnh dọn riêng profile sót của lượt lỗi bị kiểm duyệt tự động từ chối (`blocked by policy`), profile còn nhưng kiểm tra không process Edge nào dùng nó; không kill process người dùng. Không lấy lượt lỗi làm evidence PASS. MT08 PARTIAL ở mức case toàn hệ thống, thành phần server A4 PASS; IT02/IT03/GUI chưa đánh PASS toàn bộ. TRACKER/nguon/01–03 và V1–V3 giữ nguyên.
