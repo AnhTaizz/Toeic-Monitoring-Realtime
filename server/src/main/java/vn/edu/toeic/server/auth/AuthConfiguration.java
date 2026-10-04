@@ -7,13 +7,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.jdbc.core.simple.JdbcClient;
+import vn.edu.toeic.server.monitoring.JdbcAttemptScopeStore;
 
 @Configuration
 class AuthConfiguration {
     @Bean
     @ConditionalOnMissingBean(AttemptScopeAuthorizer.class)
-    AttemptScopeAuthorizer attemptScopeAuthorizer() {
-        return (user, attemptId) -> false; // No production attempt schema/assignment exists at T1-A2.
+    AttemptScopeAuthorizer attemptScopeAuthorizer(JdbcClient jdbc) {
+        return new JdbcAttemptScopeStore(jdbc);
     }
     @Bean
     PasswordEncoder passwordEncoder() {

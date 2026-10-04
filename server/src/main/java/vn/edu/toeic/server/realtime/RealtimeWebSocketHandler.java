@@ -6,18 +6,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.Strictness;
-import java.io.IOException;
 import java.time.Instant;
 import java.time.DateTimeException;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.handler.ConcurrentWebSocketSessionDecorator;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import vn.edu.toeic.protocol.ErrorCode;
 import vn.edu.toeic.protocol.Protocol;
@@ -28,30 +24,31 @@ import vn.edu.toeic.server.auth.AccessDeniedException;
 import vn.edu.toeic.server.auth.AuthenticatedUser;
 import vn.edu.toeic.server.auth.AuthorizationService;
 import vn.edu.toeic.server.auth.SessionAuthenticationService;
+import vn.edu.toeic.server.monitoring.ProcessEvent;
+import vn.edu.toeic.server.monitoring.MonitoringEventService;
+import vn.edu.toeic.server.monitoring.EventConflictException;
 
-/** Transport/auth only: no event persistence, presence, epoch or exam business. */
+/** Authenticated transport; event service owns transactional persistence. No presence/state sync. */
 @Component
 public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
     private final SessionAuthenticationService authentication;
     private final AuthorizationService authorization;
     private final int maxMessageBytes;
-    private final int sendTimeout;
-    private final int sendBuffer;
+    private final RealtimeSessionRegistry sessions;
+    private final MonitoringEventService events;
     private final Gson gson = new GsonBuilder().setStrictness(Strictness.STRICT).serializeNulls().create();
-    private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
     public RealtimeWebSocketHandler(SessionAuthenticationService authentication, AuthorizationService authorization,
             @Value("${toeic.ws.max-message-bytes:65536}") int maxMessageBytes,
-            @Value("${toeic.ws.send-timeout-ms:5000}") int sendTimeout,
-            @Value("${toeic.ws.send-buffer-bytes:65536}") int sendBuffer) {
+            RealtimeSessionRegistry sessions, MonitoringEventService events) {
         this.authentication = authentication;
         this.authorization = authorization;
         this.maxMessageBytes = maxMessageBytes;
-        this.sendTimeout = sendTimeout;
-        this.sendBuffer = sendBuffer;
+        this.sessions = sessions;
+        this.events = events;
     }
     @Override public void afterConnectionEstablished(WebSocketSession session) {
         session.setTextMessageSizeLimit(maxMessageBytes);
-        sessions.put(session.getId(), new ConcurrentWebSocketSessionDecorator(session, sendTimeout, sendBuffer));
+        sessions.register(session);
     }
     @Override protected void handleTextMessage(WebSocketSession session, TextMessage text) {
         String requestId = null;
@@ -77,8 +74,20 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
             attemptId = identifier(body, "attemptId", false);
             if ("PROCESS_OBSERVED".equals(type)) authorization.requireRole(user, Role.CANDIDATE);
             if (attemptId != null) authorization.requireAttempt(user, attemptId);
+            if ("PROCESS_OBSERVED".equals(type)) {
+                if (attemptId == null) throw new IllegalArgumentException();
+                ProcessEvent event = ProcessEvent.parse(body.getAsJsonObject("payload"));
+                // This call crosses the transactional proxy: commit failures throw before ACK.
+                MonitoringEventService.StoreResult result = events.store(user, attemptId, event);
+                JsonObject accepted = new JsonObject();
+                accepted.addProperty("status", "ACCEPTED");
+                accepted.addProperty("acknowledgedType", "PROCESS_OBSERVED");
+                send(session, new MessageEnvelope<>(Protocol.VERSION, "ACK", UUID.randomUUID().toString(), requestId,
+                        attemptId, traceId, accepted));
+                if (result.created()) sessions.warnAssignedProctors(result.stored(), traceId);
+                return;
+            }
             if (!"HEARTBEAT".equals(type)) {
-                // A3/C3 not implemented: never ACK an event without persistence.
                 throw new IllegalArgumentException();
             }
             JsonObject payload = body.getAsJsonObject("payload");
@@ -89,10 +98,12 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
             accepted.addProperty("acknowledgedType", "HEARTBEAT");
             send(session, new MessageEnvelope<>(Protocol.VERSION, "ACK", UUID.randomUUID().toString(), requestId,
                     attemptId, traceId, accepted));
+        } catch (EventConflictException exception) {
+            sendError(session, ErrorCode.CONFLICT, exception.getMessage(), false, requestId, attemptId, traceId);
         } catch (AccessDeniedException exception) {
             sendError(session, exception.code(), exception.getMessage(), false, requestId, attemptId, traceId);
             if (exception.code() == ErrorCode.UNAUTHORIZED) close(session, CloseStatus.POLICY_VIOLATION);
-        } catch (IllegalArgumentException | IllegalStateException | JsonParseException | ClassCastException | DateTimeException exception) {
+        } catch (IllegalArgumentException | IllegalStateException | JsonParseException | ClassCastException | DateTimeException | ArithmeticException exception) {
             sendError(session, ErrorCode.INVALID_INPUT, "Message realtime không hợp lệ hoặc chưa được hỗ trợ", false,
                     requestId, attemptId, traceId);
         } catch (RuntimeException exception) {
@@ -120,15 +131,11 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
     }
     /** All outbound writes go through the session decorator, including ERRORs. */
     private void send(WebSocketSession session, Object message) {
-        WebSocketSession target = sessions.get(session.getId());
-        if (target == null || !target.isOpen()) return;
-        try { target.sendMessage(new TextMessage(gson.toJson(message))); }
-        catch (IOException | RuntimeException exception) { close(session, CloseStatus.SERVER_ERROR); }
+        sessions.send(session, message);
     }
     private void close(WebSocketSession session, CloseStatus status) {
-        sessions.remove(session.getId());
-        try { session.close(status); } catch (IOException | RuntimeException ignored) { }
+        sessions.close(session, status);
     }
-    @Override public void afterConnectionClosed(WebSocketSession session, CloseStatus status) { sessions.remove(session.getId()); }
+    @Override public void afterConnectionClosed(WebSocketSession session, CloseStatus status) { sessions.remove(session); }
     @Override public void handleTransportError(WebSocketSession session, Throwable error) { close(session, CloseStatus.SERVER_ERROR); }
 }
