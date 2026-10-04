@@ -12,6 +12,13 @@
     <name>TOEIC Server</name>
 
     <dependencies>
+        <!-- Explicit C3 integration harness exercises production client delivery, test scope only. -->
+        <dependency>
+            <groupId>vn.edu.toeic</groupId>
+            <artifactId>client</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>vn.edu.toeic</groupId>
             <artifactId>protocol</artifactId>

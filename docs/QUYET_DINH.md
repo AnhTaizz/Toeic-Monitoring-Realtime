@@ -69,3 +69,11 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Ứng dụng demo: `msedge.exe`; probe hiện tại cũng quan sát được `Zalo.exe`.
 - Giới hạn: process thiếu `command`, `startInstant` hoặc `user` mang chất lượng `UNREADABLE`, không được coi là sạch. Danh sách chỉ phục vụ demo kỹ thuật, chưa phải chính sách thi thật.
 - Liên quan: T1-C1, T1-C2.
+
+## QD-09 · Identity khi thiếu thời điểm bắt đầu process
+- Ngày: 2026-10-04 · Người quyết: C · Human review B: NOT RUN.
+- Lựa chọn: C3 giữ identity C2 `(collectorSessionId,pid,startInstant nullable)`, không dùng metadataQuality để phân biệt. Start null→known hoặc known→null coi là identity mới, thay vì đoán chúng là cùng process.
+- Lý do: không đủ dữ liệu để chứng minh PID chưa bị tái sử dụng; ưu tiên khai rõ quan sát và bất định thay vì gộp có thể mất event.
+- Hệ quả: metadata hồi phục có thể phát thêm event dù process thực chưa đổi. PID reuse với start luôn null có thể không phân biệt nếu không quan sát được khoảng vắng. Scan lỗi không coi là tập rỗng; polling vẫn có thể bỏ sót process sống giữa hai poll. Hai giới hạn này không được diễn giải thành “máy sạch”.
+- Kiểm chứng: MonitoringDeliveryTest missingStart/PID reuse/scan failure; PROTOCOL C3, evidence/t1-c3/2026-10-04-verification.md.
+- Liên quan: T1-C3; không thay contract state/reducer chặng2.

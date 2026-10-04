@@ -206,3 +206,31 @@ Source/test/script `88ef95a2d96db202edf39e3ed5c72f026bfdb7fc`, base main `6b9572
 | C human review, GUI/LAN | NOT RUN | Không giả review hoặc desktop demo từ headless network harness |
 
 Không đánh PASS 27 case chính thức bằng test thành phần A3: C3 queue/collector integration, B3 dashboard, A4 presence/full/delta/exam flow chưa làm. TRACKER giữ nguyên. Không thêm QD implementation-detail; QD-05 vẫn áp dụng. Lỗi JDBC Timestamp/test fixtures đã sửa trước lượt PASS, xem evidence.
+
+## T1-C3 — 04/10/2026
+
+Base main `74d2704`. Windows11/Temurin21.0.10/Maven3.9.15/PostgreSQL18.6. Baseline chạy lại PASS200; final mvn test19:37:13 và package19:38:26 UTC+7 PASS253/253 mỗi lượt, client161/server91/spike1; 53 mới (delivery30, scope7, adapter1, gap15). Số lấy từ summary Maven, không cộng XML surefire cũ trong target. Evidence `evidence/t1-c3/2026-10-04-verification.md`.
+
+| Kiểm tra | Kết quả | Phân loại / giới hạn |
+|---|---|---|
+| First snapshot, 10 poll không trùng, disappearance/reappearance, PID/start reuse | PASS | MOCK snapshots, fake wall/monotonic clock |
+| Missing start/quality, source failure, bounded baseline | PASS | MOCK; null→known coi identity mới; không hứa PID reuse hoàn hảo |
+| Frozen ID/payload/time, write≠ACK, early/wrong/duplicate ACK | PASS | MOCK transport; deep copy, sáu correlation fields |
+| Timeout/backoff/budget/manual retry và permanent/permission errors | PASS | MOCK virtual time; reconnect không reset budget |
+| Overflow/frozen gap/next accumulator/heartbeat slot | PASS | MOCK source/transport unit; real delivery bên dưới |
+| Late old send completion/ACK, asyncStop, restart chờ blocked scan | PASS | MOCK + latch, không long sleep làm chứng cứ |
+| Fresh auth-me, empty candidate scope/proctor gate | PASS | MOCK HTTP unit và REAL TEST login/me; không scan/queue scope rỗng |
+| Windows ProcessHandle + owned Edge open/close + C2→C3→B2→DB/ACK | PASS REAL | Profile/process tree riêng; warning kiểm qua WS test, không GUI |
+| Lost ACK retry row1/warning1, many real polls | PASS | ACK loss SIMULATED tại observer; HTTP/WS/DB/C2/C3 REAL |
+| Offline assigned proctor đọc lại timeline | PASS REAL | Endpoint A3 giữ nguyên; không B3 dashboard |
+| B2 reconnect sau owned Spring server stop/restart | PASS | Server/network REAL; queued snapshot MOCK; PostgreSQL không tắt |
+| Capacity1 overflow→persist/commitACK gap, dedup/next accumulator | PASS | Snapshots MOCK; WS/PG/ACK REAL; đầu gap ACK loss SIMULATED |
+| Deferred gap COMMIT failure→rollback/error→retry | PASS REAL | Trigger TEST riêng, không sửa production handler để bỏ ACK |
+| Gap conflict/foreign/CLOSED/unknown/proctor forbidden | PASS REAL | Row không đổi; event state/warning contract giữ nguyên |
+| Collector/delivery/B2 workers/subscription cleanup | PASS | Harness đợi worker sở hữu kết thúc; stop unit idempotent |
+| A3 regression smoke trên V3 mới | PASS REAL | Scope/revocation/concurrent duplicate/commit failure/timeline PASS |
+| DEV fixture Create/duplicate rejection/idempotent Cleanup | PASS REAL | Schema c3_demo_test_UUID riêng, user2 giữ nguyên, public không chạm |
+| JAR/security/diff check | PASS | Evidence scan; test/harness/client test dependency không lọt serverJAR |
+| Human B review, GUI manual, LAN máy2 | NOT RUN | Không giả Agent/headless review thành review thành viên |
+
+MT01 vẫn PARTIAL tới B3; A4 presence chưa làm. Không thực nghiệmE1, không full/delta/reducer/đề thi, không đổi TRACKER hoặc nguồn01–03. Lượt unit đầu có một assertion gap retry sai giả định thứ tự slot; đã sửa test theo việc event dùng được slot lúc gap backoff, final PASS ở trên. Không dùng lượt lỗi làm chứng cứ PASS.

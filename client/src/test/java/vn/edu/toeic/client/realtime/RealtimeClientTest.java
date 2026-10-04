@@ -341,6 +341,19 @@ class RealtimeClientTest {
             assertThat(socket.sent).hasSize(1);
         }
     }
+    @Test void monitoringReservesHeartbeatSlotAndCanReleaseExpiredCorrelation() {
+        MockScheduler clock = new MockScheduler(); MockSocket socket = new MockSocket(null);
+        RealtimeClient.Settings settings = new RealtimeClient.Settings(Duration.ofSeconds(2), Duration.ofSeconds(1), Duration.ofSeconds(8), 4, 65536, 2);
+        try (RealtimeClient client = new RealtimeClient(listener -> { listener.onOpen(socket); return CompletableFuture.completedFuture(socket); }, settings, clock)) {
+            client.connect(SESSION).join(); client.send(event()).join();
+            MessageEnvelope<JsonObject> first = event();
+            MessageEnvelope<JsonObject> second = new MessageEnvelope<>("v0", first.type(), "MOCK-next", "MOCK-next", first.attemptId(), first.traceId(), first.payload());
+            assertThat(client.send(second)).isCompletedExceptionally();
+            clock.advance(Duration.ofSeconds(2)); assertThat(socket.sent).hasSize(2);
+            assertThat(GSON.fromJson(socket.sent.get(1), JsonObject.class).get("type").getAsString()).isEqualTo("HEARTBEAT");
+            client.forgetPending(first.requestId()); client.send(second).join(); assertThat(socket.sent).hasSize(3);
+        }
+    }
 
     @Test void settingsRejectZeroIntervalsAndOutOfScopeSession() {
         assertThatThrownBy(() -> new RealtimeClient.Settings(Duration.ZERO, Duration.ofSeconds(1),

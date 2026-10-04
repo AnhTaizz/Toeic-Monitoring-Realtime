@@ -69,7 +69,7 @@ public final class MonitoringPostgresSmoke {
                     admin.createStatement().execute("CREATE SCHEMA " + schema);
                     ownedSchemas.add(schema);
                 }
-                Flyway.configure().dataSource(url, user, password).schemas(clean).defaultSchema(clean).load().migrate();
+                Flyway.configure().dataSource(url, user, password).schemas(clean).defaultSchema(clean).target("2").load().migrate();
                 check(version(admin, clean) == 2, "Clean migration V1+V2");
                 Flyway.configure().dataSource(url, user, password).schemas(upgrade).defaultSchema(upgrade).target("1").load().migrate();
                 check(version(admin, upgrade) == 1, "Existing V1 schema");
@@ -81,7 +81,7 @@ public final class MonitoringPostgresSmoke {
                         "--spring.flyway.default-schema=" + upgrade, "--spring.flyway.schemas=" + upgrade,
                         "--logging.level.root=OFF", "--debug=false");
                         HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build()) {
-                    check(version(admin, upgrade) == 2, "Production V1 to V2 migration");
+                    check(version(admin, upgrade) >= 2, "Production V1 to V2 migration (later additive migrations allowed)");
                     check(context.getBean(AttemptScopeAuthorizer.class) instanceof JdbcAttemptScopeStore, "Production scope store");
                     JdbcClient jdbc = context.getBean(JdbcClient.class);
                     int port = ((WebServerApplicationContext) context).getWebServer().getPort();

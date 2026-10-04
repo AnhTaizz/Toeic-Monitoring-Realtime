@@ -1,0 +1,27 @@
+12:38:46.847 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+12:38:46.966 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "a3_clean_b1313ee0722d4df0ac1818fc31e046c0"."flyway_schema_history" does not exist yet
+12:38:46.973 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 3 migrations (execution time 00:00.027s)
+12:38:47.004 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "a3_clean_b1313ee0722d4df0ac1818fc31e046c0"."flyway_schema_history" ...
+12:38:47.091 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "a3_clean_b1313ee0722d4df0ac1818fc31e046c0": << Empty Schema >>
+12:38:47.113 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "a3_clean_b1313ee0722d4df0ac1818fc31e046c0" to version "1 - auth schema"
+12:38:47.182 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "a3_clean_b1313ee0722d4df0ac1818fc31e046c0" to version "2 - monitoring events"
+12:38:47.231 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 2 migrations to schema "a3_clean_b1313ee0722d4df0ac1818fc31e046c0", now at version v2 (execution time 00:00.048s)
+12:38:47.276 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+12:38:47.301 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "a3_upgrade_b1313ee0722d4df0ac1818fc31e046c0"."flyway_schema_history" does not exist yet
+12:38:47.303 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 3 migrations (execution time 00:00.008s)
+12:38:47.317 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "a3_upgrade_b1313ee0722d4df0ac1818fc31e046c0"."flyway_schema_history" ...
+12:38:47.356 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "a3_upgrade_b1313ee0722d4df0ac1818fc31e046c0": << Empty Schema >>
+12:38:47.365 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "a3_upgrade_b1313ee0722d4df0ac1818fc31e046c0" to version "1 - auth schema"
+12:38:47.405 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 1 migration to schema "a3_upgrade_b1313ee0722d4df0ac1818fc31e046c0", now at version v1 (execution time 00:00.021s)
+PASS PostgreSQL clean migration; V1 prepared for production V2 upgrade
+PASS production V1->V2 migration; TEST fixtures only; assignment/owner foreign keys
+2026-10-04T12:38:51.471Z  INFO 10164 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-04T12:38:51.476Z  INFO 10164 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+PASS login/auth-me ACTIVE scopes; candidate/foreign/closed/unknown timeline denied; assigned proctor allowed
+PASS valid event COMMIT->ACK->assigned warning; duplicate ACK twice/row once/warning once; changed payload CONFLICT; event FK/unique
+PASS candidate own/foreign/closed/unknown + proctor cannot send; malformed/path rejection; other client survives
+PASS REAL PostgreSQL deferred COMMIT failure -> rollback + retryable ERROR; NO success ACK or warning
+PASS barrier-controlled concurrent real WS retry -> ACK twice, DB once, warning once
+PASS nullable metadata retry; offline commit+ACK; REST reconnect recovery/order; live assignment/token revocation; four-client isolation
+A3 REAL PostgreSQL + HTTP + WebSocket smoke PASS
+TEST schemas removed; existing development tables untouched

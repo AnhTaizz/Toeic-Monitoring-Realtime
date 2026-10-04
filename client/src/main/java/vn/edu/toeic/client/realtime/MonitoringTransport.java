@@ -8,7 +8,7 @@ import vn.edu.toeic.protocol.ws.MessageEnvelope;
 /**
  * Collector boundary. send completes on socket write, NOT server ACK/commit.
  * C owns event identity, payload, queues and retry; ACK arrives via onMessage.
- * HEARTBEAT consumes the real A2 contract; PROCESS_OBSERVED server integration awaits A3/C3.
+ * HEARTBEAT consumes A2; PROCESS_OBSERVED and MONITORING_GAP use A3/C3 persistence/ACK.
  * State message types await C's contract; no state schema is invented here.
  */
 public interface MonitoringTransport {
@@ -16,4 +16,6 @@ public interface MonitoringTransport {
     ConnectionState connectionState();
     AutoCloseable onConnectionState(Consumer<ConnectionState> listener);
     AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> listener);
+    /** Delivery releases adapter correlation on timeout/exhaustion/stop; never means server ACK. */
+    default void forgetPending(String requestId) { }
 }
