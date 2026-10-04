@@ -1,6 +1,7 @@
 package vn.edu.toeic.client;
 
 import java.util.concurrent.CompletionException;
+import java.util.Set;
 import java.util.function.Consumer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -19,10 +20,12 @@ import vn.edu.toeic.protocol.auth.LoginResponse;
 import vn.edu.toeic.client.realtime.ConnectionViewModel;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.RealtimeClient;
+import vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpener;
 
 public final class ToeicClientApplication extends Application {
     private final LoginApiClient loginApiClient = new LoginApiClient();
-    private final RealtimeClient realtimeClient = new RealtimeClient();
+    private RealtimeClient realtimeClient;
+    private AutoCloseable problemSubscription;
     private AutoCloseable connectionSubscription;
     private long viewGeneration;
 
@@ -59,14 +62,22 @@ public final class ToeicClientApplication extends Application {
             loginButton.setDisable(true);
             status.setText("Đang kết nối…");
             try {
-                loginApiClient.login(serverField.getText(), usernameField.getText(), passwordField.getText())
+                String serverUrl = serverField.getText();
+                AuthenticatedWebSocketOpener.websocketEndpoint(serverUrl);
+                long loginView = viewGeneration;
+                loginApiClient.login(serverUrl, usernameField.getText(), passwordField.getText())
                         .whenComplete((response, failure) -> Platform.runLater(() -> {
+                            if (loginView != viewGeneration) return;
+                            passwordField.clear();
                             loginButton.setDisable(false);
                             if (failure != null) {
                                 status.setText(userMessage(failure));
                                 return;
                             }
-                            showRoleScene(stage, response);
+                            try { showRoleScene(stage, serverUrl, response); }
+                            catch (IllegalArgumentException ignored) {
+                                status.setText("Phản hồi đăng nhập không hợp lệ. Hãy đăng nhập lại.");
+                            }
                         }));
             } catch (IllegalArgumentException exception) {
                 loginButton.setDisable(false);
@@ -82,8 +93,17 @@ public final class ToeicClientApplication extends Application {
         return new Scene(root, 620, 420);
     }
 
-    private void showRoleScene(Stage stage, LoginResponse response) {
+    private void showRoleScene(Stage stage, String serverUrl, LoginResponse response) {
         RoleViewModel viewModel = RoleViewModel.from(response);
+        if (!"v0".equals(response.protocolVersion()) || !"Bearer".equalsIgnoreCase(response.tokenType())) {
+            throw new IllegalArgumentException("Phiên đăng nhập không hợp lệ");
+        }
+        Set<String> scope = response.attemptScope() == null ? Set.of() : Set.copyOf(response.attemptScope());
+        RealtimeClient.Session context = new RealtimeClient.Session(scope, null, null);
+        RealtimeClient newClient = new RealtimeClient(serverUrl, response.token());
+        releaseConnectionView();
+        if (realtimeClient != null) realtimeClient.close();
+        realtimeClient = newClient;
 
         Label title = new Label(viewModel.heading());
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
@@ -91,7 +111,8 @@ public final class ToeicClientApplication extends Application {
         Label detail = new Label(viewModel.description());
         Label connectionStatus = new Label();
         connectionStatus.setWrapText(true);
-        Label availability = new Label("Kết nối thời gian thực chưa sẵn sàng.");
+        Label availability = new Label("Đang xác thực kết nối thời gian thực…");
+        availability.setWrapText(true);
         // This container is the lock boundary for future network-dependent controls.
         VBox networkControls = new VBox(12, detail);
         long currentView = ++viewGeneration;
@@ -100,14 +121,26 @@ public final class ToeicClientApplication extends Application {
             ConnectionViewModel connection = ConnectionViewModel.from(state);
             connectionStatus.setText(connection.status());
             networkControls.setDisable(connection.networkLocked());
+            availability.setText(state == ConnectionState.CONNECTED
+                    ? "Kết nối thời gian thực sẵn sàng."
+                    : state == ConnectionState.FAILED ? "Kết nối thất bại. Hãy kiểm tra mạng hoặc đăng nhập lại."
+                    : "Các thao tác cần mạng đang khóa.");
         };
         connectionSubscription = realtimeClient.onConnectionState(
                 state -> Platform.runLater(() -> updateConnection.accept(state)));
+        problemSubscription = realtimeClient.onMessage(message -> {
+            if ("ERROR".equals(message.type())) Platform.runLater(() -> {
+                if (currentView == viewGeneration) availability.setText(
+                        "UNAUTHORIZED".equals(message.payload().get("code").getAsString())
+                        ? "Phiên hết hiệu lực. Hãy đăng nhập lại." : "Server từ chối message realtime.");
+            });
+        });
         updateConnection.accept(realtimeClient.connectionState());
         Button logout = new Button("Đăng xuất");
         logout.setOnAction(event -> {
             releaseConnectionView();
-            realtimeClient.disconnect();
+            realtimeClient.close();
+            realtimeClient = null;
             stage.setScene(loginScene(stage));
         });
 
@@ -116,6 +149,8 @@ public final class ToeicClientApplication extends Application {
         content.setAlignment(Pos.TOP_CENTER);
         BorderPane root = new BorderPane(content);
         stage.setScene(new Scene(root, 720, 480));
+        // Hai role dùng chung transport; B2 không khởi động collector.
+        realtimeClient.connect(context);
     }
 
     static String userMessage(Throwable failure) {
@@ -131,11 +166,18 @@ public final class ToeicClientApplication extends Application {
     @Override
     public void stop() {
         releaseConnectionView();
-        try { realtimeClient.close(); } finally { loginApiClient.close(); }
+        try { if (realtimeClient != null) realtimeClient.close(); } finally {
+            realtimeClient = null;
+            loginApiClient.close();
+        }
     }
 
     private void releaseConnectionView() {
         viewGeneration++;
+        if (problemSubscription != null) {
+            try { problemSubscription.close(); } catch (Exception ignored) { }
+            problemSubscription = null;
+        }
         if (connectionSubscription != null) {
             try { connectionSubscription.close(); } catch (Exception ignored) { }
             connectionSubscription = null;

@@ -27,16 +27,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
-/** One owner for socket lifecycle, fragmentation, writes, heartbeat and retry.
- * Real authenticated opening is BLOCKED by T1-A2/QD-03. No endpoint, AUTH
- * message or credential header is assumed. The default opener fails closed.
- */
+/** Một adapter sở hữu socket, fragment, write, heartbeat và bounded retry. */
 public final class RealtimeClient implements MonitoringTransport, AutoCloseable {
     /** Called on the worker for EVERY attempt, including reconnect.
-     * A future real implementation must create a fresh authenticated socket,
-     * complete only after authentication, map invalid credentials to
-     * AuthenticationRejectedException, and own/close any HTTP executors.
-     * The test implementation is explicitly MOCK.
+     * Mở socket mới và xác thực lại trên mọi reconnect; future chỉ thành công
+     * sau handshake. Test opener được ghi nhãn MOCK.
      */
     public interface ConnectionOpener extends AutoCloseable {
         CompletableFuture<WebSocket> open(WebSocket.Listener listener);
@@ -45,10 +40,6 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
 
     public static final class AuthenticationRejectedException extends RuntimeException {
         public AuthenticationRejectedException() { super("Xác thực kết nối bị từ chối"); }
-    }
-
-    public static final class AuthContractUnavailableException extends RuntimeException {
-        public AuthContractUnavailableException() { super("BLOCKED BY T1-A2: chưa có contract WS/auth QD-03"); }
     }
 
     public record Settings(Duration heartbeat, Duration initialBackoff, Duration maxBackoff,
@@ -80,9 +71,10 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     public record Session(Set<String> attemptScope, String heartbeatAttemptId, String collectorSessionId) {
         public Session {
             attemptScope = Set.copyOf(attemptScope);
-            if (heartbeatAttemptId == null || heartbeatAttemptId.isBlank()
-                    || !attemptScope.contains(heartbeatAttemptId)
-                    || collectorSessionId == null || collectorSessionId.isBlank()) {
+            if (attemptScope.stream().anyMatch(id -> !validIdentifier(id))
+                    || (heartbeatAttemptId != null && (!validIdentifier(heartbeatAttemptId)
+                    || !attemptScope.contains(heartbeatAttemptId)))
+                    || (collectorSessionId != null && !validIdentifier(collectorSessionId))) {
                 throw new IllegalArgumentException("Phiên giám sát chưa có scope hợp lệ");
             }
         }
@@ -99,6 +91,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     private final Set<CompletableFuture<Void>> writes = new HashSet<>();
     private volatile ConnectionState state = ConnectionState.DISCONNECTED;
     private boolean closed;
+    private boolean authenticationRejected;
     private long generation;
     private int retries;
     private Session session;
@@ -110,8 +103,8 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     private ScheduledFuture<?> heartbeatTask;
     private ScheduledFuture<?> retryTask;
 
-    public RealtimeClient() {
-        this(listener -> CompletableFuture.failedFuture(new AuthContractUnavailableException()), Settings.defaults());
+    public RealtimeClient(String serverUrl, String token) {
+        this(new AuthenticatedWebSocketOpener(serverUrl, token), Settings.defaults());
     }
 
     public RealtimeClient(ConnectionOpener opener, Settings settings) {
@@ -131,6 +124,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
 
     public synchronized CompletableFuture<Void> connect(Session newSession) {
         if (closed) return failed("Adapter đã đóng");
+        if (authenticationRejected) return CompletableFuture.failedFuture(new AuthenticationRejectedException());
         if (state == ConnectionState.CONNECTED || state == ConnectionState.CONNECTING
                 || state == ConnectionState.RECONNECTING) return failed("Kết nối đang hoạt động");
         session = Objects.requireNonNull(newSession);
@@ -179,9 +173,8 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     private synchronized void heartbeat() {
         if (closed || state != ConnectionState.CONNECTED) return;
         if (!writes.isEmpty()) return; // Do not accumulate heartbeats behind a stalled write.
-        // MOCK v0 fixture shape from docs/PROTOCOL.md; not real server evidence.
         JsonObject payload = new JsonObject();
-        payload.addProperty("collectorSessionId", session.collectorSessionId());
+        if (session.collectorSessionId() != null) payload.addProperty("collectorSessionId", session.collectorSessionId());
         payload.addProperty("sentAt", Instant.now().toString());
         String id = UUID.randomUUID().toString();
         send(new MessageEnvelope<>("v0", "HEARTBEAT", id, id,
@@ -196,10 +189,12 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
             validateEnvelope(message);
             if (!("HEARTBEAT".equals(message.type()) || "PROCESS_OBSERVED".equals(message.type()))
                     || !message.messageId().equals(message.requestId())) throw new IllegalArgumentException();
-            requiredString(message.payload(), "collectorSessionId");
             if ("HEARTBEAT".equals(message.type())) {
+                optionalIdentifier(message.payload(), "collectorSessionId");
                 Instant.parse(requiredString(message.payload(), "sentAt"));
             } else {
+                if (message.attemptId() == null) throw new IllegalArgumentException();
+                requiredString(message.payload(), "collectorSessionId");
                 requiredString(message.payload(), "eventId");
                 requiredString(message.payload(), "policyVersion");
                 requiredString(message.payload(), "processName");
@@ -213,7 +208,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                     message.requestId(), message.attemptId(), message.traceId(), message.payload().deepCopy());
             if (gson.toJson(copy).length() > settings.maxMessageChars()) throw new IllegalArgumentException();
         } catch (RuntimeException ignored) { return failed("Message realtime không hợp lệ hoặc chưa được hỗ trợ"); }
-        if ("PROCESS_OBSERVED".equals(copy.type())) {
+        { // HEARTBEAT và event đều phải chờ ACK thật; không coi socket write là ACK.
             MessageEnvelope<JsonObject> previous = pendingAcks.get(copy.requestId());
             if (previous != null && !previous.equals(copy)) return failed("Request ID đã dùng với nội dung khác");
             if (previous == null && pendingAcks.size() >= settings.maxPendingAcks()) return failed("Đã đạt giới hạn ACK đang chờ");
@@ -258,11 +253,14 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         if (closed || current != generation) return;
         generation++; // Ignore callbacks from the old connection immediately.
         cleanupConnection();
-        Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
-        if (cause instanceof AuthenticationRejectedException || cause instanceof AuthContractUnavailableException) {
+        Throwable cause = error;
+        while (cause instanceof CompletionException && cause.getCause() != null) cause = cause.getCause();
+        if (cause instanceof AuthenticationRejectedException) {
+            authenticationRejected = true;
+            session = null;
+            opener.close(); // Bỏ token; cần tạo adapter mới sau login.
             transition(ConnectionState.FAILED);
-            failConnecting(cause instanceof AuthContractUnavailableException
-                    ? new AuthContractUnavailableException() : new AuthenticationRejectedException());
+            failConnecting(new AuthenticationRejectedException());
             return;
         }
         if (retries >= settings.maxRetries()) {
@@ -344,28 +342,75 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         try {
             JsonObject body = gson.fromJson(text, JsonObject.class);
             MessageEnvelope<JsonObject> message = new MessageEnvelope<>(requiredString(body, "protocolVersion"),
-                    requiredString(body, "type"), requiredString(body, "messageId"), requiredString(body, "requestId"),
-                    requiredString(body, "attemptId"), requiredString(body, "traceId"), body.getAsJsonObject("payload"));
-            validateEnvelope(message);
-            if (!"ACK".equals(message.type())) throw new IllegalArgumentException();
-            MessageEnvelope<JsonObject> request = pendingAcks.get(message.requestId());
-            if (request == null || !request.attemptId().equals(message.attemptId())
-                    || !request.traceId().equals(message.traceId())
-                    || !request.type().equals(requiredString(message.payload(), "acknowledgedType"))
-                    || !"ACCEPTED".equals(requiredString(message.payload(), "status"))) throw new IllegalArgumentException();
-            pendingAcks.remove(message.requestId());
-            for (Consumer<MessageEnvelope<JsonObject>> listener : messageListeners) {
-                notifySafely(listener, new MessageEnvelope<>(message.protocolVersion(), message.type(), message.messageId(),
-                        message.requestId(), message.attemptId(), message.traceId(), message.payload().deepCopy()));
-            }
+                    requiredString(body, "type"), requiredString(body, "messageId"), optionalIdentifier(body, "requestId"),
+                    optionalIdentifier(body, "attemptId"), requiredString(body, "traceId"), body.getAsJsonObject("payload"));
+            validateHeader(message);
+            if ("ACK".equals(message.type())) {
+                validateScope(message.attemptId());
+                MessageEnvelope<JsonObject> request = pendingAcks.get(message.requestId());
+                if (request == null || !Objects.equals(request.attemptId(), message.attemptId())
+                        || !request.traceId().equals(message.traceId())
+                        || !request.type().equals(requiredString(message.payload(), "acknowledgedType"))
+                        || !"ACCEPTED".equals(requiredString(message.payload(), "status"))) throw new IllegalArgumentException();
+                pendingAcks.remove(message.requestId());
+            } else if ("ERROR".equals(message.type())) {
+                String code = requiredString(message.payload(), "code");
+                vn.edu.toeic.protocol.ErrorCode.valueOf(code);
+                requiredString(message.payload(), "message");
+                JsonElement retryable = message.payload().get("retryable");
+                if (retryable == null || !retryable.isJsonPrimitive()
+                        || !retryable.getAsJsonPrimitive().isBoolean()) throw new IllegalArgumentException();
+                // Không phản chiếu thông báo tùy ý từ server ra UI/log của client.
+                message.payload().addProperty("message", "UNAUTHORIZED".equals(code)
+                        ? "Phiên hết hiệu lực. Hãy đăng nhập lại." : "Server từ chối message realtime");
+                pendingAcks.remove(message.requestId());
+                if ("UNAUTHORIZED".equals(code)) {
+                    publish(message);
+                    connectionLost(current, new AuthenticationRejectedException());
+                    return;
+                }
+            } else throw new IllegalArgumentException();
+            publish(message);
         } catch (RuntimeException ignored) { problem(); }
     }
 
+    private void publish(MessageEnvelope<JsonObject> message) {
+        for (Consumer<MessageEnvelope<JsonObject>> listener : messageListeners) {
+            notifySafely(listener, new MessageEnvelope<>(message.protocolVersion(), message.type(), message.messageId(),
+                    message.requestId(), message.attemptId(), message.traceId(), message.payload().deepCopy()));
+        }
+    }
+
     private void validateEnvelope(MessageEnvelope<JsonObject> message) {
+        validateHeader(message);
+        if (!validIdentifier(message.requestId())) throw new IllegalArgumentException();
+        validateScope(message.attemptId());
+    }
+
+    private void validateHeader(MessageEnvelope<JsonObject> message) {
         if (message == null || !"v0".equals(message.protocolVersion()) || blank(message.type())
-                || blank(message.messageId()) || blank(message.requestId()) || blank(message.traceId())
-                || blank(message.attemptId()) || session == null || !session.attemptScope().contains(message.attemptId())
+                || !validIdentifier(message.messageId()) || !validIdentifier(message.traceId())
+                || (message.requestId() != null && !validIdentifier(message.requestId()))
+                || (message.attemptId() != null && !validIdentifier(message.attemptId()))
                 || message.payload() == null) throw new IllegalArgumentException();
+    }
+
+    private void validateScope(String attemptId) {
+        if (session == null || (attemptId != null && !session.attemptScope().contains(attemptId))) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private static boolean validIdentifier(String value) {
+        return value != null && value.matches("[A-Za-z0-9_.:-]{1,128}");
+    }
+
+    private static String optionalIdentifier(JsonObject body, String field) {
+        JsonElement value = body == null ? null : body.get(field);
+        if (value == null || value.isJsonNull()) return null;
+        String id = requiredString(body, field);
+        if (!validIdentifier(id)) throw new IllegalArgumentException();
+        return id;
     }
 
     private static boolean blank(String value) { return value == null || value.isBlank(); }
@@ -434,7 +479,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
             return CompletableFuture.completedFuture(null);
         }
         @Override public CompletionStage<?> onClose(WebSocket ws, int statusCode, String reason) {
-            dispatch(() -> connectionLost(current, null));
+            dispatch(() -> connectionLost(current, statusCode == 1008 ? new AuthenticationRejectedException() : null));
             return CompletableFuture.completedFuture(null);
         }
         @Override public void onError(WebSocket ws, Throwable error) {

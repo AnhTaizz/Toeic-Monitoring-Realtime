@@ -8,7 +8,7 @@ import vn.edu.toeic.protocol.ws.MessageEnvelope;
 /**
  * Collector boundary. send completes on socket write, NOT server ACK/commit.
  * C owns event identity, payload, queues and retry; ACK arrives via onMessage.
- * Currently only documented MOCK HEARTBEAT/PROCESS_OBSERVED are supported.
+ * HEARTBEAT consumes the real A2 contract; PROCESS_OBSERVED server integration awaits A3/C3.
  * State message types await C's contract; no state schema is invented here.
  */
 public interface MonitoringTransport {
