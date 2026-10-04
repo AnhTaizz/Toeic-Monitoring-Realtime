@@ -1,6 +1,6 @@
 # TOEIC Monitoring Realtime
 
-Xương sống kỹ thuật chặng 1 gồm Spring Boot server, JavaFX client hai role, PostgreSQL và spike `ProcessHandle`. Server T1-A2 và client T1-B2 đã tích hợp Bearer REST/WS, heartbeat/ACK transport, bounded reconnect và UI connection lock. Event persistence, presence, collector và nghiệp vụ thi thuộc các task sau.
+Xương sống kỹ thuật chặng 1 gồm Spring Boot server, JavaFX client hai role, PostgreSQL và spike `ProcessHandle`. A2/B2 đã có xác thực và realtime; C2/A3/C3 đã nối collector → event → queue/retry → DB/ACK, cảnh báo proctor và timeline. B3 dashboard, A4 presence và nghiệp vụ thi vẫn còn các task sau.
 
 ## Yêu cầu môi trường
 
@@ -18,7 +18,7 @@ Xương sống kỹ thuật chặng 1 gồm Spring Boot server, JavaFX client ha
 
 Client đọc URL mặc định từ biến `TOEIC_SERVER_URL` hoặc system property `toeic.server.url`; người dùng cũng có thể sửa URL ngay trên màn đăng nhập. Server lắng nghe `0.0.0.0:8080` mặc định để máy khác trong LAN gọi được.
 
-Tài khoản mẫu (`MOCK`, chỉ dùng phát triển) đều có mật khẩu `ChangeMe123!` nếu không đặt `TOEIC_SEED_PASSWORD`:
+Tài khoản mẫu (`MOCK`, chỉ dùng phát triển) dùng `TOEIC_SEED_PASSWORD`. Mật khẩu mặc định nằm trong cấu hình server; hãy đặt giá trị riêng ở `.env` và không commit.
 
 | Tài khoản | Role |
 |---|---|
@@ -67,7 +67,7 @@ Chi tiết contract, quyết định và bằng chứng kiểm thử nằm trong
 
 Sau login candidate hoặc proctor, JavaFX mở realtime bằng server URL của lần login và token trong memory. Session cho phép heartbeat không có attemptId/collectorSessionId khi scope rỗng; không invent attempt và không bật collector. Callback UI qua Platform.runLater, controls cần mạng chỉ mở khi CONNECTED. Logout/stop gỡ listeners, đóng socket/worker/HttpClient, bỏ reference token/context; không persist token. Màn thi/dashboard vẫn là placeholder, chưa có nghiệp vụ B3.
 
-ACK HEARTBEAT phải khớp requestId/type/attemptId/traceId đang chờ; write success chưa phải ACK. ERROR WS được đọc từ payload trực tiếp `{code,message,retryable}`; client dùng thông báo cố định, không phản chiếu raw exception/JSON. FORBIDDEN/INVALID_INPUT không tự replay message; RETRYABLE_SERVER_ERROR được chuyển cho subscriber, C quản lý retry nghiệp vụ sau này.
+ACK HEARTBEAT phải khớp requestId/type/attemptId/traceId đang chờ; write success chưa phải ACK. ERROR WS được đọc từ payload trực tiếp `{code,message,retryable}`; client dùng thông báo cố định, không phản chiếu raw exception/JSON. C3 quản lý retry event và gap; B2 chỉ quản lý reconnect socket.
 
 ### Bàn giao cho C
 
@@ -82,7 +82,7 @@ AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> listener);
 
 - C dùng interface, không dùng raw WebSocket. Subscription trả AutoCloseable để gỡ listener; callback không bảo đảm FX thread.
 - `send` hoàn thành khi socket write xong; ACK/ERROR đi qua `onMessage`. ACK pending được xóa khi disconnect, không replay event tự động. C3 quản lý eventId/queue/retry và đối soát business ACK.
-- HEARTBEAT đã nhận ACK server thật. PROCESS_OBSERVED chỉ giữ interface/validation từ fixture MOCK; server integration/persistence chờ A3/C3. State/full/delta chưa có schema thực, không tự thêm type/payload hoặc cấp scope.
+- HEARTBEAT, PROCESS_OBSERVED và MONITORING_GAP đã nhận ACK server thật. Event/gap chỉ được ACK sau COMMIT. State/full/delta chưa có schema thực, không tự thêm type/payload hoặc cấp scope.
 - C2 có thể dùng trạng thái kết nối và ranh giới transport; việc nối collector không được triển khai trong B2.
 
 Unit tests dùng MOCK socket/clock ghi nhãn; HTTP handshake tests chạy network với fixture response 401/503. Real smoke riêng dùng PostgreSQL + production Spring server + chính RealtimeClient B, kiểm candidate/proctor, heartbeat ACK, stop/restart server, revoke/expire, retry budget và shutdown:
@@ -101,8 +101,8 @@ Script đọc .env vào process, không reset DB, không in credential; harness 
 - `POST /api/v1/auth/login` vẫn public. `GET /api/v1/auth/me` và mọi route `/api/**` sau login cần `Authorization: Bearer <token>`.
 - WebSocket: `ws://<server>:8080/ws/v1/realtime` (dùng `wss://` khi server triển khai TLS). Header handshake cũng là `Authorization: Bearer <token>`; endpoint không nhận query. Không log/password/token trong URL. Kết nối mới/reconnect phải gửi lại credential.
 - Server lookup SHA-256 trong `login_sessions`, kiểm expires/revoked/user enabled; WS kiểm lại mỗi message. 401 là thiếu/sai/hết hạn/revoked credential, 403 là sai role/scope. Session bị vô hiệu trên WS nhận ERROR UNAUTHORIZED rồi đóng 1008.
-- `AuthenticatedUser`/principal lấy từ DB; `AuthorizationService.requireRole` và `requireAttempt` chạy trước nghiệp vụ. `AttemptScopeAuthorizer` production hiện **deny tất cả attempt chưa có assignment** vì schema attempt chưa cài. Provider mới có thể khai báo bean `@Primary`; không cài dữ liệu scope MOCK vào production. Login/me tiếp tục trả attemptScope rỗng.
-- Heartbeat không có attemptId là ping transport cho phiên authenticated, chưa theo dõi thi/monitoring/presence. Có attemptId thì bắt buộc scope hợp lệ. ACK ACCEPTED chỉ xác nhận server nhận heartbeat; không khẳng định event DB đã commit. PROCESS_OBSERVED/state/delta vẫn chưa cài và không nhận success ACK.
+- `AuthenticatedUser`/principal lấy từ DB; `AuthorizationService.requireRole` và `requireAttempt` chạy trước nghiệp vụ. A3 dùng assignment JDBC: candidate sở hữu/proctor được phân công vào attempt ACTIVE. Không có assignment thì scope rỗng; không tự cấp lượt khi login.
+- Heartbeat không có attemptId là ping transport cho phiên authenticated, chưa chứng minh presence. Có attemptId thì bắt buộc scope hợp lệ. ACK heartbeat chỉ xác nhận nhận heartbeat; ACK event/gap sau transaction COMMIT. State/delta chưa cài.
 - Envelope mẫu, field bắt buộc, ACK/ERROR và handoff cho B2 ở [PROTOCOL](docs/PROTOCOL.md). B cần cho phép heartbeat/ACK unscoped, cài opener header auth, xử lý ERROR và auth lại khi reconnect. B2 đã consume contract trong phiên riêng sau khi PR #2 merge; thao tác Git cuối xem report.
 - WS giới hạn message/buffer 65.536 byte và send timeout 5.000ms qua `WS_MAX_MESSAGE_BYTES`, `WS_SEND_BUFFER_BYTES`, `WS_SEND_TIMEOUT_MS`. Tất cả send đi qua `ConcurrentWebSocketSessionDecorator`.
 
@@ -121,7 +121,7 @@ Script đọc DB/seed variables từ `.env` vào process, không in credential, 
 
 `client/.../monitoring/ProcessCollector` cung cấp start(context, snapshotListener, problemListener), stop(), close(), latestSnapshot(). Start trả collectorSessionId UUID mới; callback trên worker `toeic-process-collector`, consumer UI tự marshal bằng Platform.runLater. `ScheduledThreadPoolExecutor` (ScheduledExecutorService) dùng scheduleWithFixedDelay, mặc định 1.000ms; constructor nhận Duration để đổi interval (250/500/1.000/2.000ms). Không thêm dependency và không sửa monitoring-spike C1.
 
-Gate chỉ cho CANDIDATE + monitoringActive=true. Context tương lai phải từ phiên monitoring authoritative; role candidate/login đơn lẻ không đủ. Production hiện chưa có assignment/trigger, nên JavaFX login không tự bật collector. Context active trong tests/smoke là MOCK rõ nhãn, không cấp attempt giả.
+Gate chỉ cho CANDIDATE + monitoringActive=true. C3 lấy attempt từ server và chỉ bật khi người dùng chọn/bắt đầu; login đơn lẻ không đủ. Context active trong smoke C2 vẫn là MOCK rõ nhãn; smoke C3 dùng assignment TEST thật ở schema riêng.
 
 Source production gọi ProcessHandle.allProcesses, đọc command/startInstant và availability của user. Chỉ giữ executable filename, không command line/arguments/full path/username; policy QD-08 so filename case-insensitive với đúng 8 tên v1. Thiếu command/start/user → UNREADABLE, unknown command chỉ vào diagnostic count, không diễn giải sạch. PID0 idle của Windows được tính UNREADABLE khi metadata thiếu thay vì làm fail enumeration.
 
@@ -129,7 +129,7 @@ Snapshot immutable chứa collectorSessionId, policyVersion, observationNanos/sc
 
 stop hủy task, interrupt scan, shutdown worker và bỏ listeners/latest snapshot. Future stop chỉ hoàn thành khi poll/callback đang chạy đã kết thúc; caller await ngoài FX thread. Không restart khi worker cũ chưa kết thúc; close là terminal. Source tự cài không đáp ứng interrupt phải trả về trước khi stop future hoàn thành, không giả dừng worker bằng cách mở worker mới.
 
-C3 sẽ consume ProcessSnapshot và so theo ProcessIdentity, không so toàn bộ observation (quality có thể đổi). C2 không tạo eventId, không gọi MonitoringTransport/send, không heartbeat/event/full/delta network, không queue/ACK/persistence.
+C3 consume ProcessSnapshot và so theo ProcessIdentity, không so toàn bộ observation (quality có thể đổi). ProcessCollector C2 vẫn độc lập mạng; coordinator/delivery riêng tạo event/queue/retry.
 
 ```powershell
 mvn test
@@ -137,4 +137,44 @@ mvn package
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-c2.ps1 -JavaHome <JDK21>
 ```
 
-Smoke Windows dùng source production và context active MOCK; đọc counts/filenames, mở Edge headless about:blank bằng profile tạm riêng nếu executable có sẵn, chỉ đóng process tree do harness tạo. Không thao tác ứng dụng người dùng. Log không full path/user/arguments. Evidence: `evidence/t1-c2/2026-10-04-verification.md`. GUI manual NOT RUN; MT01 mới PARTIAL local, event/state flow chờ C3/T2-C1/C2.
+Smoke C2 dùng source production và context active MOCK; mở Edge headless bằng profile tạm riêng, chỉ đóng process tree do harness tạo. Log không full path/user/arguments. Evidence: `evidence/t1-c2/2026-10-04-verification.md`. C3 bổ sung real event delivery bên dưới; GUI manual NOT RUN, MT01 PARTIAL tới khi có B3.
+
+## T1-C3 — bật giám sát và gửi sự kiện
+
+Candidate chọn lượt được cấp → “Bắt đầu giám sát” → client kiểm `/api/v1/auth/me` lại → collector chạy. Scope rỗng hiển thị “Chưa được cấp lượt giám sát”, không scan/worker/queue. Proctor không có collector/queue candidate. “Dừng giám sát” đếm rồi bỏ dữ liệu chưa xác nhận, chờ worker cũ kết thúc trước khi chọn lượt khác. Logout/đóng app ghi số bỏ vào console. Queue chỉ ở RAM: kill app không phục hồi được.
+
+DEV/TEST demo có chủ động cấp `DEMO-C3-A` cho `candidate1`, giám thị `proctor1`. Khởi động DB/server trước để Flyway áp dụng V3 và seed tài khoản; script không tự chạy từ server/login. Không tạo ca thi production:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/demo-c3.ps1 -Action Create
+java '-Dtoeic.monitoring.pollMillis=500' -jar client\target\client-0.1.0-SNAPSHOT-all.jar
+```
+
+Đăng nhập candidate1 bằng mật khẩu seed cấu hình local, kiểm tra lượt thi, chọn DEMO-C3-A, bắt đầu. Mở Microsoft Edge (`msedge.exe`, thuộc policy v1), chờ vài poll. Mong đợi số “Đã xác nhận” tăng rồi giữ nguyên khi process vẫn tồn tại. Đóng/mở lại có thể tăng số event; Edge tạo nhiều process nên không mặc định mỗi cửa sổ chỉ một event. Notepad không nằm trong policy v1. Proctor GUI cảnh báo chưa có B3; kiểm lịch sử bằng REST theo PROTOCOL. Sau demo dừng giám sát, rồi cleanup chủ động (xóa lịch sử chỉ của DEMO-C3-A, giữ tài khoản/lượt khác):
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/demo-c3.ps1 -Action Cleanup
+```
+
+Create từ chối attempt đã tồn tại; Cleanup từ chối nếu owner/assignment khác fixture. Tham số Schema chỉ dành public hoặc schema TEST do harness tạo. Kiểm thực tế GUI các bước trên: NOT RUN.
+
+| Property `toeic.monitoring.*` | Mặc định | Ý nghĩa |
+|---|---:|---|
+| pollMillis | 1000 | Chu kỳ quét C2 |
+| queueCapacity | 500 | Tất cả event chưa xác nhận, gồm failed/exhausted |
+| inFlight | 4 | Tổng event + gap chờ ACK; nên nhỏ hơn ACK slots B2 |
+| ackTimeoutMillis | 5000 | Chờ ACK mỗi lần gửi |
+| maxAttempts | 5 | Tổng lần gửi, gồm lần đầu |
+| initialBackoffMillis / maxBackoffMillis | 1000 / 8000 | Đợi retry, tăng gấp đôi tới giới hạn |
+
+Ví dụ PowerShell: `java '-Dtoeic.monitoring.queueCapacity=10' '-Dtoeic.monitoring.inFlight=2' -jar client\target\client-0.1.0-SNAPSHOT-all.jar`. Queue nhỏ hơn 4 phải giảm inFlight cùng lúc. Một timer delivery 25ms; baseline tối đa 10.000 identity, snapshot vượt giới hạn báo SNAPSHOT_LIMIT và giữ baseline cũ. Adapter maps/writes có giới hạn riêng; C3 giải phóng correlation khi timeout/stop, B2 dành một slot cho heartbeat và hết hạn correlation heartbeat sau 3 chu kỳ. Không đảm bảo tiến trình xuất hiện rồi biến mất giữa hai poll sẽ được thấy.
+
+Chỉ ACK đúng v0/request/attempt/trace/status/type mới xóa queue. ID, payload và UTC microsecond timestamps giữ nguyên khi retry. Retry hết lượt giữ event chưa xác nhận; nút “Thử lại chưa xác nhận” cấp lượt thử mới rõ ràng. CONFLICT/INVALID_INPUT dừng tự retry event đó; FORBIDDEN/UNAUTHORIZED dừng giám sát và yêu cầu dừng/kiểm quyền hoặc login lại. Overflow giữ cũ/drop mới, baseline vẫn cập nhật; gap riêng ghi số mất và khoảng thời gian client khai, không khôi phục event đã mất.
+
+```powershell
+mvn test
+mvn package
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-c3.ps1
+```
+
+Smoke C3 dùng production Spring/PostgreSQL/B2/C3/C2 Windows, schema TEST UUID riêng tự cleanup, Edge profile tạm riêng. Mất ACK SIMULATED ở observer của harness; overflow/reconnect snapshots MOCK, còn HTTP/WS/DB/ACK REAL. Không tắt/reset PostgreSQL chung. Server có dependency client **test-scope** chỉ cho harness, không đưa client vào server JAR production. Evidence: `evidence/t1-c3/2026-10-04-verification.md`. MT01 PARTIAL, GUI/LAN/human B review NOT RUN; T2-C2 gap/state/event muộn còn riêng.

@@ -1,6 +1,6 @@
 # Protocol đang dùng
 
-**Trạng thái: v0 đã cài login, Bearer REST/WS, HEARTBEAT/ACK/ERROR và T1-A3 server PROCESS_OBSERVED → PostgreSQL commit → ACK → MONITOR_WARNING; timeline REST và assignment scope thật. C3 chưa nối collector vào transport, B3 chưa có dashboard; presence/full/delta chưa có.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây.
+**Trạng thái: v0 có login/Bearer/heartbeat; C3 nối collector → event/queue/retry → A3 DB/ACK/warning/timeline. MONITORING_GAP tối thiểu cho overflow đã có persistence/ACK riêng. B3 dashboard, A4 presence và full/delta chưa có.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây.
 
 Owner: C (monitoring, khung message chung), A (auth, ca thi, lưu/nộp). Người dùng: B.
 
@@ -139,7 +139,8 @@ Token chỉ trả trong JSON body của login. Request HTTP `/api/**` sau login 
 | `HEARTBEAT` | client → server | `sentAt` bắt buộc; `collectorSessionId` optional | ACK transport | T1-A2 | Đã cài; chưa có presence T1-A4 |
 | `ACK` (heartbeat) | server → client | `status: ACCEPTED`, `acknowledgedType: HEARTBEAT` | Không | T1-A2 | Đã cài |
 | `ERROR` | server → client | `code`, `message`, `retryable` | Không | T1-A2 | Đã cài |
-| `PROCESS_OBSERVED` | thí sinh → server | Event v0; attempt bắt buộc | ACK sau commit | T1-A3/C3 | Server đã cài; collector→transport chưa có |
+| `PROCESS_OBSERVED` | thí sinh → server | Event v0; attempt bắt buộc | ACK sau commit | T1-A3/C3 | Collector→queue→B2→DB/ACK đã cài |
+| `MONITORING_GAP` | thí sinh → server | C3 QUEUE_OVERFLOW; attempt bắt buộc | ACK sau commit | T1-C3 + hook A | Đã cài tối thiểu; chưa reducer/state |
 | `ACK` (event) | server → thí sinh | `status: ACCEPTED`, `acknowledgedType: PROCESS_OBSERVED` | Không | T1-A3 | Đã cài |
 | `MONITOR_WARNING` | server → giám thị được phân công | Timeline item v0 | Không | T1-A3/B3 | Server đã cài; dashboard chưa có |
 | _presence (ONLINE/UNKNOWN)_ | server → giám thị | | | T1-A4 | Chưa có |
@@ -313,3 +314,33 @@ Push chỉ tới session proctor còn hợp lệ và có assignment tại thời
 **B3 reconnect:** đọc timeline → render → mở/live WS, rồi đọc timeline đối chiếu lần nữa và gộp theo dedupe key để bù khoảng trống giữa HTTP và handshake. Có thể mở WS/buffer trước rồi đọc timeline. Chưa có subscription message riêng; server dùng assignment để lọc các socket proctor. A3 chưa viết dashboard.
 
 Kiểm chứng: `scripts/smoke-a3.ps1` chạy production Spring + PostgreSQL thật + Java HttpClient/WebSocket trong TEST schema riêng; evidence ở `evidence/t1-a3/2026-10-04-verification.md`. Review C là NOT RUN trong phiên Agent.
+
+## Contract T1-C3 — event delivery và overflow (04/10/2026)
+
+Các ghi chú “chờ C3” trong phần bàn giao lịch sử A2/B2/C2 ở trên mô tả phiên trước. Hiện C3 đã nối production collector vào B2 và A3. Không đổi payload/warning/timeline PROCESS_OBSERVED của A3.
+
+Candidate chủ động chọn attempt từ server và bắt đầu; gọi `/api/v1/auth/me` lại trước start, cập nhật scope B2 khi không có pending delivery cũ. Server kiểm auth/role/assignment ACTIVE cho từng message. Scope rỗng/proctor không scan hoặc tạo worker/queue candidate. Stop/switch/logout đóng delivery, báo số event/gap/drop chưa xác nhận bị bỏ, rồi chờ collector/delivery cũ kết thúc. Không chuyển pending giữa attempt, không giữ trên đĩa.
+
+Identity đúng C2 `(collectorSessionId,pid,startInstant nullable)`. Snapshot đầu phát event mỗi process trong policy; nhiều poll cùng identity không phát thêm. Biến mất rồi xuất hiện/PID với start khác phát event mới. MetadataQuality thay đổi không đổi identity. Start null giữ identity null; null→known hoặc known→null coi mới theo identity nghiêm ngặt, có thể báo thêm khi metadata hồi phục. PID reuse không đọc được start có thể không phân biệt nếu chưa thấy vắng mặt. Process giữa hai poll có thể bị bỏ sót. Scan lỗi giữ baseline hợp lệ trước; snapshot vượt 10.000 identity báo SNAPSHOT_LIMIT và không thay baseline. Production mỗi lần collector start tạo delivery mới; API không cho retag accumulator chưa đóng băng sang collector khác.
+
+MonitoringMessage tạo eventId/messageId=requestId/traceId/observedAt một lần; JsonObject queued không lộ ra, envelope trả deep copy. Clock UTC lấy khi nhận snapshot, cắt dưới microsecond; observationNanos chỉ đo local, không đổi thành Unix time. Payload chỉ tám trường A3, filename không full path; start null luôn UNREADABLE.
+
+Queue RAM default500 gồm QUEUED/WAITING/RETRY_WAIT/FAILED/EXHAUSTED; in-flight4 tổng event + gap. ACK timeout5s, tối đa5 lần gửi gồm lần đầu, backoff1/2/4/8s cap8s. Register pending trước send. Chỉ ACK v0 đúng requestId, attemptId, traceId, `status:ACCEPTED`, acknowledgedType của message mới loại pending. Send completed chỉ socket write. ACK heartbeat/sai/duplicate không xóa event khác. B2 có correlation riêng, C3 forget khi timeout/exhaustion/stop; callback generation cũ không thay phiên mới. Một timer pump25ms, không mỗi event một timer; map/list/baseline/write đều bounded. B2 dành một pending ACK slot cho heartbeat (cấu hình slots>1), hết hạn pending heartbeat sau3chu kỳ.
+
+Reconnect do B2, retry event/gap do C3; giữ collector và budget gửi qua reconnect. Không send khi disconnected. Send failure/mấtACK/RETRYABLE_SERVER_ERROR retry theo backoff. CONFLICT/INVALID_INPUT hoặc lỗi permanent khác giữ FAILED, không chặn event khác; FORBIDDEN/UNAUTHORIZED dừng hoạt động được cấp quyền, giữ pending tới explicitStop. Hết lượt giữ EXHAUSTED, chưa có bằng chứng lưu; chỉ nút thử lại cấp budget mới và giữ nguyên payload/ID. Không hứa khôi phục queue sau kill app.
+
+### MONITORING_GAP tối thiểu đã triển khai
+
+Ví dụ schema TEST, timestamp client-reported:
+
+```json
+{"protocolVersion":"v0","type":"MONITORING_GAP","messageId":"TEST-gap-request","requestId":"TEST-gap-request","attemptId":"TEST-attempt-A","traceId":"TEST-gap-trace","payload":{"gapId":"TEST-gap-1","collectorSessionId":"TEST-collector-1","reason":"QUEUE_OVERFLOW","droppedCount":3,"firstDroppedAt":"2026-10-04T00:00:01Z","lastDroppedAt":"2026-10-04T00:00:02Z"}}
+```
+
+Payload đúng sáu trường, không thêm attemptId trong payload. gapId/collectorSessionId theo identifier envelope `[A-Za-z0-9_.:-]{1,128}`; reason chỉ QUEUE_OVERFLOW. droppedCount số nguyên JSON chính xác trong1..Long.MAX_VALUE; không chuỗi/fraction/overflow. Thời gian ISO Instant, chuẩn UTC microsecond, năm1..9999, last>=first sau chuẩn hóa như A3. Không chứng minh đồng hồ client đúng hoặc thời điểm server mất kết nối. Khi wall clock lùi, accumulator giữ last không nhỏ hơn first. Counter không wrap: giới hạn Long.MAX_VALUE dừng activity với COUNT_LIMIT.
+
+Queue đầy giữ event cũ/drop event mới, tăng count/thời gian; identity drop vẫn vào baseline để không đếm lại mỗi poll. Ngoài500event có **một frozen gap slot + một accumulator kế tiếp** (count và first/last). Gap có budget/correlation giống event, dùng chung in-flight nhỏ; ưu tiên slot gap. Sau freeze không sửa ID/payload; drop mới gom vào accumulator tiếp theo, sau ACK gap cũ tạo gap mới. Gap failed/exhausted vẫn giữ slot tới explicit retry/stop, accumulator vẫn bounded. Không lưu danh sách các event đã drop.
+
+Server: auth lại → roleCANDIDATE → scopeACTIVE → validation → MonitoringGapService transaction → COMMIT → ACK `acknowledgedType:MONITORING_GAP`. V3 tạo monitoring_gaps, không sửaV2. Lock attempt FOR SHARE bảo vệ transaction khi state đổi; unique `(attempt_id,gap_id)`. Cùng normalized payload ACK lại/mộtrow; payload khácCONFLICT, không overwrite. LỗiCOMMIT rollback/RETRYABLE_SERVER_ERROR, không successACK. Gap không sửa monitoring_events/process state, không pushMONITOR_WARNING, chưa có gapRESTtimeline; B3/A/C giai đoạn sau phải dùng contract riêng nếu cần hiển thị gap. Process warning/events endpoint giữ nguyên.
+
+Đây chỉ là hook overflow C3. T2-C2 còn event muộn/state/gap khác; không presence/reducer/full/delta/dashboard ở task này. Evidence `evidence/t1-c3/2026-10-04-verification.md`: real WindowsProcessHandle/B2/Spring/PostgreSQL; ACKlossSIMULATED, overflow sourceMOCK nhưng gapnetwork/commit/ACKREAL. MT01 PARTIAL tới B3; GUI/LAN/humanBreview NOTRUN.
