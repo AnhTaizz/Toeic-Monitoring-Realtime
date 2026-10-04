@@ -1,5 +1,8 @@
 package vn.edu.toeic.server.auth;
 
+import static org.mockito.Mockito.mock;
+import org.springframework.jdbc.core.simple.JdbcClient;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -50,6 +53,8 @@ import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.server.realtime.RealtimeHandshakeInterceptor;
 import vn.edu.toeic.server.realtime.RealtimeWebSocketConfiguration;
 import vn.edu.toeic.server.realtime.RealtimeWebSocketHandler;
+import vn.edu.toeic.server.realtime.RealtimeSessionRegistry;
+import vn.edu.toeic.server.monitoring.MonitoringEventService;
 
 /** REAL HTTP + java.net.http.WebSocket + Spring/Tomcat. Only DB/scope are MOCK.
  * PostgreSQL production smoke is a separate executable, never replaced by H2.
@@ -276,8 +281,11 @@ class AuthenticatedNetworkTest {
     @EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
     @Import({AuthConfiguration.class, AuthService.class, AuthController.class, ApiExceptionHandler.class,
             SessionAuthenticationService.class, AuthorizationService.class, BearerAuthenticationFilter.class,
-            SessionController.class, RealtimeHandshakeInterceptor.class, RealtimeWebSocketHandler.class, RealtimeWebSocketConfiguration.class})
+            SessionController.class, RealtimeHandshakeInterceptor.class, RealtimeWebSocketHandler.class,
+            RealtimeSessionRegistry.class, RealtimeWebSocketConfiguration.class})
     static class NetworkFixture {
+        @Bean JdbcClient mockJdbc() { return mock(JdbcClient.class); }
+        @Bean MonitoringEventService mockEventService() { return mock(MonitoringEventService.class); }
         @Bean MockStores mockStores() { return new MockStores(); }
         @Bean @Primary AttemptScopeAuthorizer mockScope() {
             return (user, attempt) -> user.role() == Role.PROCTOR ? "mock-attempt-A".equals(attempt)

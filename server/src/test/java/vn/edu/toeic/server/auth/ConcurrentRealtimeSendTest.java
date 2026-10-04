@@ -18,23 +18,32 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.server.realtime.RealtimeWebSocketHandler;
+import vn.edu.toeic.server.realtime.RealtimeSessionRegistry;
+import vn.edu.toeic.server.monitoring.MonitoringEventService;
+import vn.edu.toeic.server.monitoring.ProcessEvent;
 
 /** MOCK session with controlled overlapping callers; no sleep/race-based assertion. */
 class ConcurrentRealtimeSendTest {
-    @Test void concurrentHandlerResponsesNeverOverlapRawSessionWrites() throws Exception {
+    @ParameterizedTest @ValueSource(booleans = {false, true})
+    void concurrentAckAndAckOrWarningNeverOverlapRawSessionWrites(boolean warning) throws Exception {
         LoginSessionStore store = mock(LoginSessionStore.class);
         when(store.findByTokenHash(anyString())).thenReturn(Optional.of(new StoredSession(
-                new AuthenticatedUser(1, "MOCK-candidate", Role.CANDIDATE), Instant.now().plusSeconds(60), null, true)));
-        RealtimeWebSocketHandler handler = new RealtimeWebSocketHandler(new SessionAuthenticationService(store, Clock.systemUTC()),
-                new AuthorizationService((user, attempt) -> false), 65_536, 5000, 65_536);
+                new AuthenticatedUser(1, "MOCK-proctor", Role.PROCTOR), Instant.now().plusSeconds(60), null, true)));
+        var authentication = new SessionAuthenticationService(store, Clock.systemUTC());
+        var authorization = new AuthorizationService((user, attempt) -> true);
+        var registry = new RealtimeSessionRegistry(authentication, authorization, 5000, 65_536);
+        RealtimeWebSocketHandler handler = new RealtimeWebSocketHandler(authentication, authorization, 65_536,
+                registry, mock(MonitoringEventService.class));
         WebSocketSession socket = mock(WebSocketSession.class);
         Map<String, Object> attributes = new ConcurrentHashMap<>();
         attributes.put(SessionAuthenticationService.TOKEN_HASH_ATTRIBUTE, "MOCK-hash");
+        attributes.put(AuthenticatedUser.ATTRIBUTE, new AuthenticatedUser(1, "MOCK-proctor", Role.PROCTOR));
         when(socket.getAttributes()).thenReturn(attributes);
         when(socket.getId()).thenReturn("MOCK-socket");
         when(socket.isOpen()).thenReturn(true);
@@ -63,7 +72,12 @@ class ConcurrentRealtimeSendTest {
             });
             assertThat(firstEntered.await(3, TimeUnit.SECONDS)).isTrue();
             var second = workers.submit(() -> {
-                try { handler.handleMessage(socket, new TextMessage(AuthenticatedNetworkTest.heartbeat(null))); }
+                try {
+                    if (warning) registry.warnAssignedProctors(new MonitoringEventService.StoredEvent(1, "MOCK-attempt",
+                            new ProcessEvent("MOCK-event", "MOCK-collector", "v1", 1, "notepad.exe", null,
+                                    "UNREADABLE", Instant.now()), Instant.now()), "MOCK-trace");
+                    else handler.handleMessage(socket, new TextMessage(AuthenticatedNetworkTest.heartbeat(null)));
+                }
                 catch (Exception error) { throw new AssertionError("MOCK second handler failed"); }
             });
             second.get(3, TimeUnit.SECONDS); // decorator queues the second response without waiting for raw send

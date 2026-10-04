@@ -5,7 +5,6 @@ import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
-import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,18 +20,20 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final Clock clock;
     private final SecureRandom secureRandom;
+    private final AttemptScopeAuthorizer scopes;
 
     AuthService(
             UserAccountStore userAccountStore,
             LoginSessionStore loginSessionStore,
             PasswordEncoder passwordEncoder,
             Clock clock,
-            SecureRandom secureRandom) {
+            SecureRandom secureRandom, AttemptScopeAuthorizer scopes) {
         this.userAccountStore = userAccountStore;
         this.loginSessionStore = loginSessionStore;
         this.passwordEncoder = passwordEncoder;
         this.clock = clock;
         this.secureRandom = secureRandom;
+        this.scopes = scopes;
     }
 
     @Transactional
@@ -58,7 +59,7 @@ public class AuthService {
                 expiresAt.toString(),
                 new LoginResponse.UserView(
                         account.id(), account.username(), account.displayName(), account.role().name()),
-                List.of());
+                scopes.activeAttempts(new AuthenticatedUser(account.id(), account.username(), account.role())));
     }
 
     private static void validate(String requestId, String username, String password) {

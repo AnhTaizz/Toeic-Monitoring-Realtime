@@ -7,6 +7,9 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Optional;
+import org.springframework.jdbc.core.simple.JdbcClient;
+import vn.edu.toeic.server.monitoring.JdbcAttemptScopeStore;
+import static org.mockito.Mockito.mock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
@@ -71,9 +74,9 @@ class SessionAuthenticationTest {
         assertThatThrownBy(() -> authorization.requireAttempt(new AuthenticatedUser(2, "proctor1", Role.PROCTOR), "mock-attempt-B"))
                 .isInstanceOf(AccessDeniedException.class);
     }
-    @Test void productionScopeProviderDeniesUnknownAttempts() {
-        AuthorizationService authorization = new AuthorizationService(new AuthConfiguration().attemptScopeAuthorizer());
-        assertThatThrownBy(() -> authorization.requireAttempt(CANDIDATE, "mock-attempt-A")).isInstanceOf(AccessDeniedException.class);
+    @Test void productionScopeProviderUsesDatabaseAssignments() {
+        assertThat(new AuthConfiguration().attemptScopeAuthorizer(mock(JdbcClient.class)))
+                .isInstanceOf(JdbcAttemptScopeStore.class);
     }
     private static SessionAuthenticationService service(Store store) {
         return new SessionAuthenticationService(store, Clock.fixed(NOW, ZoneOffset.UTC));

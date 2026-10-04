@@ -9,11 +9,13 @@ import vn.edu.toeic.protocol.Protocol;
 
 @RestController
 public final class SessionController {
+    private final AttemptScopeAuthorizer scopes;
+    public SessionController(AttemptScopeAuthorizer scopes) { this.scopes = scopes; }
     @GetMapping("/api/v1/auth/me")
     public SessionView me(HttpServletRequest request) {
         AuthenticatedUser user = (AuthenticatedUser) request.getUserPrincipal();
         if (user == null) throw AccessDeniedException.unauthorized();
-        return new SessionView(Protocol.VERSION, UUID.randomUUID().toString(), user, List.of());
+        return new SessionView(Protocol.VERSION, UUID.randomUUID().toString(), user, scopes.activeAttempts(user));
     }
     public record SessionView(String protocolVersion, String traceId, AuthenticatedUser user, List<String> attemptScope) { }
 }

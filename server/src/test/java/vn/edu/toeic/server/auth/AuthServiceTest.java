@@ -30,7 +30,7 @@ class AuthServiceTest {
                 sessions,
                 encoder,
                 Clock.fixed(Instant.parse("2026-10-03T00:00:00Z"), ZoneOffset.UTC),
-                new SecureRandom());
+                new SecureRandom(), (user, attempt) -> false);
     }
 
     @Test
