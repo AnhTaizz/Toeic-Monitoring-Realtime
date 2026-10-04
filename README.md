@@ -116,3 +116,25 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-a2.ps1
 ```
 
 Script đọc DB/seed variables từ `.env` vào process, không in credential, không reset DB; harness chỉ xóa login session do chính smoke tạo. Test account seed là MOCK/dev only. Script dùng timezone UTC và port random local để không chiếm port server đang chạy. Nếu Java chưa có trong PATH/JAVA_HOME, truyền `-JavaHome <thư mục JDK 21>` cho script. Không thay đổi file `.env`.
+
+## Collector local T1-C2
+
+`client/.../monitoring/ProcessCollector` cung cấp start(context, snapshotListener, problemListener), stop(), close(), latestSnapshot(). Start trả collectorSessionId UUID mới; callback trên worker `toeic-process-collector`, consumer UI tự marshal bằng Platform.runLater. `ScheduledThreadPoolExecutor` (ScheduledExecutorService) dùng scheduleWithFixedDelay, mặc định 1.000ms; constructor nhận Duration để đổi interval (250/500/1.000/2.000ms). Không thêm dependency và không sửa monitoring-spike C1.
+
+Gate chỉ cho CANDIDATE + monitoringActive=true. Context tương lai phải từ phiên monitoring authoritative; role candidate/login đơn lẻ không đủ. Production hiện chưa có assignment/trigger, nên JavaFX login không tự bật collector. Context active trong tests/smoke là MOCK rõ nhãn, không cấp attempt giả.
+
+Source production gọi ProcessHandle.allProcesses, đọc command/startInstant và availability của user. Chỉ giữ executable filename, không command line/arguments/full path/username; policy QD-08 so filename case-insensitive với đúng 8 tên v1. Thiếu command/start/user → UNREADABLE, unknown command chỉ vào diagnostic count, không diễn giải sạch. PID0 idle của Windows được tính UNREADABLE khi metadata thiếu thay vì làm fail enumeration.
+
+Snapshot immutable chứa collectorSessionId, policyVersion, observationNanos/scanDurationNanos, restrictedProcesses và diagnostic counts. ProcessIdentity = collectorSessionId + pid + startInstant nullable; thiếu startInstant vẫn có giới hạn PID reuse. Monotonic nanoTime chỉ dùng trong JVM này, không chứng minh clock sync. Poll lỗi không publish snapshot sạch: clear latestSnapshot và báo SOURCE_FAILURE; poll sau vẫn chạy. Listener lỗi báo LISTENER_FAILURE, không kill scheduler.
+
+stop hủy task, interrupt scan, shutdown worker và bỏ listeners/latest snapshot. Future stop chỉ hoàn thành khi poll/callback đang chạy đã kết thúc; caller await ngoài FX thread. Không restart khi worker cũ chưa kết thúc; close là terminal. Source tự cài không đáp ứng interrupt phải trả về trước khi stop future hoàn thành, không giả dừng worker bằng cách mở worker mới.
+
+C3 sẽ consume ProcessSnapshot và so theo ProcessIdentity, không so toàn bộ observation (quality có thể đổi). C2 không tạo eventId, không gọi MonitoringTransport/send, không heartbeat/event/full/delta network, không queue/ACK/persistence.
+
+```powershell
+mvn test
+mvn package
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-c2.ps1 -JavaHome <JDK21>
+```
+
+Smoke Windows dùng source production và context active MOCK; đọc counts/filenames, mở Edge headless about:blank bằng profile tạm riêng nếu executable có sẵn, chỉ đóng process tree do harness tạo. Không thao tác ứng dụng người dùng. Log không full path/user/arguments. Evidence: `evidence/t1-c2/2026-10-04-verification.md`. GUI manual NOT RUN; MT01 mới PARTIAL local, event/state flow chờ C3/T2-C1/C2.

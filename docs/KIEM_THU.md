@@ -2,7 +2,7 @@
 
 Mô tả đầy đủ từng case (cách gây tình huống, kết quả bắt buộc) ở `Ke_hoach_LT_Mang_5_chang/03_KIEM_THU_VA_THUC_NGHIEM.md`. File này chỉ theo dõi đã chạy chưa và bằng chứng ở đâu.
 
-Trạng thái dùng: `NOT RUN`, `PASS`, `FAIL`, `BLOCKED`. Chỉ ghi `PASS` khi đã chạy thật và có bằng chứng.
+Trạng thái dùng: `NOT RUN`, `PASS`, `FAIL`, `BLOCKED`; `PARTIAL` khi chỉ một phần case được kiểm (MT01 local C2). Chỉ ghi `PASS` khi đã chạy thật và có bằng chứng.
 
 Mỗi lần chạy ghi đủ: commit SHA, OS/JDK/PostgreSQL, cấu hình, lệnh hoặc bước chạy, kết quả mong đợi, kết quả thật, log hoặc ảnh, người chạy. Lưu bằng chứng vào thư mục `evidence/<testId>/` (tạo khi có lần chạy đầu tiên).
 
@@ -26,7 +26,7 @@ Mỗi lần chạy ghi đủ: commit SHA, OS/JDK/PostgreSQL, cấu hình, lệnh
 
 | ID | Tóm tắt | Owner / review | Task | Trạng thái | SHA | Bằng chứng |
 |---|---|---|---|---|---|---|
-| MT01 | Full snapshot hợp lệ; event không lặp mỗi poll; collector không chạy trên giám thị | C / B | T1-C2/C3, T2-C1/C2 | NOT RUN | | |
+| MT01 | Full snapshot hợp lệ; event không lặp mỗi poll; collector không chạy trên giám thị | C / B | T1-C2/C3, T2-C1/C2 | PARTIAL — local C2 | `02789a8` | `evidence/t1-c2/2026-10-04-verification.md`; event/state flow chưa cài |
 | MT02 | Replay cùng message sau mất ACK | C / B | T3-C3 | NOT RUN | | |
 | MT03 | Thiếu một delta → UNSYNCED, yêu cầu full | C / B | T3-C3 | NOT RUN | | |
 | MT04 | Delta epoch cũ không sửa state epoch mới | C / B | T3-C3/C4 | NOT RUN | | |
@@ -163,3 +163,24 @@ Source `6d5c7f4335743b42e74b7232b2e219a89be2e9ca`, merge main A2 `f62c732` bằn
 | GUI manual/LAN/cross-review A | NOT RUN | Chưa có công cụ desktop/máy/reviewer thật |
 
 Không đổi trạng thái 27 case chính thức: IT03 mới kiểm headless model/worker, chưa thao tác GUI; event/presence/queue/dashboard chờ A3/A4/C3/B3. TRACKER giữ nguyên.
+
+## T1-C2 — 04/10/2026
+
+Source `02789a86c1c9785bc54f31b4584751eae3340f10`, base main `9f01861`. Windows11/JDK21.0.8/Maven3.9.11, người chạy Codex Agent. Evidence `evidence/t1-c2/2026-10-04-verification.md`.
+
+| Kiểm tra | Trạng thái | Evidence/giới hạn |
+|---|---|---|
+| Final mvn test/package | PASS 175/175 mỗi lượt, 5/5 module, 0 failure/error/skipped | Server51/client123/monitoring1; C2 thêm33 lượt |
+| QD-08 v1 filenames/case-insensitive/immutable list | PASS | ProcessPolicyAndSourceTest, không mở rộng policy |
+| Immutable restricted-only snapshot + unreadable counts | PASS | Unknown command không phải sạch; lỗi poll clear latest thay vì publish clean snapshot |
+| Session/PID/start identity, PID reuse/start null | PASS | Start khác → identity khác; missing start UNREADABLE; restart UUID mới |
+| Fixed-delay/no-overlap/thread off caller | PASS | Slow fake source/latch, second poll không chạy khi first giữ latch; interval sau first finish |
+| start/stop/restart/no later poll/worker termination | PASS | Interrupt source và await worker; ngăn restart khi old source chưa kết thúc |
+| Source/listener/diagnostic listener failures | PASS | Controlled problem enum; poll sau tiếp tục |
+| Active/inactive candidate, active/inactive proctor gate | PASS | Lifecycle side effects với MOCK contexts, không chỉ kiểm enum |
+| Real ProcessHandle Windows source | PASS | Smoke:378 scanned,162 unreadable; discord.exe/msedge.exe/zalo.exe observed |
+| Owned headless Edge open/close process-set transition | PASS | Profile tạm riêng, chỉ close owned tree; không kill process user |
+| Real collector stop/restart/cleanup | PASS | Source production; active context MOCK, không giả assignment |
+| GUI manual/LAN/review B | NOT RUN | Headless/role-gate unit không phải GUI PASS |
+
+MT01 PARTIAL: local polling/gate/lifecycle đã kiểm; network full/state/event non-dup/persistence còn C3/T2-C1/C2. E1 không chạy, không sửa TRACKER. Smoke đầu FAIL trước sửa PID0 idle validation; after-fix smoke PASS trên code sau đó commit02789a8. Mockito/ByteBuddy + shade warnings không làm fail build.

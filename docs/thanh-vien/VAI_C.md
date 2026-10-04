@@ -89,7 +89,7 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 **Xong khi:** mở và đóng ứng dụng demo thì tập process thay đổi tương ứng; đăng nhập bằng giám thị thì collector không chạy; phần đầu của MT01.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 04/10, T1-C2 code-complete trên `feat/t1-c2-process-collector`, base main PR #3 `9f01861`, source `02789a8`. ProcessHandleSnapshotSource chỉ giữ filename/start/user-availability, QD-08 v1 đúng 8 tên, UNREADABLE diagnostics, immutable snapshots và identity(session,pid,start nullable); nanoTime local. Fixed-delay default1s configurable, worker riêng, start/stop/restart UUID mới, stop future chờ worker kết thúc và ngăn overlap xuyên restart. Gate chỉ active candidate; chưa có production monitoring trigger nên không auto-start login. Mvn test/package PASS 175/175 (33 mới), Windows source/owned headless Edge open-close/cleanup PASS; GUI manual/review B NOT RUN, MT01 PARTIAL local. Smoke đầu FAIL trước sửa validation PID0 idle; sau sửa/1 regression test smoke PASS, không dùng lượt lỗi làm PASS. Không eventId/transport.send/queue/ACK/persistence/full/delta, không sửa C3/A3 hoặc tracker. Evidence `evidence/t1-c2/2026-10-04-verification.md`; Git/PR/merge cuối xem report.
 
 ### T1-C3 · Event, retry và queue có giới hạn
 `4h` · phụ thuộc: T1-C2, T1-B2 (interface), T1-A3 · review: B
