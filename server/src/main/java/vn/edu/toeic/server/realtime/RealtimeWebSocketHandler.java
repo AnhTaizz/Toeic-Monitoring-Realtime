@@ -27,6 +27,8 @@ import vn.edu.toeic.server.auth.SessionAuthenticationService;
 import vn.edu.toeic.server.monitoring.ProcessEvent;
 import vn.edu.toeic.server.monitoring.MonitoringEventService;
 import vn.edu.toeic.server.monitoring.EventConflictException;
+import vn.edu.toeic.server.monitoring.MonitoringGap;
+import vn.edu.toeic.server.monitoring.MonitoringGapService;
 
 /** Authenticated transport; event service owns transactional persistence. No presence/state sync. */
 @Component
@@ -36,15 +38,17 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
     private final int maxMessageBytes;
     private final RealtimeSessionRegistry sessions;
     private final MonitoringEventService events;
+    private final MonitoringGapService gaps;
     private final Gson gson = new GsonBuilder().setStrictness(Strictness.STRICT).serializeNulls().create();
     public RealtimeWebSocketHandler(SessionAuthenticationService authentication, AuthorizationService authorization,
             @Value("${toeic.ws.max-message-bytes:65536}") int maxMessageBytes,
-            RealtimeSessionRegistry sessions, MonitoringEventService events) {
+            RealtimeSessionRegistry sessions, MonitoringEventService events, MonitoringGapService gaps) {
         this.authentication = authentication;
         this.authorization = authorization;
         this.maxMessageBytes = maxMessageBytes;
         this.sessions = sessions;
         this.events = events;
+        this.gaps = gaps;
     }
     @Override public void afterConnectionEstablished(WebSocketSession session) {
         session.setTextMessageSizeLimit(maxMessageBytes);
@@ -72,8 +76,15 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
             }
             String type = string(body, "type");
             attemptId = identifier(body, "attemptId", false);
-            if ("PROCESS_OBSERVED".equals(type)) authorization.requireRole(user, Role.CANDIDATE);
+            if ("PROCESS_OBSERVED".equals(type) || "MONITORING_GAP".equals(type)) authorization.requireRole(user, Role.CANDIDATE);
             if (attemptId != null) authorization.requireAttempt(user, attemptId);
+            if ("MONITORING_GAP".equals(type)) {
+                if (attemptId == null) throw new IllegalArgumentException();
+                gaps.store(user, attemptId, MonitoringGap.parse(body.getAsJsonObject("payload")));
+                JsonObject accepted = new JsonObject(); accepted.addProperty("status", "ACCEPTED"); accepted.addProperty("acknowledgedType", "MONITORING_GAP");
+                send(session, new MessageEnvelope<>(Protocol.VERSION, "ACK", UUID.randomUUID().toString(), requestId, attemptId, traceId, accepted));
+                return;
+            }
             if ("PROCESS_OBSERVED".equals(type)) {
                 if (attemptId == null) throw new IllegalArgumentException();
                 ProcessEvent event = ProcessEvent.parse(body.getAsJsonObject("payload"));

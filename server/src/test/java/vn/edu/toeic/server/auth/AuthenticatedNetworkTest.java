@@ -2,6 +2,7 @@ package vn.edu.toeic.server.auth;
 
 import static org.mockito.Mockito.mock;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import vn.edu.toeic.server.monitoring.MonitoringGapService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -284,6 +285,7 @@ class AuthenticatedNetworkTest {
             SessionController.class, RealtimeHandshakeInterceptor.class, RealtimeWebSocketHandler.class,
             RealtimeSessionRegistry.class, RealtimeWebSocketConfiguration.class})
     static class NetworkFixture {
+        @Bean MonitoringGapService mockGapService() { return mock(MonitoringGapService.class); }
         @Bean JdbcClient mockJdbc() { return mock(JdbcClient.class); }
         @Bean MonitoringEventService mockEventService() { return mock(MonitoringEventService.class); }
         @Bean MockStores mockStores() { return new MockStores(); }
