@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import java.net.http.WebSocket;
 import java.nio.ByteBuffer;
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import vn.edu.toeic.client.dashboard.DashboardFixtures;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
 /** All sockets/openers in this class are MOCK, never authenticated server proof. */
@@ -497,6 +499,32 @@ class RealtimeClientTest {
         }
     }
 
+    @Test void warningPushDoesNotConsumeEventAckAndFragmentsStillRequestNext() {
+        try(Fixture f=new Fixture()) {
+            f.connect(); f.client.send(event()).join();
+            String push=GSON.toJson(DashboardFixtures.warning("mock-attempt-A","MOCK-warning"));
+            f.socket().text(push.substring(0,20),false); f.socket().text(push.substring(20),true);
+            assertThat(f.messages).hasSize(1); assertThat(f.messages.getFirst().type()).isEqualTo("MONITOR_WARNING");
+            f.socket().text(ack(),true); assertThat(f.messages).hasSize(2); assertThat(f.messages.getLast().type()).isEqualTo("ACK");
+            assertThat(f.problems).isEmpty(); assertThat(f.socket().demand).isGreaterThan(1);
+        }
+    }
+    @Test void presenceExactLongRevisionAcceptedWithoutPendingRequest() {
+        try(Fixture f=new Fixture()) {
+            f.connect(); f.socket().text(new GsonBuilder().serializeNulls().create().toJson(DashboardFixtures.push("mock-attempt-A",Long.MAX_VALUE)),true);
+            assertThat(f.messages).hasSize(1); assertThat(f.messages.getFirst().payload().get("revision").getAsLong()).isEqualTo(Long.MAX_VALUE);
+            assertThat(f.problems).isEmpty();
+        }
+    }
+    @Test void invalidOrForeignPushCannotBreakPendingAckOrConnection() {
+        try(Fixture f=new Fixture()) {
+            f.connect(); f.client.send(event()).join();
+            f.socket().text(GSON.toJson(DashboardFixtures.push("MOCK-foreign",1)),true);
+            var invalid=DashboardFixtures.push("mock-attempt-A",1); invalid.payload().addProperty("revision",1.1);
+            f.socket().text(GSON.toJson(invalid),true); assertThat(f.messages).isEmpty(); assertThat(f.problems).hasSize(2);
+            f.socket().text(ack(),true); assertThat(f.messages).hasSize(1); assertThat(f.client.connectionState()).isEqualTo(ConnectionState.CONNECTED);
+        }
+    }
     private static MessageEnvelope<JsonObject> event() {
         JsonObject payload = new JsonObject();
         payload.addProperty("eventId", "mock-event-001");
