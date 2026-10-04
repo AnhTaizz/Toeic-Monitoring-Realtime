@@ -1,0 +1,2 @@
+50256bcdc92fea264c1119bfad30230462fbcab494adcdd2332178e02498b37b  server/target/server-0.1.0-SNAPSHOT.jar
+82a0d0ba870641148d758b641f37d66dc3ef5381c1e755df6fae5f2fcfccd39a  client/target/client-0.1.0-SNAPSHOT-all.jar

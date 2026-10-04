@@ -1,0 +1,9 @@
+Security / packaging / source correspondence scan: PASS
+Files inspected: 41
+Changed source/script checksums identical to tested isolated build: 19
+Actual local DB/seed credentials in added content: absent; TEST/MOCK literals are synthetic.
+Raw bearer credentials/private absolute paths/NUL in inspected text: absent; negative TEST fixtures are test-only.
+PNG evidence: actual JavaFX Scene, TEST identities only; visually inspected.
+Evidence normalized UTF8 without BOM; workspace/user/JDK paths sanitized.
+.env/task.txt tracked: NO; TRACKER/nguon/plans01-03/server production/migrations V1-V4 changed: NO.
+Production JAR excludes Test/Smoke classes and client test-scope dependency: PASS.

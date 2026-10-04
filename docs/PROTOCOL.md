@@ -1,6 +1,6 @@
 # Protocol đang dùng
 
-**Trạng thái: v0 có login/Bearer; C3 nối collector → event/queue/retry → A3 DB/ACK/warning/timeline. A4 nối scoped heartbeat, presence/timeout/history, roster REST và MONITOR_PRESENCE. Overflow C3 giữ contract riêng. B3 dashboard và full/delta chưa có.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây.
+**Trạng thái: v0 có login/Bearer; C3 nối collector → event/queue/retry → A3 DB/ACK/warning/timeline. A4 nối scoped heartbeat, presence/timeout/history, roster REST và MONITOR_PRESENCE. B3 đã consume trên dashboard giám thị, HTTP recovery và parser push. Overflow C3 giữ contract riêng; full/delta chưa có.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây.
 
 Owner: C (monitoring, khung message chung), A (auth, ca thi, lưu/nộp). Người dùng: B.
 
@@ -144,8 +144,8 @@ Token chỉ trả trong JSON body của login. Request HTTP `/api/**` sau login 
 | `PROCESS_OBSERVED` | thí sinh → server | Event v0; attempt bắt buộc | ACK sau commit | T1-A3/C3 | Collector→queue→B2→DB/ACK đã cài |
 | `MONITORING_GAP` | thí sinh → server | C3 QUEUE_OVERFLOW; attempt bắt buộc | ACK sau commit | T1-C3 + hook A | Đã cài tối thiểu; chưa reducer/state |
 | `ACK` (event) | server → thí sinh | `status: ACCEPTED`, `acknowledgedType: PROCESS_OBSERVED` | Không | T1-A3 | Đã cài |
-| `MONITOR_WARNING` | server → giám thị được phân công | Timeline item v0 | Không | T1-A3/B3 | Server đã cài; dashboard chưa có |
-| `MONITOR_PRESENCE` | server → giám thị được phân công | PresenceSnapshot: identity/status/reason/revision/timestamps | Không | T1-A4/B3 | Server đã cài; dashboard chưa có |
+| `MONITOR_WARNING` | server → giám thị được phân công | Timeline item v0 | Không | T1-A3/B3 | Server và dashboard đã cài |
+| `MONITOR_PRESENCE` | server → giám thị được phân công | PresenceSnapshot: identity/status/reason/revision/timestamps | Không | T1-A4/B3 | Server và dashboard đã cài |
 | _full snapshot_ | thí sinh → server | | Sau khi state được chấp nhận | T2-C1 | Chưa có |
 | _delta_ | thí sinh → server | | | T3-C1, T3-C2 | Chưa có |
 | _yêu cầu resync / epoch mới_ | server → thí sinh | | | T2-C1, T3-C2 | Chưa có |
@@ -408,3 +408,15 @@ B cần cài dashboard và parser MONITOR_PRESENCE/MONITOR_WARNING. Mở WS/buff
 Sau reconnect tải roster mới để bỏ attempt không còn được phân công; scope/assignment thay đổi cũng cần refresh. Khi chính dashboard mất mạng phải hiện dữ liệu cũ/stale dù last snapshot ONLINE. History gộp theo gapId, thay recoveredAt khi refresh; event gộp `(attemptId,eventId)`, schema/timeline A3 giữ nguyên. Push best effort không thay HTTP recovery. Không cài dashboard/parser B3 hoặc epoch/full/delta trong A4.
 
 Demo tự động: `scripts/smoke-a4.ps1` login/fresh scope/explicit start hai candidate, event commit/ACK, hard-kill JVM riêng, timeout A trong khi B sống, scoped recovery và history; nguồn process MOCK, HTTP/WS/DB/B2/C3 thật. Demo Windows Edge thật vẫn `smoke-c3.ps1`. Evidence `evidence/t1-a4/2026-10-04-verification.md`; GUI/LAN/human C review NOT RUN.
+
+### B3 đã consume — 04/10/2026
+
+`MonitoringApiClient` đọc `/auth/me`, roster, events và interruptions bằng Bearer header. `MonitoringJson` validate v0, object/array, identity, số nguyên Java long chính xác, timestamp/null, status/reason và attempt nhất quán. Không đổi endpoint, envelope, DTO hay migration A3/A4. RealtimeClient thêm warning/presence vào onMessage, requestId null không đi qua pending ACK; fragment handling và B2 reconnect giữ nguyên.
+
+Dashboard đăng ký listener trước khi mở WS; mỗi CONNECTED tải scope/roster và chi tiết đang chọn. Push chờ trong buffer có giới hạn. Roster HTTP đầy đủ quyết định membership; auth/me làm mới scope adapter. Presence chỉ thay khi revision lớn hơn; bằng nhau/cùng nội dung không đổi, bằng nhau/khác nội dung báo mâu thuẫn và đối chiếu HTTP. HTTP revision thấp không ghi đè WS mới. Push attempt chưa có trong roster không tự tạo identity hoặc cấp quyền; cần refresh/buffer hữu hạn.
+
+Events dùng `(attemptId,eventId)`, cùng key khác nội dung báo lỗi. Giữ order response HTTP (`received_at,id`); push mới tạm nối cuối, không suy ra internal id hay tuyệt đối thứ tự timestamp bằng nhau. History dùng `(attemptId,gapId)`; refresh cho phép recoveredAt null thành giá trị thật, callback generation cũ không đưa nó về null. ONLINE không xóa history, presence không tự tạo gap. Overflow gap C3 vẫn chưa có REST/push cho dashboard.
+
+HTTP/state worker riêng, snapshot bất biến và render JavaFX thread. Đổi selection, reconnect, logout và thu hồi quyền vô hiệu hóa callback cũ; 401 dọn phiên/đăng nhập lại, 403 chi tiết loại attempt rồi refresh scope/roster. Network/5xx/schema lỗi giữ dữ liệu cũ theo từng phần; không đổi candidate sang UNKNOWN vì dashboard mất mạng. Buffer/rows/body hữu hạn; overflow hiện cần đồng bộ HTTP, retry tự động có ngân sách 2 vòng mỗi refresh/reconnect, không lặp vô hạn.
+
+Evidence [B3](../evidence/t1-b3/2026-10-04-verification.md): 331 tests, REAL PostgreSQL V4/HTTP/WS/dashboard/B2/C3 và Stage JavaFX proctor, hard-kill owned JVM/UNKNOWN/history/recovery, reconnect HTTP và auth. Process source B3 MOCK; C3 regression Windows ProcessHandle/owned Edge REAL. GUI toàn luồng candidate, LAN/package máy khác và human A review NOT RUN; prototype PARTIAL.
