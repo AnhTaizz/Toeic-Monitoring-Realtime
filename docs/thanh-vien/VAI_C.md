@@ -112,6 +112,8 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 **Ghi chú làm dở:** 04/10/2026 T1-C3 code-complete trên feat/t1-c3-monitoring-event-delivery, base74d2704. CandidateMonitoringSession explicit start/stop + fresh server scope; MonitoringMessage immutable, MonitoringDelivery bounded RAM500/in-flight4/ACK5s/max5/backoff1..8s. Strict identity(session,pid,start nullable), scan failure giữ baseline; overflow giữcũ/dropmới + frozen gap và accumulator kế tiếp. B2 adapter hỗ trợ gap/forget correlation/heartbeat expiry; server V3 + transactional MonitoringGapService commit-before-ACK/unique/conflict/scope. Test/package253/253 (53mới), real WindowsC2/B2/Spring/PostgreSQL delivery/reconnect/timeline/overflow/cleanupPASS; ACKlossSIMULATED, overflow snapshotMOCK. HumanBreview/GUI/LAN NOTRUN, MT01PARTIAL tớiB3. Evidence evidence/t1-c3/2026-10-04-verification.md. Git/PR/merge cuối xem report. TRACKER giữ nguyên; không triển khai C4/A4/B3/chặng2.
 
+**Bổ sung handoff A4, 04/10:** CandidateMonitoringSession gắn heartbeat lease vào đúng UUID trả từ collector.start, gỡ khi Stop/logout/switch/mất quyền; RealtimeClient giữ binding qua socket reconnect. Collector C2 và event/gap C3 không đổi contract. Server V4 theo dõi HEARTBEAT_TIMEOUT riêng monitoring_interruptions, không nhận reason đó qua MONITORING_GAP. Human C review phần A4 NOT RUN; T2-C2 event muộn/state/gap khác vẫn chưa làm. Xem PROTOCOL T1-A4 và evidence/t1-a4/2026-10-04-verification.md.
+
 ### T1-C4 · Log đo và ghi chú lựa chọn phương pháp monitoring
 `3h` · phụ thuộc: T1-C1, T1-C3 · review: B
 

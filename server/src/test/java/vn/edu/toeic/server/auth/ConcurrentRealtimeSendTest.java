@@ -28,11 +28,13 @@ import vn.edu.toeic.server.realtime.RealtimeSessionRegistry;
 import vn.edu.toeic.server.monitoring.MonitoringEventService;
 import vn.edu.toeic.server.monitoring.ProcessEvent;
 import vn.edu.toeic.server.monitoring.MonitoringGapService;
+import vn.edu.toeic.server.monitoring.MonitoringPresenceService;
+import vn.edu.toeic.server.monitoring.PresenceSnapshot;
 
 /** MOCK session with controlled overlapping callers; no sleep/race-based assertion. */
 class ConcurrentRealtimeSendTest {
-    @ParameterizedTest @ValueSource(booleans = {false, true})
-    void concurrentAckAndAckOrWarningNeverOverlapRawSessionWrites(boolean warning) throws Exception {
+    @ParameterizedTest @ValueSource(strings = {"ACK", "WARNING", "PRESENCE"})
+    void concurrentAckAndAckOrWarningNeverOverlapRawSessionWrites(String type) throws Exception {
         LoginSessionStore store = mock(LoginSessionStore.class);
         when(store.findByTokenHash(anyString())).thenReturn(Optional.of(new StoredSession(
                 new AuthenticatedUser(1, "MOCK-proctor", Role.PROCTOR), Instant.now().plusSeconds(60), null, true)));
@@ -40,7 +42,7 @@ class ConcurrentRealtimeSendTest {
         var authorization = new AuthorizationService((user, attempt) -> true);
         var registry = new RealtimeSessionRegistry(authentication, authorization, 5000, 65_536);
         RealtimeWebSocketHandler handler = new RealtimeWebSocketHandler(authentication, authorization, 65_536,
-                registry, mock(MonitoringEventService.class), mock(MonitoringGapService.class));
+                registry, mock(MonitoringEventService.class), mock(MonitoringGapService.class), mock(MonitoringPresenceService.class));
         WebSocketSession socket = mock(WebSocketSession.class);
         Map<String, Object> attributes = new ConcurrentHashMap<>();
         attributes.put(SessionAuthenticationService.TOKEN_HASH_ATTRIBUTE, "MOCK-hash");
@@ -74,9 +76,10 @@ class ConcurrentRealtimeSendTest {
             assertThat(firstEntered.await(3, TimeUnit.SECONDS)).isTrue();
             var second = workers.submit(() -> {
                 try {
-                    if (warning) registry.warnAssignedProctors(new MonitoringEventService.StoredEvent(1, "MOCK-attempt",
+                    if (type.equals("WARNING")) registry.warnAssignedProctors(new MonitoringEventService.StoredEvent(1, "MOCK-attempt",
                             new ProcessEvent("MOCK-event", "MOCK-collector", "v1", 1, "notepad.exe", null,
                                     "UNREADABLE", Instant.now()), Instant.now()), "MOCK-trace");
+                    else if(type.equals("PRESENCE")) registry.presenceAssignedProctors(new PresenceSnapshot("MOCK-attempt",1,"MOCK", "ONLINE","HEARTBEAT",1,"MOCK-collector",Instant.now(),null),"MOCK-trace");
                     else handler.handleMessage(socket, new TextMessage(AuthenticatedNetworkTest.heartbeat(null)));
                 }
                 catch (Exception error) { throw new AssertionError("MOCK second handler failed"); }

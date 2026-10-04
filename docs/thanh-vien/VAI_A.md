@@ -120,7 +120,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** gate 08/10 qua phần server: event commit rồi ACK, không trùng, heartbeat timeout hiển thị UNKNOWN.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 04/10 T1-A4 trên `feat/t1-a4-monitoring-presence`, base main `99b4f39`. Scoped heartbeat gắn collector UUID thật khi explicit start; lease Stop/logout/switch/reconnect, unscoped không ONLINE. Presence service deadline đơn điệu 6s/scan500ms, association bounded/tổng hợp nhiều socket, revision/CAS, push sau commit ngoài DB lock. V4 bảng presence và interruptions riêng V3 overflow; recovery giữ gapId/recoveredAt, restart UNKNOWN/SERVER_RESTART không bịa gap. Roster/history REST và MONITOR_PRESENCE chỉ proctor có assignment ACTIVE. Real hai candidate/owned JVM hard-kill/recovery/push isolation/deferred COMMIT/cleanup PASS; test/package và hồi quy xem evidence `evidence/t1-a4/2026-10-04-verification.md`. Chạm B2 adapter và C3 coordinator tối thiểu, không đổi event/overflow. Human C review, GUI/LAN NOT RUN; B3 dashboard/parser chưa làm, không đánh toàn prototype PASS. TRACKER giữ nguyên; Git/PR/merge cuối xem report. Dừng A4.
 
 ---
 

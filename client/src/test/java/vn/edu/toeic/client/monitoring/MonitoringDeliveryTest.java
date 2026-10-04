@@ -250,6 +250,20 @@ class MonitoringDeliveryTest {
             assertThat(f.transport.sent.getFirst().payload().get("collectorSessionId").getAsString()).isEqualTo("MOCK-collector");
         }
     }
+    @Test void coordinatorBindsReturnedCollectorIdAndPermissionStopClosesLease() throws Exception {
+        MockTransport transport=new MockTransport();
+        ProcessCollector collector=new ProcessCollector(List::of,Duration.ofSeconds(1));
+        try(CandidateMonitoringSession session=new CandidateMonitoringSession(collector,transport,MonitoringDelivery.Settings.defaults(),ignored->{ })) {
+            String first=session.start(Role.CANDIDATE,"MOCK-A",Set.of("MOCK-A"));
+            assertThat(transport.heartbeatCollector).isEqualTo(first); assertThat(transport.heartbeatAttempt).isEqualTo("MOCK-A");
+            session.stop().stopped().get(2,TimeUnit.SECONDS); assertThat(transport.heartbeatCollector).isNull();
+            String next=session.start(Role.CANDIDATE,"MOCK-B",Set.of("MOCK-B")); assertThat(next).isNotEqualTo(first);
+            JsonObject error=new JsonObject(); error.addProperty("code","UNAUTHORIZED");
+            transport.deliver(new MessageEnvelope<>("v0","ERROR","MOCK-error",null,null,"MOCK-trace",error));
+            assertThat(session.isActive()).isFalse(); assertThat(transport.heartbeatCollector).isNull();
+            session.stop().stopped().get(2,TimeUnit.SECONDS);
+        }
+    }
     static ProcessSnapshot snapshot(ObservedProcess... processes) {
         return new ProcessSnapshot("MOCK-collector", "process-policy-v1", Long.MAX_VALUE, 0, Set.of(processes), diagnostics());
     }
@@ -286,6 +300,11 @@ class MonitoringDeliveryTest {
         final List<Consumer<ConnectionState>> stateListeners = new CopyOnWriteArrayList<>();
         boolean immediateAck, failWrites; ConnectionState connection = ConnectionState.CONNECTED;
         CompletableFuture<Void> write;
+        String heartbeatAttempt,heartbeatCollector;
+        @Override public AutoCloseable monitoringHeartbeat(String attempt,String collector) {
+            heartbeatAttempt=attempt; heartbeatCollector=collector;
+            return ()->{ if(collector.equals(heartbeatCollector)){heartbeatAttempt=null;heartbeatCollector=null;} };
+        }
         @Override public CompletableFuture<Void> send(MessageEnvelope<JsonObject> m) {
             sent.add(copy(m)); if (immediateAck) deliver(MonitoringDeliveryTest.ack(m));
             return write != null ? write : failWrites ? CompletableFuture.failedFuture(new IllegalStateException("MOCK failure")) : CompletableFuture.completedFuture(null);

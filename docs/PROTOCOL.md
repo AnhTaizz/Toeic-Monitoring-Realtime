@@ -1,6 +1,6 @@
 # Protocol đang dùng
 
-**Trạng thái: v0 có login/Bearer/heartbeat; C3 nối collector → event/queue/retry → A3 DB/ACK/warning/timeline. MONITORING_GAP tối thiểu cho overflow đã có persistence/ACK riêng. B3 dashboard, A4 presence và full/delta chưa có.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây.
+**Trạng thái: v0 có login/Bearer; C3 nối collector → event/queue/retry → A3 DB/ACK/warning/timeline. A4 nối scoped heartbeat, presence/timeout/history, roster REST và MONITOR_PRESENCE. Overflow C3 giữ contract riêng. B3 dashboard và full/delta chưa có.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây.
 
 Owner: C (monitoring, khung message chung), A (auth, ca thi, lưu/nộp). Người dùng: B.
 
@@ -95,6 +95,8 @@ ACK thành công chỉ được phát sau khi thao tác tương ứng đã đư�
 | `POST /api/v1/auth/login` | Thí sinh, giám thị | `requestId`, `username`, `password` | `protocolVersion`, `requestId`, `traceId`, `token`, `tokenType`, `expiresAt`, `user`, `attemptScope` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 500 `RETRYABLE_SERVER_ERROR` | T1-A1 | Đã cài |
 | `GET /api/v1/auth/me` | Người đã login | Header Bearer | `protocolVersion`, `traceId`, `user: {userId, username, role}`, `attemptScope`: các attempt ACTIVE có quyền | 401 `UNAUTHORIZED`; 503 khi lookup session lỗi; 500 khi lookup scope lỗi, `RETRYABLE_SERVER_ERROR` | T1-A2/A3 | Đã cài |
 | `GET /api/v1/monitoring/attempts/{attemptId}/events` | Giám thị được phân công | Header Bearer | `protocolVersion`, `traceId`, `attemptId`, `events` | 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 `RETRYABLE_SERVER_ERROR` | T1-A3 | Đã cài |
+| `GET /api/v1/monitoring/attempts` | Giám thị | Header Bearer | `protocolVersion`, `traceId`, `serverTime`, `attempts`: identity + presence của ACTIVE được phân công | 401; 403 sai role; 500/503 lỗi DB | T1-A4 | Đã cài |
+| `GET /api/v1/monitoring/attempts/{attemptId}/interruptions` | Giám thị được phân công | Header Bearer | `protocolVersion`, `traceId`, `attemptId`, `interruptions` | 401; 403 sai role/foreign/CLOSED/unknown; 500/503 lỗi DB | T1-A4 | Đã cài |
 | _import đề / tạo ca_ | Giám thị | | | | T2-A1 | Chưa có |
 | _lấy đề (không có đáp án đúng)_ | Thí sinh | | | | T2-A1 | Chưa có |
 | _autosave_ | Thí sinh | | | | T2-A2 | Chưa có |
@@ -136,14 +138,14 @@ Token chỉ trả trong JSON body của login. Request HTTP `/api/**` sau login 
 
 | `type` | Hướng | Payload | ACK | Task | Trạng thái |
 |---|---|---|---|---|---|
-| `HEARTBEAT` | client → server | `sentAt` bắt buộc; `collectorSessionId` optional | ACK transport | T1-A2 | Đã cài; chưa có presence T1-A4 |
+| `HEARTBEAT` | client → server | `sentAt` bắt buộc; scoped bắt buộc collectorSessionId | Unscoped ACK transport; scoped ACK sau presence commit | T1-A2/A4 | Đã cài |
 | `ACK` (heartbeat) | server → client | `status: ACCEPTED`, `acknowledgedType: HEARTBEAT` | Không | T1-A2 | Đã cài |
 | `ERROR` | server → client | `code`, `message`, `retryable` | Không | T1-A2 | Đã cài |
 | `PROCESS_OBSERVED` | thí sinh → server | Event v0; attempt bắt buộc | ACK sau commit | T1-A3/C3 | Collector→queue→B2→DB/ACK đã cài |
 | `MONITORING_GAP` | thí sinh → server | C3 QUEUE_OVERFLOW; attempt bắt buộc | ACK sau commit | T1-C3 + hook A | Đã cài tối thiểu; chưa reducer/state |
 | `ACK` (event) | server → thí sinh | `status: ACCEPTED`, `acknowledgedType: PROCESS_OBSERVED` | Không | T1-A3 | Đã cài |
 | `MONITOR_WARNING` | server → giám thị được phân công | Timeline item v0 | Không | T1-A3/B3 | Server đã cài; dashboard chưa có |
-| _presence (ONLINE/UNKNOWN)_ | server → giám thị | | | T1-A4 | Chưa có |
+| `MONITOR_PRESENCE` | server → giám thị được phân công | PresenceSnapshot: identity/status/reason/revision/timestamps | Không | T1-A4/B3 | Server đã cài; dashboard chưa có |
 | _full snapshot_ | thí sinh → server | | Sau khi state được chấp nhận | T2-C1 | Chưa có |
 | _delta_ | thí sinh → server | | | T3-C1, T3-C2 | Chưa có |
 | _yêu cầu resync / epoch mới_ | server → thí sinh | | | T2-C1, T3-C2 | Chưa có |
@@ -211,21 +213,21 @@ Giá trị thử nghiệm theo hợp đồng, phải ghi lại giá trị thật
 - Mỗi reconnect tạo WS mới và gửi header auth lại. Server giữ user và **hash** session trong attributes; mỗi message tra DB lại để kiểm expiry/revoke/enabled/current role. Phiên bị vô hiệu → ERROR UNAUTHORIZED rồi close 1008. Lookup session tạm thời lỗi → handshake 503 hoặc WS ERROR RETRYABLE_SERVER_ERROR; không trả stack trace.
 - REST `/api/**` ngoại trừ POST login dùng cùng Bearer semantics và identity/principal. Token trong query `token`/`access_token` bị từ chối; sai role/scope → 403 FORBIDDEN. Không tự bật browser CORS wildcard.
 
-### Trường nhận ở T1-A2
+### Trường nhận ở T1-A2, cập nhật A3/C3/A4
 
 | Trường | Quy tắc |
 |---|---|
 | protocolVersion | Bắt buộc string `v0` |
-| type | Bắt buộc string; HEARTBEAT và PROCESS_OBSERVED được hỗ trợ (event từ A3) |
+| type | Bắt buộc string; HEARTBEAT, PROCESS_OBSERVED, MONITORING_GAP được hỗ trợ |
 | messageId | Bắt buộc, 1–128 ký tự `[A-Za-z0-9_.:-]` |
 | traceId | Bắt buộc, cùng giới hạn ID; ACK giữ correlation |
 | requestId | Có thể thiếu/null, khi đó dùng messageId; nếu có phải bằng messageId |
-| attemptId | HEARTBEAT có thể thiếu/null. Nếu có phải là ID hợp lệ và được AttemptScopeAuthorizer cho phép |
-| payload | HEARTBEAT bắt buộc object, `sentAt` là string ISO-8601 Instant; `collectorSessionId` optional, nếu có là ID hợp lệ |
+| attemptId | HEARTBEAT có thể thiếu/null. Scoped bắt buộc candidate sở hữu ACTIVE; event/gap bắt buộc attempt |
+| payload | HEARTBEAT chỉ sentAt ISO Instant và collectorSessionId identifier; collector bắt buộc nếu scoped, optional/null nếu unscoped |
 
 Giới hạn text message/buffer: 65.536 byte mặc định, configurable; send timeout 5.000ms. Message vượt giới hạn container có thể bị đóng 1009; binary không được hỗ trợ. JSON sai/type lạ/thiếu trường trong giới hạn → ERROR INVALID_INPUT chỉ tới session đó; kết nối vẫn nhận heartbeat tiếp theo.
 
-**Heartbeat thiếu attemptId chỉ là transport ping của phiên authenticated**, dùng khi login chưa cấp attempt. Nó không ghi presence/ONLINE/UNKNOWN, không bật collector và không cấp quyền truy cập attempt. Nếu có attemptId, auth → scope check → ACK. Từ A3, production scope đọc assignment PostgreSQL: candidate sở hữu hoặc proctor được phân công vào attempt ACTIVE. Không có assignment thì scope rỗng; không tạo fixture production.
+**Heartbeat thiếu attemptId chỉ là transport ping của phiên authenticated**, dùng khi chưa start collector hoặc sau Stop. Nó không ghi presence/ONLINE/UNKNOWN, không bật collector và không cấp quyền truy cập attempt. Scoped heartbeat A4: auth → candidate/ACTIVE scope → validation → presence COMMIT → ACK/push. Từ A3, production scope đọc assignment PostgreSQL: candidate sở hữu hoặc proctor được phân công vào attempt ACTIVE; proctor scope chỉ phục vụ đọc/push, không cho gửi scoped candidate heartbeat. Không có assignment thì scope rỗng; không tạo fixture production.
 
 ### HEARTBEAT/ACK đã cài
 
@@ -239,7 +241,7 @@ Các ID/thời gian dưới đây là giá trị minh họa; shape được ki�
 {"protocolVersion":"v0","type":"ACK","messageId":"server-generated-id","requestId":"sample-hb-001","attemptId":null,"traceId":"sample-trace-001","payload":{"status":"ACCEPTED","acknowledgedType":"HEARTBEAT"}}
 ```
 
-ACK heartbeat xác nhận transport đã nhận/chấp nhận message; **không phải ACK event persistence/DB commit**. ACK PROCESS_OBSERVED từ A3 chỉ gửi sau commit, theo contract bên dưới. Full/delta và message khác chưa được hỗ trợ.
+ACK unscoped heartbeat xác nhận transport đã nhận/chấp nhận ping; scoped A4 xác nhận presence commit, không thay ACK event/gap. ACK PROCESS_OBSERVED/MONITORING_GAP chỉ gửi sau commit tương ứng, theo contract bên dưới. Full/delta chưa được hỗ trợ.
 
 ### ERROR envelope WS đã cài
 
@@ -344,3 +346,65 @@ Queue đầy giữ event cũ/drop event mới, tăng count/thời gian; identity
 Server: auth lại → roleCANDIDATE → scopeACTIVE → validation → MonitoringGapService transaction → COMMIT → ACK `acknowledgedType:MONITORING_GAP`. V3 tạo monitoring_gaps, không sửaV2. Lock attempt FOR SHARE bảo vệ transaction khi state đổi; unique `(attempt_id,gap_id)`. Cùng normalized payload ACK lại/mộtrow; payload khácCONFLICT, không overwrite. LỗiCOMMIT rollback/RETRYABLE_SERVER_ERROR, không successACK. Gap không sửa monitoring_events/process state, không pushMONITOR_WARNING, chưa có gapRESTtimeline; B3/A/C giai đoạn sau phải dùng contract riêng nếu cần hiển thị gap. Process warning/events endpoint giữ nguyên.
 
 Đây chỉ là hook overflow C3. T2-C2 còn event muộn/state/gap khác; không presence/reducer/full/delta/dashboard ở task này. Evidence `evidence/t1-c3/2026-10-04-verification.md`: real WindowsProcessHandle/B2/Spring/PostgreSQL; ACKlossSIMULATED, overflow sourceMOCK nhưng gapnetwork/commit/ACKREAL. MT01 PARTIAL tới B3; GUI/LAN/humanBreview NOTRUN.
+
+## Contract T1-A4 — heartbeat và presence (04/10/2026)
+
+### Bắt đầu, dừng và reconnect
+
+Sau fresh `/api/v1/auth/me` và explicit start, `CandidateMonitoringSession` lấy UUID thật từ `ProcessCollector.start`, rồi gọi `MonitoringTransport.monitoringHeartbeat(attemptId,collectorSessionId)`. `RealtimeClient` gửi heartbeat đầu ngay khi CONNECTED và tiếp tục mỗi 2 giây mặc định. JVM property `toeic.realtime.heartbeatMillis` cấu hình chu kỳ; không đổi queue/in-flight/ACK budget C3.
+
+Lease trả về chỉ gỡ binding mà chính nó tạo. Stop/logout/switch và mất quyền gỡ lease; callback/generation cũ không thể gỡ hoặc bật lại phiên mới. Reconnect cùng run giữ attempt/collector; không restart collector đã Stop. Chưa start, role PROCTOR hoặc scope rỗng dùng unscoped ping. Legacy Session fields vẫn phục vụ API B2; sau khi dùng lease thì lifecycle explicit quyết định binding, không khôi phục fields cũ sau Stop. Không có message STOP riêng: server chỉ UNKNOWN sau timeout tính từ heartbeat hợp lệ cuối, kể cả một heartbeat đang trên đường truyền khi người dùng Stop.
+
+Scoped envelope dùng mẫu HEARTBEAT đầu file: `attemptId` bắt buộc có quyền candidate sở hữu ACTIVE, payload chỉ `sentAt` (ISO Instant bắt buộc) và `collectorSessionId` (identifier bắt buộc). Unscoped có `attemptId:null`, collector thiếu/null được phép; giữ ACK HEARTBEAT như B2, không tạo/refresh presence. Proctor không được gửi scoped heartbeat. Malformed, token hết hiệu lực, foreign/CLOSED/unknown bị từ chối trước refresh. PROCESS_OBSERVED/MONITORING_GAP không thay heartbeat.
+
+Scoped heartbeat qua transaction proxy COMMIT rồi ACK và push; lỗi DB/COMMIT trả `RETRYABLE_SERVER_ERROR`, không ghi runtime freshness hoặc push thành công. Scheduler lỗi DB giữ association để retry, vẫn xử lý các attempt khác. Socket gửi ACK/ERROR/warning/presence chung decorator hiện có, không raw send song song.
+
+### Trạng thái và thời gian
+
+| status / reason | Ý nghĩa |
+|---|---|
+| ONLINE / HEARTBEAT | Vừa nhận và lưu heartbeat hợp lệ |
+| UNKNOWN / NOT_SEEN | Chưa từng nhận; revision0, collector/lastSeenAt/timeoutDetectedAt null, không row timeout giả |
+| UNKNOWN / HEARTBEAT_TIMEOUT | Không association hợp lệ nào còn heartbeat trong deadline |
+| UNKNOWN / ACCESS_REVOKED | Tất cả association mất auth/scope/ACTIVE; không tạo heartbeat timeout giả |
+| UNKNOWN / SERVER_RESTART | ONLINE lưu từ JVM trước đã được demote lúc startup; timeoutDetectedAt null |
+
+ONLINE chỉ xác nhận liên lạc đã quan sát; không chứng minh collector chưa bị sửa hoặc mọi process được thấy. UNKNOWN không phải kết luận gian lận. `lastSeenAt` và `timeoutDetectedAt` dùng Clock server UTC, cắt dưới microsecond; `sentAt` client không quyết định timeout. Deadline dùng `System.nanoTime()` trong cùng JVM, nên chỉnh wall clock không kéo dài/rút ngắn deadline. Timestamp UTC có thể lùi khi đồng hồ server lùi; thứ tự update dùng revision, không dùng timestamp. Không so nanoTime giữa máy hoặc giữa lần chạy server.
+
+Timeout mặc định `MONITORING_TIMEOUT_MS=6000`, scan `MONITORING_TIMEOUT_SCAN_MS=500`. Khi đủ ngưỡng, scan kế tiếp xử lý; không hứa đúng tuyệt đối 6 giây nếu DB/worker chậm. RAM giới hạn `MONITORING_PRESENCE_MAX_ATTEMPTS=4096`, `MONITORING_ASSOCIATIONS_PER_ATTEMPT=8`; hết chỗ trả retryable error, không nhận thành công giả.
+
+Identity tách user / attempt / collector / socket. Mỗi socket+attempt có một collector hiện hành; nhiều socket hợp lệ cùng attempt được tổng hợp. Close callback không demote ngay: association hết hạn theo heartbeat hoặc bị thu quyền. Socket cũ đóng/hết hạn không phá socket mới còn hợp lệ. Scan dọn association expired/revoked/CLOSED; khi không còn eligible thì transaction cập nhật UNKNOWN một lần và xóa run RAM. Có khóa theo attempt bằng 128 stripe cố định, không một khóa chung toàn bộ client. Heartbeat và timeout tuần tự trên cùng stripe, DB compare-and-set ONLINE+expected revision chống timeout cũ ghi đè. Mỗi heartbeat/transition được commit tăng revision BIGINT theo attempt. Socket push sau commit và ngoài khóa DB/stripe; có thể đến lệch thứ tự, B3 phải đối chiếu revision. Prototype chạy một server JVM cùng schema; chưa hỗ trợ nhiều server writer đồng thời.
+
+### Lịch sử gián đoạn do server
+
+V4 mới tạo `monitoring_presence` và `monitoring_interruptions`, không sửa V1–V3. Interruption chứa gapId UUID ổn định, attempt/collector/socket, presence_revision, reason HEARTBEAT_TIMEOUT, last_seen_at, timeout_detected_at, recovered_at nullable. Unique `(attempt_id,presence_revision)` và một interruption chưa recovered mỗi attempt. Một lần timeout tạo một record/push UNKNOWN; scan tiếp không lặp. Heartbeat phục hồi cập nhật recoveredAt và giữ gapId/record. Đây là khoảng server biết, không phải thời điểm client chắc chắn dừng.
+
+Startup demote persisted ONLINE thành UNKNOWN/SERVER_RESTART và tăng revision trước khi API/WS phục vụ. Không phục hồi deadline nanoTime cũ, không bịa downtime timestamp/gap; lịch sử trước restart giữ nguyên. Heartbeat mới mới làm ONLINE. Overflow C3 vẫn ở `monitoring_gaps`, reason QUEUE_OVERFLOW và payload sáu trường; không đưa HEARTBEAT_TIMEOUT vào MONITORING_GAP. T2-C2 còn state/event muộn/gap khác.
+
+### Roster, presence push và history
+
+GET roster chỉ PROCTOR; một SQL lọc ACTIVE + assignment, trả identity tối thiểu và snapshot. Mẫu TEST:
+
+```json
+{"protocolVersion":"v0","traceId":"TEST-trace","serverTime":"2026-10-04T00:00:02Z","attempts":[{"attemptId":"TEST-attempt-A","candidateUserId":101,"candidateDisplayName":"TEST Candidate A","status":"ONLINE","reason":"HEARTBEAT","revision":5,"collectorSessionId":"TEST-collector-A","lastSeenAt":"2026-10-04T00:00:02Z","timeoutDetectedAt":null}]}
+```
+
+`MONITOR_PRESENCE` payload **cùng PresenceSnapshot schema** với roster item, attemptId có cả envelope và payload. Ví dụ timeout:
+
+```json
+{"protocolVersion":"v0","type":"MONITOR_PRESENCE","messageId":"TEST-presence","requestId":null,"attemptId":"TEST-attempt-A","traceId":"TEST-trace","payload":{"attemptId":"TEST-attempt-A","candidateUserId":101,"candidateDisplayName":"TEST Candidate A","status":"UNKNOWN","reason":"HEARTBEAT_TIMEOUT","revision":6,"collectorSessionId":"TEST-collector-A","lastSeenAt":"2026-10-04T00:00:02Z","timeoutDetectedAt":"2026-10-04T00:00:08Z"}}
+```
+
+Registry revalidate auth, role PROCTOR và assignment ACTIVE trước từng push; offline/buffer lỗi không mất snapshot/history DB. Không trả raw socket/token/password/OS path. HTTP history chỉ PROCTOR có scope ACTIVE, order presence_revision; chưa phân trang:
+
+```json
+{"protocolVersion":"v0","traceId":"TEST-trace","attemptId":"TEST-attempt-A","interruptions":[{"gapId":"TEST-gap-A","attemptId":"TEST-attempt-A","collectorSessionId":"TEST-collector-A","reason":"HEARTBEAT_TIMEOUT","lastSeenAt":"2026-10-04T00:00:02Z","timeoutDetectedAt":"2026-10-04T00:00:08Z","recoveredAt":"2026-10-04T00:00:09Z"}]}
+```
+
+### Handoff B3
+
+B cần cài dashboard và parser MONITOR_PRESENCE/MONITOR_WARNING. Mở WS/buffer trước rồi tải roster và timeline/history; hoặc tải trước rồi đọc lại sau handshake. Với presence, map theo attemptId, chỉ nhận revision lớn hơn hiện có; revision bằng nhau là cùng snapshot. HTTP về trễ không ghi đè WS revision mới. Revision0 NOT_SEEN là trạng thái chưa có heartbeat, không phải timeout. JSON revision là số nguyên BIGINT; Java dùng long.
+
+Sau reconnect tải roster mới để bỏ attempt không còn được phân công; scope/assignment thay đổi cũng cần refresh. Khi chính dashboard mất mạng phải hiện dữ liệu cũ/stale dù last snapshot ONLINE. History gộp theo gapId, thay recoveredAt khi refresh; event gộp `(attemptId,eventId)`, schema/timeline A3 giữ nguyên. Push best effort không thay HTTP recovery. Không cài dashboard/parser B3 hoặc epoch/full/delta trong A4.
+
+Demo tự động: `scripts/smoke-a4.ps1` login/fresh scope/explicit start hai candidate, event commit/ACK, hard-kill JVM riêng, timeout A trong khi B sống, scoped recovery và history; nguồn process MOCK, HTTP/WS/DB/B2/C3 thật. Demo Windows Edge thật vẫn `smoke-c3.ps1`. Evidence `evidence/t1-a4/2026-10-04-verification.md`; GUI/LAN/human C review NOT RUN.

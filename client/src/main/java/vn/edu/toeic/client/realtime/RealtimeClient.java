@@ -24,6 +24,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 import vn.edu.toeic.protocol.ErrorCode;
@@ -56,6 +57,11 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         public static Settings defaults() {
             return new Settings(Duration.ofSeconds(2), Duration.ofSeconds(1),
                     Duration.ofSeconds(8), 4, 65_536, 500);
+        }
+        public static Settings configured() {
+            Settings d = defaults();
+            return new Settings(Duration.ofMillis(Long.getLong("toeic.realtime.heartbeatMillis", d.heartbeat.toMillis())),
+                    d.initialBackoff, d.maxBackoff, d.maxRetries, d.maxMessageChars, d.maxPendingAcks);
         }
         public Duration retryDelay(int retry) {
             long delay = initialBackoff.toMillis();
@@ -104,9 +110,12 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     private CompletableFuture<Void> writeTail = CompletableFuture.completedFuture(null);
     private ScheduledFuture<?> heartbeatTask;
     private ScheduledFuture<?> retryTask;
+    private record HeartbeatBinding(String attempt, String collector) { }
+    private final AtomicReference<HeartbeatBinding> monitoringBinding = new AtomicReference<>();
+    private volatile boolean explicitHeartbeatLifecycle;
 
     public RealtimeClient(String serverUrl, String token) {
-        this(new AuthenticatedWebSocketOpener(serverUrl, token), Settings.defaults());
+        this(new AuthenticatedWebSocketOpener(serverUrl, token), Settings.configured());
     }
 
     public RealtimeClient(ConnectionOpener opener, Settings settings) {
@@ -180,11 +189,14 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         });
         if (!writes.isEmpty()) return; // Do not accumulate heartbeats behind a stalled write.
         JsonObject payload = new JsonObject();
-        if (session.collectorSessionId() != null) payload.addProperty("collectorSessionId", session.collectorSessionId());
+        HeartbeatBinding binding = monitoringBinding.get();
+        String attempt = explicitHeartbeatLifecycle ? (binding == null ? null : binding.attempt) : session.heartbeatAttemptId();
+        String collector = explicitHeartbeatLifecycle ? (binding == null ? null : binding.collector) : session.collectorSessionId();
+        if (collector != null) payload.addProperty("collectorSessionId", collector);
         payload.addProperty("sentAt", Instant.now().toString());
         String id = UUID.randomUUID().toString();
         send(new MessageEnvelope<>("v0", "HEARTBEAT", id, id,
-                session.heartbeatAttemptId(), UUID.randomUUID().toString(), payload));
+                attempt, UUID.randomUUID().toString(), payload));
     }
 
     @Override public synchronized CompletableFuture<Void> send(MessageEnvelope<JsonObject> message) {
@@ -326,6 +338,17 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     }
 
     @Override public ConnectionState connectionState() { return state; }
+    @Override public AutoCloseable monitoringHeartbeat(String attempt, String collector) {
+        if (!validIdentifier(attempt) || !validIdentifier(collector)) throw new IllegalArgumentException("Phiên heartbeat không hợp lệ");
+        HeartbeatBinding binding = new HeartbeatBinding(attempt, collector);
+        explicitHeartbeatLifecycle = true;
+        monitoringBinding.set(binding);
+        // No adapter lock on the caller: socket observers may be holding it while entering coordinator callbacks.
+        dispatch(() -> { synchronized (RealtimeClient.this) {
+            if (!closed && monitoringBinding.get() == binding) heartbeat();
+        } });
+        return () -> monitoringBinding.compareAndSet(binding, null);
+    }
     @Override public synchronized void forgetPending(String requestId) {
         pendingAcks.remove(requestId); heartbeatDeadlines.remove(requestId);
     }
@@ -461,6 +484,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     @Override public synchronized void close() {
         if (closed) return;
         closed = true;
+        monitoringBinding.set(null);
         disconnect();
         try { opener.close(); } finally {
             worker.shutdownNow();

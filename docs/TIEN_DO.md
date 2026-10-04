@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 04/10/2026 — base main PR #4 `6b9572e` đã có A2/B2/C2. T1-A3 code-complete trên `feat/t1-a3-monitoring-events`: assignment scope JDBC thật, event persistence/idempotency, commit-before-ACK, push giám thị được phân công và timeline REST. Real PostgreSQL18.6/HTTP/WS smoke PASS, gồm lỗi deferred COMMIT rollback không ACK. Collector→transport C3 và dashboard B3 chưa làm. Review C và GUI/LAN NOT RUN; TRACKER giữ nguyên. Evidence `evidence/t1-a3/2026-10-04-verification.md`; Git cuối xem report.
+Cập nhật lần cuối: 04/10/2026 — base main PR #6 `99b4f39` đã có A2/B2/C2/A3/C3. T1-A4 nối heartbeat đúng collector/attempt, server presence/timeout/history V4, assigned-proctor push và roster/history REST. Real PostgreSQL/Spring/HTTP/WS/B2/C3 hai candidate, hard-kill JVM riêng, recovery/history và COMMIT failure PASS. B3 dashboard chưa làm; chưa nghiệm thu toàn prototype. Human C review, GUI/LAN NOT RUN; TRACKER giữ nguyên. Evidence `evidence/t1-a4/2026-10-04-verification.md`; Git/PR/merge cuối xem report.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
@@ -14,7 +14,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
-| A | _chưa gán_ | T1-A3 code-complete; chốt contract cho B3/C3 | Event DB/duplicate/conflict/scope/push/timeline và COMMIT failure PASS | C review NOT RUN; PR/merge theo task, dừng sau A3 | `feat/t1-a3-monitoring-events` |
+| A | _chưa gán_ | T1-A4; bàn giao roster/presence/history cho B3 | Scoped heartbeat, timeout/recovery/restart, multi-client isolation và lỗi COMMIT PASS | Human C review NOT RUN; dừng sau A4, GUI/LAN chờ kiểm riêng | `feat/t1-a4-monitoring-presence` |
 | B | _chưa gán_ | T1-B2 đã merge PR #3, MonitoringTransport trên main | Real WS/ACK/reconnect PASS; tests 142/142 lịch sử | Review C2; GUI manual và review A còn NOT RUN | `feat/t1-b2-network-heartbeat-ui` |
 | C | _chưa gán_ | T1-C3 code-complete; event/queue/retry và gap | Tests/package253; real Windows/B2/DB/ACK/reconnect/gap/cleanup PASS | Human B review/GUI/LAN NOT RUN; bàn giao B3/A, dừng C3 | `feat/t1-c3-monitoring-event-delivery` |
 
@@ -26,7 +26,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 - PR #1 đã merge trên main `34a7835`; các mục GUI/LAN thiếu chứng cứ lịch sử vẫn NOT RUN.
 - A3 đã thay deny-all A2 bằng assignment scope JDBC; candidate sở hữu/proctor được phân công vào attempt ACTIVE. Không seed assignment production; khi chưa tạo lượt thi, scope vẫn rỗng. Schema tối thiểu chưa phải hệ thống đề/ca thi.
 - B2 đã có real integration riêng: production opener, heartbeat/ACK attemptId null, ERROR, server-off/re-auth. Headless model lock PASS; không coi là GUI manual hoặc event/presence đã xong. Evidence mới: `evidence/t1-b2/2026-10-04-real-integration.md`.
-- C3 đã nối production C2/B2/A3, fresh scope + explicit candidate start/stop; queue500/in-flight4/retry bounded và MONITORING_GAP persistence/ACKV3. Real ProcessHandle + WS + PostgreSQLPASS, mấtACKSIMULATEDrow1/warning1, overflowMOCKsource→REALgap; worker cleanupPASS. MT01PARTIAL tớiB3, A4presence chưa làm. Evidence C3 `evidence/t1-c3/2026-10-04-verification.md`; humanBreview/GUI/LAN NOTRUN.
+- C3 đã nối production C2/B2/A3, fresh scope + explicit candidate start/stop; queue500/in-flight4/retry bounded và MONITORING_GAP persistence/ACKV3. Real ProcessHandle + WS + PostgreSQLPASS, mấtACKSIMULATEDrow1/warning1, overflowMOCKsource→REALgap; worker cleanupPASS. A4 thêm binding heartbeat và presence V4, không đổi event/overflow contract. MT01PARTIAL tớiB3. Evidence C3 `evidence/t1-c3/2026-10-04-verification.md`, A4 `evidence/t1-a4/2026-10-04-verification.md`; human review/GUI/LAN NOTRUN.
 - DB-off smoke A3: NOT RUN vì PostgreSQL đang dùng chung; deferred constraint trigger TEST trong schema riêng đã kiểm lỗi COMMIT thật, rollback, RETRYABLE_SERVER_ERROR, không ACK/warning. Review C→A3 NOT RUN.
 - Bằng chứng A2: `evidence/t1-a2/2026-10-04-verification.md`. TRACKER.json giữ nguyên.
 
@@ -39,6 +39,7 @@ Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì
 | 03/10, giờ đầu | C + mẫu auth của A → A, B | Login, role/attempt scope, WS event/ACK/heartbeat v0 | A3/C3 collector→event/ACK/push/timeline thật; overflow gap riêng; state chưa có |
 | 04/10 | B → C | Interface collector → network | MonitoringTransport B2 send=write, ACK/ERROR riêng; C3 dùng event contract A3, state chưa có |
 | 04/10 | A → B | Cách gửi credential HTTP/WS, phạm vi subscription | Bearer header, /ws/v1/realtime; A3 assignment lọc push MONITOR_WARNING và timeline; B3 chưa consume |
+| 04/10 | A → B, C | Scoped heartbeat, roster/presence/history | A4 V4 + GET attempts/interruptions + MONITOR_PRESENCE; revision loại update cũ; B3 cần dashboard/parser/HTTP recovery; PROTOCOL đã chốt |
 | 09/10 | A → B, C | Import đề, answers/revision, requestId, writerEpoch, deadline/state, mã lỗi | Chưa có |
 | 12/10 | A → B | Trạng thái đã chốt, takeover writer, state khi reconnect | Chưa có |
 | 16/10 | A + B → C | Audio manifest, READY/start/interrupted | Chưa có |

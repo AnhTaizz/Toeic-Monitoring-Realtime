@@ -18,4 +18,6 @@ public interface MonitoringTransport {
     AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> listener);
     /** Delivery releases adapter correlation on timeout/exhaustion/stop; never means server ACK. */
     default void forgetPending(String requestId) { }
+    /** Nonblocking lease for the real collector run. Closing an old lease must not unbind a newer run. */
+    default AutoCloseable monitoringHeartbeat(String attemptId, String collectorSessionId) { return () -> { }; }
 }

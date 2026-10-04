@@ -1,8 +1,14 @@
 package vn.edu.toeic.server.auth;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import vn.edu.toeic.server.monitoring.MonitoringGapService;
+import vn.edu.toeic.server.monitoring.MonitoringPresenceService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -69,9 +75,11 @@ class AuthenticatedNetworkTest {
     @LocalServerPort int port;
     @Autowired MockStores stores;
     @Autowired PasswordEncoder encoder;
+    @Autowired MonitoringPresenceService presence;
     private HttpClient http;
     private final List<WebSocket> sockets = new ArrayList<>();
     @BeforeEach void setUp() {
+        reset(presence);
         stores.sessions.clear();
         stores.users.clear();
         String hash = encoder.encode(MOCK_PASSWORD);
@@ -253,6 +261,29 @@ class AuthenticatedNetworkTest {
         body.add("payload", payload);
         return body.toString();
     }
+    @ParameterizedTest @ValueSource(strings={"missing-collector","bad-collector","bad-time","extra-field"})
+    void malformedScopedHeartbeatDoesNotRefreshPresence(String fault)throws Exception {
+        Probe candidate=connect(login("candidate1"));
+        JsonObject message=GSON.fromJson(heartbeat("mock-attempt-A"),JsonObject.class);
+        JsonObject payload=message.getAsJsonObject("payload");
+        if(fault.equals("missing-collector"))payload.remove("collectorSessionId");
+        if(fault.equals("bad-collector"))payload.addProperty("collectorSessionId","bad collector");
+        if(fault.equals("bad-time"))payload.addProperty("sentAt","invalid");
+        if(fault.equals("extra-field"))payload.addProperty("role","CANDIDATE");
+        candidate.socket.sendText(message.toString(),true).get(3,TimeUnit.SECONDS);
+        assertThat(wsError(candidate.next())).isEqualTo("INVALID_INPUT");
+        verify(presence,never()).heartbeat(any(),anyString(),anyString(),anyString(),anyString());
+    }
+    @Test void unscopedPingNeverCallsPresenceHeartbeat()throws Exception {
+        Probe candidate=connect(login("candidate1"));candidate.socket.sendText(heartbeat(null),true).get(3,TimeUnit.SECONDS);
+        assertThat(candidate.next().get("type").getAsString()).isEqualTo("ACK");
+        verify(presence,never()).heartbeat(any(),anyString(),anyString(),anyString(),anyString());
+    }
+    @Test void scopedProctorHeartbeatRejectedBeforePresence()throws Exception {
+        Probe proctor=connect(login("proctor1"));proctor.socket.sendText(heartbeat("mock-attempt-A"),true).get(3,TimeUnit.SECONDS);
+        assertThat(wsError(proctor.next())).isEqualTo("FORBIDDEN");
+        verify(presence,never()).heartbeat(any(),anyString(),anyString(),anyString(),anyString());
+    }
     private static String errorCode(String json) { return GSON.fromJson(json, JsonObject.class).getAsJsonObject("error").get("code").getAsString(); }
     private static String wsError(JsonObject message) {
         assertThat(message.get("type").getAsString()).isEqualTo("ERROR");
@@ -286,6 +317,7 @@ class AuthenticatedNetworkTest {
             RealtimeSessionRegistry.class, RealtimeWebSocketConfiguration.class})
     static class NetworkFixture {
         @Bean MonitoringGapService mockGapService() { return mock(MonitoringGapService.class); }
+        @Bean MonitoringPresenceService mockPresenceService() { return mock(MonitoringPresenceService.class); }
         @Bean JdbcClient mockJdbc() { return mock(JdbcClient.class); }
         @Bean MonitoringEventService mockEventService() { return mock(MonitoringEventService.class); }
         @Bean MockStores mockStores() { return new MockStores(); }
