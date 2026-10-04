@@ -1,0 +1,9 @@
+B2 security scan — 2026-10-04
+Source SHA: 6d5c7f4335743b42e74b7232b2e219a89be2e9ca
+PR-diff source/docs/evidence files scanned: 26
+Findings: 0
+Checks: literal long Bearer credential, private workspace/user-home paths, private keys,
+local DB/seed credentials compared in memory without printing values.
+Runtime smoke/owned-server/SQL output checked; fixture MOCK dev seed explicitly allowed.
+.env/task.txt not tracked. TRACKER/nguon/server/protocol/QD-03 unchanged versus main A2.
+Result: PASS

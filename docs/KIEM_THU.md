@@ -143,3 +143,23 @@ Code: `7ac62c4d0bc5120ba10f887efbe5478a693d6385`, base main `34a7835`. Windows 1
 | GUI/LAN, B2 real integration, event DB/presence | NOT RUN | Ngoài task A2; nhánh B2 chưa đổi/merge, A3/C3/A4 chưa cài |
 
 AT02 mới kiểm các thành phần auth/role/scope/WS của A2; endpoint import/start thật chưa có, nên không đánh PASS toàn bộ case AT02 hoặc 27 cases bằng test fixture. TRACKER.json giữ nguyên. Optional clean FAIL vì app-image EXE bị Windows khóa; không ảnh hưởng test/package PASS và không kill process người dùng.
+
+## T1-B2 — real integration 04/10/2026
+
+Source `6d5c7f4335743b42e74b7232b2e219a89be2e9ca`, merge main A2 `f62c732` bằng `57f2a9c`. Windows 11/JDK21.0.8/Maven3.9.11/PostgreSQL18.6; người chạy Codex Agent. Evidence `evidence/t1-b2/2026-10-04-real-integration.md`.
+
+| Kiểm tra | Trạng thái | Bằng chứng/giới hạn |
+|---|---|---|
+| Baseline sau merge main | PASS 119/119, 5/5 module | Log merged-baseline-test |
+| Final mvn test/package | PASS 142/142 mỗi lượt, 5/5 module; 0 failure/error/skipped | Logs real-mvn-test/package; 23 lượt mới phiên này |
+| URI HTTP→WS/HTTPS→WSS, no query, header mỗi open | PASS | Opener unit + real HTTP fixture 401/503; production WS smoke |
+| Fragment/JSON/bounded writes/ACK correlation/shutdown | PASS | 36 RealtimeClient MOCK test lượt; worker thật được await |
+| Unscoped heartbeat/optional collector/ACK, direct ERROR/1008 | PASS | Unit/mock parser; real heartbeat ACK/ERROR; close1008 riêng là MOCK test |
+| Candidate/proctor real login → chính B adapter → ACK | PASS | Production Spring/JDBC/Flyway/PostgreSQL; không H2/provider MOCK |
+| Invalid/expired/revoked → auth FAILED, no old-token retry | PASS | PostgreSQL real smoke + controlled unit tests |
+| Owned server stop/restart → lock model/reconnect/fresh auth | PASS | Real process/network; không phải GUI manual |
+| Retry budget exhausted + owned worker/server cleanup | PASS | Real smoke và unit shutdown |
+| Token/password/private path diff/evidence scan | PASS | Security scan log, fixed smoke stdout, empty stderr |
+| GUI manual/LAN/cross-review A | NOT RUN | Chưa có công cụ desktop/máy/reviewer thật |
+
+Không đổi trạng thái 27 case chính thức: IT03 mới kiểm headless model/worker, chưa thao tác GUI; event/presence/queue/dashboard chờ A3/A4/C3/B3. TRACKER giữ nguyên.

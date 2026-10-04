@@ -254,3 +254,7 @@ ERROR dùng payload trực tiếp `{code,message,retryable}`; khác REST lỗi c
 3. Cho phép heartbeat/ACK attemptId null khi scope login rỗng; không invent scope/attempt. Không coi unscoped heartbeat là monitoring được cấp quyền.
 4. Theo dõi ACK HEARTBEAT và xử lý ERROR payload/correlation; parser B hiện chỉ nhận event ACK nên cần cập nhật. Khi UNAUTHORIZED/1008: khóa UI/yêu cầu login lại. Không coi socket write là ACK/commit.
 5. Giữ PROCESS_OBSERVED/state integration chờ A3/C3. Phiên A2 không sửa/merge nhánh B2, không kiểm GUI thay B.
+
+## B2 consume contract A2 — 04/10/2026
+
+Client B2 đã cài opener Bearer cho `/ws/v1/realtime`, heartbeat/ACK unscoped và ERROR payload trực tiếp theo contract ở trên. Mỗi reconnect mở handshake mới; 401/UNAUTHORIZED/1008 dừng retry bằng token cũ và yêu cầu login lại. JavaFX dùng cùng transport cho candidate/proctor, không bật collector. MonitoringTransport giữ send = socket write, ACK/ERROR = onMessage; PROCESS_OBSERVED/state/full/delta vẫn CHƯA TÍCH HỢP SERVER THẬT, chờ A3/C3. Không đổi QD-03 hoặc semantics do A/C sở hữu. Evidence: `evidence/t1-b2/2026-10-04-real-integration.md`; GUI manual NOT RUN.

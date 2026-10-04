@@ -1,0 +1,16 @@
+Source SHA: 6d5c7f4335743b42e74b7232b2e219a89be2e9ca
+Command: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-b2.ps1 -JavaHome <JDK21>
+Production server + PostgreSQL 18.6 + B RealtimeClient; timezone UTC; random loopback port.
+
+PASS PostgreSQL production REST candidate login; scope empty; credential remains in memory
+PASS B RealtimeClient authenticated WS + unscoped HEARTBEAT + correlated server ACK
+PASS owned server-off -> RECONNECTING/locked -> restart -> fresh Bearer handshake -> ACK
+PASS real PostgreSQL revoke -> ERROR UNAUTHORIZED -> FAILED; heartbeat/retry stopped
+PASS invalid bearer handshake 401 -> AuthenticationRejectedException -> FAILED without retry
+PASS expired PostgreSQL session handshake -> FAILED without retry
+PASS proctor login -> authenticated transport -> HEARTBEAT ACK; no collector started
+PASS real server-off retry budget exhausted -> FAILED; worker cleanup via close
+PASS closed adapters terminate owned realtime workers; owned server processes stopped
+B2 real integration PASS; GUI manual NOT RUN; no PROCESS_OBSERVED/presence/collector
+
+Harness stderr: empty. Session SQL stderr: empty.
