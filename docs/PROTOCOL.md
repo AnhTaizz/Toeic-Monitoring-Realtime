@@ -1,6 +1,6 @@
 # Protocol đang dùng
 
-**Trạng thái: v0 đã cài login, Bearer REST/WS auth, HEARTBEAT/ACK/ERROR transport T1-A2. PROCESS_OBSERVED và các message nghiệp vụ vẫn MOCK/CHƯA CÓ cho tới T1-A3/T1-C3.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây.
+**Trạng thái: v0 đã cài login, Bearer REST/WS, HEARTBEAT/ACK/ERROR và T1-A3 server PROCESS_OBSERVED → PostgreSQL commit → ACK → MONITOR_WARNING; timeline REST và assignment scope thật. C3 chưa nối collector vào transport, B3 chưa có dashboard; presence/full/delta chưa có.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây.
 
 Owner: C (monitoring, khung message chung), A (auth, ca thi, lưu/nộp). Người dùng: B.
 
@@ -93,8 +93,8 @@ ACK thành công chỉ được phát sau khi thao tác tương ứng đã đư�
 | Method + đường dẫn | Ai gọi | Request | Response | Lỗi | Task | Trạng thái |
 |---|---|---|---|---|---|---|
 | `POST /api/v1/auth/login` | Thí sinh, giám thị | `requestId`, `username`, `password` | `protocolVersion`, `requestId`, `traceId`, `token`, `tokenType`, `expiresAt`, `user`, `attemptScope` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 500 `RETRYABLE_SERVER_ERROR` | T1-A1 | Đã cài |
-| `GET /api/v1/auth/me` | Người đã login | Header Bearer | `protocolVersion`, `traceId`, `user: {userId, username, role}`, `attemptScope: []` | 401 `UNAUTHORIZED`; 503 `RETRYABLE_SERVER_ERROR` khi không lookup được session | T1-A2 | Đã cài |
-| _timeline của một thí sinh_ | Giám thị | | | | T1-A3 | Chưa có |
+| `GET /api/v1/auth/me` | Người đã login | Header Bearer | `protocolVersion`, `traceId`, `user: {userId, username, role}`, `attemptScope`: các attempt ACTIVE có quyền | 401 `UNAUTHORIZED`; 503 khi lookup session lỗi; 500 khi lookup scope lỗi, `RETRYABLE_SERVER_ERROR` | T1-A2/A3 | Đã cài |
+| `GET /api/v1/monitoring/attempts/{attemptId}/events` | Giám thị được phân công | Header Bearer | `protocolVersion`, `traceId`, `attemptId`, `events` | 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 `RETRYABLE_SERVER_ERROR` | T1-A3 | Đã cài |
 | _import đề / tạo ca_ | Giám thị | | | | T2-A1 | Chưa có |
 | _lấy đề (không có đáp án đúng)_ | Thí sinh | | | | T2-A1 | Chưa có |
 | _autosave_ | Thí sinh | | | | T2-A2 | Chưa có |
@@ -139,8 +139,9 @@ Token chỉ trả trong JSON body của login. Request HTTP `/api/**` sau login 
 | `HEARTBEAT` | client → server | `sentAt` bắt buộc; `collectorSessionId` optional | ACK transport | T1-A2 | Đã cài; chưa có presence T1-A4 |
 | `ACK` (heartbeat) | server → client | `status: ACCEPTED`, `acknowledgedType: HEARTBEAT` | Không | T1-A2 | Đã cài |
 | `ERROR` | server → client | `code`, `message`, `retryable` | Không | T1-A2 | Đã cài |
-| _event process_ | thí sinh → server | | Sau khi commit | T1-C3, T1-A3 | Chưa có |
-| _cảnh báo_ | server → giám thị | | | T1-A3, T1-B3 | Chưa có |
+| `PROCESS_OBSERVED` | thí sinh → server | Event v0; attempt bắt buộc | ACK sau commit | T1-A3/C3 | Server đã cài; collector→transport chưa có |
+| `ACK` (event) | server → thí sinh | `status: ACCEPTED`, `acknowledgedType: PROCESS_OBSERVED` | Không | T1-A3 | Đã cài |
+| `MONITOR_WARNING` | server → giám thị được phân công | Timeline item v0 | Không | T1-A3/B3 | Server đã cài; dashboard chưa có |
 | _presence (ONLINE/UNKNOWN)_ | server → giám thị | | | T1-A4 | Chưa có |
 | _full snapshot_ | thí sinh → server | | Sau khi state được chấp nhận | T2-C1 | Chưa có |
 | _delta_ | thí sinh → server | | | T3-C1, T3-C2 | Chưa có |
@@ -214,7 +215,7 @@ Giá trị thử nghiệm theo hợp đồng, phải ghi lại giá trị thật
 | Trường | Quy tắc |
 |---|---|
 | protocolVersion | Bắt buộc string `v0` |
-| type | Bắt buộc string; hiện chỉ HEARTBEAT được ACK |
+| type | Bắt buộc string; HEARTBEAT và PROCESS_OBSERVED được hỗ trợ (event từ A3) |
 | messageId | Bắt buộc, 1–128 ký tự `[A-Za-z0-9_.:-]` |
 | traceId | Bắt buộc, cùng giới hạn ID; ACK giữ correlation |
 | requestId | Có thể thiếu/null, khi đó dùng messageId; nếu có phải bằng messageId |
@@ -223,7 +224,7 @@ Giá trị thử nghiệm theo hợp đồng, phải ghi lại giá trị thật
 
 Giới hạn text message/buffer: 65.536 byte mặc định, configurable; send timeout 5.000ms. Message vượt giới hạn container có thể bị đóng 1009; binary không được hỗ trợ. JSON sai/type lạ/thiếu trường trong giới hạn → ERROR INVALID_INPUT chỉ tới session đó; kết nối vẫn nhận heartbeat tiếp theo.
 
-**Heartbeat thiếu attemptId chỉ là transport ping của phiên authenticated**, dùng khi login chưa cấp attempt (scope hiện rỗng). Nó không ghi presence/ONLINE/UNKNOWN, không bật collector và không cấp quyền truy cập attempt. Nếu có attemptId, auth → scope check → ACK. Production scope provider hiện deny mọi attempt vì chưa có schema/assignment. Own/proctor scope allowed chỉ được chứng minh bằng provider **MOCK trong test**, không cài fixture vào production.
+**Heartbeat thiếu attemptId chỉ là transport ping của phiên authenticated**, dùng khi login chưa cấp attempt. Nó không ghi presence/ONLINE/UNKNOWN, không bật collector và không cấp quyền truy cập attempt. Nếu có attemptId, auth → scope check → ACK. Từ A3, production scope đọc assignment PostgreSQL: candidate sở hữu hoặc proctor được phân công vào attempt ACTIVE. Không có assignment thì scope rỗng; không tạo fixture production.
 
 ### HEARTBEAT/ACK đã cài
 
@@ -237,7 +238,7 @@ Các ID/thời gian dưới đây là giá trị minh họa; shape được ki�
 {"protocolVersion":"v0","type":"ACK","messageId":"server-generated-id","requestId":"sample-hb-001","attemptId":null,"traceId":"sample-trace-001","payload":{"status":"ACCEPTED","acknowledgedType":"HEARTBEAT"}}
 ```
 
-ACK heartbeat xác nhận transport đã nhận/chấp nhận message; **không phải ACK event persistence/DB commit**. PROCESS_OBSERVED chưa cài: kiểm candidate role/scope trước khi từ chối INVALID_INPUT, tuyệt đối không ACK success event. Full/delta và message khác cũng chưa được hỗ trợ.
+ACK heartbeat xác nhận transport đã nhận/chấp nhận message; **không phải ACK event persistence/DB commit**. ACK PROCESS_OBSERVED từ A3 chỉ gửi sau commit, theo contract bên dưới. Full/delta và message khác chưa được hỗ trợ.
 
 ### ERROR envelope WS đã cài
 
@@ -261,4 +262,54 @@ Client B2 đã cài opener Bearer cho `/ws/v1/realtime`, heartbeat/ACK unscoped 
 
 ## Collector local C2 — 04/10/2026
 
-ProcessCollector client đã có polling local theo process-policy-v1 và immutable ProcessSnapshot. Gate yêu cầu candidate + monitoring session active; production chưa có trigger nên không auto-start từ login. C2 không gọi MonitoringTransport, không gửi PROCESS_OBSERVED/heartbeat/full/delta, không eventId/queue/ACK. PROCESS_OBSERVED vẫn MOCK/CHƯA CÓ cho tới A3/C3; schema v0/QD-03/QD-08 giữ nguyên. Handoff API/evidence: `evidence/t1-c2/2026-10-04-verification.md`.
+ProcessCollector client đã có polling local theo process-policy-v1 và immutable ProcessSnapshot. Gate yêu cầu candidate + monitoring session active; production chưa có trigger nên không auto-start từ login. C2 không gọi MonitoringTransport, không gửi PROCESS_OBSERVED/heartbeat/full/delta, không eventId/queue/ACK. A3 đã cài server event; collector→transport vẫn chờ C3. QD-03/QD-08 giữ nguyên. Handoff API/evidence: `evidence/t1-c2/2026-10-04-verification.md`.
+
+## Contract T1-A3 — server đã cài, handoff C3/B3 (04/10/2026)
+
+### Assignment và phạm vi quyền
+
+Flyway V2 tạo `monitoring_attempts`, `monitoring_proctor_assignments`, `monitoring_events`. Migration chỉ tạo schema; không seed lượt thi. Candidate chỉ có quyền trên attempt ACTIVE của chính mình; proctor chỉ có quyền trên attempt ACTIVE được phân công. Unknown/CLOSED/foreign đều trả FORBIDDEN chung. Login và `/auth/me` trả `attemptScope` theo DB, sắp xếp attemptId; thay đổi assignment được đọc lại khi gọi `/auth/me`, xử lý message, timeline và trước mỗi push. Không được dùng scope lưu ở client để thay kiểm quyền server.
+
+### PROCESS_OBSERVED → ACK
+
+Request và ACK dùng đúng mẫu v0 phía trên. `attemptId` bắt buộc. `messageId`, `traceId`, `eventId`, `collectorSessionId` là ID 1–128 ký tự `[A-Za-z0-9_.:-]`. `requestId` thiếu/null được lấy bằng messageId; có giá trị phải bằng messageId. Payload chỉ nhận tám trường trong mẫu, từ chối trường lạ.
+
+| Trường payload | Kiểm tra |
+|---|---|
+| eventId, collectorSessionId | Bắt buộc ID hợp lệ |
+| policyVersion | String không trống, tối đa128 ký tự, không ký tự điều khiển |
+| pid | Số nguyên dương trong phạm vi Java long; không nhận string số |
+| processName | Filename 1–255 ký tự `[A-Za-z0-9_.-]`, không `.`/`..`; reject path, khoảng trắng/arguments, ký tự điều khiển |
+| startInstant | ISO-8601 Instant hoặc thiếu/null; thiếu phải dùng UNREADABLE |
+| metadataQuality | COMPLETE hoặc UNREADABLE |
+| observedAt | ISO-8601 Instant bắt buộc; năm0001–9999 |
+
+Các Instant được chuẩn hóa UTC và cắt phần nhỏ hơn microsecond trước khi lưu/so sánh, theo độ chính xác PostgreSQL. `observedAt` do client khai, không phải bằng chứng đồng bộ đồng hồ. `receivedAt` lấy bằng PostgreSQL `clock_timestamp()` khi insert, không sửa khi retry.
+
+Luồng: xác thực lại → role CANDIDATE → scope → validation → service transaction → COMMIT → ACK → push nếu row mới. Unique `(attempt_id,event_id)`. So sánh record đã chuẩn hóa, không so chuỗi JSON hay envelope. Cùng payload dù thứ tự key khác: ACK lại, một row, một warning. Khác bất kỳ trường payload đã chuẩn hóa: ERROR CONFLICT, không overwrite/ACK/push. ID event thuộc attempt; không unique toàn hệ thống.
+
+Lỗi WS dùng `{code,message,retryable}` trong `payload`: INVALID_INPUT/FORBIDDEN/CONFLICT/UNAUTHORIZED đều `retryable:false`; lỗi DB/commit là RETRYABLE_SERVER_ERROR `retryable:true`, không ACK success hoặc warning. UNAUTHORIZED đóng socket1008. Error không phản chiếu payload, path hoặc stack trace.
+
+**C3:** giữ eventId và payload qua retry; giữ mapping requestId→queued event. `MonitoringTransport.send` hoàn thành chỉ nghĩa là ghi socket. Chỉ xóa queued event khi nhận ACK với requestId đúng và `acknowledgedType:PROCESS_OBSERVED`. CONFLICT dừng retry tự động; lỗi retryable/mất ACK retry có giới hạn cùng event. A3 chưa viết queue/retry/collector integration.
+
+### MONITOR_WARNING và timeline REST
+
+Ví dụ minh họa schema (ID/thời gian TEST, không credential):
+
+```json
+{"protocolVersion":"v0","type":"MONITOR_WARNING","messageId":"server-generated-id","requestId":null,"attemptId":"TEST-attempt-A","traceId":"TEST-trace","payload":{"eventId":"TEST-event-1","attemptId":"TEST-attempt-A","processName":"notepad.exe","metadataQuality":"COMPLETE","policyVersion":"process-policy-v1","observedAt":"2026-10-04T00:00:01Z","receivedAt":"2026-10-04T00:00:02Z"}}
+```
+
+Push chỉ tới session proctor còn hợp lệ và có assignment tại thời điểm kiểm quyền; candidate/proctor khác không nhận. Mọi ACK/ERROR/warning đi qua cùng ConcurrentWebSocketSessionDecorator. Giao nhận push best effort: offline/socket lỗi không làm mất event đã commit, không biến ACK thành lỗi. Không đảm bảo thứ tự warning giữa các connection gửi đồng thời; REST là nguồn lịch sử ổn định.
+
+`GET /api/v1/monitoring/attempts/{attemptId}/events` với Bearer header, chỉ PROCTOR có scope ACTIVE. Chưa có phân trang. Response200:
+
+```json
+{"protocolVersion":"v0","traceId":"server-generated-id","attemptId":"TEST-attempt-A","events":[{"eventId":"TEST-event-1","attemptId":"TEST-attempt-A","processName":"notepad.exe","metadataQuality":"COMPLETE","policyVersion":"process-policy-v1","observedAt":"2026-10-04T00:00:01Z","receivedAt":"2026-10-04T00:00:02Z"}]}
+```
+
+`events` có thể rỗng. Item timeline và payload warning cùng schema. Order `received_at ASC,id ASC`; không theo observedAt. Không có password/token/OS username/full path/command line. B3 hiển thị “Quan sát thấy …”, không kết luận gian lận. Dedupe bằng `(attemptId,eventId)`.
+
+**B3 reconnect:** đọc timeline → render → mở/live WS, rồi đọc timeline đối chiếu lần nữa và gộp theo dedupe key để bù khoảng trống giữa HTTP và handshake. Có thể mở WS/buffer trước rồi đọc timeline. Chưa có subscription message riêng; server dùng assignment để lọc các socket proctor. A3 chưa viết dashboard.
+
+Kiểm chứng: `scripts/smoke-a3.ps1` chạy production Spring + PostgreSQL thật + Java HttpClient/WebSocket trong TEST schema riêng; evidence ở `evidence/t1-a3/2026-10-04-verification.md`. Review C là NOT RUN trong phiên Agent.

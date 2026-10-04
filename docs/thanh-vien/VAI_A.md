@@ -100,7 +100,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** gửi cùng `eventId` hai lần chỉ có một dòng trong DB và một cảnh báo trên màn giám thị; giám thị tắt mở lại vẫn thấy đủ timeline; tắt DB thì client không nhận ACK thành công.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 04/10/2026, T1-A3 server code-complete trên `feat/t1-a3-monitoring-events`: V2 assignment/events, JDBC scope/login/auth-me, validation, unique attempt/event, so payload, transaction proxy commit-before-ACK, assigned-proctor push qua decorator, timeline ordered DB. Real PostgreSQL18.6 + HTTP/WS PASS gồm duplicate/concurrent retry, conflict, scope, offline recovery và deferred COMMIT failure rollback không ACK/warning. DB-off NOT RUN vì DB dùng chung; C review NOT RUN, không ghi duyệt thay C. Không viết C3/B3/A4; TRACKER giữ nguyên. Contract PROTOCOL và evidence `evidence/t1-a3/2026-10-04-verification.md`; Git/PR/merge xem final report.
 
 ### T1-A4 · Presence và tích hợp prototype
 `3h` · phụ thuộc: T1-A2, T1-B2 · review: C

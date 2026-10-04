@@ -26,7 +26,7 @@ Mỗi lần chạy ghi đủ: commit SHA, OS/JDK/PostgreSQL, cấu hình, lệnh
 
 | ID | Tóm tắt | Owner / review | Task | Trạng thái | SHA | Bằng chứng |
 |---|---|---|---|---|---|---|
-| MT01 | Full snapshot hợp lệ; event không lặp mỗi poll; collector không chạy trên giám thị | C / B | T1-C2/C3, T2-C1/C2 | PARTIAL — local C2 | `02789a8` | `evidence/t1-c2/2026-10-04-verification.md`; event/state flow chưa cài |
+| MT01 | Full snapshot hợp lệ; event không lặp mỗi poll; collector không chạy trên giám thị | C / B | T1-C2/C3, T2-C1/C2 | PARTIAL — local C2 | `02789a8` | `evidence/t1-c2/2026-10-04-verification.md`; A3 server event riêng đã kiểm, collector→transport/state chưa cài |
 | MT02 | Replay cùng message sau mất ACK | C / B | T3-C3 | NOT RUN | | |
 | MT03 | Thiếu một delta → UNSYNCED, yêu cầu full | C / B | T3-C3 | NOT RUN | | |
 | MT04 | Delta epoch cũ không sửa state epoch mới | C / B | T3-C3/C4 | NOT RUN | | |
@@ -184,3 +184,25 @@ Source `02789a86c1c9785bc54f31b4584751eae3340f10`, base main `9f01861`. Windows1
 | GUI manual/LAN/review B | NOT RUN | Headless/role-gate unit không phải GUI PASS |
 
 MT01 PARTIAL: local polling/gate/lifecycle đã kiểm; network full/state/event non-dup/persistence còn C3/T2-C1/C2. E1 không chạy, không sửa TRACKER. Smoke đầu FAIL trước sửa PID0 idle validation; after-fix smoke PASS trên code sau đó commit02789a8. Mockito/ByteBuddy + shade warnings không làm fail build.
+
+## T1-A3 — 04/10/2026
+
+Source/test/script `88ef95a2d96db202edf39e3ed5c72f026bfdb7fc`, base main `6b9572e`. Windows11 amd64/Temurin21.0.10/Maven3.9.15/PostgreSQL18.6; người chạy Codex Agent. Evidence `evidence/t1-a3/2026-10-04-verification.md` và sanitized logs.
+
+| Kiểm tra | Trạng thái | Bằng chứng/giới hạn |
+|---|---|---|
+| Final mvn test/package | PASS 200/200 mỗi lượt; 5/5 module; 0 failure/error/skipped | Server76/client123/spike1, A3 mới25; package không đóng Test/Smoke classes |
+| Payload validation và privacy | PASS | ProcessEventTest24 + real WS invalid JSON/field/path |
+| Schema clean V1+V2 và upgrade V1→V2 | PASS — PostgreSQL thật | Hai schema TEST riêng; FK/unique SQLSTATE23503/23505 |
+| Production assignment scope, login/auth-me | PASS — DB/HTTP/WS thật | Own/assigned ACTIVE allowed; foreign/unknown/CLOSED denied |
+| Event commit→ACK→push assigned | PASS — mạng/DB thật | Không broadcast proctor khác; candidate chỉ ACK |
+| Duplicate same/changed, concurrent retry | PASS — mạng/DB thật | ACK2/row1/warning1; CONFLICT không overwrite; CyclicBarrier hai workers |
+| Deferred COMMIT fail rollback/no success ACK/no warning | PASS — PostgreSQL thật | Trigger TEST chạy tại COMMIT; retryable error/row0 |
+| Timeline auth/order/offline recovery | PASS — HTTP/DB thật | Bearer+PROCTOR+scope; received_at,id order; offline event phục hồi |
+| Revalidate assignment/session trước push/message | PASS — mạng/DB thật | Xóa assignment→no push/403; revoked proctor/candidate→close1008 |
+| Concurrent ACK/ACK và ACK/warning send | PASS — MOCK raw session + latch/worker thật | Max1 raw writer; không dùng sleep để điều khiển overlap |
+| Secret/path scan | PASS | security-scan.txt; TEST-only password và synthetic rejected path không credential thật |
+| DB-off smoke | NOT RUN | DB dùng chung; dùng COMMIT-failure test an toàn, không gọi là DB-off PASS |
+| C human review, GUI/LAN | NOT RUN | Không giả review hoặc desktop demo từ headless network harness |
+
+Không đánh PASS 27 case chính thức bằng test thành phần A3: C3 queue/collector integration, B3 dashboard, A4 presence/full/delta/exam flow chưa làm. TRACKER giữ nguyên. Không thêm QD implementation-detail; QD-05 vẫn áp dụng. Lỗi JDBC Timestamp/test fixtures đã sửa trước lượt PASS, xem evidence.
