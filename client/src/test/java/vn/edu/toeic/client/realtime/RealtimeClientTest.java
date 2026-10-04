@@ -111,12 +111,10 @@ class RealtimeClientTest {
         }
     }
 
-    @Test void defaultOpenerIsBlockedByA2WithoutInventedAuthentication() throws Exception {
-        try (RealtimeClient client = new RealtimeClient()) {
-            assertThatThrownBy(() -> client.connect(SESSION).get(3, TimeUnit.SECONDS))
-                    .hasCauseInstanceOf(RealtimeClient.AuthContractUnavailableException.class);
-            assertThat(client.connectionState()).isEqualTo(ConnectionState.FAILED);
-        }
+    @Test void productionOpenerRejectsCredentialInUrlWithoutLeakingInput() {
+        assertThatThrownBy(() -> new RealtimeClient("http://localhost?token=MOCK-secret", "MOCK-token"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Địa chỉ server phải là gốc http:// hoặc https://, không có query");
     }
 
     @Test void closeCancelsHeartbeatRetryAndClosesOpenerExactlyOnce() {
@@ -144,7 +142,7 @@ class RealtimeClientTest {
         RealtimeClient client = new RealtimeClient(listener -> {
             observed.add(Thread.currentThread());
             entered.countDown();
-            return CompletableFuture.failedFuture(new RealtimeClient.AuthContractUnavailableException());
+            return CompletableFuture.failedFuture(new RealtimeClient.AuthenticationRejectedException());
         }, RealtimeClient.Settings.defaults(), worker);
         try {
             client.connect(SESSION);
@@ -351,6 +349,105 @@ class RealtimeClientTest {
                 Duration.ofSeconds(8), 4, 65_536, 500)).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> new RealtimeClient.Session(Set.of(), "mock-not-authorized", "mock-collector"))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test void unscopedHeartbeatOmitsCollectorAndDeliversCorrelatedServerAck() {
+        try (Fixture f = new Fixture()) {
+            f.client.connect(new RealtimeClient.Session(Set.of(), null, null)).join();
+            f.clock.advance(Duration.ofSeconds(2));
+            JsonObject sent = GSON.fromJson(f.socket().sent.getFirst(), JsonObject.class);
+            assertThat(sent.has("attemptId")).isFalse();
+            assertThat(sent.getAsJsonObject("payload").keySet()).containsExactly("sentAt");
+            assertThat(f.messages).isEmpty(); // write completion chưa phải server ACK
+            sent.addProperty("type", "ACK");
+            JsonObject payload = new JsonObject();
+            payload.addProperty("status", "ACCEPTED");
+            payload.addProperty("acknowledgedType", "HEARTBEAT");
+            sent.add("payload", payload);
+            f.socket().text(sent.toString(), true);
+            assertThat(f.messages).hasSize(1);
+            assertThat(f.messages.getFirst().attemptId()).isNull();
+            f.socket().text(sent.toString(), true);
+            assertThat(f.messages).hasSize(1); // duplicate không thành ACK mới
+        }
+    }
+
+    @ParameterizedTest @ValueSource(strings = {"FORBIDDEN", "INVALID_INPUT", "RETRYABLE_SERVER_ERROR"})
+    void directErrorPayloadIsDeliveredWithoutAutomaticMessageRetry(String code) {
+        try (Fixture f = new Fixture()) {
+            f.connect();
+            f.client.send(event()).join();
+            f.socket().text(error(code), true);
+            assertThat(f.messages).hasSize(1);
+            assertThat(f.messages.getFirst().payload().get("code").getAsString()).isEqualTo(code);
+            assertThat(f.messages.getFirst().payload().get("message").getAsString())
+                    .isEqualTo("Server từ chối message realtime");
+            assertThat(f.client.connectionState()).isEqualTo(ConnectionState.CONNECTED);
+            assertThat(f.socket().sent).hasSize(1);
+        }
+    }
+
+    @Test void unauthorizedErrorFailsLocksStopsHeartbeatAndRejectsOldCredentialReuse() {
+        try (Fixture f = new Fixture()) {
+            f.connect();
+            f.socket().text(error("UNAUTHORIZED"), true);
+            assertThat(f.client.connectionState()).isEqualTo(ConnectionState.FAILED);
+            assertThat(ConnectionViewModel.from(f.client.connectionState()).networkLocked()).isTrue();
+            assertThat(f.messages).hasSize(1);
+            f.clock.advance(Duration.ofDays(1));
+            assertThat(f.opens).isEqualTo(1);
+            assertThat(f.socket().sent).isEmpty();
+            assertThatThrownBy(() -> f.client.connect(SESSION).join())
+                    .hasCauseInstanceOf(RealtimeClient.AuthenticationRejectedException.class);
+        }
+    }
+
+    @Test void close1008AloneIsAuthFailureAndDoesNotRetry() {
+        try (Fixture f = new Fixture()) {
+            f.connect();
+            f.socket().listener.onClose(f.socket(), 1008, "MOCK auth close");
+            f.clock.advance(Duration.ofDays(1));
+            assertThat(f.opens).isEqualTo(1);
+            assertThat(f.client.connectionState()).isEqualTo(ConnectionState.FAILED);
+        }
+    }
+
+    @Test void transientInitialFailureRetriesAndConnectFutureCompletesAfterFreshOpen() {
+        try (Fixture f = new Fixture()) {
+            f.failOpening = true;
+            CompletableFuture<Void> connected = f.client.connect(SESSION);
+            assertThat(connected).isNotDone();
+            assertThat(f.client.connectionState()).isEqualTo(ConnectionState.RECONNECTING);
+            f.failOpening = false;
+            f.clock.advance(Duration.ofSeconds(1));
+            assertThat(connected).isCompleted();
+            assertThat(f.opens).isEqualTo(2);
+            assertThat(f.client.connectionState()).isEqualTo(ConnectionState.CONNECTED);
+        }
+    }
+
+    @Test void malformedErrorDoesNotKillHeartbeatAndUnscopedEventCannotWrite() {
+        try (Fixture f = new Fixture()) {
+            f.client.connect(new RealtimeClient.Session(Set.of(), null, null)).join();
+            JsonObject invalid = GSON.fromJson(error("INVALID_INPUT"), JsonObject.class);
+            invalid.getAsJsonObject("payload").addProperty("retryable", "false");
+            f.socket().text(invalid.toString(), true);
+            assertThat(f.messages).isEmpty();
+            assertThat(f.problems).hasSize(1);
+            assertThat(f.client.send(event())).isCompletedExceptionally();
+            f.clock.advance(Duration.ofSeconds(2));
+            assertThat(f.socket().sent).hasSize(1);
+            assertThat(f.client.connectionState()).isEqualTo(ConnectionState.CONNECTED);
+        }
+    }
+
+    private static String error(String code) {
+        JsonObject payload = new JsonObject();
+        payload.addProperty("code", code);
+        payload.addProperty("message", "MOCK-secret-server-message");
+        payload.addProperty("retryable", "RETRYABLE_SERVER_ERROR".equals(code));
+        return GSON.toJson(new MessageEnvelope<>("v0", "ERROR", "mock-error", "mock-event-message",
+                "mock-attempt-A", "mock-trace", payload));
     }
 
     private static MessageEnvelope<JsonObject> event() {
