@@ -18,6 +18,11 @@ public final class CandidateMonitoringSession implements AutoCloseable {
     private CompletableFuture<Void> stopping = CompletableFuture.completedFuture(null);
     private boolean closed;
     private long generation;
+    private AutoCloseable heartbeat;
+    private void stopHeartbeat() {
+        AutoCloseable old = heartbeat; heartbeat = null;
+        if (old != null) try { old.close(); } catch (Exception ignored) { }
+    }
     public CandidateMonitoringSession(MonitoringTransport transport, Consumer<MonitoringDelivery.Status> listener) {
         this(new ProcessCollector(new ProcessHandleSnapshotSource(), Duration.ofMillis(Long.getLong("toeic.monitoring.pollMillis", 1000L))),
                 transport, MonitoringDelivery.Settings.configured(), listener);
@@ -33,14 +38,16 @@ public final class CandidateMonitoringSession implements AutoCloseable {
         MonitoringDelivery next = new MonitoringDelivery(attempt, transport, settings, status -> {
             synchronized (CandidateMonitoringSession.this) {
                 if (closed || current != generation) return;
-                if (!status.active()) collector.stop();
+                if (!status.active()) { stopHeartbeat(); collector.stop(); }
             }
             listener.accept(status);
         });
         delivery = next;
         try {
-            return collector.start(new MonitoringSessionGate.Context(freshRole, true, attempt), next::observe, ignored -> next.sourceFailed());
-        } catch (RuntimeException failure) { delivery = null; next.close(); throw failure; }
+            String collectorId = collector.start(new MonitoringSessionGate.Context(freshRole, true, attempt), next::observe, ignored -> next.sourceFailed());
+            heartbeat = transport.monitoringHeartbeat(attempt, collectorId);
+            return collectorId;
+        } catch (RuntimeException failure) { stopHeartbeat(); collector.stop(); delivery = null; next.close(); throw failure; }
     }
     public synchronized boolean isActive() { return delivery != null && delivery.status().active(); }
     public synchronized MonitoringDelivery.Status status() { return delivery == null ? null : delivery.status(); }
@@ -50,7 +57,7 @@ public final class CandidateMonitoringSession implements AutoCloseable {
         CompletableFuture<Void> previous;
         CompletableFuture<Void> completion = new CompletableFuture<>();
         synchronized (this) {
-            generation++; old = delivery; delivery = null; previous = stopping; stopping = completion;
+            generation++; stopHeartbeat(); old = delivery; delivery = null; previous = stopping; stopping = completion;
         }
         MonitoringDelivery.Discarded discarded = old == null ? new MonitoringDelivery.Discarded(0, false, 0) : old.stop();
         CompletableFuture.allOf(previous, collector.stop(), old == null ? CompletableFuture.completedFuture(null) : old.stopped())

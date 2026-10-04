@@ -463,6 +463,40 @@ class RealtimeClientTest {
                 "mock-attempt-A", "mock-trace", payload));
     }
 
+    @Test void scopedHeartbeatLeaseUsesRealCollectorAndStopReturnsToUnscopedPing() throws Exception {
+        try(Fixture f=new Fixture()) {
+            f.connect(); AutoCloseable lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-real-collector");
+            JsonObject scoped=GSON.fromJson(f.socket().sent.getLast(),JsonObject.class);
+            assertThat(scoped.get("attemptId").getAsString()).isEqualTo("mock-attempt-A");
+            assertThat(scoped.getAsJsonObject("payload").get("collectorSessionId").getAsString()).isEqualTo("MOCK-real-collector");
+            lease.close(); f.clock.advance(Duration.ofSeconds(2));
+            JsonObject ping=GSON.fromJson(f.socket().sent.getLast(),JsonObject.class);
+            assertThat(ping.has("attemptId")).isFalse(); assertThat(ping.getAsJsonObject("payload").has("collectorSessionId")).isFalse();
+        }
+    }
+    @Test void oldLeaseCloseCannotClearNewCollectorBinding() throws Exception {
+        try(Fixture f=new Fixture()) {
+            f.connect(); AutoCloseable old=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-old");
+            AutoCloseable next=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-new"); old.close(); f.clock.advance(Duration.ofSeconds(2));
+            assertThat(GSON.fromJson(f.socket().sent.getLast(),JsonObject.class).getAsJsonObject("payload").get("collectorSessionId").getAsString()).isEqualTo("MOCK-new"); next.close();
+        }
+    }
+    @Test void reconnectKeepsBindingButReconnectAfterStopCannotReviveIt() throws Exception {
+        try(Fixture f=new Fixture()) {
+            f.connect(); AutoCloseable lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-collector");
+            f.client.disconnect(); f.client.connect(SESSION).join(); f.clock.advance(Duration.ofSeconds(2));
+            assertThat(GSON.fromJson(f.socket().sent.getLast(),JsonObject.class).getAsJsonObject("payload").get("collectorSessionId").getAsString()).isEqualTo("MOCK-collector");
+            lease.close(); f.client.disconnect(); f.client.connect(SESSION).join(); f.clock.advance(Duration.ofSeconds(2));
+            assertThat(GSON.fromJson(f.socket().sent.getLast(),JsonObject.class).has("attemptId")).isFalse();
+        }
+    }
+    @Test void invalidCollectorBindingRejectedBeforeSend() {
+        try(Fixture f=new Fixture()) {
+            f.connect(); assertThatThrownBy(()->f.client.monitoringHeartbeat("mock-attempt-A","bad collector")).isInstanceOf(IllegalArgumentException.class);
+            assertThat(f.socket().sent).isEmpty();
+        }
+    }
+
     private static MessageEnvelope<JsonObject> event() {
         JsonObject payload = new JsonObject();
         payload.addProperty("eventId", "mock-event-001");
