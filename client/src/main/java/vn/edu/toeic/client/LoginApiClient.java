@@ -117,6 +117,6 @@ public final class LoginApiClient implements AutoCloseable {
 
     @Override
     public void close() {
-        executor.shutdownNow();
+        try { httpClient.shutdownNow(); } finally { executor.shutdownNow(); }
     }
 }

@@ -87,7 +87,7 @@ Lịch gợi ý: 03/10 B1 · 04/10 B2 (3h) + B3 (1h) · 05/10 B2 (1h) + B3 (2h) 
 
 **Xong khi:** kết nối WS có xác thực với server thật; tắt server thì giao diện khóa và thử lại có giới hạn; đóng app không còn tiến trình Java treo (phần đầu của IT03).
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 04/10, B2 đã tích hợp A2/QD-03 trên `feat/t1-b2-network-heartbeat-ui`: giữ HEAD cũ `edd50cf`, merge main `f62c732` bằng `57f2a9c`, source cuối `6d5c7f4`. AuthenticatedWebSocketOpener dùng Bearer handshake mới mỗi reconnect; login candidate/proctor nối realtime, unscoped heartbeat/ACK và ERROR payload trực tiếp, 401/UNAUTHORIZED/1008 dừng retry/token cũ, bounded backoff, khóa UI model và shutdown. Test cuối 142/142 PASS (client 90), package PASS 142/142; real Spring/PostgreSQL smoke cuối PASS login/ACK/server-off/reconnect/revoke/expire/proctor/worker shutdown. GUI manual/LAN và review A NOT RUN. MonitoringTransport giữ send = write, ACK/ERROR = onMessage; PROCESS_OBSERVED/state chưa tích hợp server, không cài collector/C3/B3. Evidence: `evidence/t1-b2/2026-10-04-real-integration.md`; tracker giữ nguyên; PR/merge cuối xem report.
 
 ### T1-B3 · Màn giám thị tối thiểu
 `4h` · phụ thuộc: T1-B2, T1-A3 · review: A

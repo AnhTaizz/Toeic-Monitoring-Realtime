@@ -101,6 +101,27 @@ HEAD đối chiếu: `ceb8131a558660057cf62c46f2466db8515b9b4e`. Chỉ cập nh�
 
 Bằng chứng và giới hạn xác nhận: `evidence/stage1/2026-10-03-merge-readiness.md`. Không thay đổi trạng thái 27 test chính thức hay TRACKER.json. Ready to merge: NO.
 
+## T1-B2 — kiểm 03/10, ghi nhận 04/10/2026
+
+Code SHA: `75d4b9fc794c4a1939b47bcdd990ffc0def52164`, base main `34a7835`. Windows 11 x64 / Oracle JDK 21.0.8 / Maven 3.9.11, gọi từ WSL; người chạy Codex Agent. Không dùng PostgreSQL/server thật trong phiên này. Evidence tổng: `evidence/t1-b2/2026-10-04-verification.md`.
+
+| Kiểm tra | Kết quả | Bằng chứng / giới hạn |
+|---|---|---|
+| mvn test | PASS — 5/5 module, 70/70 test, 0 failure/error/skipped | `evidence/t1-b2/2026-10-03-mvn-test.txt`; realtime 28/28 MOCK |
+| mvn package | PASS — 5/5 module, 70/70 test, fat JAR client tạo được | `evidence/t1-b2/2026-10-03-mvn-package.txt`; shade cảnh báo module-info/MANIFEST trùng |
+| Fragment >=2 phần, parse chỉ last=true; request(1) mỗi fragment; message quá lớn | PASS — MOCK | RealtimeClientTest; không phải socket server thật |
+| Heartbeat 2s khi CONNECTED; không gửi sau disconnect/close, không tích lũy khi write kẹt | PASS — MOCK, thời gian ảo | RealtimeClientTest + MockScheduler |
+| Mất connection → RECONNECTING; delay tăng/cap; hết 4 retry → FAILED | PASS — MOCK | Test budget 1+4 lần mở, không sleep dài |
+| Reconnect dùng socket mới; bỏ fragment/ACK/callback cũ; lỗi auth không retry | PASS — MOCK | Hook opener được gọi lại; chưa chứng minh re-auth thật |
+| close hủy heartbeat/retry/handshake, abort socket, close opener, shutdown executor | PASS — MOCK + executor thật | Test worker thật dùng awaitTermination; không phải đóng GUI thật |
+| ConnectionState → UI model khóa/mở | PASS — model | Container JavaFX cập nhật qua Platform.runLater; thao tác GUI NOT RUN |
+| JSON malformed/type lạ/thiếu trường/sai scope/ACK lệch không crash listener | PASS — MOCK | Message bị từ chối bằng thông báo cố định, message hợp lệ tiếp theo vẫn nhận |
+| WS real authenticated, heartbeat server receipt, server-off/reconnect/re-auth | BLOCKED BY T1-A2 | QD-03/endpoint/auth chưa có; không tự bịa contract |
+| Login server thật trong phiên B2 | NOT RUN | Không chạy lại smoke T1-A1; kết quả lịch sử giữ nguyên |
+| GUI manual / LAN máy thứ hai / shutdown app GUI | NOT RUN | Không có công cụ điều khiển GUI hay máy thứ hai thật |
+
+Không đổi trạng thái IT03/AT02 hoặc 27 case chính thức bằng test MOCK; TRACKER.json giữ nguyên. T1-B2 **PARTIAL / BLOCKED BY T1-A2**.
+
 ## T1-A2 — 04/10/2026
 
 Code: `7ac62c4d0bc5120ba10f887efbe5478a693d6385`, base main `34a7835`. Windows 11 x64 / Oracle JDK 21.0.8 / Maven 3.9.11; PostgreSQL 18 Docker. Người chạy: Codex Agent. Evidence: `evidence/t1-a2/2026-10-04-verification.md`.
@@ -122,3 +143,23 @@ Code: `7ac62c4d0bc5120ba10f887efbe5478a693d6385`, base main `34a7835`. Windows 1
 | GUI/LAN, B2 real integration, event DB/presence | NOT RUN | Ngoài task A2; nhánh B2 chưa đổi/merge, A3/C3/A4 chưa cài |
 
 AT02 mới kiểm các thành phần auth/role/scope/WS của A2; endpoint import/start thật chưa có, nên không đánh PASS toàn bộ case AT02 hoặc 27 cases bằng test fixture. TRACKER.json giữ nguyên. Optional clean FAIL vì app-image EXE bị Windows khóa; không ảnh hưởng test/package PASS và không kill process người dùng.
+
+## T1-B2 — real integration 04/10/2026
+
+Source `6d5c7f4335743b42e74b7232b2e219a89be2e9ca`, merge main A2 `f62c732` bằng `57f2a9c`. Windows 11/JDK21.0.8/Maven3.9.11/PostgreSQL18.6; người chạy Codex Agent. Evidence `evidence/t1-b2/2026-10-04-real-integration.md`.
+
+| Kiểm tra | Trạng thái | Bằng chứng/giới hạn |
+|---|---|---|
+| Baseline sau merge main | PASS 119/119, 5/5 module | Log merged-baseline-test |
+| Final mvn test/package | PASS 142/142 mỗi lượt, 5/5 module; 0 failure/error/skipped | Logs real-mvn-test/package; 23 lượt mới phiên này |
+| URI HTTP→WS/HTTPS→WSS, no query, header mỗi open | PASS | Opener unit + real HTTP fixture 401/503; production WS smoke |
+| Fragment/JSON/bounded writes/ACK correlation/shutdown | PASS | 36 RealtimeClient MOCK test lượt; worker thật được await |
+| Unscoped heartbeat/optional collector/ACK, direct ERROR/1008 | PASS | Unit/mock parser; real heartbeat ACK/ERROR; close1008 riêng là MOCK test |
+| Candidate/proctor real login → chính B adapter → ACK | PASS | Production Spring/JDBC/Flyway/PostgreSQL; không H2/provider MOCK |
+| Invalid/expired/revoked → auth FAILED, no old-token retry | PASS | PostgreSQL real smoke + controlled unit tests |
+| Owned server stop/restart → lock model/reconnect/fresh auth | PASS | Real process/network; không phải GUI manual |
+| Retry budget exhausted + owned worker/server cleanup | PASS | Real smoke và unit shutdown |
+| Token/password/private path diff/evidence scan | PASS | Security scan log, fixed smoke stdout, empty stderr |
+| GUI manual/LAN/cross-review A | NOT RUN | Chưa có công cụ desktop/máy/reviewer thật |
+
+Không đổi trạng thái 27 case chính thức: IT03 mới kiểm headless model/worker, chưa thao tác GUI; event/presence/queue/dashboard chờ A3/A4/C3/B3. TRACKER giữ nguyên.
