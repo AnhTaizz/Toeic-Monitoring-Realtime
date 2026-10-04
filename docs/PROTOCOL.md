@@ -258,3 +258,7 @@ ERROR dùng payload trực tiếp `{code,message,retryable}`; khác REST lỗi c
 ## B2 consume contract A2 — 04/10/2026
 
 Client B2 đã cài opener Bearer cho `/ws/v1/realtime`, heartbeat/ACK unscoped và ERROR payload trực tiếp theo contract ở trên. Mỗi reconnect mở handshake mới; 401/UNAUTHORIZED/1008 dừng retry bằng token cũ và yêu cầu login lại. JavaFX dùng cùng transport cho candidate/proctor, không bật collector. MonitoringTransport giữ send = socket write, ACK/ERROR = onMessage; PROCESS_OBSERVED/state/full/delta vẫn CHƯA TÍCH HỢP SERVER THẬT, chờ A3/C3. Không đổi QD-03 hoặc semantics do A/C sở hữu. Evidence: `evidence/t1-b2/2026-10-04-real-integration.md`; GUI manual NOT RUN.
+
+## Collector local C2 — 04/10/2026
+
+ProcessCollector client đã có polling local theo process-policy-v1 và immutable ProcessSnapshot. Gate yêu cầu candidate + monitoring session active; production chưa có trigger nên không auto-start từ login. C2 không gọi MonitoringTransport, không gửi PROCESS_OBSERVED/heartbeat/full/delta, không eventId/queue/ACK. PROCESS_OBSERVED vẫn MOCK/CHƯA CÓ cho tới A3/C3; schema v0/QD-03/QD-08 giữ nguyên. Handoff API/evidence: `evidence/t1-c2/2026-10-04-verification.md`.

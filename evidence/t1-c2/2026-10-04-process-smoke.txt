@@ -1,0 +1,15 @@
+Tested source later committed as: 02789a86c1c9785bc54f31b4584751eae3340f10
+Command: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-c2.ps1 -JavaHome <JDK21>
+Real Windows ProcessHandle; MOCK active context; headless owned Edge demo; no GUI manual.
+
+ENV OS=Windows 11 JDK=21.0.8
+SUMMARY scanned=378 unreadable=162 missingCommand=162 missingStartInstant=162 missingUser=162
+OBSERVED restrictedExecutableFilenames=discord.exe,msedge.exe,zalo.exe
+PASS real ProcessHandle.allProcesses source + local polling snapshot; no network send
+PASS owned isolated headless msedge.exe appears; metadataQuality=COMPLETE
+PASS only owned Edge process tree stopped; owned processes absent from later snapshot
+PASS stop/restart generates fresh collectorSessionId and terminates collector workers
+PASS active proctor denied; no collector worker started
+C2 ProcessHandle smoke PASS; active context MOCK; GUI manual NOT RUN; no event/transport integration
+
+Harness stderr: empty.
