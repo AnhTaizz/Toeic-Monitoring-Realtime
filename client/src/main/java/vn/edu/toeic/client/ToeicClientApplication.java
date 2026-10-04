@@ -26,6 +26,7 @@ import vn.edu.toeic.client.realtime.ConnectionViewModel;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.RealtimeClient;
 import vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpener;
+import vn.edu.toeic.client.dashboard.ProctorDashboardView;
 
 public final class ToeicClientApplication extends Application {
     private final LoginApiClient loginApiClient = new LoginApiClient();
@@ -35,6 +36,7 @@ public final class ToeicClientApplication extends Application {
     private long viewGeneration;
     private CandidateMonitoringSession monitoring;
     private long monitoringGeneration;
+    private ProctorDashboardView dashboard;
 
     @Override
     public void start(Stage stage) {
@@ -46,6 +48,9 @@ public final class ToeicClientApplication extends Application {
     }
 
     private Scene loginScene(Stage stage) {
+        return loginScene(stage, "");
+    }
+    private Scene loginScene(Stage stage, String notice) {
         Label title = new Label("Đăng nhập TOEIC Monitor");
         title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
@@ -53,7 +58,7 @@ public final class ToeicClientApplication extends Application {
         TextField usernameField = new TextField();
         PasswordField passwordField = new PasswordField();
         Button loginButton = new Button("Đăng nhập");
-        Label status = new Label();
+        Label status = new Label(notice);
         status.setWrapText(true);
 
         GridPane form = new GridPane();
@@ -111,6 +116,15 @@ public final class ToeicClientApplication extends Application {
         releaseConnectionView();
         if (realtimeClient != null) realtimeClient.close();
         realtimeClient = newClient;
+        if ("PROCTOR".equals(response.user().role())) {
+            long currentView=++viewGeneration;
+            dashboard=new ProctorDashboardView(serverUrl,response,newClient,
+                    () -> leaveDashboard(stage,currentView,""),
+                    () -> leaveDashboard(stage,currentView,"Phiên hết hiệu lực. Hãy đăng nhập lại."));
+            stage.setScene(new Scene(dashboard,1100,740));
+            newClient.connect(context);
+            return;
+        }
 
         Label title = new Label(viewModel.heading());
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
@@ -245,6 +259,7 @@ public final class ToeicClientApplication extends Application {
     private void releaseConnectionView() {
         viewGeneration++;
         monitoringGeneration++;
+        if (dashboard!=null) { dashboard.close(); dashboard=null; }
         if (monitoring != null) { monitoring.close(); monitoring = null; }
         if (problemSubscription != null) {
             try { problemSubscription.close(); } catch (Exception ignored) { }
@@ -254,5 +269,11 @@ public final class ToeicClientApplication extends Application {
             try { connectionSubscription.close(); } catch (Exception ignored) { }
             connectionSubscription = null;
         }
+    }
+    private void leaveDashboard(Stage stage,long currentView,String notice) {
+        if (currentView!=viewGeneration) return;
+        releaseConnectionView();
+        if (realtimeClient!=null) { realtimeClient.close(); realtimeClient=null; }
+        stage.setScene(loginScene(stage,notice));
     }
 }
