@@ -9,6 +9,7 @@ import com.google.gson.Strictness;
 import java.time.Instant;
 import java.time.DateTimeException;
 import java.util.UUID;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -29,8 +30,10 @@ import vn.edu.toeic.server.monitoring.MonitoringEventService;
 import vn.edu.toeic.server.monitoring.EventConflictException;
 import vn.edu.toeic.server.monitoring.MonitoringGap;
 import vn.edu.toeic.server.monitoring.MonitoringGapService;
+import vn.edu.toeic.server.monitoring.MonitoringPresenceService;
+import vn.edu.toeic.server.monitoring.PresenceSnapshot;
 
-/** Authenticated transport; event service owns transactional persistence. No presence/state sync. */
+/** Authenticated transport; services own persistence/presence. No state reducer. */
 @Component
 public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
     private final SessionAuthenticationService authentication;
@@ -39,16 +42,18 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
     private final RealtimeSessionRegistry sessions;
     private final MonitoringEventService events;
     private final MonitoringGapService gaps;
+    private final MonitoringPresenceService presence;
     private final Gson gson = new GsonBuilder().setStrictness(Strictness.STRICT).serializeNulls().create();
     public RealtimeWebSocketHandler(SessionAuthenticationService authentication, AuthorizationService authorization,
             @Value("${toeic.ws.max-message-bytes:65536}") int maxMessageBytes,
-            RealtimeSessionRegistry sessions, MonitoringEventService events, MonitoringGapService gaps) {
+            RealtimeSessionRegistry sessions, MonitoringEventService events, MonitoringGapService gaps, MonitoringPresenceService presence) {
         this.authentication = authentication;
         this.authorization = authorization;
         this.maxMessageBytes = maxMessageBytes;
         this.sessions = sessions;
         this.events = events;
         this.gaps = gaps;
+        this.presence = presence;
     }
     @Override public void afterConnectionEstablished(WebSocketSession session) {
         session.setTextMessageSizeLimit(maxMessageBytes);
@@ -76,7 +81,8 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
             }
             String type = string(body, "type");
             attemptId = identifier(body, "attemptId", false);
-            if ("PROCESS_OBSERVED".equals(type) || "MONITORING_GAP".equals(type)) authorization.requireRole(user, Role.CANDIDATE);
+            if ("PROCESS_OBSERVED".equals(type) || "MONITORING_GAP".equals(type)
+                    || ("HEARTBEAT".equals(type) && attemptId!=null)) authorization.requireRole(user, Role.CANDIDATE);
             if (attemptId != null) authorization.requireAttempt(user, attemptId);
             if ("MONITORING_GAP".equals(type)) {
                 if (attemptId == null) throw new IllegalArgumentException();
@@ -102,13 +108,16 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
                 throw new IllegalArgumentException();
             }
             JsonObject payload = body.getAsJsonObject("payload");
+            if (payload==null || !Set.of("sentAt","collectorSessionId").containsAll(payload.keySet())) throw new IllegalArgumentException();
             Instant.parse(string(payload, "sentAt"));
-            identifier(payload, "collectorSessionId", false);
+            String collector=identifier(payload, "collectorSessionId", attemptId!=null);
+            PresenceSnapshot acceptedPresence=attemptId==null ? null : presence.heartbeat(user,attemptId,collector,session.getId(),tokenHash);
             JsonObject accepted = new JsonObject();
             accepted.addProperty("status", "ACCEPTED");
             accepted.addProperty("acknowledgedType", "HEARTBEAT");
             send(session, new MessageEnvelope<>(Protocol.VERSION, "ACK", UUID.randomUUID().toString(), requestId,
                     attemptId, traceId, accepted));
+            presence.publish(acceptedPresence,traceId);
         } catch (EventConflictException exception) {
             sendError(session, ErrorCode.CONFLICT, exception.getMessage(), false, requestId, attemptId, traceId);
         } catch (AccessDeniedException exception) {

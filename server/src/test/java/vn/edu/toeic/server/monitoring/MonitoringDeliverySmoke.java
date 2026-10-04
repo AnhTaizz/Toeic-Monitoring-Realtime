@@ -2,6 +2,7 @@ package vn.edu.toeic.server.monitoring;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -80,7 +81,7 @@ public final class MonitoringDeliverySmoke {
             try {
                 Flyway.configure().dataSource(url, env("DB_USER", "toeic"), env("DB_PASSWORD", "")).schemas(schema).defaultSchema(schema).target("2").load().migrate();
                 start(); fixtures();
-                check(jdbc().sql("SELECT max(version::int) FROM flyway_schema_history WHERE success AND version IS NOT NULL").query(Integer.class).single() == 3, "V2->V3 migration");
+                check(jdbc().sql("SELECT max(version::int) FROM flyway_schema_history WHERE success AND version IS NOT NULL").query(Integer.class).single() >= 3, "V2->V3 migration (later additive migrations allowed)");
                 System.out.println("PASS REAL PostgreSQL18 V2->V3; TEST assignments only; no shared DB reset");
                 verify(edge);
             } finally {
@@ -238,7 +239,16 @@ public final class MonitoringDeliverySmoke {
             Path normalized = profile.toAbsolutePath().normalize();
             check(normalized.getParent().equals(Path.of(System.getProperty("java.io.tmpdir")).toAbsolutePath().normalize())
                     && normalized.getFileName().toString().startsWith("toeic-c3-owned-edge-"), "Cleanup owned temp profile only");
-            try (var files = Files.walk(normalized)) { for (Path file : files.sorted(Comparator.reverseOrder()).toList()) Files.deleteIfExists(file); }
+            // Windows may retain an owned profile handle briefly after the process exits.
+            long cleanupDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10);
+            while (Files.exists(normalized)) {
+                try (var files = Files.walk(normalized)) {
+                    for (Path file : files.sorted(Comparator.reverseOrder()).toList()) Files.deleteIfExists(file);
+                } catch (IOException locked) {
+                    if (System.nanoTime() - cleanupDeadline >= 0) throw locked;
+                    Thread.sleep(50);
+                }
+            }
         }
     }
     private static Process launch(Path edge, Path profile) throws Exception {
@@ -291,6 +301,7 @@ public final class MonitoringDeliverySmoke {
         final AtomicBoolean eventLoss = new AtomicBoolean(), gapLoss = new AtomicBoolean(), dropGapAck = new AtomicBoolean();
         final AtomicInteger eventWrites = new AtomicInteger(), gapWrites = new AtomicInteger();
         LossBoundary(RealtimeClient delegate) { this.delegate = delegate; }
+        @Override public AutoCloseable monitoringHeartbeat(String attempt,String collector) { return delegate.monitoringHeartbeat(attempt,collector); }
         @Override public CompletableFuture<Void> send(MessageEnvelope<JsonObject> message) {
             if (message.type().equals("PROCESS_OBSERVED") && message.payload().get("pid").getAsLong() == targetPid.get()) {
                 eventRequest.compareAndSet(null, message.requestId()); check(eventRequest.get().equals(message.requestId()), "Stable event request retry"); eventWrites.incrementAndGet();

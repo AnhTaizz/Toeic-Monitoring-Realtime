@@ -270,7 +270,8 @@ public final class MonitoringPostgresSmoke {
         body.addProperty("attemptId", attempt); body.add("payload", payload); return body.toString();
     }
     private static String heartbeat(String message) {
-        JsonObject body = JsonParser.parseString(envelope(message, B, event("TEST-unused"))).getAsJsonObject();
+        // This A3 probe checks transport survival; only an explicit collector start may bind presence in A4.
+        JsonObject body = JsonParser.parseString(envelope(message, null, event("TEST-unused"))).getAsJsonObject();
         body.addProperty("type", "HEARTBEAT"); JsonObject payload = new JsonObject(); payload.addProperty("sentAt", Instant.now().toString()); body.add("payload", payload); return body.toString();
     }
     private static void ack(JsonObject response, String request) {

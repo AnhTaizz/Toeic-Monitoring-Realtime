@@ -2,7 +2,10 @@ package vn.edu.toeic.server.realtime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,12 +23,15 @@ import vn.edu.toeic.server.auth.AuthenticatedUser;
 import vn.edu.toeic.server.auth.AuthorizationService;
 import vn.edu.toeic.server.auth.SessionAuthenticationService;
 import vn.edu.toeic.server.monitoring.MonitoringEventService.StoredEvent;
+import vn.edu.toeic.server.monitoring.PresenceSnapshot;
 
 /** One decorated outbound writer per connection, shared by ACK/ERROR/warnings. */
 @Component
 public final class RealtimeSessionRegistry {
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
-    private final Gson gson = new GsonBuilder().serializeNulls().create();
+    private final Gson gson = new GsonBuilder().serializeNulls()
+            .registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (value, type, context) -> new JsonPrimitive(value.toString()))
+            .create();
     private final SessionAuthenticationService authentication;
     private final AuthorizationService authorization;
     private final int sendTimeout;
@@ -53,6 +59,12 @@ public final class RealtimeSessionRegistry {
         catch (IOException | RuntimeException ignored) { close(session, CloseStatus.SERVER_ERROR); }
     }
     public void warnAssignedProctors(StoredEvent event, String traceId) {
+        pushAssignedProctors(event.attemptId(),"MONITOR_WARNING",event.item(),traceId);
+    }
+    public void presenceAssignedProctors(PresenceSnapshot presence, String traceId) {
+        pushAssignedProctors(presence.attemptId(),"MONITOR_PRESENCE",presence,traceId);
+    }
+    private void pushAssignedProctors(String attempt, String type, Object payload, String traceId) {
         for (WebSocketSession target : sessions.values()) {
             try {
                 Object identity = target.getAttributes().get(AuthenticatedUser.ATTRIBUTE);
@@ -62,9 +74,9 @@ public final class RealtimeSessionRegistry {
                 // Revalidate auth, current role and current assignment before any data-bearing push.
                 AuthenticatedUser current = authentication.authenticateHash(tokenHash);
                 authorization.requireRole(current, Role.PROCTOR);
-                authorization.requireAttempt(current, event.attemptId());
-                send(target, new MessageEnvelope<>(Protocol.VERSION, "MONITOR_WARNING", UUID.randomUUID().toString(),
-                        null, event.attemptId(), traceId, event.item()));
+                authorization.requireAttempt(current, attempt);
+                send(target, new MessageEnvelope<>(Protocol.VERSION, type, UUID.randomUUID().toString(),
+                        null, attempt, traceId, payload));
             } catch (AccessDeniedException denied) {
                 if (denied.status() == 401) close(target, CloseStatus.POLICY_VIOLATION);
             } catch (RuntimeException ignored) {
