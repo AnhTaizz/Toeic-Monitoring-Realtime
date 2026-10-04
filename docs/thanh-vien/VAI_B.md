@@ -95,8 +95,8 @@ Lịch gợi ý: 03/10 B1 · 04/10 B2 (3h) + B3 (1h) · 05/10 B2 (1h) + B3 (2h) 
 **Đầu ra:** danh sách thí sinh với trạng thái ONLINE/UNKNOWN và timeline cảnh báo.
 
 **Cách làm:**
-1. Khi mở màn hình hoặc sau reconnect: tải timeline từ DB qua HTTP, sau đó mới nhận message đẩy.
-2. Lưu cảnh báo theo `eventId` (map), nên message đến hai lần không tạo hai dòng.
+1. B3 chọn đăng ký listener trước WS, buffer push hữu hạn; mỗi CONNECTED đọc scope/roster/chi tiết HTTP để bù dữ liệu trong lúc offline.
+2. Lưu cảnh báo theo `(attemptId,eventId)`; cùng sự kiện qua HTTP/WS chỉ một dòng, giữ order HTTP.
 3. Hiển thị riêng trạng thái "dữ liệu cũ" khi chính màn giám thị mất kết nối, để không nhầm với ONLINE.
 4. Chữ trên màn hình: "quan sát thấy [ứng dụng]", không viết "gian lận". UNKNOWN là "không còn xác nhận được".
 
@@ -104,7 +104,9 @@ Lịch gợi ý: 03/10 B1 · 04/10 B2 (3h) + B3 (1h) · 05/10 B2 (1h) + B3 (2h) 
 
 **Xong khi:** mở ứng dụng bị hạn chế trên máy thí sinh → một dòng cảnh báo xuất hiện; kill client thí sinh → UNKNOWN; tắt mở lại màn giám thị vẫn đủ timeline, không dòng nào nhân đôi.
 
-**Ghi chú làm dở:** B3 chưa triển khai. Handoff A4 ngày04/10: GET `/api/v1/monitoring/attempts` trả roster identity+PresenceSnapshot chỉ ACTIVE assigned; GET `.../{attemptId}/interruptions` trả history heartbeat timeout. Push MONITOR_PRESENCE cùng item schema, giữ revision lớn nhất theo attempt; MONITOR_WARNING và events timeline A3 không đổi, dedupe attempt/event. Mở WS/buffer rồi tải HTTP, đọc lại sau handshake/reconnect; refresh roster để bỏ scope bị thu hồi, hiện dữ liệu cũ khi dashboard offline. History gộp gapId và refresh recoveredAt. UNKNOWN/NOT_SEEN không gọi gian lận. A4 đã thêm lease heartbeat vào RealtimeClient/MonitoringTransport và CandidateMonitoringSession, B3 không tự invent collector/start. Schema mẫu ở PROTOCOL mục T1-A4; evidence `evidence/t1-a4/2026-10-04-verification.md`. GUI/LAN/human review NOT RUN.
+**Ghi chú bàn giao 04/10:** B3 CODE_COMPLETE trên base main `1e084d4`, branch `feat/t1-b3-proctor-dashboard`. Package dashboard tách DTO/JSON/API/model/controller/view; PROCTOR thay placeholder, candidate C3/A4 giữ nguyên. Roster assigned ACTIVE, selection, ONLINE/UNKNOWN/lý do/lastSeen, timeline quan sát với hai nguồn giờ, history thật/recoveredAt; loading/empty/error/stale riêng từng phần. Parser warning/presence giữ ACK/ERROR/request(1)/fragment. Revision long chính xác, HTTP không đè WS mới; equal conflict báo lỗi; roster authoritative và fresh auth/me trim adapter scope; event/history dedupe, generation/cancel tránh callback cũ. Bounded rows/buffer/body, không cache toàn bộ attempt hoặc thêm overflow-history API.
+
+Tests mới54, tổng331/331; final mvn test/package PASS, REAL PG V4/Spring/HTTP/WS/B2/C3/dashboard và visible JavaFX component PASS. MOCK chỉ nguồn process B3; C3 regression có ProcessHandle/owned Edge REAL, A4 regression PASS. Stage proctor chọn dòng/tab, hard-kill candidate JVM riêng → UNKNOWN/history, mở lại → ONLINE/history giữ, offline stale ONLINE/reconnect/refresh/logout callback; ảnh thật và log trong `evidence/t1-b3/2026-10-04-verification.md`. Đây chưa phải GUI login/candidate toàn luồng MT01/MT08; LAN/package máy khác/human A review NOT RUN, prototype PARTIAL. Không thêm dependency, không đổi server production/V1–V4/plans/TRACKER. Dừng B3; commit/PR/merge cuối xem report.
 
 ### T1-B4 · Thử đóng gói Windows và audio
 `3h` · phụ thuộc: T1-B1, T1-B2 · review: A

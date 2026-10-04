@@ -26,14 +26,14 @@ Mỗi lần chạy ghi đủ: commit SHA, OS/JDK/PostgreSQL, cấu hình, lệnh
 
 | ID | Tóm tắt | Owner / review | Task | Trạng thái | SHA | Bằng chứng |
 |---|---|---|---|---|---|---|
-| MT01 | Full snapshot hợp lệ; event không lặp mỗi poll; collector không chạy trên giám thị | C / B | T1-C2/C3, T2-C1/C2 | PARTIAL — local C2 | `02789a8` | `evidence/t1-c2/2026-10-04-verification.md`; A3 server event riêng đã kiểm, collector→transport/state chưa cài |
+| MT01 | Full snapshot hợp lệ; event không lặp mỗi poll; collector không chạy trên giám thị | C / B | T1-C2/C3, T2-C1/C2 | PARTIAL — C3 network + B3 proctor GUI component PASS; full/delta và candidate GUI toàn luồng chưa kiểm | base B3 `1e084d4`, source checksum trong evidence | `evidence/t1-b3/2026-10-04-verification.md`; process B3 MOCK, C3 regression ProcessHandle/Edge REAL; không full/state chặng2 |
 | MT02 | Replay cùng message sau mất ACK | C / B | T3-C3 | NOT RUN | | |
 | MT03 | Thiếu một delta → UNSYNCED, yêu cầu full | C / B | T3-C3 | NOT RUN | | |
 | MT04 | Delta epoch cũ không sửa state epoch mới | C / B | T3-C3/C4 | NOT RUN | | |
 | MT05 | Restart collector hoặc server → cần epoch và full mới | C / B | T3-C3/C4 | NOT RUN | | |
 | MT06 | Không lùi state; full và delta cho cùng state và event set | C / B | T3-C3 | NOT RUN | | |
 | MT07 | Event muộn, queue tràn; snapshot mới không xóa gap | C / B | T2-C2 | NOT RUN | | |
-| MT08 | Kill client → server tự chuyển UNKNOWN | C / B | T2-C2 | PARTIAL — server A4 PASS; GUI B3 NOT RUN | base `99b4f39` + A4, SHA trong evidence | `evidence/t1-a4/2026-10-04-verification.md`; hard-kill JVM riêng, timeout/history/multi-client thật; không full/state chặng2 |
+| MT08 | Kill client → server tự chuyển UNKNOWN | C / B | T2-C2 | PARTIAL — A4 server + B3 visible proctor component PASS; candidate GUI toàn luồng NOT RUN | base B3 `1e084d4`, source checksum trong evidence | `evidence/t1-b3/2026-10-04-verification.md`; hard-kill owned JVM → UNKNOWN/history/recovered ONLINE trên Stage thật; không full/state chặng2 |
 
 ## Listening và tích hợp
 

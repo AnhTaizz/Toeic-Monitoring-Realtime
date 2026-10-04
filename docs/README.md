@@ -17,6 +17,8 @@ Thư mục này là nơi ghi lại việc đang làm, để bất kỳ ai (hoặ
 
 Trạng thái chính thức của từng task (TODO/đang làm/xong, giờ thực tế, bằng chứng) vẫn nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`. Các file ở đây không lặp lại trạng thái đó.
 
+Bàn giao B3 ngày04/10: [evidence dashboard](../evidence/t1-b3/2026-10-04-verification.md) ghi 331 tests, REAL integration và Stage proctor; [README chạy dashboard](../README.md#dashboard-giám-thị-t1-b3). TRACKER giữ nguyên theo yêu cầu task; trạng thái code/component và nghiệm thu toàn prototype được ghi riêng.
+
 ## Bắt đầu một buổi làm
 
 1. Đọc [TIEN_DO.md](TIEN_DO.md): xem dòng của mình và mục "Đang bị chặn".

@@ -1,6 +1,6 @@
 # TOEIC Monitoring Realtime
 
-Xương sống kỹ thuật chặng 1 gồm Spring Boot server, JavaFX client hai role, PostgreSQL và spike `ProcessHandle`. A2/B2 đã có xác thực và realtime; C2/A3/C3 đã nối collector → event → queue/retry → DB/ACK, cảnh báo proctor và timeline. A4 có scoped heartbeat, presence/timeout/history và roster cho giám thị. B3 dashboard và nghiệp vụ thi vẫn còn các task sau.
+Xương sống kỹ thuật chặng 1 gồm Spring Boot server, JavaFX client hai role, PostgreSQL và spike `ProcessHandle`. C2/A3/C3 đã nối collector → event → queue/retry → DB/ACK. A4 có heartbeat, presence/timeout/history; B3 đã có dashboard giám thị nhận cảnh báo và tải lịch sử. Nghiệp vụ thi, full/delta và đóng gói chạy trên máy thứ hai thuộc các task sau.
 
 ## Yêu cầu môi trường
 
@@ -65,7 +65,7 @@ Chi tiết contract, quyết định và bằng chứng kiểm thử nằm trong
 
 `Settings` cấu hình heartbeat (mặc định 2 giây), backoff (1/2/4/8 giây, cap 8 giây), tối đa 4 retry sau lần mở đầu, message tối đa 65.536 ký tự và tối đa 500 ACK/write đang chờ. Mỗi outage mới sau kết nối thành công có budget mới. 401, ERROR UNAUTHORIZED hoặc close 1008 → FAILED, dừng heartbeat/retry, bỏ token trong opener; phải login và tạo adapter mới. 503/network failure → bounded backoff. Hết retry cần đăng nhập lại; không tự retry vô hạn.
 
-Sau login candidate hoặc proctor, JavaFX mở realtime bằng server URL của lần login và token trong memory. Session cho phép heartbeat không có attemptId/collectorSessionId khi scope rỗng; không invent attempt và không bật collector. Callback UI qua Platform.runLater, controls cần mạng chỉ mở khi CONNECTED. Logout/stop gỡ listeners, đóng socket/worker/HttpClient, bỏ reference token/context; không persist token. Màn thi/dashboard vẫn là placeholder, chưa có nghiệp vụ B3.
+Sau login candidate hoặc proctor, JavaFX mở realtime bằng server URL của lần login và token trong memory. Session cho phép heartbeat không có attemptId/collectorSessionId khi scope rỗng. Callback UI qua Platform.runLater; logout/stop gỡ listeners, đóng socket/worker/HttpClient, bỏ reference token/context. PROCTOR mở dashboard B3; CANDIDATE giữ các nút giám sát C3/A4, nghiệp vụ bài thi chưa cài.
 
 ACK HEARTBEAT phải khớp requestId/type/attemptId/traceId đang chờ; write success chưa phải ACK. ERROR WS được đọc từ payload trực tiếp `{code,message,retryable}`; client dùng thông báo cố định, không phản chiếu raw exception/JSON. C3 quản lý retry event và gap; B2 chỉ quản lý reconnect socket.
 
@@ -137,7 +137,7 @@ mvn package
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-c2.ps1 -JavaHome <JDK21>
 ```
 
-Smoke C2 dùng source production và context active MOCK; mở Edge headless bằng profile tạm riêng, chỉ đóng process tree do harness tạo. Log không full path/user/arguments. Evidence: `evidence/t1-c2/2026-10-04-verification.md`. C3 bổ sung real event delivery bên dưới; GUI manual NOT RUN, MT01 PARTIAL tới khi có B3.
+Smoke C2 dùng source production và context active MOCK; mở Edge headless bằng profile tạm riêng, chỉ đóng process tree do harness tạo. Log không full path/user/arguments. Evidence: `evidence/t1-c2/2026-10-04-verification.md`. C3 bổ sung real event delivery bên dưới; B3 component GUI được kiểm riêng, MT01 toàn case còn PARTIAL.
 
 ## T1-C3 — bật giám sát và gửi sự kiện
 
@@ -150,7 +150,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/demo-c3.ps1 -Action 
 java '-Dtoeic.monitoring.pollMillis=500' -jar client\target\client-0.1.0-SNAPSHOT-all.jar
 ```
 
-Đăng nhập candidate1 bằng mật khẩu seed cấu hình local, kiểm tra lượt thi, chọn DEMO-C3-A, bắt đầu. Mở Microsoft Edge (`msedge.exe`, thuộc policy v1), chờ vài poll. Mong đợi số “Đã xác nhận” tăng rồi giữ nguyên khi process vẫn tồn tại. Đóng/mở lại có thể tăng số event; Edge tạo nhiều process nên không mặc định mỗi cửa sổ chỉ một event. Notepad không nằm trong policy v1. Proctor GUI cảnh báo chưa có B3; kiểm lịch sử bằng REST theo PROTOCOL. Sau demo dừng giám sát, rồi cleanup chủ động (xóa lịch sử chỉ của DEMO-C3-A, giữ tài khoản/lượt khác):
+Đăng nhập candidate1 bằng mật khẩu seed cấu hình local, kiểm tra lượt thi, chọn DEMO-C3-A, bắt đầu. Mở Microsoft Edge (`msedge.exe`, thuộc policy v1), chờ vài poll. Mong đợi số “Đã xác nhận” tăng rồi giữ nguyên khi process vẫn tồn tại. Đóng/mở lại có thể tăng số event; Edge tạo nhiều process nên không mặc định mỗi cửa sổ chỉ một event. Notepad không nằm trong policy v1. Đăng nhập proctor1 trên client thứ hai, chọn DEMO-C3-A để xem dashboard B3 (server cần V4). Sau demo dừng giám sát, rồi cleanup chủ động (xóa lịch sử chỉ của DEMO-C3-A, giữ tài khoản/lượt khác):
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/demo-c3.ps1 -Action Cleanup
@@ -206,4 +206,26 @@ Nếu server đang chạy giữ khóa JAR trên Windows, dừng server của mì
 
 Smoke A4 dùng TEST schema UUID riêng, timeout700ms/scan25ms/heartbeat100ms; PostgreSQL/Spring/HTTP/WS/B2/C3 thật, nguồn process MOCK. Hai candidate ONLINE, hard-kill JVM do test tạo → A UNKNOWN trong khi B vẫn gửi event/ACK; proctor đúng assignment nhận presence, proctor khác không nhận; A quay lại giữ history. Có kiểm COMMIT failure thật, Stop/unscoped, reconnect/socket cũ, roster/history khi proctor offline, server restart và worker cleanup. Không kill Java/Edge người dùng, không tắt/reset DB chung. Smoke C3 vẫn kiểm ProcessHandle/Edge thật.
 
-B3 dùng `GET /api/v1/monitoring/attempts`, `GET /api/v1/monitoring/attempts/{attemptId}/interruptions`, push `MONITOR_PRESENCE`; event `MONITOR_WARNING`/timeline A3 giữ nguyên. Schema và quy tắc revision/HTTP-WS recovery ở [PROTOCOL](docs/PROTOCOL.md). Dashboard/parser B3, GUI/LAN và human C review NOT RUN; không gọi toàn prototype PASS. Evidence: [A4 verification](evidence/t1-a4/2026-10-04-verification.md).
+B3 đã dùng các endpoint và push A3/A4, giữ nguyên server schema. Schema và quy tắc revision/HTTP-WS recovery ở [PROTOCOL](docs/PROTOCOL.md). A4 server verification ở [A4 evidence](evidence/t1-a4/2026-10-04-verification.md); dashboard component verification ở [B3 evidence](evidence/t1-b3/2026-10-04-verification.md). Human review, GUI toàn luồng candidate/proctor và LAN máy thứ hai còn NOT RUN; nghiệm thu prototype PARTIAL.
+
+## Dashboard giám thị T1-B3
+
+Server phải chạy bản đã có Flyway V4. Server dev đang chạy JAR cũ cần được người dùng chủ động dừng và chạy lại bản mới; không xóa volume để nâng cấp. Xem `flyway_schema_history` trong đúng database của server. Build đang khóa JAR trên Windows có thể dùng checkout riêng; evidence B3 ghi checksum source/build tương ứng.
+
+1. Tạo fixture DEMO-C3-A bằng script demo phía trên, sau khi server V4 đã khởi động.
+2. Mở hai client. Candidate1 chọn lượt và bấm **Bắt đầu giám sát**; proctor1 đăng nhập sẽ mở **Giám sát thí sinh**.
+3. Proctor chọn dòng DEMO-C3-A. Tab **Cảnh báo process** hiện “Quan sát thấy msedge.exe”. Hai cột giờ tách máy thí sinh quan sát và server nhận. Không lấy hiệu hai giờ này để suy ra độ trễ.
+4. Tab **Lịch sử gián đoạn** hiện liên lạc cuối, server phát hiện và phục hồi. Dừng candidate rồi chờ timeout mặc định 6 giây: server gửi UNKNOWN và ghi history; bắt đầu lại: ONLINE, history vẫn còn.
+5. Khi máy giám thị mất mạng, dashboard giữ trạng thái nhận gần nhất kèm **Dữ liệu cũ**. Khi kết nối lại, từng phần chỉ bỏ nhãn này sau khi HTTP đồng bộ xong. Nút **Làm mới quyền và dữ liệu** đọc lại phân công; server hiện chưa đẩy thay đổi assignment tức thì.
+6. **Đăng xuất** trở về màn đăng nhập, bỏ dữ liệu và đóng worker/socket. Proctor không bật collector.
+
+UTC được giữ trong model; giờ trên màn theo timezone máy, hoặc `"-Dtoeic.dashboard.timezone=Asia/Ho_Chi_Minh"`. Các property tùy chọn khác: `toeic.dashboard.httpTimeoutMillis=10000`, `toeic.dashboard.maxRows=5000`, `toeic.dashboard.pushBuffer=256`. Truyền property Java trong dấu ngoặc kép khi chạy PowerShell. Body HTTP giới hạn 4 MiB; vượt giới hạn sẽ báo lỗi/dữ liệu cũ, không tự coi lịch sử đầy đủ. Bộ đệm đầy yêu cầu HTTP đồng bộ; tự làm mới có ngân sách hữu hạn, hết ngân sách cần bấm nút. Client chỉ giữ chi tiết lượt đang chọn.
+
+Kiểm tra tự động riêng sau `mvn package`:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/smoke-b3.ps1
+powershell -ExecutionPolicy Bypass -File scripts/smoke-b3.ps1 -Gui
+```
+
+Script đọc `.env` riêng, tạo schema TEST UUID/server cổng riêng và các JVM candidate do test sở hữu; kết thúc tự dọn. HTTP/WS/PostgreSQL/B2/C3/dashboard là REAL, nguồn quan sát process là MOCK. `-Gui` mở Stage JavaFX thật, chọn dòng/đổi tab/làm mới/đăng xuất bằng controls JavaFX, kiểm UNKNOWN sau hard-kill và ONLINE phục hồi, chụp ảnh vào `client/target/b3-dashboard-*.png`. Đây là kiểm component proctor; đăng nhập và thao tác candidate GUI đầy đủ, LAN/package máy khác và human A review vẫn cần kiểm riêng. Không thêm thư viện ngoài cho B3.

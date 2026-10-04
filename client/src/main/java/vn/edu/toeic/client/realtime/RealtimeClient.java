@@ -25,6 +25,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import vn.edu.toeic.client.dashboard.MonitoringJson;
 import java.util.function.Consumer;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 import vn.edu.toeic.protocol.ErrorCode;
@@ -423,6 +424,9 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                     connectionLost(current, new AuthenticationRejectedException());
                     return;
                 }
+            } else if ("MONITOR_WARNING".equals(message.type()) || "MONITOR_PRESENCE".equals(message.type())) {
+                validateScope(message.attemptId());
+                MonitoringJson.push(message); // Unsolicited push never consumes pending ACK correlation.
             } else throw new IllegalArgumentException();
             publish(message);
         } catch (RuntimeException ignored) { problem(); }
