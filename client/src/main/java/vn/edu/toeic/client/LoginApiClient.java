@@ -11,6 +11,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.UUID;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,6 +52,30 @@ public final class LoginApiClient implements AutoCloseable {
 
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(this::parseResponse);
+    }
+    public record ScopeView(Role role, Set<String> attemptScope) {
+        public ScopeView { attemptScope = Set.copyOf(attemptScope); }
+    }
+    public CompletableFuture<ScopeView> scope(String serverUrl, String token) {
+        URI login = loginEndpoint(serverUrl);
+        URI endpoint = URI.create(login.toString().replaceFirst("/auth/login$", "/auth/me"));
+        HttpRequest request = HttpRequest.newBuilder(endpoint).timeout(Duration.ofSeconds(10))
+                .header("Authorization", "Bearer " + token).GET().build();
+        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenApply(response -> {
+            if (response.statusCode() != 200) throw new LoginFailedException(response.statusCode(), "Không kiểm tra được quyền. Hãy đăng nhập lại.");
+            try {
+                JsonObject body = responseGson.fromJson(response.body(), JsonObject.class);
+                if (!"v0".equals(requiredString(body, "protocolVersion")) || !body.get("attemptScope").isJsonArray()) throw new InvalidServerResponseException();
+                Role role = Role.valueOf(requiredString(body.getAsJsonObject("user"), "role"));
+                Set<String> scopes = new HashSet<>();
+                for (JsonElement value : body.getAsJsonArray("attemptScope")) {
+                    if (!value.isJsonPrimitive() || !value.getAsJsonPrimitive().isString()
+                            || !value.getAsString().matches("[A-Za-z0-9_.:-]{1,128}")) throw new InvalidServerResponseException();
+                    scopes.add(value.getAsString());
+                }
+                return new ScopeView(role, scopes);
+            } catch (RuntimeException ignored) { throw new InvalidServerResponseException(); }
+        });
     }
 
     static URI loginEndpoint(String serverUrl) {

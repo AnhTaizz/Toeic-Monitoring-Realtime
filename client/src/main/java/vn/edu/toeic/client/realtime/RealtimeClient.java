@@ -26,6 +26,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
+import vn.edu.toeic.protocol.ErrorCode;
 
 /** Một adapter sở hữu socket, fragment, write, heartbeat và bounded retry. */
 public final class RealtimeClient implements MonitoringTransport, AutoCloseable {
@@ -88,6 +89,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     private final CopyOnWriteArrayList<Consumer<MessageEnvelope<JsonObject>>> messageListeners = new CopyOnWriteArrayList<>();
     private final CopyOnWriteArrayList<Consumer<String>> problemListeners = new CopyOnWriteArrayList<>();
     private final Map<String, MessageEnvelope<JsonObject>> pendingAcks = new HashMap<>();
+    private final Map<String, Long> heartbeatDeadlines = new HashMap<>();
     private final Set<CompletableFuture<Void>> writes = new HashSet<>();
     private volatile ConnectionState state = ConnectionState.DISCONNECTED;
     private boolean closed;
@@ -172,6 +174,10 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
 
     private synchronized void heartbeat() {
         if (closed || state != ConnectionState.CONNECTED) return;
+        heartbeatDeadlines.entrySet().removeIf(entry -> {
+            if (System.nanoTime() - entry.getValue() < 0) return false;
+            pendingAcks.remove(entry.getKey()); return true;
+        });
         if (!writes.isEmpty()) return; // Do not accumulate heartbeats behind a stalled write.
         JsonObject payload = new JsonObject();
         if (session.collectorSessionId() != null) payload.addProperty("collectorSessionId", session.collectorSessionId());
@@ -187,11 +193,20 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         final MessageEnvelope<JsonObject> copy;
         try {
             validateEnvelope(message);
-            if (!("HEARTBEAT".equals(message.type()) || "PROCESS_OBSERVED".equals(message.type()))
+            if (!("HEARTBEAT".equals(message.type()) || "PROCESS_OBSERVED".equals(message.type()) || "MONITORING_GAP".equals(message.type()))
                     || !message.messageId().equals(message.requestId())) throw new IllegalArgumentException();
             if ("HEARTBEAT".equals(message.type())) {
                 optionalIdentifier(message.payload(), "collectorSessionId");
                 Instant.parse(requiredString(message.payload(), "sentAt"));
+            } else if ("MONITORING_GAP".equals(message.type())) {
+                if (message.attemptId() == null) throw new IllegalArgumentException();
+                requiredString(message.payload(), "gapId"); requiredString(message.payload(), "collectorSessionId");
+                if (!"QUEUE_OVERFLOW".equals(requiredString(message.payload(), "reason"))) throw new IllegalArgumentException();
+                JsonElement count = message.payload().get("droppedCount");
+                if (count == null || !count.isJsonPrimitive() || !count.getAsJsonPrimitive().isNumber()
+                        || count.getAsBigDecimal().longValueExact() <= 0) throw new IllegalArgumentException();
+                Instant first = Instant.parse(requiredString(message.payload(), "firstDroppedAt"));
+                if (Instant.parse(requiredString(message.payload(), "lastDroppedAt")).isBefore(first)) throw new IllegalArgumentException();
             } else {
                 if (message.attemptId() == null) throw new IllegalArgumentException();
                 requiredString(message.payload(), "collectorSessionId");
@@ -212,7 +227,11 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
             MessageEnvelope<JsonObject> previous = pendingAcks.get(copy.requestId());
             if (previous != null && !previous.equals(copy)) return failed("Request ID đã dùng với nội dung khác");
             if (previous == null && pendingAcks.size() >= settings.maxPendingAcks()) return failed("Đã đạt giới hạn ACK đang chờ");
+            if (previous == null && !"HEARTBEAT".equals(copy.type()) && settings.maxPendingAcks() > 1
+                    && pendingAcks.values().stream().filter(p -> !"HEARTBEAT".equals(p.type())).count() >= settings.maxPendingAcks() - 1)
+                return failed("Dành một ACK slot cho heartbeat");
             pendingAcks.put(copy.requestId(), copy);
+            if ("HEARTBEAT".equals(copy.type())) heartbeatDeadlines.put(copy.requestId(), System.nanoTime() + settings.heartbeat().multipliedBy(3).toNanos());
         }
         CompletableFuture<Void> result = new CompletableFuture<>();
         writes.add(result);
@@ -294,6 +313,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         if (opening != null) opening.cancel(true);
         opening = null;
         pendingAcks.clear();
+        heartbeatDeadlines.clear();
         for (CompletableFuture<Void> write : Set.copyOf(writes)) {
             write.completeExceptionally(new IllegalStateException("Kết nối đã dừng"));
         }
@@ -306,6 +326,15 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     }
 
     @Override public ConnectionState connectionState() { return state; }
+    @Override public synchronized void forgetPending(String requestId) {
+        pendingAcks.remove(requestId); heartbeatDeadlines.remove(requestId);
+    }
+    /** Fresh /auth/me result only; caller must stop old delivery before changing scope. */
+    public synchronized void updateScope(Set<String> freshScope) {
+        if (closed || session == null || pendingAcks.values().stream().anyMatch(p -> !"HEARTBEAT".equals(p.type())))
+            throw new IllegalStateException("Dừng phiên delivery trước khi đổi scope");
+        session = new Session(freshScope, null, session.collectorSessionId());
+    }
 
     @Override public AutoCloseable onConnectionState(Consumer<ConnectionState> listener) {
         stateListeners.add(Objects.requireNonNull(listener));
@@ -353,9 +382,10 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                         || !request.type().equals(requiredString(message.payload(), "acknowledgedType"))
                         || !"ACCEPTED".equals(requiredString(message.payload(), "status"))) throw new IllegalArgumentException();
                 pendingAcks.remove(message.requestId());
+                heartbeatDeadlines.remove(message.requestId());
             } else if ("ERROR".equals(message.type())) {
                 String code = requiredString(message.payload(), "code");
-                vn.edu.toeic.protocol.ErrorCode.valueOf(code);
+                ErrorCode.valueOf(code);
                 requiredString(message.payload(), "message");
                 JsonElement retryable = message.payload().get("retryable");
                 if (retryable == null || !retryable.isJsonPrimitive()
@@ -364,6 +394,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                 message.payload().addProperty("message", "UNAUTHORIZED".equals(code)
                         ? "Phiên hết hiệu lực. Hãy đăng nhập lại." : "Server từ chối message realtime");
                 pendingAcks.remove(message.requestId());
+                heartbeatDeadlines.remove(message.requestId());
                 if ("UNAUTHORIZED".equals(code)) {
                     publish(message);
                     connectionLost(current, new AuthenticationRejectedException());
