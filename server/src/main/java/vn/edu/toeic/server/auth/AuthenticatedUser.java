@@ -6,6 +6,6 @@ import vn.edu.toeic.protocol.Role;
 
 /** Identity read from the server DB, never from client role/payload. */
 public record AuthenticatedUser(long userId, String username, Role role) implements Principal {
-    public static final String ATTRIBUTE = AuthenticatedUser.class.getName();
+    public static final String ATTRIBUTE = "vn.edu.toeic.server.auth.AuthenticatedUser";
     @JsonIgnore @Override public String getName() { return username; }
 }
