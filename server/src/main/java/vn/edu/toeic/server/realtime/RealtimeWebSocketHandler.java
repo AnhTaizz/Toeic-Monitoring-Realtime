@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import vn.edu.toeic.protocol.ErrorCode;
@@ -60,6 +61,7 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
         sessions.register(session);
     }
     @Override protected void handleTextMessage(WebSocketSession session, TextMessage text) {
+        sessions.measurements().received(text.getPayload()); // Spring delivers a complete text message here.
         String requestId = null;
         String traceId = UUID.randomUUID().toString();
         String attemptId = null;
@@ -158,4 +160,8 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
     }
     @Override public void afterConnectionClosed(WebSocketSession session, CloseStatus status) { sessions.remove(session); }
     @Override public void handleTransportError(WebSocketSession session, Throwable error) { close(session, CloseStatus.SERVER_ERROR); }
+    @Override protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
+        sessions.measurements().unmeasuredReceive();
+        super.handleBinaryMessage(session,message); // Preserve TextWebSocketHandler rejection.
+    }
 }
