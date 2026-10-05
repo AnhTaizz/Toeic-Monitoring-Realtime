@@ -7,6 +7,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import java.net.http.WebSocket;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -22,6 +25,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import vn.edu.toeic.client.dashboard.DashboardFixtures;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
+import vn.edu.toeic.protocol.measurement.MessageMeasurements;
+import vn.edu.toeic.protocol.measurement.MessageMeasurements.Endpoint;
+import vn.edu.toeic.protocol.measurement.MessageMeasurements.Outcome;
 
 /** All sockets/openers in this class are MOCK, never authenticated server proof. */
 class RealtimeClientTest {
@@ -539,6 +545,75 @@ class RealtimeClientTest {
                 "mock-attempt-A", "mock-trace", payload);
     }
 
+    private static MessageMeasurements measured(StringWriter raw) {
+        return new MessageMeasurements(Endpoint.CLIENT,"MOCK-boundary",128,1000,() -> raw,Map.of("workloadLabel","MOCK"));
+    }
+    private static long measuredCount(MessageMeasurements m,Outcome outcome) {
+        return m.snapshot().counters().stream().filter(c -> c.key().outcome()==outcome).mapToLong(MessageMeasurements.Counter::messages).sum();
+    }
+    @Test void measuredTxUsesExactSerializedTextIncludingVietnamese() {
+        try(Fixture f=new Fixture(measured(new StringWriter()))) {
+            f.connect();var event=event();event.payload().addProperty("note","Tiếng Việt 😀");f.client.send(event).join();
+            String actual=f.socket().sent.getFirst();
+            assertThat(f.client.measurements().snapshot().counters()).allSatisfy(c -> assertThat(c.bytesUtf8()).isEqualTo(actual.getBytes(StandardCharsets.UTF_8).length));
+            assertThat(measuredCount(f.client.measurements(),Outcome.ACCEPTED)).isZero();
+        }
+    }
+    @Test void measuredFragmentsCountOnceEvenAcrossUnicodeSurrogates() {
+        try(Fixture f=new Fixture(measured(new StringWriter()))) {
+            f.connect();String complete=GSON.toJson(DashboardFixtures.warning("mock-attempt-A","MOCK-event"));
+            complete=complete.replace("msedge.exe","😀.exe");int split=complete.indexOf("😀")+1;
+            f.socket().text(complete.substring(0,split),false);assertThat(measuredCount(f.client.measurements(),Outcome.RECEIVED)).isZero();
+            f.socket().text(complete.substring(split),true);
+            assertThat(measuredCount(f.client.measurements(),Outcome.RECEIVED)).isEqualTo(1);
+            assertThat(f.client.measurements().snapshot().counters().getFirst().bytesUtf8()).isEqualTo(complete.getBytes(StandardCharsets.UTF_8).length);
+            // Invalid process filename is still an observed complete transport message, never raw logged.
+            assertThat(f.problems).hasSize(1);assertThat(f.socket().demand).isEqualTo(3);
+        }
+    }
+    @Test void measuredRetrySameEventAddsAnotherAttemptAndOneBusinessAck() {
+        try(Fixture f=new Fixture(measured(new StringWriter()))) {
+            f.connect();f.client.send(event()).join();f.client.send(event()).join();f.socket().text(ack(),true);
+            assertThat(measuredCount(f.client.measurements(),Outcome.ATTEMPTED)).isEqualTo(2);
+            assertThat(measuredCount(f.client.measurements(),Outcome.WRITE_COMPLETED)).isEqualTo(2);
+            assertThat(measuredCount(f.client.measurements(),Outcome.RECEIVED)).isEqualTo(1);
+            assertThat(measuredCount(f.client.measurements(),Outcome.ACCEPTED)).isEqualTo(1);
+            f.socket().text(ack(),true);assertThat(measuredCount(f.client.measurements(),Outcome.ACCEPTED)).isEqualTo(1);
+        }
+    }
+    @Test void measuredAsyncFailureDoesNotClaimWriteCompleted() {
+        try(Fixture f=new Fixture(measured(new StringWriter()))) {
+            f.connect();f.socket().writeGate=new CompletableFuture<>();var sent=f.client.send(event());
+            assertThat(measuredCount(f.client.measurements(),Outcome.ATTEMPTED)).isEqualTo(1);
+            assertThat(measuredCount(f.client.measurements(),Outcome.WRITE_COMPLETED)).isZero();
+            f.socket().writeGate.completeExceptionally(new IllegalStateException("MOCK send failure"));
+            assertThat(sent).isCompletedExceptionally();assertThat(measuredCount(f.client.measurements(),Outcome.WRITE_FAILED)).isEqualTo(1);
+        }
+    }
+    @Test void measuredBinaryAndOversizedTextAreUnmeasuredWithoutInventedBytes() {
+        try(Fixture f=new Fixture(measured(new StringWriter()))) {
+            f.connect();f.socket().listener.onBinary(f.socket(),ByteBuffer.wrap(new byte[]{1}),true);
+            f.socket().text("x".repeat(65537),true);
+            assertThat(measuredCount(f.client.measurements(),Outcome.RECEIVED)).isZero();
+            assertThat(measuredCount(f.client.measurements(),Outcome.UNMEASURED)).isEqualTo(2);
+            assertThat(f.client.measurements().snapshot().counters().getFirst().bytesUtf8()).isZero();
+        }
+    }
+    @Test void measuredMalformedReceiveNeverLeaksTextToRaw() throws Exception {
+        StringWriter raw=new StringWriter();MessageMeasurements m=measured(raw);
+        try(Fixture f=new Fixture(m)) { f.connect();f.socket().text("password SECRET-MOCK malformed",true);assertThat(f.problems).hasSize(1); }
+        m.finished().get(2,TimeUnit.SECONDS);assertThat(raw.toString()).doesNotContain("SECRET-MOCK");
+        assertThat(measuredCount(m,Outcome.RECEIVED)).isEqualTo(1);
+    }
+    @Test void failedRecorderCannotBreakEventAckOrTransportCleanup() throws Exception {
+        MessageMeasurements m=new MessageMeasurements(Endpoint.CLIENT,"MOCK-io-failure",2,1000,() -> { throw new IllegalStateException("MOCK disk failure"); },Map.of());
+        try(Fixture f=new Fixture(m)) {
+            f.connect();f.client.send(event()).join();f.socket().text(ack(),true);
+            assertThat(f.messages).hasSize(1);assertThat(f.client.connectionState()).isEqualTo(ConnectionState.CONNECTED);
+        }
+        assertThat(m.finished().get(2,TimeUnit.SECONDS).writerFailed()).isTrue();
+    }
+
     private static String ack() {
         JsonObject payload = new JsonObject();
         payload.addProperty("status", "ACCEPTED");
@@ -558,7 +633,10 @@ class RealtimeClientTest {
         boolean authRejected;
         int opens;
         int openerClosed;
-        final RealtimeClient client = new RealtimeClient(new RealtimeClient.ConnectionOpener() {
+        final RealtimeClient client;
+        Fixture() { this(MessageMeasurements.disabled()); }
+        Fixture(MessageMeasurements measurements) {
+            client = new RealtimeClient(new RealtimeClient.ConnectionOpener() {
             @Override public CompletableFuture<WebSocket> open(WebSocket.Listener listener) {
                 opens++;
                 if (authRejected) return CompletableFuture.failedFuture(new RealtimeClient.AuthenticationRejectedException());
@@ -569,8 +647,9 @@ class RealtimeClientTest {
                 return CompletableFuture.completedFuture(socket);
             }
             @Override public void close() { openerClosed++; }
-        }, settings, clock);
-        Fixture() { client.onMessage(messages::add); client.onProblem(problems::add); client.onConnectionState(states::add); }
+            }, settings, clock, measurements);
+            client.onMessage(messages::add); client.onProblem(problems::add); client.onConnectionState(states::add);
+        }
         void connect() { client.connect(SESSION).join(); }
         MockSocket socket() { return sockets.getLast(); }
         @Override public void close() { client.close(); }
