@@ -420,3 +420,13 @@ Events dùng `(attemptId,eventId)`, cùng key khác nội dung báo lỗi. Giữ
 HTTP/state worker riêng, snapshot bất biến và render JavaFX thread. Đổi selection, reconnect, logout và thu hồi quyền vô hiệu hóa callback cũ; 401 dọn phiên/đăng nhập lại, 403 chi tiết loại attempt rồi refresh scope/roster. Network/5xx/schema lỗi giữ dữ liệu cũ theo từng phần; không đổi candidate sang UNKNOWN vì dashboard mất mạng. Buffer/rows/body hữu hạn; overflow hiện cần đồng bộ HTTP, retry tự động có ngân sách 2 vòng mỗi refresh/reconnect, không lặp vô hạn.
 
 Evidence [B3](../evidence/t1-b3/2026-10-04-verification.md): 331 tests, REAL PostgreSQL V4/HTTP/WS/dashboard/B2/C3 và Stage JavaFX proctor, hard-kill owned JVM/UNKNOWN/history/recovery, reconnect HTTP và auth. Process source B3 MOCK; C3 regression Windows ProcessHandle/owned Edge REAL. GUI toàn luồng candidate, LAN/package máy khác và human A review NOT RUN; prototype PARTIAL.
+
+## C4 — instrumentation cục bộ, 05/10/2026
+
+Wire vẫn `protocolVersion=v0`; không thêm field/message/endpoint/migration. `monitoring-measurement-v1` là phiên bản file log cục bộ, không gửi qua mạng. Định nghĩa và fields: [MONITORING_MEASUREMENTS](MONITORING_MEASUREMENTS.md).
+
+Client serialize một lần cho check size/send/đếm byte; TX có ticket attempted rồi completed/failed. RX ghép đủ text một lần, kể cả Unicode qua fragment; malformed có byte RX/INVALID, binary/oversized UNMEASURED nullable byte theo rejection hiện có. Server nhận full text ở handler và đo outbound tại raw delegate nằm trong ConcurrentWebSocketSessionDecorator, vì enqueue chưa phải write xong. ACK/ERROR/warning/presence cùng đường send; không thêm counter ở service.
+
+Ghi đo opt-in; auth/role/scope/pending correlation/ACK sau COMMIT/C3 retry/presence/dashboard giữ nguyên. BUSINESS_ACK chỉ sau B2 chấp nhận correlation; byte ACK đã tính ở RX, không cộng lần hai. Trong demo SIMULATED chặn observer C3, B2 vẫn nhận ACK, nên có thể thấy ACCEPTED rồi C3 gửi retry: đây là chủ đích test, không phải bằng chứng mất ACK trên mạng. Sequence v0 chưa có nên null; không dùng recordIndex làm sequence.
+
+Cross-owner tối thiểu: B RealtimeClient, A RealtimeWebSocketHandler/RealtimeSessionRegistry. Human B review NOT RUN; [evidence C4](../evidence/t1-c4/2026-10-05-verification.md) ghi kiểm transport/recorder và dữ liệu REAL/MOCK/SIMULATED. Không triển khai state/full/delta/E1/E2.

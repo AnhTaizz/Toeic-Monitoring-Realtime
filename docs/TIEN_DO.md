@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 04/10/2026 — base main PR #7 `1e084d4` đã có A4 V4. T1-B3 có dashboard PROCTOR, roster/presence, timeline/history, parser push, HTTP recovery/scope và xử lý dữ liệu cũ. Tests/package331/331 PASS; REAL PostgreSQL/Spring/HTTP/WS/B2/C3/dashboard và Stage JavaFX proctor hard-kill/UNKNOWN/recovery/history PASS. C3/A4 regression PASS. CODE_COMPLETE B3; nghiệm thu prototype PARTIAL. GUI candidate/proctor toàn luồng, LAN/package máy khác và human A review NOT RUN; TRACKER giữ nguyên. Evidence `evidence/t1-b3/2026-10-04-verification.md`; Git/PR/merge cuối xem report.
+Cập nhật lần cuối: 05/10/2026 — base main PR#8 `a04aaa2` giữ A4/B3. T1-C4 CODE_COMPLETE: recorder JSONL/UTF-8 toàn message, counters TX/RX/outcome, bounded async writer và summary tái tạo; survey ProcessHandle/WMI có nguồn chính thức. Final tests/package366/366 PASS (+35 Java), Python9 PASS; REAL PG/HTTP/WS/B2 candidate/proctor/dashboard model + ProcessHandle scan riêng PASS, event/overflow source MOCK và ACK suppression SIMULATED. Raw3file/26category COMPLETE, tổng TX từng outcome12568byte; B3 regression/worker/security/source checks PASS. Human B review, GUI toàn luồng, LAN máy2 và E1/E2 NOT RUN; prototype vẫn PARTIAL, TRACKER giữ nguyên. Evidence `evidence/t1-c4/2026-10-05-verification.md`; Git/PR/merge cuối xem report.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
@@ -16,9 +16,11 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 |---|---|---|---|---|---|
 | A | _chưa gán_ | T1-A4; bàn giao roster/presence/history cho B3 | Scoped heartbeat, timeout/recovery/restart, multi-client isolation và lỗi COMMIT PASS | Human C review NOT RUN; dừng sau A4, GUI/LAN chờ kiểm riêng | `feat/t1-a4-monitoring-presence` |
 | B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; không tự làm B4 | `feat/t1-b3-proctor-dashboard` |
-| C | _chưa gán_ | T1-C3 code-complete; event/queue/retry và gap | Tests/package253; real Windows/B2/DB/ACK/reconnect/gap/cleanup PASS | Human B review/GUI/LAN NOT RUN; bàn giao B3/A, dừng C3 | `feat/t1-c3-monitoring-event-delivery` |
+| C | _chưa gán_ | T1-C4 code-complete; log đo và survey | Tests/package366 + Python9; REAL transport/log-summary/ProcessHandle scan, MOCK overflow và SIMULATED retry PASS | Human B review, GUI/LAN và E1/E2 NOT RUN; bàn giao A/B transport hooks, dừng C4 | `feat/t1-c4-monitoring-measurement` |
 
 ## Đang bị chặn
+
+- C4 human B review: **NOT RUN**; A/B cần xem RealtimeClient và handler/registry hooks. Đã kiểm BYTE/fragment/retry/concurrent-decorator/failure/cleanup và B3 regression. Log COMPLETE chỉ cho file đã cung cấp; chưa đo CPU/memory/latency/miss-rate hoặc lợi ích delta. ProcessHandle scan REAL riêng, event/overflow MOCK; WMI/ETW chỉ khảo sát. Không tự làm B4/chặng2/E1/E2.
 
 - GUI manual end-to-end: **NOT RUN** — B3 đã mở Stage JavaFX thật bằng harness và thao tác controls proctor, có ảnh UNKNOWN/recovery/stale. Chưa thao tác toàn app login/candidate/process thật → proctor; cần người dùng kiểm candidate/proctor/sai mật khẩu/server tắt. Component proctor PASS không thay toàn MT01/MT08.
 - LAN second-machine test: **NOT RUN** — chưa có máy Windows thứ hai thật được cung cấp cho phiên này; không thay bằng localhost.

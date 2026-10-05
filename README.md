@@ -53,7 +53,7 @@ jpackage --type app-image --dest jpackage-out --name ToeicMonitor `
 | Flyway + PostgreSQL module | Migration schema có version, dựng lại được |
 | PostgreSQL JDBC Driver | Kết nối PostgreSQL 18 |
 | JavaFX Controls 21.0.12 | Một desktop app có giao diện thí sinh/giám thị |
-| Gson 2.13.2 | Contract login phía client; strict JSON parsing và serialization envelope/error WS phía server |
+| Gson 2.13.2 | Contract login/client và envelope/error WS server; C4 dùng lại trong protocol để lọc metadata và ghi JSONL, không thêm framework telemetry |
 | JUnit 5 + AssertJ | Test đơn vị và test hành vi bất đồng bộ |
 | Maven Shade Plugin | Tạo fat JAR đầu vào cho spike `jpackage` |
 
@@ -229,3 +229,30 @@ powershell -ExecutionPolicy Bypass -File scripts/smoke-b3.ps1 -Gui
 ```
 
 Script đọc `.env` riêng, tạo schema TEST UUID/server cổng riêng và các JVM candidate do test sở hữu; kết thúc tự dọn. HTTP/WS/PostgreSQL/B2/C3/dashboard là REAL, nguồn quan sát process là MOCK. `-Gui` mở Stage JavaFX thật, chọn dòng/đổi tab/làm mới/đăng xuất bằng controls JavaFX, kiểm UNKNOWN sau hard-kill và ONLINE phục hồi, chụp ảnh vào `client/target/b3-dashboard-*.png`. Đây là kiểm component proctor; đăng nhập và thao tác candidate GUI đầy đủ, LAN/package máy khác và human A review vẫn cần kiểm riêng. Không thêm thư viện ngoài cho B3.
+
+## Log đo monitoring T1-C4
+
+C4 đếm UTF-8 của toàn JSON WebSocket (envelope + payload), tách TX/RX và ATTEMPTED/WRITE_COMPLETED/WRITE_FAILED/RECEIVED. ACK nghiệp vụ có record riêng không cộng byte lần nữa. Retry cùng event vẫn tính thêm lần gửi; tổng gửi chỉ cộng CLIENT TX + SERVER TX theo một outcome, không cộng RX hay attempted với completed. Không đo framing/TCP/IP/TLS/HTTP và chưa phải E1/E2.
+
+Recorder mặc định tắt, dùng lại Gson và JDK; bật ở cả hai JVM với cùng runId. Ví dụ PowerShell sau khi nạp DB variables cho server:
+
+```powershell
+java "-Dtoeic.measurement.enabled=true" "-Dtoeic.measurement.runId=DEMO-C4" -jar server/target/server-0.1.0-SNAPSHOT.jar
+java "-Dtoeic.measurement.enabled=true" "-Dtoeic.measurement.runId=DEMO-C4" -jar client/target/client-0.1.0-SNAPSHOT-all.jar
+# Runtime JSONL ở logs/monitoring (ignored). Cần đóng app/server bình thường để flush FINAL.
+python scripts/summarize-monitoring.py logs/monitoring --output logs/monitoring-summary
+```
+
+Demo verification tự động dùng PostgreSQL theo `.env`, schema TEST/cổng riêng và transport production của candidate/proctor, không reset DB hoặc kill process người dùng:
+
+```powershell
+docker compose up -d --wait
+mvn test
+mvn package
+python -m unittest discover -s scripts -p test_summarize_monitoring.py -v
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-c4.ps1
+```
+
+Script in thư mục `server/target/c4-runtime/<runId>` chứa raw/metadata/summary JSON+CSV. Python3.11+ stdlib; không cài thêm package. Event/overflow source MOCK, ACK suppression tại observer C3 SIMULATED; HTTP/WS/DB/B2/dashboard model REAL. ProcessHandle collector scan REAL được kiểm riêng, không giả process mở từ MOCK. Metadata ghi source SHA/dirty/hash source+JAR, OS/JDK/settings/clock domain và lệnh sanitize. Đây là smoke không mở GUI; LAN, human B review, WMI/ETW và E1/E2 NOT RUN.
+
+Queue log mặc định1024/drop-new, flush2000ms, writer daemon; I/O lỗi không phá delivery. Summary exit0=COMPLETE các file cung cấp, exit2=INCOMPLETE/lỗi; báo drop/unwritten/truncated/malformed/counter mismatch, không sửa raw. Cấu hình, schema, chi phí khi bật và giới hạn: [MONITORING_MEASUREMENTS](docs/MONITORING_MEASUREMENTS.md). [Khảo sát ProcessHandle/WMI có nguồn Oracle/Microsoft](docs/PROCESS_MONITORING_SURVEY.md), [evidence C4](evidence/t1-c4/2026-10-05-verification.md).

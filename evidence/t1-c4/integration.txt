@@ -1,0 +1,21 @@
+13:59:06.004 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+13:59:06.166 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "c4_test_7a75a5fd772f4ad7a450945ad37a852b"."flyway_schema_history" does not exist yet
+13:59:06.176 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 4 migrations (execution time 00:00.047s)
+13:59:06.209 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "c4_test_7a75a5fd772f4ad7a450945ad37a852b"."flyway_schema_history" ...
+13:59:06.346 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "c4_test_7a75a5fd772f4ad7a450945ad37a852b": << Empty Schema >>
+13:59:06.377 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c4_test_7a75a5fd772f4ad7a450945ad37a852b" to version "1 - auth schema"
+13:59:06.487 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c4_test_7a75a5fd772f4ad7a450945ad37a852b" to version "2 - monitoring events"
+13:59:06.595 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c4_test_7a75a5fd772f4ad7a450945ad37a852b" to version "3 - monitoring gaps"
+13:59:06.669 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c4_test_7a75a5fd772f4ad7a450945ad37a852b" to version "4 - monitoring presence"
+13:59:06.741 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 4 migrations to schema "c4_test_7a75a5fd772f4ad7a450945ad37a852b", now at version v4 (execution time 00:00.141s)
+2026-10-05T13:59:18.311Z  INFO 29500 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-05T13:59:18.324Z  INFO 29500 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 6 ms
+PASS REAL Windows ProcessHandle production collector scan; only aggregate diagnostics checked, no process details logged; separate from MOCK event source
+PASS MOCK event -> REAL B2/DB/ACK/warning/dashboard; SIMULATED observer ACK suppression -> retry >=2 writes, DB1/dashboard1
+PASS MOCK capacity1 overflow drops2 -> REAL MONITORING_GAP commit/ACK; retained event -> warning/dashboard
+PASS all seven message types counted across REAL candidate/proctor/server; conflicting event -> REAL ERROR; semantic ACK separate from socket write
+PASS cleanup own TEST schema/ephemeral server; shared DB/user processes untouched
+PASS all owned recorder/collector/delivery/B2/dashboard/presence workers gone
+C4 REAL transport verification PASS; event+overflow MOCK; ACK suppression SIMULATED; GUI/LAN/human B review/E1/E2 NOT RUN
+Summary COMPLETE: endpoints=3, categories=26; WS JSON application bytes only
+C4 artifacts: server/target/c4-runtime/C4-23e3008b-e226-4c32-ba70-991b5e9365e1

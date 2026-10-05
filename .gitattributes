@@ -22,3 +22,9 @@ mvnw        text eol=lf
 *.docx      binary
 *.xlsx      binary
 *.pptx      binary
+
+# C4 raw phải giữ nguyên byte để summary SHA256 tái tạo trên mọi máy.
+evidence/t1-c4/raw/*.jsonl -text
+evidence/t1-c4/*.json text eol=lf
+evidence/t1-c4/*.csv text eol=lf
+evidence/t1-c4/*.txt text eol=lf

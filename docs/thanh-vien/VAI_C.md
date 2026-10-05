@@ -121,14 +121,14 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 **Cách làm:**
 1. Định nghĩa schema log: thời điểm (ghi rõ thuộc đồng hồ nào), loại message, hướng (gửi/nhận), kích thước, `traceId`, `sequence`/`eventId`.
-2. Bộ đếm byte hai chiều: đếm số byte UTF-8 của payload đã serialize, theo từng loại message và từng hướng. Đây là byte tầng ứng dụng, không phải băng thông TCP/IP.
+2. Bộ đếm byte hai chiều: theo định nghĩa task C4, đếm UTF-8 của toàn bộ JSON đã serialize (envelope + payload), theo type/hướng/outcome. Đây là byte tầng ứng dụng, không phải băng thông TCP/IP.
 3. Bảng khảo sát ít nhất 2 cách thu thập thông tin process (ví dụ polling bằng `ProcessHandle` so với cơ chế thông báo sự kiện của hệ điều hành), dẫn nguồn từ tài liệu chính thức. Ghi rõ cách nào nhóm đã chạy, cách nào chỉ khảo sát trên tài liệu.
 
 **Dễ sai:** điền số đo cho phương pháp chưa chạy. Bảng khảo sát là nguồn cho phần Related Work; mọi nguồn phải trích dẫn được.
 
 **Xong khi:** log của một phiên demo đọc được theo schema; bảng khảo sát có nguồn.
 
-**Ghi chú làm dở:** —
+**Ghi chú bàn giao 05/10/2026:** C4 có recorder opt-in `monitoring-measurement-v1`, counters thread-safe theo type/TX/RX/outcome, bounded queue/drop-new/flush/failure isolation; client ghép Unicode rồi đo, server đo delegate thật bên trong concurrent send decorator. Summary JSON/CSV validate raw/counter, phát hiện incomplete; ProcessHandle polling/WMI survey có nguồn Oracle/Microsoft. Xem [định nghĩa/cấu hình](../MONITORING_MEASUREMENTS.md), [khảo sát](../PROCESS_MONITORING_SURVEY.md), [evidence](../../evidence/t1-c4/2026-10-05-verification.md). Cross-owner A/B: handler/registry/RealtimeClient; không đổi wire/auth/scope/retry/presence/dashboard. Human B review, GUI/LAN, WMI/ETW và E1/E2 NOT RUN; không triển khai full/delta/B4, TRACKER giữ nguyên. Kết quả và SHA build thật được chốt trong evidence.
 
 ---
 

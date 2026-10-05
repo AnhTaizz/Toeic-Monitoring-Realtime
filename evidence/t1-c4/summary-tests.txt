@@ -1,0 +1,29 @@
+python : test_drop_and_counter_mismatch_are_reported_without_repair 
+(test_summarize_monitoring.SummaryTest.test_drop_and_counter_mismatch_are_reported_without_repair) ... ok
+At line:2 char:1
++ python -m unittest discover -s scripts -p test_summarize_monitoring.p ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_drop_and_c..._repair) ... ok:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+test_duplicate_endpoint_not_added_twice 
+(test_summarize_monitoring.SummaryTest.test_duplicate_endpoint_not_added_twice) ... ok
+test_duplicate_fields_rejected (test_summarize_monitoring.SummaryTest.test_duplicate_fields_rejected) ... ok
+test_generated_outputs_reproducible_without_mutating_input 
+(test_summarize_monitoring.SummaryTest.test_generated_outputs_reproducible_without_mutating_input) ... ok
+test_hand_calculated_retry_two_endpoints_no_tx_rx_double_count 
+(test_summarize_monitoring.SummaryTest.test_hand_calculated_retry_two_endpoints_no_tx_rx_double_count) ... ok
+test_malformed_and_secret_input_are_not_echoed 
+(test_summarize_monitoring.SummaryTest.test_malformed_and_secret_input_are_not_echoed) ... ok
+test_oversized_line_hash_still_covers_whole_file 
+(test_summarize_monitoring.SummaryTest.test_oversized_line_hash_still_covers_whole_file) ... ok
+test_truncated_and_missing_final (test_summarize_monitoring.SummaryTest.test_truncated_and_missing_final) ... ok
+test_validation_rejects_bad_ids_sequence_clock_and_invented_bytes 
+(test_summarize_monitoring.SummaryTest.test_validation_rejects_bad_ids_sequence_clock_and_invented_bytes) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.186s
+
+OK
+Summary COMPLETE: endpoints=1, categories=2; WS JSON application bytes only
+Summary COMPLETE: endpoints=1, categories=2; WS JSON application bytes only

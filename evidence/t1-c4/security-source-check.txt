@@ -1,0 +1,12 @@
+C4 final security/source verification — 2026-10-05 UTC+7
+PASS actual local DB_PASSWORD/TOEIC_SEED_PASSWORD values absent from changed files; values not printed.
+PASS no personal Windows user/project/JDK paths or raw Bearer tokens in changed source/docs/evidence.
+PASS raw JSONL generated with whitelisted validated IDs and counters; no payload/processName/PID/OS username/command line.
+PASS summary regenerated from copied original raw; JSON/CSV hashes byte-identical and raw SHA matches summary.
+PASS code/scripts/tests unchanged since c70c93e clean final build; docs/evidence changes only afterward.
+PASS production server/client JAR entries exclude project Test/Smoke classes, JUnit/Mockito/AssertJ and server client test dependency.
+PASS TRACKER, 01-03, nguon and migrations V1-V4 unchanged; .env/task.txt not staged.
+PASS SQL owned C4/B3 TEST schemas remaining=0; public Flyway max version=3 (not reset/migrated by task).
+PASS recorder/collector/delivery/B2/dashboard/presence owned workers terminated in final smoke.
+NOTE old copied build folders remain in ignored target; cleanup rejected by automatic review (blocked by policy), not retried.
+NOT RUN human B/A review, full GUI/LAN/package other machine, WMI/ETW, E1/E2/full-delta.
