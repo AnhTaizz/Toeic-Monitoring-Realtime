@@ -100,7 +100,7 @@ ACK thành công chỉ được phát sau khi thao tác tương ứng đã đư�
 | `POST /api/v1/exams/import` | Giám thị | `examId`, `title`, `description`, `questions: [{questionId, section, part, groupId, passageText, audioFile, prompt, correctOption, orderIndex, options: [{optionId, optionText, orderIndex}]}]` | `examId`, `title`, `totalQuestions`, `status` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 | T2-A1 | Đã cài |
 | `POST /api/v1/sessions` | Giám thị | `sessionId`, `examId`, `title`, `durationSeconds`, `proctorUsernames`, `candidateUsernames` | `sessionId`, `examId`, `title`, `durationSeconds`, `state`, `createdAttempts: [{attemptId, candidateUsername, state}]` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 | T2-A1 | Đã cài |
 | `GET /api/v1/attempts/{attemptId}/exam` | Thí sinh / Giám thị phân công | Header Bearer | `examId`, `title`, `description`, `totalQuestions`, `questions` (**TUYỆT ĐỐI KHÔNG CÓ `correctOption`**) | 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 | T2-A1 | Đã cài |
-| _autosave_ | Thí sinh | | | | T2-A2 | Chưa có |
+| `POST /api/v1/attempts/{attemptId}/answers` | Thí sinh sở hữu | `requestId`, `attemptId`, `writerEpoch`, `answerRevision`, `answers: {qId: optId}` | `requestId`, `attemptId`, `status`, `savedRevision`, `writerEpoch`, `decisionAt` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 409 `STALE`/`CONFLICT`/`INVALID_STATE`/`EXPIRED` | T2-A2 | Đã cài |
 | _submit_ | Thí sinh | | | | T2-A3 | Chưa có |
 | _trạng thái attempt (answers, revision, state, deadline)_ | Thí sinh | | | | T2-A4 | Chưa có |
 | _manifest và tải audio_ | Thí sinh | | | | T3-A1 | Chưa có |
@@ -508,4 +508,52 @@ Cross-owner tối thiểu: B RealtimeClient, A RealtimeWebSocketHandler/Realtime
   ]
 }
 ```
+
+## Contract T2-A2 — Autosave Toàn Bộ Đáp Án Theo Revision (05/10/2026)
+
+### 1. Schema DB Flyway V6
+- Tạo bảng `exam_autosave_requests`: lưu trữ idempotency request log gồm `attempt_id`, `request_id`, `writer_epoch`, `answer_revision`, `answers_json`, `decision_at`, `created_at`.
+
+### 2. Endpoint `POST /api/v1/attempts/{attemptId}/answers` (Thí sinh)
+- Header: `Authorization: Bearer <token>`.
+- Phân quyền: Role `CANDIDATE` sở hữu `attemptId` (Proctor/unauthenticated/foreign attempt nhận 401/403).
+- Request body:
+```json
+{
+  "requestId": "sample-request-42",
+  "attemptId": "sample-attempt-A",
+  "writerEpoch": 1,
+  "answerRevision": 42,
+  "answers": {
+    "L1": "A",
+    "R1": "B"
+  }
+}
+```
+- Response 200 OK:
+```json
+{
+  "requestId": "sample-request-42",
+  "attemptId": "sample-attempt-A",
+  "status": "SAVED",
+  "savedRevision": 42,
+  "writerEpoch": 1,
+  "decisionAt": "2026-10-05T16:15:30.850Z"
+}
+```
+
+### 3. Quy tắc Thứ tự Quyết định & Xử lý Lỗi (Tuân thủ Hợp đồng Mục 2):
+1. **Xác thực & Kiểm quyền:** Trước khi đọc hoặc ghi. Sai role/không sở hữu -> 403 `FORBIDDEN`.
+2. **Khóa bản ghi:** `SELECT ... FROM monitoring_attempts a WHERE a.attempt_id = :attemptId FOR UPDATE OF a`.
+3. **Kiểm tra `writerEpoch` sau khóa:** Khác epoch hiện tại -> 409 `STALE`.
+4. **Kiểm tra trạng thái bài thi:** Khác `ACTIVE` (ví dụ `SUBMITTED`, `TIMEOUT`) -> 409 `INVALID_STATE`.
+5. **Kiểm tra deadline bằng `clock_timestamp()`:** `decisionAt >= deadlineAt` -> 409 `EXPIRED`.
+6. **Kiểm tra hợp lệ đề thi:** Mọi `questionId` phải thuộc đề của attempt; mọi `optionId` phải thuộc câu hỏi đó. Sai -> 400 `INVALID_INPUT`.
+7. **Idempotency theo requestId (AT05):** Cùng `requestId` và cùng payload -> 200 `ALREADY_SAVED`; cùng `requestId` khác payload -> 409 `CONFLICT`.
+8. **Quy tắc Revision (AT03, AT04):**
+   - `answerRevision < savedRevision`: 409 `STALE` (không ghi đè bản cũ).
+   - `answerRevision == savedRevision`: Cùng nội dung (kể cả đổi thứ tự key JSON) -> 200 `ALREADY_SAVED`; khác nội dung -> 409 `CONFLICT`.
+   - `answerRevision > savedRevision`: Cập nhật `monitoring_attempts` và ghi `exam_autosave_requests` -> 200 `SAVED`.
+9. **Commit transaction:** Thành công trước khi trả response về client.
+
 

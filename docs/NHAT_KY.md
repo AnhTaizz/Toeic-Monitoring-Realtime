@@ -186,3 +186,26 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - Bằng chứng: `evidence/t2-a1/2026-10-05-verification.md`.
 - Tiếp theo: Chuyển tiếp sang T2-A2 (Autosave bài thi theo revision, kiểm tra writerEpoch và khóa bi quan).
 
+## 2026-10-05 · A · T2-A2 — Autosave toàn bộ đáp án theo revision
+- Base: `feat/t2-a2-autosave-answers` tách từ `feat/t2-a1-exam-import-session`.
+- Đã làm:
+  - Protocol DTOs: `AutosaveAnswersRequest`, `AutosaveAnswersResponse` trong `vn.edu.toeic.protocol.exam`.
+  - Flyway migration V6 (`V6__exam_autosave_requests.sql`): bảng `exam_autosave_requests` theo dõi idempotency log `(attempt_id, request_id)`.
+  - Backend: `ExamService.autosaveAnswers` tuân thủ đúng thứ tự quyết định Mục 2:
+    1. Kiểm quyền thí sinh sở hữu attempt (401/403).
+    2. Khóa dòng attempt bằng `SELECT ... FOR UPDATE OF a`.
+    3. Kiểm tra `writerEpoch` sau khóa (khác epoch hiện tại -> 409 `STALE`).
+    4. Kiểm tra trạng thái bài thi (`state != 'ACTIVE'` -> 409 `INVALID_STATE`).
+    5. Kiểm tra thời hạn bằng `SELECT clock_timestamp()` (`decisionAt >= deadlineAt` -> 409 `EXPIRED`).
+    6. Kiểm tra các câu hỏi/lựa chọn trong map answers thuộc đúng đề thi của attempt (sai -> 400 `INVALID_INPUT`).
+    7. Chuẩn hóa canonical answers map bằng `TreeMap` (so sánh chuẩn xác JSON không bị ảnh hưởng bởi thứ tự key).
+    8. Idempotency theo `requestId` (AT05): cùng payload trả `ALREADY_SAVED`; khác payload trả 409 `CONFLICT`.
+    9. Quy tắc revision (AT03, AT04): revision thấp hơn -> 409 `STALE`; cùng revision cùng nội dung -> `ALREADY_SAVED`; cùng revision khác nội dung -> 409 `CONFLICT`; revision cao hơn -> cập nhật answers và commit trả `SAVED`.
+  - Controller & Exception: `POST /api/v1/attempts/{attemptId}/answers`, `ExamApiException` ánh xạ HTTP error codes (`STALE`, `CONFLICT`, `EXPIRED`, `INVALID_STATE`, `INVALID_INPUT`).
+- Đã kiểm:
+  - `mvn test` PASS 373/373 tests trên 5 module (protocol 23, client 227, server 122, spike 1).
+  - Real PostgreSQL 18.6 smoke (`scripts/smoke-t2a2.ps1`): Flyway V1->V6, autosave tăng dần revision 1->2, AT03 stale revision 41<42 bị từ chối 409, AT04 đổi thứ tự key JSON vẫn idempotent 200 ALREADY_SAVED, AT04 cùng revision khác đáp án bị từ chối 409 CONFLICT, AT05 retry cùng requestId trả ALREADY_SAVED, AT05 tái sử dụng requestId khác payload bị từ chối 409 CONFLICT, proctor bị chặn 403.
+- Bằng chứng: `evidence/t2-a2/2026-10-05-verification.md`.
+- Tiếp theo: Chuyển tiếp sang T2-A3 (Submit bài thi, timeout và chấm điểm một lần).
+
+
