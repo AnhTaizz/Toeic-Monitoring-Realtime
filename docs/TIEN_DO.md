@@ -1,22 +1,21 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 05/10/2026 — base main PR#8 `a04aaa2` giữ A4/B3. T1-C4 CODE_COMPLETE: recorder JSONL/UTF-8 toàn message, counters TX/RX/outcome, bounded async writer và summary tái tạo; survey ProcessHandle/WMI có nguồn chính thức. Final tests/package366/366 PASS (+35 Java), Python9 PASS; REAL PG/HTTP/WS/B2 candidate/proctor/dashboard model + ProcessHandle scan riêng PASS, event/overflow source MOCK và ACK suppression SIMULATED. Raw3file/26category COMPLETE, tổng TX từng outcome12568byte; B3 regression/worker/security/source checks PASS. Human B review, GUI toàn luồng, LAN máy2 và E1/E2 NOT RUN; prototype vẫn PARTIAL, TRACKER giữ nguyên. Evidence `evidence/t1-c4/2026-10-05-verification.md`; Git/PR/merge cuối xem report.
+Cập nhật lần cuối: 05/10/2026 — T2-A1 CODE_COMPLETE: Import đề thi TOEIC JSON (Listening + Reading đoạn văn) và Mở ca thi; Flyway V5 schema `exams`, `exam_questions`, `exam_options`, `exam_sessions`, `exam_session_proctors`; phân quyền AT02 (Chỉ PROCTOR được import/mở ca, Thí sinh chỉ lấy đề không đáp án). Final tests 372/372 PASS (+6 tests), REAL PG18.6 smoke PASS. Evidence `evidence/t2-a1/2026-10-05-verification.md`.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
 ## Đang ở đâu
 
-- Chặng: **1** (03–08/10)
-- Gate kế tiếp: **04/10 nền tảng** — JavaFX build và thử đóng gói, WS có xác thực, ProcessHandle đọc được process.
-- Gate sau đó: **08/10 prototype** — event lưu DB rồi lên dashboard, không trùng, heartbeat, package chạy trên máy khác.
+- Chặng: **2** (09–16/10) — Bắt đầu triển khai thi và giám sát.
+- Gate kế tiếp: **12/10 thi cơ bản** — nộp bài, chấm điểm, lưu đáp án, đổi câu hỏi, timer.
 
 ## Mỗi người
 
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
-| A | _chưa gán_ | T1-A4; bàn giao roster/presence/history cho B3 | Scoped heartbeat, timeout/recovery/restart, multi-client isolation và lỗi COMMIT PASS | Human C review NOT RUN; dừng sau A4, GUI/LAN chờ kiểm riêng | `feat/t1-a4-monitoring-presence` |
-| B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; không tự làm B4 | `feat/t1-b3-proctor-dashboard` |
-| C | _chưa gán_ | T1-C4 code-complete; log đo và survey | Tests/package366 + Python9; REAL transport/log-summary/ProcessHandle scan, MOCK overflow và SIMULATED retry PASS | Human B review, GUI/LAN và E1/E2 NOT RUN; bàn giao A/B transport hooks, dừng C4 | `feat/t1-c4-monitoring-measurement` |
+| A | _chưa gán_ | T2-A1 code-complete; chuẩn bị T2-A2 | Import JSON đề thi, mở ca thi, Flyway V5, 372 tests PASS, Postgres 18 smoke PASS | Bắt đầu T2-A2 (Autosave bài thi theo revision & khóa bi quan) | `feat/t2-a1-exam-import-session` |
+| B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; chuẩn bị Chặng 2 | `feat/t1-b3-proctor-dashboard` |
+| C | _chưa gán_ | T1-C4 code-complete; log đo và survey | Tests/package366 + Python9; REAL transport/log-summary/ProcessHandle scan, MOCK overflow và SIMULATED retry PASS | Human B review, GUI/LAN và E1/E2 NOT RUN; chuẩn bị Chặng 2 | `feat/t1-c4-monitoring-measurement` |
 
 ## Đang bị chặn
 

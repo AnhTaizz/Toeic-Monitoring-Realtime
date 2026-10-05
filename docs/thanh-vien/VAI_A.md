@@ -143,7 +143,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** import đề mẫu 10–20 câu thành công; đề sai bị từ chối có lý do; thí sinh gọi import bị từ chối (AT02); JSON đề gửi cho thí sinh không chứa đáp án.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 05/10/2026, T2-A1 code-complete trên `feat/t2-a1-exam-import-session`: Flyway V5 schema (exams, exam_questions, exam_options, exam_sessions, exam_session_proctors, mở rộng monitoring_attempts), ExamValidationService, ExamService, ExamController (import đề, tạo ca thi, cấp đề thí sinh), 372/372 unit/integration tests PASS, candidate DTO độc lập tuyệt đối không chứa correctOption (tuân thủ AT02 và invariant), Contract bàn giao ghi trong PROTOCOL.md. Real PostgreSQL smoke script `scripts/smoke-t2a1.ps1` sẵn sàng. Review C chưa chạy; chuẩn bị T2-A2.
 
 ### T2-A2 · Autosave toàn bộ đáp án theo revision
 `4h` · phụ thuộc: T2-A1 · review: C
