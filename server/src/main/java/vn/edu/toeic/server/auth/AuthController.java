@@ -11,10 +11,10 @@ import vn.edu.toeic.protocol.auth.LoginResponse;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-class AuthController {
+public class AuthController {
     private final AuthService authService;
 
-    AuthController(AuthService authService) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
     }
 

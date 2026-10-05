@@ -97,8 +97,9 @@ ACK thành công chỉ được phát sau khi thao tác tương ứng đã đư�
 | `GET /api/v1/monitoring/attempts/{attemptId}/events` | Giám thị được phân công | Header Bearer | `protocolVersion`, `traceId`, `attemptId`, `events` | 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 `RETRYABLE_SERVER_ERROR` | T1-A3 | Đã cài |
 | `GET /api/v1/monitoring/attempts` | Giám thị | Header Bearer | `protocolVersion`, `traceId`, `serverTime`, `attempts`: identity + presence của ACTIVE được phân công | 401; 403 sai role; 500/503 lỗi DB | T1-A4 | Đã cài |
 | `GET /api/v1/monitoring/attempts/{attemptId}/interruptions` | Giám thị được phân công | Header Bearer | `protocolVersion`, `traceId`, `attemptId`, `interruptions` | 401; 403 sai role/foreign/CLOSED/unknown; 500/503 lỗi DB | T1-A4 | Đã cài |
-| _import đề / tạo ca_ | Giám thị | | | | T2-A1 | Chưa có |
-| _lấy đề (không có đáp án đúng)_ | Thí sinh | | | | T2-A1 | Chưa có |
+| `POST /api/v1/exams/import` | Giám thị | `examId`, `title`, `description`, `questions: [{questionId, section, part, groupId, passageText, audioFile, prompt, correctOption, orderIndex, options: [{optionId, optionText, orderIndex}]}]` | `examId`, `title`, `totalQuestions`, `status` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 | T2-A1 | Đã cài |
+| `POST /api/v1/sessions` | Giám thị | `sessionId`, `examId`, `title`, `durationSeconds`, `proctorUsernames`, `candidateUsernames` | `sessionId`, `examId`, `title`, `durationSeconds`, `state`, `createdAttempts: [{attemptId, candidateUsername, state}]` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 | T2-A1 | Đã cài |
+| `GET /api/v1/attempts/{attemptId}/exam` | Thí sinh / Giám thị phân công | Header Bearer | `examId`, `title`, `description`, `totalQuestions`, `questions` (**TUYỆT ĐỐI KHÔNG CÓ `correctOption`**) | 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 | T2-A1 | Đã cài |
 | _autosave_ | Thí sinh | | | | T2-A2 | Chưa có |
 | _submit_ | Thí sinh | | | | T2-A3 | Chưa có |
 | _trạng thái attempt (answers, revision, state, deadline)_ | Thí sinh | | | | T2-A4 | Chưa có |
@@ -430,3 +431,81 @@ Client serialize một lần cho check size/send/đếm byte; TX có ticket atte
 Ghi đo opt-in; auth/role/scope/pending correlation/ACK sau COMMIT/C3 retry/presence/dashboard giữ nguyên. BUSINESS_ACK chỉ sau B2 chấp nhận correlation; byte ACK đã tính ở RX, không cộng lần hai. Trong demo SIMULATED chặn observer C3, B2 vẫn nhận ACK, nên có thể thấy ACCEPTED rồi C3 gửi retry: đây là chủ đích test, không phải bằng chứng mất ACK trên mạng. Sequence v0 chưa có nên null; không dùng recordIndex làm sequence.
 
 Cross-owner tối thiểu: B RealtimeClient, A RealtimeWebSocketHandler/RealtimeSessionRegistry. Human B review NOT RUN; [evidence C4](../evidence/t1-c4/2026-10-05-verification.md) ghi kiểm transport/recorder và dữ liệu REAL/MOCK/SIMULATED. Không triển khai state/full/delta/E1/E2.
+
+## Contract T2-A1 — Import đề thi và Quản lý ca thi (05/10/2026)
+
+### 1. Schema DB Flyway V5
+- Tạo các bảng: `exams`, `exam_questions`, `exam_options`, `exam_sessions`, `exam_session_proctors`.
+- Mở rộng bảng `monitoring_attempts`: thêm các cột `session_id`, `exam_id`, `deadline_at`, `writer_epoch`, `saved_revision`, `submitted_at`, `score`, `answers_json`.
+- Cho phép các trạng thái `state IN ('ACTIVE', 'CLOSED', 'SUBMITTED', 'TIMED_OUT', 'INTERRUPTED')`.
+
+### 2. Endpoint `POST /api/v1/exams/import` (Chỉ PROCTOR)
+- Header: `Authorization: Bearer <token>`.
+- Phân quyền: Role `PROCTOR` bắt buộc. Role `CANDIDATE` nhận `403 FORBIDDEN` (tuân thủ `AT02`).
+- Payload import:
+```json
+{
+  "examId": "EXAM-TOEIC-SAMPLE-10",
+  "title": "TOEIC 10-Question Benchmark Exam",
+  "description": "Đề thi mẫu gồm 5 câu Listening và 5 câu Reading",
+  "questions": [
+    {
+      "questionId": "L1",
+      "section": "LISTENING",
+      "part": 1,
+      "groupId": null,
+      "passageText": null,
+      "audioFile": "audio_part1_1.mp3",
+      "prompt": "Listen and choose the best description",
+      "correctOption": "A",
+      "orderIndex": 1,
+      "options": [
+        {"optionId": "A", "optionText": "The woman is typing on a laptop.", "orderIndex": 1},
+        {"optionId": "B", "optionText": "The woman is reading a book.", "orderIndex": 2}
+      ]
+    }
+  ]
+}
+```
+- Validation rules:
+  - `examId`, `title`, `questions` không được rỗng.
+  - `questionId` là duy nhất trong toàn bộ đề.
+  - `section` thuộc `LISTENING` hoặc `READING`, `part` từ 1 đến 7.
+  - Mỗi câu hỏi phải có tối thiểu 2 lựa chọn (`options`).
+  - `correctOption` **BẮT BUỘC** phải khớp với một trong các `optionId` của câu hỏi.
+  - Các câu hỏi chung `groupId` phải có nội dung `passageText` nhất quán.
+
+### 3. Endpoint `POST /api/v1/sessions` (Chỉ PROCTOR)
+- Tạo ca thi, gán danh sách thí sinh và giám thị.
+- Tự động sinh `monitoring_attempts` (`state = 'ACTIVE'`) và `monitoring_proctor_assignments` cho từng thí sinh.
+
+### 4. Endpoint `GET /api/v1/attempts/{attemptId}/exam` (Thí sinh / Giám thị)
+- Header: `Authorization: Bearer <token>`.
+- Kiểm quyền: `attemptId` phải thuộc quyền của người gọi (Candidate sở hữu hoặc Proctor được phân công).
+- **QUY TẮC BẤT BIẾN:** Response DTO gửi xuống Client **TUYỆT ĐỐI KHÔNG CÓ** trường `correctOption`.
+- Schema trả về:
+```json
+{
+  "examId": "EXAM-TOEIC-SAMPLE-10",
+  "title": "TOEIC 10-Question Benchmark Exam",
+  "description": "Đề thi mẫu gồm 5 câu Listening và 5 câu Reading",
+  "totalQuestions": 10,
+  "questions": [
+    {
+      "questionId": "L1",
+      "section": "LISTENING",
+      "part": 1,
+      "groupId": null,
+      "passageText": null,
+      "audioFile": "audio_part1_1.mp3",
+      "prompt": "Listen and choose the best description",
+      "orderIndex": 1,
+      "options": [
+        {"optionId": "A", "optionText": "The woman is typing on a laptop.", "orderIndex": 1},
+        {"optionId": "B", "optionText": "The woman is reading a book.", "orderIndex": 2}
+      ]
+    }
+  ]
+}
+```
+

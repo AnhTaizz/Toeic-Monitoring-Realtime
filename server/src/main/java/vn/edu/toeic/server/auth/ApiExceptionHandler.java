@@ -12,9 +12,10 @@ import org.springframework.web.context.request.WebRequest;
 import vn.edu.toeic.protocol.ErrorCode;
 import vn.edu.toeic.protocol.Protocol;
 import vn.edu.toeic.protocol.error.ApiErrorResponse;
+import vn.edu.toeic.server.exam.InvalidExamException;
 
 @RestControllerAdvice
-class ApiExceptionHandler {
+public class ApiExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiExceptionHandler.class);
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -32,11 +33,13 @@ class ApiExceptionHandler {
                 exception.requestId());
     }
 
-    @ExceptionHandler({InvalidLoginRequestException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler({InvalidLoginRequestException.class, HttpMessageNotReadableException.class, InvalidExamException.class, IllegalArgumentException.class})
     ResponseEntity<ApiErrorResponse> invalidInput(Exception exception) {
-        String message = exception instanceof InvalidLoginRequestException
-                ? exception.getMessage()
-                : "JSON không hợp lệ";
+        String message = exception instanceof InvalidLoginRequestException invalid
+                ? invalid.getMessage()
+                : (exception.getMessage() != null && !exception.getMessage().isBlank()
+                        ? exception.getMessage()
+                        : "Dữ liệu đầu vào không hợp lệ");
         String requestId = exception instanceof InvalidLoginRequestException invalid
                 ? invalid.requestId()
                 : null;

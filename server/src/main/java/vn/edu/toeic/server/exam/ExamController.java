@@ -1,0 +1,64 @@
+package vn.edu.toeic.server.exam;
+
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import vn.edu.toeic.protocol.exam.CandidateExamDto;
+import vn.edu.toeic.protocol.exam.CreateSessionRequest;
+import vn.edu.toeic.protocol.exam.CreateSessionResponse;
+import vn.edu.toeic.protocol.exam.ExamImportRequest;
+import vn.edu.toeic.protocol.exam.ExamImportResponse;
+import vn.edu.toeic.server.auth.AccessDeniedException;
+import vn.edu.toeic.server.auth.AuthenticatedUser;
+
+@RestController
+@RequestMapping("/api/v1")
+public class ExamController {
+
+    private final ExamService examService;
+
+    public ExamController(ExamService examService) {
+        this.examService = examService;
+    }
+
+    @PostMapping("/exams/import")
+    public ResponseEntity<ExamImportResponse> importExam(
+            HttpServletRequest httpRequest,
+            @RequestBody ExamImportRequest request) {
+        AuthenticatedUser user = (AuthenticatedUser) httpRequest.getUserPrincipal();
+        if (user == null) {
+            throw AccessDeniedException.unauthorized();
+        }
+        ExamImportResponse response = examService.importExam(user, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/sessions")
+    public ResponseEntity<CreateSessionResponse> createSession(
+            HttpServletRequest httpRequest,
+            @RequestBody CreateSessionRequest request) {
+        AuthenticatedUser user = (AuthenticatedUser) httpRequest.getUserPrincipal();
+        if (user == null) {
+            throw AccessDeniedException.unauthorized();
+        }
+        CreateSessionResponse response = examService.createSession(user, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/attempts/{attemptId}/exam")
+    public ResponseEntity<CandidateExamDto> getCandidateExam(
+            HttpServletRequest httpRequest,
+            @PathVariable String attemptId) {
+        AuthenticatedUser user = (AuthenticatedUser) httpRequest.getUserPrincipal();
+        if (user == null) {
+            throw AccessDeniedException.unauthorized();
+        }
+        CandidateExamDto response = examService.getCandidateExam(user, attemptId);
+        return ResponseEntity.ok(response);
+    }
+}

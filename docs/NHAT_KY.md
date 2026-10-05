@@ -171,3 +171,18 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - Survey ProcessHandle/WMI nguồn Oracle/Microsoft, polling phù hợpstack nhưng thiếumetadata/bỏprocessgiữahaiquét; WMI/ETW/JNI/JNA chỉ khảo sát/NOTRUN. Không claim performance/novelty/delta. README/docsREADME/PROTOCOL/TIEN_DO/KIEM_THU/VAI_C/schema/survey/QD11 và evidence t1-c4/2026-10-05-verification.md cập nhật; TRACKER/01–03/nguon/migrations unchanged.
 - `.gitattributes` giữ raw JSONL nguyên byte (`-text`) và summary LF để checkout Windows không phá SHA256/reproduce; không đổi source Java/script sau final build.
 - Human B review (và A cross-owner), GUI toàn luồng, LAN/package máy2, E1/E2/full-delta NOT RUN. CODE_COMPLETE C4, prototype vẫn PARTIAL; push/PR/merge theo quyền task khi technical gates/mergeability PASS, Git cuối trong report. Dừng C4, không B4/chặng2.
+
+## 2026-10-05 · A · T2-A1 — Import đề thi và Mở ca thi
+- Base: fetch origin, checkout `feat/t2-a1-exam-import-session` từ main mới nhất.
+- Đã làm:
+  - Protocol DTOs: `ExamOptionImportDto`, `ExamQuestionImportDto`, `ExamImportRequest`, `ExamImportResponse`, `CreateSessionRequest`, `CreateSessionResponse`, `AttemptCreationDto` (Giám thị); `CandidateOptionDto`, `CandidateQuestionDto`, `CandidateExamDto` (Thí sinh). Bất biến tuyệt đối: DTO thí sinh không chứa `correctOption` hay bất kỳ trường đáp án nào.
+  - Flyway migration V5 (`V5__exams_and_sessions.sql`): các bảng `exams`, `exam_questions`, `exam_options`, `exam_sessions`, `exam_session_proctors`; bổ sung `session_id`, `exam_id`, `deadline_at`, `writer_epoch`, `saved_revision`, `submitted_at`, `score`, `answers_json` và mở rộng `state` constraint của `monitoring_attempts`.
+  - Backend: `ExamValidationService` (kiểm tra đề, option, correctOption, sequenceOrder, đoạn văn), `ExamService` (transactional import, session creation đồng bộ attempts/proctor_assignments, lấy đề thí sinh không đáp án), `ExamController` (`POST /api/v1/exams/import`, `POST /api/v1/sessions`, `GET /api/v1/attempts/{attemptId}/exam`).
+  - Phân quyền & AT02: Chỉ `PROCTOR` được import và tạo ca thi; `CANDIDATE` gọi import bị từ chối 403 `FORBIDDEN`; unauthenticated bị từ chối 401 `UNAUTHORIZED`. Thí sinh chỉ lấy được đề thi của chính attempt mình sở hữu.
+- Đã kiểm:
+  - `mvn test` PASS 372/372 tests trên toàn bộ 5 module (protocol 23, client 227, server 121, spike 1).
+  - Unit test `ExamControllerTest` dùng Reflection assert toàn bộ DTO thí sinh không có trường đáp án.
+  - Real PostgreSQL 18.6 smoke (`scripts/smoke-t2a1.ps1`): Flyway V1->V5 migration, proctor/candidate login, AT02 role rejection, import 10-câu TOEIC, tạo ca thi, DB attempt verification, candidate lấy đề 10 câu không chứa chuỗi 'correctOption'/'correct_option'/'correctAnswer' PASS.
+- Bằng chứng: `evidence/t2-a1/2026-10-05-verification.md`.
+- Tiếp theo: Chuyển tiếp sang T2-A2 (Autosave bài thi theo revision, kiểm tra writerEpoch và khóa bi quan).
+

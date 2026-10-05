@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import vn.edu.toeic.server.monitoring.JdbcAttemptScopeStore;
 
 @Configuration
-class AuthConfiguration {
+public class AuthConfiguration {
     @Bean
     @ConditionalOnMissingBean(AttemptScopeAuthorizer.class)
     AttemptScopeAuthorizer attemptScopeAuthorizer(JdbcClient jdbc) {
