@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 05/10/2026 — T2-A2 CODE_COMPLETE: Autosave toàn bộ đáp án theo revision; khóa bi quan `FOR UPDATE OF a`, `clock_timestamp()`, kiểm tra `writerEpoch`, deadline, hợp lệ đề thi, so sánh JSON chuẩn tắc bằng `TreeMap`, AT03/AT04/AT05 logic; Flyway V6 `exam_autosave_requests`. Final tests 373/373 PASS (+1 test), REAL PG18.6 smoke PASS. Evidence `evidence/t2-a2/2026-10-05-verification.md`.
+Cập nhật lần cuối: 05/10/2026 — T2-A3 CODE_COMPLETE: Submit bài thi, timeout và chấm điểm một lần; khóa bi quan `FOR UPDATE OF a`, `clock_timestamp()`, kiểm tra `writerEpoch`, deadline, hợp lệ đề thi, idempotency retry theo `requestId` (AT06), từ chối nộp lại/autosave sau nộp bài (AT06), từ chối quá hạn (AT07), background timeout `ExamTimeoutService` tự động chuyển `TIMED_OUT` và chấm điểm `saved_answers` (AT08); Flyway V7 `exam_submit_requests`. Final tests 373/373 PASS, REAL PG18.6 smoke PASS. Evidence `evidence/t2-a3/2026-10-05-verification.md`.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
@@ -13,7 +13,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
-| A | _chưa gán_ | T2-A2 code-complete; chuẩn bị T2-A3 | Autosave revision, khóa bi quan `FOR UPDATE OF a`, AT03/AT04/AT05 PASS, Flyway V6 | Bắt đầu T2-A3 (Submit, timeout và chấm điểm một lần) | `feat/t2-a2-autosave-answers` |
+| A | _chưa gán_ | T2-A3 code-complete; chuẩn bị T2-A4 | Submit & scoring, timeout `ExamTimeoutService`, AT06/AT07/AT08 PASS, Flyway V7 | Bắt đầu T2-A4 (Phiên ghi và kiểm thử tranh chấp trên PostgreSQL) | `feat/t2-a3-submit-and-scoring` |
 | B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; chuẩn bị Chặng 2 | `feat/t1-b3-proctor-dashboard` |
 | C | _chưa gán_ | T1-C4 code-complete; log đo và survey | Tests/package366 + Python9; REAL transport/log-summary/ProcessHandle scan, MOCK overflow và SIMULATED retry PASS | Human B review, GUI/LAN và E1/E2 NOT RUN; chuẩn bị Chặng 2 | `feat/t1-c4-monitoring-measurement` |
 

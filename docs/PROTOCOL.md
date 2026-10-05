@@ -556,4 +556,70 @@ Cross-owner tối thiểu: B RealtimeClient, A RealtimeWebSocketHandler/Realtime
    - `answerRevision > savedRevision`: Cập nhật `monitoring_attempts` và ghi `exam_autosave_requests` -> 200 `SAVED`.
 9. **Commit transaction:** Thành công trước khi trả response về client.
 
+## Contract T2-A3 — Submit, Timeout và Chấm Điểm Một Lần (05/10/2026)
+
+### 1. Schema DB Flyway V7
+- Tạo bảng `exam_submit_requests`: lưu trữ idempotency request log cho submit gồm `attempt_id`, `request_id`, `writer_epoch`, `answer_revision`, `answers_json`, `total_questions`, `correct_count`, `listening_correct`, `reading_correct`, `score`, `submitted_at`, `decision_at`, `created_at`.
+- Bổ sung các cột tính điểm trên `monitoring_attempts`: `total_questions`, `correct_count`, `listening_correct`, `reading_correct`.
+
+### 2. Endpoint `POST /api/v1/attempts/{attemptId}/submit` (Thí sinh)
+- Header: `Authorization: Bearer <token>`.
+- Phân quyền: Role `CANDIDATE` sở hữu `attemptId` (Proctor/unauthenticated/foreign attempt nhận 401/403).
+- Request body:
+```json
+{
+  "requestId": "submit-request-001",
+  "attemptId": "SESSION-T2A3-candidate1",
+  "writerEpoch": 1,
+  "answerRevision": 43,
+  "answers": {
+    "L1": "A",
+    "L2": "B",
+    "R1": "B",
+    "R2": "A"
+  }
+}
+```
+- Response 200 OK:
+```json
+{
+  "requestId": "submit-request-001",
+  "attemptId": "SESSION-T2A3-candidate1",
+  "state": "SUBMITTED",
+  "totalQuestions": 4,
+  "correctCount": 3,
+  "listeningCorrect": 1,
+  "readingCorrect": 2,
+  "score": 3,
+  "submittedAt": "2026-10-05T16:27:18.123Z",
+  "decisionAt": "2026-10-05T16:27:18.123Z",
+  "savedRevision": 43
+}
+```
+
+### 3. Quy tắc Thứ tự Quyết định & Nghiệm thu (AT06, AT07, AT08):
+1. **Xác thực & Kiểm quyền:** Trước khi đọc hoặc ghi. Sai role/không sở hữu -> 403 `FORBIDDEN`.
+2. **Khóa bản ghi:** `SELECT ... FROM monitoring_attempts a WHERE a.attempt_id = :attemptId FOR UPDATE OF a`.
+3. **Idempotency theo requestId (AT06):**
+   - Nếu `(attempt_id, request_id)` đã tồn tại với cùng payload -> trả về kết quả đã chấm trước đó (200 OK).
+   - Nếu cùng `requestId` khác payload -> 409 `CONFLICT`.
+4. **Kiểm tra trạng thái bài thi (AT06):**
+   - Nếu attempt không ở trạng thái `ACTIVE` (đã `SUBMITTED`, `TIMED_OUT`...) -> 409 `INVALID_STATE`.
+   - Autosave sau khi bài đã submit/timeout -> 409 `INVALID_STATE`.
+5. **Kiểm tra `writerEpoch` sau khóa:** Khác epoch hiện tại -> 409 `STALE`.
+6. **Kiểm tra deadline bằng `clock_timestamp()` sau khóa (AT07):** `decisionAt >= deadlineAt` -> 409 `EXPIRED`.
+7. **Kiểm tra hợp lệ đề thi:** Mọi `questionId` và `optionId` phải thuộc đề thi. Sai -> 400 `INVALID_INPUT`.
+8. **Quy tắc Revision:** `answerRevision < savedRevision` -> 409 `STALE` (không tự chốt bằng bản cũ).
+9. **Chấm điểm độc lập tại Server (Scoring Engine):**
+   - Đối chiếu với đáp án đúng `correct_option` từ `exam_questions`.
+   - Tính toán `totalQuestions`, `correctCount`, `listeningCorrect`, `readingCorrect`, `score`.
+   - Cập nhật `monitoring_attempts` (`state = 'SUBMITTED'`) và ghi `exam_submit_requests`.
+   - Commit transaction thành công trước khi trả response về client.
+
+### 4. Tác vụ Timeout Định kỳ (`ExamTimeoutService` - AT08)
+- Định kỳ quét các attempt quá hạn (`state = 'ACTIVE'` và `deadline_at <= clock_timestamp()`).
+- Mở transaction khóa bi quan `FOR UPDATE OF a`, kiểm tra lại với `clock_timestamp()`.
+- Chấm điểm trên bộ đáp án đã lưu (`saved_answers`), cập nhật trạng thái `TIMED_OUT` và lưu điểm số vào DB.
+- Timeout không nhận đáp án mới từ client; mọi request nộp bài sau đó đều bị từ chối 409 `INVALID_STATE`.
+
 
