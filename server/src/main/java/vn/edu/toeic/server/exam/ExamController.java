@@ -101,5 +101,38 @@ public class ExamController {
         vn.edu.toeic.protocol.exam.SubmitExamResponse response = examService.submitExam(user, request);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/attempts/{attemptId}/takeover")
+    public ResponseEntity<vn.edu.toeic.protocol.exam.TakeoverWriterResponse> takeoverWriter(
+            HttpServletRequest httpRequest,
+            @PathVariable String attemptId,
+            @RequestBody vn.edu.toeic.protocol.exam.TakeoverWriterRequest request) {
+        AuthenticatedUser user = (AuthenticatedUser) httpRequest.getUserPrincipal();
+        if (user == null) {
+            throw AccessDeniedException.unauthorized();
+        }
+        if (!attemptId.equals(request.attemptId())) {
+            throw new ExamApiException(
+                    org.springframework.http.HttpStatus.BAD_REQUEST,
+                    vn.edu.toeic.protocol.ErrorCode.INVALID_INPUT,
+                    "attemptId trong URL không khớp với request body",
+                    request.requestId());
+        }
+        vn.edu.toeic.protocol.exam.TakeoverWriterResponse response = examService.takeoverWriter(user, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/attempts/{attemptId}/status")
+    public ResponseEntity<vn.edu.toeic.protocol.exam.CandidateAttemptStatusResponse> getAttemptStatus(
+            HttpServletRequest httpRequest,
+            @PathVariable String attemptId) {
+        AuthenticatedUser user = (AuthenticatedUser) httpRequest.getUserPrincipal();
+        if (user == null) {
+            throw AccessDeniedException.unauthorized();
+        }
+        vn.edu.toeic.protocol.exam.CandidateAttemptStatusResponse response = examService.getAttemptStatus(user, attemptId);
+        return ResponseEntity.ok(response);
+    }
 }
+
 

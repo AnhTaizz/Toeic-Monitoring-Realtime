@@ -165,6 +165,36 @@ class ExamControllerTest {
         assertThat(proctorForbidden.statusCode()).isEqualTo(403);
     }
 
+    @Test
+    void takeoverEndpointRoleAndMismatchValidation() throws Exception {
+        var takeoverReq = new vn.edu.toeic.protocol.exam.TakeoverWriterRequest("req-to-1", "mock-attempt-A", "session-client-1");
+        String json = GSON.toJson(takeoverReq);
+
+        // Unauthenticated -> 401
+        HttpResponse<String> unauth = postJson("/api/v1/attempts/mock-attempt-A/takeover", json, null);
+        assertThat(unauth.statusCode()).isEqualTo(401);
+
+        // AttemptId mismatch between URL and Body -> 400
+        String candidateToken = login("candidate1");
+        HttpResponse<String> mismatch = postJson("/api/v1/attempts/OTHER-ATTEMPT/takeover", json, "Bearer " + candidateToken);
+        assertThat(mismatch.statusCode()).isEqualTo(400);
+
+        // Proctor calling candidate takeover -> 403
+        String proctorToken = login("proctor1");
+        HttpResponse<String> proctorForbidden = postJson("/api/v1/attempts/mock-attempt-A/takeover", json, "Bearer " + proctorToken);
+        assertThat(proctorForbidden.statusCode()).isEqualTo(403);
+    }
+
+    @Test
+    void statusEndpointUnauthenticatedValidation() throws Exception {
+        HttpRequest req = HttpRequest.newBuilder(uri("/api/v1/attempts/mock-attempt-A/status"))
+                .timeout(Duration.ofSeconds(5))
+                .GET()
+                .build();
+        HttpResponse<String> res = http.send(req, HttpResponse.BodyHandlers.ofString());
+        assertThat(res.statusCode()).isEqualTo(401);
+    }
+
     private ExamImportRequest sampleExamRequest(String examId) {
         return new ExamImportRequest(
                 examId,

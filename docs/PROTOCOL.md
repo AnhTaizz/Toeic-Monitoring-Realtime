@@ -622,4 +622,69 @@ Cross-owner tối thiểu: B RealtimeClient, A RealtimeWebSocketHandler/Realtime
 - Chấm điểm trên bộ đáp án đã lưu (`saved_answers`), cập nhật trạng thái `TIMED_OUT` và lưu điểm số vào DB.
 - Timeout không nhận đáp án mới từ client; mọi request nộp bài sau đó đều bị từ chối 409 `INVALID_STATE`.
 
+## Contract T2-A4 — Phiên Ghi (Takeover Writer) và Kiểm Thử Tranh Chấp (05/10/2026)
+
+### 1. Endpoint `POST /api/v1/attempts/{attemptId}/takeover` (Thí sinh)
+- Header: `Authorization: Bearer <token>`.
+- Phân quyền: Role `CANDIDATE` sở hữu `attemptId` (Proctor/unauthenticated/foreign attempt nhận 401/403).
+- Request body:
+```json
+{
+  "requestId": "takeover-request-001",
+  "attemptId": "SESSION-T2A4-candidate1"
+}
+```
+- Response 200 OK:
+```json
+{
+  "requestId": "takeover-request-001",
+  "attemptId": "SESSION-T2A4-candidate1",
+  "writerEpoch": 2,
+  "savedRevision": 42,
+  "state": "ACTIVE",
+  "deadlineAt": "2026-10-05T18:00:00Z",
+  "answers": {
+    "L1": "A",
+    "R1": "B"
+  }
+}
+```
+- Cơ chế hoạt động:
+  - Khóa bi quan `SELECT ... FOR UPDATE OF a`.
+  - Kiểm tra trạng thái bài thi: nếu không ở trạng thái `ACTIVE` (ví dụ `SUBMITTED`, `TIMED_OUT`) -> từ chối với 409 `INVALID_STATE`.
+  - Tăng `writer_epoch = writer_epoch + 1`.
+  - Commit transaction và trả về trạng thái phiên thi mới nhất cùng `writerEpoch` mới. Mọi writer cũ giữ `writerEpoch` cũ sẽ bị chặn với 409 `STALE` (AT09).
+
+### 2. Endpoint `GET /api/v1/attempts/{attemptId}/status` (Thí sinh / Giám thị)
+- Header: `Authorization: Bearer <token>`.
+- Phân quyền: `attemptId` phải thuộc quyền của người gọi (Candidate sở hữu hoặc Proctor được phân công).
+- Response 200 OK:
+```json
+{
+  "attemptId": "SESSION-T2A4-candidate1",
+  "sessionId": "SESSION-T2A4",
+  "examId": "EXAM-TOEIC-SAMPLE-10",
+  "candidateUsername": "candidate1",
+  "writerEpoch": 2,
+  "savedRevision": 42,
+  "state": "ACTIVE",
+  "startedAt": "2026-10-05T16:00:00Z",
+  "deadlineAt": "2026-10-05T18:00:00Z",
+  "answers": {
+    "L1": "A",
+    "R1": "B"
+  },
+  "totalQuestions": 4,
+  "score": null,
+  "submittedAt": null
+}
+```
+
+### 3. Nghiệm thu Concurrency & Tranh chấp (AT01, AT07, AT09, AT10):
+- **AT01 (Cross-Candidate Access Isolation):** Thí sinh B không thể đọc, autosave, submit, hay takeover trên attempt của Thí sinh A (403 FORBIDDEN) cả trước và sau khi submit.
+- **AT07 (Pessimistic Lock Held Past Deadline):** Khi một transaction giữ khóa bi quan qua hạn `deadlineAt`, request khác bị chặn chờ khóa khi được xử lý sau khi nhả khóa sẽ kiểm tra lại `clock_timestamp()` và bị từ chối với 409 `EXPIRED`.
+- **AT09 (Takeover & Stale Writer Concurrency):** Request của Writer 1 với stale epoch đang chờ lock bị từ chối với 409 `STALE` sau khi Writer 2 takeover và commit thành công. Writer 2 với `writerEpoch` mới ghi đáp án thành công.
+- **AT10 (Tampering After Deadline & Timeout Job):** Mọi request gửi sau deadline đều bị từ chối ngay lập tức với 409 `EXPIRED` qua kiểm tra `clock_timestamp() >= deadline_at` sau khóa, không phụ thuộc vào việc background timeout job đã chạy hay chưa.
+
+
 

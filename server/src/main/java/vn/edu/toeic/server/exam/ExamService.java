@@ -24,8 +24,11 @@ import vn.edu.toeic.protocol.exam.ExamImportRequest;
 import vn.edu.toeic.protocol.exam.ExamImportResponse;
 import vn.edu.toeic.protocol.exam.ExamOptionImportDto;
 import vn.edu.toeic.protocol.exam.ExamQuestionImportDto;
+import vn.edu.toeic.protocol.exam.CandidateAttemptStatusResponse;
 import vn.edu.toeic.protocol.exam.SubmitExamRequest;
 import vn.edu.toeic.protocol.exam.SubmitExamResponse;
+import vn.edu.toeic.protocol.exam.TakeoverWriterRequest;
+import vn.edu.toeic.protocol.exam.TakeoverWriterResponse;
 import vn.edu.toeic.server.auth.AccessDeniedException;
 import vn.edu.toeic.server.auth.AuthenticatedUser;
 import vn.edu.toeic.server.auth.AuthorizationService;
@@ -893,5 +896,175 @@ public class ExamService {
                 .query(String.class)
                 .list();
     }
+
+    @Transactional
+    public TakeoverWriterResponse takeoverWriter(AuthenticatedUser user, TakeoverWriterRequest request) {
+        if (user.role() != Role.CANDIDATE) {
+            throw AccessDeniedException.forbidden();
+        }
+        if (request.requestId() == null || request.requestId().isBlank()) {
+            throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "requestId không được để trống", request.requestId());
+        }
+        if (request.attemptId() == null || request.attemptId().isBlank()) {
+            throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "attemptId không được để trống", request.requestId());
+        }
+
+        record AttemptLockRow(
+                String attemptId,
+                long candidateUserId,
+                Instant deadlineAt,
+                long writerEpoch,
+                long savedRevision,
+                String state,
+                String answersJson
+        ) {}
+
+        AttemptLockRow attempt = jdbc.sql("""
+                SELECT a.attempt_id, a.candidate_user_id, a.deadline_at,
+                       a.writer_epoch, a.saved_revision, a.state, a.answers_json
+                FROM monitoring_attempts a
+                WHERE a.attempt_id = :attemptId
+                FOR UPDATE OF a
+                """)
+                .param("attemptId", request.attemptId())
+                .query((rs, rowNum) -> new AttemptLockRow(
+                        rs.getString("attempt_id"),
+                        rs.getLong("candidate_user_id"),
+                        rs.getTimestamp("deadline_at") != null ? rs.getTimestamp("deadline_at").toInstant() : null,
+                        rs.getLong("writer_epoch"),
+                        rs.getLong("saved_revision"),
+                        rs.getString("state"),
+                        rs.getString("answers_json")
+                ))
+                .optional()
+                .orElseThrow(() -> new ExamApiException(HttpStatus.FORBIDDEN, ErrorCode.FORBIDDEN, "Không tìm thấy lượt thi hoặc không có quyền", request.requestId()));
+
+        if (attempt.candidateUserId() != user.userId()) {
+            throw new ExamApiException(HttpStatus.FORBIDDEN, ErrorCode.FORBIDDEN, "Bạn không sở hữu lượt thi này", request.requestId());
+        }
+
+        if (!"ACTIVE".equalsIgnoreCase(attempt.state())) {
+            throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.INVALID_STATE, "Lượt thi không ở trạng thái làm bài (state=" + attempt.state() + ")", request.requestId());
+        }
+
+        long newWriterEpoch = attempt.writerEpoch() + 1;
+
+        jdbc.sql("UPDATE monitoring_attempts SET writer_epoch = :newEpoch WHERE attempt_id = :attemptId")
+                .param("newEpoch", newWriterEpoch)
+                .param("attemptId", request.attemptId())
+                .update();
+
+        Map<String, String> answers = Map.of();
+        if (attempt.answersJson() != null && !attempt.answersJson().isBlank()) {
+            try {
+                @SuppressWarnings("unchecked")
+                Map<String, String> parsed = GSON.fromJson(attempt.answersJson(), Map.class);
+                if (parsed != null) {
+                    answers = parsed;
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        return new TakeoverWriterResponse(
+                request.requestId(),
+                request.attemptId(),
+                newWriterEpoch,
+                attempt.savedRevision(),
+                attempt.state(),
+                attempt.deadlineAt(),
+                answers
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public CandidateAttemptStatusResponse getAttemptStatus(AuthenticatedUser user, String attemptId) {
+        authorizationService.requireAttempt(user, attemptId);
+
+        record StatusRow(
+                String attemptId,
+                long candidateUserId,
+                String sessionId,
+                String examId,
+                Instant deadlineAt,
+                Instant submittedAt,
+                long writerEpoch,
+                long savedRevision,
+                String state,
+                String answersJson,
+                int totalQuestions,
+                int correctCount,
+                int listeningCorrect,
+                int readingCorrect,
+                int score
+        ) {}
+
+        StatusRow row = jdbc.sql("""
+                SELECT a.attempt_id, a.candidate_user_id, a.session_id, COALESCE(a.exam_id, s.exam_id) AS exam_id,
+                       a.deadline_at, a.submitted_at, a.writer_epoch, a.saved_revision, a.state, a.answers_json,
+                       COALESCE(a.total_questions, 0) AS total_questions,
+                       COALESCE(a.correct_count, 0) AS correct_count,
+                       COALESCE(a.listening_correct, 0) AS listening_correct,
+                       COALESCE(a.reading_correct, 0) AS reading_correct,
+                       COALESCE(a.score, 0) AS score
+                FROM monitoring_attempts a
+                LEFT JOIN exam_sessions s ON s.session_id = a.session_id
+                WHERE a.attempt_id = :attemptId
+                """)
+                .param("attemptId", attemptId)
+                .query((rs, rowNum) -> new StatusRow(
+                        rs.getString("attempt_id"),
+                        rs.getLong("candidate_user_id"),
+                        rs.getString("session_id"),
+                        rs.getString("exam_id"),
+                        rs.getTimestamp("deadline_at") != null ? rs.getTimestamp("deadline_at").toInstant() : null,
+                        rs.getTimestamp("submitted_at") != null ? rs.getTimestamp("submitted_at").toInstant() : null,
+                        rs.getLong("writer_epoch"),
+                        rs.getLong("saved_revision"),
+                        rs.getString("state"),
+                        rs.getString("answers_json"),
+                        rs.getInt("total_questions"),
+                        rs.getInt("correct_count"),
+                        rs.getInt("listening_correct"),
+                        rs.getInt("reading_correct"),
+                        rs.getInt("score")
+                ))
+                .optional()
+                .orElseThrow(() -> new ExamApiException(HttpStatus.FORBIDDEN, ErrorCode.FORBIDDEN, "Không tìm thấy lượt thi", "status-query"));
+
+        if (user.role() == Role.CANDIDATE && row.candidateUserId() != user.userId()) {
+            throw new ExamApiException(HttpStatus.FORBIDDEN, ErrorCode.FORBIDDEN, "Bạn không sở hữu lượt thi này", "status-query");
+        }
+
+        Map<String, String> answers = Map.of();
+        if (row.answersJson() != null && !row.answersJson().isBlank()) {
+            try {
+                @SuppressWarnings("unchecked")
+                Map<String, String> parsed = GSON.fromJson(row.answersJson(), Map.class);
+                if (parsed != null) {
+                    answers = parsed;
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        return new CandidateAttemptStatusResponse(
+                row.attemptId(),
+                row.sessionId(),
+                row.examId(),
+                row.writerEpoch(),
+                row.savedRevision(),
+                row.state(),
+                row.deadlineAt(),
+                row.submittedAt(),
+                row.totalQuestions(),
+                row.correctCount(),
+                row.listeningCorrect(),
+                row.readingCorrect(),
+                row.score(),
+                answers
+        );
+    }
 }
+
 
