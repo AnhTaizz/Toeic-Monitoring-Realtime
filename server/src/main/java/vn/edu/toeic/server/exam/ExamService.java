@@ -24,6 +24,8 @@ import vn.edu.toeic.protocol.exam.ExamImportRequest;
 import vn.edu.toeic.protocol.exam.ExamImportResponse;
 import vn.edu.toeic.protocol.exam.ExamOptionImportDto;
 import vn.edu.toeic.protocol.exam.ExamQuestionImportDto;
+import vn.edu.toeic.protocol.exam.SubmitExamRequest;
+import vn.edu.toeic.protocol.exam.SubmitExamResponse;
 import vn.edu.toeic.server.auth.AccessDeniedException;
 import vn.edu.toeic.server.auth.AuthenticatedUser;
 import vn.edu.toeic.server.auth.AuthorizationService;
@@ -36,6 +38,14 @@ public class ExamService {
     private final JdbcClient jdbc;
     private final ExamValidationService validationService;
     private final AuthorizationService authorizationService;
+
+    public record ScoringResult(
+            int totalQuestions,
+            int correctCount,
+            int listeningCorrect,
+            int readingCorrect,
+            int score
+    ) {}
 
     public ExamService(
             JdbcClient jdbc,
@@ -504,4 +514,384 @@ public class ExamService {
                 "SCHEDULED",
                 createdAttempts);
     }
+
+    public ScoringResult calculateScore(String examId, Map<String, String> answers) {
+        record QuestionRow(String questionId, String section, String correctOption) {}
+        List<QuestionRow> questions = jdbc.sql("""
+                SELECT question_id, section, correct_option
+                FROM exam_questions
+                WHERE exam_id = :examId
+                """)
+                .param("examId", examId)
+                .query((rs, rowNum) -> new QuestionRow(
+                        rs.getString("question_id"),
+                        rs.getString("section"),
+                        rs.getString("correct_option")
+                ))
+                .list();
+
+        int totalQuestions = questions.size();
+        int correctCount = 0;
+        int listeningCorrect = 0;
+        int readingCorrect = 0;
+
+        if (answers != null && !answers.isEmpty()) {
+            for (QuestionRow q : questions) {
+                String selected = answers.get(q.questionId());
+                if (selected != null && selected.equalsIgnoreCase(q.correctOption())) {
+                    correctCount++;
+                    if ("LISTENING".equalsIgnoreCase(q.section())) {
+                        listeningCorrect++;
+                    } else if ("READING".equalsIgnoreCase(q.section())) {
+                        readingCorrect++;
+                    }
+                }
+            }
+        }
+
+        return new ScoringResult(totalQuestions, correctCount, listeningCorrect, readingCorrect, correctCount);
+    }
+
+    @Transactional
+    public SubmitExamResponse submitExam(AuthenticatedUser candidate, SubmitExamRequest request) {
+        if (candidate.role() != Role.CANDIDATE) {
+            throw AccessDeniedException.forbidden();
+        }
+        if (request.requestId() == null || request.requestId().isBlank()) {
+            throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "requestId không được để trống", request.requestId());
+        }
+        if (request.attemptId() == null || request.attemptId().isBlank()) {
+            throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "attemptId không được để trống", request.requestId());
+        }
+        if (request.writerEpoch() <= 0) {
+            throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "writerEpoch phải lớn hơn 0", request.requestId());
+        }
+        if (request.answerRevision() <= 0) {
+            throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "answerRevision phải lớn hơn 0", request.requestId());
+        }
+
+        record AttemptLockRow(
+                String attemptId,
+                long candidateUserId,
+                String examId,
+                String sessionId,
+                Instant deadlineAt,
+                long writerEpoch,
+                long savedRevision,
+                String state,
+                String answersJson,
+                int durationSeconds
+        ) {}
+
+        AttemptLockRow attempt = jdbc.sql("""
+                SELECT a.attempt_id, a.candidate_user_id, COALESCE(a.exam_id, s.exam_id) AS exam_id,
+                       a.session_id, a.deadline_at, a.writer_epoch, a.saved_revision, a.state, a.answers_json,
+                       COALESCE(s.duration_seconds, 7200) AS duration_seconds
+                FROM monitoring_attempts a
+                LEFT JOIN exam_sessions s ON s.session_id = a.session_id
+                WHERE a.attempt_id = :attemptId
+                FOR UPDATE OF a
+                """)
+                .param("attemptId", request.attemptId())
+                .query((rs, rowNum) -> new AttemptLockRow(
+                        rs.getString("attempt_id"),
+                        rs.getLong("candidate_user_id"),
+                        rs.getString("exam_id"),
+                        rs.getString("session_id"),
+                        rs.getTimestamp("deadline_at") != null ? rs.getTimestamp("deadline_at").toInstant() : null,
+                        rs.getLong("writer_epoch"),
+                        rs.getLong("saved_revision"),
+                        rs.getString("state"),
+                        rs.getString("answers_json"),
+                        rs.getInt("duration_seconds")
+                ))
+                .optional()
+                .orElseThrow(() -> new ExamApiException(HttpStatus.FORBIDDEN, ErrorCode.FORBIDDEN, "Không tìm thấy lượt thi hoặc không có quyền", request.requestId()));
+
+        if (attempt.candidateUserId() != candidate.userId()) {
+            throw new ExamApiException(HttpStatus.FORBIDDEN, ErrorCode.FORBIDDEN, "Bạn không sở hữu lượt thi này", request.requestId());
+        }
+
+        TreeMap<String, String> canonicalMap = new TreeMap<>(request.answers() != null ? request.answers() : Map.of());
+        String canonicalJson = GSON.toJson(canonicalMap);
+
+        record SubmitReqRow(
+                long writerEpoch,
+                long answerRevision,
+                String answersJson,
+                int totalQuestions,
+                int correctCount,
+                int listeningCorrect,
+                int readingCorrect,
+                int score,
+                Instant submittedAt,
+                Instant decisionAt
+        ) {}
+
+        var prevSubmitOpt = jdbc.sql("""
+                SELECT writer_epoch, answer_revision, answers_json, total_questions, correct_count,
+                       listening_correct, reading_correct, score, submitted_at, decision_at
+                FROM exam_submit_requests
+                WHERE attempt_id = :attemptId AND request_id = :requestId
+                """)
+                .param("attemptId", request.attemptId())
+                .param("requestId", request.requestId())
+                .query((rs, rowNum) -> new SubmitReqRow(
+                        rs.getLong("writer_epoch"),
+                        rs.getLong("answer_revision"),
+                        rs.getString("answers_json"),
+                        rs.getInt("total_questions"),
+                        rs.getInt("correct_count"),
+                        rs.getInt("listening_correct"),
+                        rs.getInt("reading_correct"),
+                        rs.getInt("score"),
+                        rs.getTimestamp("submitted_at").toInstant(),
+                        rs.getTimestamp("decision_at").toInstant()
+                ))
+                .optional();
+
+        if (prevSubmitOpt.isPresent()) {
+            SubmitReqRow prev = prevSubmitOpt.get();
+            if (prev.writerEpoch() == request.writerEpoch()
+                    && prev.answerRevision() == request.answerRevision()
+                    && prev.answersJson().equals(canonicalJson)) {
+                return new SubmitExamResponse(
+                        request.requestId(),
+                        request.attemptId(),
+                        "SUBMITTED",
+                        prev.totalQuestions(),
+                        prev.correctCount(),
+                        prev.listeningCorrect(),
+                        prev.readingCorrect(),
+                        prev.score(),
+                        prev.submittedAt(),
+                        prev.decisionAt(),
+                        prev.answerRevision()
+                );
+            } else {
+                throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.CONFLICT, "RequestId đã được sử dụng với payload khác", request.requestId());
+            }
+        }
+
+        if (!"ACTIVE".equalsIgnoreCase(attempt.state())) {
+            throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.INVALID_STATE, "Lượt thi đã kết thúc hoặc đã nộp (state=" + attempt.state() + ")", request.requestId());
+        }
+
+        if (request.writerEpoch() != attempt.writerEpoch()) {
+            throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.STALE, "Phiên ghi không còn hợp lệ (stale writerEpoch)", request.requestId());
+        }
+
+        Instant decisionAt = jdbc.sql("SELECT clock_timestamp()").query(Instant.class).single();
+
+        if (attempt.deadlineAt() != null) {
+            if (decisionAt.isAfter(attempt.deadlineAt()) || decisionAt.equals(attempt.deadlineAt())) {
+                throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.EXPIRED, "Đã quá thời gian làm bài (deadline exceeded)", request.requestId());
+            }
+        }
+
+        if (attempt.examId() == null || attempt.examId().isBlank()) {
+            throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "Lượt thi chưa được gán đề thi", request.requestId());
+        }
+
+        if (request.answers() != null && !request.answers().isEmpty()) {
+            for (Map.Entry<String, String> entry : request.answers().entrySet()) {
+                String qId = entry.getKey();
+                String optId = entry.getValue();
+
+                if (qId == null || qId.isBlank() || optId == null || optId.isBlank()) {
+                    throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "Mã câu hỏi hoặc lựa chọn không được để trống", request.requestId());
+                }
+
+                boolean questionExists = jdbc.sql("SELECT count(*) FROM exam_questions WHERE exam_id = :examId AND question_id = :qId")
+                        .param("examId", attempt.examId())
+                        .param("qId", qId)
+                        .query(Long.class)
+                        .single() > 0;
+
+                if (!questionExists) {
+                    throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "Câu hỏi '" + qId + "' không thuộc đề thi '" + attempt.examId() + "'", request.requestId());
+                }
+
+                boolean optionExists = jdbc.sql("SELECT count(*) FROM exam_options WHERE exam_id = :examId AND question_id = :qId AND option_id = :optId")
+                        .param("examId", attempt.examId())
+                        .param("qId", qId)
+                        .param("optId", optId)
+                        .query(Long.class)
+                        .single() > 0;
+
+                if (!optionExists) {
+                    throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "Lựa chọn '" + optId + "' không hợp lệ cho câu hỏi '" + qId + "'", request.requestId());
+                }
+            }
+        }
+
+        long currentSavedRevision = attempt.savedRevision();
+        String currentAnswersJson = attempt.answersJson() != null && !attempt.answersJson().isBlank()
+                ? attempt.answersJson()
+                : GSON.toJson(Map.of());
+
+        if (request.answerRevision() < currentSavedRevision) {
+            throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.STALE, "Revision thấp hơn phiên bản đã lưu (savedRevision=" + currentSavedRevision + ")", request.requestId());
+        }
+
+        if (request.answerRevision() == currentSavedRevision && !canonicalJson.equals(currentAnswersJson)) {
+            throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.CONFLICT, "Cùng revision (" + request.answerRevision() + ") nhưng nội dung khác", request.requestId());
+        }
+
+        ScoringResult score = calculateScore(attempt.examId(), request.answers());
+
+        jdbc.sql("""
+                UPDATE monitoring_attempts
+                SET answers_json = :canonicalJson,
+                    saved_revision = :savedRevision,
+                    state = 'SUBMITTED',
+                    submitted_at = :decisionAt,
+                    total_questions = :totalQuestions,
+                    correct_count = :correctCount,
+                    listening_correct = :listeningCorrect,
+                    reading_correct = :readingCorrect,
+                    score = :score
+                WHERE attempt_id = :attemptId
+                """)
+                .param("canonicalJson", canonicalJson)
+                .param("savedRevision", request.answerRevision())
+                .param("decisionAt", java.sql.Timestamp.from(decisionAt))
+                .param("totalQuestions", score.totalQuestions())
+                .param("correctCount", score.correctCount())
+                .param("listeningCorrect", score.listeningCorrect())
+                .param("readingCorrect", score.readingCorrect())
+                .param("score", score.score())
+                .param("attemptId", request.attemptId())
+                .update();
+
+        jdbc.sql("""
+                INSERT INTO exam_submit_requests (
+                    attempt_id, request_id, writer_epoch, answer_revision, answers_json,
+                    total_questions, correct_count, listening_correct, reading_correct, score,
+                    submitted_at, decision_at
+                ) VALUES (
+                    :attemptId, :requestId, :writerEpoch, :answerRevision, :canonicalJson,
+                    :totalQuestions, :correctCount, :listeningCorrect, :readingCorrect, :score,
+                    :submittedAt, :decisionAt
+                )
+                """)
+                .param("attemptId", request.attemptId())
+                .param("requestId", request.requestId())
+                .param("writerEpoch", attempt.writerEpoch())
+                .param("answerRevision", request.answerRevision())
+                .param("canonicalJson", canonicalJson)
+                .param("totalQuestions", score.totalQuestions())
+                .param("correctCount", score.correctCount())
+                .param("listeningCorrect", score.listeningCorrect())
+                .param("readingCorrect", score.readingCorrect())
+                .param("score", score.score())
+                .param("submittedAt", java.sql.Timestamp.from(decisionAt))
+                .param("decisionAt", java.sql.Timestamp.from(decisionAt))
+                .update();
+
+        return new SubmitExamResponse(
+                request.requestId(),
+                request.attemptId(),
+                "SUBMITTED",
+                score.totalQuestions(),
+                score.correctCount(),
+                score.listeningCorrect(),
+                score.readingCorrect(),
+                score.score(),
+                decisionAt,
+                decisionAt,
+                request.answerRevision()
+        );
+    }
+
+    @Transactional
+    public boolean timeoutAttempt(String attemptId) {
+        record TimeoutAttemptLock(
+                String attemptId,
+                String examId,
+                Instant deadlineAt,
+                String state,
+                String answersJson
+        ) {}
+
+        var attemptOpt = jdbc.sql("""
+                SELECT a.attempt_id, COALESCE(a.exam_id, s.exam_id) AS exam_id,
+                       a.deadline_at, a.state, a.answers_json
+                FROM monitoring_attempts a
+                LEFT JOIN exam_sessions s ON s.session_id = a.session_id
+                WHERE a.attempt_id = :attemptId
+                FOR UPDATE OF a
+                """)
+                .param("attemptId", attemptId)
+                .query((rs, rowNum) -> new TimeoutAttemptLock(
+                        rs.getString("attempt_id"),
+                        rs.getString("exam_id"),
+                        rs.getTimestamp("deadline_at") != null ? rs.getTimestamp("deadline_at").toInstant() : null,
+                        rs.getString("state"),
+                        rs.getString("answers_json")
+                ))
+                .optional();
+
+        if (attemptOpt.isEmpty()) {
+            return false;
+        }
+
+        TimeoutAttemptLock attempt = attemptOpt.get();
+        if (!"ACTIVE".equalsIgnoreCase(attempt.state())) {
+            return false;
+        }
+
+        Instant decisionAt = jdbc.sql("SELECT clock_timestamp()").query(Instant.class).single();
+        if (attempt.deadlineAt() == null || decisionAt.isBefore(attempt.deadlineAt())) {
+            return false;
+        }
+
+        Map<String, String> answers = Map.of();
+        if (attempt.answersJson() != null && !attempt.answersJson().isBlank()) {
+            try {
+                @SuppressWarnings("unchecked")
+                Map<String, String> parsed = GSON.fromJson(attempt.answersJson(), Map.class);
+                if (parsed != null) {
+                    answers = parsed;
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        ScoringResult score = calculateScore(attempt.examId(), answers);
+
+        jdbc.sql("""
+                UPDATE monitoring_attempts
+                SET state = 'TIMED_OUT',
+                    total_questions = :totalQuestions,
+                    correct_count = :correctCount,
+                    listening_correct = :listeningCorrect,
+                    reading_correct = :readingCorrect,
+                    score = :score
+                WHERE attempt_id = :attemptId
+                """)
+                .param("totalQuestions", score.totalQuestions())
+                .param("correctCount", score.correctCount())
+                .param("listeningCorrect", score.listeningCorrect())
+                .param("readingCorrect", score.readingCorrect())
+                .param("score", score.score())
+                .param("attemptId", attemptId)
+                .update();
+
+        return true;
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> findExpiredActiveAttemptIds() {
+        return jdbc.sql("""
+                SELECT attempt_id
+                FROM monitoring_attempts
+                WHERE state = 'ACTIVE'
+                  AND deadline_at IS NOT NULL
+                  AND deadline_at <= clock_timestamp()
+                """)
+                .query(String.class)
+                .list();
+    }
 }
+

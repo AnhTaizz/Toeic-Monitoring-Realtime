@@ -145,6 +145,26 @@ class ExamControllerTest {
         assertThat(proctorForbidden.statusCode()).isEqualTo(403);
     }
 
+    @Test
+    void submitEndpointRoleAndMismatchValidation() throws Exception {
+        var submitReq = new vn.edu.toeic.protocol.exam.SubmitExamRequest("req-sub-1", "mock-attempt-A", 1, 1, Map.of("q1", "A"));
+        String json = GSON.toJson(submitReq);
+
+        // Unauthenticated -> 401
+        HttpResponse<String> unauth = postJson("/api/v1/attempts/mock-attempt-A/submit", json, null);
+        assertThat(unauth.statusCode()).isEqualTo(401);
+
+        // AttemptId mismatch between URL and Body -> 400
+        String candidateToken = login("candidate1");
+        HttpResponse<String> mismatch = postJson("/api/v1/attempts/OTHER-ATTEMPT/submit", json, "Bearer " + candidateToken);
+        assertThat(mismatch.statusCode()).isEqualTo(400);
+
+        // Proctor calling candidate submit -> 403
+        String proctorToken = login("proctor1");
+        HttpResponse<String> proctorForbidden = postJson("/api/v1/attempts/mock-attempt-A/submit", json, "Bearer " + proctorToken);
+        assertThat(proctorForbidden.statusCode()).isEqualTo(403);
+    }
+
     private ExamImportRequest sampleExamRequest(String examId) {
         return new ExamImportRequest(
                 examId,
