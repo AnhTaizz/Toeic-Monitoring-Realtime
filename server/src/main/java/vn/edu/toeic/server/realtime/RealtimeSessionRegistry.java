@@ -7,17 +7,23 @@ import com.google.gson.JsonSerializer;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Map;
+import jakarta.annotation.PreDestroy;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.handler.ConcurrentWebSocketSessionDecorator;
+import org.springframework.web.socket.handler.WebSocketSessionDecorator;
 import vn.edu.toeic.protocol.Protocol;
 import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
+import vn.edu.toeic.protocol.measurement.MessageMeasurements;
+import vn.edu.toeic.protocol.measurement.MessageMeasurements.Endpoint;
 import vn.edu.toeic.server.auth.AccessDeniedException;
 import vn.edu.toeic.server.auth.AuthenticatedUser;
 import vn.edu.toeic.server.auth.AuthorizationService;
@@ -36,16 +42,24 @@ public final class RealtimeSessionRegistry {
     private final AuthorizationService authorization;
     private final int sendTimeout;
     private final int sendBuffer;
-    public RealtimeSessionRegistry(SessionAuthenticationService authentication, AuthorizationService authorization,
+    private final MessageMeasurements measurements;
+    @Autowired public RealtimeSessionRegistry(SessionAuthenticationService authentication, AuthorizationService authorization,
             @Value("${toeic.ws.send-timeout-ms:5000}") int sendTimeout,
             @Value("${toeic.ws.send-buffer-bytes:65536}") int sendBuffer) {
+        this(authentication,authorization,sendTimeout,sendBuffer,MessageMeasurements.configured(Endpoint.SERVER,
+                Map.of("sendTimeoutMillis",sendTimeout,"sendBufferBytes",sendBuffer)));
+    }
+    public RealtimeSessionRegistry(SessionAuthenticationService authentication, AuthorizationService authorization,
+            int sendTimeout,int sendBuffer,MessageMeasurements measurements) {
         this.authentication = authentication;
         this.authorization = authorization;
         this.sendTimeout = sendTimeout;
         this.sendBuffer = sendBuffer;
+        this.measurements=measurements;
     }
+    public MessageMeasurements measurements() { return measurements; }
     public void register(WebSocketSession session) {
-        sessions.put(session.getId(), new ConcurrentWebSocketSessionDecorator(session, sendTimeout, sendBuffer));
+        sessions.put(session.getId(), new ConcurrentWebSocketSessionDecorator(new MeasuredSession(session), sendTimeout, sendBuffer));
     }
     public void remove(WebSocketSession session) { sessions.remove(session.getId()); }
     public void close(WebSocketSession session, CloseStatus status) {
@@ -84,4 +98,15 @@ public final class RealtimeSessionRegistry {
             }
         }
     }
+    /** Measures actual delegate writes, including messages drained from the decorator buffer. */
+    private final class MeasuredSession extends WebSocketSessionDecorator {
+        MeasuredSession(WebSocketSession delegate) { super(delegate); }
+        @Override public void sendMessage(WebSocketMessage<?> message) throws IOException {
+            if (!(message instanceof TextMessage text)) { super.sendMessage(message);return; }
+            MessageMeasurements.Tx measured=measurements.attempt(text.getPayload());
+            try { super.sendMessage(message);measured.completed(); }
+            catch (IOException | RuntimeException failure) { measured.failed();throw failure; }
+        }
+    }
+    @PreDestroy public void closeMeasurements() { measurements.close(); }
 }

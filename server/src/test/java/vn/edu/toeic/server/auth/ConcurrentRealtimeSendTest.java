@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.Clock;
+import java.io.StringWriter;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
@@ -23,6 +24,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import vn.edu.toeic.protocol.Role;
+import vn.edu.toeic.protocol.measurement.MessageMeasurements;
+import vn.edu.toeic.protocol.measurement.MessageMeasurements.Endpoint;
+import vn.edu.toeic.protocol.measurement.MessageMeasurements.Outcome;
 import vn.edu.toeic.server.realtime.RealtimeWebSocketHandler;
 import vn.edu.toeic.server.realtime.RealtimeSessionRegistry;
 import vn.edu.toeic.server.monitoring.MonitoringEventService;
@@ -40,7 +44,8 @@ class ConcurrentRealtimeSendTest {
                 new AuthenticatedUser(1, "MOCK-proctor", Role.PROCTOR), Instant.now().plusSeconds(60), null, true)));
         var authentication = new SessionAuthenticationService(store, Clock.systemUTC());
         var authorization = new AuthorizationService((user, attempt) -> true);
-        var registry = new RealtimeSessionRegistry(authentication, authorization, 5000, 65_536);
+        var measurement=new MessageMeasurements(Endpoint.SERVER,"MOCK-decorator",64,1000,StringWriter::new,Map.of());
+        var registry = new RealtimeSessionRegistry(authentication, authorization, 5000, 65_536,measurement);
         RealtimeWebSocketHandler handler = new RealtimeWebSocketHandler(authentication, authorization, 65_536,
                 registry, mock(MonitoringEventService.class), mock(MonitoringGapService.class), mock(MonitoringPresenceService.class));
         WebSocketSession socket = mock(WebSocketSession.class);
@@ -86,15 +91,19 @@ class ConcurrentRealtimeSendTest {
             });
             second.get(3, TimeUnit.SECONDS); // decorator queues the second response without waiting for raw send
             assertThat(maximum.get()).isEqualTo(1);
+            assertThat(measurement.snapshot().counters().stream().filter(c -> c.key().outcome()==Outcome.ATTEMPTED).mapToLong(MessageMeasurements.Counter::messages).sum()).isEqualTo(1);
+            assertThat(measurement.snapshot().counters().stream().filter(c -> c.key().outcome()==Outcome.WRITE_COMPLETED).mapToLong(MessageMeasurements.Counter::messages).sum()).isZero();
             releaseFirst.countDown();
             first.get(3, TimeUnit.SECONDS);
             assertThat(writes.get()).isEqualTo(2);
             assertThat(maximum.get()).isEqualTo(1);
             verify(socket, times(2)).sendMessage(any(TextMessage.class));
+            assertThat(measurement.snapshot().counters().stream().filter(c -> c.key().outcome()==Outcome.WRITE_COMPLETED).mapToLong(MessageMeasurements.Counter::messages).sum()).isEqualTo(2);
         } finally {
             releaseFirst.countDown();
             workers.shutdownNow();
             assertThat(workers.awaitTermination(3, TimeUnit.SECONDS)).isTrue();
+            registry.closeMeasurements();measurement.finished().get(2,TimeUnit.SECONDS);
         }
     }
 }

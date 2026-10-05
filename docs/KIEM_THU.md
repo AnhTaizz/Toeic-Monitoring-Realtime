@@ -254,3 +254,24 @@ Base main99b4f39. Windows11/Temurin21.0.10/Maven3.9.15/PostgreSQL18.6; người 
 | GUI/LAN/package máy khác/human C review | NOT RUN | B3 còn dashboard/parser/HTTP recovery; chưa nghiệm thu toàn prototype |
 
 Lượt đầu decorator test phát hiện Gson không serialize Instant; đã thêm adapter ISO UTC và chạy lại PASS. Hồi quy đầu A3 dùng scoped ping không collector, chỉnh sang unscoped đúng mục đích transport. Hồi quy đầu C3 lỗi khóa profile Edge sau exit, thêm bounded cleanup retry; lượt final PASS. Lệnh dọn riêng profile sót của lượt lỗi bị kiểm duyệt tự động từ chối (`blocked by policy`), profile còn nhưng kiểm tra không process Edge nào dùng nó; không kill process người dùng. Không lấy lượt lỗi làm evidence PASS. MT08 PARTIAL ở mức case toàn hệ thống, thành phần server A4 PASS; IT02/IT03/GUI chưa đánh PASS toàn bộ. TRACKER/nguon/01–03 và V1–V3 giữ nguyên.
+
+## T1-C4 — 05/10/2026
+
+Base main PR#8 a04aaa2; final source c70c93e sạch trong checkout build riêng. Baseline331 PASS20:26:45 UTC+7; final test366 PASS20:56:53/package366 PASS20:57:53 (+35: protocol23/client7/server5). Tổng protocol23/client227/server115/spike1. Python9 PASS riêng; 3 concurrent cases chỉ bổ sung assertion không tăng test count. Source/script sau build không thay đổi, docs/evidence bổ sung riêng. [Evidence C4](../evidence/t1-c4/2026-10-05-verification.md) và transcripts/hash/raw/summary cùng thư mục.
+
+| Kiểm tra | Kết quả thật | Giới hạn |
+|---|---|---|
+| Toàn JSON UTF-8 ASCII/Vietnamese/emoji, TX success/failure, retry cùng event | PASS MOCK | Đúng chuỗi serialize/send, ticket terminal1, ACK nghiệp vụ riêng không thêm byte |
+| RX fragmented/surrogate/malformed/binary/oversized | PASS MOCK | Full text1; INVALID lọc ID/cause, UNMEASURED nullablebyte; demand/rejection giữ |
+| Server ACK/ERROR/warning/presence, decorator enqueue/delegate/race | PASS MOCK + REAL | Byte exact socket; latch enqueue2 chưa write2, release đo đúng2 |
+| Counters concurrent, bounded queue/drop, file failure/timeout/flush/disabled | PASS MOCK | Counter độc lập raw; logger hỏng vẫn event/ACK; daemon + bounded close không giữ JVM |
+| Summary known trace/hand calc/reproducibility/schema/drop/truncation | PASS MOCK | 220byte =2×100+20, không TX/RX/outcome đếm đôi; 9 Python tests |
+| PG18.6/Spring/HTTP/WS/B2 candidate+proctor/dashboard model | PASS REAL | TEST schema/port, cả7types log; nguồn event/overflow MOCK, không GUI |
+| ProcessHandle collector production scan/stop | PASS REAL | Windows đọc processesScanned>0 riêng; không dùng MOCK làm bằng chứng process thật |
+| Retry + gap overflow | PASS MIXED | ACK observer C3 suppression SIMULATED sau B2 accepted; DB1/dashboard1 trước overflow, capacity1/drop2/gapACK REAL |
+| Raw3file/FINAL khỏe/26category/summary regenerated | PASS REAL | TX37message12568byte mỗi outcome; JSON/CSV hash tái tạo byte-identical, raw untouched |
+| B3 hồi quy | PASS REAL | C3/event/presence/dashboard, owned hard-kill, stale/reconnect/history, 403/401/cleanup; source MOCK; GUI NOT RUN |
+| Worker/TEST schema/security/JAR/protected/source checks | PASS | TEST schemas0, public vẫn V3; no live secret/private path/payload, JAR không test/harness; TRACKER/01–03/nguon/migrations không đổi |
+| Human B review/GUI toàn luồng/LAN/WMI/ETW/E1/E2/full-delta | NOT RUN | C4 chuẩn bị công cụ đo, chưa nghiệm thu toàn MT01/MT08 hay thử hiệu năng |
+
+Lượt exploratory phát hiện assertion/control-record và compile signature/constant trong test, đã sửa trước final PASS. Final sạch trên commit c70c93e; không lấy exploratory làm evidence. Automatic review chặn dọn bản sao target tạo thừa; giữ ignored, không retry xóa. Dừng C4; không B4/chặng2, không claim novelty/delta tốt hơn.

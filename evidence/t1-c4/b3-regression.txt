@@ -1,0 +1,19 @@
+13:59:23.443 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+13:59:23.585 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "b3_test_b910aef4df3f48f18312d0c5bf22ac39"."flyway_schema_history" does not exist yet
+13:59:23.594 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 4 migrations (execution time 00:00.045s)
+13:59:23.625 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "b3_test_b910aef4df3f48f18312d0c5bf22ac39"."flyway_schema_history" ...
+13:59:23.744 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "b3_test_b910aef4df3f48f18312d0c5bf22ac39": << Empty Schema >>
+13:59:23.769 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "b3_test_b910aef4df3f48f18312d0c5bf22ac39" to version "1 - auth schema"
+13:59:23.866 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "b3_test_b910aef4df3f48f18312d0c5bf22ac39" to version "2 - monitoring events"
+13:59:23.925 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "b3_test_b910aef4df3f48f18312d0c5bf22ac39" to version "3 - monitoring gaps"
+13:59:23.965 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 3 migrations to schema "b3_test_b910aef4df3f48f18312d0c5bf22ac39", now at version v3 (execution time 00:00.068s)
+2026-10-05T13:59:35.526Z  INFO 824 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-05T13:59:35.537Z  INFO 824 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
+PASS REAL V3->V4/HTTP roster/events/history/B2 push parser/C3 event commit; MOCK process polls; HTTP+WS one row; other proctor isolated
+PASS REAL owned child hard-kill -> UNKNOWN/history; fresh child -> ONLINE/same gap recoveredAt; B stays ONLINE
+PASS REAL intentional proctor disconnect -> stale ONLINE; missed event/timeout/recovery -> reconnect fresh auth/me/roster/events/history without duplicate; B2 owns reconnect loop
+PASS REAL HTTP403 selected attempt removal/fresh auth/me+B2 scope; revoked bearer -> HTTP401/session cleared/login callback
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS cleanup owned B3 TEST schema; shared PostgreSQL/public data/user server untouched
+PASS owned dashboard HTTP/state/collector/delivery/B2/presence/child-reader workers gone
+B3 REAL integration PASS; process source MOCK; hard-kill REAL owned JVM; GUI=NOT RUN; MT01/MT08 full candidate GUI, LAN, human A review NOT RUN

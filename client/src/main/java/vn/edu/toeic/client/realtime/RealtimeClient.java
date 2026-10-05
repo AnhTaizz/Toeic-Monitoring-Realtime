@@ -29,6 +29,8 @@ import vn.edu.toeic.client.dashboard.MonitoringJson;
 import java.util.function.Consumer;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 import vn.edu.toeic.protocol.ErrorCode;
+import vn.edu.toeic.protocol.measurement.MessageMeasurements;
+import vn.edu.toeic.protocol.measurement.MessageMeasurements.Endpoint;
 
 /** Một adapter sở hữu socket, fragment, write, heartbeat và bounded retry. */
 public final class RealtimeClient implements MonitoringTransport, AutoCloseable {
@@ -91,6 +93,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     private final ConnectionOpener opener;
     private final Settings settings;
     private final ScheduledExecutorService worker;
+    private final MessageMeasurements measurements;
     private final Gson gson = new GsonBuilder().setStrictness(Strictness.STRICT).create();
     private final CopyOnWriteArrayList<Consumer<ConnectionState>> stateListeners = new CopyOnWriteArrayList<>();
     private final CopyOnWriteArrayList<Consumer<MessageEnvelope<JsonObject>>> messageListeners = new CopyOnWriteArrayList<>();
@@ -129,10 +132,19 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
 
     /** The adapter owns this scheduler and shuts it down in close(). */
     public RealtimeClient(ConnectionOpener opener, Settings settings, ScheduledExecutorService worker) {
+        this(opener,settings,worker,MessageMeasurements.configured(Endpoint.CLIENT,Map.of(
+                "heartbeatMillis",settings.heartbeat().toMillis(),"maxMessageChars",settings.maxMessageChars(),"maxPendingAcks",settings.maxPendingAcks(),
+                "initialBackoffMillis",settings.initialBackoff().toMillis(),"maxBackoffMillis",settings.maxBackoff().toMillis(),"maxRetries",settings.maxRetries())));
+    }
+
+    /** Optional owned recorder; tests may inject an in-memory writer. No second transport. */
+    public RealtimeClient(ConnectionOpener opener, Settings settings, ScheduledExecutorService worker, MessageMeasurements measurements) {
         this.opener = Objects.requireNonNull(opener);
         this.settings = Objects.requireNonNull(settings);
         this.worker = Objects.requireNonNull(worker);
+        this.measurements = Objects.requireNonNull(measurements);
     }
+    public MessageMeasurements measurements() { return measurements; }
 
     public synchronized CompletableFuture<Void> connect(Session newSession) {
         if (closed) return failed("Adapter đã đóng");
@@ -204,6 +216,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         if (closed || state != ConnectionState.CONNECTED) return failed("Mất kết nối tới server");
         if (writes.size() >= settings.maxPendingAcks()) return failed("Đã đạt giới hạn write đang chờ");
         final MessageEnvelope<JsonObject> copy;
+        final String serialized;
         try {
             validateEnvelope(message);
             if (!("HEARTBEAT".equals(message.type()) || "PROCESS_OBSERVED".equals(message.type()) || "MONITORING_GAP".equals(message.type()))
@@ -234,7 +247,8 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
             }
             copy = new MessageEnvelope<>(message.protocolVersion(), message.type(), message.messageId(),
                     message.requestId(), message.attemptId(), message.traceId(), message.payload().deepCopy());
-            if (gson.toJson(copy).length() > settings.maxMessageChars()) throw new IllegalArgumentException();
+            serialized = gson.toJson(copy);
+            if (serialized.length() > settings.maxMessageChars()) throw new IllegalArgumentException();
         } catch (RuntimeException ignored) { return failed("Message realtime không hợp lệ hoặc chưa được hỗ trợ"); }
         { // HEARTBEAT và event đều phải chờ ACK thật; không coi socket write là ACK.
             MessageEnvelope<JsonObject> previous = pendingAcks.get(copy.requestId());
@@ -250,11 +264,11 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         writes.add(result);
         long current = generation;
         WebSocket target = socket;
-        dispatch(() -> write(current, target, copy, result));
+        dispatch(() -> write(current, target, serialized, result));
         return result;
     }
 
-    private synchronized void write(long current, WebSocket target, MessageEnvelope<JsonObject> message,
+    private synchronized void write(long current, WebSocket target, String serialized,
                                     CompletableFuture<Void> result) {
         if (closed || current != generation || state != ConnectionState.CONNECTED) {
             result.completeExceptionally(new IllegalStateException("Mất kết nối tới server"));
@@ -266,7 +280,12 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         writeTail = writeTail.handle((unused, error) -> null).thenCompose(unused -> {
             synchronized (RealtimeClient.this) {
                 if (closed || current != generation) return failed("Mất kết nối tới server");
-                return target.sendText(gson.toJson(message), true).thenApply(ws -> (Void) null);
+                MessageMeasurements.Tx measured=measurements.attempt(serialized);
+                try {
+                    return target.sendText(serialized,true).whenComplete((ws,error) -> {
+                        if (error==null) measured.completed(); else measured.failed();
+                    }).thenApply(ws -> (Void)null);
+                } catch (RuntimeException error) { measured.failed();return CompletableFuture.failedFuture(error); }
             }
         });
         writeTail.whenComplete((unused, error) -> {
@@ -407,6 +426,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                         || !"ACCEPTED".equals(requiredString(message.payload(), "status"))) throw new IllegalArgumentException();
                 pendingAcks.remove(message.requestId());
                 heartbeatDeadlines.remove(message.requestId());
+                measurements.businessAck(text);
             } else if ("ERROR".equals(message.type())) {
                 String code = requiredString(message.payload(), "code");
                 ErrorCode.valueOf(code);
@@ -492,6 +512,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         disconnect();
         try { opener.close(); } finally {
             worker.shutdownNow();
+            measurements.close();
             stateListeners.clear();
             messageListeners.clear();
             problemListeners.clear();
@@ -521,9 +542,10 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                     } else fragments.append(data);
                 }
                 if (last) {
-                    if (oversized) dispatch(RealtimeClient.this::problem);
+                    if (oversized) { measurements.unmeasuredReceive();dispatch(RealtimeClient.this::problem); }
                     else {
                         String text = fragments.toString();
+                        measurements.received(text);
                         dispatch(() -> receive(current, text));
                     }
                     fragments.setLength(0);
@@ -534,7 +556,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         }
 
         @Override public CompletionStage<?> onBinary(WebSocket ws, ByteBuffer data, boolean last) {
-            try { dispatch(RealtimeClient.this::problem); } finally { ws.request(1); }
+            try { if (last) measurements.unmeasuredReceive();dispatch(RealtimeClient.this::problem); } finally { ws.request(1); }
             return CompletableFuture.completedFuture(null);
         }
         @Override public CompletionStage<?> onClose(WebSocket ws, int statusCode, String reason) {

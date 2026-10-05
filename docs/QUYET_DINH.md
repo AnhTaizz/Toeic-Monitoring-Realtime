@@ -86,3 +86,11 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Startup: persisted ONLINE → UNKNOWN/SERVER_RESTART, tăng revision trước phục vụ; không dùng nanoTime JVM cũ, không bịa downtime gap/time. Heartbeat mới phục hồi ONLINE; interruption trước đó được giữ và ghi recoveredAt.
 - Phạm vi: một server JVM writer trên schema. Không full syncEpoch/reducer hay nhiều server writer; ONLINE xác nhận liên lạc, UNKNOWN không kết luận gian lận. Overflow V3 client-reported tách server-detected HEARTBEAT_TIMEOUT V4.
 - Kiểm chứng: fake ticker/wall-clock/latch/association unit; REAL PostgreSQL/B2/C3/hard-kill/multi-client/reconnect/COMMIT failure/restart/cleanup. Contract PROTOCOL T1-A4; evidence/t1-a4/2026-10-04-verification.md. B3 dashboard/parser và GUI/LAN NOT RUN.
+
+## QD-11 · C4 đo toàn JSON và ghi log có giới hạn
+
+- Ngày: 2026-10-05 · Vai C theo task C4 · Human B review: NOT RUN.
+- Lựa chọn: byte UTF-8 của toàn JSON envelope+payload tại transport, tách attempted/write-completed/write-failed/full-RX; BUSINESS_ACK không cộng byte. Server hook ở delegate bên trong ConcurrentWebSocketSessionDecorator để không coi enqueue là write. Tổng gửi cộng CLIENT TX+SERVER TX theo một outcome, không cộng RX.
+- Recorder opt-in mặc định tắt; queue1024/drop-new, counter độc lập, JSONL writer daemon/flush2000ms. I/O lỗi không thay delivery; thiếu FINAL/drop/mismatch phải báo INCOMPLETE. Không disk-queue event, không thêm telemetry framework.
+- Lý do: định nghĩa byte tái kiểm từ đúng chuỗi, không đếm đôi retry/fragment/outcome, không chặn FX/WS bằng file I/O. Chưa đo overhead hay full/delta; WMI chỉ khảo sát nguồn chính thức, giữ ProcessHandle polling hiện có.
+- Kiểm chứng và giới hạn: [schema](MONITORING_MEASUREMENTS.md), [survey](PROCESS_MONITORING_SURVEY.md), [evidence C4](../evidence/t1-c4/2026-10-05-verification.md); không tự đổi kế hoạch01–03 hoặc TRACKER.
