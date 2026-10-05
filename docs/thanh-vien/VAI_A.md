@@ -183,7 +183,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** AT06, AT07 (phần liên quan), AT08 chạy được; kết quả đã commit không đổi dù có request muộn.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 05/10/2026, T2-A3 code-complete trên `feat/t2-a3-submit-and-scoring`: Flyway V7 schema `exam_submit_requests`, SubmitExamRequest/Response, ExamService.submitExam với khóa bi quan (`FOR UPDATE OF a`), `clock_timestamp()`, kiểm tra `writerEpoch`, deadline, đề thi, revision, idempotency retry, tính điểm server-side theo listening/reading, `ExamTimeoutService` quét định kỳ và chấm điểm attempt quá hạn. AT06/AT07/AT08 logic. Real PostgreSQL 18.6 smoke `scripts/smoke-t2a3.ps1` và unit tests 373/373 PASS. Review C chưa chạy; chuẩn bị T2-A4.
 
 ### T2-A4 · Phiên ghi và kiểm thử tranh chấp trên PostgreSQL
 `4h` · phụ thuộc: T2-A2, T2-A3 · review: C

@@ -208,4 +208,38 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - Bằng chứng: `evidence/t2-a2/2026-10-05-verification.md`.
 - Tiếp theo: Chuyển tiếp sang T2-A3 (Submit bài thi, timeout và chấm điểm một lần).
 
+## 2026-10-05 · A · T2-A3 — Submit bài thi, timeout và chấm điểm một lần
+- Base: `feat/t2-a3-submit-and-scoring` tách từ `feat/t2-a2-autosave-answers`.
+- Đã làm:
+  - Protocol DTOs: `SubmitExamRequest`, `SubmitExamResponse` trong `vn.edu.toeic.protocol.exam`.
+  - Flyway migration V7 (`V7__exam_submits.sql`): bảng `exam_submit_requests` lưu trữ idempotency request log cho submit `(attempt_id, request_id)`; bổ sung các cột phân tích điểm `total_questions`, `correct_count`, `listening_correct`, `reading_correct` trên `monitoring_attempts`.
+  - Backend `ExamService.submitExam`:
+    1. Kiểm quyền thí sinh sở hữu attempt (401/403).
+    2. Khóa dòng attempt bằng `SELECT ... FOR UPDATE OF a`.
+    3. Idempotency theo `requestId` (AT06): cùng `requestId` cùng payload trả lại kết quả đã chấm trước đó; cùng `requestId` khác payload trả 409 `CONFLICT`.
+    4. Kiểm tra trạng thái bài thi: nếu đã `SUBMITTED`/`TIMED_OUT` -> 409 `INVALID_STATE` (AT06 - không nộp lại trên bài đã chốt).
+    5. Kiểm tra `writerEpoch` sau khóa (khác epoch hiện tại -> 409 `STALE`).
+    6. Kiểm tra thời hạn bằng `SELECT clock_timestamp()` (`decisionAt >= deadlineAt` -> 409 `EXPIRED` - AT07).
+    7. Kiểm tra tính hợp lệ của câu hỏi/lựa chọn trong đề thi (sai -> 400 `INVALID_INPUT`).
+    8. Kiểm tra revision: revision thấp hơn -> 409 `STALE` (không tự chốt bằng bản cũ).
+    9. Chấm điểm độc lập tại server: đối chiếu `correct_option` từ `exam_questions`, tính `listeningCorrect`, `readingCorrect`, `correctCount`, `totalQuestions`, cập nhật trạng thái `SUBMITTED`, lưu `exam_submit_requests` và commit transaction.
+  - Background Timeout `ExamTimeoutService` (AT08):
+    - Quét các attempt quá hạn (`state = 'ACTIVE'` và `deadline_at <= clock_timestamp()`).
+    - Khóa bi quan `FOR UPDATE OF a`, kiểm tra lại `clock_timestamp()`, chấm điểm trên `saved_answers`, cập nhật trạng thái `TIMED_OUT` và commit.
+    - Không nhận đáp án mới từ client; submit/autosave muộn sau timeout đều bị từ chối 409 `INVALID_STATE`.
+  - Controller: `POST /api/v1/attempts/{attemptId}/submit`.
+- Đã kiểm:
+  - `mvn test` PASS 373/373 tests trên toàn bộ dự án.
+  - Real PostgreSQL 18.6 smoke (`scripts/smoke-t2a3.ps1`):
+    - Flyway V1->V7 migration trong schema tạm.
+    - Proctor import đề 4 câu (2 Listening, 2 Reading), tạo ca thi.
+    - Candidate1 autosave revision 1, submit revision 2 đạt 3/4 câu (1 Listening, 2 Reading) -> 200 SUBMITTED.
+    - AT06: Retry submit cùng requestId trả lại điểm số và timestamp giống hệt (idempotent 200).
+    - AT06: Gửi submit requestId mới trên bài đã nộp bị từ chối 409 `INVALID_STATE`.
+    - AT06: Autosave sau khi submit bị từ chối 409 `INVALID_STATE`.
+    - AT07: Cập nhật deadline về quá khứ -> Autosave và Submit đều bị từ chối 409 `EXPIRED`.
+    - AT08: Tác vụ timeout định kỳ khóa và chuyển attempt sang `TIMED_OUT`, chấm điểm đúng bộ đáp án đã lưu (2 câu đúng), submit sau timeout bị từ chối 409 `INVALID_STATE`.
+- Bằng chứng: `evidence/t2-a3/2026-10-05-verification.md`.
+- Tiếp theo: Chuyển tiếp sang T2-A4 (Phiên ghi và kiểm thử tranh chấp trên PostgreSQL).
+
 

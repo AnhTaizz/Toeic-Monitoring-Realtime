@@ -81,4 +81,25 @@ public class ExamController {
         vn.edu.toeic.protocol.exam.AutosaveAnswersResponse response = examService.autosaveAnswers(user, request);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/attempts/{attemptId}/submit")
+    public ResponseEntity<vn.edu.toeic.protocol.exam.SubmitExamResponse> submitExam(
+            HttpServletRequest httpRequest,
+            @PathVariable String attemptId,
+            @RequestBody vn.edu.toeic.protocol.exam.SubmitExamRequest request) {
+        AuthenticatedUser user = (AuthenticatedUser) httpRequest.getUserPrincipal();
+        if (user == null) {
+            throw AccessDeniedException.unauthorized();
+        }
+        if (!attemptId.equals(request.attemptId())) {
+            throw new ExamApiException(
+                    org.springframework.http.HttpStatus.BAD_REQUEST,
+                    vn.edu.toeic.protocol.ErrorCode.INVALID_INPUT,
+                    "attemptId trong URL không khớp với request body",
+                    request.requestId());
+        }
+        vn.edu.toeic.protocol.exam.SubmitExamResponse response = examService.submitExam(user, request);
+        return ResponseEntity.ok(response);
+    }
 }
+
