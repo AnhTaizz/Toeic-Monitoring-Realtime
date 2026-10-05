@@ -1,4 +1,4 @@
-# REAL PostgreSQL 18 + HTTP verification for Task T2-A2 (Autosave Full Answers by Revision)
+# REAL PostgreSQL 18 + HTTP verification for Task T2-A3 (Submit Exam, Timeout and Scoring)
 param([string]$JavaHome = "C:\Program Files\Java\jdk-25")
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
@@ -17,16 +17,17 @@ try {
     $serverJar = 'server/target/server-0.1.0-SNAPSHOT.jar'
     if (-not (Test-Path $serverJar)) { throw 'Run mvn package first.' }
     
-    $smokeClasses = 'server/target/t2a2-smoke-classes/vn/edu/toeic/server/exam'
+    $smokeClasses = 'server/target/t2a3-smoke-classes/vn/edu/toeic/server/exam'
     New-Item -ItemType Directory -Force $smokeClasses | Out-Null
-    Copy-Item 'server/target/test-classes/vn/edu/toeic/server/exam/ExamAutosavePostgresSmoke*.class' $smokeClasses -Force
-    & $javaCommand '-Duser.timezone=UTC' '-Dloader.path=server/target/t2a2-smoke-classes' `
-        '-Dloader.main=vn.edu.toeic.server.exam.ExamAutosavePostgresSmoke' '-cp' $serverJar `
+    Copy-Item 'server/target/test-classes/vn/edu/toeic/server/exam/ExamSubmitPostgresSmoke*.class' $smokeClasses -Force
+    & $javaCommand '-Duser.timezone=UTC' '-Dloader.path=server/target/t2a3-smoke-classes' `
+        '-Dloader.main=vn.edu.toeic.server.exam.ExamSubmitPostgresSmoke' '-cp' $serverJar `
         'org.springframework.boot.loader.launch.PropertiesLauncher'
-    if ($LASTEXITCODE -ne 0) { throw 'T2-A2 PostgreSQL smoke failed.' }
+    if ($LASTEXITCODE -ne 0) { throw 'T2-A3 PostgreSQL smoke failed.' }
 } finally {
     foreach ($key in $previousValues.Keys) {
         [Environment]::SetEnvironmentVariable($key, $previousValues[$key], 'Process')
     }
     Pop-Location
 }
+
