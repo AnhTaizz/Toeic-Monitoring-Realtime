@@ -242,4 +242,24 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - Bằng chứng: `evidence/t2-a3/2026-10-05-verification.md`.
 - Tiếp theo: Chuyển tiếp sang T2-A4 (Phiên ghi và kiểm thử tranh chấp trên PostgreSQL).
 
+## 2026-10-05 · A · T2-A4 — Phiên ghi (Takeover Writer) và Kiểm thử tranh chấp trên PostgreSQL
+- Base: `feat/t2-a4-concurrency-and-takeover` tách từ `feat/t2-a3-submit-and-scoring`.
+- Đã làm:
+  - Protocol DTOs: `TakeoverWriterRequest`, `TakeoverWriterResponse`, `CandidateAttemptStatusResponse` trong `vn.edu.toeic.protocol.exam`.
+  - Backend `ExamService`:
+    - `takeoverWriter`: Kiểm tra quyền thí sinh sở hữu attempt (401/403), mở transaction với khóa bi quan `SELECT ... FOR UPDATE OF a`, kiểm tra trạng thái bài thi `ACTIVE` (nếu đã kết thúc thì 409 `INVALID_STATE`), tăng `writer_epoch = writer_epoch + 1`, commit transaction và trả về `writerEpoch` mới cùng trạng thái phiên thi hiện hành.
+    - `getAttemptStatus`: Cho phép thí sinh sở hữu hoặc proctor được phân công tra cứu trạng thái attempt (`writerEpoch`, `savedRevision`, `state`, `deadlineAt`, `answers`, `totalQuestions`, `score`, `submittedAt`) phục vụ khôi phục khi reconnect hoặc đối soát.
+  - Controller: `POST /api/v1/attempts/{attemptId}/takeover`, `GET /api/v1/attempts/{attemptId}/status`.
+  - Bộ kiểm thử tranh chấp `ExamConcurrencyPostgresSmoke` với các luồng và kết nối JDBC độc lập điều phối bằng `CountDownLatch`:
+    - AT01: Thí sinh 2 không thể xem, lưu bài, nộp bài, hay takeover trên bài thi của Thí sinh 1 (403 `FORBIDDEN`) cả trước và sau khi Thí sinh 1 nộp bài.
+    - AT07: Luồng 1 giữ khóa bi quan `FOR UPDATE` vượt quá hạn `deadlineAt`. Luồng 2 (HTTP) bị chặn chờ khóa. Khi Luồng 1 nhả khóa và commit, Luồng 2 được xử lý, kiểm tra `clock_timestamp()` sau khóa và bị từ chối 409 `EXPIRED`.
+    - AT09: Luồng 1 giữ khóa bi quan. Luồng 2 (HTTP) gửi request autosave với `writerEpoch=1` và bị chặn chờ khóa. Writer 2 (Luồng 3) thực hiện takeover writer nâng `writerEpoch` lên 3. Luồng 1 nhả khóa -> request của Luồng 2 được thực thi thấy epoch cũ và bị từ chối 409 `STALE`. Writer 2 sau đó autosave với epoch 3 thành công.
+    - AT10: Thao tác autosave/submit gửi sau deadline bị từ chối ngay lập tức 409 `EXPIRED` qua kiểm tra `clock_timestamp()` sau khóa bi quan, không phụ thuộc vào background timeout job.
+- Đã kiểm:
+  - `mvn test` PASS 375/375 tests trên 5 module (protocol 23, client 227, server 124, spike 1).
+  - Real PostgreSQL 18.6 smoke (`scripts/smoke-t2a4.ps1`): Chạy thành công 100% các kịch bản AT01, AT07, AT09, AT10 trong schema cách ly tự dọn dẹp.
+- Bằng chứng: `evidence/t2-a4/2026-10-05-verification.md`.
+- Tiếp theo: Chuyển tiếp sang T2-A5 (Tài liệu giao dịch và bằng chứng quyền).
+
+
 

@@ -201,7 +201,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** AT01, AT07, AT09, AT10 có bằng chứng; chạy lại nhiều lần cho cùng kết quả.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 05/10/2026, T2-A4 code-complete trên `feat/t2-a4-concurrency-and-takeover`: Endpoint `POST /api/v1/attempts/{attemptId}/takeover` (tăng `writerEpoch` dưới khóa bi quan `FOR UPDATE OF a`), `GET /api/v1/attempts/{attemptId}/status` trả về state/answers/revision/epoch/score. Test tranh chấp đa luồng `ExamConcurrencyPostgresSmoke` kiểm thử AT01 (cách ly phân quyền thí sinh), AT07 (giữ khóa bi quan qua deadline), AT09 (takeover writer và chặn stale epoch đang chờ lock), AT10 (từ chối nộp bài/lưu bài sau deadline ngay lập tức bằng `clock_timestamp()` sau khóa). Script `scripts/smoke-t2a4.ps1` chạy PASS hoàn toàn trên PostgreSQL 18.6 thật và 375/375 unit tests PASS. Bằng chứng lưu tại `evidence/t2-a4/2026-10-05-verification.md`. Chuẩn bị T2-A5.
 
 ### T2-A5 · Tài liệu giao dịch và bằng chứng quyền
 `2h` · phụ thuộc: T2-A4 · review: C
