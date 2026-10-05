@@ -261,5 +261,23 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - Bằng chứng: `evidence/t2-a4/2026-10-05-verification.md`.
 - Tiếp theo: Chuyển tiếp sang T2-A5 (Tài liệu giao dịch và bằng chứng quyền).
 
+## 2026-10-05 · A · T2-A5 — Tài liệu giao dịch và bằng chứng quyền
+- Base: `feat/t2-a5-transaction-docs-and-auth-evidence` tách từ `feat/t2-a4-concurrency-and-takeover`.
+- Đã làm:
+  - Soạn thảo tài liệu chuyên sâu `docs/GIAO_DICH_VA_QUYEN.md` phục vụ báo cáo và bảo vệ đồ án:
+    - 4 sơ đồ tuần tự chi tiết dạng Mermaid: (1) Lưu đáp án theo revision, (2) Nộp bài và chấm điểm 1 lần, (3) Tác vụ timeout định kỳ, (4) Chiếm quyền ghi (takeover) và phục hồi phiên khi reconnect.
+    - Bộ mẫu JSON response chuẩn cho toàn bộ mã thành công (`SAVED`, `ALREADY_SAVED`, `SUBMITTED`) và mã lỗi nghiệp vụ (`STALE`, `CONFLICT`, `EXPIRED`, `INVALID_STATE`, `INVALID_INPUT`, `FORBIDDEN`, `UNAUTHORIZED`).
+    - Trích xuất log thực tế và SQL queries có `FOR UPDATE OF a`, `clock_timestamp()`, `writer_epoch`, `saved_revision`.
+    - Lập luận kỹ thuật cho 4 câu hỏi bảo vệ trọng tâm:
+      1. Khác biệt cốt tử giữa `clock_timestamp()` sau khóa và `now()`.
+      2. Tại sao tầng xác thực/kiểm quyền Gate 1 ngăn chặn hoàn toàn việc kẻ xấu lạm dụng idempotency/requestId để vượt quyền.
+      3. Cơ chế tuần tự hóa (serialization) xử lý tranh chấp giữa Save và Submit khi đến cùng lúc.
+      4. Cách `writerEpoch` ngăn chặn split-brain writer giữa nhiều thiết bị/tab.
+  - Cập nhật bảng kiểm thử Answer/Submission (AT01 -> AT10) trong `docs/KIEM_THU.md` với đầy đủ kết quả PASS, commit SHA (`60e1ced`), môi trường và file bằng chứng tương ứng.
+- Đã kiểm: Toàn bộ bộ test 375/375 PASS; kiểm tra chéo tính nhất quán giữa tài liệu giao dịch, protocol specification và source code.
+- Bằng chứng: `evidence/t2-a5/2026-10-05-verification.md` và `docs/GIAO_DICH_VA_QUYEN.md`.
+- Hoàn thành Chặng 2 cho Vai A: Toàn bộ các tasks T2-A1 -> T2-A5 đã hoàn thành code-complete và nghiệm thu. Sẵn sàng cho Chặng 3 (API tài nguyên audio, READY, Listening gián đoạn).
+
+
 
 

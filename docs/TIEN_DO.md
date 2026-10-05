@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 05/10/2026 — T2-A4 CODE_COMPLETE: Phiên ghi (Takeover Writer) và Kiểm thử tranh chấp trên PostgreSQL; `POST /api/v1/attempts/{attemptId}/takeover`, `GET /api/v1/attempts/{attemptId}/status`, AT01 (phân quyền cách ly thí sinh), AT07 (khóa bi quan giữ qua deadline), AT09 (takeover writer và chặn stale epoch đang chờ lock), AT10 (từ chối nộp bài/lưu bài sau deadline ngay lập tức bằng `clock_timestamp()` sau khóa). 375/375 tests PASS, REAL PG18.6 smoke PASS. Evidence `evidence/t2-a4/2026-10-05-verification.md`.
+Cập nhật lần cuối: 05/10/2026 — T2-A5 CODE_COMPLETE: Tài liệu giao dịch và bằng chứng quyền; Hoàn thành tài liệu chuyên sâu `docs/GIAO_DICH_VA_QUYEN.md` (4 sơ đồ tuần tự Mermaid, mẫu response, trích xuất log/SQL `FOR UPDATE OF a`, 4 câu hỏi bảo vệ), cập nhật toàn bộ test cases AT01–AT10 trong `docs/KIEM_THU.md` đạt 100% PASS. Hoàn thành toàn bộ Chặng 2 của Vai A (T2-A1 -> T2-A5). Bằng chứng `evidence/t2-a5/2026-10-05-verification.md`.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
@@ -13,7 +13,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
-| A | _chưa gán_ | T2-A4 code-complete; chuẩn bị T2-A5 | Takeover Writer, Status/Sync, Concurrency Smoke PG18 (AT01, AT07, AT09, AT10) PASS | Bắt đầu T2-A5 (Tài liệu giao dịch và bằng chứng quyền) | `feat/t2-a4-concurrency-and-takeover` |
+| A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
 | B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; chuẩn bị Chặng 2 | `feat/t1-b3-proctor-dashboard` |
 | C | _chưa gán_ | T1-C4 code-complete; log đo và survey | Tests/package366 + Python9; REAL transport/log-summary/ProcessHandle scan, MOCK overflow và SIMULATED retry PASS | Human B review, GUI/LAN và E1/E2 NOT RUN; chuẩn bị Chặng 2 | `feat/t1-c4-monitoring-measurement` |
 

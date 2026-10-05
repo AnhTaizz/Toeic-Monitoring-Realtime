@@ -210,7 +210,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** C đọc xong tự vẽ lại được luồng lưu–nộp. Cập nhật `docs/PROTOCOL.md` và `docs/KIEM_THU.md`.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 05/10/2026, T2-A5 code-complete trên `feat/t2-a5-transaction-docs-and-auth-evidence`: Đã xây dựng tài liệu giao dịch và an toàn dữ liệu chuyên sâu `docs/GIAO_DICH_VA_QUYEN.md` gồm 4 sơ đồ tuần tự Mermaid (Autosave, Submit/Scoring, Timeout, Takeover/Reconnect), bảng mẫu response 200/409/400/403, trích xuất log và SQL `FOR UPDATE OF a` / `clock_timestamp()`, cùng lập luận kỹ thuật cho 4 câu hỏi bảo vệ. Cập nhật bảng kiểm thử Answer/Submission AT01–AT10 trong `docs/KIEM_THU.md` đạt 100% PASS. Bằng chứng lưu tại `evidence/t2-a5/2026-10-05-verification.md`. Hoàn thành toàn bộ Chặng 2 của Vai A.
 
 ---
 
