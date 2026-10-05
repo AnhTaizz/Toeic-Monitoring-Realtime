@@ -123,7 +123,15 @@ Tests mới54, tổng331/331; final mvn test/package PASS, REAL PG V4/Spring/HTT
 
 **Xong khi:** phần chặng 1 của IT01 có kết quả (qua hoặc không qua đều ghi rõ). Nếu không qua, demo từ IDE và nói rõ "chưa qua gate đóng gói".
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở (05/10, T1-B4 PARTIAL):** nhánh `feat/t1-b4-windows-package-audio`, base main `a04aaa2`. Đã có: `scripts/package-client.ps1` (app-image 158,4 MB kèm runtime, không cần JDK trên máy đích), `scripts/smoke-b4.ps1`, harness `AudioSmokeHarness` trong test source, dependency `javafx-media`. Trên máy build, bản đóng gói chạy sai mật khẩu/login hai role/WS/giám sát/cảnh báo/UNKNOWN với server thật và đóng app hết process; audio MP3/WAV/M4A phát được trong app-image với thư mục audio có dấu; QD-07 chốt MP3, file ngoài JAR, nạp bằng `path.toUri()`.
+
+Chưa xong, làm tiếp theo thứ tự:
+1. **Máy Windows thứ hai (NOT RUN):** chép nguyên `jpackage-out\ToeicMonitor\` sang máy không có IDE/JDK, đặt ở đường dẫn ASCII; máy server mở TCP 8080; nhập `http://<IPv4 LAN>:8080`; chạy checklist "Máy thứ hai" trong `evidence/t1-b4/2026-10-05-verification.md` và ghi phiên bản Windows + SHA256 của JAR.
+2. **Đường dẫn có dấu (FAIL):** app đặt trong thư mục có ký tự ngoài code page ANSI của máy không khởi động. Đã thử ngoài repo: nhúng `activeCodePage=UTF-8` vào manifest của `ToeicMonitor.exe` thì chạy được. Chưa đưa vào script vì là lựa chọn kỹ thuật cần chốt (QD-11) và phải chạy lại toàn bộ smoke với code page UTF-8.
+3. Nghe bằng tai một file MP3 thật dài vài phút trên bản đóng gói; thử `java-options=-Dtoeic.server.url=...` trong `ToeicMonitor.cfg`.
+4. Dòng "Collector chưa được bật ở task T1-B1" trên màn thí sinh là chữ cũ từ B1, nên sửa khi làm T2-B1.
+
+Lưu ý khi làm T3-B1/B2: đường dẫn audio do code Java dựng, không nhận qua tham số dòng lệnh (argv mất ký tự ngoài code page); bắt cả `MediaException` lúc tạo `Media` lẫn `MediaPlayer.onError`.
 
 ---
 

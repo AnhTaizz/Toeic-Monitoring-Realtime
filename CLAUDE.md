@@ -151,14 +151,18 @@ java -jar server\target\server-0.1.0-SNAPSHOT.jar
 # Probe ProcessHandle
 mvn --% -q -pl monitoring-spike exec:java -Dexec.args=--limit=200
 
-# Tạo app-image Windows sau mvn package
-jpackage --type app-image --dest jpackage-out --name ToeicMonitor --input client\target `
-  --main-jar client-0.1.0-SNAPSHOT-all.jar --main-class vn.edu.toeic.client.Launcher `
-  --app-version 0.1.0 --vendor "TOEIC Monitor Team"
+# Tạo app-image Windows sau mvn package (script gọi jpackage, chỉ đưa fat JAR vào --input)
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-client.ps1
 
 # Chạy client đã đóng gói
 .\jpackage-out\ToeicMonitor\ToeicMonitor.exe
+
+# Kiểm đóng gói, đường dẫn và JavaFX Media trong app-image (T1-B4); xong thì đóng lại bản không có harness
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-client.ps1 -WithAudioSmoke
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-b4.ps1
 ```
+
+`smoke-b4.ps1` trên máy code page ANSI 1252 kết thúc với 1 FAIL đã biết: app-image đặt trong thư mục có ký tự ngoài code page không khởi động (QD-11 đang chờ). Đừng đặt app trong đường dẫn như vậy khi demo.
 
 `scripts/reset-db.ps1 -Force` đóng gói đúng chuỗi `config --volumes` → `down -v` → `up -d --wait` thành một lệnh và từ chối chạy nếu compose có volume khác `toeic-pgdata`. Chuỗi lệnh Docker bên trên đã chạy thật; script wrapper chưa chạy riêng trong phiên này.
 

@@ -1,26 +1,32 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 04/10/2026 — base main PR #7 `1e084d4` đã có A4 V4. T1-B3 có dashboard PROCTOR, roster/presence, timeline/history, parser push, HTTP recovery/scope và xử lý dữ liệu cũ. Tests/package331/331 PASS; REAL PostgreSQL/Spring/HTTP/WS/B2/C3/dashboard và Stage JavaFX proctor hard-kill/UNKNOWN/recovery/history PASS. C3/A4 regression PASS. CODE_COMPLETE B3; nghiệm thu prototype PARTIAL. GUI candidate/proctor toàn luồng, LAN/package máy khác và human A review NOT RUN; TRACKER giữ nguyên. Evidence `evidence/t1-b3/2026-10-04-verification.md`; Git/PR/merge cuối xem report.
+Cập nhật lần cuối: 05/10/2026 — T1-B4 trên base main `a04aaa2`: app-image Windows kèm runtime (158,4 MB) đóng bằng `scripts/package-client.ps1`; bản đóng gói chạy login candidate/proctor, WS, giám sát, cảnh báo và UNKNOWN với server thật trên máy build (thao tác bằng UI Automation); JavaFX Media phát MP3/WAV/M4A trong app-image, QD-07 chốt MP3. Tests/package 338/338 PASS. **FAIL đã ghi:** app đặt trong thư mục có ký tự ngoài code page ANSI không khởi động (QD-11 đang chờ). Máy Windows thứ hai và LAN thật NOT RUN nên T1-B4 PARTIAL, IT01 PARTIAL. Evidence `evidence/t1-b4/2026-10-05-verification.md`.
+
+Trạng thái trước đó (04/10/2026) — base main PR #7 `1e084d4` đã có A4 V4. T1-B3 có dashboard PROCTOR, roster/presence, timeline/history, parser push, HTTP recovery/scope và xử lý dữ liệu cũ. Tests/package331/331 PASS; REAL PostgreSQL/Spring/HTTP/WS/B2/C3/dashboard và Stage JavaFX proctor hard-kill/UNKNOWN/recovery/history PASS. C3/A4 regression PASS. CODE_COMPLETE B3; nghiệm thu prototype PARTIAL. GUI candidate/proctor toàn luồng, LAN/package máy khác và human A review NOT RUN; TRACKER giữ nguyên. Evidence `evidence/t1-b3/2026-10-04-verification.md`; Git/PR/merge cuối xem report.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
 ## Đang ở đâu
 
 - Chặng: **1** (03–08/10)
-- Gate kế tiếp: **04/10 nền tảng** — JavaFX build và thử đóng gói, WS có xác thực, ProcessHandle đọc được process.
-- Gate sau đó: **08/10 prototype** — event lưu DB rồi lên dashboard, không trùng, heartbeat, package chạy trên máy khác.
+- Gate 04/10 nền tảng — JavaFX build và thử đóng gói, WS có xác thực, ProcessHandle đọc được process: các phần này đã có kết quả trên máy build (xem KIEM_THU).
+- Gate kế tiếp: **08/10 prototype** — event lưu DB rồi lên dashboard, không trùng, heartbeat, package chạy trên máy khác. Còn thiếu đúng phần "package chạy trên máy khác".
 
 ## Mỗi người
 
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
 | A | _chưa gán_ | T1-A4; bàn giao roster/presence/history cho B3 | Scoped heartbeat, timeout/recovery/restart, multi-client isolation và lỗi COMMIT PASS | Human C review NOT RUN; dừng sau A4, GUI/LAN chờ kiểm riêng | `feat/t1-a4-monitoring-presence` |
-| B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; không tự làm B4 | `feat/t1-b3-proctor-dashboard` |
+| B | _chưa gán_ | T1-B4 PARTIAL, dừng sau bàn giao | App-image + runtime, luồng login/giám sát trên bản đóng gói, audio MP3/WAV/M4A, QD-07; 338 tests PASS | Chép `ToeicMonitor\` sang máy Windows thứ hai (không IDE/JDK) và chạy checklist trong evidence; quyết QD-11; human A review NOT RUN; không tự làm T2-B1 | `feat/t1-b4-windows-package-audio` |
 | C | _chưa gán_ | T1-C3 code-complete; event/queue/retry và gap | Tests/package253; real Windows/B2/DB/ACK/reconnect/gap/cleanup PASS | Human B review/GUI/LAN NOT RUN; bàn giao B3/A, dừng C3 | `feat/t1-c3-monitoring-event-delivery` |
 
 ## Đang bị chặn
 
-- GUI manual end-to-end: **NOT RUN** — B3 đã mở Stage JavaFX thật bằng harness và thao tác controls proctor, có ảnh UNKNOWN/recovery/stale. Chưa thao tác toàn app login/candidate/process thật → proctor; cần người dùng kiểm candidate/proctor/sai mật khẩu/server tắt. Component proctor PASS không thay toàn MT01/MT08.
+- [05/10] B bị chặn nghiệm thu T1-B4/IT01 — bởi chưa có máy Windows thứ hai (không IDE/JDK) cùng LAN với máy server — cần nhóm cung cấp máy và chạy checklist "Máy thứ hai" trong `evidence/t1-b4/2026-10-05-verification.md` — hạn gate 08/10.
+- [05/10] App-image không khởi động khi đặt trong thư mục có ký tự ngoài code page ANSI của máy (ví dụ `Thử nghiệm TOEIC` trên máy 1252; JVM báo `could not find java.dll`). Thư mục có khoảng trắng và thư mục có dấu trong code page chạy được. Thử nghiệm nhúng `activeCodePage=UTF-8` vào manifest launcher cho kết quả chạy được nhưng chưa đưa vào script — cần B quyết QD-11, A duyệt — hạn 22/10 (trước T3-B5).
+- [05/10] `scripts/demo-c3.ps1 -Action Cleanup` lỗi khóa ngoại `monitoring_presence_attempt_id_fkey` sau khi lượt DEMO-C3-A đã có heartbeat (bảng V4 của A4 chưa được script xóa) — cần C (chủ script) bổ sung xóa `monitoring_interruptions`/`monitoring_presence` cho DEMO-C3-A, A xác nhận thứ tự bảng — hạn trước buổi demo 08/10.
+- Ghi chú cho A/C: lần đầu chạy server bản mới trên DB dev của máy build, Flyway áp dụng V2–V4 lên schema `public` (trước đó V1); không reset dữ liệu.
+- GUI manual end-to-end: **PARTIAL từ 05/10** — B4 đã chạy toàn luồng login candidate/proctor → bật giám sát (ProcessHandle, `msedge.exe` thật) → cảnh báo → UNKNOWN trên bản đóng gói bằng UI Automation; thành viên tự thao tác và server tắt/login lại vẫn NOT RUN. Ghi chú cũ: B3 đã mở Stage JavaFX thật bằng harness và thao tác controls proctor, có ảnh UNKNOWN/recovery/stale. Chưa thao tác toàn app login/candidate/process thật → proctor; cần người dùng kiểm candidate/proctor/sai mật khẩu/server tắt. Component proctor PASS không thay toàn MT01/MT08.
 - LAN second-machine test: **NOT RUN** — chưa có máy Windows thứ hai thật được cung cấp cho phiên này; không thay bằng localhost.
 - Review C→A2 và A→B2: **NOT RUN trong phiên Agent**; không ghi duyệt thay thành viên. Task.txt C2 cho phép merge khi code acceptance/PR mergeability PASS; review B→C2 cũng NOT RUN. PR #2/#3 đã merge, Git C2 cuối xem final report.
 - PR #1 đã merge trên main `34a7835`; các mục GUI/LAN thiếu chứng cứ lịch sử vẫn NOT RUN.

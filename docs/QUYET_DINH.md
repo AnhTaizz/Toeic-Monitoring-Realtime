@@ -19,13 +19,31 @@ Ghi lại lựa chọn đã chốt để sau này không phải tranh luận l�
 | Mã | Cần quyết | Ai quyết | Hạn | Task |
 |---|---|---|---|---|
 | QD-06 | Cách chạy test trên PostgreSQL thật (DB test cục bộ hay container) | A | 12/10 | T2-A4 |
-| QD-07 | Định dạng audio và cách đóng gói tài nguyên | B | 08/10 | T1-B4 |
 | QD-09 | Quy tắc chấm điểm nội bộ (câu sai, câu trống) | A | 12/10 | T2-A3 |
 | QD-10 | Giữ hay cắt delta khỏi bản chính | C, B duyệt | 20/10 | T3-C4 |
+| QD-11 | App-image đặt trong thư mục có ký tự ngoài code page ANSI không khởi động được (T1-B4): nhúng `activeCodePage=UTF-8` vào manifest launcher sau `jpackage`, hay giới hạn đường dẫn cài đặt là ASCII | B, A duyệt | 22/10 | T3-B5, IT01 |
 
 Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 
 ## Đã chốt
+
+## QD-07 · Audio Listening dùng MP3, file nằm ngoài JAR và nạp bằng URI
+- Ngày: 2026-10-05 · Người quyết: B theo task T1-B4 · Review A: chưa diễn ra trong phiên Agent, không ghi duyệt thay A.
+- Lựa chọn: audio Listening là **MP3**. File audio là file thường nằm ngoài JAR (thư mục dữ liệu cạnh app hoặc thư mục tải về ở T3-B1); code Java tự dựng `Path` rồi nạp bằng `new Media(path.toUri().toString())`. Không truyền đường dẫn audio qua tham số dòng lệnh. Thư viện: `org.openjfx:javafx-media` cùng phiên bản JavaFX 21.0.12, không thêm thư viện audio ngoài.
+- Đã đo (Windows 11 Home x64, JDK/jpackage 21.0.8, code page ANSI 1252, tone TEST 440 Hz 2 giây): trong app-image, cả ba định dạng đi đủ READY → PLAYING → STOPPED và thời gian phát tăng ≥ 500 ms, với file nằm trong thư mục `Âm thanh mẫu` (khoảng trắng + dấu ngoài code page) và app ở thư mục thường lẫn thư mục có khoảng trắng. Cùng harness chạy bằng JDK dev (`java -cp`) cho kết quả giống. File không phải audio và file thiếu kết thúc ở ERROR, không crash, không treo process.
+
+  | Định dạng | App-image | JDK dev | Kích thước tone 2 giây |
+  |---|---|---|---:|
+  | MP3 96 kbps 44,1 kHz stereo | PLAYED | PLAYED | 25.158 byte |
+  | AAC trong M4A 96 kbps | PLAYED | PLAYED | 25.593 byte |
+  | WAV PCM 16-bit 22,05 kHz mono | PLAYED | PLAYED | 88.244 byte |
+
+- Lý do chọn MP3: phát được trong bản đóng gói thật; nhỏ hơn WAV nên tải và băm SHA-256 ở T3-B1 nhanh hơn (PCM 16-bit 44,1 kHz stereo khoảng 10 MB/phút, MP3 96 kbps khoảng 0,7 MB/phút — con số tính từ bitrate, không phải đo). AAC/M4A cũng phát được nhưng không có lợi thế nào thêm cho dự án, nên không dùng để khỏi phải kiểm hai định dạng.
+- WAV PCM: giữ làm định dạng dự phòng và làm fixture test (sinh bằng code, không cần file nhị phân trong repo).
+- Chưa đo, không được coi là PASS: nghe bằng tai (PLAYED chỉ là trạng thái pipeline); máy Windows thứ hai; Windows bản N thiếu Media Feature Pack (theo tài liệu JavaFX, MP3/AAC trên Windows dựa vào codec của hệ điều hành — chưa kiểm ở dự án này, nếu máy thi rơi vào trường hợp đó thì chuyển sang WAV PCM); file MP3 dài thật (vài phút) và VBR; audio đặt trong JAR (`jar:` URI) — không chọn nên không thử.
+- Hệ quả: T3-B1 tải/băm file MP3 vào thư mục dữ liệu rồi mở bằng URI; lỗi `MediaException`/`MediaPlayer.onError` phải được bắt và đưa về trạng thái lỗi của Listening (LT02). Vị trí **cài app** có giới hạn riêng về ký tự ngoài code page, xem QD-11 đang chờ.
+- Kiểm chứng: `scripts/smoke-b4.ps1`, `AudioSmokeHarness` (test source), `evidence/t1-b4/2026-10-05-verification.md`.
+- Liên quan: T1-B4, T3-B1, T3-B2, LT01, LT02, IT01.
 
 ## QD-03 · Bearer header cho REST và WebSocket handshake
 - Ngày: 2026-10-04 · Người quyết: A theo task T1-A2 · Review C: chưa diễn ra trong phiên Agent, không ghi duyệt thay C.

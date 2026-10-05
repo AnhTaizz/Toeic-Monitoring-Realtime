@@ -1,0 +1,23 @@
+T1-B4 security scan, 2026-10-05. Scope: lines added versus a04aaa2 (staged diff, 2625 lines), text files only; binary fixtures/screenshots reviewed by eye.
+actual LAN IPv4 of build machine: 0
+Windows user name: 0
+C:\Users\ absolute path: 0
+E:\Project\ absolute path: 0
+local DB password value from .env: 0
+seed password value in use: 0
+Bearer followed by a token-like value: 0
+lines mentioning Authorization: 0
+lines mentioning password/mật khẩu: 10
+lines mentioning token: 2
+--- context of password/token/Authorization mentions (first 80 chars each)
+  +| Bản bàn giao + server thật: sai mật khẩu, login candidate/proctor, WS, giám sát, cảnh báo, ONLINE→UNKNOWN, 
+  +- Đã kiểm: baseline `mvn test` 331/331; final `mvn test`/`mvn package` 338/338 (client 227, server 110, spike
+  +- GUI manual end-to-end: **PARTIAL từ 05/10** — B4 đã chạy toàn luồng login candidate/proctor → bật giám sát 
+  +**Ghi chú làm dở (05/10, T1-B4 PARTIAL):** nhánh `feat/t1-b4-windows-package-audio`, base main `a04aaa2`. Đã 
+  +Client: `jpackage-out\ToeicMonitor\ToeicMonitor.exe` của **bản bàn giao** (JAR `BB9BB545…`), hai instance. Th
+  +| Sai mật khẩu → "Tên đăng nhập hoặc mật khẩu không đúng", vẫn ở màn đăng nhập | PASS — [ảnh](screenshots/log
+  +- Ảnh dashboard lượt cuối bị cắt mép phải/dưới (cửa sổ 1100×740 lệch khỏi màn hình khi `PrintWindow`); nội du
+  +4. Sai mật khẩu → báo lỗi; `candidate1` đăng nhập; `proctor1` đăng nhập (máy thứ hai hoặc máy server).
+  +[security-scan.txt](security-scan.txt): diff so với `a04aaa2` không thêm token, mật khẩu thật, đường dẫn tuyệ
+  +PASS | wrong password rejected, stays on login | Tên đăng nhập hoặc mật khẩu không đúng
+tracked .env: False; tracked task.txt: False; TRACKER.json changed: False; nguon/ changed: False

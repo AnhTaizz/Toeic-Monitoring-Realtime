@@ -43,7 +43,7 @@ Mỗi lần chạy ghi đủ: commit SHA, OS/JDK/PostgreSQL, cấu hình, lệnh
 | LT02 | Start lặp không phát lại; lỗi media khóa và ghi gián đoạn | B / A | T3-B2/B3 | NOT RUN | | |
 | LT03 | Mất mạng giữa audio; mở lại không tự phát hay resume | B / A | T3-B3 | NOT RUN | | |
 | LT04 | Tổ chức lại: attempt mới, dữ liệu và deadline cũ giữ nguyên | B / A | T3-B4, T3-A2 | NOT RUN | | |
-| IT01 | Chạy từ package trên máy không có IDE, đường dẫn có dấu | B / A | T1-B4, T3-B5, T5-B1 | NOT RUN | | |
+| IT01 | Chạy từ package trên máy không có IDE, đường dẫn có dấu | B / A | T1-B4, T3-B5, T5-B1 | PARTIAL — phần chặng 1 trên máy build: app-image + runtime kèm theo chạy login/giám sát/audio; thư mục có khoảng trắng PASS; thư mục có ký tự ngoài code page ANSI **FAIL** (không khởi động); máy thứ hai NOT RUN | base `a04aaa2`, source B4 trong evidence | `evidence/t1-b4/2026-10-05-verification.md` |
 | IT02 | 2 thí sinh + 1 giám thị; một client gửi JSON sai hoặc rớt | A / C | T3-A4, T4-B1 | NOT RUN | | |
 | IT03 | Mạng hoặc quét chậm, UI vẫn phản hồi; đóng app dọn worker | B / A | T1-B2, T4-B1 | NOT RUN | | |
 | IT04 | DB hoặc server tắt giữa lúc xử lý; khởi động lại | A / C | T3-A3, T4-A1, T4-B1 | NOT RUN | | |
@@ -254,3 +254,26 @@ Base main99b4f39. Windows11/Temurin21.0.10/Maven3.9.15/PostgreSQL18.6; người 
 | GUI/LAN/package máy khác/human C review | NOT RUN | B3 còn dashboard/parser/HTTP recovery; chưa nghiệm thu toàn prototype |
 
 Lượt đầu decorator test phát hiện Gson không serialize Instant; đã thêm adapter ISO UTC và chạy lại PASS. Hồi quy đầu A3 dùng scoped ping không collector, chỉnh sang unscoped đúng mục đích transport. Hồi quy đầu C3 lỗi khóa profile Edge sau exit, thêm bounded cleanup retry; lượt final PASS. Lệnh dọn riêng profile sót của lượt lỗi bị kiểm duyệt tự động từ chối (`blocked by policy`), profile còn nhưng kiểm tra không process Edge nào dùng nó; không kill process người dùng. Không lấy lượt lỗi làm evidence PASS. MT08 PARTIAL ở mức case toàn hệ thống, thành phần server A4 PASS; IT02/IT03/GUI chưa đánh PASS toàn bộ. TRACKER/nguon/01–03 và V1–V3 giữ nguyên.
+
+## T1-B4 — 05/10/2026
+
+Base main `a04aaa20963b9377809c8d1c0ec8298f638244b0`, nhánh `feat/t1-b4-windows-package-audio`. Windows 11 Home x64 (10.0.26200) / Oracle JDK + jpackage 21.0.8 / Maven 3.9.11 / JavaFX 21.0.12 / PostgreSQL 18 Docker; code page ANSI 1252. Người chạy: Claude Code Agent. Evidence `evidence/t1-b4/2026-10-05-verification.md`.
+
+| Kiểm tra | Kết quả thật | Bằng chứng / giới hạn |
+|---|---|---|
+| Baseline `mvn test` trên main | PASS 331/331, 5/5 module | `baseline-test.txt` |
+| Final `mvn test` / `mvn package` | PASS 338/338 mỗi lượt (client 227, server 110, spike 1), 0 failure/error/skipped | 7 test mới cho tone WAV và khử đường dẫn trong thông báo lỗi; `mvn-test.txt`, `mvn-package.txt` |
+| `scripts/package-client.ps1` → app-image | PASS — 158,4 MB, 287 file, có `runtime\`, không có `java.exe` | `package-client.txt`; JAR production không chứa harness |
+| App-image mở cửa sổ, đóng cửa sổ hết process (vị trí build, thư mục có khoảng trắng) | PASS | `smoke-b4.txt` |
+| App-image trong thư mục `Thử nghiệm TOEIC` (ký tự ngoài code page 1252) | **FAIL** — launcher thoát mã 2, `could not find java.dll` | `smoke-b4.txt`; thư mục có dấu trong code page (`Thí nghiêm cp1252`) chạy được — chẩn đoán tay trong evidence |
+| Audio WAV/MP3/M4A trong app-image, file ở `Âm thanh mẫu` | PASS — READY→PLAYING→STOPPED, thời gian phát tăng | PLAYED là trạng thái pipeline, chưa nghe bằng tai |
+| Audio cùng harness trên JDK dev (`java -cp`) | PASS 3 định dạng | Ghi riêng, không thay kết quả app-image |
+| File không phải audio / file thiếu | PASS — trạng thái ERROR, không crash, process tự thoát | `ERROR_MEDIA_INVALID`, `FILE_NOT_READABLE` |
+| Đường dẫn audio có ký tự ngoài code page truyền qua tham số dòng lệnh | **FAIL** ở lượt đầu → harness chuyển sang biến môi trường | `smoke-b4-first-run-argv.txt`; hệ quả ghi ở QD-07 |
+| Bản bàn giao + server thật: sai mật khẩu, login candidate/proctor, WS, giám sát, cảnh báo, ONLINE→UNKNOWN, đóng app | PASS 18/18 bước, thao tác bằng UI Automation trên `ToeicMonitor.exe` | `packaged-gui-flow.txt`, `screenshots/`; cùng một máy, URL là IPv4 LAN của chính máy đó |
+| `TOEIC_SERVER_URL` và sửa URL trên màn đăng nhập | PASS | Cùng log; `java-options` trong `.cfg` chưa thử |
+| Người thật thao tác chuột/phím, nghe loa | NOT RUN | UI Automation không thay kiểm tra của thành viên |
+| Máy Windows thứ hai không có IDE/JDK; LAN giữa hai máy | NOT RUN | Không có máy thứ hai trong phiên; không thay bằng localhost |
+| Thử nghiệm ngoài repo: manifest `activeCodePage=UTF-8` cho launcher | App chạy được từ `Thử nghiệm TOEIC`, audio 3 định dạng PLAYED | Chưa đưa vào script; chờ QD-11 |
+
+IT01 chuyển NOT RUN → PARTIAL (phần chặng 1 có kết quả, gồm một FAIL về đường dẫn). MT01/MT08 giữ PARTIAL: lượt này có thêm GUI candidate/proctor toàn luồng trên bản đóng gói bằng UI Automation với ProcessHandle và `msedge.exe` thật, nhưng full/delta chặng 2 và kiểm tra của thành viên chưa có. Phát hiện ngoài phạm vi B: `scripts/demo-c3.ps1 -Action Cleanup` lỗi khóa ngoại `monitoring_presence` từ khi có V4 (xem evidence); chưa sửa vì là script của C. TRACKER giữ nguyên.

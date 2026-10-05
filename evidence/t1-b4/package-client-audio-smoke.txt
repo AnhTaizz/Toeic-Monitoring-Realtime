@@ -1,0 +1,5 @@
+App-image: jpackage-out\ToeicMonitor (158.9 MB, 290 files)
+Launcher: jpackage-out\ToeicMonitor\ToeicMonitor.exe
+Bundled runtime: Java "21.0.8" (target machine needs no JDK/JRE)
+Client JAR SHA256: BB9BB5458D4F638497304744E73C5FF042C0E21BB152717437068FD0CA26BC94
+TEST launcher AudioSmoke.exe included; rebuild without -WithAudioSmoke for the image to hand over.

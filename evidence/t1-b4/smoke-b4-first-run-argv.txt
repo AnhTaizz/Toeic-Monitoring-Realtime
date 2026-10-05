@@ -1,0 +1,37 @@
+
+Where              Check                                   Result Detail
+-----              -----                                   ------ ------
+build-output       ToeicMonitor.exe opens main window      PASS   title=TOEIC Monitor
+build-output       window close leaves no process          PASS   remaining=0
+build-output       harness writes WAV tone                 PASS
+build-output       audio TEST tone 440hz.wav expect PLAYED PASS   outcome=PLAYED statuses=LOADING,READY,PLAYING,STOPPED playedMs=572 durationMs=2000 spacePath=true nonAsciiPath=false exited=True error=
+build-output       audio TEST tone 440hz.m4a expect PLAYED PASS   outcome=PLAYED statuses=LOADING,READY,PLAYING,STOPPED playedMs=511 durationMs=2020 spacePath=true nonAsciiPath=false exited=True error=
+build-output       audio TEST tone 440hz.mp3 expect PLAYED PASS   outcome=PLAYED statuses=LOADING,READY,PLAYING,STOPPED playedMs=561 durationMs=2061 spacePath=true nonAsciiPath=false exited=True error=
+build-output       audio TEST not audio.mp3 expect ERROR   PASS   outcome=ERROR statuses=LOADING,ERROR playedMs=0 durationMs=-1 spacePath=true nonAsciiPath=false exited=True error=UNKNOWN:
+                                                                  [com.sun.media.jfxmediaimpl.platform.gstreamer.GSTMediaPlayer@77833ea4] ERROR_MEDIA_INVALID: ERROR_MEDIA_INVALID
+build-output       audio TEST missing.mp3 expect ERROR     PASS   outcome=ERROR statuses=LOADING,ERROR playedMs=0 durationMs=-1 spacePath=false nonAsciiPath=false exited=True error=FILE_NOT_READABLE
+build-output       audio runs leave no process             PASS   remaining=0
+space-path         ToeicMonitor.exe opens main window      PASS   title=TOEIC Monitor
+space-path         window close leaves no process          PASS   remaining=0
+space-path         harness writes WAV tone                 FAIL
+space-path         audio TEST tone 440hz.wav expect PLAYED FAIL   outcome= statuses= playedMs= durationMs= spacePath= nonAsciiPath= exited=False error=
+space-path         audio TEST tone 440hz.m4a expect PLAYED FAIL   outcome= statuses= playedMs= durationMs= spacePath= nonAsciiPath= exited=False error=
+space-path         audio TEST tone 440hz.mp3 expect PLAYED FAIL   outcome= statuses= playedMs= durationMs= spacePath= nonAsciiPath= exited=True error=
+space-path         audio TEST not audio.mp3 expect ERROR   FAIL   outcome= statuses= playedMs= durationMs= spacePath= nonAsciiPath= exited=True error=
+space-path         audio TEST missing.mp3 expect ERROR     FAIL   outcome= statuses= playedMs= durationMs= spacePath= nonAsciiPath= exited=True error=
+space-path         audio runs leave no process             PASS   remaining=0
+unicode-path       ToeicMonitor.exe opens main window      FAIL   title=
+unicode-path       window close leaves no process          FAIL   remaining=0
+unicode-path       harness writes WAV tone                 FAIL
+unicode-path       audio TEST tone 440hz.wav expect PLAYED FAIL   outcome= statuses= playedMs= durationMs= spacePath= nonAsciiPath= exited=True error=
+unicode-path       audio TEST tone 440hz.m4a expect PLAYED FAIL   outcome= statuses= playedMs= durationMs= spacePath= nonAsciiPath= exited=True error=
+unicode-path       audio TEST tone 440hz.mp3 expect PLAYED FAIL   outcome= statuses= playedMs= durationMs= spacePath= nonAsciiPath= exited=True error=
+unicode-path       audio TEST not audio.mp3 expect ERROR   FAIL   outcome= statuses= playedMs= durationMs= spacePath= nonAsciiPath= exited=True error=
+unicode-path       audio TEST missing.mp3 expect ERROR     FAIL   outcome= statuses= playedMs= durationMs= spacePath= nonAsciiPath= exited=True error=
+unicode-path       audio runs leave no process             PASS   remaining=0
+dev-jdk (java -cp) audio TEST tone 440hz.m4a expect PLAYED FAIL   outcome= statuses= playedMs= durationMs= spacePath= nonAsciiPath= exited=True error=
+dev-jdk (java -cp) audio TEST tone 440hz.mp3 expect PLAYED FAIL   outcome= statuses= playedMs= durationMs= spacePath= nonAsciiPath= exited=True error=
+
+
+
+T1-B4 smoke: 13 PASS, 16 FAIL. PLAYED = JavaFX Media reported PLAYING and playback time advanced; it does not prove the speaker was audible.

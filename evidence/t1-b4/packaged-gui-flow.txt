@@ -1,0 +1,21 @@
+image jar sha256: BB9BB5458D4F638497304744E73C5FF042C0E21BB152717437068FD0CA26BC94
+start: 2026-10-05 16:47:24 UTC+7
+PASS | default server URL shown when no env is set | http://127.0.0.1:8080
+PASS | wrong password rejected, stays on login | Tên đăng nhập hoặc mật khẩu không đúng
+PASS | proctor login via URL edited in login UI | server field=http://192.168.x.x:8080 -> Giám sát thí sinh
+PASS | proctor realtime WS connected | Đã kết nối — đang đồng bộ HTTP
+PASS | TOEIC_SERVER_URL prefilled in login field | http://192.168.x.x:8080
+PASS | candidate login | Giao diện thí sinh
+PASS | candidate realtime WS connected | Kết nối thời gian thực sẵn sàng.
+PASS | candidate has server-granted attempt DEMO-C3-A | TEST fixture from scripts/demo-c3.ps1
+PASS | candidate monitoring events acknowledged | msedge processes=21 -> Chưa xác nhận: 0 · Đã xác nhận: 21 · Bị mất do queue đầy: 0
+PASS | no new event per poll while process set unchanged | after 6s: Chưa xác nhận: 0 · Đã xác nhận: 21 · Bị mất do queue đầy: 0 (msedge now 21)
+PASS | proctor sees monitoring warning | Quan sát thấy msedge.exe
+PASS | proctor warning counter | Cảnh báo: 43 · Đã đồng bộ
+PASS | proctor presence ONLINE | Vừa nhận heartbeat hợp lệ
+PASS | candidate window close ends process (monitoring active) | pid 7532 exited=True; ToeicMonitor processes now=2 (proctor instance still open)
+PASS | proctor presence UNKNOWN after candidate left | Quá thời gian chờ heartbeat
+PASS | proctor interruption history | Gián đoạn: 2 · Đã đồng bộ
+PASS | proctor window close ends process | pid 17880 exited=True
+PASS | no ToeicMonitor process left | count=0
+end: 2026-10-05 16:48:13 UTC+7

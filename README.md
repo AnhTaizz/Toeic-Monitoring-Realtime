@@ -35,13 +35,14 @@ Tài khoản mẫu (`MOCK`, chỉ dùng phát triển) dùng `TOEIC_SEED_PASSWOR
 
 Lệnh reset xóa volume `toeic-pgdata`, vì vậy toàn bộ dữ liệu phát triển hiện có sẽ mất. Flyway tự dựng schema khi server khởi động lại.
 
-Tạo Windows app-image sau `mvn package`:
+Tạo Windows app-image (kèm Java runtime) sau `mvn package`:
 
 ```powershell
-jpackage --type app-image --dest jpackage-out --name ToeicMonitor `
-  --input client\target --main-jar client-0.1.0-SNAPSHOT-all.jar `
-  --main-class vn.edu.toeic.client.Launcher --app-version 0.1.0
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-client.ps1
+.\jpackage-out\ToeicMonitor\ToeicMonitor.exe
 ```
+
+Chi tiết, cấu hình server và giới hạn đường dẫn ở mục [Đóng gói Windows và audio T1-B4](#đóng-gói-windows-và-audio-t1-b4).
 
 ## Thư viện ngoài và lý do sử dụng
 
@@ -53,6 +54,7 @@ jpackage --type app-image --dest jpackage-out --name ToeicMonitor `
 | Flyway + PostgreSQL module | Migration schema có version, dựng lại được |
 | PostgreSQL JDBC Driver | Kết nối PostgreSQL 18 |
 | JavaFX Controls 21.0.12 | Một desktop app có giao diện thí sinh/giám thị |
+| JavaFX Media 21.0.12 | Phát audio Listening từ file cục bộ (`Media`/`MediaPlayer`); T1-B4 đã thử trong app-image, chưa nối vào luồng thi |
 | Gson 2.13.2 | Contract login phía client; strict JSON parsing và serialization envelope/error WS phía server |
 | JUnit 5 + AssertJ | Test đơn vị và test hành vi bất đồng bộ |
 | Maven Shade Plugin | Tạo fat JAR đầu vào cho spike `jpackage` |
@@ -229,3 +231,44 @@ powershell -ExecutionPolicy Bypass -File scripts/smoke-b3.ps1 -Gui
 ```
 
 Script đọc `.env` riêng, tạo schema TEST UUID/server cổng riêng và các JVM candidate do test sở hữu; kết thúc tự dọn. HTTP/WS/PostgreSQL/B2/C3/dashboard là REAL, nguồn quan sát process là MOCK. `-Gui` mở Stage JavaFX thật, chọn dòng/đổi tab/làm mới/đăng xuất bằng controls JavaFX, kiểm UNKNOWN sau hard-kill và ONLINE phục hồi, chụp ảnh vào `client/target/b3-dashboard-*.png`. Đây là kiểm component proctor; đăng nhập và thao tác candidate GUI đầy đủ, LAN/package máy khác và human A review vẫn cần kiểm riêng. Không thêm thư viện ngoài cho B3.
+
+## Đóng gói Windows và audio T1-B4
+
+```powershell
+mvn package
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-client.ps1
+```
+
+Script kiểm tra Windows/`jpackage`/fat JAR, chỉ đưa `client-0.1.0-SNAPSHOT-all.jar` vào `--input` (thư mục `client\target` còn chứa test class và báo cáo), xóa đúng `jpackage-out\ToeicMonitor` của lần trước nếu app không còn chạy, gọi `jpackage --type app-image` rồi xác minh `ToeicMonitor.exe`, `runtime\bin\server\jvm.dll` và JAR. Lần đo 05/10/2026: 158,4 MB, 287 file (runtime 147,5 MB, app 10,4 MB). App-image không có `java.exe`; máy đích không cần JDK/JRE, Maven hay IDE. Chép nguyên thư mục `ToeicMonitor\` sang máy khác rồi chạy `ToeicMonitor.exe`. Đây chưa phải bộ cài (T3-B5).
+
+**Cấu hình server trên bản đóng gói** (không có `localhost` viết cứng):
+
+- Sửa trực tiếp ô **Server** trên màn đăng nhập, ví dụ `http://192.168.x.x:8080`.
+- Hoặc đặt biến môi trường `TOEIC_SERVER_URL` trước khi mở app; ô Server sẽ điền sẵn giá trị đó.
+- Hoặc thêm dòng `java-options=-Dtoeic.server.url=http://192.168.x.x:8080` vào mục `[JavaOptions]` của `ToeicMonitor\app\ToeicMonitor.cfg` (cách này chưa chạy thử ở T1-B4).
+
+Máy chạy server cần mở TCP 8080 trên tường lửa cho mạng LAN; client không kết nối PostgreSQL, DB tiếp tục chỉ bind `127.0.0.1`.
+
+**Giới hạn đường dẫn đã đo (máy build code page ANSI 1252):**
+
+| Vị trí đặt `ToeicMonitor\` | Kết quả |
+|---|---|
+| Thư mục có khoảng trắng (`TOEIC Test`) | Chạy được |
+| Thư mục có dấu nằm trong code page của máy (`Thí nghiêm cp1252`) | Chạy được |
+| Thư mục có ký tự ngoài code page (`Thử nghiệm TOEIC`) | **Không mở được**: launcher thoát mã 2, JVM báo `could not find java.dll` |
+
+Cho tới khi chốt QD-11, đặt app trong đường dẫn không có ký tự ngoài code page ANSI của máy (an toàn nhất là ASCII, ví dụ `C:\TOEIC\ToeicMonitor`). Thư mục **dữ liệu audio** thì không bị giới hạn này: file trong `Âm thanh mẫu\` phát bình thường khi đường dẫn do code Java tạo ra (`Path.toUri()`), không truyền qua tham số dòng lệnh.
+
+**Audio (QD-07):** JavaFX Media phát được MP3, WAV PCM và AAC/M4A trong app-image trên Windows 11 x64. Chọn MP3 cho audio Listening; file nằm ngoài JAR và được nạp bằng `new Media(path.toUri().toString())`.
+
+Kiểm lại đóng gói, đường dẫn và audio (không cần server/DB):
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-client.ps1 -WithAudioSmoke
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-b4.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-client.ps1
+```
+
+`-WithAudioSmoke` thêm launcher **TEST** `AudioSmoke.exe` (harness `AudioSmokeHarness` trong test source, có nút Play/Stop và trạng thái READY/PLAYING/STOPPED/ERROR) để thử JavaFX Media bên trong bản đóng gói; lệnh cuối đóng lại bản bàn giao không có harness. `smoke-b4.ps1` chép app-image vào `%TEMP%\toeic-b4\TOEIC Test` và `...\Thử nghiệm TOEIC`, mở/đóng app ở từng nơi, phát thử ba định dạng, thử file hỏng/thiếu và chạy cùng harness bằng JDK dev để so sánh. Trên máy code page 1252 script kết thúc với 1 FAIL ở dòng `unicode-path` — đó là giới hạn ở bảng trên, không phải lỗi script. PLAYED nghĩa là JavaFX báo PLAYING và thời gian phát tăng; script không chứng minh loa có tiếng.
+
+Bằng chứng và phần chưa chạy (máy Windows thứ hai, LAN thật): `evidence/t1-b4/2026-10-05-verification.md`.
