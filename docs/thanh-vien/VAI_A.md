@@ -165,9 +165,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 - Kiểm tra `writerEpoch` trước khi lấy khóa rồi tin kết quả đó.
 - Kiểm tra đáp án gửi lên có thuộc đúng đề của attempt không.
 
-**Xong khi:** AT03, AT04, AT05 chạy trên PostgreSQL thật; log có `decisionAt` và `savedRevision`.
-
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 05/10/2026, T2-A2 code-complete trên `feat/t2-a2-autosave-answers`: Flyway V6 schema `exam_autosave_requests`, AutosaveAnswersRequest/Response, ExamService.autosaveAnswers với khóa bi quan (`FOR UPDATE OF a`), `clock_timestamp()`, kiểm tra `writerEpoch`, kiểm tra deadline, kiểm tra câu hỏi/lựa chọn thuộc đề, so sánh JSON chuẩn tắc bằng TreeMap, AT03/AT04/AT05 logic. Real PostgreSQL 18.6 smoke `scripts/smoke-t2a2.ps1` và unit tests 373/373 PASS. Review C chưa chạy; chuẩn bị T2-A3.
 
 ### T2-A3 · Submit, timeout và chấm điểm một lần
 `4h` · phụ thuộc: T2-A2 · review: C

@@ -18,6 +18,11 @@ import vn.edu.toeic.server.exam.InvalidExamException;
 public class ApiExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiExceptionHandler.class);
 
+    @ExceptionHandler(vn.edu.toeic.server.exam.ExamApiException.class)
+    ResponseEntity<ApiErrorResponse> examApiException(vn.edu.toeic.server.exam.ExamApiException exception) {
+        return error(exception.status(), exception.code(), exception.getMessage(), false, exception.requestId());
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<ApiErrorResponse> accessDenied(AccessDeniedException exception) {
         return error(HttpStatus.valueOf(exception.status()), exception.code(), exception.getMessage(), false, null);

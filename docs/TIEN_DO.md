@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 05/10/2026 — T2-A1 CODE_COMPLETE: Import đề thi TOEIC JSON (Listening + Reading đoạn văn) và Mở ca thi; Flyway V5 schema `exams`, `exam_questions`, `exam_options`, `exam_sessions`, `exam_session_proctors`; phân quyền AT02 (Chỉ PROCTOR được import/mở ca, Thí sinh chỉ lấy đề không đáp án). Final tests 372/372 PASS (+6 tests), REAL PG18.6 smoke PASS. Evidence `evidence/t2-a1/2026-10-05-verification.md`.
+Cập nhật lần cuối: 05/10/2026 — T2-A2 CODE_COMPLETE: Autosave toàn bộ đáp án theo revision; khóa bi quan `FOR UPDATE OF a`, `clock_timestamp()`, kiểm tra `writerEpoch`, deadline, hợp lệ đề thi, so sánh JSON chuẩn tắc bằng `TreeMap`, AT03/AT04/AT05 logic; Flyway V6 `exam_autosave_requests`. Final tests 373/373 PASS (+1 test), REAL PG18.6 smoke PASS. Evidence `evidence/t2-a2/2026-10-05-verification.md`.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
@@ -13,7 +13,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
-| A | _chưa gán_ | T2-A1 code-complete; chuẩn bị T2-A2 | Import JSON đề thi, mở ca thi, Flyway V5, 372 tests PASS, Postgres 18 smoke PASS | Bắt đầu T2-A2 (Autosave bài thi theo revision & khóa bi quan) | `feat/t2-a1-exam-import-session` |
+| A | _chưa gán_ | T2-A2 code-complete; chuẩn bị T2-A3 | Autosave revision, khóa bi quan `FOR UPDATE OF a`, AT03/AT04/AT05 PASS, Flyway V6 | Bắt đầu T2-A3 (Submit, timeout và chấm điểm một lần) | `feat/t2-a2-autosave-answers` |
 | B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; chuẩn bị Chặng 2 | `feat/t1-b3-proctor-dashboard` |
 | C | _chưa gán_ | T1-C4 code-complete; log đo và survey | Tests/package366 + Python9; REAL transport/log-summary/ProcessHandle scan, MOCK overflow và SIMULATED retry PASS | Human B review, GUI/LAN và E1/E2 NOT RUN; chuẩn bị Chặng 2 | `feat/t1-c4-monitoring-measurement` |
 
