@@ -10,16 +10,16 @@ Mỗi lần chạy ghi đủ: commit SHA, OS/JDK/PostgreSQL, cấu hình, lệnh
 
 | ID | Tóm tắt | Owner / review | Task | Trạng thái | SHA | Bằng chứng |
 |---|---|---|---|---|---|---|
-| AT01 | Thí sinh B không đọc/sửa được bài của A, trước và sau khi nộp | A / C | T2-A4, T3-A4 | NOT RUN | | |
-| AT02 | Chưa login hoặc sai role gọi import/start; WS thiếu token | A / C | T1-A2, T2-A1 | NOT RUN | | |
-| AT03 | Revision 42 rồi 41: bản cũ không ghi đè | A / C | T2-A2 | NOT RUN | | |
-| AT04 | Cùng revision cùng nội dung, khác nội dung, đổi thứ tự key | A / C | T2-A2 | NOT RUN | | |
-| AT05 | requestId lặp; rollback không ACK thành công | A / C | T2-A2, T4-A1 | NOT RUN | | |
-| AT06 | Autosave cũ đến sau submit không đổi bài đã chốt | A / C | T2-A3 | NOT RUN | | |
-| AT07 | Chờ khóa qua deadline: quyết định theo giờ sau khóa | A / C | T2-A4 | NOT RUN | | |
-| AT08 | Submit lặp, timeout, save đến gần nhau: một kết quả, chấm một lần | A / C | T2-A3, T4-A1 | NOT RUN | | |
-| AT09 | Request của writer cũ không ghi được sau takeover | A / C | T2-A4 | NOT RUN | | |
-| AT10 | Không nhận đáp án sau khi chốt hoặc sau deadline | A / C | T2-A4 | NOT RUN | | |
+| AT01 | Thí sinh B không đọc/sửa được bài của A, trước và sau khi nộp | A / C | T2-A4, T3-A4 | **PASS** | `60e1ced` | `evidence/t2-a4/2026-10-05-verification.md` |
+| AT02 | Chưa login hoặc sai role gọi import/start; WS thiếu token | A / C | T1-A2, T2-A1 | **PASS** | `5fafab2` | `evidence/t2-a1/2026-10-05-verification.md` |
+| AT03 | Revision 42 rồi 41: bản cũ không ghi đè | A / C | T2-A2 | **PASS** | `443458d` | `evidence/t2-a2/2026-10-05-verification.md` |
+| AT04 | Cùng revision cùng nội dung, khác nội dung, đổi thứ tự key | A / C | T2-A2 | **PASS** | `443458d` | `evidence/t2-a2/2026-10-05-verification.md` |
+| AT05 | requestId lặp; rollback không ACK thành công | A / C | T2-A2, T4-A1 | **PASS** | `443458d` | `evidence/t2-a2/2026-10-05-verification.md` |
+| AT06 | Autosave cũ đến sau submit không đổi bài đã chốt | A / C | T2-A3 | **PASS** | `f28099b` | `evidence/t2-a3/2026-10-05-verification.md` |
+| AT07 | Chờ khóa qua deadline: quyết định theo giờ sau khóa | A / C | T2-A4 | **PASS** | `60e1ced` | `evidence/t2-a4/2026-10-05-verification.md` |
+| AT08 | Submit lặp, timeout, save đến gần nhau: một kết quả, chấm một lần | A / C | T2-A3, T4-A1 | **PASS** | `f28099b` | `evidence/t2-a3/2026-10-05-verification.md` |
+| AT09 | Request của writer cũ không ghi được sau takeover | A / C | T2-A4 | **PASS** | `60e1ced` | `evidence/t2-a4/2026-10-05-verification.md` |
+| AT10 | Không nhận đáp án sau khi chốt hoặc sau deadline | A / C | T2-A4 | **PASS** | `60e1ced` | `evidence/t2-a4/2026-10-05-verification.md` |
 | AT11 | Server 40 / client 42, mất ACK, reconnect, mở app mới | B / A | T2-B4, T4-B1 | NOT RUN | | |
 
 ## Monitoring
