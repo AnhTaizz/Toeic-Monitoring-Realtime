@@ -278,6 +278,27 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - Bằng chứng: `evidence/t2-a5/2026-10-05-verification.md` và `docs/GIAO_DICH_VA_QUYEN.md`.
 - Hoàn thành Chặng 2 cho Vai A: Toàn bộ các tasks T2-A1 -> T2-A5 đã hoàn thành code-complete và nghiệm thu. Sẵn sàng cho Chặng 3 (API tài nguyên audio, READY, Listening gián đoạn).
 
+## 2026-10-05 · A · T1-AR — Người A Review Toàn Bộ Phần B Làm Trong Chặng 1 (T1-B1..T1-B4)
+- **Đối tượng review:** Toàn bộ code, test, tài liệu thuộc client module của Vai B trong Chặng 1: `ToeicClientApplication`, `LoginApiClient`, `RealtimeClient`, `AuthenticatedWebSocketOpener`, `ConnectionViewModel`, `ProctorDashboardView`, `DashboardController`, `DashboardModel`, `MonitoringApiClient`, `MonitoringJson`, `MonitoringData`.
+- **Kết quả rà soát theo 5 tiêu chuẩn hợp đồng:**
+  1. *Có tác vụ mạng/file/quét chạy trên luồng giao diện (JavaFX Thread) không?*
+     - **ĐẠT:** Mọi tác vụ HTTP, WebSocket I/O, JSON parse, reconnect schedule đều chạy trên các daemon worker pool chuyên biệt (`toeic-http-worker`, `toeic-realtime-worker`, `toeic-dashboard-http`, `toeic-dashboard-worker`). Cập nhật giao diện luôn được bọc qua `Platform.runLater` và kiểm tra `viewGeneration` / `closed` flag an toàn.
+  2. *Đóng app có dừng hết worker không?*
+     - **ĐẠT:** `ToeicClientApplication.stop()` và `releaseConnectionView()` đóng tuần tự và triệt để: `dashboard.close()`, `monitoring.close()`, `realtimeClient.close()`, `loginApiClient.close()`. Tất cả thread factories đều set daemon `true`, không gây treo process hoặc leak background socket.
+  3. *Retry có giữ nguyên requestId, revision, nội dung không?*
+     - **ĐẠT:** `RealtimeClient` quản lý `pendingAcks` chặt chẽ, kiểm tra chống trùng lặp `requestId` với nội dung khác. Quá trình reconnect WebSocket giữ nguyên correlation và ngân sách thử lại (tối đa 4 lần, backoff 1s/2s/4s/8s), không tự ý thay đổi payload. `DashboardController` có `reloadBudget = 2` hữu hạn, chống bão request.
+  4. *Client có hiển thị "đã lưu" / "xác nhận" trước khi nhận ACK không?*
+     - **ĐẠT:** Giao diện tách bạch rõ ràng giữa "Chưa xác nhận" và "Đã xác nhận"; không coi việc ghi socket là ACK. Bảng giám thị Proctor hiển thị cờ "Dữ liệu cũ" (`staleRoster`) khi mất mạng hoặc đang đồng bộ HTTP.
+  5. *Client có tự cho mình quyền gì mà server không kiểm tra không?*
+     - **ĐẠT:** Tuân thủ triệt để nguyên tắc Zero-Trust. Token Bearer gửi qua header; danh sách `attemptScope` chỉ lấy từ `/api/v1/auth/me` do server xác thực; role và assignment luôn được server kiểm tra lại trên từng thông điệp.
+- **Điểm sáng kỹ thuật phát hiện:**
+  - `MonitoringJson` dùng `BigDecimal.longValueExact()` để đọc các trường số lớn (như `candidateUserId`, `revision`, `droppedCount`), triệt tiêu hoàn toàn lỗi làm tròn số khi dùng `double`.
+  - `LimitedBody` trong `MonitoringApiClient` chặn streaming response HTTP vượt quá 4MB để chống tấn công OOM.
+  - Xóa token khỏi bộ nhớ (`token = null`) ngay khi đóng kết nối hoặc gặp lỗi 401/1008.
+- **Khuyến nghị cho Chặng 2 (T2-B):**
+  - Khi triển khai giao diện làm bài thi (Exam View) và chức năng autosave/submit, B cần kế thừa pattern này: sinh `requestId` duy nhất, giữ nguyên `requestId` khi retry, tăng `answerRevision` khi sửa đáp án, và chỉ hiển thị "Đã lưu" khi nhận status `SAVED` hoặc `ALREADY_SAVED` từ Server.
+
+
 
 
 
