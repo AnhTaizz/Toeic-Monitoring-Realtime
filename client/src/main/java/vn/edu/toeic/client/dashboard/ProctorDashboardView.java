@@ -41,6 +41,7 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
     private final AtomicBoolean queued=new AtomicBoolean(), closed=new AtomicBoolean();
     private final DateTimeFormatter times;
     private final DashboardController controller;
+    private final ExamApiClient examApi;
     private boolean rendering;
     public ProctorDashboardView(String serverUrl, LoginResponse login, RealtimeClient transport, Runnable onLogout, Runnable onExpired) {
         if (!"PROCTOR".equals(login.user().role())) throw new IllegalArgumentException("Dashboard chỉ dành cho giám thị");
@@ -58,15 +59,16 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
 
         Button seedSampleBtn = new Button("⚡ Khởi tạo Đề & Ca Thi Mẫu (10 câu)");
         seedSampleBtn.getStyleClass().add("btn-success");
-        ExamApiClient examApi = new ExamApiClient(serverUrl, login.token());
+        examApi = new ExamApiClient(serverUrl, login.token());
         seedSampleBtn.setOnAction(event -> {
             seedSampleBtn.setDisable(true);
             banner.setText("Đang import đề thi mẫu và tạo ca thi...");
-            examApi.importSampleExam().thenCompose(imp -> examApi.createSampleSession("SESSION-BENCHMARK-" + (System.currentTimeMillis() % 10000)))
+            SampleExamSeeder.seed(examApi, "SESSION-BENCHMARK-" + (System.currentTimeMillis() % 10000))
                     .whenComplete((sess, err) -> Platform.runLater(() -> {
+                        if (closed.get()) return;
                         seedSampleBtn.setDisable(false);
                         if (err != null) {
-                            banner.setText("Lỗi khởi tạo ca thi mẫu: " + err.getMessage());
+                            banner.setText("Lỗi khởi tạo ca thi mẫu: " + ExamApiClient.describe(err));
                         } else {
                             banner.setText("Khởi tạo thành công ca thi " + sess.sessionId() + "! Hãy bấm 'Làm mới' để nạp lượt thi.");
                             controller.refresh();
@@ -157,5 +159,5 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
             historyStatus.setText(section(value.historyLoading(),value.historyStale(),value.historyError(),"Gián đoạn: "+value.interruptions().size()));
         } finally { rendering=false; }
     }
-    @Override public void close() { if (closed.compareAndSet(false,true)) { controller.close(); pending.set(null); roster.getItems().clear(); events.getItems().clear(); history.getItems().clear(); } }
+    @Override public void close() { if (closed.compareAndSet(false,true)) { controller.close(); examApi.close(); pending.set(null); roster.getItems().clear(); events.getItems().clear(); history.getItems().clear(); } }
 }
