@@ -298,7 +298,11 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - **Khuyến nghị cho Chặng 2 (T2-B):**
   - Khi triển khai giao diện làm bài thi (Exam View) và chức năng autosave/submit, B cần kế thừa pattern này: sinh `requestId` duy nhất, giữ nguyên `requestId` khi retry, tăng `answerRevision` khi sửa đáp án, và chỉ hiển thị "Đã lưu" khi nhận status `SAVED` hoặc `ALREADY_SAVED` từ Server.
 
-
-
-
-
+## 2026-10-09 · B · T2-B1…T2-B4 trên PR #17
+- Thời lượng: một phiên Agent; giờ của thành viên chưa ghi.
+- Đã làm: review PR #17 (`0a4ea38`, 0 comment review trên GitHub) rồi sửa. Lỗi chặn tìm thấy: `ExamApiClient` không parse được `Instant` nên mọi status/autosave/submit/takeover đều thành "phản hồi không hợp lệ", màn thi chưa từng mở được với server thật; `triggerAutosave` bỏ mất thay đổi khi đang có request; ACK cũ vẫn báo "Đã lưu"; hết giờ thì tự nộp và mở hộp thoại trong `Timeline`; deadline null gây NPE; nộp lại sinh requestId mới; mất WS chỉ đổi màu badge. Thêm `ExamSession` (không phụ thuộc JavaFX, chạy trên một luồng owner), `ExamPaper`, `ExamEntry`, `ExamSettings`, `ExamGateway`, `ExamApiException`; viết lại `CandidateExamView` thành lớp chỉ vẽ; tách đề mẫu sang `SampleExamSeeder` (MOCK) và cho bấm tạo ca nhiều lần; đóng `ExamApiClient` của dashboard khi đăng xuất.
+- Commit: `639ab21`, `2f2aa21`, `e63907d`, `c03b859`, `e362ed9` và commit tài liệu kế tiếp (nhánh `test/javafx-full-ui-testing`).
+- Đã kiểm: `mvn package` 441/441; `ExamFlowPostgresSmoke` với Spring Boot jar và PostgreSQL 18.6 thật: 28 PASS, 3 GAP server; GUI thật qua UI Automation: vào thi, lưu, bỏ chọn, nhóm đoạn văn, tắt/bật server, nộp và xem điểm 2/10, hai cửa sổ takeover, đóng cửa sổ, hết giờ. Lượt smoke đầu lộ ra fixture của test chép mẫu JSON sai trong tài liệu và hai lỗi server; các lượt đó không dùng làm bằng chứng PASS.
+- Còn dở: hiển thị `TIMED_OUT` và mở lại lượt đã chốt chưa nghiệm thu được với server thật; nhánh xung đột và 401 mới có test MOCK; chưa làm T2-B5.
+- Tiếp theo: sau khi A sửa, chạy lại smoke (ba dòng GAP phải thành PASS) và chạy checklist GUI bằng tay trên hai máy.
+- Cần người khác: A — cho đọc status/exam của lượt đã chốt, bật `@EnableScheduling` cho job hết giờ, quyết thời điểm đặt deadline, sửa mẫu JSON status, review QD-12 và QD-13, review PR #17. Bằng chứng `evidence/t2-b/2026-10-09-verification.md`.
