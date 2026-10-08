@@ -10,24 +10,26 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import vn.edu.toeic.protocol.exam.SubmitExamResponse;
 
 public final class ScoreResultDialog {
     private ScoreResultDialog() { }
 
-    public static void show(Stage owner, SubmitExamResponse result, Runnable onDone) {
+    /** Hiển thị kết quả do server trả. note là ghi chú của ExamSession (ví dụ thay đổi chưa lưu không được tính). */
+    public static void show(Stage owner, ExamSession.Result result, String note, Runnable onDone) {
         Stage dialog = new Stage();
         dialog.initOwner(owner);
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("Kết Quả Bài Thi TOEIC");
 
-        Label header = new Label(result.state().equals("TIMED_OUT") ? "HẾT GIỜ LÀM BÀI" : "NỘP BÀI THÀNH CÔNG");
+        boolean timedOut = "TIMED_OUT".equals(result.state());
+        Label header = new Label(timedOut ? "HẾT GIỜ — SERVER ĐÃ CHỐT BÀI" : "SERVER ĐÃ GHI NHẬN BÀI NỘP");
         header.getStyleClass().add("title-large");
-        header.setStyle(result.state().equals("TIMED_OUT")
+        header.setStyle(timedOut
                 ? "-fx-text-fill: #fb7185; -fx-font-size: 24px; -fx-font-weight: 800;"
                 : "-fx-text-fill: #34d399; -fx-font-size: 24px; -fx-font-weight: 800;");
 
-        Label subHeader = new Label("Bài thi của bạn đã được hệ thống máy chủ ghi nhận và chấm điểm độc lập.");
+        Label subHeader = new Label(note == null || note.isBlank()
+                ? "Bài thi của bạn đã được hệ thống máy chủ ghi nhận và chấm điểm độc lập." : note);
         subHeader.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 13px;");
         subHeader.setWrapText(true);
 
@@ -63,7 +65,7 @@ public final class ScoreResultDialog {
         breakdown.getChildren().addAll(listeningBox, readingBox);
         scoreCard.getChildren().addAll(totalScoreLabel, totalScoreVal, breakdown);
 
-        Label timeInfo = new Label("Thời điểm chốt điểm: " + (result.submittedAt() != null ? result.submittedAt().toString() : "Vừa xong"));
+        Label timeInfo = new Label("Thời điểm server chốt: " + (result.decidedAt() != null ? result.decidedAt().toString() : "server không trả"));
         timeInfo.setStyle("-fx-text-fill: #64748b; -fx-font-size: 12px;");
 
         Button closeBtn = new Button("Hoàn Tất & Thoát");

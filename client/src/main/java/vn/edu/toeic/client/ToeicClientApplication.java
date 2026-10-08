@@ -32,6 +32,8 @@ import vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpener;
 import vn.edu.toeic.client.dashboard.ProctorDashboardView;
 import vn.edu.toeic.client.exam.CandidateExamView;
 import vn.edu.toeic.client.exam.ExamApiClient;
+import vn.edu.toeic.client.exam.ExamEntry;
+import vn.edu.toeic.client.exam.ExamSession;
 
 public final class ToeicClientApplication extends Application {
     private final LoginApiClient loginApiClient = new LoginApiClient();
@@ -360,33 +362,27 @@ public final class ToeicClientApplication extends Application {
                 } catch (Exception ignored) { }
             }
 
-            examApiClient.getExam(selectedAttempt).thenCombine(examApiClient.getAttemptStatus(selectedAttempt), (exam, attemptStatus) -> {
-                return new Object[]{exam, attemptStatus};
-            }).whenComplete((data, err) -> Platform.runLater(() -> {
+            // Đọc trạng thái, tải đề rồi xin server cấp quyền ghi cho lần mở này; tất cả chạy trên worker HTTP.
+            ExamEntry.open(examApiClient, selectedAttempt).whenComplete((outcome, err) -> Platform.runLater(() -> {
+                // Đã đăng xuất hoặc đổi màn trong lúc tải: không mở màn thi trên client đã đóng.
+                if (currentView != viewGeneration) return;
                 startExamBtn.setDisable(false);
                 if (err != null) {
-                    status.setText("Không tải được đề thi (" + err.getMessage() + ")");
+                    status.setText("Không vào được phòng thi: " + ExamApiClient.describe(err));
                     status.setStyle("-fx-text-fill: #fb7185;");
                     return;
                 }
-                var exam = (vn.edu.toeic.protocol.exam.CandidateExamDto) data[0];
-                var attemptStatus = (vn.edu.toeic.protocol.exam.CandidateAttemptStatusResponse) data[1];
-
-                if ("SUBMITTED".equals(attemptStatus.state()) || "TIMED_OUT".equals(attemptStatus.state())) {
-                    status.setText("Lượt thi này đã kết thúc (Trạng thái: " + attemptStatus.state() + " - Điểm: " + attemptStatus.score() + ").");
+                if (outcome instanceof ExamEntry.Finished finished) {
+                    ExamSession.Result result = finished.result();
+                    status.setText("Lượt thi này đã được server chốt (" + result.state() + "): đúng "
+                            + result.correctCount() + " / " + result.totalQuestions() + " câu.");
                     return;
                 }
-
-                // Launch Candidate Exam View
-                activeExamView = new CandidateExamView(selectedAttempt, login.user().username(), exam, attemptStatus,
-                        examApiClient, realtimeClient, () -> {
-                    // On Exit / Completed Exam
-                    if (activeExamView != null) {
-                        activeExamView.close();
-                        activeExamView = null;
-                    }
-                    showRoleScene(stage, serverUrl, login);
-                });
+                ExamEntry.Ready ready = (ExamEntry.Ready) outcome;
+                activeExamView = new CandidateExamView(selectedAttempt, login.user().username(), ready.paper(),
+                        ready.start(), examApiClient, realtimeClient,
+                        () -> showRoleScene(stage, serverUrl, login),
+                        () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."));
 
                 Scene examScene = applyStyles(new Scene(activeExamView, 1180, 800));
                 stage.setScene(examScene);
