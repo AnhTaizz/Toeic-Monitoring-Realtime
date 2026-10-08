@@ -2,7 +2,9 @@ package vn.edu.toeic.client.dashboard;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import vn.edu.toeic.client.exam.ExamApiClient;
+import vn.edu.toeic.client.exam.ExamApiException;
 import vn.edu.toeic.protocol.exam.CreateSessionRequest;
 import vn.edu.toeic.protocol.exam.CreateSessionResponse;
 import vn.edu.toeic.protocol.exam.ExamImportRequest;
@@ -28,7 +30,20 @@ final class SampleExamSeeder {
     static CompletableFuture<CreateSessionResponse> seed(ExamApiClient api, String sessionId) {
         CreateSessionRequest session = new CreateSessionRequest(sessionId, EXAM_ID, "Ca thi mẫu TOEIC 10 câu (MOCK)",
                 durationSeconds(), List.of("proctor1"), List.of("candidate1", "candidate2"));
-        return api.importExam(sampleExam()).thenCompose(imported -> api.createSession(session));
+        return api.importExam(sampleExam()).handle((imported, failure) -> failure).thenCompose(failure -> {
+            // Bấm lần thứ hai thì đề mẫu đã có và server trả INVALID_INPUT: vẫn tạo ca mới trên đề đó.
+            // Nếu đề thật sự không tồn tại, chính bước tạo ca sẽ báo lỗi.
+            if (failure != null && !isInvalidInput(failure)) {
+                return CompletableFuture.<CreateSessionResponse>failedFuture(failure);
+            }
+            return api.createSession(session);
+        });
+    }
+
+    private static boolean isInvalidInput(Throwable failure) {
+        Throwable cause = failure instanceof CompletionException && failure.getCause() != null
+                ? failure.getCause() : failure;
+        return cause instanceof ExamApiException rejection && "INVALID_INPUT".equals(rejection.code());
     }
 
     private static ExamImportRequest sampleExam() {

@@ -129,8 +129,11 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        HBox topBar = new HBox(14, leftInfo, realtimeStatusLabel, spacer, saveStatusLabel, retryBtn, timerLabel,
-                leaveBtn, submitBtn);
+        // Các nhãn trạng thái và nút không được co lại thành "…" khi cửa sổ hẹp.
+        for (Region fixed : List.of(realtimeStatusLabel, timerLabel, leaveBtn, submitBtn)) {
+            fixed.setMinWidth(Region.USE_PREF_SIZE);
+        }
+        HBox topBar = new HBox(14, leftInfo, realtimeStatusLabel, spacer, timerLabel, leaveBtn, submitBtn);
         topBar.setAlignment(Pos.CENTER_LEFT);
         topBar.setPadding(new Insets(8, 12, 14, 12));
         topBar.setStyle("-fx-border-color: #334155; -fx-border-width: 0 0 1 0;");
@@ -153,7 +156,10 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
         exitBtn.setId("exam-exit");
         exitBtn.setOnAction(event -> leave());
 
-        HBox bar = new HBox(12, noticeLabel, reclaimBtn, reloadBtn, exitBtn);
+        for (Region fixed : List.of(saveStatusLabel, retryBtn, reclaimBtn, reloadBtn, exitBtn)) {
+            fixed.setMinWidth(Region.USE_PREF_SIZE);
+        }
+        HBox bar = new HBox(12, saveStatusLabel, retryBtn, noticeLabel, reclaimBtn, reloadBtn, exitBtn);
         bar.setAlignment(Pos.CENTER_LEFT);
         bar.setPadding(new Insets(8, 12, 8, 12));
         return bar;
@@ -276,6 +282,11 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
 
     private static String saveText(ExamSession.View view) {
         if (view.phase() == ExamSession.Phase.FINAL) return "Lượt thi đã chốt";
+        // Ngoài lúc đang làm bài thì không còn gì "đang chờ gửi": chỉ nói rõ bản trên máy chưa được xác nhận.
+        if (view.phase() != ExamSession.Phase.ACTIVE && view.saveState() != ExamSession.SaveState.SAVED
+                && view.saveState() != ExamSession.SaveState.SAVING) {
+            return "Thay đổi trên máy này CHƯA được server xác nhận";
+        }
         return switch (view.saveState()) {
             case SAVED -> "Đã lưu (server xác nhận revision " + view.confirmedRevision() + ")";
             case PENDING -> "Chưa lưu — đang chờ gửi revision " + view.revision();
@@ -297,7 +308,7 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
         if (!view.message().isBlank()) return view.message();
         if (view.phase() == ExamSession.Phase.ACTIVE && !view.connectionOnline()) {
             return "Mất kết nối giám sát tới server: chỉnh sửa đáp án tạm khóa cho tới khi kết nối lại. "
-                    + "Trạng thái lưu bên phải vẫn chỉ phản ánh xác nhận của server.";
+                    + "Trạng thái lưu vẫn chỉ phản ánh xác nhận của server.";
         }
         return "";
     }
