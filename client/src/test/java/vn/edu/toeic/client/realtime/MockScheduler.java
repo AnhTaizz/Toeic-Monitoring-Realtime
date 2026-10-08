@@ -15,12 +15,12 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /** MOCK virtual clock: no sleep, sockets, GUI or real integration evidence. */
-final class MockScheduler extends AbstractExecutorService implements ScheduledExecutorService {
+public final class MockScheduler extends AbstractExecutorService implements ScheduledExecutorService {
     private final PriorityQueue<Task<?>> queue = new PriorityQueue<>();
     private long now;
     private boolean shutdown;
 
-    void advance(Duration duration) {
+    public void advance(Duration duration) {
         long end = now + duration.toMillis();
         while (!queue.isEmpty() && queue.peek().due <= end) {
             Task<?> task = queue.remove();
