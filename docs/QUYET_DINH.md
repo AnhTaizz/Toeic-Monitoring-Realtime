@@ -94,3 +94,21 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Recorder opt-in mặc định tắt; queue1024/drop-new, counter độc lập, JSONL writer daemon/flush2000ms. I/O lỗi không thay delivery; thiếu FINAL/drop/mismatch phải báo INCOMPLETE. Không disk-queue event, không thêm telemetry framework.
 - Lý do: định nghĩa byte tái kiểm từ đúng chuỗi, không đếm đôi retry/fragment/outcome, không chặn FX/WS bằng file I/O. Chưa đo overhead hay full/delta; WMI chỉ khảo sát nguồn chính thức, giữ ProcessHandle polling hiện có.
 - Kiểm chứng và giới hạn: [schema](MONITORING_MEASUREMENTS.md), [survey](PROCESS_MONITORING_SURVEY.md), [evidence C4](../evidence/t1-c4/2026-10-05-verification.md); không tự đổi kế hoạch01–03 hoặc TRACKER.
+
+## QD-12 · Vào phòng thi là xin writerEpoch mới
+
+- Ngày: 2026-10-09 · Người quyết: B (phiên Agent) · Review A: NOT RUN.
+- Lựa chọn: mỗi lần mở màn thi, client gọi `POST /attempts/{id}/takeover` và làm bài bằng epoch server vừa cấp, không dùng epoch đọc từ `GET /status`. Thứ tự: đọc status (lượt đã chốt thì chỉ hiện kết quả) → tải và kiểm tra đề → takeover.
+- Lý do: status trả cùng một epoch cho mọi máy. Nếu chỉ đọc status, hai máy cùng tài khoản giữ chung epoch và server không chặn được máy cũ; hợp đồng mục 2 coi mở lại ứng dụng là writer mới.
+- Hệ quả: vào thi trên máy thứ hai làm máy đầu bị từ chối `STALE` ở lần lưu kế tiếp; máy đầu khóa và phải bấm lấy lại quyền ghi, khi đó bản chưa lưu của nó bị bỏ. Nút takeover không còn hiện thường trực. Epoch tăng mỗi lần vào thi, kể cả cùng một máy.
+- Kiểm chứng: `ExamPaperAndEntryTest`, `ExamSessionTest.staleWriterEpochBlocksThisSessionUntilItIsGrantedANewEpoch`, REAL smoke và GUI hai cửa sổ; `evidence/t2-b/2026-10-09-verification.md`.
+- Liên quan: T2-B4, AT09, AT11.
+
+## QD-13 · Mất WebSocket khi đang thi: khóa sửa, không khóa nộp
+
+- Ngày: 2026-10-09 · Người quyết: B (phiên Agent) · Review A: NOT RUN.
+- Lựa chọn: khi kết nối realtime không ở `CONNECTED`, màn thi khóa chọn/đổi/bỏ chọn đáp án. Request HTTP đang chạy vẫn chạy tiếp và kết quả của nó vẫn được ghi nhận; nút nộp bài vẫn dùng được. Khi `CONNECTED` trở lại, client đọc status và đối chiếu xong mới mở khóa.
+- Lý do: mất WS nghĩa là server không còn xác nhận được giám sát, nên không cho làm tiếp. Nhưng WS và HTTP là hai kênh riêng: mất WS không chứng minh bản lưu thất bại hay thành công, nên nhãn lưu chỉ đổi theo ACK. Cho nộp để thí sinh không bị kẹt khi WS ở `FAILED`; server vẫn quyết định nhận hay không.
+- Hệ quả: đây chỉ là phản hồi giao diện; server vẫn nhận autosave từ một client đã sửa để bỏ khóa. Nếu nhóm muốn cấm cả nộp bài khi mất WS thì phải đổi ở cả hai phía.
+- Kiểm chứng: `ExamSessionTest.losingTheWebSocketLocksEditingButDoesNotChangeWhatTheServerConfirmed`; GUI thật tắt/bật server; `evidence/t2-b/2026-10-09-verification.md`.
+- Liên quan: T2-B3, T2-B4, T3-B3 (Listening có chính sách riêng, không dùng lại nhánh này).

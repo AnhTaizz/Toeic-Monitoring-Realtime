@@ -256,3 +256,30 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-c4.ps1
 Script in thư mục `server/target/c4-runtime/<runId>` chứa raw/metadata/summary JSON+CSV. Python3.11+ stdlib; không cài thêm package. Event/overflow source MOCK, ACK suppression tại observer C3 SIMULATED; HTTP/WS/DB/B2/dashboard model REAL. ProcessHandle collector scan REAL được kiểm riêng, không giả process mở từ MOCK. Metadata ghi source SHA/dirty/hash source+JAR, OS/JDK/settings/clock domain và lệnh sanitize. Đây là smoke không mở GUI; LAN, human B review, WMI/ETW và E1/E2 NOT RUN.
 
 Queue log mặc định1024/drop-new, flush2000ms, writer daemon; I/O lỗi không phá delivery. Summary exit0=COMPLETE các file cung cấp, exit2=INCOMPLETE/lỗi; báo drop/unwritten/truncated/malformed/counter mismatch, không sửa raw. Cấu hình, schema, chi phí khi bật và giới hạn: [MONITORING_MEASUREMENTS](docs/MONITORING_MEASUREMENTS.md). [Khảo sát ProcessHandle/WMI có nguồn Oracle/Microsoft](docs/PROCESS_MONITORING_SURVEY.md), [evidence C4](evidence/t1-c4/2026-10-05-verification.md).
+
+## Luồng thi T2-B (màn thí sinh)
+
+Giám thị bấm "Khởi tạo Đề & Ca Thi Mẫu" (đề `MOCK` 10 câu, chỉ để phát triển và demo); thí sinh bấm "Làm mới danh sách ca thi" rồi "Vào Phòng Thi". Đáp án được gửi sau mỗi thay đổi và chỉ ghi "Đã lưu" khi server xác nhận đúng revision đang có trên máy. Mất kết nối realtime thì khóa sửa đáp án cho tới khi kết nối lại. Hết giờ thì client khóa và hỏi server, không tự nộp. Mở cùng lượt thi trên máy thứ hai sẽ lấy quyền ghi của máy đầu.
+
+Tham số tùy chọn khi chạy client (truyền trong dấu ngoặc kép ở PowerShell):
+
+| Property | Mặc định | Ý nghĩa |
+|---|---|---|
+| `toeic.exam.autosaveDebounceMillis` | 800 | Chờ không có thay đổi rồi mới gửi autosave |
+| `toeic.exam.retryInitialMillis`, `toeic.exam.retryMaxMillis` | 1000, 8000 | Khoảng chờ giữa các lần gửi lại |
+| `toeic.exam.maxRetries` | 4 | Số lần tự gửi lại trước khi chờ bấm "Thử lại" |
+| `toeic.exam.statusPollMillis`, `toeic.exam.maxStatusPolls` | 1000, 30 | Hỏi trạng thái lượt thi sau khi hết giờ |
+| `toeic.exam.httpTimeoutMillis` | 10000 | Timeout mỗi request của màn thi |
+| `toeic.sample.durationSeconds` | 2700 | Thời lượng ca mẫu do giám thị tạo; đặt nhỏ để thử hết giờ |
+
+Smoke với server và PostgreSQL thật (không mở GUI). Nó chạy server trên một schema tạm rồi xóa schema đó, không reset DB:
+
+```powershell
+docker compose up -d --wait
+mvn package
+# nạp DB_NAME/DB_USER/DB_PASSWORD/DB_PORT từ .env vào terminal trước
+$gson = "$env:USERPROFILE\.m2\repository\com\google\code\gson\gson\2.13.2\gson-2.13.2.jar"
+java -cp "client\target\test-classes;client\target\classes;protocol\target\classes;$gson" vn.edu.toeic.client.exam.ExamFlowPostgresSmoke
+```
+
+Dòng `GAP` trong kết quả là hành vi server đang chặn hợp đồng, không phải PASS. Giới hạn hiện tại: chưa phát audio Listening; chưa hiển thị được kết quả hết giờ và chưa mở lại được lượt đã chốt vì server (xem `docs/TIEN_DO.md`); client không lưu đáp án ra đĩa. Không thêm thư viện ngoài. Bằng chứng: [evidence T2-B](evidence/t2-b/2026-10-09-verification.md).

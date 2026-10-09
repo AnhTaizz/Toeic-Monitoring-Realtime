@@ -1,0 +1,38 @@
+Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.970 s -- in vn.edu.toeic.protocol.measurement.MessageMeasurementsTest
+Tests run: 23, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.374 s -- in vn.edu.toeic.client.dashboard.DashboardControllerTest
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in vn.edu.toeic.client.dashboard.DashboardModelTest
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.190 s -- in vn.edu.toeic.client.dashboard.MonitoringApiClientTest
+Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.103 s -- in vn.edu.toeic.client.dashboard.MonitoringJsonTest
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.748 s -- in vn.edu.toeic.client.exam.ExamApiClientTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.060 s -- in vn.edu.toeic.client.exam.ExamPaperAndEntryTest
+Tests run: 43, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.230 s -- in vn.edu.toeic.client.exam.ExamSessionTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s -- in vn.edu.toeic.client.exam.ExamSessionThreadingTest
+Tests run: 39, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.969 s -- in vn.edu.toeic.client.LoginApiClientTest
+Tests run: 31, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.223 s -- in vn.edu.toeic.client.monitoring.MonitoringDeliveryTest
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.408 s -- in vn.edu.toeic.client.monitoring.ProcessCollectorTest
+Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.080 s -- in vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest
+Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.129 s -- in vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpenerTest
+Tests run: 51, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.295 s -- in vn.edu.toeic.client.realtime.RealtimeClientTest
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.130 s -- in vn.edu.toeic.client.ScopeLookupTest
+Tests run: 293, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 36, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 22.84 s -- in vn.edu.toeic.server.auth.AuthenticatedNetworkTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 s -- in vn.edu.toeic.server.auth.AuthServiceTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.487 s -- in vn.edu.toeic.server.auth.ConcurrentRealtimeSendTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.638 s -- in vn.edu.toeic.server.auth.RealtimeMeasurementTest
+Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.146 s -- in vn.edu.toeic.server.auth.SessionAuthenticationTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.678 s -- in vn.edu.toeic.server.exam.ExamControllerTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in vn.edu.toeic.server.exam.ExamValidationTest
+Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s -- in vn.edu.toeic.server.monitoring.MonitoringGapTest
+Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.195 s -- in vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest
+Tests run: 24, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.218 s -- in vn.edu.toeic.server.monitoring.ProcessEventTest
+Tests run: 125, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.174 s -- in vn.edu.toeic.monitoring.ProcessObservationTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+Reactor Summary for TOEIC Monitoring Realtime 0.1.0-SNAPSHOT:
+TOEIC Monitoring Realtime .......................... SUCCESS [  0.003 s]
+TOEIC Protocol ..................................... SUCCESS [  5.481 s]
+TOEIC JavaFX Client ................................ SUCCESS [ 23.075 s]
+TOEIC Server ....................................... SUCCESS [ 36.380 s]
+TOEIC ProcessHandle Spike .......................... SUCCESS [  1.590 s]
+BUILD SUCCESS

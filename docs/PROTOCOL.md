@@ -203,6 +203,7 @@ Giá trị thử nghiệm theo hợp đồng, phải ghi lại giá trị thật
 |---|---|---|---|
 | 03/10/2026 | Chốt login REST, envelope/message MOCK v0 và mã lỗi v0 cho T1-A1/T1-C1 | A + C | Client T1-B1 |
 | 04/10/2026 | QD-03 Bearer header; endpoint WS thật, heartbeat transport/ACK/ERROR, auth/role/scope guard | A (T1-A2) | B2 cần tích hợp ở phiên riêng; chưa sửa nhánh B2 |
+| 09/10/2026 | B consume T2-A1…A4 trên PR #17; ghi 4 điểm server khác tài liệu; không đổi endpoint/DTO | B | A cần xử lý các điểm 1–3 và sửa mẫu JSON status |
 
 ## Contract T1-A2 và handoff cho B2
 
@@ -686,5 +687,33 @@ Cross-owner tối thiểu: B RealtimeClient, A RealtimeWebSocketHandler/Realtime
 - **AT09 (Takeover & Stale Writer Concurrency):** Request của Writer 1 với stale epoch đang chờ lock bị từ chối với 409 `STALE` sau khi Writer 2 takeover và commit thành công. Writer 2 với `writerEpoch` mới ghi đáp án thành công.
 - **AT10 (Tampering After Deadline & Timeout Job):** Mọi request gửi sau deadline đều bị từ chối ngay lập tức với 409 `EXPIRED` qua kiểm tra `clock_timestamp() >= deadline_at` sau khóa, không phụ thuộc vào việc background timeout job đã chạy hay chưa.
 
+## B consume contract T2-A1…T2-A4 — 09/10/2026
 
+Không thêm hay đổi endpoint, message hoặc DTO. Phần này ghi cách client JavaFX (PR #17) dùng các endpoint ở trên và những chỗ hành vi server khác tài liệu, đã chạy thật ngày 09/10 trên `main` `8eba405`.
 
+| Bước của client | Endpoint | Ghi chú |
+|---|---|---|
+| Vào phòng thi | `GET /status` → `GET /exam` → `POST /takeover` | Làm bài bằng `writerEpoch` do takeover trả (QD-12) |
+| Autosave | `POST /answers` | Toàn bộ map; retry giữ nguyên requestId, epoch, revision, answers; chỉ coi là ACK khi `status` là `SAVED`/`ALREADY_SAVED` và `savedRevision` bằng revision đã gửi |
+| Biết deadline | `GET /status` sau ACK đầu tiên | Response autosave không có `deadlineAt` |
+| Nộp bài | `POST /submit` | Một payload đóng băng; bài chưa sửa lần nào nộp với `answerRevision = 1` vì server từ chối 0 |
+| Kết quả không rõ, hết giờ, kết nối lại, `STALE` | `GET /status` | `STALE` không cho biết do epoch hay revision nên client đọc status để phân biệt |
+
+Client rẽ nhánh theo `error.code` và HTTP status, không theo `error.message`, và không hiển thị lại câu chữ của server. 5xx, timeout, mất mạng và body 2xx không đọc được đều được coi là "chưa rõ kết quả".
+
+Hành vi server khác tài liệu (bằng chứng `evidence/t2-b/2026-10-09-verification.md`):
+
+1. `GET /status` và `GET /exam` trả `403 FORBIDDEN` cho chính thí sinh sở hữu khi lượt đã `SUBMITTED` hoặc `TIMED_OUT`; tài liệu mô tả status đọc được ở mọi trạng thái.
+2. Lượt quá hạn không tự chuyển `TIMED_OUT` trong bản jar: `ExamTimeoutService` có `@Scheduled` nhưng server không bật scheduling.
+3. `deadlineAt` là null cho tới lần autosave thành công đầu tiên.
+4. Mẫu JSON của `GET /status` ở trên có `candidateUsername`, `startedAt` và `"score": null`; record `CandidateAttemptStatusResponse` thật không có hai trường đầu và `score` là số.
+
+Tham số phía client (system property, đổi khi chạy JVM):
+
+| Property | Mặc định | Ý nghĩa |
+|---|---|---|
+| `toeic.exam.autosaveDebounceMillis` | 800 | Chờ không có thay đổi rồi mới gửi |
+| `toeic.exam.retryInitialMillis` / `toeic.exam.retryMaxMillis` | 1000 / 8000 | Khoảng chờ retry, gấp đôi mỗi lần |
+| `toeic.exam.maxRetries` | 4 | Số lần tự gửi lại autosave, nộp bài, đối chiếu |
+| `toeic.exam.statusPollMillis` / `toeic.exam.maxStatusPolls` | 1000 / 30 | Hỏi trạng thái sau khi hết giờ |
+| `toeic.exam.httpTimeoutMillis` | 10000 | Timeout mỗi request HTTP của màn thi |

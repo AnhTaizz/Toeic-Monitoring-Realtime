@@ -141,7 +141,7 @@ Tests mới54, tổng331/331; final mvn test/package PASS, REAL PG V4/Spring/HTT
 
 **Xong khi:** làm được một đề mẫu 10–20 câu; bỏ chọn một câu thì model phản ánh đúng.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 09/10, PR #17 `e362ed9`: CODE_COMPLETE. `ExamPaper` gom câu theo `groupId` (một đoạn văn với các câu của nó) và từ chối đề sai (trùng mã câu, dưới hai lựa chọn, trùng mã lựa chọn) trước khi mở màn thi. Một model đáp án duy nhất nằm trong `ExamSession`; chọn, đổi, bỏ chọn đều qua nó. DTO thí sinh không có trường đáp án đúng (có test). Đề mẫu có đáp án đã chuyển sang `SampleExamSeeder` (MOCK, chỉ giám thị gửi lên) nhưng vẫn nằm trong cùng JAR client. Audio chỉ hiện tên file, chưa phát. GUI agent-driven PASS; thành viên tự kiểm và review A NOT RUN. Evidence `evidence/t2-b/2026-10-09-verification.md`.
 
 ### T2-B2 · Autosave và trạng thái lưu
 `4h` · phụ thuộc: T2-B1, T2-A2 (contract) · review: A
@@ -156,7 +156,7 @@ Tests mới54, tổng331/331; final mvn test/package PASS, REAL PG V4/Spring/HTT
 
 **Xong khi:** làm chậm server → giao diện vẫn thao tác được và hiện "đang chờ"; nhận ACK thì chuyển "đã lưu".
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 09/10, PR #17 `e362ed9`: CODE_COMPLETE. Revision cục bộ tăng theo mỗi thay đổi và không lùi; debounce cấu hình `toeic.exam.autosaveDebounceMillis` (800 ms); mỗi lần gửi là `Map.copyOf` kèm requestId; thay đổi đến khi đang gửi được gửi ngay sau khi request trước xong; retry gửi lại đúng object cũ, có giới hạn rồi chờ bấm Thử lại; "Đã lưu" chỉ khi ACK đúng revision đang có trên máy. Test MOCK 65/65, REAL smoke (mất ACK → `ALREADY_SAVED`, server 7 / client 9) và GUI agent-driven PASS. Review A NOT RUN.
 
 ### T2-B3 · Nộp bài và đồng hồ phía client
 `4h` · phụ thuộc: T2-B2, T2-A3 · review: A
@@ -171,7 +171,7 @@ Tests mới54, tổng331/331; final mvn test/package PASS, REAL PG V4/Spring/HTT
 
 **Xong khi:** nộp rồi rớt mạng rồi retry vẫn chỉ có một kết quả; sau khi chốt không sửa được đáp án.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 09/10, PR #17 `e362ed9`: PARTIAL, chờ A. Đã có: bấm nộp khóa sửa và đóng băng một payload, mọi lần gửi lại dùng đúng payload đó; kết quả không rõ thì hỏi status trước, status bị 403 thì gửi lại đúng bài để lấy kết quả cũ; hết giờ theo đồng hồ máy chỉ khóa và hỏi server, không tự nộp, không báo đã nộp khi chưa có xác nhận; deadline null được xử lý. Nộp bài qua GUI thật PASS (2/10 do server chấm). Chưa nghiệm thu được: hiển thị `TIMED_OUT` và điểm hết giờ, vì job hết giờ của server không chạy và status của lượt đã chốt trả 403 (xem TIEN_DO mục bị chặn). Nhánh đó mới có test MOCK.
 
 ### T2-B4 · Reconnect Reading và mở lại ứng dụng
 `4h` · phụ thuộc: T2-B3, T2-A4 · review: A
@@ -190,7 +190,7 @@ Tests mới54, tổng331/331; final mvn test/package PASS, REAL PG V4/Spring/HTT
 
 **Xong khi:** AT11 chạy được với trường hợp server 40 / client 42, mất ACK, và mở ứng dụng mới.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 09/10, PR #17 `e362ed9`: PARTIAL. Đã có theo bảng hợp đồng: kết nối lại thì đọc status và đối chiếu (server đã có bản đang chờ → đã lưu; máy cao hơn → giữ bản máy, gửi lại đúng request; cùng revision khác nội dung → dừng tự lưu, chờ nạp bản server; server mới hơn → nạp bản server); `writerEpoch` đổi thì khóa, bấm lấy lại quyền ghi thì nạp bản server và bỏ bản đang chờ. Vào phòng thi xin epoch mới (QD-12); mất WS khóa sửa (QD-13). AT11 có test MOCK, REAL smoke và GUI hai cửa sổ. Còn thiếu: mở lại lượt đã chốt (server 403), thành viên tự kiểm, máy thứ hai, review A; client không lưu cache ra đĩa nên mở lại app luôn bắt đầu từ bản server. Bổ sung `d50891e`: realtime `FAILED` thì hỏi server qua HTTP, 401 đưa về màn đăng nhập; về màn thí sinh thì tự làm mới danh sách lượt thi; xung đột, `FAILED` và thu hồi phiên đã chạy trên GUI thật (agent-driven).
 
 ### T2-B5 · Tiến độ trên màn giám thị
 `2h` · phụ thuộc: T2-B4, T1-B3 · review: A
