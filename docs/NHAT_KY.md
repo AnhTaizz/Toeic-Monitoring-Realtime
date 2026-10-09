@@ -306,3 +306,12 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - Còn dở: hiển thị `TIMED_OUT` và mở lại lượt đã chốt chưa nghiệm thu được với server thật; nhánh xung đột và 401 mới có test MOCK; chưa làm T2-B5.
 - Tiếp theo: sau khi A sửa, chạy lại smoke (ba dòng GAP phải thành PASS) và chạy checklist GUI bằng tay trên hai máy.
 - Cần người khác: A — cho đọc status/exam của lượt đã chốt, bật `@EnableScheduling` cho job hết giờ, quyết thời điểm đặt deadline, sửa mẫu JSON status, review QD-12 và QD-13, review PR #17. Bằng chứng `evidence/t2-b/2026-10-09-verification.md`.
+
+## 2026-10-09 · B · T2-B3, T2-B4 trên PR #17 (lượt bổ sung)
+- Thời lượng: tiếp phiên Agent cùng ngày.
+- Đã làm: thêm `ExamSession.probeSession` — khi realtime dừng hẳn (`FAILED`) thì hỏi server qua HTTP; 401 kết thúc phiên và đưa về màn đăng nhập, mất mạng thì giữ khóa và hướng dẫn rời phòng thi. Màn thí sinh tự làm mới danh sách lượt thi mỗi lần mở. Nhãn lưu không còn ghi "Đã lưu" khi đang xung đột.
+- Commit: `d50891e` và commit tài liệu kế tiếp.
+- Đã kiểm: `mvn package` 442/442; smoke REAL 28 PASS + 3 GAP; GUI thật agent-driven: xung đột cùng revision rồi nạp bản server, realtime `FAILED` rồi rời phòng thi và vào lại (epoch mới, đúng bản server), thu hồi phiên → về màn đăng nhập, nộp bài → danh sách lượt thi được làm mới. Dữ liệu xung đột và thu hồi phiên tạo bằng SQL trên schema tạm của lượt chạy.
+- Còn dở: như mục trước; ba điểm server vẫn chặn hết giờ và đọc lượt đã chốt. Ghi nhận thêm: màn đăng nhập của PR có nút điền sẵn tài khoản `MOCK` kèm mật khẩu mặc định trong mã client; cần gỡ hoặc ẩn trước bản phát hành (T5-B2).
+- Tiếp theo: không đổi.
+- Cần người khác: không đổi. Bằng chứng `evidence/t2-b/2026-10-09-verification.md` mục 4b.

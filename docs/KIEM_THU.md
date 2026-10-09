@@ -289,4 +289,6 @@ SHA `e362ed9`, Windows 11, JDK 21.0.8, PostgreSQL 18.6. Chi tiết, lệnh và �
 | Hiển thị `TIMED_OUT` và điểm hết giờ | BLOCKED | Job hết giờ của server không chạy; status của lượt đã chốt trả 403 |
 | Thành viên tự thao tác GUI, máy thứ hai/LAN, review A | NOT RUN | Checklist trong evidence |
 
+Lượt bổ sung cùng ngày trên `d50891e`: `mvn package` 442/442 (thêm test `probeSession`); smoke REAL vẫn 28 PASS + 3 GAP; GUI agent-driven chạy thêm xung đột cùng revision, realtime `FAILED` rồi rời phòng thi, phiên bị thu hồi về màn đăng nhập, danh sách lượt thi sau khi nộp — PASS.
+
 AT11 để PARTIAL: nhánh cùng writer (server thấp hơn client, mất ACK) và writer mới đã chạy với server thật; nhánh mở lại lượt đã chốt bị server chặn, và T4-B1 trên máy khác chưa chạy. Không đổi trạng thái IT01–IT04 hay AT01–AT10; `TRACKER.json` giữ nguyên.

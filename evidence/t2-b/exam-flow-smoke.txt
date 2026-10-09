@@ -1,5 +1,5 @@
 PASS Spring Boot jar thật chạy trên PostgreSQL thật, Flyway tạo schema tạm
-PASS PROCTOR import đề thử và tạo 3 ca (600 s, 4 s, 3 s) trên schema tạm t2b_smoke_b730b6d22ef7
+PASS PROCTOR import đề thử và tạo 3 ca (600 s, 4 s, 3 s) trên schema tạm t2b_smoke_d3367b3e373d
 PASS JSON đề gửi cho thí sinh không có trường đáp án đúng
 PASS Vào phòng thi: server cấp writerEpoch mới (1 -> 2), revision 0, chưa có đáp án
 PASS Server chưa tính giờ trước lần lưu đầu (deadlineAt null)
@@ -30,4 +30,4 @@ PASS Nộp sau deadline: server không nhận, client không báo nộp thành c
 PASS Client nói rõ server đã báo quá hạn và bài chưa được coi là đã nộp
 GAP Nộp sau deadline: server trả EXPIRED nhưng không chốt lượt thi nên client không có kết quả để hiển thị
 T2-B exam flow REAL PostgreSQL/Spring/HTTP smoke: 28 checks PASS, 3 GAP phía server (PARTIAL, xem các dòng GAP); GUI JavaFX và WebSocket NOT RUN trong smoke này
-CLEANUP đã dừng server của smoke và xóa schema tạm t2b_smoke_b730b6d22ef7
+CLEANUP đã dừng server của smoke và xóa schema tạm t2b_smoke_d3367b3e373d

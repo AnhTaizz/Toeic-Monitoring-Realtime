@@ -3,7 +3,7 @@
 - **Ngày chạy:** 09/10/2026 (UTC+7)
 - **Người chạy:** phiên Agent làm vai B. Chưa có thành viên nào tự thao tác hay review; mục nào ghi "agent-driven" là do Agent điều khiển, không phải kiểm thử tay của nhóm.
 - **Nhánh:** `test/javafx-full-ui-testing` (PR #17), base `main` `8eba405`
-- **SHA code được kiểm:** `e362ed9`
+- **SHA code được kiểm:** `e362ed9` cho mục 2–4; lượt bổ sung ở mục 4b, bản build và smoke cuối chạy trên `d50891e` (thêm `probeSession`, làm mới danh sách lượt thi, nhãn xung đột)
 - **Môi trường:** Windows 11 x64, Oracle JDK 21.0.8, Maven 3.9.11, PostgreSQL 18.6 (container `toeic-db`), Docker 29.4.3
 - **Trạng thái chung:** T2-B1, T2-B2 **CODE_COMPLETE**; T2-B3, T2-B4 **PARTIAL** vì ba điểm phía server ở mục 5. `TRACKER.json` không đổi.
 
@@ -23,10 +23,10 @@ java -cp "client\target\test-classes;client\target\classes;protocol\target\class
 
 | Phạm vi | Loại | Kết quả | Bằng chứng |
 |---|---|---|---|
-| `mvn package` toàn repo | JUnit | **PASS** 441/441 (protocol 23, client 292, server 125, spike 1); trước khi sửa là 376 | `mvn-package-summary.txt` |
+| `mvn package` toàn repo | JUnit | **PASS** 441/441 (protocol 23, client 292, server 125, spike 1); trước khi sửa là 376. Sau lượt bổ sung: 442/442 (client 293) | `mvn-package-summary.txt` |
 | Test mới của màn thi | MOCK gateway + đồng hồ ảo; 1 test luồng thật | **PASS** 65/65 | 4 lớp `Exam*Test` trong `mvn-package-summary.txt` |
 | `ExamFlowPostgresSmoke` | REAL Spring Boot jar + PostgreSQL + HTTP; không GUI, không WS | **PARTIAL**: 28 kiểm tra PASS, 3 GAP phía server, 0 FAIL | `exam-flow-smoke.txt` |
-| Giao diện JavaFX thật | REAL app + server + PostgreSQL, agent-driven bằng Windows UI Automation | **PASS** các bước đã chạy ở mục 4; phần hết giờ bị chặn bởi server | 6 ảnh `gui-*.png` |
+| Giao diện JavaFX thật | REAL app + server + PostgreSQL, agent-driven bằng Windows UI Automation | **PASS** các bước đã chạy ở mục 4 và 4b; phần hết giờ bị chặn bởi server | 9 ảnh `gui-*.png` |
 | Thành viên tự thao tác GUI | Tay | **NOT RUN** | checklist mục 6 |
 | Máy Windows thứ hai / LAN | Tay | **NOT RUN** | — |
 | Review của A (A xem B) | Người | **NOT RUN** | — |
@@ -73,7 +73,20 @@ Client chạy từ `client-0.1.0-SNAPSHOT-all.jar`, server từ `server-0.1.0-SN
 | Đóng cửa sổ khi đang ở màn thi | JVM thoát trong 15 giây ở cả hai cửa sổ |
 | Ca 25 giây, chờ về `00:00:00` | Lựa chọn bật 0/4, nút nộp tắt, không có hộp thoại nào mở, không tự nộp (`gui-deadline-locked.png`); sau 5 lần hỏi thì hiện `Server chưa chốt lượt thi…` và nút `Thử lại` (`gui-deadline-server-undecided.png`) |
 
-Chưa chạy trên GUI: xung đột cùng revision, phiên hết hiệu lực (401), nộp bài khi mất response, hiển thị kết quả `TIMED_OUT`. Các nhánh này mới có test MOCK.
+### 4b. Lượt bổ sung cùng ngày (agent-driven)
+
+Bốn nhánh trước đó mới có test MOCK, nay đã chạy trên giao diện thật. Dữ liệu của tình huống xung đột và thu hồi phiên được tạo bằng SQL trên schema tạm của lượt chạy, không phải trên schema `public`.
+
+| Bước | Quan sát được |
+|---|---|
+| Sửa `answers_json` của lượt thi trên server (cùng `saved_revision`), tắt/bật server để client đối chiếu lại | Màn thi báo "Bản trên máy và bản trên server cùng revision nhưng khác nội dung", lựa chọn bật 0/4, nút nộp tắt, hiện nút "Nạp bản của server" (`gui-conflict.png`) |
+| Bấm "Nạp bản của server", rồi chọn câu khác | Lựa chọn bật 4/4; lần lưu kế tiếp được server xác nhận revision 2, hàng trên server là `{"L1":"B"}` |
+| Tắt server cho tới khi realtime hết lượt thử lại | `REALTIME: FAILED`, thông báo "Kết nối giám sát đã dừng hẳn…", lựa chọn bật 0/4, nhãn lưu giữ nguyên (`gui-realtime-failed.png`) |
+| Bấm "Rời phòng thi", xác nhận | Về màn thí sinh; bật lại server, đăng nhập lại và vào lại lượt thi thì nhận `Writer Epoch: 3` và đúng bản server ở revision 2 |
+| Thu hồi phiên đăng nhập của thí sinh khi đang ở màn thi | Ứng dụng tự về màn đăng nhập với dòng "Phiên hết hiệu lực. Hãy đăng nhập lại." (`gui-session-expired.png`). Trước khi thêm `probeSession`, màn thi chỉ báo mất kết nối và đứng yên |
+| Nộp bài rồi bấm "Hoàn Tất & Thoát" | Kết quả server 0/10 khớp đáp án đã chọn; màn thí sinh tự làm mới danh sách và báo "Chưa được cấp lượt thi nào", nút vào phòng thi tắt |
+
+Vẫn chưa chạy trên GUI: nộp bài khi mất response (đã chạy trong smoke REAL) và hiển thị kết quả `TIMED_OUT` (bị GAP 1 và 2 chặn).
 
 ## 5. Ba điểm phía server đang chặn nghiệm thu (cần vai A)
 
