@@ -517,6 +517,17 @@ public final class ExamSession implements AutoCloseable {
         publish();
     }
 
+    /**
+     * WebSocket đã dừng hẳn (hết lượt thử lại hoặc bị từ chối xác thực). Hỏi server qua HTTP để
+     * phân biệt phiên hết hiệu lực (401: về màn đăng nhập) với mất mạng (vẫn khóa, chờ người dùng).
+     */
+    public void probeSession() {
+        if (closed || phase == Phase.FINAL || phase == Phase.ENDED) return;
+        call(() -> gateway.getAttemptStatus(attemptId), (status, failure) -> {
+            if (phase != Phase.FINAL && phase != Phase.ENDED) endedBy(failure);
+        });
+    }
+
     private void startSync(String reason) {
         syncPending = true;
         syncAttempts = 1;

@@ -392,6 +392,9 @@ public final class ToeicClientApplication extends Application {
         HBox attemptRow = new HBox(12, attempts, refreshScopeBtn);
         attemptRow.setAlignment(Pos.CENTER_LEFT);
 
+        // Danh sách trong response đăng nhập có thể đã cũ (ví dụ vừa nộp bài xong): hỏi lại server ngay.
+        checkScope.accept(false);
+
         HBox examActions = new HBox(12, startExamBtn, manualMonitoringStart, manualMonitoringStop);
         examActions.setAlignment(Pos.CENTER_LEFT);
 

@@ -814,6 +814,30 @@ class ExamSessionTest {
     }
 
     @Test
+    void probingAfterTheRealtimeChannelFailedTellsAnExpiredSessionFromALostNetwork() {
+        ExamSession offline = session(3, Map.of("q1", "A"), DEADLINE);
+        offline.setConnectionOnline(false);
+        offline.probeSession();
+        gateway.failStatus(0, new IOException("MOCK mất mạng"));
+        assertThat(offline.view().phase()).as("mất mạng thì vẫn ở màn thi, chỉ khóa sửa").isEqualTo(Phase.ACTIVE);
+        assertThat(offline.view().editable()).isFalse();
+
+        ExamSession revoked = session(3, Map.of("q1", "A"), DEADLINE);
+        revoked.setConnectionOnline(false);
+        revoked.probeSession();
+        gateway.failStatus(1, new ExamApiException(401, "UNAUTHORIZED", false));
+        assertThat(revoked.view().phase()).isEqualTo(Phase.ENDED);
+        assertThat(revoked.view().sessionExpired()).isTrue();
+
+        ExamSession stillValid = session(3, Map.of("q1", "A"), DEADLINE);
+        stillValid.setConnectionOnline(false);
+        stillValid.probeSession();
+        gateway.replyStatus(2, gateway.active(1, 3, Map.of("q1", "A"), DEADLINE));
+        assertThat(stillValid.view().phase()).isEqualTo(Phase.ACTIVE);
+        assertThat(stillValid.view().editable()).as("HTTP còn sống không thay cho kết nối giám sát").isFalse();
+    }
+
+    @Test
     void attemptInAnotherServerStateEndsTheSession() {
         ExamSession session = session(40, Map.of("q1", "A"), DEADLINE);
         session.setConnectionOnline(false);

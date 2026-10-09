@@ -47,6 +47,7 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
     private int groupIndex;
     private boolean closed;
     private boolean outcomeShown;
+    private boolean realtimeFailed;
 
     private final Label timerLabel = new Label("--:--:--");
     private final Label saveStatusLabel = new Label();
@@ -256,7 +257,7 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
         retryBtn.setVisible(view.needsUserRetry());
         retryBtn.setManaged(view.needsUserRetry());
 
-        noticeLabel.setText(noticeText(view));
+        noticeLabel.setText(noticeText(view, realtimeFailed));
         show(reclaimBtn, view.phase() == ExamSession.Phase.WRITER_REPLACED);
         show(reloadBtn, view.phase() == ExamSession.Phase.CONFLICT);
         show(exitBtn, view.phase() == ExamSession.Phase.ENDED || view.phase() == ExamSession.Phase.FINAL);
@@ -282,6 +283,8 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
 
     private static String saveText(ExamSession.View view) {
         if (view.phase() == ExamSession.Phase.FINAL) return "Lượt thi đã chốt";
+        // Bản trên máy khác bản server dù cùng revision: không được hiện "Đã lưu".
+        if (view.phase() == ExamSession.Phase.CONFLICT) return "Đã dừng tự lưu: bản trên máy khác bản server";
         // Ngoài lúc đang làm bài thì không còn gì "đang chờ gửi": chỉ nói rõ bản trên máy chưa được xác nhận.
         if (view.phase() != ExamSession.Phase.ACTIVE && view.saveState() != ExamSession.SaveState.SAVED
                 && view.saveState() != ExamSession.SaveState.SAVING) {
@@ -297,6 +300,7 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
     }
 
     private static String saveColor(ExamSession.View view) {
+        if (view.phase() == ExamSession.Phase.CONFLICT) return "#f43f5e";
         return switch (view.saveState()) {
             case SAVED -> "#34d399";
             case PENDING, SAVING, RETRYING -> "#f59e0b";
@@ -304,8 +308,12 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
         };
     }
 
-    private static String noticeText(ExamSession.View view) {
+    private static String noticeText(ExamSession.View view, boolean realtimeFailed) {
         if (!view.message().isBlank()) return view.message();
+        if (view.phase() == ExamSession.Phase.ACTIVE && realtimeFailed) {
+            return "Kết nối giám sát đã dừng hẳn sau nhiều lần thử lại: chỉnh sửa đáp án bị khóa. "
+                    + "Kiểm tra mạng, rồi bấm \"Rời phòng thi\" và vào lại; đồng hồ trên server vẫn chạy.";
+        }
         if (view.phase() == ExamSession.Phase.ACTIVE && !view.connectionOnline()) {
             return "Mất kết nối giám sát tới server: chỉnh sửa đáp án tạm khóa cho tới khi kết nối lại. "
                     + "Trạng thái lưu vẫn chỉ phản ánh xác nhận của server.";
@@ -426,7 +434,13 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
         realtimeStatusLabel.getStyleClass().add(state == ConnectionState.CONNECTED ? "badge-online"
                 : state == ConnectionState.RECONNECTING || state == ConnectionState.CONNECTING ? "badge-unknown"
                 : "badge-danger");
+        boolean failedNow = state == ConnectionState.FAILED;
+        boolean justFailed = failedNow && !realtimeFailed;
+        realtimeFailed = failedNow;
         session.setConnectionOnline(state == ConnectionState.CONNECTED);
+        // FAILED có thể do phiên đã bị thu hồi: hỏi server qua HTTP, 401 thì session đưa về màn đăng nhập.
+        if (justFailed) session.probeSession();
+        if (current != null) noticeLabel.setText(noticeText(session.view(), realtimeFailed));
     }
 
     // ---------------------------------------------------------------- nộp, kết quả, rời màn thi
