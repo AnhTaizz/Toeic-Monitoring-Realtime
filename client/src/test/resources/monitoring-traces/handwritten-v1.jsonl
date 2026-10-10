@@ -1,0 +1,8 @@
+{"kind":"HEADER","schemaVersion":"monitoring-observation-trace-v1","sourceLabel":"MOCK","pollMillis":100,"policyVersion":"process-policy-v1","wallOrigin":"2026-10-10T00:00:00Z"}
+{"kind":"RECORD","index":1,"type":"START","elapsedNanos":0,"collectorSessionId":"MOCK-collector","policyVersion":"process-policy-v1","scanDurationNanos":0,"processes":[]}
+{"kind":"RECORD","index":2,"type":"OBSERVATION","elapsedNanos":100000000,"collectorSessionId":"MOCK-collector","policyVersion":"process-policy-v1","scanDurationNanos":0,"processes":[]}
+{"kind":"RECORD","index":3,"type":"OBSERVATION","elapsedNanos":200000000,"collectorSessionId":"MOCK-collector","policyVersion":"process-policy-v1","scanDurationNanos":0,"processes":[{"pid":42,"processName":"msedge.exe","startInstant":"2026-10-10T00:00:00Z","metadataQuality":"COMPLETE"}]}
+{"kind":"RECORD","index":4,"type":"OBSERVATION","elapsedNanos":300000000,"collectorSessionId":"MOCK-collector","policyVersion":"process-policy-v1","scanDurationNanos":0,"processes":[{"pid":42,"processName":"msedge.exe","startInstant":"2026-10-10T00:00:00Z","metadataQuality":"COMPLETE"}]}
+{"kind":"RECORD","index":5,"type":"OBSERVATION","elapsedNanos":400000000,"collectorSessionId":"MOCK-collector","policyVersion":"process-policy-v1","scanDurationNanos":0,"processes":[]}
+{"kind":"RECORD","index":6,"type":"STOP","elapsedNanos":500000000,"collectorSessionId":"MOCK-collector","policyVersion":"process-policy-v1","scanDurationNanos":0,"processes":[]}
+{"kind":"FINAL","status":"COMPLETE","attempted":6,"written":6,"dropped":0,"sha256":"adedb4a9ab24ce77244d7f4bfe2e27655adbf663193a8c0106fd021c37b6ea9e"}

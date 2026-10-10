@@ -119,3 +119,12 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Lưu classification riêng với payload trong V8; retry cùng event/nguồn gốc trả metadata lần lưu đầu, không relabel/conflict hoặc phát thêm warning. Không áp syncEpoch của full vào event lịch sử. Legacy/mốc trước ACK đầu giữ UNSPECIFIED; cần nâng server trước client mới.
 - Gap overflow vẫn V3; heartbeat interruption vẫn V4. Thêm HTTP/tab gap riêng, không suy ra droppedCount từ timeout. Không thêm message type/worker hoặc durability queue, giữ hooks đo C4.
 - Cross-owner: A xem migration/transaction/ACK/permission, B xem ACK identity/parser/dashboard và guard plan cũ. Contract chi tiết [T2-C2](PROTOCOL.md#t2-c2--heartbeat-event-đến-muộn-và-khoảng-trống).
+
+## QD-14 · Trace quan sát và replay production với oracle độc lập
+
+- Ngày10/10/2026 · C, T2-C3 · Human B review NOT RUN, A cần xem adapter reducer.
+- Tap recorder tùy chọn trên collector sẵn có, không scanner mới/không file queue delivery. Worker ghi đĩa riêng, queue bounded drop-new, lỗi tách khỏi monitoring; thiếu/dropped/lỗi không COMPLETE. Giữ quan sát an toàn, empty success riêng SOURCE_FAILURE, checksum exact byte, không credential/path/command/user.
+- Tách thuật toán C1 nguyên trạng vào FullStateReducer dùng chung server và CLI. Server giữ boundary lỗi/lock/auth/store/lifecycle. Driver dùng full/event encoder thật, injection ID ở package constructor không đổi UUID production, đồng hồ theo trace. Không thêm dependency/framework/message/DB schema.
+- Oracle từ observation gốc + identity/event rule + lịch delivery riêng; không gọi reducer/encoder để tạo expected. Kiểm oracle bằng fixture/expected viết tay và full sai cố ý. Seed tái tạo IDs/lịch/report byte-identical.
+- Transport/ACK baseline/epoch gate SIMULATED; headless event map không chứng minh commit ACK/auth/presence. Drop/reorder data riêng, OPEN/CLOSE reliable; business event khác delivered event. Không suy UNKNOWN/time STALE/TTL. Giới hạn và counterexample [MONITORING_TRACE](MONITORING_TRACE.md); evidence REAL source capture + REPLAY + hồi quy production riêng.
+- Không delta/T2-C4/E1/E2. B review collector tap, deterministic ID seam/full/event driver; A review shared reducer adapter. Việc B/A chưa duyệt được ghi riêng với code acceptance, không giả approval.

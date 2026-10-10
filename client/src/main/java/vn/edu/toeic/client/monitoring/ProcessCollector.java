@@ -13,6 +13,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.LongSupplier;
+import java.util.function.Function;
+import vn.edu.toeic.client.monitoring.trace.TraceRecorder;
 
 /** Collector local, không biết transport/event/ACK. Callback chạy trên worker.
  * stop() không block caller; future chỉ hoàn thành sau poll/callback đang chạy và worker kết thúc.
@@ -25,6 +27,7 @@ public final class ProcessCollector implements AutoCloseable {
     private final ProcessPolicy policy = new ProcessPolicy();
     private final Duration interval;
     private final LongSupplier nanoTime;
+    private final Function<String,ObservationTrace> traceFactory;
     private Run current;
     private boolean closed;
     private ProcessSnapshot latest;
@@ -32,8 +35,15 @@ public final class ProcessCollector implements AutoCloseable {
     public ProcessCollector() { this(new ProcessHandleSnapshotSource(), DEFAULT_INTERVAL); }
     public ProcessCollector(ProcessSnapshotSource source, Duration interval) { this(source, interval, System::nanoTime); }
     ProcessCollector(ProcessSnapshotSource source, Duration interval, LongSupplier nanoTime) {
+        this(source,interval,nanoTime,id -> TraceRecorder.configured(id,interval,source instanceof ProcessHandleSnapshotSource));
+    }
+    public ProcessCollector(ProcessSnapshotSource source, Duration interval, ObservationTrace trace) {
+        this(source,interval,System::nanoTime,id -> trace);
+    }
+    ProcessCollector(ProcessSnapshotSource source, Duration interval, LongSupplier nanoTime, Function<String,ObservationTrace> traceFactory) {
         this.source = Objects.requireNonNull(source);
         this.nanoTime = Objects.requireNonNull(nanoTime);
+        this.traceFactory = Objects.requireNonNull(traceFactory);
         if (interval == null || interval.toMillis() < 1) throw new IllegalArgumentException("Chu kỳ poll phải >= 1ms");
         this.interval = interval;
     }
@@ -47,12 +57,16 @@ public final class ProcessCollector implements AutoCloseable {
         synchronized (lock) {
             if (closed || current != null) throw new IllegalStateException("Collector đang chạy/dừng hoặc đã đóng");
             Run run = new Run(UUID.randomUUID().toString(), listener, problems);
+            try { run.trace=Objects.requireNonNull(traceFactory.apply(run.id)); }
+            catch(RuntimeException invalid) { run.trace=ObservationTrace.NONE; }
+            trace(() -> run.trace.started(run.id,policy.version(),nanoTime.getAsLong()));
             run.worker = new ScheduledThreadPoolExecutor(1, task -> {
                 Thread thread = new Thread(task, "toeic-process-collector");
                 thread.setDaemon(true);
                 return thread;
             }) {
                 @Override protected void terminated() {
+                    trace(() -> run.trace.stopped(run.id,nanoTime.getAsLong()));
                     synchronized (lock) { if (current == run) current = null; }
                     run.stopped.complete(null);
                 }
@@ -96,10 +110,12 @@ public final class ProcessCollector implements AutoCloseable {
             long observed = nanoTime.getAsLong();
             snapshot = snapshot(run.id, readings, observed, observed - began);
         } catch (RuntimeException ignored) {
+            trace(() -> run.trace.failed(run.id,policy.version(),nanoTime.getAsLong()));
             synchronized (lock) { if (active(run)) latest = null; }
             report(run, Problem.SOURCE_FAILURE);
             return;
         }
+        trace(() -> run.trace.observed(snapshot));
         Consumer<ProcessSnapshot> listener;
         synchronized (lock) {
             if (!active(run)) return;
@@ -110,6 +126,7 @@ public final class ProcessCollector implements AutoCloseable {
         catch (RuntimeException ignored) { report(run, Problem.LISTENER_FAILURE); }
     }
 
+    private static void trace(Runnable tap) { try { tap.run(); } catch(RuntimeException ignored) { /* Recording cannot break monitoring. */ } }
     private ProcessSnapshot snapshot(String session, List<ProcessReading> readings, long observed, long elapsed) {
         Set<ObservedProcess> restricted = new HashSet<>();
         int unreadable = 0, missingCommand = 0, missingStart = 0, missingUser = 0;
@@ -141,6 +158,7 @@ public final class ProcessCollector implements AutoCloseable {
         boolean stopping;
         Consumer<ProcessSnapshot> listener;
         Consumer<Problem> problems;
+        ObservationTrace trace=ObservationTrace.NONE;
         Run(String id, Consumer<ProcessSnapshot> listener, Consumer<Problem> problems) {
             this.id = id; this.listener = listener; this.problems = problems;
         }
