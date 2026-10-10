@@ -11,6 +11,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class ProcessEventTest {
+    @Test void acceptsLegacyButIncludesFrozenOriginInConflictIdentity() {
+        var legacy=ProcessEvent.parse(valid());assertThat(legacy.origin().context()).isEqualTo("UNSPECIFIED");
+        var body=valid();new vn.edu.toeic.protocol.monitoring.EventOrigin("CONNECTED","MOCK-old").write(body);
+        var event=ProcessEvent.parse(body);assertThat(event.origin().deliveryStatus("MOCK-new")).isEqualTo("PREVIOUS_CONNECTION");
+        assertThat(event).isNotEqualTo(legacy);
+        body.addProperty("observationConnectionId","MOCK-other");assertThat(ProcessEvent.parse(body)).isNotEqualTo(event);
+    }
     static JsonObject valid() {
         return JsonParser.parseString("""
                 {"eventId":"TEST-event","collectorSessionId":"TEST-collector","policyVersion":"process-policy-v1",

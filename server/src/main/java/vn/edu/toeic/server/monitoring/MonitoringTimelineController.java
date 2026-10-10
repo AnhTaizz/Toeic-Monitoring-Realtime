@@ -12,7 +12,14 @@ import vn.edu.toeic.server.auth.AuthenticatedUser;
 @RestController
 public final class MonitoringTimelineController {
     private final MonitoringEventService events;
-    public MonitoringTimelineController(MonitoringEventService events) { this.events = events; }
+    private final MonitoringGapService gaps;
+    public MonitoringTimelineController(MonitoringEventService events,MonitoringGapService gaps) { this.events = events;this.gaps=gaps; }
+    @GetMapping("/api/v1/monitoring/attempts/{attemptId}/gaps")
+    public GapResponse gaps(@PathVariable String attemptId,HttpServletRequest request) {
+        return new GapResponse(Protocol.VERSION,UUID.randomUUID().toString(),attemptId,
+                gaps.timeline((AuthenticatedUser)request.getUserPrincipal(),attemptId));
+    }
+    public record GapResponse(String protocolVersion,String traceId,String attemptId,List<MonitoringGapService.GapItem> gaps) { }
     @GetMapping("/api/v1/monitoring/attempts/{attemptId}/events")
     public TimelineResponse timeline(@PathVariable String attemptId, HttpServletRequest request) {
         return new TimelineResponse(Protocol.VERSION, UUID.randomUUID().toString(), attemptId,

@@ -150,7 +150,7 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 **Xong khi:** màn giám thị thấy state hiện tại của thí sinh; message của epoch cũ bị từ chối; MT01 chạy được.
 
-**Ghi chú làm dở:** 10/10/2026 — PR#18 trên `feat/t2-c1-monitoring-full-snapshot`, code full6acd031, review-fix e07bb7e. Người dùng phát hiện maintain Scheduled không tự chạy; đã thay worker riêng, không bật scheduler toàn server/ExamTimeoutService. Java413 và REAL socket+heartbeat giữ mở → STALE/TTL/capacity tự động, shutdown dọn RAM/worker, full Edge/GUI component + A4/C3/C4/B3 hồi quy PASS. MT01 PARTIAL; GUI candidate/LAN/human A/B review tổng thể NOT RUN. [Evidence gốc](../../evidence/t2-c1/2026-10-10-verification.md), [bổ sung](../../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md). Chưa merge hoặc làm T2-C2–C5/delta/E1/E2.
+**Ghi chú bàn giao:** 10/10/2026 — PR#18 đã merge bằng merge commit683adfc, nhánh `feat/t2-c1-monitoring-full-snapshot` giữ lại. Code full6acd031, review-fix e07bb7e dùng worker riêng, không bật scheduler toàn server/ExamTimeoutService. Java413 và REAL autonomous STALE/TTL/capacity/shutdown/full Edge/GUI component PASS; C2 chạy lại C1 hồi quy PASS. MT01 PARTIAL; GUI candidate/LAN/human A/B review tổng thể NOT RUN. [Evidence gốc](../../evidence/t2-c1/2026-10-10-verification.md), [bổ sung](../../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md).
 
 ### T2-C2 · Heartbeat, event muộn và khoảng trống
 `4h` · phụ thuộc: T2-C1 · review: B
@@ -164,7 +164,7 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 **Xong khi:** MT01, MT07, MT08 có bằng chứng.
 
-**Ghi chú làm dở:** —
+**Ghi chú bàn giao 10/10/2026:** Nhánh `feat/t2-c2-monitoring-late-events-and-gaps`, base683adfc, code fdac531. Reuse heartbeat/presence A4, full worker C1 và gap C3; thêm EventOrigin frozen lúc observe, deliveryStatus lần INSERT đầu, V8 additive, HTTP đọc gap/tab giám thị và generation guard gửi event cũ. Java425/package/Python10, C2 REAL Spring/PG/HTTP/WS/collector worker/proctor Stage PASS; readings MOCK/outage/write/ACK loss SIMULATED. A3/A4/C3/C4/B3/C1 mới PASS, gồm hard-kill JVM và ProcessHandle/Edge thật, tự STALE/TTL/shutdown. [Evidence](../../evidence/t2-c2/2026-10-10-verification.md), [demo](../../README.md#heartbeat-event-muộn-và-gap-t2-c2), [contract](../PROTOCOL.md#t2-c2--heartbeat-event-đến-muộn-và-khoảng-trống), QD-13. MT01/MT07/MT08 PARTIAL cấp toàn hệ thống; candidate GUI/LAN/human A/B review NOT RUN. A cần xem V8/transaction/ACK/permission, B xem RealtimeClient/parser/controller/model/view. Event trước ACK đầu/legacy UNSPECIFIED; LIVE chỉ cùng socket, không đo delay; origin không phải chứng cứ gian lận. Không sửa tracker/.env/nguồn kế hoạch/migration cũ, không reset DB; dừng sau C2, không C3–C5/delta/E1/E2.
 
 ### T2-C3 · Ghi/phát lại trace và oracle trạng thái
 `4h` · phụ thuộc: T2-C1 · review: B

@@ -131,7 +131,7 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
                 if (attemptId == null) throw new IllegalArgumentException();
                 ProcessEvent event = ProcessEvent.parse(body.getAsJsonObject("payload"));
                 // This call crosses the transactional proxy: commit failures throw before ACK.
-                MonitoringEventService.StoreResult result = events.store(user, attemptId, event);
+                MonitoringEventService.StoreResult result = events.store(user, attemptId, event,session.getId());
                 JsonObject accepted = new JsonObject();
                 accepted.addProperty("status", "ACCEPTED");
                 accepted.addProperty("acknowledgedType", "PROCESS_OBSERVED");
@@ -151,6 +151,7 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
             JsonObject accepted = new JsonObject();
             accepted.addProperty("status", "ACCEPTED");
             accepted.addProperty("acknowledgedType", "HEARTBEAT");
+            accepted.addProperty("connectionId",session.getId());
             send(session, new MessageEnvelope<>(Protocol.VERSION, "ACK", UUID.randomUUID().toString(), requestId,
                     attemptId, traceId, accepted));
             presence.publish(acceptedPresence,traceId);

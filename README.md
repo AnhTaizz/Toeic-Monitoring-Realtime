@@ -287,4 +287,28 @@ java "-Duser.timezone=UTC" -jar server/target/server-0.1.0-SNAPSHOT.jar
 
 Dừng giám sát: state STALE giữ tập cuối với nhãn dữ liệu cũ. Kết nối lại: OPEN mới, UNSYNCED cho tới full1. Lỗi scan không gửi full rỗng; full rỗng chỉ từ scan thành công không có process phù hợp. Default server stale6s, TTL5phút,4096attempt; client full queue16+1pending, snapshot128process, retry5. Quá giới hạn báo lỗi, không cắt tập. Restart server mất state RAM; lịch sử PostgreSQL không mất. Không hỗ trợ nhiều server cùng giữ full state. [Contract](docs/PROTOCOL.md#t2-c1--contract-full-snapshot-baseline-v1), [QD-12](docs/QUYET_DINH.md), [evidence](evidence/t2-c1/2026-10-10-verification.md).
 
+## Heartbeat, event muộn và gap T2-C2
+
+Khi client mất liên lạc, A4 tự báo UNKNOWN và ghi lần heartbeat cuối/thời điểm server phát hiện timeout. Khi nối lại, event chưa được xác nhận có thể gửi bù vào lịch sử; full mới phục hồi danh sách process hiện tại. Hai luồng này độc lập: process đã đóng vẫn có cảnh báo lịch sử, còn danh sách hiện tại không được event muộn làm sống lại.
+
+Event mới có nguồn kết nối đóng băng lúc quan sát. Dashboard thêm cột "Cách nhận": "Đến muộn · từ kết nối trước", "Đến muộn · quan sát khi mất kết nối", "Cùng kết nối lúc quan sát" hoặc "Chưa có thông tin kết nối lúc quan sát". Đây là thông tin về kết nối, không phải số mili giây trễ hoặc bằng chứng gian lận. Event trước ACK heartbeat đầu/legacy có thể chưa xác định; không suy luận bằng cách trừ giờ hai máy.
+
+Tab "Khoảng trống dữ liệu" đọc báo cáo QUEUE_OVERFLOW qua `/api/v1/monitoring/attempts/{attemptId}/gaps`. Bấm "Làm mới quyền và dữ liệu" để lấy báo cáo mới. Mất heartbeat nằm riêng ở "Lịch sử gián đoạn" và không có số event mất tự suy ra. Nâng server trước client mới; Flyway tự thêm V8, không reset DB hoặc sửa migration đã áp dụng. V8 giữ các event cũ với nguồn UNSPECIFIED.
+
+Demo tự động trên Windows, từ thư mục repository, với Docker/PostgreSQL đang chạy và `.env` local đã có:
+
+```powershell
+$jdk = 'C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot' # đổi thành JDK 21 của máy bạn
+mvn package
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t2c2.ps1 -JavaHome $jdk -Gui
+# Hồi quy full/process thật và tự STALE/TTL/shutdown:
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t2c1.ps1 -JavaHome $jdk -Gui
+# Hard-kill client JVM thật, nhiều socket, revoke, khôi phục presence:
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-a4.ps1 -JavaHome $jdk
+```
+
+C2 smoke tự dựng schema TEST và server port riêng; không cần dừng server dev. Nó chạy lần lượt: hai candidate ONLINE → giữ một event chưa gửi → ngắt socket A → tự UNKNOWN → tạo event offline → reconnect/ONLINE → gửi bù có nhãn → full rỗng phục hồi state → kiểm retry/conflict/COMMIT lỗi → ép queue tràn → giám thị đọc gap → kiểm CLOSED/SUBMITTED/TIMED_OUT/revoke → dọn worker/schema. Mạng/DB/Spring/collector worker và GUI proctor component là REAL; process readings là MOCK; ngắt kết nối/giữ write/mất ACK được điều khiển (SIMULATED). Smoke C1 riêng dùng ProcessHandle/Edge thật; A4 riêng hard-kill JVM sở hữu thật. Không dùng nút Stop để giả mất mạng trong app: Stop chủ động dọn và bỏ pending theo contract.
+
+Kết quả mong đợi là các dòng PASS và `Summary COMPLETE`, file ở `server/target/t2c2-runtime/<runId>/`, ảnh ở `server/target/t2c2-smoke/`. LAN và candidate GUI toàn app chưa được mô phỏng thành PASS. Chỉ có các số drop mà client thực sự báo qua overflow mới xuất hiện ở tab gap. [Contract C2](docs/PROTOCOL.md#t2-c2--heartbeat-event-đến-muộn-và-khoảng-trống).
+
 Review-fix e07bb7e: `MonitoringStateMaintenance` tự gọi maintain theo scan-ms bằng worker riêng; server close hủy worker và xóa full RAM. Không bật EnableScheduling toàn app để tránh kích hoạt scheduler bài thi A ngoài phạm vi. Smoke full nay kiểm thêm socket/heartbeat vẫn sống, ngừng full → tự push STALE, TTL4s tự xóa entry/capacity1 cấp được lượt khác; không đọc HTTP state hay gọi maintain bằng tay. [Evidence sửa scheduling](evidence/t2-c1/scheduling-fix/2026-10-10-verification.md). Kết quả gốc30fa6d9 chưa chứng minh tác vụ tự chạy.

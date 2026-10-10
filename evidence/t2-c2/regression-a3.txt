@@ -1,0 +1,11 @@
+EXCERPT of actual command output; raw measurement files are separate and unchanged.
+PASS PostgreSQL clean migration; V1 prepared for production V2 upgrade
+PASS production V1->V2 migration; TEST fixtures only; assignment/owner foreign keys
+PASS login/auth-me ACTIVE scopes; candidate/foreign/closed/unknown timeline denied; assigned proctor allowed
+PASS valid event COMMIT->ACK->assigned warning; duplicate ACK twice/row once/warning once; changed payload CONFLICT; event FK/unique
+PASS candidate own/foreign/closed/unknown + proctor cannot send; malformed/path rejection; other client survives
+PASS REAL PostgreSQL deferred COMMIT failure -> rollback + retryable ERROR; NO success ACK or warning
+PASS barrier-controlled concurrent real WS retry -> ACK twice, DB once, warning once
+PASS nullable metadata retry; offline commit+ACK; REST reconnect recovery/order; live assignment/token revocation; four-client isolation
+A3 REAL PostgreSQL + HTTP + WebSocket smoke PASS
+TEST schemas removed; existing development tables untouched

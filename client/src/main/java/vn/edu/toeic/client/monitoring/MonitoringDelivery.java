@@ -21,6 +21,7 @@ import java.util.function.LongSupplier;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
+import vn.edu.toeic.protocol.monitoring.EventOrigin;
 
 /** RAM delivery only. No socket/reconnect ownership and no disk queue.
  * A single periodic pump bounds timers. No transport/listener calls while holding the queue lock.
@@ -65,7 +66,7 @@ public final class MonitoringDelivery implements AutoCloseable {
         long deadline;
         Pending(MonitoringMessage message) { this.message = message; }
     }
-    private record Send(Pending pending, int attempt) { }
+    private record Send(Pending pending, int attempt, long generation, long socketGeneration) { }
     private final Object lock = new Object();
     private final String attemptId;
     private final MonitoringTransport transport;
@@ -80,6 +81,8 @@ public final class MonitoringDelivery implements AutoCloseable {
     private long bufferedDrops, totalDropped, acknowledged;
     private Instant firstDrop, lastDrop;
     private boolean connected, closed, authorized = true;
+    private volatile long generation;
+    private volatile boolean sendingAllowed = true;
     private String problem = "NONE";
     private final ScheduledThreadPoolExecutor worker;
     private final ScheduledFuture<?> timer;
@@ -104,6 +107,7 @@ public final class MonitoringDelivery implements AutoCloseable {
         timer = automatic ? worker.scheduleWithFixedDelay(this::tick, settings.pumpInterval.toMillis(), settings.pumpInterval.toMillis(), TimeUnit.MILLISECONDS) : null;
     }
     public void observe(ProcessSnapshot snapshot) {
+        EventOrigin origin=transport.observationOrigin(); // Capture outside lock: avoid transport/delivery lock inversion.
         synchronized (lock) {
             if (closed || !authorized) return;
             if (snapshot.restrictedProcesses().size() > settings.maxObservedProcesses) { problem = "SNAPSHOT_LIMIT"; return; }
@@ -126,7 +130,7 @@ public final class MonitoringDelivery implements AutoCloseable {
                     continue;
                 }
                 try {
-                    MonitoringMessage message = MonitoringMessage.observed(attemptId, snapshot, process, observedAt);
+                    MonitoringMessage message = MonitoringMessage.observed(attemptId, snapshot, process, observedAt,origin);
                     events.put(message.requestId(), new Pending(message));
                 } catch (IllegalArgumentException ignored) { problem = "INVALID_OBSERVATION"; }
             }
@@ -135,9 +139,10 @@ public final class MonitoringDelivery implements AutoCloseable {
         publish();
     }
     public void sourceFailed() { synchronized (lock) { if (!closed) problem = "SOURCE_FAILURE"; } publish(); }
-    public void accessRejected(String code) { synchronized (lock) { if (!closed) { authorized=false; problem=code; } } publish(); }
+    public void accessRejected(String code) { synchronized (lock) { if (!closed) { authorized=false; sendingAllowed=false; generation++; problem=code; } } publish(); }
     /** One task, bounded plans; exposed to package tests using a fake monotonic clock. */
     void tick() {
+        long socketGeneration=transport.connectionGeneration();
         List<String> forget = new ArrayList<>();
         List<Send> sends = new ArrayList<>();
         synchronized (lock) {
@@ -158,7 +163,7 @@ public final class MonitoringDelivery implements AutoCloseable {
                 if (available == 0) break;
                 if (pending.state != State.QUEUED && !(pending.state == State.RETRY_WAIT && now - pending.deadline >= 0)) continue;
                 pending.state = State.WAITING; pending.attempts++; pending.deadline = now + settings.ackTimeout.toNanos();
-                sends.add(new Send(pending, pending.attempts)); available--;
+                sends.add(new Send(pending, pending.attempts,generation,socketGeneration)); available--;
             }
         }
         forget.forEach(transport::forgetPending);
@@ -166,7 +171,8 @@ public final class MonitoringDelivery implements AutoCloseable {
             synchronized (lock) {
                 if (closed || !authorized || lookup(send.pending.message.requestId()) != send.pending || send.pending.state != State.WAITING) continue;
             }
-            try { transport.send(send.pending.message.envelope()).whenComplete((unused, failure) -> {
+            try { transport.sendForGeneration(send.pending.message.envelope(),send.socketGeneration,
+                    () -> sendingAllowed && generation==send.generation).whenComplete((unused, failure) -> {
                 if (failure != null) failedSend(send);
             }); } catch (RuntimeException ignored) { failedSend(send); }
             synchronized (lock) { if (!closed) continue; }
@@ -177,7 +183,7 @@ public final class MonitoringDelivery implements AutoCloseable {
     private void failedSend(Send send) {
         synchronized (lock) {
             Pending pending = lookup(send.pending.message.requestId());
-            if (closed || pending != send.pending || pending.attempts != send.attempt || pending.state != State.WAITING) return;
+            if (closed || generation!=send.generation || pending != send.pending || pending.attempts != send.attempt || pending.state != State.WAITING) return;
             retry(pending, nanoTime.getAsLong()); problem = "SEND_FAILURE";
         }
         transport.forgetPending(send.pending.message.requestId()); publish();
@@ -189,6 +195,7 @@ public final class MonitoringDelivery implements AutoCloseable {
     private void connectionChanged(ConnectionState state) {
         synchronized (lock) {
             if (closed) return;
+            generation++;
             connected = state == ConnectionState.CONNECTED;
             if (!connected) for (Pending pending : events.values()) if (pending.state == State.WAITING) retry(pending, nanoTime.getAsLong());
             if (!connected && gap != null && gap.state == State.WAITING) retry(gap, nanoTime.getAsLong());
@@ -202,7 +209,7 @@ public final class MonitoringDelivery implements AutoCloseable {
             if (closed || message == null || !"v0".equals(message.protocolVersion()) || message.payload() == null) return;
             JsonObject payload = message.payload();
             String code = text(payload, "code");
-            if ("ERROR".equals(message.type()) && "UNAUTHORIZED".equals(code)) { authorized = false; problem = code; }
+            if ("ERROR".equals(message.type()) && "UNAUTHORIZED".equals(code)) { authorized = false; sendingAllowed=false; generation++; problem = code; }
             else {
                 Pending pending = lookup(message.requestId());
                 if (pending == null || pending.attempts == 0 || !attemptId.equals(message.attemptId())
@@ -212,7 +219,7 @@ public final class MonitoringDelivery implements AutoCloseable {
                     if (pending == gap) gap = null; else events.remove(message.requestId());
                     acknowledged++; release = message.requestId();
                 } else if ("ERROR".equals(message.type()) && code != null) {
-                    if ("FORBIDDEN".equals(code)) { authorized = false; problem = code; }
+                    if ("FORBIDDEN".equals(code)) { authorized = false; sendingAllowed=false; generation++; problem = code; }
                     else if ("RETRYABLE_SERVER_ERROR".equals(code) && bool(payload, "retryable")) retry(pending, nanoTime.getAsLong());
                     else { pending.state = State.FAILED; problem = code; }
                     release = message.requestId();
@@ -262,7 +269,7 @@ public final class MonitoringDelivery implements AutoCloseable {
         synchronized (lock) {
             if (closed) return new Discarded(0, false, 0);
             discarded = discardSummary();
-            closed = true; ids = new ArrayList<>(events.keySet()); if (gap != null) ids.add(gap.message.requestId());
+            closed = true; sendingAllowed=false; generation++; ids = new ArrayList<>(events.keySet()); if (gap != null) ids.add(gap.message.requestId());
             events.clear(); gap = null; baseline = Set.of(); bufferedDrops = 0;
         }
         if (timer != null) timer.cancel(false);

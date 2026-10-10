@@ -1,0 +1,11 @@
+EXCERPT of actual command output; raw measurement files are separate and unchanged.
+PASS REAL PostgreSQL18 V2->V3; TEST assignments only; no shared DB reset
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS REAL Windows ProcessHandle/owned Edge open-close -> production C2/C3/B2 -> DB/ACK; SIMULATED first event ACK loss -> row1/warning1; real offline proctor timeline
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS REAL owned server stop/restart + B2 reconnect; MOCK snapshot pending delivered exactly once; no reconnect loop in C3
+PASS MOCK overflow capacity1 -> REAL gap persistence/commit ACK; DB COMMIT rollback/retry; SIMULATED gap ACK loss; stable dedup; next accumulator + heartbeat
+PASS REAL gap auth/role/foreign/CLOSED/unknown scope; gap never changes process state; warning/timeline process contract unchanged
+PASS collector/delivery/transport workers terminated; callbacks/subscriptions cleaned; no queue across logout/app kill
+TEST schema removed; shared PostgreSQL/dev tables untouched
+C3 REAL integration PASS; GUI/LAN/human B review NOT RUN; MT01 PARTIAL until B3

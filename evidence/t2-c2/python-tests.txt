@@ -1,0 +1,5 @@
+EXCERPT of actual command output; raw measurement files are separate and unchanged.
+Ran 10 tests in 0.214s
+OK
+Summary COMPLETE: endpoints=1, categories=2; WS JSON application bytes only
+Summary COMPLETE: endpoints=1, categories=2; WS JSON application bytes only

@@ -18,6 +18,7 @@ import vn.edu.toeic.client.dashboard.MonitoringData.Event;
 import vn.edu.toeic.client.dashboard.MonitoringData.Interruption;
 import vn.edu.toeic.client.dashboard.MonitoringData.Presence;
 import vn.edu.toeic.client.dashboard.MonitoringData.Roster;
+import vn.edu.toeic.client.dashboard.MonitoringData.Gap;
 
 /** Explicit validation, shared by HTTP and push. No numeric coercion through double. */
 public final class MonitoringJson {
@@ -115,11 +116,13 @@ public final class MonitoringJson {
         return new Presence(attempt, user, name, status, reason, revision, collector, seen, detected);
     }
     public static Event event(JsonObject body) {
+        String delivery=body.has("deliveryStatus")?text(body,"deliveryStatus",32):"UNSPECIFIED";
+        if(!Set.of("LIVE","BUFFERED_OFFLINE","PREVIOUS_CONNECTION","UNSPECIFIED").contains(delivery)) throw invalid();
         String name = text(body, "processName", 255), quality = text(body, "metadataQuality", 32);
         if (!name.matches("[A-Za-z0-9_.-]{1,255}") || name.equals(".") || name.equals("..")
                 || !Set.of("COMPLETE","UNREADABLE").contains(quality)) throw invalid();
         return new Event(id(body,"eventId"), id(body,"attemptId"), name, quality, text(body,"policyVersion",128),
-                time(body,"observedAt",false), time(body,"receivedAt",false));
+                time(body,"observedAt",false), time(body,"receivedAt",false),delivery);
     }
     public static Interruption interruption(JsonObject body) {
         if (!"HEARTBEAT_TIMEOUT".equals(text(body,"reason",32))) throw invalid();
@@ -137,6 +140,19 @@ public final class MonitoringJson {
         List<Interruption> result = items(body,"interruptions",maximum, MonitoringJson::interruption);
         if (result.stream().anyMatch(item -> !item.attemptId().equals(attempt))) throw invalid();
         unique(result, Interruption::gapId); return result;
+    }
+    public static Gap gap(JsonObject body) {
+        if(!text(body,"reason",32).equals("QUEUE_OVERFLOW")) throw invalid();
+        Instant first=time(body,"firstDroppedAt",false),last=time(body,"lastDroppedAt",false);
+        if(last.isBefore(first)) throw invalid();
+        return new Gap(id(body,"gapId"),id(body,"attemptId"),id(body,"collectorSessionId"),"QUEUE_OVERFLOW",
+                number(body,"droppedCount",1),first,last,time(body,"receivedAt",false));
+    }
+    public static List<Gap> gaps(JsonObject body,String attempt,int maximum) {
+        response(body);if(!id(body,"attemptId").equals(attempt)) throw invalid();
+        List<Gap> result=items(body,"gaps",maximum,MonitoringJson::gap);
+        if(result.stream().anyMatch(item -> !item.attemptId().equals(attempt))) throw invalid();
+        unique(result,Gap::gapId);return result;
     }
     public static void push(MessageEnvelope<JsonObject> message) {
         if (!"v0".equals(message.protocolVersion()) || message.requestId() != null || message.attemptId() == null) throw invalid();

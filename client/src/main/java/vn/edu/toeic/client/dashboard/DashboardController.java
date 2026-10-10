@@ -19,13 +19,14 @@ import vn.edu.toeic.client.LoginFailedException;
 import vn.edu.toeic.client.dashboard.DashboardModel.Snapshot;
 import vn.edu.toeic.client.dashboard.MonitoringData.Event;
 import vn.edu.toeic.client.dashboard.MonitoringData.Interruption;
+import vn.edu.toeic.client.dashboard.MonitoringData.Gap;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
 import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
 
-/** One state worker, one existing B2 socket, bounded push inbox and five HTTP requests at most.
+/** One state worker, one existing B2 socket, bounded push inbox and six HTTP requests at most.
  * Snapshot delivery is immutable; UI decides how to marshal it onto JavaFX.
  */
 public final class DashboardController implements AutoCloseable {
@@ -46,6 +47,8 @@ public final class DashboardController implements AutoCloseable {
     private long refreshGeneration, selectionGeneration, historyGeneration;
     private long eventGeneration;
     private long stateGeneration;
+    private long gapGeneration;
+    private CompletableFuture<?> gapRequest;
     private CompletableFuture<?> eventRequest, historyRequest,stateRequest;
     private boolean syncing, historyDirty, resyncRequested;
     private int reloadBudget=2;
@@ -140,6 +143,21 @@ public final class DashboardController implements AutoCloseable {
         });
         loadHistory();
         loadState();
+        loadGaps();
+    }
+    private void loadGaps() {
+        String attempt=model.selected();if(attempt==null) return;
+        long selection=selectionGeneration,refresh=refreshGeneration,current=epoch.get(),request=++gapGeneration;
+        if(gapRequest!=null) gapRequest.cancel(true);
+        model.beginGaps();
+        CompletableFuture<List<Gap>> future=api.gaps(attempt);gapRequest=future;
+        request(future,(gaps,failure) -> {
+            if(!selected(attempt,current,refresh,selection) || request!=gapGeneration) return;
+            if(failure!=null) { fail("gaps",attempt,failure);return; }
+            try { model.gaps(gaps); }
+            catch(RuntimeException invalid) { model.gapsFailed("Khoảng trống mâu thuẫn. Hãy làm mới."); }
+            publish();
+        });
     }
     private void loadState() {
         String attempt=model.selected(); if(attempt==null) return;
@@ -204,6 +222,7 @@ public final class DashboardController implements AutoCloseable {
                 } else if (push.message().type().equals("MONITOR_PRESENCE")) {
                     MonitoringJson.push(push.message());
                     if (model.presence(MonitoringJson.presence(push.message().payload()))) {
+                        loadGaps();
                         if (model.snapshot().historyLoading()) historyDirty=true; else loadHistory();
                     }
                 } else { MonitoringJson.push(push.message()); model.warning(MonitoringJson.event(push.message().payload())); }
@@ -237,6 +256,7 @@ public final class DashboardController implements AutoCloseable {
         if (part.equals("roster")) model.rosterFailed(text);
         else if (part.equals("events")) model.eventsFailed(text);
         else if (part.equals("state")) model.stateFailed(text);
+        else if (part.equals("gaps")) model.gapsFailed(text);
         else model.historyFailed(text);
         publish();
     }
@@ -247,6 +267,7 @@ public final class DashboardController implements AutoCloseable {
     }
     private void cancelDetails() {
         eventGeneration++; historyGeneration++; stateGeneration++;
+        gapGeneration++;if(gapRequest!=null) gapRequest.cancel(true);gapRequest=null;
         if (eventRequest!=null) eventRequest.cancel(true);
         if (historyRequest!=null) historyRequest.cancel(true);
         if (stateRequest!=null) stateRequest.cancel(true);

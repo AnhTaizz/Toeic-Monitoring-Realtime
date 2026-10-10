@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.BooleanSupplier;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
+import vn.edu.toeic.protocol.monitoring.EventOrigin;
 
 /**
  * Collector boundary. send completes on socket write, NOT server ACK/commit.
@@ -14,6 +15,9 @@ import vn.edu.toeic.protocol.ws.MessageEnvelope;
  */
 public interface MonitoringTransport {
     CompletableFuture<Void> send(MessageEnvelope<JsonObject> message);
+    default EventOrigin observationOrigin() {
+        return connectionState()==ConnectionState.CONNECTED ? EventOrigin.UNSPECIFIED : EventOrigin.OFFLINE;
+    }
     /** A plan made for an old socket must never be written onto its replacement. */
     default long connectionGeneration() { return 0; }
     default CompletableFuture<Void> sendForGeneration(MessageEnvelope<JsonObject> message,long generation) {

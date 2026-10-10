@@ -6,6 +6,7 @@ import vn.edu.toeic.client.LoginApiClient.ScopeView;
 import vn.edu.toeic.client.dashboard.MonitoringData.Event;
 import vn.edu.toeic.client.dashboard.MonitoringData.Interruption;
 import vn.edu.toeic.client.dashboard.MonitoringData.Roster;
+import vn.edu.toeic.client.dashboard.MonitoringData.Gap;
 import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
 
 public interface DashboardApi extends AutoCloseable {
@@ -13,6 +14,7 @@ public interface DashboardApi extends AutoCloseable {
     CompletableFuture<Roster> roster();
     CompletableFuture<List<Event>> events(String attempt);
     CompletableFuture<List<Interruption>> interruptions(String attempt);
+    default CompletableFuture<List<Gap>> gaps(String attempt) { return CompletableFuture.failedFuture(new UnsupportedOperationException("Gap API chưa được cung cấp")); }
     default CompletableFuture<MonitoringStateView> state(String attempt) {
         return CompletableFuture.failedFuture(new UnsupportedOperationException("Full state API chưa được cung cấp"));
     }

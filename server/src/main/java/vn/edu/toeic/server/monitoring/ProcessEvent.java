@@ -5,11 +5,16 @@ import com.google.gson.JsonObject;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
+import vn.edu.toeic.protocol.monitoring.EventOrigin;
 
 public record ProcessEvent(String eventId, String collectorSessionId, String policyVersion, long pid,
-        String processName, Instant startInstant, String metadataQuality, Instant observedAt) {
+        String processName, Instant startInstant, String metadataQuality, Instant observedAt, EventOrigin origin) {
+    public ProcessEvent(String eventId,String collectorSessionId,String policyVersion,long pid,String processName,
+            Instant startInstant,String metadataQuality,Instant observedAt) {
+        this(eventId,collectorSessionId,policyVersion,pid,processName,startInstant,metadataQuality,observedAt,EventOrigin.UNSPECIFIED);
+    }
     private static final Set<String> FIELDS = Set.of("eventId", "collectorSessionId", "policyVersion", "pid",
-            "processName", "startInstant", "metadataQuality", "observedAt");
+            "processName", "startInstant", "metadataQuality", "observedAt", "observationContext", "observationConnectionId");
 
     public static ProcessEvent parse(JsonObject payload) {
         if (payload == null || !FIELDS.containsAll(payload.keySet())) throw new IllegalArgumentException();
@@ -27,7 +32,7 @@ public record ProcessEvent(String eventId, String collectorSessionId, String pol
         Instant start = startValue == null || startValue.isJsonNull() ? null : instant(payload, "startInstant");
         String quality = text(payload, "metadataQuality");
         if (!Set.of("COMPLETE", "UNREADABLE").contains(quality) || (start == null && quality.equals("COMPLETE"))) throw new IllegalArgumentException();
-        return new ProcessEvent(eventId, collector, policy, pid, name, start, quality, instant(payload, "observedAt"));
+        return new ProcessEvent(eventId, collector, policy, pid, name, start, quality, instant(payload, "observedAt"),EventOrigin.parse(payload));
     }
 
     private static Instant instant(JsonObject body, String field) {

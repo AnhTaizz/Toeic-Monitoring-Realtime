@@ -2,6 +2,7 @@ package vn.edu.toeic.client.dashboard;
 
 import java.util.ArrayList;
 import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
+import vn.edu.toeic.client.dashboard.MonitoringData.Gap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +19,9 @@ public final class DashboardModel {
             ConnectionState connection, boolean rosterLoading, boolean eventsLoading, boolean historyLoading,
             boolean rosterStale, boolean eventsStale, boolean historyStale,
             String rosterError, String eventsError, String historyError, boolean loginRequired,
-            MonitoringStateView currentState,boolean stateLoading,boolean stateStale,String stateError) {
-        public Snapshot { attempts=List.copyOf(attempts); events=List.copyOf(events); interruptions=List.copyOf(interruptions); }
+            MonitoringStateView currentState,boolean stateLoading,boolean stateStale,String stateError,
+            List<Gap> gaps,boolean gapsLoading,boolean gapsStale,String gapsError) {
+        public Snapshot { attempts=List.copyOf(attempts); events=List.copyOf(events); interruptions=List.copyOf(interruptions);gaps=List.copyOf(gaps); }
     }
     private final int bufferLimit, rowLimit;
     private Set<String> scope;
@@ -36,6 +38,9 @@ public final class DashboardModel {
     private MonitoringStateView currentState;
     private boolean stateLoading,stateStale=true;
     private String stateError="";
+    private List<Gap> gaps=List.of();
+    private boolean gapsLoading,gapsStale=true;
+    private String gapsError="";
     public DashboardModel(Set<String> scope, int bufferLimit, int rowLimit) {
         if (bufferLimit<1 || rowLimit<1 || bufferLimit>100000 || rowLimit>100000) throw new IllegalArgumentException();
         this.scope=Set.copyOf(scope); this.bufferLimit=bufferLimit; this.rowLimit=rowLimit;
@@ -43,11 +48,13 @@ public final class DashboardModel {
     public Snapshot snapshot() { return new Snapshot(new ArrayList<>(roster.values()),selected,new ArrayList<>(events.values()),history,
             connection,rosterLoading,eventsLoading,historyLoading,rosterStale,eventsStale,historyStale,rosterError,eventsError,historyError,loginRequired,
             currentState,stateLoading,stateStale || rosterStale || connection!=ConnectionState.CONNECTED
-                || (selected!=null && roster.containsKey(selected) && !roster.get(selected).status().equals("ONLINE")),stateError); }
+                || (selected!=null && roster.containsKey(selected) && !roster.get(selected).status().equals("ONLINE")),stateError,
+            gaps,gapsLoading,gapsStale || rosterStale || connection!=ConnectionState.CONNECTED,gapsError); }
     void connection(ConnectionState state) {
         connection=state;
         if (state==ConnectionState.CONNECTED) resetState();
         if (state != ConnectionState.CONNECTED) {
+            gapsStale=true;gapsLoading=false;
             stateStale=true; stateLoading=false;
             rosterStale=eventsStale=historyStale=true;
             rosterLoading=eventsLoading=historyLoading=false;
@@ -93,6 +100,7 @@ public final class DashboardModel {
     void select(String attempt) {
         if (attempt!=null && !roster.containsKey(attempt)) return;
         selected=attempt; events.clear(); eventBuffer.clear(); history=List.of();
+        gaps=List.of();gapsLoading=false;gapsStale=true;gapsError="";
         resetState();
         eventsLoading=historyLoading=false; eventsStale=historyStale=true; eventsError=historyError="";
     }
@@ -151,6 +159,18 @@ public final class DashboardModel {
     void eventsFailed(String message) { eventsLoading=false; eventsStale=true; eventsError=message; }
     void historyFailed(String message) { historyLoading=false; historyStale=true; historyError=message; }
     void beginState() { stateLoading=true; stateStale=true; stateError=""; }
+    void beginGaps() { gapsLoading=true;gapsStale=true;gapsError=""; }
+    void gaps(List<Gap> values) {
+        if(values.size()>rowLimit) throw conflict();
+        Set<String> seen=new HashSet<>();
+        Map<String,Gap> previous=new LinkedHashMap<>();gaps.forEach(value -> previous.put(value.gapId(),value));
+        for(Gap value:values) {
+            if(!value.attemptId().equals(selected) || !seen.add(value.gapId())
+                    || (previous.containsKey(value.gapId()) && !previous.get(value.gapId()).equals(value))) throw conflict();
+        }
+        gaps=List.copyOf(values);gapsLoading=false;gapsStale=false;gapsError="";
+    }
+    void gapsFailed(String message) { gapsLoading=false;gapsStale=true;gapsError=message; }
     void state(MonitoringStateView value,boolean http) {
         if (!value.attemptId().equals(selected) || !allowed(value.attemptId())) return;
         if (currentState!=null) {
@@ -164,7 +184,7 @@ public final class DashboardModel {
     }
     private void resetState() { currentState=null; stateLoading=false; stateStale=true; stateError=""; }
     void stateFailed(String message) { stateLoading=false; stateStale=true; stateError=message; }
-    void overflow() { rosterStale=eventsStale=historyStale=stateStale=true; rosterError="Bộ đệm cập nhật đầy. Cần đồng bộ lại HTTP."; }
+    void overflow() { rosterStale=eventsStale=historyStale=stateStale=gapsStale=true; rosterError="Bộ đệm cập nhật đầy. Cần đồng bộ lại HTTP."; }
     void expire() {
         roster.clear(); scope=Set.of(); presenceBuffer.clear(); select(null); loginRequired=true;
         rosterLoading=false; rosterStale=true; rosterError="Phiên hết hiệu lực. Hãy đăng nhập lại.";
