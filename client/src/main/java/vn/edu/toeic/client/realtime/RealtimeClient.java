@@ -32,6 +32,7 @@ import vn.edu.toeic.protocol.ws.MessageEnvelope;
 import vn.edu.toeic.protocol.ErrorCode;
 import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
 import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
+import vn.edu.toeic.protocol.monitoring.EventOrigin;
 import java.nio.charset.StandardCharsets;
 import vn.edu.toeic.protocol.measurement.MessageMeasurements;
 import vn.edu.toeic.protocol.measurement.MessageMeasurements.Endpoint;
@@ -109,6 +110,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     private boolean closed;
     private boolean authenticationRejected;
     private long generation;
+    private String observationConnectionId;
     private int retries;
     private Session session;
     private WebSocket socket;
@@ -254,6 +256,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                 if (message.attemptId() == null) throw new IllegalArgumentException();
                 requiredString(message.payload(), "collectorSessionId");
                 requiredString(message.payload(), "eventId");
+                EventOrigin.parse(message.payload());
                 requiredString(message.payload(), "policyVersion");
                 requiredString(message.payload(), "processName");
                 requiredString(message.payload(), "metadataQuality");
@@ -285,6 +288,10 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         return result;
     }
     @Override public synchronized long connectionGeneration() { return generation; }
+    @Override public synchronized EventOrigin observationOrigin() {
+        if (closed || state!=ConnectionState.CONNECTED) return EventOrigin.OFFLINE;
+        return observationConnectionId==null ? EventOrigin.UNSPECIFIED : new EventOrigin("CONNECTED",observationConnectionId);
+    }
     @Override public synchronized CompletableFuture<Void> sendForGeneration(MessageEnvelope<JsonObject> message,long expectedGeneration) {
         if (generation!=expectedGeneration) return failed("Socket đã thay đổi");
         return send(message);
@@ -373,6 +380,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         if (opening != null) opening.cancel(true);
         opening = null;
         pendingAcks.clear();
+        observationConnectionId=null;
         heartbeatDeadlines.clear();
         for (CompletableFuture<Void> write : Set.copyOf(writes)) {
             write.completeExceptionally(new IllegalStateException("Kết nối đã dừng"));
@@ -459,6 +467,11 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                 }
                 pendingAcks.remove(message.requestId());
                 heartbeatDeadlines.remove(message.requestId());
+                if (request.type().equals("HEARTBEAT") && message.payload().has("connectionId")) {
+                    String identity=FullSnapshotPayload.id(requiredString(message.payload(),"connectionId"));
+                    if (observationConnectionId!=null && !observationConnectionId.equals(identity)) throw new IllegalArgumentException();
+                    observationConnectionId=identity;
+                }
                 measurements.businessAck(text);
             } else if ("ERROR".equals(message.type())) {
                 String code = requiredString(message.payload(), "code");

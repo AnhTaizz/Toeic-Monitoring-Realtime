@@ -31,3 +31,6 @@ evidence/t1-c4/*.txt text eol=lf
 
 # T2-C1 artifact checksums cover exact bytes, including metadata and summaries.
 evidence/t2-c1/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# T2-C2 raw, metadata and summaries retain the exact verified bytes.
+evidence/t2-c2/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

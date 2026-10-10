@@ -111,3 +111,11 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Không bật EnableScheduling toàn app: thao tác đó đồng thời kích hoạt ExamTimeoutService, vượt phạm vi sửa C1. Scheduler bài thi của A vẫn là vấn đề riêng cần A xử lý/phối hợp; chưa sửa hoặc nghiệm thu nó trong task này.
 - Worker bắt RuntimeException không lộ cause/credential để scan sau tiếp tục. PreDestroy hủy/interrupt, đợi tối đa5s; store PreDestroy xóa entries/chặn request muộn. Phụ thuộc Spring maintenance→store giúp hủy worker trước khi hủy store.
 - Test Spring/WS/PG giữ socket và heartbeat hoạt động nhưng không gửi full/CLOSE, không gọi maintain/read state: cần tự push STALE, rồi TTL tombstone và OPEN lượt khác thành công khi capacity1. Unit riêng kiểm tự gọi/retry sau lỗi/dừng task đang chạy và dọn RAM. [Evidence bổ sung](../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md).
+
+## QD-13 · Nhãn event muộn dựa trên kết nối, giữ cố định khi lưu
+
+- Ngày: 10/10/2026 · C, T2-C2 · Human A/B review chưa chạy.
+- Chọn EventOrigin đóng băng lúc quan sát: OFFLINE, CONNECTED kèm ID server trả trong ACK heartbeat, hoặc UNSPECIFIED khi thiếu dữ liệu. So với socket nhận để phân loại BUFFERED_OFFLINE/PREVIOUS_CONNECTION/LIVE/UNSPECIFIED; không so hai đồng hồ chưa đồng bộ. LIVE chỉ nói cùng kết nối, không cam kết độ trễ thấp.
+- Lưu classification riêng với payload trong V8; retry cùng event/nguồn gốc trả metadata lần lưu đầu, không relabel/conflict hoặc phát thêm warning. Không áp syncEpoch của full vào event lịch sử. Legacy/mốc trước ACK đầu giữ UNSPECIFIED; cần nâng server trước client mới.
+- Gap overflow vẫn V3; heartbeat interruption vẫn V4. Thêm HTTP/tab gap riêng, không suy ra droppedCount từ timeout. Không thêm message type/worker hoặc durability queue, giữ hooks đo C4.
+- Cross-owner: A xem migration/transaction/ACK/permission, B xem ACK identity/parser/dashboard và guard plan cũ. Contract chi tiết [T2-C2](PROTOCOL.md#t2-c2--heartbeat-event-đến-muộn-và-khoảng-trống).

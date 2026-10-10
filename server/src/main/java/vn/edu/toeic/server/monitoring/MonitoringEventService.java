@@ -13,6 +13,7 @@ import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.server.auth.AccessDeniedException;
 import vn.edu.toeic.server.auth.AuthenticatedUser;
 import vn.edu.toeic.server.auth.AuthorizationService;
+import vn.edu.toeic.protocol.monitoring.EventOrigin;
 
 /** No socket calls here. Caller gets a result only after Spring commits the transaction. */
 @Service
@@ -26,17 +27,23 @@ public class MonitoringEventService {
 
     @Transactional
     public StoreResult store(AuthenticatedUser user, String attemptId, ProcessEvent event) {
+        return store(user,attemptId,event,null);
+    }
+    @Transactional
+    public StoreResult store(AuthenticatedUser user, String attemptId, ProcessEvent event,String receivingConnection) {
         authorization.requireRole(user, Role.CANDIDATE);
         lockAndAuthorize(user, attemptId);
         int inserted = jdbc.sql("""
                 INSERT INTO monitoring_events(attempt_id,event_id,collector_session_id,policy_version,pid,process_name,
-                    process_start_instant,metadata_quality,observed_at)
-                VALUES (:attempt,:event,:collector,:policy,:pid,:name,:start,:quality,:observed)
+                    process_start_instant,metadata_quality,observed_at,observation_context,observation_connection_id,delivery_status)
+                VALUES (:attempt,:event,:collector,:policy,:pid,:name,:start,:quality,:observed,:context,:connection,:delivery)
                 ON CONFLICT (attempt_id,event_id) DO NOTHING
                 """).param("attempt", attemptId).param("event", event.eventId()).param("collector", event.collectorSessionId())
                 .param("policy", event.policyVersion()).param("pid", event.pid()).param("name", event.processName())
                 .param("start", event.startInstant() == null ? null : Timestamp.from(event.startInstant()), Types.TIMESTAMP)
-                .param("quality", event.metadataQuality()).param("observed", Timestamp.from(event.observedAt())).update();
+                .param("quality", event.metadataQuality()).param("observed", Timestamp.from(event.observedAt()))
+                .param("context",event.origin().context()).param("connection",event.origin().connectionId(),Types.VARCHAR)
+                .param("delivery",event.origin().deliveryStatus(receivingConnection)).update();
         StoredEvent stored = jdbc.sql("SELECT * FROM monitoring_events WHERE attempt_id=:attempt AND event_id=:event")
                 .param("attempt", attemptId).param("event", event.eventId()).query(MonitoringEventService::read).single();
         if (!stored.event().equals(event)) throw new EventConflictException();
@@ -64,16 +71,17 @@ public class MonitoringEventService {
         return new StoredEvent(row.getLong("id"), row.getString("attempt_id"),
                 new ProcessEvent(row.getString("event_id"), row.getString("collector_session_id"), row.getString("policy_version"),
                         row.getLong("pid"), row.getString("process_name"), start == null ? null : start.toInstant(),
-                        row.getString("metadata_quality"), row.getTimestamp("observed_at").toInstant()),
-                row.getTimestamp("received_at").toInstant());
+                        row.getString("metadata_quality"), row.getTimestamp("observed_at").toInstant(),
+                        new EventOrigin(row.getString("observation_context"),row.getString("observation_connection_id"))),
+                row.getTimestamp("received_at").toInstant(),row.getString("delivery_status"));
     }
     public record StoreResult(boolean created, StoredEvent stored) { }
-    public record StoredEvent(long id, String attemptId, ProcessEvent event, Instant receivedAt) {
+    public record StoredEvent(long id, String attemptId, ProcessEvent event, Instant receivedAt,String deliveryStatus) {
         public TimelineItem item() {
             return new TimelineItem(event.eventId(), attemptId, event.processName(), event.metadataQuality(),
-                    event.policyVersion(), event.observedAt().toString(), receivedAt.toString());
+                    event.policyVersion(), event.observedAt().toString(), receivedAt.toString(),deliveryStatus);
         }
     }
     public record TimelineItem(String eventId, String attemptId, String processName, String metadataQuality,
-            String policyVersion, String observedAt, String receivedAt) { }
+            String policyVersion, String observedAt, String receivedAt,String deliveryStatus) { }
 }

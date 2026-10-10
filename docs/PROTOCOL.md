@@ -4,6 +4,8 @@
 
 Owner: C (monitoring, khung message chung), A (auth, ca thi, lưu/nộp). Người dùng: B.
 
+T2-C2 bổ sung nguồn gốc kết nối của event, nhãn nhận do server lưu và HTTP đọc gap. Contract hiện tại ở mục T2-C2 cuối file; các ghi chú "chưa có gap REST/event muộn" trong mục chặng 1 là lịch sử.
+
 Đổi một message đã có người dùng thì: owner sửa file này, reviewer duyệt, người dùng cập nhật fixture trong cùng nhánh tích hợp.
 
 ## Phân kênh
@@ -704,3 +706,51 @@ Contract bổ sung 10/10/2026, trong nhánh tích hợp; không có delta hoặc
 - Giám thị lấy `GET /api/v1/monitoring/attempts/{attemptId}/state` hoặc nhận `MONITOR_STATE`. Payload `{attemptId,serverInstanceId,syncEpoch,collectorSessionId,revision,sequence,status,policyVersion,processes,receivedAt}`; status UNSYNCED/SYNCED/STALE, receivedAt UTC do server nhận, không phải thời gian process mở. revision tăng trong một serverInstanceId cho OPEN/full/STALE; dùng revision để gộp HTTP/push (sequence không dùng so giữa epoch). Endpoint kiểm PROCTOR + assignment mỗi lần; push kiểm auth và scope lại. Dashboard disconnect/loading/presence UNKNOWN hiển thị cũ; đổi lượt/refresh/reconnect bỏ response cũ, refresh xóa baseline revision của server trước. State riêng với event/gap/interruption.
 - TX/RX/ACK đi qua hooks C4 hiện có một lần; không đo lại trong reducer. Event C3, heartbeat/presence A4 giữ đường chạy riêng.
 - Bảo trì full state: bean `MonitoringStateMaintenance` có worker riêng gọi `MonitoringStateService.maintain()` theo fixed delay `toeic.state.scan-ms` (default500ms). Không dùng `@Scheduled` và không bật scheduling toàn server, nên không kích hoạt scheduler hết giờ bài thi của A. Runtime failure không hủy các scan sau. Spring shutdown dừng/interrupt và đợi worker tối đa5s, rồi store xóa RAM/chặn request muộn. STALE/TTL push không cần proctor đọc HTTP. Bổ sung này sửa lỗi wiring tại30fa6d9; test cũ gọi maintain trực tiếp chưa kiểm tự chạy.
+
+## T2-C2 — Heartbeat, event đến muộn và khoảng trống
+
+Heartbeat/presence A4, full RAM C1 và gap QUEUE_OVERFLOW C3 tiếp tục chạy riêng. Không thêm message type hoặc bật scheduling toàn server.
+
+### Thông tin kết nối lúc quan sát
+
+ACK hợp lệ của HEARTBEAT (scoped hoặc unscoped) thêm `connectionId`: mã opaque của socket server đang nhận, không phải token, user ID hay syncEpoch. Scoped ACK vẫn sau presence commit; unscoped không cập nhật presence. `RealtimeClient` chỉ nhận mã từ ACK khớp request/trace/type trên generation hiện tại; xóa khi disconnect/reconnect/close. Callback của socket cũ bị bỏ như trước.
+
+`MonitoringDelivery.observe()` lấy `MonitoringTransport.observationOrigin()` ở đầu lần quan sát, ngoài lock. `MonitoringMessage.observed()` đóng băng hai trường tùy chọn dưới đây cùng eventId/payload/observedAt. Retry không bổ sung hoặc đổi nhãn vào payload:
+
+| observationContext | observationConnectionId | Ý nghĩa |
+|---|---|---|
+| CONNECTED | Bắt buộc ID hợp lệ của ACK heartbeat vừa biết trên socket lúc quan sát | Client quan sát trên kết nối xác định |
+| OFFLINE | Thiếu hoặc null | Client đã biết adapter không CONNECTED lúc quan sát |
+| UNSPECIFIED | Thiếu hoặc null | Chưa nhận được ID từ ACK; không đủ dữ liệu xác định nguồn kết nối |
+| Cả hai trường thiếu | — | Event v0 cũ; chuẩn hóa thành UNSPECIFIED |
+
+Một ID có mặt nhưng context thiếu, CONNECTED không có ID, hoặc OFFLINE/UNSPECIFIED có ID đều INVALID_INPUT. JSON serializer hiện có lược bỏ null; parser chấp nhận thiếu ID trong hai context không có kết nối. Trường mới vẫn dùng envelope protocolVersion v0. Triển khai server mới trước client mới: server cũ từ chối trường origin mới. Server mới nhận event legacy; dashboard mới đọc timeline legacy thiếu deliveryStatus thành UNSPECIFIED.
+
+### Phân loại tại lần lưu đầu tiên
+
+`RealtimeWebSocketHandler` truyền `session.getId()` thực tế tới `MonitoringEventService.store()`. Server lưu `deliveryStatus` trong V8, chỉ khi INSERT mới:
+
+| deliveryStatus | Quy tắc / hiển thị |
+|---|---|
+| BUFFERED_OFFLINE | Context OFFLINE: "Đến muộn · quan sát khi mất kết nối" |
+| PREVIOUS_CONNECTION | Context CONNECTED, ID lúc quan sát khác socket nhận: "Đến muộn · từ kết nối trước" |
+| LIVE | Context CONNECTED, ID khớp socket nhận: "Cùng kết nối lúc quan sát" |
+| UNSPECIFIED | Dữ liệu cũ hoặc chưa biết nguồn: "Chưa có thông tin kết nối lúc quan sát" |
+
+Đây là nhãn nguồn kết nối, không đo độ trễ và không hứa LIVE là đến nhanh. Không trừ observedAt client với receivedAt server. Ngay trước heartbeat ACK đầu tiên, event có thể UNSPECIFIED; không tự gán nhãn đến muộn cho dữ liệu thiếu bằng chứng. Origin do client báo, không phải bằng chứng chống client đã bị sửa hoặc kết luận gian lận.
+
+V8 chỉ thêm observation_context, observation_connection_id và delivery_status vào monitoring_events. Dòng cũ giữ nguyên và mặc định UNSPECIFIED. So duplicate theo toàn ProcessEvent đã chuẩn hóa, gồm origin gốc; deliveryStatus/receivedAt server không tham gia so payload. Retry event đã lưu LIVE trên socket mới vẫn trả bản LIVE ban đầu; không tạo CONFLICT vì nhãn server thay đổi. Đổi PID/observedAt/origin với cùng eventId là CONFLICT. Unique attempt/eventId, quyền ACTIVE/owner/role trước duplicate, FOR SHARE và transaction/COMMIT rồi ACK giữ nguyên. Không chấp nhận CLOSED/SUBMITTED/TIMED_OUT; không dùng epoch full để loại event lịch sử thuộc quyền. Event chỉ ghi monitoring_events, không gọi reducer/full state hoặc sửa gap/interruption.
+
+HTTP events và MONITOR_WARNING thêm deliveryStatus vào TimelineItem. Duplicate không phát thêm warning; HTTP giúp giám thị phục hồi cảnh báo đã commit nhưng mất push. Callback event send giờ dùng guard collector/socket generation như full: Stop/mất quyền/kết nối thay đổi làm plan cũ không được write; không đổi eventId, payload hoặc ngân sách retry.
+
+### Ba tình huống khác nhau
+
+- Không nhận heartbeat: A4 tự UNKNOWN và lưu monitoring_interruptions với lastSeenAt, timeoutDetectedAt, recoveredAt. Không biết thời điểm chính xác monitoring dừng hay số event mất. ONLINE trở lại không xóa dòng cũ; nhiều socket còn hợp lệ không bị callback socket cũ làm UNKNOWN.
+- Tràn queue: C3 biết số event đã bỏ, gửi MONITORING_GAP QUEUE_OVERFLOW với gapId/count/thời gian client giữ nguyên. Server lưu monitoring_gaps; retry cùng ID/nội dung một dòng, khác nội dung CONFLICT. Không biến heartbeat timeout thành QUEUE_OVERFLOW.
+- Gửi chậm rồi bù đủ: các event vào lịch sử, có nhãn nguồn khi đủ dữ liệu; không tạo thêm số event mất hoặc gap QUEUE_OVERFLOW. Full mới chỉ phục hồi tập process hiện tại.
+
+### Gap HTTP và dashboard
+
+`GET /api/v1/monitoring/attempts/{attemptId}/gaps`: Bearer, PROCTOR được phân công vào ACTIVE. Response `{protocolVersion,traceId,attemptId,gaps:[{gapId,attemptId,collectorSessionId,reason,droppedCount,firstDroppedAt,lastDroppedAt,receivedAt}]}`. reason chỉ QUEUE_OVERFLOW, count số nguyên dương, timestamp đầu/cuối do client báo; receivedAt do DB ghi. 401 thiếu/revoked; 403 sai role/scope hoặc lượt đã kết thúc; lỗi DB/COMMIT/giới hạn trả lỗi, không trả dữ liệu một phần giả đầy đủ. Reader tối đa5000 dòng, lấy5001 để phát hiện vượt giới hạn, không tải toàn lịch sử vào RAM; HTTP client còn giữ giới hạn body/rows có sẵn.
+
+Dashboard có cột "Cách nhận" và tab "Khoảng trống dữ liệu" riêng với lịch sử gián đoạn heartbeat. Gap đọc khi chọn lượt, refresh, reconnect hoặc presence đổi ONLINE/UNKNOWN. Không có push gap riêng: báo cáo overflow vừa nhận cần bấm "Làm mới quyền và dữ liệu". Lỗi đọc gap giữ last-known với nhãn cũ; không giả thành tập rỗng đã đồng bộ. Selection/refresh/connection/request generation chặn response cũ; revoke/logout/close xóa dữ liệu và dọn future/listener/worker. Parser kiểm exact long, reason/timestamps/scope/dedup/limits. Không quét/mạng/file trên FX thread. TX/RX/BUSINESS_ACK dùng hooks C4 hiện có đúng một lần.

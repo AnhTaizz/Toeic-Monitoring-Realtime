@@ -31,6 +31,21 @@ import vn.edu.toeic.protocol.measurement.MessageMeasurements.Outcome;
 
 /** All sockets/openers in this class are MOCK, never authenticated server proof. */
 class RealtimeClientTest {
+    @Test void observationIdentityUsesCorrelatedHeartbeatAckAndClearsOnReconnect() {
+        try(Fixture f=new Fixture()) {
+            f.connect();assertThat(f.client.observationOrigin().context()).isEqualTo("UNSPECIFIED");
+            f.clock.advance(Duration.ofSeconds(2));
+            var heartbeat=GSON.fromJson(f.socket().sent.getFirst(),JsonObject.class);
+            var payload=new JsonObject();payload.addProperty("status","ACCEPTED");payload.addProperty("acknowledgedType","HEARTBEAT");payload.addProperty("connectionId","MOCK-link-1");
+            String reply=GSON.toJson(new MessageEnvelope<>("v0","ACK","MOCK-hb-ack",heartbeat.get("requestId").getAsString(),
+                    "mock-attempt-A",heartbeat.get("traceId").getAsString(),payload));
+            var old=f.socket();old.text(reply,true);
+            assertThat(f.client.observationOrigin().connectionId()).isEqualTo("MOCK-link-1");
+            f.client.disconnect();assertThat(f.client.observationOrigin().context()).isEqualTo("OFFLINE");
+            f.connect();old.text(reply,true);
+            assertThat(f.client.observationOrigin().context()).isEqualTo("UNSPECIFIED");
+        }
+    }
     private static final RealtimeClient.Session SESSION = new RealtimeClient.Session(
             Set.of("mock-attempt-A"), "mock-attempt-A", "mock-collector-001");
     private static final Gson GSON = new Gson();

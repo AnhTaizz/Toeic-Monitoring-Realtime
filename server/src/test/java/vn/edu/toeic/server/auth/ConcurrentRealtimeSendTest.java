@@ -84,7 +84,7 @@ class ConcurrentRealtimeSendTest {
                 try {
                     if (type.equals("WARNING")) registry.warnAssignedProctors(new MonitoringEventService.StoredEvent(1, "MOCK-attempt",
                             new ProcessEvent("MOCK-event", "MOCK-collector", "v1", 1, "notepad.exe", null,
-                                    "UNREADABLE", Instant.now()), Instant.now()), "MOCK-trace");
+                                    "UNREADABLE", Instant.now()), Instant.now(),"UNSPECIFIED"), "MOCK-trace");
                     else if(type.equals("PRESENCE")) registry.presenceAssignedProctors(new PresenceSnapshot("MOCK-attempt",1,"MOCK", "ONLINE","HEARTBEAT",1,"MOCK-collector",Instant.now(),null),"MOCK-trace");
                     else handler.handleMessage(socket, new TextMessage(AuthenticatedNetworkTest.heartbeat(null)));
                 }

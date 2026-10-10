@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
+import vn.edu.toeic.protocol.monitoring.EventOrigin;
 
 /** Queued identity and payload are frozen; callers receive defensive copies. */
 public final class MonitoringMessage {
@@ -14,6 +15,9 @@ public final class MonitoringMessage {
         envelope = new MessageEnvelope<>("v0", type, request, request, attempt, UUID.randomUUID().toString(), payload.deepCopy());
     }
     public static MonitoringMessage observed(String attempt, ProcessSnapshot snapshot, ObservedProcess process, Instant time) {
+        return observed(attempt,snapshot,process,time,EventOrigin.UNSPECIFIED);
+    }
+    public static MonitoringMessage observed(String attempt, ProcessSnapshot snapshot, ObservedProcess process, Instant time, EventOrigin origin) {
         ProcessIdentity identity = process.identity();
         if (identity.pid() < 1 || !process.executableName().matches("[A-Za-z0-9_.-]{1,255}"))
             throw new IllegalArgumentException("Observation không có filename/PID hợp lệ");
@@ -26,6 +30,7 @@ public final class MonitoringMessage {
         payload.addProperty("startInstant", identity.startInstant() == null ? null : instant(identity.startInstant()));
         payload.addProperty("metadataQuality", identity.startInstant() == null ? "UNREADABLE" : process.metadataQuality().name());
         payload.addProperty("observedAt", instant(time));
+        origin.write(payload);
         return new MonitoringMessage("PROCESS_OBSERVED", attempt, payload);
     }
     public static MonitoringMessage gap(String attempt, String collector, long count, Instant first, Instant last) {

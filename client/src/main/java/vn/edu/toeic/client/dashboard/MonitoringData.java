@@ -10,7 +10,13 @@ public final class MonitoringData {
             String status, String reason, long revision, String collectorSessionId,
             Instant lastSeenAt, Instant timeoutDetectedAt) { }
     public record Event(String eventId, String attemptId, String processName, String metadataQuality,
-            String policyVersion, Instant observedAt, Instant receivedAt) { }
+            String policyVersion, Instant observedAt, Instant receivedAt,String deliveryStatus) {
+        public Event(String eventId,String attemptId,String processName,String metadataQuality,String policyVersion,Instant observedAt,Instant receivedAt) {
+            this(eventId,attemptId,processName,metadataQuality,policyVersion,observedAt,receivedAt,"UNSPECIFIED");
+        }
+    }
+    public record Gap(String gapId,String attemptId,String collectorSessionId,String reason,long droppedCount,
+            Instant firstDroppedAt,Instant lastDroppedAt,Instant receivedAt) { }
     public record Interruption(String gapId, String attemptId, String collectorSessionId,
             String reason, Instant lastSeenAt, Instant timeoutDetectedAt, Instant recoveredAt) { }
     public record Roster(Instant serverTime, List<Presence> attempts) {
