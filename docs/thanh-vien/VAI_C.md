@@ -199,7 +199,7 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 **Xong khi:** một lần chạy thử cho ra file ground truth và file quan sát của collector, ghép được với nhau.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** Code0164297/test/evidence hoàn tất10/10 từ C3 merge PR#20/f6d46b2. Java493/package PASS; Windows30child REAL đủ10 mỗi200/800/3000, poll500/seed1234/TEST:27 OBSERVED/3 NOT_OBSERVED_IN_TRACE/0 INCONCLUSIVE; checksum/rejoin/cleanup PASS. [Cách chạy/clock/identity](../CONTROLLED_PROCESS_HARNESS.md), [evidence](../../evidence/t2-c4/2026-10-10-verification.md). C1-Gui/C3-replay/measurement và event chạy riêng hồi quy PASS; lần event song song FAIL retained/cause chưa chứng minh. Human B review NOT RUN, cần xem policy seam/trace TEST/clock binding/coverage/lifecycle. OS Ctrl+C/hardkill parent, candidate full GUI/LAN/E1/E2 NOT RUN; không latency/miss-rate hoặc tên production mới. Giữ nhánh C4 theo yêu cầu, Git cuối trong báo cáo/PR. Dừng sau C4, chưa C5/delta.
 
 ### T2-C5 · Ghi phương pháp baseline và protocol
 `2h` · phụ thuộc: T2-C2, T2-C4 · review: B

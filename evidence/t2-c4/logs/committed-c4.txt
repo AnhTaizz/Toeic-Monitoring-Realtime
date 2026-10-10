@@ -1,0 +1,17 @@
+Sanitized copy: private home/workspace prefixes replaced; original log retained under ignored target.
+JOIN COMPLETE observed=27 notObservedInTrace=3 inconclusive=0; no latency or general miss-rate claim
+targetMillis=200 trials=10 observed=7
+targetMillis=800 trials=10 observed=10
+targetMillis=3000 trials=10 observed=10
+HARNESS COMPLETE runId=80c58d68-958a-4ecd-aedd-9db9731b97a3 resourcesCleaned=true error=null; TEST owned-root policy; source REAL; not E1/E2
+JOIN COMPLETE observed=27 notObservedInTrace=3 inconclusive=0; no latency or general miss-rate claim
+targetMillis=200 trials=10 observed=7
+targetMillis=800 trials=10 observed=10
+targetMillis=3000 trials=10 observed=10
+PASS reread ground truth/C3 trace/manifest and rejoin byte-identical; no requirement all children observed
+JOIN INCOMPLETE observed=0 notObservedInTrace=0 inconclusive=30; no latency or general miss-rate claim
+targetMillis=200 trials=10 observed=0
+targetMillis=800 trials=10 observed=0
+targetMillis=3000 trials=10 observed=0
+PASS corrupt trace rejected as inconclusive, not definite miss
+PASS T2-C4 artifact/identity/clock/cleanup smoke; artifacts: <WORKSPACE>\client\target\t2c4-smoke\fe0864ce-9023-4dbf-a3db-4493f06bafa2

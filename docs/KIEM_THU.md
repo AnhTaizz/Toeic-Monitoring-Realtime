@@ -312,3 +312,23 @@ Lượt exploratory phát hiện assertion/control-record và compile signature/
 | ProcessHandle capture + owned Edge appear/disappear/cleanup | COMPLETE→replay PASS | Nguồn REAL, gate/fault SIMULATED |
 | C1-Gui/C2-Gui/event-C3/C4/A4 | PASS mới | REAL localhost/PG/component, source/fault từng ca xem evidence |
 | B human review/A adapter review/candidate full GUI/LAN/T2-C4/delta/E1/E2 | NOT RUN | Không lấy replay thay bằng chứng này |
+
+## T2-C4 — harness và dữ liệu chuẩn độc lập (10/10/2026)
+
+Java493/package PASS; 32 ca mới có expected viết tay và child thật. [Evidence/logs/raw/example/checksums](../evidence/t2-c4/2026-10-10-verification.md); [lệnh](CONTROLLED_PROCESS_HARNESS.md). Không đổi MT02–MT06 delta hoặc E1/E2 thành PASS.
+
+| Kiểm tra mới | Kết quả | Mức bằng chứng |
+|---|---|---|
+| Same seed/manual seed7/ba loại/giới hạn | PASS | Unit schedule/expected viết tay |
+| GT độc lập khi collector luôn empty | PASS | Child REAL, collector readings MOCK |
+| Clock offset/thứ tự/không ép target bằng thực đo | PASS | Fixture viết tay + audit raw REAL |
+| PID/start/collector, reuse, thiếu start/tên/coverage | PASS | Fixture MOCK riêng |
+| Trace lỗi/truncated/hash/mutation/existing output | PASS reject/inconclusive | Unit + CLI bản sao lỗi |
+| Child lỗi/noREADY/hang/launchfail/APIcancel/known tree | PASS cleanup | Child REAL + source MOCK |
+| Windows30child (10 mỗi200/800/3000), poll500/seed1234 | COMPLETE 27 observed/3 notObserved/0 inconclusive | Child+source REAL, TEST policy; gate SIMULATED |
+| Checksum/manifest/rejoin/cleanup/no overwrite | PASS | Raw và CLI thật |
+| C3 replay/REAL owned Edge trace, C1-Gui, measurement | PASS | Hồi quy riêng; faults/gate MOCK/SIMULATED theo evidence |
+| Event lostACK retry/network | Initial concurrent FAIL; isolated PASS | Hai log retained, cause chưa chứng minh |
+| Human B review/OS Ctrl+C/hardkill/candidate full GUI/LAN/E1/E2 | NOT RUN | Không giả bằng unit/replay/smoke |
+
+C2-Gui/A4 không chạy lại trong C4; server production không đổi. Python analyzer không đổi, không chạy lại bộ Python10 trong C4. B review policy/TEST DTO/clock/identity/coverage/cleanup.

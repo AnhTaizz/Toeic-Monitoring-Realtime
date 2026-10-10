@@ -33,7 +33,7 @@ public final class ObservationOracle {
             if(sample.type().equals("OBSERVATION")||sample.type().equals("SOURCE_FAILURE")) {scan++;if(scan==reconnectAt)generation++;}
             if(sample.type().equals("OBSERVATION")) {
                 var next=new HashSet<String>();
-                for(var process:sample.processes()) {
+                for(var process:sample.productionProcesses()) {
                     String key=key(sample.collectorSessionId(),process);next.add(key);
                     if(previous.contains(key))continue;
                     String id="replay-event-"+(++eventNumber);added.add(id);
@@ -45,7 +45,7 @@ public final class ObservationOracle {
                     event.addProperty("observationContext","CONNECTED");event.addProperty("observationConnectionId","SIMULATED-connection-"+generation);
                     businessEvents.put(id,event);
                 }
-                previous=next;last=keys(sample.collectorSessionId(),sample.processes());
+                previous=next;last=keys(sample.collectorSessionId(),sample.productionProcesses());
             }
             steps.add(new BusinessStep(sample.index(),sample.type(),last,List.copyOf(added)));
         }
@@ -74,14 +74,14 @@ public final class ObservationOracle {
         if(!type.equals("MONITORING_FULL"))return "INVALID_INPUT";
         if(closed)return "STALE";
         long version=frame.expectedSequence();Version byId=recent.get(frame.message().messageId());
-        if(byId!=null)return byId.sequence()==version&&byId.processes().equals(frame.source().processes())?"DUPLICATE":"CONFLICT";
+        if(byId!=null)return byId.sequence()==version&&byId.processes().equals(frame.source().productionProcesses())?"DUPLICATE":"CONFLICT";
         for(var known:recent.values())if(known.sequence()==version) {
-            if(!known.processes().equals(frame.source().processes()))return "CONFLICT";
-            remember(frame.message().messageId(),new Version(version,frame.source().processes()));return "DUPLICATE";
+            if(!known.processes().equals(frame.source().productionProcesses()))return "CONFLICT";
+            remember(frame.message().messageId(),new Version(version,frame.source().productionProcesses()));return "DUPLICATE";
         }
         if(version<=sequence)return "STALE";
         if(sequence==0&&version!=1)return "INVALID_INPUT";
-        sequence=version;processes=frame.source().processes();status="SYNCED";remember(frame.message().messageId(),new Version(version,processes));return "ACCEPTED";
+        sequence=version;processes=frame.source().productionProcesses();status="SYNCED";remember(frame.message().messageId(),new Version(version,processes));return "ACCEPTED";
     }
     private void remember(String id,Version version){recent.put(id,version);if(recent.size()>64)recent.remove(recent.keySet().iterator().next());}
     public static String key(String collector,Process process){return collector+"|"+process.pid()+"|"+(process.startInstant()==null?"NO_START":process.startInstant());}

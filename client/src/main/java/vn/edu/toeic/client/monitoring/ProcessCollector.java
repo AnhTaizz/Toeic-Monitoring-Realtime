@@ -24,7 +24,7 @@ public final class ProcessCollector implements AutoCloseable {
     public enum Problem { SOURCE_FAILURE, LISTENER_FAILURE }
     private final Object lock = new Object();
     private final ProcessSnapshotSource source;
-    private final ProcessPolicy policy = new ProcessPolicy();
+    private final ProcessSelection policy;
     private final Duration interval;
     private final LongSupplier nanoTime;
     private final Function<String,ObservationTrace> traceFactory;
@@ -41,7 +41,14 @@ public final class ProcessCollector implements AutoCloseable {
         this(source,interval,System::nanoTime,id -> trace);
     }
     ProcessCollector(ProcessSnapshotSource source, Duration interval, LongSupplier nanoTime, Function<String,ObservationTrace> traceFactory) {
+        this(source,interval,nanoTime,traceFactory,new ProcessPolicy());
+    }
+    public ProcessCollector(ProcessSnapshotSource source, Duration interval, ObservationTrace trace, ProcessSelection selection) {
+        this(source,interval,System::nanoTime,id -> trace,selection);
+    }
+    private ProcessCollector(ProcessSnapshotSource source, Duration interval, LongSupplier nanoTime, Function<String,ObservationTrace> traceFactory, ProcessSelection selection) {
         this.source = Objects.requireNonNull(source);
+        this.policy = Objects.requireNonNull(selection);
         this.nanoTime = Objects.requireNonNull(nanoTime);
         this.traceFactory = Objects.requireNonNull(traceFactory);
         if (interval == null || interval.toMillis() < 1) throw new IllegalArgumentException("Chu kỳ poll phải >= 1ms");
@@ -135,7 +142,7 @@ public final class ProcessCollector implements AutoCloseable {
             if (reading.executableName() == null) missingCommand++;
             if (reading.startInstant() == null) missingStart++;
             if (!reading.userAvailable()) missingUser++;
-            if (policy.matches(reading.executableName())) restricted.add(new ObservedProcess(
+            if (policy.includes(reading)) restricted.add(new ObservedProcess(
                     new ProcessIdentity(session, reading.pid(), reading.startInstant()),
                     reading.executableName(), reading.metadataQuality()));
         }

@@ -324,3 +324,6 @@ java -cp client/target/client-0.1.0-SNAPSHOT-all.jar vn.edu.toeic.client.monitor
 ```
 
 Exit0 PASS,1 oracle mismatch,2 invalid/incomplete/config/I/O. Output mới, không ghi đè. REAL chỉ nói nguồn ProcessHandle thực; phát lại là REPLAY, lỗi/ACK/gate SIMULATED. Không suy UNKNOWN từ full bị mất hoặc lấy thời gian replay làm E1/E2. Human B review/candidate GUI toàn app/LAN NOT RUN; dừng sau C3.
+# Chạy thử process có kiểm soát (T2-C4)
+
+Sau `mvn package`, chạy `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t2c4.ps1 -JavaHome '<JDK21>'` tại thư mục gốc. Công cụ tạo 30 child Java thật, ghi ground truth độc lập và trace collector rồi ghép theo PID/start/clock mapping; không cần DB hoặc GUI. Policy TEST riêng không đổi 8 tên production. [Lệnh CLI, từng mốc thời gian và giới hạn](docs/CONTROLLED_PROCESS_HARNESS.md); [evidence](evidence/t2-c4/2026-10-10-verification.md). Không coi mọi child không thấy là lỗi, không suy ra E1/E2 hay hiệu năng.

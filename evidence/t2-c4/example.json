@@ -1,0 +1,74 @@
+{
+  "note": "Actual raw excerpt; parent-observed intervals, not kernel time/detection latency",
+  "groundTruth": {
+    "planned": {
+      "trialId": "trial-006",
+      "targetMillis": 200,
+      "phaseMillis": 50,
+      "plannedLaunchElapsedNanos": 17050000000
+    },
+    "queuedElapsedNanos": 17062529300,
+    "launchBeginElapsedNanos": 17062617400,
+    "startReturnedElapsedNanos": 17070640800,
+    "registeredElapsedNanos": 17071661600,
+    "readyReceivedElapsedNanos": 17156982100,
+    "goSentElapsedNanos": 17188589400,
+    "exitObservedElapsedNanos": 17400535200,
+    "pid": 28356,
+    "processName": "java.exe",
+    "startInstant": "2026-10-10T15:05:48.012Z",
+    "metadataQuality": "COMPLETE",
+    "status": "EXITED",
+    "exitCode": 0,
+    "forcedCleanup": false,
+    "kind": "TRIAL",
+    "observedLifetimeNanos": 329894400,
+    "observedHoldNanos": 211945800
+  },
+  "observation": {
+    "index": 32,
+    "type": "OBSERVATION",
+    "elapsedNanos": 17410763600,
+    "collectorSessionId": "0f9bda03-b066-4514-bad3-83899d05830f",
+    "policyVersion": "test-owned-process-v1",
+    "scanDurationNanos": 65062700,
+    "processes": [
+      {
+        "pid": 9708,
+        "processName": "java.exe",
+        "startInstant": "2026-10-10T15:05:48.184Z",
+        "metadataQuality": "COMPLETE"
+      },
+      {
+        "pid": 28356,
+        "processName": null,
+        "startInstant": "2026-10-10T15:05:48.012Z",
+        "metadataQuality": "UNREADABLE"
+      }
+    ],
+    "kind": "RECORD"
+  },
+  "matchedProcess": {
+    "pid": 28356,
+    "processName": null,
+    "startInstant": "2026-10-10T15:05:48.012Z",
+    "metadataQuality": "UNREADABLE"
+  },
+  "join": {
+    "trialId": "trial-006",
+    "targetMillis": 200,
+    "pid": 28356,
+    "startInstant": "2026-10-10T15:05:48.012Z",
+    "groundTruthStatus": "EXITED",
+    "conclusion": "OBSERVED",
+    "reason": "PID_START_COLLECTOR_AND_SCAN_WINDOW_MATCH",
+    "pidObserved": true,
+    "firstScanRecord": 32,
+    "firstScanBeginElapsedNanos": 17361632200,
+    "firstScanEndElapsedNanos": 17426694900,
+    "metadataQuality": "UNREADABLE",
+    "observedLifetimeNanos": 329894400,
+    "observedHoldNanos": 211945800
+  },
+  "traceStartElapsedNanos": 15931300
+}
