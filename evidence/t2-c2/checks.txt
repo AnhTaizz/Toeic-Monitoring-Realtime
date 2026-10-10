@@ -1,0 +1,12 @@
+Checks executed 10/10/2026 on code fdac531; documentation/evidence added afterward.
+PASS 187 manifest local SHA256 + Git normalized content matches.
+PASS evidence raw field/real-password scan and complete scoped code diff real-password scan (values never printed).
+PASS production server/client JAR excludes own test/smoke classes.
+PASS regenerated summary JSON and CSV byte-identical.
+PASS all 6 endpoint FINAL records drop/unwritten/pending0, summary COMPLETE63 categories.
+PASS protected .env/tracker/original plans/V1-V7/C1 maintenance/exam lifecycle unchanged.
+PASS no EnableScheduling introduced; A exam scheduler outside C2.
+REAL PostgreSQL18.6; after smokes C2_TEST_SCHEMAS=0 DEV_MIGRATION=7.
+PASS origin/main still683adfc at final local review.
+PASS GUI screenshots visually inspected: 2 explicit late labels, gap count2; UNKNOWN is after Stop.
+Human A/B and ChatGPT planning/review NOT RUN. Full candidate GUI/LAN NOT RUN.

@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 10/10/2026 — PR#18 sửa lỗi bảo trì C1 chưa tự chạy tại30fa6d9. Code e07bb7e có worker monitoring riêng, Java413/package PASS; REAL Spring/PG/WS tự push STALE/TTL khi socket+heartbeat còn sống và dọn shutdown PASS. Full Edge/proctor GUI component và A4/C3/C4/B3 hồi quy PASS. Human A/B review tổng thể, GUI candidate toàn luồng và LAN NOT RUN. A giữ trạng thái theo evidence cũ; scheduler hết giờ bài thi cần A kiểm riêng.
+Cập nhật lần cuối: 10/10/2026 — C1 đã merge PR#18 vào main683adfc, giữ nhánh C1. T2-C2 code fdac531: nhãn event gửi bù theo nguồn kết nối, V8 additive, HTTP/tab gap và guard gửi cũ. Java425/package/Python10 PASS; C2 REAL Spring/PG/HTTP/WS/collector worker/proctor component PASS với readings MOCK/faults SIMULATED. A3/A4/C3/C4/B3/C1 hồi quy mới PASS, gồm hard-kill thật và tự STALE/TTL/shutdown. GUI candidate toàn luồng/LAN/human A/B review NOT RUN. Evidence C2 và Git/PR cuối xem báo cáo bàn giao. A giữ trạng thái theo evidence cũ; scheduler hết giờ bài thi cần A kiểm riêng.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
@@ -15,12 +15,12 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
 | B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; chuẩn bị Chặng 2 | `feat/t1-b3-proctor-dashboard` |
-| C | _chưa gán_ | T2-C1 sửa scheduling sau review người dùng; bàn giao PR#18 | e07bb7e: worker riêng + shutdown, Java413, REAL autonomous STALE/TTL/capacity và full Edge/GUI component PASS | A/B review bản sửa; GUI candidate/LAN NOT RUN; chưa merge hoặc chuyển C2 | `feat/t2-c1-monitoring-full-snapshot` |
+| C | _chưa gán_ | T2-C2 code/test/evidence hoàn tất; dừng sau C2 | fdac531: event muộn/gap HTTP/dashboard, Java425/Python10/C2 và 6 hồi quy PASS; C1 đã merge | Human A/B review và candidate GUI/LAN acceptance còn NOT RUN; không tự làm C3–C5 | `feat/t2-c2-monitoring-late-events-and-gaps` |
 
 ## Đang bị chặn
 
-- T2-C1 human A/B review: **NOT RUN**, không ngăn bàn giao code/test/PR. Full state chỉ RAM một JVM (QD-12); chưa durability/multi-server/delta. MT01 giữ PARTIAL: proctor component có Edge thật và ảnh, chưa candidate GUI toàn app/T2-C2/LAN. Evidence: `evidence/t2-c1/2026-10-10-verification.md`.
-- Review người dùng tìm ra annotation Scheduled chưa được kích hoạt. C1 đã sửa bằng worker riêng, không bật scheduling toàn app hoặc sửa ExamTimeoutService; issue scheduler bài thi chuyển A xem riêng. [Evidence sửa C1](../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md). PR#18 giữ mở, chưa merge.
+- T2-C2 human A/B review: **NOT RUN**, không ngăn code/test/PR/merge đã được người dùng ủy quyền nếu GitHub không có yêu cầu bắt buộc thiếu. [Evidence C2](../evidence/t2-c2/2026-10-10-verification.md). MT01/MT07/MT08 giữ PARTIAL cấp toàn hệ thống do candidate GUI/LAN chưa chạy; các kiểm tra kỹ thuật mới PASS có nhãn REAL/MOCK/SIMULATED. Origin legacy/trước heartbeat ACK đầu UNSPECIFIED; queue RAM/full RAM một JVM, gap mới cần HTTP refresh.
+- C1 lỗi annotation Scheduled đã sửa bằng worker riêng và merge PR#18 tại683adfc. Nhánh C1 giữ local/remote. Không bật scheduling toàn app hoặc sửa ExamTimeoutService; issue scheduler bài thi chuyển A xem riêng. [Evidence sửa C1](../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md). C2 đã chạy lại hồi quy tự STALE/TTL/capacity/shutdown PASS.
 
 - C4 human B review: **NOT RUN**; A/B cần xem RealtimeClient và handler/registry hooks. Đã kiểm BYTE/fragment/retry/concurrent-decorator/failure/cleanup và B3 regression. Log COMPLETE chỉ cho file đã cung cấp; chưa đo CPU/memory/latency/miss-rate hoặc lợi ích delta. ProcessHandle scan REAL riêng, event/overflow MOCK; WMI/ETW chỉ khảo sát. Không tự làm B4/chặng2/E1/E2.
 
@@ -47,7 +47,7 @@ Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì
 | 09/10 | A → B, C | Import đề, answers/revision, requestId, writerEpoch, deadline/state, mã lỗi | Chưa có |
 | 12/10 | A → B | Trạng thái đã chốt, takeover writer, state khi reconnect | Chưa có |
 | 16/10 | A + B → C | Audio manifest, READY/start/interrupted | Chưa có |
-| 16/10, khóa 18/10 | C → A, B | Monitoring epoch/base/sequence, định nghĩa metric | T2-C1 OPEN/full/CLOSE/epoch/sequence/state có code và contract v1; baseSequence/delta/metric E1-E2 chưa có; A/B review NOT RUN |
+| 16/10, khóa 18/10 | C → A, B | Monitoring epoch/base/sequence, định nghĩa metric | C1 OPEN/full/CLOSE/epoch/sequence/state đã merge; C2 bổ sung EventOrigin/deliveryStatus và HTTP gap theo QD-13, server trước client mới; baseSequence/delta/metric E1-E2 chưa có; human A/B review NOT RUN |
 
 ## Câu hỏi mở cần nhóm hoặc thầy trả lời
 

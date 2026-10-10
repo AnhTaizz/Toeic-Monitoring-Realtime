@@ -1,0 +1,14 @@
+EXCERPT of actual command output; raw measurement files are separate and unchanged.
+PASS REAL V7 preexisting event -> V8 preserves identity/timestamp; old provenance remains UNSPECIFIED
+PASS legacy event accepted with UNSPECIFIED delivery; no unsynchronized-clock lateness inference
+PASS REAL automatic UNKNOWN/reconnect ONLINE/late event history; reads MOCK, outage and withheld write SIMULATED; B unaffected; interruption retained, droppedCount0/gaps0
+PASS REAL late dedup/conflict/frozen metadata/full isolation and deferred COMMIT rollback/retry; skewed client date2099 does not infer network latency
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS MOCK queue capacity1 drop2; REAL gap HTTP/store/retry/conflict/full-history preservation; gap ACK loss SIMULATED
+PASS REAL proctor JavaFX component late labels/gap tab/HTTP refresh/screenshots; full candidate GUI NOT RUN
+PASS REAL role/foreign/CLOSED/assignment/token revoke checks including duplicate paths; no permission widening
+PASS owned C2 schema/context/client resources cleaned; public/dev untouched
+T2-C2 REAL Spring/PG/HTTP/WS/collector-worker PASS; process readings MOCK; disconnect/write/ACK loss SIMULATED; full candidate GUI/LAN/human A/B review NOT RUN
+Summary COMPLETE: endpoints=6, categories=63; WS JSON application bytes only
+T2-C2 artifacts: server/target/t2c2-runtime/T2C2-c1de406a-82fc-4993-9374-da1fdfec8270
