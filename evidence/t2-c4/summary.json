@@ -1,0 +1,35 @@
+{
+  "runId": "80c58d68-958a-4ecd-aedd-9db9731b97a3",
+  "sourceHead": "01642976fda7ebbfcc4b09b6d4c449c216560ca8",
+  "policy": "test-owned-process-v1",
+  "pollMillis": 500,
+  "seed": 1234,
+  "perDuration": 10,
+  "status": "COMPLETE",
+  "observed": 27,
+  "notObservedInTrace": 3,
+  "inconclusive": 0,
+  "peakParentObservedLaunchExitIntervals": 2,
+  "checksumAndRejoinVerified": true,
+  "resourcesCleaned": true,
+  "groups": [
+    {
+      "targetMillis": 200,
+      "trials": 10,
+      "observed": 7,
+      "notObservedInTrace": 3
+    },
+    {
+      "targetMillis": 800,
+      "trials": 10,
+      "observed": 10,
+      "notObservedInTrace": 0
+    },
+    {
+      "targetMillis": 3000,
+      "trials": 10,
+      "observed": 10,
+      "notObservedInTrace": 0
+    }
+  ]
+}

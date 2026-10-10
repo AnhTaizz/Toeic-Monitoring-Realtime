@@ -44,3 +44,5 @@ Bàn giao B3 ngày04/10: [evidence dashboard](../evidence/t1-b3/2026-10-04-verif
 - Không ghi kết quả chưa đo, không ghi Passed cho test chưa chạy.
 
 T2-C3: [trace/schema/lệnh CLI](MONITORING_TRACE.md), [evidence/checksums](../evidence/t2-c3/2026-10-10-verification.md). Reuse full/event encoder và shared C1 reducer, oracle độc lập, recorder mặc định tắt. REAL source khác REPLAY và SIMULATED faults; Human B review NOT RUN; chưa delta/T2-C4/E1/E2.
+
+T2-C4: [harness/CLI/ground truth/clock mapping/TEST policy](CONTROLLED_PROCESS_HARNESS.md), [evidence thực chạy](../evidence/t2-c4/2026-10-10-verification.md). Java493 PASS, Windows30child đủ ba nhóm, artifact/cleanup PASS; Human B review và E1/E2 NOT RUN. Dừng sau C4.
