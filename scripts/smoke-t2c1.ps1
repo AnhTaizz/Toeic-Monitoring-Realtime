@@ -39,6 +39,7 @@ try {
         command='powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t2c1.ps1 [-Gui] -JavaHome <JDK21>'
         gui=[bool]$Gui;workload='REAL ProcessHandle/owned Edge; MOCK fault process sets';network='REAL localhost HTTP/WS/PostgreSQL'
         heartbeatMillis=200;pollMillis=200;maxProcesses=128;fullQueueCapacity=16;maxPendingFull=1;maxDedupIds=64
+        stateStaleMillis=1200;stateScanMillis=25;stateTtlMillis=4000;stateMaxAttempts=1;presenceTimeoutMillis=1200;presenceScanMillis=25
         stateStore='RAM, one server JVM';lan='NOT RUN';fullCandidateGui='NOT RUN';humanReview='NOT RUN'
         serverJarSha256=(Get-FileHash -LiteralPath $serverJar -Algorithm SHA256).Hash.ToLowerInvariant()
         clientJarSha256=(Get-FileHash -LiteralPath 'client/target/client-0.1.0-SNAPSHOT-all.jar' -Algorithm SHA256).Hash.ToLowerInvariant()

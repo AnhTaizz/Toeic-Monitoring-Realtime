@@ -17,10 +17,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BooleanSupplier;
+import java.util.function.Predicate;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
@@ -34,6 +38,7 @@ import org.springframework.boot.web.server.context.WebServerApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 import vn.edu.toeic.client.LoginApiClient;
 import vn.edu.toeic.client.dashboard.DashboardController;
 import vn.edu.toeic.client.dashboard.MonitoringApiClient;
@@ -44,6 +49,7 @@ import vn.edu.toeic.client.monitoring.MonitoringDelivery;
 import vn.edu.toeic.client.monitoring.ProcessCollector;
 import vn.edu.toeic.client.monitoring.ProcessHandleSnapshotSource;
 import vn.edu.toeic.client.realtime.RealtimeClient;
+import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.protocol.auth.LoginResponse;
 import vn.edu.toeic.protocol.measurement.MessageMeasurements;
@@ -80,14 +86,23 @@ public final class FullSnapshotSmoke {
                 var app=new SpringApplication(ToeicServerApplication.class);app.setBannerMode(Banner.Mode.OFF);
                 context=app.run("--server.port=0","--server.address=127.0.0.1","--spring.datasource.url="+url+"?currentSchema="+schema,
                         "--spring.flyway.schemas="+schema,"--spring.flyway.default-schema="+schema,"--logging.level.root=OFF","--debug=false",
-                        "--toeic.presence.timeout-ms=1200","--toeic.presence.scan-interval-ms=25","--toeic.state.stale-ms=1200","--toeic.state.scan-ms=25");
+                        "--toeic.presence.timeout-ms=1200","--toeic.presence.scan-interval-ms=25","--toeic.state.stale-ms=1200","--toeic.state.scan-ms=25",
+                        "--toeic.state.ttl-ms=4000","--toeic.state.max-attempts=1");
                 measurements.add(context.getBean(RealtimeSessionRegistry.class).measurements());
                 origin="http://127.0.0.1:"+((WebServerApplicationContext)context).getWebServer().getPort();fixtures();verify(gui);
+                // No dashboard HTTP/controller remains during the autonomous maintenance assertions.
+                if(view!=null) {fx(() -> {view.close();stage.close();return null;});view=null;}
+                if(guiTransport!=null) {guiTransport.close();guiTransport=null;}
+                verifyScheduledMaintenance();
             } finally {
                 if(view!=null) fx(() -> {view.close();stage.close();return null;});
                 if(guiTransport!=null) guiTransport.close();
                 if(gui) Platform.exit();
-                if(context!=null) {context.close();context=null;}
+                if(context!=null) {
+                    var state=context.getBean(MonitoringStateService.class);context.close();context=null;
+                    check(state.activeAttempts()==0,"RAM cleared on Spring shutdown");
+                    System.out.println("PASS REAL Spring shutdown clears full-state RAM");
+                }
                 admin.createStatement().execute("DROP SCHEMA "+schema+" CASCADE");
                 System.out.println("PASS only owned TEST schema/server/Edge/FX resources cleaned; shared history untouched");
             }
@@ -96,7 +111,7 @@ public final class FullSnapshotSmoke {
             var result=m.finished().get(5,TimeUnit.SECONDS);check(!result.writerFailed()&&result.logDroppedCount()==0,"complete measured log");
         }
         await(() -> Thread.getAllStackTraces().keySet().stream().noneMatch(t -> t.isAlive() && Set.of("toeic-full-snapshot","toeic-process-collector",
-                "toeic-monitoring-delivery","toeic-dashboard-worker","toeic-dashboard-http","toeic-realtime-worker","toeic-measurement-writer").contains(t.getName())),"owned workers gone");
+                "toeic-monitoring-delivery","toeic-dashboard-worker","toeic-dashboard-http","toeic-realtime-worker","toeic-measurement-writer","toeic-state-maintenance").contains(t.getName())),"owned workers gone");
         System.out.println("T2-C1 REAL full snapshot smoke PASS; fault process sets MOCK; full candidate GUI/LAN/human review NOT RUN");
     }
     private void fixtures() {
@@ -183,11 +198,63 @@ public final class FullSnapshotSmoke {
     }
     private MessageEnvelope<JsonObject> exchange(RealtimeClient transport,String type,JsonObject payload) throws Exception {return exchange(transport,type,payload,UUID.randomUUID().toString());}
     private MessageEnvelope<JsonObject> exchange(RealtimeClient transport,String type,JsonObject payload,String id) throws Exception {
+        return exchange(transport,type,payload,id,ATTEMPT);
+    }
+    private MessageEnvelope<JsonObject> exchange(RealtimeClient transport,String type,JsonObject payload,String id,String attempt) throws Exception {
         var replies=new LinkedBlockingQueue<MessageEnvelope<JsonObject>>();
         try(AutoCloseable listener=transport.onMessage(m -> {if(id.equals(m.requestId())) replies.offer(m);})) {
-            transport.send(new MessageEnvelope<>("v0",type,id,id,ATTEMPT,"TEST-trace",payload)).get(5,TimeUnit.SECONDS);
+            transport.send(new MessageEnvelope<>("v0",type,id,id,attempt,"TEST-trace",payload)).get(5,TimeUnit.SECONDS);
             var result=replies.poll(5,TimeUnit.SECONDS);check(result!=null,"network response "+type);return result;
         }
+    }
+    private void verifyScheduledMaintenance() throws Exception {
+        phase="AUTO_MAINTENANCE_SETUP";
+        check(context.getBeansOfType(ScheduledAnnotationBeanPostProcessor.class).isEmpty(),"global scheduling not enabled for exam tasks");
+        String nextAttempt="TEST-T2C1-B";
+        jdbc().sql("INSERT INTO monitoring_attempts(attempt_id,candidate_user_id,state) SELECT :a,id,'ACTIVE' FROM user_accounts WHERE username='TEST-full-candidate'").param("a",nextAttempt).update();
+        jdbc().sql("INSERT INTO monitoring_proctor_assignments SELECT :a,id FROM user_accounts WHERE username='TEST-full-proctor'").param("a",nextAttempt).update();
+        try(LoginApiClient loginApi=new LoginApiClient()) {
+            var c=loginApi.login(origin,"TEST-full-candidate",PASSWORD).get(5,TimeUnit.SECONDS);
+            var p=loginApi.login(origin,"TEST-full-proctor",PASSWORD).get(5,TimeUnit.SECONDS);
+            try(RealtimeClient candidate=socket(c);RealtimeClient proctor=socket(p)) {
+                var updates=new ArrayBlockingQueue<MonitoringStateView>(16);
+                var heartbeats=new AtomicInteger();
+                try(AutoCloseable messages=proctor.onMessage(m -> {
+                    if(m.type().equals("MONITOR_STATE") && ATTEMPT.equals(m.attemptId())) updates.offer(MonitoringStateView.parse(m.payload()));
+                });AutoCloseable acknowledgements=candidate.onMessage(m -> {
+                    if(m.type().equals("ACK") && "HEARTBEAT".equals(m.payload().get("acknowledgedType").getAsString())) heartbeats.incrementAndGet();
+                });AutoCloseable heartbeat=candidate.monitoringHeartbeat(ATTEMPT,"TEST-auto-maintenance")) {
+                    await(() -> heartbeats.get()>0,"live scoped heartbeat before full");
+                    long events=historyCount("monitoring_events"),gaps=historyCount("monitoring_gaps"),interruptions=historyCount("monitoring_interruptions");
+                    JsonObject open=new JsonObject();open.addProperty("collectorSessionId","TEST-auto-maintenance");
+                    String epoch=exchange(candidate,"MONITORING_SYNC_OPEN",open).payload().get("syncEpoch").getAsString();
+                    var full=new FullSnapshotPayload("TEST-auto-maintenance",epoch,1,FullSnapshotPayload.POLICY,List.of(new FullSnapshotPayload.Process(910100,"msedge.exe",null,"UNREADABLE")));
+                    check(exchange(candidate,"MONITORING_FULL",GSON.toJsonTree(full).getAsJsonObject()).type().equals("ACK"),"maintenance probe full accepted");
+                    MonitoringStateView synced=nextState(updates,s -> epoch.equals(s.syncEpoch()) && s.status().equals("SYNCED"));
+                    check(exchange(candidate,"MONITORING_SYNC_OPEN",open,UUID.randomUUID().toString(),nextAttempt).payload().get("code").getAsString().equals("RETRYABLE_SERVER_ERROR"),"capacity one is occupied before TTL");
+                    phase="AUTO_STALE_WITHOUT_HTTP_OR_CLOSE";
+                    int before=heartbeats.get();
+                    MonitoringStateView stale=nextState(updates,s -> epoch.equals(s.syncEpoch()) && s.status().equals("STALE"));
+                    check(stale.sequence()==1 && stale.processes().equals(full.processes()) && stale.revision()>synced.revision(),"scheduled STALE retains last full");
+                    check(candidate.connectionState()==ConnectionState.CONNECTED && heartbeats.get()>before,"socket and scoped heartbeat remain live without full/CLOSE");
+                    System.out.println("PASS REAL autonomous STALE push with open socket/scoped heartbeat; no CLOSE/HTTP state read/manual maintain; last process set retained (MOCK process)");
+                    phase="AUTO_TTL_CAPACITY";
+                    MonitoringStateView expired=nextState(updates,s -> s.syncEpoch()==null && s.status().equals("UNSYNCED") && s.revision()>stale.revision());
+                    check(expired.processes().isEmpty() && candidate.connectionState()==ConnectionState.CONNECTED,"TTL tombstone while socket still open");
+                    check(exchange(candidate,"MONITORING_SYNC_OPEN",open,UUID.randomUUID().toString(),nextAttempt).type().equals("ACK"),"TTL frees capacity for another attempt");
+                    check(historyCount("monitoring_events")==events && historyCount("monitoring_gaps")==gaps && historyCount("monitoring_interruptions")==interruptions,"maintenance never deletes history or fabricates heartbeat loss");
+                    System.out.println("PASS REAL autonomous TTL4000ms tombstone/capacity release: OPEN B refused before TTL and ACK after TTL; history unchanged; no manual maintain/HTTP refresh");
+                }
+            }
+        }
+    }
+    private long historyCount(String table) {
+        return jdbc().sql("SELECT count(*) FROM "+table+" WHERE attempt_id=:a").param("a",ATTEMPT).query(Long.class).single();
+    }
+    private static MonitoringStateView nextState(BlockingQueue<MonitoringStateView> updates,Predicate<MonitoringStateView> expected) throws Exception {
+        long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(8);
+        while(System.nanoTime()<deadline) {var value=updates.poll(100,TimeUnit.MILLISECONDS);if(value!=null && expected.test(value))return value;}
+        throw new IllegalStateException("Expected autonomous state push");
     }
     private void startGui(LoginResponse login) throws Exception {
         var ready=new CompletableFuture<Void>();Platform.startup(() -> {Platform.setImplicitExit(false);ready.complete(null);});ready.get(10,TimeUnit.SECONDS);

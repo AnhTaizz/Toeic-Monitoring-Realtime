@@ -71,4 +71,13 @@ class MonitoringStateServiceTest {
         assertThat(s.end(c,"MOCK-A","MOCK-s","MOCK-c",epoch).changed()).isFalse();
         FullSnapshotReducerTest.rejected(() -> s.full(c,"MOCK-A","MOCK-s","MOCK-next",full(epoch,2)),ErrorCode.STALE);
     }
+    @Test void shutdownClearsRamAndRejectsLateRequests() {
+        var s=store(1);s.open(c,"MOCK-A","MOCK-c","MOCK-s",1,"MOCK-o");
+        assertThat(s.activeAttempts()).isEqualTo(1);
+        s.close();s.close();s.maintain();
+        assertThat(s.activeAttempts()).isZero();
+        FullSnapshotReducerTest.rejected(() -> s.open(c,"MOCK-A","MOCK-c","MOCK-s",1,"MOCK-new"),ErrorCode.RETRYABLE_SERVER_ERROR);
+        FullSnapshotReducerTest.rejected(() -> s.read(p,"MOCK-A"),ErrorCode.RETRYABLE_SERVER_ERROR);
+        verify(registry,never()).stateAssignedProctors(any(),anyString());
+    }
 }

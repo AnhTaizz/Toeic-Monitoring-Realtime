@@ -104,3 +104,10 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Giới hạn:128process/full, queue16 +1pendingfull, retry5; server4096attempt,64full ID/attempt, STALE6s và TTL5phút từ OPEN/full mới nhất. TTL bỏ state hiện tại, giữ lịch sử DB; restart mất RAM, phải OPEN/full1. Lỗi scan không gửi tập rỗng, quá giới hạn không cắt tập. Policy/identity theo QD-08/QD-09.
 - Lý do: đây là baseline kiểm tính đúng và điểm tích hợp tối thiểu; chưa có yêu cầu durability/full nhiều server, delta hoặc benchmark. Không suy ra máy sạch từ tập rỗng hay UNKNOWN.
 - Contract: [PROTOCOL](PROTOCOL.md#t2-c1--contract-full-snapshot-baseline-v1); bằng chứng và giới hạn: [T2-C1](../evidence/t2-c1/2026-10-10-verification.md).
+
+### QD-12 bổ sung — worker bảo trì full riêng (10/10/2026)
+
+- Review của người dùng chỉ ra `@Scheduled maintain()` chưa được kích hoạt ở30fa6d9. Chọn bean `MonitoringStateMaintenance` sở hữu một ScheduledThreadPoolExecutor daemon, fixed delay theo `toeic.state.scan-ms`, cùng cách dùng worker riêng của presence A4. Bỏ annotation Scheduled trên maintain để tránh chạy trùng nếu A bật scheduling sau này.
+- Không bật EnableScheduling toàn app: thao tác đó đồng thời kích hoạt ExamTimeoutService, vượt phạm vi sửa C1. Scheduler bài thi của A vẫn là vấn đề riêng cần A xử lý/phối hợp; chưa sửa hoặc nghiệm thu nó trong task này.
+- Worker bắt RuntimeException không lộ cause/credential để scan sau tiếp tục. PreDestroy hủy/interrupt, đợi tối đa5s; store PreDestroy xóa entries/chặn request muộn. Phụ thuộc Spring maintenance→store giúp hủy worker trước khi hủy store.
+- Test Spring/WS/PG giữ socket và heartbeat hoạt động nhưng không gửi full/CLOSE, không gọi maintain/read state: cần tự push STALE, rồi TTL tombstone và OPEN lượt khác thành công khi capacity1. Unit riêng kiểm tự gọi/retry sau lỗi/dừng task đang chạy và dọn RAM. [Evidence bổ sung](../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md).
