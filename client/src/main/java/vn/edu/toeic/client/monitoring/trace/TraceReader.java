@@ -41,6 +41,7 @@ public final class TraceReader {
                 }
                 if(samples.size()>=MAX_RECORDS)throw new IOException("RECORD_LIMIT");
                 var sample=TraceJson.sample(body);
+                if(!sample.policyVersion().equals(header.policyVersion()))throw new IOException("POLICY_MISMATCH");
                 if(sample.index()!=samples.size()+1L)throw new IOException("RECORD_SEQUENCE");
                 if(samples.isEmpty()) {if(!sample.type().equals("START")||sample.elapsedNanos()!=0)throw new IOException("START_REQUIRED");}
                 else {var last=samples.getLast();if(last.type().equals("STOP")||sample.type().equals("START")

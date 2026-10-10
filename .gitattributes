@@ -38,3 +38,6 @@ evidence/t2-c2/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr
 # Observation trace checksums include exact UTF-8/LF bytes.
 client/src/test/resources/monitoring-traces/*.jsonl -text whitespace=cr-at-eol
 evidence/t2-c3/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# C4 ground truth, observation and manifest checksums retain exact bytes.
+evidence/t2-c4/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

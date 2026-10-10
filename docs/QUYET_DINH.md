@@ -128,3 +128,12 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Oracle từ observation gốc + identity/event rule + lịch delivery riêng; không gọi reducer/encoder để tạo expected. Kiểm oracle bằng fixture/expected viết tay và full sai cố ý. Seed tái tạo IDs/lịch/report byte-identical.
 - Transport/ACK baseline/epoch gate SIMULATED; headless event map không chứng minh commit ACK/auth/presence. Drop/reorder data riêng, OPEN/CLOSE reliable; business event khác delivered event. Không suy UNKNOWN/time STALE/TTL. Giới hạn và counterexample [MONITORING_TRACE](MONITORING_TRACE.md); evidence REAL source capture + REPLAY + hồi quy production riêng.
 - Không delta/T2-C4/E1/E2. B review collector tap, deterministic ID seam/full/event driver; A review shared reducer adapter. Việc B/A chưa duyệt được ghi riêng với code acceptance, không giả approval.
+
+## QD-15 · Harness child và trace TEST tách khỏi production
+
+- Ngày10/10/2026 · C, T2-C4 · Human B review NOT RUN.
+- Reuse ProcessCollector/ProcessHandleSnapshotSource, chỉ thêm ProcessSelection; default ProcessPolicy vẫn 8 tên. OwnedProcessPolicy giữ identity root thuộc lượt chạy đến khi collector dừng, so start khi cả hai đọc được. Không đổi executable production, không giả Edge, không scanner mới.
+- ProcessBuilder child Java READY→GO→hold→exit; ground truth từ parent quản lý process, độc lập callback collector. Cùng JVM cha nanoTime, lưu offset origin recorder C3; không trừ đồng hồ child/parent hoặc hai máy. Exit là parent nhận biết, có độ trễ thông báo, không phải kernel time.
+- TraceData.Process là DTO lưu file an toàn; production schema/policy giữ kiểm cũ, TEST có schema/policy riêng và bị network/replay driver production từ chối. Reader/parser/recorder/checksum C3 reuse, không đổi FullSnapshotPayload.
+- Join xác nhận collector+PID+start+cửa sổ quét; thiếu start/conflict/coverage/lỗi trace thành INCONCLUSIVE. Chỉ complete/bracketed/khỏe mới nói NOT_OBSERVED_IN_TRACE; không tính latency/miss-rate/E1/E2.
+- Bounded schedule/queue/threads/READY/exit/run/cleanup; chỉ dọn root/cây sở hữu, CREATE_NEW không overwrite. Test child thật success/error/cancel/known descendant; OS Ctrl+C/hardkill parent NOT RUN. [Contract và cách chạy](CONTROLLED_PROCESS_HARNESS.md).

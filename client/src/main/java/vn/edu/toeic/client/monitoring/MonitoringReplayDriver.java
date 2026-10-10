@@ -27,6 +27,7 @@ public final class MonitoringReplayDriver {
     public static final int MAX_FRAMES=20000;
     private MonitoringReplayDriver() { }
     public static List<ReplayFrame> encode(TraceData.Trace trace,int reconnectAt) {
+        if(!TraceData.SCHEMA.equals(trace.header().schemaVersion()))throw new IllegalArgumentException("TEST_POLICY_NOT_NETWORK_REPLAY");
         var transport=new EncodingTransport();var clock=new ReplayClock();Map<String,Integer> ids=new HashMap<>();
         var settings=MonitoringDelivery.Settings.defaults();
         try(var events=new MonitoringDelivery("SIMULATED-attempt",transport,settings,clock,() -> clock.tick,ignored -> {},false,

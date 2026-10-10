@@ -59,10 +59,10 @@ public final class TraceRecorder implements ObservationTrace,AutoCloseable {
         try {
             // Bound before copying. Never truncate an observation into a seemingly complete trace.
             if(snapshot.restrictedProcesses().size()>FullSnapshotPayload.MAX_PROCESSES)throw new IllegalArgumentException();
-            var values=new ArrayList<FullSnapshotPayload.Process>();
+            var values=new ArrayList<TraceData.Process>();
             for(var p:snapshot.restrictedProcesses()) {
                 if(!snapshot.collectorSessionId().equals(p.identity().collectorSessionId()))throw new IllegalArgumentException();
-                values.add(new FullSnapshotPayload.Process(p.identity().pid(),p.executableName(),
+                values.add(new TraceData.Process(p.identity().pid(),p.executableName(),
                         p.identity().startInstant()==null?null:p.identity().startInstant().toString(),p.metadataQuality().name()));
             }
             offer("OBSERVATION",snapshot.collectorSessionId(),snapshot.policyVersion(),snapshot.observationNanos(),snapshot.scanDurationNanos(),values);
@@ -70,11 +70,12 @@ public final class TraceRecorder implements ObservationTrace,AutoCloseable {
     }
     @Override public void failed(String collector,String policy,long tick) {offer("SOURCE_FAILURE",collector,policy,tick,0,List.of());}
     @Override public void stopped(String collector,long tick) {offer("STOP",collector,header.policyVersion(),tick,0,List.of());closeAsync();}
-    private void offer(String type,String collector,String policy,long tick,long duration,List<FullSnapshotPayload.Process> processes) {
+    private void offer(String type,String collector,String policy,long tick,long duration,List<TraceData.Process> processes) {
         synchronized(lock) {
             if(closing)return;
             attempted++;
             try {
+                if(!header.policyVersion().equals(policy))throw new IllegalArgumentException();
                 if(!begun) {if(!type.equals("START"))throw new IllegalArgumentException();begun=true;baseTick=tick;}
                 else if(type.equals("START")||ended)throw new IllegalArgumentException();
                 long elapsed=Math.subtractExact(tick,baseTick);if(elapsed<lastElapsed)throw new IllegalArgumentException();lastElapsed=elapsed;

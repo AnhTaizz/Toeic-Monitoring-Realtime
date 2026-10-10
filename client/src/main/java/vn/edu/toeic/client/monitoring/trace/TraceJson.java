@@ -17,10 +17,10 @@ import java.util.HashSet;
 import java.util.Set;
 import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
 
-final class TraceJson {
+public final class TraceJson {
     static final Gson JSON=new GsonBuilder().serializeNulls().create();
     private TraceJson() { }
-    static JsonObject object(String line) throws IOException {
+    public static JsonObject object(String line) throws IOException {
         try(var reader=new JsonReader(new StringReader(line))) {
             reader.setStrictness(Strictness.STRICT);
             JsonElement value=read(reader,0);
@@ -47,7 +47,7 @@ final class TraceJson {
             default -> throw new IOException("JSON_VALUE");
         };
     }
-    static void fields(JsonObject object,Set<String> names) {
+    public static void fields(JsonObject object,Set<String> names) {
         if(!object.keySet().equals(names)) throw new IllegalArgumentException();
     }
     static TraceData.Header header(JsonObject body) {
@@ -58,8 +58,15 @@ final class TraceJson {
     static TraceData.Sample sample(JsonObject body) {
         fields(body,Set.of("kind","index","type","elapsedNanos","collectorSessionId","policyVersion","scanDurationNanos","processes"));
         if(!text(body,"kind").equals("RECORD"))throw new IllegalArgumentException();
+        var raw=body.get("processes");if(raw==null||!raw.isJsonArray()||raw.getAsJsonArray().size()>128)throw new IllegalArgumentException();
+        var processes=new java.util.ArrayList<TraceData.Process>();
+        for(var item:raw.getAsJsonArray()) {
+            if(!item.isJsonObject())throw new IllegalArgumentException();var value=item.getAsJsonObject();
+            fields(value,Set.of("pid","processName","startInstant","metadataQuality"));
+            processes.add(new TraceData.Process(number(value,"pid"),FullSnapshotPayload.nullable(value,"processName"),FullSnapshotPayload.nullable(value,"startInstant"),text(value,"metadataQuality")));
+        }
         return new TraceData.Sample(number(body,"index"),text(body,"type"),number(body,"elapsedNanos"),text(body,"collectorSessionId"),
-                text(body,"policyVersion"),number(body,"scanDurationNanos"),FullSnapshotPayload.parseProcesses(body));
+                text(body,"policyVersion"),number(body,"scanDurationNanos"),processes);
     }
     static JsonObject record(TraceData.Sample sample) {var body=JSON.toJsonTree(sample).getAsJsonObject();body.addProperty("kind","RECORD");return body;}
     static JsonObject header(TraceData.Header header) {var body=JSON.toJsonTree(header).getAsJsonObject();body.addProperty("kind","HEADER");return body;}

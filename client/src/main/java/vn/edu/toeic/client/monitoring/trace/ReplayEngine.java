@@ -19,6 +19,7 @@ public final class ReplayEngine {
             List<String> missingBusinessEvents,List<String> issues) { }
     private ReplayEngine() { }
     public static Result replay(TraceData.Trace trace,FaultSchedule.Config config) {
+        if(!TraceData.SCHEMA.equals(trace.header().schemaVersion()))throw new IllegalArgumentException("TEST_POLICY_NOT_NETWORK_REPLAY");
         var issues=new ArrayList<String>();long scans=trace.samples().stream().filter(s -> s.type().equals("OBSERVATION")||s.type().equals("SOURCE_FAILURE")).count();
         if(config.reconnectAt()>scans||config.dropFullAt()>scans||config.mutateFullAt()>scans)throw new IllegalArgumentException("FAULT_STEP_OUT_OF_RANGE");
         var frames=MonitoringReplayDriver.encode(trace,config.reconnectAt());
