@@ -27,12 +27,15 @@ import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.RealtimeClient;
 import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.protocol.auth.LoginResponse;
+import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
 
 /** FX controls only. Network/state work belongs to the controller and API client. */
 public final class ProctorDashboardView extends BorderPane implements AutoCloseable {
     private final TableView<Presence> roster=new TableView<>();
     private final TableView<Event> events=new TableView<>();
     private final TableView<Interruption> history=new TableView<>();
+    private final TableView<FullSnapshotPayload.Process> currentProcesses=new TableView<>();
+    private final Label currentStatus=new Label();
     private final Label banner=new Label(), rosterStatus=new Label(), details=new Label(), eventsStatus=new Label(), historyStatus=new Label();
     private final Button refresh=new Button("Làm mới quyền và dữ liệu"), logout=new Button("Đăng xuất");
     private final AtomicReference<Snapshot> pending=new AtomicReference<>();
@@ -66,10 +69,17 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
         column(history,"Server phát hiện mất liên lạc",240,value -> time(value.timeoutDetectedAt(),"—"));
         column(history,"Phục hồi",220,value -> time(value.recoveredAt(),"Chưa phục hồi"));
         column(history,"Lý do",180,value -> "Không nhận heartbeat");
+        currentProcesses.setId("dashboard-current-processes"); currentStatus.setId("dashboard-current-status");
+        currentProcesses.setPlaceholder(new Label("Chưa có process trong snapshot đang hiển thị. Xem trạng thái đồng bộ phía trên."));
+        column(currentProcesses,"Process được quan sát",230,FullSnapshotPayload.Process::processName);
+        column(currentProcesses,"PID",110,value -> Long.toString(value.pid()));
+        column(currentProcesses,"Process bắt đầu",220,value -> value.startInstant()==null?"Không đọc được":time(Instant.parse(value.startInstant()),"—"));
+        column(currentProcesses,"Chất lượng metadata",200,FullSnapshotPayload.Process::metadataQuality);
+        Tab current=new Tab("Process hiện tại",new BorderPane(currentProcesses,currentStatus,null,null,null)); current.setClosable(false);
         Tab timeline=new Tab("Cảnh báo process",new BorderPane(events,eventsStatus,null,null,null)); timeline.setClosable(false);
         Tab interruptions=new Tab("Lịch sử gián đoạn",new BorderPane(history,historyStatus,null,null,null)); interruptions.setClosable(false);
         VBox list=new VBox(8,rosterStatus,roster,details); VBox.setMargin(list,new Insets(14,0,12,0));
-        BorderPane body=new BorderPane(new TabPane(timeline,interruptions)); body.setTop(list); setCenter(body);
+        BorderPane body=new BorderPane(new TabPane(current,timeline,interruptions)); body.setTop(list); setCenter(body);
         setBottom(new Label("UNKNOWN: server không còn xác nhận được liên lạc. Đây không phải kết luận gian lận."));
         Set<String> scope=login.attemptScope()==null?Set.of():Set.copyOf(login.attemptScope());
         controller=new DashboardController(Role.PROCTOR,new MonitoringApiClient(serverUrl,login.token()),transport,
@@ -126,7 +136,13 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
             details.setText(value.selected()==null?"Chưa chọn lượt. Chọn một dòng để xem cảnh báo và lịch sử.":"Lượt đang xem: "+value.selected());
             eventsStatus.setText(section(value.eventsLoading(),value.eventsStale(),value.eventsError(),"Cảnh báo: "+value.events().size()));
             historyStatus.setText(section(value.historyLoading(),value.historyStale(),value.historyError(),"Gián đoạn: "+value.interruptions().size()));
+            var state=value.currentState();
+            currentProcesses.getItems().setAll(state==null?java.util.List.of():state.processes());
+            String stateText=state==null?"UNSYNCED — chưa có snapshot được xác nhận"
+                    :state.status().equals("UNSYNCED")?"UNSYNCED — đang chờ full snapshot đầu tiên"
+                    :"Quan sát gần nhất: "+state.processes().size()+" process · server nhận "+time(state.receivedAt()==null?null:Instant.parse(state.receivedAt()),"—");
+            currentStatus.setText(section(value.stateLoading(),value.stateStale(),value.stateError(),stateText));
         } finally { rendering=false; }
     }
-    @Override public void close() { if (closed.compareAndSet(false,true)) { controller.close(); pending.set(null); roster.getItems().clear(); events.getItems().clear(); history.getItems().clear(); } }
+    @Override public void close() { if (closed.compareAndSet(false,true)) { controller.close(); pending.set(null); roster.getItems().clear(); events.getItems().clear(); history.getItems().clear(); currentProcesses.getItems().clear(); } }
 }

@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CountDownLatch;
@@ -164,7 +165,7 @@ public final class MonitoringDeliverySmoke {
                 boundary.dropGapAck.set(true);
                 try (MonitoringDelivery delivery = new MonitoringDelivery(A, boundary, settings(1), overflow::set)) {
                     delivery.observe(mockSnapshot(700010, 700011, 700012));
-                    MessageEnvelope<JsonObject> dbError = errors.poll(5, TimeUnit.SECONDS);
+                    MessageEnvelope<JsonObject> dbError = errorFor(errors, boundary.firstGap);
                     check(dbError != null && dbError.payload().get("code").getAsString().equals("RETRYABLE_SERVER_ERROR"), "Deferred gap COMMIT error");
                     check(jdbc().sql("SELECT count(*) FROM monitoring_gaps").query(Integer.class).single() == 0, "Gap COMMIT rollback no row");
                     check(delivery.status().gapPending(), "No fake gap ACK on commit failure");
@@ -179,7 +180,7 @@ public final class MonitoringDeliverySmoke {
                     await(() -> heartbeatAcks.get() > beforeHeartbeat, "Heartbeat not starved by delivery");
                     MessageEnvelope<JsonObject> changed = boundary.firstGap.get(); JsonObject altered = changed.payload().deepCopy(); altered.addProperty("droppedCount", 99);
                     client.send(new MessageEnvelope<>(changed.protocolVersion(), changed.type(), changed.messageId(), changed.requestId(), changed.attemptId(), changed.traceId(), altered)).get(5, TimeUnit.SECONDS);
-                    MessageEnvelope<JsonObject> conflict = errors.poll(5, TimeUnit.SECONDS);
+                    MessageEnvelope<JsonObject> conflict = errorFor(errors, boundary.firstGap);
                     check(conflict != null && conflict.payload().get("code").getAsString().equals("CONFLICT"), "Gap changed payload conflict");
                 }
                 System.out.println("PASS MOCK overflow capacity1 -> REAL gap persistence/commit ACK; DB COMMIT rollback/retry; SIMULATED gap ACK loss; stable dedup; next accumulator + heartbeat");
@@ -277,6 +278,15 @@ public final class MonitoringDeliverySmoke {
             CompletableFuture.runAsync(() -> { }, CompletableFuture.delayedExecutor(20, TimeUnit.MILLISECONDS)).get();
         }
         check(false, label);
+    }
+    private static MessageEnvelope<JsonObject> errorFor(BlockingQueue<MessageEnvelope<JsonObject>> errors,
+            AtomicReference<MessageEnvelope<JsonObject>> request) throws InterruptedException {
+        long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);
+        while(System.nanoTime()<deadline) {
+            var error=errors.poll(100,TimeUnit.MILLISECONDS);var expected=request.get();
+            if(error!=null && expected!=null && expected.requestId().equals(error.requestId())) return error;
+        }
+        return null;
     }
     private static void check(boolean pass, String label) { if (!pass) { System.err.println("FAIL " + label); throw new IllegalStateException("TEST assertion"); } }
     private static String error(JsonObject body) { check(body.get("type").getAsString().equals("ERROR"), "Expected ERROR"); return body.getAsJsonObject("payload").get("code").getAsString(); }

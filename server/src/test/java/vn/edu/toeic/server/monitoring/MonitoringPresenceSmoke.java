@@ -86,7 +86,7 @@ public final class MonitoringPresenceSmoke {
             check(schema.matches("a4_test_[a-f0-9]{32}"),"Owned schema");admin.createStatement().execute("CREATE SCHEMA "+schema);
             try{
                 Flyway.configure().dataSource(url,env("DB_USER","toeic"),env("DB_PASSWORD","")).schemas(schema).defaultSchema(schema).target("3").load().migrate();
-                start();fixtures();check(jdbc().sql("SELECT max(version::int) FROM flyway_schema_history WHERE success AND version IS NOT NULL").query(Integer.class).single()==4,"V3->V4");
+                start();fixtures();check(jdbc().sql("SELECT max(version::int) FROM flyway_schema_history WHERE success AND version IS NOT NULL").query(Integer.class).single()>=4,"V3->V4 (later additive migrations allowed)");
                 System.out.println("PASS REAL PostgreSQL18 V3->V4; runtime timeout700ms/scan25ms/heartbeat100ms; production defaults6000/500/2000ms");
                 verify();
             }finally{if(context!=null){context.close();context=null;}admin.createStatement().execute("DROP SCHEMA "+schema+" CASCADE");System.out.println("Owned A4 TEST schema removed; public/dev data and shared PostgreSQL untouched");}

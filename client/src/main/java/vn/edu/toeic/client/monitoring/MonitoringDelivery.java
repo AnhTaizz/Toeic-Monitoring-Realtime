@@ -135,6 +135,7 @@ public final class MonitoringDelivery implements AutoCloseable {
         publish();
     }
     public void sourceFailed() { synchronized (lock) { if (!closed) problem = "SOURCE_FAILURE"; } publish(); }
+    public void accessRejected(String code) { synchronized (lock) { if (!closed) { authorized=false; problem=code; } } publish(); }
     /** One task, bounded plans; exposed to package tests using a fake monotonic clock. */
     void tick() {
         List<String> forget = new ArrayList<>();

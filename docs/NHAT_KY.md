@@ -296,7 +296,22 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
   - `LimitedBody` trong `MonitoringApiClient` chặn streaming response HTTP vượt quá 4MB để chống tấn công OOM.
   - Xóa token khỏi bộ nhớ (`token = null`) ngay khi đóng kết nối hoặc gặp lỗi 401/1008.
 - **Khuyến nghị cho Chặng 2 (T2-B):**
-  - Khi triển khai giao diện làm bài thi (Exam View) và chức năng autosave/submit, B cần kế thừa pattern này: sinh `requestId` duy nhất, giữ nguyên `requestId` khi retry, tăng `answerRevision` khi sửa đáp án, và chỉ hiển thị "Đã lưu" khi nhận status `SAVED` hoặc `ALREADY_SAVED` từ Server.
+     - Khi triển khai giao diện làm bài thi (Exam View) và chức năng autosave/submit, B cần kế thừa pattern này: sinh `requestId` duy nhất, giữ nguyên `requestId` khi retry, tăng `answerRevision` khi sửa đáp án, và chỉ hiển thị "Đã lưu" khi nhận status `SAVED` hoặc `ALREADY_SAVED` từ Server.
+
+## 10/10/2026 — C: T2-C1 full snapshot baseline v1
+
+- Đọc source/contract/kế hoạch/evidence và fetch remote; main base `8eba405`, working tree sạch, chưa có implementation/PR T2-C1. Tạo `feat/t2-c1-monitoring-full-snapshot`, không dùng nhánh C4 cũ. Code commit `6acd031`.
+- Thêm contract/shared parser OPEN/full/CLOSE/MONITOR_STATE, full delivery RAM riêng với event C3, reducer/store server có auth/epoch/socket/sequence/dedup/conflict/STALE/TTL/limits. ACK FULL chỉ RAM theo QD-12. Reuse collector/policy/identity/WS/auth/registry/measurement. Dashboard HTTP/push gộp revision/serverInstanceId, tab Process hiện tại và lifecycle guard; không collector PROCTOR, không xóa event/gap/interruption.
+- Baseline Java376/A2 PASS sau DB bật; sau sửa Java408/package/Python10 PASS. Full smoke REAL Edge/ProcessHandle/HTTP/WS/PG/proctor JavaFX component PASS, raw4endpoint COMPLETE với source SHA6acd031/clean metadata. A2/A3/A4/C2/C3/C4/B3 và B2 owned TEST DB PASS. B2 wrapper cũ không phù hợp DB dev đã có scope; không xóa fixture. C3 correlate đúng ERROR gap để không nhầm kênh full; A4/B3 >=V4 và tab index theo view mới.
+- Lượt fail và sửa ghi rõ trong evidence: cache sandbox, DB off, Edge profile file lock, UNKNOWN MOCK thiếu timestamp, B2 seed readiness/timezone, C3 ERROR khác request. Không claim GUI candidate toàn app/LAN/full server restart qua network/human A/B review hoặc performance. MT01 PARTIAL. [Evidence](../evidence/t2-c1/2026-10-10-verification.md), [README tự demo](../README.md#full-snapshot-t2-c1).
+- Được ủy quyền commit/push/mở PR, không merge; bàn giao review A auth/RAM/hooks và B transport/parser/dashboard. Không sửa TRACKER/kế hoạch/.env/migration, không reset shared DB, không làm T2-C2–C5/delta/E1/E2. ChatGPT planning/review NOT RUN theo lựa chọn không kết nối trước đó của người dùng.
+
+## 10/10/2026 — C: review-fix scheduling PR#18
+
+- Người dùng review30fa6d9 phát hiện maintain Scheduled chưa được kích hoạt; unit gọi trực tiếp/CLOSE không chứng minh tự STALE/TTL. Harness Spring thật mới trên product cũ FAIL phase AUTO_STALE_WITHOUT_HTTP_OR_CLOSE, ghi đúng lỗi, không xóa evidence cũ.
+- Code e07bb7e: bean MonitoringStateMaintenance worker riêng/fixed delay/catch runtime/shutdown interrupt+await; store dọn RAM và chặn request muộn. Bỏ Scheduled trên maintain, không EnableScheduling toàn server hoặc chạm ExamTimeoutService; lỗi scheduler bài thi cần A review riêng. QD-12/PROTOCOL bổ sung lựa chọn này.
+- Java413/package PASS; REAL WS giữ socket/scoped heartbeat, ngừng full → tự push STALE/TTL4s; capacity1 OPEN B bị từ chối trước TTL/ACK sau TTL; history giữ nguyên; Spring close xóa RAM/dừng workers PASS. Full Edge/GUI component và A4/C3/C4/B3 hồi quy PASS. Lượt cuối source e07bb7e sạch, log6endpoint/63category COMPLETE; Python summary tái tạo giống byte. Python unittest10 và A2/A3/B2/C2 không chạy lại trong lượt này.
+- Bằng chứng [scheduling-fix](../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md), raw/ảnh/metadata/checksum riêng; đính chính evidence gốc, không sửa raw. Push và cập nhật PR#18 theo yêu cầu; giữ mở, không merge/C2. MT01 PARTIAL, GUI candidate/LAN/human A/B review tổng thể NOT RUN. Không sửa .env/migration/tracker/kế hoạch/reset DB.
 
 
 

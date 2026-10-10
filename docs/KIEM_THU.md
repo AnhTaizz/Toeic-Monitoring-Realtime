@@ -26,7 +26,7 @@ Mỗi lần chạy ghi đủ: commit SHA, OS/JDK/PostgreSQL, cấu hình, lệnh
 
 | ID | Tóm tắt | Owner / review | Task | Trạng thái | SHA | Bằng chứng |
 |---|---|---|---|---|---|---|
-| MT01 | Full snapshot hợp lệ; event không lặp mỗi poll; collector không chạy trên giám thị | C / B | T1-C2/C3, T2-C1/C2 | PARTIAL — C3 network + B3 proctor GUI component PASS; full/delta và candidate GUI toàn luồng chưa kiểm | base B3 `1e084d4`, source checksum trong evidence | `evidence/t1-b3/2026-10-04-verification.md`; process B3 MOCK, C3 regression ProcessHandle/Edge REAL; không full/state chặng2 |
+| MT01 | Full snapshot hợp lệ; event không lặp mỗi poll; collector không chạy trên giám thị | C / B | T1-C2/C3, T2-C1/C2 | PARTIAL — T2-C1 full REAL Edge/network/proctor JavaFX component PASS; candidate GUI toàn app và T2-C2 chưa đủ | `6acd031`, source/JAR manifest trong evidence | `evidence/t2-c1/2026-10-10-verification.md`; full hiện tại tách event, Edge đóng biến mất khỏi state, lịch sử giữ nguyên; chưa full GUI/LAN |
 | MT02 | Replay cùng message sau mất ACK | C / B | T3-C3 | NOT RUN | | |
 | MT03 | Thiếu một delta → UNSYNCED, yêu cầu full | C / B | T3-C3 | NOT RUN | | |
 | MT04 | Delta epoch cũ không sửa state epoch mới | C / B | T3-C3/C4 | NOT RUN | | |
@@ -36,6 +36,8 @@ Mỗi lần chạy ghi đủ: commit SHA, OS/JDK/PostgreSQL, cấu hình, lệnh
 | MT08 | Kill client → server tự chuyển UNKNOWN | C / B | T2-C2 | PARTIAL — A4 server + B3 visible proctor component PASS; candidate GUI toàn luồng NOT RUN | base B3 `1e084d4`, source checksum trong evidence | `evidence/t1-b3/2026-10-04-verification.md`; hard-kill owned JVM → UNKNOWN/history/recovered ONLINE trên Stage thật; không full/state chặng2 |
 
 ## Listening và tích hợp
+
+Full-only retry/epoch/order/reconnect đã kiểm trong acceptance T2-C1 bên dưới. Không đổi MT02–MT06 của delta thành PASS và không coi full/C4 log là E1/E2.
 
 | ID | Tóm tắt | Owner / review | Task | Trạng thái | SHA | Bằng chứng |
 |---|---|---|---|---|---|---|
@@ -100,6 +102,16 @@ HEAD đối chiếu: `ceb8131a558660057cf62c46f2466db8515b9b4e`. Chỉ cập nh�
 | C reviewed A | NOT RUN | Cùng lý do |
 
 Bằng chứng và giới hạn xác nhận: `evidence/stage1/2026-10-03-merge-readiness.md`. Không thay đổi trạng thái 27 test chính thức hay TRACKER.json. Ready to merge: NO.
+
+## Acceptance T2-C1 — 10/10/2026
+
+Base `8eba405`, code `6acd031`; Windows11/Temurin21.0.10/PostgreSQL18.6/Maven3.9.15/Python3.15.0b3. Agent chạy. Baseline trước sửa Java376/A2 PASS; sau sửa Java408/package/Python10 PASS. A2/A3/A4/C2/C3/C4/B3 và B2 riêng trên owned TEST DB PASS. B2 wrapper DB dev có lỗi tiền điều kiện scope rỗng; không xóa fixture để làm test qua. A4/B3 harness hỗ trợ migration mới và B3 tab mới; C3 ERROR phải correlate request gap.
+
+T2-C1 REAL HTTP/WS/PG/ProcessHandle/owned Edge/proctor JavaFX component PASS: full1, Edge xuất hiện/biến mất giữ event, reconnect/new epoch/old epoch STALE, retry/conflict, full rỗng, role/scope, CLOSE/STale, history gap/interruption còn và dọn workers. Fault process sets MOCK; queue/scan failure/order/TTL/late callback/canceled socket write bằng MOCK unit. 4file measurement FINAL, drop/unwritten/pending0, summary COMPLETE. Chi tiết, lỗi ban đầu đã sửa, configs thực và ảnh: [evidence](../evidence/t2-c1/2026-10-10-verification.md).
+
+Bổ sung review-fix cùng ngày: tại30fa6d9, maintain Scheduled không được Spring gọi; các test PASS cũ không chứng minh autonomous STALE/TTL. Harness mới trên implementation cũ FAIL phase AUTO_STALE_WITHOUT_HTTP_OR_CLOSE. Code e07bb7e dùng worker riêng; Java413/package PASS (protocol29/client242/server141/spike1). REAL Spring/PG/WS giữ socket và scoped heartbeat, không full/CLOSE/HTTP state read/manual maintain: tự push STALE, TTL4s tombstone, capacity1 từ OPEN B bị từ chối đến ACK B và giữ history PASS. Spring close xóa RAM/dừng worker PASS. A4/C3/C4/B3 hồi quy chạy lại PASS. [Evidence bổ sung](../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md); Python10 thuộc lượt trước, không chạy lại unittest Python vì script phân tích không đổi (summary mới vẫn chạy thật).
+
+MT01 vẫn PARTIAL; GUI candidate toàn app, LAN máy thứ hai, human A/B review, full server restart network và lỗi scan OS thực NOT RUN. Không triển khai task C2–C5 chặng2/delta/E1/E2. Không reset DB/migration/tracker/kế hoạch.
 
 ## T1-B2 — kiểm 03/10, ghi nhận 04/10/2026
 
