@@ -11,6 +11,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.LongSupplier;
+import java.util.function.Function;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
 import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
@@ -34,6 +35,7 @@ public final class FullSnapshotDelivery implements AutoCloseable {
     private final MonitoringTransport transport;
     private final MonitoringDelivery.Settings settings;
     private final LongSupplier ticker;
+    private final Function<String,String> ids;
     private final Consumer<String> denied;
     private final ArrayDeque<ProcessSnapshot> observations = new ArrayDeque<>();
     private final ScheduledThreadPoolExecutor worker;
@@ -50,7 +52,12 @@ public final class FullSnapshotDelivery implements AutoCloseable {
     }
     FullSnapshotDelivery(String attempt,MonitoringTransport transport,MonitoringDelivery.Settings settings,Consumer<String> denied,
             LongSupplier ticker,boolean automatic) {
+        this(attempt,transport,settings,denied,ticker,automatic,kind -> UUID.randomUUID().toString());
+    }
+    FullSnapshotDelivery(String attempt,MonitoringTransport transport,MonitoringDelivery.Settings settings,Consumer<String> denied,
+            LongSupplier ticker,boolean automatic,Function<String,String> ids) {
         this.attempt=FullSnapshotPayload.id(attempt); this.transport=transport; this.settings=settings; this.denied=denied; this.ticker=ticker;
+        this.ids=ids;
         connected=transport.connectionState()==ConnectionState.CONNECTED;
         worker=new ScheduledThreadPoolExecutor(1,task -> { Thread thread=new Thread(task,"toeic-full-snapshot"); thread.setDaemon(true); return thread; }) {
             @Override protected void terminated() { stopped.complete(null); }
@@ -80,8 +87,8 @@ public final class FullSnapshotDelivery implements AutoCloseable {
     }
     public void sourceFailed() { synchronized (lock) { observations.clear(); problem="SOURCE_FAILURE"; } }
     private MessageEnvelope<JsonObject> message(String type,JsonObject payload) {
-        String id=UUID.randomUUID().toString();
-        return new MessageEnvelope<>("v0",type,id,id,attempt,UUID.randomUUID().toString(),payload);
+        String id=ids.apply("full-request");
+        return new MessageEnvelope<>("v0",type,id,id,attempt,ids.apply("full-trace"),payload);
     }
     private JsonObject identity() {
         JsonObject body=new JsonObject(); body.addProperty("collectorSessionId",collector);

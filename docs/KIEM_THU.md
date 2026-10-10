@@ -295,3 +295,20 @@ Base main PR#8 a04aaa2; final source c70c93e sạch trong checkout build riêng.
 | Human B review/GUI toàn luồng/LAN/WMI/ETW/E1/E2/full-delta | NOT RUN | C4 chuẩn bị công cụ đo, chưa nghiệm thu toàn MT01/MT08 hay thử hiệu năng |
 
 Lượt exploratory phát hiện assertion/control-record và compile signature/constant trong test, đã sửa trước final PASS. Final sạch trên commit c70c93e; không lấy exploratory làm evidence. Automatic review chặn dọn bản sao target tạo thừa; giữ ignored, không retry xóa. Dừng C4; không B4/chặng2, không claim novelty/delta tốt hơn.
+
+## T2-C3 — 10/10/2026
+
+[Evidence mới](../evidence/t2-c3/2026-10-10-verification.md), [lệnh và schema](MONITORING_TRACE.md). Baseline425 chạy mới; final461 PASS (+36, protocol32/client286/server142/spike1), Python10 PASS. Không đổi trạng thái MT02–MT06 vì chưa delta; MT01/MT07/MT08 giữ PARTIAL toàn hệ thống.
+
+| Ca C3 | Kết quả | Mức |
+|---|---|---|
+| Handwritten empty→Edge→Edge→empty: state0/1/1/0, event1 | PASS | MOCK + production REPLAY |
+| Roundtrip/empty versus error/PID reuse/missing metadata/nanosecond identity | PASS | MOCK |
+| Reader checksum/missing/corrupt/UTF8/field/version/size/order | Reject đúng | MOCK |
+| Writer error/full queue/close/tap failure isolation | PASS, không COMPLETE giả | MOCK latch/failure |
+| Duplicate/drop/reorder/reconnect/old epoch/history separation | PASS | REPLAY + SIMULATED |
+| Same seed/config/input | Byte-identical report PASS | CLI thật |
+| Intentional full mutation/corrupt checksum | FAIL exit1/reject exit2 đúng | CLI thật, nguồn MOCK |
+| ProcessHandle capture + owned Edge appear/disappear/cleanup | COMPLETE→replay PASS | Nguồn REAL, gate/fault SIMULATED |
+| C1-Gui/C2-Gui/event-C3/C4/A4 | PASS mới | REAL localhost/PG/component, source/fault từng ca xem evidence |
+| B human review/A adapter review/candidate full GUI/LAN/T2-C4/delta/E1/E2 | NOT RUN | Không lấy replay thay bằng chứng này |

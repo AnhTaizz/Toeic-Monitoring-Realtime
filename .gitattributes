@@ -34,3 +34,7 @@ evidence/t2-c1/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr
 
 # T2-C2 raw, metadata and summaries retain the exact verified bytes.
 evidence/t2-c2/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Observation trace checksums include exact UTF-8/LF bytes.
+client/src/test/resources/monitoring-traces/*.jsonl -text whitespace=cr-at-eol
+evidence/t2-c3/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

@@ -1,0 +1,32 @@
+{
+  "sourceLabel": "MOCK",
+  "authored": "handwritten observation table; independent of encoder/reducer/oracle output",
+  "recordTypes": [
+    "START",
+    "OBSERVATION",
+    "OBSERVATION",
+    "OBSERVATION",
+    "OBSERVATION",
+    "STOP"
+  ],
+  "processCounts": [
+    0,
+    0,
+    1,
+    1,
+    0,
+    0
+  ],
+  "newEventCounts": [
+    0,
+    0,
+    1,
+    0,
+    0,
+    0
+  ],
+  "businessEventCount": 1,
+  "edgeKey": "MOCK-collector|42|2026-10-10T00:00:00Z",
+  "finalLifecycleStatus": "STALE",
+  "replayStatus": "PASS"
+}

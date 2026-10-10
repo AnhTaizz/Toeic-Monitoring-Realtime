@@ -42,3 +42,5 @@ Bàn giao B3 ngày04/10: [evidence dashboard](../evidence/t1-b3/2026-10-04-verif
 - Bằng chứng là thứ kiểm tra lại được: commit SHA, tên test đã chạy, đường dẫn file log. "Đã thử thấy ổn" không phải bằng chứng.
 - Dữ liệu giả ghi nhãn `MOCK`.
 - Không ghi kết quả chưa đo, không ghi Passed cho test chưa chạy.
+
+T2-C3: [trace/schema/lệnh CLI](MONITORING_TRACE.md), [evidence/checksums](../evidence/t2-c3/2026-10-10-verification.md). Reuse full/event encoder và shared C1 reducer, oracle độc lập, recorder mặc định tắt. REAL source khác REPLAY và SIMULATED faults; Human B review NOT RUN; chưa delta/T2-C4/E1/E2.

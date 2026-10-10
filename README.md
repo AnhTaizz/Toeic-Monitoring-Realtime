@@ -312,3 +312,15 @@ C2 smoke tự dựng schema TEST và server port riêng; không cần dừng ser
 Kết quả mong đợi là các dòng PASS và `Summary COMPLETE`, file ở `server/target/t2c2-runtime/<runId>/`, ảnh ở `server/target/t2c2-smoke/`. LAN và candidate GUI toàn app chưa được mô phỏng thành PASS. Chỉ có các số drop mà client thực sự báo qua overflow mới xuất hiện ở tab gap. [Contract C2](docs/PROTOCOL.md#t2-c2--heartbeat-event-đến-muộn-và-khoảng-trống).
 
 Review-fix e07bb7e: `MonitoringStateMaintenance` tự gọi maintain theo scan-ms bằng worker riêng; server close hủy worker và xóa full RAM. Không bật EnableScheduling toàn app để tránh kích hoạt scheduler bài thi A ngoài phạm vi. Smoke full nay kiểm thêm socket/heartbeat vẫn sống, ngừng full → tự push STALE, TTL4s tự xóa entry/capacity1 cấp được lượt khác; không đọc HTTP state hay gọi maintain bằng tay. [Evidence sửa scheduling](evidence/t2-c1/scheduling-fix/2026-10-10-verification.md). Kết quả gốc30fa6d9 chưa chứng minh tác vụ tự chạy.
+
+## Trace và oracle T2-C3
+
+Recorder tùy chọn trên collector hiện tại, CLI không cần giao diện dùng full/event encoder production và lõi reducer C1, oracle độc lập từ quan sát gốc, gây lỗi duplicate/drop/reorder/reconnect bằng seed. Không thêm thư viện hoặc message mạng. [Cách chạy và schema](docs/MONITORING_TRACE.md), [evidence mới](evidence/t2-c3/2026-10-10-verification.md).
+
+```powershell
+mvn package
+java -cp client/target/client-0.1.0-SNAPSHOT-all.jar vn.edu.toeic.client.monitoring.trace.TraceCli record --output traces/demo.jsonl --scans 20 --poll-ms 500
+java -cp client/target/client-0.1.0-SNAPSHOT-all.jar vn.edu.toeic.client.monitoring.trace.TraceCli replay --input traces/demo.jsonl --output traces/demo-result.json --seed 1234 --duplicate 20 --drop 10 --reorder 35 --reconnect-at 3
+```
+
+Exit0 PASS,1 oracle mismatch,2 invalid/incomplete/config/I/O. Output mới, không ghi đè. REAL chỉ nói nguồn ProcessHandle thực; phát lại là REPLAY, lỗi/ACK/gate SIMULATED. Không suy UNKNOWN từ full bị mất hoặc lấy thời gian replay làm E1/E2. Human B review/candidate GUI toàn app/LAN NOT RUN; dừng sau C3.

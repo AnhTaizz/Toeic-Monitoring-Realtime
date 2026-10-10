@@ -1,0 +1,8 @@
+PASS REAL Windows ProcessHandle production collector scan; only aggregate diagnostics checked, no process details logged; separate from MOCK event source
+PASS MOCK event -> REAL B2/DB/ACK/warning/dashboard; SIMULATED observer ACK suppression -> retry >=2 writes, DB1/dashboard1
+PASS MOCK capacity1 overflow drops2 -> REAL MONITORING_GAP commit/ACK; retained event -> warning/dashboard
+PASS all seven message types counted across REAL candidate/proctor/server; conflicting event -> REAL ERROR; semantic ACK separate from socket write
+PASS cleanup own TEST schema/ephemeral server; shared DB/user processes untouched
+PASS all owned recorder/collector/delivery/B2/dashboard/presence workers gone
+Summary COMPLETE: endpoints=3, categories=26; WS JSON application bytes only
+C4 artifacts: server/target/c4-runtime/C4-55b513a0-f5ef-4e6d-b917-198631f071af

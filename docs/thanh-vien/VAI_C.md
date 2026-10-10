@@ -182,7 +182,7 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 **Xong khi:** phát lại trace nhỏ cho đúng kết quả đã biết; bật gây lỗi thì kết quả mong đợi là UNSYNCED/UNKNOWN đúng chỗ.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** Code/test/CLI/evidence hoàn tất10/10, commit5844e88. [Cách chạy/schema](../MONITORING_TRACE.md), [evidence](../../evidence/t2-c3/2026-10-10-verification.md). Java461/Python10, real ProcessHandle/owned Edge trace→replay và C1/C2/event/C4/A4 hồi quy PASS. Oracle từ quan sát gốc, fixture expected viết tay, seed tái tạo byte-identical; full lỗi cố ý bị phát hiện. Human B review NOT RUN, A cần xem reducer adapter. UNKNOWN thuộc presence không mô phỏng ở CLI; không gán từ drop full. Candidate GUI/LAN/delta/T2-C4/E1/E2 chưa làm. Dừng sau C3; Git cuối xem báo cáo/PR.
 
 ### T2-C4 · Harness phát process thử nghiệm
 `4h` · phụ thuộc: T2-C3 · review: B

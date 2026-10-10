@@ -22,6 +22,9 @@ import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 import vn.edu.toeic.protocol.monitoring.EventOrigin;
+import java.util.UUID;
+import java.util.Comparator;
+import java.util.function.Function;
 
 /** RAM delivery only. No socket/reconnect ownership and no disk queue.
  * A single periodic pump bounds timers. No transport/listener calls while holding the queue lock.
@@ -73,6 +76,7 @@ public final class MonitoringDelivery implements AutoCloseable {
     private final Settings settings;
     private final Clock clock;
     private final LongSupplier nanoTime;
+    private final Function<String,String> ids;
     private final Consumer<Status> listener;
     private final Map<String, Pending> events = new LinkedHashMap<>();
     private Set<ProcessIdentity> baseline = Set.of();
@@ -93,9 +97,14 @@ public final class MonitoringDelivery implements AutoCloseable {
     }
     MonitoringDelivery(String attempt, MonitoringTransport transport, Settings settings, Clock clock,
             LongSupplier nanoTime, Consumer<Status> listener, boolean automatic) {
+        this(attempt,transport,settings,clock,nanoTime,listener,automatic,kind -> UUID.randomUUID().toString());
+    }
+    MonitoringDelivery(String attempt,MonitoringTransport transport,Settings settings,Clock clock,LongSupplier nanoTime,
+            Consumer<Status> listener,boolean automatic,Function<String,String> ids) {
         if (attempt == null || !attempt.matches("[A-Za-z0-9_.:-]{1,128}")) throw new IllegalArgumentException("Attempt không hợp lệ");
         this.attemptId = attempt; this.transport = Objects.requireNonNull(transport); this.settings = Objects.requireNonNull(settings);
         this.clock = Objects.requireNonNull(clock); this.nanoTime = Objects.requireNonNull(nanoTime); this.listener = Objects.requireNonNull(listener);
+        this.ids=Objects.requireNonNull(ids);
         connected = transport.connectionState() == ConnectionState.CONNECTED;
         worker = new ScheduledThreadPoolExecutor(1, task -> {
             Thread thread = new Thread(task, "toeic-monitoring-delivery"); thread.setDaemon(true); return thread;
@@ -120,7 +129,9 @@ public final class MonitoringDelivery implements AutoCloseable {
             collector = snapshot.collectorSessionId();
             Set<ProcessIdentity> next = new HashSet<>();
             Instant observedAt = clock.instant(); // Wall clock, never observationNanos converted to Unix time.
-            for (ObservedProcess process : snapshot.restrictedProcesses()) {
+            for (ObservedProcess process : snapshot.restrictedProcesses().stream().sorted(Comparator
+                    .comparingLong((ObservedProcess p) -> p.identity().pid())
+                    .thenComparing(p -> p.identity().startInstant()==null?"":p.identity().startInstant().toString())).toList()) {
                 if (!next.add(process.identity()) || baseline.contains(process.identity())) continue;
                 if (events.size() == settings.capacity) {
                     if (bufferedDrops == Long.MAX_VALUE || totalDropped == Long.MAX_VALUE) { authorized = false; problem = "COUNT_LIMIT"; break; }
@@ -130,7 +141,7 @@ public final class MonitoringDelivery implements AutoCloseable {
                     continue;
                 }
                 try {
-                    MonitoringMessage message = MonitoringMessage.observed(attemptId, snapshot, process, observedAt,origin);
+                    MonitoringMessage message = MonitoringMessage.observed(attemptId, snapshot, process, observedAt,origin,ids);
                     events.put(message.requestId(), new Pending(message));
                 } catch (IllegalArgumentException ignored) { problem = "INVALID_OBSERVATION"; }
             }
@@ -149,7 +160,7 @@ public final class MonitoringDelivery implements AutoCloseable {
             if (closed || !authorized) return;
             long now = nanoTime.getAsLong();
             if (connected && gap == null && bufferedDrops > 0) {
-                gap = new Pending(MonitoringMessage.gap(attemptId, collector, bufferedDrops, firstDrop, lastDrop));
+                gap = new Pending(MonitoringMessage.gap(attemptId, collector, bufferedDrops, firstDrop, lastDrop,ids));
                 bufferedDrops = 0; firstDrop = null; lastDrop = null;
             }
             List<Pending> all = new ArrayList<>(); if (gap != null) all.add(gap); all.addAll(events.values());
