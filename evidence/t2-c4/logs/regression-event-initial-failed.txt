@@ -15,7 +15,7 @@ At line:2 char:1
 + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : NotSpecified: (FAIL Real process lost ACK retry:String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
- 
+
 MONITORING_STOP RAM discarded: unconfirmedEvents=4 unconfirmedGap=false unreportedDrops=0
 TEST schema removed; shared PostgreSQL/dev tables untouched
 C3 smoke FAIL phase=REAL_PROCESS class=IllegalStateException
@@ -25,4 +25,3 @@ At <WORKSPACE>\scripts\smoke-c3.ps1:30 char:32
 +                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : OperationStopped: (C3 integration ...tadata printed.:String) [], RuntimeException
     + FullyQualifiedErrorId : C3 integration smoke failed; no credential/private metadata printed.
- 

@@ -2,39 +2,39 @@ Sanitized copy: private home/workspace prefixes replaced; original log retained 
 [INFO] Scanning for projects...
 [INFO] ------------------------------------------------------------------------
 [INFO] Reactor Build Order:
-[INFO] 
+[INFO]
 [INFO] TOEIC Monitoring Realtime                                          [pom]
 [INFO] TOEIC Protocol                                                     [jar]
 [INFO] TOEIC JavaFX Client                                                [jar]
 [INFO] TOEIC Server                                                       [jar]
 [INFO] TOEIC ProcessHandle Spike                                          [jar]
-[INFO] 
+[INFO]
 [INFO] ---------------< vn.edu.toeic:toeic-monitoring-realtime >---------------
 [INFO] Building TOEIC Monitoring Realtime 0.1.0-SNAPSHOT                  [1/5]
 [INFO]   from pom.xml
 [INFO] --------------------------------[ pom ]---------------------------------
-[INFO] 
+[INFO]
 [INFO] -----------------------< vn.edu.toeic:protocol >------------------------
 [INFO] Building TOEIC Protocol 0.1.0-SNAPSHOT                             [2/5]
 [INFO]   from protocol\pom.xml
 [INFO] --------------------------------[ jar ]---------------------------------
-[INFO] 
+[INFO]
 [INFO] --- resources:3.5.0:resources (default-resources) @ protocol ---
 [INFO] skip non existing resourceDirectory <WORKSPACE>\protocol\src\main\resources
 [INFO] skip non existing resourceDirectory <WORKSPACE>\protocol\src\main\resources
-[INFO] 
+[INFO]
 [INFO] --- compiler:3.15.0:compile (default-compile) @ protocol ---
 [INFO] Nothing to compile - all classes are up to date.
-[INFO] 
+[INFO]
 [INFO] --- resources:3.5.0:testResources (default-testResources) @ protocol ---
 [INFO] skip non existing resourceDirectory <WORKSPACE>\protocol\src\test\resources
-[INFO] 
+[INFO]
 [INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ protocol ---
 [INFO] Nothing to compile - all classes are up to date.
-[INFO] 
+[INFO]
 [INFO] --- surefire:3.5.6:test (default-test) @ protocol ---
 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
-[INFO] 
+[INFO]
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
@@ -45,7 +45,7 @@ At line:4 char:1
 + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : NotSpecified: (MEASUREMENT_WRI...oring unchanged:String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
- 
+
 MEASUREMENT_WRITER_FAILED raw log incomplete; monitoring unchanged
 MEASUREMENT_FLUSH_TIMEOUT raw log incomplete; writer is daemon
 [INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.849 s -- in vn.edu.toeic.protocol.measurement.MessageMeasurementsTest
@@ -53,38 +53,38 @@ MEASUREMENT_FLUSH_TIMEOUT raw log incomplete; writer is daemon
 [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in vn.edu.toeic.protocol.monitoring.EventOriginTest
 [INFO] Running vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest
 [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.096 s -- in vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest
-[INFO] 
+[INFO]
 [INFO] Results:
-[INFO] 
+[INFO]
 [INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0
-[INFO] 
-[INFO] 
+[INFO]
+[INFO]
 [INFO] --- jar:3.5.1:jar (default-jar) @ protocol ---
 [INFO] Building jar: <WORKSPACE>\protocol\target\protocol-0.1.0-SNAPSHOT.jar
-[INFO] 
+[INFO]
 [INFO] ------------------------< vn.edu.toeic:client >-------------------------
 [INFO] Building TOEIC JavaFX Client 0.1.0-SNAPSHOT                        [3/5]
 [INFO]   from client\pom.xml
 [INFO] --------------------------------[ jar ]---------------------------------
-[INFO] 
+[INFO]
 [INFO] --- resources:3.5.0:resources (default-resources) @ client ---
 [INFO] skip non existing resourceDirectory <WORKSPACE>\client\src\main\resources
 [INFO] skip non existing resourceDirectory <WORKSPACE>\client\src\main\resources
-[INFO] 
+[INFO]
 [INFO] --- compiler:3.15.0:compile (default-compile) @ client ---
 [INFO] Recompiling the module because of changed dependency.
 [INFO] Compiling 45 source files with javac [debug parameters release 21] to target\classes
-[INFO] 
+[INFO]
 [INFO] --- resources:3.5.0:testResources (default-testResources) @ client ---
 [INFO] Copying 2 resources from src\test\resources to target\test-classes
-[INFO] 
+[INFO]
 [INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ client ---
 [INFO] Recompiling the module because of changed dependency.
 [INFO] Compiling 26 source files with javac [debug parameters release 21] to target\test-classes
-[INFO] 
+[INFO]
 [INFO] --- surefire:3.5.6:test (default-test) @ client ---
 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
-[INFO] 
+[INFO]
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
@@ -132,22 +132,22 @@ MEASUREMENT_WRITER_FAILED raw log incomplete; monitoring unchanged
 [INFO] Tests run: 54, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.189 s -- in vn.edu.toeic.client.realtime.RealtimeClientTest
 [INFO] Running vn.edu.toeic.client.ScopeLookupTest
 [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.076 s -- in vn.edu.toeic.client.ScopeLookupTest
-[INFO] 
+[INFO]
 [INFO] Results:
-[INFO] 
+[INFO]
 [INFO] Tests run: 286, Failures: 0, Errors: 0, Skipped: 0
-[INFO] 
-[INFO] 
+[INFO]
+[INFO]
 [INFO] --- jar:3.5.1:jar (default-jar) @ client ---
 [INFO] Building jar: <WORKSPACE>\client\target\client-0.1.0-SNAPSHOT.jar
-[INFO] 
+[INFO]
 [INFO] --- shade:3.6.1:shade (default) @ client ---
 [WARNING] Discovered module-info.class. Shading will break its strong encapsulation.
 [WARNING] Discovered module-info.class. Shading will break its strong encapsulation.
 [WARNING] Discovered module-info.class. Shading will break its strong encapsulation.
-[WARNING] client-0.1.0-SNAPSHOT.jar, error_prone_annotations-2.41.0.jar, gson-2.13.2.jar, javafx-base-21.0.12-win.jar, javafx-base-21.0.12.jar, javafx-controls-21.0.12-win.jar, javafx-controls-21.0.12.jar, javafx-graphics-21.0.12-win.jar, javafx-graphics-21.0.12.jar, protocol-0.1.0-SNAPSHOT.jar define 1 overlapping resource: 
+[WARNING] client-0.1.0-SNAPSHOT.jar, error_prone_annotations-2.41.0.jar, gson-2.13.2.jar, javafx-base-21.0.12-win.jar, javafx-base-21.0.12.jar, javafx-controls-21.0.12-win.jar, javafx-controls-21.0.12.jar, javafx-graphics-21.0.12-win.jar, javafx-graphics-21.0.12.jar, protocol-0.1.0-SNAPSHOT.jar define 1 overlapping resource:
 [WARNING]   - META-INF/MANIFEST.MF
-[WARNING] error_prone_annotations-2.41.0.jar, gson-2.13.2.jar define 1 overlapping classes: 
+[WARNING] error_prone_annotations-2.41.0.jar, gson-2.13.2.jar define 1 overlapping classes:
 [WARNING]   - META-INF.versions.9.module-info
 [WARNING] maven-shade-plugin has detected that some files are
 [WARNING] present in two or more JARs. When this happens, only one
@@ -157,30 +157,30 @@ MEASUREMENT_WRITER_FAILED raw log incomplete; monitoring unchanged
 [WARNING] mvn dependency:tree -Ddetail=true and the above output.
 [WARNING] See https://maven.apache.org/plugins/maven-shade-plugin/
 [INFO] Attaching shaded artifact.
-[INFO] 
+[INFO]
 [INFO] ------------------------< vn.edu.toeic:server >-------------------------
 [INFO] Building TOEIC Server 0.1.0-SNAPSHOT                               [4/5]
 [INFO]   from server\pom.xml
 [INFO] --------------------------------[ jar ]---------------------------------
-[INFO] 
+[INFO]
 [INFO] --- resources:3.5.0:resources (default-resources) @ server ---
 [INFO] Copying 1 resource from src\main\resources to target\classes
 [INFO] Copying 8 resources from src\main\resources to target\classes
-[INFO] 
+[INFO]
 [INFO] --- compiler:3.15.0:compile (default-compile) @ server ---
 [INFO] Recompiling the module because of changed dependency.
 [INFO] Compiling 49 source files with javac [debug parameters release 21] to target\classes
-[INFO] 
+[INFO]
 [INFO] --- resources:3.5.0:testResources (default-testResources) @ server ---
 [INFO] skip non existing resourceDirectory <WORKSPACE>\server\src\test\resources
-[INFO] 
+[INFO]
 [INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ server ---
 [INFO] Recompiling the module because of changed dependency.
 [INFO] Compiling 25 source files with javac [debug parameters release 21] to target\test-classes
-[INFO] 
+[INFO]
 [INFO] --- surefire:3.5.6:test (default-test) @ server ---
 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
-[INFO] 
+[INFO]
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
@@ -201,12 +201,12 @@ MEASUREMENT_WRITER_FAILED raw log incomplete; monitoring unchanged
 2026-10-10T21:28:43.604+07:00  INFO 23908 --- [toeic-server] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
 2026-10-10T21:28:43.605+07:00  INFO 23908 --- [toeic-server] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
 2026-10-10T21:28:43.669+07:00  INFO 23908 --- [toeic-server] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1219 ms
-Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of 
-the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: 
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of
+the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation:
 https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has 
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has
 been appended
-WARNING: A Java agent has been loaded dynamically 
+WARNING: A Java agent has been loaded dynamically
 (<USER_HOME>\.m2\repository\net\bytebuddy\byte-buddy-agent\1.18.11\byte-buddy-agent-1.18.11.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
@@ -264,55 +264,55 @@ PRESENCE_SCAN retryable failure; no success push
 [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s -- in vn.edu.toeic.server.monitoring.MonitoringStateServiceTest
 [INFO] Running vn.edu.toeic.server.monitoring.ProcessEventTest
 [INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.045 s -- in vn.edu.toeic.server.monitoring.ProcessEventTest
-[INFO] 
+[INFO]
 [INFO] Results:
-[INFO] 
+[INFO]
 [INFO] Tests run: 142, Failures: 0, Errors: 0, Skipped: 0
-[INFO] 
-[INFO] 
+[INFO]
+[INFO]
 [INFO] --- jar:3.5.1:jar (default-jar) @ server ---
 [INFO] Building jar: <WORKSPACE>\server\target\server-0.1.0-SNAPSHOT.jar
-[INFO] 
+[INFO]
 [INFO] --- spring-boot:4.1.1:repackage (repackage) @ server ---
 [INFO] Replacing main artifact <WORKSPACE>\server\target\server-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
 [INFO] The original artifact has been renamed to <WORKSPACE>\server\target\server-0.1.0-SNAPSHOT.jar.original
-[INFO] 
+[INFO]
 [INFO] -------------------< vn.edu.toeic:monitoring-spike >--------------------
 [INFO] Building TOEIC ProcessHandle Spike 0.1.0-SNAPSHOT                  [5/5]
 [INFO]   from monitoring-spike\pom.xml
 [INFO] --------------------------------[ jar ]---------------------------------
-[INFO] 
+[INFO]
 [INFO] --- resources:3.5.0:resources (default-resources) @ monitoring-spike ---
 [INFO] skip non existing resourceDirectory <WORKSPACE>\monitoring-spike\src\main\resources
 [INFO] skip non existing resourceDirectory <WORKSPACE>\monitoring-spike\src\main\resources
-[INFO] 
+[INFO]
 [INFO] --- compiler:3.15.0:compile (default-compile) @ monitoring-spike ---
 [INFO] Nothing to compile - all classes are up to date.
-[INFO] 
+[INFO]
 [INFO] --- resources:3.5.0:testResources (default-testResources) @ monitoring-spike ---
 [INFO] skip non existing resourceDirectory <WORKSPACE>\monitoring-spike\src\test\resources
-[INFO] 
+[INFO]
 [INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ monitoring-spike ---
 [INFO] Nothing to compile - all classes are up to date.
-[INFO] 
+[INFO]
 [INFO] --- surefire:3.5.6:test (default-test) @ monitoring-spike ---
 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
-[INFO] 
+[INFO]
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running vn.edu.toeic.monitoring.ProcessObservationTest
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.085 s -- in vn.edu.toeic.monitoring.ProcessObservationTest
-[INFO] 
+[INFO]
 [INFO] Results:
-[INFO] 
+[INFO]
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-[INFO] 
-[INFO] 
+[INFO]
+[INFO]
 [INFO] --- jar:3.5.1:jar (default-jar) @ monitoring-spike ---
 [INFO] ------------------------------------------------------------------------
 [INFO] Reactor Summary for TOEIC Monitoring Realtime 0.1.0-SNAPSHOT:
-[INFO] 
+[INFO]
 [INFO] TOEIC Monitoring Realtime .......................... SUCCESS [  0.003 s]
 [INFO] TOEIC Protocol ..................................... SUCCESS [  4.299 s]
 [INFO] TOEIC JavaFX Client ................................ SUCCESS [ 19.481 s]
