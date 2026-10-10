@@ -15,7 +15,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
 | B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; chuẩn bị Chặng 2 | `feat/t1-b3-proctor-dashboard` |
-| C | _chưa gán_ | T2-C2 code/test/evidence hoàn tất; dừng sau C2 | fdac531: event muộn/gap HTTP/dashboard, Java425/Python10/C2 và 6 hồi quy PASS; C1 đã merge | Human A/B review và candidate GUI/LAN acceptance còn NOT RUN; không tự làm C3–C5 | `feat/t2-c2-monitoring-late-events-and-gaps` |
+| C | _chưa gán_ | T2-C3 code/test/evidence hoàn tất; dừng sau C3 | 5844e88: observation trace/replay/oracle, Java461/Python10/CLI REAL source+REPLAY và 5 hồi quy PASS; C2 merge PR#19 b2926ea | Human B review/candidate GUI/LAN NOT RUN; chưa T2-C4/delta/E1/E2 | `feat/t2-c3-monitoring-trace-replay` |
 
 ## Đang bị chặn
 
@@ -63,4 +63,8 @@ Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì
 |---|---:|---:|---|
 | A | — | — | |
 | B | — | — | |
-| C | — | — | |
+| C | _chưa gán_ | T2-C3 code/test/evidence hoàn tất; dừng sau C3 | 5844e88: observation trace/replay/oracle, Java461/Python10/CLI REAL source+REPLAY và 5 hồi quy PASS; C2 merge PR#19 b2926ea | Human B review/candidate GUI/LAN NOT RUN; chưa T2-C4/delta/E1/E2 | `feat/t2-c3-monitoring-trace-replay` |
+
+## Bàn giao T2-C3 ngày10/10/2026
+
+C2 đã merge PR#19 bằng merge commit b2926ea, giữ C1/C2 local/remote. C3 tạo từ main này, không tiếp tục nhánh cũ. Trace tùy chọn mặc định tắt, full/event encoder và lõi reducer C1 production, oracle độc lập/fixture viết tay/seed faults có bằng chứng; [cách chạy](MONITORING_TRACE.md), [evidence](../evidence/t2-c3/2026-10-10-verification.md). Human B review/A adapter review NOT RUN, không giả approval; người dùng cho phép merge commit khi không blocker GitHub và giữ C3. Trạng thái Git cuối xem báo cáo/PR. Không suy UNKNOWN từ full mất; CLI không presence/TTL/auth/DB, không MT02–MT06 delta PASS hoặc E1/E2. Dừng sau C3.

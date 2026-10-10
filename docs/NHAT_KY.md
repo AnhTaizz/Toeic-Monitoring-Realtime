@@ -327,3 +327,12 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 
 
 
+
+## 10/10/2026 — C: T2-C3 observation trace/replay/oracle
+
+- Xác minh C2 PR#19 merge b2926ea và main sạch; tạo feat/t2-c3-monitoring-trace-replay. Code/contract/test5844e88. Không tiếp tục C1/C2 hoặc thay tracker/kế hoạch/.env/migration/exam lifecycle.
+- Tap collector đang có, trace async bounded/error isolation/exact-byte checksum/strict reader, CLI record và replay. Production full/event delivery dùng seam ID riêng test, runtime UUID không đổi. FullSnapshotReducer bọc FullStateReducer dùng chung; parser/algorithm C1 nguyên trạng, server giữ auth/lock/epoch/store/maintenance. Oracle độc lập từ raw observation, fixture+expected viết tay; schedule seeded/drop/dup/reorder/reconnect và mutation negative. QD-14 ghi mô hình baseline ACK/control/transport/event map mô phỏng, không real commit/network/presence proof.
+- Baseline425 PASS chạy mới20:21:36; final Java461/package PASS20:52:54 (+36), Python10 PASS. CLI clean/double/drop-mid/drop-first/mixed/repeat PASS, seed report giống byte; mutation FAIL exit1 đúng, corrupt checksum exit2 đúng. REAL ProcessHandle6scans và owned Edge appear/disappear ghi COMPLETE rồi REPLAY PASS; dọn test-owned resources. Final clean5844e88 run e7f90965-955d-431c-ac91-7e5e2520faa4 lúc20:58:59, metadata source/JAR hashes.
+- C1-Gui/C2-Gui/event-C3/C4/A4 regression PASS chạy mới; C1 tự STALE/TTL/capacity/close, C2 late/gap/COMMIT/auth, C3 owned Edge/network retry, C4 byte, A4 presence/hard-kill. C1/C2 metadata precommit dirty được đối chiếu Java hashes/client JAR với cleanC3, không gọi là clean run. Test schemas0, publicV7 không đổi; không resetDB.
+- [Evidence](../evidence/t2-c3/2026-10-10-verification.md) giữ nguyên trace và gzip lossless report lớn với checksums; excerpts là dòng thật. Pipeline PowerShell làm mất dấu tài liệu append ban đầu đã sửa UTF-8 trước commit; không product failure chưa xử lý. Không dùng replay time làm E1/E2, không ground truth C4/delta.
+- Human B review/A adapter review NOT RUN; B xem collector tap và seam ID/full/event/replay, A xem shared reducer adapter. ChatGPT planning/review NOT RUN theo lựa chọn không kết nối của người dùng. Candidate GUI/LAN/MT02–MT06 delta NOT RUN; MT01/07/08 vẫn PARTIAL tổng thể. Người dùng ủy quyền push/PR/merge commit nếu không blocker và giữ C3, Git cuối trong báo cáo/PR. Dừng sau T2-C3.

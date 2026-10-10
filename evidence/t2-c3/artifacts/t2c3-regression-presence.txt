@@ -1,0 +1,10 @@
+PASS REAL PostgreSQL18 V3->V4; runtime timeout700ms/scan25ms/heartbeat100ms; production defaults6000/500/2000ms
+PASS REAL roster role/auth/assigned ACTIVE filtering; never-seen UNKNOWN/NOT_SEEN/null lastSeen; interruption history scope
+PASS REAL separate owned client JVM hard-kill pid=26520 -> A UNKNOWN/history once; B ONLINE/event commit/ACK unaffected; MOCK process observation; assigned/foreign push isolation
+PASS REAL recovery retains stable interruption ID/recoveredAt; same collector on socket reconnect; expired old socket cannot make live association UNKNOWN
+PASS REAL malformed/role/foreign/CLOSED/unknown heartbeat rejection without refresh; token revoke and association cleanup; no timeout gap for NOT_SEEN
+PASS REAL deferred PostgreSQL COMMIT failure: heartbeat ERROR/no ACK/state/push; timeout rollback/no history/push, scheduler retries, other candidate stays ONLINE; recovery commits one interruption
+PASS REAL CLOSED attempt removes live association without fabricated heartbeat gap
+PASS REAL Stop unbinds heartbeat, unscoped pings cannot refresh; offline roster/history recovery; server restart UNKNOWN/SERVER_RESTART without fabricated timeout gap; new scoped heartbeat ONLINE
+PASS REAL presence/collector/delivery/transport/child-reader worker cleanup; hard kill touched only owned TEST process
+A4 REAL integration PASS; hard-kill REAL owned JVM; snapshots MOCK; GUI/LAN/human C review NOT RUN; B3 pending
