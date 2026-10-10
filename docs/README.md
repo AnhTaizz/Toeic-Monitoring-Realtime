@@ -13,6 +13,7 @@ Thư mục này là nơi ghi lại việc đang làm, để bất kỳ ai (hoặ
 | [MONITORING_MEASUREMENTS.md](MONITORING_MEASUREMENTS.md) | Schema JSONL, byte/outcome, cấu hình và tái tạo summary C4 | C | Khi đổi cách đo |
 | [PROCESS_MONITORING_SURVEY.md](PROCESS_MONITORING_SURVEY.md) | ProcessHandle/WMI, nguồn chính thức và giới hạn quan sát | C | Khi khảo sát phương pháp |
 | [KIEM_THU.md](KIEM_THU.md) | Trạng thái 27 test case và nơi lưu bằng chứng | Owner của test | Khi chạy test |
+| [../evidence/README.md](../evidence/README.md) | Mục lục báo cáo, log và artifact theo task để đọc trên GitHub | Người bổ sung bằng chứng | Khi thêm lượt kiểm thử hoặc task mới |
 | [thanh-vien/VAI_A.md](thanh-vien/VAI_A.md) | Task và hướng dẫn cho vai A (server, DB, giao dịch) | A | Ghi chú làm dở |
 | [thanh-vien/VAI_B.md](thanh-vien/VAI_B.md) | Task và hướng dẫn cho vai B (JavaFX, audio, đóng gói) | B | Ghi chú làm dở |
 | [thanh-vien/VAI_C.md](thanh-vien/VAI_C.md) | Task và hướng dẫn cho vai C (monitoring, thực nghiệm) | C | Ghi chú làm dở |

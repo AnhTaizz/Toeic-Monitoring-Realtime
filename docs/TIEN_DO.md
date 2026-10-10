@@ -4,6 +4,8 @@ Cập nhật lần cuối: 10/10/2026 — T2-C4 code0164297/test/evidence hoàn 
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
+10/10/2026: thêm [mục lục log và bằng chứng](../evidence/README.md) theo task để đọc trên GitHub và chuẩn bị prompt cho chat web. Kết quả kiểm thử và trạng thái nghiệm thu giữ theo báo cáo của từng lượt chạy.
+
 ## Đang ở đâu
 
 - Chặng: **2** (09–16/10) — Bắt đầu triển khai thi và giám sát.

@@ -346,3 +346,14 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - C3 CLI/owned Edge/replay, C1-Gui/full/autoSTALE/TTL/shutdown, measurement regressions PASS. Event smoke chạy song song initial FAIL real lostACKretry; chạy riêng PASS không sửa code; hai log retained, cause chưa chứng minh. Shared DB không reset, schemas thử được dọn bởi smoke. C2-Gui/A4/Python10 không chạy lại vì phần tương ứng không đổi.
 - [Evidence](../evidence/t2-c4/2026-10-10-verification.md), [guide](CONTROLLED_PROCESS_HARNESS.md), QD15. Không sửa .env/tracker/kế hoạch gốc/migration/exam lifecycle. Raw giữ exact bytes, log copy thay prefix private; secret/privatehome audit PASS. Human B review/ChatGPT planning/review NOT RUN theo lựa chọn hiện có; không giả approval.
 - B cần xem ProcessSelection/OwnedProcessPolicy, TEST DTO/parser, clock binding, identity/coverage và cleanup. OS Ctrl+C/hardkill parent/candidate full GUI/LAN/E1/E2 NOT RUN; không genericmissrate/latency/CPU/memory. Người dùng ủy quyền push/PR/merge commit nếu không blocker và giữ C4; Git cuối trong final/PR. Dừng sau C4, chưa C5/delta.
+
+## 10/10/2026 — Đồng bộ main và mục lục bằng chứng
+
+- Theo yêu cầu người dùng, fetch và cập nhật main local bằng fast-forward từ a04aaa2 tới f6d46b2 (PR#20); giữ nhánh B4 và các file chưa commit có sẵn.
+- Người dùng chọn tập trung bằng chứng đã kiểm tra tại evidence/<task>/ và thêm mục lục để đọc trên GitHub. Thêm evidence/README.md, liên kết từ README và docs/README, ghi cách lưu transcript/raw/metadata/checksum và phân biệt REAL/MOCK/SIMULATED/REPLAY.
+- Giữ đường dẫn và nội dung artifact cũ; chưa đưa các log chạy local tạm vào Git. Kiểm tra liên kết nội bộ và diff; không chạy lại build, smoke hoặc thay đổi trạng thái kiểm thử/tracker.
+
+## 11/10/2026 — Hoàn tất đồng bộ và công bố mục lục
+
+- Khi tiếp tục phiên, origin/main đã có PR#21 tại b576a07. Đưa commit mục lục chưa push lên main mới bằng rebase, giữ cả mục nhật ký C4 và mục đồng bộ trước đó.
+- Bổ sung T2-C4 vào mục lục bằng chứng; kiểm tra liên kết và diff trước khi push tài liệu. Không chạy lại kiểm thử ứng dụng.
