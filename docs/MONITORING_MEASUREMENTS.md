@@ -94,3 +94,7 @@ Summary validate schema/ID/UTC/sequence/index/domain/category/control order/FINA
 Kiểm tính tay trong `test_summarize_monitoring.py`: event100byte thử gửi hai lần (200) + server ACK20byte (20) → tổng TX220byte cho ATTEMPTED, WRITE_COMPLETED riêng cũng220. RX không cộng; hai record TX outcome không cộng với nhau. Fixture MOCK này kiểm phép cộng, không phải byte của message production.
 
 Khảo sát có nguồn và giới hạn: [PROCESS_MONITORING_SURVEY.md](PROCESS_MONITORING_SURVEY.md). Evidence phiên thật: [2026-10-05-verification.md](../evidence/t1-c4/2026-10-05-verification.md). Chưa chạy E1/E2/full/delta, WMI/ETW, GUI/LAN hoặc human B review.
+
+## Bổ sung T2-C1 — 10/10/2026
+
+Whitelist type và Python summary nhận thêm MONITORING_SYNC_OPEN/MONITORING_FULL/MONITORING_SYNC_CLOSE/MONITOR_STATE. Hook đọc sequence từ payload cho FULL, MONITOR_STATE và ACK FULL; OPEN/CLOSE không có sequence nên giữ null. Byte/outcome/schema/hook không đổi: FULL ACK vẫn là BUSINESS_ACK sau correlation, không cộng byte ACK lần hai. REAL full/Edge/GUI component dùng recorder transport hiện có, 4 endpoint có FINAL và summary COMPLETE; fault process set MOCK. [Evidence full](../evidence/t2-c1/2026-10-10-verification.md). Chưa đo overhead/CPU/memory/latency/miss-rate, delta/E1/E2 hoặc LAN; COMPLETE chỉ cho các file cung cấp.

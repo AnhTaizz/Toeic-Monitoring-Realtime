@@ -1,0 +1,13 @@
+﻿test_duplicate_endpoint_not_added_twice 
+test_duplicate_fields_rejected (test_summarize_monitoring.SummaryTest.test_duplicate_fields_rejected) ... ok
+test_full_types_are_counted_once_without_rx_or_business_ack_bytes 
+test_generated_outputs_reproducible_without_mutating_input 
+test_hand_calculated_retry_two_endpoints_no_tx_rx_double_count 
+test_malformed_and_secret_input_are_not_echoed 
+test_oversized_line_hash_still_covers_whole_file 
+test_truncated_and_missing_final (test_summarize_monitoring.SummaryTest.test_truncated_and_missing_final) ... ok
+test_validation_rejects_bad_ids_sequence_clock_and_invented_bytes 
+Ran 10 tests in 0.085s
+OK
+Summary COMPLETE: endpoints=1, categories=2; WS JSON application bytes only
+Summary COMPLETE: endpoints=1, categories=2; WS JSON application bytes only

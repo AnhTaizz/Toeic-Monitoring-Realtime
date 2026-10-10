@@ -1,0 +1,90 @@
+﻿Baseline main 8eba405: Java376 PASS; initial A2 DB-off FAIL then DB started, A2 PASS.
+Code source 6acd031: Java408 PASS (29 protocol,242 client,136 server,1 spike); package PASS.
+Python10 PASS; raw metadata sourceHead=6acd031, clean workingTree at smoke start.
+LOG t2c1-regression-a2
+PASS PostgreSQL login + session hash + REST auth + missing/invalid WS token rejection
+PASS real java.net.http.WebSocket Authorization header + HEARTBEAT -> ACK
+PASS production deny unknown scope + malformed JSON isolation
+PASS PostgreSQL revoked session rejects REST/handshake and active WS messages
+PASS PostgreSQL expired token rejects REST/handshake
+A2 PostgreSQL smoke PASS; no token/password printed; no attempt fixtures installed in production
+LOG t2c1-regression-b2-isolated
+CREATE DATABASE
+PASS PostgreSQL production REST candidate login; scope empty; credential remains in memory
+PASS B RealtimeClient authenticated WS + unscoped HEARTBEAT + correlated server ACK
+PASS owned server-off -> RECONNECTING/locked -> restart -> fresh Bearer handshake -> ACK
+PASS real PostgreSQL revoke -> ERROR UNAUTHORIZED -> FAILED; heartbeat/retry stopped
+PASS invalid bearer handshake 401 -> AuthenticationRejectedException -> FAILED without retry
+PASS expired PostgreSQL session handshake -> FAILED without retry
+PASS proctor login -> authenticated transport -> HEARTBEAT ACK; no collector started
+PASS real server-off retry budget exhausted -> FAILED; worker cleanup via close
+PASS closed adapters terminate owned realtime workers; owned server processes stopped
+B2 real integration PASS; GUI manual NOT RUN; no PROCESS_OBSERVED/presence/collector
+DROP DATABASE
+LOG t2c1-regression-a3
+PASS PostgreSQL clean migration; V1 prepared for production V2 upgrade
+PASS production V1->V2 migration; TEST fixtures only; assignment/owner foreign keys
+PASS login/auth-me ACTIVE scopes; candidate/foreign/closed/unknown timeline denied; assigned proctor allowed
+PASS valid event COMMIT->ACK->assigned warning; duplicate ACK twice/row once/warning once; changed payload CONFLICT; event FK/unique
+PASS candidate own/foreign/closed/unknown + proctor cannot send; malformed/path rejection; other client survives
+PASS REAL PostgreSQL deferred COMMIT failure -> rollback + retryable ERROR; NO success ACK or warning
+PASS barrier-controlled concurrent real WS retry -> ACK twice, DB once, warning once
+PASS nullable metadata retry; offline commit+ACK; REST reconnect recovery/order; live assignment/token revocation; four-client isolation
+A3 REAL PostgreSQL + HTTP + WebSocket smoke PASS
+LOG t2c1-regression-a4
+PASS REAL PostgreSQL18 V3->V4; runtime timeout700ms/scan25ms/heartbeat100ms; production defaults6000/500/2000ms
+PASS REAL roster role/auth/assigned ACTIVE filtering; never-seen UNKNOWN/NOT_SEEN/null lastSeen; interruption history scope
+PASS REAL separate owned client JVM hard-kill pid=5220 -> A UNKNOWN/history once; B ONLINE/event commit/ACK unaffected; MOCK process observation; assigned/foreign push isolation
+PASS REAL recovery retains stable interruption ID/recoveredAt; same collector on socket reconnect; expired old socket cannot make live association UNKNOWN
+PASS REAL malformed/role/foreign/CLOSED/unknown heartbeat rejection without refresh; token revoke and association cleanup; no timeout gap for NOT_SEEN
+PASS REAL deferred PostgreSQL COMMIT failure: heartbeat ERROR/no ACK/state/push; timeout rollback/no history/push, scheduler retries, other candidate stays ONLINE; recovery commits one interruption
+PASS REAL CLOSED attempt removes live association without fabricated heartbeat gap
+PASS REAL Stop unbinds heartbeat, unscoped pings cannot refresh; offline roster/history recovery; server restart UNKNOWN/SERVER_RESTART without fabricated timeout gap; new scoped heartbeat ONLINE
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS REAL presence/collector/delivery/transport/child-reader worker cleanup; hard kill touched only owned TEST process
+A4 REAL integration PASS; hard-kill REAL owned JVM; snapshots MOCK; GUI/LAN/human C review NOT RUN; B3 pending
+LOG t2c1-regression-c2
+PASS real ProcessHandle.allProcesses source + local polling snapshot; no network send
+PASS owned isolated headless msedge.exe appears; metadataQuality=COMPLETE
+PASS only owned Edge process tree stopped; owned processes absent from later snapshot
+PASS stop/restart generates fresh collectorSessionId and terminates collector workers
+PASS active proctor denied; no collector worker started
+C2 ProcessHandle smoke PASS; active context MOCK; GUI manual NOT RUN; no event/transport integration
+LOG t2c1-regression-c3
+PASS REAL PostgreSQL18 V2->V3; TEST assignments only; no shared DB reset
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS REAL Windows ProcessHandle/owned Edge open-close -> production C2/C3/B2 -> DB/ACK; SIMULATED first event ACK loss -> row1/warning1; real offline proctor timeline
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS REAL owned server stop/restart + B2 reconnect; MOCK snapshot pending delivered exactly once; no reconnect loop in C3
+PASS MOCK overflow capacity1 -> REAL gap persistence/commit ACK; DB COMMIT rollback/retry; SIMULATED gap ACK loss; stable dedup; next accumulator + heartbeat
+PASS REAL gap auth/role/foreign/CLOSED/unknown scope; gap never changes process state; warning/timeline process contract unchanged
+PASS collector/delivery/transport workers terminated; callbacks/subscriptions cleaned; no queue across logout/app kill
+C3 REAL integration PASS; GUI/LAN/human B review NOT RUN; MT01 PARTIAL until B3
+LOG t2c1-regression-c4
+PASS REAL Windows ProcessHandle production collector scan; only aggregate diagnostics checked, no process details logged; separate from MOCK event source
+PASS MOCK event -> REAL B2/DB/ACK/warning/dashboard; SIMULATED observer ACK suppression -> retry >=2 writes, DB1/dashboard1
+PASS MOCK capacity1 overflow drops2 -> REAL MONITORING_GAP commit/ACK; retained event -> warning/dashboard
+PASS all seven message types counted across REAL candidate/proctor/server; conflicting event -> REAL ERROR; semantic ACK separate from socket write
+PASS cleanup own TEST schema/ephemeral server; shared DB/user processes untouched
+PASS all owned recorder/collector/delivery/B2/dashboard/presence workers gone
+C4 REAL transport verification PASS; event+overflow MOCK; ACK suppression SIMULATED; GUI/LAN/human B review/E1/E2 NOT RUN
+Summary COMPLETE: endpoints=3, categories=26; WS JSON application bytes only
+LOG t2c1-regression-b3
+PASS REAL V3->V4/HTTP roster/events/history/B2 push parser/C3 event commit; MOCK process polls; HTTP+WS one row; other proctor isolated
+PASS REAL owned child hard-kill -> UNKNOWN/history; fresh child -> ONLINE/same gap recoveredAt; B stays ONLINE
+PASS REAL intentional proctor disconnect -> stale ONLINE; missed event/timeout/recovery -> reconnect fresh auth/me/roster/events/history without duplicate; B2 owns reconnect loop
+PASS REAL JavaFX visible Stage/production view: roster/select/events/history/tabs/owned hard-kill UNKNOWN/recovery/history kept/stale ONLINE/reconnect/refresh/logout callback; screenshots actual Scene; no candidate GUI claim
+PASS REAL HTTP403 selected attempt removal/fresh auth/me+B2 scope; revoked bearer -> HTTP401/session cleared/login callback
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS cleanup owned B3 TEST schema; shared PostgreSQL/public data/user server untouched
+PASS owned dashboard HTTP/state/collector/delivery/B2/presence/child-reader workers gone
+B3 REAL integration PASS; process source MOCK; hard-kill REAL owned JVM; GUI=component PASS; MT01/MT08 full candidate GUI, LAN, human A review NOT RUN
+LOG t2c1-integration
+PASS REAL Edge -> production ProcessHandle/collector/full/WS/RAM/ACK/dashboard; close removes current PID and retains PostgreSQL history
+PASS REAL reconnect/epoch isolation/duplicate/conflict/empty/scope/stop; MOCK fault sets; event/gap/interruption history preserved
+PASS REAL JavaFX proctor component/controls/Edge rows/screenshots; full candidate GUI NOT RUN
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS only owned TEST schema/server/Edge/FX resources cleaned; shared history untouched
+T2-C1 REAL full snapshot smoke PASS; fault process sets MOCK; full candidate GUI/LAN/human review NOT RUN
+Summary COMPLETE: endpoints=4, categories=48; WS JSON application bytes only
+T2-C1 artifacts: server/target/t2c1-runtime/T2C1-e540e5a0-665d-4a12-af97-33201a8e1b8a

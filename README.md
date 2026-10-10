@@ -1,6 +1,6 @@
 # TOEIC Monitoring Realtime
 
-Xương sống kỹ thuật chặng 1 gồm Spring Boot server, JavaFX client hai role, PostgreSQL và spike `ProcessHandle`. C2/A3/C3 đã nối collector → event → queue/retry → DB/ACK. A4 có heartbeat, presence/timeout/history; B3 đã có dashboard giám thị nhận cảnh báo và tải lịch sử. Nghiệp vụ thi, full/delta và đóng gói chạy trên máy thứ hai thuộc các task sau.
+Spring Boot server, JavaFX client hai role, PostgreSQL và collector `ProcessHandle`. Event/queue/retry, heartbeat/presence/history và dashboard chặng 1 đã có. Server có backend thi chặng 2; T2-C1 thêm full snapshot và tab **Process hiện tại**. Delta, GUI thi toàn luồng và đóng gói trên máy thứ hai chưa được nghiệm thu. Các mục chặng 1 bên dưới mô tả phạm vi lịch sử của từng task; phần full hiện tại ở cuối.
 
 ## Yêu cầu môi trường
 
@@ -82,7 +82,7 @@ AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> listener);
 
 - C dùng interface, không dùng raw WebSocket. Subscription trả AutoCloseable để gỡ listener; callback không bảo đảm FX thread.
 - `send` hoàn thành khi socket write xong; ACK/ERROR đi qua `onMessage`. ACK pending được xóa khi disconnect, không replay event tự động. C3 quản lý eventId/queue/retry và đối soát business ACK.
-- HEARTBEAT, PROCESS_OBSERVED và MONITORING_GAP đã nhận ACK server thật. Event/gap chỉ được ACK sau COMMIT. State/full/delta chưa có schema thực, không tự thêm type/payload hoặc cấp scope.
+- HEARTBEAT, PROCESS_OBSERVED và MONITORING_GAP đã nhận ACK server thật. Event/gap chỉ được ACK sau COMMIT. T2-C1 thêm OPEN/FULL/CLOSE/MONITOR_STATE theo contract ở cuối PROTOCOL; ACK FULL xác nhận state RAM, delta chưa có.
 - C2 có thể dùng trạng thái kết nối và ranh giới transport; việc nối collector không được triển khai trong B2.
 
 Unit tests dùng MOCK socket/clock ghi nhãn; HTTP handshake tests chạy network với fixture response 401/503. Real smoke riêng dùng PostgreSQL + production Spring server + chính RealtimeClient B, kiểm candidate/proctor, heartbeat ACK, stop/restart server, revoke/expire, retry budget và shutdown:
@@ -256,3 +256,33 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-c4.ps1
 Script in thư mục `server/target/c4-runtime/<runId>` chứa raw/metadata/summary JSON+CSV. Python3.11+ stdlib; không cài thêm package. Event/overflow source MOCK, ACK suppression tại observer C3 SIMULATED; HTTP/WS/DB/B2/dashboard model REAL. ProcessHandle collector scan REAL được kiểm riêng, không giả process mở từ MOCK. Metadata ghi source SHA/dirty/hash source+JAR, OS/JDK/settings/clock domain và lệnh sanitize. Đây là smoke không mở GUI; LAN, human B review, WMI/ETW và E1/E2 NOT RUN.
 
 Queue log mặc định1024/drop-new, flush2000ms, writer daemon; I/O lỗi không phá delivery. Summary exit0=COMPLETE các file cung cấp, exit2=INCOMPLETE/lỗi; báo drop/unwritten/truncated/malformed/counter mismatch, không sửa raw. Cấu hình, schema, chi phí khi bật và giới hạn: [MONITORING_MEASUREMENTS](docs/MONITORING_MEASUREMENTS.md). [Khảo sát ProcessHandle/WMI có nguồn Oracle/Microsoft](docs/PROCESS_MONITORING_SURVEY.md), [evidence C4](evidence/t1-c4/2026-10-05-verification.md).
+
+## Full snapshot T2-C1
+
+Candidate bấm **Bắt đầu giám sát** sẽ OPEN để lấy syncEpoch, rồi gửi toàn bộ tập process theo policy v1 sau mỗi lần quét thành công. Full đầu sequence1; ACK có epoch/sequence sau khi server chấp nhận RAM. Event cảnh báo vẫn lưu riêng trong DB. Proctor chọn lượt được phân công, tab **Process hiện tại** cho thấy filename/PID/startInstant/metadataQuality; tab cảnh báo và gián đoạn giữ lịch sử khi process đóng.
+
+Kiểm tự động với DB theo `.env`, schema TEST/port riêng, Windows Edge do test tự mở và dọn:
+
+```powershell
+docker compose up -d --wait
+mvn package
+python -m unittest discover -s scripts -p test_summarize_monitoring.py -v
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t2c1.ps1 -JavaHome $env:JAVA_HOME -Gui
+```
+
+`JavaHome` là thư mục JDK21, không phải `bin/java.exe`; nếu JAVA_HOME rỗng, script dùng `java` trong PATH. Python dùng stdlib, không cần rg/winget cho smoke này. `-Gui` mở component giám thị JavaFX thật, chọn lượt, kiểm process Edge xuất hiện/biến mất và chụp ảnh ở `server/target/t2c1-smoke/`. Raw, checksum source/JAR, metadata và summary nằm dưới đường dẫn runId mà script in. Component PASS chưa thay GUI candidate toàn app hay LAN.
+
+Tự demo trong app: build lại, dừng server dev cũ và chạy bản mới (không reset volume). Nạp `.env` vào PowerShell rồi chạy server:
+
+```powershell
+foreach ($line in Get-Content -Encoding UTF8 .env) {
+    if ($line -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD)\s*=(.*)$') {
+        [Environment]::SetEnvironmentVariable($Matches[1], $Matches[2].Trim().Trim('"').Trim("'"), 'Process')
+    }
+}
+java "-Duser.timezone=UTC" -jar server/target/server-0.1.0-SNAPSHOT.jar
+```
+
+Ở hai terminal khác, mỗi terminal chạy `java -jar client/target/client-0.1.0-SNAPSHOT-all.jar`. Nếu đã có DEMO-C3-A thì dùng lại; nếu chưa có, chạy `scripts/demo-c3.ps1 -Action Create` như mục demo C3. Candidate1 chọn lượt/bắt đầu; proctor1 chọn cùng lượt. Mở Edge, chờ vài poll: bảng hiện tại có một hoặc nhiều PID Edge. Đóng **tất cả process Edge đó**: chúng biến mất khỏi bảng hiện tại; cảnh báo lịch sử vẫn còn. Edge có thể giữ process nền sau đóng cửa sổ nên phải đối chiếu PID. Notepad không thuộc policy v1.
+
+Dừng giám sát: state STALE giữ tập cuối với nhãn dữ liệu cũ. Kết nối lại: OPEN mới, UNSYNCED cho tới full1. Lỗi scan không gửi full rỗng; full rỗng chỉ từ scan thành công không có process phù hợp. Default server stale6s, TTL5phút,4096attempt; client full queue16+1pending, snapshot128process, retry5. Quá giới hạn báo lỗi, không cắt tập. Restart server mất state RAM; lịch sử PostgreSQL không mất. Không hỗ trợ nhiều server cùng giữ full state. [Contract](docs/PROTOCOL.md#t2-c1--contract-full-snapshot-baseline-v1), [QD-12](docs/QUYET_DINH.md), [evidence](evidence/t2-c1/2026-10-10-verification.md).

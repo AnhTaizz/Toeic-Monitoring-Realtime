@@ -150,7 +150,7 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 **Xong khi:** màn giám thị thấy state hiện tại của thí sinh; message của epoch cũ bị từ chối; MT01 chạy được.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 10/10/2026 — CODE_COMPLETE T2-C1 trong `feat/t2-c1-monitoring-full-snapshot`, code `6acd031`. FullSnapshotDelivery → B2 → MonitoringStateService/FullSnapshotReducer RAM → ACK/MONITOR_STATE/HTTP → tab Process hiện tại. Quyền/storage hooks A giữ nguyên; QD-12 và PROTOCOL bổ sung OPEN/full/CLOSE/revision/TTL. Java408/Python10, REAL Edge/HTTP/WS/PG/proctor JavaFX component và hồi quy PASS; MT01 giữ PARTIAL, GUI candidate/LAN/human A/B review NOT RUN. [Evidence](../../evidence/t2-c1/2026-10-10-verification.md). Không merge, dừng bàn giao task; chưa làm T2-C2–C5/delta/E1/E2.
 
 ### T2-C2 · Heartbeat, event muộn và khoảng trống
 `4h` · phụ thuộc: T2-C1 · review: B
