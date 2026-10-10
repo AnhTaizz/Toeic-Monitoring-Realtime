@@ -109,6 +109,8 @@ Base `8eba405`, code `6acd031`; Windows11/Temurin21.0.10/PostgreSQL18.6/Maven3.9
 
 T2-C1 REAL HTTP/WS/PG/ProcessHandle/owned Edge/proctor JavaFX component PASS: full1, Edge xuất hiện/biến mất giữ event, reconnect/new epoch/old epoch STALE, retry/conflict, full rỗng, role/scope, CLOSE/STale, history gap/interruption còn và dọn workers. Fault process sets MOCK; queue/scan failure/order/TTL/late callback/canceled socket write bằng MOCK unit. 4file measurement FINAL, drop/unwritten/pending0, summary COMPLETE. Chi tiết, lỗi ban đầu đã sửa, configs thực và ảnh: [evidence](../evidence/t2-c1/2026-10-10-verification.md).
 
+Bổ sung review-fix cùng ngày: tại30fa6d9, maintain Scheduled không được Spring gọi; các test PASS cũ không chứng minh autonomous STALE/TTL. Harness mới trên implementation cũ FAIL phase AUTO_STALE_WITHOUT_HTTP_OR_CLOSE. Code e07bb7e dùng worker riêng; Java413/package PASS (protocol29/client242/server141/spike1). REAL Spring/PG/WS giữ socket và scoped heartbeat, không full/CLOSE/HTTP state read/manual maintain: tự push STALE, TTL4s tombstone, capacity1 từ OPEN B bị từ chối đến ACK B và giữ history PASS. Spring close xóa RAM/dừng worker PASS. A4/C3/C4/B3 hồi quy chạy lại PASS. [Evidence bổ sung](../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md); Python10 thuộc lượt trước, không chạy lại unittest Python vì script phân tích không đổi (summary mới vẫn chạy thật).
+
 MT01 vẫn PARTIAL; GUI candidate toàn app, LAN máy thứ hai, human A/B review, full server restart network và lỗi scan OS thực NOT RUN. Không triển khai task C2–C5 chặng2/delta/E1/E2. Không reset DB/migration/tracker/kế hoạch.
 
 ## T1-B2 — kiểm 03/10, ghi nhận 04/10/2026

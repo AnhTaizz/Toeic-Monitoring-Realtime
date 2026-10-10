@@ -1,5 +1,7 @@
 # T2-C1 full snapshot baseline v1 — 10/10/2026
 
+**Đính chính sau review người dùng:** tại30fa6d9, annotation Scheduled của maintain chưa được kích hoạt. Các PASS dưới đây đúng cho test đã chạy (logic gọi trực tiếp/CLOSE), nhưng không chứng minh tự STALE/TTL. Bản sửa e07bb7e và bằng chứng tự chạy Spring/WS/TTL/shutdown nằm ở [scheduling-fix](scheduling-fix/2026-10-10-verification.md). Raw/summary/metadata của lượt cũ giữ nguyên.
+
 Người chạy: Codex Agent, theo ủy quyền implement/test/commit/push/PR của vai C. Base origin/main sau fetch: `8eba40595e396184fc7f93f6e38d73c0ae4af673`; trước sửa working tree sạch, chưa có branch/PR T2-C1. Nhánh `feat/t2-c1-monitoring-full-snapshot`, code commit **`6acd031e0c11ddb7ace97ace4f68359e23cf8fe1`**. Commit bàn giao sau đó chỉ docs/evidence, không đổi code đã kiểm. Chưa merge. Human A/B review và ChatGPT planning/review NOT RUN (người dùng đã chọn không kết nối ChatGPT).
 
 ## Điều kiện và lệnh thực chạy

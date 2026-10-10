@@ -1,0 +1,731 @@
+﻿{
+    "runId":  "T2C1-c4692b28-08d6-461e-8368-902af2c5ddf2",
+    "utc":  "2026-10-10T07:15:04.5379465Z",
+    "sourceHead":  "e07bb7ef90fd2326dd120b681c3c7029c6a2bda0",
+    "branch":  "feat/t2-c1-monitoring-full-snapshot",
+    "workingTree":  [
+
+                    ],
+    "java":  "openjdk version \"21.0.10\" 2026-01-20 LTS\r\nOpenJDK Runtime Environment Temurin-21.0.10+7 (build 21.0.10+7-LTS)\r\nOpenJDK 64-Bit Server VM Temurin-21.0.10+7 (build 21.0.10+7-LTS, mixed mode, sharing)\r\n",
+    "os":  "Microsoft Windows NT 10.0.26200.0",
+    "command":  "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t2c1.ps1 [-Gui] -JavaHome \u003cJDK21\u003e",
+    "gui":  true,
+    "workload":  "REAL ProcessHandle/owned Edge; MOCK fault process sets",
+    "network":  "REAL localhost HTTP/WS/PostgreSQL",
+    "heartbeatMillis":  200,
+    "pollMillis":  200,
+    "maxProcesses":  128,
+    "fullQueueCapacity":  16,
+    "maxPendingFull":  1,
+    "maxDedupIds":  64,
+    "stateStaleMillis":  1200,
+    "stateScanMillis":  25,
+    "stateTtlMillis":  4000,
+    "stateMaxAttempts":  1,
+    "presenceTimeoutMillis":  1200,
+    "presenceScanMillis":  25,
+    "stateStore":  "RAM, one server JVM",
+    "lan":  "NOT RUN",
+    "fullCandidateGui":  "NOT RUN",
+    "humanReview":  "NOT RUN",
+    "serverJarSha256":  "a38fbd2f3af2ee2efe8df60adcacc367b9c37d2e71c94b9d28497e75b53d0b64",
+    "clientJarSha256":  "6def1adefb9d6ddb505a495ea8cad26bb21da2c069c65e9612f69f8331709eec",
+    "sourceManifest":  [
+                           {
+                               "path":  "client/pom.xml",
+                               "sha256":  "5f1796df8f893f19019bdc07d8ee381e5c9f4e00f6831019f8b0a8679c77f49e"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/ClientSettings.java",
+                               "sha256":  "da7a052faf78e00f250012980a1b6283f98ee8a9f784189525df421febfa7487"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/dashboard/DashboardApi.java",
+                               "sha256":  "6d143b031c0c008f2583c1dc68c9879cd1dd7aa340d18c5a3264a70b26a46509"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/dashboard/DashboardController.java",
+                               "sha256":  "14061a656fc804f9f15f4af27e3d50f0204e567112dc418da3d78526100d9343"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/dashboard/DashboardModel.java",
+                               "sha256":  "a0da45c7c601e8e118e83716b612534d97e2cb68c4ac2c0eb77d97335e42da32"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/dashboard/MonitoringApiClient.java",
+                               "sha256":  "ff1f3e308a802dce5f4c2eb70537f0003c56fb43ed515404865c3c610c7019ee"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/dashboard/MonitoringData.java",
+                               "sha256":  "1c01f3ffd1cb4e51a6c3f3ccd05f6df9d27af768344d0cd1af6a946bc9fc55c2"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/dashboard/MonitoringJson.java",
+                               "sha256":  "3cb3f480979b41ebccc2c2b0053d0bebaf7f7e052d47de056d0488307771852c"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/dashboard/ProctorDashboardView.java",
+                               "sha256":  "c8947944c80e63ff3c309997c509b3b5249f5738db631613644221e5818af255"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/InvalidServerResponseException.java",
+                               "sha256":  "33eb0481d37379cb1aade778e75a8e93f371bb5a6e5c659b5f6c4746c6424b4e"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/Launcher.java",
+                               "sha256":  "48b14c04638864837b86b1737998cddaf81a0eb7c9689531eb2ebfb1e249838d"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/LoginApiClient.java",
+                               "sha256":  "49c18e0af7d5e4869c71be7843d4db9715d3074e757549e059b997da98163e99"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/LoginFailedException.java",
+                               "sha256":  "ff50be9312ac76366bf65495f0492dc7fc30f076901add6e70c72993ca73fa87"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/monitoring/CandidateMonitoringSession.java",
+                               "sha256":  "e30dcfb613ddbb0c6eff4ee16a9f4c7fb8043fbf6b7fc8d97d40bce4b7f88a36"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/monitoring/FullSnapshotDelivery.java",
+                               "sha256":  "b1c34d7f7688173395329195abe414cf4949cf08134fc1e9610baf6433ee9948"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/monitoring/MetadataQuality.java",
+                               "sha256":  "e68972f6e7f1719e4b0d16d1aef0498f896054a8db773f2321adf6f9e91b36c3"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/monitoring/MonitoringDelivery.java",
+                               "sha256":  "7cae632badfc98b19f44beb42ac7bc1d83be5d1447a6235dcd670037b8373740"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/monitoring/MonitoringMessage.java",
+                               "sha256":  "e7ac0820ae9974780e6789a24fe260c84c9a198879fbb60e9e163074a18644c6"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/monitoring/MonitoringSessionGate.java",
+                               "sha256":  "7358ca211da85440b88a999ef91bd31b3fc78cac1e7ff7b959d5942d56094fc7"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/monitoring/ObservedProcess.java",
+                               "sha256":  "c4d16c3cd3501604bad4845e0664162fd87c2dc59b79502462cc25c3998870a2"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessCollector.java",
+                               "sha256":  "795326da82a2ee4eb74f3ec7d54b114d2d230bd34106474863d782bc91d2a592"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessHandleSnapshotSource.java",
+                               "sha256":  "49a93ad6d6f9ace186014ee88b23da39270f2a7c766eec5660f034d8611bf418"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessIdentity.java",
+                               "sha256":  "916b8535744f9e1ec6419058c12cfbcfb2a15c9d6cf2e97d58d5aaf4fb18cb80"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessPolicy.java",
+                               "sha256":  "90c86aab9ea2218a61387bba566f4d6de5dbe25ebd354885e074eb08bd6830e1"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessReading.java",
+                               "sha256":  "53afe103acb599b21d6a3785796f76ea509a4fbf4f0f7d084f00a51eaa86af6b"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessSnapshot.java",
+                               "sha256":  "e56475ae6fd24f1075d6a8e3c19090ef208e214ceb6753d78871b7e6e03af497"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessSnapshotSource.java",
+                               "sha256":  "89bf121829fe9a8ce55de8ca942d2ad9982dc984dd4bf697a04892a89ee270ea"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/realtime/AuthenticatedWebSocketOpener.java",
+                               "sha256":  "b235d59bd748eb6d33831749e86a078daaea82ae7e72f0c8c4478071fb481c53"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/realtime/ConnectionState.java",
+                               "sha256":  "fc094bc5f9aa5df1acff8c83ad9cfd77e812c0a62d6c79136e36a87f3c5f7154"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/realtime/ConnectionViewModel.java",
+                               "sha256":  "ff37c8dbcf10c6f821a33bd614856d584a4225ff3d825aa3a8649f4332f68fe3"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/realtime/MonitoringTransport.java",
+                               "sha256":  "ca1934b22488f73e0e888332c747b7b20d823940b8c323e43a691a4a4828cfe3"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/realtime/RealtimeClient.java",
+                               "sha256":  "ee37af07d67146e3633414d61926f6ad2b6396349295eb25cf9fd8023a16df24"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/RoleViewModel.java",
+                               "sha256":  "955a6dbed0cfc3d3e46c562ca7053d7c517fdf1d98e1c3f896cc5d7e4b90497d"
+                           },
+                           {
+                               "path":  "client/src/main/java/vn/edu/toeic/client/ToeicClientApplication.java",
+                               "sha256":  "ea3b5e9841e0d600114dc242964e5d2736fccd01c4b96624ba4e7a94704c1b26"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/dashboard/DashboardControllerTest.java",
+                               "sha256":  "438bedc02ed3c5ff8bb5945f2c686b6a999ae5f66df5705f4b41594bf8474f6c"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/dashboard/DashboardFixtures.java",
+                               "sha256":  "8094024f7ae655a1f94221db7a08602f1b74938b4d40652fa4b65382a6d23a86"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/dashboard/DashboardModelTest.java",
+                               "sha256":  "8ebff353ebf71dd5945f2de6f6f49d160de8b81bb889b20a8be97be9e1b4f8ca"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/dashboard/FullStateDashboardTest.java",
+                               "sha256":  "50dc64c097040953b89b4bc5f83178d78ec5bc7636ef0c73aa08bf3805288526"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/dashboard/MonitoringApiClientTest.java",
+                               "sha256":  "5db37280c0eefda6b3a81bc1621ce6e8bf0bc09ac9f9ec57b0832bb5ee1eac0c"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/dashboard/MonitoringJsonTest.java",
+                               "sha256":  "2f2891075972523516d5fef0c182ec5cdd3e5ae0869d7078a35d8604a34ba834"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/LoginApiClientTest.java",
+                               "sha256":  "9214ebd3e594de93b26a4a8d08444fe76e781d8c82e7187279779efdc8e8ea4e"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/monitoring/FullSnapshotDeliveryTest.java",
+                               "sha256":  "7f04935d815e2cc344e3bfaca83ebb03e9491f751eabe0302f3ad14f8d9c3365"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/monitoring/MonitoringDeliveryTest.java",
+                               "sha256":  "120202cef511b868076f83a274a7e8cc2b9de8f5f399642cefad9ee88fe6bf12"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessCollectorSmoke.java",
+                               "sha256":  "5cf06b755baa6431c85fb4a0e729f8a1448fb0eaa06a61f7ae72c0cee99d0c70"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessCollectorTest.java",
+                               "sha256":  "76377d0f7ae327d134e7723d9ed8ee1c2f373e8134b71db5590dfe0575c70181"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessPolicyAndSourceTest.java",
+                               "sha256":  "3f29f864a6a15579de381c974f5fd2923efca09ca0dbcc6d968da900861c2e61"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/realtime/AuthenticatedWebSocketOpenerTest.java",
+                               "sha256":  "505bb3a2d9e56eb07fb65ee98cd0e8e1796cb5e44ef49b66e1827f1eb511568f"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/realtime/MockScheduler.java",
+                               "sha256":  "c0cd5ae624eba086d0214a1e3a09e9d5d778179a5fa81cf4f49e8933086b4862"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/realtime/RealtimeClientTest.java",
+                               "sha256":  "4c599392cd56a38c43458fd41a02be658120d024312fd9f2ce4293804363e011"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/realtime/RealtimePostgresSmoke.java",
+                               "sha256":  "3f570e43f5e43c0e199ea312c49a17780f259d066504f2a15a871c846f79df16"
+                           },
+                           {
+                               "path":  "client/src/test/java/vn/edu/toeic/client/ScopeLookupTest.java",
+                               "sha256":  "3b3f59d969dbf27664e8444d3eba3a0c0126441b45616e37695516ffe137f34e"
+                           },
+                           {
+                               "path":  "protocol/pom.xml",
+                               "sha256":  "f693fb01ce9f2fc86df58800a08d981ceedd87100902a1ccbd6589019881f4c9"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/auth/LoginRequest.java",
+                               "sha256":  "a214622d2a68adbabd042d178db82164efc57b230f1832433567569cda2b29fc"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/auth/LoginResponse.java",
+                               "sha256":  "5d01d3dfb2d11df5fd0ab87091ba391099548453b58466f4b34a337820cea71d"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/error/ApiErrorResponse.java",
+                               "sha256":  "52c93d1f441cbd649fdc460d787352b5051deb85459e6dd0c15a378d86a489d6"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/ErrorCode.java",
+                               "sha256":  "ad83db9ad7a8712a76a1f8fdf06cb4f07d4aab26cad4a28e8e4ec349cd31c824"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/AttemptCreationDto.java",
+                               "sha256":  "9c7c389f7c76d7226577d2ad50433b578e366e097c42645e27747b17c3fbdeb5"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/AutosaveAnswersRequest.java",
+                               "sha256":  "1d57cb3489468a968cb335ce228038dc4a2aad855dc90bc5854ab6b32b0c0d54"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/AutosaveAnswersResponse.java",
+                               "sha256":  "e0aa7e2dd94c74dcb045f792416903a3c8f9d2a40ffbecff1c0a9d3a84dfb11c"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/CandidateAttemptStatusResponse.java",
+                               "sha256":  "2d3e52a1709514ba56093f51aa8daefb2a6d0726d1089b4798ef80a0f2ad7a94"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/CandidateExamDto.java",
+                               "sha256":  "9b7e9f6b9211e0fc78b1c827ca9599f180c80b470e91c7f34a250ad9496eb3c5"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/CandidateOptionDto.java",
+                               "sha256":  "cdd797914438f7f86234cd4dd98eba1b1d001ee4da80d3b6628eeca6c1e7b34d"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/CandidateQuestionDto.java",
+                               "sha256":  "5747483880fc6aa9d4f7087eedefb4d163200fd022d20928e4da5b7409b3ba43"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/CreateSessionRequest.java",
+                               "sha256":  "6a2d53d932d31f85139bd1ab8739dff71c1c54e88c0eec8752c7e1e0347bc3a1"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/CreateSessionResponse.java",
+                               "sha256":  "c16a4255b48df8a53d0c8def531677c3ad0e0550d193265c336c4e85363e6638"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/ExamImportRequest.java",
+                               "sha256":  "9427f60abbf09fefb502e4abaf6c23ec6affc0b1820a1dad9ad7394aff916c2d"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/ExamImportResponse.java",
+                               "sha256":  "5c3ec0fb1636c8a3fcba48e2a19910e7c622b24c84306fc38335cab056a6b600"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/ExamOptionImportDto.java",
+                               "sha256":  "d2de0542e14e451979fcb874f13a488a937d284c06899cb8f5ebf9bbddad32b9"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/ExamQuestionImportDto.java",
+                               "sha256":  "bb8ca6997170fac991fc9f8a4df80b998bb96c9c82121954f18271ceb02aa851"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/SubmitExamRequest.java",
+                               "sha256":  "464234202f61e0db8c92f35e4ca767a05c30dd2cf88a53c3ee4e98e5bc7f7dcd"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/SubmitExamResponse.java",
+                               "sha256":  "df13922ee32c56585842d61b742e4dbaae47e8a6498262589fb249b84319de3a"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/TakeoverWriterRequest.java",
+                               "sha256":  "e5c9877f0c4094df84bf03ff380458dc1ccb23ed8ae2c4cd9f304ac46e26d584"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/TakeoverWriterResponse.java",
+                               "sha256":  "3bce8e765ce4b6a77cd274f58d7f171648c24e244a9043f3c3b920092d737403"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/measurement/MessageIdentity.java",
+                               "sha256":  "23037d01f46c5a2c4115b80fe7ff2783af95b3ec14bde75dae9dfb9879c235b3"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/measurement/MessageMeasurements.java",
+                               "sha256":  "7aad0f955be4f40dd29801ae2e491108ff9ba27cc7c9fc0ac7724bbd6871e95c"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/FullSnapshotPayload.java",
+                               "sha256":  "ead98b4c26e8c040e7c3d42665cbfd152b4ec65cbf20459de9181d737f6d5199"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/MonitoringStateView.java",
+                               "sha256":  "5fe942d341787d06cce18ef4ed82d7c6dce0532840dc26cfa964d3ad3d4a0886"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/Protocol.java",
+                               "sha256":  "078a444625056e29836f667a7795b0a117c8f89a8666b230c3436bdb7922fe9b"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/Role.java",
+                               "sha256":  "a48aae3625ff5c6e06109a3bf97cd7f92a65fb7592a38d32bf7812b90b738d93"
+                           },
+                           {
+                               "path":  "protocol/src/main/java/vn/edu/toeic/protocol/ws/MessageEnvelope.java",
+                               "sha256":  "4c772dc0821724b7aaa7f52e4b34776df8035f438acd50e4720877c1eb794897"
+                           },
+                           {
+                               "path":  "protocol/src/test/java/vn/edu/toeic/protocol/measurement/MessageMeasurementsTest.java",
+                               "sha256":  "6b392bbb603dccc8a87d3e771c5f4d2316f9618aa76bcc95651f4d28ac899f05"
+                           },
+                           {
+                               "path":  "protocol/src/test/java/vn/edu/toeic/protocol/monitoring/FullSnapshotPayloadTest.java",
+                               "sha256":  "8f2b4ce0691f5c681cbf178a42adef43458b15d6d8d1a1cabdc6813688971f75"
+                           },
+                           {
+                               "path":  "scripts/demo-c3.ps1",
+                               "sha256":  "4bd525eb133d8bda168fac42e5f202fbd69fbb251b0b31764a850db43b53f14d"
+                           },
+                           {
+                               "path":  "scripts/reset-db.ps1",
+                               "sha256":  "11fde9c7a0315b8fdcf34340fe751c6beeb99dc9dbf8ed2ee0d36327ff996792"
+                           },
+                           {
+                               "path":  "scripts/smoke-a2.ps1",
+                               "sha256":  "434528db168905de26f33cd73151b5fa80d2540f348285ff9e631258cd54fa28"
+                           },
+                           {
+                               "path":  "scripts/smoke-a3.ps1",
+                               "sha256":  "d202f0ae7c2557f36dc91e60db47b62d3e8a3bcc6ad6913e57af1c41f43ce415"
+                           },
+                           {
+                               "path":  "scripts/smoke-a4.ps1",
+                               "sha256":  "8b6c46447b9df4a40f99f62a68f5e7f1843dd813740985ace51e4f846d773501"
+                           },
+                           {
+                               "path":  "scripts/smoke-b2.ps1",
+                               "sha256":  "992ef392ac8b18669a4a0f0ef107a98632bd2f13f54174f9e057a06f5b0285b4"
+                           },
+                           {
+                               "path":  "scripts/smoke-b3.ps1",
+                               "sha256":  "089b2ca3daed2e2b4958f38abe6e2167258671f747621073e780437771fb2e6b"
+                           },
+                           {
+                               "path":  "scripts/smoke-c2.ps1",
+                               "sha256":  "e12df8fdcf75773a722dbec9927f054433849c78b1f80516c31bf479dd60a311"
+                           },
+                           {
+                               "path":  "scripts/smoke-c3.ps1",
+                               "sha256":  "5934be774658be35b6db8f640a997ef4322e57e5d94467cbb4e5277f07291fb1"
+                           },
+                           {
+                               "path":  "scripts/smoke-c4.ps1",
+                               "sha256":  "66a5e055dc5a22c80cea1a79b10ae6dd74dfa88e281644446a37ff09cdd5a21c"
+                           },
+                           {
+                               "path":  "scripts/smoke-t2a1.ps1",
+                               "sha256":  "235bd6d88092665d0813a4d89815d6b6312883ad5d36762dc29864cafeb80fdb"
+                           },
+                           {
+                               "path":  "scripts/smoke-t2a2.ps1",
+                               "sha256":  "5e11dbd7a2ac27d2afb74dbc5bf9c5cb90e3e2a1ef52ebfb3821d6db678795fe"
+                           },
+                           {
+                               "path":  "scripts/smoke-t2a3.ps1",
+                               "sha256":  "08ac5d2a528bb113c94c3d637b45204de8c26a8c2b592399c4c837f5e495b68d"
+                           },
+                           {
+                               "path":  "scripts/smoke-t2a4.ps1",
+                               "sha256":  "00f7539eb95fd55a340539be5096c7d90a6216095d79b0f83fec1ac15c7ea6c8"
+                           },
+                           {
+                               "path":  "scripts/smoke-t2c1.ps1",
+                               "sha256":  "d2f2544723d125c5f4a50d3cada2ccc178ac71a6f0d14657cc016d94406ae202"
+                           },
+                           {
+                               "path":  "scripts/summarize-monitoring.py",
+                               "sha256":  "3eeed5885cf84dd34913ef55d5c5fb3c557be04f16a1aa07cf77ee3b7de90c86"
+                           },
+                           {
+                               "path":  "scripts/test_summarize_monitoring.py",
+                               "sha256":  "c30d638fa0e38663c502d40ea442000fecc824d4983a8aabe7b07abb9167b78d"
+                           },
+                           {
+                               "path":  "server/pom.xml",
+                               "sha256":  "b401abfc2cfadd3de7f8322c5292d0a313cda0981ca81498fd2b0468bc600228"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/AccessDeniedException.java",
+                               "sha256":  "202d7c0227755aef1bac826ef63de88798fa81fc405309e281f60369b4c2d5ce"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/ApiExceptionHandler.java",
+                               "sha256":  "9c73e5baf0632daf0f7679523db97bb3f70d3f5fb301e1d156424020602eee4e"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/AttemptScopeAuthorizer.java",
+                               "sha256":  "b3a8524c73a1d3d32bea43c92a0204870d77cd79e016cf4b597ce26df90a1b83"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/AuthConfiguration.java",
+                               "sha256":  "b85a5e000ab705d1ec20947ee7e32c0ecf6fb11ad3f67aae64e59d42e2134477"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/AuthController.java",
+                               "sha256":  "4121791d56d20e4a615657256132335babff50f06f896c43843eed8a71a5c4c6"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/AuthenticatedUser.java",
+                               "sha256":  "f7bee62bc73e2fa23978a82a66df5df938fd62f8b60845583da1f05c25a24928"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/AuthorizationService.java",
+                               "sha256":  "1a1c18799ba967a3290569033bbb3c881d9ba96c596d823fd2bf9fae38450cb5"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/AuthService.java",
+                               "sha256":  "6ee47c779d808e9922fbde486e4a48ee97314896a9193d6aa39f9a34b0120b27"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/BearerAuthenticationFilter.java",
+                               "sha256":  "f1d9a47ddb1b6684e05fc268d4680250e34706a4262084f0a35eac795c5bcdb8"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/InvalidCredentialsException.java",
+                               "sha256":  "bb31534904cae389a10553e204ef1ac936de950c1c0939aeb142021753eb669d"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/InvalidLoginRequestException.java",
+                               "sha256":  "f4f0829a3dcf7657c2abb790155d00ba7333a51863393d3b1f9de39bae9dd737"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/JdbcLoginSessionStore.java",
+                               "sha256":  "cc8a129fbad6631d6c33ab19e5f7456126f591fa72e587b37070061263011688"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/JdbcUserAccountStore.java",
+                               "sha256":  "1b5709bce4c2b4319b4dddb166ae2af31a9d2e4a48197b3547866a2b86095135"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/LoginSessionStore.java",
+                               "sha256":  "92a9e1d64a5eaaac0df6c37d6fcd52b3231fe641d957de51303719e92c483509"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/SeedDataInitializer.java",
+                               "sha256":  "d6f07302df283147f7a4322d26c282d9795cd0a669f57f74ebc3855794edbca3"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/SessionAuthenticationService.java",
+                               "sha256":  "0ff56d6b6b7e25a8840617f3ac4b6f4f6599ae90bef1bcaf5d08c710f9e4bd62"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/SessionController.java",
+                               "sha256":  "d9051fe4013c43556eb8c9a8c14d9754f4aacb52cfed0ed7231667b030bf4cc1"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/StoredSession.java",
+                               "sha256":  "79215ab5a668d4e96cf3b96c1eb81dc9c702827eff6483a524d43579f5737c0a"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/TokenHash.java",
+                               "sha256":  "918fe3a95da883e36e1744a3189ce6e0369b2e8527d94be05333f47579058bac"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/UserAccount.java",
+                               "sha256":  "d955773879c9925e9ea175871a73cb68c006573fdf500f78107721737181ed46"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/auth/UserAccountStore.java",
+                               "sha256":  "cfcc1651b239221ce0a9afef5c909c13c67fc9b531b1eee13da9eb01a2c9f01c"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/exam/ExamApiException.java",
+                               "sha256":  "adc57c8a6c05214abefb1442e932c8dcc5b8b6d7a93340f4f142fb4dde9cde9c"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/exam/ExamController.java",
+                               "sha256":  "931b40f35fc2f3d781409caf7bffed57e3697b7747c6218497321543335b6597"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/exam/ExamService.java",
+                               "sha256":  "e1e3efb6a9fe7e041f07ba66e0c0b07fa5d53bed6ba21e42aa4c4e9574b2927d"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/exam/ExamTimeoutService.java",
+                               "sha256":  "390cc3ee006313cd67538b6c1667ebd58c1552344fd40f4089a60d9b88d81ed3"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/exam/ExamValidationService.java",
+                               "sha256":  "aabd59eb470403334d8d283770a50df4c40d14cef0681180b9a1c785ca58ccd9"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/exam/InvalidExamException.java",
+                               "sha256":  "39e6c347c255d0b44fbb468f9a0997e01cf958a5b7918895a312aa9993d97f1b"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/EventConflictException.java",
+                               "sha256":  "176e6c3c563e1754c7334eb9ba6e4afdaeaca09d4ddf6575b6dd2385750d92d2"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/FullSnapshotReducer.java",
+                               "sha256":  "7fdb7982712177ce9cd6d17a29c0153de9bbc1fbd9e3adac3701ee643c2da353"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/JdbcAttemptScopeStore.java",
+                               "sha256":  "a17463ba7b6859ad8bbe0cb57b60c3b0da9c45ce2fe4af73194280c867515137"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/JdbcPresenceStore.java",
+                               "sha256":  "834da924f557a4d2d22d66ac897af432e6a690e9d195327ab7c3b5f8e9b88f2c"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringEventService.java",
+                               "sha256":  "80673813c934487a985945507074c77f6406731dbe92f22066b90037013b708f"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringGap.java",
+                               "sha256":  "07c46b105cd0bae57f672a09db8106f9e640f896638a2a364e735e175c070eea"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringGapService.java",
+                               "sha256":  "a4e5c1d5dfe3c006cea568f2f94181375138ca394f1afa19032a597cda030079"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringPresenceController.java",
+                               "sha256":  "c0cc8e7a3b3a77fe57cc4ef9cbc22f89804facdfa2e8b2c27fc565304c3c5ca4"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringPresenceService.java",
+                               "sha256":  "ac8835a46bccf76f1275fe044a606b54dc7881a49080401ba4181cc77564842b"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringStateController.java",
+                               "sha256":  "6ec89fdbe2b2b51ea2ea41df40f53dfb2e4ce922d9ebdbd6aeda5f732c4a5b62"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringStateMaintenance.java",
+                               "sha256":  "df4d405a2dc2d1a4f9b2ee6f2f6676cd6608a89c1283dc3c9a531e8a565aa017"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringStateService.java",
+                               "sha256":  "aa118fceeef8942cf284478200c2007a3f7ff12ba3cb6cc74edf322b8801f9f1"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringTimelineController.java",
+                               "sha256":  "b3e006cf886d43b87730771765b7c182319d1759d7b30e4c408e269913d50ca1"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/PresenceSnapshot.java",
+                               "sha256":  "e842509b55a7a8aefe2a7c3933f8bd3b4b5f591175f40ad68529825df95113cf"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/PresenceStore.java",
+                               "sha256":  "8f76ff8ac17a263f94300560c1c52b7444752b4e260e0eff2b01481b9707f374"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/ProcessEvent.java",
+                               "sha256":  "935f4936f76177749c8a19b4c19b23d3e854a52fdb54613b71b4f4053c77c0c8"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/StateRejectedException.java",
+                               "sha256":  "2df0be50dbab6daed67c41f8137922f9f6cd6807541d064a28516049a003dff2"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeHandshakeInterceptor.java",
+                               "sha256":  "8645c5a834387c56e6573f3224d0b88d0b820b9ead2b16b39e0451f54f438efa"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeSessionRegistry.java",
+                               "sha256":  "4b7b8e9c9ff48b76c21b5332edfc815986d7eff8bb3b92373acd7bd255c39a15"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeWebSocketConfiguration.java",
+                               "sha256":  "3a21bb900d0056ede48817d425c9defd411b874f6afce917e27cb5de9185749a"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeWebSocketHandler.java",
+                               "sha256":  "04f94ee85a24fd7b61d0bfa8b7740a3fcda14750eed90bd29564a37afc340af0"
+                           },
+                           {
+                               "path":  "server/src/main/java/vn/edu/toeic/server/ToeicServerApplication.java",
+                               "sha256":  "b7c769016d8504c9d2de45fe18139973d09fc88b2a6f86e942352b4480003145"
+                           },
+                           {
+                               "path":  "server/src/main/resources/application.properties",
+                               "sha256":  "1440d2126d649ea24d673e16288d44ef1cc7cd3b3b90b816273473cabb31bf2a"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/auth/AuthenticatedNetworkTest.java",
+                               "sha256":  "cef767cb14e2d4b12a32a258fd0891c051a40dcbc1309b45ae88b1c8dcf94fda"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/auth/AuthServiceTest.java",
+                               "sha256":  "280535a719590b6e989826ab38e866a2c10e7dbc2cdccf12a33df9a6e9cf51c8"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/auth/ConcurrentRealtimeSendTest.java",
+                               "sha256":  "c954b1ba603eb9978e0864577f83520dfef1714c66d7971d7741b06394f97d1b"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/auth/PostgresWebSocketSmoke.java",
+                               "sha256":  "9e1fbe09175ccb9f29d08d6d725def120413db95a20cfc08a2cc4f0546af9a2f"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/auth/RealtimeMeasurementTest.java",
+                               "sha256":  "3f8fc327380dd253ec25525d4e89592c1ad93f0004285e91e6bc26665bfc4437"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/auth/SessionAuthenticationTest.java",
+                               "sha256":  "9ac4e18fbae148d8b27446250f1e14277b34743528ab7f0b421025cf3d7d7e21"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/exam/ExamAutosavePostgresSmoke.java",
+                               "sha256":  "cacc51c29313b4c39ab990ae8c7a69c18b7011ad66d04264fe6ff65da74ce4f6"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/exam/ExamConcurrencyPostgresSmoke.java",
+                               "sha256":  "7643d3ddd4760a814de2748bc00b4d3c248302edad68001a67306e5e8ff4f3d6"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/exam/ExamControllerTest.java",
+                               "sha256":  "026cc0708e61cf2b02a82381d7be8493a5b2a4f561ca07858f01801e1210a789"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/exam/ExamPostgresSmoke.java",
+                               "sha256":  "724e949001ccb028535ebd118b121723bc3ad9d6c4f27c81be4ed583a2a2c416"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/exam/ExamSubmitPostgresSmoke.java",
+                               "sha256":  "1b822f7af6a56db2c2b5faf61bfb65132409089dafd55b4c0b3fbed44eb979f1"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/exam/ExamValidationTest.java",
+                               "sha256":  "2cede8e91d3d7bc99ee225f62eefafe509e8102e98bc7f28e033c03ce0e2a38f"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/monitoring/FullSnapshotReducerTest.java",
+                               "sha256":  "b72b76bedb1e3d2a28c774403ced22e726d557ae3c71caf6ada64b5647cf5db3"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/monitoring/FullSnapshotSmoke.java",
+                               "sha256":  "561371152986fe1bd80f214affd8fee0aa8332259c21a4a5c35b4455c04c3672"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringDeliverySmoke.java",
+                               "sha256":  "638bfe95ae9faad2ec4ef6f8ac2fd39d07d420d1d79e30b6df74e4e5223e592d"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringGapTest.java",
+                               "sha256":  "43d2737b304eddfea56fc4aacc5985a782dfb8b7a3f60e25f3858a27243944f3"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringMeasurementSmoke.java",
+                               "sha256":  "27e028fbe6f7af68bc65c454182e6773df364619b01c2c84df3c61e88c778ce0"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringPostgresSmoke.java",
+                               "sha256":  "4d27ed06c250173dace91e181d8b30f4b10bffff5b77922e2f8c13a67eb1ee0b"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringPresenceServiceTest.java",
+                               "sha256":  "6b6e1079bb9524a21376a8760bac6269cd10b1ba0f06d077f86e193e1388d595"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringPresenceSmoke.java",
+                               "sha256":  "aab5501cea7039b05e5605c9fb4842257f9a82208d01c5a29754833d5d38a055"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringStateMaintenanceTest.java",
+                               "sha256":  "cdc18a017ac68498712c9017f5480733d2f647d225bb14082b092584acbf9752"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringStateServiceTest.java",
+                               "sha256":  "e70fd9be5dc4f1e90be0edd7da925b43e9d9b3f8727d0ec07319b4620cccb1f8"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/monitoring/ProcessEventTest.java",
+                               "sha256":  "2ce7fcc5c4bc166d616c9d1467b2619056f6138534c7373f1fa1cc1452ecbcf8"
+                           },
+                           {
+                               "path":  "server/src/test/java/vn/edu/toeic/server/monitoring/ProctorDashboardSmoke.java",
+                               "sha256":  "7b6291e8caae86542e93960d38ada9bd3b32be85ad346a69bb96cded94f13a34"
+                           }
+                       ]
+}

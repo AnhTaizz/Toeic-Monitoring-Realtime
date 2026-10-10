@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 10/10/2026 — T2-C1 CODE_COMPLETE trong nhánh task: full snapshot RAM, epoch/sequence/dedup/ACK, HTTP/push và tab process hiện tại. Java408/Python10, REAL Edge+PG/HTTP/WS và proctor JavaFX component PASS. Human A/B review, GUI candidate toàn luồng và LAN NOT RUN. A vẫn CODE_COMPLETE T2-A1..T2-A5 theo evidence hiện có.
+Cập nhật lần cuối: 10/10/2026 — PR#18 sửa lỗi bảo trì C1 chưa tự chạy tại30fa6d9. Code e07bb7e có worker monitoring riêng, Java413/package PASS; REAL Spring/PG/WS tự push STALE/TTL khi socket+heartbeat còn sống và dọn shutdown PASS. Full Edge/proctor GUI component và A4/C3/C4/B3 hồi quy PASS. Human A/B review tổng thể, GUI candidate toàn luồng và LAN NOT RUN. A giữ trạng thái theo evidence cũ; scheduler hết giờ bài thi cần A kiểm riêng.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
@@ -15,11 +15,12 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
 | B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; chuẩn bị Chặng 2 | `feat/t1-b3-proctor-dashboard` |
-| C | _chưa gán_ | T2-C1 code-complete, bàn giao PR; dừng tại task | Full/epoch/reducer/ACK/state dashboard; Java408/Python10 và REAL Edge/GUI component PASS | A review RAM/auth/hooks, B review transport/dashboard; GUI candidate/LAN NOT RUN; T2-C2 chưa làm | `feat/t2-c1-monitoring-full-snapshot` |
+| C | _chưa gán_ | T2-C1 sửa scheduling sau review người dùng; bàn giao PR#18 | e07bb7e: worker riêng + shutdown, Java413, REAL autonomous STALE/TTL/capacity và full Edge/GUI component PASS | A/B review bản sửa; GUI candidate/LAN NOT RUN; chưa merge hoặc chuyển C2 | `feat/t2-c1-monitoring-full-snapshot` |
 
 ## Đang bị chặn
 
 - T2-C1 human A/B review: **NOT RUN**, không ngăn bàn giao code/test/PR. Full state chỉ RAM một JVM (QD-12); chưa durability/multi-server/delta. MT01 giữ PARTIAL: proctor component có Edge thật và ảnh, chưa candidate GUI toàn app/T2-C2/LAN. Evidence: `evidence/t2-c1/2026-10-10-verification.md`.
+- Review người dùng tìm ra annotation Scheduled chưa được kích hoạt. C1 đã sửa bằng worker riêng, không bật scheduling toàn app hoặc sửa ExamTimeoutService; issue scheduler bài thi chuyển A xem riêng. [Evidence sửa C1](../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md). PR#18 giữ mở, chưa merge.
 
 - C4 human B review: **NOT RUN**; A/B cần xem RealtimeClient và handler/registry hooks. Đã kiểm BYTE/fragment/retry/concurrent-decorator/failure/cleanup và B3 regression. Log COMPLETE chỉ cho file đã cung cấp; chưa đo CPU/memory/latency/miss-rate hoặc lợi ích delta. ProcessHandle scan REAL riêng, event/overflow MOCK; WMI/ETW chỉ khảo sát. Không tự làm B4/chặng2/E1/E2.
 
