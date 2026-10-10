@@ -27,8 +27,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import vn.edu.toeic.client.dashboard.MonitoringJson;
 import java.util.function.Consumer;
+import java.util.function.BooleanSupplier;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 import vn.edu.toeic.protocol.ErrorCode;
+import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
+import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
+import java.nio.charset.StandardCharsets;
 import vn.edu.toeic.protocol.measurement.MessageMeasurements;
 import vn.edu.toeic.protocol.measurement.MessageMeasurements.Endpoint;
 
@@ -213,15 +217,28 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     }
 
     @Override public synchronized CompletableFuture<Void> send(MessageEnvelope<JsonObject> message) {
+        return sendGuarded(message,() -> true);
+    }
+    private CompletableFuture<Void> sendGuarded(MessageEnvelope<JsonObject> message,BooleanSupplier stillCurrent) {
+        if(!stillCurrent.getAsBoolean()) return failed("Phiên giám sát đã thay đổi");
         if (closed || state != ConnectionState.CONNECTED) return failed("Mất kết nối tới server");
         if (writes.size() >= settings.maxPendingAcks()) return failed("Đã đạt giới hạn write đang chờ");
         final MessageEnvelope<JsonObject> copy;
         final String serialized;
         try {
             validateEnvelope(message);
-            if (!("HEARTBEAT".equals(message.type()) || "PROCESS_OBSERVED".equals(message.type()) || "MONITORING_GAP".equals(message.type()))
+            if (!(Set.of("HEARTBEAT","PROCESS_OBSERVED","MONITORING_GAP","MONITORING_SYNC_OPEN","MONITORING_FULL","MONITORING_SYNC_CLOSE").contains(message.type()))
                     || !message.messageId().equals(message.requestId())) throw new IllegalArgumentException();
-            if ("HEARTBEAT".equals(message.type())) {
+            if ("MONITORING_FULL".equals(message.type())) {
+                if (message.attemptId() == null) throw new IllegalArgumentException();
+                FullSnapshotPayload.parse(message.payload());
+            } else if ("MONITORING_SYNC_OPEN".equals(message.type()) || "MONITORING_SYNC_CLOSE".equals(message.type())) {
+                if (message.attemptId() == null) throw new IllegalArgumentException();
+                FullSnapshotPayload.fields(message.payload(),message.type().equals("MONITORING_SYNC_OPEN")
+                        ? Set.of("collectorSessionId") : Set.of("collectorSessionId","syncEpoch"));
+                FullSnapshotPayload.id(requiredString(message.payload(),"collectorSessionId"));
+                if (message.type().equals("MONITORING_SYNC_CLOSE")) FullSnapshotPayload.id(requiredString(message.payload(),"syncEpoch"));
+            } else if ("HEARTBEAT".equals(message.type())) {
                 optionalIdentifier(message.payload(), "collectorSessionId");
                 Instant.parse(requiredString(message.payload(), "sentAt"));
             } else if ("MONITORING_GAP".equals(message.type())) {
@@ -248,7 +265,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
             copy = new MessageEnvelope<>(message.protocolVersion(), message.type(), message.messageId(),
                     message.requestId(), message.attemptId(), message.traceId(), message.payload().deepCopy());
             serialized = gson.toJson(copy);
-            if (serialized.length() > settings.maxMessageChars()) throw new IllegalArgumentException();
+            if (serialized.length() > settings.maxMessageChars() || serialized.getBytes(StandardCharsets.UTF_8).length > settings.maxMessageChars()) throw new IllegalArgumentException();
         } catch (RuntimeException ignored) { return failed("Message realtime không hợp lệ hoặc chưa được hỗ trợ"); }
         { // HEARTBEAT và event đều phải chờ ACK thật; không coi socket write là ACK.
             MessageEnvelope<JsonObject> previous = pendingAcks.get(copy.requestId());
@@ -258,28 +275,38 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                     && pendingAcks.values().stream().filter(p -> !"HEARTBEAT".equals(p.type())).count() >= settings.maxPendingAcks() - 1)
                 return failed("Dành một ACK slot cho heartbeat");
             pendingAcks.put(copy.requestId(), copy);
-            if ("HEARTBEAT".equals(copy.type())) heartbeatDeadlines.put(copy.requestId(), System.nanoTime() + settings.heartbeat().multipliedBy(3).toNanos());
+            if ("HEARTBEAT".equals(copy.type()) || "MONITORING_SYNC_CLOSE".equals(copy.type())) heartbeatDeadlines.put(copy.requestId(), System.nanoTime() + settings.heartbeat().multipliedBy(3).toNanos());
         }
         CompletableFuture<Void> result = new CompletableFuture<>();
         writes.add(result);
         long current = generation;
         WebSocket target = socket;
-        dispatch(() -> write(current, target, serialized, result));
+        dispatch(() -> write(current, target, serialized, copy.requestId(),stillCurrent,result));
         return result;
     }
+    @Override public synchronized long connectionGeneration() { return generation; }
+    @Override public synchronized CompletableFuture<Void> sendForGeneration(MessageEnvelope<JsonObject> message,long expectedGeneration) {
+        if (generation!=expectedGeneration) return failed("Socket đã thay đổi");
+        return send(message);
+    }
+    @Override public synchronized CompletableFuture<Void> sendForGeneration(MessageEnvelope<JsonObject> message,long expectedGeneration,BooleanSupplier stillCurrent) {
+        if(generation!=expectedGeneration) return failed("Socket đã thay đổi");
+        return sendGuarded(message,stillCurrent);
+    }
 
-    private synchronized void write(long current, WebSocket target, String serialized,
+    private synchronized void write(long current, WebSocket target, String serialized,String requestId,BooleanSupplier stillCurrent,
                                     CompletableFuture<Void> result) {
-        if (closed || current != generation || state != ConnectionState.CONNECTED) {
+        if (closed || current != generation || state != ConnectionState.CONNECTED || !stillCurrent.getAsBoolean()) {
             result.completeExceptionally(new IllegalStateException("Mất kết nối tới server"));
             writes.remove(result);
+            pendingAcks.remove(requestId);
             return;
         }
         // java.net.http disallows overlapping text sends. Chain writes instead
         // of blocking any thread; this is not C's event retry queue.
         writeTail = writeTail.handle((unused, error) -> null).thenCompose(unused -> {
             synchronized (RealtimeClient.this) {
-                if (closed || current != generation) return failed("Mất kết nối tới server");
+                if (closed || current != generation || !stillCurrent.getAsBoolean()) return failed("Phiên giám sát đã thay đổi");
                 MessageMeasurements.Tx measured=measurements.attempt(serialized);
                 try {
                     return target.sendText(serialized,true).whenComplete((ws,error) -> {
@@ -294,7 +321,8 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                 if (error == null) result.complete(null);
                 else {
                     result.completeExceptionally(new IllegalStateException("Không gửi được message realtime"));
-                    dispatch(() -> connectionLost(current, error));
+                    pendingAcks.remove(requestId);
+                    if(stillCurrent.getAsBoolean()) dispatch(() -> connectionLost(current, error));
                 }
             }
         });
@@ -424,6 +452,11 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                         || !request.traceId().equals(message.traceId())
                         || !request.type().equals(requiredString(message.payload(), "acknowledgedType"))
                         || !"ACCEPTED".equals(requiredString(message.payload(), "status"))) throw new IllegalArgumentException();
+                if (request.type().startsWith("MONITORING_SYNC_") || request.type().equals("MONITORING_FULL")) {
+                    FullSnapshotPayload.id(requiredString(message.payload(),"syncEpoch"));
+                    if (!request.type().equals("MONITORING_SYNC_OPEN") && !requiredString(request.payload(),"syncEpoch").equals(requiredString(message.payload(),"syncEpoch"))) throw new IllegalArgumentException();
+                    if (request.type().equals("MONITORING_FULL") && FullSnapshotPayload.number(request.payload(),"sequence") != FullSnapshotPayload.number(message.payload(),"sequence")) throw new IllegalArgumentException();
+                }
                 pendingAcks.remove(message.requestId());
                 heartbeatDeadlines.remove(message.requestId());
                 measurements.businessAck(text);
@@ -444,6 +477,9 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                     connectionLost(current, new AuthenticationRejectedException());
                     return;
                 }
+            } else if ("MONITOR_STATE".equals(message.type())) {
+                validateScope(message.attemptId());
+                if (!MonitoringStateView.parse(message.payload()).attemptId().equals(message.attemptId())) throw new IllegalArgumentException();
             } else if ("MONITOR_WARNING".equals(message.type()) || "MONITOR_PRESENCE".equals(message.type())) {
                 validateScope(message.attemptId());
                 MonitoringJson.push(message); // Unsolicited push never consumes pending ACK correlation.

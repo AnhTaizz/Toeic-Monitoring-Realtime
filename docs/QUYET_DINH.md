@@ -94,3 +94,13 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Recorder opt-in mặc định tắt; queue1024/drop-new, counter độc lập, JSONL writer daemon/flush2000ms. I/O lỗi không thay delivery; thiếu FINAL/drop/mismatch phải báo INCOMPLETE. Không disk-queue event, không thêm telemetry framework.
 - Lý do: định nghĩa byte tái kiểm từ đúng chuỗi, không đếm đôi retry/fragment/outcome, không chặn FX/WS bằng file I/O. Chưa đo overhead hay full/delta; WMI chỉ khảo sát nguồn chính thức, giữ ProcessHandle polling hiện có.
 - Kiểm chứng và giới hạn: [schema](MONITORING_MEASUREMENTS.md), [survey](PROCESS_MONITORING_SURVEY.md), [evidence C4](../evidence/t1-c4/2026-10-05-verification.md); không tự đổi kế hoạch01–03 hoặc TRACKER.
+
+## QD-12 · Full snapshot v1 có trạng thái RAM và quyền theo epoch/socket
+
+- Ngày: 10/10/2026 · Vai C theo T2-C1 · Human A/B review: NOT RUN.
+- Chọn một store RAM trong một server JVM; ACK FULL xác nhận reducer đã nhận RAM, không xác nhận commit DB. Event/gap/interruption tiếp tục dùng storage hooks A và PostgreSQL hiện có. Không thêm hoặc sửa migration.
+- OPEN cấp UUID syncEpoch gắn attempt/user/collector/socket, UNSYNCED sequence0; full đầu bắt buộc1. Full mới thay toàn tập nên được phép nhảy sequence, full rỗng hợp lệ. Retry cùng nội dung trong cửa sổ64 ID ACK lại; khác nội dung CONFLICT; cũ/epoch hoặc socket sai STALE. Socket mở trước không giành lại epoch của socket mở sau. Giữ64 OPEN ID gần nhất để retry OPEN đã nghỉ không mở lại generation trên socket dùng chung.
+- Mỗi lần cập nhật tăng revision theo serverInstanceId, để B gộp HTTP/push qua reconnect không so sequence của hai epoch. Publish ngoài lock; auth/epoch/reducer cùng lock nhằm tránh hai request kiểm tra trên một state rồi ghi đè nhau. Client kiểm generation collector và socket ngay trước socket write; callback cũ cũng bị bỏ. Đóng collector không đóng WS dùng chung.
+- Giới hạn:128process/full, queue16 +1pendingfull, retry5; server4096attempt,64full ID/attempt, STALE6s và TTL5phút từ OPEN/full mới nhất. TTL bỏ state hiện tại, giữ lịch sử DB; restart mất RAM, phải OPEN/full1. Lỗi scan không gửi tập rỗng, quá giới hạn không cắt tập. Policy/identity theo QD-08/QD-09.
+- Lý do: đây là baseline kiểm tính đúng và điểm tích hợp tối thiểu; chưa có yêu cầu durability/full nhiều server, delta hoặc benchmark. Không suy ra máy sạch từ tập rỗng hay UNKNOWN.
+- Contract: [PROTOCOL](PROTOCOL.md#t2-c1--contract-full-snapshot-baseline-v1); bằng chứng và giới hạn: [T2-C1](../evidence/t2-c1/2026-10-10-verification.md).

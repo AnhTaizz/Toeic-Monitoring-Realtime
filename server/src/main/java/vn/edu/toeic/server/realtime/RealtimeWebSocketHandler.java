@@ -33,8 +33,13 @@ import vn.edu.toeic.server.monitoring.MonitoringGap;
 import vn.edu.toeic.server.monitoring.MonitoringGapService;
 import vn.edu.toeic.server.monitoring.MonitoringPresenceService;
 import vn.edu.toeic.server.monitoring.PresenceSnapshot;
+import vn.edu.toeic.server.monitoring.MonitoringStateService;
+import vn.edu.toeic.server.monitoring.StateRejectedException;
+import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.nio.charset.StandardCharsets;
 
-/** Authenticated transport; services own persistence/presence. No state reducer. */
+/** Authenticated transport; C owns RAM state, A owns persistence/presence hooks. */
 @Component
 public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
     private final SessionAuthenticationService authentication;
@@ -44,10 +49,12 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
     private final MonitoringEventService events;
     private final MonitoringGapService gaps;
     private final MonitoringPresenceService presence;
+    private final MonitoringStateService state;
     private final Gson gson = new GsonBuilder().setStrictness(Strictness.STRICT).serializeNulls().create();
-    public RealtimeWebSocketHandler(SessionAuthenticationService authentication, AuthorizationService authorization,
+    @Autowired public RealtimeWebSocketHandler(SessionAuthenticationService authentication, AuthorizationService authorization,
             @Value("${toeic.ws.max-message-bytes:65536}") int maxMessageBytes,
-            RealtimeSessionRegistry sessions, MonitoringEventService events, MonitoringGapService gaps, MonitoringPresenceService presence) {
+            RealtimeSessionRegistry sessions, MonitoringEventService events, MonitoringGapService gaps, MonitoringPresenceService presence,
+            MonitoringStateService state) {
         this.authentication = authentication;
         this.authorization = authorization;
         this.maxMessageBytes = maxMessageBytes;
@@ -55,6 +62,7 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
         this.events = events;
         this.gaps = gaps;
         this.presence = presence;
+        this.state = state;
     }
     @Override public void afterConnectionEstablished(WebSocketSession session) {
         session.setTextMessageSizeLimit(maxMessageBytes);
@@ -72,7 +80,7 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
             if (!(hash instanceof String tokenHash)) throw AccessDeniedException.unauthorized();
             AuthenticatedUser user = authentication.authenticateHash(tokenHash);
             session.getAttributes().put(AuthenticatedUser.ATTRIBUTE, user);
-            if (text.getPayloadLength() > maxMessageBytes) throw new IllegalArgumentException();
+            if (text.getPayload().getBytes(StandardCharsets.UTF_8).length > maxMessageBytes) throw new IllegalArgumentException();
             JsonObject body = gson.fromJson(text.getPayload(), JsonObject.class);
             String messageId = identifier(body, "messageId", true);
             traceId = identifier(body, "traceId", true);
@@ -84,8 +92,34 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
             String type = string(body, "type");
             attemptId = identifier(body, "attemptId", false);
             if ("PROCESS_OBSERVED".equals(type) || "MONITORING_GAP".equals(type)
+                    || type.startsWith("MONITORING_SYNC_") || "MONITORING_FULL".equals(type)
                     || ("HEARTBEAT".equals(type) && attemptId!=null)) authorization.requireRole(user, Role.CANDIDATE);
             if (attemptId != null) authorization.requireAttempt(user, attemptId);
+            if ("MONITORING_SYNC_OPEN".equals(type) || "MONITORING_FULL".equals(type) || "MONITORING_SYNC_CLOSE".equals(type)) {
+                if (attemptId == null) throw new IllegalArgumentException();
+                JsonObject payload = body.getAsJsonObject("payload");
+                MonitoringStateService.Accepted result;
+                Long acceptedSequence = null;
+                if ("MONITORING_FULL".equals(type)) {
+                    FullSnapshotPayload full = FullSnapshotPayload.parse(payload);
+                    result = state.full(user,attemptId,session.getId(),messageId,full);
+                    acceptedSequence = full.sequence();
+                } else {
+                    FullSnapshotPayload.fields(payload,"MONITORING_SYNC_OPEN".equals(type)
+                            ? Set.of("collectorSessionId") : Set.of("collectorSessionId","syncEpoch"));
+                    String collector = identifier(payload,"collectorSessionId",true);
+                    if ("MONITORING_SYNC_OPEN".equals(type)) result = state.open(user,attemptId,collector,session.getId(),
+                            (Long)session.getAttributes().get(RealtimeSessionRegistry.CONNECTION_ORDER_ATTRIBUTE),messageId);
+                    else result = state.end(user,attemptId,session.getId(),collector,identifier(payload,"syncEpoch",true));
+                }
+                JsonObject accepted = new JsonObject();
+                accepted.addProperty("status","ACCEPTED"); accepted.addProperty("acknowledgedType",type);
+                accepted.addProperty("syncEpoch",result.state().syncEpoch());
+                if (acceptedSequence != null) accepted.addProperty("sequence",acceptedSequence);
+                send(session,new MessageEnvelope<>(Protocol.VERSION,"ACK",UUID.randomUUID().toString(),requestId,attemptId,traceId,accepted));
+                if (result.changed()) state.publish(result.state());
+                return;
+            }
             if ("MONITORING_GAP".equals(type)) {
                 if (attemptId == null) throw new IllegalArgumentException();
                 gaps.store(user, attemptId, MonitoringGap.parse(body.getAsJsonObject("payload")));
@@ -120,6 +154,8 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
             send(session, new MessageEnvelope<>(Protocol.VERSION, "ACK", UUID.randomUUID().toString(), requestId,
                     attemptId, traceId, accepted));
             presence.publish(acceptedPresence,traceId);
+        } catch (StateRejectedException exception) {
+            sendError(session, exception.code(), exception.getMessage(), exception.code()==ErrorCode.RETRYABLE_SERVER_ERROR,requestId,attemptId,traceId);
         } catch (EventConflictException exception) {
             sendError(session, ErrorCode.CONFLICT, exception.getMessage(), false, requestId, attemptId, traceId);
         } catch (AccessDeniedException exception) {

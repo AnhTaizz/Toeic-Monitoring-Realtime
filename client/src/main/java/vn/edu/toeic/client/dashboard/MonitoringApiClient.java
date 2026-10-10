@@ -24,6 +24,7 @@ import vn.edu.toeic.client.LoginApiClient.ScopeView;
 import vn.edu.toeic.client.dashboard.MonitoringData.Event;
 import vn.edu.toeic.client.dashboard.MonitoringData.Interruption;
 import vn.edu.toeic.client.dashboard.MonitoringData.Roster;
+import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
 
 /** All HTTP/body/parser work is outside the FX thread. Credentials only in headers. */
 public final class MonitoringApiClient implements DashboardApi {
@@ -70,6 +71,13 @@ public final class MonitoringApiClient implements DashboardApi {
     }
     @Override public CompletableFuture<List<Event>> events(String attempt) { return get(attemptPath(attempt)+"/events",body -> MonitoringJson.events(body,attempt,maximum)); }
     @Override public CompletableFuture<List<Interruption>> interruptions(String attempt) { return get(attemptPath(attempt)+"/interruptions",body -> MonitoringJson.interruptions(body,attempt,maximum)); }
+    @Override public CompletableFuture<MonitoringStateView> state(String attempt) {
+        return get(attemptPath(attempt)+"/state",body -> {
+            MonitoringStateView value=MonitoringStateView.parse(body);
+            if (!attempt.equals(value.attemptId())) throw new IllegalArgumentException();
+            return value;
+        });
+    }
     @Override public void close() { token = null; http.shutdownNow(); worker.shutdownNow(); }
     /** Bounds body allocation before JSON parse, not just after receiving an oversized response. */
     private static final class LimitedBody implements HttpResponse.BodySubscriber<String> {

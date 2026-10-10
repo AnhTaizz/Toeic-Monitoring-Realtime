@@ -23,8 +23,9 @@ import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
 import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
+import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
 
-/** One state worker, one existing B2 socket, bounded push inbox and four HTTP requests at most.
+/** One state worker, one existing B2 socket, bounded push inbox and five HTTP requests at most.
  * Snapshot delivery is immutable; UI decides how to marshal it onto JavaFX.
  */
 public final class DashboardController implements AutoCloseable {
@@ -44,7 +45,8 @@ public final class DashboardController implements AutoCloseable {
     private volatile Snapshot latest;
     private long refreshGeneration, selectionGeneration, historyGeneration;
     private long eventGeneration;
-    private CompletableFuture<?> eventRequest, historyRequest;
+    private long stateGeneration;
+    private CompletableFuture<?> eventRequest, historyRequest,stateRequest;
     private boolean syncing, historyDirty, resyncRequested;
     private int reloadBudget=2;
     public DashboardController(Role role, DashboardApi api, MonitoringTransport transport, Consumer<Set<String>> applyScope,
@@ -137,6 +139,21 @@ public final class DashboardController implements AutoCloseable {
             publish();
         });
         loadHistory();
+        loadState();
+    }
+    private void loadState() {
+        String attempt=model.selected(); if(attempt==null) return;
+        long selection=selectionGeneration,refresh=refreshGeneration,current=epoch.get(),request=++stateGeneration;
+        if(stateRequest!=null) stateRequest.cancel(true);
+        model.beginState();
+        CompletableFuture<MonitoringStateView> future=api.state(attempt); stateRequest=future;
+        request(future,(state,failure) -> {
+            if(!selected(attempt,current,refresh,selection) || request!=stateGeneration) return;
+            if(failure!=null) { fail("state",attempt,failure); return; }
+            try { model.state(state,true); }
+            catch(RuntimeException invalid) { model.stateFailed("Trạng thái process mâu thuẫn. Hãy làm mới."); }
+            publish();
+        });
     }
     private boolean selected(String attempt,long connection,long refresh,long selection) {
         return current(connection,refresh) && selection==selectionGeneration && attempt.equals(model.selected()) && model.allowed(attempt);
@@ -168,7 +185,7 @@ public final class DashboardController implements AutoCloseable {
             if (code.equals("UNAUTHORIZED")) dispatch(this::expire);
             return;
         }
-        if (!message.type().equals("MONITOR_PRESENCE") && !message.type().equals("MONITOR_WARNING")) return;
+        if (!message.type().equals("MONITOR_PRESENCE") && !message.type().equals("MONITOR_WARNING") && !message.type().equals("MONITOR_STATE")) return;
         if (!inbox.offer(new Push(epoch.get(),message))) overflow.set(true);
         queuePump();
     }
@@ -180,14 +197,19 @@ public final class DashboardController implements AutoCloseable {
             Push push=inbox.poll(); if (push==null) break;
             if (push.epoch()!=epoch.get() || transport.connectionState()!=ConnectionState.CONNECTED) continue;
             try {
-                MonitoringJson.push(push.message());
-                if (push.message().type().equals("MONITOR_PRESENCE")) {
+                if (push.message().type().equals("MONITOR_STATE")) {
+                    MonitoringStateView state=MonitoringStateView.parse(push.message().payload());
+                    if(!state.attemptId().equals(push.message().attemptId())) throw new IllegalArgumentException();
+                    model.state(state,false);
+                } else if (push.message().type().equals("MONITOR_PRESENCE")) {
+                    MonitoringJson.push(push.message());
                     if (model.presence(MonitoringJson.presence(push.message().payload()))) {
                         if (model.snapshot().historyLoading()) historyDirty=true; else loadHistory();
                     }
-                } else model.warning(MonitoringJson.event(push.message().payload()));
+                } else { MonitoringJson.push(push.message()); model.warning(MonitoringJson.event(push.message().payload())); }
             } catch (RuntimeException ignored) {
-                if (push.message().type().equals("MONITOR_PRESENCE")) model.rosterFailed("Cập nhật trạng thái mâu thuẫn. Cần đối chiếu HTTP.");
+                if (push.message().type().equals("MONITOR_STATE")) model.stateFailed("Cập nhật process mâu thuẫn. Cần đối chiếu HTTP.");
+                else if (push.message().type().equals("MONITOR_PRESENCE")) model.rosterFailed("Cập nhật trạng thái mâu thuẫn. Cần đối chiếu HTTP.");
                 else model.eventsFailed("Cập nhật cảnh báo mâu thuẫn. Cần đối chiếu HTTP.");
                 reload=true;
             }
@@ -214,6 +236,7 @@ public final class DashboardController implements AutoCloseable {
         String text="Không tải được dữ liệu hợp lệ. Dữ liệu đang hiển thị là dữ liệu cũ; hãy làm mới.";
         if (part.equals("roster")) model.rosterFailed(text);
         else if (part.equals("events")) model.eventsFailed(text);
+        else if (part.equals("state")) model.stateFailed(text);
         else model.historyFailed(text);
         publish();
     }
@@ -223,10 +246,11 @@ public final class DashboardController implements AutoCloseable {
         try { sessionExpired.run(); } catch (RuntimeException ignored) { }
     }
     private void cancelDetails() {
-        eventGeneration++; historyGeneration++;
+        eventGeneration++; historyGeneration++; stateGeneration++;
         if (eventRequest!=null) eventRequest.cancel(true);
         if (historyRequest!=null) historyRequest.cancel(true);
-        eventRequest=historyRequest=null;
+        if (stateRequest!=null) stateRequest.cancel(true);
+        eventRequest=historyRequest=stateRequest=null;
     }
     private void cancelRequests() { cancelDetails(); for (CompletableFuture<?> request : Set.copyOf(pending)) request.cancel(true); pending.clear(); }
     private void unsubscribe() { try { messages.close(); } catch (Exception ignored) { } try { states.close(); } catch (Exception ignored) { } }

@@ -1,6 +1,6 @@
 # Protocol đang dùng
 
-**Trạng thái: v0 có login/Bearer; C3 nối collector → event/queue/retry → A3 DB/ACK/warning/timeline. A4 nối scoped heartbeat, presence/timeout/history, roster REST và MONITOR_PRESENCE. B3 đã consume trên dashboard giám thị, HTTP recovery và parser push. Overflow C3 giữ contract riêng; full/delta chưa có.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây.
+**Trạng thái: v0 có login/Bearer, C3 event/queue/retry, A4 heartbeat/presence/history và B3 dashboard. T2-C1 bổ sung OPEN/full/CLOSE, state RAM, HTTP/MONITOR_STATE và tab process hiện tại; delta chưa có.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây. Các mục chặng 1 bên dưới ghi phạm vi lịch sử tại thời điểm task đó; contract T2-C1 ở cuối là phần bổ sung hiện tại.
 
 Owner: C (monitoring, khung message chung), A (auth, ca thi, lưu/nộp). Người dùng: B.
 
@@ -147,9 +147,12 @@ Token chỉ trả trong JSON body của login. Request HTTP `/api/**` sau login 
 | `ACK` (event) | server → thí sinh | `status: ACCEPTED`, `acknowledgedType: PROCESS_OBSERVED` | Không | T1-A3 | Đã cài |
 | `MONITOR_WARNING` | server → giám thị được phân công | Timeline item v0 | Không | T1-A3/B3 | Server và dashboard đã cài |
 | `MONITOR_PRESENCE` | server → giám thị được phân công | PresenceSnapshot: identity/status/reason/revision/timestamps | Không | T1-A4/B3 | Server và dashboard đã cài |
-| _full snapshot_ | thí sinh → server | | Sau khi state được chấp nhận | T2-C1 | Chưa có |
+| `MONITORING_SYNC_OPEN` | thí sinh → server | collectorSessionId | ACK cấp syncEpoch | T2-C1 | Contract v1 trong nhánh tích hợp |
+| `MONITORING_FULL` | thí sinh → server | collectorSessionId, syncEpoch, sequence, policyVersion, processes | ACK sau nhận state RAM | T2-C1 | Contract v1 trong nhánh tích hợp |
+| `MONITORING_SYNC_CLOSE` | thí sinh → server | collectorSessionId, syncEpoch | ACK sau đánh dấu STALE | T2-C1 | Contract v1 trong nhánh tích hợp |
+| `MONITOR_STATE` | server → giám thị được phân công | trạng thái hiện tại có revision | Không | T2-C1 | Contract v1 trong nhánh tích hợp |
 | _delta_ | thí sinh → server | | | T3-C1, T3-C2 | Chưa có |
-| _yêu cầu resync / epoch mới_ | server → thí sinh | | | T2-C1, T3-C2 | Chưa có |
+| _yêu cầu resync delta_ | server → thí sinh | | | T3-C2 | Chưa có; T2-C1 cấp epoch qua ACK của OPEN |
 | _READY / start / interrupted (Listening)_ | hai chiều | | | T3-A2, T3-B2 | Chưa có |
 
 ## Mã lỗi
@@ -688,3 +691,15 @@ Cross-owner tối thiểu: B RealtimeClient, A RealtimeWebSocketHandler/Realtime
 
 
 
+
+## T2-C1 · Contract full snapshot baseline v1
+
+Contract bổ sung 10/10/2026, trong nhánh tích hợp; không có delta hoặc writerEpoch.
+
+- Sau explicit start và mỗi CONNECTED mới, candidate gửi `MONITORING_SYNC_OPEN` với payload chỉ có `collectorSessionId`. Server kiểm CANDIDATE + ACTIVE attempt trước cả retry; cấp UUID `syncEpoch` gắn user/attempt/collector/socket. ACK giữ requestId/traceId và có `status=ACCEPTED`, `acknowledgedType=MONITORING_SYNC_OPEN`, `syncEpoch`. Retry đúng OPEN trên cùng socket giữ epoch; OPEN khác cấp epoch mới. Socket có thứ tự mở cũ không được giành lại epoch của socket mới.
+- `MONITORING_FULL` payload: `{collectorSessionId,syncEpoch,sequence,policyVersion,processes:[{pid,processName,startInstant,metadataQuality}]}`. Chỉ `process-policy-v1` và cùng 8 filename QD-08, không path/user/arguments. Identity nằm trong collectorSessionId + pid + startInstant nullable; COMPLETE bắt buộc startInstant. Canonical hóa thứ tự process, filename chữ thường và Instant trước so nội dung; không so chuỗi JSON thô.
+- Epoch bắt đầu UNSYNCED/sequence0 và phải nhận full1. Sau đó full có sequence cao hơn được thay toàn tập, kể cả rỗng; full không cần sequence liền kề. Sai epoch/socket/collector hoặc sequence cũ trả ERROR STALE. Cùng messageId hoặc sequence trong cửa sổ 64 message mà khác nội dung trả CONFLICT; retry cùng messageId/sequence/nội dung ACK lại, không áp dụng hoặc push lần hai. Ngoài cửa sổ, message cũ chỉ STALE. ACK FULL có epoch/sequence, chỉ phát sau reducer chấp nhận RAM, không hứa persistence.
+- `MONITORING_SYNC_CLOSE` payload chỉ `{collectorSessionId,syncEpoch}`; chỉ đúng owner/socket/epoch hiện tại được chuyển STALE, giữ last-known process. Close/retry không tác động lịch sử và không đóng socket dùng chung. Logout/socket mất hoặc không có full thành công trong 6s cũng STALE; heartbeat ONLINE không chứng minh full còn mới. Scan lỗi không gửi full rỗng. TTL 5 phút xóa state không còn hoạt động, không xóa PostgreSQL. Một server JVM giữ tối đa4096attempt, 128process/snapshot, 64dedup/attempt. Server restart mất RAM, epoch cũ không hợp lệ; reconnect phải OPEN/full1.
+- Client có hàng chờ full RAM tối đa16 và một message chờ ACK; retry cùng message/sequence tối đa5, timeout5s. Normal scan thành công gửi full mới; mất kết nối xóa hàng chờ full. Full đầu mỗi epoch lấy từ scan thành công sau CONNECTED, không tái gửi observation cũ. Khi đầy/oversize báo lỗi, không cắt bớt tập thành snapshot có vẻ đầy đủ. Byte UTF-8 toàn envelope không vượt giới hạn WS 65536. Generation của socket và vòng đời collector được kiểm lại ngay trước sendText để bỏ cả message cũ còn chờ ghi trên socket dùng chung.
+- Giám thị lấy `GET /api/v1/monitoring/attempts/{attemptId}/state` hoặc nhận `MONITOR_STATE`. Payload `{attemptId,serverInstanceId,syncEpoch,collectorSessionId,revision,sequence,status,policyVersion,processes,receivedAt}`; status UNSYNCED/SYNCED/STALE, receivedAt UTC do server nhận, không phải thời gian process mở. revision tăng trong một serverInstanceId cho OPEN/full/STALE; dùng revision để gộp HTTP/push (sequence không dùng so giữa epoch). Endpoint kiểm PROCTOR + assignment mỗi lần; push kiểm auth và scope lại. Dashboard disconnect/loading/presence UNKNOWN hiển thị cũ; đổi lượt/refresh/reconnect bỏ response cũ, refresh xóa baseline revision của server trước. State riêng với event/gap/interruption.
+- TX/RX/ACK đi qua hooks C4 hiện có một lần; không đo lại trong reducer. Event C3, heartbeat/presence A4 giữ đường chạy riêng.

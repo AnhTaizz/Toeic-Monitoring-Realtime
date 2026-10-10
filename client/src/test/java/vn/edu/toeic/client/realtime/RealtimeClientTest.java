@@ -614,6 +614,27 @@ class RealtimeClientTest {
         assertThat(m.finished().get(2,TimeUnit.SECONDS).writerFailed()).isTrue();
     }
 
+    @Test void generationBoundSendCannotUseSocketFromBeforeDisconnect() {
+        try(Fixture f=new Fixture()) {
+            f.connect();long before=f.client.connectionGeneration();f.client.disconnect();f.connect();
+            assertThat(f.client.sendForGeneration(event(),before)).isCompletedExceptionally();
+            assertThat(f.socket().sent).isEmpty();
+            assertThat(f.client.sendForGeneration(event(),f.client.connectionGeneration())).isCompleted();
+        }
+    }
+    @Test void queuedFullPlanCannotBeWrittenAfterCollectorStopAndDoesNotDropSharedSocket() {
+        try(Fixture f=new Fixture()) {
+            f.connect();f.socket().writeGate=new CompletableFuture<>();
+            f.client.send(event());
+            var full=new JsonObject();full.addProperty("collectorSessionId","mock-collector");
+            var running=new java.util.concurrent.atomic.AtomicBoolean(true);
+            var later=f.client.sendForGeneration(new MessageEnvelope<>("v0","MONITORING_SYNC_OPEN","mock-open","mock-open","mock-attempt-A","mock-trace",full),
+                    f.client.connectionGeneration(),running::get);
+            running.set(false);f.socket().writeGate.complete(f.socket());
+            assertThat(later).isCompletedExceptionally();assertThat(f.socket().sent).hasSize(1);
+            assertThat(f.client.connectionState()).isEqualTo(ConnectionState.CONNECTED);
+        }
+    }
     private static String ack() {
         JsonObject payload = new JsonObject();
         payload.addProperty("status", "ACCEPTED");
