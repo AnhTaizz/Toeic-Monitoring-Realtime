@@ -1,0 +1,25 @@
+13:19:16.954 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+13:19:17.111 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "c4_test_0d474d016dc7438f9ca3aa0bae2e8d00"."flyway_schema_history" does not exist yet
+13:19:17.122 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.050s)
+13:19:17.150 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "c4_test_0d474d016dc7438f9ca3aa0bae2e8d00"."flyway_schema_history" ...
+13:19:17.256 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "c4_test_0d474d016dc7438f9ca3aa0bae2e8d00": << Empty Schema >>
+13:19:17.284 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c4_test_0d474d016dc7438f9ca3aa0bae2e8d00" to version "1 - auth schema"
+13:19:17.356 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c4_test_0d474d016dc7438f9ca3aa0bae2e8d00" to version "2 - monitoring events"
+13:19:17.407 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c4_test_0d474d016dc7438f9ca3aa0bae2e8d00" to version "3 - monitoring gaps"
+13:19:17.441 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c4_test_0d474d016dc7438f9ca3aa0bae2e8d00" to version "4 - monitoring presence"
+13:19:17.482 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c4_test_0d474d016dc7438f9ca3aa0bae2e8d00" to version "5 - exams and sessions"
+13:19:17.543 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c4_test_0d474d016dc7438f9ca3aa0bae2e8d00" to version "6 - exam autosave requests"
+13:19:17.572 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c4_test_0d474d016dc7438f9ca3aa0bae2e8d00" to version "7 - exam submits"
+13:19:17.603 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c4_test_0d474d016dc7438f9ca3aa0bae2e8d00" to version "8 - monitoring event delivery"
+13:19:17.627 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 8 migrations to schema "c4_test_0d474d016dc7438f9ca3aa0bae2e8d00", now at version v8 (execution time 00:00.153s)
+2026-10-11T13:19:23.632Z  INFO 4564 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-11T13:19:23.638Z  INFO 4564 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+PASS REAL Windows ProcessHandle production collector scan; only aggregate diagnostics checked, no process details logged; separate from MOCK event source
+PASS MOCK event -> REAL B2/DB/ACK/warning/dashboard; SIMULATED observer ACK suppression -> retry >=2 writes, DB1/dashboard1
+PASS MOCK capacity1 overflow drops2 -> REAL MONITORING_GAP commit/ACK; retained event -> warning/dashboard
+PASS all seven message types counted across REAL candidate/proctor/server; conflicting event -> REAL ERROR; semantic ACK separate from socket write
+PASS cleanup own TEST schema/ephemeral server; shared DB/user processes untouched
+PASS all owned recorder/collector/delivery/B2/dashboard/presence workers gone
+C4 REAL transport verification PASS; event+overflow MOCK; ACK suppression SIMULATED; GUI/LAN/human B review/E1/E2 NOT RUN
+Summary COMPLETE: endpoints=3, categories=26; WS JSON application bytes only
+C4 artifacts: server/target/c4-runtime/C4-00bb861f-b241-48e8-801b-5722fb7d8859

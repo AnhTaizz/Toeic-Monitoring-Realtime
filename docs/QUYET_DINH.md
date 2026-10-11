@@ -138,6 +138,15 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Join xác nhận collector+PID+start+cửa sổ quét; thiếu start/conflict/coverage/lỗi trace thành INCONCLUSIVE. Chỉ complete/bracketed/khỏe mới nói NOT_OBSERVED_IN_TRACE; không tính latency/miss-rate/E1/E2.
 - Bounded schedule/queue/threads/READY/exit/run/cleanup; chỉ dọn root/cây sở hữu, CREATE_NEW không overwrite. Test child thật success/error/cancel/known descendant; OS Ctrl+C/hardkill parent NOT RUN. [Contract và cách chạy](CONTROLLED_PROCESS_HARNESS.md).
 
+## QD-16 · Delta dựa vào state đã ACK, coalescing và full khi metadata đổi
+
+- Ngày11/10/2026 · C, T3-C1 · Human B/A review NOT RUN; gate production chưa chạy.
+- Reuse FullSnapshotDelivery cho lifecycle/ACK/retry/guard, public constructor full vẫn chế độ0. DeltaSnapshotDelivery yêu cầu capability transport explicit; RealtimeClient mặc định false, candidate production không đổi. Không negotiation giả hoặc cờ bật production.
+- Base lưu canonical tập process+sequence đã ACK; pending target bất biến, retry toàn message. Chỉ một pending state và một latest waiting; observations trung gian có thể bỏ trong current state, event delivery độc lập không coalescing theo state. Metadata đổi cùng identity dùng full, vì added/removed chưa có updated. Schema/cách chạy [delta encoder](MONITORING_DELTA_ENCODER.md).
+- Full đối soát30s monotonic từ ACK full; source lỗi xóa latest, không tạo empty. Hết retry/không chắc epoch thì invalid base và cần fresh scan→OPEN epoch mới→full1, không tái dùng ID/payload cũ với base mới. Shared transport/listeners/worker cleanup giữ guard.
+- Replay dùng adapter delta tuần tự SIMULATED, oracle raw+manual fixture+mutation negative, kiểm observation không phát message và event IDs/content. Delta drop/reorder/resync gate chưa làm, CLI từ chối các option đó. Full faults C3 giữ nguyên.
+- STALE6s của full server xung đột skip-unchanged/full30s: giữ nguyên production; cơ chế chứng minh successful scan mới khi không đổi cần A/C chốt riêng T3-C2/T3-A3 và client integration. Không dùng heartbeat để làm tươi full. Measurement DELTA/live negotiation/gate do A/B/C review và tích hợp sau. Không mở E1/E2 hoặc giả human approval.
+
 ## QD-18 · Deadline bắt đầu khi thí sinh nhận quyền ghi để vào thi
 
 - Ngày11/10/2026 · Vai A (Agent) · Human review NOT RUN · nhánh P0 chưa merge.

@@ -1,5 +1,7 @@
 # Log đo byte (T1-C4, mở rộng full tại T2-C1)
 
+**Phạm vi sau T3-C111/10/2026:** [Encoder delta/replay candidate](MONITORING_DELTA_ENCODER.md) đã có; production vẫn full, server/transport/gate delta chưa hỗ trợ. Các mô tả “chưa có delta” bên dưới ghi phạm vi task trước. Không đo E1/E2, không đổi measurement schema/hooks hoặc timeout full.
+
 Phạm vi: chỉ JSON text WebSocket của monitoring session. Không đo HTTP login/roster/audio, handshake, WebSocket framing, TCP/IP, TLS hoặc retransmission mạng. Đây là application message bytes, không phải tổng băng thông hay chi phí toàn kỳ thi.
 
 `bytesUtf8 = serializedMessage.getBytes(StandardCharsets.UTF_8).length`: toàn bộ JSON envelope + payload, từ đúng chuỗi gửi/nhận. Không dùng String.length, dung lượng object, payload riêng hay kích thước file log. Retry cùng eventId là lần gửi mới và tính lại toàn bộ byte.

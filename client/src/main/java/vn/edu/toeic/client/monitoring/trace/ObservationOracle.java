@@ -52,6 +52,27 @@ public final class ObservationOracle {
         businessSteps=List.copyOf(steps);
     }
     public List<BusinessStep> businessSteps(){return businessSteps;}
+    /** Expected checkpoints from raw observations only; CLI candidate contract uses a 30s full period. */
+    public static Map<Long,State> observationStates(TraceData.Trace trace,int reconnectAt,boolean deltaMode) {
+        var result=new TreeMap<Long,State>();
+        int scan=0,generation=1;long version=0,lastFull=0;List<Process> previous=List.of();
+        for(var sample:trace.samples()) {
+            if(sample.type().equals("OBSERVATION")||sample.type().equals("SOURCE_FAILURE")) {
+                scan++;
+                if(scan==reconnectAt){generation++;version=0;previous=List.of();lastFull=sample.elapsedNanos();}
+            }
+            if(!sample.type().equals("OBSERVATION"))continue;
+            var next=sample.productionProcesses();
+            boolean metadataChanged=false;
+            for(var p:next)for(var old:previous)if(p.pid()==old.pid()&&java.util.Objects.equals(p.startInstant(),old.startInstant())&&!p.equals(old))metadataChanged=true;
+            boolean full=!deltaMode||version==0||metadataChanged||sample.elapsedNanos()-lastFull>=30_000_000_000L;
+            if(full||!previous.equals(next))version++;
+            if(full)lastFull=sample.elapsedNanos();
+            previous=next;
+            result.put(sample.index(),new State("SYNCED","SIMULATED-epoch-"+generation,version,keys(sample.collectorSessionId(),next),next));
+        }
+        return result;
+    }
     public Map<String,JsonObject> businessEvents(){return businessEvents;}
     public Map<String,JsonObject> events(){return deliveredEvents;}
     public State state(){return new State(status,epoch,sequence,collector==null?List.of():keys(collector,processes),processes);}
@@ -71,7 +92,7 @@ public final class ObservationOracle {
         if(type.equals("MONITORING_SYNC_CLOSE")) {
             if(closed)return "DUPLICATE";closed=true;status="STALE";return "ACCEPTED";
         }
-        if(!type.equals("MONITORING_FULL"))return "INVALID_INPUT";
+        if(!type.equals("MONITORING_FULL")&&!type.equals("MONITORING_DELTA"))return "INVALID_INPUT";
         if(closed)return "STALE";
         long version=frame.expectedSequence();Version byId=recent.get(frame.message().messageId());
         if(byId!=null)return byId.sequence()==version&&byId.processes().equals(frame.source().productionProcesses())?"DUPLICATE":"CONFLICT";
@@ -81,6 +102,7 @@ public final class ObservationOracle {
         }
         if(version<=sequence)return "STALE";
         if(sequence==0&&version!=1)return "INVALID_INPUT";
+        if(type.equals("MONITORING_DELTA")&&(sequence==0||version!=sequence+1))return "INVALID_INPUT";
         sequence=version;processes=frame.source().productionProcesses();status="SYNCED";remember(frame.message().messageId(),new Version(version,processes));return "ACCEPTED";
     }
     private void remember(String id,Version version){recent.put(id,version);if(recent.size()>64)recent.remove(recent.keySet().iterator().next());}

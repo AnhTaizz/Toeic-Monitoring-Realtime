@@ -353,3 +353,22 @@ MT01/MT07/MT08 giữ PARTIAL toàn hệ thống; MT02–MT06 delta và E1/E2 kh�
 Nhánh A từ main12e2838: Maven test/package510 PASS, tích hợp tạm PR17 package582 PASS, đều bật11 regression PG thực và không skip. Native PostgreSQL18.1 cluster test riêng; không reset DB dev. Ba GAP B: owner/assigned proctor đọc SUBMITTED/TIMED_OUT, scheduler tự chốt và deadline bắt đầu ngay takeover entry **PASS kỹ thuật**. B smoke JAR/PG/HTTP28 PASS,0GAP; C1 full/reconnect/autonomous STALE/TTL và C2 late/gap/history/permission hồi quy PASS; Python10 PASS.
 
 [Evidence P0 mới](../evidence/t2-a-p0/2026-10-11-verification.md) ghi source/hash, logs, fixture patch và lỗi exploratory. Không sửa các evidence lịch sử B/C hoặc TRACKER. T2-B3/B4 vẫn PARTIAL; human review, full GUI candidate/proctor, server-off/reconnect, LAN/app-image/audio máy thứ hai NOT RUN. E1/E2 không thay trạng thái. Remote PR17 chưa có commit A cho đến khi được phép push và tích hợp.
+
+## T3-C1 — encoder delta candidate (11/10/2026)
+
+[Guide](MONITORING_DELTA_ENCODER.md), [evidence](../evidence/t3-c1/2026-10-11-verification.md). Baseline mới493 PASS; final531 Java PASS (protocol35/client353/server142/spike1), 38 mới. Test snapshot/clock/transport MOCK, scheduled worker REAL; CLI thực thi thật nhưng network/ACK/epoch/adapter SIMULATED. Production vẫn full.
+
+| Kiểm tra | Kết quả | Phạm vi |
+|---|---|---|
+| First full ACK / ACK sai8trường / base chỉ ACK | PASS | DeltaSnapshotDeliveryTest |
+| Thêm/bớt/multiple/empty/metadata full/PID reuse/null start/reappear | PASS | Delivery + handwritten oracle/replay |
+| Unchanged không event/poll, coalescing1.000→queued1 | PASS | Event thật trong test, readings MOCK |
+| SOURCE_FAILURE khác empty, retry nguyên message/ACK loss/write error | PASS | Clock/transport MOCK, lỗi SIMULATED |
+| Retry bounded/error-STale/fresh scan/OPEN/full1/reconnect/oldcallback | PASS | Client lifecycle; không server delta/resync proof |
+| Reconciliation30s/scan failure/pending/cleanup/auth revoke | PASS | Controlled clock, worker scheduled/shutdown thật |
+| Replay full/delta/canonical metadata/event ID-content/reconnect/duplicate | PASS | Fixture MOCK + trace ProcessHandle REAL; tất cả ACK/network SIMULATED |
+| Delta/full cố ý sai | FAIL đúng exit1 | Oracle độc lập bắt sai từ raw; giữ report |
+| TEST C4/future delta drop options | Refused đúng exit2 | Không đổi schema hoặc giả gate support |
+| MT02–MT06 gate/live delta/E1/E2/human A/B review | NOT RUN | Không nâng status27case/tracker từ component tests |
+
+Lượt package đầu mới thêm test ERROR STALE FAIL vì còn deadline ACK cũ; sửa deadline rejection candidate về now, bản sửa529 PASS; bổ sung2ca pending-ACK, final531 PASS. Không lấy lượt lỗi làm PASS. Hồi quy DB đầu dừng MIGRATION do Docker chưa chạy; bật Docker/compose volume cũ rồi chạy lại PASS. Kết quả hồi quy mạng/DB mới ghi trong evidence, không suy từ529unit.

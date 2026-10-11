@@ -1,0 +1,2333 @@
+{
+  "schemaVersion": "monitoring-replay-result-v1",
+  "status": "PASS",
+  "traceSource": "MOCK",
+  "traceChecksum": "62ee6bbafa43eb40cdf888e63b86c4d6925aadfa9701a371d312fc66c764ffae",
+  "workload": "REPLAY delta; shared client state/event delivery; SIMULATED sequential delta adapter (not T3-C2)",
+  "faultLabel": "SIMULATED",
+  "encoderAck": "SIMULATED baseline drain; not ACK of faulted network",
+  "presence": "NOT_SIMULATED; no heartbeat UNKNOWN/timeout/TTL inference",
+  "config": {
+    "seed": 0,
+    "duplicatePercent": 0,
+    "dropPercent": 0,
+    "reorderPercent": 0,
+    "reconnectAt": 0,
+    "dropFullAt": 0,
+    "mutateFullAt": 0
+  },
+  "businessSteps": [
+    {
+      "record": 1,
+      "observation": "START",
+      "processKeys": [],
+      "newEventIds": []
+    },
+    {
+      "record": 2,
+      "observation": "OBSERVATION",
+      "processKeys": [
+        "MOCK-delta|10|2026-10-11T00:00:00Z",
+        "MOCK-delta|20|2026-10-11T00:00:00Z"
+      ],
+      "newEventIds": [
+        "replay-event-1",
+        "replay-event-2"
+      ]
+    },
+    {
+      "record": 3,
+      "observation": "OBSERVATION",
+      "processKeys": [
+        "MOCK-delta|20|2026-10-11T00:00:00Z",
+        "MOCK-delta|30|2026-10-11T00:00:00Z"
+      ],
+      "newEventIds": [
+        "replay-event-3"
+      ]
+    },
+    {
+      "record": 4,
+      "observation": "OBSERVATION",
+      "processKeys": [
+        "MOCK-delta|20|2026-10-11T00:00:00Z",
+        "MOCK-delta|30|2026-10-11T00:00:00Z"
+      ],
+      "newEventIds": []
+    },
+    {
+      "record": 5,
+      "observation": "OBSERVATION",
+      "processKeys": [
+        "MOCK-delta|20|2026-10-11T00:00:00Z",
+        "MOCK-delta|30|2026-10-11T00:00:00Z"
+      ],
+      "newEventIds": []
+    },
+    {
+      "record": 6,
+      "observation": "OBSERVATION",
+      "processKeys": [
+        "MOCK-delta|20|2026-10-11T00:00:00Z",
+        "MOCK-delta|30|NO_START"
+      ],
+      "newEventIds": [
+        "replay-event-4"
+      ]
+    },
+    {
+      "record": 7,
+      "observation": "OBSERVATION",
+      "processKeys": [
+        "MOCK-delta|20|2026-10-11T00:00:00Z",
+        "MOCK-delta|30|2026-10-11T00:00:01Z"
+      ],
+      "newEventIds": [
+        "replay-event-5"
+      ]
+    },
+    {
+      "record": 8,
+      "observation": "OBSERVATION",
+      "processKeys": [],
+      "newEventIds": []
+    },
+    {
+      "record": 9,
+      "observation": "SOURCE_FAILURE",
+      "processKeys": [],
+      "newEventIds": []
+    },
+    {
+      "record": 10,
+      "observation": "OBSERVATION",
+      "processKeys": [
+        "MOCK-delta|10|2026-10-11T00:00:00Z"
+      ],
+      "newEventIds": [
+        "replay-event-6"
+      ]
+    },
+    {
+      "record": 11,
+      "observation": "OBSERVATION",
+      "processKeys": [
+        "MOCK-delta|10|2026-10-11T00:00:00Z"
+      ],
+      "newEventIds": []
+    },
+    {
+      "record": 12,
+      "observation": "STOP",
+      "processKeys": [
+        "MOCK-delta|10|2026-10-11T00:00:00Z"
+      ],
+      "newEventIds": []
+    }
+  ],
+  "cleanChecks": [
+    {
+      "operation": "DELIVER_CONTROL",
+      "message": "MONITORING_SYNC_OPEN@record1/message1",
+      "record": 1,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "UNSYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 0,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "UNSYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 0,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_FULL@record2/message2",
+      "record": 2,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z",
+          "MOCK-delta|20|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z",
+          "MOCK-delta|20|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "PROCESS_OBSERVED@record2/message3",
+      "record": 2,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z",
+          "MOCK-delta|20|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z",
+          "MOCK-delta|20|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 1,
+      "actualEvents": 1,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "PROCESS_OBSERVED@record2/message4",
+      "record": 2,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z",
+          "MOCK-delta|20|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z",
+          "MOCK-delta|20|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 2,
+      "actualEvents": 2,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_DELTA@record3/message5",
+      "record": 3,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 2,
+      "actualEvents": 2,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "PROCESS_OBSERVED@record3/message6",
+      "record": 3,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 3,
+      "actualEvents": 3,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_FULL@record5/message7",
+      "record": 5,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 3,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 3,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "expectedEvents": 3,
+      "actualEvents": 3,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_DELTA@record6/message8",
+      "record": 6,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|NO_START"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": null,
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|NO_START"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": null,
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "expectedEvents": 3,
+      "actualEvents": 3,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "PROCESS_OBSERVED@record6/message9",
+      "record": 6,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|NO_START"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": null,
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|NO_START"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": null,
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "expectedEvents": 4,
+      "actualEvents": 4,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_DELTA@record7/message10",
+      "record": 7,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 5,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:01Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:01Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 5,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:01Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:01Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 4,
+      "actualEvents": 4,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "PROCESS_OBSERVED@record7/message11",
+      "record": 7,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 5,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:01Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:01Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 5,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:01Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:01Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 5,
+      "actualEvents": 5,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_DELTA@record8/message12",
+      "record": 8,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 6,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 6,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 5,
+      "actualEvents": 5,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_DELTA@record10/message13",
+      "record": 10,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 7,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 7,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 5,
+      "actualEvents": 5,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "PROCESS_OBSERVED@record10/message14",
+      "record": 10,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 7,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 7,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 6,
+      "actualEvents": 6,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_FULL@record11/message15",
+      "record": 11,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 8,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 8,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 6,
+      "actualEvents": 6,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER_CONTROL",
+      "message": "MONITORING_SYNC_CLOSE@record12/message16",
+      "record": 12,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "STALE",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 8,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "STALE",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 8,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 6,
+      "actualEvents": 6,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    }
+  ],
+  "faultChecks": [
+    {
+      "operation": "DELIVER_CONTROL",
+      "message": "MONITORING_SYNC_OPEN@record1/message1",
+      "record": 1,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "UNSYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 0,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "UNSYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 0,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_FULL@record2/message2",
+      "record": 2,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z",
+          "MOCK-delta|20|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z",
+          "MOCK-delta|20|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "PROCESS_OBSERVED@record2/message3",
+      "record": 2,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z",
+          "MOCK-delta|20|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z",
+          "MOCK-delta|20|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 1,
+      "actualEvents": 1,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "PROCESS_OBSERVED@record2/message4",
+      "record": 2,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z",
+          "MOCK-delta|20|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z",
+          "MOCK-delta|20|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 2,
+      "actualEvents": 2,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_DELTA@record3/message5",
+      "record": 3,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 2,
+      "actualEvents": 2,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "PROCESS_OBSERVED@record3/message6",
+      "record": 3,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 3,
+      "actualEvents": 3,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_FULL@record5/message7",
+      "record": 5,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 3,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 3,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "expectedEvents": 3,
+      "actualEvents": 3,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_DELTA@record6/message8",
+      "record": 6,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|NO_START"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": null,
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|NO_START"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": null,
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "expectedEvents": 3,
+      "actualEvents": 3,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "PROCESS_OBSERVED@record6/message9",
+      "record": 6,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|NO_START"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": null,
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|NO_START"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": null,
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "expectedEvents": 4,
+      "actualEvents": 4,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_DELTA@record7/message10",
+      "record": 7,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 5,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:01Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:01Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 5,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:01Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:01Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 4,
+      "actualEvents": 4,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "PROCESS_OBSERVED@record7/message11",
+      "record": 7,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 5,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:01Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:01Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 5,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:01Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:01Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 5,
+      "actualEvents": 5,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_DELTA@record8/message12",
+      "record": 8,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 6,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 6,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 5,
+      "actualEvents": 5,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_DELTA@record10/message13",
+      "record": 10,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 7,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 7,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 5,
+      "actualEvents": 5,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "PROCESS_OBSERVED@record10/message14",
+      "record": 10,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 7,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 7,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 6,
+      "actualEvents": 6,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_FULL@record11/message15",
+      "record": 11,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 8,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 8,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 6,
+      "actualEvents": 6,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER_CONTROL",
+      "message": "MONITORING_SYNC_CLOSE@record12/message16",
+      "record": 12,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "STALE",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 8,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "STALE",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 8,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 6,
+      "actualEvents": 6,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    }
+  ],
+  "observationChecks": [
+    {
+      "operation": "OBSERVATION",
+      "message": "raw@record2",
+      "record": 2,
+      "expectedOutcome": "SYNCED",
+      "actualOutcome": "SYNCED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z",
+          "MOCK-delta|20|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z",
+          "MOCK-delta|20|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "RAW_PROCESS_AND_METADATA_MATCH"
+    },
+    {
+      "operation": "OBSERVATION",
+      "message": "raw@record3",
+      "record": 3,
+      "expectedOutcome": "SYNCED",
+      "actualOutcome": "SYNCED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "RAW_PROCESS_AND_METADATA_MATCH"
+    },
+    {
+      "operation": "OBSERVATION",
+      "message": "raw@record4",
+      "record": 4,
+      "expectedOutcome": "SYNCED",
+      "actualOutcome": "SYNCED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "RAW_PROCESS_AND_METADATA_MATCH"
+    },
+    {
+      "operation": "OBSERVATION",
+      "message": "raw@record5",
+      "record": 5,
+      "expectedOutcome": "SYNCED",
+      "actualOutcome": "SYNCED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 3,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 3,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "RAW_PROCESS_AND_METADATA_MATCH"
+    },
+    {
+      "operation": "OBSERVATION",
+      "message": "raw@record6",
+      "record": 6,
+      "expectedOutcome": "SYNCED",
+      "actualOutcome": "SYNCED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|NO_START"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": null,
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|NO_START"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": null,
+            "metadataQuality": "UNREADABLE"
+          }
+        ]
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "RAW_PROCESS_AND_METADATA_MATCH"
+    },
+    {
+      "operation": "OBSERVATION",
+      "message": "raw@record7",
+      "record": 7,
+      "expectedOutcome": "SYNCED",
+      "actualOutcome": "SYNCED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 5,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:01Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:01Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 5,
+        "processKeys": [
+          "MOCK-delta|20|2026-10-11T00:00:00Z",
+          "MOCK-delta|30|2026-10-11T00:00:01Z"
+        ],
+        "processes": [
+          {
+            "pid": 20,
+            "processName": "chrome.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          },
+          {
+            "pid": 30,
+            "processName": "zalo.exe",
+            "startInstant": "2026-10-11T00:00:01Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "RAW_PROCESS_AND_METADATA_MATCH"
+    },
+    {
+      "operation": "OBSERVATION",
+      "message": "raw@record8",
+      "record": 8,
+      "expectedOutcome": "SYNCED",
+      "actualOutcome": "SYNCED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 6,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 6,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "RAW_PROCESS_AND_METADATA_MATCH"
+    },
+    {
+      "operation": "OBSERVATION",
+      "message": "raw@record10",
+      "record": 10,
+      "expectedOutcome": "SYNCED",
+      "actualOutcome": "SYNCED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 7,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 7,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "RAW_PROCESS_AND_METADATA_MATCH"
+    },
+    {
+      "operation": "OBSERVATION",
+      "message": "raw@record11",
+      "record": 11,
+      "expectedOutcome": "SYNCED",
+      "actualOutcome": "SYNCED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 8,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 8,
+        "processKeys": [
+          "MOCK-delta|10|2026-10-11T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 10,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-11T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "RAW_PROCESS_AND_METADATA_MATCH"
+    }
+  ],
+  "businessEvents": {
+    "replay-event-1": {
+      "eventId": "replay-event-1",
+      "collectorSessionId": "MOCK-delta",
+      "policyVersion": "process-policy-v1",
+      "pid": 10,
+      "processName": "msedge.exe",
+      "startInstant": "2026-10-11T00:00:00Z",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-11T00:00:01Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "deliveryStatus": "LIVE"
+    },
+    "replay-event-2": {
+      "eventId": "replay-event-2",
+      "collectorSessionId": "MOCK-delta",
+      "policyVersion": "process-policy-v1",
+      "pid": 20,
+      "processName": "chrome.exe",
+      "startInstant": "2026-10-11T00:00:00Z",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-11T00:00:01Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "deliveryStatus": "LIVE"
+    },
+    "replay-event-3": {
+      "eventId": "replay-event-3",
+      "collectorSessionId": "MOCK-delta",
+      "policyVersion": "process-policy-v1",
+      "pid": 30,
+      "processName": "zalo.exe",
+      "startInstant": "2026-10-11T00:00:00Z",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-11T00:00:02Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "deliveryStatus": "LIVE"
+    },
+    "replay-event-4": {
+      "eventId": "replay-event-4",
+      "collectorSessionId": "MOCK-delta",
+      "policyVersion": "process-policy-v1",
+      "pid": 30,
+      "processName": "zalo.exe",
+      "startInstant": null,
+      "metadataQuality": "UNREADABLE",
+      "observedAt": "2026-10-11T00:00:05Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "deliveryStatus": "LIVE"
+    },
+    "replay-event-5": {
+      "eventId": "replay-event-5",
+      "collectorSessionId": "MOCK-delta",
+      "policyVersion": "process-policy-v1",
+      "pid": 30,
+      "processName": "zalo.exe",
+      "startInstant": "2026-10-11T00:00:01Z",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-11T00:00:06Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "deliveryStatus": "LIVE"
+    },
+    "replay-event-6": {
+      "eventId": "replay-event-6",
+      "collectorSessionId": "MOCK-delta",
+      "policyVersion": "process-policy-v1",
+      "pid": 10,
+      "processName": "msedge.exe",
+      "startInstant": "2026-10-11T00:00:00Z",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-11T00:00:09Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "deliveryStatus": "LIVE"
+    }
+  },
+  "deliveredEvents": {
+    "replay-event-1": {
+      "eventId": "replay-event-1",
+      "collectorSessionId": "MOCK-delta",
+      "policyVersion": "process-policy-v1",
+      "pid": 10,
+      "processName": "msedge.exe",
+      "startInstant": "2026-10-11T00:00:00Z",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-11T00:00:01Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "deliveryStatus": "LIVE"
+    },
+    "replay-event-2": {
+      "eventId": "replay-event-2",
+      "collectorSessionId": "MOCK-delta",
+      "policyVersion": "process-policy-v1",
+      "pid": 20,
+      "processName": "chrome.exe",
+      "startInstant": "2026-10-11T00:00:00Z",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-11T00:00:01Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "deliveryStatus": "LIVE"
+    },
+    "replay-event-3": {
+      "eventId": "replay-event-3",
+      "collectorSessionId": "MOCK-delta",
+      "policyVersion": "process-policy-v1",
+      "pid": 30,
+      "processName": "zalo.exe",
+      "startInstant": "2026-10-11T00:00:00Z",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-11T00:00:02Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "deliveryStatus": "LIVE"
+    },
+    "replay-event-4": {
+      "eventId": "replay-event-4",
+      "collectorSessionId": "MOCK-delta",
+      "policyVersion": "process-policy-v1",
+      "pid": 30,
+      "processName": "zalo.exe",
+      "metadataQuality": "UNREADABLE",
+      "observedAt": "2026-10-11T00:00:05Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "startInstant": null,
+      "deliveryStatus": "LIVE"
+    },
+    "replay-event-5": {
+      "eventId": "replay-event-5",
+      "collectorSessionId": "MOCK-delta",
+      "policyVersion": "process-policy-v1",
+      "pid": 30,
+      "processName": "zalo.exe",
+      "startInstant": "2026-10-11T00:00:01Z",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-11T00:00:06Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "deliveryStatus": "LIVE"
+    },
+    "replay-event-6": {
+      "eventId": "replay-event-6",
+      "collectorSessionId": "MOCK-delta",
+      "policyVersion": "process-policy-v1",
+      "pid": 10,
+      "processName": "msedge.exe",
+      "startInstant": "2026-10-11T00:00:00Z",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-11T00:00:09Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "deliveryStatus": "LIVE"
+    }
+  },
+  "missingBusinessEvents": [],
+  "issues": []
+}

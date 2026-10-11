@@ -14,6 +14,8 @@ import vn.edu.toeic.protocol.monitoring.EventOrigin;
  * Full state uses C's shared v1 contract. State ACK is separate from write completion.
  */
 public interface MonitoringTransport {
+    /** Explicit capability, false on production transport until T3-C2/integration/gate. */
+    default boolean supportsMonitoringDelta() { return false; }
     CompletableFuture<Void> send(MessageEnvelope<JsonObject> message);
     default EventOrigin observationOrigin() {
         return connectionState()==ConnectionState.CONNECTED ? EventOrigin.UNSPECIFIED : EventOrigin.OFFLINE;

@@ -1,0 +1,13 @@
+powershell.exe : T2-C1 FAIL phase=MIGRATION class=PSQLException
+At line:7 char:5
++     & powershell @arguments *> "server/target/t3c1-$name.txt"
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (T2-C1 FAIL phas...s=PSQLException:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+T2-C1 integration failed; credentials are never printed.
+At <WORKSPACE>\scripts\smoke-t2c1.ps1:56 char:29
++ ... CODE -ne 0){throw 'T2-C1 integration failed; credentials are never pr ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (T2-C1 integrati... never printed.:String) [], RuntimeException
+    + FullyQualifiedErrorId : T2-C1 integration failed; credentials are never printed.

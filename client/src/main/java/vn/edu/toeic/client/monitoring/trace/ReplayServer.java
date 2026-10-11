@@ -15,24 +15,34 @@ import vn.edu.toeic.protocol.monitoring.FullStateReducer;
  * Event map is headless dedup, not PostgreSQL/auth/presence implementation or commit-ACK evidence.
  */
 final class ReplayServer {
+    private final boolean deltaMode;
+    private SequentialDeltaReplayAdapter delta=new SequentialDeltaReplayAdapter();
+    ReplayServer(){this(false);}
+    ReplayServer(boolean deltaMode){this.deltaMode=deltaMode;}
     private FullStateReducer reducer=new FullStateReducer();
     private String epoch,collector,status="UNSYNCED";
     private boolean closed;
     private List<FullSnapshotPayload.Process> processes=List.of();
     private final Map<String,JsonObject> events=new TreeMap<>(),originals=new TreeMap<>();
     Map<String,JsonObject> events(){return events;}
-    ObservationOracle.State state(){return new ObservationOracle.State(status,epoch,reducer.sequence(),collector==null?List.of():ObservationOracle.keys(collector,processes),processes);}
+    ObservationOracle.State state(){return new ObservationOracle.State(status,epoch,(deltaMode?delta.sequence:reducer.sequence()),collector==null?List.of():ObservationOracle.keys(collector,processes),processes);}
     String apply(ReplayFrame frame) {
         try {
             JsonObject body=frame.message().payload();String type=frame.message().type();
             if(type.equals("MONITORING_SYNC_OPEN")) {
                 FullSnapshotPayload.fields(body,Set.of("collectorSessionId"));collector=FullSnapshotPayload.id(FullSnapshotPayload.text(body,"collectorSessionId"));
-                epoch=frame.expectedEpoch();closed=false;status="UNSYNCED";processes=List.of();reducer=new FullStateReducer();return "ACCEPTED";
+                epoch=frame.expectedEpoch();closed=false;status="UNSYNCED";processes=List.of();reducer=new FullStateReducer();delta=new SequentialDeltaReplayAdapter();return "ACCEPTED";
             }
             if(type.equals("PROCESS_OBSERVED"))return event(frame);
             if(type.equals("MONITORING_SYNC_CLOSE")) {
                 FullSnapshotPayload.fields(body,Set.of("collectorSessionId","syncEpoch"));
                 if(!bound(body))return "STALE";if(closed)return "DUPLICATE";closed=true;status="STALE";return "ACCEPTED";
+            }
+            if(deltaMode&&(type.equals("MONITORING_FULL")||type.equals("MONITORING_DELTA"))) {
+                if(closed||!bound(body))return "STALE";
+                String outcome=delta.apply(frame.message().messageId(),type,body);
+                if(outcome.equals("ACCEPTED")){processes=delta.processes;status="SYNCED";}
+                return outcome;
             }
             if(!type.equals("MONITORING_FULL"))return "INVALID_INPUT";
             var full=FullSnapshotPayload.parse(body);

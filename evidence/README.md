@@ -33,6 +33,8 @@
 | T2-C4 | Controlled process harness và ground truth độc lập | [Verification](t2-c4/2026-10-10-verification.md), [log kiểm tra](t2-c4/logs/) |
 | T2-C5 | Phương pháp baseline/protocol và kiểm tra tài liệu | [Verification](t2-c5/2026-10-11-verification.md), [kiểm tra source/link/hash](t2-c5/doc-checks.json) |
 
+| T3-C1 | Encoder delta candidate/ACKed base và replay oracle | [Verification](t3-c1/2026-10-11-verification.md), [artifact audit](t3-c1/artifact-audit.json) |
+
 ## Cách lưu log mới
 
 - Lưu theo task trong `evidence/<task>/`; một lượt chạy bổ sung có thể dùng thư mục con riêng. Thêm báo cáo và liên kết vào mục lục này khi có bằng chứng mới.

@@ -15,15 +15,17 @@ import java.util.function.Function;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
 import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
+import vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayload;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
-/** Full-only, bounded RAM delivery. Never invokes the transport while holding its state lock. */
+/** Shared bounded state delivery; public constructors remain full-only. Never invokes the transport while holding its state lock. */
 public final class FullSnapshotDelivery implements AutoCloseable {
     public record Status(String syncEpoch,long sequence,long acknowledgedSequence,int queued,String problem) { }
     private static final Gson GSON = new Gson();
     private static final int QUEUE_LIMIT = 16;
     private static final class Pending {
         final MessageEnvelope<JsonObject> message;
+        List<FullSnapshotPayload.Process> target;
         int attempts;
         long deadline;
         boolean waiting;
@@ -47,6 +49,11 @@ public final class FullSnapshotDelivery implements AutoCloseable {
     private long sequence,acknowledged;
     private boolean connected,authorized=true;
     private Pending pending;
+    private final long reconciliationNanos; // zero means unchanged full baseline
+    private List<FullSnapshotPayload.Process> acknowledgedState=List.of();
+    private ProcessSnapshot latest;
+    private long fullAcknowledgedAt;
+    private boolean awaitFresh;
     public FullSnapshotDelivery(String attempt,MonitoringTransport transport,MonitoringDelivery.Settings settings,Consumer<String> denied) {
         this(attempt,transport,settings,denied,System::nanoTime,true);
     }
@@ -56,6 +63,11 @@ public final class FullSnapshotDelivery implements AutoCloseable {
     }
     FullSnapshotDelivery(String attempt,MonitoringTransport transport,MonitoringDelivery.Settings settings,Consumer<String> denied,
             LongSupplier ticker,boolean automatic,Function<String,String> ids) {
+        this(attempt,transport,settings,denied,ticker,automatic,ids,0);
+    }
+    FullSnapshotDelivery(String attempt,MonitoringTransport transport,MonitoringDelivery.Settings settings,Consumer<String> denied,
+            LongSupplier ticker,boolean automatic,Function<String,String> ids,long reconciliationNanos) {
+        this.reconciliationNanos=reconciliationNanos;
         this.attempt=FullSnapshotPayload.id(attempt); this.transport=transport; this.settings=settings; this.denied=denied; this.ticker=ticker;
         this.ids=ids;
         connected=transport.connectionState()==ConnectionState.CONNECTED;
@@ -78,14 +90,18 @@ public final class FullSnapshotDelivery implements AutoCloseable {
             if (closed || !authorized) return;
             bind(snapshot.collectorSessionId());
             if (!FullSnapshotPayload.POLICY.equals(snapshot.policyVersion()) || snapshot.restrictedProcesses().size()>FullSnapshotPayload.MAX_PROCESSES) {
+                if(reconciliationNanos>0) { observations.clear(); latest=null; }
                 problem="SNAPSHOT_LIMIT"; return;
             }
             if (!connected) return; // Reconnect requires a NEW successful scan, not an offline observation.
+            if (reconciliationNanos>0) {
+                observations.clear(); observations.addLast(snapshot); latest=snapshot; awaitFresh=false; problem="NONE"; return;
+            }
             if (observations.size()>=QUEUE_LIMIT) { problem="FULL_QUEUE_LIMIT"; return; }
             observations.addLast(snapshot); problem="NONE";
         }
     }
-    public void sourceFailed() { synchronized (lock) { observations.clear(); problem="SOURCE_FAILURE"; } }
+    public void sourceFailed() { synchronized (lock) { observations.clear(); latest=null; problem="SOURCE_FAILURE"; } }
     private MessageEnvelope<JsonObject> message(String type,JsonObject payload) {
         String id=ids.apply("full-request");
         return new MessageEnvelope<>("v0",type,id,id,attempt,ids.apply("full-trace"),payload);
@@ -97,14 +113,14 @@ public final class FullSnapshotDelivery implements AutoCloseable {
     }
     void tick() {
         try { pump(); }
-        catch (RuntimeException invalid) { synchronized(lock) { problem="INVALID_FULL_OBSERVATION"; observations.clear(); } }
+        catch (RuntimeException invalid) { synchronized(lock) { problem="INVALID_FULL_OBSERVATION"; observations.clear(); latest=null; } }
     }
     private void pump() {
         long socketGeneration=transport.connectionGeneration();
         Send send=null;
         String forget=null;
         synchronized (lock) {
-            if (closed || !authorized || !connected || collector==null) return;
+            if (closed || !authorized || !connected || collector==null || awaitFresh) return;
             long now=ticker.getAsLong();
             if (pending != null && pending.waiting && now-pending.deadline>=0) {
                 forget=pending.message.requestId(); pending.waiting=false;
@@ -112,23 +128,36 @@ public final class FullSnapshotDelivery implements AutoCloseable {
             }
             if (pending == null) {
                 if (epoch == null) pending=new Pending(message("MONITORING_SYNC_OPEN",identity()));
-                else if (!observations.isEmpty()) {
-                    ProcessSnapshot snapshot=observations.removeFirst();
-                    List<FullSnapshotPayload.Process> processes=new ArrayList<>();
-                    for (ObservedProcess process : snapshot.restrictedProcesses()) {
-                        ProcessIdentity id=process.identity();
-                        if (!snapshot.collectorSessionId().equals(id.collectorSessionId())) { problem="INVALID_OBSERVATION"; return; }
-                        processes.add(new FullSnapshotPayload.Process(id.pid(),process.executableName(),
-                                id.startInstant()==null?null:id.startInstant().toString(),process.metadataQuality().name()));
-                    }
+                else if (!observations.isEmpty() || (reconciliationNanos>0 && latest!=null && acknowledged>0
+                        && now-fullAcknowledgedAt>=reconciliationNanos)) {
+                    ProcessSnapshot snapshot=observations.isEmpty()?latest:observations.removeFirst();
+                    List<FullSnapshotPayload.Process> processes=processes(snapshot);
                     if (sequence==Long.MAX_VALUE) { authorized=false; problem="SEQUENCE_LIMIT"; return; }
-                    var full=new FullSnapshotPayload(collector,epoch,sequence+1,snapshot.policyVersion(),processes);
+                    boolean full=reconciliationNanos==0 || acknowledged==0 || now-fullAcknowledgedAt>=reconciliationNanos;
+                    if (!full && processes.equals(acknowledgedState)) return;
+                    var added=new ArrayList<FullSnapshotPayload.Process>();
+                    var removed=new ArrayList<DeltaSnapshotPayload.Identity>();
+                    if (!full) {
+                        for (var process:processes) {
+                            var previous=acknowledgedState.stream().filter(p -> DeltaSnapshotPayload.Identity.of(p).equals(DeltaSnapshotPayload.Identity.of(process))).findFirst();
+                            if(previous.isEmpty()) added.add(process);
+                            else if(!previous.get().equals(process)) full=true; // same identity, new metadata: full replacement
+                        }
+                        for (var process:acknowledgedState) if(processes.stream().noneMatch(p -> DeltaSnapshotPayload.Identity.of(p).equals(DeltaSnapshotPayload.Identity.of(process))))
+                            removed.add(DeltaSnapshotPayload.Identity.of(process));
+                    }
+                    Object payload=full ? new FullSnapshotPayload(collector,epoch,sequence+1,snapshot.policyVersion(),processes)
+                            : new DeltaSnapshotPayload(collector,epoch,acknowledged,acknowledged+1,snapshot.policyVersion(),added,removed);
                     sequence++;
-                    pending=new Pending(message("MONITORING_FULL",GSON.toJsonTree(full).getAsJsonObject()));
+                    pending=new Pending(message(full?"MONITORING_FULL":"MONITORING_DELTA",GSON.toJsonTree(payload).getAsJsonObject()));
+                    pending.target=processes;
                 }
             }
             if (pending != null && !pending.waiting && (pending.attempts==0 || now-pending.deadline>=0)) {
-                if (pending.attempts >= settings.maxAttempts()) problem="FULL_RETRY_EXHAUSTED";
+                if (pending.attempts >= settings.maxAttempts()) {
+                    problem="FULL_RETRY_EXHAUSTED";
+                    if(reconciliationNanos>0) { forget=pending.message.requestId(); resetDelta(); problem="STATE_RETRY_EXHAUSTED_WAIT_FRESH"; }
+                }
                 else {
                     pending.waiting=true; pending.attempts++; pending.deadline=now+settings.ackTimeout().toNanos();
                     send=new Send(pending,generation,pending.attempts,socketGeneration);
@@ -139,7 +168,7 @@ public final class FullSnapshotDelivery implements AutoCloseable {
         if (send != null) send(send);
     }
     private void send(Send send) {
-        try { transport.sendForGeneration(send.pending.message,send.connectionGeneration,() -> !closed && send.generation==generation)
+        try { transport.sendForGeneration(copy(send.pending.message),send.connectionGeneration,() -> !closed && send.generation==generation)
                 .whenComplete((unused,error) -> { if (error != null) failed(send); }); }
         catch (RuntimeException error) { failed(send); }
         boolean old;
@@ -154,6 +183,16 @@ public final class FullSnapshotDelivery implements AutoCloseable {
         transport.forgetPending(send.pending.message.requestId());
     }
     private void receive(MessageEnvelope<JsonObject> reply) {
+        // Authentication may fail before the server parses a request, hence no correlation IDs.
+        if(reconciliationNanos>0 && reply!=null && "v0".equals(reply.protocolVersion()) && "ERROR".equals(reply.type())
+                && reply.requestId()==null && reply.attemptId()==null && reply.payload()!=null) {
+            try {
+                if("UNAUTHORIZED".equals(FullSnapshotPayload.text(reply.payload(),"code"))) {
+                    synchronized(lock) { if(closed)return; authorized=false; problem="UNAUTHORIZED"; }
+                    close(); denied.accept("UNAUTHORIZED"); return;
+                }
+            } catch(IllegalArgumentException invalid) { return; }
+        }
         String fatal=null;
         synchronized (lock) {
             if (closed || pending==null || pending.attempts==0 || reply==null || reply.payload()==null || !"v0".equals(reply.protocolVersion())
@@ -168,6 +207,10 @@ public final class FullSnapshotDelivery implements AutoCloseable {
                     else {
                         if (!accepted.equals(epoch) || FullSnapshotPayload.number(body,"sequence")!=sequence) return;
                         acknowledged=sequence;
+                        if(reconciliationNanos>0) {
+                            acknowledgedState=pending.target;
+                            if(pending.message.type().equals("MONITORING_FULL")) fullAcknowledgedAt=ticker.getAsLong();
+                        }
                     }
                     pending=null; if (!problem.equals("SOURCE_FAILURE")) problem="NONE";
                 } else if (reply.type().equals("ERROR")) {
@@ -175,11 +218,14 @@ public final class FullSnapshotDelivery implements AutoCloseable {
                     problem=code;
                     if (code.equals("FORBIDDEN") || code.equals("UNAUTHORIZED")) { authorized=false; fatal=code; }
                     else if (code.equals("RETRYABLE_SERVER_ERROR")) { pending.waiting=false; pending.deadline=ticker.getAsLong()+settings.delay(pending.attempts); }
-                    else { pending.waiting=false; pending.attempts=settings.maxAttempts(); }
+                    else {
+                        pending.waiting=false; pending.attempts=settings.maxAttempts();
+                        if(reconciliationNanos>0) pending.deadline=ticker.getAsLong(); // retire rejected base on next pump
+                    }
                 }
             } catch (RuntimeException invalid) { problem="INVALID_STATE_ACK"; }
         }
-        if (fatal != null) denied.accept(fatal);
+        if (fatal != null) { if(reconciliationNanos>0) close(); denied.accept(fatal); }
     }
     private void connectionChanged(ConnectionState state) {
         String forget;
@@ -187,9 +233,26 @@ public final class FullSnapshotDelivery implements AutoCloseable {
             if (closed) return;
             generation++; connected=state==ConnectionState.CONNECTED;
             forget=pending==null?null:pending.message.requestId(); pending=null;
-            epoch=null; sequence=acknowledged=0; observations.clear(); problem="UNSYNCED";
+            epoch=null; sequence=acknowledged=0; observations.clear(); latest=null; acknowledgedState=List.of(); awaitFresh=false; problem="UNSYNCED";
         }
         if (forget != null) transport.forgetPending(forget);
+    }
+    private List<FullSnapshotPayload.Process> processes(ProcessSnapshot snapshot) {
+        var values=new ArrayList<FullSnapshotPayload.Process>();
+        for(var process:snapshot.restrictedProcesses()) {
+            var id=process.identity();
+            if(!snapshot.collectorSessionId().equals(id.collectorSessionId())) throw new IllegalArgumentException("INVALID_OBSERVATION");
+            values.add(new FullSnapshotPayload.Process(id.pid(),process.executableName(),id.startInstant()==null?null:id.startInstant().toString(),process.metadataQuality().name()));
+        }
+        return FullSnapshotPayload.canonical(values);
+    }
+    /** In doubt, retire the old epoch, require a fresh scan, OPEN and full1; never rebase a retry. */
+    private void resetDelta() {
+        generation++; pending=null; epoch=null; sequence=acknowledged=0; observations.clear(); latest=null;
+        acknowledgedState=List.of(); awaitFresh=true;
+    }
+    private static MessageEnvelope<JsonObject> copy(MessageEnvelope<JsonObject> value) {
+        return new MessageEnvelope<>(value.protocolVersion(),value.type(),value.messageId(),value.requestId(),value.attemptId(),value.traceId(),value.payload().deepCopy());
     }
     public Status status() { synchronized (lock) { return new Status(epoch,sequence,acknowledged,observations.size(),problem); } }
     public CompletableFuture<Void> stopped() { return stopped.copy(); }
@@ -200,7 +263,8 @@ public final class FullSnapshotDelivery implements AutoCloseable {
         synchronized (lock) {
             if (closed) return;
             end=connected && authorized && epoch!=null ? message("MONITORING_SYNC_CLOSE",identity()) : null;
-            closed=true; generation++; forget=pending==null?null:pending.message.requestId(); pending=null; observations.clear(); epoch=null;
+            closed=true; generation++; forget=pending==null?null:pending.message.requestId(); pending=null; observations.clear(); latest=null; acknowledgedState=List.of(); epoch=null;
+            if(reconciliationNanos>0) sequence=acknowledged=0;
         }
         try { messages.close(); } catch (Exception ignored) { }
         try { states.close(); } catch (Exception ignored) { }
