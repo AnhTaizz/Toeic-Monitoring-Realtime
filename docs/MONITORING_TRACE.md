@@ -1,5 +1,7 @@
 # T2-C3: ghi và phát lại quan sát process
 
+**Bổ sung T3-C111/10/2026:** [Encoder delta/replay candidate](MONITORING_DELTA_ENCODER.md) đã có; production vẫn full, server/transport/gate delta chưa hỗ trợ. Các mô tả “chưa có delta” bên dưới ghi phạm vi task trước. Không đo E1/E2, không đổi measurement schema/hooks hoặc timeout full.
+
 Trace là file chứa những lần collector đã quan sát. Replayer đọc lại file này để chạy encoder full/event thật và lõi reducer C1 thật. Oracle là thuật toán tính kết quả mong đợi độc lập từ các quan sát gốc. Công cụ chạy không cần JavaFX, Spring, DB hoặc socket.
 
 ## Chạy bằng PowerShell tại thư mục dự án

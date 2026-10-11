@@ -1,6 +1,8 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 11/10/2026 — T2-C5 tài liệu phương pháp và đối chiếu protocol hoàn tất từ main82557bf. Không đổi runtime; không chạy lại Java493/smoke/E1/E2. Kiểm tra mới là source/link/schema/default/evidence integrity. B human review trước phép đo NOT RUN; marker cửa sổ E1, resource sampler/analyzer và delta/E2 còn thiếu. Giữ các kết quả C1–C4 theo evidence gốc.
+Cập nhật mới T3-C1: 11/10/2026 — encoder delta candidate/replay đã triển khai; production vẫn full, server T3-C2/gate chưa có. Human B review/E1/E2 NOT RUN. [Hướng dẫn](MONITORING_DELTA_ENCODER.md), [evidence](../evidence/t3-c1/2026-10-11-verification.md).
+
+Mốc C5 trước đó: 11/10/2026 — T2-C5 tài liệu phương pháp và đối chiếu protocol hoàn tất từ main82557bf. Không đổi runtime; không chạy lại Java493/smoke/E1/E2. Kiểm tra mới là source/link/schema/default/evidence integrity. B human review trước phép đo NOT RUN; marker cửa sổ E1, resource sampler/analyzer và delta/E2 còn thiếu. Giữ các kết quả C1–C4 theo evidence gốc.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
@@ -17,7 +19,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
 | B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; chuẩn bị Chặng 2 | `feat/t1-b3-proctor-dashboard` |
-| C | _chưa gán_ | T2-C5 tài liệu/kiểm tra hoàn tất; dừng sau C5 | eb6ba59: phương pháp baseline, identity/E1/E2/byte/clock và protocol đối chiếu source; C4 PR#21 merge b576a07 | B review trước đo NOT RUN; cần window/resource/analyzer E1, delta correctness trước E2; chưa chạy benchmark | `docs/t2-c5-monitoring-baseline-methodology` |
+| C | _chưa gán_ | T3-C1 encoder candidate/test/replay; full mặc định | Base12e2838; ACKed base, bounded coalescing, metadata full, reconciliation30s/oracle raw | Human B review; A/T3-C2 freshness6s/resync/epoch/transport hooks, gate chưa chạy; dừng sau C1 | `feat/t3-c1-monitoring-delta-encoder` |
 
 ## Đang bị chặn
 
@@ -49,7 +51,7 @@ Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì
 | 09/10 | A → B, C | Import đề, answers/revision, requestId, writerEpoch, deadline/state, mã lỗi | Chưa có |
 | 12/10 | A → B | Trạng thái đã chốt, takeover writer, state khi reconnect | Chưa có |
 | 16/10 | A + B → C | Audio manifest, READY/start/interrupted | Chưa có |
-| 16/10, khóa 18/10 | C → A, B | Monitoring epoch/base/sequence, định nghĩa metric | C1 OPEN/full/CLOSE/epoch/sequence/state đã merge; C2 bổ sung EventOrigin/deliveryStatus và HTTP gap theo QD-13, server trước client mới; baseSequence/delta/metric E1-E2 chưa có; human A/B review NOT RUN |
+| 16/10, khóa 18/10 | C → A, B | Monitoring epoch/base/sequence, định nghĩa metric | C1 OPEN/full/CLOSE/epoch/sequence/state đã merge; C2 bổ sung EventOrigin/deliveryStatus và HTTP gap theo QD-13, server trước client mới; T3-C1 encoder/replay/baseSequence có; server delta/resync/freshness/gate và metric E1-E2 chưa có; human A/B review NOT RUN |
 
 ## Câu hỏi mở cần nhóm hoặc thầy trả lời
 
@@ -65,7 +67,7 @@ Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì
 |---|---:|---:|---|
 | A | — | — | |
 | B | — | — | |
-| C | — | — | T2-C5 tài liệu hoàn tất; B review và E1/E2 NOT RUN. Không điền giờ chưa đo. |
+| C | — | — | T3-C1 candidate encoder/test/replay có; B review/live delta/gate và E1/E2 NOT RUN. Không điền giờ chưa đo. |
 
 ## Bàn giao T2-C3 ngày10/10/2026
 
@@ -78,3 +80,7 @@ C4 từ main f6d46b2, code0164297. [Hướng dẫn](CONTROLLED_PROCESS_HARNESS.m
 ## Bàn giao T2-C5 ngày11/10/2026
 
 [Phương pháp baseline](MONITORING_BASELINE_METHOD.md), [kiểm tra tài liệu](../evidence/t2-c5/2026-10-11-verification.md). Base82557bf có mục lục evidence sau C4 merge PR#21. Tài liệu không đổi collector/harness/reducer/wire; sửa mô tả byte type/sequence cũ, phân biệt hold200ms với parent-observed lifetime và policy TEST/production. Rate có eligibility chung, INCONCLUSIVE riêng, latency chính xác NOT MEASURED; E2 chưa delta. Human B review/GUI/LAN/E1/E2 NOT RUN. Không sửa tracker/kế hoạch/old artifacts; QUYET_DINH giữ nguyên vì không quyết định kiến trúc mới. Git cuối xem PR/final; dừng sau C5.
+
+## Bàn giao T3-C1 ngày11/10/2026
+
+[Encoder candidate](MONITORING_DELTA_ENCODER.md), [evidence](../evidence/t3-c1/2026-10-11-verification.md). Main remote12e2838 sau C5PR#22; chưa branch/PR delta hoặc A3 hook delta. Production factory/transport/server giữ full; baseSequence encoder/replay đã có, server delta/resync/freshness/measurement classification và gate chưa làm. STALE6s/full30s bàn giao A/C, không âm thầm thay timeout/heartbeat. Human B review/ChatGPT planning-review NOT RUN theo opt-out; không thay tracker/task completion hoặc MT02–MT06 toàn hệ thống. Người dùng ủy quyền merge commit khi không blocker GitHub và giữ nhánh; Git cuối xem evidence/PR/final. Dừng T3-C1, không T3-C2/E1/E2.

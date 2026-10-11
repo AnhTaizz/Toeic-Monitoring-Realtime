@@ -229,6 +229,8 @@ Viết ra: `policyVersion`, khóa process, phạm vi đo, giới hạn về quy�
 
 **Ghi chú làm dở:** —
 
+**Ghi chú bàn giao11/10/2026:** T3-C1 encoder candidate/replay có từ main12e2838, nhánh feat/t3-c1-monitoring-delta-encoder. [Hướng dẫn](../MONITORING_DELTA_ENCODER.md), [evidence](../../evidence/t3-c1/2026-10-11-verification.md), QD-16. Reuse lifecycle FullSnapshotDelivery/event C3; ACKed canonical base, coalescing1pending snapshot, metadata fallback full, retry frozen, reconnect/fresh scan/full1 và full30s monotonic. Replay full/delta cùng raw oracle, handwritten fixture/negative mutation, event IDs/content giữ nguyên; delta adapter SIMULATED chưa server T3-C2. Production full default/capability false; STALE6s vs full30s cần A/C freshness contract trước bật. Human B/A review, live delta/LAN/gate/E1/E2 NOT RUN; không tự chuyển C2 hoặc thay tracker.
+
 ### T3-C2 · Reducer delta phía server
 `4h` · phụ thuộc: T3-C1, T3-A3 (hook) · review: B
 

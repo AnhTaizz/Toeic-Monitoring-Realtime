@@ -16,7 +16,7 @@ public final class FaultSchedule {
     public static List<Action> build(List<ReplayFrame> frames,Config config) {
         var random=new Random(config.seed());var result=new ArrayList<Action>();List<Action> held=null;
         for(var frame:frames) {
-            boolean data=frame.message().type().equals("MONITORING_FULL")||frame.message().type().equals("PROCESS_OBSERVED");
+            boolean data=frame.message().type().equals("MONITORING_DELTA")||frame.message().type().equals("MONITORING_FULL")||frame.message().type().equals("PROCESS_OBSERVED");
             if(!data) {result.add(new Action("DELIVER_CONTROL",frame));continue;}
             boolean drop=random.nextInt(100)<config.dropPercent()||(frame.message().type().equals("MONITORING_FULL")&&frame.scan()==config.dropFullAt());
             boolean duplicate=random.nextInt(100)<config.duplicatePercent(),reorder=random.nextInt(100)<config.reorderPercent();

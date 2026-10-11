@@ -1,0 +1,27 @@
+{
+  "artifactChecks": 60,
+  "gzipRestoration": "PASS",
+  "measurementSummaries": [
+    {
+      "tag": "full-33828d4",
+      "endpoints": 6,
+      "categories": 64,
+      "status": "COMPLETE"
+    },
+    {
+      "tag": "measurement-33828d4",
+      "endpoints": 3,
+      "categories": 26,
+      "status": "COMPLETE"
+    },
+    {
+      "tag": "full-final",
+      "endpoints": 6,
+      "categories": 63,
+      "status": "COMPLETE"
+    }
+  ],
+  "regeneratedSummary": "byte-identical JSON/CSV",
+  "sourceManifestChecks": 228,
+  "repeatFixtureReports": 6
+}

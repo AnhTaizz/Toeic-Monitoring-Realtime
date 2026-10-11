@@ -30,11 +30,11 @@ public final class TraceCli {
             Map<String,String> options=options(args);
             if(args[0].equals("record"))return record(options,output);
             if(!args[0].equals("replay"))throw new IllegalArgumentException();
-            requireKnown(options,Set.of("--input","--output","--seed","--duplicate","--drop","--reorder","--reconnect-at","--drop-full-at","--mutate-full-at"));
+            requireKnown(options,Set.of("--input","--output","--seed","--duplicate","--drop","--reorder","--reconnect-at","--drop-full-at","--mutate-full-at","--mode","--mutate-delta-at"));
             var trace=TraceReader.read(Path.of(required(options,"--input")));
             var config=new FaultSchedule.Config(Long.parseLong(options.getOrDefault("--seed","0")),integer(options,"--duplicate",0),integer(options,"--drop",0),integer(options,"--reorder",0),
                     integer(options,"--reconnect-at",0),integer(options,"--drop-full-at",0),integer(options,"--mutate-full-at",0));
-            var result=ReplayEngine.replay(trace,config);
+            var result=ReplayEngine.replay(trace,config,options.getOrDefault("--mode","full"),integer(options,"--mutate-delta-at",0));
             Path target=Path.of(required(options,"--output"));Path parent=target.toAbsolutePath().getParent();if(parent!=null)Files.createDirectories(parent);
             try(var writer=Files.newBufferedWriter(target,StandardCharsets.UTF_8,StandardOpenOption.CREATE_NEW)) {
                 new GsonBuilder().serializeNulls().setPrettyPrinting().disableHtmlEscaping().create().toJson(result,writer);writer.write('\n');
