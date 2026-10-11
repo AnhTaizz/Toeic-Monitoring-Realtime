@@ -32,6 +32,12 @@ def trace(endpoint="CLIENT", domain="MOCK-clock", rows=None):
 
 
 class SummaryTest(unittest.TestCase):
+    def test_full_types_are_counted_once_without_rx_or_business_ack_bytes(self):
+        rows = [("TX", kind, "WRITE_COMPLETED", 100) for kind in ("MONITORING_SYNC_OPEN", "MONITORING_FULL", "MONITORING_SYNC_CLOSE", "MONITOR_STATE")]
+        self.write(trace(rows=rows + [("RX", "MONITORING_FULL", "RECEIVED", 100)]))
+        result = summary.summarize([self.folder / "raw.jsonl"])
+        self.assertEqual("COMPLETE", result["status"])
+        self.assertEqual(400, result["totals"][0]["rawTxWriteCompletedBytes"])
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
         self.folder = pathlib.Path(self.temp.name)

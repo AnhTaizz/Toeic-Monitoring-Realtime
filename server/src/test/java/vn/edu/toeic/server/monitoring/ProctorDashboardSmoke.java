@@ -102,7 +102,7 @@ public final class ProctorDashboardSmoke {
                         "--spring.flyway.schemas="+schema,"--spring.flyway.default-schema="+schema,"--logging.level.root=OFF","--debug=false",
                         "--toeic.presence.timeout-ms=1200","--toeic.presence.scan-interval-ms=25");
                 origin="http://127.0.0.1:"+((WebServerApplicationContext)context).getWebServer().getPort();
-                check(jdbc().sql("SELECT max(version::int) FROM flyway_schema_history WHERE success AND version IS NOT NULL").query(Integer.class).single()==4,"real V4");
+                check(jdbc().sql("SELECT max(version::int) FROM flyway_schema_history WHERE success AND version IS NOT NULL").query(Integer.class).single()>=4,"real V4 (later additive migrations allowed)");
                 fixtures(); verify();
             } finally {
                 if (context!=null) { context.close(); context=null; }
@@ -227,7 +227,7 @@ public final class ProctorDashboardSmoke {
                 fx(() -> { TableView<Presence> roster=table(view,"#dashboard-roster"); roster.getSelectionModel().select(roster.getItems().stream().filter(p -> p.attemptId().equals(A)).findFirst().orElseThrow()); return null; });
                 await(() -> fx(() -> ProctorDashboardSmoke.<Event>table(view,"#dashboard-events").getItems().size()==2),"GUI select/events");
                 check(guiStatus(view,A,"ONLINE"),"GUI ONLINE"); screenshot(stage.getScene(),"b3-dashboard-online.png");
-                fx(() -> { ((TabPane)view.lookup(".tab-pane")).getSelectionModel().select(1); return null; });
+                fx(() -> { ((TabPane)view.lookup(".tab-pane")).getSelectionModel().select(2); return null; });
                 await(() -> fx(() -> ProctorDashboardSmoke.<Interruption>table(view,"#dashboard-history").getItems().size()==2),"GUI history retained");
                 screenshot(stage.getScene(),"b3-dashboard-history.png");
                 active.kill();

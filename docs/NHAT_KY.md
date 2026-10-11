@@ -296,7 +296,32 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
   - `LimitedBody` trong `MonitoringApiClient` chặn streaming response HTTP vượt quá 4MB để chống tấn công OOM.
   - Xóa token khỏi bộ nhớ (`token = null`) ngay khi đóng kết nối hoặc gặp lỗi 401/1008.
 - **Khuyến nghị cho Chặng 2 (T2-B):**
-  - Khi triển khai giao diện làm bài thi (Exam View) và chức năng autosave/submit, B cần kế thừa pattern này: sinh `requestId` duy nhất, giữ nguyên `requestId` khi retry, tăng `answerRevision` khi sửa đáp án, và chỉ hiển thị "Đã lưu" khi nhận status `SAVED` hoặc `ALREADY_SAVED` từ Server.
+     - Khi triển khai giao diện làm bài thi (Exam View) và chức năng autosave/submit, B cần kế thừa pattern này: sinh `requestId` duy nhất, giữ nguyên `requestId` khi retry, tăng `answerRevision` khi sửa đáp án, và chỉ hiển thị "Đã lưu" khi nhận status `SAVED` hoặc `ALREADY_SAVED` từ Server.
+
+## 10/10/2026 — C: T2-C1 full snapshot baseline v1
+
+- Đọc source/contract/kế hoạch/evidence và fetch remote; main base `8eba405`, working tree sạch, chưa có implementation/PR T2-C1. Tạo `feat/t2-c1-monitoring-full-snapshot`, không dùng nhánh C4 cũ. Code commit `6acd031`.
+- Thêm contract/shared parser OPEN/full/CLOSE/MONITOR_STATE, full delivery RAM riêng với event C3, reducer/store server có auth/epoch/socket/sequence/dedup/conflict/STALE/TTL/limits. ACK FULL chỉ RAM theo QD-12. Reuse collector/policy/identity/WS/auth/registry/measurement. Dashboard HTTP/push gộp revision/serverInstanceId, tab Process hiện tại và lifecycle guard; không collector PROCTOR, không xóa event/gap/interruption.
+- Baseline Java376/A2 PASS sau DB bật; sau sửa Java408/package/Python10 PASS. Full smoke REAL Edge/ProcessHandle/HTTP/WS/PG/proctor JavaFX component PASS, raw4endpoint COMPLETE với source SHA6acd031/clean metadata. A2/A3/A4/C2/C3/C4/B3 và B2 owned TEST DB PASS. B2 wrapper cũ không phù hợp DB dev đã có scope; không xóa fixture. C3 correlate đúng ERROR gap để không nhầm kênh full; A4/B3 >=V4 và tab index theo view mới.
+- Lượt fail và sửa ghi rõ trong evidence: cache sandbox, DB off, Edge profile file lock, UNKNOWN MOCK thiếu timestamp, B2 seed readiness/timezone, C3 ERROR khác request. Không claim GUI candidate toàn app/LAN/full server restart qua network/human A/B review hoặc performance. MT01 PARTIAL. [Evidence](../evidence/t2-c1/2026-10-10-verification.md), [README tự demo](../README.md#full-snapshot-t2-c1).
+- Được ủy quyền commit/push/mở PR, không merge; bàn giao review A auth/RAM/hooks và B transport/parser/dashboard. Không sửa TRACKER/kế hoạch/.env/migration, không reset shared DB, không làm T2-C2–C5/delta/E1/E2. ChatGPT planning/review NOT RUN theo lựa chọn không kết nối trước đó của người dùng.
+
+## 10/10/2026 — C: review-fix scheduling PR#18
+
+- Người dùng review30fa6d9 phát hiện maintain Scheduled chưa được kích hoạt; unit gọi trực tiếp/CLOSE không chứng minh tự STALE/TTL. Harness Spring thật mới trên product cũ FAIL phase AUTO_STALE_WITHOUT_HTTP_OR_CLOSE, ghi đúng lỗi, không xóa evidence cũ.
+- Code e07bb7e: bean MonitoringStateMaintenance worker riêng/fixed delay/catch runtime/shutdown interrupt+await; store dọn RAM và chặn request muộn. Bỏ Scheduled trên maintain, không EnableScheduling toàn server hoặc chạm ExamTimeoutService; lỗi scheduler bài thi cần A review riêng. QD-12/PROTOCOL bổ sung lựa chọn này.
+- Java413/package PASS; REAL WS giữ socket/scoped heartbeat, ngừng full → tự push STALE/TTL4s; capacity1 OPEN B bị từ chối trước TTL/ACK sau TTL; history giữ nguyên; Spring close xóa RAM/dừng workers PASS. Full Edge/GUI component và A4/C3/C4/B3 hồi quy PASS. Lượt cuối source e07bb7e sạch, log6endpoint/63category COMPLETE; Python summary tái tạo giống byte. Python unittest10 và A2/A3/B2/C2 không chạy lại trong lượt này.
+- Bằng chứng [scheduling-fix](../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md), raw/ảnh/metadata/checksum riêng; đính chính evidence gốc, không sửa raw. Push và cập nhật PR#18 theo yêu cầu; giữ mở, không merge/C2. MT01 PARTIAL, GUI candidate/LAN/human A/B review tổng thể NOT RUN. Không sửa .env/migration/tracker/kế hoạch/reset DB.
+
+## 10/10/2026 — C: T2-C2 heartbeat, event muộn và khoảng trống
+
+- Xác minh PR#18 đã merge bằng merge commit683adfc, giữ nhánh C1. Fetch/main sạch cùng base, chưa có nhánh/PR C2; tạo `feat/t2-c2-monitoring-late-events-and-gaps`. Không phát triển tiếp C1. Code/contract commit fdac531.
+- Đối chiếu kế hoạch/source/evidence: A4 đã có scoped heartbeat/timeout/interruption/recovery/multi-socket, C1 có own maintenance, C3 có bounded queue/frozen gap/commit ACK. Reuse những phần này; thiếu nhãn event muộn và HTTP/GUI gap. Thêm EventOrigin frozen lúc observe (CONNECTED/socket ID từ heartbeat ACK, OFFLINE, UNSPECIFIED), deliveryStatus chỉ lần INSERT đầu, V8 additive, gap GET kiểm quyền+giới hạn, cột/tab giám thị, callback/send generation guard. Không so hai đồng hồ chưa đồng bộ, không dùng epoch full để loại event lịch sử hoặc nới quyền lượt đã chốt.
+- Java425/package PASS, Python10 PASS chạy mới. C2 REAL Spring/PG/HTTP/WS/collector worker/proctor Stage PASS; readings MOCK, disconnect/held write/lost ACK SIMULATED. UNKNOWN/reconnect/late labels/dedup/conflict/full-isolation/overflow gap/history retention/COMMIT rollback/auth-revoke/lifecycle và V7 dữ liệu cũ→V8 PASS. A3/A4/C3/C4/B3/C1 hồi quy mới PASS, có hard-kill JVM thật/Edge ProcessHandle thật và tự STALE/TTL/capacity/shutdown không refresh/manual maintain.
+- Lượt final clean fdac531 lúc17:34 UTC+7: run T2C2-c1de406a-82fc-4993-9374-da1fdfec8270, metadata187source hashes+JAR hashes, raw6endpoints/63categories COMPLETE, drop/unwritten/pending0, JSON/CSV tái tạo giống byte. TEST schemas0, public dev vẫn V7. [Evidence](../evidence/t2-c2/2026-10-10-verification.md) có ảnh, transcript trích nguyên dòng thật, negative test và checksum exact-byte. Code cũ FAIL LEGACY_DELIVERY_METADATA, chỉ chứng minh thiếu metadata; không lấy lượt lỗi làm PASS.
+- Lỗi exploratory đã sửa: parser không chấp nhận Gson bỏ null origin ID; thêm roundtrip và cho OFFLINE/UNSPECIFIED thiếu ID. Assertion interruption tổng1 sau Stop sai; sửa so trước/sau full. Auth-revoke ERROR không có requestId vì auth trước parse; harness nghe callback riêng và đòi FAILED. Class target có unresolved compilation từng cần clean rebuild. Chi tiết trong evidence.
+- A cần review V8/event/gap service/HTTP/WS commit/permission/ACK; B cần review RealtimeClient/adapter/parser/controller/model/view/lifecycle. Human A/B review NOT RUN, ChatGPT planning/review NOT RUN theo lựa chọn không kết nối của người dùng. MT01/MT07/MT08 PARTIAL toàn luồng: candidate GUI/LAN NOT RUN; không giả thành viên đã duyệt. Người dùng đã ủy quyền commit/push/PR/merge commit nếu không blocker và giữ C2; Git cuối ở báo cáo bàn giao.
+- Không sửa .env/tracker/kế hoạch/nguồn/V1–V7 hoặc reset shared DB, không bật EnableScheduling/chạm ExamTimeoutService. Dừng sau C2; không làm C3–C5/delta/E1/E2. Legacy/trước ACK đầu UNSPECIFIED, LIVE chỉ cùng socket; không chứng minh chống client sửa. Gap mới cần refresh; queue/full vẫn RAM như contract cũ.
 
 ## 2026-10-09 · B · T2-B1…T2-B4 trên PR #17
 - Thời lượng: một phiên Agent; giờ của thành viên chưa ghi.
@@ -315,3 +340,50 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - Còn dở: như mục trước; ba điểm server vẫn chặn hết giờ và đọc lượt đã chốt. Ghi nhận thêm: màn đăng nhập của PR có nút điền sẵn tài khoản `MOCK` kèm mật khẩu mặc định trong mã client; cần gỡ hoặc ẩn trước bản phát hành (T5-B2).
 - Tiếp theo: không đổi.
 - Cần người khác: không đổi. Bằng chứng `evidence/t2-b/2026-10-09-verification.md` mục 4b.
+
+## 10/10/2026 — C: T2-C3 observation trace/replay/oracle
+
+- Xác minh C2 PR#19 merge b2926ea và main sạch; tạo feat/t2-c3-monitoring-trace-replay. Code/contract/test5844e88. Không tiếp tục C1/C2 hoặc thay tracker/kế hoạch/.env/migration/exam lifecycle.
+- Tap collector đang có, trace async bounded/error isolation/exact-byte checksum/strict reader, CLI record và replay. Production full/event delivery dùng seam ID riêng test, runtime UUID không đổi. FullSnapshotReducer bọc FullStateReducer dùng chung; parser/algorithm C1 nguyên trạng, server giữ auth/lock/epoch/store/maintenance. Oracle độc lập từ raw observation, fixture+expected viết tay; schedule seeded/drop/dup/reorder/reconnect và mutation negative. QD-14 ghi mô hình baseline ACK/control/transport/event map mô phỏng, không real commit/network/presence proof.
+- Baseline425 PASS chạy mới20:21:36; final Java461/package PASS20:52:54 (+36), Python10 PASS. CLI clean/double/drop-mid/drop-first/mixed/repeat PASS, seed report giống byte; mutation FAIL exit1 đúng, corrupt checksum exit2 đúng. REAL ProcessHandle6scans và owned Edge appear/disappear ghi COMPLETE rồi REPLAY PASS; dọn test-owned resources. Final clean5844e88 run e7f90965-955d-431c-ac91-7e5e2520faa4 lúc20:58:59, metadata source/JAR hashes.
+- C1-Gui/C2-Gui/event-C3/C4/A4 regression PASS chạy mới; C1 tự STALE/TTL/capacity/close, C2 late/gap/COMMIT/auth, C3 owned Edge/network retry, C4 byte, A4 presence/hard-kill. C1/C2 metadata precommit dirty được đối chiếu Java hashes/client JAR với cleanC3, không gọi là clean run. Test schemas0, publicV7 không đổi; không resetDB.
+- [Evidence](../evidence/t2-c3/2026-10-10-verification.md) giữ nguyên trace và gzip lossless report lớn với checksums; excerpts là dòng thật. Pipeline PowerShell làm mất dấu tài liệu append ban đầu đã sửa UTF-8 trước commit; không product failure chưa xử lý. Không dùng replay time làm E1/E2, không ground truth C4/delta.
+- Human B review/A adapter review NOT RUN; B xem collector tap và seam ID/full/event/replay, A xem shared reducer adapter. ChatGPT planning/review NOT RUN theo lựa chọn không kết nối của người dùng. Candidate GUI/LAN/MT02–MT06 delta NOT RUN; MT01/07/08 vẫn PARTIAL tổng thể. Người dùng ủy quyền push/PR/merge commit nếu không blocker và giữ C3, Git cuối trong báo cáo/PR. Dừng sau T2-C3.
+
+## 10/10/2026 — C: T2-C4 controlled process harness
+
+- Đọc contract/kế hoạch/C3 source/evidence, xác minh PR#20 merged/mainf6d46b2 và chưa có C4; tạo feat/t2-c4-controlled-process-harness từ origin/main, bảo toàn nhánh trước. Code/test/contract0164297.
+- ProcessBuilder Java child READY/GO/targethold/exit, seeded planned phase200/800/3000, bounded concurrent/run/timeouts. GT parent nanoTime từ vòng đời child độc lập scan; AlignedTrace offset C3 cùng parent JVM. TEST owned root identity giữ đến stop; no Java name production/no Edge spoof. Trace DTO riêng file, production replay/network từ chối TEST. Join exact PID/start/collector/scan window, lỗi/thiếu/conflict thành INCONCLUSIVE.
+- Baseline461 PASS21:28:58; final493/package PASS21:56:00 (+32new). REAL child unit success/error/noREADY/hang/APIcancel/tree + MOCK scanner, manual expected seed/clock/identity/coverage, artifact bounds/hash/nooverwrite PASS. Compile overload matches(null), READY CRLF Windows và interruption cleanup failures đã sửa trước final; không giấu failure thành PASS.
+- Full Windows30child trên clean0164297 lúc22:05:30:27 observed/3notObserved/0inconclusive; nhóm200 7/3,800 10/0,3000 10/0; resourcesCleaned true. Ground truth/trace/manifest raw hashes, rejoin byte-identical audited; corrupt copy exit2/inconclusive30/notObserved0. Exploratory precommit25/5 retained, không chọn số đẹp hoặc ép mọi child được thấy.
+- C3 CLI/owned Edge/replay, C1-Gui/full/autoSTALE/TTL/shutdown, measurement regressions PASS. Event smoke chạy song song initial FAIL real lostACKretry; chạy riêng PASS không sửa code; hai log retained, cause chưa chứng minh. Shared DB không reset, schemas thử được dọn bởi smoke. C2-Gui/A4/Python10 không chạy lại vì phần tương ứng không đổi.
+- [Evidence](../evidence/t2-c4/2026-10-10-verification.md), [guide](CONTROLLED_PROCESS_HARNESS.md), QD15. Không sửa .env/tracker/kế hoạch gốc/migration/exam lifecycle. Raw giữ exact bytes, log copy thay prefix private; secret/privatehome audit PASS. Human B review/ChatGPT planning/review NOT RUN theo lựa chọn hiện có; không giả approval.
+- B cần xem ProcessSelection/OwnedProcessPolicy, TEST DTO/parser, clock binding, identity/coverage và cleanup. OS Ctrl+C/hardkill parent/candidate full GUI/LAN/E1/E2 NOT RUN; không genericmissrate/latency/CPU/memory. Người dùng ủy quyền push/PR/merge commit nếu không blocker và giữ C4; Git cuối trong final/PR. Dừng sau C4, chưa C5/delta.
+
+## 10/10/2026 — Đồng bộ main và mục lục bằng chứng
+
+- Theo yêu cầu người dùng, fetch và cập nhật main local bằng fast-forward từ a04aaa2 tới f6d46b2 (PR#20); giữ nhánh B4 và các file chưa commit có sẵn.
+- Người dùng chọn tập trung bằng chứng đã kiểm tra tại evidence/<task>/ và thêm mục lục để đọc trên GitHub. Thêm evidence/README.md, liên kết từ README và docs/README, ghi cách lưu transcript/raw/metadata/checksum và phân biệt REAL/MOCK/SIMULATED/REPLAY.
+- Giữ đường dẫn và nội dung artifact cũ; chưa đưa các log chạy local tạm vào Git. Kiểm tra liên kết nội bộ và diff; không chạy lại build, smoke hoặc thay đổi trạng thái kiểm thử/tracker.
+
+## 11/10/2026 — Hoàn tất đồng bộ và công bố mục lục
+
+- Khi tiếp tục phiên, origin/main đã có PR#21 tại b576a07. Đưa commit mục lục chưa push lên main mới bằng rebase, giữ cả mục nhật ký C4 và mục đồng bộ trước đó.
+- Bổ sung T2-C4 vào mục lục bằng chứng; kiểm tra liên kết và diff trước khi push tài liệu. Không chạy lại kiểm thử ứng dụng.
+
+## 11/10/2026 — C: T2-C5 phương pháp baseline và protocol
+
+- Fetch xác minh main82557bf (thêm mục lục evidence sau C4 PR#21/b576a07), workspace sạch; nhánh docs/t2-c5-monitoring-baseline-methodology từ main. Commit phương pháp eb6ba59; không tiếp tục nhánh C4 hoặc thay runtime.
+- [MONITORING_BASELINE_METHOD](MONITORING_BASELINE_METHOD.md): production8tên/TEST, identity/metadata, empty vs source failure, event/current-state/presence/gap, epoch/sequence/revision và RAM restart; ACK full RAM khác event/gap commit. Default source riêng smoke.
+- E1 định nghĩa targetGO/startup proxy/parent-observed lifetime/scan bounds/clock offset, OBSERVED/NOT_OBSERVED_IN_TRACE/INCONCLUSIVE và metadata độc lập. Rate/actual-lifetime bins là đề xuất chưa có analyzer, chung eligibility O/N; latency kernel NOT MEASURED; không clip PRE_GO âm. Harness chưa có warmup15s/window120s/resource sampler. E2 chỉ phương pháp, TEST trace bị production replay từ chối, thiếu delta/oracle/correctness gate; byte JSON transport/outcome/endpoint/window tránh đếm đôi và scope HTTP/framing chưa đo.
+- Đồng bộ PROTOCOL, measurement type/sequence mô tả cũ, trace scope C4, harness note, README/index; không thêm QD kiến trúc vì chỉ đối chiếu hiện có. Giữ raw/old checksums, log event concurrent FAIL và isolated PASS; cause chưa chứng minh. C3 replay PASS vẫn có6missingBusinessEvents trong owned-edge-seeded. C4 trial006 target200/lifetime329,8944ms/hold211,9458ms minh họa đúng proxy.
+- Kiểm tra mới: Markdown link/anchor, tên method/field/schema/default, diff scope và checksum C3/C4/gzip restoration. [Report/checks](../evidence/t2-c5/2026-10-11-verification.md). Java493/Python10 thuộc task trước; C5 không chạy lại runtime tests/smoke/benchmark. B human review và ChatGPT review NOT RUN theo opt-out hiện có; GUI/LAN/MT toàn hệ thống/E1/E2 không nâng PASS.
+- Không sửa .env/tracker/kế hoạch gốc/migration/exam code/collector/harness/reducer/old evidence. B cần chốt window/eligibility/actual bins/uncertainty/workload và byte endpoint/correlation trước đo; công cụ còn thiếu phải task riêng. Người dùng ủy quyền push/PR/merge commit nếu không blocker, giữ C5 và sync main an toàn; kết quả Git cuối trong PR/final. Dừng sau T2-C5.
+
+## 11/10/2026 — B: ổn định PR #17 với main C1–C5
+
+- Worktree riêng và nhánh `stabilize/pr17-main-20261011` từ PR17 41da669; merge main12e2838, xử lý7conflict giữ C full/gap/lifecycle và B exam/seeder/UI. Giữ nguyên workspace gốc, worktree PR17 cũ và3untracked file, không trộn B4 cũ.
+- Gỡ password demo client/smoke fallback; fresh scope trước vào thi, chỉ reuse monitoring cùng attempt, không nuốt lỗi start, khóa selection khi active/đợi stop future. Guard6 + manual FX component smoke mới.
+- Package565/Python10 PASS, FX controls REAL với gateway/WS MOCK PASS, C3 replay PASS/mutation EXPECTED FAIL, C4 join archived byte-identical27/3/0, ledger104file/gzip3/security JAR PASS. Source metadata dirty/in-progress trong evidence; không giả SHA commit về sau là SHA lúc build. PostgreSQL/full GUI/LAN/image/audio/E1/E2 NOT RUN; Docker engine chưa hoạt động.
+- [Report](../evidence/b-integration/2026-10-11-verification.md), [review C](REVIEW_B_MONITORING.md), [checklist + B4 plan](NGHIEM_THU_VAI_B.md). Review do agent Vai B, human A/B approval NOT RUN. Ba blocker A về status chốt/scheduler/deadline vẫn còn; không sửa backend.
+- Đổi hai QD B cũ12/13 thành16/17 để tránh trùng C; các reference lịch sử trong evidence09/10 giữ nguyên và phải đọc theo mapping này. Chưa push/merge main; đích push chỉ nhánh PR17 sau user grant, không force-push. Giờ thực tế/tracker/kế hoạch không điền thay.

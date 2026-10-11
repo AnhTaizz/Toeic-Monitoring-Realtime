@@ -316,6 +316,7 @@ class AuthenticatedNetworkTest {
             SessionController.class, RealtimeHandshakeInterceptor.class, RealtimeWebSocketHandler.class,
             RealtimeSessionRegistry.class, RealtimeWebSocketConfiguration.class})
     static class NetworkFixture {
+        @Bean vn.edu.toeic.server.monitoring.MonitoringStateService mockStateService() { return mock(vn.edu.toeic.server.monitoring.MonitoringStateService.class); }
         @Bean MonitoringGapService mockGapService() { return mock(MonitoringGapService.class); }
         @Bean MonitoringPresenceService mockPresenceService() { return mock(MonitoringPresenceService.class); }
         @Bean JdbcClient mockJdbc() { return mock(JdbcClient.class); }

@@ -1,0 +1,4 @@
+EXCERPT of actual command output; raw measurement files are separate and unchanged.
+powershell : T2-C2 FAIL phase=LEGACY_DELIVERY_METADATA class=IllegalStateException
+TEST assertion: legacy provenance explicit, not invented late/live
+T2-C2 integration failed; credentials are never printed.

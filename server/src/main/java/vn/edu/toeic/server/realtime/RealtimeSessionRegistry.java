@@ -10,6 +10,8 @@ import java.util.Map;
 import jakarta.annotation.PreDestroy;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
+import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,6 +36,8 @@ import vn.edu.toeic.server.monitoring.PresenceSnapshot;
 /** One decorated outbound writer per connection, shared by ACK/ERROR/warnings. */
 @Component
 public final class RealtimeSessionRegistry {
+    public static final String CONNECTION_ORDER_ATTRIBUTE = "monitoring.connectionOrder";
+    private final AtomicLong connectionOrders = new AtomicLong();
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
     private final Gson gson = new GsonBuilder().serializeNulls()
             .registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (value, type, context) -> new JsonPrimitive(value.toString()))
@@ -59,6 +63,7 @@ public final class RealtimeSessionRegistry {
     }
     public MessageMeasurements measurements() { return measurements; }
     public void register(WebSocketSession session) {
+        session.getAttributes().put(CONNECTION_ORDER_ATTRIBUTE, connectionOrders.incrementAndGet());
         sessions.put(session.getId(), new ConcurrentWebSocketSessionDecorator(new MeasuredSession(session), sendTimeout, sendBuffer));
     }
     public void remove(WebSocketSession session) { sessions.remove(session.getId()); }
@@ -77,6 +82,10 @@ public final class RealtimeSessionRegistry {
     }
     public void presenceAssignedProctors(PresenceSnapshot presence, String traceId) {
         pushAssignedProctors(presence.attemptId(),"MONITOR_PRESENCE",presence,traceId);
+    }
+    public boolean isRegistered(String socket) { return sessions.containsKey(socket); }
+    public void stateAssignedProctors(MonitoringStateView state,String traceId) {
+        pushAssignedProctors(state.attemptId(),"MONITOR_STATE",state,traceId);
     }
     private void pushAssignedProctors(String attempt, String type, Object payload, String traceId) {
         for (WebSocketSession target : sessions.values()) {

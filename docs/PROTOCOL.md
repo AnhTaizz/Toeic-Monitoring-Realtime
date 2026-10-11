@@ -1,10 +1,25 @@
 # Protocol đang dùng
 
-**Trạng thái: v0 có login/Bearer; C3 nối collector → event/queue/retry → A3 DB/ACK/warning/timeline. A4 nối scoped heartbeat, presence/timeout/history, roster REST và MONITOR_PRESENCE. B3 đã consume trên dashboard giám thị, HTTP recovery và parser push. Overflow C3 giữ contract riêng; full/delta chưa có.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây.
+**Trạng thái: v0 có login/Bearer, C3 event/queue/retry, A4 heartbeat/presence/history và B3 dashboard. T2-C1 bổ sung OPEN/full/CLOSE, state RAM, HTTP/MONITOR_STATE và tab process hiện tại; delta chưa có.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây. Các mục chặng 1 bên dưới ghi phạm vi lịch sử tại thời điểm task đó; contract T2-C1 ở cuối là phần bổ sung hiện tại.
 
 Owner: C (monitoring, khung message chung), A (auth, ca thi, lưu/nộp). Người dùng: B.
 
+T2-C2 bổ sung nguồn gốc kết nối của event, nhãn nhận do server lưu và HTTP đọc gap. Contract hiện tại ở mục T2-C2 cuối file; các ghi chú "chưa có gap REST/event muộn" trong mục chặng 1 là lịch sử.
+
 Đổi một message đã có người dùng thì: owner sửa file này, reviewer duyệt, người dùng cập nhật fixture trong cùng nhánh tích hợp.
+
+## T2-C5 · Tóm tắt baseline hiện tại và phạm vi đo
+
+Đối chiếu source tại main82557bf ngày11/10/2026. Không thêm message/field. [Phương pháp baseline](MONITORING_BASELINE_METHOD.md) là đầu mối cho identity, nghĩa của số đo và điều kiện trước E1/E2; bảng/contract C1/C2 phía cuối vẫn là chi tiết wire hiện có. Các ghi chú chặng1 là lịch sử, không thay định nghĩa hiện tại sau đây.
+
+- Production `process-policy-v1`: chrome.exe/msedge.exe/firefox.exe/zalo.exe/teams.exe/discord.exe/anydesk.exe/teamviewer.exe. Source liệt kê rồi lọc. Identity local `(collectorSessionId,pid,startInstant)`; start nullable làm yếu khả năng phân biệt PID reuse, tên không phải khóa. Metadata UNREADABLE không chứng minh không có process liên quan.
+- OPEN cấp syncEpoch/UNSYNCED sequence0; full đầu1, full tiếp theo cao hơn thay toàn tập và có thể nhảy số. Duplicate cùng nội dung trong dedup ACK lại; conflict/stale/epoch/socket sai bị từ chối. Delta/baseSequence chưa triển khai. View revision chỉ so trong serverInstanceId, không dùng sequence giữa epoch.
+- ACK FULL là nhận vào RAM một server JVM. Event/gap và scoped presence ACK sau transaction commit. Full không ghi/xóa history. deliveryStatus là nguồn socket, không đo delay. QUEUE_OVERFLOW có droppedCount khác interruption heartbeat UNKNOWN, vốn không biết số event mất.
+- Poll production1.000ms, heartbeat2.000ms, presence timeout6.000ms; full STALE6.000ms/TTL300.000ms/maintenance500ms, RAM bounded4.096attempt. Worker bảo trì riêng, không dựa annotation Scheduled cũ. Restart mất full RAM, không phục hồi history chưa từng commit. Cấu hình smoke nhỏ không là default production.
+- Measurement `monitoring-measurement-v1` nhận OPEN/FULL/CLOSE/state, sequence có trong FULL/state/ACK FULL; không có thì null. Không lưu syncEpoch/revision/acknowledgedType ở raw measurement, không lấy recordIndex làm wire sequence. Hooks đếm JSON UTF-8 WS tại transport, ATTEMPTED/WRITE_COMPLETED/WRITE_FAILED riêng và ACK correlation không cộng byte lần hai. Không HTTP/handshake/TCP-IP/TLS/WS framing; E2 cần endpoint/window/correlation trước claim tổng rộng hơn.
+- TEST C4 `test-owned-process-v1`/`monitoring-observation-trace-test-v1` chỉ root identities harness tạo; không đổi production8tên, network full vẫn chỉ nhận production. Reader giữ metadata thiếu, join dựa PID/start/collector/clock. Production replay từ chối TEST. 200ms target sau GO không là kernel lifespan200ms; scan/exit là khoảng quan sát parent, latency NOT MEASURED.
+
+Không dùng việc merge tài liệu để ghi B review, delta, E1/E2 hoặc MT01/07/08 toàn hệ thống PASS.
 
 ## Phân kênh
 
@@ -147,9 +162,12 @@ Token chỉ trả trong JSON body của login. Request HTTP `/api/**` sau login 
 | `ACK` (event) | server → thí sinh | `status: ACCEPTED`, `acknowledgedType: PROCESS_OBSERVED` | Không | T1-A3 | Đã cài |
 | `MONITOR_WARNING` | server → giám thị được phân công | Timeline item v0 | Không | T1-A3/B3 | Server và dashboard đã cài |
 | `MONITOR_PRESENCE` | server → giám thị được phân công | PresenceSnapshot: identity/status/reason/revision/timestamps | Không | T1-A4/B3 | Server và dashboard đã cài |
-| _full snapshot_ | thí sinh → server | | Sau khi state được chấp nhận | T2-C1 | Chưa có |
+| `MONITORING_SYNC_OPEN` | thí sinh → server | collectorSessionId | ACK cấp syncEpoch | T2-C1 | Contract v1 trong nhánh tích hợp |
+| `MONITORING_FULL` | thí sinh → server | collectorSessionId, syncEpoch, sequence, policyVersion, processes | ACK sau nhận state RAM | T2-C1 | Contract v1 trong nhánh tích hợp |
+| `MONITORING_SYNC_CLOSE` | thí sinh → server | collectorSessionId, syncEpoch | ACK sau đánh dấu STALE | T2-C1 | Contract v1 trong nhánh tích hợp |
+| `MONITOR_STATE` | server → giám thị được phân công | trạng thái hiện tại có revision | Không | T2-C1 | Contract v1 trong nhánh tích hợp |
 | _delta_ | thí sinh → server | | | T3-C1, T3-C2 | Chưa có |
-| _yêu cầu resync / epoch mới_ | server → thí sinh | | | T2-C1, T3-C2 | Chưa có |
+| _yêu cầu resync delta_ | server → thí sinh | | | T3-C2 | Chưa có; T2-C1 cấp epoch qua ACK của OPEN |
 | _READY / start / interrupted (Listening)_ | hai chiều | | | T3-A2, T3-B2 | Chưa có |
 
 ## Mã lỗi
@@ -693,7 +711,7 @@ Không thêm hay đổi endpoint, message hoặc DTO. Phần này ghi cách clie
 
 | Bước của client | Endpoint | Ghi chú |
 |---|---|---|
-| Vào phòng thi | `GET /status` → `GET /exam` → `POST /takeover` | Làm bài bằng `writerEpoch` do takeover trả (QD-12) |
+| Vào phòng thi | `GET /status` → `GET /exam` → `POST /takeover` | Làm bài bằng `writerEpoch` do takeover trả (QD-16) |
 | Autosave | `POST /answers` | Toàn bộ map; retry giữ nguyên requestId, epoch, revision, answers; chỉ coi là ACK khi `status` là `SAVED`/`ALREADY_SAVED` và `savedRevision` bằng revision đã gửi |
 | Biết deadline | `GET /status` sau ACK đầu tiên | Response autosave không có `deadlineAt` |
 | Nộp bài | `POST /submit` | Một payload đóng băng; bài chưa sửa lần nào nộp với `answerRevision = 1` vì server từ chối 0 |
@@ -717,3 +735,75 @@ Tham số phía client (system property, đổi khi chạy JVM):
 | `toeic.exam.maxRetries` | 4 | Số lần tự gửi lại autosave, nộp bài, đối chiếu |
 | `toeic.exam.statusPollMillis` / `toeic.exam.maxStatusPolls` | 1000 / 30 | Hỏi trạng thái sau khi hết giờ |
 | `toeic.exam.httpTimeoutMillis` | 10000 | Timeout mỗi request HTTP của màn thi |
+
+## T2-C1 · Contract full snapshot baseline v1
+
+Contract bổ sung 10/10/2026, trong nhánh tích hợp; không có delta hoặc writerEpoch.
+
+- Sau explicit start và mỗi CONNECTED mới, candidate gửi `MONITORING_SYNC_OPEN` với payload chỉ có `collectorSessionId`. Server kiểm CANDIDATE + ACTIVE attempt trước cả retry; cấp UUID `syncEpoch` gắn user/attempt/collector/socket. ACK giữ requestId/traceId và có `status=ACCEPTED`, `acknowledgedType=MONITORING_SYNC_OPEN`, `syncEpoch`. Retry đúng OPEN trên cùng socket giữ epoch; OPEN khác cấp epoch mới. Socket có thứ tự mở cũ không được giành lại epoch của socket mới.
+- `MONITORING_FULL` payload: `{collectorSessionId,syncEpoch,sequence,policyVersion,processes:[{pid,processName,startInstant,metadataQuality}]}`. Chỉ `process-policy-v1` và cùng 8 filename QD-08, không path/user/arguments. Identity nằm trong collectorSessionId + pid + startInstant nullable; COMPLETE bắt buộc startInstant. Canonical hóa thứ tự process, filename chữ thường và Instant trước so nội dung; không so chuỗi JSON thô.
+- Epoch bắt đầu UNSYNCED/sequence0 và phải nhận full1. Sau đó full có sequence cao hơn được thay toàn tập, kể cả rỗng; full không cần sequence liền kề. Sai epoch/socket/collector hoặc sequence cũ trả ERROR STALE. Cùng messageId hoặc sequence trong cửa sổ 64 message mà khác nội dung trả CONFLICT; retry cùng messageId/sequence/nội dung ACK lại, không áp dụng hoặc push lần hai. Ngoài cửa sổ, message cũ chỉ STALE. ACK FULL có epoch/sequence, chỉ phát sau reducer chấp nhận RAM, không hứa persistence.
+- `MONITORING_SYNC_CLOSE` payload chỉ `{collectorSessionId,syncEpoch}`; chỉ đúng owner/socket/epoch hiện tại được chuyển STALE, giữ last-known process. Close/retry không tác động lịch sử và không đóng socket dùng chung. Logout/socket mất hoặc không có full thành công trong 6s cũng STALE; heartbeat ONLINE không chứng minh full còn mới. Scan lỗi không gửi full rỗng. TTL 5 phút xóa state không còn hoạt động, không xóa PostgreSQL. Một server JVM giữ tối đa4096attempt, 128process/snapshot, 64dedup/attempt. Server restart mất RAM, epoch cũ không hợp lệ; reconnect phải OPEN/full1.
+- Client có hàng chờ full RAM tối đa16 và một message chờ ACK; retry cùng message/sequence tối đa5, timeout5s. Normal scan thành công gửi full mới; mất kết nối xóa hàng chờ full. Full đầu mỗi epoch lấy từ scan thành công sau CONNECTED, không tái gửi observation cũ. Khi đầy/oversize báo lỗi, không cắt bớt tập thành snapshot có vẻ đầy đủ. Byte UTF-8 toàn envelope không vượt giới hạn WS 65536. Generation của socket và vòng đời collector được kiểm lại ngay trước sendText để bỏ cả message cũ còn chờ ghi trên socket dùng chung.
+- Giám thị lấy `GET /api/v1/monitoring/attempts/{attemptId}/state` hoặc nhận `MONITOR_STATE`. Payload `{attemptId,serverInstanceId,syncEpoch,collectorSessionId,revision,sequence,status,policyVersion,processes,receivedAt}`; status UNSYNCED/SYNCED/STALE, receivedAt UTC do server nhận, không phải thời gian process mở. revision tăng trong một serverInstanceId cho OPEN/full/STALE; dùng revision để gộp HTTP/push (sequence không dùng so giữa epoch). Endpoint kiểm PROCTOR + assignment mỗi lần; push kiểm auth và scope lại. Dashboard disconnect/loading/presence UNKNOWN hiển thị cũ; đổi lượt/refresh/reconnect bỏ response cũ, refresh xóa baseline revision của server trước. State riêng với event/gap/interruption.
+- TX/RX/ACK đi qua hooks C4 hiện có một lần; không đo lại trong reducer. Event C3, heartbeat/presence A4 giữ đường chạy riêng.
+- Bảo trì full state: bean `MonitoringStateMaintenance` có worker riêng gọi `MonitoringStateService.maintain()` theo fixed delay `toeic.state.scan-ms` (default500ms). Không dùng `@Scheduled` và không bật scheduling toàn server, nên không kích hoạt scheduler hết giờ bài thi của A. Runtime failure không hủy các scan sau. Spring shutdown dừng/interrupt và đợi worker tối đa5s, rồi store xóa RAM/chặn request muộn. STALE/TTL push không cần proctor đọc HTTP. Bổ sung này sửa lỗi wiring tại30fa6d9; test cũ gọi maintain trực tiếp chưa kiểm tự chạy.
+
+## T2-C2 — Heartbeat, event đến muộn và khoảng trống
+
+Heartbeat/presence A4, full RAM C1 và gap QUEUE_OVERFLOW C3 tiếp tục chạy riêng. Không thêm message type hoặc bật scheduling toàn server.
+
+### Thông tin kết nối lúc quan sát
+
+ACK hợp lệ của HEARTBEAT (scoped hoặc unscoped) thêm `connectionId`: mã opaque của socket server đang nhận, không phải token, user ID hay syncEpoch. Scoped ACK vẫn sau presence commit; unscoped không cập nhật presence. `RealtimeClient` chỉ nhận mã từ ACK khớp request/trace/type trên generation hiện tại; xóa khi disconnect/reconnect/close. Callback của socket cũ bị bỏ như trước.
+
+`MonitoringDelivery.observe()` lấy `MonitoringTransport.observationOrigin()` ở đầu lần quan sát, ngoài lock. `MonitoringMessage.observed()` đóng băng hai trường tùy chọn dưới đây cùng eventId/payload/observedAt. Retry không bổ sung hoặc đổi nhãn vào payload:
+
+| observationContext | observationConnectionId | Ý nghĩa |
+|---|---|---|
+| CONNECTED | Bắt buộc ID hợp lệ của ACK heartbeat vừa biết trên socket lúc quan sát | Client quan sát trên kết nối xác định |
+| OFFLINE | Thiếu hoặc null | Client đã biết adapter không CONNECTED lúc quan sát |
+| UNSPECIFIED | Thiếu hoặc null | Chưa nhận được ID từ ACK; không đủ dữ liệu xác định nguồn kết nối |
+| Cả hai trường thiếu | — | Event v0 cũ; chuẩn hóa thành UNSPECIFIED |
+
+Một ID có mặt nhưng context thiếu, CONNECTED không có ID, hoặc OFFLINE/UNSPECIFIED có ID đều INVALID_INPUT. JSON serializer hiện có lược bỏ null; parser chấp nhận thiếu ID trong hai context không có kết nối. Trường mới vẫn dùng envelope protocolVersion v0. Triển khai server mới trước client mới: server cũ từ chối trường origin mới. Server mới nhận event legacy; dashboard mới đọc timeline legacy thiếu deliveryStatus thành UNSPECIFIED.
+
+### Phân loại tại lần lưu đầu tiên
+
+`RealtimeWebSocketHandler` truyền `session.getId()` thực tế tới `MonitoringEventService.store()`. Server lưu `deliveryStatus` trong V8, chỉ khi INSERT mới:
+
+| deliveryStatus | Quy tắc / hiển thị |
+|---|---|
+| BUFFERED_OFFLINE | Context OFFLINE: "Đến muộn · quan sát khi mất kết nối" |
+| PREVIOUS_CONNECTION | Context CONNECTED, ID lúc quan sát khác socket nhận: "Đến muộn · từ kết nối trước" |
+| LIVE | Context CONNECTED, ID khớp socket nhận: "Cùng kết nối lúc quan sát" |
+| UNSPECIFIED | Dữ liệu cũ hoặc chưa biết nguồn: "Chưa có thông tin kết nối lúc quan sát" |
+
+Đây là nhãn nguồn kết nối, không đo độ trễ và không hứa LIVE là đến nhanh. Không trừ observedAt client với receivedAt server. Ngay trước heartbeat ACK đầu tiên, event có thể UNSPECIFIED; không tự gán nhãn đến muộn cho dữ liệu thiếu bằng chứng. Origin do client báo, không phải bằng chứng chống client đã bị sửa hoặc kết luận gian lận.
+
+V8 chỉ thêm observation_context, observation_connection_id và delivery_status vào monitoring_events. Dòng cũ giữ nguyên và mặc định UNSPECIFIED. So duplicate theo toàn ProcessEvent đã chuẩn hóa, gồm origin gốc; deliveryStatus/receivedAt server không tham gia so payload. Retry event đã lưu LIVE trên socket mới vẫn trả bản LIVE ban đầu; không tạo CONFLICT vì nhãn server thay đổi. Đổi PID/observedAt/origin với cùng eventId là CONFLICT. Unique attempt/eventId, quyền ACTIVE/owner/role trước duplicate, FOR SHARE và transaction/COMMIT rồi ACK giữ nguyên. Không chấp nhận CLOSED/SUBMITTED/TIMED_OUT; không dùng epoch full để loại event lịch sử thuộc quyền. Event chỉ ghi monitoring_events, không gọi reducer/full state hoặc sửa gap/interruption.
+
+HTTP events và MONITOR_WARNING thêm deliveryStatus vào TimelineItem. Duplicate không phát thêm warning; HTTP giúp giám thị phục hồi cảnh báo đã commit nhưng mất push. Callback event send giờ dùng guard collector/socket generation như full: Stop/mất quyền/kết nối thay đổi làm plan cũ không được write; không đổi eventId, payload hoặc ngân sách retry.
+
+### Ba tình huống khác nhau
+
+- Không nhận heartbeat: A4 tự UNKNOWN và lưu monitoring_interruptions với lastSeenAt, timeoutDetectedAt, recoveredAt. Không biết thời điểm chính xác monitoring dừng hay số event mất. ONLINE trở lại không xóa dòng cũ; nhiều socket còn hợp lệ không bị callback socket cũ làm UNKNOWN.
+- Tràn queue: C3 biết số event đã bỏ, gửi MONITORING_GAP QUEUE_OVERFLOW với gapId/count/thời gian client giữ nguyên. Server lưu monitoring_gaps; retry cùng ID/nội dung một dòng, khác nội dung CONFLICT. Không biến heartbeat timeout thành QUEUE_OVERFLOW.
+- Gửi chậm rồi bù đủ: các event vào lịch sử, có nhãn nguồn khi đủ dữ liệu; không tạo thêm số event mất hoặc gap QUEUE_OVERFLOW. Full mới chỉ phục hồi tập process hiện tại.
+
+### Gap HTTP và dashboard
+
+`GET /api/v1/monitoring/attempts/{attemptId}/gaps`: Bearer, PROCTOR được phân công vào ACTIVE. Response `{protocolVersion,traceId,attemptId,gaps:[{gapId,attemptId,collectorSessionId,reason,droppedCount,firstDroppedAt,lastDroppedAt,receivedAt}]}`. reason chỉ QUEUE_OVERFLOW, count số nguyên dương, timestamp đầu/cuối do client báo; receivedAt do DB ghi. 401 thiếu/revoked; 403 sai role/scope hoặc lượt đã kết thúc; lỗi DB/COMMIT/giới hạn trả lỗi, không trả dữ liệu một phần giả đầy đủ. Reader tối đa5000 dòng, lấy5001 để phát hiện vượt giới hạn, không tải toàn lịch sử vào RAM; HTTP client còn giữ giới hạn body/rows có sẵn.
+
+Dashboard có cột "Cách nhận" và tab "Khoảng trống dữ liệu" riêng với lịch sử gián đoạn heartbeat. Gap đọc khi chọn lượt, refresh, reconnect hoặc presence đổi ONLINE/UNKNOWN. Không có push gap riêng: báo cáo overflow vừa nhận cần bấm "Làm mới quyền và dữ liệu". Lỗi đọc gap giữ last-known với nhãn cũ; không giả thành tập rỗng đã đồng bộ. Selection/refresh/connection/request generation chặn response cũ; revoke/logout/close xóa dữ liệu và dọn future/listener/worker. Parser kiểm exact long, reason/timestamps/scope/dedup/limits. Không quét/mạng/file trên FX thread. TX/RX/BUSINESS_ACK dùng hooks C4 hiện có đúng một lần.
+
+## T2-C3 — trace quan sát local và kết quả replay
+
+Không thêm/sửa message mạng hay quyền C1/C2. Schema local `monitoring-observation-trace-v1`: HEADER → START → OBSERVATION/SOURCE_FAILURE → STOP → FINAL. Policy/identity/process metadata dùng production. Empty success khác scan failure; failure không xóa state/baseline event. Checksum SHA256 tính exact UTF-8/LF bytes của HEADER và tất cả RECORD, không tính FINAL; index liên tục, COMPLETE/written=attempted/drop0/STOP/checksum đúng mới cho replay. File16MiB,10000record,128process; reader strict unknown/duplicate field/UTF-8/time/order/partial line. [Schema và lệnh đầy đủ](MONITORING_TRACE.md).
+
+Server FullSnapshotReducer delegate lõi FullStateReducer trong protocol; CLI cũng gọi parser/canonicalization/core này. Không di chuyển auth/transaction/epoch/socket/maintenance sang CLI. ObservationOracle tính expected riêng từ trace; driver dùng full/event encoder thật với ID/clock/transport/ACK baseline mô phỏng. Fault schedule drop vĩnh viễn/duplicate/reorder dữ liệu; OPEN/CLOSE tin cậy trong mô hình, reconnect tạo epoch mới. Không ACK-lost/retry network, heartbeat UNKNOWN/timer STALE/TTL/auth/DB simulation. Full seq mới có thể nhảy sau seq1 hợp lệ; mất seq1 thì chưa đồng bộ. Event business/delivered/missing kiểm độc lập; full không phục hồi/xóa history. [QD-14](QUYET_DINH.md#qd-14--trace-quan-sát-và-replay-production-với-oracle-độc-lập).
+## T2-C4 · Artifact thử nghiệm cục bộ
+
+C4 không thêm HTTP/WS message, không đổi FullSnapshotPayload hoặc 8 tên executable production. `ProcessSelection` là điểm chọn process trong collector; mặc định vẫn `ProcessPolicy`. Chỉ harness truyền `OwnedProcessPolicy` cho root child do mình tạo.
+
+Trace TEST dùng cặp schema/policy `monitoring-observation-trace-test-v1` / `test-owned-process-v1`; reader C3 nhận schema an toàn này nhưng replay/network driver production từ chối. Dữ liệu tên/start thiếu được giữ UNREADABLE; không ép Java child thành ứng dụng production. Ground truth `controlled-ground-truth-v1` có parent clock mapping, checksum, identity và trạng thái cleanup. [Contract/lệnh/giới hạn C4](CONTROLLED_PROCESS_HARNESS.md).

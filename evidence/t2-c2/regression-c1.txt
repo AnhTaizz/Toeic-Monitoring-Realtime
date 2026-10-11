@@ -1,0 +1,12 @@
+EXCERPT of actual command output; raw measurement files are separate and unchanged.
+PASS REAL Edge -> production ProcessHandle/collector/full/WS/RAM/ACK/dashboard; close removes current PID and retains PostgreSQL history
+PASS REAL reconnect/epoch isolation/duplicate/conflict/empty/scope/stop; MOCK fault sets; event/gap/interruption history preserved
+PASS REAL JavaFX proctor component/controls/Edge rows/screenshots; full candidate GUI NOT RUN
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS REAL autonomous STALE push with open socket/scoped heartbeat; no CLOSE/HTTP state read/manual maintain; last process set retained (MOCK process)
+PASS REAL autonomous TTL4000ms tombstone/capacity release: OPEN B refused before TTL and ACK after TTL; history unchanged; no manual maintain/HTTP refresh
+PASS REAL Spring shutdown clears full-state RAM
+PASS only owned TEST schema/server/Edge/FX resources cleaned; shared history untouched
+T2-C1 REAL full snapshot smoke PASS; fault process sets MOCK; full candidate GUI/LAN/human review NOT RUN
+Summary COMPLETE: endpoints=6, categories=63; WS JSON application bytes only
+T2-C1 artifacts: server/target/t2c1-runtime/T2C1-19d9c00c-aa37-4ab8-b4f1-baf8849e6647

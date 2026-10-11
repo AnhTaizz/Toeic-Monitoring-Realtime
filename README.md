@@ -1,6 +1,10 @@
 # TOEIC Monitoring Realtime
 
-Xương sống kỹ thuật chặng 1 gồm Spring Boot server, JavaFX client hai role, PostgreSQL và spike `ProcessHandle`. C2/A3/C3 đã nối collector → event → queue/retry → DB/ACK. A4 có heartbeat, presence/timeout/history; B3 đã có dashboard giám thị nhận cảnh báo và tải lịch sử. Nghiệp vụ thi, full/delta và đóng gói chạy trên máy thứ hai thuộc các task sau.
+Nhánh tích hợp B từ PR #17 + main12e2838 có màn thi JavaFX, gỡ password demo và giữ full/gap giám thị. [Trạng thái kiểm mới](evidence/b-integration/2026-10-11-verification.md), [checklist gate/B4 và blocker A](docs/NGHIEM_THU_VAI_B.md), [review C](docs/REVIEW_B_MONITORING.md). Package565/Python10/FX fixture PASS; nghiệm thu PostgreSQL/toàn luồng/LAN vẫn còn thiếu, B3/B4 PARTIAL.
+
+Spring Boot server, JavaFX client hai role, PostgreSQL và collector `ProcessHandle`. Event/queue/retry, heartbeat/presence/history và dashboard chặng 1 đã có. Server có backend thi chặng 2; T2-C1 thêm full snapshot và tab **Process hiện tại**. Delta, GUI thi toàn luồng và đóng gói trên máy thứ hai chưa được nghiệm thu. Các mục chặng 1 bên dưới mô tả phạm vi lịch sử của từng task; phần full hiện tại ở cuối.
+
+Log và bằng chứng được tập trung theo task tại [evidence/README.md](evidence/README.md). Khi đọc dự án trên GitHub hoặc chuẩn bị prompt cho chat web, bắt đầu từ [tiến độ](docs/TIEN_DO.md), [protocol](docs/PROTOCOL.md), [kiểm thử](docs/KIEM_THU.md), rồi đối chiếu báo cáo và artifact của task trong mục lục bằng chứng.
 
 ## Yêu cầu môi trường
 
@@ -82,7 +86,7 @@ AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> listener);
 
 - C dùng interface, không dùng raw WebSocket. Subscription trả AutoCloseable để gỡ listener; callback không bảo đảm FX thread.
 - `send` hoàn thành khi socket write xong; ACK/ERROR đi qua `onMessage`. ACK pending được xóa khi disconnect, không replay event tự động. C3 quản lý eventId/queue/retry và đối soát business ACK.
-- HEARTBEAT, PROCESS_OBSERVED và MONITORING_GAP đã nhận ACK server thật. Event/gap chỉ được ACK sau COMMIT. State/full/delta chưa có schema thực, không tự thêm type/payload hoặc cấp scope.
+- HEARTBEAT, PROCESS_OBSERVED và MONITORING_GAP đã nhận ACK server thật. Event/gap chỉ được ACK sau COMMIT. T2-C1 thêm OPEN/FULL/CLOSE/MONITOR_STATE theo contract ở cuối PROTOCOL; ACK FULL xác nhận state RAM, delta chưa có.
 - C2 có thể dùng trạng thái kết nối và ranh giới transport; việc nối collector không được triển khai trong B2.
 
 Unit tests dùng MOCK socket/clock ghi nhãn; HTTP handshake tests chạy network với fixture response 401/503. Real smoke riêng dùng PostgreSQL + production Spring server + chính RealtimeClient B, kiểm candidate/proctor, heartbeat ACK, stop/restart server, revoke/expire, retry budget và shutdown:
@@ -256,6 +260,81 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-c4.ps1
 Script in thư mục `server/target/c4-runtime/<runId>` chứa raw/metadata/summary JSON+CSV. Python3.11+ stdlib; không cài thêm package. Event/overflow source MOCK, ACK suppression tại observer C3 SIMULATED; HTTP/WS/DB/B2/dashboard model REAL. ProcessHandle collector scan REAL được kiểm riêng, không giả process mở từ MOCK. Metadata ghi source SHA/dirty/hash source+JAR, OS/JDK/settings/clock domain và lệnh sanitize. Đây là smoke không mở GUI; LAN, human B review, WMI/ETW và E1/E2 NOT RUN.
 
 Queue log mặc định1024/drop-new, flush2000ms, writer daemon; I/O lỗi không phá delivery. Summary exit0=COMPLETE các file cung cấp, exit2=INCOMPLETE/lỗi; báo drop/unwritten/truncated/malformed/counter mismatch, không sửa raw. Cấu hình, schema, chi phí khi bật và giới hạn: [MONITORING_MEASUREMENTS](docs/MONITORING_MEASUREMENTS.md). [Khảo sát ProcessHandle/WMI có nguồn Oracle/Microsoft](docs/PROCESS_MONITORING_SURVEY.md), [evidence C4](evidence/t1-c4/2026-10-05-verification.md).
+
+## Full snapshot T2-C1
+
+Candidate bấm **Bắt đầu giám sát** sẽ OPEN để lấy syncEpoch, rồi gửi toàn bộ tập process theo policy v1 sau mỗi lần quét thành công. Full đầu sequence1; ACK có epoch/sequence sau khi server chấp nhận RAM. Event cảnh báo vẫn lưu riêng trong DB. Proctor chọn lượt được phân công, tab **Process hiện tại** cho thấy filename/PID/startInstant/metadataQuality; tab cảnh báo và gián đoạn giữ lịch sử khi process đóng.
+
+Kiểm tự động với DB theo `.env`, schema TEST/port riêng, Windows Edge do test tự mở và dọn:
+
+```powershell
+docker compose up -d --wait
+mvn package
+python -m unittest discover -s scripts -p test_summarize_monitoring.py -v
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t2c1.ps1 -JavaHome $env:JAVA_HOME -Gui
+```
+
+`JavaHome` là thư mục JDK21, không phải `bin/java.exe`; nếu JAVA_HOME rỗng, script dùng `java` trong PATH. Python dùng stdlib, không cần rg/winget cho smoke này. `-Gui` mở component giám thị JavaFX thật, chọn lượt, kiểm process Edge xuất hiện/biến mất và chụp ảnh ở `server/target/t2c1-smoke/`. Raw, checksum source/JAR, metadata và summary nằm dưới đường dẫn runId mà script in. Component PASS chưa thay GUI candidate toàn app hay LAN.
+
+Tự demo trong app: build lại, dừng server dev cũ và chạy bản mới (không reset volume). Nạp `.env` vào PowerShell rồi chạy server:
+
+```powershell
+foreach ($line in Get-Content -Encoding UTF8 .env) {
+    if ($line -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD)\s*=(.*)$') {
+        [Environment]::SetEnvironmentVariable($Matches[1], $Matches[2].Trim().Trim('"').Trim("'"), 'Process')
+    }
+}
+java "-Duser.timezone=UTC" -jar server/target/server-0.1.0-SNAPSHOT.jar
+```
+
+Ở hai terminal khác, mỗi terminal chạy `java -jar client/target/client-0.1.0-SNAPSHOT-all.jar`. Nếu đã có DEMO-C3-A thì dùng lại; nếu chưa có, chạy `scripts/demo-c3.ps1 -Action Create` như mục demo C3. Candidate1 chọn lượt/bắt đầu; proctor1 chọn cùng lượt. Mở Edge, chờ vài poll: bảng hiện tại có một hoặc nhiều PID Edge. Đóng **tất cả process Edge đó**: chúng biến mất khỏi bảng hiện tại; cảnh báo lịch sử vẫn còn. Edge có thể giữ process nền sau đóng cửa sổ nên phải đối chiếu PID. Notepad không thuộc policy v1.
+
+Dừng giám sát: state STALE giữ tập cuối với nhãn dữ liệu cũ. Kết nối lại: OPEN mới, UNSYNCED cho tới full1. Lỗi scan không gửi full rỗng; full rỗng chỉ từ scan thành công không có process phù hợp. Default server stale6s, TTL5phút,4096attempt; client full queue16+1pending, snapshot128process, retry5. Quá giới hạn báo lỗi, không cắt tập. Restart server mất state RAM; lịch sử PostgreSQL không mất. Không hỗ trợ nhiều server cùng giữ full state. [Contract](docs/PROTOCOL.md#t2-c1--contract-full-snapshot-baseline-v1), [QD-12](docs/QUYET_DINH.md), [evidence](evidence/t2-c1/2026-10-10-verification.md).
+
+## Heartbeat, event muộn và gap T2-C2
+
+Khi client mất liên lạc, A4 tự báo UNKNOWN và ghi lần heartbeat cuối/thời điểm server phát hiện timeout. Khi nối lại, event chưa được xác nhận có thể gửi bù vào lịch sử; full mới phục hồi danh sách process hiện tại. Hai luồng này độc lập: process đã đóng vẫn có cảnh báo lịch sử, còn danh sách hiện tại không được event muộn làm sống lại.
+
+Event mới có nguồn kết nối đóng băng lúc quan sát. Dashboard thêm cột "Cách nhận": "Đến muộn · từ kết nối trước", "Đến muộn · quan sát khi mất kết nối", "Cùng kết nối lúc quan sát" hoặc "Chưa có thông tin kết nối lúc quan sát". Đây là thông tin về kết nối, không phải số mili giây trễ hoặc bằng chứng gian lận. Event trước ACK heartbeat đầu/legacy có thể chưa xác định; không suy luận bằng cách trừ giờ hai máy.
+
+Tab "Khoảng trống dữ liệu" đọc báo cáo QUEUE_OVERFLOW qua `/api/v1/monitoring/attempts/{attemptId}/gaps`. Bấm "Làm mới quyền và dữ liệu" để lấy báo cáo mới. Mất heartbeat nằm riêng ở "Lịch sử gián đoạn" và không có số event mất tự suy ra. Nâng server trước client mới; Flyway tự thêm V8, không reset DB hoặc sửa migration đã áp dụng. V8 giữ các event cũ với nguồn UNSPECIFIED.
+
+Demo tự động trên Windows, từ thư mục repository, với Docker/PostgreSQL đang chạy và `.env` local đã có:
+
+```powershell
+$jdk = 'C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot' # đổi thành JDK 21 của máy bạn
+mvn package
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t2c2.ps1 -JavaHome $jdk -Gui
+# Hồi quy full/process thật và tự STALE/TTL/shutdown:
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t2c1.ps1 -JavaHome $jdk -Gui
+# Hard-kill client JVM thật, nhiều socket, revoke, khôi phục presence:
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-a4.ps1 -JavaHome $jdk
+```
+
+C2 smoke tự dựng schema TEST và server port riêng; không cần dừng server dev. Nó chạy lần lượt: hai candidate ONLINE → giữ một event chưa gửi → ngắt socket A → tự UNKNOWN → tạo event offline → reconnect/ONLINE → gửi bù có nhãn → full rỗng phục hồi state → kiểm retry/conflict/COMMIT lỗi → ép queue tràn → giám thị đọc gap → kiểm CLOSED/SUBMITTED/TIMED_OUT/revoke → dọn worker/schema. Mạng/DB/Spring/collector worker và GUI proctor component là REAL; process readings là MOCK; ngắt kết nối/giữ write/mất ACK được điều khiển (SIMULATED). Smoke C1 riêng dùng ProcessHandle/Edge thật; A4 riêng hard-kill JVM sở hữu thật. Không dùng nút Stop để giả mất mạng trong app: Stop chủ động dọn và bỏ pending theo contract.
+
+Kết quả mong đợi là các dòng PASS và `Summary COMPLETE`, file ở `server/target/t2c2-runtime/<runId>/`, ảnh ở `server/target/t2c2-smoke/`. LAN và candidate GUI toàn app chưa được mô phỏng thành PASS. Chỉ có các số drop mà client thực sự báo qua overflow mới xuất hiện ở tab gap. [Contract C2](docs/PROTOCOL.md#t2-c2--heartbeat-event-đến-muộn-và-khoảng-trống).
+
+Review-fix e07bb7e: `MonitoringStateMaintenance` tự gọi maintain theo scan-ms bằng worker riêng; server close hủy worker và xóa full RAM. Không bật EnableScheduling toàn app để tránh kích hoạt scheduler bài thi A ngoài phạm vi. Smoke full nay kiểm thêm socket/heartbeat vẫn sống, ngừng full → tự push STALE, TTL4s tự xóa entry/capacity1 cấp được lượt khác; không đọc HTTP state hay gọi maintain bằng tay. [Evidence sửa scheduling](evidence/t2-c1/scheduling-fix/2026-10-10-verification.md). Kết quả gốc30fa6d9 chưa chứng minh tác vụ tự chạy.
+
+## Trace và oracle T2-C3
+
+Recorder tùy chọn trên collector hiện tại, CLI không cần giao diện dùng full/event encoder production và lõi reducer C1, oracle độc lập từ quan sát gốc, gây lỗi duplicate/drop/reorder/reconnect bằng seed. Không thêm thư viện hoặc message mạng. [Cách chạy và schema](docs/MONITORING_TRACE.md), [evidence mới](evidence/t2-c3/2026-10-10-verification.md).
+
+```powershell
+mvn package
+java -cp client/target/client-0.1.0-SNAPSHOT-all.jar vn.edu.toeic.client.monitoring.trace.TraceCli record --output traces/demo.jsonl --scans 20 --poll-ms 500
+java -cp client/target/client-0.1.0-SNAPSHOT-all.jar vn.edu.toeic.client.monitoring.trace.TraceCli replay --input traces/demo.jsonl --output traces/demo-result.json --seed 1234 --duplicate 20 --drop 10 --reorder 35 --reconnect-at 3
+```
+
+Exit0 PASS,1 oracle mismatch,2 invalid/incomplete/config/I/O. Output mới, không ghi đè. REAL chỉ nói nguồn ProcessHandle thực; phát lại là REPLAY, lỗi/ACK/gate SIMULATED. Không suy UNKNOWN từ full bị mất hoặc lấy thời gian replay làm E1/E2. Human B review/candidate GUI toàn app/LAN NOT RUN; dừng sau C3.
+# Chạy thử process có kiểm soát (T2-C4)
+
+Sau `mvn package`, chạy `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t2c4.ps1 -JavaHome '<JDK21>'` tại thư mục gốc. Công cụ tạo 30 child Java thật, ghi ground truth độc lập và trace collector rồi ghép theo PID/start/clock mapping; không cần DB hoặc GUI. Policy TEST riêng không đổi 8 tên production. [Lệnh CLI, từng mốc thời gian và giới hạn](docs/CONTROLLED_PROCESS_HARNESS.md); [evidence](evidence/t2-c4/2026-10-10-verification.md). Không coi mọi child không thấy là lỗi, không suy ra E1/E2 hay hiệu năng.
+
+## Phương pháp baseline monitoring (T2-C5)
+
+Đọc [phương pháp baseline](docs/MONITORING_BASELINE_METHOD.md) để phân biệt event/state/presence/gap, identity, policy production/TEST, byte tầng ứng dụng và clock. Tài liệu chốt cách đối chiếu C4, giới hạn target200ms và checklist trước E1/E2; còn thiếu marker cửa sổ đo, resource sampler/analyzer E1 và delta/E2. Đây là tài liệu phương pháp, không phải nghiệm thu E1/E2 hoặc human B review.
 
 ## Luồng thi T2-B (màn thí sinh)
 

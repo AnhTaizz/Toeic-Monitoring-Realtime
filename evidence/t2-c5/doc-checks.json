@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-11",
+  "base": "82557bf4a5daddd213469196c3501968b3bbe21e",
+  "task": "T2-C5 documents only",
+  "localLinksAndAnchors": 185,
+  "sourceMethodReferences": 27,
+  "productionExecutables": [
+    "chrome.exe",
+    "msedge.exe",
+    "firefox.exe",
+    "zalo.exe",
+    "teams.exe",
+    "discord.exe",
+    "anydesk.exe",
+    "teamviewer.exe"
+  ],
+  "measurementTypes": [
+    "HEARTBEAT",
+    "PROCESS_OBSERVED",
+    "MONITORING_GAP",
+    "ACK",
+    "ERROR",
+    "MONITOR_WARNING",
+    "MONITOR_PRESENCE",
+    "MONITORING_SYNC_OPEN",
+    "MONITORING_FULL",
+    "MONITORING_SYNC_CLOSE",
+    "MONITOR_STATE"
+  ],
+  "sourceDefaultsAndSchema": "PASS",
+  "c4EvidenceHashes": 28,
+  "c3EvidenceHashes": 27,
+  "c3GzipRestoration": "PASS",
+  "replayPassWithMissingEvents": [
+    {
+      "path": "artifacts/clean.json",
+      "status": "PASS",
+      "missingBusinessEvents": 0
+    },
+    {
+      "path": "artifacts/drop-first.json",
+      "status": "PASS",
+      "missingBusinessEvents": 0
+    },
+    {
+      "path": "artifacts/drop-middle.json",
+      "status": "PASS",
+      "missingBusinessEvents": 0
+    },
+    {
+      "path": "artifacts/duplicate.json",
+      "status": "PASS",
+      "missingBusinessEvents": 0
+    },
+    {
+      "path": "artifacts/mixed.json",
+      "status": "PASS",
+      "missingBusinessEvents": 0
+    },
+    {
+      "path": "artifacts/mutation.json",
+      "status": "FAIL",
+      "missingBusinessEvents": 0
+    },
+    {
+      "path": "artifacts/owned-edge-seeded.json.gz",
+      "status": "PASS",
+      "missingBusinessEvents": 6
+    },
+    {
+      "path": "artifacts/owned-edge.json.gz",
+      "status": "PASS",
+      "missingBusinessEvents": 0
+    },
+    {
+      "path": "artifacts/process-handle.json.gz",
+      "status": "PASS",
+      "missingBusinessEvents": 0
+    },
+    {
+      "path": "artifacts/repeat.json",
+      "status": "PASS",
+      "missingBusinessEvents": 0
+    }
+  ],
+  "c4SummaryAndExample": "PASS",
+  "protectedScope": "PASS",
+  "javaTests": "NOT RUN in C5",
+  "analyzerUnitTests": "NOT RUN in C5",
+  "desktopSmokes": "NOT RUN in C5",
+  "e1e2": "NOT RUN",
+  "humanBReview": "NOT RUN",
+  "chatGPTReview": "NOT RUN per existing opt-out"
+}

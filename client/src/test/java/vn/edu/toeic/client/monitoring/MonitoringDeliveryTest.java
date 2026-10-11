@@ -27,6 +27,31 @@ import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
 /** MOCK snapshots/transport + virtual wall/monotonic time; no sleep/network integration claims. */
 class MonitoringDeliveryTest {
+    @Test void offlineOriginAndPayloadRemainFrozenThroughReconnectAndRetry() {
+        try(Fixture f=new Fixture(4,1,3)) {
+            f.transport.state(ConnectionState.RECONNECTING);
+            f.delivery.observe(snapshot(process(9901,0)));
+            f.transport.state(ConnectionState.CONNECTED);f.delivery.tick();
+            var first=copy(f.transport.sent.getFirst());
+            assertThat(first.payload().get("observationContext").getAsString()).isEqualTo("OFFLINE");
+            assertThat(first.payload().get("observationConnectionId").isJsonNull()).isTrue();
+            f.time.advance(20);f.delivery.tick();f.time.advance(10);f.delivery.tick();
+            assertThat(f.transport.sent.getLast()).isEqualTo(first);
+            f.transport.ack(f.transport.sent.size()-1);
+            assertThat(f.delivery.status().pendingEvents()).isZero();
+            assertThat(f.delivery.status().droppedCount()).isZero();
+            assertThat(f.delivery.status().gapPending()).isFalse();
+        }
+    }
+    @Test void stopInvalidatesPlannedEventSocketWrite() {
+        try(Fixture f=new Fixture(4,1,3)) {
+            f.transport.defer=true;f.delivery.observe(snapshot(process(9902,0)));f.delivery.tick();
+            assertThat(f.transport.guard.getAsBoolean()).isTrue();
+            f.delivery.stop();
+            assertThat(f.transport.guard.getAsBoolean()).isFalse();
+            assertThat(f.transport.listeners).isEmpty();assertThat(f.transport.stateListeners).isEmpty();
+        }
+    }
     @Test void firstSnapshotAndTenPollsEmitOnceUntilDisappearReappear() {
         try (Fixture f = new Fixture(5, 2, 3)) {
             for (int i = 0; i < 10; i++) f.delivery.observe(snapshot(process(1, 0)));
@@ -295,6 +320,12 @@ class MonitoringDeliveryTest {
         @Override public void close() { delivery.close(); }
     }
     static final class MockTransport implements MonitoringTransport {
+        boolean defer;
+        java.util.function.BooleanSupplier guard;
+        @Override public CompletableFuture<Void> sendForGeneration(MessageEnvelope<JsonObject> m,long generation,java.util.function.BooleanSupplier stillCurrent) {
+            guard=stillCurrent;if(defer)return new CompletableFuture<>();
+            return MonitoringTransport.super.sendForGeneration(m,generation,stillCurrent);
+        }
         final List<MessageEnvelope<JsonObject>> sent = new ArrayList<>(); final List<String> forgotten = new ArrayList<>();
         final List<Consumer<MessageEnvelope<JsonObject>>> listeners = new CopyOnWriteArrayList<>();
         final List<Consumer<ConnectionState>> stateListeners = new CopyOnWriteArrayList<>();

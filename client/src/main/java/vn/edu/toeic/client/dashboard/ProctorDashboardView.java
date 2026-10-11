@@ -25,16 +25,22 @@ import vn.edu.toeic.client.dashboard.MonitoringData.Event;
 import vn.edu.toeic.client.dashboard.MonitoringData.Interruption;
 import vn.edu.toeic.client.dashboard.MonitoringData.Presence;
 import vn.edu.toeic.client.exam.ExamApiClient;
+import vn.edu.toeic.client.dashboard.MonitoringData.Gap;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.RealtimeClient;
 import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.protocol.auth.LoginResponse;
+import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
 
 /** FX controls only. Network/state work belongs to the controller and API client. */
 public final class ProctorDashboardView extends BorderPane implements AutoCloseable {
     private final TableView<Presence> roster=new TableView<>();
     private final TableView<Event> events=new TableView<>();
+    private final TableView<Gap> gaps=new TableView<>();
+    private final Label gapStatus=new Label();
     private final TableView<Interruption> history=new TableView<>();
+    private final TableView<FullSnapshotPayload.Process> currentProcesses=new TableView<>();
+    private final Label currentStatus=new Label();
     private final Label banner=new Label(), rosterStatus=new Label(), details=new Label(), eventsStatus=new Label(), historyStatus=new Label();
     private final Button refresh=new Button("Làm mới quyền và dữ liệu"), logout=new Button("Đăng xuất");
     private final AtomicReference<Snapshot> pending=new AtomicReference<>();
@@ -94,16 +100,32 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
         column(events,"Quan sát",230,value -> "Quan sát thấy "+value.processName());
         column(events,"Máy thí sinh báo quan sát",200,value -> time(value.observedAt(),"—"));
         column(events,"Server nhận",200,value -> time(value.receivedAt(),"—"));
+        column(events,"Cách nhận",210,value -> deliveryLabel(value.deliveryStatus()));
         column(events,"Thông tin quan sát",190,value -> value.metadataQuality().equals("COMPLETE")?"COMPLETE — đủ thông tin":"UNREADABLE — thiếu thông tin");
         history.setId("dashboard-history"); history.setPlaceholder(new Label("Chưa có gián đoạn heartbeat được server ghi."));
         column(history,"Liên lạc cuối",210,value -> time(value.lastSeenAt(),"—"));
         column(history,"Server phát hiện mất liên lạc",240,value -> time(value.timeoutDetectedAt(),"—"));
         column(history,"Phục hồi",220,value -> time(value.recoveredAt(),"Chưa phục hồi"));
         column(history,"Lý do",180,value -> "Không nhận heartbeat");
+        currentProcesses.setId("dashboard-current-processes"); currentStatus.setId("dashboard-current-status");
+        currentProcesses.setPlaceholder(new Label("Chưa có process trong snapshot đang hiển thị. Xem trạng thái đồng bộ phía trên."));
+        column(currentProcesses,"Process được quan sát",230,FullSnapshotPayload.Process::processName);
+        column(currentProcesses,"PID",110,value -> Long.toString(value.pid()));
+        column(currentProcesses,"Process bắt đầu",220,value -> value.startInstant()==null?"Không đọc được":time(Instant.parse(value.startInstant()),"—"));
+        column(currentProcesses,"Chất lượng metadata",200,FullSnapshotPayload.Process::metadataQuality);
+        Tab current=new Tab("Process hiện tại",new BorderPane(currentProcesses,currentStatus,null,null,null)); current.setClosable(false);
         Tab timeline=new Tab("Cảnh báo process",new BorderPane(events,eventsStatus,null,null,null)); timeline.setClosable(false);
         Tab interruptions=new Tab("Lịch sử gián đoạn",new BorderPane(history,historyStatus,null,null,null)); interruptions.setClosable(false);
+        gaps.setId("dashboard-gaps");gapStatus.setId("dashboard-gap-status");
+        gaps.setPlaceholder(new Label("Chưa có báo cáo tràn hàng đợi. Mất heartbeat được ghi ở Lịch sử gián đoạn."));
+        column(gaps,"Lý do",180,value -> "Tràn hàng đợi event");
+        column(gaps,"Số event client báo đã bỏ",210,value -> Long.toString(value.droppedCount()));
+        column(gaps,"Client báo bỏ đầu tiên",220,value -> time(value.firstDroppedAt(),"—"));
+        column(gaps,"Client báo bỏ cuối cùng",220,value -> time(value.lastDroppedAt(),"—"));
+        column(gaps,"Server nhận",220,value -> time(value.receivedAt(),"—"));
+        Tab gapTab=new Tab("Khoảng trống dữ liệu",new BorderPane(gaps,gapStatus,null,null,null));gapTab.setClosable(false);
         VBox list=new VBox(8,rosterStatus,roster,details); VBox.setMargin(list,new Insets(14,0,12,0));
-        BorderPane body=new BorderPane(new TabPane(timeline,interruptions)); body.setTop(list); setCenter(body);
+        BorderPane body=new BorderPane(new TabPane(current,timeline,interruptions,gapTab)); body.setTop(list); setCenter(body);
         setBottom(new Label("UNKNOWN: server không còn xác nhận được liên lạc. Đây không phải kết luận gian lận."));
         refresh.setOnAction(event -> controller.refresh());
         roster.getSelectionModel().selectedItemProperty().addListener((observable,old,value) -> {
@@ -113,6 +135,14 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
     }
     private boolean staleRoster() { Snapshot state=pending.get(); return state==null || state.rosterStale() || state.connection()!=ConnectionState.CONNECTED; }
     private String time(Instant value,String empty) { return value==null?empty:times.format(value); }
+    public static String deliveryLabel(String status) {
+        return switch(status) {
+            case "LIVE" -> "Cùng kết nối lúc quan sát";
+            case "BUFFERED_OFFLINE" -> "Đến muộn · quan sát khi mất kết nối";
+            case "PREVIOUS_CONNECTION" -> "Đến muộn · từ kết nối trước";
+            default -> "Chưa có thông tin kết nối lúc quan sát";
+        };
+    }
     private static String reason(String value) {
         return switch(value) {
             case "HEARTBEAT" -> "Vừa nhận heartbeat hợp lệ";
@@ -154,10 +184,18 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
             if (value.selected()!=null) value.attempts().stream().filter(item -> item.attemptId().equals(value.selected())).findFirst().ifPresent(item -> roster.getSelectionModel().select(item));
             else roster.getSelectionModel().clearSelection();
             roster.refresh(); events.getItems().setAll(value.events()); history.getItems().setAll(value.interruptions());
+            gaps.getItems().setAll(value.gaps());
+            gapStatus.setText(section(value.gapsLoading(),value.gapsStale(),value.gapsError(),"Báo cáo tràn: "+value.gaps().size()+". Làm mới để tải báo cáo vừa nhận. Mất liên lạc không có số event mất xác định."));
             details.setText(value.selected()==null?"Chưa chọn lượt. Chọn một dòng để xem cảnh báo và lịch sử.":"Lượt đang xem: "+value.selected());
             eventsStatus.setText(section(value.eventsLoading(),value.eventsStale(),value.eventsError(),"Cảnh báo: "+value.events().size()));
             historyStatus.setText(section(value.historyLoading(),value.historyStale(),value.historyError(),"Gián đoạn: "+value.interruptions().size()));
+            var state=value.currentState();
+            currentProcesses.getItems().setAll(state==null?java.util.List.of():state.processes());
+            String stateText=state==null?"UNSYNCED — chưa có snapshot được xác nhận"
+                    :state.status().equals("UNSYNCED")?"UNSYNCED — đang chờ full snapshot đầu tiên"
+                    :"Quan sát gần nhất: "+state.processes().size()+" process · server nhận "+time(state.receivedAt()==null?null:Instant.parse(state.receivedAt()),"—");
+            currentStatus.setText(section(value.stateLoading(),value.stateStale(),value.stateError(),stateText));
         } finally { rendering=false; }
     }
-    @Override public void close() { if (closed.compareAndSet(false,true)) { controller.close(); examApi.close(); pending.set(null); roster.getItems().clear(); events.getItems().clear(); history.getItems().clear(); } }
+    @Override public void close() { if (closed.compareAndSet(false,true)) { controller.close(); examApi.close(); pending.set(null); roster.getItems().clear(); events.getItems().clear(); history.getItems().clear(); gaps.getItems().clear(); currentProcesses.getItems().clear(); } }
 }

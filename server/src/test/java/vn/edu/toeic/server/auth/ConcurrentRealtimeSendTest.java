@@ -47,7 +47,8 @@ class ConcurrentRealtimeSendTest {
         var measurement=new MessageMeasurements(Endpoint.SERVER,"MOCK-decorator",64,1000,StringWriter::new,Map.of());
         var registry = new RealtimeSessionRegistry(authentication, authorization, 5000, 65_536,measurement);
         RealtimeWebSocketHandler handler = new RealtimeWebSocketHandler(authentication, authorization, 65_536,
-                registry, mock(MonitoringEventService.class), mock(MonitoringGapService.class), mock(MonitoringPresenceService.class));
+                registry, mock(MonitoringEventService.class), mock(MonitoringGapService.class), mock(MonitoringPresenceService.class),
+                mock(vn.edu.toeic.server.monitoring.MonitoringStateService.class));
         WebSocketSession socket = mock(WebSocketSession.class);
         Map<String, Object> attributes = new ConcurrentHashMap<>();
         attributes.put(SessionAuthenticationService.TOKEN_HASH_ATTRIBUTE, "MOCK-hash");
@@ -83,7 +84,7 @@ class ConcurrentRealtimeSendTest {
                 try {
                     if (type.equals("WARNING")) registry.warnAssignedProctors(new MonitoringEventService.StoredEvent(1, "MOCK-attempt",
                             new ProcessEvent("MOCK-event", "MOCK-collector", "v1", 1, "notepad.exe", null,
-                                    "UNREADABLE", Instant.now()), Instant.now()), "MOCK-trace");
+                                    "UNREADABLE", Instant.now()), Instant.now(),"UNSPECIFIED"), "MOCK-trace");
                     else if(type.equals("PRESENCE")) registry.presenceAssignedProctors(new PresenceSnapshot("MOCK-attempt",1,"MOCK", "ONLINE","HEARTBEAT",1,"MOCK-collector",Instant.now(),null),"MOCK-trace");
                     else handler.handleMessage(socket, new TextMessage(AuthenticatedNetworkTest.heartbeat(null)));
                 }

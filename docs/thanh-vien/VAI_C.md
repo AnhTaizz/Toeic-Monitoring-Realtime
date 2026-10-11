@@ -150,7 +150,7 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 **Xong khi:** màn giám thị thấy state hiện tại của thí sinh; message của epoch cũ bị từ chối; MT01 chạy được.
 
-**Ghi chú làm dở:** —
+**Ghi chú bàn giao:** 10/10/2026 — PR#18 đã merge bằng merge commit683adfc, nhánh `feat/t2-c1-monitoring-full-snapshot` giữ lại. Code full6acd031, review-fix e07bb7e dùng worker riêng, không bật scheduler toàn server/ExamTimeoutService. Java413 và REAL autonomous STALE/TTL/capacity/shutdown/full Edge/GUI component PASS; C2 chạy lại C1 hồi quy PASS. MT01 PARTIAL; GUI candidate/LAN/human A/B review tổng thể NOT RUN. [Evidence gốc](../../evidence/t2-c1/2026-10-10-verification.md), [bổ sung](../../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md).
 
 ### T2-C2 · Heartbeat, event muộn và khoảng trống
 `4h` · phụ thuộc: T2-C1 · review: B
@@ -164,7 +164,7 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 **Xong khi:** MT01, MT07, MT08 có bằng chứng.
 
-**Ghi chú làm dở:** —
+**Ghi chú bàn giao 10/10/2026:** Nhánh `feat/t2-c2-monitoring-late-events-and-gaps`, base683adfc, code fdac531. Reuse heartbeat/presence A4, full worker C1 và gap C3; thêm EventOrigin frozen lúc observe, deliveryStatus lần INSERT đầu, V8 additive, HTTP đọc gap/tab giám thị và generation guard gửi event cũ. Java425/package/Python10, C2 REAL Spring/PG/HTTP/WS/collector worker/proctor Stage PASS; readings MOCK/outage/write/ACK loss SIMULATED. A3/A4/C3/C4/B3/C1 mới PASS, gồm hard-kill JVM và ProcessHandle/Edge thật, tự STALE/TTL/shutdown. [Evidence](../../evidence/t2-c2/2026-10-10-verification.md), [demo](../../README.md#heartbeat-event-muộn-và-gap-t2-c2), [contract](../PROTOCOL.md#t2-c2--heartbeat-event-đến-muộn-và-khoảng-trống), QD-13. MT01/MT07/MT08 PARTIAL cấp toàn hệ thống; candidate GUI/LAN/human A/B review NOT RUN. A cần xem V8/transaction/ACK/permission, B xem RealtimeClient/parser/controller/model/view. Event trước ACK đầu/legacy UNSPECIFIED; LIVE chỉ cùng socket, không đo delay; origin không phải chứng cứ gian lận. Không sửa tracker/.env/nguồn kế hoạch/migration cũ, không reset DB; dừng sau C2, không C3–C5/delta/E1/E2.
 
 ### T2-C3 · Ghi/phát lại trace và oracle trạng thái
 `4h` · phụ thuộc: T2-C1 · review: B
@@ -182,7 +182,7 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 **Xong khi:** phát lại trace nhỏ cho đúng kết quả đã biết; bật gây lỗi thì kết quả mong đợi là UNSYNCED/UNKNOWN đúng chỗ.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** Code/test/CLI/evidence hoàn tất10/10, commit5844e88. [Cách chạy/schema](../MONITORING_TRACE.md), [evidence](../../evidence/t2-c3/2026-10-10-verification.md). Java461/Python10, real ProcessHandle/owned Edge trace→replay và C1/C2/event/C4/A4 hồi quy PASS. Oracle từ quan sát gốc, fixture expected viết tay, seed tái tạo byte-identical; full lỗi cố ý bị phát hiện. Human B review NOT RUN, A cần xem reducer adapter. UNKNOWN thuộc presence không mô phỏng ở CLI; không gán từ drop full. Candidate GUI/LAN/delta/T2-C4/E1/E2 chưa làm. Dừng sau C3; Git cuối xem báo cáo/PR.
 
 ### T2-C4 · Harness phát process thử nghiệm
 `4h` · phụ thuộc: T2-C3 · review: B
@@ -199,14 +199,14 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 **Xong khi:** một lần chạy thử cho ra file ground truth và file quan sát của collector, ghép được với nhau.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** Code0164297/test/evidence hoàn tất10/10 từ C3 merge PR#20/f6d46b2. Java493/package PASS; Windows30child REAL đủ10 mỗi200/800/3000, poll500/seed1234/TEST:27 OBSERVED/3 NOT_OBSERVED_IN_TRACE/0 INCONCLUSIVE; checksum/rejoin/cleanup PASS. [Cách chạy/clock/identity](../CONTROLLED_PROCESS_HARNESS.md), [evidence](../../evidence/t2-c4/2026-10-10-verification.md). C1-Gui/C3-replay/measurement và event chạy riêng hồi quy PASS; lần event song song FAIL retained/cause chưa chứng minh. Human B review NOT RUN, cần xem policy seam/trace TEST/clock binding/coverage/lifecycle. OS Ctrl+C/hardkill parent, candidate full GUI/LAN/E1/E2 NOT RUN; không latency/miss-rate hoặc tên production mới. Giữ nhánh C4 theo yêu cầu, Git cuối trong báo cáo/PR. Dừng sau C4, chưa C5/delta.
 
 ### T2-C5 · Ghi phương pháp baseline và protocol
 `2h` · phụ thuộc: T2-C2, T2-C4 · review: B
 
 Viết ra: `policyVersion`, khóa process, phạm vi đo, giới hạn về quyền và PID tái sử dụng; định nghĩa "bỏ sót" và "độ trễ phát hiện"; đầu vào của benchmark. Đưa cho B review trước khi chạy đo. Cập nhật `docs/PROTOCOL.md`.
 
-**Ghi chú làm dở:** —
+**Ghi chú bàn giao 11/10/2026:** Tài liệu/đối chiếu hoàn tất, commit phương pháp eb6ba59 từ main82557bf (C4 PR#21 đã merge). [Phương pháp baseline](../MONITORING_BASELINE_METHOD.md), [kiểm tra mới C5](../../evidence/t2-c5/2026-10-11-verification.md). Policy/identity/ACK RAM vs commit/event/state/presence/gap/byte/clock đã chốt theo source; 200ms hold không là đời process200ms. Rate có eligibility và nhóm thực đo đề xuất; latency kernel/CPU/memory NOT MEASURED. Thiếu window/warmup/resource sampler/analyzer E1, delta/oracle/MT02–MT06 trước E2. Human B review NOT RUN, checklist chờ người thật trước đo; không giả đã duyệt. C5 chỉ kiểm tài liệu/source/evidence, không chạy lại Java493/Python10/smoke hoặc benchmark. TRACKER/old artifact/QUYET_DINH giữ nguyên. Git cuối trong PR/final; dừng sau C5, không tự chặng3/delta/E1/E2.
 
 ---
 

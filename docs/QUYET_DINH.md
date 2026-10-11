@@ -95,7 +95,50 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Lý do: định nghĩa byte tái kiểm từ đúng chuỗi, không đếm đôi retry/fragment/outcome, không chặn FX/WS bằng file I/O. Chưa đo overhead hay full/delta; WMI chỉ khảo sát nguồn chính thức, giữ ProcessHandle polling hiện có.
 - Kiểm chứng và giới hạn: [schema](MONITORING_MEASUREMENTS.md), [survey](PROCESS_MONITORING_SURVEY.md), [evidence C4](../evidence/t1-c4/2026-10-05-verification.md); không tự đổi kế hoạch01–03 hoặc TRACKER.
 
-## QD-12 · Vào phòng thi là xin writerEpoch mới
+## QD-12 · Full snapshot v1 có trạng thái RAM và quyền theo epoch/socket
+
+- Ngày: 10/10/2026 · Vai C theo T2-C1 · Human A/B review: NOT RUN.
+- Chọn một store RAM trong một server JVM; ACK FULL xác nhận reducer đã nhận RAM, không xác nhận commit DB. Event/gap/interruption tiếp tục dùng storage hooks A và PostgreSQL hiện có. Không thêm hoặc sửa migration.
+- OPEN cấp UUID syncEpoch gắn attempt/user/collector/socket, UNSYNCED sequence0; full đầu bắt buộc1. Full mới thay toàn tập nên được phép nhảy sequence, full rỗng hợp lệ. Retry cùng nội dung trong cửa sổ64 ID ACK lại; khác nội dung CONFLICT; cũ/epoch hoặc socket sai STALE. Socket mở trước không giành lại epoch của socket mở sau. Giữ64 OPEN ID gần nhất để retry OPEN đã nghỉ không mở lại generation trên socket dùng chung.
+- Mỗi lần cập nhật tăng revision theo serverInstanceId, để B gộp HTTP/push qua reconnect không so sequence của hai epoch. Publish ngoài lock; auth/epoch/reducer cùng lock nhằm tránh hai request kiểm tra trên một state rồi ghi đè nhau. Client kiểm generation collector và socket ngay trước socket write; callback cũ cũng bị bỏ. Đóng collector không đóng WS dùng chung.
+- Giới hạn:128process/full, queue16 +1pendingfull, retry5; server4096attempt,64full ID/attempt, STALE6s và TTL5phút từ OPEN/full mới nhất. TTL bỏ state hiện tại, giữ lịch sử DB; restart mất RAM, phải OPEN/full1. Lỗi scan không gửi tập rỗng, quá giới hạn không cắt tập. Policy/identity theo QD-08/QD-09.
+- Lý do: đây là baseline kiểm tính đúng và điểm tích hợp tối thiểu; chưa có yêu cầu durability/full nhiều server, delta hoặc benchmark. Không suy ra máy sạch từ tập rỗng hay UNKNOWN.
+- Contract: [PROTOCOL](PROTOCOL.md#t2-c1--contract-full-snapshot-baseline-v1); bằng chứng và giới hạn: [T2-C1](../evidence/t2-c1/2026-10-10-verification.md).
+
+### QD-12 bổ sung — worker bảo trì full riêng (10/10/2026)
+
+- Review của người dùng chỉ ra `@Scheduled maintain()` chưa được kích hoạt ở30fa6d9. Chọn bean `MonitoringStateMaintenance` sở hữu một ScheduledThreadPoolExecutor daemon, fixed delay theo `toeic.state.scan-ms`, cùng cách dùng worker riêng của presence A4. Bỏ annotation Scheduled trên maintain để tránh chạy trùng nếu A bật scheduling sau này.
+- Không bật EnableScheduling toàn app: thao tác đó đồng thời kích hoạt ExamTimeoutService, vượt phạm vi sửa C1. Scheduler bài thi của A vẫn là vấn đề riêng cần A xử lý/phối hợp; chưa sửa hoặc nghiệm thu nó trong task này.
+- Worker bắt RuntimeException không lộ cause/credential để scan sau tiếp tục. PreDestroy hủy/interrupt, đợi tối đa5s; store PreDestroy xóa entries/chặn request muộn. Phụ thuộc Spring maintenance→store giúp hủy worker trước khi hủy store.
+- Test Spring/WS/PG giữ socket và heartbeat hoạt động nhưng không gửi full/CLOSE, không gọi maintain/read state: cần tự push STALE, rồi TTL tombstone và OPEN lượt khác thành công khi capacity1. Unit riêng kiểm tự gọi/retry sau lỗi/dừng task đang chạy và dọn RAM. [Evidence bổ sung](../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md).
+
+## QD-13 · Nhãn event muộn dựa trên kết nối, giữ cố định khi lưu
+
+- Ngày: 10/10/2026 · C, T2-C2 · Human A/B review chưa chạy.
+- Chọn EventOrigin đóng băng lúc quan sát: OFFLINE, CONNECTED kèm ID server trả trong ACK heartbeat, hoặc UNSPECIFIED khi thiếu dữ liệu. So với socket nhận để phân loại BUFFERED_OFFLINE/PREVIOUS_CONNECTION/LIVE/UNSPECIFIED; không so hai đồng hồ chưa đồng bộ. LIVE chỉ nói cùng kết nối, không cam kết độ trễ thấp.
+- Lưu classification riêng với payload trong V8; retry cùng event/nguồn gốc trả metadata lần lưu đầu, không relabel/conflict hoặc phát thêm warning. Không áp syncEpoch của full vào event lịch sử. Legacy/mốc trước ACK đầu giữ UNSPECIFIED; cần nâng server trước client mới.
+- Gap overflow vẫn V3; heartbeat interruption vẫn V4. Thêm HTTP/tab gap riêng, không suy ra droppedCount từ timeout. Không thêm message type/worker hoặc durability queue, giữ hooks đo C4.
+- Cross-owner: A xem migration/transaction/ACK/permission, B xem ACK identity/parser/dashboard và guard plan cũ. Contract chi tiết [T2-C2](PROTOCOL.md#t2-c2--heartbeat-event-đến-muộn-và-khoảng-trống).
+
+## QD-14 · Trace quan sát và replay production với oracle độc lập
+
+- Ngày10/10/2026 · C, T2-C3 · Human B review NOT RUN, A cần xem adapter reducer.
+- Tap recorder tùy chọn trên collector sẵn có, không scanner mới/không file queue delivery. Worker ghi đĩa riêng, queue bounded drop-new, lỗi tách khỏi monitoring; thiếu/dropped/lỗi không COMPLETE. Giữ quan sát an toàn, empty success riêng SOURCE_FAILURE, checksum exact byte, không credential/path/command/user.
+- Tách thuật toán C1 nguyên trạng vào FullStateReducer dùng chung server và CLI. Server giữ boundary lỗi/lock/auth/store/lifecycle. Driver dùng full/event encoder thật, injection ID ở package constructor không đổi UUID production, đồng hồ theo trace. Không thêm dependency/framework/message/DB schema.
+- Oracle từ observation gốc + identity/event rule + lịch delivery riêng; không gọi reducer/encoder để tạo expected. Kiểm oracle bằng fixture/expected viết tay và full sai cố ý. Seed tái tạo IDs/lịch/report byte-identical.
+- Transport/ACK baseline/epoch gate SIMULATED; headless event map không chứng minh commit ACK/auth/presence. Drop/reorder data riêng, OPEN/CLOSE reliable; business event khác delivered event. Không suy UNKNOWN/time STALE/TTL. Giới hạn và counterexample [MONITORING_TRACE](MONITORING_TRACE.md); evidence REAL source capture + REPLAY + hồi quy production riêng.
+- Không delta/T2-C4/E1/E2. B review collector tap, deterministic ID seam/full/event driver; A review shared reducer adapter. Việc B/A chưa duyệt được ghi riêng với code acceptance, không giả approval.
+
+## QD-15 · Harness child và trace TEST tách khỏi production
+
+- Ngày10/10/2026 · C, T2-C4 · Human B review NOT RUN.
+- Reuse ProcessCollector/ProcessHandleSnapshotSource, chỉ thêm ProcessSelection; default ProcessPolicy vẫn 8 tên. OwnedProcessPolicy giữ identity root thuộc lượt chạy đến khi collector dừng, so start khi cả hai đọc được. Không đổi executable production, không giả Edge, không scanner mới.
+- ProcessBuilder child Java READY→GO→hold→exit; ground truth từ parent quản lý process, độc lập callback collector. Cùng JVM cha nanoTime, lưu offset origin recorder C3; không trừ đồng hồ child/parent hoặc hai máy. Exit là parent nhận biết, có độ trễ thông báo, không phải kernel time.
+- TraceData.Process là DTO lưu file an toàn; production schema/policy giữ kiểm cũ, TEST có schema/policy riêng và bị network/replay driver production từ chối. Reader/parser/recorder/checksum C3 reuse, không đổi FullSnapshotPayload.
+- Join xác nhận collector+PID+start+cửa sổ quét; thiếu start/conflict/coverage/lỗi trace thành INCONCLUSIVE. Chỉ complete/bracketed/khỏe mới nói NOT_OBSERVED_IN_TRACE; không tính latency/miss-rate/E1/E2.
+- Bounded schedule/queue/threads/READY/exit/run/cleanup; chỉ dọn root/cây sở hữu, CREATE_NEW không overwrite. Test child thật success/error/cancel/known descendant; OS Ctrl+C/hardkill parent NOT RUN. [Contract và cách chạy](CONTROLLED_PROCESS_HARNESS.md).
+
+## QD-16 · Vào phòng thi là xin writerEpoch mới
 
 - Ngày: 2026-10-09 · Người quyết: B (phiên Agent) · Review A: NOT RUN.
 - Lựa chọn: mỗi lần mở màn thi, client gọi `POST /attempts/{id}/takeover` và làm bài bằng epoch server vừa cấp, không dùng epoch đọc từ `GET /status`. Thứ tự: đọc status (lượt đã chốt thì chỉ hiện kết quả) → tải và kiểm tra đề → takeover.
@@ -104,7 +147,7 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Kiểm chứng: `ExamPaperAndEntryTest`, `ExamSessionTest.staleWriterEpochBlocksThisSessionUntilItIsGrantedANewEpoch`, REAL smoke và GUI hai cửa sổ; `evidence/t2-b/2026-10-09-verification.md`.
 - Liên quan: T2-B4, AT09, AT11.
 
-## QD-13 · Mất WebSocket khi đang thi: khóa sửa, không khóa nộp
+## QD-17 · Mất WebSocket khi đang thi: khóa sửa, không khóa nộp
 
 - Ngày: 2026-10-09 · Người quyết: B (phiên Agent) · Review A: NOT RUN.
 - Lựa chọn: khi kết nối realtime không ở `CONNECTED`, màn thi khóa chọn/đổi/bỏ chọn đáp án. Request HTTP đang chạy vẫn chạy tiếp và kết quả của nó vẫn được ghi nhận; nút nộp bài vẫn dùng được. Khi `CONNECTED` trở lại, client đọc status và đối chiếu xong mới mở khóa.
@@ -112,3 +155,5 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Hệ quả: đây chỉ là phản hồi giao diện; server vẫn nhận autosave từ một client đã sửa để bỏ khóa. Nếu nhóm muốn cấm cả nộp bài khi mất WS thì phải đổi ở cả hai phía.
 - Kiểm chứng: `ExamSessionTest.losingTheWebSocketLocksEditingButDoesNotChangeWhatTheServerConfirmed`; GUI thật tắt/bật server; `evidence/t2-b/2026-10-09-verification.md`.
 - Liên quan: T2-B3, T2-B4, T3-B3 (Listening có chính sách riêng, không dùng lại nhánh này).
+
+Ghi chú tích hợp11/10/2026: quyết định B trước đây đánh số QD-12/QD-13 trên PR17 đã đổi thành QD-16/QD-17 trong tài liệu hợp nhất để giữ số QD12–15 của C. Nội dung quyết định B giữ nguyên; evidence09/10 có số cũ được giữ đúng lịch sử. [Sửa guard vào thi và checklist](NGHIEM_THU_VAI_B.md).

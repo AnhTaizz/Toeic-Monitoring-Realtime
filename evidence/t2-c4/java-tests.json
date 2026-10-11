@@ -1,0 +1,59 @@
+{
+  "sourceCodeCommit": "01642976fda7ebbfcc4b09b6d4c449c216560ca8",
+  "counts": {
+    "protocol": {
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "client": {
+      "tests": 318,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "server": {
+      "tests": 142,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "monitoring-spike": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "total": 493,
+  "newC4TestInvocations": 32,
+  "harnessTests": [
+    {
+      "class": "vn.edu.toeic.client.monitoring.harness.ControlledProcessHarnessTest",
+      "tests": 8
+    },
+    {
+      "class": "vn.edu.toeic.client.monitoring.harness.HarnessArtifactsTest",
+      "tests": 4
+    },
+    {
+      "class": "vn.edu.toeic.client.monitoring.harness.HarnessCliTest",
+      "tests": 2
+    },
+    {
+      "class": "vn.edu.toeic.client.monitoring.harness.HarnessPlanTest",
+      "tests": 4
+    },
+    {
+      "class": "vn.edu.toeic.client.monitoring.harness.ObservationJoinerTest",
+      "tests": 11
+    },
+    {
+      "class": "vn.edu.toeic.client.monitoring.harness.TestTracePolicyTest",
+      "tests": 3
+    }
+  ],
+  "productionJarIncludesCliAndChild": true,
+  "testFailureFixturePackaged": false
+}

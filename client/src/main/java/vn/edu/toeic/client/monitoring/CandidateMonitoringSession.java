@@ -15,6 +15,7 @@ public final class CandidateMonitoringSession implements AutoCloseable {
     private final MonitoringDelivery.Settings settings;
     private final Consumer<MonitoringDelivery.Status> listener;
     private MonitoringDelivery delivery;
+    private FullSnapshotDelivery full;
     private CompletableFuture<Void> stopping = CompletableFuture.completedFuture(null);
     private boolean closed;
     private long generation;
@@ -36,31 +37,42 @@ public final class CandidateMonitoringSession implements AutoCloseable {
                 || freshScope == null || !freshScope.contains(attempt)) throw new IllegalStateException("Chưa được cấp lượt giám sát hoặc phiên cũ chưa dừng");
         long current = ++generation;
         MonitoringDelivery next = new MonitoringDelivery(attempt, transport, settings, status -> {
+            FullSnapshotDelivery stopFull=null;
             synchronized (CandidateMonitoringSession.this) {
                 if (closed || current != generation) return;
-                if (!status.active()) { stopHeartbeat(); collector.stop(); }
+                if (!status.active()) { stopHeartbeat(); collector.stop(); stopFull=full; }
             }
+            if(stopFull!=null) stopFull.close();
             listener.accept(status);
         });
         delivery = next;
+        FullSnapshotDelivery nextFull = new FullSnapshotDelivery(attempt,transport,settings,next::accessRejected);
+        full = nextFull;
         try {
-            String collectorId = collector.start(new MonitoringSessionGate.Context(freshRole, true, attempt), next::observe, ignored -> next.sourceFailed());
+            String collectorId = collector.start(new MonitoringSessionGate.Context(freshRole, true, attempt), snapshot -> {
+                next.observe(snapshot); nextFull.observe(snapshot);
+            }, ignored -> { next.sourceFailed(); nextFull.sourceFailed(); });
+            nextFull.bind(collectorId);
             heartbeat = transport.monitoringHeartbeat(attempt, collectorId);
             return collectorId;
-        } catch (RuntimeException failure) { stopHeartbeat(); collector.stop(); delivery = null; next.close(); throw failure; }
+        } catch (RuntimeException failure) { stopHeartbeat(); collector.stop(); delivery = null; full=null; nextFull.close(); next.close(); throw failure; }
     }
     public synchronized boolean isActive() { return delivery != null && delivery.status().active(); }
     public synchronized MonitoringDelivery.Status status() { return delivery == null ? null : delivery.status(); }
+    public synchronized FullSnapshotDelivery.Status fullStatus() { return full==null ? null : full.status(); }
     public synchronized void retryFailed() { if (delivery != null) delivery.retryFailed(); }
     public StopResult stop() {
         MonitoringDelivery old;
+        FullSnapshotDelivery oldFull;
         CompletableFuture<Void> previous;
         CompletableFuture<Void> completion = new CompletableFuture<>();
         synchronized (this) {
-            generation++; stopHeartbeat(); old = delivery; delivery = null; previous = stopping; stopping = completion;
+            generation++; stopHeartbeat(); old = delivery; delivery = null; oldFull=full; full=null; previous = stopping; stopping = completion;
         }
         MonitoringDelivery.Discarded discarded = old == null ? new MonitoringDelivery.Discarded(0, false, 0) : old.stop();
-        CompletableFuture.allOf(previous, collector.stop(), old == null ? CompletableFuture.completedFuture(null) : old.stopped())
+        if (oldFull!=null) oldFull.close();
+        CompletableFuture.allOf(previous, collector.stop(), old == null ? CompletableFuture.completedFuture(null) : old.stopped(),
+                oldFull==null?CompletableFuture.completedFuture(null):oldFull.stopped())
                 .whenComplete((unused, failure) -> { if (failure == null) completion.complete(null); else completion.completeExceptionally(failure); });
         return new StopResult(discarded, completion.copy());
     }

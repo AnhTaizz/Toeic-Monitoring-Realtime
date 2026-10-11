@@ -1,0 +1,27 @@
+Sanitized copy: private home/workspace prefixes replaced; original log retained under ignored target.
+15:03:14.775 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+15:03:14.919 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "c3_test_5c7f0fd923844df89e17340f9dcbaa25"."flyway_schema_history" does not exist yet
+15:03:14.925 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.040s)
+15:03:14.960 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "c3_test_5c7f0fd923844df89e17340f9dcbaa25"."flyway_schema_history" ...
+15:03:15.067 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "c3_test_5c7f0fd923844df89e17340f9dcbaa25": << Empty Schema >>
+15:03:15.088 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c3_test_5c7f0fd923844df89e17340f9dcbaa25" to version "1 - auth schema"
+15:03:15.156 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "c3_test_5c7f0fd923844df89e17340f9dcbaa25" to version "2 - monitoring events"
+15:03:15.201 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 2 migrations to schema "c3_test_5c7f0fd923844df89e17340f9dcbaa25", now at version v2 (execution time 00:00.053s)
+PASS REAL PostgreSQL18 V2->V3; TEST assignments only; no shared DB reset
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+powershell : FAIL Real process lost ACK retry
+At line:2 char:1
++ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-c3. ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL Real process lost ACK retry:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+MONITORING_STOP RAM discarded: unconfirmedEvents=4 unconfirmedGap=false unreportedDrops=0
+TEST schema removed; shared PostgreSQL/dev tables untouched
+C3 smoke FAIL phase=REAL_PROCESS class=IllegalStateException
+C3 integration smoke failed; no credential/private metadata printed.
+At <WORKSPACE>\scripts\smoke-c3.ps1:30 char:32
++ ... DE -ne 0) { throw 'C3 integration smoke failed; no credential/private ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (C3 integration ...tadata printed.:String) [], RuntimeException
+    + FullyQualifiedErrorId : C3 integration smoke failed; no credential/private metadata printed.

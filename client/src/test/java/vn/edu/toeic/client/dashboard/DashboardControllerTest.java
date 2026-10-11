@@ -21,9 +21,34 @@ import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
 import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
+import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
+import com.google.gson.Gson;
 
 /** MOCK HTTP/transport, manually drained executor and completion gates; no timing sleeps. */
 class DashboardControllerTest {
+    @Test void oldGapCallbackCannotRepopulateAfterAttemptSwitchOrClose() {
+        try(Fixture f=new Fixture()) {
+            f.loadRoster();f.choose("MOCK-A");var late=f.api.gaps.getLast();f.choose("MOCK-B");
+            late.complete(List.of(overflow("MOCK-A")));f.worker.runAll();assertThat(f.controller.snapshot().gaps()).isEmpty();
+            f.api.gaps.getLast().complete(List.of(overflow("MOCK-B")));f.worker.runAll();
+            assertThat(f.controller.snapshot().gaps()).extracting(MonitoringData.Gap::attemptId).containsExactly("MOCK-B");
+            f.controller.close();f.worker.runAll();assertThat(f.controller.snapshot().gaps()).isEmpty();
+            assertThat(f.transport.messages).isEmpty();assertThat(f.transport.states).isEmpty();
+        }
+    }
+    @Test void gapHttpFailureKeepsLastKnownWithStaleLabelAndScopeRevocationClearsIt() {
+        try(Fixture f=new Fixture()) {
+            f.loadRoster();f.choose("MOCK-A");f.api.gaps.getLast().complete(List.of(overflow("MOCK-A")));f.worker.runAll();
+            f.controller.refresh();f.worker.runAll();f.finishRoster();
+            f.api.gaps.getLast().completeExceptionally(new LoginFailedException(503,"MOCK failure"));f.worker.runAll();
+            assertThat(f.controller.snapshot().gaps()).hasSize(1);assertThat(f.controller.snapshot().gapsStale()).isTrue();
+            f.controller.refresh();f.worker.runAll();f.api.scopes.getLast().complete(new ScopeView(Role.PROCTOR,Set.of("MOCK-B")));f.worker.runAll();
+            assertThat(f.controller.snapshot().gaps()).isEmpty();
+        }
+    }
+    private static MonitoringData.Gap overflow(String attempt) {
+        return new MonitoringData.Gap("MOCK-overflow",attempt,"MOCK-collector","QUEUE_OVERFLOW",2,TIME,TIME,TIME);
+    }
     @Test void connectedSocketIsNotFreshUntilHttpRecoveryAndSelectionLoadsFinish() {
         try(Fixture f=new Fixture()) {
             f.worker.runAll(); assertThat(f.controller.snapshot().rosterLoading()).isTrue();
@@ -118,8 +143,34 @@ class DashboardControllerTest {
             assertThat(f.api.scopes).hasSize(2); assertThat(f.controller.snapshot().rosterStale()).isTrue(); assertThat(f.controller.snapshot().events().size()).isLessThanOrEqualTo(4);
         }
     }
+    @Test void fullPushBeatsLateHttpAndOldSelectionAndLogoutResponsesAreDiscarded() {
+        try(Fixture f=new Fixture()) {
+            f.loadRoster();f.choose("MOCK-A");var old=f.api.fullStates.getLast();
+            var latest=FullStateDashboardTest.state("MOCK-A",20,"MOCK-epoch",2,false);
+            f.transport.push(new MessageEnvelope<>("v0","MONITOR_STATE","MOCK-m",null,"MOCK-A","MOCK-t",new Gson().toJsonTree(latest).getAsJsonObject()));f.worker.runAll();
+            old.complete(FullStateDashboardTest.state("MOCK-A",10,"MOCK-epoch",1,true));f.worker.runAll();
+            assertThat(f.controller.snapshot().currentState()).isEqualTo(latest);
+            f.controller.refresh();f.worker.runAll();f.finishRoster();var oldSelection=f.api.fullStates.getLast();
+            f.choose("MOCK-B");oldSelection.complete(latest);f.worker.runAll();assertThat(f.controller.snapshot().currentState()).isNull();
+            var late=f.api.fullStates.getLast();f.controller.close();late.complete(FullStateDashboardTest.state("MOCK-B",99,"MOCK-e",1,false));f.worker.runAll();
+            assertThat(f.controller.snapshot().currentState()).isNull();assertThat(f.transport.messages).isEmpty();
+        }
+    }
+    @Test void fullHttpFromBeforeReconnectCannotOverwriteNewGeneration() {
+        try(Fixture f=new Fixture()) {
+            f.loadRoster();f.choose("MOCK-A");var late=f.api.fullStates.getLast();
+            f.transport.state(ConnectionState.RECONNECTING);f.transport.state(ConnectionState.CONNECTED);f.worker.runAll();f.finishRoster();
+            var fresh=FullStateDashboardTest.state("MOCK-A",3,"MOCK-new",1,true);f.api.fullStates.getLast().complete(fresh);
+            late.complete(FullStateDashboardTest.state("MOCK-A",200,"MOCK-old",20,false));f.worker.runAll();
+            assertThat(f.controller.snapshot().currentState()).isEqualTo(fresh);
+        }
+    }
     private static final class NonCancelling<T> extends CompletableFuture<T> { @Override public boolean cancel(boolean interrupt) { return false; } }
     static final class Api implements DashboardApi {
+        final List<CompletableFuture<List<MonitoringData.Gap>>> gaps=new ArrayList<>();
+        @Override public CompletableFuture<List<MonitoringData.Gap>> gaps(String attempt) {return next(gaps);}
+        final List<CompletableFuture<MonitoringStateView>> fullStates=new ArrayList<>();
+        @Override public CompletableFuture<MonitoringStateView> state(String a) {return next(fullStates);}
         final List<CompletableFuture<ScopeView>> scopes=new ArrayList<>(); final List<CompletableFuture<Roster>> rosters=new ArrayList<>();
         final List<CompletableFuture<List<Event>>> events=new ArrayList<>(); final List<CompletableFuture<List<Interruption>>> history=new ArrayList<>(); boolean closed;
         private static <T> CompletableFuture<T> next(List<CompletableFuture<T>> list) { CompletableFuture<T> f=new NonCancelling<>(); list.add(f); return f; }

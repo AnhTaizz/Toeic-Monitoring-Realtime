@@ -43,6 +43,7 @@ public final class ToeicClientApplication extends Application {
     private AutoCloseable connectionSubscription;
     private long viewGeneration;
     private CandidateMonitoringSession monitoring;
+    private String monitoringAttempt;
     private long monitoringGeneration;
     private ProctorDashboardView dashboard;
     private CandidateExamView activeExamView;
@@ -94,18 +95,18 @@ public final class ToeicClientApplication extends Application {
         status.setStyle("-fx-text-fill: #fb7185; -fx-font-weight: 600; -fx-font-size: 13px;");
         status.setWrapText(true);
 
-        // Quick fill test account buttons
+        // Demo shortcuts select an account; its password is entered at runtime.
         Label quickFillLabel = new Label("Tài khoản mẫu thử nghiệm:");
         quickFillLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 12px; -fx-font-weight: 700;");
 
         Button btnCand1 = new Button("Thí sinh 1 (candidate1)");
-        btnCand1.setOnAction(e -> { usernameField.setText("candidate1"); passwordField.setText("ChangeMe123!"); });
+        btnCand1.setOnAction(e -> { usernameField.setText("candidate1"); passwordField.clear(); passwordField.requestFocus(); });
 
         Button btnCand2 = new Button("Thí sinh 2 (candidate2)");
-        btnCand2.setOnAction(e -> { usernameField.setText("candidate2"); passwordField.setText("ChangeMe123!"); });
+        btnCand2.setOnAction(e -> { usernameField.setText("candidate2"); passwordField.clear(); passwordField.requestFocus(); });
 
         Button btnProctor = new Button("Giám thị (proctor1)");
-        btnProctor.setOnAction(e -> { usernameField.setText("proctor1"); passwordField.setText("ChangeMe123!"); });
+        btnProctor.setOnAction(e -> { usernameField.setText("proctor1"); passwordField.clear(); passwordField.requestFocus(); });
 
         HBox quickFillBox = new HBox(8, btnCand1, btnCand2, btnProctor);
         quickFillBox.setAlignment(Pos.CENTER);
@@ -258,6 +259,7 @@ public final class ToeicClientApplication extends Application {
         sectionTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: 800; -fx-text-fill: #38bdf8; -fx-letter-spacing: 1px;");
 
         ComboBox<String> attempts = new ComboBox<>();
+        attempts.setId("candidate-attempts");
         if (login.attemptScope() != null) attempts.getItems().setAll(login.attemptScope());
         attempts.getSelectionModel().selectFirst();
         attempts.setMinWidth(320);
@@ -267,6 +269,7 @@ public final class ToeicClientApplication extends Application {
         status.setWrapText(true);
 
         Button startExamBtn = new Button("✍️ VÀO PHÒNG THI & LÀM BÀI");
+        startExamBtn.setId("candidate-enter-exam");
         startExamBtn.getStyleClass().add("btn-primary");
         startExamBtn.setStyle("-fx-font-size: 15px; -fx-padding: 12 28;");
         startExamBtn.setDisable(attempts.getItems().isEmpty());
@@ -325,8 +328,9 @@ public final class ToeicClientApplication extends Application {
                     return;
                 }
                 try {
-                    realtimeClient.updateScope(scope.attemptScope());
-                    session.start(scope.role(), selected, scope.attemptScope());
+                    monitoringAttempt = startOrReuseMonitoring(session, monitoringAttempt, selected, scope, realtimeClient::updateScope);
+                    attempts.setDisable(true);
+                    refreshScopeBtn.setDisable(true);
                     manualMonitoringStart.setDisable(true);
                     manualMonitoringStop.setDisable(false);
                 } catch (RuntimeException ignored) {
@@ -342,8 +346,18 @@ public final class ToeicClientApplication extends Application {
             monitoringGeneration++;
             CandidateMonitoringSession.StopResult result = session.stop();
             manualMonitoringStop.setDisable(true);
-            manualMonitoringStart.setDisable(false);
-            status.setText("Đã dừng giám sát.");
+            manualMonitoringStart.setDisable(true);
+            startExamBtn.setDisable(true);
+            status.setText("Đang dừng giám sát; chưa xác nhận: " + result.discarded().unconfirmedEvents());
+            result.stopped().whenComplete((unused, failure) -> Platform.runLater(() -> {
+                if (currentView != viewGeneration || monitoring != session) return;
+                monitoringAttempt = null;
+                attempts.setDisable(false);
+                refreshScopeBtn.setDisable(false);
+                manualMonitoringStart.setDisable(false);
+                startExamBtn.setDisable(attempts.getItems().isEmpty());
+                status.setText(failure == null ? "Đã dừng giám sát." : "Chưa xác nhận phiên giám sát đã dừng. Hãy đăng nhập lại.");
+            }));
         });
 
         // Launch Exam View
@@ -354,38 +368,60 @@ public final class ToeicClientApplication extends Application {
             startExamBtn.setDisable(true);
             status.setText("Đang tải đề thi và đồng bộ trạng thái làm bài từ máy chủ...");
 
-            // Auto-start background monitoring if not started
-            if (!session.isActive()) {
+            long request = ++monitoringGeneration;
+            manualMonitoringStart.setDisable(true);
+            manualMonitoringStop.setDisable(true);
+            attempts.setDisable(true);
+            refreshScopeBtn.setDisable(true);
+            loginApiClient.scope(serverUrl, login.token()).whenComplete((freshScope, failure) -> Platform.runLater(() -> {
+                if (currentView != viewGeneration || request != monitoringGeneration || monitoring != session) return;
+                if (failure != null) {
+                    startExamBtn.setDisable(false);
+                    manualMonitoringStart.setDisable(session.isActive());
+                    manualMonitoringStop.setDisable(!session.isActive());
+                    attempts.setDisable(session.isActive());
+                    refreshScopeBtn.setDisable(session.isActive());
+                    status.setText(userMessage(failure));
+                    return;
+                }
                 try {
-                    realtimeClient.updateScope(Set.of(selectedAttempt));
-                    session.start(Role.CANDIDATE, selectedAttempt, Set.of(selectedAttempt));
-                } catch (Exception ignored) { }
-            }
-
-            // Đọc trạng thái, tải đề rồi xin server cấp quyền ghi cho lần mở này; tất cả chạy trên worker HTTP.
-            ExamEntry.open(examApiClient, selectedAttempt).whenComplete((outcome, err) -> Platform.runLater(() -> {
-                // Đã đăng xuất hoặc đổi màn trong lúc tải: không mở màn thi trên client đã đóng.
-                if (currentView != viewGeneration) return;
-                startExamBtn.setDisable(false);
-                if (err != null) {
-                    status.setText("Không vào được phòng thi: " + ExamApiClient.describe(err));
-                    status.setStyle("-fx-text-fill: #fb7185;");
+                    monitoringAttempt = startOrReuseMonitoring(session, monitoringAttempt, selectedAttempt,
+                            freshScope, realtimeClient::updateScope);
+                } catch (RuntimeException refused) {
+                    startExamBtn.setDisable(false);
+                    manualMonitoringStart.setDisable(session.isActive());
+                    manualMonitoringStop.setDisable(!session.isActive());
+                    attempts.setDisable(session.isActive());
+                    refreshScopeBtn.setDisable(session.isActive());
+                    status.setText("Không vào được phòng thi: " + refused.getMessage());
                     return;
                 }
-                if (outcome instanceof ExamEntry.Finished finished) {
-                    ExamSession.Result result = finished.result();
-                    status.setText("Lượt thi này đã được server chốt (" + result.state() + "): đúng "
-                            + result.correctCount() + " / " + result.totalQuestions() + " câu.");
-                    return;
-                }
-                ExamEntry.Ready ready = (ExamEntry.Ready) outcome;
-                activeExamView = new CandidateExamView(selectedAttempt, login.user().username(), ready.paper(),
-                        ready.start(), examApiClient, realtimeClient,
-                        () -> showRoleScene(stage, serverUrl, login),
-                        () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."));
+                // Đọc trạng thái, tải đề rồi xin server cấp quyền ghi cho lần mở này; tất cả chạy trên worker HTTP.
+                ExamEntry.open(examApiClient, selectedAttempt).whenComplete((outcome, err) -> Platform.runLater(() -> {
+                    // Đã đăng xuất hoặc đổi màn trong lúc tải: không mở màn thi trên client đã đóng.
+                    if (currentView != viewGeneration || request != monitoringGeneration || monitoring != session) return;
+                    startExamBtn.setDisable(false);
+                    manualMonitoringStop.setDisable(false);
+                    if (err != null) {
+                        status.setText("Không vào được phòng thi: " + ExamApiClient.describe(err));
+                        status.setStyle("-fx-text-fill: #fb7185;");
+                        return;
+                    }
+                    if (outcome instanceof ExamEntry.Finished finished) {
+                        ExamSession.Result result = finished.result();
+                        status.setText("Lượt thi này đã được server chốt (" + result.state() + "): đúng "
+                                + result.correctCount() + " / " + result.totalQuestions() + " câu.");
+                        return;
+                    }
+                    ExamEntry.Ready ready = (ExamEntry.Ready) outcome;
+                    activeExamView = new CandidateExamView(selectedAttempt, login.user().username(), ready.paper(),
+                            ready.start(), examApiClient, realtimeClient,
+                            () -> showRoleScene(stage, serverUrl, login),
+                            () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."));
 
-                Scene examScene = applyStyles(new Scene(activeExamView, 1180, 800));
-                stage.setScene(examScene);
+                    Scene examScene = applyStyles(new Scene(activeExamView, 1180, 800));
+                    stage.setScene(examScene);
+                }));
             }));
         });
 
@@ -402,6 +438,25 @@ public final class ToeicClientApplication extends Application {
         container.setPadding(new Insets(16));
         container.getStyleClass().add("card-accent");
         return container;
+    }
+
+    /** Uses a fresh server scope; an existing collector can only serve its original attempt. */
+    static String startOrReuseMonitoring(CandidateMonitoringSession session, String activeAttempt,
+            String selectedAttempt, LoginApiClient.ScopeView freshScope, Consumer<Set<String>> updateScope) {
+        if (freshScope == null || freshScope.role() != Role.CANDIDATE || selectedAttempt == null
+                || !freshScope.attemptScope().contains(selectedAttempt)) {
+            throw new IllegalStateException("Lượt thi không còn trong quyền được server cấp. Làm mới danh sách.");
+        }
+        if (session.isActive()) {
+            if (!selectedAttempt.equals(activeAttempt)) {
+                throw new IllegalStateException("Dừng giám sát lượt hiện tại trước khi chọn lượt khác.");
+            }
+            // C1/C2 may have pending FULL/event ACKs; do not replace their transport scope.
+            return activeAttempt;
+        }
+        updateScope.accept(freshScope.attemptScope());
+        session.start(freshScope.role(), selectedAttempt, freshScope.attemptScope());
+        return selectedAttempt;
     }
 
     static String userMessage(Throwable failure) {
@@ -434,6 +489,7 @@ public final class ToeicClientApplication extends Application {
         if (activeExamView != null) { activeExamView.close(); activeExamView = null; }
         if (dashboard != null) { dashboard.close(); dashboard = null; }
         if (monitoring != null) { monitoring.close(); monitoring = null; }
+        monitoringAttempt = null;
         if (problemSubscription != null) {
             try { problemSubscription.close(); } catch (Exception ignored) { }
             problemSubscription = null;

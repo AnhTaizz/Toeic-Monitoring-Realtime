@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "controlled-harness-manifest-v1",
+  "status": "COMPLETE",
+  "files": {
+    "ground-truth.jsonl": "a55fd287b3429314d921a83e54779cda8281abbf82b29da92bd2ea23a1a2f6a6",
+    "observations.jsonl": "8937ae29291bcb55c867f52dbc92b5a716aebde492fa5006eaf15817c97becfa",
+    "metadata.json": "4cfb6c150ec0e936b741b487695738227f985c903c2984ffdfd8e631e13ee8fd",
+    "join.json": "4e15522954e990de5e8d1d39d1bec7b62dbeea651e0d0901eda5bcf318fb80c9"
+  }
+}

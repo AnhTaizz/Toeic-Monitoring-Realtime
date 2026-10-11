@@ -190,7 +190,7 @@ Tests mới54, tổng331/331; final mvn test/package PASS, REAL PG V4/Spring/HTT
 
 **Xong khi:** AT11 chạy được với trường hợp server 40 / client 42, mất ACK, và mở ứng dụng mới.
 
-**Ghi chú làm dở:** 09/10, PR #17 `e362ed9`: PARTIAL. Đã có theo bảng hợp đồng: kết nối lại thì đọc status và đối chiếu (server đã có bản đang chờ → đã lưu; máy cao hơn → giữ bản máy, gửi lại đúng request; cùng revision khác nội dung → dừng tự lưu, chờ nạp bản server; server mới hơn → nạp bản server); `writerEpoch` đổi thì khóa, bấm lấy lại quyền ghi thì nạp bản server và bỏ bản đang chờ. Vào phòng thi xin epoch mới (QD-12); mất WS khóa sửa (QD-13). AT11 có test MOCK, REAL smoke và GUI hai cửa sổ. Còn thiếu: mở lại lượt đã chốt (server 403), thành viên tự kiểm, máy thứ hai, review A; client không lưu cache ra đĩa nên mở lại app luôn bắt đầu từ bản server. Bổ sung `d50891e`: realtime `FAILED` thì hỏi server qua HTTP, 401 đưa về màn đăng nhập; về màn thí sinh thì tự làm mới danh sách lượt thi; xung đột, `FAILED` và thu hồi phiên đã chạy trên GUI thật (agent-driven).
+**Ghi chú làm dở:** 09/10, PR #17 `e362ed9`: PARTIAL. Đã có theo bảng hợp đồng: kết nối lại thì đọc status và đối chiếu (server đã có bản đang chờ → đã lưu; máy cao hơn → giữ bản máy, gửi lại đúng request; cùng revision khác nội dung → dừng tự lưu, chờ nạp bản server; server mới hơn → nạp bản server); `writerEpoch` đổi thì khóa, bấm lấy lại quyền ghi thì nạp bản server và bỏ bản đang chờ. Vào phòng thi xin epoch mới (QD-16); mất WS khóa sửa (QD-17). AT11 có test MOCK, REAL smoke và GUI hai cửa sổ. Còn thiếu: mở lại lượt đã chốt (server 403), thành viên tự kiểm, máy thứ hai, review A; client không lưu cache ra đĩa nên mở lại app luôn bắt đầu từ bản server. Bổ sung `d50891e`: realtime `FAILED` thì hỏi server qua HTTP, 401 đưa về màn đăng nhập; về màn thí sinh thì tự làm mới danh sách lượt thi; xung đột, `FAILED` và thu hồi phiên đã chạy trên GUI thật (agent-driven).
 
 ### T2-B5 · Tiến độ trên màn giám thị
 `2h` · phụ thuộc: T2-B4, T1-B3 · review: A
@@ -345,3 +345,7 @@ Implementation phía client, luồng làm bài Reading và Listening, chính sá
 - Đóng ứng dụng thì các luồng nền được dọn ra sao?
 
 Bạn cũng phải vẽ lại được luồng của A (khóa, deadline, commit rồi ACK) và của C (snapshot, epoch).
+
+## Bàn giao ổn định 11/10/2026
+
+Worktree riêng `Toeic-Monitoring-Realtime-b-stabilize`, merge main12e2838 vào candidate từ PR17 41da669. [Báo cáo mới](../../evidence/b-integration/2026-10-11-verification.md), [checklist gate và B4](../NGHIEM_THU_VAI_B.md), [review C](../REVIEW_B_MONITORING.md). Package565/Python10 và FX component MOCK backend PASS; client password demo gỡ; guard fresh scope/same attempt/stop bổ sung. B1/B2 CODE_COMPLETE, B3/B4 PARTIAL do A; production DB/full GUI/LAN NOT RUN; chưa push/chưa merge main. B4 chỉ đối chiếu nguồn PR9 và đề xuất port/package/audio riêng, giữ helper local chưa commit. Không T2-B5/Listening/delta/E1/E2.

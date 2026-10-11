@@ -1,0 +1,4 @@
+﻿PASS REAL Edge -> production ProcessHandle/collector/full/WS/RAM/ACK/dashboard; close removes current PID and retains PostgreSQL history
+PASS REAL reconnect/epoch isolation/duplicate/conflict/empty/scope/stop; MOCK fault sets; event/gap/interruption history preserved
+PASS only owned TEST schema/server/Edge/FX resources cleaned; shared history untouched
+powershell : T2-C1 FAIL phase=AUTO_STALE_WITHOUT_HTTP_OR_CLOSE class=IllegalStateException

@@ -90,7 +90,8 @@ public final class ExamFlowPostgresSmoke {
     private void run() throws Exception {
         startServer();
         String origin = "http://127.0.0.1:" + port;
-        String password = System.getenv().getOrDefault("TOEIC_SEED_PASSWORD", "ChangeMe123!"); // MOCK dev seed
+        String password = System.getenv("TOEIC_SEED_PASSWORD"); // supplied at runtime; no test password fallback
+        if (password == null || password.isBlank()) throw new IllegalStateException("TOEIC_SEED_PASSWORD is required for the TEST smoke");
         String examId = "SMOKE-EXAM-" + suffix;
         String mainAttempt = "SMOKE-MAIN-" + suffix + "-candidate1";
         String shortAttempt = "SMOKE-SHORT-" + suffix + "-candidate1";
