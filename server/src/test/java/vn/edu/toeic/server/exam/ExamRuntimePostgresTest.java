@@ -225,22 +225,18 @@ class ExamRuntimePostgresTest {
     }
 
     @Test void submitAndTimeoutContendOnPostgresRowAcrossDeadline() throws Exception {
-        String attempt = attempt(60);
+        String attempt = attempt(1);
         long epoch = json(expect(post(path(attempt, "takeover"), takeover(attempt), candidateToken), 200)).get("writerEpoch").getAsLong();
         expect(post(path(attempt, "answers"), new AutosaveAnswersRequest(id(), attempt, epoch, 1, Map.of("R1", "A")), candidateToken), 200);
-        // Expire while the test owns the row; HTTP submit blocks across the committed deadline.
+        // Hold the row across the real deadline; BOTH the HTTP submit and autonomous timeout wait.
         try (Connection blocker = connection()) {
             blocker.setAutoCommit(false);
             try (var lock = blocker.prepareStatement("SELECT attempt_id FROM " + schema + ".monitoring_attempts WHERE attempt_id = ? FOR UPDATE")) {
                 lock.setString(1, attempt); lock.executeQuery().close();
             }
-            jdbc.sql("SELECT 1").query(Integer.class).single();
-            try (var update = blocker.prepareStatement("UPDATE " + schema + ".monitoring_attempts SET deadline_at = clock_timestamp() - interval '1 second' WHERE attempt_id = ?")) {
-                update.setString(1, attempt); update.executeUpdate();
-            }
             CompletableFuture<HttpResponse<String>> submit = http.sendAsync(httpRequest(path(attempt, "submit"),
                     new SubmitExamRequest(id(), attempt, epoch, 2, Map.of("R1", "A", "R2", "B")), candidateToken), HttpResponse.BodyHandlers.ofString());
-            awaitBlockedQuery();
+            awaitBlockedQueries(2);
             blocker.commit();
             HttpResponse<String> rejected = submit.get(10, TimeUnit.SECONDS);
             assertThat(rejected.statusCode()).isEqualTo(409);
@@ -251,7 +247,7 @@ class ExamRuntimePostgresTest {
         assertThat(result.get("score").getAsInt()).isEqualTo(1);
         assertThat(result.get("savedRevision").getAsLong()).isEqualTo(1);
         assertThat(jdbc.sql("SELECT count(*) FROM exam_submit_requests WHERE attempt_id = :a").param("a", attempt).query(Long.class).single()).isZero();
-        System.out.println("PASS PostgreSQL row contention: submit waits across deadline, rejected; scheduler finalizes acknowledged answers once");
+        System.out.println("PASS PostgreSQL row contention: HTTP submit AND autonomous scheduler wait across deadline; submit rejected; scheduler finalizes acknowledged answers once");
     }
 
     @Test void legacyAutosaveWithoutTakeoverStartsDeadlineWithoutReset() throws Exception {
@@ -265,14 +261,14 @@ class ExamRuntimePostgresTest {
         System.out.println("PASS legacy first-save compatibility and takeover preserve existing deadline");
     }
 
-    private void awaitBlockedQuery() throws Exception {
+    private void awaitBlockedQueries(int count) throws Exception {
         long end = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
         while (System.nanoTime() < end) {
             if (jdbc.sql("SELECT count(*) FROM pg_stat_activity WHERE application_name = 'toeic_p0_server' AND wait_event_type = 'Lock' AND query LIKE '%FOR UPDATE OF a%'")
-                    .query(Long.class).single() > 0) return;
+                    .query(Long.class).single() >= count) return;
             Thread.sleep(20);
         }
-        throw new AssertionError("HTTP submit did not demonstrably wait on PostgreSQL row lock");
+        throw new AssertionError("HTTP submit and autonomous timeout did not both demonstrably wait on PostgreSQL row lock");
     }
     private Connection connection() throws Exception {
         return DriverManager.getConnection("jdbc:postgresql://" + required("DB_HOST") + ":" + required("DB_PORT") + "/" + required("DB_NAME"), required("DB_USER"), required("DB_PASSWORD"));

@@ -17,9 +17,9 @@ class ExamReadAuthorizationTest {
 
     @Test void unauthenticatedReadsFailBeforeAnyLookup() {
         assertThatThrownBy(() -> service.getAttemptStatus(null, "a"))
-                .isInstanceOf(AccessDeniedException.class).extracting("status").isEqualTo(401);
+                .isInstanceOf(AccessDeniedException.class).extracting(error -> ((AccessDeniedException) error).status()).isEqualTo(401);
         assertThatThrownBy(() -> service.getCandidateExam(null, "a"))
-                .isInstanceOf(AccessDeniedException.class).extracting("status").isEqualTo(401);
+                .isInstanceOf(AccessDeniedException.class).extracting(error -> ((AccessDeniedException) error).status()).isEqualTo(401);
         verifyNoInteractions(jdbc, scopes);
     }
 
@@ -28,16 +28,16 @@ class ExamReadAuthorizationTest {
         AuthorizationService auth = new AuthorizationService(activeOnly);
         auth.requireAttempt(owner, "a");
         assertThatThrownBy(() -> auth.requireExamRead(owner, "a"))
-                .isInstanceOf(AccessDeniedException.class).extracting("status").isEqualTo(403);
+                .isInstanceOf(AccessDeniedException.class).extracting(error -> ((AccessDeniedException) error).status()).isEqualTo(403);
     }
 
     @Test void forbiddenReadsFailBeforeAnyDataBranchIncludingFinalResults() {
         for (Role role : Role.values()) {
             AuthenticatedUser user = new AuthenticatedUser(10, "foreign", role);
             assertThatThrownBy(() -> service.getAttemptStatus(user, "a"))
-                    .isInstanceOf(AccessDeniedException.class).extracting("status").isEqualTo(403);
+                    .isInstanceOf(AccessDeniedException.class).extracting(error -> ((AccessDeniedException) error).status()).isEqualTo(403);
             assertThatThrownBy(() -> service.getCandidateExam(user, "a"))
-                    .isInstanceOf(AccessDeniedException.class).extracting("status").isEqualTo(403);
+                    .isInstanceOf(AccessDeniedException.class).extracting(error -> ((AccessDeniedException) error).status()).isEqualTo(403);
         }
         verifyNoInteractions(jdbc);
     }
