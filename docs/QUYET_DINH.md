@@ -137,3 +137,10 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - TraceData.Process là DTO lưu file an toàn; production schema/policy giữ kiểm cũ, TEST có schema/policy riêng và bị network/replay driver production từ chối. Reader/parser/recorder/checksum C3 reuse, không đổi FullSnapshotPayload.
 - Join xác nhận collector+PID+start+cửa sổ quét; thiếu start/conflict/coverage/lỗi trace thành INCONCLUSIVE. Chỉ complete/bracketed/khỏe mới nói NOT_OBSERVED_IN_TRACE; không tính latency/miss-rate/E1/E2.
 - Bounded schedule/queue/threads/READY/exit/run/cleanup; chỉ dọn root/cây sở hữu, CREATE_NEW không overwrite. Test child thật success/error/cancel/known descendant; OS Ctrl+C/hardkill parent NOT RUN. [Contract và cách chạy](CONTROLLED_PROCESS_HARNESS.md).
+
+## QD-18 · Deadline bắt đầu khi thí sinh nhận quyền ghi để vào thi
+
+- Ngày11/10/2026 · Vai A (Agent) · Human review NOT RUN · nhánh P0 chưa merge.
+- Dùng POST takeover hiện có làm mốc entry: dưới khóa hàng và sau kiểm owner/ACTIVE, server đặt deadline chưa có bằng clock_timestamp()+duration ca và trả field deadlineAt hiện có. Hai máy được tuần tự hóa; takeover/reconnect sau giữ nguyên deadline. Status/exam GET không khởi tạo giờ.
+- PR17 luôn takeover sau status/exam, nên không đổi wire/DTO/client production. Legacy save-first được giữ; ca chưa vào vẫn chưa bắt đầu giờ. WriterEpoch vẫn tăng mỗi entry (QD16 trên PR17), không được dùng epoch full của C làm writerEpoch.
+- Read history tách scope ACTIVE, scheduler exam riêng và chốt theo answers đã commit. [Review A/B](REVIEW_A_PR17.md).

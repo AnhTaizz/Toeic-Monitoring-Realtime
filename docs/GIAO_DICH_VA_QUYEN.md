@@ -22,7 +22,7 @@ Trong hệ thống thi TOEIC trực tuyến thời gian thực, các nguy cơ tr
 - **Đồng hồ thực sau khóa bằng `clock_timestamp()`:** Server không dùng `now()` (vốn là transaction start time) mà gọi `SELECT clock_timestamp()` **ngay sau khi đã giữ khóa thành công** để xác định `decisionAt`.
 - **Thế hệ phiên ghi (`writerEpoch`):** Mỗi lần kết nối mới chiếm quyền ghi (`takeover`), `writerEpoch` được tăng thêm 1 trong DB. Mọi request mang epoch cũ đều bị từ chối 409 `STALE`.
 - **Số hiệu phiên bản đơn điệu (`savedRevision`):** Đáp án lưu chỉ được tăng (`revision > savedRevision`), cấm ghi đè bản cũ.
-- **Xác thực và phân quyền trước mọi thao tác (Zero-Trust Auth Gate):** Kiểm tra JWT/Bearer token và quyền sở hữu attempt trên từng request trước khi tra cache chống trùng hay xin khóa DB.
+- **Xác thực và phân quyền trước mọi thao tác (Zero-Trust Auth Gate):** Kiểm tra Bearer token opaque và role trước thao tác; đọc row dưới khóa để kiểm owner trước mọi nhánh trả dữ liệu/cached result hoặc cập nhật.
 
 ---
 
@@ -46,7 +46,7 @@ sequenceDiagram
         Ctrl-->>C: 403 FORBIDDEN
     end
     Ctrl->>Svc: autosaveAnswers(attemptId, request)
-    Svc->>DB: BEGIN TRANSACTION (SERIALIZABLE / READ COMMITTED)
+    Svc->>DB: BEGIN TRANSACTION (READ COMMITTED)
     Svc->>DB: SELECT * FROM monitoring_attempts WHERE attempt_id = :id FOR UPDATE OF a
     Note over Svc,DB: Khóa bi quan độc quyền trên dòng attempt
     Svc->>DB: SELECT clock_timestamp() -> decisionAt
@@ -156,11 +156,11 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Sch as Scheduled Task (500ms)
+    participant Sch as Scheduled Task (1000ms mặc định)
     participant Svc as ExamTimeoutService
     participant DB as PostgreSQL 18
 
-    Sch->>Svc: scanAndProcessTimeouts()
+    Sch->>Svc: processTimeouts() (tự chạy qua scheduler)
     Svc->>DB: SELECT attempt_id FROM monitoring_attempts<br/>WHERE state = 'ACTIVE' AND deadline_at <= clock_timestamp()
     loop Mỗi attempt quá hạn
         Svc->>DB: BEGIN TRANSACTION
@@ -284,18 +284,19 @@ sequenceDiagram
   "attemptId": "SESSION-2026-candidate1",
   "sessionId": "SESSION-2026",
   "examId": "EXAM-TOEIC-SAMPLE-10",
-  "candidateUsername": "candidate1",
   "writerEpoch": 2,
   "savedRevision": 42,
   "state": "ACTIVE",
-  "startedAt": "2026-10-05T16:00:00Z",
   "deadlineAt": "2026-10-05T18:00:00Z",
   "answers": {
     "L1": "A",
     "R1": "B"
   },
-  "totalQuestions": 10,
-  "score": null,
+  "totalQuestions": 0,
+  "correctCount": 0,
+  "listeningCorrect": 0,
+  "readingCorrect": 0,
+  "score": 0,
   "submittedAt": null
 }
 ```
@@ -356,7 +357,7 @@ sequenceDiagram
 
 ## 4. Bằng chứng Trích xuất Log & Truy vấn Thực tế
 
-Đoạn log trích xuất từ kịch bản kiểm thử PostgreSQL 18 thật ([`ExamConcurrencyPostgresSmoke`](file:///c:/Users/Lenovo/OneDrive/Máy%20tính/LTM/Toeic-Monitoring-Realtime/server/src/test/java/vn/edu/toeic/server/exam/ExamConcurrencyPostgresSmoke.java)):
+Đoạn log trích xuất từ kịch bản kiểm thử PostgreSQL 18 thật ([`ExamConcurrencyPostgresSmoke`](../server/src/test/java/vn/edu/toeic/server/exam/ExamConcurrencyPostgresSmoke.java)):
 
 ```sql
 -- 1. Khóa bi quan độc quyền trên attempt của thí sinh:
@@ -440,3 +441,13 @@ PASS: AT10: Error is EXPIRED
 > - Giả sử máy 1 bị mất mạng tạm thời nhưng tiến trình cũ vẫn đang cố gửi autosave với đáp án cũ.
 > - Thí sinh chuyển sang máy 2, đăng nhập và gọi `takeover`. Server tăng `writerEpoch` từ 1 lên 2.
 > - Khi mạng máy 1 hồi phục và gửi gói tin cũ với `writerEpoch = 1` lên server, server so sánh thấy epoch cũ hơn `writerEpoch` hiện hành (2) và từ chối ngay với **`409 STALE`**, ngăn chặn hoàn toàn việc dữ liệu cũ ở máy 1 ghi đè lên bài làm mới ở máy 2.
+
+## 6. Cập nhật P0 ngày 11/10/2026 (chưa merge)
+
+Quyền đọc exam/status cho owner hoặc assigned proctor tách khỏi scope ghi/giám sát ACTIVE. Chỉ ba state ACTIVE/SUBMITTED/TIMED_OUT được đọc; CLOSED/INTERRUPTED không được mở thêm. Retry submit vẫn kiểm candidate/owner trước đọc cache, nên foreign user không lấy được kết quả idempotent.
+
+Lần takeover đầu tiên khi vào thi đặt deadline bằng clock_timestamp() sau khóa; lần sau giữ nguyên. Không phụ thuộc câu trả lời đầu tiên, không reset khi reconnect/takeover. Client PR17 đã consume deadlineAt trong TakeoverWriterResponse nên không cần đổi DTO. Legacy save-first còn tương thích.
+
+Scheduler exam default1000ms, bean riêng examTimeoutScheduler và EnableScheduling; C giữ hai worker riêng. Timeout ghi submitted_at là giờ chốt và tính từ answers_json đã commit; transaction không sửa lượt đã chốt. Mẫu status ở mục3 đã đối chiếu record thật: không candidateUsername/startedAt, số điểm0 trước chấm. Mẫu lỗi sơ đồ là rút gọn; wire HTTP thật vẫn dùng envelope error.code như PROTOCOL.
+
+[Review QD16/QD17 và cách tích hợp](REVIEW_A_PR17.md). Evidence P0 sẽ ghi riêng, không biến báo cáo lịch sử B hay human review thành PASS.

@@ -347,3 +347,9 @@ C5 là thay đổi tài liệu. [Phương pháp](MONITORING_BASELINE_METHOD.md),
 | B human review/window/sampler/analyzer E1/delta correctness/E2 | NOT RUN hoặc còn thiếu | Không đánh dấu đủ công cụ/nghiệm thu |
 
 MT01/MT07/MT08 giữ PARTIAL toàn hệ thống; MT02–MT06 delta và E1/E2 không nâng PASS. Merge tài liệu không thay review của B hoặc nghiệm thu GUI/LAN.
+
+## Backend P0 unblock PR17 — 11/10/2026 (local, chưa merge)
+
+Nhánh A từ main12e2838: Maven test/package510 PASS, tích hợp tạm PR17 package582 PASS, đều bật11 regression PG thực và không skip. Native PostgreSQL18.1 cluster test riêng; không reset DB dev. Ba GAP B: owner/assigned proctor đọc SUBMITTED/TIMED_OUT, scheduler tự chốt và deadline bắt đầu ngay takeover entry **PASS kỹ thuật**. B smoke JAR/PG/HTTP28 PASS,0GAP; C1 full/reconnect/autonomous STALE/TTL và C2 late/gap/history/permission hồi quy PASS; Python10 PASS.
+
+[Evidence P0 mới](../evidence/t2-a-p0/2026-10-11-verification.md) ghi source/hash, logs, fixture patch và lỗi exploratory. Không sửa các evidence lịch sử B/C hoặc TRACKER. T2-B3/B4 vẫn PARTIAL; human review, full GUI candidate/proctor, server-off/reconnect, LAN/app-image/audio máy thứ hai NOT RUN. E1/E2 không thay trạng thái. Remote PR17 chưa có commit A cho đến khi được phép push và tích hợp.

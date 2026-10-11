@@ -1,0 +1,17 @@
+{
+  "protected_uncommitted_sha256": {
+    "scripts/launcher-manifest.ps1": "f03e74acd32930e0a779cd3921e0c74c8951925a32e1f08c3962806a5d1a8e05",
+    "scripts/test-launcher-manifest.ps1": "f8a94279352578aaf6c73292ea888e49d05ac60cfdd5d0a6a7d5fb4b2dc091b7",
+    "task.txt": "303226cf46e5d94c1fcadcd4addd94d1914c97a5bae3b8be3859d2cdf20abf69"
+  },
+  "b4_head_unchanged": "568be803be2758eed7954e3e70818496dfe45569",
+  "integrated_client_production_unchanged": true,
+  "a_client_protocol_migrations_unchanged": true,
+  "server_production_class_hashes_identical": true,
+  "server_class_count": 79,
+  "main_remote": "12e28386169c42b88883f23a5053baeb8fb0c3c9",
+  "pr17_remote": "2f5fc66d1220f1e860f7c3beced86ef3f294ac46",
+  "pr17_state": "OPEN, unmerged, GitHub mergeable=true; no review submissions",
+  "pushed": false,
+  "public_or_dev_database_reset": false
+}

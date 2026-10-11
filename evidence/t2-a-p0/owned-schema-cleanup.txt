@@ -1,0 +1,9 @@
+ schema_name 
+-------------
+(0 rows)
+
+ public_tables 
+---------------
+             0
+(1 row)
+
