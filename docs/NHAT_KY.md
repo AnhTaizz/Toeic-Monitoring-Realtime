@@ -377,3 +377,7 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - Package ERROR STALE mới initialFAIL vì giữ ACK deadline; sửa candidate về now rồi PASS, giữ transcript. DB regression đầuMIGRATIONfail doDocker chưa chạy; bật Docker Desktop/compose volume cũ rồi PASS, không sửa.env. Audit lầnđầuKeyError dùngsummaries thayrows đã sửa auditor, khôngraw/runtime. [Evidence](../evidence/t3-c1/2026-10-11-verification.md), [guide](MONITORING_DELTA_ENCODER.md), QD16.
 - A/C cần server nhận delta/binding/auth/epoch/seq/dedup/resync/freshness successful scan và giải quyết STALE6s vs full30s/skipunchanged trước production; không heartbeat gia hạn/tăngtimeout ngầm. B cần capability negotiation/ACK/guard/lifecycle/measurement classification và review. Human A/B/ChatGPT planning-review NOT RUN theooptout; fullcandidateGUI/LAN/MT02–MT06gate/Pythonunit/E1/E2 NOT RUN. Không fake approval hoặc status27case/tracker.
 - Không sửa tracker/kế hoạch gốc/.env/migration/server/exam/dependencies. Dừng T3-C1; không T3-C2/gate hoặc tự bật production/benchmark. Git cuối trong PR/final.
+
+### Đính chính evidence T3-C1 cùng phiên
+
+- Log PowerShell gốc là UTF-16 BOM; bước sao chép transcript đầu đọc sai UTF-8, dẫn NUL/binary diff. Đã tạo lại bản sao từ đúng log gốc, decode BOM→UTF-8/LF/sanitized prefixes; originalSHA không đổi, derivedSHA cập nhật và không NUL/replacement. Không thay runtime hoặc chạy lại tests vì sửa format evidence. Privacy/source/hash audit chạy lại trước PR; không giả raw/test PASS mới.

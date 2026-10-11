@@ -1,7 +1,9 @@
 {
-  "files": 94,
-  "localLinks": 195,
-  "secretPrivacyFiles": 91,
+  "files": 95,
+  "localLinks": 196,
+  "secretPrivacyFiles": 93,
+  "artifactChecks": 60,
+  "transcriptEncoding": "UTF-8/no NUL/no replacement character",
   "protectedPaths": "unchanged",
   "issues": []
 }

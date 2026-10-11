@@ -1,63 +1,83 @@
 [
   {
     "path": "transcripts/baseline-493.txt",
-    "sha256": "cfbe378c473a0f11b62eb49082a28289caa31f0a8cb1762ec12e18b62cc2ecfa",
+    "sha256": "b371a3f4acc2d06ef48e8f858fed12043afa3bb8f86ae69601063e79953f6ba0",
     "originalSha256": "9a527fedb3a1fadcb60ab1844e8e67efd3b52488e5899006b384b30cadb40fe1",
-    "sanitizedTranscript": true
+    "sanitizedTranscript": true,
+    "sourceEncoding": "UTF-16 BOM",
+    "trimTrailingWhitespace": true
   },
   {
     "path": "transcripts/initial-error-test-failed.txt",
-    "sha256": "b0217495e6cfcca81b7eff692b6e5f0a5cbe20f91283ba44e85850206321a365",
+    "sha256": "36c610dfdd84d4e90673dd38d0913830cfdfafbeea98e68e379a5544f02efe9b",
     "originalSha256": "9205ea9a6d7b5b405bc19c5959a3dace17ae20673d7a1ae3ed41667be05e78b1",
-    "sanitizedTranscript": true
+    "sanitizedTranscript": true,
+    "sourceEncoding": "UTF-16 BOM",
+    "trimTrailingWhitespace": true
   },
   {
     "path": "transcripts/final-package-531.txt",
-    "sha256": "e29a115569cf73388b4018ba7987026224ecda4fdad140bb12d54c476ecd07b0",
+    "sha256": "dfb4d6808e6d983fe510f32d00104ae414b548848f501d4b285dd1f4bec88707",
     "originalSha256": "e57310c8d0fa7d73bdd89470a2aa4c1e761cf494f53d96eef467c31813be8b3c",
-    "sanitizedTranscript": true
+    "sanitizedTranscript": true,
+    "sourceEncoding": "UTF-16 BOM",
+    "trimTrailingWhitespace": true
   },
   {
     "path": "transcripts/cli-initial.txt",
-    "sha256": "047b4bb2e98f6f84857a3f8b25942e883a932c6603b91b0eb29cae8b219ef4bf",
+    "sha256": "0c5b2b1fe21da6b6a9ad53094f731d4db837fcd304a8b985d0cd51842ca12934",
     "originalSha256": "8a640e200a200e74ad13dd0a75f3f2882237c143e4ffc3607fbea872ce2890a2",
-    "sanitizedTranscript": true
+    "sanitizedTranscript": true,
+    "sourceEncoding": "UTF-16 BOM",
+    "trimTrailingWhitespace": true
   },
   {
     "path": "transcripts/cli-final.txt",
-    "sha256": "b0abf01dffe8d08b5c5a4d3b42ec7067d1f9398763fd60f35b476d4744de64bb",
+    "sha256": "db4f9bc620aea89be75d2f80d496ce89a31274b47870490f15f22d393564e630",
     "originalSha256": "b7dcc47d46e3775e711ca8030de8eadc61bdc21a6196f08367bd35361ed39056",
-    "sanitizedTranscript": true
+    "sanitizedTranscript": true,
+    "sourceEncoding": "UTF-16 BOM",
+    "trimTrailingWhitespace": true
   },
   {
     "path": "transcripts/initial-db-unavailable.txt",
-    "sha256": "6d62a5b44c625c2622f51f0c893609feb9bc90268c406bba0e33b1df63d9ddea",
+    "sha256": "fed9bd072bec1cfc1b5bd324ef7e2ef19ac883c52f56d57a7ff718c3b71beec4",
     "originalSha256": "937806c880083d5a8b5292c8817d42d2ce029072e99e172c8da8c246c9bcdf3d",
-    "sanitizedTranscript": true
+    "sanitizedTranscript": true,
+    "sourceEncoding": "UTF-16 BOM",
+    "trimTrailingWhitespace": true
   },
   {
     "path": "transcripts/full-33828d4.txt",
-    "sha256": "6a289b18c6657bf5d8154e8799488fd62936058ab72d24ae649a181c75655948",
+    "sha256": "b5a567967331e7fb44e7643662a60a71b6ececb48f70c9ba8e0e40ac68c8e102",
     "originalSha256": "d4b1914727e2e47fa6d9fecd718da9f042372f55c78f57cf38aab898d2e9fa2f",
-    "sanitizedTranscript": true
+    "sanitizedTranscript": true,
+    "sourceEncoding": "UTF-16 BOM",
+    "trimTrailingWhitespace": true
   },
   {
     "path": "transcripts/event-33828d4.txt",
-    "sha256": "cbe03106370f69ae269005916e79d6b0126a14e09235786e0ea9742b071f2624",
+    "sha256": "1800ff9715bb94ea8e9721ace36a8186ff5bb5408b7a1eb2a46d9ba4a19d8fdc",
     "originalSha256": "d11e7b654661e339a4a8557c7aef1fd61a111005af8ee7e7660e82d6e8a76d72",
-    "sanitizedTranscript": true
+    "sanitizedTranscript": true,
+    "sourceEncoding": "UTF-16 BOM",
+    "trimTrailingWhitespace": true
   },
   {
     "path": "transcripts/presence-33828d4.txt",
-    "sha256": "29a155f6caa6362947e3507366f0378d0ab6d41dd54fc5757ba2cd4f65308a31",
+    "sha256": "ad7e101e79e513f2a7f9ab015a120299efb066590b5ca7bcd88fe50a3ceeb415",
     "originalSha256": "993fc7903f2a69c150267bea5ba7a6dc8e471f8665b2c838a356917ea21479ef",
-    "sanitizedTranscript": true
+    "sanitizedTranscript": true,
+    "sourceEncoding": "UTF-16 BOM",
+    "trimTrailingWhitespace": true
   },
   {
     "path": "transcripts/measurement-33828d4.txt",
-    "sha256": "456911b32be02c2c51f488b0cf7d6157a1ab71dc4ecb5f4bd43e98a27c966ccf",
+    "sha256": "8a41a083b745eb33e3c9a3fd670863c27764d9a355f14f31aecab6d9ce62fb55",
     "originalSha256": "3826fa6edcebd6cc7d73de7b5213ec00f820ed595a23f22f44f94807185b9ae9",
-    "sanitizedTranscript": true
+    "sanitizedTranscript": true,
+    "sourceEncoding": "UTF-16 BOM",
+    "trimTrailingWhitespace": true
   },
   {
     "path": "artifacts/cli-initial/fixture-delta.json",
@@ -265,9 +285,11 @@
   },
   {
     "path": "transcripts/full-final-7041c6e.txt",
-    "sha256": "30854ff5df6e1432a068db6709b4c27b199e70fb07b90d384c9bfca4b46bdbbe",
+    "sha256": "919e916bfae14c1627cd7f160fac9786abdf75fd9ff972eefae228ef1abcfeef",
     "originalSha256": "f4adf164a435df37ed2fb79a05f2816d3db85f4d12111bfadb06db667a4eb394",
-    "sanitizedTranscript": true
+    "sanitizedTranscript": true,
+    "sourceEncoding": "UTF-16 BOM",
+    "trimTrailingWhitespace": true
   },
   {
     "path": "artifacts/full-final/raw/T2C1-fb0112a1-f0cc-49df-82c2-a8eedcf88e22-CLIENT-6d5f4e93-3387-464e-a511-54947687fb38.jsonl.gz",
@@ -335,7 +357,10 @@
   },
   {
     "path": "transcripts/db-readonly-audit.txt",
-    "sha256": "4b35149ac62af8733c8936c3f1667404be68f33d51688735f133fb3acdb3599e",
-    "originalSha256": "4b35149ac62af8733c8936c3f1667404be68f33d51688735f133fb3acdb3599e"
+    "sha256": "7100ce4992b8e15937c42c884e2c3e6efd956a74b4bca3d8bbdccbc2b9627e48",
+    "originalSha256": "4b35149ac62af8733c8936c3f1667404be68f33d51688735f133fb3acdb3599e",
+    "sanitizedTranscript": true,
+    "sourceEncoding": "UTF-16 BOM",
+    "trimTrailingWhitespace": true
   }
 ]
