@@ -1,0 +1,18 @@
+DROP SCHEMA
+psql:E:/Project/.toeic-a-p0-runtime-20261011/cleanup-owned-b.sql:1: NOTICE:  drop cascades to 16 other objects
+DETAIL:  drop cascades to table t2b_smoke_4d1b8abd9f56.flyway_schema_history
+drop cascades to table t2b_smoke_4d1b8abd9f56.user_accounts
+drop cascades to table t2b_smoke_4d1b8abd9f56.login_sessions
+drop cascades to table t2b_smoke_4d1b8abd9f56.monitoring_attempts
+drop cascades to table t2b_smoke_4d1b8abd9f56.monitoring_proctor_assignments
+drop cascades to table t2b_smoke_4d1b8abd9f56.monitoring_events
+drop cascades to table t2b_smoke_4d1b8abd9f56.monitoring_gaps
+drop cascades to table t2b_smoke_4d1b8abd9f56.monitoring_presence
+drop cascades to table t2b_smoke_4d1b8abd9f56.monitoring_interruptions
+drop cascades to table t2b_smoke_4d1b8abd9f56.exams
+drop cascades to table t2b_smoke_4d1b8abd9f56.exam_questions
+drop cascades to table t2b_smoke_4d1b8abd9f56.exam_options
+drop cascades to table t2b_smoke_4d1b8abd9f56.exam_sessions
+drop cascades to table t2b_smoke_4d1b8abd9f56.exam_session_proctors
+drop cascades to table t2b_smoke_4d1b8abd9f56.exam_autosave_requests
+drop cascades to table t2b_smoke_4d1b8abd9f56.exam_submit_requests

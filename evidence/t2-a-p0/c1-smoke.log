@@ -1,0 +1,2 @@
+Error: Unable to initialize main class vn.edu.toeic.server.monitoring.FullSnapshotSmoke
+Caused by: java.lang.NoClassDefFoundError: vn/edu/toeic/client/realtime/MonitoringTransport

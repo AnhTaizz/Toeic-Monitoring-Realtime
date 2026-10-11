@@ -1,0 +1,27 @@
+PASS Spring Boot jar th?t ch?y trên PostgreSQL th?t, Flyway t?o schema t?m
+PASS PROCTOR import ?? th? và t?o 3 ca (600 s, 4 s, 3 s) trên schema t?m t2b_smoke_4d1b8abd9f56
+PASS JSON ?? g?i cho thí sinh không có tr??ng ?áp án ?úng
+PASS Vào phòng thi: server c?p writerEpoch m?i (1 -> 2), revision 0, ch?a có ?áp án
+PASS Server tính gi? ngay khi vào phòng thi, tr??c khi có ?áp án; takeover và status cùng deadline
+PASS ?? 4 câu ???c gom thành 3 nhóm (2 câu chung ?o?n v?n)
+PASS Autosave ??u: server l?u revision 1 ?úng toàn b? map; client ch? báo ?ã l?u sau ACK
+PASS Client gi? deadline t? takeover sau l?n l?u ??u, không t? ??t/reset
+PASS S?a liên ti?p + b? ch?n: server gi? ?úng b?n cu?i ? revision 5, không m?t thay ??i
+PASS Máy th? hai vào thi: writerEpoch 3, nh?n ?úng answers/revision server ?ang gi?
+PASS Writer c? (epoch 2) b? server t? ch?i STALE: không ghi ???c, client khóa và báo b? thay writer
+PASS Writer m?i (epoch 3) l?u ti?p ???c ? revision 6
+PASS L?y l?i quy?n ghi: epoch 4, n?p b?n server, b? thay ??i ch?a l?u c?a phiên c?, revision không lùi
+PASS M?t ACK: client g?i l?i ?úng request c? (cùng requestId, revision 7) và server tr? ALREADY_SAVED
+PASS M?t m?ng: server ? revision 7, client ? revision 9 và báo CH?A L?U ???C (không báo ?ã l?u)
+PASS Reconnect cùng writer (server 7 / client 9): gi? b?n trên máy, g?i l?i ?úng request revision 9, không dùng l?i s? c?
+PASS B?m n?p hai l?n ch? sinh m?t bài n?p; m?i l?n g?i l?i (1 l?n g?i) dùng ?úng payload ?ã ?óng b?ng
+PASS M?t response n?p bài: client ch? báo ?ã n?p sau khi server xác nh?n; k?t qu? hi?n th? là c?a server (2/4)
+PASS G?i l?i ?úng request n?p ?ã ?óng b?ng: server tr? l?i k?t qu? c?, không ch?m l?n hai
+PASS Bài ?ã ch?t: request n?p khác b? t? ch?i INVALID_STATE
+PASS Bài ?ã ch?t: autosave mu?n b? t? ch?i INVALID_STATE
+PASS Sau các l?n g?i mu?n, bài ?ã ch?t không ??i ?áp án và ?i?m
+PASS M? l?i l??t ?ã ch?t: ch? tr? k?t qu?, không xin quy?n ghi
+PASS H?t gi? theo ??ng h? máy: client khóa s?a và khóa n?p
+PASS Sau khi h?t gi?: client không t? n?p, không m? l?i s?a
+FAIL IllegalStateException: Server ch?t TIMED_OUT, ch?m trên b?n ?ã l?u (1 câu ?úng); client nói rõ thay ??i ch?a xác nh?n không ???c tính
+CLEANUP CH?A xóa ???c schema t?m t2b_smoke_4d1b8abd9f56; c?n xóa tay
