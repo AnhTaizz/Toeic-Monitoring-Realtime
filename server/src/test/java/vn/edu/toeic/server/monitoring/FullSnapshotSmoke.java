@@ -72,7 +72,9 @@ public final class FullSnapshotSmoke {
     public static void main(String[] args) {
         var smoke=new FullSnapshotSmoke();
         try { smoke.run(List.of(args).contains("--gui")); }
-        catch(Exception failure) { System.err.println("T2-C1 FAIL phase="+smoke.phase+" class="+failure.getClass().getSimpleName());System.exit(1); }
+        catch(Exception failure) { System.err.println("T2-C1 FAIL phase="+smoke.phase+" class="+failure.getClass().getSimpleName());
+            if (failure instanceof IllegalStateException) System.err.println("Harness check: " + failure.getMessage());
+            System.exit(1); }
     }
     private static String env(String name,String fallback) { return System.getenv().getOrDefault(name,fallback); }
     private JdbcClient jdbc() { return context.getBean(JdbcClient.class); }
@@ -209,7 +211,11 @@ public final class FullSnapshotSmoke {
     }
     private void verifyScheduledMaintenance() throws Exception {
         phase="AUTO_MAINTENANCE_SETUP";
-        check(context.getBeansOfType(ScheduledAnnotationBeanPostProcessor.class).isEmpty(),"global scheduling not enabled for exam tasks");
+        var processors = context.getBeansOfType(ScheduledAnnotationBeanPostProcessor.class);
+        check(processors.size() == 1 && processors.values().stream()
+                .mapToInt(processor -> processor.getScheduledTasks().size()).sum() == 1,
+                "only the exam job is annotation-scheduled; monitoring still owns its workers");
+        check(context.containsBean("examTimeoutScheduler"), "exam owns a separate scheduler");
         String nextAttempt="TEST-T2C1-B";
         jdbc().sql("INSERT INTO monitoring_attempts(attempt_id,candidate_user_id,state) SELECT :a,id,'ACTIVE' FROM user_accounts WHERE username='TEST-full-candidate'").param("a",nextAttempt).update();
         jdbc().sql("INSERT INTO monitoring_proctor_assignments SELECT :a,id FROM user_accounts WHERE username='TEST-full-proctor'").param("a",nextAttempt).update();
