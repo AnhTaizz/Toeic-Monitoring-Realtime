@@ -8,6 +8,19 @@ T2-C2 bổ sung nguồn gốc kết nối của event, nhãn nhận do server l�
 
 Đổi một message đã có người dùng thì: owner sửa file này, reviewer duyệt, người dùng cập nhật fixture trong cùng nhánh tích hợp.
 
+## T2-C5 · Tóm tắt baseline hiện tại và phạm vi đo
+
+Đối chiếu source tại main82557bf ngày11/10/2026. Không thêm message/field. [Phương pháp baseline](MONITORING_BASELINE_METHOD.md) là đầu mối cho identity, nghĩa của số đo và điều kiện trước E1/E2; bảng/contract C1/C2 phía cuối vẫn là chi tiết wire hiện có. Các ghi chú chặng1 là lịch sử, không thay định nghĩa hiện tại sau đây.
+
+- Production `process-policy-v1`: chrome.exe/msedge.exe/firefox.exe/zalo.exe/teams.exe/discord.exe/anydesk.exe/teamviewer.exe. Source liệt kê rồi lọc. Identity local `(collectorSessionId,pid,startInstant)`; start nullable làm yếu khả năng phân biệt PID reuse, tên không phải khóa. Metadata UNREADABLE không chứng minh không có process liên quan.
+- OPEN cấp syncEpoch/UNSYNCED sequence0; full đầu1, full tiếp theo cao hơn thay toàn tập và có thể nhảy số. Duplicate cùng nội dung trong dedup ACK lại; conflict/stale/epoch/socket sai bị từ chối. Delta/baseSequence chưa triển khai. View revision chỉ so trong serverInstanceId, không dùng sequence giữa epoch.
+- ACK FULL là nhận vào RAM một server JVM. Event/gap và scoped presence ACK sau transaction commit. Full không ghi/xóa history. deliveryStatus là nguồn socket, không đo delay. QUEUE_OVERFLOW có droppedCount khác interruption heartbeat UNKNOWN, vốn không biết số event mất.
+- Poll production1.000ms, heartbeat2.000ms, presence timeout6.000ms; full STALE6.000ms/TTL300.000ms/maintenance500ms, RAM bounded4.096attempt. Worker bảo trì riêng, không dựa annotation Scheduled cũ. Restart mất full RAM, không phục hồi history chưa từng commit. Cấu hình smoke nhỏ không là default production.
+- Measurement `monitoring-measurement-v1` nhận OPEN/FULL/CLOSE/state, sequence có trong FULL/state/ACK FULL; không có thì null. Không lưu syncEpoch/revision/acknowledgedType ở raw measurement, không lấy recordIndex làm wire sequence. Hooks đếm JSON UTF-8 WS tại transport, ATTEMPTED/WRITE_COMPLETED/WRITE_FAILED riêng và ACK correlation không cộng byte lần hai. Không HTTP/handshake/TCP-IP/TLS/WS framing; E2 cần endpoint/window/correlation trước claim tổng rộng hơn.
+- TEST C4 `test-owned-process-v1`/`monitoring-observation-trace-test-v1` chỉ root identities harness tạo; không đổi production8tên, network full vẫn chỉ nhận production. Reader giữ metadata thiếu, join dựa PID/start/collector/clock. Production replay từ chối TEST. 200ms target sau GO không là kernel lifespan200ms; scan/exit là khoảng quan sát parent, latency NOT MEASURED.
+
+Không dùng việc merge tài liệu để ghi B review, delta, E1/E2 hoặc MT01/07/08 toàn hệ thống PASS.
+
 ## Phân kênh
 
 | Kênh | Dùng cho |
@@ -760,7 +773,7 @@ Dashboard có cột "Cách nhận" và tab "Khoảng trống dữ liệu" riêng
 Không thêm/sửa message mạng hay quyền C1/C2. Schema local `monitoring-observation-trace-v1`: HEADER → START → OBSERVATION/SOURCE_FAILURE → STOP → FINAL. Policy/identity/process metadata dùng production. Empty success khác scan failure; failure không xóa state/baseline event. Checksum SHA256 tính exact UTF-8/LF bytes của HEADER và tất cả RECORD, không tính FINAL; index liên tục, COMPLETE/written=attempted/drop0/STOP/checksum đúng mới cho replay. File16MiB,10000record,128process; reader strict unknown/duplicate field/UTF-8/time/order/partial line. [Schema và lệnh đầy đủ](MONITORING_TRACE.md).
 
 Server FullSnapshotReducer delegate lõi FullStateReducer trong protocol; CLI cũng gọi parser/canonicalization/core này. Không di chuyển auth/transaction/epoch/socket/maintenance sang CLI. ObservationOracle tính expected riêng từ trace; driver dùng full/event encoder thật với ID/clock/transport/ACK baseline mô phỏng. Fault schedule drop vĩnh viễn/duplicate/reorder dữ liệu; OPEN/CLOSE tin cậy trong mô hình, reconnect tạo epoch mới. Không ACK-lost/retry network, heartbeat UNKNOWN/timer STALE/TTL/auth/DB simulation. Full seq mới có thể nhảy sau seq1 hợp lệ; mất seq1 thì chưa đồng bộ. Event business/delivered/missing kiểm độc lập; full không phục hồi/xóa history. [QD-14](QUYET_DINH.md#qd-14--trace-quan-sát-và-replay-production-với-oracle-độc-lập).
-# T2-C4 · Artifact thử nghiệm cục bộ
+## T2-C4 · Artifact thử nghiệm cục bộ
 
 C4 không thêm HTTP/WS message, không đổi FullSnapshotPayload hoặc 8 tên executable production. `ProcessSelection` là điểm chọn process trong collector; mặc định vẫn `ProcessPolicy`. Chỉ harness truyền `OwnedProcessPolicy` cho root child do mình tạo.
 

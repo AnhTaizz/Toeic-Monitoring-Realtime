@@ -1,4 +1,4 @@
-# Log đo C4 — định nghĩa, schema và cách chạy
+# Log đo byte (T1-C4, mở rộng full tại T2-C1)
 
 Phạm vi: chỉ JSON text WebSocket của monitoring session. Không đo HTTP login/roster/audio, handshake, WebSocket framing, TCP/IP, TLS hoặc retransmission mạng. Đây là application message bytes, không phải tổng băng thông hay chi phí toàn kỳ thi.
 
@@ -10,9 +10,9 @@ ACK nghiệp vụ là record BUSINESS_ACK riêng sau client validate pending cor
 
 Summary báo từng endpoint/clock domain/direction/type/outcome. Tổng gửi ứng dụng theo lần thử = CLIENT TX ATTEMPTED + SERVER TX ATTEMPTED. Tổng write-completed báo riêng. Không cộng RX vào TX để gọi là byte truyền duy nhất; không cộng cả ATTEMPTED và COMPLETED vì hai record mô tả cùng lần gửi.
 
-recordedAt là UTC wall clock; elapsedNanos là nanoTime trừ đầu recorder, chỉ so trong cùng clockDomain. runId nối file, không đồng bộ đồng hồ. sequence lấy từ wire khi hợp lệ, hiện protocol chưa gửi sequence nên null; recordIndex chỉ là thứ tự local log để phát hiện mất record, không phải sequence monitoring.
+recordedAt là UTC wall clock; elapsedNanos là nanoTime trừ đầu recorder, chỉ so trong cùng clockDomain. runId nối file, không đồng bộ đồng hồ. sequence lấy từ payload khi hợp lệ: MONITORING_FULL, MONITOR_STATE và ACK FULL hiện có sequence; OPEN/CLOSE/event/heartbeat không có thì null; recordIndex chỉ là thứ tự local log để phát hiện mất record, không phải sequence monitoring.
 
-Định nghĩa trên được ghi trước khi triển khai. C4 không chạy E1/E2, không triển khai full/delta và không kết luận hiệu năng.
+Định nghĩa byte bắt đầu ở T1-C4; T2-C1 đã mở rộng phân loại full mà không đổi schema recorder. Chưa delta/E1/E2, không kết luận hiệu năng từ smoke. [Phương pháp baseline hiện tại](MONITORING_BASELINE_METHOD.md) tách định nghĩa/đề xuất khỏi kết quả đã chạy.
 
 ## Schema JSON Lines v1
 
@@ -23,10 +23,10 @@ JSON Lines là file mà mỗi dòng chứa một object JSON hoàn chỉnh, UTF-
 | schemaVersion, runId, clockDomain, endpoint | Phiên bản, nhóm run, miền đồng hồ riêng, CLIENT hoặc SERVER. |
 | recordType | METADATA đầu file; MESSAGE cho byte; BUSINESS_ACK xác nhận đã qua correlation B2; OBSERVATION cho binary/oversized; FINAL cuối file. |
 | recordIndex | Số tăng dần của record dữ liệu, bắt đầu1; khoảng nhảy cho biết có record không ghi được. Không phải wire sequence. METADATA/FINAL không có field này. |
-| direction, messageType, outcome | TX/RX, một trong HEARTBEAT/PROCESS_OBSERVED/MONITORING_GAP/ACK/ERROR/MONITOR_WARNING/MONITOR_PRESENCE/UNKNOWN/INVALID; outcome theo bảng dưới. Không áp dụng cho control record. |
+| direction, messageType, outcome | TX/RX, một trong HEARTBEAT/PROCESS_OBSERVED/MONITORING_GAP/ACK/ERROR/MONITOR_WARNING/MONITOR_PRESENCE/MONITORING_SYNC_OPEN/MONITORING_FULL/MONITORING_SYNC_CLOSE/MONITOR_STATE/UNKNOWN/INVALID; outcome theo bảng dưới. Không áp dụng cho control record. |
 | messageId, requestId, traceId, attemptId | ID từ envelope khi là chuỗi hợp lệ; nullable. |
 | eventId, gapId, collectorSessionId | ID từ payload khi là chuỗi hợp lệ; nullable. |
-| sequence | Số nguyên không âm trong payload khi thực sự có, vừa long; còn lại null. v0 hiện không gửi sequence. |
+| sequence | Số nguyên không âm trong payload khi thực sự có, vừa long; còn lại null. v0 có sequence trong FULL/state/ACK FULL; không suy từ recordIndex. |
 | bytesUtf8 | MESSAGE: số byte của toàn chuỗi JSON. BUSINESS_ACK/OBSERVATION: null, không cộng byte lần nữa/không đoán. |
 | recordedAt | Instant UTC với đuôi Z, dùng đọc giờ và nối evidence. |
 | elapsedNanos | System.nanoTime trừ mốc đầu recorder; chỉ so cùng clockDomain, không suy ra độ trễ giữa máy. |
@@ -98,3 +98,5 @@ Khảo sát có nguồn và giới hạn: [PROCESS_MONITORING_SURVEY.md](PROCESS
 ## Bổ sung T2-C1 — 10/10/2026
 
 Whitelist type và Python summary nhận thêm MONITORING_SYNC_OPEN/MONITORING_FULL/MONITORING_SYNC_CLOSE/MONITOR_STATE. Hook đọc sequence từ payload cho FULL, MONITOR_STATE và ACK FULL; OPEN/CLOSE không có sequence nên giữ null. Byte/outcome/schema/hook không đổi: FULL ACK vẫn là BUSINESS_ACK sau correlation, không cộng byte ACK lần hai. REAL full/Edge/GUI component dùng recorder transport hiện có, 4 endpoint có FINAL và summary COMPLETE; fault process set MOCK. [Evidence full](../evidence/t2-c1/2026-10-10-verification.md). Chưa đo overhead/CPU/memory/latency/miss-rate, delta/E1/E2 hoặc LAN; COMPLETE chỉ cho các file cung cấp.
+
+Giới hạn trước E2: raw measurement không lưu syncEpoch/revision/acknowledgedType hoặc payload đầy đủ. Analyzer hiện chỉ gộp theo type/outcome; phân loại ACK state/history cần correlation TX requestId/traceId theo endpoint/retry, chưa có analyzer E2 chuyên biệt. COMPLETE chỉ cho file đã cung cấp, không chứng minh endpoint inventory/window đủ. Chưa đo HTTP/handshake/CPU/RSS/commit/render span. Xem [phương pháp E2 và điều kiện thiếu](MONITORING_BASELINE_METHOD.md#5-e2-chuẩn-bị-so-full-và-delta-về-sau).

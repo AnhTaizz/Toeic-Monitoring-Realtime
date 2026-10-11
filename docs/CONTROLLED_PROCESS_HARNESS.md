@@ -80,3 +80,7 @@ READY/exit/run/cleanup đều có hạn. Khi thành công, lỗi hoặc `cancel(
 REAL: Windows child và ProcessHandle thật. MOCK: dữ liệu giả trong unit test để kiểm metadata/identity/coverage. SIMULATED: candidate gate trong harness, faults replay. Không mạng/DB/GUI trong C4; C3/C1/event hồi quy là các kiểm tra riêng. Không CPU/memory/latency/miss-rate/E1/E2. Human B review và ChatGPT planning/review NOT RUN; B cần xem policy seam, trace TEST, clock mapping, identity/coverage và lifecycle.
 
 Evidence: [báo cáo T2-C4](../evidence/t2-c4/2026-10-10-verification.md). Dừng sau T2-C4; chưa triển khai C5/delta.
+
+## T2-C5: cách dùng đúng trong phương pháp đo
+
+[Phương pháp baseline](MONITORING_BASELINE_METHOD.md) chốt các kết luận/eligibility/clock/byte và đầu vào còn thiếu. Child giữ200ms sau GO có thể đã được quan sát trước GO; observedLifetime đo startReturned→exitObserved không bằng target. Harness hiện chưa có warmup15s/cửa sổ120s/resource sampler/analyzer E1; trace TEST không đưa vào production replay E2. Không đổi raw hoặc gọi lượt smoke đủ30child là E1 PASS.

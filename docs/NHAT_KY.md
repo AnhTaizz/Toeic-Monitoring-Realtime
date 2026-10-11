@@ -357,3 +357,12 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 
 - Khi tiếp tục phiên, origin/main đã có PR#21 tại b576a07. Đưa commit mục lục chưa push lên main mới bằng rebase, giữ cả mục nhật ký C4 và mục đồng bộ trước đó.
 - Bổ sung T2-C4 vào mục lục bằng chứng; kiểm tra liên kết và diff trước khi push tài liệu. Không chạy lại kiểm thử ứng dụng.
+
+## 11/10/2026 — C: T2-C5 phương pháp baseline và protocol
+
+- Fetch xác minh main82557bf (thêm mục lục evidence sau C4 PR#21/b576a07), workspace sạch; nhánh docs/t2-c5-monitoring-baseline-methodology từ main. Commit phương pháp eb6ba59; không tiếp tục nhánh C4 hoặc thay runtime.
+- [MONITORING_BASELINE_METHOD](MONITORING_BASELINE_METHOD.md): production8tên/TEST, identity/metadata, empty vs source failure, event/current-state/presence/gap, epoch/sequence/revision và RAM restart; ACK full RAM khác event/gap commit. Default source riêng smoke.
+- E1 định nghĩa targetGO/startup proxy/parent-observed lifetime/scan bounds/clock offset, OBSERVED/NOT_OBSERVED_IN_TRACE/INCONCLUSIVE và metadata độc lập. Rate/actual-lifetime bins là đề xuất chưa có analyzer, chung eligibility O/N; latency kernel NOT MEASURED; không clip PRE_GO âm. Harness chưa có warmup15s/window120s/resource sampler. E2 chỉ phương pháp, TEST trace bị production replay từ chối, thiếu delta/oracle/correctness gate; byte JSON transport/outcome/endpoint/window tránh đếm đôi và scope HTTP/framing chưa đo.
+- Đồng bộ PROTOCOL, measurement type/sequence mô tả cũ, trace scope C4, harness note, README/index; không thêm QD kiến trúc vì chỉ đối chiếu hiện có. Giữ raw/old checksums, log event concurrent FAIL và isolated PASS; cause chưa chứng minh. C3 replay PASS vẫn có6missingBusinessEvents trong owned-edge-seeded. C4 trial006 target200/lifetime329,8944ms/hold211,9458ms minh họa đúng proxy.
+- Kiểm tra mới: Markdown link/anchor, tên method/field/schema/default, diff scope và checksum C3/C4/gzip restoration. [Report/checks](../evidence/t2-c5/2026-10-11-verification.md). Java493/Python10 thuộc task trước; C5 không chạy lại runtime tests/smoke/benchmark. B human review và ChatGPT review NOT RUN theo opt-out hiện có; GUI/LAN/MT toàn hệ thống/E1/E2 không nâng PASS.
+- Không sửa .env/tracker/kế hoạch gốc/migration/exam code/collector/harness/reducer/old evidence. B cần chốt window/eligibility/actual bins/uncertainty/workload và byte endpoint/correlation trước đo; công cụ còn thiếu phải task riêng. Người dùng ủy quyền push/PR/merge commit nếu không blocker, giữ C5 và sync main an toàn; kết quả Git cuối trong PR/final. Dừng sau T2-C5.

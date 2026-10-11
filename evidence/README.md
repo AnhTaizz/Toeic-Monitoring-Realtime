@@ -31,6 +31,7 @@
 | T2-C2 | Event gửi bù và lịch sử gap | [Verification](t2-c2/2026-10-10-verification.md) |
 | T2-C3 | Observation trace, replay và oracle | [Verification](t2-c3/2026-10-10-verification.md) |
 | T2-C4 | Controlled process harness và ground truth độc lập | [Verification](t2-c4/2026-10-10-verification.md), [log kiểm tra](t2-c4/logs/) |
+| T2-C5 | Phương pháp baseline/protocol và kiểm tra tài liệu | [Verification](t2-c5/2026-10-11-verification.md), [kiểm tra source/link/hash](t2-c5/doc-checks.json) |
 
 ## Cách lưu log mới
 

@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-Cập nhật lần cuối: 10/10/2026 — T2-C4 code0164297/test/evidence hoàn tất từ main f6d46b2 (C3 PR#20 merge). Java493 PASS; Windows30 child REAL/poll500/TEST policy:27 observed/3 notObserved, cleanup/checksum/rejoin PASS. Human B review/candidate GUI/LAN/E1/E2 NOT RUN; dừng sau C4. Chi tiết Git cuối trong báo cáo/PR. C1 đã merge PR#18 vào main683adfc, giữ nhánh C1. T2-C2 code fdac531: nhãn event gửi bù theo nguồn kết nối, V8 additive, HTTP/tab gap và guard gửi cũ. Java425/package/Python10 PASS; C2 REAL Spring/PG/HTTP/WS/collector worker/proctor component PASS với readings MOCK/faults SIMULATED. A3/A4/C3/C4/B3/C1 hồi quy mới PASS, gồm hard-kill thật và tự STALE/TTL/shutdown. GUI candidate toàn luồng/LAN/human A/B review NOT RUN. Evidence C2 và Git/PR cuối xem báo cáo bàn giao. A giữ trạng thái theo evidence cũ; scheduler hết giờ bài thi cần A kiểm riêng.
+Cập nhật lần cuối: 11/10/2026 — T2-C5 tài liệu phương pháp và đối chiếu protocol hoàn tất từ main82557bf. Không đổi runtime; không chạy lại Java493/smoke/E1/E2. Kiểm tra mới là source/link/schema/default/evidence integrity. B human review trước phép đo NOT RUN; marker cửa sổ E1, resource sampler/analyzer và delta/E2 còn thiếu. Giữ các kết quả C1–C4 theo evidence gốc.
 
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
@@ -17,7 +17,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
 | B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; chuẩn bị Chặng 2 | `feat/t1-b3-proctor-dashboard` |
-| C | _chưa gán_ | T2-C4 code/test/evidence hoàn tất; dừng sau C4 | 0164297: harness/ground truth/trace TEST/join; Java493, Windows30child và checksum/cleanup PASS; C3 PR#20 merge f6d46b2 | Human B review/candidate GUI/LAN/OS Ctrl+C/E1/E2 NOT RUN; chưa C5/delta | `feat/t2-c4-controlled-process-harness` |
+| C | _chưa gán_ | T2-C5 tài liệu/kiểm tra hoàn tất; dừng sau C5 | eb6ba59: phương pháp baseline, identity/E1/E2/byte/clock và protocol đối chiếu source; C4 PR#21 merge b576a07 | B review trước đo NOT RUN; cần window/resource/analyzer E1, delta correctness trước E2; chưa chạy benchmark | `docs/t2-c5-monitoring-baseline-methodology` |
 
 ## Đang bị chặn
 
@@ -65,7 +65,7 @@ Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì
 |---|---:|---:|---|
 | A | — | — | |
 | B | — | — | |
-| C | _chưa gán_ | T2-C4 code/test/evidence hoàn tất; dừng sau C4 | 0164297: harness/ground truth/trace TEST/join; Java493, Windows30child và checksum/cleanup PASS; C3 PR#20 merge f6d46b2 | Human B review/candidate GUI/LAN/OS Ctrl+C/E1/E2 NOT RUN; chưa C5/delta | `feat/t2-c4-controlled-process-harness` |
+| C | — | — | T2-C5 tài liệu hoàn tất; B review và E1/E2 NOT RUN. Không điền giờ chưa đo. |
 
 ## Bàn giao T2-C3 ngày10/10/2026
 
@@ -74,3 +74,7 @@ C2 đã merge PR#19 bằng merge commit b2926ea, giữ C1/C2 local/remote. C3 t�
 ## Bàn giao T2-C4 ngày10/10/2026
 
 C4 từ main f6d46b2, code0164297. [Hướng dẫn](CONTROLLED_PROCESS_HARNESS.md), [evidence](../evidence/t2-c4/2026-10-10-verification.md). Ground truth độc lập từ parent, clock mapping cùng JVM, TEST owned identity giữ đến collector stop; production8 tên và network contract không đổi. Java493 PASS, full30 REAL child:27/3/0, nguồn scan REAL/gate SIMULATED, checksum/rejoin/cleanup PASS. C1-Gui/C3-replay/measurement/event riêng PASS; event chạy song song lần đầu FAIL retained, cause chưa chứng minh. Human B review NOT RUN; B cần xem policy/trace/clock/identity/lifecycle. Chưa C5/delta/E1/E2; dừng sau C4. Git merge cuối xem báo cáo/PR, không giả review.
+
+## Bàn giao T2-C5 ngày11/10/2026
+
+[Phương pháp baseline](MONITORING_BASELINE_METHOD.md), [kiểm tra tài liệu](../evidence/t2-c5/2026-10-11-verification.md). Base82557bf có mục lục evidence sau C4 merge PR#21. Tài liệu không đổi collector/harness/reducer/wire; sửa mô tả byte type/sequence cũ, phân biệt hold200ms với parent-observed lifetime và policy TEST/production. Rate có eligibility chung, INCONCLUSIVE riêng, latency chính xác NOT MEASURED; E2 chưa delta. Human B review/GUI/LAN/E1/E2 NOT RUN. Không sửa tracker/kế hoạch/old artifacts; QUYET_DINH giữ nguyên vì không quyết định kiến trúc mới. Git cuối xem PR/final; dừng sau C5.

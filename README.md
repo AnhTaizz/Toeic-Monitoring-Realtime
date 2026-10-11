@@ -329,3 +329,7 @@ Exit0 PASS,1 oracle mismatch,2 invalid/incomplete/config/I/O. Output mới, khô
 # Chạy thử process có kiểm soát (T2-C4)
 
 Sau `mvn package`, chạy `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t2c4.ps1 -JavaHome '<JDK21>'` tại thư mục gốc. Công cụ tạo 30 child Java thật, ghi ground truth độc lập và trace collector rồi ghép theo PID/start/clock mapping; không cần DB hoặc GUI. Policy TEST riêng không đổi 8 tên production. [Lệnh CLI, từng mốc thời gian và giới hạn](docs/CONTROLLED_PROCESS_HARNESS.md); [evidence](evidence/t2-c4/2026-10-10-verification.md). Không coi mọi child không thấy là lỗi, không suy ra E1/E2 hay hiệu năng.
+
+## Phương pháp baseline monitoring (T2-C5)
+
+Đọc [phương pháp baseline](docs/MONITORING_BASELINE_METHOD.md) để phân biệt event/state/presence/gap, identity, policy production/TEST, byte tầng ứng dụng và clock. Tài liệu chốt cách đối chiếu C4, giới hạn target200ms và checklist trước E1/E2; còn thiếu marker cửa sổ đo, resource sampler/analyzer E1 và delta/E2. Đây là tài liệu phương pháp, không phải nghiệm thu E1/E2 hoặc human B review.
