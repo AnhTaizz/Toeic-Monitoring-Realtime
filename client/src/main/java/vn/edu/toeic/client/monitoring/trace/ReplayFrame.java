@@ -3,7 +3,7 @@ package vn.edu.toeic.client.monitoring.trace;
 import com.google.gson.JsonObject;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
-/** expectedSequence/epoch/source come from observation/lifecycle position, not encoded payload. */
+/** expectedSequence/epoch/source come from raw observation/lifecycle position (mode-specific sequence), not encoded payload. */
 public record ReplayFrame(long ordinal,TraceData.Sample source,int scan,int generation,long expectedSequence,
         MessageEnvelope<JsonObject> message) {
     public String expectedEpoch() {return "SIMULATED-epoch-"+generation;}

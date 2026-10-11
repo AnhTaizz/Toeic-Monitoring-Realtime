@@ -1,6 +1,6 @@
 # Protocol đang dùng
 
-**Trạng thái: v0 có login/Bearer, C3 event/queue/retry, A4 heartbeat/presence/history và B3 dashboard. T2-C1 bổ sung OPEN/full/CLOSE, state RAM, HTTP/MONITOR_STATE và tab process hiện tại; delta chưa có.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây. Các mục chặng 1 bên dưới ghi phạm vi lịch sử tại thời điểm task đó; contract T2-C1 ở cuối là phần bổ sung hiện tại.
+**Trạng thái: v0 có login/Bearer, C3 event/queue/retry, A4 heartbeat/presence/history và B3 dashboard. T2-C1 bổ sung OPEN/full/CLOSE, state RAM, HTTP/MONITOR_STATE và tab process hiện tại. T3-C1 có encoder delta/replay candidate; server production chưa hỗ trợ delta.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây. Các mục chặng 1 bên dưới ghi phạm vi lịch sử tại thời điểm task đó; contract T2-C1 ở cuối là phần bổ sung hiện tại.
 
 Owner: C (monitoring, khung message chung), A (auth, ca thi, lưu/nộp). Người dùng: B.
 
@@ -166,7 +166,7 @@ Token chỉ trả trong JSON body của login. Request HTTP `/api/**` sau login 
 | `MONITORING_FULL` | thí sinh → server | collectorSessionId, syncEpoch, sequence, policyVersion, processes | ACK sau nhận state RAM | T2-C1 | Contract v1 trong nhánh tích hợp |
 | `MONITORING_SYNC_CLOSE` | thí sinh → server | collectorSessionId, syncEpoch | ACK sau đánh dấu STALE | T2-C1 | Contract v1 trong nhánh tích hợp |
 | `MONITOR_STATE` | server → giám thị được phân công | trạng thái hiện tại có revision | Không | T2-C1 | Contract v1 trong nhánh tích hợp |
-| _delta_ | thí sinh → server | | | T3-C1, T3-C2 | Chưa có |
+| `MONITORING_DELTA` | client candidate → adapter replay | collectorSessionId, syncEpoch, baseSequence, sequence, policyVersion, added, removed | ACK state RAM mô phỏng | T3-C1 | Encoder có; production server/transport chưa hỗ trợ |
 | _yêu cầu resync delta_ | server → thí sinh | | | T3-C2 | Chưa có; T2-C1 cấp epoch qua ACK của OPEN |
 | _READY / start / interrupted (Listening)_ | hai chiều | | | T3-A2, T3-B2 | Chưa có |
 
@@ -778,3 +778,20 @@ Server FullSnapshotReducer delegate lõi FullStateReducer trong protocol; CLI c�
 C4 không thêm HTTP/WS message, không đổi FullSnapshotPayload hoặc 8 tên executable production. `ProcessSelection` là điểm chọn process trong collector; mặc định vẫn `ProcessPolicy`. Chỉ harness truyền `OwnedProcessPolicy` cho root child do mình tạo.
 
 Trace TEST dùng cặp schema/policy `monitoring-observation-trace-test-v1` / `test-owned-process-v1`; reader C3 nhận schema an toàn này nhưng replay/network driver production từ chối. Dữ liệu tên/start thiếu được giữ UNREADABLE; không ép Java child thành ứng dụng production. Ground truth `controlled-ground-truth-v1` có parent clock mapping, checksum, identity và trạng thái cleanup. [Contract/lệnh/giới hạn C4](CONTROLLED_PROCESS_HARNESS.md).
+
+## T3-C1 · Contract candidate delta, chưa bật production
+
+Ngày11/10/2026. Encoder/replay có; server T3-C2/T3-A3, live transport capability/negotiation và gate T3-C3/C4 chưa có. CandidateMonitoringSession vẫn full default. Xem [luồng, retry, cách chạy và bàn giao](MONITORING_DELTA_ENCODER.md), QD-16.
+
+`MONITORING_DELTA` dùng envelope v0 như FULL: messageId=requestId ổn định, attemptId đúng scope, traceId giữ qua retry. Payload:
+
+```json
+{"collectorSessionId":"collectorC","syncEpoch":"epochE","baseSequence":1,"sequence":2,"policyVersion":"process-policy-v1","added":[{"pid":30,"processName":"zalo.exe","startInstant":"2026-10-11T00:00:00Z","metadataQuality":"COMPLETE"}],"removed":[{"pid":10,"startInstant":"2026-10-11T00:00:00Z"}]}
+```
+
+- added là process đầy đủ theo FULL; removed chỉ PID/start nullable, collector thuộc scope payload. Khóa collector+PID+start nguyên độ chính xác; tên chữ thường/Instant chuẩn hóa, sorting PID/start, mỗi list tối đa128, không trùng identity trong list hoặc vừa added vừa removed. Kết quả state tối đa128; policy8tên không đổi. Field lạ bị từ chối. Thiếu start giới hạn phân biệt PID reuse; không tạo start giả.
+- Epoch mới OPEN→ACK cấp epoch→full1→ACK hợp lệ trước delta. baseSequence>=1, sequence=base+1 không overflow. Cùng identity đổi name/quality gửi FULL; schema chưa có updated. Delta không viết history/event/gap/interruption.
+- ACK DELTA candidate giữ protocolVersion=v0, requestId/attemptId/traceId của request, type=ACK, payload status=ACCEPTED, acknowledgedType=MONITORING_DELTA, syncEpoch và sequence chính xác. Không tiến base chỉ vì socket write thành công. ACK FULL/OPEN giữ contract C1. Candidate retry nguyên envelope/payload, tối đa5/defaultACKtimeout5s; pending.target chỉ thành acknowledgedState sau ACK đúng.
+- Queue delta coalesces1latest waiting; full queue16 không đổi. Reconnect/hết retry xóa base/pending, OPEN mới/full1 từ scan thành công; oldACK/callback không tác động. Scan lỗi không gửi empty. Stop/revoke dọn worker/listeners, không đóng shared socket.
+- Đối soát full30s monotonic từ ACK full cuối, hoãn nếu pending; SOURCE_FAILURE chặn gửi lại latest. Full baseline vẫn mọi successful scan. Production C1 STALE6s/TTL5phút không đổi. Skip unchanged + full30s chưa đủ freshness6s: A/C phải chốt scan-based refresh/freshness/resync contract và test, không dùng heartbeat gia hạn hay tăng timeout âm thầm.
+- SequentialDeltaReplayAdapter là SIMULATED tối thiểu, không production reducer. Delta replay clean/duplicate/reconnect/mutation; drop/reorder/gap-resync còn T3-C2/C3, không claim MT02–MT06 PASS. Production measurement type DELTA và live gate cần tích hợp sau; chưa đo E2.

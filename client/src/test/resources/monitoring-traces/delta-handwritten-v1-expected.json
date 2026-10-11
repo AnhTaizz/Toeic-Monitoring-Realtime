@@ -1,0 +1,61 @@
+{
+  "source": "MOCK; handwritten expected",
+  "observationPids": [
+    [
+      10,
+      20
+    ],
+    [
+      20,
+      30
+    ],
+    [
+      20,
+      30
+    ],
+    [
+      20,
+      30
+    ],
+    [
+      20,
+      30
+    ],
+    [
+      20,
+      30
+    ],
+    [],
+    [
+      10
+    ],
+    [
+      10
+    ]
+  ],
+  "newEventCounts": [
+    2,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0
+  ],
+  "businessEvents": 6,
+  "deltaWireTypes": [
+    "MONITORING_SYNC_OPEN",
+    "MONITORING_FULL",
+    "MONITORING_DELTA",
+    "MONITORING_FULL",
+    "MONITORING_DELTA",
+    "MONITORING_DELTA",
+    "MONITORING_DELTA",
+    "MONITORING_DELTA",
+    "MONITORING_FULL",
+    "MONITORING_SYNC_CLOSE"
+  ],
+  "finalStatus": "STALE"
+}

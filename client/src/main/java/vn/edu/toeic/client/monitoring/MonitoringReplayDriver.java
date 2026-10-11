@@ -18,9 +18,10 @@ import vn.edu.toeic.client.monitoring.trace.TraceData;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
 import vn.edu.toeic.protocol.monitoring.EventOrigin;
+import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload.Process;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
-/** Deterministic headless adapter for production full/event delivery. No GUI, socket or DB.
+/** Deterministic headless adapter for shared client state/event delivery. No GUI, socket or DB.
  * Encoder ACKs are SIMULATED solely to enumerate the baseline wire stream. Faulted delivery is checked separately.
  */
 public final class MonitoringReplayDriver {
@@ -28,12 +29,17 @@ public final class MonitoringReplayDriver {
     private MonitoringReplayDriver() { }
     public static List<ReplayFrame> encode(TraceData.Trace trace,int reconnectAt) {
         if(!TraceData.SCHEMA.equals(trace.header().schemaVersion()))throw new IllegalArgumentException("TEST_POLICY_NOT_NETWORK_REPLAY");
+        return encode(trace,reconnectAt,false);
+    }
+    public static List<ReplayFrame> encode(TraceData.Trace trace,int reconnectAt,boolean delta) {
+        if(!TraceData.SCHEMA.equals(trace.header().schemaVersion()))throw new IllegalArgumentException("TEST_POLICY_NOT_NETWORK_REPLAY");
         var transport=new EncodingTransport();var clock=new ReplayClock();Map<String,Integer> ids=new HashMap<>();
         var settings=MonitoringDelivery.Settings.defaults();
         try(var events=new MonitoringDelivery("SIMULATED-attempt",transport,settings,clock,() -> clock.tick,ignored -> {},false,
                 kind -> "replay-"+kind+"-"+ids.merge(kind,1,Integer::sum));
             var full=new FullSnapshotDelivery("SIMULATED-attempt",transport,settings,ignored -> {},() -> clock.tick,false,
-                kind -> "replay-"+kind+"-"+ids.merge(kind,1,Integer::sum))) {
+                kind -> "replay-"+kind+"-"+ids.merge(kind,1,Integer::sum),delta?DeltaSnapshotDelivery.DEFAULT_RECONCILIATION.toNanos():0)) {
+            List<Process> previous=List.of();long lastFull=0;
             for(var sample:trace.samples()) {
                 transport.source=sample;clock.tick=sample.elapsedNanos();clock.wall=Instant.parse(trace.header().wallOrigin()).plusNanos(clock.tick);
                 switch(sample.type()) {
@@ -41,11 +47,17 @@ public final class MonitoringReplayDriver {
                     case "OBSERVATION","SOURCE_FAILURE" -> {
                         transport.scan++;
                         if(transport.scan==reconnectAt) {
-                            transport.change(ConnectionState.RECONNECTING);transport.generation++;transport.sequence=0;
+                            transport.change(ConnectionState.RECONNECTING);transport.generation++;transport.sequence=0;previous=List.of();lastFull=clock.tick;
                             transport.change(ConnectionState.CONNECTED);full.tick();
                         }
                         if(sample.type().equals("SOURCE_FAILURE")) {full.sourceFailed();events.sourceFailed();break;}
-                        transport.sequence++;var snapshot=sample.snapshot();full.observe(snapshot);events.observe(snapshot);
+                        var current=sample.productionProcesses();
+                        boolean fullDue=transport.sequence==0 || clock.tick-lastFull>=DeltaSnapshotDelivery.DEFAULT_RECONCILIATION.toNanos()
+                                || metadataChanged(current,previous);
+                        if(!delta || fullDue || !current.equals(previous))transport.sequence++;
+                        if(fullDue)lastFull=clock.tick;
+                        previous=current;
+                        var snapshot=sample.snapshot();full.observe(snapshot);events.observe(snapshot);
                         full.tick();
                         for(int round=0;events.status().pendingEvents()>0&&round<128;round++)events.tick();
                         if(events.status().pendingEvents()!=0||events.status().droppedCount()!=0||full.status().acknowledgedSequence()!=transport.sequence)
@@ -57,6 +69,11 @@ public final class MonitoringReplayDriver {
             }
             return List.copyOf(transport.frames);
         }
+    }
+    private static boolean metadataChanged(List<Process> current,
+            List<Process> previous) {
+        for(var p:current)for(var old:previous)if(p.pid()==old.pid()&&java.util.Objects.equals(p.startInstant(),old.startInstant())&&!p.equals(old))return true;
+        return false;
     }
     private static final class ReplayClock extends Clock {
         long tick;Instant wall=Instant.EPOCH;
@@ -85,6 +102,7 @@ public final class MonitoringReplayDriver {
             return CompletableFuture.completedFuture(null);
         }
         void change(ConnectionState value) {state=value;for(var listener:List.copyOf(states))listener.accept(value);}
+        @Override public boolean supportsMonitoringDelta(){return true;}
         @Override public long connectionGeneration(){return generation;}
         @Override public EventOrigin observationOrigin(){return new EventOrigin("CONNECTED","SIMULATED-connection-"+generation);}
         @Override public ConnectionState connectionState(){return state;}
