@@ -22,5 +22,9 @@
   "python-tests.log": {
     "sha256": "7990f93274981e700915f8d8eb64769afa8ffc534d3a6df6243cabd35080416d",
     "bytes": 1747
+  },
+  "b-exam-flow-smoke.log": {
+    "sha256": "6cead08d74129ab947e62bd3560e3b46223b76b2da1a50daec5bdb83b43cdb85",
+    "bytes": 3035
   }
 }
