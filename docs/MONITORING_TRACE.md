@@ -43,7 +43,7 @@ Sau login candidate, fresh scope và Start hợp lệ, collector mới ghi một
 
 UTF-8, mỗi dòng JSON kết thúc bằng LF, không BOM/CRLF. HEADER: kind, schemaVersion, sourceLabel (REAL/MOCK), pollMillis, policyVersion, wallOrigin. RECORD: kind, index liên tục từ 1, type, elapsedNanos, collectorSessionId, policyVersion, scanDurationNanos, processes. Bắt đầu START tại elapsed 0, kết thúc STOP. OBSERVATION với processes rỗng nghĩa là quét thành công và không thấy process thuộc policy; SOURCE_FAILURE giữ state trước đó, không phải rỗng.
 
-Process chỉ chứa PID, executable basename, startInstant có thể null và metadataQuality. Tập được chuẩn hóa theo policy/identity production. Identity giữ độ chính xác startInstant gốc; event theo contract hiện tại chuẩn hóa timestamp tới microsecond. Scan duration giữ để đối chiếu nguồn, không dùng làm thời gian chạy replay hay số đo E1/E2.
+Process chỉ chứa PID, executable basename, startInstant có thể null và metadataQuality. Tập được chuẩn hóa theo policy/identity production. Identity giữ độ chính xác startInstant gốc; event theo contract hiện tại chuẩn hóa timestamp tới microsecond. Scan duration giữ khoảng bắt đầu/kết thúc lượt quét; không phải timestamp đọc từng PID, detection latency hoặc runtime replay. C4 dùng cùng parent clock mapping; [phương pháp E1](MONITORING_BASELINE_METHOD.md#4-e1-dùng-ground-truth-và-trace-thế-nào) giải thích proxy và đại lượng chưa đo.
 
 FINAL có kind, status, attempted, written, dropped, sha256. SHA-256 (dấu kiểm tra toàn vẹn) tính trên **chính byte HEADER và mọi RECORD theo thứ tự, kể cả LF**, không tính FINAL. Chỉ COMPLETE, attempted=written=số record, dropped=0, STOP hợp lệ và checksum đúng mới được đọc. Đây không phải chữ ký chứng minh client trung thực. Reader từ chối duplicate/unknown field, UTF-8 sai, JSON sai, index thiếu, time đảo, partial line, record sau FINAL hoặc field có thông tin ngoài schema.
 
@@ -63,8 +63,8 @@ Fixture và expected **viết tay** nằm ở `client/src/test/resources/monitor
 
 Sau full đầu seq1 được nhận, drop seq2 không ngăn seq3 thay toàn bộ state. Nếu drop full đầu, seq2 trở đi chưa đủ điều kiện khởi tạo: INVALID_INPUT và UNSYNCED. Full epoch cũ không ghi đè epoch mới. Event bị drop có thể thiếu trong deliveredEvents nhưng vẫn hiện trong businessEvents/missingBusinessEvents; full mới không khôi phục hay xóa lịch sử. PASS có nghĩa kết quả khớp lịch lỗi đã mô hình hóa, không có nghĩa không mất event.
 
-Không suy UNKNOWN từ full bị drop: UNKNOWN thuộc heartbeat/presence, **NOT_SIMULATED** ở CLI. Không mô phỏng timer STALE/TTL, auth, socket thật, ACK bị mất, retry trên mạng lỗi, backlog offline, gap/interruption DB. C1/C2/C3/C4/A4 integration kiểm hồi quy riêng các đường production đó. Chưa delta, T2-C4, E1/E2, GUI candidate toàn app hoặc LAN. Human B review vẫn NOT RUN; B cần xem collector tap và seam ID, A xem adapter reducer; không ghi đã được thành viên duyệt.
-# Bổ sung T2-C4: trace TEST của child có kiểm soát
+Không suy UNKNOWN từ full bị drop: UNKNOWN thuộc heartbeat/presence, **NOT_SIMULATED** ở CLI. Không mô phỏng timer STALE/TTL, auth, socket thật, ACK bị mất, retry trên mạng lỗi, backlog offline, gap/interruption DB. C1/C2/C3/C4/A4 integration kiểm hồi quy riêng các đường production đó. C4 đã bổ sung harness TEST riêng ở mục dưới; C3 production replay không đọc trace TEST đó. Chưa delta/E1/E2/GUI candidate toàn app hoặc LAN. Human B review vẫn NOT RUN; B cần xem collector tap và seam ID, A xem adapter reducer; không ghi đã được thành viên duyệt.
+## Bổ sung T2-C4: trace TEST của child có kiểm soát
 
 Recorder/reader/queue/checksum C3 được tái sử dụng. `TraceData.Process` tách DTO lưu file khỏi DTO gửi mạng: trace production v1 vẫn kiểm 8 executable như trước; trace TEST v1 giữ basename/null và start/null với chất lượng UNREADABLE. Header/record phải cùng policy; các cặp schema/policy khác bị từ chối. Production replay và MonitoringReplayDriver từ chối trace TEST, không nới network contract.
 
