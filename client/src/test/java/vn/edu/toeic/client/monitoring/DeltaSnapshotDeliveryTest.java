@@ -208,4 +208,30 @@ class DeltaSnapshotDeliveryTest {
         }finally{delta.close();delta.stopped().get(2,TimeUnit.SECONDS);}
         assertThat(transport.mock.listeners).isEmpty();
     }
+    @Test void coalescingWhileDeltaWaitsDoesNotDiscardIntermediateAppearanceEvents() {
+        try(var f=new Fixture();var events=new MonitoringDelivery("MOCK-A",f.transport,MonitoringDelivery.Settings.defaults(),f.time,()->f.time.nanos,ignored->{},false)) {
+            f.baseline(process(1,0));f.observe(process(2,0));var pending=f.last();
+            events.observe(snapshot(process(2,0)));
+            f.observe(process(3,0));events.observe(snapshot(process(3,0)));
+            f.observe(process(4,0));events.observe(snapshot(process(4,0)));events.tick();
+            assertThat(f.mock.sent.stream().filter(m->m.type().equals("PROCESS_OBSERVED")).map(m->m.payload().get("pid").getAsLong()).toList())
+                    .containsExactly(2L,3L,4L);
+            assertThat(f.mock.sent.stream().filter(m->m.type().equals("MONITORING_DELTA"))).hasSize(1);
+            f.mock.deliver(accepted(pending,"MOCK-epoch"));f.delta.tick();
+            var next=DeltaSnapshotPayload.parse(f.last().payload());assertThat(next.baseSequence()).isEqualTo(2);
+            assertThat(next.added()).extracting(p->p.pid()).containsExactly(4L);
+            assertThat(next.removed()).extracting(DeltaSnapshotPayload.Identity::pid).containsExactly(2L);
+        }
+    }
+    @Test void reconciliationDueWhileAckPendingWaitsThenSendsFullOfLatestScan() {
+        try(var f=new Fixture()) {
+            f.baseline(process(1,0));f.observe(process(2,0));var pending=f.last();f.observe(process(3,0));
+            f.time.advance(30000);f.delta.tick();
+            assertThat(f.mock.sent.stream().filter(m->m.type().equals("MONITORING_FULL"))).hasSize(1);
+            f.mock.deliver(accepted(pending,"MOCK-epoch"));f.delta.tick();
+            assertThat(f.last().type()).isEqualTo("MONITORING_FULL");
+            assertThat(f.last().payload().get("sequence").getAsLong()).isEqualTo(3);
+            assertThat(f.last().payload().getAsJsonArray("processes").get(0).getAsJsonObject().get("pid").getAsLong()).isEqualTo(3);
+        }
+    }
 }

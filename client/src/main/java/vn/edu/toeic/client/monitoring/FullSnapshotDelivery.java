@@ -263,7 +263,8 @@ public final class FullSnapshotDelivery implements AutoCloseable {
         synchronized (lock) {
             if (closed) return;
             end=connected && authorized && epoch!=null ? message("MONITORING_SYNC_CLOSE",identity()) : null;
-            closed=true; generation++; forget=pending==null?null:pending.message.requestId(); pending=null; observations.clear(); latest=null; acknowledgedState=List.of(); epoch=null; sequence=acknowledged=0;
+            closed=true; generation++; forget=pending==null?null:pending.message.requestId(); pending=null; observations.clear(); latest=null; acknowledgedState=List.of(); epoch=null;
+            if(reconciliationNanos>0) sequence=acknowledged=0;
         }
         try { messages.close(); } catch (Exception ignored) { }
         try { states.close(); } catch (Exception ignored) { }
