@@ -1,0 +1,4 @@
+JOIN COMPLETE observed=27 notObservedInTrace=3 inconclusive=0; no latency or general miss-rate claim
+targetMillis=200 trials=10 observed=7
+targetMillis=800 trials=10 observed=10
+targetMillis=3000 trials=10 observed=10

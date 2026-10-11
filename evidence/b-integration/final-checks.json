@@ -1,0 +1,11 @@
+{
+  "markdownLinksChecked": 271,
+  "missingLinks": [],
+  "sourceHashMismatches": [],
+  "javaTests": 565,
+  "pythonTests": 10,
+  "fullProductionGui": "NOT RUN",
+  "postgres": "NOT RUN",
+  "lan": "NOT RUN",
+  "e1e2": "NOT RUN"
+}

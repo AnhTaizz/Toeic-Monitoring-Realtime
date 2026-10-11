@@ -1,0 +1,4 @@
+REPLAY FAIL source=MOCK faults=SIMULATED cleanSteps=7 faultSteps=7 businessEvents=1 deliveredEvents=1
+MISMATCH record=3 message=MONITORING_FULL@record3/message3 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=3 message=PROCESS_OBSERVED@record3/message4 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.

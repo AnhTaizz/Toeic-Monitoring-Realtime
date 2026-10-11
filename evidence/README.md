@@ -42,3 +42,7 @@
 - Kiểm nội dung trước khi commit: không đưa mật khẩu, token, `.env` hoặc dữ liệu riêng tư vào bằng chứng. Mục lục dẫn tới báo cáo có thể đọc trực tiếp trên GitHub; artifact nén cần tải và giải nén để xem chi tiết.
 
 Mục lục chỉ tổ chức bằng chứng đã có, không xác nhận task hoàn thành hoặc thay đổi trạng thái trong tracker.
+
+## Vai B — tích hợp ổn định PR #17, 11/10/2026
+
+[Báo cáo](b-integration/2026-10-11-verification.md), [Java counts](b-integration/java-test-counts.json), [package log](b-integration/maven-package.txt), [FX component](b-integration/gui-component.txt), [integrity](b-integration/evidence-integrity.json), [metadata](b-integration/run-metadata.json). Package565/Python10 PASS; REAL FX + MOCK gateway/WS state; fresh PostgreSQL/full GUI/LAN/B4/E1/E2 NOT RUN. Checklist/review nằm trong docs; không ghi approval của thành viên.

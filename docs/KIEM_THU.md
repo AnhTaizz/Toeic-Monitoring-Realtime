@@ -20,7 +20,7 @@ Mỗi lần chạy ghi đủ: commit SHA, OS/JDK/PostgreSQL, cấu hình, lệnh
 | AT08 | Submit lặp, timeout, save đến gần nhau: một kết quả, chấm một lần | A / C | T2-A3, T4-A1 | **PASS** | `f28099b` | `evidence/t2-a3/2026-10-05-verification.md` |
 | AT09 | Request của writer cũ không ghi được sau takeover | A / C | T2-A4 | **PASS** | `60e1ced` | `evidence/t2-a4/2026-10-05-verification.md` |
 | AT10 | Không nhận đáp án sau khi chốt hoặc sau deadline | A / C | T2-A4 | **PASS** | `60e1ced` | `evidence/t2-a4/2026-10-05-verification.md` |
-| AT11 | Server 40 / client 42, mất ACK, reconnect, mở app mới | B / A | T2-B4, T4-B1 | NOT RUN | | |
+| AT11 | Server 40 / client 42, mất ACK, reconnect, mở app mới | B / A | T2-B4, T4-B1 | PARTIAL | `e362ed9` | `evidence/t2-b/2026-10-09-verification.md` |
 
 ## Monitoring
 
@@ -296,6 +296,23 @@ Base main PR#8 a04aaa2; final source c70c93e sạch trong checkout build riêng.
 
 Lượt exploratory phát hiện assertion/control-record và compile signature/constant trong test, đã sửa trước final PASS. Final sạch trên commit c70c93e; không lấy exploratory làm evidence. Automatic review chặn dọn bản sao target tạo thừa; giữ ignored, không retry xóa. Dừng C4; không B4/chặng2, không claim novelty/delta tốt hơn.
 
+## T2-B1…T2-B4 — luồng thi JavaFX trên PR #17, 09/10/2026
+
+SHA `e362ed9`, Windows 11, JDK 21.0.8, PostgreSQL 18.6. Chi tiết, lệnh và ảnh: `evidence/t2-b/2026-10-09-verification.md`.
+
+| Kiểm tra | Kết quả | Ghi chú |
+|---|---|---|
+| `mvn test`, `mvn package` | PASS 441/441 | protocol 23, client 292, server 125, spike 1; trước khi sửa 376 |
+| 65 test mới của màn thi | PASS MOCK | Gateway giả và đồng hồ ảo; một test dùng luồng thật với semaphore/latch; `ExamApiClientTest` dùng HTTP cục bộ thật với fixture MOCK |
+| `ExamFlowPostgresSmoke` | PARTIAL REAL | 28 PASS, 3 GAP phía server, 0 FAIL; Spring Boot jar + PostgreSQL + HTTP thật trên schema tạm; không GUI, không WS |
+| GUI JavaFX agent-driven (UI Automation) | PASS các bước đã chạy | Vào thi, lưu, bỏ chọn, nhóm đoạn văn, tắt/bật server, nộp và xem điểm, hai cửa sổ takeover, đóng cửa sổ; hết giờ dừng ở GAP server |
+| Hiển thị `TIMED_OUT` và điểm hết giờ | BLOCKED | Job hết giờ của server không chạy; status của lượt đã chốt trả 403 |
+| Thành viên tự thao tác GUI, máy thứ hai/LAN, review A | NOT RUN | Checklist trong evidence |
+
+Lượt bổ sung cùng ngày trên `d50891e`: `mvn package` 442/442 (thêm test `probeSession`); smoke REAL vẫn 28 PASS + 3 GAP; GUI agent-driven chạy thêm xung đột cùng revision, realtime `FAILED` rồi rời phòng thi, phiên bị thu hồi về màn đăng nhập, danh sách lượt thi sau khi nộp — PASS.
+
+AT11 để PARTIAL: nhánh cùng writer (server thấp hơn client, mất ACK) và writer mới đã chạy với server thật; nhánh mở lại lượt đã chốt bị server chặn, và T4-B1 trên máy khác chưa chạy. Không đổi trạng thái IT01–IT04 hay AT01–AT10; `TRACKER.json` giữ nguyên.
+
 ## T2-C3 — 10/10/2026
 
 [Evidence mới](../evidence/t2-c3/2026-10-10-verification.md), [lệnh và schema](MONITORING_TRACE.md). Baseline425 chạy mới; final461 PASS (+36, protocol32/client286/server142/spike1), Python10 PASS. Không đổi trạng thái MT02–MT06 vì chưa delta; MT01/MT07/MT08 giữ PARTIAL toàn hệ thống.
@@ -347,3 +364,7 @@ C5 là thay đổi tài liệu. [Phương pháp](MONITORING_BASELINE_METHOD.md),
 | B human review/window/sampler/analyzer E1/delta correctness/E2 | NOT RUN hoặc còn thiếu | Không đánh dấu đủ công cụ/nghiệm thu |
 
 MT01/MT07/MT08 giữ PARTIAL toàn hệ thống; MT02–MT06 delta và E1/E2 không nâng PASS. Merge tài liệu không thay review của B hoặc nghiệm thu GUI/LAN.
+
+## Vai B tích hợp C1–C5 — 11/10/2026
+
+[Evidence mới](../evidence/b-integration/2026-10-11-verification.md): main12e2838 + PR17 41da669 trong worktree riêng, source dirty/in-progress ghi metadata/hashes. Package565 PASS (protocol32/client390/server142/spike1), Python10 PASS. REAL JavaFX component: password shortcut, CandidateExamView autosave/reconnect/close và ProctorDashboardView bốn tab/sample action PASS; gateway/WS state MOCK/SIMULATED, không PostgreSQL/full GUI/LAN. Guard6 kiểm fresh scope, active attempt, FULL ACK pending và cleanup. C3 replay fixture PASS + mutation EXPECTED FAIL; C4 archived join byte-identical27/3/0; ledger104file/3gzip PASS. [Agent B review C](REVIEW_B_MONITORING.md), human A/B approval NOT RUN. E1/E2 và MT delta không nâng PASS; AT11/MT01/MT07/MT08 còn PARTIAL. Docker engine không hoạt động nên production smoke NOT RUN; ba blocker A vẫn còn, xem [checklist](NGHIEM_THU_VAI_B.md). Không sửa tracker hoặc old evidence.

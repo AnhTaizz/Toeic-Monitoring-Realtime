@@ -1,0 +1,14 @@
+{
+  "2026-10-11-verification.md": "b1f18487891e0ca01339c0521b94d81f1051059d9274a3302af2771ffac58d02",
+  "c3-mutation-expected-fail.txt": "4a3811c67980102439b0419b7ec7d2cd879ad57d942410e327d714fef2519573",
+  "c3-replay.txt": "badd380aef1a18458a78156c6ac0d0ab5532202163371e1ecb4b98971abf13a5",
+  "c4-join.txt": "affe2f4653679b7be2f470ebcbada19ac0a423a347029ed443af1664409a5216",
+  "evidence-integrity.json": "d492fa3186475c17977ec979c4c9ac81a6741d4d74d790e498e6465d2a927415",
+  "final-checks.json": "ff68df28ad1674dc1544e71226a9be477f293e177b2a741ecd94b9401d78654f",
+  "gui-component.txt": "95aced5135515c64be317c0345d706feda35084f0c1b06b3d65178a0d3cd1ac9",
+  "java-test-counts.json": "109eb6fdb599daed68cb6f0d47e5273c4008d42593ff60c0c419cf39c6820aa3",
+  "maven-package.txt": "b18ca4a92797a7f7e7fdbfd727b6002a6e92281b9f57baef60ede29adfa11abd",
+  "preserved-local-files.json": "f1376a3c6a7930247622dd6efae40c825b8c01dd2918c66c8ce233cc837d806a",
+  "python-tests.txt": "e395333e3556b40c1c92a04eff902bb6cc330c9fc0178d49c04e537c23153369",
+  "run-metadata.json": "d2f6c07b0356269f822d54c0a6da60f21c85b7d4bf7601670471355bd2b1404f"
+}

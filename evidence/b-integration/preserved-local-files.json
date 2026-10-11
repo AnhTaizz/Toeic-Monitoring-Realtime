@@ -1,0 +1,8 @@
+{
+  "allUnchanged": true,
+  "sha256": {
+    "scripts/launcher-manifest.ps1": "f03e74acd32930e0a779cd3921e0c74c8951925a32e1f08c3962806a5d1a8e05",
+    "scripts/test-launcher-manifest.ps1": "f8a94279352578aaf6c73292ea888e49d05ac60cfdd5d0a6a7d5fb4b2dc091b7",
+    "task.txt": "303226cf46e5d94c1fcadcd4addd94d1914c97a5bae3b8be3859d2cdf20abf69"
+  }
+}
