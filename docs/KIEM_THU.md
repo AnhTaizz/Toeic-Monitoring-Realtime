@@ -347,3 +347,22 @@ C5 là thay đổi tài liệu. [Phương pháp](MONITORING_BASELINE_METHOD.md),
 | B human review/window/sampler/analyzer E1/delta correctness/E2 | NOT RUN hoặc còn thiếu | Không đánh dấu đủ công cụ/nghiệm thu |
 
 MT01/MT07/MT08 giữ PARTIAL toàn hệ thống; MT02–MT06 delta và E1/E2 không nâng PASS. Merge tài liệu không thay review của B hoặc nghiệm thu GUI/LAN.
+
+## T3-C1 — encoder delta candidate (11/10/2026)
+
+[Guide](MONITORING_DELTA_ENCODER.md), [evidence](../evidence/t3-c1/2026-10-11-verification.md). Baseline mới493 PASS; final531 Java PASS (protocol35/client353/server142/spike1), 38 mới. Test snapshot/clock/transport MOCK, scheduled worker REAL; CLI thực thi thật nhưng network/ACK/epoch/adapter SIMULATED. Production vẫn full.
+
+| Kiểm tra | Kết quả | Phạm vi |
+|---|---|---|
+| First full ACK / ACK sai8trường / base chỉ ACK | PASS | DeltaSnapshotDeliveryTest |
+| Thêm/bớt/multiple/empty/metadata full/PID reuse/null start/reappear | PASS | Delivery + handwritten oracle/replay |
+| Unchanged không event/poll, coalescing1.000→queued1 | PASS | Event thật trong test, readings MOCK |
+| SOURCE_FAILURE khác empty, retry nguyên message/ACK loss/write error | PASS | Clock/transport MOCK, lỗi SIMULATED |
+| Retry bounded/error-STale/fresh scan/OPEN/full1/reconnect/oldcallback | PASS | Client lifecycle; không server delta/resync proof |
+| Reconciliation30s/scan failure/pending/cleanup/auth revoke | PASS | Controlled clock, worker scheduled/shutdown thật |
+| Replay full/delta/canonical metadata/event ID-content/reconnect/duplicate | PASS | Fixture MOCK + trace ProcessHandle REAL; tất cả ACK/network SIMULATED |
+| Delta/full cố ý sai | FAIL đúng exit1 | Oracle độc lập bắt sai từ raw; giữ report |
+| TEST C4/future delta drop options | Refused đúng exit2 | Không đổi schema hoặc giả gate support |
+| MT02–MT06 gate/live delta/E1/E2/human A/B review | NOT RUN | Không nâng status27case/tracker từ component tests |
+
+Lượt package đầu mới thêm test ERROR STALE FAIL vì còn deadline ACK cũ; sửa deadline rejection candidate về now, bản sửa529 PASS; bổ sung2ca pending-ACK, final531 PASS. Không lấy lượt lỗi làm PASS. Hồi quy DB đầu dừng MIGRATION do Docker chưa chạy; bật Docker/compose volume cũ rồi chạy lại PASS. Kết quả hồi quy mạng/DB mới ghi trong evidence, không suy từ529unit.

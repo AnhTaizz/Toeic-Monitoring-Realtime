@@ -50,6 +50,8 @@ java -cp $jar $cli replay --input $trace --mode delta --duplicate 100 --reconnec
 java -cp $jar $cli replay --input $trace --mode delta --mutate-delta-at 2 --output client/target/delta-negative-review.json
 ```
 
+Acceptance CLI có thể chạy gọn bằng `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t3c1.ps1 -JavaHome '<JDK21>' -RealScan`. Script tạo output GUID mới, kiểm hai mode cả process/metadata/event ID/nội dung, ca lỗi chủ động và TEST refusal; tùy chọn RealScan ghi6scans ProcessHandle thật. Không cần Docker/DB cho script này.
+
 Ba lệnh đầu mong exit0/PASS. Lệnh cuối mong exit1/FAIL: cố ý xóa cả added/removed của delta2; oracle từ raw vẫn đòi Chrome+Zalo. Exit2 là file/config/I/O không hợp lệ. Có thể dùng trace production REAL đã ghi bằng TraceCli.record; TEST harness C4 vẫn bị từ chối, không sửa schema. `--mutate-full-at` cũ giữ nguyên; `--mutate-delta-at` chỉ hợp lệ delta và phải chỉ một scan thực sự sinh delta. T3-C1 delta chỉ hỗ trợ clean/duplicate/reconnect tuần tự và mutation; drop/reorder/drop-full bị từ chối exit2, chờ reducer/fault gate T3-C2/C3. Full giữ toàn lịch gây lỗi C3.
 
 Replay dùng cùng FullSnapshotDelivery/MonitoringDelivery, clock/ACK/epoch/network **SIMULATED**, dữ liệu fixture MOCK hoặc scan trace REAL. SequentialDeltaReplayAdapter chỉ parse và áp tuần tự tối thiểu; không auth/socket/DB/TTL/STALE tự động/resync server. Oracle lấy đáp án từ observation gốc; observationChecks kiểm cả lần không gửi frame, so PID/start/name/quality và event map cùng ID/nội dung. Sequence có thể khác giữa full và delta vì skip unchanged; không ép chúng bằng nhau. Report có giới hạn hiện có, không cắt rồi PASS. Không lấy report bytes hay runtime replay kết luận tối ưu.

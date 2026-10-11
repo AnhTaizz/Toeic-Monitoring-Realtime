@@ -1,5 +1,7 @@
 # T2-C5 — Phương pháp baseline monitoring
 
+**Cập nhật sau C511/10/2026:** [Encoder delta/replay candidate](MONITORING_DELTA_ENCODER.md) đã có; production vẫn full, server/transport/gate delta chưa hỗ trợ. Các mô tả “chưa có delta” bên dưới ghi phạm vi task trước. Không đo E1/E2, không đổi measurement schema/hooks hoặc timeout full.
+
 Đối chiếu implementation tại main `82557bf4a5daddd213469196c3501968b3bbe21e`, ngày **11/10/2026**. Baseline là cách chạy làm mốc so sánh: hiện dùng full snapshot, tức gửi lại toàn bộ tập process thuộc policy đã quan sát được. Tài liệu này chốt cách đọc dữ liệu và **đề xuất phép đo**, không ghi E1/E2 PASS. Không thêm field (trường dữ liệu) trong thông điệp mạng, code đo hay delta (chỉ gửi phần thay đổi). Human B review **NOT RUN**.
 
 ## 1. Hệ thống theo dõi cái gì?
