@@ -61,9 +61,7 @@ public class ExamService {
 
     @Transactional
     public AutosaveAnswersResponse autosaveAnswers(AuthenticatedUser candidate, AutosaveAnswersRequest request) {
-        if (candidate.role() != Role.CANDIDATE) {
-            throw AccessDeniedException.forbidden();
-        }
+        authorizationService.requireRole(candidate, Role.CANDIDATE);
         if (request.requestId() == null || request.requestId().isBlank()) {
             throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "requestId không được để trống", request.requestId());
         }
@@ -338,7 +336,7 @@ public class ExamService {
 
     @Transactional(readOnly = true)
     public CandidateExamDto getCandidateExam(AuthenticatedUser user, String attemptId) {
-        authorizationService.requireAttempt(user, attemptId);
+        authorizationService.requireExamRead(user, attemptId);
 
         String examId = jdbc.sql("""
                 SELECT COALESCE(a.exam_id, s.exam_id) FROM monitoring_attempts a
@@ -557,9 +555,7 @@ public class ExamService {
 
     @Transactional
     public SubmitExamResponse submitExam(AuthenticatedUser candidate, SubmitExamRequest request) {
-        if (candidate.role() != Role.CANDIDATE) {
-            throw AccessDeniedException.forbidden();
-        }
+        authorizationService.requireRole(candidate, Role.CANDIDATE);
         if (request.requestId() == null || request.requestId().isBlank()) {
             throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "requestId không được để trống", request.requestId());
         }
@@ -899,9 +895,7 @@ public class ExamService {
 
     @Transactional
     public TakeoverWriterResponse takeoverWriter(AuthenticatedUser user, TakeoverWriterRequest request) {
-        if (user.role() != Role.CANDIDATE) {
-            throw AccessDeniedException.forbidden();
-        }
+        authorizationService.requireRole(user, Role.CANDIDATE);
         if (request.requestId() == null || request.requestId().isBlank()) {
             throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "requestId không được để trống", request.requestId());
         }
@@ -979,7 +973,7 @@ public class ExamService {
 
     @Transactional(readOnly = true)
     public CandidateAttemptStatusResponse getAttemptStatus(AuthenticatedUser user, String attemptId) {
-        authorizationService.requireAttempt(user, attemptId);
+        authorizationService.requireExamRead(user, attemptId);
 
         record StatusRow(
                 String attemptId,

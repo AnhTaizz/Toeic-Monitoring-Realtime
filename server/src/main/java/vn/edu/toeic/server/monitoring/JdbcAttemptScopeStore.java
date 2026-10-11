@@ -31,4 +31,16 @@ public final class JdbcAttemptScopeStore implements AttemptScopeAuthorizer {
                     WHERE p.attempt_id = a.attempt_id AND p.proctor_user_id = :user))) ORDER BY a.attempt_id
                 """).param("role", user.role().name()).param("user", user.userId()).query(String.class).list();
     }
+
+    @Override public boolean canReadExam(AuthenticatedUser user, String attemptId) {
+        if (user == null || attemptId == null) return false;
+        return jdbc.sql("""
+                SELECT count(*) FROM monitoring_attempts a WHERE a.attempt_id = :attempt
+                AND a.state IN ('ACTIVE', 'SUBMITTED', 'TIMED_OUT')
+                AND ((:role = 'CANDIDATE' AND a.candidate_user_id = :user)
+                OR (:role = 'PROCTOR' AND EXISTS (SELECT 1 FROM monitoring_proctor_assignments p
+                    WHERE p.attempt_id = a.attempt_id AND p.proctor_user_id = :user)))
+                """).param("attempt", attemptId).param("role", user.role().name()).param("user", user.userId())
+                .query(Long.class).single() == 1;
+    }
 }
