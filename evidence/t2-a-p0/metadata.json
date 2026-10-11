@@ -18,5 +18,11 @@
     "integrated_server_jar_sha256": "8cbd6a9d40ddfaf5f310462c4a5b4d792220d039d78734f87a265202824f2c03",
     "integrated_client_jar_sha256": "43d1fd5ce956e25290fffa49eaee6ac4ad3d940394517031afa0ccb7f7c46c1b"
   },
-  "owned_cluster_stopped": true
+  "owned_cluster_stopped": true,
+  "temporary_full_integration_head": "b2c17c8d580550a086435e152eb3c0354d8456f6",
+  "temporary_full_integration_note": "Full local merge of backend 30e9199, preserving both docs sides; code same as package/smoke; no remote branch modified.",
+  "document_conflicts_resolved_in_temporary_worktree": [
+    "docs/KIEM_THU.md",
+    "docs/QUYET_DINH.md"
+  ]
 }
