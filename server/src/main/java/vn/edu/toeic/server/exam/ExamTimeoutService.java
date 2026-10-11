@@ -19,7 +19,7 @@ public class ExamTimeoutService {
         this.examService = examService;
     }
 
-    @Scheduled(fixedDelayString = "${exam.timeout.scan-interval-ms:1000}")
+    @Scheduled(fixedDelayString = "${exam.timeout.scan-interval-ms:1000}", scheduler = "examTimeoutScheduler")
     public int processTimeouts() {
         List<String> expiredAttemptIds = examService.findExpiredActiveAttemptIds();
         int count = 0;
