@@ -332,3 +332,18 @@ Java493/package PASS; 32 ca mới có expected viết tay và child thật. [Evi
 | Human B review/OS Ctrl+C/hardkill/candidate full GUI/LAN/E1/E2 | NOT RUN | Không giả bằng unit/replay/smoke |
 
 C2-Gui/A4 không chạy lại trong C4; server production không đổi. Python analyzer không đổi, không chạy lại bộ Python10 trong C4. B review policy/TEST DTO/clock/identity/coverage/cleanup.
+
+## T2-C5 — kiểm tra phương pháp và protocol (11/10/2026)
+
+C5 là thay đổi tài liệu. [Phương pháp](MONITORING_BASELINE_METHOD.md), [kiểm tra mới](../evidence/t2-c5/2026-10-11-verification.md). Link/anchor/source method/schema/default và C3/C4 artifact hashes đối chiếu mới; số chi tiết trong doc-checks.json. Không coi các kiểm tra file này là chạy lại test Java493/Python10 hoặc component smoke.
+
+| Kiểm tra/điều kiện | Trạng thái | Phạm vi |
+|---|---|---|
+| Source policy8tên/TEST/identity/ACK/RAM/default | Đối chiếu PASS | Không đổi code/wire |
+| Markdown local link/anchor, class/method/schema/CLI | PASS | Tài liệu thay đổi |
+| C3/C4 hashes, FINAL/manifest, gzip phục hồi | PASS | Đọc artifact cũ, không replay lại |
+| C3 PASS có missingBusinessEvents/C4 số27/3 và proxy example | Đối chiếu PASS | Kết quả cũ, không E1 |
+| Java/Python analyzer unit/desktop smoke | NOT RUN trong C5 | Kết quả cũ giữ riêng |
+| B human review/window/sampler/analyzer E1/delta correctness/E2 | NOT RUN hoặc còn thiếu | Không đánh dấu đủ công cụ/nghiệm thu |
+
+MT01/MT07/MT08 giữ PARTIAL toàn hệ thống; MT02–MT06 delta và E1/E2 không nâng PASS. Merge tài liệu không thay review của B hoặc nghiệm thu GUI/LAN.

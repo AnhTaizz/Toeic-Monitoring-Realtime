@@ -206,7 +206,7 @@ Lịch gợi ý: 03/10 C1 · 04/10 C2 · 05/10 C3 (3h) · 06/10 C3 (1h) + C4 (1h
 
 Viết ra: `policyVersion`, khóa process, phạm vi đo, giới hạn về quyền và PID tái sử dụng; định nghĩa "bỏ sót" và "độ trễ phát hiện"; đầu vào của benchmark. Đưa cho B review trước khi chạy đo. Cập nhật `docs/PROTOCOL.md`.
 
-**Ghi chú làm dở:** —
+**Ghi chú bàn giao 11/10/2026:** Tài liệu/đối chiếu hoàn tất, commit phương pháp eb6ba59 từ main82557bf (C4 PR#21 đã merge). [Phương pháp baseline](../MONITORING_BASELINE_METHOD.md), [kiểm tra mới C5](../../evidence/t2-c5/2026-10-11-verification.md). Policy/identity/ACK RAM vs commit/event/state/presence/gap/byte/clock đã chốt theo source; 200ms hold không là đời process200ms. Rate có eligibility và nhóm thực đo đề xuất; latency kernel/CPU/memory NOT MEASURED. Thiếu window/warmup/resource sampler/analyzer E1, delta/oracle/MT02–MT06 trước E2. Human B review NOT RUN, checklist chờ người thật trước đo; không giả đã duyệt. C5 chỉ kiểm tài liệu/source/evidence, không chạy lại Java493/Python10/smoke hoặc benchmark. TRACKER/old artifact/QUYET_DINH giữ nguyên. Git cuối trong PR/final; dừng sau C5, không tự chặng3/delta/E1/E2.
 
 ---
 
