@@ -1,0 +1,15 @@
+                                 version                                 
+-------------------------------------------------------------------------
+ PostgreSQL 18.1 on x86_64-windows, compiled by msvc-19.44.35221, 64-bit
+(1 row)
+
+ owned_leftover_schemas 
+------------------------
+                      0
+(1 row)
+
+ public_tables 
+---------------
+             0
+(1 row)
+

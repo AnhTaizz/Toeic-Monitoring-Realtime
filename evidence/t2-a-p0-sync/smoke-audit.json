@@ -1,0 +1,10 @@
+{
+  "old_pass": 28,
+  "old_gap": 3,
+  "new_pass": 28,
+  "new_gap": 0,
+  "final_status_timeout_late_submit_assertions_retained": true,
+  "await_ack_revision_strengthened": true,
+  "unanswered_autonomous_runtime_executed_in_all_three_builds": true,
+  "deleted_or_skipped_smoke_flows": false
+}

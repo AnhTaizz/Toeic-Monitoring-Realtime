@@ -372,3 +372,9 @@ Nhánh A từ main12e2838: Maven test/package510 PASS, tích hợp tạm PR17 pa
 | MT02–MT06 gate/live delta/E1/E2/human A/B review | NOT RUN | Không nâng status27case/tracker từ component tests |
 
 Lượt package đầu mới thêm test ERROR STALE FAIL vì còn deadline ACK cũ; sửa deadline rejection candidate về now, bản sửa529 PASS; bổ sung2ca pending-ACK, final531 PASS. Không lấy lượt lỗi làm PASS. Hồi quy DB đầu dừng MIGRATION do Docker chưa chạy; bật Docker/compose volume cũ rồi chạy lại PASS. Kết quả hồi quy mạng/DB mới ghi trong evidence, không suy từ529unit.
+
+## Backend A sync main T3-C1 — 12/10/2026 (local, chờ push)
+
+Merge A6cfe7c4 + main144fe55 thành cadd98d, giữ P0 và encoder/transport/regression C. Maven test/package **548PASS**, checkout detached PR17+A/main package **620PASS**, đều0fail/error/skip và gồm11PG runtime +38test C mới. Smoke B **28PASS/0GAP**, C1/C2/CLI regression PASS, Python10PASS. Scheduler exam riêng, C tự STALE/TTL/presence và shutdown PASS; bài trắng tự TIMED_OUT0/2. [Evidence mới](../evidence/t2-a-p0-sync/2026-10-12-verification.md) ghi source/code/fixture hashes, logs và giới hạn.
+
+PR23 remote vẫn6cfe7c4, PR17 vẫn2f5fc66; chưa push local sync/chưa merge/human review. B3/B4 vẫnPARTIAL; full GUI/server-off/LAN/app-image/audio máy thứ hai/live delta/gate/E1/E2 NOT RUN. Không thay tracker hoặc evidence lịch sử.

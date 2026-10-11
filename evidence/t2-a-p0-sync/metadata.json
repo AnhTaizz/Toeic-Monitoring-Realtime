@@ -1,0 +1,20 @@
+{
+  "tested_a_head": "cadd98d1a49cb5b4eb0f22f68f346dfd682386c9",
+  "old_a_head": "6cfe7c4b46ee550497e33591b891f214e8df08b3",
+  "main_integrated": "144fe559c5cf2d5a9608d3cf804cd2adb22bca70",
+  "pr17_unchanged": "2f5fc66d1220f1e860f7c3beced86ef3f294ac46",
+  "integrated_tested_head": "59404d69daed0c2261169809ba237f36ee8b6c50",
+  "postgres": "native Windows 18.1; owned loopback cluster port 56261; isolated schema per run",
+  "pg_integration_enabled": true,
+  "production_delta": "DISABLED, unchanged full default",
+  "c1_test_heartbeat_ms": 200,
+  "gui_lan_human_review_e1_e2": "NOT RUN",
+  "a_tests": 548,
+  "integrated_tests": 620,
+  "server_production_bytes_identical": true,
+  "secrets": "read from owned runtime environment, not embedded in source or evidence",
+  "jars": {
+    "server/target/server-0.1.0-SNAPSHOT.jar": "a43698fbe8b0be0cf0ded2e60f092e255b9af1698233114cb0c880ab28cd64ed",
+    "client/target/client-0.1.0-SNAPSHOT-all.jar": "657dd469aead27bd209f2ce7372cf92e8327619f370126e9ef2ab7131de24db0"
+  }
+}

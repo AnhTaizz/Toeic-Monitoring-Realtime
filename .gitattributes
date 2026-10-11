@@ -47,3 +47,6 @@ evidence/t2-a-p0/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-t
 
 # T3-C1 trace/replay/transcript checksums cover exact bytes.
 evidence/t3-c1/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Backend P0/main synchronization evidence retains exact captured bytes.
+evidence/t2-a-p0-sync/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol

@@ -1,0 +1,100 @@
+diff --git a/.gitattributes b/.gitattributes
+index 91fd0b1..2320abf 100644
+--- a/.gitattributes
++++ b/.gitattributes
+@@ -44,3 +44,6 @@ evidence/t2-c4/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr
+ 
+ # Backend P0 evidence checksums cover exact captured bytes (Windows logs may use CRLF).
+ evidence/t2-a-p0/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
++
++# T3-C1 trace/replay/transcript checksums cover exact bytes.
++evidence/t3-c1/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+diff --git a/docs/KIEM_THU.md b/docs/KIEM_THU.md
+index 2566735..c71a729 100644
+--- a/docs/KIEM_THU.md
++++ b/docs/KIEM_THU.md
+@@ -353,3 +353,22 @@ MT01/MT07/MT08 giữ PARTIAL toàn hệ thống; MT02–MT06 delta và E1/E2 kh
+ Nhánh A từ main12e2838: Maven test/package510 PASS, tích hợp tạm PR17 package582 PASS, đều bật11 regression PG thực và không skip. Native PostgreSQL18.1 cluster test riêng; không reset DB dev. Ba GAP B: owner/assigned proctor đọc SUBMITTED/TIMED_OUT, scheduler tự chốt và deadline bắt đầu ngay takeover entry **PASS kỹ thuật**. B smoke JAR/PG/HTTP28 PASS,0GAP; C1 full/reconnect/autonomous STALE/TTL và C2 late/gap/history/permission hồi quy PASS; Python10 PASS.
+ 
+ [Evidence P0 mới](../evidence/t2-a-p0/2026-10-11-verification.md) ghi source/hash, logs, fixture patch và lỗi exploratory. Không sửa các evidence lịch sử B/C hoặc TRACKER. T2-B3/B4 vẫn PARTIAL; human review, full GUI candidate/proctor, server-off/reconnect, LAN/app-image/audio máy thứ hai NOT RUN. E1/E2 không thay trạng thái. Remote PR17 chưa có commit A cho đến khi được phép push và tích hợp.
++
++## T3-C1 — encoder delta candidate (11/10/2026)
++
++[Guide](MONITORING_DELTA_ENCODER.md), [evidence](../evidence/t3-c1/2026-10-11-verification.md). Baseline mới493 PASS; final531 Java PASS (protocol35/client353/server142/spike1), 38 mới. Test snapshot/clock/transport MOCK, scheduled worker REAL; CLI thực thi thật nhưng network/ACK/epoch/adapter SIMULATED. Production vẫn full.
++
++| Kiểm tra | Kết quả | Phạm vi |
++|---|---|---|
++| First full ACK / ACK sai8trường / base chỉ ACK | PASS | DeltaSnapshotDeliveryTest |
++| Thêm/bớt/multiple/empty/metadata full/PID reuse/null start/reappear | PASS | Delivery + handwritten oracle/replay |
++| Unchanged không event/poll, coalescing1.000→queued1 | PASS | Event thật trong test, readings MOCK |
++| SOURCE_FAILURE khác empty, retry nguyên message/ACK loss/write error | PASS | Clock/transport MOCK, lỗi SIMULATED |
++| Retry bounded/error-STale/fresh scan/OPEN/full1/reconnect/oldcallback | PASS | Client lifecycle; không server delta/resync proof |
++| Reconciliation30s/scan failure/pending/cleanup/auth revoke | PASS | Controlled clock, worker scheduled/shutdown thật |
++| Replay full/delta/canonical metadata/event ID-content/reconnect/duplicate | PASS | Fixture MOCK + trace ProcessHandle REAL; tất cả ACK/network SIMULATED |
++| Delta/full cố ý sai | FAIL đúng exit1 | Oracle độc lập bắt sai từ raw; giữ report |
++| TEST C4/future delta drop options | Refused đúng exit2 | Không đổi schema hoặc giả gate support |
++| MT02–MT06 gate/live delta/E1/E2/human A/B review | NOT RUN | Không nâng status27case/tracker từ component tests |
++
++Lượt package đầu mới thêm test ERROR STALE FAIL vì còn deadline ACK cũ; sửa deadline rejection candidate về now, bản sửa529 PASS; bổ sung2ca pending-ACK, final531 PASS. Không lấy lượt lỗi làm PASS. Hồi quy DB đầu dừng MIGRATION do Docker chưa chạy; bật Docker/compose volume cũ rồi chạy lại PASS. Kết quả hồi quy mạng/DB mới ghi trong evidence, không suy từ529unit.
+diff --git a/docs/PROTOCOL.md b/docs/PROTOCOL.md
+index ee46ef1..65b2646 100644
+--- a/docs/PROTOCOL.md
++++ b/docs/PROTOCOL.md
+@@ -1,6 +1,6 @@
+ # Protocol đang dùng
+ 
+-**Trạng thái: v0 có login/Bearer, C3 event/queue/retry, A4 heartbeat/presence/history và B3 dashboard. T2-C1 bổ sung OPEN/full/CLOSE, state RAM, HTTP/MONITOR_STATE và tab process hiện tại; delta chưa có.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây. Các mục chặng 1 bên dưới ghi phạm vi lịch sử tại thời điểm task đó; contract T2-C1 ở cuối là phần bổ sung hiện tại.
++**Trạng thái: v0 có login/Bearer, C3 event/queue/retry, A4 heartbeat/presence/history và B3 dashboard. T2-C1 bổ sung OPEN/full/CLOSE, state RAM, HTTP/MONITOR_STATE và tab process hiện tại. T3-C1 có encoder delta/replay candidate; server production chưa hỗ trợ delta.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây. Các mục chặng 1 bên dưới ghi phạm vi lịch sử tại thời điểm task đó; contract T2-C1 ở cuối là phần bổ sung hiện tại.
+ 
+ Owner: C (monitoring, khung message chung), A (auth, ca thi, lưu/nộp). Người dùng: B.
+ 
+@@ -167,7 +167,7 @@ Token chỉ trả trong JSON body của login. Request HTTP `/api/**` sau login
+ | `MONITORING_FULL` | thí sinh → server | collectorSessionId, syncEpoch, sequence, policyVersion, processes | ACK sau nhận state RAM | T2-C1 | Contract v1 trong nhánh tích hợp |
+ | `MONITORING_SYNC_CLOSE` | thí sinh → server | collectorSessionId, syncEpoch | ACK sau đánh dấu STALE | T2-C1 | Contract v1 trong nhánh tích hợp |
+ | `MONITOR_STATE` | server → giám thị được phân công | trạng thái hiện tại có revision | Không | T2-C1 | Contract v1 trong nhánh tích hợp |
+-| _delta_ | thí sinh → server | | | T3-C1, T3-C2 | Chưa có |
++| `MONITORING_DELTA` | client candidate → adapter replay | collectorSessionId, syncEpoch, baseSequence, sequence, policyVersion, added, removed | ACK state RAM mô phỏng | T3-C1 | Encoder có; production server/transport chưa hỗ trợ |
+ | _yêu cầu resync delta_ | server → thí sinh | | | T3-C2 | Chưa có; T2-C1 cấp epoch qua ACK của OPEN |
+ | _READY / start / interrupted (Listening)_ | hai chiều | | | T3-A2, T3-B2 | Chưa có |
+ 
+@@ -790,3 +790,20 @@ Trace TEST dùng cặp schema/policy `monitoring-observation-trace-test-v1` / `t
+ - Timeout chấm answers đã commit, khóa và kiểm lại ACTIVE/deadline; không chấm SUBMITTED/TIMED_OUT lần nữa. `submittedAt` với TIMED_OUT là giờ chốt server, không có nghĩa client đã bấm submit.
+ - Không đổi endpoint, DTO, wire version hay migration. Status không có candidateUsername/startedAt; các điểm và totalQuestions hiện là số 0 trước khi chấm (không dùng chúng làm tổng số câu trên UI; lấy CandidateExamDto).
+ - QD-16 của B phù hợp với writerEpoch; QD-17 phù hợp vì HTTP submit độc lập WS, vẫn kiểm owner/epoch/deadline/state. [Review phối hợp A/B](REVIEW_A_PR17.md).
++
++## T3-C1 · Contract candidate delta, chưa bật production
++
++Ngày11/10/2026. Encoder/replay có; server T3-C2/T3-A3, live transport capability/negotiation và gate T3-C3/C4 chưa có. CandidateMonitoringSession vẫn full default. Xem [luồng, retry, cách chạy và bàn giao](MONITORING_DELTA_ENCODER.md), QD-16.
++
++`MONITORING_DELTA` dùng envelope v0 như FULL: messageId=requestId ổn định, attemptId đúng scope, traceId giữ qua retry. Payload:
++
++```json
++{"collectorSessionId":"collectorC","syncEpoch":"epochE","baseSequence":1,"sequence":2,"policyVersion":"process-policy-v1","added":[{"pid":30,"processName":"zalo.exe","startInstant":"2026-10-11T00:00:00Z","metadataQuality":"COMPLETE"}],"removed":[{"pid":10,"startInstant":"2026-10-11T00:00:00Z"}]}
++```
++
++- added là process đầy đủ theo FULL; removed chỉ PID/start nullable, collector thuộc scope payload. Khóa collector+PID+start nguyên độ chính xác; tên chữ thường/Instant chuẩn hóa, sorting PID/start, mỗi list tối đa128, không trùng identity trong list hoặc vừa added vừa removed. Kết quả state tối đa128; policy8tên không đổi. Field lạ bị từ chối. Thiếu start giới hạn phân biệt PID reuse; không tạo start giả.
++- Epoch mới OPEN→ACK cấp epoch→full1→ACK hợp lệ trước delta. baseSequence>=1, sequence=base+1 không overflow. Cùng identity đổi name/quality gửi FULL; schema chưa có updated. Delta không viết history/event/gap/interruption.
++- ACK DELTA candidate giữ protocolVersion=v0, requestId/attemptId/traceId của request, type=ACK, payload status=ACCEPTED, acknowledgedType=MONITORING_DELTA, syncEpoch và sequence chính xác. Không tiến base chỉ vì socket write thành công. ACK FULL/OPEN giữ contract C1. Candidate retry nguyên envelope/payload, tối đa5/defaultACKtimeout5s; pending.target chỉ thành acknowledgedState sau ACK đúng.
++- Queue delta coalesces1latest waiting; full queue16 không đổi. Reconnect/hết retry xóa base/pending, OPEN mới/full1 từ scan thành công; oldACK/callback không tác động. Scan lỗi không gửi empty. Stop/revoke dọn worker/listeners, không đóng shared socket.
++- Đối soát full30s monotonic từ ACK full cuối, hoãn nếu pending; SOURCE_FAILURE chặn gửi lại latest. Full baseline vẫn mọi successful scan. Production C1 STALE6s/TTL5phút không đổi. Skip unchanged + full30s chưa đủ freshness6s: A/C phải chốt scan-based refresh/freshness/resync contract và test, không dùng heartbeat gia hạn hay tăng timeout âm thầm.
++- SequentialDeltaReplayAdapter là SIMULATED tối thiểu, không production reducer. Delta replay clean/duplicate/reconnect/mutation; drop/reorder/gap-resync còn T3-C2/C3, không claim MT02–MT06 PASS. Production measurement type DELTA và live gate cần tích hợp sau; chưa đo E2.
+diff --git a/docs/QUYET_DINH.md b/docs/QUYET_DINH.md
+index a2856ba..3bf660b 100644
+--- a/docs/QUYET_DINH.md
++++ b/docs/QUYET_DINH.md
+@@ -138,6 +138,15 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
+ - Join xác nhận collector+PID+start+cửa sổ quét; thiếu start/conflict/coverage/lỗi trace thành INCONCLUSIVE. Chỉ complete/bracketed/khỏe mới nói NOT_OBSERVED_IN_TRACE; không tính latency/miss-rate/E1/E2.
+ - Bounded schedule/queue/threads/READY/exit/run/cleanup; chỉ dọn root/cây sở hữu, CREATE_NEW không overwrite. Test child thật success/error/cancel/known descendant; OS Ctrl+C/hardkill parent NOT RUN. [Contract và cách chạy](CONTROLLED_PROCESS_HARNESS.md).
+ 
++## QD-16 · Delta dựa vào state đã ACK, coalescing và full khi metadata đổi
++
++- Ngày11/10/2026 · C, T3-C1 · Human B/A review NOT RUN; gate production chưa chạy.
++- Reuse FullSnapshotDelivery cho lifecycle/ACK/retry/guard, public constructor full vẫn chế độ0. DeltaSnapshotDelivery yêu cầu capability transport explicit; RealtimeClient mặc định false, candidate production không đổi. Không negotiation giả hoặc cờ bật production.
++- Base lưu canonical tập process+sequence đã ACK; pending target bất biến, retry toàn message. Chỉ một pending state và một latest waiting; observations trung gian có thể bỏ trong current state, event delivery độc lập không coalescing theo state. Metadata đổi cùng identity dùng full, vì added/removed chưa có updated. Schema/cách chạy [delta encoder](MONITORING_DELTA_ENCODER.md).
++- Full đối soát30s monotonic từ ACK full; source lỗi xóa latest, không tạo empty. Hết retry/không chắc epoch thì invalid base và cần fresh scan→OPEN epoch mới→full1, không tái dùng ID/payload cũ với base mới. Shared transport/listeners/worker cleanup giữ guard.
++- Replay dùng adapter delta tuần tự SIMULATED, oracle raw+manual fixture+mutation negative, kiểm observation không phát message và event IDs/content. Delta drop/reorder/resync gate chưa làm, CLI từ chối các option đó. Full faults C3 giữ nguyên.
++- STALE6s của full server xung đột skip-unchanged/full30s: giữ nguyên production; cơ chế chứng minh successful scan mới khi không đổi cần A/C chốt riêng T3-C2/T3-A3 và client integration. Không dùng heartbeat để làm tươi full. Measurement DELTA/live negotiation/gate do A/B/C review và tích hợp sau. Không mở E1/E2 hoặc giả human approval.
++
+ ## QD-18 · Deadline bắt đầu khi thí sinh nhận quyền ghi để vào thi
+ 
+ - Ngày11/10/2026 · Vai A (Agent) · Human review NOT RUN · nhánh P0 chưa merge.
