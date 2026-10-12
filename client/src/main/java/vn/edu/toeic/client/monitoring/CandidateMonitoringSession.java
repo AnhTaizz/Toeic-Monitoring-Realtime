@@ -84,7 +84,6 @@ public final class CandidateMonitoringSession implements AutoCloseable {
                         &&transport.deltaCapability()==DeltaCapability.UNSUPPORTED)next.accessRejected("DELTA_CAPABILITY_LOST");
             });
             heartbeat = transport.monitoringHeartbeat(attempt, collectorId);
-            System.out.printf("MONITORING_MODE mode=%s reason=%s%n",mode.mode(),mode.reason());
             return collectorId;
         } catch (RuntimeException failure) { stopHeartbeat(); collector.stop(); delivery = null; FullSnapshotDelivery created=full;full=null;
             if(created!=null)created.close();next.close();throw failure; }
