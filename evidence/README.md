@@ -48,3 +48,4 @@
 Mục lục chỉ tổ chức bằng chứng đã có, không xác nhận task hoàn thành hoặc thay đổi trạng thái trong tracker.
 
 - T3-C3: [Replay delta faults và campaign](t3-c3/2026-10-12-verification.md) —3MOCKworkloads/72cases/4negative/deterministic reports, full default; ACK-loss/live gate/E1/E2 chưa chạy.
+- Backend A, PR #23: [đồng bộ main T3-C3 và review lại P0](t2-a-p0-sync-20261013/2026-10-13-verification.md) — `9713658`, Maven 586, smoke C1/C2, Python 10 PASS; human review, GUI, LAN chưa chạy.

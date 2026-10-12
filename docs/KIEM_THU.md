@@ -408,3 +408,17 @@ Các lượt lỗi fixture/constructor oracle/manifest/DB chưa chạy được 
 - Không chạy lại live Spring/PG/WS smokes hoặc Python analyzer vì code liên quan không đổi; kết quả C2 là evidence cũ ghi riêng, không PASS mới. Human B/ChatGPT review NOT RUN theo opt-out; MT02–MT06 toàn gate giữ PARTIAL; T3-C4/GUI/LAN/E1/E2 NOT RUN. [Evidence](../evidence/t3-c3/2026-10-12-verification.md).
 
 - Kiểm cuối exact Git fixture bytes: auto text normalization đã làm manifest/expected blob LF khác workspace CRLF. Commit d813cb1 giữ exact byte; verified package569 PASS22:51:24 và campaign runb46f6a5e-e652-4ec4-8a8b-0201ba5b991a72PASS/4negative/77repeat identical,76case reports byte-identical với earlier d337 run, chỉ summary sourceSHA mới. Final REAL capture46business/40delivered/6missing; earlier47/40/7 giữ riêng, không so performance. JAR không đổi FB05E7D3;243source/blob hashes và222artifact/167gzip PASS. Runtime/doc workingtree ghi đúng dirty filenames; live/Python regressions không chạy thêm.
+
+## Backend A — PR #23 đồng bộ main T3-C3 và review lại P0, 13/10/2026 (local, chờ push)
+
+Commit `9713658` trên nhánh cục bộ `sync/pr23-main-20261013` = head PR #23 `4753149` + main `ee714fc`. Chi tiết: `evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md`.
+
+| Kiểm tra | Kết quả | Ghi chú |
+|---|---|---|
+| `mvn package` với `TOEIC_PG_INTEGRATION=true` | PASS 586, 0 skip | protocol 43, client 376, server 166, spike 1; gồm 11 test `ExamRuntimePostgresTest` trên PostgreSQL thật |
+| Smoke C1 full snapshot, smoke C2 late event/gap | PASS | REAL HTTP/WS/PG trên schema riêng; nhãn MOCK/SIMULATED như script ghi |
+| Python analyzer | PASS 10 | Python 3.14; lượt đầu bằng Python 3.9 trên PATH lỗi do phiên bản, không tính |
+| Review lại ba sửa P0 (đọc sau khi chốt, scheduler hết giờ, deadline khi vào thi) | Đạt, 4 ghi nhận không chặn | Agent review; human review NOT RUN |
+| `ExamFlowPostgresSmoke`, GUI, LAN | NOT RUN trên nhánh này | chạy ở nhánh client của B |
+
+Không đổi trạng thái AT/MT/LT/IT trong bảng chính; `TRACKER.json` giữ nguyên.

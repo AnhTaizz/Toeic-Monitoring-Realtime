@@ -407,3 +407,12 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - Audit phát hiện manifest/expected JSON workspace CRLF nhưng initial Git blob LF; d337 thêm -text chưa tự đổi index cũ. Commit d813cb1 renormalize đúng2file theo -text để Git bytes khớp thật. Không sửa observation trace/raw hoặc thuật toán; không giả source hash. Chạy lại package569 PASS22:51:24 và CLI72PASS/4negative/77repeat identical trên d813cb1, runb46f6a5e-e652-4ec4-8a8b-0201ba5b991a;76case files identical earlier d337, metadata/summary sourceSHA mới ghi rõ dirty docs/evidence. Final REAL capture46business/40delivered/6missing, earlier47/40/7 còn nguyên.243source/Gitblob/JAR và222artifact/167gzip PASS; JAR FB05E7D3 unchanged, C1/T2-C3 regressions d337 vẫn cùng runtime source bytes. Raw original UTF16 cli.txt regression giữ nguyên BOM, auditor decode theo BOM. Git cuối trong PR/final.
 
 - Staged diff check bắt derived CSV CRCRLF; regenerate2matrix từ summary nguyên byte bằng explicit UTF8/LF,72rows và hashes/previousDerivedSHA ghi ledger. Không raw/runtime change, không giả test mới; staged check chạy lại.
+
+## 2026-10-13 · A · PR #23: đồng bộ main T3-C3, review lại ba sửa P0
+- Thời lượng: một phiên Agent; giờ của thành viên chưa ghi.
+- Đã làm: merge `origin/main` `ee714fc` vào head PR #23 `4753149` trên nhánh cục bộ `sync/pr23-main-20261013`. Conflict chỉ ở tài liệu; quyết định deadline của A đổi số QD-18 → QD-21 vì main đã dùng QD-17/QD-18 cho T3-C2/T3-C3. Đọc lại diff production của ba sửa P0 và ghi bốn điểm không chặn merge.
+- Commit: `9713658` (merge) và commit tài liệu kế tiếp. Không push.
+- Đã kiểm: `mvn package` 586 PASS, 0 skip với PostgreSQL thật; smoke C1 và C2 PASS; Python 10 PASS (bằng Python 3.14, bản 3.9 trên PATH không chạy được script).
+- Còn dở: chưa push nên PR #23 trên GitHub vẫn báo conflict.
+- Tiếp theo: người dùng cho phép push thì PR #23 merge được; sau đó PR API lịch sử, rồi PR client của B.
+- Cần người khác: C review PR #23 (review xoay vòng C xem A); A xem bốn ghi nhận trong `evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md`.
