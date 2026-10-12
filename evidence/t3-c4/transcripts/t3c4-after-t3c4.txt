@@ -1,0 +1,77 @@
+17:47:59.181 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+17:47:59.290 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "delta_live_gate_test_63b9a51e09754ea997e0c8bc6163c318"."flyway_schema_history" does not exist yet
+17:47:59.296 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.037s)
+17:47:59.314 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "delta_live_gate_test_63b9a51e09754ea997e0c8bc6163c318"."flyway_schema_history" ...
+17:47:59.405 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "delta_live_gate_test_63b9a51e09754ea997e0c8bc6163c318": << Empty Schema >>
+17:47:59.435 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_63b9a51e09754ea997e0c8bc6163c318" to version "1 - auth schema"
+17:47:59.482 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_63b9a51e09754ea997e0c8bc6163c318" to version "2 - monitoring events"
+17:47:59.514 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_63b9a51e09754ea997e0c8bc6163c318" to version "3 - monitoring gaps"
+17:47:59.536 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_63b9a51e09754ea997e0c8bc6163c318" to version "4 - monitoring presence"
+17:47:59.565 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_63b9a51e09754ea997e0c8bc6163c318" to version "5 - exams and sessions"
+17:47:59.610 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_63b9a51e09754ea997e0c8bc6163c318" to version "6 - exam autosave requests"
+17:47:59.629 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_63b9a51e09754ea997e0c8bc6163c318" to version "7 - exam submits"
+17:47:59.654 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_63b9a51e09754ea997e0c8bc6163c318" to version "8 - monitoring event delivery"
+17:47:59.670 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 8 migrations to schema "delta_live_gate_test_63b9a51e09754ea997e0c8bc6163c318", now at version v8 (execution time 00:00.097s)
+2026-10-12T17:48:03.717Z  INFO 33320 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T17:48:03.720Z  INFO 33320 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+PASS START_candidate-delta-default · REAL Application buttons/HTTP/WS/source
+PASS START_candidate-full-default · REAL Application buttons/HTTP/WS/source
+PASS PROCTOR_NO_COLLECTOR · REAL GUI role/HTTP/WS
+PASS REAL_EDGE_IDENTITY_METADATA · REAL OS/collector/encoder/server/HTTP/push
+PASS UNCHANGED_FRESH_30S · REAL time/ProcessHandle
+PASS DEFAULT_APP_FACTORY_DELTA · REAL default factory/client/WS
+PASS EVENT_HISTORY_SEPARATE · REAL PostgreSQL
+PASS CANDIDATE_ISOLATION · REAL hard-kill, one host
+PASS START_candidate-delta-instrumented · REAL Application buttons/HTTP/WS/source
+PASS CANDIDATE_RESTART_EPOCH · REAL child restart/DB/WS
+PASS OLD_SOCKET_EPOCH · REAL WS/binding, SIMULATED old payload
+PASS CROSS_CANDIDATE_SCOPE · REAL server auth/scope; forged request SIMULATED
+PASS PROCTOR_CANNOT_WRITE · REAL server/production proctor socket
+PASS GAP_DB_COMMIT · REAL network/PG, sentinel payload SIMULATED
+PASS ACK_LOSS_RETRY_NO_REAPPLY · REAL server/network; SIMULATED delivery-observer ACK drop
+PASS HTTP_PUSH_STATE_EQUAL · REAL HTTP/WS; paused source SIMULATED
+PASS FROZEN_RETRY · REAL encoder/adapter; fault SIMULATED
+PASS OLD_ACK_NOT_OTHER_MESSAGE · REAL callback; SIMULATED delayed observer
+PASS RESYNC_LAST_KNOWN · REAL HTTP/WS/parser/callback; SIMULATED one wire base/seq change
+PASS RESYNC_FRESH_FULL_UI_HISTORY · REAL Application/encoder/WS/RAM/DB
+PASS RETRY_EXHAUSTION_FRESH_EPOCH · REAL production delivery; SIMULATED ACK observer suppression
+PASS HUNG_COLLECTOR_HB_ONLINE · REAL scheduler/HB/push; SIMULATED source wait
+PASS SOURCE_FAILURE_TTL · REAL maintenance/HB; SIMULATED scan exception; production TTL5min unchanged
+powershell.exe : PRESENCE_SCAN retryable failure; no success push
+At line:4 char:132
++ ... =$run.extra;& powershell -NoProfile -ExecutionPolicy Bypass -File $fi ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (PRESENCE_SCAN r...no success push:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+PRESENCE_SCAN retryable failure; no success push
+PASS DB_SCOPE_BEFORE_DUPLICATE · REAL JDBC/WS; own TEST schema fault SIMULATED, shared DB not stopped
+PASS DB_EVENT_ROLLBACK_NO_ACK · REAL Edge/PG/transaction/WS; trigger SIMULATED
+PASS EVENT_ID_CONTENT_RETRY_DB · REAL wire payload/PG, independent SQL rows; no reducer as expected
+PASS ATTEMPT_REVOKE_DUPLICATE · REAL DB auth/WS/GUI; duplicate trigger SIMULATED
+PASS START_candidate-delta-instrumented · REAL Application buttons/HTTP/WS/source
+PASS ASSIGNMENT_REVOKED_HTTP · REAL HTTP/auth/own TEST DB revoke
+PASS ASSIGNMENT_REVOKED_PUSH · REAL push/assignment; no UI refresh during wait
+2026-10-12T17:49:33.578Z  INFO 33320 --- [toeic-server] [.1-56665-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T17:49:33.580Z  INFO 33320 --- [toeic-server] [.1-56665-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+PASS SERVER_RESTART_RAM_DB · REAL Spring restart same TEST port/PG/HTTP/WS/Applications
+2026-10-12T17:49:35.722Z  INFO 33320 --- [toeic-server] [.1-56665-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T17:49:35.723Z  INFO 33320 --- [toeic-server] [.1-56665-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+PASS CAPABILITY_LOST_STOPS_RUN · REAL server restart/capability/adapter/coordinator
+PASS START_candidate-delta-instrumented · REAL Application buttons/HTTP/WS/source
+2026-10-12T17:49:37.328Z  INFO 33320 --- [toeic-server] [.1-56665-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T17:49:37.329Z  INFO 33320 --- [toeic-server] [.1-56665-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+PASS FULL_PINNED_UNTIL_START · REAL Application/reconnect
+PASS START_candidate-delta-instrumented · REAL Application buttons/HTTP/WS/source
+PASS TOKEN_REVOKE_ACTIVE_APP · REAL TEST token revocation
+PASS CLEANUP_candidate-delta-instrumented · REAL Application.stop/owned child
+2026-10-12T17:49:40.235Z  INFO 33320 --- [toeic-server] [.1-56665-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T17:49:40.236Z  INFO 33320 --- [toeic-server] [.1-56665-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+PASS START_candidate-opt-in-unsupported · REAL Application buttons/HTTP/WS/source
+PASS OLD_OR_DISABLED_SERVER_FULL · REAL disabled server/current socket/default Application
+PASS LOCAL_GATE_PREPARATION · one Windows host, two child JVMs + proctor Application
+PASS CLEANUP_candidate-full-default · REAL Application.stop/owned child
+PASS CLEANUP_candidate-opt-in-unsupported · REAL Application.stop/owned child
+T3-C4 LOCAL artifacts: D:\Toeic-Monitoring-Realtime\server\target\t3c4-live\T3C4-692e8c8a-0265-4211-afc6-151a5d5e6048 exit=0; human gate/LAN not confirmed.
+Summary INCOMPLETE: endpoints=12, categories=140; WS JSON application bytes only
+Measurement summary exit=2; hard-killed endpoint is expected INCOMPLETE, retained raw.

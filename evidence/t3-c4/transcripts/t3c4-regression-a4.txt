@@ -1,0 +1,31 @@
+17:44:32.803 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+17:44:32.906 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "a4_test_34d2d69dd8a644cb979672418ff449db"."flyway_schema_history" does not exist yet
+17:44:32.912 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.032s)
+17:44:32.931 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "a4_test_34d2d69dd8a644cb979672418ff449db"."flyway_schema_history" ...
+17:44:33.018 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "a4_test_34d2d69dd8a644cb979672418ff449db": << Empty Schema >>
+17:44:33.040 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "a4_test_34d2d69dd8a644cb979672418ff449db" to version "1 - auth schema"
+17:44:33.098 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "a4_test_34d2d69dd8a644cb979672418ff449db" to version "2 - monitoring events"
+17:44:33.136 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "a4_test_34d2d69dd8a644cb979672418ff449db" to version "3 - monitoring gaps"
+17:44:33.160 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 3 migrations to schema "a4_test_34d2d69dd8a644cb979672418ff449db", now at version v3 (execution time 00:00.051s)
+PASS REAL PostgreSQL18 V3->V4; runtime timeout700ms/scan25ms/heartbeat100ms; production defaults6000/500/2000ms
+2026-10-12T17:44:37.722Z  INFO 30876 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T17:44:37.724Z  INFO 30876 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+PASS REAL roster role/auth/assigned ACTIVE filtering; never-seen UNKNOWN/NOT_SEEN/null lastSeen; interruption history scope
+MONITORING_MODE mode=FULL reason=OPT_IN_OFF
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+Owned A4 TEST schema removed; public/dev data and shared PostgreSQL untouched
+powershell.exe : A4 smoke FAIL phase=SCOPED_BINDING class=IllegalStateException
+At line:4 char:143
++ ... a=$run.args;& powershell -NoProfile -ExecutionPolicy Bypass -File $fi ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (A4 smoke FAIL p...lStateException:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+TEST assertion: Owned child ready
+A4 real integration failed; no credentials printed.
+At D:\Toeic-Monitoring-Realtime\scripts\smoke-a4.ps1:24 char:32
++ ... DE -ne 0) { throw 'A4 real integration failed; no credentials printed ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (A4 real integra...ntials printed.:String) [], RuntimeException
+    + FullyQualifiedErrorId : A4 real integration failed; no credentials printed.
+ 

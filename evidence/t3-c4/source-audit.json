@@ -1,0 +1,1504 @@
+{
+  "sourceSha": "d9475ebd20ccb1590cb234571f810896c5e31304",
+  "sourceFiles": 249,
+  "jarHashes": {
+    "clientJarSha256": "96266b4c529a41d9138ffa0b51a3f371147b985e41cb59331b31d5c3b9a688d3",
+    "serverJarSha256": "c1e14821db56409e02c08345688d724bb61e500f3d09937c48e1fe8f0111049f"
+  },
+  "checks": [
+    {
+      "path": "client/pom.xml",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/ClientSettings.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/dashboard/DashboardApi.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/dashboard/DashboardController.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/dashboard/DashboardModel.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/dashboard/MonitoringApiClient.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/dashboard/MonitoringData.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/dashboard/MonitoringJson.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/dashboard/ProctorDashboardView.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/InvalidServerResponseException.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/Launcher.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/LoginApiClient.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/LoginFailedException.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/CandidateMonitoringSession.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/DeltaSnapshotDelivery.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/FullSnapshotDelivery.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/harness/ControlledProcessChild.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/harness/ControlledProcessHarness.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/harness/GroundTruth.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/harness/HarnessArtifacts.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/harness/HarnessCli.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/harness/HarnessPlan.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/harness/ObservationJoiner.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/harness/OwnedProcessPolicy.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/MetadataQuality.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/MonitoringDelivery.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/MonitoringMessage.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/MonitoringReplayDriver.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/MonitoringSessionGate.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/ObservationTrace.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/ObservedProcess.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessCollector.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessHandleSnapshotSource.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessIdentity.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessPolicy.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessReading.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessSelection.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessSnapshot.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessSnapshotSource.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/FaultSchedule.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/ObservationOracle.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/ReplayCampaign.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/ReplayEngine.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/ReplayFrame.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/ReplayServer.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/TraceCli.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/TraceData.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/TraceJson.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/TraceReader.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/TraceRecorder.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/realtime/AuthenticatedWebSocketOpener.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/realtime/ConnectionState.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/realtime/ConnectionViewModel.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/realtime/MonitoringTransport.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/realtime/RealtimeClient.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/RoleViewModel.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/ToeicClientApplication.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/dashboard/DashboardControllerTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/dashboard/DashboardFixtures.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/dashboard/DashboardModelTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/dashboard/FullStateDashboardTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/dashboard/LateEventsAndGapsTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/dashboard/MonitoringApiClientTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/dashboard/MonitoringJsonTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/LoginApiClientTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/CandidateModeSessionTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/DeltaSnapshotDeliveryTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/FullSnapshotDeliveryTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/harness/ChildFailureFixture.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/harness/ControlledProcessHarnessTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/harness/HarnessArtifactsTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/harness/HarnessCliTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/harness/HarnessFixtures.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/harness/HarnessPlanTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/harness/ObservationJoinerTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/harness/TestTracePolicyTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/MonitoringDeliveryTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessCollectorSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessCollectorTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessCollectorTraceTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessPolicyAndSourceTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/trace/DeltaReplayTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/trace/HandwrittenTraceTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/trace/ReplayCampaignTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/trace/ReplayEngineTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/trace/TraceCaptureSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/trace/TraceCliTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/trace/TraceFixtures.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/trace/TraceReaderTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/trace/TraceRecorderTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/realtime/AuthenticatedWebSocketOpenerTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/realtime/MockScheduler.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/realtime/RealtimeClientTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/realtime/RealtimePostgresSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/ScopeLookupTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/resources/monitoring-traces/delta-handwritten-v1.jsonl",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/resources/monitoring-traces/delta-handwritten-v1-expected.json",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/resources/monitoring-traces/handwritten-v1.jsonl",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/resources/monitoring-traces/handwritten-v1-expected.json",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/resources/monitoring-traces/t3-c3/handwritten-expected.json",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/resources/monitoring-traces/t3-c3/high-change.jsonl",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/resources/monitoring-traces/t3-c3/low-change.jsonl",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/resources/monitoring-traces/t3-c3/manifest.json",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "client/src/test/resources/monitoring-traces/t3-c3/reconnect.jsonl",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/pom.xml",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/auth/LoginRequest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/auth/LoginResponse.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/error/ApiErrorResponse.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/ErrorCode.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/AttemptCreationDto.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/AutosaveAnswersRequest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/AutosaveAnswersResponse.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/CandidateAttemptStatusResponse.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/CandidateExamDto.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/CandidateOptionDto.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/CandidateQuestionDto.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/CreateSessionRequest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/CreateSessionResponse.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/ExamImportRequest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/ExamImportResponse.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/ExamOptionImportDto.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/ExamQuestionImportDto.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/SubmitExamRequest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/SubmitExamResponse.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/TakeoverWriterRequest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/exam/TakeoverWriterResponse.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/measurement/MessageIdentity.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/measurement/MessageMeasurements.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/DeltaSnapshotPayload.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/EventOrigin.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/FullSnapshotPayload.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/FullStateReducer.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/MonitoringResyncPayload.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/MonitoringStateReducer.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/MonitoringStateView.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/Protocol.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/Role.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/ws/MessageEnvelope.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/test/java/vn/edu/toeic/protocol/measurement/MessageMeasurementsTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/test/java/vn/edu/toeic/protocol/monitoring/DeltaSnapshotPayloadTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/test/java/vn/edu/toeic/protocol/monitoring/EventOriginTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/test/java/vn/edu/toeic/protocol/monitoring/FullSnapshotPayloadTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "protocol/src/test/java/vn/edu/toeic/protocol/monitoring/MonitoringStateReducerTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/demo-c3.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/reset-db.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-a2.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-a3.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-a4.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-b2.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-b3.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-c2.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-c3.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-c4.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-t2a1.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-t2a2.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-t2a3.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-t2a4.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-t2c1.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-t2c2.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-t2c3.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-t2c4.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-t3c1.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-t3c2.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-t3c3.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/smoke-t3c4.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/start-monitoring-client.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/start-monitoring-server.ps1",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/summarize-monitoring.py",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "scripts/test_summarize_monitoring.py",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/pom.xml",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/AccessDeniedException.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/ApiExceptionHandler.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/AttemptScopeAuthorizer.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/AuthConfiguration.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/AuthController.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/AuthenticatedUser.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/AuthorizationService.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/AuthService.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/BearerAuthenticationFilter.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/InvalidCredentialsException.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/InvalidLoginRequestException.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/JdbcLoginSessionStore.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/JdbcUserAccountStore.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/LoginSessionStore.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/SeedDataInitializer.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/SessionAuthenticationService.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/SessionController.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/StoredSession.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/TokenHash.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/UserAccount.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/UserAccountStore.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/exam/ExamApiException.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/exam/ExamController.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/exam/ExamService.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/exam/ExamTimeoutService.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/exam/ExamValidationService.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/exam/InvalidExamException.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/EventConflictException.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/FullSnapshotReducer.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/JdbcAttemptScopeStore.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/JdbcPresenceStore.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringEventService.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringGap.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringGapService.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringPresenceController.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringPresenceService.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringStateController.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringStateMaintenance.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringStateService.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringTimelineController.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/PresenceSnapshot.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/PresenceStore.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/ProcessEvent.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/StateRejectedException.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeHandshakeInterceptor.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeSessionRegistry.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeWebSocketConfiguration.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeWebSocketHandler.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/ToeicServerApplication.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/main/resources/application.properties",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/client/LiveCandidateApp.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/auth/AuthenticatedNetworkTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/auth/AuthServiceTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/auth/ConcurrentRealtimeSendTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/auth/PostgresWebSocketSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/auth/RealtimeMeasurementTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/auth/SessionAuthenticationTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/exam/ExamAutosavePostgresSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/exam/ExamConcurrencyPostgresSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/exam/ExamControllerTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/exam/ExamPostgresSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/exam/ExamSubmitPostgresSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/exam/ExamValidationTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/DeltaLiveGateSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/DeltaStateSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/FullSnapshotReducerTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/FullSnapshotSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/LateEventsAndGapsSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringDeliverySmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringDeltaStateTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringGapTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringMeasurementSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringPostgresSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringPresenceServiceTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringPresenceSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringStateMaintenanceTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringStateServiceTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": true,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/ProcessEventTest.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/ProctorDashboardSmoke.java",
+      "workingMatchesRuntime": true,
+      "gitMatchesExactBytes": false,
+      "gitMatchesAfterCrLfNormalization": true
+    }
+  ]
+}

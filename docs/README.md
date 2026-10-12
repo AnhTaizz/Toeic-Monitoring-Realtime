@@ -54,3 +54,5 @@ T2-C4: [harness/CLI/ground truth/clock mapping/TEST policy](CONTROLLED_PROCESS_H
 - [T3-C2 reducer delta/resync, capability thử nghiệm và scan freshness](MONITORING_DELTA_REDUCER.md). Full mặc định, gate chưa chạy.
 
 - T3-C3: [Replay delta faults và campaign](MONITORING_DELTA_FAULT_REPLAY.md) —3MOCKworkloads/72cases/4negative/deterministic reports, full default; ACK-loss/live gate/E1/E2 chưa chạy.
+
+- T3-C4: [Candidate thật, cấu hình FULL/DELTA và checklist live gate](MONITORING_DELTA_LIVE_GATE.md). FULL mặc định, nghiệm thu LAN/human B review còn riêng.

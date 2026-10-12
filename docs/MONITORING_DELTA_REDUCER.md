@@ -1,5 +1,8 @@
 # T3-C2 · Reducer delta, resync và độ mới
 
+**Cập nhật T3-C4 ngày13/10/2026:** [Tích hợp candidate/live gate](MONITORING_DELTA_LIVE_GATE.md) bổ sung factory production DELTA opt-in + capability socket hiện tại. FULL vẫn mặc định; các đoạn factory luôn full bên dưới là phạm vi lịch sử C1/C2/C3. Live localhost và replay tách riêng; gate20/10/LAN hai máy/human B review/E1/E2 chưa chốt.
+
+
 **Cập nhật T3-C3 ngày12/10/2026:** [Chiến dịch replay/model và CLI](MONITORING_DELTA_FAULT_REPLAY.md) đã có72cases/3workload/12fault scenarios cho full và delta; production reducer C2, oracle raw độc lập. ACK baseline enumeration và data faults SIMULATED, resync recorded/no feedback, retry/ACK-loss/presence/live gate/E1/E2 NOT MODELED hoặc NOT RUN. Các đoạn ghi delta drop/reorder chưa hỗ trợ bên dưới là phạm vi task trước; full vẫn mặc định.
 
 Reducer là phần áp thông điệp vào state (danh sách process server đang giữ). Full thay toàn tập; delta thêm/bớt từ một base (state gốc) xác định. T3-C2 có lõi production và tích hợp server/client thử nghiệm. **Full vẫn mặc định**; candidate factory không chọn delta. Gate T3-C3/C4, desktop/LAN và E1/E2 chưa chạy.

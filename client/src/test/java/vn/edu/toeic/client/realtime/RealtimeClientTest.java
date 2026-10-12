@@ -31,6 +31,33 @@ import vn.edu.toeic.protocol.measurement.MessageMeasurements.Outcome;
 
 /** All sockets/openers in this class are MOCK, never authenticated server proof. */
 class RealtimeClientTest {
+    @Test void scopedHeartbeatRejectionCallbackRequiresCorrelationAndExcludesTransientDbFailure() {
+        try(Fixture f=new Fixture()) {
+            var rejected=new ArrayList<MonitoringTransport.MonitoringAccessRejection>();f.client.onMonitoringAccessRejected(rejected::add);f.connect();f.clock.advance(Duration.ofSeconds(2));
+            var hb=GSON.fromJson(f.socket().sent.getLast(),JsonObject.class);var p=new JsonObject();p.addProperty("code","RETRYABLE_SERVER_ERROR");p.addProperty("message","MOCK");p.addProperty("retryable",true);
+            f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ERROR","e",hb.get("requestId").getAsString(),"mock-attempt-A",hb.get("traceId").getAsString(),p)),true);assertThat(rejected).isEmpty();
+            f.clock.advance(Duration.ofSeconds(2));hb=GSON.fromJson(f.socket().sent.getLast(),JsonObject.class);p.addProperty("code","FORBIDDEN");p.addProperty("retryable",false);
+            f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ERROR","e2",hb.get("requestId").getAsString(),"mock-attempt-A",hb.get("traceId").getAsString(),p)),true);
+            assertThat(rejected).hasSize(1);f.clock.advance(Duration.ofSeconds(2));var wrong=GSON.fromJson(f.socket().sent.getLast(),JsonObject.class);
+            f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ERROR","wrong-trace",wrong.get("requestId").getAsString(),"mock-attempt-A","wrong-trace",p)),true);assertThat(rejected).hasSize(1);
+            assertThat(rejected.getFirst().collectorSessionId()).isEqualTo("mock-collector-001");assertThat(rejected.getFirst().code()).isEqualTo("FORBIDDEN");
+            f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ERROR","late",hb.get("requestId").getAsString(),"mock-attempt-A",hb.get("traceId").getAsString(),p)),true);assertThat(rejected).hasSize(1);
+        }
+    }
+    @Test void deltaCapabilityRequiresWholeHeartbeatAckAndOlderServerIsExplicitlyUnsupported() {
+        String previous=System.getProperty("toeic.realtime.delta-experimental");System.setProperty("toeic.realtime.delta-experimental","true");
+        try(Fixture f=new Fixture()) {
+            f.connect();assertThat(f.client.deltaCapability()).isEqualTo(MonitoringTransport.DeltaCapability.UNKNOWN);f.clock.advance(Duration.ofSeconds(2));
+            var hb=GSON.fromJson(f.socket().sent.getLast(),JsonObject.class);var body=new JsonObject();body.addProperty("status","ACCEPTED");body.addProperty("acknowledgedType","HEARTBEAT");body.addProperty("monitoringDelta",true);body.addProperty("connectionId",42);
+            f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ACK","MOCK-invalid",hb.get("requestId").getAsString(),"mock-attempt-A",hb.get("traceId").getAsString(),body)),true);
+            assertThat(f.client.supportsMonitoringDelta()).isFalse();assertThat(f.client.deltaCapability()).isEqualTo(MonitoringTransport.DeltaCapability.UNKNOWN);
+            f.clock.advance(Duration.ofSeconds(2));hb=GSON.fromJson(f.socket().sent.getLast(),JsonObject.class);body.addProperty("connectionId","MOCK-live");
+            f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ACK","MOCK-valid",hb.get("requestId").getAsString(),"mock-attempt-A",hb.get("traceId").getAsString(),body)),true);assertThat(f.client.supportsMonitoringDelta()).isTrue();
+            f.clock.advance(Duration.ofSeconds(2));hb=GSON.fromJson(f.socket().sent.getLast(),JsonObject.class);body.remove("monitoringDelta");
+            f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ACK","MOCK-oldserver",hb.get("requestId").getAsString(),"mock-attempt-A",hb.get("traceId").getAsString(),body)),true);
+            assertThat(f.client.deltaCapability()).isEqualTo(MonitoringTransport.DeltaCapability.UNSUPPORTED);assertThat(f.client.supportsMonitoringDelta()).isFalse();
+        }finally{if(previous==null)System.clearProperty("toeic.realtime.delta-experimental");else System.setProperty("toeic.realtime.delta-experimental",previous);}
+    }
     @Test void deltaCapabilityRequiresExplicitOptInAndCorrelatedServerAckAndResetsOnReconnect() {
         String previous=System.getProperty("toeic.realtime.delta-experimental");System.setProperty("toeic.realtime.delta-experimental","true");
         try(Fixture f=new Fixture()) {

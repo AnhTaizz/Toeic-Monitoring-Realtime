@@ -1,5 +1,8 @@
 # T3-C3 — Chiến dịch replay full/delta
 
+**Cập nhật T3-C4 ngày13/10/2026:** [Tích hợp candidate/live gate](MONITORING_DELTA_LIVE_GATE.md) bổ sung factory production DELTA opt-in + capability socket hiện tại. FULL vẫn mặc định; các đoạn factory luôn full bên dưới là phạm vi lịch sử C1/C2/C3. Live localhost và replay tách riêng; gate20/10/LAN hai máy/human B review/E1/E2 chưa chốt.
+
+
 Replay là phát lại file quan sát đã lưu, không quét OS lần nữa. Oracle là phần tính đáp án độc lập từ raw observations (quan sát gốc) và lịch giao message. Full vẫn mặc định. C3 kiểm tính đúng theo **mô hình nhận dữ liệu**; không thay live T3-C4, gate của B hoặc E1/E2.
 
 ## Chạy bằng PowerShell

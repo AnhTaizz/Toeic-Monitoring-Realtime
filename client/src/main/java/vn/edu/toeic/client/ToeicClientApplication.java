@@ -3,6 +3,9 @@ package vn.edu.toeic.client;
 import java.util.concurrent.CompletionException;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.BiFunction;
+import java.util.Objects;
+import vn.edu.toeic.client.realtime.MonitoringTransport;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -29,6 +32,12 @@ import vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpener;
 import vn.edu.toeic.client.dashboard.ProctorDashboardView;
 
 public final class ToeicClientApplication extends Application {
+    private final BiFunction<MonitoringTransport,Consumer<MonitoringDelivery.Status>,CandidateMonitoringSession> monitoringFactory;
+    public ToeicClientApplication(){this(CandidateMonitoringSession::new);}
+    /** Package seam for owned GUI integration tests; ordinary application always uses the production factory. */
+    ToeicClientApplication(BiFunction<MonitoringTransport,Consumer<MonitoringDelivery.Status>,CandidateMonitoringSession> monitoringFactory) {
+        this.monitoringFactory=Objects.requireNonNull(monitoringFactory);
+    }
     private final LoginApiClient loginApiClient = new LoginApiClient();
     private RealtimeClient realtimeClient;
     private AutoCloseable problemSubscription;
@@ -129,7 +138,8 @@ public final class ToeicClientApplication extends Application {
         Label title = new Label(viewModel.heading());
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
         Label identity = new Label(response.user().displayName() + " · " + response.user().username());
-        Label detail = new Label(viewModel.description());
+        Label detail = new Label("CANDIDATE".equals(response.user().role())
+                ? "Chọn lượt được cấp và bấm Bắt đầu giám sát." : viewModel.description());
         Label connectionStatus = new Label();
         connectionStatus.setWrapText(true);
         Label availability = new Label("Đang xác thực kết nối thời gian thực…");
@@ -171,7 +181,7 @@ public final class ToeicClientApplication extends Application {
         content.setPadding(new Insets(36));
         content.setAlignment(Pos.TOP_CENTER);
         BorderPane root = new BorderPane(content);
-        stage.setScene(new Scene(root, 720, 480));
+        stage.setScene(new Scene(root, 720, 600));
         // Hai role dùng chung transport; candidate starts monitoring only through explicit controls.
         realtimeClient.connect(context);
     }
@@ -185,17 +195,20 @@ public final class ToeicClientApplication extends Application {
         Button refresh = new Button("Kiểm tra lượt thi"), retry = new Button("Thử lại chưa xác nhận");
         stop.setDisable(true); retry.setDisable(true); start.setDisable(attempts.getItems().isEmpty());
         AtomicBoolean updateQueued = new AtomicBoolean();
-        CandidateMonitoringSession session = new CandidateMonitoringSession(realtimeClient, value -> {
+        CandidateMonitoringSession session = monitoringFactory.apply(realtimeClient, value -> {
             if (updateQueued.compareAndSet(false, true)) Platform.runLater(() -> {
                 updateQueued.set(false);
                 if (currentView != viewGeneration || monitoring == null) return;
                 // Read the current run, never a status captured before Stop/switch/logout.
                 MonitoringDelivery.Status state = monitoring.status();
                 if (state == null) return;
-                status.setText("Chưa xác nhận: " + state.pendingEvents() + " · Đã xác nhận: " + state.acknowledged()
+                status.setText("Chế độ " + monitoring.modeStatus().mode() + " · "+modeExplanation(monitoring.modeStatus().reason())
+                        + " · Chưa xác nhận: " + state.pendingEvents() + " · Đã xác nhận: " + state.acknowledged()
                         + " · Bị mất do queue đầy: " + state.droppedCount() + (state.gapPending() ? " · Đang báo khoảng trống" : "")
                         + (state.exhausted() > 0 ? " · Hết lượt tự thử lại" : "") + (state.failed() > 0 ? " · Có sự kiện bị từ chối" : "")
-                        + (!state.active() ? " · Mất quyền; dừng rồi kiểm tra lượt thi/đăng nhập lại" : ""));
+                        + (!state.active() ? ("DELTA_CAPABILITY_LOST".equals(state.problem())
+                            ? " · Server không còn hỗ trợ delta; dừng rồi Start lại bằng FULL."
+                            : " · Mất quyền; dừng rồi kiểm tra lượt thi/đăng nhập lại") : ""));
                 retry.setDisable(!state.active() || (state.failed() == 0 && state.exhausted() == 0));
             });
         });
@@ -217,6 +230,7 @@ public final class ToeicClientApplication extends Application {
                 try {
                     realtimeClient.updateScope(scope.attemptScope());
                     session.start(scope.role(), selected, scope.attemptScope());
+                    status.setText("Chế độ "+session.modeStatus().mode()+" · "+modeExplanation(session.modeStatus().reason()));
                     attempts.setDisable(true); start.setDisable(true); refresh.setDisable(true); stop.setDisable(false);
                 } catch (RuntimeException ignored) { status.setText("Chưa bắt đầu được. Đợi phiên cũ dừng rồi kiểm tra lại."); }
             }));
@@ -235,6 +249,15 @@ public final class ToeicClientApplication extends Application {
         });
         return new VBox(8, new Label("Lượt giám sát được server cấp"), attempts, refresh, start, stop, retry, status,
                 new Label("Dừng/đăng xuất/đóng app sẽ bỏ dữ liệu chưa xác nhận trong RAM."));
+    }
+    private static String modeExplanation(String reason) {
+        return switch(reason) {
+            case "CAPABILITY_CONFIRMED" -> "Delta thử nghiệm; server đã xác nhận hỗ trợ.";
+            case "WAITING_CURRENT_SOCKET_CAPABILITY" -> "Đợi server xác nhận hỗ trợ trên kết nối mới.";
+            case "CAPABILITY_PENDING_FULL_FALLBACK" -> "Chưa xác nhận hỗ trợ delta; dùng full cho lần Start này.";
+            case "SERVER_OR_TRANSPORT_UNSUPPORTED_FULL_FALLBACK" -> "Server/kết nối chưa hỗ trợ delta; dùng full.";
+            default -> "Full mặc định.";
+        };
     }
 
     static String userMessage(Throwable failure) {
