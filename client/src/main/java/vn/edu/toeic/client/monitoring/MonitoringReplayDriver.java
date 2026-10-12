@@ -38,8 +38,8 @@ public final class MonitoringReplayDriver {
         try(var events=new MonitoringDelivery("SIMULATED-attempt",transport,settings,clock,() -> clock.tick,ignored -> {},false,
                 kind -> "replay-"+kind+"-"+ids.merge(kind,1,Integer::sum));
             var full=new FullSnapshotDelivery("SIMULATED-attempt",transport,settings,ignored -> {},() -> clock.tick,false,
-                kind -> "replay-"+kind+"-"+ids.merge(kind,1,Integer::sum),delta?DeltaSnapshotDelivery.DEFAULT_RECONCILIATION.toNanos():0)) {
-            List<Process> previous=List.of();long lastFull=0;
+                kind -> "replay-"+kind+"-"+ids.merge(kind,1,Integer::sum),delta?DeltaSnapshotDelivery.DEFAULT_RECONCILIATION.toNanos():0,2000)) {
+            List<Process> previous=List.of();long lastFull=0,lastState=0;
             for(var sample:trace.samples()) {
                 transport.source=sample;clock.tick=sample.elapsedNanos();clock.wall=Instant.parse(trace.header().wallOrigin()).plusNanos(clock.tick);
                 switch(sample.type()) {
@@ -47,14 +47,14 @@ public final class MonitoringReplayDriver {
                     case "OBSERVATION","SOURCE_FAILURE" -> {
                         transport.scan++;
                         if(transport.scan==reconnectAt) {
-                            transport.change(ConnectionState.RECONNECTING);transport.generation++;transport.sequence=0;previous=List.of();lastFull=clock.tick;
+                            transport.change(ConnectionState.RECONNECTING);transport.generation++;transport.sequence=0;previous=List.of();lastFull=clock.tick;lastState=clock.tick;
                             transport.change(ConnectionState.CONNECTED);full.tick();
                         }
                         if(sample.type().equals("SOURCE_FAILURE")) {full.sourceFailed();events.sourceFailed();break;}
                         var current=sample.productionProcesses();
                         boolean fullDue=transport.sequence==0 || clock.tick-lastFull>=DeltaSnapshotDelivery.DEFAULT_RECONCILIATION.toNanos()
                                 || metadataChanged(current,previous);
-                        if(!delta || fullDue || !current.equals(previous))transport.sequence++;
+                        if(!delta || fullDue || !current.equals(previous) || clock.tick-lastState>=2_000_000_000L){transport.sequence++;lastState=clock.tick;}
                         if(fullDue)lastFull=clock.tick;
                         previous=current;
                         var snapshot=sample.snapshot();full.observe(snapshot);events.observe(snapshot);

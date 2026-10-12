@@ -53,14 +53,32 @@ class DeltaReplayTest {
         assertThat(result.status()).isEqualTo("PASS");assertThat(result.observationChecks()).hasSize(4);
         assertThat(result.cleanChecks()).noneMatch(c->c.record()==4);assertThat(result.observationChecks()).anyMatch(c->c.record()==4&&c.match());
     }
-    @Test void refuseFutureGateFaultsRatherThanClaimUnsupportedResyncCorrectness() throws Exception {
+    @Test void deltaFaultsNowUseProductionReducerButStillRejectInvalidMode() throws Exception {
         var trace=trace();
-        assertThatThrownBy(()->ReplayEngine.replay(trace,new FaultSchedule.Config(1,0,10,0,0,0,0),"delta",0))
-                .hasMessage("DELTA_FAULT_GATE_NOT_IMPLEMENTED");
+        assertThat(ReplayEngine.replay(trace,new FaultSchedule.Config(1,0,10,0,0,0,0),"delta",0).status()).isEqualTo("PASS");
         assertThatThrownBy(()->ReplayEngine.replay(trace,FaultSchedule.Config.none(),"invalid",0)).hasMessage("REPLAY_MODE");
     }
     @Test void testHarnessSchemaIsStillRefusedInBothModes() {
         var trace=new TraceData.Trace(new TraceData.Header(TraceData.TEST_SCHEMA,"MOCK",500,TraceData.TEST_POLICY,"2026-10-11T00:00:00Z"),java.util.List.of(),"MOCK");
         assertThatThrownBy(()->ReplayEngine.replay(trace,FaultSchedule.Config.none(),"delta",0)).hasMessage("TEST_POLICY_NOT_NETWORK_REPLAY");
+    }
+    @Test void independentOracleAndProductionCoreAgreeOnMissingDeltaFullRecoveryAndLateDelta() {
+        var trace=TraceFixtures.hand();var oracle=new ObservationOracle(trace,0);var server=new ReplayServer(true);
+        var frames=MonitoringReplayDriver.encode(trace,0,true);ReplayFrame delayed=null;
+        var initialOracle=new ObservationOracle(trace,0);var initialServer=new ReplayServer(true);
+        initialOracle.apply(frames.getFirst());initialServer.apply(frames.getFirst());
+        var beforeFull=frames.stream().filter(f->f.message().type().equals("MONITORING_DELTA")).findFirst().orElseThrow();
+        assertThat(initialOracle.apply(beforeFull)).isEqualTo("RESYNC");assertThat(initialServer.apply(beforeFull)).isEqualTo("RESYNC");
+        assertThat(initialServer.state()).isEqualTo(initialOracle.state());
+        for(var frame:frames) {
+            if(frame.message().type().equals("MONITORING_SYNC_CLOSE"))continue;
+            if(frame.message().type().equals("MONITORING_DELTA")&&frame.expectedSequence()==2){delayed=frame;continue;}
+            String expected=oracle.apply(frame);assertThat(server.apply(frame)).isEqualTo(expected);assertThat(server.state()).isEqualTo(oracle.state());
+        }
+        assertThat(server.state().status()).isEqualTo("UNSYNCED");assertThat(server.state().sequence()).isEqualTo(1);
+        var sample=trace.samples().get(4);var body=new com.google.gson.Gson().toJsonTree(new vn.edu.toeic.protocol.monitoring.FullSnapshotPayload(sample.collectorSessionId(),"SIMULATED-epoch-1",10,sample.policyVersion(),sample.productionProcesses())).getAsJsonObject();
+        var recovery=new ReplayFrame(100,sample,4,1,10,new vn.edu.toeic.protocol.ws.MessageEnvelope<>("v0","MONITORING_FULL","MOCK-recovery","MOCK-recovery","SIMULATED-attempt","MOCK-trace",body));
+        assertThat(oracle.apply(recovery)).isEqualTo("ACCEPTED");assertThat(server.apply(recovery)).isEqualTo("ACCEPTED");assertThat(server.state()).isEqualTo(oracle.state());
+        assertThat(oracle.apply(delayed)).isEqualTo("STALE");assertThat(server.apply(delayed)).isEqualTo("STALE");assertThat(server.state().status()).isEqualTo("SYNCED");
     }
 }

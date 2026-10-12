@@ -147,9 +147,28 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Replay dùng adapter delta tuần tự SIMULATED, oracle raw+manual fixture+mutation negative, kiểm observation không phát message và event IDs/content. Delta drop/reorder/resync gate chưa làm, CLI từ chối các option đó. Full faults C3 giữ nguyên.
 - STALE6s của full server xung đột skip-unchanged/full30s: giữ nguyên production; cơ chế chứng minh successful scan mới khi không đổi cần A/C chốt riêng T3-C2/T3-A3 và client integration. Không dùng heartbeat để làm tươi full. Measurement DELTA/live negotiation/gate do A/B/C review và tích hợp sau. Không mở E1/E2 hoặc giả human approval.
 
-## QD-18 · Deadline bắt đầu khi thí sinh nhận quyền ghi để vào thi
+## QD-17 · Reducer chung, resync có correlation và scan-based refresh
+
+- Ngày12/10/2026 · C, T3-C2 · Human A/B review NOT RUN. Không đánh dấu T3-A3 DONE thay A.
+- MonitoringStateReducer thuần là lõi production chung full/delta; FullStateReducer/FullSnapshotReducer giữ facade caller. Cache64ID chung canonical type+payload; invalid set atomic, missing base needsFull/UNSYNCED last-known; full cao phục hồi. Auth/socket/epoch trước cache và một khóa store C1 tuần tự hóa. Publish/write ngoài khóa, dashboard revision/instance chống nhận trễ.
+- MONITORING_RESYNC correlated cho message chưa áp; duplicate ACK kèm resync object nếu cần full. Client bỏ base/pending, fresh observation rồi full cao trong epoch, hoặc OPEN/full1 khi chưa base/STALE/restart/TTL. Capability chỉ từ server flag và correlated heartbeat ACK + local opt-in; candidate factory full không đổi.
+- Chốt vấn đề6s/30s của QD16 bằng empty delta từ successful scan mới, refresh2s default, không từ heartbeat/latest cũ. Snapshot age theo observationNanos cùng local ticker, queued observation quá tuổi bị bỏ; periodic full cũng cần successful scan mới. Duplicate không touch freshness/TTL. Receiver receipt freshness không OS/transport latency guarantee.
+- Thay adapter giả C1 bằng lõi production trong replay; oracle độc lập cập nhật refresh2s. C2 kiểm đơn vị/race + real Spring/PG/WS callback/restart, không triển khai chiến dịch gate T3-C3 hoặc E1/E2. Full/delta cùng process policy/event; measurement known types mới ở hooks cũ.
+- A review SessionAuthentication/Authorization hooks/handler/binding/RAM/push/maintenance; B review RealtimeClient capability/resync/ACK/guard/clock/lifecycle. Contract [T3-C2](MONITORING_DELTA_REDUCER.md); production delta vẫn tắt.
+
+## QD-18 · Replay acceptance faults, lịch riêng mỗi mode và resync không feedback
+
+- Ngày12/10/2026 · C, T3-C3 · Human B review NOT RUN, full vẫn mặc định.
+- Giữ production full/event/delta encoder và reducer C2, oracle raw độc lập. Gây data faults sau baseline ACK enumeration; drop không là ACK-loss, RESYNC chỉ ghi, recovery bằng fresh periodic full/reconnect. Không giả retry/resync feedback/live network/control reliability toàn diện.
+- Ba production-schema MOCK workloads/checksum/handwritten table;72cases/12scenarios ×2mode,4negative, repeat byte-identical và summary sinh Java. Event seeded decisions keyed stable eventId/channel riêng, state theo mode ordinal; không suy cùng seed thành cùng state fault. Lịch source/ID/payload/version/atRecord và expected/actual state/event map lưu reportv2.
+- Coverage raw checkpoint kể cả không phát frame; so full/delta khi cùng khớp observation. Seeded zero common checkpoint báo NO_COMMON_SYNC_CHECKPOINT, không ép UNSYNCED bằng SYNCED hoặc claim state equivalence ở chỗ không có. PASS với missingBusinessEvents nghĩa khớp drop model, không khôi phục history.
+- Replayer event so receiving connection hiện tại để giữ PREVIOUS_CONNECTION, không origin-as-receiving giả LIVE. Không sửa server/EventOrigin/schema DB/transport/candidate factory. MT02–MT06 REPLAY/PARTIAL cấp toàn gate; live ACK-loss/GUI/LAN/restart/revoke/C4/gate B/E1/E2 còn riêng. [CLI/model](MONITORING_DELTA_FAULT_REPLAY.md).
+
+## QD-21 · Deadline bắt đầu khi thí sinh nhận quyền ghi để vào thi
 
 - Ngày11/10/2026 · Vai A (Agent) · Human review NOT RUN · nhánh P0 chưa merge.
 - Dùng POST takeover hiện có làm mốc entry: dưới khóa hàng và sau kiểm owner/ACTIVE, server đặt deadline chưa có bằng clock_timestamp()+duration ca và trả field deadlineAt hiện có. Hai máy được tuần tự hóa; takeover/reconnect sau giữ nguyên deadline. Status/exam GET không khởi tạo giờ.
 - PR17 luôn takeover sau status/exam, nên không đổi wire/DTO/client production. Legacy save-first được giữ; ca chưa vào vẫn chưa bắt đầu giờ. WriterEpoch vẫn tăng mỗi entry (QD16 trên PR17), không được dùng epoch full của C làm writerEpoch.
 - Read history tách scope ACTIVE, scheduler exam riêng và chốt theo answers đã commit. [Review A/B](REVIEW_A_PR17.md).
+
+Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`, QD-17 và QD-18 đã thuộc T3-C2/T3-C3 của C, nên quyết định deadline của A (trước mang số QD-18 trên nhánh này) đổi thành QD-21. QD-19 dành cho API lịch sử lượt thi của A, QD-20 và QD-22 dành cho hai quyết định của B trên PR #17 (mất WebSocket; `writerEpoch` khi vào thi), theo đúng bản ghép đã nghiệm thu; các mục đó vào main cùng PR tương ứng.

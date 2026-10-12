@@ -50,3 +50,7 @@ T2-C3: [trace/schema/lệnh CLI](MONITORING_TRACE.md), [evidence/checksums](../e
 T2-C4: [harness/CLI/ground truth/clock mapping/TEST policy](CONTROLLED_PROCESS_HARNESS.md), [evidence thực chạy](../evidence/t2-c4/2026-10-10-verification.md). Java493 PASS, Windows30child đủ ba nhóm, artifact/cleanup PASS; Human B review và E1/E2 NOT RUN. Dừng sau C4.
 
 - [T3-C1 encoder delta candidate: contract, ACK, lifecycle và replay](MONITORING_DELTA_ENCODER.md). Production vẫn full; server/gate delta chưa có.
+
+- [T3-C2 reducer delta/resync, capability thử nghiệm và scan freshness](MONITORING_DELTA_REDUCER.md). Full mặc định, gate chưa chạy.
+
+- T3-C3: [Replay delta faults và campaign](MONITORING_DELTA_FAULT_REPLAY.md) —3MOCKworkloads/72cases/4negative/deterministic reports, full default; ACK-loss/live gate/E1/E2 chưa chạy.

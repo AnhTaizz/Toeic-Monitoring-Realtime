@@ -1,0 +1,35 @@
+CASE clean
+REPLAY PASS source=MOCK faults=SIMULATED cleanSteps=7 faultSteps=7 businessEvents=1 deliveredEvents=1
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CASE duplicate
+REPLAY PASS source=MOCK faults=SIMULATED cleanSteps=7 faultSteps=12 businessEvents=1 deliveredEvents=1
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CASE drop-middle
+REPLAY PASS source=MOCK faults=SIMULATED cleanSteps=7 faultSteps=7 businessEvents=1 deliveredEvents=1
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CASE drop-first
+REPLAY PASS source=MOCK faults=SIMULATED cleanSteps=7 faultSteps=7 businessEvents=1 deliveredEvents=1
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CASE mixed
+REPLAY PASS source=MOCK faults=SIMULATED cleanSteps=8 faultSteps=12 businessEvents=1 deliveredEvents=1
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CASE repeat
+REPLAY PASS source=MOCK faults=SIMULATED cleanSteps=8 faultSteps=12 businessEvents=1 deliveredEvents=1
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+PASS same input/config/seed: byte-identical reports
+REPLAY FAIL source=MOCK faults=SIMULATED cleanSteps=7 faultSteps=7 businessEvents=1 deliveredEvents=1
+MISMATCH record=3 message=MONITORING_FULL@record3/message3 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=3 message=PROCESS_OBSERVED@record3/message4 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+TRACE ERROR TRACE line 8: CHECKSUM_OR_INCOMPLETE
+TRACE COMPLETE source=REAL ProcessHandle records=8 sha256=ee2429b6754f7025b48247e1d35ae7c10bac0453c168773ae0c56242e10639c7; candidate gate SIMULATED, no server/GUI.
+REPLAY PASS source=REAL faults=SIMULATED cleanSteps=51 faultSteps=51 businessEvents=43 deliveredEvents=43
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+PASS REAL ProcessHandle/production collector/owned Edge appear+disappear -> complete trace -> headless production replay/oracle; gate SIMULATED; no network/GUI/DB/E1/E2
+PASS owned Edge/profile/collector/recorder resources cleaned; user processes untouched
+REPLAY PASS source=REAL faults=SIMULATED cleanSteps=50 faultSteps=50 businessEvents=45 deliveredEvents=45
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+REPLAY PASS source=REAL faults=SIMULATED cleanSteps=51 faultSteps=69 businessEvents=45 deliveredEvents=40
+SIMULATED dropped event IDs=[replay-event-17, replay-event-21, replay-event-22, replay-event-36, replay-event-41]; no invented client gap or heartbeat UNKNOWN
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+PASS T2-C3 smoke; artifacts: <WORKSPACE>\client\target\t2c3-smoke\421db06a-2832-48c1-a0d6-2da54314c989

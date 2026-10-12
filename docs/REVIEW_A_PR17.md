@@ -35,3 +35,7 @@ Backend P0 PASS không tự chuyển T2-B3/B4 thành DONE: vẫn cần tích h�
 ### Phân biệt mã quyết định sau main T3-C1 — 12/10/2026
 
 Main `144fe55` có QD-16 của C về delta dựa trên state đã ACK; đó là quyết định khác QD-16 writerEpoch của B trên PR17. Giữ nội dung và mã nguồn của cả hai trong lượt sync A, ghi rõ chủ sở hữu khi tham chiếu. Khi B đồng bộ tài liệu cần phối hợp mã riêng để tránh trùng; không thay hợp đồng writerEpoch hoặc bật delta production vì trùng số tài liệu.
+
+### Phân biệt mã quyết định sau main T3-C3 — 13/10/2026
+
+Main `ee714fc` đã dùng QD-17 (reducer T3-C2) và QD-18 (replay T3-C3) của C. Trong tài liệu này "QD-16 của B" và "QD-17 của B" vẫn là số đang ghi trên nhánh PR #17; khi nhánh client của B vào main chúng mang số QD-22 (`writerEpoch` khi vào thi) và QD-20 (mất WebSocket, vẫn nộp qua HTTP). Quyết định deadline của A là QD-21. Nội dung các quyết định không đổi.

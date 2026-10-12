@@ -42,6 +42,10 @@ class DeltaSnapshotDeliveryTest {
         MessageEnvelope<JsonObject> last(){return mock.sent.getLast();}
         void open(){delta.bind("MOCK-collector");delta.tick();mock.deliver(accepted(last(),"MOCK-epoch"));}
         void ack(){mock.deliver(accepted(last(),delta.status().syncEpoch()));}
+        ProcessSnapshot snapshot(ObservedProcess... values) {
+            var original=MonitoringDeliveryTest.snapshot(values);
+            return new ProcessSnapshot(original.collectorSessionId(),original.policyVersion(),time.nanos,0,original.restrictedProcesses(),original.diagnostics());
+        }
         void observe(ObservedProcess... values){delta.observe(snapshot(values));delta.tick();}
         void baseline(ObservedProcess... values){open();observe(values);ack();}
         @Override public void close(){delta.close();}
@@ -103,15 +107,16 @@ class DeltaSnapshotDeliveryTest {
     }
     @Test void periodicFullUsesMonotonicDeadlineAndDoesNotRefreshAfterScanFailure() {
         try(var f=new Fixture()) {
-            f.baseline(process(1,0));f.time.advance(29999);f.observe(process(1,0));assertThat(f.mock.sent).hasSize(2);
-            f.time.advance(1);f.delta.tick();assertThat(f.last().type()).isEqualTo("MONITORING_FULL");f.ack();
-            f.delta.sourceFailed();f.time.advance(30000);f.delta.tick();assertThat(f.mock.sent).hasSize(3);
-            f.observe(process(1,0));assertThat(f.mock.sent).hasSize(4);assertThat(f.last().type()).isEqualTo("MONITORING_FULL");
+            f.baseline(process(1,0));f.time.advance(29999);f.observe(process(1,0));
+            assertThat(f.last().type()).isEqualTo("MONITORING_DELTA");assertThat(DeltaSnapshotPayload.parse(f.last().payload()).added()).isEmpty();f.ack();
+            f.time.advance(1);f.observe(process(1,0));assertThat(f.last().type()).isEqualTo("MONITORING_FULL");f.ack();
+            int sent=f.mock.sent.size();f.delta.sourceFailed();f.time.advance(30000);f.delta.tick();assertThat(f.mock.sent).hasSize(sent);
+            f.observe(process(1,0));assertThat(f.mock.sent).hasSize(sent+1);assertThat(f.last().type()).isEqualTo("MONITORING_FULL");
         }
     }
     @Test void failedScanIsNotEmptyAndValidEmptyReallyRemovesState() {
         try(var f=new Fixture()) {
-            f.baseline(process(1,0));f.delta.observe(snapshot());f.delta.sourceFailed();f.delta.tick();assertThat(f.mock.sent).hasSize(2);
+            f.baseline(process(1,0));f.delta.observe(f.snapshot());f.delta.sourceFailed();f.delta.tick();assertThat(f.mock.sent).hasSize(2);
             f.observe();assertThat(DeltaSnapshotPayload.parse(f.last().payload()).removed()).hasSize(1);
         }
     }
@@ -122,7 +127,7 @@ class DeltaSnapshotDeliveryTest {
             f.observe(process(9,0));f.last().payload().addProperty("sequence",999); // transport cannot mutate pending
             if(!fail){f.time.advance(5001);f.delta.tick();}f.time.advance(1001);f.delta.tick();
             assertThat(f.last()).isEqualTo(original);assertThat(f.delta.status().acknowledgedSequence()).isEqualTo(1);
-            f.mock.failWrites=false;f.ack();f.delta.tick();
+            f.mock.failWrites=false;f.ack();f.observe(process(9,0));
             var next=DeltaSnapshotPayload.parse(f.last().payload());assertThat(next.baseSequence()).isEqualTo(2);
             assertThat(next.removed()).extracting(DeltaSnapshotPayload.Identity::pid).containsExactly(2L);
             assertThat(next.added()).extracting(p->p.pid()).containsExactly(9L);
@@ -166,7 +171,7 @@ class DeltaSnapshotDeliveryTest {
     @Test void oversizeInvalidPolicyOrCollectorDoNotTruncateOrRetagState() {
         try(var f=new Fixture()) {
             f.baseline(process(1,0));var many=new ObservedProcess[129];for(int i=0;i<129;i++)many[i]=process(i+1,0);
-            f.delta.observe(snapshot(many));f.delta.tick();assertThat(f.mock.sent).hasSize(2);
+            f.delta.observe(f.snapshot(many));f.delta.tick();assertThat(f.mock.sent).hasSize(2);
             assertThat(f.delta.status().problem()).isEqualTo("SNAPSHOT_LIMIT");
             assertThatThrownBy(()->f.delta.bind("MOCK-other")).isInstanceOf(IllegalArgumentException.class);
         }
@@ -203,7 +208,8 @@ class DeltaSnapshotDeliveryTest {
         };
         var delta=new DeltaSnapshotDelivery("MOCK-A",transport,MonitoringDelivery.Settings.defaults(),ignored->{},Duration.ofSeconds(30));
         try {
-            delta.bind("MOCK-collector");assertThat(open.await(2,TimeUnit.SECONDS)).isTrue();delta.observe(snapshot(process(1,0)));
+            delta.bind("MOCK-collector");assertThat(open.await(2,TimeUnit.SECONDS)).isTrue();
+            var raw=snapshot(process(1,0));delta.observe(new ProcessSnapshot(raw.collectorSessionId(),raw.policyVersion(),System.nanoTime(),0,raw.restrictedProcesses(),raw.diagnostics()));
             assertThat(full.await(2,TimeUnit.SECONDS)).isTrue();assertThat(delta.status().acknowledgedSequence()).isEqualTo(1);
         }finally{delta.close();delta.stopped().get(2,TimeUnit.SECONDS);}
         assertThat(transport.mock.listeners).isEmpty();
@@ -226,7 +232,7 @@ class DeltaSnapshotDeliveryTest {
     @Test void reconciliationDueWhileAckPendingWaitsThenSendsFullOfLatestScan() {
         try(var f=new Fixture()) {
             f.baseline(process(1,0));f.observe(process(2,0));var pending=f.last();f.observe(process(3,0));
-            f.time.advance(30000);f.delta.tick();
+            f.time.advance(30000);f.observe(process(3,0));
             assertThat(f.mock.sent.stream().filter(m->m.type().equals("MONITORING_FULL"))).hasSize(1);
             f.mock.deliver(accepted(pending,"MOCK-epoch"));f.delta.tick();
             assertThat(f.last().type()).isEqualTo("MONITORING_FULL");
@@ -234,4 +240,44 @@ class DeltaSnapshotDeliveryTest {
             assertThat(f.last().payload().getAsJsonArray("processes").get(0).getAsJsonObject().get("pid").getAsLong()).isEqualTo(3);
         }
     }
+    @Test void collectorStopsSilentlyAndNoSavedSnapshotRefreshesIt() {
+        try(var f=new Fixture()) {
+            f.baseline(process(1,0));f.time.advance(31000);f.delta.tick();assertThat(f.mock.sent).hasSize(2);
+            f.delta.observe(f.snapshot(process(1,0)));f.time.advance(2001);f.delta.tick();
+            assertThat(f.mock.sent).hasSize(2);assertThat(f.delta.status().problem()).isEqualTo("OBSERVATION_EXPIRED");
+        }
+    }
+    @Test void correlatedResyncRequiresNewScanAndFullAboveAttemptedSequenceInSameEpoch() {
+        try(var f=new Fixture()) {
+            f.baseline(process(1,0));f.observe(process(2,0));var pending=f.last();
+            var body=new JsonObject();body.addProperty("collectorSessionId","MOCK-collector");body.addProperty("syncEpoch","MOCK-epoch");body.addProperty("currentSequence",1);body.addProperty("reason","BASE_MISSING");
+            f.mock.deliver(new MessageEnvelope<>("v0","MONITORING_RESYNC","MOCK-response",pending.requestId(),pending.attemptId(),pending.traceId(),body));
+            assertThat(f.delta.status().problem()).isEqualTo("RESYNC_WAIT_FRESH");assertThat(f.delta.status().acknowledgedSequence()).isZero();f.delta.tick();assertThat(f.mock.sent).hasSize(3);
+            f.mock.deliver(accepted(pending,"MOCK-epoch"));f.observe(process(3,0));assertThat(f.last().type()).isEqualTo("MONITORING_FULL");
+            assertThat(f.last().payload().get("sequence").getAsLong()).isEqualTo(3);assertThat(f.delta.status().syncEpoch()).isEqualTo("MOCK-epoch");
+        }
+    }
+    @Test void zeroSequenceResyncNeedsNewOpenRatherThanFullAboveOne() {
+        try(var f=new Fixture()) {
+            f.open();f.observe(process(1,0));var pending=f.last();var body=new JsonObject();body.addProperty("collectorSessionId","MOCK-collector");body.addProperty("syncEpoch","MOCK-epoch");body.addProperty("currentSequence",0);body.addProperty("reason","BASE_MISSING");
+            f.mock.deliver(new MessageEnvelope<>("v0","MONITORING_RESYNC","MOCK-r",pending.requestId(),pending.attemptId(),pending.traceId(),body));
+            assertThat(f.delta.status().syncEpoch()).isNull();f.observe(process(2,0));assertThat(f.last().type()).isEqualTo("MONITORING_SYNC_OPEN");
+        }
+    }
+    @Test void duplicateAckWithResyncDoesNotConfirmAUsableBase() {
+        try(var f=new Fixture()) {
+            f.baseline(process(1,0));f.observe(process(2,0));var reply=accepted(f.last(),"MOCK-epoch");
+            var resync=new JsonObject();resync.addProperty("collectorSessionId","MOCK-collector");resync.addProperty("syncEpoch","MOCK-epoch");resync.addProperty("currentSequence",2);resync.addProperty("reason","BASE_MISSING");reply.payload().add("resync",resync);
+            f.mock.deliver(reply);assertThat(f.delta.status().acknowledgedSequence()).isZero();f.observe(process(3,0));assertThat(f.last().type()).isEqualTo("MONITORING_FULL");assertThat(f.last().payload().get("sequence").getAsLong()).isEqualTo(3);
+        }
+    }
+
+    @Test void presentingCachedSnapshotAgainCannotMakeItsObservationFresh() {
+        try(var f=new Fixture()) {
+            f.baseline(process(1,0));var old=f.snapshot(process(1,0));f.time.advance(31000);f.delta.observe(old);f.delta.tick();
+            assertThat(f.mock.sent).hasSize(2);assertThat(f.delta.status().problem()).isEqualTo("OBSERVATION_EXPIRED");
+            f.observe(process(1,0));assertThat(f.last().type()).isEqualTo("MONITORING_FULL");
+        }
+    }
+
 }

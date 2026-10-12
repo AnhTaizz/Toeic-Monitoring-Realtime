@@ -1,5 +1,9 @@
 # T3-C1 · Encoder delta phía client
 
+**Cập nhật T3-C3 ngày12/10/2026:** [Chiến dịch replay/model và CLI](MONITORING_DELTA_FAULT_REPLAY.md) đã có72cases/3workload/12fault scenarios cho full và delta; production reducer C2, oracle raw độc lập. ACK baseline enumeration và data faults SIMULATED, resync recorded/no feedback, retry/ACK-loss/presence/live gate/E1/E2 NOT MODELED hoặc NOT RUN. Các đoạn ghi delta drop/reorder chưa hỗ trợ bên dưới là phạm vi task trước; full vẫn mặc định.
+
+**Cập nhật T3-C2 ngày12/10/2026:** [Reducer/resync/capability và scan refresh](MONITORING_DELTA_REDUCER.md) đã có qua flag thử nghiệm, production vẫn full. Các mô tả “chưa có server delta/adapter giả/freshness chưa chốt” dưới đây ghi phạm vi task trước; C2 thay adapter replay bằng lõi production, empty delta từ scan mới sau2s và full30s chỉ từ scan mới. Không E1/E2 hoặc gate MT02–MT06.
+
 Encoder là phần chuyển quan sát process thành message gửi đi. Full chứa cả tập; delta chứa phần thêm và phần bớt so với tập đã được xác nhận. Implementation T3-C1 đã có, chạy trong replay/test. **CandidateMonitoringSession và RealtimeClient production vẫn dùng full. Không có cờ JVM để bật delta production.** Server hiện từ chối MONITORING_DELTA; T3-C2/T3-A3 và gate T3-C3/C4 chưa thực hiện. Không kết luận MT02–MT06 hoặc E2 PASS.
 
 ## Contract và đường đi

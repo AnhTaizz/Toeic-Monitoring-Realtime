@@ -31,6 +31,8 @@ import java.util.function.BooleanSupplier;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 import vn.edu.toeic.protocol.ErrorCode;
 import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
+import vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayload;
+import vn.edu.toeic.protocol.monitoring.MonitoringResyncPayload;
 import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
 import vn.edu.toeic.protocol.monitoring.EventOrigin;
 import java.nio.charset.StandardCharsets;
@@ -107,6 +109,9 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     private final Map<String, Long> heartbeatDeadlines = new HashMap<>();
     private final Set<CompletableFuture<Void>> writes = new HashSet<>();
     private volatile ConnectionState state = ConnectionState.DISCONNECTED;
+    private final boolean experimentalDelta=Boolean.getBoolean("toeic.realtime.delta-experimental");
+    private boolean serverDelta;
+    @Override public synchronized boolean supportsMonitoringDelta(){return experimentalDelta&&serverDelta&&state==ConnectionState.CONNECTED&&!closed;}
     private boolean closed;
     private boolean authenticationRejected;
     private long generation;
@@ -168,6 +173,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     private synchronized void openConnection() {
         if (closed || state == ConnectionState.DISCONNECTED) return;
         long current = ++generation;
+        serverDelta=false;
         SocketListener listener = new SocketListener(current);
         try {
             opening = Objects.requireNonNull(opener.open(listener));
@@ -229,9 +235,12 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         final String serialized;
         try {
             validateEnvelope(message);
-            if (!(Set.of("HEARTBEAT","PROCESS_OBSERVED","MONITORING_GAP","MONITORING_SYNC_OPEN","MONITORING_FULL","MONITORING_SYNC_CLOSE").contains(message.type()))
+            if (!(Set.of("HEARTBEAT","PROCESS_OBSERVED","MONITORING_GAP","MONITORING_SYNC_OPEN","MONITORING_FULL","MONITORING_DELTA","MONITORING_SYNC_CLOSE").contains(message.type()))
                     || !message.messageId().equals(message.requestId())) throw new IllegalArgumentException();
-            if ("MONITORING_FULL".equals(message.type())) {
+            if("MONITORING_DELTA".equals(message.type())) {
+                if(message.attemptId()==null || !supportsMonitoringDelta())throw new IllegalArgumentException();
+                DeltaSnapshotPayload.parse(message.payload());
+            } else if ("MONITORING_FULL".equals(message.type())) {
                 if (message.attemptId() == null) throw new IllegalArgumentException();
                 FullSnapshotPayload.parse(message.payload());
             } else if ("MONITORING_SYNC_OPEN".equals(message.type()) || "MONITORING_SYNC_CLOSE".equals(message.type())) {
@@ -460,19 +469,30 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                         || !request.traceId().equals(message.traceId())
                         || !request.type().equals(requiredString(message.payload(), "acknowledgedType"))
                         || !"ACCEPTED".equals(requiredString(message.payload(), "status"))) throw new IllegalArgumentException();
-                if (request.type().startsWith("MONITORING_SYNC_") || request.type().equals("MONITORING_FULL")) {
+                if (request.type().startsWith("MONITORING_SYNC_") || request.type().equals("MONITORING_FULL") || request.type().equals("MONITORING_DELTA")) {
                     FullSnapshotPayload.id(requiredString(message.payload(),"syncEpoch"));
                     if (!request.type().equals("MONITORING_SYNC_OPEN") && !requiredString(request.payload(),"syncEpoch").equals(requiredString(message.payload(),"syncEpoch"))) throw new IllegalArgumentException();
-                    if (request.type().equals("MONITORING_FULL") && FullSnapshotPayload.number(request.payload(),"sequence") != FullSnapshotPayload.number(message.payload(),"sequence")) throw new IllegalArgumentException();
+                    if ((request.type().equals("MONITORING_FULL") || request.type().equals("MONITORING_DELTA")) && FullSnapshotPayload.number(request.payload(),"sequence") != FullSnapshotPayload.number(message.payload(),"sequence")) throw new IllegalArgumentException();
                 }
+                if(message.payload().has("resync"))validateResync(request,MonitoringResyncPayload.parse(message.payload().getAsJsonObject("resync")));
                 pendingAcks.remove(message.requestId());
                 heartbeatDeadlines.remove(message.requestId());
+                if(request.type().equals("HEARTBEAT")&&message.payload().has("monitoringDelta")) {
+                    var capability=message.payload().get("monitoringDelta");
+                    if(!capability.isJsonPrimitive()||!capability.getAsJsonPrimitive().isBoolean())throw new IllegalArgumentException();
+                    serverDelta=capability.getAsBoolean();
+                }
                 if (request.type().equals("HEARTBEAT") && message.payload().has("connectionId")) {
                     String identity=FullSnapshotPayload.id(requiredString(message.payload(),"connectionId"));
                     if (observationConnectionId!=null && !observationConnectionId.equals(identity)) throw new IllegalArgumentException();
                     observationConnectionId=identity;
                 }
                 measurements.businessAck(text);
+            } else if("MONITORING_RESYNC".equals(message.type())) {
+                validateScope(message.attemptId());
+                var request=pendingAcks.get(message.requestId());
+                if(request==null||!Objects.equals(request.attemptId(),message.attemptId())||!request.traceId().equals(message.traceId()))throw new IllegalArgumentException();
+                validateResync(request,MonitoringResyncPayload.parse(message.payload()));pendingAcks.remove(message.requestId());
             } else if ("ERROR".equals(message.type())) {
                 String code = requiredString(message.payload(), "code");
                 ErrorCode.valueOf(code);
@@ -501,6 +521,11 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         } catch (RuntimeException ignored) { problem(); }
     }
 
+    private void validateResync(MessageEnvelope<JsonObject> request,MonitoringResyncPayload resync) {
+        if(!Set.of("MONITORING_FULL","MONITORING_DELTA").contains(request.type())
+                ||!resync.collectorSessionId().equals(requiredString(request.payload(),"collectorSessionId"))
+                ||!resync.syncEpoch().equals(requiredString(request.payload(),"syncEpoch")))throw new IllegalArgumentException();
+    }
     private void publish(MessageEnvelope<JsonObject> message) {
         for (Consumer<MessageEnvelope<JsonObject>> listener : messageListeners) {
             notifySafely(listener, new MessageEnvelope<>(message.protocolVersion(), message.type(), message.messageId(),
