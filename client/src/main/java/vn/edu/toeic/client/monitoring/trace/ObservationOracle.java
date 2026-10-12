@@ -101,7 +101,7 @@ public final class ObservationOracle {
             remember(frame.message().messageId(),new Version(version,frame.source().productionProcesses(),type));return "DUPLICATE";
         }
         if(version<=sequence)return "STALE";
-        if(sequence==0&&version!=1)return "INVALID_INPUT";
+        if(type.equals("MONITORING_FULL")&&sequence==0&&version!=1)return "INVALID_INPUT";
         if(type.equals("MONITORING_DELTA")&&(status.equals("UNSYNCED")||sequence==0||version!=sequence+1)){status="UNSYNCED";return "RESYNC";}
         sequence=version;processes=frame.source().productionProcesses();status="SYNCED";remember(frame.message().messageId(),new Version(version,processes));return "ACCEPTED";
     }

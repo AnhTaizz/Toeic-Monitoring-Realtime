@@ -66,6 +66,11 @@ class DeltaReplayTest {
     @Test void independentOracleAndProductionCoreAgreeOnMissingDeltaFullRecoveryAndLateDelta() {
         var trace=TraceFixtures.hand();var oracle=new ObservationOracle(trace,0);var server=new ReplayServer(true);
         var frames=MonitoringReplayDriver.encode(trace,0,true);ReplayFrame delayed=null;
+        var initialOracle=new ObservationOracle(trace,0);var initialServer=new ReplayServer(true);
+        initialOracle.apply(frames.getFirst());initialServer.apply(frames.getFirst());
+        var beforeFull=frames.stream().filter(f->f.message().type().equals("MONITORING_DELTA")).findFirst().orElseThrow();
+        assertThat(initialOracle.apply(beforeFull)).isEqualTo("RESYNC");assertThat(initialServer.apply(beforeFull)).isEqualTo("RESYNC");
+        assertThat(initialServer.state()).isEqualTo(initialOracle.state());
         for(var frame:frames) {
             if(frame.message().type().equals("MONITORING_SYNC_CLOSE"))continue;
             if(frame.message().type().equals("MONITORING_DELTA")&&frame.expectedSequence()==2){delayed=frame;continue;}
