@@ -337,23 +337,21 @@ public final class ToeicClientApplication extends Application {
             loginApiClient.scope(serverUrl, login.token()).whenComplete((scope, failure) -> Platform.runLater(() -> {
                 if (currentView != viewGeneration || request != monitoringGeneration || monitoring != session) return;
                 refreshScopeBtn.setDisable(false);
-                if (failure != null) { status.setText(userMessage(failure)); return; }
-                attempts.getItems().setAll(scope.attemptScope().stream().sorted().toList());
-                if (scope.attemptScope().contains(selected)) attempts.setValue(selected); else attempts.getSelectionModel().selectFirst();
-                startExamBtn.setDisable(scope.role() != Role.CANDIDATE || scope.attemptScope().isEmpty());
-
-                if (scope.role() != Role.CANDIDATE || scope.attemptScope().isEmpty()) {
-                    status.setText("Chưa được cấp lượt thi nào. Hãy yêu cầu giám thị bấm 'Khởi tạo Đề & Ca Thi Mẫu'.");
-                    return;
+                // Quyết định nằm trong AttemptRefresh (test được không cần JavaFX); ở đây chỉ áp lên control.
+                AttemptRefresh.Outcome outcome = failure != null
+                        ? AttemptRefresh.failed(attempts.getItems(), selected)
+                        : AttemptRefresh.loaded(scope.role(), scope.attemptScope(), selected, begin);
+                attempts.getItems().setAll(outcome.items());
+                attempts.setValue(outcome.selected());
+                startExamBtn.setDisable(!outcome.canEnter());
+                switch (outcome.next()) {
+                    case RETRY -> status.setText(userMessage(failure));
+                    case NO_ATTEMPT -> status.setText("Chưa được cấp lượt thi nào. Hãy yêu cầu giám thị bấm 'Khởi tạo Đề & Ca Thi Mẫu'.");
+                    case CHOOSE -> status.setText("Đã cập nhật ca thi! Chọn một lượt rồi bấm 'Vào Phòng Thi'.");
+                    case SELECTION_REVOKED -> status.setText("Lượt đã chọn không còn quyền. Hãy chọn lại.");
+                    case START_MONITORING -> { }
                 }
-                if (!begin) {
-                    status.setText("Đã cập nhật ca thi! Chọn một lượt rồi bấm 'Vào Phòng Thi'.");
-                    return;
-                }
-                if (!scope.attemptScope().contains(selected)) {
-                    status.setText("Lượt đã chọn không còn quyền. Hãy chọn lại.");
-                    return;
-                }
+                if (outcome.next() != AttemptRefresh.Next.START_MONITORING) return;
                 try {
                     monitoringAttempt = startOrReuseMonitoring(session, monitoringAttempt, selected, scope, realtimeClient::updateScope);
                     status.setText("Giám sát: Chế độ " + session.modeStatus().mode() + " · " + modeExplanation(session.modeStatus().reason()));
