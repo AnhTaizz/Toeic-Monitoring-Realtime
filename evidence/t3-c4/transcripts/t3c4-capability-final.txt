@@ -1,0 +1,1 @@
+CAPABILITY_COUNTEREXAMPLE malformed heartbeat ACK/connectionId numeric: expected=false actual=false; input MOCK, no network

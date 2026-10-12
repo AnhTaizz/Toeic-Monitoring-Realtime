@@ -1,0 +1,13 @@
+powershell : java.exe : openjdk version "21.0.10" 2026-01-20 LTS
+At line:2 char:1
++ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t3c ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (java.exe : open... 2026-01-20 LTS:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+At D:\Toeic-Monitoring-Realtime\scripts\smoke-t3c4.ps1:13 char:19
++     $javaVersion=(& $java -version 2>&1 | Out-String).Trim()
++                   ~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (openjdk version "21.0.10" 2026-01-20 LTS:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

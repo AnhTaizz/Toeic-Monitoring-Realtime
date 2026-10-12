@@ -1,0 +1,27 @@
+[
+    {
+        "name":  "t3c2",
+        "log":  "server/target/t3c4-regression-t3c2.txt",
+        "exit":  0
+    },
+    {
+        "name":  "t2c1",
+        "log":  "server/target/t3c4-regression-t2c1.txt",
+        "exit":  0
+    },
+    {
+        "name":  "t2c2",
+        "log":  "server/target/t3c4-regression-t2c2.txt",
+        "exit":  0
+    },
+    {
+        "name":  "c3",
+        "log":  "server/target/t3c4-regression-c3.txt",
+        "exit":  0
+    },
+    {
+        "name":  "a4",
+        "log":  "server/target/t3c4-regression-a4.txt",
+        "exit":  1
+    }
+]

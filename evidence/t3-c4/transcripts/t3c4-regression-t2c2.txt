@@ -1,0 +1,30 @@
+17:44:09.992 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+17:44:10.093 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "late_events_test_77813956ea6b44a2ae0f962d60e6d8a6"."flyway_schema_history" does not exist yet
+17:44:10.098 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.030s)
+17:44:10.112 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "late_events_test_77813956ea6b44a2ae0f962d60e6d8a6"."flyway_schema_history" ...
+17:44:10.176 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "late_events_test_77813956ea6b44a2ae0f962d60e6d8a6": << Empty Schema >>
+17:44:10.194 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "late_events_test_77813956ea6b44a2ae0f962d60e6d8a6" to version "1 - auth schema"
+17:44:10.236 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "late_events_test_77813956ea6b44a2ae0f962d60e6d8a6" to version "2 - monitoring events"
+17:44:10.270 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "late_events_test_77813956ea6b44a2ae0f962d60e6d8a6" to version "3 - monitoring gaps"
+17:44:10.291 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "late_events_test_77813956ea6b44a2ae0f962d60e6d8a6" to version "4 - monitoring presence"
+17:44:10.318 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "late_events_test_77813956ea6b44a2ae0f962d60e6d8a6" to version "5 - exams and sessions"
+17:44:10.357 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "late_events_test_77813956ea6b44a2ae0f962d60e6d8a6" to version "6 - exam autosave requests"
+17:44:10.376 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "late_events_test_77813956ea6b44a2ae0f962d60e6d8a6" to version "7 - exam submits"
+17:44:10.399 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 7 migrations to schema "late_events_test_77813956ea6b44a2ae0f962d60e6d8a6", now at version v7 (execution time 00:00.086s)
+2026-10-12T17:44:14.527Z  INFO 9836 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T17:44:14.530Z  INFO 9836 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+PASS REAL V7 preexisting event -> V8 preserves identity/timestamp; old provenance remains UNSPECIFIED
+PASS legacy event accepted with UNSPECIFIED delivery; no unsynchronized-clock lateness inference
+MONITORING_MODE mode=FULL reason=OPT_IN_OFF
+MONITORING_MODE mode=FULL reason=OPT_IN_OFF
+PASS REAL automatic UNKNOWN/reconnect ONLINE/late event history; reads MOCK, outage and withheld write SIMULATED; B unaffected; interruption retained, droppedCount0/gaps0
+PASS REAL late dedup/conflict/frozen metadata/full isolation and deferred COMMIT rollback/retry; skewed client date2099 does not infer network latency
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS MOCK queue capacity1 drop2; REAL gap HTTP/store/retry/conflict/full-history preservation; gap ACK loss SIMULATED
+PASS REAL proctor JavaFX component late labels/gap tab/HTTP refresh/screenshots; full candidate GUI NOT RUN
+PASS REAL role/foreign/CLOSED/assignment/token revoke checks including duplicate paths; no permission widening
+PASS owned C2 schema/context/client resources cleaned; public/dev untouched
+T2-C2 REAL Spring/PG/HTTP/WS/collector-worker PASS; process readings MOCK; disconnect/write/ACK loss SIMULATED; full candidate GUI/LAN/human A/B review NOT RUN
+Summary COMPLETE: endpoints=6, categories=63; WS JSON application bytes only
+T2-C2 artifacts: server/target/t2c2-runtime/T2C2-c06171d2-1bf8-47df-8f04-b7015316d182

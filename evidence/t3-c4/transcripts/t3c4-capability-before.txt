@@ -1,0 +1,9 @@
+CAPABILITY_COUNTEREXAMPLE malformed heartbeat ACK/connectionId numeric: expected=false actual=true; input MOCK, no network
+java.exe : Exception in thread "main" java.lang.AssertionError: INVALID_ACK_ENABLED_DELTA
+At line:33 char:1
++ & "$jdk\bin\java.exe" -cp 'client/target/t3c4-counterexample;client/t ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Exception in th...K_ENABLED_DELTA:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+	at CapabilityCounterexample.main(CapabilityCounterexample.java:19)

@@ -1,0 +1,10 @@
+ remaining_c4_test_schemas 
+---------------------------
+                         0
+(1 row)
+
+ public_version 
+----------------
+ 7
+(1 row)
+

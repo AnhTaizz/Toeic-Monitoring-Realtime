@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+Cập nhật T3-C4:13/10/2026 — candidate Application chọn DELTA opt-in + capability hiện tại, FULL mặc định. Code/test sourced9475eb; Java579 PASS. [Guide](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-13-verification.md). LOCAL preparation riêng với replay; gate20/10/LAN hai máy/human B review chưa chốt, T3-A3 không tự đánh dấu DONE, E1/E2 NOT RUN.
+
 Cập nhật mới T3-C2: 12/10/2026 — reducer production/resync/capability/scan freshness thử nghiệm có; full vẫn default. Java554/Python10 và REAL Spring/PG/WS/restart, CLI/hồi quy PASS. Readings MOCK trong delta smoke; gate/LAN/human A/B/E1/E2 NOT RUN. [Guide](MONITORING_DELTA_REDUCER.md), [evidence](../evidence/t3-c2/2026-10-12-verification.md).
 
 Mốc C5 trước đó: 11/10/2026 — T2-C5 tài liệu phương pháp và đối chiếu protocol hoàn tất từ main82557bf. Không đổi runtime; không chạy lại Java493/smoke/E1/E2. Kiểm tra mới là source/link/schema/default/evidence integrity. B human review trước phép đo NOT RUN; marker cửa sổ E1, resource sampler/analyzer và delta/E2 còn thiếu. Giữ các kết quả C1–C4 theo evidence gốc.
@@ -19,7 +21,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
 | B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; chuẩn bị Chặng 2 | `feat/t1-b3-proctor-dashboard` |
-| C | _chưa gán_ | T3-C3 replay acceptance campaign; dừng sau C3 | Code dc87fcc/runtime d813cb1 từ main6a41031;569tests và CLI72cases/4negative/repeat PASS | B review model/coverage; live T3-C4/gate/ACK-loss còn riêng, full default | `feat/t3-c3-monitoring-delta-fault-replay` |
+| C | _chưa gán_ | T3-C4 tích hợp Application/live preparation; gate PARTIAL | Coded9475eb,579Java PASS; kết quả live/hồi quy xem evidence | LAN hai máy, human A/B review và gate20/10; FULL default | `feat/t3-c4-monitoring-delta-live-gate` |
 
 ## Đang bị chặn
 
@@ -94,3 +96,7 @@ Dùng lại AuthorizationService/SessionAuthenticationService/MonitoringStateSer
 - [Guide](MONITORING_DELTA_FAULT_REPLAY.md), [evidence](../evidence/t3-c3/2026-10-12-verification.md):3MOCKproduction-schema traces/handwritten expected,72positive acceptance replay cases/4detected negatives, summary sinh Java, repeat report byte-identical. Java569/PASS (+15), CLI/ProcessHandle/owned Edge regressions PASS; không source/network benchmark.
 - Fix replayer receiving connection dùng PREVIOUS_CONNECTION đúng contract; không sửa encoder/reducer/server/transport production. ACK baseline enumeration, resync recorded/no feedback; retry/ACK-loss/presence/TTL/network/DB trong replay NOT MODELED. Seeded reconnect có0common synced checkpoints ghi riêng, không claim state equivalence ở đó.
 - MT02–MT06 PARTIAL cấp toàn gate với evidence REPLAY; T3-C4/human B/GUI/LAN/hai desktop/E1/E2 NOT RUN. Không tự quyết QD10/bật delta hoặc thay tracker/.env/kế hoạch gốc/migrations/exam/PR A-B. Git cuối trong PR/final; giữ nhánh C3 và sync main an toàn theo ủy quyền.
+
+## Bàn giao T3-C4 ngày13/10/2026
+
+Baseee714fc (C3PR26). Opt-in/current capability/fixed mode, reconnect fresh OPEN/full, scope heartbeat callback, actual candidate/proctor Application LOCAL GUI; code2d867c2 + fix stdoutd9475eb. [Guide](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-13-verification.md), QD19 liên kết QD10 presence. Source/JAR/raw/failed attempts giữ riêng, không sửa `.env`/tracker/kế hoạch/migrations/exam/PR A-B. Gate preparation/PARTIAL, cần LAN hai máy và B review; không giả approve hoặc gate20/10 đã diễn ra. Git cuối trong PR/final; giữ nhánh và sync main khi an toàn. Dừng sau C4, không C5/E1/E2.
