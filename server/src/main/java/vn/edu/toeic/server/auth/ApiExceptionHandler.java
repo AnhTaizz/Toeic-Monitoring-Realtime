@@ -9,6 +9,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import vn.edu.toeic.protocol.ErrorCode;
 import vn.edu.toeic.protocol.Protocol;
 import vn.edu.toeic.protocol.error.ApiErrorResponse;
@@ -49,6 +50,16 @@ public class ApiExceptionHandler {
                 ? invalid.requestId()
                 : null;
         return error(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, message, false, requestId);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    ResponseEntity<ApiErrorResponse> noResourceFound(NoResourceFoundException exception) {
+        return error(
+                HttpStatus.NOT_FOUND,
+                ErrorCode.INVALID_INPUT,
+                "Không tìm thấy tài nguyên API",
+                false,
+                null);
     }
 
     @ExceptionHandler(Exception.class)

@@ -3,6 +3,7 @@ package vn.edu.toeic.server.exam;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.net.URI;
 import java.net.http.*;
@@ -59,6 +60,7 @@ class ExamRuntimePostgresTest {
         properties.put("toeic.seed.password", required("TOEIC_SEED_PASSWORD"));
         properties.put("exam.timeout.scan-interval-ms", "100");
         properties.put("exam.timeout.scheduler.enabled", "true");
+        properties.put("debug", "false");
         properties.put("logging.level.root", "WARN");
         SpringApplication app = new SpringApplication(ToeicServerApplication.class);
         app.setBannerMode(Banner.Mode.OFF);
@@ -140,6 +142,113 @@ class ExamRuntimePostgresTest {
             expect(get(path(attempt, "exam"), token), 403);
         }
         System.out.println("PASS " + state + " remains forbidden for exam reads");
+    }
+
+    @Test void candidateAttemptHistoryIsOwnedRoleProtectedAndFieldWhitelisted() throws Exception {
+        String active = attempt(60);
+        String submitted = attempt(60);
+        String timedOut = attempt(60);
+        String closed = attempt(60);
+        String interrupted = attempt(60);
+        String foreign = attemptFor("candidate2", 60);
+        setFinalState(submitted, "SUBMITTED");
+        setFinalState(timedOut, "TIMED_OUT");
+        jdbc.sql("UPDATE monitoring_attempts SET state = 'CLOSED' WHERE attempt_id = :a").param("a", closed).update();
+        jdbc.sql("UPDATE monitoring_attempts SET state = 'INTERRUPTED' WHERE attempt_id = :a").param("a", interrupted).update();
+        long writerEpochBefore = jdbc.sql("SELECT writer_epoch FROM monitoring_attempts WHERE attempt_id = :a")
+                .param("a", submitted).query(Long.class).single();
+
+        HttpResponse<String> response = expect(get("/api/v1/candidate/attempts?limit=100", candidateToken), 200);
+        assertThat(response.headers().firstValue("Cache-Control")).hasValueSatisfying(value -> assertThat(value).contains("no-store"));
+        JsonArray attempts = json(response).getAsJsonArray("attempts");
+        Set<String> ids = new HashSet<>();
+        for (var element : attempts) ids.add(element.getAsJsonObject().get("attemptId").getAsString());
+        assertThat(ids).contains(active, submitted, timedOut).doesNotContain(closed, interrupted, foreign);
+
+        JsonObject activeSummary = summary(attempts, active);
+        JsonObject submittedSummary = summary(attempts, submitted);
+        assertThat(activeSummary.keySet()).containsExactlyInAnyOrder(
+                "attemptId", "sessionId", "examId", "examTitle", "sessionTitle", "state", "submittedAt");
+        assertThat(activeSummary.get("state").getAsString()).isEqualTo("ACTIVE");
+        assertThat(activeSummary.get("submittedAt").isJsonNull()).isTrue();
+        assertThat(submittedSummary.get("state").getAsString()).isEqualTo("SUBMITTED");
+        assertThat(submittedSummary.get("submittedAt").isJsonNull()).isFalse();
+        assertThat(response.body()).doesNotContain(
+                "correctOption", "answers", "writerEpoch", "savedRevision", "candidateUserId",
+                "score", "process", "policy", "token");
+
+        JsonArray foreignList = json(expect(get("/api/v1/candidate/attempts?limit=100", otherCandidateToken), 200))
+                .getAsJsonArray("attempts");
+        assertThat(summaryIds(foreignList)).contains(foreign).doesNotContain(active, submitted, timedOut);
+        expect(get("/api/v1/candidate/attempts", proctorToken), 403);
+        expect(get("/api/v1/candidate/attempts", null), 401);
+        expectCode(get("/api/v1/candidate/attempts?candidateUserId=1", candidateToken), 400, "INVALID_INPUT");
+
+        JsonArray scope = json(expect(get("/api/v1/auth/me", candidateToken), 200)).getAsJsonArray("attemptScope");
+        assertThat(scope.toString()).contains(active).doesNotContain(submitted, timedOut);
+        assertThat(jdbc.sql("SELECT writer_epoch FROM monitoring_attempts WHERE attempt_id = :a")
+                .param("a", submitted).query(Long.class).single()).isEqualTo(writerEpochBefore);
+        System.out.println("PASS candidate history ownership/role/states/field whitelist/no-store; auth scope and writer epoch unchanged");
+    }
+
+    @Test void candidateAttemptHistoryUsesBoundedDeterministicKeysetPagination() throws Exception {
+        for (int i = 0; i < 5; i++) attempt(60);
+        String foreignCursor = attemptFor("candidate2", 60);
+        List<String> expected = jdbc.sql("""
+                SELECT a.attempt_id
+                FROM monitoring_attempts a
+                JOIN exam_sessions s ON s.session_id = a.session_id
+                JOIN exams e ON e.exam_id = a.exam_id AND e.exam_id = s.exam_id
+                JOIN user_accounts u ON u.id = a.candidate_user_id
+                WHERE u.username = 'candidate1'
+                  AND a.state IN ('ACTIVE', 'SUBMITTED', 'TIMED_OUT')
+                  AND (a.state = 'ACTIVE' OR a.submitted_at IS NOT NULL)
+                ORDER BY a.attempt_id COLLATE "C" ASC
+                """).query(String.class).list();
+
+        List<String> actual = new ArrayList<>();
+        Set<String> unique = new HashSet<>();
+        String cursor = null;
+        for (int pageNumber = 0; pageNumber < 100; pageNumber++) {
+            String path = "/api/v1/candidate/attempts?limit=2"
+                    + (cursor == null ? "" : "&afterAttemptId=" + cursor);
+            JsonObject page = json(expect(get(path, candidateToken), 200));
+            JsonArray attempts = page.getAsJsonArray("attempts");
+            assertThat(attempts.size()).isLessThanOrEqualTo(2);
+            for (var element : attempts) {
+                String attemptId = element.getAsJsonObject().get("attemptId").getAsString();
+                if (!actual.isEmpty()) assertThat(attemptId.compareTo(actual.getLast())).isPositive();
+                assertThat(unique.add(attemptId)).isTrue();
+                actual.add(attemptId);
+            }
+            if (page.get("nextAfterAttemptId").isJsonNull()) break;
+            assertThat(attempts).isNotEmpty();
+            cursor = page.get("nextAfterAttemptId").getAsString();
+            assertThat(cursor).isEqualTo(actual.getLast());
+        }
+        assertThat(actual).containsExactlyElementsOf(expected);
+
+        for (String invalid : List.of(
+                "/api/v1/candidate/attempts?limit=0",
+                "/api/v1/candidate/attempts?limit=101",
+                "/api/v1/candidate/attempts?limit=abc",
+                "/api/v1/candidate/attempts?limit=1&limit=2",
+                "/api/v1/candidate/attempts?afterAttemptId=",
+                "/api/v1/candidate/attempts?afterAttemptId=%27OR%271%27%3D%271")) {
+            expectCode(get(invalid, candidateToken), 400, "INVALID_INPUT");
+        }
+        assertThat(summaryIds(json(expect(get(
+                "/api/v1/candidate/attempts?limit=100&afterAttemptId=" + foreignCursor,
+                candidateToken), 200)).getAsJsonArray("attempts"))).doesNotContain(foreignCursor);
+        System.out.println("PASS candidate history deterministic keyset pagination/limits/cursor validation/foreign cursor isolation");
+    }
+
+    @Test void unknownApiRouteReturnsStructured404InsteadOf500() throws Exception {
+        HttpResponse<String> response = expect(get("/api/v1/route-that-does-not-exist", candidateToken), 404);
+        JsonObject error = json(response).getAsJsonObject("error");
+        assertThat(error.get("code").getAsString()).isEqualTo("INVALID_INPUT");
+        assertThat(error.get("retryable").getAsBoolean()).isFalse();
+        System.out.println("PASS unknown API route: structured 404, not generic 500");
     }
 
     @Test void concurrentFirstEntriesReconnectAndTakeoverKeepOneDeadline() throws Exception {
@@ -283,10 +392,32 @@ class ExamRuntimePostgresTest {
         throw new AssertionError("Autonomous runtime scheduler did not finalize attempt");
     }
     private JsonObject status(String attempt) throws Exception { return json(expect(get(path(attempt, "status"), candidateToken), 200)); }
-    private String attempt(int seconds) throws Exception {
+    private String attempt(int seconds) throws Exception { return attemptFor("candidate1", seconds); }
+    private String attemptFor(String candidateUsername, int seconds) throws Exception {
         String session = "P0-" + id();
-        expect(post("/api/v1/sessions", new CreateSessionRequest(session, examId, "TEST P0 session", seconds, List.of("proctor1"), List.of("candidate1")), proctorToken), 200);
-        return session + "-candidate1";
+        expect(post("/api/v1/sessions", new CreateSessionRequest(session, examId, "TEST P0 session", seconds,
+                List.of("proctor1"), List.of(candidateUsername)), proctorToken), 200);
+        return session + "-" + candidateUsername;
+    }
+    private void setFinalState(String attemptId, String state) {
+        jdbc.sql("""
+                UPDATE monitoring_attempts
+                SET state = :state, submitted_at = clock_timestamp(), total_questions = 2,
+                    correct_count = 1, listening_correct = 0, reading_correct = 1, score = 1
+                WHERE attempt_id = :attemptId
+                """).param("state", state).param("attemptId", attemptId).update();
+    }
+    private static JsonObject summary(JsonArray attempts, String attemptId) {
+        for (var element : attempts) {
+            JsonObject item = element.getAsJsonObject();
+            if (attemptId.equals(item.get("attemptId").getAsString())) return item;
+        }
+        throw new AssertionError("Missing attempt summary " + attemptId);
+    }
+    private static Set<String> summaryIds(JsonArray attempts) {
+        Set<String> ids = new HashSet<>();
+        for (var element : attempts) ids.add(element.getAsJsonObject().get("attemptId").getAsString());
+        return ids;
     }
     private TakeoverWriterRequest takeover(String attempt) { return new TakeoverWriterRequest(id(), attempt, "TEST-device-" + id()); }
     private String login(String username) throws Exception {

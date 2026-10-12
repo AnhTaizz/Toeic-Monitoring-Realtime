@@ -195,6 +195,21 @@ class ExamControllerTest {
         assertThat(res.statusCode()).isEqualTo(401);
     }
 
+    @Test
+    void unknownAuthenticatedApiRouteReturnsStructured404() throws Exception {
+        String candidateToken = login("candidate1");
+        HttpRequest request = HttpRequest.newBuilder(uri("/api/v1/route-that-does-not-exist"))
+                .timeout(Duration.ofSeconds(5))
+                .header("Authorization", "Bearer " + candidateToken)
+                .GET()
+                .build();
+        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+        assertThat(response.statusCode()).isEqualTo(404);
+        JsonObject error = GSON.fromJson(response.body(), JsonObject.class).getAsJsonObject("error");
+        assertThat(error.get("code").getAsString()).isEqualTo("INVALID_INPUT");
+        assertThat(error.get("retryable").getAsBoolean()).isFalse();
+    }
+
     private ExamImportRequest sampleExamRequest(String examId) {
         return new ExamImportRequest(
                 examId,
