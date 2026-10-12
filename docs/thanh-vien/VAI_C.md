@@ -248,7 +248,7 @@ Việc chuyển epoch (cấp epoch mới, nhận full mới, vô hiệu epoch c�
 
 **Xong khi:** test thuần cho từng quy tắc qua.
 
-**Ghi chú làm dở:** —
+**Bàn giao12/10/2026:** T3-C2 implementation/test/replay/live harness có, branch feat/t3-c2-monitoring-delta-reducer từ main144fe55. Core1c3f982, oracle4042b1c; Java554/Python10/CLI/REAL Spring-PG-WS-resync-restart và full/event/presence/dashboard/measurement regression PASS. Readings delta MOCK, injected future base SIMULATED; worker/network thật. [Guide](../MONITORING_DELTA_REDUCER.md), [evidence](../../evidence/t3-c2/2026-10-12-verification.md), QD17. Full default, capability/flag experimental; freshness6s giữ, empty delta2s/fresh observation và full30s không dùng latest cũ. A/B review NOT RUN, T3-A3 không đánh dấu DONE. Không gate/C3/E1/E2 hoặc sửa tracker/exam/.env/migrations/PR17-23; dừng C2. Git cuối PR/final.
 
 ### T3-C3 · Phát lại kiểm tra tính đúng và lỗi
 `4h` · phụ thuộc: T3-C2, T2-C3 · review: B

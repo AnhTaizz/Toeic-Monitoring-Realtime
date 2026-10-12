@@ -1,0 +1,28 @@
+14:28:51.453 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+14:28:51.573 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "delta_state_test_3ddaadf394904444a97d2d8527011984"."flyway_schema_history" does not exist yet
+14:28:51.579 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.039s)
+14:28:51.612 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "delta_state_test_3ddaadf394904444a97d2d8527011984"."flyway_schema_history" ...
+14:28:51.724 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "delta_state_test_3ddaadf394904444a97d2d8527011984": << Empty Schema >>
+14:28:51.746 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_3ddaadf394904444a97d2d8527011984" to version "1 - auth schema"
+14:28:51.807 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_3ddaadf394904444a97d2d8527011984" to version "2 - monitoring events"
+14:28:51.855 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_3ddaadf394904444a97d2d8527011984" to version "3 - monitoring gaps"
+14:28:51.885 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_3ddaadf394904444a97d2d8527011984" to version "4 - monitoring presence"
+14:28:51.926 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_3ddaadf394904444a97d2d8527011984" to version "5 - exams and sessions"
+14:28:51.987 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_3ddaadf394904444a97d2d8527011984" to version "6 - exam autosave requests"
+14:28:52.013 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_3ddaadf394904444a97d2d8527011984" to version "7 - exam submits"
+14:28:52.041 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_3ddaadf394904444a97d2d8527011984" to version "8 - monitoring event delivery"
+14:28:52.062 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 8 migrations to schema "delta_state_test_3ddaadf394904444a97d2d8527011984", now at version v8 (execution time 00:00.154s)
+2026-10-12T14:28:57.691Z  INFO 22100 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T14:28:57.697Z  INFO 22100 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+PASS REAL full1/delta2/duplicate/conflict/invalid-remove/UNSYNCED/resync/full5/role scope; handwritten process set; event+gap committed separately
+PASS REAL no-op deltas from successful MOCK scans keep SYNCED across stale1200ms with full reconciliation30000ms
+PASS REAL hung collector auto STALE while heartbeat ONLINE; SIMULATED future-base injection -> real correlated resync/parser/encoder fresh full recovery in same epoch
+PASS REAL SOURCE_FAILURE/heartbeat ONLINE -> autonomous STALE/TTL; fresh scan -> old epoch rejected -> OPEN/new epoch/full1; event/gap retained
+2026-10-12T14:29:07.265Z  INFO 22100 --- [toeic-server] [.1-61942-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T14:29:07.267Z  INFO 22100 --- [toeic-server] [.1-61942-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+PASS REAL Spring restart / same port / persisted auth -> B2 reconnect / new serverInstanceId / new epoch / full; history retained
+PASS REAL token revocation before handling -> UNAUTHORIZED -> encoder/collector callback cleanup; no fake ACK
+T3-C2 REAL Spring/PG/HTTP/WS/client resync/freshness/restart PASS; readings MOCK, bad-order injection SIMULATED; TEST schema removed; gate/GUI/LAN/E1/E2/human review NOT RUN
+Summary COMPLETE: endpoints=4, categories=57; WS JSON application bytes only
+PASS measurement DELTA/RESYNC classified; no added delivery counters or double-counted ACK bytes.
+T3-C2 artifacts: server/target/t3c2-runtime/T3C2-8e57770e-105b-4396-bd30-75cdac832d14

@@ -1,0 +1,13 @@
+powershell : T3-C2 FAIL phase=MIGRATION class=PSQLException
+At line:2 char:1
++ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t3c ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (T3-C2 FAIL phas...s=PSQLException:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+T3-C2 smoke failed; credentials/cause omitted.
+At <WORKSPACE>\scripts\smoke-t3c2.ps1:29 char:29
++ ... ITCODE -ne 0){throw 'T3-C2 smoke failed; credentials/cause omitted.'}
++                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (T3-C2 smoke fai.../cause omitted.:String) [], RuntimeException
+    + FullyQualifiedErrorId : T3-C2 smoke failed; credentials/cause omitted.

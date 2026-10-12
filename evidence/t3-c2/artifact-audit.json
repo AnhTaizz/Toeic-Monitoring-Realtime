@@ -1,0 +1,40 @@
+{
+  "artifactChecks": 69,
+  "gzipRestoration": "PASS",
+  "summaries": [
+    {
+      "tag": "delta-final",
+      "endpoints": 4,
+      "categories": 57,
+      "status": "COMPLETE"
+    },
+    {
+      "tag": "delta-exploratory",
+      "endpoints": 4,
+      "categories": 55,
+      "status": "COMPLETE"
+    },
+    {
+      "tag": "full-regression",
+      "endpoints": 6,
+      "categories": 63,
+      "status": "COMPLETE"
+    },
+    {
+      "tag": "late-gap-regression",
+      "endpoints": 6,
+      "categories": 63,
+      "status": "COMPLETE"
+    },
+    {
+      "tag": "measurement-regression",
+      "endpoints": 3,
+      "categories": 26,
+      "status": "COMPLETE"
+    }
+  ],
+  "sourceManifestChecks": 233,
+  "jarHashes": "PASS",
+  "regeneratedSummary": "byte-identical JSON/CSV",
+  "defaultRegressionsDeltaTypes": "absent"
+}

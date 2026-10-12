@@ -1,0 +1,27 @@
+14:29:16.948 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+14:29:17.084 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "full_snapshot_test_ec6ecef30e794fd29db679ce462582a1"."flyway_schema_history" does not exist yet
+14:29:17.093 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.042s)
+14:29:17.119 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "full_snapshot_test_ec6ecef30e794fd29db679ce462582a1"."flyway_schema_history" ...
+14:29:17.199 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "full_snapshot_test_ec6ecef30e794fd29db679ce462582a1": << Empty Schema >>
+14:29:17.215 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "full_snapshot_test_ec6ecef30e794fd29db679ce462582a1" to version "1 - auth schema"
+14:29:17.267 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "full_snapshot_test_ec6ecef30e794fd29db679ce462582a1" to version "2 - monitoring events"
+14:29:17.311 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "full_snapshot_test_ec6ecef30e794fd29db679ce462582a1" to version "3 - monitoring gaps"
+14:29:17.339 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "full_snapshot_test_ec6ecef30e794fd29db679ce462582a1" to version "4 - monitoring presence"
+14:29:17.374 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "full_snapshot_test_ec6ecef30e794fd29db679ce462582a1" to version "5 - exams and sessions"
+14:29:17.426 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "full_snapshot_test_ec6ecef30e794fd29db679ce462582a1" to version "6 - exam autosave requests"
+14:29:17.450 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "full_snapshot_test_ec6ecef30e794fd29db679ce462582a1" to version "7 - exam submits"
+14:29:17.475 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "full_snapshot_test_ec6ecef30e794fd29db679ce462582a1" to version "8 - monitoring event delivery"
+14:29:17.500 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 8 migrations to schema "full_snapshot_test_ec6ecef30e794fd29db679ce462582a1", now at version v8 (execution time 00:00.131s)
+2026-10-12T14:29:23.876Z  INFO 9300 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T14:29:23.880Z  INFO 9300 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+PASS REAL Edge -> production ProcessHandle/collector/full/WS/RAM/ACK/dashboard; close removes current PID and retains PostgreSQL history
+PASS REAL reconnect/epoch isolation/duplicate/conflict/empty/scope/stop; MOCK fault sets; event/gap/interruption history preserved
+PASS REAL JavaFX proctor component/controls/Edge rows/screenshots; full candidate GUI NOT RUN
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS REAL autonomous STALE push with open socket/scoped heartbeat; no CLOSE/HTTP state read/manual maintain; last process set retained (MOCK process)
+PASS REAL autonomous TTL4000ms tombstone/capacity release: OPEN B refused before TTL and ACK after TTL; history unchanged; no manual maintain/HTTP refresh
+PASS REAL Spring shutdown clears full-state RAM
+PASS only owned TEST schema/server/Edge/FX resources cleaned; shared history untouched
+T2-C1 REAL full snapshot smoke PASS; fault process sets MOCK; full candidate GUI/LAN/human review NOT RUN
+Summary COMPLETE: endpoints=6, categories=63; WS JSON application bytes only
+T2-C1 artifacts: server/target/t2c1-runtime/T2C1-0296a5be-0936-4743-b957-a7bdb4564ea3

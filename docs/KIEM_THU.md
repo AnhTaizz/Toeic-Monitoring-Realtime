@@ -366,3 +366,22 @@ MT01/MT07/MT08 giữ PARTIAL toàn hệ thống; MT02–MT06 delta và E1/E2 kh�
 | MT02–MT06 gate/live delta/E1/E2/human A/B review | NOT RUN | Không nâng status27case/tracker từ component tests |
 
 Lượt package đầu mới thêm test ERROR STALE FAIL vì còn deadline ACK cũ; sửa deadline rejection candidate về now, bản sửa529 PASS; bổ sung2ca pending-ACK, final531 PASS. Không lấy lượt lỗi làm PASS. Hồi quy DB đầu dừng MIGRATION do Docker chưa chạy; bật Docker/compose volume cũ rồi chạy lại PASS. Kết quả hồi quy mạng/DB mới ghi trong evidence, không suy từ529unit.
+
+## T3-C2 — reducer/resync/freshness (12/10/2026)
+
+[Guide](MONITORING_DELTA_REDUCER.md), [evidence](../evidence/t3-c2/2026-10-12-verification.md). Baseline531 mới PASS; final554 Java/package PASS (protocol43/client361/server149/spike1), Python10 PASS.23test mới = core6/measurement2/client freshness-resync5/parser2/oracle1/server7. Không nâng gate MT02–MT06 hoặc tracker.
+
+| Kiểm tra | Kết quả | Mức |
+|---|---|---|
+| Full đầu/delta/base gap/dup/conflict/common cache64/atomic payload/full recovery/old binding | PASS | Pure core + store/mock scope/clock |
+| Quyền trước duplicate, TTL không gia hạn bởi duplicate/gap | PASS | Unit + REAL JDBC/WS scope CLOSED/revoked token |
+| OPEN/full/CLOSE tranh chấp delta/maintenance | PASS | Latch/order có kiểm soát, không sleep quyết định thứ tự |
+| Correlated resync/parser/client fresh full cùng epoch, seq0 newOPEN | PASS | Unit + REAL Spring/PG/HTTP/WS |
+| Successful unchanged scan/noop, scan hung/failure HB ONLINE → STALE/TTL | PASS | Worker thật, readings MOCK; không maintain/HTTP ở phase auto |
+| Spring server restart → instance/epoch mới/full, DB history retained | PASS | REAL restart same test port, persisted auth |
+| Oracle missing-first-full/missing-delta/recovery/old, manual fixture/negative CLI/REAL trace | PASS hoặc FAIL/refusal đúng ca âm | Shared production core, independent raw expected; ACK/network CLI SIMULATED |
+| Full-Gui/C2-Gui/event/presence/measurement | PASS mới | REAL components, fault/readings đúng nhãn trong evidence |
+| DELTA/RESYNC measurement/analyzer/byte summary | PASS | Known types, counters cùng transport hooks; không E2 |
+| Human A/B review/whole gate/C3 campaign/fullcandidateGUI/LAN/E1/E2 | NOT RUN | Không giả approval hoặc prototype acceptance toàn case |
+
+Các lượt lỗi fixture/constructor oracle/manifest/DB chưa chạy được giữ trong evidence và sửa trước final. Không lấy kết quả dương cũ thay lượt mới.
