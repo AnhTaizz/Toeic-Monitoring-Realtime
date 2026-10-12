@@ -1,0 +1,94 @@
+CAMPAIGN PASS cases=72 negativeChecks=4; REPLAY/ACK baseline SIMULATED, no live gate/E1/E2
+CAMPAIGN PASS cases=72 negativeChecks=4; REPLAY/ACK baseline SIMULATED, no live gate/E1/E2
+REPLAY FAIL source=MOCK faults=SIMULATED cleanSteps=76 faultSteps=76 businessEvents=4 deliveredEvents=4
+MISMATCH record=2 message=MONITORING_FULL@record2/message2 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=2 message=PROCESS_OBSERVED@record2/message3 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=2 message=PROCESS_OBSERVED@record2/message4 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI negative-full-cli exit=1 expected=1
+REPLAY FAIL source=MOCK faults=SIMULATED cleanSteps=43 faultSteps=43 businessEvents=4 deliveredEvents=4
+MISMATCH record=3 message=MONITORING_DELTA@record3/message5 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=3 message=PROCESS_OBSERVED@record3/message6 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=4 message=MONITORING_DELTA@record4/message7 expected=ACCEPTED actual=INVALID_INPUT reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=5 message=MONITORING_DELTA@record5/message8 expected=ACCEPTED actual=RESYNC reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=6 message=MONITORING_DELTA@record6/message9 expected=ACCEPTED actual=RESYNC reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=6 message=PROCESS_OBSERVED@record6/message10 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=8 message=MONITORING_DELTA@record8/message11 expected=ACCEPTED actual=RESYNC reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=10 message=MONITORING_DELTA@record10/message12 expected=ACCEPTED actual=RESYNC reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=12 message=MONITORING_DELTA@record12/message13 expected=ACCEPTED actual=RESYNC reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=14 message=MONITORING_DELTA@record14/message14 expected=ACCEPTED actual=RESYNC reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=16 message=MONITORING_DELTA@record16/message15 expected=ACCEPTED actual=RESYNC reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=18 message=MONITORING_DELTA@record18/message16 expected=ACCEPTED actual=RESYNC reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=20 message=MONITORING_DELTA@record20/message17 expected=ACCEPTED actual=RESYNC reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=22 message=MONITORING_DELTA@record22/message18 expected=ACCEPTED actual=RESYNC reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=24 message=MONITORING_DELTA@record24/message19 expected=ACCEPTED actual=RESYNC reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=26 message=MONITORING_DELTA@record26/message20 expected=ACCEPTED actual=RESYNC reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=28 message=MONITORING_DELTA@record28/message21 expected=ACCEPTED actual=RESYNC reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=30 message=MONITORING_DELTA@record30/message22 expected=ACCEPTED actual=RESYNC reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI negative-delta-cli exit=1 expected=1
+REPLAY FAIL source=MOCK faults=SIMULATED cleanSteps=43 faultSteps=43 businessEvents=4 deliveredEvents=4
+MISMATCH record=2 message=PROCESS_OBSERVED@record2/message3 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=2 message=PROCESS_OBSERVED@record2/message4 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=3 message=MONITORING_DELTA@record3/message5 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=3 message=PROCESS_OBSERVED@record3/message6 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=4 message=MONITORING_DELTA@record4/message7 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=5 message=MONITORING_DELTA@record5/message8 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=6 message=MONITORING_DELTA@record6/message9 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=6 message=PROCESS_OBSERVED@record6/message10 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=8 message=MONITORING_DELTA@record8/message11 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=10 message=MONITORING_DELTA@record10/message12 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=12 message=MONITORING_DELTA@record12/message13 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=14 message=MONITORING_DELTA@record14/message14 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=16 message=MONITORING_DELTA@record16/message15 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=18 message=MONITORING_DELTA@record18/message16 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=20 message=MONITORING_DELTA@record20/message17 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=22 message=MONITORING_DELTA@record22/message18 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=24 message=MONITORING_DELTA@record24/message19 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=26 message=MONITORING_DELTA@record26/message20 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=28 message=MONITORING_DELTA@record28/message21 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=30 message=MONITORING_DELTA@record30/message22 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=32 message=MONITORING_FULL@record32/message23 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=34 message=MONITORING_DELTA@record34/message24 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=36 message=MONITORING_DELTA@record36/message25 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=38 message=MONITORING_DELTA@record38/message26 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=40 message=MONITORING_DELTA@record40/message27 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=42 message=MONITORING_DELTA@record42/message28 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=44 message=MONITORING_DELTA@record44/message29 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=46 message=MONITORING_DELTA@record46/message30 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=48 message=MONITORING_DELTA@record48/message31 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=50 message=MONITORING_DELTA@record50/message32 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=52 message=MONITORING_DELTA@record52/message33 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=54 message=MONITORING_DELTA@record54/message34 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=56 message=MONITORING_DELTA@record56/message35 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=58 message=MONITORING_DELTA@record58/message36 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=60 message=MONITORING_DELTA@record60/message37 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=62 message=MONITORING_FULL@record62/message38 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=64 message=MONITORING_DELTA@record64/message39 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=66 message=MONITORING_DELTA@record66/message40 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=68 message=MONITORING_DELTA@record68/message41 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=70 message=MONITORING_DELTA@record70/message42 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=72 message=MONITORING_SYNC_CLOSE@record72/message43 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI negative-event-cli exit=1 expected=1
+TRACE ERROR SCENARIO_AND_RANDOM_FAULTS_AMBIGUOUS
+CLI invalid-config-refused exit=2 expected=2
+TRACE ERROR TRACE line 74: CHECKSUM_OR_INCOMPLETE
+CLI checksum-refused exit=2 expected=2
+TRACE ERROR TEST_POLICY_NOT_NETWORK_REPLAY
+CLI test-schema-refused exit=2 expected=2
+REPLAY PASS source=MOCK faults=SIMULATED cleanSteps=76 faultSteps=76 businessEvents=4 deliveredEvents=4
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI no-overwrite exit=0 expected=0
+TRACE ERROR INPUT_CONFIG_OR_IO; private path/cause omitted
+CLI no-overwrite exit=2 expected=2
+TRACE COMPLETE source=REAL ProcessHandle records=8 sha256=2c51673a4646be1fdceccc2e6da38713324ce216423bb3efcfb5a6e737ab62b5; candidate gate SIMULATED, no server/GUI.
+REPLAY PASS source=REAL faults=SIMULATED cleanSteps=56 faultSteps=97 businessEvents=47 deliveredEvents=40
+SIMULATED dropped event IDs=[replay-event-12, replay-event-16, replay-event-22, replay-event-4, replay-event-43, replay-event-47, replay-event-8]; no invented client gap or heartbeat UNKNOWN
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI real-full exit=0 expected=0
+REPLAY PASS source=REAL faults=SIMULATED cleanSteps=52 faultSteps=90 businessEvents=47 deliveredEvents=40
+SIMULATED dropped event IDs=[replay-event-12, replay-event-16, replay-event-22, replay-event-4, replay-event-43, replay-event-47, replay-event-8]; no invented client gap or heartbeat UNKNOWN
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI real-delta exit=0 expected=0
+T3-C3 PASS output=client/target/t3c3-smoke/2bd621c6-7577-499e-b300-b69fc226a45e cases=72 negatives=4 deterministic reports; intentional negative CLI exit1/config-checksum-TEST-nooverwrite exit2.

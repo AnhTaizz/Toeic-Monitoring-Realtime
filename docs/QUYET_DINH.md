@@ -155,3 +155,11 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Chốt vấn đề6s/30s của QD16 bằng empty delta từ successful scan mới, refresh2s default, không từ heartbeat/latest cũ. Snapshot age theo observationNanos cùng local ticker, queued observation quá tuổi bị bỏ; periodic full cũng cần successful scan mới. Duplicate không touch freshness/TTL. Receiver receipt freshness không OS/transport latency guarantee.
 - Thay adapter giả C1 bằng lõi production trong replay; oracle độc lập cập nhật refresh2s. C2 kiểm đơn vị/race + real Spring/PG/WS callback/restart, không triển khai chiến dịch gate T3-C3 hoặc E1/E2. Full/delta cùng process policy/event; measurement known types mới ở hooks cũ.
 - A review SessionAuthentication/Authorization hooks/handler/binding/RAM/push/maintenance; B review RealtimeClient capability/resync/ACK/guard/clock/lifecycle. Contract [T3-C2](MONITORING_DELTA_REDUCER.md); production delta vẫn tắt.
+
+## QD-18 · Replay acceptance faults, lịch riêng mỗi mode và resync không feedback
+
+- Ngày12/10/2026 · C, T3-C3 · Human B review NOT RUN, full vẫn mặc định.
+- Giữ production full/event/delta encoder và reducer C2, oracle raw độc lập. Gây data faults sau baseline ACK enumeration; drop không là ACK-loss, RESYNC chỉ ghi, recovery bằng fresh periodic full/reconnect. Không giả retry/resync feedback/live network/control reliability toàn diện.
+- Ba production-schema MOCK workloads/checksum/handwritten table;72cases/12scenarios ×2mode,4negative, repeat byte-identical và summary sinh Java. Event seeded decisions keyed stable eventId/channel riêng, state theo mode ordinal; không suy cùng seed thành cùng state fault. Lịch source/ID/payload/version/atRecord và expected/actual state/event map lưu reportv2.
+- Coverage raw checkpoint kể cả không phát frame; so full/delta khi cùng khớp observation. Seeded zero common checkpoint báo NO_COMMON_SYNC_CHECKPOINT, không ép UNSYNCED bằng SYNCED hoặc claim state equivalence ở chỗ không có. PASS với missingBusinessEvents nghĩa khớp drop model, không khôi phục history.
+- Replayer event so receiving connection hiện tại để giữ PREVIOUS_CONNECTION, không origin-as-receiving giả LIVE. Không sửa server/EventOrigin/schema DB/transport/candidate factory. MT02–MT06 REPLAY/PARTIAL cấp toàn gate; live ACK-loss/GUI/LAN/restart/revoke/C4/gate B/E1/E2 còn riêng. [CLI/model](MONITORING_DELTA_FAULT_REPLAY.md).

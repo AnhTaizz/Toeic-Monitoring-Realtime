@@ -47,3 +47,7 @@ evidence/t3-c1/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr
 
 # T3-C2 verification artifacts retain exact bytes/checksums.
 evidence/t3-c2/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# C3 fixture manifest hashes and replay artifact hashes cover exact bytes.
+client/src/test/resources/monitoring-traces/t3-c3/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+evidence/t3-c3/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

@@ -29,12 +29,19 @@ public final class TraceCli {
             if(args.length<1)throw new IllegalArgumentException();
             Map<String,String> options=options(args);
             if(args[0].equals("record"))return record(options,output);
+            if(args[0].equals("campaign")) {
+                requireKnown(options,Set.of("--fixtures","--output","--seed","--source-sha"));
+                var summary=ReplayCampaign.run(Path.of(required(options,"--fixtures")),Path.of(required(options,"--output")),
+                        Long.parseLong(options.getOrDefault("--seed","20261012")),required(options,"--source-sha"));
+                output.println("CAMPAIGN "+summary.status()+" cases="+summary.cases().size()+" negativeChecks="+summary.negativeChecks().size()+"; REPLAY/ACK baseline SIMULATED, no live gate/E1/E2");
+                return summary.status().equals("PASS")?0:1;
+            }
             if(!args[0].equals("replay"))throw new IllegalArgumentException();
-            requireKnown(options,Set.of("--input","--output","--seed","--duplicate","--drop","--reorder","--reconnect-at","--drop-full-at","--mutate-full-at","--mode","--mutate-delta-at"));
+            requireKnown(options,Set.of("--input","--output","--seed","--duplicate","--drop","--reorder","--reconnect-at","--drop-full-at","--mutate-full-at","--mode","--mutate-delta-at","--scenario","--mutate-event-at"));
             var trace=TraceReader.read(Path.of(required(options,"--input")));
             var config=new FaultSchedule.Config(Long.parseLong(options.getOrDefault("--seed","0")),integer(options,"--duplicate",0),integer(options,"--drop",0),integer(options,"--reorder",0),
                     integer(options,"--reconnect-at",0),integer(options,"--drop-full-at",0),integer(options,"--mutate-full-at",0));
-            var result=ReplayEngine.replay(trace,config,options.getOrDefault("--mode","full"),integer(options,"--mutate-delta-at",0));
+            var result=ReplayEngine.replay(trace,config,options.getOrDefault("--mode","full"),integer(options,"--mutate-delta-at",0),options.get("--scenario"),integer(options,"--mutate-event-at",0));
             Path target=Path.of(required(options,"--output"));Path parent=target.toAbsolutePath().getParent();if(parent!=null)Files.createDirectories(parent);
             try(var writer=Files.newBufferedWriter(target,StandardCharsets.UTF_8,StandardOpenOption.CREATE_NEW)) {
                 new GsonBuilder().serializeNulls().setPrettyPrinting().disableHtmlEscaping().create().toJson(result,writer);writer.write('\n');
@@ -46,7 +53,7 @@ public final class TraceCli {
             return result.status().equals("PASS")?0:1;
         } catch(Exception invalid) {
             String reason=invalid.getMessage();
-            output.println("TRACE ERROR "+(reason!=null&&reason.startsWith("TRACE line ")?reason:"INPUT_CONFIG_OR_IO; private path/cause omitted"));
+            output.println("TRACE ERROR "+(reason!=null&&(reason.startsWith("TRACE line ")||reason.matches("(?:FAULT|SCENARIO|CAMPAIGN|MUTATION|REPLAY|TEST_POLICY)_[A-Z0-9_]+"))?reason:"INPUT_CONFIG_OR_IO; private path/cause omitted"));
             return 2;
         }
     }

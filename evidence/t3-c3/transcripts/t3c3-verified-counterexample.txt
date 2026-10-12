@@ -1,0 +1,1 @@
+COUNTEREXAMPLE REPLAY event origin connection1, delivered after OPEN connection2: expected=PREVIOUS_CONNECTION actual=PREVIOUS_CONNECTION

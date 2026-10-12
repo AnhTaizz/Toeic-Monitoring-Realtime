@@ -53,10 +53,9 @@ class DeltaReplayTest {
         assertThat(result.status()).isEqualTo("PASS");assertThat(result.observationChecks()).hasSize(4);
         assertThat(result.cleanChecks()).noneMatch(c->c.record()==4);assertThat(result.observationChecks()).anyMatch(c->c.record()==4&&c.match());
     }
-    @Test void refuseFutureGateFaultsRatherThanClaimUnsupportedResyncCorrectness() throws Exception {
+    @Test void deltaFaultsNowUseProductionReducerButStillRejectInvalidMode() throws Exception {
         var trace=trace();
-        assertThatThrownBy(()->ReplayEngine.replay(trace,new FaultSchedule.Config(1,0,10,0,0,0,0),"delta",0))
-                .hasMessage("DELTA_FAULT_GATE_NOT_IMPLEMENTED");
+        assertThat(ReplayEngine.replay(trace,new FaultSchedule.Config(1,0,10,0,0,0,0),"delta",0).status()).isEqualTo("PASS");
         assertThatThrownBy(()->ReplayEngine.replay(trace,FaultSchedule.Config.none(),"invalid",0)).hasMessage("REPLAY_MODE");
     }
     @Test void testHarnessSchemaIsStillRefusedInBothModes() {

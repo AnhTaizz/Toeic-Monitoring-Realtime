@@ -38,7 +38,8 @@ try {
     Compare-Modes 'reconnect'
     Invoke-Replay 'negative-delta' $fixture @('--mode','delta','--mutate-delta-at','2') 1
     Invoke-Replay 'negative-full' $fixture @('--mutate-full-at','2') 1
-    Invoke-Replay 'unsupported-delta-faults' $fixture @('--mode','delta','--drop','10') 2
+    # T3-C3 now checks acceptance faults; baseline ACK enumeration is still SIMULATED.
+    Invoke-Replay 'delta-acceptance-faults' $fixture @('--mode','delta','--drop','10')
     $hand = 'client/src/test/resources/monitoring-traces/handwritten-v1.jsonl'
     Invoke-Replay 'legacy-full-faults' $hand @('--seed','1234','--duplicate','20','--drop','10','--reorder','35','--reconnect-at','3')
     $testTrace = 'evidence/t2-c4/raw/observations.jsonl'
