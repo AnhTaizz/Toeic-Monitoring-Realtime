@@ -422,3 +422,12 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Còn dở: chưa push nên PR #23 trên GitHub vẫn báo conflict.
 - Tiếp theo: người dùng cho phép push thì PR #23 merge được; sau đó PR API lịch sử, rồi PR client của B.
 - Cần người khác: C review PR #23 (review xoay vòng C xem A); A xem bốn ghi nhận trong `evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md`.
+
+## 2026-10-13 · A · PR #23: đồng bộ lần hai với main T3-C4
+- Thời lượng: cùng phiên Agent.
+- Đã làm: `origin/main` tiến lên `cb30f3d` (PR #27, T3-C4) sau lần đồng bộ đầu, nên merge thêm một lần. Conflict chỉ ở tài liệu. Main đã dùng QD-19 cho T3-C4, nên sửa ghi chú đánh số: quyết định API lịch sử của A sẽ mang số QD-23.
+- Commit: `c64503f` (merge) và commit tài liệu kế tiếp. Không push.
+- Đã kiểm: `mvn package` 596 PASS, 0 skip với PostgreSQL thật; smoke C1, C2 PASS; Python 10 PASS.
+- Còn dở: chưa push. Nếu main tiến tiếp trước khi merge thì phải đồng bộ thêm.
+- Tiếp theo: xếp lại nhánh API lịch sử và nhánh client của B trên commit này.
+- Cần người khác: C review PR #23. Bằng chứng `evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md`.

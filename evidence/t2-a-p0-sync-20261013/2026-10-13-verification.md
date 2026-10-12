@@ -1,5 +1,7 @@
 # Backend A — PR #23 đồng bộ main `ee714fc`, review lại ba sửa P0 (13/10/2026)
 
+> **Bản để push là `c64503f`**, không phải `9713658`: trong lúc làm, main tiến thêm PR #27 (T3-C4) lên `cb30f3d`. Xem mục cuối "Đồng bộ lần hai". Các mục bên dưới giữ nguyên như đã ghi cho `9713658`.
+
 Agent-driven. Thành viên vai A và reviewer C chưa xem: **human review NOT RUN**. Chưa push, chưa merge.
 
 ## Nguồn
@@ -63,3 +65,20 @@ Ba file `.txt` của Maven và smoke là bản lọc lấy dòng kết quả t�
 1. Push thường `sync/pr23-main-20261013` lên `fix/backend-exam-p0-20261011` (fast-forward từ `4753149`).
 2. Trên GitHub, PR #23 sẽ hết trạng thái conflict; merge bằng merge commit như các PR trước.
 3. Sau đó mới mở PR API lịch sử lượt thi (xếp trên nhánh này) rồi PR client của B.
+
+## Đồng bộ lần hai với main `cb30f3d` (T3-C4)
+
+- Merge `origin/main` `cb30f3d` vào nhánh, commit đã kiểm **`c64503f09c7a64e90ff2feb047d548ff57a99e04`**. Vẫn là fast-forward của nhánh PR #23 (`4753149` là tổ tiên).
+- Conflict chỉ ở tài liệu (`KIEM_THU`, `NHAT_KY`, `QUYET_DINH`, `TIEN_DO`, `evidence/README`), giữ cả hai phía. T3-C4 không sửa `server/src/main` hay `protocol/src/main`; so với main `cb30f3d`, code production của nhánh vẫn chỉ khác đúng 7 file P0, và 7 file đó trùng từng byte với head PR #23.
+- Main dùng **QD-19** cho quyết định T3-C4 của C. Ghi chú đánh số trong `docs/QUYET_DINH.md` sửa lại: quyết định API lịch sử của A (bản ghép cục bộ trước đó ghi QD-19) mang số **QD-23**. QD-21 (deadline của A), QD-20 và QD-22 (của B) không đổi.
+- Review ba sửa P0 ở trên không đổi vì code P0 không đổi.
+
+| Kiểm tra trên `c64503f` | Kết quả | Bằng chứng |
+|---|---|---|
+| `mvn package` với `TOEIC_PG_INTEGRATION=true` | **596 PASS**, 0 failure/error/skip (protocol 43, client 386, server 166, spike 1) | [tóm tắt](mvn-package-summary-c64503f.txt) |
+| `ExamRuntimePostgresTest` (nằm trong 596) | 11 PASS trên PostgreSQL thật | dòng `PASS` trong tóm tắt |
+| `scripts/smoke-t2c1.ps1`, `scripts/smoke-t2c2.ps1` | PASS, PASS | [C1](c1-smoke-c64503f.txt), [C2](c2-smoke-c64503f.txt) |
+| `scripts/test_summarize_monitoring.py` (Python 3.14) | 10 PASS | [log](python-tests-c64503f.txt) |
+| `scripts/smoke-t3c4.ps1` (live gate cục bộ của C) | NOT RUN | code T3-C4 trùng main; không thuộc phần A |
+
+596 = 586 của lượt trước + 10 test client mà T3-C4 thêm. Lệnh push ở mục "Để merge" giữ nguyên, áp dụng cho `c64503f` và commit tài liệu ngay sau nó.
