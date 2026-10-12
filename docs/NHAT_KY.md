@@ -408,6 +408,12 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 
 - Staged diff check bắt derived CSV CRCRLF; regenerate2matrix từ summary nguyên byte bằng explicit UTF8/LF,72rows và hashes/previousDerivedSHA ghi ledger. Không raw/runtime change, không giả test mới; staged check chạy lại.
 
+## 13/10/2026 — C — T3-C4 candidate delta integration/live preparation
+
+Base main ee714fc/C3PR26, branch feat/t3-c4-monitoring-delta-live-gate, code2d867c2 + fix stdoutd9475eb. Java579/PASS, factory production opt-in/current capability, pinned mode, reconnect fresh OPEN/full, safe fallback. Counterexample malformed ACK bật delta trên C3 giữ failure trước/sau. Live exploratory source treo + attempt CLOSED: server FORBIDDEN nhưng coordinator còn active; thêm scoped-heartbeat callback có collector/socket guard, unit và rerun thực kiểm lại. Các lượt lỗi giữ artifact, không sửa raw thành PASS. [Guide](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-13-verification.md) ghi final live/hồi quy/manifest.
+
+Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schema/REAL ProcessHandle/owned Edge; fault injection SIMULATED. QD19, QD10presence nguyên trạng; gate20/10 chưa diễn ra, LAN/human B/A review NOT RUN, không E1/E2/C5/Listening/taskA3 DONE. `.env`/tracker/kế hoạch gốc/migrations/exam/PR A-B giữ phạm vi người dùng. Git push/PR/merge cuối xem PR/final; merge code opt-in off không là human approval/gate acceptance.
+
 ## 2026-10-13 · A · PR #23: đồng bộ main T3-C3, review lại ba sửa P0
 - Thời lượng: một phiên Agent; giờ của thành viên chưa ghi.
 - Đã làm: merge `origin/main` `ee714fc` vào head PR #23 `4753149` trên nhánh cục bộ `sync/pr23-main-20261013`. Conflict chỉ ở tài liệu; quyết định deadline của A đổi số QD-18 → QD-21 vì main đã dùng QD-17/QD-18 cho T3-C2/T3-C3. Đọc lại diff production của ba sửa P0 và ghi bốn điểm không chặn merge.

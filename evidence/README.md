@@ -48,4 +48,7 @@
 Mục lục chỉ tổ chức bằng chứng đã có, không xác nhận task hoàn thành hoặc thay đổi trạng thái trong tracker.
 
 - T3-C3: [Replay delta faults và campaign](t3-c3/2026-10-12-verification.md) —3MOCKworkloads/72cases/4negative/deterministic reports, full default; ACK-loss/live gate/E1/E2 chưa chạy.
+
+- **T3-C4 ·13/10/2026:** [candidate thật/live preparation và final evidence](t3-c4/2026-10-13-verification.md):579Java/42localassertions/7regression commands latestPASS; failures/raw/checksums retained; FULLdefault, LAN/humanB/gate20/10 NOT DECIDED, noE1/E2.
+
 - Backend A, PR #23: [đồng bộ main T3-C3 và review lại P0](t2-a-p0-sync-20261013/2026-10-13-verification.md) — `9713658`, Maven 586, smoke C1/C2, Python 10 PASS; human review, GUI, LAN chưa chạy.

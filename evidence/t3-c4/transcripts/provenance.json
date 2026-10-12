@@ -1,0 +1,177 @@
+[
+  {
+    "file": "t3c4-after-a4.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "becd817fb1c636ea90e44c267a80895f6d865f1100ec80b4be5c428d01dd152a",
+    "derivedSha256": "fdc89a3e936709b9eb6783562de4f9e1e23a9e01c9216b4622e63b3bb982431a",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-after-c4.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "e8bc2bfafc66d4bdec5fc7b4fb3478e36731919242ca04818771647788773cb5",
+    "derivedSha256": "6afbbd61784b7afed13df289572418a2066316afe345b45a4b38da0bc5fb9fdf",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-after-t3c3.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "e2655a7b688bb6647ed312a8e82eaa9b787b2d5401026ba648a0e89cd43a3118",
+    "derivedSha256": "6440faaccc821bc313459bed0503038538c494580689678c0f398a3b846440ee",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-after-t3c4.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "de11519d18e335741f94594aacd233071a1b40deef72cd32c7273d2b9a46478b",
+    "derivedSha256": "a42f944898ed89679d2667c478367d352df59c63a0e35d9c9451d68e45311d42",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-baseline.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "5dd5fa904350d27621ae9a33575b7fc170f3b6766dd9b0d388501e6b5549ce4d",
+    "derivedSha256": "8184d298e33e4e414e228ead49448fe5539e41a40848a87da2d331f64635ee43",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-capability-after.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "893e870d4a4f5aa86b2dbb8088377e20a69b9c1b00ca82b418d53cc102959359",
+    "derivedSha256": "cd5657df6f2d0abcac2c97a94be213693b2913b25e4888246a2ddde08d0f970a",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-capability-before.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "902ffa346d7cc1eca09cec7e8c7ee278c75155feff6ac25c752feeb13e6748bf",
+    "derivedSha256": "dfe81d7e8b5778c165b2cd6a25e0a3ccf3200a50a124e7014055d62036456b11",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-capability-final.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "893e870d4a4f5aa86b2dbb8088377e20a69b9c1b00ca82b418d53cc102959359",
+    "derivedSha256": "cd5657df6f2d0abcac2c97a94be213693b2913b25e4888246a2ddde08d0f970a",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-db-audit.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "3e857fd12d43fa12fd1ac1f0c9cc2532c5898432553637d7dc46216988da9225",
+    "derivedSha256": "167cb3b32992a66e3c973c9eb57e4e2510c87a8bba88cd41768d9e59dacbc054",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-final-db-audit.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "3e857fd12d43fa12fd1ac1f0c9cc2532c5898432553637d7dc46216988da9225",
+    "derivedSha256": "167cb3b32992a66e3c973c9eb57e4e2510c87a8bba88cd41768d9e59dacbc054",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-final-package.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "067f472e3ca1de1aaeb71af23f4fabcc8ca953807548e37561541cc87314a2cd",
+    "derivedSha256": "be92bee3e15a5a0d9dfb3f65eef402b9e719ffd2919c200228e4762d3db5b6e6",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-first-package.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "23c6f5489bae36f99041e909e61a0e96a08518eafd327c43f8a2948a7dcf274a",
+    "derivedSha256": "31f001a981b9083ada8c34ffdb3464d956455c04fa605d446593a3291456f359",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-first-tests.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "a35e26b28cd7fb9248abfe07d102c4f4d8241d1953f4ac174659c7b53654d18e",
+    "derivedSha256": "22663e28c33243e12259a0eb63bccd00341bf7f413f96e98b5ac8fb1ea663d51",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-live-compile.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "6eda097f4a391ebc7d9e6ccee20ba941e063f8661c6a38efba78bc817b7d3b73",
+    "derivedSha256": "18d0501f704c41f8a5292618eb0674dd0c3501edcf36ba0d6f12bdc55d94d381",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-local-final.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "e479c4610f1020709864bad4e8478c7470a9cb19344685b099a485ed61beed8f",
+    "derivedSha256": "0ea5b4a85de6086507568dcbe39b077778f35292eef308140d80e39400d69f12",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-local-first.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "8e482368f8698e054803b2287f1f31d3523d4e0f18b4bfa5d1c1cb4515989c3e",
+    "derivedSha256": "6c2985317767843743a7f5144cb7be4617c9224ec4564845b34ed75d02982169",
+    "replacementCharactersInOriginal": 26
+  },
+  {
+    "file": "t3c4-local-second.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "c4a67fd283f91630d1c0155091b71cd7e75906c378c18f25e0f181e8eaeec6d7",
+    "derivedSha256": "826bb37a0b51aff68d67a90a017aebf33058c37e9530d4586c50bd886a8c52dc",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-local-third.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "b900898694a9a495b80e00d0d7a38375cef76baac57a7431afb6ed1d1618ba2c",
+    "derivedSha256": "b3fa21c9ff99b5d3a8ed0c5cfc73a2cc6758fa77989cfa16cb5713a89b0c7376",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-regression-a4.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "be91fed6c3372573a2eff96681b8fe1e6e6990a5a2228795c5edfad5afa6ed4d",
+    "derivedSha256": "c391d7a93a1a63ce4fb953dea4760faee20e4a57b5239f7136c0680ce86a15fd",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-regression-c3.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "bafa466404deef8db41ee0519387f377db4b9d264790b77efa9756068b3c6b61",
+    "derivedSha256": "85eea4638fcb4feebd847bf73a59ae7a0dab0f1b25aa2836ea38e4584b09dc2a",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-regression-t2c1.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "42126bbf396acc6a7ced50c4b662ebcd340c7b5ac5418f261dbf0e6c86c095d5",
+    "derivedSha256": "e6b3bfe29e0249bd30c6f9146eea04b81b6f7f530abf5e204ba4fcb0198359c2",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-regression-t2c2.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "888453f145ef0aa4bd5a609959b11b9e2e72b825e01bca4f541e3f6fb9869844",
+    "derivedSha256": "33efe78848af98b8106ea33d8ccd073ca2dd509e980b5046733a981263e2e5be",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-regression-t3c2.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "2d00d3c84e374182cc77014be3bb0fa72203f2a09962a1d456a6b2561b2873a8",
+    "derivedSha256": "05ef81af4b0e601cb39cd3f48e0bd4b8b760c5d1815536f566f6f52834fef66c",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-second-package.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "c36418de4de4ad9a2829dd7f2227457f3b15c752da6e577d246d3b02a65e3b79",
+    "derivedSha256": "c26e1965e07b8e2d1170e152a5f023e205aba6be11e85915da9ad9f7e6acf4b6",
+    "replacementCharactersInOriginal": 0
+  },
+  {
+    "file": "t3c4-third-package.txt",
+    "originalEncoding": "utf-16",
+    "originalSha256": "a3f163a4551eb5a98e814eee09a59765e91708fd54bef0dea52c69eae42b794f",
+    "derivedSha256": "fc6a7c2703a38107da28053ed28a02c262a925c601a5efca97b6d13dc328e69a",
+    "replacementCharactersInOriginal": 0
+  }
+]

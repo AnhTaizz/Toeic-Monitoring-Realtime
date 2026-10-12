@@ -8,7 +8,7 @@ import java.util.function.Function;
 import java.util.function.LongSupplier;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
 
-/** Candidate encoder. Deliberately unavailable to the current production transport/session factory. */
+/** Experimental candidate encoder, selected only after local opt-in and confirmed transport capability. */
 public final class DeltaSnapshotDelivery implements AutoCloseable {
     public static final Duration DEFAULT_RECONCILIATION = Duration.ofSeconds(30);
     private final FullSnapshotDelivery delivery;
@@ -28,6 +28,7 @@ public final class DeltaSnapshotDelivery implements AutoCloseable {
     public void sourceFailed() { delivery.sourceFailed(); }
     void tick() { delivery.tick(); }
     public FullSnapshotDelivery.Status status() { return delivery.status(); }
+    FullSnapshotDelivery sharedDelivery() { return delivery; }
     public CompletableFuture<Void> stopped() { return delivery.stopped(); }
     @Override public void close() { delivery.close(); }
 }

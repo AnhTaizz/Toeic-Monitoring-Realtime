@@ -127,6 +127,9 @@ public final class FullSnapshotDelivery implements AutoCloseable {
     }
     private void pump() {
         long socketGeneration=transport.connectionGeneration();
+        // A reconnect invalidates capability along with the base. No OPEN/full/delta until reconfirmed.
+        // Query outside the delivery lock; capability is not a substitute for authorization.
+        if(reconciliationNanos>0&&!transport.supportsMonitoringDelta())return;
         Send send=null;
         String forget=null;
         synchronized (lock) {

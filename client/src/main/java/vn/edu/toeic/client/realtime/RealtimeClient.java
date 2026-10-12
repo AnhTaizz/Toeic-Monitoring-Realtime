@@ -110,11 +110,20 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     private final Set<CompletableFuture<Void>> writes = new HashSet<>();
     private volatile ConnectionState state = ConnectionState.DISCONNECTED;
     private final boolean experimentalDelta=Boolean.getBoolean("toeic.realtime.delta-experimental");
-    private boolean serverDelta;
-    @Override public synchronized boolean supportsMonitoringDelta(){return experimentalDelta&&serverDelta&&state==ConnectionState.CONNECTED&&!closed;}
-    private boolean closed;
+    private record DeltaSupport(long generation,DeltaCapability capability) { }
+    private volatile DeltaSupport deltaSupport=new DeltaSupport(0,DeltaCapability.UNKNOWN);
+    private final java.util.List<Consumer<MonitoringAccessRejection>> monitoringRejections=new CopyOnWriteArrayList<>();
+    @Override public AutoCloseable onMonitoringAccessRejected(Consumer<MonitoringAccessRejection> listener) {
+        monitoringRejections.add(Objects.requireNonNull(listener));return ()->monitoringRejections.remove(listener);
+    }
+    @Override public DeltaCapability deltaCapability() {
+        var support=deltaSupport;
+        return !closed&&state==ConnectionState.CONNECTED&&support.generation()==generation?support.capability():DeltaCapability.UNKNOWN;
+    }
+    @Override public boolean supportsMonitoringDelta(){return experimentalDelta&&deltaCapability()==DeltaCapability.SUPPORTED;}
+    private volatile boolean closed;
     private boolean authenticationRejected;
-    private long generation;
+    private volatile long generation;
     private String observationConnectionId;
     private int retries;
     private Session session;
@@ -173,7 +182,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     private synchronized void openConnection() {
         if (closed || state == ConnectionState.DISCONNECTED) return;
         long current = ++generation;
-        serverDelta=false;
+        deltaSupport=new DeltaSupport(current,DeltaCapability.UNKNOWN);
         SocketListener listener = new SocketListener(current);
         try {
             opening = Objects.requireNonNull(opener.open(listener));
@@ -477,16 +486,21 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                 if(message.payload().has("resync"))validateResync(request,MonitoringResyncPayload.parse(message.payload().getAsJsonObject("resync")));
                 pendingAcks.remove(message.requestId());
                 heartbeatDeadlines.remove(message.requestId());
-                if(request.type().equals("HEARTBEAT")&&message.payload().has("monitoringDelta")) {
-                    var capability=message.payload().get("monitoringDelta");
-                    if(!capability.isJsonPrimitive()||!capability.getAsJsonPrimitive().isBoolean())throw new IllegalArgumentException();
-                    serverDelta=capability.getAsBoolean();
+                DeltaCapability confirmed=null;
+                if(request.type().equals("HEARTBEAT")) {
+                    confirmed=DeltaCapability.UNSUPPORTED; // Old/disabled servers omit the optional marker.
+                    if(message.payload().has("monitoringDelta")) {
+                        var capability=message.payload().get("monitoringDelta");
+                        if(!capability.isJsonPrimitive()||!capability.getAsJsonPrimitive().isBoolean())throw new IllegalArgumentException();
+                        if(capability.getAsBoolean())confirmed=DeltaCapability.SUPPORTED;
+                    }
                 }
                 if (request.type().equals("HEARTBEAT") && message.payload().has("connectionId")) {
                     String identity=FullSnapshotPayload.id(requiredString(message.payload(),"connectionId"));
                     if (observationConnectionId!=null && !observationConnectionId.equals(identity)) throw new IllegalArgumentException();
                     observationConnectionId=identity;
                 }
+                if(confirmed!=null)deltaSupport=new DeltaSupport(current,confirmed); // Only after the entire ACK is valid.
                 measurements.businessAck(text);
             } else if("MONITORING_RESYNC".equals(message.type())) {
                 validateScope(message.attemptId());
@@ -503,6 +517,13 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                 // Không phản chiếu thông báo tùy ý từ server ra UI/log của client.
                 message.payload().addProperty("message", "UNAUTHORIZED".equals(code)
                         ? "Phiên hết hiệu lực. Hãy đăng nhập lại." : "Server từ chối message realtime");
+                var rejected=pendingAcks.get(message.requestId());
+                if((code.equals("FORBIDDEN")||code.equals("UNAUTHORIZED"))&&rejected!=null&&rejected.type().equals("HEARTBEAT")
+                        &&rejected.attemptId()!=null&&rejected.payload().has("collectorSessionId")
+                        &&Objects.equals(rejected.attemptId(),message.attemptId())&&rejected.traceId().equals(message.traceId())) {
+                    var rejection=new MonitoringAccessRejection(rejected.attemptId(),requiredString(rejected.payload(),"collectorSessionId"),code,current);
+                    for(var listener:monitoringRejections)notifySafely(listener,rejection);
+                }
                 pendingAcks.remove(message.requestId());
                 heartbeatDeadlines.remove(message.requestId());
                 if ("UNAUTHORIZED".equals(code)) {

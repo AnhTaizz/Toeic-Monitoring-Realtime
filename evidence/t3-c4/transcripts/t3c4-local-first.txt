@@ -1,0 +1,61 @@
+17:20:44.257 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+17:20:44.387 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "delta_live_gate_test_7435d46f72e14c2dace5785d8fbc4b30"."flyway_schema_history" does not exist yet
+17:20:44.393 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.042s)
+17:20:44.419 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "delta_live_gate_test_7435d46f72e14c2dace5785d8fbc4b30"."flyway_schema_history" ...
+17:20:44.531 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "delta_live_gate_test_7435d46f72e14c2dace5785d8fbc4b30": << Empty Schema >>
+17:20:44.553 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_7435d46f72e14c2dace5785d8fbc4b30" to version "1 - auth schema"
+17:20:44.616 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_7435d46f72e14c2dace5785d8fbc4b30" to version "2 - monitoring events"
+17:20:44.657 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_7435d46f72e14c2dace5785d8fbc4b30" to version "3 - monitoring gaps"
+17:20:44.682 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_7435d46f72e14c2dace5785d8fbc4b30" to version "4 - monitoring presence"
+17:20:44.709 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_7435d46f72e14c2dace5785d8fbc4b30" to version "5 - exams and sessions"
+17:20:44.753 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_7435d46f72e14c2dace5785d8fbc4b30" to version "6 - exam autosave requests"
+17:20:44.773 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_7435d46f72e14c2dace5785d8fbc4b30" to version "7 - exam submits"
+17:20:44.793 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_7435d46f72e14c2dace5785d8fbc4b30" to version "8 - monitoring event delivery"
+17:20:44.810 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 8 migrations to schema "delta_live_gate_test_7435d46f72e14c2dace5785d8fbc4b30", now at version v8 (execution time 00:00.120s)
+2026-10-12T17:20:49.164Z  INFO 34592 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T17:20:49.167Z  INFO 34592 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+PASS START_candidate-delta-default � REAL Application buttons/HTTP/WS/source
+PASS START_candidate-full-default � REAL Application buttons/HTTP/WS/source
+PASS PROCTOR_NO_COLLECTOR � REAL GUI role/HTTP/WS
+PASS REAL_EDGE_IDENTITY_METADATA � REAL OS/collector/encoder/server/HTTP/push
+PASS UNCHANGED_FRESH_30S � REAL time/ProcessHandle
+PASS DEFAULT_APP_FACTORY_DELTA � REAL default factory/client/WS
+PASS EVENT_HISTORY_SEPARATE � REAL PostgreSQL
+PASS CANDIDATE_ISOLATION � REAL hard-kill, one host
+PASS START_candidate-delta-instrumented � REAL Application buttons/HTTP/WS/source
+PASS CANDIDATE_RESTART_EPOCH � REAL child restart/DB/WS
+PASS OLD_SOCKET_EPOCH � REAL WS/binding, SIMULATED old payload
+PASS CROSS_CANDIDATE_SCOPE � REAL server auth/scope; forged request SIMULATED
+PASS PROCTOR_CANNOT_WRITE � REAL server/production proctor socket
+PASS GAP_DB_COMMIT � REAL network/PG, sentinel payload SIMULATED
+PASS ACK_LOSS_RETRY_NO_REAPPLY � REAL server/network; SIMULATED delivery-observer ACK drop
+PASS FROZEN_RETRY � REAL encoder/adapter; fault SIMULATED
+PASS OLD_ACK_NOT_OTHER_MESSAGE � REAL callback; SIMULATED delayed observer
+PASS RESYNC_LAST_KNOWN � REAL HTTP/WS/parser/callback; SIMULATED one wire base/seq change
+PASS RESYNC_FRESH_FULL_UI_HISTORY � REAL Application/encoder/WS/RAM/DB
+PASS RETRY_EXHAUSTION_FRESH_EPOCH � REAL production delivery; SIMULATED ACK observer suppression
+PASS HUNG_COLLECTOR_HB_ONLINE � REAL scheduler/HB/push; SIMULATED source wait
+PASS SOURCE_FAILURE_TTL � REAL maintenance/HB; SIMULATED scan exception; production TTL5min unchanged
+powershell : PRESENCE_SCAN retryable failure; no success push
+At line:7 char:1
++ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t3c ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (PRESENCE_SCAN r...no success push:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+PRESENCE_SCAN retryable failure; no success push
+PASS DB_SCOPE_BEFORE_DUPLICATE � REAL JDBC/WS; own TEST schema fault SIMULATED, shared DB not stopped
+PASS DB_EVENT_ROLLBACK_NO_ACK � REAL Edge/PG/transaction/WS; trigger SIMULATED
+T3-C4 LOCAL FAIL phase=ATTEMPT_REVOKE_DUPLICATE class=IllegalStateException
+PASS CLEANUP_candidate-full-default � REAL Application.stop/owned child
+PASS CLEANUP_candidate-delta-instrumented � REAL Application.stop/owned child
+T3-C4 LOCAL artifacts: D:\Toeic-Monitoring-Realtime\server\target\t3c4-live\T3C4-57713825-508d-4ea1-8322-00d7fcc00d22 exit=1; human gate/LAN not confirmed.
+Summary INCOMPLETE: endpoints=7, categories=77; WS JSON application bytes only
+Measurement summary exit=2; hard-killed endpoint is expected INCOMPLETE, retained raw.
+C4 local smoke failed; keep artifacts. Credentials/cause omitted.
+At D:\Toeic-Monitoring-Realtime\scripts\smoke-t3c4.ps1:46 char:26
++ ... Exit -ne 0){throw 'C4 local smoke failed; keep artifacts. Credentials ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (C4 local smoke .../cause omitted.:String) [], RuntimeException
+    + FullyQualifiedErrorId : C4 local smoke failed; keep artifacts. Credentials/cause omitted.
+ 

@@ -14,8 +14,14 @@ import vn.edu.toeic.protocol.monitoring.EventOrigin;
  * Full state uses C's shared v1 contract. State ACK is separate from write completion.
  */
 public interface MonitoringTransport {
-    /** Explicit capability, false on production transport until T3-C2/integration/gate. */
+    enum DeltaCapability { UNKNOWN, SUPPORTED, UNSUPPORTED }
+    /** Server capability on the current socket; this does not grant candidate/attempt permission. */
+    default DeltaCapability deltaCapability() { return supportsMonitoringDelta()?DeltaCapability.SUPPORTED:DeltaCapability.UNSUPPORTED; }
+    /** Requires local experimental opt-in as well as confirmed server capability. */
     default boolean supportsMonitoringDelta() { return false; }
+    record MonitoringAccessRejection(String attemptId,String collectorSessionId,String code,long connectionGeneration) { }
+    /** Only a validated denial of this run's scoped heartbeat; old request/collector cannot revoke a new run. */
+    default AutoCloseable onMonitoringAccessRejected(Consumer<MonitoringAccessRejection> listener) { return ()->{ }; }
     CompletableFuture<Void> send(MessageEnvelope<JsonObject> message);
     default EventOrigin observationOrigin() {
         return connectionState()==ConnectionState.CONNECTED ? EventOrigin.UNSPECIFIED : EventOrigin.OFFLINE;

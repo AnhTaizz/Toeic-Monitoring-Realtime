@@ -824,3 +824,13 @@ Contract12/10/2026 thay phần “server chưa hỗ trợ/freshness chưa chốt
 ## T3-C3 · Replay acceptance campaign, không đổi wire contract
 
 [CLI/fault model](MONITORING_DELTA_FAULT_REPLAY.md) và QD18: full/delta cùng production encoder/reducer C2, raw oracle độc lập;72cases/3MOCKworkloads,4negative và deterministic reportv2. OPEN/CLOSE reliable, ACK baseline enumeration trước faults, RESYNC chỉ ghi/no encoder feedback; không ACK-loss/retry/presence/TTL/DB/live gate. Event đến sau reconnect dùng PREVIOUS_CONNECTION theo receiving connection, không origin connection giả LIVE. Đây là sửa replayer, không server/transport/schema/message/capability/default production. Gate B/T3-C4/E1/E2 chưa chạy.
+
+## T3-C4 — chọn mode trong candidate Application và xác nhận capability hiện tại
+
+Ngày13/10, QD19. Không đổi wire message/payload hoặc migrations. [Guide](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-13-verification.md).
+
+CandidateMonitoringSession.start chọn DELTA khi local opt-in và RealtimeClient hỗ trợ từ ACK HEARTBEAT toàn bộ hợp lệ trên generation socket hiện tại; mặc định FULL. UNKNOWN hoặc server cũ/off -> FULL cho lần Start này, không tự đổi sang DELTA khi ACK đến sau. Reconnect invalidates capability và base; DELTA chờ xác nhận trước OPEN/full/scan mới. ACK xác nhận UNSUPPORTED khi đang DELTA -> dừng DELTA_CAPABILITY_LOST, Stop/Start mới chọn FULL. Không giữ queue/base/epoch cũ để chuyển mode ngầm.
+
+Callback nội bộ onMonitoringAccessRejected chỉ phát FORBIDDEN/UNAUTHORIZED khi khớp heartbeat pending/attempt/trace, mang collectorSessionId/socket generation. Coordinator chỉ dừng đúng collector/lượt/socket hiện tại, tháo heartbeat/capability/rejection listeners. Lỗi DB retryable không coi mất quyền; global UNAUTHORIZED giữ semantics đăng nhập lại. Stop/logout dọn worker/queue RAM hiện có. Full/delta ACK vẫn RAM, event/gap ACK vẫn sau COMMIT; proctor không collector. Nhãn UI mode an toàn không chứa token/password.
+
+Gate20/10 chưa diễn ra; local13/10 là preparation, LAN hai máy và B review NOT RUN. QD10 presence giữ nguyên, không đổi STALE6s/TTL5min bằng heartbeat hoặc nâng E1/E2.
