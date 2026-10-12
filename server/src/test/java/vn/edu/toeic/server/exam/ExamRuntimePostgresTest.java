@@ -243,6 +243,81 @@ class ExamRuntimePostgresTest {
         System.out.println("PASS candidate history deterministic keyset pagination/limits/cursor validation/foreign cursor isolation");
     }
 
+    @Test void candidateAttemptHistoryOrdersByAsciiAndHandlesPageBoundaries() throws Exception {
+        // The database default collation is en_US: without COLLATE "C" it sorts 'a' before 'B' and B's client rejects the page.
+        String run = "HIST-" + id().substring(0, 8);
+        List<String> created = new ArrayList<>();
+        for (String sessionId : List.of(run + "_c", run + "-a", run + ".d", run + "-B")) {
+            expect(post("/api/v1/sessions", new CreateSessionRequest(sessionId, examId, "TEST history order", 60,
+                    List.of("proctor1"), List.of("candidate2")), proctorToken), 200);
+            created.add(sessionId + "-candidate2");
+        }
+        List<String> all = new ArrayList<>(summaryIds(json(expect(get(
+                "/api/v1/candidate/attempts?limit=100", otherCandidateToken), 200)).getAsJsonArray("attempts")));
+        assertThat(all).containsAll(created).hasSizeLessThan(100);
+        Collections.sort(all);
+        List<String> paged = new ArrayList<>();
+        String cursor = null;
+        do {
+            JsonObject page = json(expect(get("/api/v1/candidate/attempts?limit=1"
+                    + (cursor == null ? "" : "&afterAttemptId=" + cursor), otherCandidateToken), 200));
+            assertThat(page.keySet()).containsExactlyInAnyOrder("attempts", "nextAfterAttemptId");
+            for (var element : page.getAsJsonArray("attempts")) paged.add(element.getAsJsonObject().get("attemptId").getAsString());
+            cursor = page.get("nextAfterAttemptId").isJsonNull() ? null : page.get("nextAfterAttemptId").getAsString();
+        } while (cursor != null && paged.size() <= all.size());
+        assertThat(paged).as("byte order of String.compareTo, one row per page").containsExactlyElementsOf(all);
+        assertThat(paged.indexOf(run + "-B-candidate2")).isLessThan(paged.indexOf(run + "-a-candidate2"));
+        assertThat(paged.indexOf(run + "-a-candidate2")).isLessThan(paged.indexOf(run + ".d-candidate2"));
+        assertThat(paged.indexOf(run + ".d-candidate2")).isLessThan(paged.indexOf(run + "_c-candidate2"));
+
+        JsonObject exactFit = json(expect(get("/api/v1/candidate/attempts?limit=" + all.size(), otherCandidateToken), 200));
+        assertThat(exactFit.getAsJsonArray("attempts")).hasSize(all.size());
+        assertThat(exactFit.get("nextAfterAttemptId").isJsonNull()).as("exactly limit rows: no extra page").isTrue();
+        JsonObject pastEnd = json(expect(get("/api/v1/candidate/attempts?afterAttemptId=" + all.getLast(), otherCandidateToken), 200));
+        assertThat(pastEnd.getAsJsonArray("attempts")).isEmpty();
+        assertThat(pastEnd.get("nextAfterAttemptId").isJsonNull()).isTrue();
+        // The cursor is only a position: an ID that does not exist still returns just the caller's own later rows.
+        JsonArray afterUnknown = json(expect(get("/api/v1/candidate/attempts?limit=100&afterAttemptId=" + run + "-Z",
+                otherCandidateToken), 200)).getAsJsonArray("attempts");
+        assertThat(summaryIds(afterUnknown)).contains(run + "-a-candidate2", run + ".d-candidate2", run + "_c-candidate2")
+                .doesNotContain(run + "-B-candidate2");
+        System.out.println("PASS candidate history ASCII/C order under en_US database collation; exact-fit, past-end and unknown cursor boundaries");
+    }
+
+    @Test void candidateAttemptHistoryHidesNonExamRowsAndRejectsRevokedSessions() throws Exception {
+        long candidateId = jdbc.sql("SELECT id FROM user_accounts WHERE username = 'candidate1'").query(Long.class).single();
+        String legacy = "LEGACY-" + id();
+        jdbc.sql("INSERT INTO monitoring_attempts (attempt_id, candidate_user_id, state) VALUES (:a, :u, 'ACTIVE')")
+                .param("a", legacy).param("u", candidateId).update();
+        String finalWithoutTimestamp = attempt(60);
+        jdbc.sql("UPDATE monitoring_attempts SET state = 'SUBMITTED', submitted_at = NULL WHERE attempt_id = :a")
+                .param("a", finalWithoutTimestamp).update();
+        String timedOut = attempt(60);
+        setFinalState(timedOut, "TIMED_OUT");
+
+        JsonArray attempts = json(expect(get("/api/v1/candidate/attempts?limit=100", candidateToken), 200)).getAsJsonArray("attempts");
+        assertThat(summaryIds(attempts)).contains(timedOut).doesNotContain(legacy, finalWithoutTimestamp);
+        JsonObject timedOutSummary = summary(attempts, timedOut);
+        assertThat(timedOutSummary.keySet()).containsExactlyInAnyOrder(
+                "attemptId", "sessionId", "examId", "examTitle", "sessionTitle", "state", "submittedAt");
+        assertThat(timedOutSummary.get("state").getAsString()).isEqualTo("TIMED_OUT");
+        assertThat(Instant.parse(timedOutSummary.get("submittedAt").getAsString())).isBeforeOrEqualTo(Instant.now());
+        // History only discovers IDs: results are still read through GET status under exam-read; ACTIVE scope is unchanged.
+        expect(get(path(timedOut, "status"), candidateToken), 200);
+        expect(get(path(timedOut, "status"), otherCandidateToken), 403);
+        assertThat(json(expect(get("/api/v1/auth/me", candidateToken), 200)).getAsJsonArray("attemptScope").toString())
+                .contains(legacy).doesNotContain(timedOut);
+
+        String revokedToken = login("candidate2");
+        jdbc.sql("UPDATE login_sessions SET revoked_at = clock_timestamp() WHERE id = (SELECT max(id) FROM login_sessions)").update();
+        expectCode(get("/api/v1/candidate/attempts", revokedToken), 401, "UNAUTHORIZED");
+        expect(get("/api/v1/candidate/attempts", "TEST-not-a-session-token"), 401);
+        int wrongMethod = post("/api/v1/candidate/attempts", Map.of("candidateUserId", candidateId), candidateToken).statusCode();
+        assertThat(wrongMethod).as("list is read-only").isGreaterThanOrEqualTo(400);
+        System.out.println("PASS candidate history hides legacy monitoring-only and untimestamped final rows; TIMED_OUT listed; "
+                + "revoked/unknown token 401; POST not served (HTTP " + wrongMethod + ")");
+    }
+
     @Test void unknownApiRouteReturnsStructured404InsteadOf500() throws Exception {
         HttpResponse<String> response = expect(get("/api/v1/route-that-does-not-exist", candidateToken), 404);
         JsonObject error = json(response).getAsJsonObject("error");
