@@ -103,7 +103,7 @@ public final class ObservationOracle {
         if(version<=sequence)return "STALE";
         if(type.equals("MONITORING_FULL")&&sequence==0&&version!=1)return "INVALID_INPUT";
         if(type.equals("MONITORING_DELTA")&&(status.equals("UNSYNCED")||sequence==0||version!=sequence+1)){status="UNSYNCED";return "RESYNC";}
-        sequence=version;processes=frame.source().productionProcesses();status="SYNCED";remember(frame.message().messageId(),new Version(version,processes));return "ACCEPTED";
+        sequence=version;processes=frame.source().productionProcesses();status="SYNCED";remember(frame.message().messageId(),new Version(version,processes,type));return "ACCEPTED";
     }
     private void remember(String id,Version version){recent.put(id,version);if(recent.size()>64)recent.remove(recent.keySet().iterator().next());}
     public static String key(String collector,Process process){return collector+"|"+process.pid()+"|"+(process.startInstant()==null?"NO_START":process.startInstant());}
