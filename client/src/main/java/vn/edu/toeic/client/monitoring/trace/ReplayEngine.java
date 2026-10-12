@@ -13,20 +13,31 @@ import vn.edu.toeic.protocol.ws.MessageEnvelope;
 public final class ReplayEngine {
     public record Check(String operation,String message,long record,String expectedOutcome,String actualOutcome,
             ObservationOracle.State expectedState,ObservationOracle.State actualState,int expectedEvents,int actualEvents,boolean match,String reason) { }
+    public record Resync(String requestId,String attemptId,String traceId,String collectorSessionId,String syncEpoch,long currentSequence,
+            long atRecord,String modeledResponse) { }
+    public record Recovery(long atRecord,String message,ObservationOracle.State state,String reason) { }
+    public record Mutation(int fullScan,int deltaScan,int eventOrdinal) { }
     public record Result(String schemaVersion,String status,String traceSource,String traceChecksum,String workload,String faultLabel,
             String encoderAck,String presence,FaultSchedule.Config config,List<ObservationOracle.BusinessStep> businessSteps,
             List<Check> cleanChecks,List<Check> faultChecks,List<Check> observationChecks,Map<String,JsonObject> businessEvents,Map<String,JsonObject> deliveredEvents,
-            List<String> missingBusinessEvents,List<String> issues) { }
+            List<String> missingBusinessEvents,List<String> issues,String scenario,List<FaultSchedule.Action> faultSchedule,
+            List<Resync> resyncRequests,List<Recovery> recoveryPoints,ObservationOracle.State lastDataState,
+            Map<String,JsonObject> expectedDeliveredEvents,Mutation mutation) { }
     private ReplayEngine() { }
     public static Result replay(TraceData.Trace trace,FaultSchedule.Config config) {
         return replay(trace,config,"full",0);
     }
     public static Result replay(TraceData.Trace trace,FaultSchedule.Config config,String mode,int mutateDeltaAt) {
+        return replay(trace,config,mode,mutateDeltaAt,null,0);
+    }
+    public static Result replay(TraceData.Trace trace,FaultSchedule.Config config,String mode,int mutateDeltaAt,String scenario,int mutateEventAt) {
         if(!mode.equals("full")&&!mode.equals("delta"))throw new IllegalArgumentException("REPLAY_MODE");
         boolean delta=mode.equals("delta");
         if(mutateDeltaAt<0 || (!delta&&mutateDeltaAt!=0))throw new IllegalArgumentException("DELTA_MUTATION_MODE");
-        // T3-C1 only: don't claim a production fault/resync reducer before T3-C2/gate.
-        if(delta&&(config.dropPercent()!=0||config.reorderPercent()!=0||config.dropFullAt()!=0))throw new IllegalArgumentException("DELTA_FAULT_GATE_NOT_IMPLEMENTED");
+        if(mutateEventAt<0)throw new IllegalArgumentException("EVENT_MUTATION");
+        if(scenario!=null&&!FaultSchedule.SCENARIOS.contains(scenario))throw new IllegalArgumentException("FAULT_SCENARIO");
+        if(scenario!=null&&!scenario.equals("seeded")&&(config.duplicatePercent()!=0||config.dropPercent()!=0||config.reorderPercent()!=0||config.dropFullAt()!=0))
+            throw new IllegalArgumentException("SCENARIO_AND_RANDOM_FAULTS_AMBIGUOUS");
         if(!TraceData.SCHEMA.equals(trace.header().schemaVersion()))throw new IllegalArgumentException("TEST_POLICY_NOT_NETWORK_REPLAY");
         var issues=new ArrayList<String>();long scans=trace.samples().stream().filter(s -> s.type().equals("OBSERVATION")||s.type().equals("SOURCE_FAILURE")).count();
         if(config.reconnectAt()>scans||config.dropFullAt()>scans||config.mutateFullAt()>scans)throw new IllegalArgumentException("FAULT_STEP_OUT_OF_RANGE");
@@ -43,14 +54,31 @@ public final class ReplayEngine {
         var oracle=new ObservationOracle(trace,config.reconnectAt());var server=new ReplayServer(delta);
         if(config.mutateFullAt()!=0)frames=mutate(frames,config.mutateFullAt());
         if(mutateDeltaAt!=0)frames=mutateDelta(frames,mutateDeltaAt);
-        var faultChecks=run(FaultSchedule.build(frames,config),oracle,server);
+        if(mutateEventAt!=0)frames=mutateEvent(frames,mutateEventAt);
+        var schedule=scenario==null?FaultSchedule.build(frames,config):FaultSchedule.build(frames,config,scenario);
+        var faultChecks=run(schedule,oracle,server);
         if(cleanChecks.stream().anyMatch(c -> !c.match()))issues.add("CLEAN_MISMATCH");
         if(faultChecks.stream().anyMatch(c -> !c.match()))issues.add("FAULT_MISMATCH");
         var missing=business.keySet().stream().filter(id -> !server.events().containsKey(id)).toList();
-        return new Result("monitoring-replay-result-v1",issues.isEmpty()?"PASS":"FAIL",trace.header().sourceLabel(),trace.sha256(),
+        var resyncs=new ArrayList<Resync>();var recoveries=new ArrayList<Recovery>();
+        ObservationOracle.State lastData=new ObservationOracle.State("UNSYNCED",null,0,List.of(),List.of());
+        ObservationOracle.State before=lastData;
+        for(int i=0;i<schedule.size();i++) {
+            var action=schedule.get(i);var check=faultChecks.get(i);var m=action.frame().message();
+            if(check.actualOutcome().equals("RESYNC")||check.actualOutcome().equals("DUPLICATE")&&check.actualState().status().equals("UNSYNCED")
+                    &&(m.type().equals("MONITORING_FULL")||m.type().equals("MONITORING_DELTA")))
+                resyncs.add(new Resync(m.requestId(),m.attemptId(),m.traceId(),action.frame().source().collectorSessionId(),action.frame().expectedEpoch(),
+                        check.actualState().sequence(),action.atRecord(),check.actualOutcome().equals("RESYNC")?"MONITORING_RESYNC SIMULATED/NOT_SENT_TO_ENCODER":"ACK_WITH_RESYNC SIMULATED/NOT_SENT_TO_ENCODER"));
+            if(m.type().equals("MONITORING_FULL")&&check.actualOutcome().equals("ACCEPTED")&&!before.status().equals("SYNCED"))
+                recoveries.add(new Recovery(action.atRecord(),action.frame().label(),check.actualState(),"FIRST_FULL_OR_PERIODIC_OR_RECONNECT_RECOVERY; no automatic feedback modeled"));
+            before=check.actualState();
+            if(!m.type().equals("MONITORING_SYNC_CLOSE"))lastData=check.actualState();
+        }
+        return new Result("monitoring-replay-result-v2",issues.isEmpty()?"PASS":"FAIL",trace.header().sourceLabel(),trace.sha256(),
                 "REPLAY "+mode+"; shared client state/event delivery; "+(delta?"production MonitoringStateReducer; network/auth/ACK SIMULATED":"shared C1 reducer"),"SIMULATED", "SIMULATED baseline drain; not ACK of faulted network",
                 "NOT_SIMULATED; no heartbeat UNKNOWN/timeout/TTL inference",config,cleanOracle.businessSteps(),List.copyOf(cleanChecks),List.copyOf(faultChecks),observationChecks,
-                business,new TreeMap<>(server.events()),missing,List.copyOf(issues));
+                business,new TreeMap<>(server.events()),missing,List.copyOf(issues),scenario==null?"legacy-seeded":scenario,schedule,
+                List.copyOf(resyncs),List.copyOf(recoveries),lastData,new TreeMap<>(oracle.events()),new Mutation(config.mutateFullAt(),mutateDeltaAt,mutateEventAt));
     }
     /** Coverage also checks observations with NO wire frame (unchanged delta state). Raw source is the answer. */
     private static List<Check> observations(TraceData.Trace trace,List<ReplayFrame> frames,boolean delta,int reconnectAt) {
@@ -87,7 +115,11 @@ public final class ReplayEngine {
         for(var action:actions) {
             var frame=action.frame();String expected,actual;
             if(action.operation().equals("DROP")||action.operation().equals("HOLD")) {expected=actual="NOT_DELIVERED";}
-            else {expected=oracle.apply(frame);actual=server.apply(frame);}
+            else {
+                // These injected probes follow successful delivery in explicit conflict-only scenarios.
+                // Reference rejects changed known ID/version by schedule intent, never by production digest/decoder.
+                expected=action.operation().startsWith("CONFLICT_")?"CONFLICT":oracle.apply(frame);actual=server.apply(frame);
+            }
             boolean match=expected.equals(actual)&&oracle.state().equals(server.state())&&oracle.events().equals(server.events());
             stateCells+=oracle.state().processKeys().size()+server.state().processKeys().size();
             if(stateCells>100000||checks.size()>=40000)throw new IllegalStateException("REPLAY_REPORT_LIMIT");
@@ -107,5 +139,13 @@ public final class ReplayEngine {
             } else changed.add(frame);
         }
         if(!applied)throw new IllegalArgumentException("MUTATION_NEEDS_SUCCESSFUL_SCAN");return changed;
+    }
+    private static List<ReplayFrame> mutateEvent(List<ReplayFrame> frames,int eventNumber) {
+        var result=new ArrayList<ReplayFrame>();int index=0;boolean applied=false;
+        for(var frame:frames) {
+            if(frame.message().type().equals("PROCESS_OBSERVED")&&++index==eventNumber){result.add(FaultSchedule.corrupt(frame,false));applied=true;}
+            else result.add(frame);
+        }
+        if(!applied)throw new IllegalArgumentException("MUTATION_NEEDS_EVENT");return result;
     }
 }

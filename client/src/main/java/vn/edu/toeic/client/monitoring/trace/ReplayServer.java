@@ -20,7 +20,7 @@ final class ReplayServer {
     ReplayServer(){this(false);}
     ReplayServer(boolean deltaMode){this.deltaMode=deltaMode;}
     private MonitoringStateReducer reducer=new MonitoringStateReducer();
-    private String epoch,collector,status="UNSYNCED";
+    private String epoch,collector,connection,status="UNSYNCED";
     private boolean closed;
     private List<FullSnapshotPayload.Process> processes=List.of();
     private final Map<String,JsonObject> events=new TreeMap<>(),originals=new TreeMap<>();
@@ -31,7 +31,7 @@ final class ReplayServer {
             JsonObject body=frame.message().payload();String type=frame.message().type();
             if(type.equals("MONITORING_SYNC_OPEN")) {
                 FullSnapshotPayload.fields(body,Set.of("collectorSessionId"));collector=FullSnapshotPayload.id(FullSnapshotPayload.text(body,"collectorSessionId"));
-                epoch=frame.expectedEpoch();closed=false;status="UNSYNCED";processes=List.of();reducer=new MonitoringStateReducer();return "ACCEPTED";
+                epoch=frame.expectedEpoch();connection=frame.connection();closed=false;status="UNSYNCED";processes=List.of();reducer=new MonitoringStateReducer();return "ACCEPTED";
             }
             if(type.equals("PROCESS_OBSERVED"))return event(frame);
             if(type.equals("MONITORING_SYNC_CLOSE")) {
@@ -64,6 +64,6 @@ final class ReplayServer {
         var eventOrigin=EventOrigin.parse(body);var normalized=body.deepCopy();normalized.addProperty("startInstant",process.startInstant());
         normalized.addProperty("observedAt",Instant.parse(FullSnapshotPayload.text(body,"observedAt")).truncatedTo(ChronoUnit.MICROS).toString());
         if(originals.containsKey(id))return originals.get(id).equals(normalized)?"DUPLICATE":"CONFLICT";
-        originals.put(id,normalized);var stored=normalized.deepCopy();stored.addProperty("deliveryStatus",eventOrigin.deliveryStatus(frame.connection()));events.put(id,stored);return "ACCEPTED";
+        originals.put(id,normalized);var stored=normalized.deepCopy();stored.addProperty("deliveryStatus",eventOrigin.deliveryStatus(connection));events.put(id,stored);return "ACCEPTED";
     }
 }

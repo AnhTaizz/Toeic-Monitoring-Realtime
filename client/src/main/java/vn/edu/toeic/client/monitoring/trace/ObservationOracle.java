@@ -21,7 +21,7 @@ public final class ObservationOracle {
     private final Map<String,JsonObject> businessEvents=new TreeMap<>(),deliveredEvents=new TreeMap<>();
     private final List<BusinessStep> businessSteps;
     private final LinkedHashMap<String,Version> recent=new LinkedHashMap<>();
-    private String epoch,collector,status="UNSYNCED";
+    private String epoch,collector,connection,status="UNSYNCED";
     private long sequence;
     private List<Process> processes=List.of();
     private boolean closed;
@@ -79,14 +79,14 @@ public final class ObservationOracle {
     public String apply(ReplayFrame frame) {
         String type=frame.message().type();
         if(type.equals("MONITORING_SYNC_OPEN")) {
-            epoch=frame.expectedEpoch();collector=frame.source().collectorSessionId();sequence=0;processes=List.of();recent.clear();closed=false;status="UNSYNCED";return "ACCEPTED";
+            epoch=frame.expectedEpoch();connection=frame.connection();collector=frame.source().collectorSessionId();sequence=0;processes=List.of();recent.clear();closed=false;status="UNSYNCED";return "ACCEPTED";
         }
         if(type.equals("PROCESS_OBSERVED")) {
             String id=frame.message().payload().get("eventId").getAsString();JsonObject original=businessEvents.get(id);
             if(original==null)return "INVALID_INPUT";
             JsonObject existing=deliveredEvents.get(id);
             if(existing!=null)return "DUPLICATE";
-            JsonObject stored=original.deepCopy();stored.addProperty("deliveryStatus","LIVE");deliveredEvents.put(id,stored);return "ACCEPTED";
+            JsonObject stored=original.deepCopy();stored.addProperty("deliveryStatus",original.get("observationConnectionId").getAsString().equals(connection)?"LIVE":"PREVIOUS_CONNECTION");deliveredEvents.put(id,stored);return "ACCEPTED";
         }
         if(!frame.expectedEpoch().equals(epoch)||!frame.source().collectorSessionId().equals(collector))return "STALE";
         if(type.equals("MONITORING_SYNC_CLOSE")) {

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "monitoring-replay-fixtures-v1",
+  "provenance": "MOCK_HANDWRITTEN",
+  "workloads": [
+    {
+      "name": "low-change",
+      "file": "low-change.jsonl",
+      "fileSha256": "175ceea908f9a528d65f39fd2b406e3d484b407a81e12329c2d8aadfd67d18e6",
+      "traceChecksum": "ce462d9a3d93fd483e72660ffcc3c6b57804548b42d644274f4dd4055843bb53",
+      "reconnectAt": 0
+    },
+    {
+      "name": "high-change",
+      "file": "high-change.jsonl",
+      "fileSha256": "88e21d78eaebea84eeaa717affb4f7b43a2ceb8402a61c1044678aef3799397b",
+      "traceChecksum": "373152ae011a39cbceb046a165cfdb4d397e152d761350048890dc91a63674d4",
+      "reconnectAt": 0
+    },
+    {
+      "name": "reconnect",
+      "file": "reconnect.jsonl",
+      "fileSha256": "255cd30574e9017a0fa4ad3a49eca5ee117a0a96c9e7fdeaa21557ac9b60dac2",
+      "traceChecksum": "a907ba774afd25290d4b0b5e692522c18debb5f2468ab799ef69facb6e042334",
+      "reconnectAt": 6
+    }
+  ]
+}
