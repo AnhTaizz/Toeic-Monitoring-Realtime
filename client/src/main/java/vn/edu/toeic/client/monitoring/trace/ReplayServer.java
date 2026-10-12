@@ -9,29 +9,29 @@ import java.util.Set;
 import java.util.TreeMap;
 import vn.edu.toeic.protocol.monitoring.EventOrigin;
 import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
-import vn.edu.toeic.protocol.monitoring.FullStateReducer;
+import vn.edu.toeic.protocol.monitoring.MonitoringStateReducer;
+import vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayload;
 
-/** SIMULATED fixed candidate/ACTIVE scope and epoch lifecycle; REAL shared parser/C1 reducer.
+/** SIMULATED fixed candidate/ACTIVE scope and epoch lifecycle; REAL shared production full/delta parser/reducer.
  * Event map is headless dedup, not PostgreSQL/auth/presence implementation or commit-ACK evidence.
  */
 final class ReplayServer {
     private final boolean deltaMode;
-    private SequentialDeltaReplayAdapter delta=new SequentialDeltaReplayAdapter();
     ReplayServer(){this(false);}
     ReplayServer(boolean deltaMode){this.deltaMode=deltaMode;}
-    private FullStateReducer reducer=new FullStateReducer();
+    private MonitoringStateReducer reducer=new MonitoringStateReducer();
     private String epoch,collector,status="UNSYNCED";
     private boolean closed;
     private List<FullSnapshotPayload.Process> processes=List.of();
     private final Map<String,JsonObject> events=new TreeMap<>(),originals=new TreeMap<>();
     Map<String,JsonObject> events(){return events;}
-    ObservationOracle.State state(){return new ObservationOracle.State(status,epoch,(deltaMode?delta.sequence:reducer.sequence()),collector==null?List.of():ObservationOracle.keys(collector,processes),processes);}
+    ObservationOracle.State state(){return new ObservationOracle.State(status,epoch,reducer.sequence(),collector==null?List.of():ObservationOracle.keys(collector,processes),processes);}
     String apply(ReplayFrame frame) {
         try {
             JsonObject body=frame.message().payload();String type=frame.message().type();
             if(type.equals("MONITORING_SYNC_OPEN")) {
                 FullSnapshotPayload.fields(body,Set.of("collectorSessionId"));collector=FullSnapshotPayload.id(FullSnapshotPayload.text(body,"collectorSessionId"));
-                epoch=frame.expectedEpoch();closed=false;status="UNSYNCED";processes=List.of();reducer=new FullStateReducer();delta=new SequentialDeltaReplayAdapter();return "ACCEPTED";
+                epoch=frame.expectedEpoch();closed=false;status="UNSYNCED";processes=List.of();reducer=new MonitoringStateReducer();return "ACCEPTED";
             }
             if(type.equals("PROCESS_OBSERVED"))return event(frame);
             if(type.equals("MONITORING_SYNC_CLOSE")) {
@@ -40,16 +40,19 @@ final class ReplayServer {
             }
             if(deltaMode&&(type.equals("MONITORING_FULL")||type.equals("MONITORING_DELTA"))) {
                 if(closed||!bound(body))return "STALE";
-                String outcome=delta.apply(frame.message().messageId(),type,body);
-                if(outcome.equals("ACCEPTED")){processes=delta.processes;status="SYNCED";}
-                return outcome;
+                var outcome=type.equals("MONITORING_FULL")?reducer.full(frame.message().messageId(),FullSnapshotPayload.parse(body))
+                        :reducer.delta(frame.message().messageId(),DeltaSnapshotPayload.parse(body));
+                processes=reducer.processes();
+                if(outcome==MonitoringStateReducer.Outcome.APPLIED)status="SYNCED";
+                if(outcome==MonitoringStateReducer.Outcome.RESYNC)status="UNSYNCED";
+                return outcome==MonitoringStateReducer.Outcome.APPLIED?"ACCEPTED":outcome.name();
             }
             if(!type.equals("MONITORING_FULL"))return "INVALID_INPUT";
             var full=FullSnapshotPayload.parse(body);
             if(closed||!bound(body))return "STALE";
-            if(!reducer.accept(frame.message().messageId(),full))return "DUPLICATE";
+            if(reducer.full(frame.message().messageId(),full)==MonitoringStateReducer.Outcome.DUPLICATE)return "DUPLICATE";
             processes=full.processes();status="SYNCED";return "ACCEPTED";
-        } catch(FullStateReducer.Rejected rejected) {return rejected.code().name();}
+        } catch(MonitoringStateReducer.Rejected rejected) {return rejected.code().name();}
         catch(RuntimeException invalid) {return "INVALID_INPUT";}
     }
     private boolean bound(JsonObject body){return epoch!=null&&epoch.equals(FullSnapshotPayload.text(body,"syncEpoch"))&&collector.equals(FullSnapshotPayload.text(body,"collectorSessionId"));}

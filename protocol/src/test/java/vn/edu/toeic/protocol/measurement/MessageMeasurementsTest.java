@@ -47,7 +47,7 @@ class MessageMeasurementsTest {
             assertThat(m.snapshot().counters().stream().filter(c -> c.key().outcome()==Outcome.ATTEMPTED).findFirst().orElseThrow().bytesUtf8()).isEqualTo(2L*event.getBytes(StandardCharsets.UTF_8).length);
         }
     }
-    @ParameterizedTest @ValueSource(strings={"HEARTBEAT","PROCESS_OBSERVED","MONITORING_GAP","ACK","ERROR","MONITOR_WARNING","MONITOR_PRESENCE"})
+    @ParameterizedTest @ValueSource(strings={"HEARTBEAT","PROCESS_OBSERVED","MONITORING_GAP","ACK","ERROR","MONITOR_WARNING","MONITOR_PRESENCE","MONITORING_DELTA","MONITORING_RESYNC"})
     void knownTypesHaveIndependentCounters(String type) throws Exception {
         try(MessageMeasurements m=recorder(new StringWriter(),32)) {
             m.received(message(type,"MOCK"));

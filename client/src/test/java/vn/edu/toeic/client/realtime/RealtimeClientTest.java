@@ -31,6 +31,28 @@ import vn.edu.toeic.protocol.measurement.MessageMeasurements.Outcome;
 
 /** All sockets/openers in this class are MOCK, never authenticated server proof. */
 class RealtimeClientTest {
+    @Test void deltaCapabilityRequiresExplicitOptInAndCorrelatedServerAckAndResetsOnReconnect() {
+        String previous=System.getProperty("toeic.realtime.delta-experimental");System.setProperty("toeic.realtime.delta-experimental","true");
+        try(Fixture f=new Fixture()) {
+            f.connect();assertThat(f.client.supportsMonitoringDelta()).isFalse();f.clock.advance(Duration.ofSeconds(2));
+            var hb=GSON.fromJson(f.socket().sent.getFirst(),JsonObject.class);var payload=new JsonObject();
+            payload.addProperty("status","ACCEPTED");payload.addProperty("acknowledgedType","HEARTBEAT");payload.addProperty("monitoringDelta",true);
+            f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ACK","cap",hb.get("requestId").getAsString(),"mock-attempt-A",hb.get("traceId").getAsString(),payload)),true);
+            assertThat(f.client.supportsMonitoringDelta()).isTrue();var old=f.socket();f.client.disconnect();f.connect();assertThat(f.client.supportsMonitoringDelta()).isFalse();
+            old.text(GSON.toJson(new MessageEnvelope<>("v0","ACK","cap",hb.get("requestId").getAsString(),"mock-attempt-A",hb.get("traceId").getAsString(),payload)),true);assertThat(f.client.supportsMonitoringDelta()).isFalse();
+        }finally{if(previous==null)System.clearProperty("toeic.realtime.delta-experimental");else System.setProperty("toeic.realtime.delta-experimental",previous);}
+    }
+    @Test void parserValidatesResyncCorrelationAndEpochBeforePublishingToEncoder() {
+        try(Fixture f=new Fixture()) {
+            f.connect();var full=new JsonObject();full.addProperty("collectorSessionId","mock-collector-001");full.addProperty("syncEpoch","mock-e");full.addProperty("sequence",1);full.addProperty("policyVersion","process-policy-v1");full.add("processes",new com.google.gson.JsonArray());
+            f.client.send(new MessageEnvelope<>("v0","MONITORING_FULL","f","f","mock-attempt-A","t",full)).join();
+            var resync=new JsonObject();resync.addProperty("collectorSessionId","mock-collector-001");resync.addProperty("syncEpoch","old-e");resync.addProperty("currentSequence",0);resync.addProperty("reason","BASE_MISSING");
+            f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","MONITORING_RESYNC","r","f","mock-attempt-A","t",resync)),true);assertThat(f.messages).isEmpty();
+            resync.addProperty("syncEpoch","mock-e");f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","MONITORING_RESYNC","r","f","mock-attempt-A","wrong",resync)),true);assertThat(f.messages).isEmpty();
+            f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","MONITORING_RESYNC","r","f","mock-attempt-A","t",resync)),true);assertThat(f.messages).hasSize(1);assertThat(f.messages.getFirst().type()).isEqualTo("MONITORING_RESYNC");
+            assertThat(f.client.supportsMonitoringDelta()).isFalse(); // full/resync support does not opt production into delta
+        }
+    }
     @Test void observationIdentityUsesCorrelatedHeartbeatAckAndClearsOnReconnect() {
         try(Fixture f=new Fixture()) {
             f.connect();assertThat(f.client.observationOrigin().context()).isEqualTo("UNSPECIFIED");

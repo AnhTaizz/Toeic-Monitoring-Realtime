@@ -55,18 +55,18 @@ public final class ObservationOracle {
     /** Expected checkpoints from raw observations only; CLI candidate contract uses a 30s full period. */
     public static Map<Long,State> observationStates(TraceData.Trace trace,int reconnectAt,boolean deltaMode) {
         var result=new TreeMap<Long,State>();
-        int scan=0,generation=1;long version=0,lastFull=0;List<Process> previous=List.of();
+        int scan=0,generation=1;long version=0,lastFull=0,lastState=0;List<Process> previous=List.of();
         for(var sample:trace.samples()) {
             if(sample.type().equals("OBSERVATION")||sample.type().equals("SOURCE_FAILURE")) {
                 scan++;
-                if(scan==reconnectAt){generation++;version=0;previous=List.of();lastFull=sample.elapsedNanos();}
+                if(scan==reconnectAt){generation++;version=0;previous=List.of();lastFull=sample.elapsedNanos();lastState=sample.elapsedNanos();}
             }
             if(!sample.type().equals("OBSERVATION"))continue;
             var next=sample.productionProcesses();
             boolean metadataChanged=false;
             for(var p:next)for(var old:previous)if(p.pid()==old.pid()&&java.util.Objects.equals(p.startInstant(),old.startInstant())&&!p.equals(old))metadataChanged=true;
             boolean full=!deltaMode||version==0||metadataChanged||sample.elapsedNanos()-lastFull>=30_000_000_000L;
-            if(full||!previous.equals(next))version++;
+            if(full||!previous.equals(next)||sample.elapsedNanos()-lastState>=2_000_000_000L){version++;lastState=sample.elapsedNanos();}
             if(full)lastFull=sample.elapsedNanos();
             previous=next;
             result.put(sample.index(),new State("SYNCED","SIMULATED-epoch-"+generation,version,keys(sample.collectorSessionId(),next),next));

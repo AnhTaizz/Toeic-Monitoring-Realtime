@@ -1,6 +1,6 @@
 # Protocol đang dùng
 
-**Trạng thái: v0 có login/Bearer, C3 event/queue/retry, A4 heartbeat/presence/history và B3 dashboard. T2-C1 bổ sung OPEN/full/CLOSE, state RAM, HTTP/MONITOR_STATE và tab process hiện tại. T3-C1 có encoder delta/replay candidate; server production chưa hỗ trợ delta.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây. Các mục chặng 1 bên dưới ghi phạm vi lịch sử tại thời điểm task đó; contract T2-C1 ở cuối là phần bổ sung hiện tại.
+**Trạng thái: v0 có login/Bearer, C3 event/queue/retry, A4 heartbeat/presence/history và B3 dashboard. T2-C1 bổ sung OPEN/full/CLOSE, state RAM, HTTP/MONITOR_STATE và tab process hiện tại. T3-C2 có reducer delta/resync và capability thử nghiệm; server/client delta mặc định tắt, candidate factory vẫn full.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây. Các mục chặng 1 bên dưới ghi phạm vi lịch sử tại thời điểm task đó; contract T2-C1 ở cuối là phần bổ sung hiện tại.
 
 Owner: C (monitoring, khung message chung), A (auth, ca thi, lưu/nộp). Người dùng: B.
 
@@ -166,8 +166,8 @@ Token chỉ trả trong JSON body của login. Request HTTP `/api/**` sau login 
 | `MONITORING_FULL` | thí sinh → server | collectorSessionId, syncEpoch, sequence, policyVersion, processes | ACK sau nhận state RAM | T2-C1 | Contract v1 trong nhánh tích hợp |
 | `MONITORING_SYNC_CLOSE` | thí sinh → server | collectorSessionId, syncEpoch | ACK sau đánh dấu STALE | T2-C1 | Contract v1 trong nhánh tích hợp |
 | `MONITOR_STATE` | server → giám thị được phân công | trạng thái hiện tại có revision | Không | T2-C1 | Contract v1 trong nhánh tích hợp |
-| `MONITORING_DELTA` | client candidate → adapter replay | collectorSessionId, syncEpoch, baseSequence, sequence, policyVersion, added, removed | ACK state RAM mô phỏng | T3-C1 | Encoder có; production server/transport chưa hỗ trợ |
-| _yêu cầu resync delta_ | server → thí sinh | | | T3-C2 | Chưa có; T2-C1 cấp epoch qua ACK của OPEN |
+| `MONITORING_DELTA` | candidate thử nghiệm → server | collectorSessionId, syncEpoch, baseSequence, sequence, policyVersion, added, removed | ACK RAM | T3-C1/C2 | Có; cần server flag + client opt-in/capability, full default |
+| `MONITORING_RESYNC` | server → candidate | collectorSessionId, syncEpoch, currentSequence, reason | Correlated reply, không ACK message chưa áp | T3-C2 | Có khi thiếu base; full mới phục hồi |
 | _READY / start / interrupted (Listening)_ | hai chiều | | | T3-A2, T3-B2 | Chưa có |
 
 ## Mã lỗi
@@ -795,3 +795,16 @@ Ngày11/10/2026. Encoder/replay có; server T3-C2/T3-A3, live transport capabili
 - Queue delta coalesces1latest waiting; full queue16 không đổi. Reconnect/hết retry xóa base/pending, OPEN mới/full1 từ scan thành công; oldACK/callback không tác động. Scan lỗi không gửi empty. Stop/revoke dọn worker/listeners, không đóng shared socket.
 - Đối soát full30s monotonic từ ACK full cuối, hoãn nếu pending; SOURCE_FAILURE chặn gửi lại latest. Full baseline vẫn mọi successful scan. Production C1 STALE6s/TTL5phút không đổi. Skip unchanged + full30s chưa đủ freshness6s: A/C phải chốt scan-based refresh/freshness/resync contract và test, không dùng heartbeat gia hạn hay tăng timeout âm thầm.
 - SequentialDeltaReplayAdapter là SIMULATED tối thiểu, không production reducer. Delta replay clean/duplicate/reconnect/mutation; drop/reorder/gap-resync còn T3-C2/C3, không claim MT02–MT06 PASS. Production measurement type DELTA và live gate cần tích hợp sau; chưa đo E2.
+
+## T3-C2 · Reducer delta, resync và capability thử nghiệm
+
+Contract12/10/2026 thay phần “server chưa hỗ trợ/freshness chưa chốt” của T3-C1; [hướng dẫn và hook](MONITORING_DELTA_REDUCER.md), QD-17. Không thay v0/header/policy/identity/event/gap schema hoặc baseline6s/TTL5phút. Không full gate/production delta default.
+
+- Server `toeic.state.delta-enabled=false` mặc định. Khi bật, ACK HEARTBEAT hợp lệ có optional `monitoringDelta=true`; client opt-in `toeic.realtime.delta-experimental=true` + ACK có correlation đúng mới supportsMonitoringDelta. Capability reset khi socket mới; không cấp role/scope. Candidate factory vẫn full, demo gọi encoder delta riêng.
+- MONITORING_DELTA schema C1 giữ nguyên; empty delta được phép từ successful observation mới để refresh. Server bind/auth trước cache, core dùng chung64ID full/delta, canonical + message type digest. Duplicate không apply/push/touch/revision; cùng sequence khác full/delta payload CONFLICT, ngoài window message cũ STALE.
+- Delta mới thiếu base/chưa full/đang needsFull: state UNSYNCED giữ set/sequence/receivedAt, không nhớ message chưa áp và không cập nhật freshness. Full cao hơn phục hồi/xóa needsFull; old message không poison state mới. Remove absent/add existing/result>128 INVALID_INPUT atomic; metadata cùng identity dùng full.
+- MONITORING_RESYNC envelope giữ requestId/attemptId/traceId của request, messageId mới; payload `{collectorSessionId,syncEpoch,currentSequence,reason:BASE_MISSING}`. Không ACK delta chưa áp. Duplicate đã áp vẫn ACK đúng sequence của request, kèm optional `resync` object cùng schema khi base cần full; không làm state SYNCED bằng retry.
+- Parser RealtimeClient validate correlation/type/scope/collector/epoch trước callback. Encoder bỏ base/pending/observations và invalid guard; chờ scan mới. CurrentSequence>0 → full trong epoch hiện tại, sequence>max(server current,client attempted). CurrentSequence0/long hết hoặc STALE/TTL/restart → OPEN mới/full1. ID mới cho full/resync, retry message cũ không thay payload.
+- Delta không đổi skip trước deadline refresh2s từ ACK state cuối; sau đó empty delta sequence+1 từ scan mới. `toeic.delta.refreshMillis`1–2000ms thử nghiệm; snapshot age0..<refresh theo observationNanos/ticker cùng clock. Reconciliation30s chỉ gửi trên fresh successful scan, không tick latest cũ; source lỗi/hung không sinh message mới. Duplicate không gia hạn; heartbeat chỉ presence. Server freshness theo new-state accepted receipt, không chứng minh OS time/client trung thực/latency mạng.
+- MONITOR_STATE có UNSYNCED với last-known set/sequence>0; UI phải nói chưa đồng bộ/dữ liệu cũ. Revision/instance dùng reconciliation hiện có; state vẫn RAM một JVM/max4096attempt/128process/64ID. Auth trước duplicate, push auth/assignment lại; websocket write/push ngoài store lock. Event/gap commit ACK không đổi.
+- Measurement/analyzer thêm known type DELTA/RESYNC, không schema mới/counter delivery/đếm ACK hai lần. Replay dùng lõi production, oracle raw độc lập; auth/socket/ACK trong replay SIMULATED. T3-C3 fault campaign/gate/live desktop/E1/E2 chưa chạy.

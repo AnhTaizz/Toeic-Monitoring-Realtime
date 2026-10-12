@@ -48,7 +48,7 @@ public final class ReplayEngine {
         if(faultChecks.stream().anyMatch(c -> !c.match()))issues.add("FAULT_MISMATCH");
         var missing=business.keySet().stream().filter(id -> !server.events().containsKey(id)).toList();
         return new Result("monitoring-replay-result-v1",issues.isEmpty()?"PASS":"FAIL",trace.header().sourceLabel(),trace.sha256(),
-                "REPLAY "+mode+"; shared client state/event delivery; "+(delta?"SIMULATED sequential delta adapter (not T3-C2)":"shared C1 reducer"),"SIMULATED", "SIMULATED baseline drain; not ACK of faulted network",
+                "REPLAY "+mode+"; shared client state/event delivery; "+(delta?"production MonitoringStateReducer; network/auth/ACK SIMULATED":"shared C1 reducer"),"SIMULATED", "SIMULATED baseline drain; not ACK of faulted network",
                 "NOT_SIMULATED; no heartbeat UNKNOWN/timeout/TTL inference",config,cleanOracle.businessSteps(),List.copyOf(cleanChecks),List.copyOf(faultChecks),observationChecks,
                 business,new TreeMap<>(server.events()),missing,List.copyOf(issues));
     }

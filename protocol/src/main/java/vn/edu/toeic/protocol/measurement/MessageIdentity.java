@@ -13,7 +13,7 @@ public record MessageIdentity(String messageType, String messageId, String reque
         String attemptId, String eventId, String gapId, String collectorSessionId, Long sequence) {
     private static final Gson JSON=new GsonBuilder().setStrictness(Strictness.STRICT).create();
     private static final Set<String> TYPES=Set.of("HEARTBEAT","PROCESS_OBSERVED","MONITORING_GAP","ACK","ERROR","MONITOR_WARNING","MONITOR_PRESENCE",
-            "MONITORING_SYNC_OPEN","MONITORING_FULL","MONITORING_SYNC_CLOSE","MONITOR_STATE");
+            "MONITORING_SYNC_OPEN","MONITORING_FULL", "MONITORING_DELTA", "MONITORING_RESYNC","MONITORING_SYNC_CLOSE","MONITOR_STATE");
     public static MessageIdentity read(String text) {
         try {
             JsonObject body=JSON.fromJson(text,JsonObject.class);
