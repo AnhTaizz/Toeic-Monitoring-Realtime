@@ -431,3 +431,12 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Còn dở: chưa push. Nếu main tiến tiếp trước khi merge thì phải đồng bộ thêm.
 - Tiếp theo: xếp lại nhánh API lịch sử và nhánh client của B trên commit này.
 - Cần người khác: C review PR #23. Bằng chứng `evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md`.
+
+## 2026-10-12 · A · B-ACCEPT-01: API lịch sử lượt thi
+- Thời lượng: hai phiên Agent (Codex rồi Claude); giờ của thành viên chưa ghi.
+- Đã làm: Codex cài `GET /api/v1/candidate/attempts`, hai DTO `CandidateAttemptPageResponse`/`CandidateAttemptSummaryDto`, handler 404 cho `NoResourceFoundException` và ba test PostgreSQL (`e81961e`). Phiên Claude nhận lại: chạy toàn bộ test, thêm hai test (thứ tự byte dưới DB `en_US`, biên phân trang, lượt cũ và lượt chốt thiếu `submitted_at` bị ẩn, phiên thu hồi), kiểm chéo bằng client của B, viết contract chính thức và bằng chứng.
+- Commit: `e81961e` (Codex), `33a2932` và commit tài liệu kế tiếp, nhánh `fix/backend-candidate-attempt-history-20261012`. Không push, không merge.
+- Đã kiểm: `mvn test` 590/590 trên `e81961e`; `mvn package` 592/592 trên `33a2932`, đều với `TOEIC_PG_INTEGRATION=true` trên PostgreSQL 18.6; client B `770c896` gọi server jar của nhánh này PASS 13/13 (HTTP + PostgreSQL thật, có lượt `SUBMITTED` và `TIMED_OUT` thật).
+- Còn dở: GUI production của B chưa chạy nên B-ACCEPT-01 chưa đóng; sai phương thức HTTP vẫn trả 500 (ngoài phạm vi giao việc, chỉ ghi nhận); chưa đo truy vấn với số lượt lớn.
+- Tiếp theo: người dùng quyết định push/merge; B ghép với `770c896` và chạy lại GUI.
+- Cần người khác: B chạy GUI production theo mục 5 của evidence; C review phần auth/handler lỗi của A. Bằng chứng `evidence/t2-a-history/2026-10-12-verification.md`.

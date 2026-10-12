@@ -180,3 +180,13 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Read history tách scope ACTIVE, scheduler exam riêng và chốt theo answers đã commit. [Review A/B](REVIEW_A_PR17.md).
 
 Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`, QD-17 và QD-18 đã thuộc T3-C2/T3-C3 của C, nên quyết định deadline của A (trước mang số QD-18 trên nhánh này) đổi thành QD-21. QD-20 và QD-22 dành cho hai quyết định của B trên PR #17 (mất WebSocket; `writerEpoch` khi vào thi); các mục đó vào main cùng PR tương ứng. Đồng bộ lần hai với main `cb30f3d`: QD-19 đã thuộc T3-C4 của C, nên quyết định API lịch sử lượt thi của A (bản ghép cục bộ trước đó ghi QD-19) mang số QD-23.
+
+## QD-23 · Lịch sử lượt thi tách khỏi scope monitoring, phân trang theo attemptId
+
+- Ngày: 2026-10-12 · Người quyết: A (phiên Agent, theo đề xuất của B) · Review C: NOT RUN.
+- Lựa chọn: thêm endpoint đọc riêng `GET /api/v1/candidate/attempts` để thí sinh khám phá lượt thi của mình, thay vì nới `auth/me.attemptScope`. Sắp xếp và phân trang keyset theo `attemptId` với `COLLATE "C"`; `limit` 1..100, mặc định 50.
+- Lý do: `attemptScope` là quyền monitoring và ghi, chỉ gồm lượt `ACTIVE`; đưa lượt đã chốt vào đó sẽ mở lại quyền gửi heartbeat/event cho lượt đã chốt. `attemptId` là khóa duy nhất có sẵn nên không cần migration hay cột thời gian mới. Collation mặc định của DB là `en_US`, sắp `a` trước `B`; client so bằng `String.compareTo` nên server phải ép thứ tự byte.
+- Hệ quả: thứ tự không phải "mới nhất trước"; không có snapshot xuyên trang. Lượt đã chốt thiếu `submitted_at` bị ẩn. Danh sách chỉ để tìm ID; kết quả vẫn đọc qua `GET /status` và được kiểm quyền lại ở đó.
+- Kèm theo: route API không tồn tại trả 404 `INVALID_INPUT` thay cho 500. `ErrorCode` không có mã riêng cho "không tìm thấy" và không thêm mã mới để khỏi đổi contract lỗi v0.
+- Kiểm chứng: `ExamRuntimePostgresTest` (PostgreSQL thật) và kiểm chéo với client B `770c896`; `evidence/t2-a-history/2026-10-12-verification.md`.
+- Liên quan: B-ACCEPT-01, T2-A4, T2-B4, AT01, AT11.

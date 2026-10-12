@@ -432,3 +432,17 @@ Không đổi trạng thái AT/MT/LT/IT trong bảng chính; `TRACKER.json` gi�
 ### Backend A — PR #23 đồng bộ lần hai với main T3-C4, 13/10/2026 (local, chờ push)
 
 Main tiến lên `cb30f3d` (PR #27) trong lúc làm, nên nhánh `sync/pr23-main-20261013` được merge thêm một lần: commit `c64503f`. `mvn package` với `TOEIC_PG_INTEGRATION=true`: **PASS 596**, 0 skip (protocol 43, client 386, server 166, spike 1; 11 test PostgreSQL thật). Smoke C1, C2 PASS; Python 10 PASS. Smoke T3-C4, GUI, LAN, human review: NOT RUN. Bảng 586 ở mục "PR #23 đồng bộ main T3-C3" là của commit `9713658` trước đó. Chi tiết: `evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md`.
+
+## B-ACCEPT-01 phía A — API lịch sử lượt thi (12/10/2026)
+
+SHA `33a2932` trên nhánh cục bộ `fix/backend-candidate-attempt-history-20261012` (base `main` `ee714fc` + 5 commit P0), Windows 11, JDK 21.0.8, PostgreSQL 18.6. Chi tiết: `evidence/t2-a-history/2026-10-12-verification.md`.
+
+| Kiểm tra | Kết quả | Ghi chú |
+|---|---|---|
+| `mvn test`, `mvn package` với `TOEIC_PG_INTEGRATION=true` | PASS 592/592 | protocol 43, client 376, server 172, spike 1; bản Codex để lại (`e81961e`) là 590/590 |
+| Endpoint lịch sử: chủ sở hữu, thí sinh khác, role, phiên thu hồi, phân trang, whitelist trường | PASS REAL | Spring runtime + HTTP + PostgreSQL thật, schema riêng tự xóa; 4 test |
+| Route API không tồn tại | PASS | 404 `INVALID_INPUT`, không còn 500 |
+| Client B `770c896` gọi server nhánh này | PASS REAL 13/13 | HTTP + PostgreSQL thật, không GUI; `SUBMITTED` và `TIMED_OUT` thật |
+| GUI production của B, review C→A, LAN | NOT RUN | B-ACCEPT-01 chưa đóng cho tới khi B chạy lại GUI |
+
+Không đổi trạng thái AT01–AT11 hay IT01–IT04; `TRACKER.json` giữ nguyên.
