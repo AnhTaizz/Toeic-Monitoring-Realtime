@@ -1,0 +1,40 @@
+REPLAY PASS source=MOCK faults=SIMULATED cleanSteps=17 faultSteps=17 businessEvents=6 deliveredEvents=6
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI fixture-full exit=0 expected=0
+REPLAY PASS source=MOCK faults=SIMULATED cleanSteps=16 faultSteps=16 businessEvents=6 deliveredEvents=6
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI fixture-delta exit=0 expected=0
+COMPARE fixture canonical processes+metadata and complete event IDs/content PASS; sequence may differ.
+REPLAY PASS source=MOCK faults=SIMULATED cleanSteps=18 faultSteps=33 businessEvents=6 deliveredEvents=6
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI reconnect-full exit=0 expected=0
+REPLAY PASS source=MOCK faults=SIMULATED cleanSteps=18 faultSteps=33 businessEvents=6 deliveredEvents=6
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI reconnect-delta exit=0 expected=0
+COMPARE reconnect canonical processes+metadata and complete event IDs/content PASS; sequence may differ.
+REPLAY FAIL source=MOCK faults=SIMULATED cleanSteps=16 faultSteps=16 businessEvents=6 deliveredEvents=6
+MISMATCH record=3 message=MONITORING_DELTA@record3/message5 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=3 message=PROCESS_OBSERVED@record3/message6 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI negative-delta exit=1 expected=1
+REPLAY FAIL source=MOCK faults=SIMULATED cleanSteps=17 faultSteps=17 businessEvents=6 deliveredEvents=6
+MISMATCH record=3 message=MONITORING_FULL@record3/message5 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+MISMATCH record=3 message=PROCESS_OBSERVED@record3/message6 expected=ACCEPTED actual=ACCEPTED reason=OUTCOME_STATE_OR_EVENT_SET_MISMATCH
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI negative-full exit=1 expected=1
+TRACE ERROR INPUT_CONFIG_OR_IO; private path/cause omitted
+CLI unsupported-delta-faults exit=2 expected=2
+REPLAY PASS source=MOCK faults=SIMULATED cleanSteps=8 faultSteps=10 businessEvents=1 deliveredEvents=1
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI legacy-full-faults exit=0 expected=0
+TRACE ERROR INPUT_CONFIG_OR_IO; private path/cause omitted
+CLI test-schema-refused exit=2 expected=2
+TRACE COMPLETE source=REAL ProcessHandle records=8 sha256=a95aaacac1e390b738cb6c9cdb5c895591c300e35d6f7ed064e39cd2c3bfeb77; candidate gate SIMULATED, no server/GUI.
+REPLAY PASS source=REAL faults=SIMULATED cleanSteps=53 faultSteps=53 businessEvents=45 deliveredEvents=45
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI real-full exit=0 expected=0
+REPLAY PASS source=REAL faults=SIMULATED cleanSteps=48 faultSteps=48 businessEvents=45 deliveredEvents=45
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.
+CLI real-delta exit=0 expected=0
+COMPARE real canonical processes+metadata and complete event IDs/content PASS; sequence may differ.
+T3-C1 CLI PASS artifacts=client/target/t3c1-smoke/271c19c0-b95e-49a4-965b-80d2d2c29663; no production delta, MT gate or E1/E2 claim.

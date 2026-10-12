@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 import static vn.edu.toeic.protocol.monitoring.FullSnapshotPayload.*;
 
-/** T3-C1 candidate wire contract. Production server support is a separate T3-C2 task. */
+/** Shared delta wire contract. Server/transport support requires explicit experimental capability. */
 public record DeltaSnapshotPayload(String collectorSessionId, String syncEpoch, long baseSequence,
         long sequence, String policyVersion, List<Process> added, List<Identity> removed) {
     public record Identity(long pid, String startInstant) {

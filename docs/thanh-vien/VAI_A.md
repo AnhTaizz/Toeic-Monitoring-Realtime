@@ -259,7 +259,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** C dùng được hook; phần server của IT04 chạy được.
 
-**Ghi chú làm dở:** —
+**Bàn giao từ C ngày12/10/2026:** C2 tận dụng AuthorizationService/SessionAuthenticationService/active binding/store RAM C1/registry/maintenance; bổ sung delta/resync và experimental heartbeat capability, không thay auth implementation/DB migrations/exam. REAL server restart/resync harness PASS nhưng IT04 toàn hệ thống/human A review chưa làm; không đánh dấu T3-A3 DONE thay A. A cần review scope trước duplicate, socket/epoch/RAM freshness/TTL/ACK và push assignment, coarse store lock. [Guide C2](../MONITORING_DELTA_REDUCER.md), [evidence](../../evidence/t3-c2/2026-10-12-verification.md).
 
 ### T3-A4 · Regression giao dịch và nhiều client
 `4h` · phụ thuộc: T3-A2, T3-A3, T3-C4 · review: C

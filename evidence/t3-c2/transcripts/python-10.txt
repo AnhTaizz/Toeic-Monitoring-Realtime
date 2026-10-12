@@ -1,0 +1,13 @@
+python : ..........
+At line:2 char:1
++ python -m unittest discover -s scripts -p 'test_summarize_monitoring. ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (..........:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.242s
+
+OK
+Summary COMPLETE: endpoints=1, categories=2; WS JSON application bytes only
+Summary COMPLETE: endpoints=1, categories=2; WS JSON application bytes only

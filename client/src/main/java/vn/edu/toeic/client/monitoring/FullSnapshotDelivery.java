@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -16,6 +17,7 @@ import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
 import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
 import vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayload;
+import vn.edu.toeic.protocol.monitoring.MonitoringResyncPayload;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
 /** Shared bounded state delivery; public constructors remain full-only. Never invokes the transport while holding its state lock. */
@@ -52,7 +54,8 @@ public final class FullSnapshotDelivery implements AutoCloseable {
     private final long reconciliationNanos; // zero means unchanged full baseline
     private List<FullSnapshotPayload.Process> acknowledgedState=List.of();
     private ProcessSnapshot latest;
-    private long fullAcknowledgedAt;
+    private long fullAcknowledgedAt,stateAcknowledgedAt,observedAt;
+    private final long refreshNanos;
     private boolean awaitFresh;
     public FullSnapshotDelivery(String attempt,MonitoringTransport transport,MonitoringDelivery.Settings settings,Consumer<String> denied) {
         this(attempt,transport,settings,denied,System::nanoTime,true);
@@ -67,7 +70,14 @@ public final class FullSnapshotDelivery implements AutoCloseable {
     }
     FullSnapshotDelivery(String attempt,MonitoringTransport transport,MonitoringDelivery.Settings settings,Consumer<String> denied,
             LongSupplier ticker,boolean automatic,Function<String,String> ids,long reconciliationNanos) {
+        this(attempt,transport,settings,denied,ticker,automatic,ids,reconciliationNanos,
+                reconciliationNanos>0?Long.getLong("toeic.delta.refreshMillis",2000L):2000L);
+    }
+    FullSnapshotDelivery(String attempt,MonitoringTransport transport,MonitoringDelivery.Settings settings,Consumer<String> denied,
+            LongSupplier ticker,boolean automatic,Function<String,String> ids,long reconciliationNanos,long refreshMillis) {
         this.reconciliationNanos=reconciliationNanos;
+        if(refreshMillis<1||refreshMillis>2000)throw new IllegalArgumentException("DELTA_REFRESH_LIMIT");
+        refreshNanos=TimeUnit.MILLISECONDS.toNanos(refreshMillis);
         this.attempt=FullSnapshotPayload.id(attempt); this.transport=transport; this.settings=settings; this.denied=denied; this.ticker=ticker;
         this.ids=ids;
         connected=transport.connectionState()==ConnectionState.CONNECTED;
@@ -95,7 +105,7 @@ public final class FullSnapshotDelivery implements AutoCloseable {
             }
             if (!connected) return; // Reconnect requires a NEW successful scan, not an offline observation.
             if (reconciliationNanos>0) {
-                observations.clear(); observations.addLast(snapshot); latest=snapshot; awaitFresh=false; problem="NONE"; return;
+                observations.clear(); observations.addLast(snapshot); latest=snapshot; observedAt=snapshot.observationNanos(); awaitFresh=false; problem="NONE"; return;
             }
             if (observations.size()>=QUEUE_LIMIT) { problem="FULL_QUEUE_LIMIT"; return; }
             observations.addLast(snapshot); problem="NONE";
@@ -128,13 +138,13 @@ public final class FullSnapshotDelivery implements AutoCloseable {
             }
             if (pending == null) {
                 if (epoch == null) pending=new Pending(message("MONITORING_SYNC_OPEN",identity()));
-                else if (!observations.isEmpty() || (reconciliationNanos>0 && latest!=null && acknowledged>0
-                        && now-fullAcknowledgedAt>=reconciliationNanos)) {
+                else if (!observations.isEmpty()) {
+                    if(reconciliationNanos>0&&(now-observedAt<0 || now-observedAt>=refreshNanos)){observations.clear();latest=null;problem="OBSERVATION_EXPIRED";return;}
                     ProcessSnapshot snapshot=observations.isEmpty()?latest:observations.removeFirst();
                     List<FullSnapshotPayload.Process> processes=processes(snapshot);
                     if (sequence==Long.MAX_VALUE) { authorized=false; problem="SEQUENCE_LIMIT"; return; }
                     boolean full=reconciliationNanos==0 || acknowledged==0 || now-fullAcknowledgedAt>=reconciliationNanos;
-                    if (!full && processes.equals(acknowledgedState)) return;
+                    if (!full && processes.equals(acknowledgedState) && now-stateAcknowledgedAt<refreshNanos) return;
                     var added=new ArrayList<FullSnapshotPayload.Process>();
                     var removed=new ArrayList<DeltaSnapshotPayload.Identity>();
                     if (!full) {
@@ -200,15 +210,19 @@ public final class FullSnapshotDelivery implements AutoCloseable {
                     || !pending.message.traceId().equals(reply.traceId())) return;
             JsonObject body=reply.payload();
             try {
+                if(reconciliationNanos>0&&reply.type().equals("MONITORING_RESYNC")) {
+                    requestFull(MonitoringResyncPayload.parse(body));return;
+                }
                 if (reply.type().equals("ACK") && "ACCEPTED".equals(FullSnapshotPayload.text(body,"status"))
                         && pending.message.type().equals(FullSnapshotPayload.text(body,"acknowledgedType"))) {
+                    if(reconciliationNanos>0&&body.has("resync")){requestFull(MonitoringResyncPayload.parse(body.getAsJsonObject("resync")));return;}
                     String accepted=FullSnapshotPayload.id(FullSnapshotPayload.text(body,"syncEpoch"));
                     if (pending.message.type().equals("MONITORING_SYNC_OPEN")) epoch=accepted;
                     else {
                         if (!accepted.equals(epoch) || FullSnapshotPayload.number(body,"sequence")!=sequence) return;
                         acknowledged=sequence;
                         if(reconciliationNanos>0) {
-                            acknowledgedState=pending.target;
+                            acknowledgedState=pending.target;stateAcknowledgedAt=ticker.getAsLong();
                             if(pending.message.type().equals("MONITORING_FULL")) fullAcknowledgedAt=ticker.getAsLong();
                         }
                     }
@@ -226,6 +240,14 @@ public final class FullSnapshotDelivery implements AutoCloseable {
             } catch (RuntimeException invalid) { problem="INVALID_STATE_ACK"; }
         }
         if (fatal != null) { if(reconciliationNanos>0) close(); denied.accept(fatal); }
+    }
+    private void requestFull(MonitoringResyncPayload resync) {
+        if(!Set.of("MONITORING_FULL","MONITORING_DELTA").contains(pending.message.type())
+                ||!resync.collectorSessionId().equals(collector)||!resync.syncEpoch().equals(epoch))return;
+        generation++;
+        if(resync.currentSequence()==0 || resync.currentSequence()==Long.MAX_VALUE || sequence==Long.MAX_VALUE){resetDelta();problem="RESYNC_WAIT_FRESH";return;}
+        sequence=Math.max(sequence,resync.currentSequence());acknowledged=0;acknowledgedState=List.of();
+        pending=null;observations.clear();latest=null;awaitFresh=true;problem="RESYNC_WAIT_FRESH";
     }
     private void connectionChanged(ConnectionState state) {
         String forget;

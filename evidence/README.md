@@ -35,6 +35,8 @@
 
 | T3-C1 | Encoder delta candidate/ACKed base và replay oracle | [Verification](t3-c1/2026-10-11-verification.md), [artifact audit](t3-c1/artifact-audit.json) |
 
+| T3-C2 | Reducer production, resync, capability và scan freshness | [Verification](t3-c2/2026-10-12-verification.md) |
+
 ## Cách lưu log mới
 
 - Lưu theo task trong `evidence/<task>/`; một lượt chạy bổ sung có thể dùng thư mục con riêng. Thêm báo cáo và liên kết vào mục lục này khi có bằng chứng mới.

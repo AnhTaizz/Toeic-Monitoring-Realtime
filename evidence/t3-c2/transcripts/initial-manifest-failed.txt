@@ -1,0 +1,17 @@
+powershell : Resolve-Path : Cannot find path
+At line:2 char:1
++ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t3c ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Resolve-Path : Cannot find path :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+'client/src/main/java/vn/edu/toeic/client/monitoring/trace/SequentialDeltaReplayAdapter.java' because it does not
+exist.
+At
+C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules\Microsoft.PowerShell.Utility\Microsoft.PowerShell.Utility.psm1:106
+char:36
++ ...     $pathsToProcess += Resolve-Path -LiteralPath $LiteralPath | Forea ...
++                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (client/src/main...layAdapter.java:String) [Resolve-Path], ItemNotFoundE
+   xception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.ResolvePathCommand

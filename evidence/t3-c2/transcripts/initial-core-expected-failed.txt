@@ -1,0 +1,105 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO]
+[INFO] TOEIC Monitoring Realtime                                          [pom]
+[INFO] TOEIC Protocol                                                     [jar]
+[INFO] TOEIC JavaFX Client                                                [jar]
+[INFO] TOEIC Server                                                       [jar]
+[INFO] TOEIC ProcessHandle Spike                                          [jar]
+[INFO]
+[INFO] ---------------< vn.edu.toeic:toeic-monitoring-realtime >---------------
+[INFO] Building TOEIC Monitoring Realtime 0.1.0-SNAPSHOT                  [1/5]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] -----------------------< vn.edu.toeic:protocol >------------------------
+[INFO] Building TOEIC Protocol 0.1.0-SNAPSHOT                             [2/5]
+[INFO]   from protocol\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.5.0:resources (default-resources) @ protocol ---
+[INFO] skip non existing resourceDirectory <WORKSPACE>\protocol\src\main\resources
+[INFO] skip non existing resourceDirectory <WORKSPACE>\protocol\src\main\resources
+[INFO]
+[INFO] --- compiler:3.15.0:compile (default-compile) @ protocol ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ protocol ---
+[INFO] skip non existing resourceDirectory <WORKSPACE>\protocol\src\test\resources
+[INFO]
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ protocol ---
+[INFO] Recompiling the module because of added or removed source files.
+[INFO] Compiling 5 source files with javac [debug parameters release 21] to target\test-classes
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ protocol ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running vn.edu.toeic.protocol.measurement.MessageMeasurementsTest
+mvn : MEASUREMENT_WRITER_FAILED raw log incomplete; monitoring unchanged
+At line:2 char:1
++ mvn "-Dmaven.repo.local=<USER_HOME>\.m2\repository" test *> server/ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (MEASUREMENT_WRI...oring unchanged:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+MEASUREMENT_WRITER_FAILED raw log incomplete; monitoring unchanged
+MEASUREMENT_FLUSH_TIMEOUT raw log incomplete; writer is daemon
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.583 s -- in vn.edu.toeic.protocol.measurement.MessageMeasurementsTest
+[INFO] Running vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest
+[INFO] Running vn.edu.toeic.protocol.monitoring.EventOriginTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in vn.edu.toeic.protocol.monitoring.EventOriginTest
+[INFO] Running vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 s -- in vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest
+[INFO] Running vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest
+[ERROR] Tests run: 6, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.097 s <<< FAILURE! -- in vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest
+[ERROR] vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest.sixRulesFullDeltaRetryMissingBaseRecoveryOldEpoch -- Time elapsed: 0.017 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: STALE
+ but was: CONFLICT
+	at vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest.rejected(MonitoringStateReducerTest.java:14)
+	at vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest.sixRulesFullDeltaRetryMissingBaseRecoveryOldEpoch(MonitoringStateReducerTest.java:24)
+
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR]   MonitoringStateReducerTest.sixRulesFullDeltaRetryMissingBaseRecoveryOldEpoch:24->rejected:14
+expected: STALE
+ but was: CONFLICT
+[INFO]
+[ERROR] Tests run: 41, Failures: 1, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for TOEIC Monitoring Realtime 0.1.0-SNAPSHOT:
+[INFO]
+[INFO] TOEIC Monitoring Realtime .......................... SUCCESS [  0.002 s]
+[INFO] TOEIC Protocol ..................................... FAILURE [  3.999 s]
+[INFO] TOEIC JavaFX Client ................................ SKIPPED
+[INFO] TOEIC Server ....................................... SKIPPED
+[INFO] TOEIC ProcessHandle Spike .......................... SKIPPED
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.324 s
+[INFO] Finished at: 2026-10-12T20:46:16+07:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project protocol: There are test failures.
+[ERROR]
+[ERROR] See <WORKSPACE>\protocol\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[ERROR]
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <args> -rf :protocol

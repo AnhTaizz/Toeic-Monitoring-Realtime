@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import vn.edu.toeic.protocol.ErrorCode;
 import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
+import vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayload;
+import vn.edu.toeic.protocol.monitoring.MonitoringStateReducer;
 import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
 import vn.edu.toeic.server.auth.AuthenticatedUser;
 import vn.edu.toeic.server.auth.AuthorizationService;
@@ -24,7 +26,9 @@ import vn.edu.toeic.server.realtime.RealtimeSessionRegistry;
 /** One bounded RAM store / server JVM. No history SQL or database migration. */
 @Service
 public final class MonitoringStateService implements AutoCloseable {
-    public record Accepted(MonitoringStateView state, boolean changed) { }
+    public record Accepted(MonitoringStateView state, boolean changed, boolean resync) {
+        public Accepted(MonitoringStateView state,boolean changed){this(state,changed,false);}
+    }
     private static final class Entry {
         final long user, connectionOrder;
         final String socket, collector, epoch, openId;
@@ -32,7 +36,7 @@ public final class MonitoringStateService implements AutoCloseable {
         final Map<String,String> opens = new LinkedHashMap<>();
         MonitoringStateView view;
         long touched;
-        boolean closed;
+        boolean closed,requiresFull;
         Entry(long user, String socket, long order, String collector, String openId, MonitoringStateView view, long now) {
             this.user=user; this.socket=socket; connectionOrder=order; this.collector=collector; this.openId=openId;
             this.epoch=view.syncEpoch(); this.view=view; touched=now;
@@ -46,6 +50,8 @@ public final class MonitoringStateService implements AutoCloseable {
     private final long staleNanos, ttlNanos;
     private final int maxAttempts;
     private long revision;
+    @Value("${toeic.state.delta-enabled:false}") private boolean deltaEnabled;
+    public boolean deltaEnabled(){return deltaEnabled;}
     private volatile boolean closed;
     @Autowired public MonitoringStateService(AuthorizationService authorization, RealtimeSessionRegistry sessions,
             @Value("${toeic.state.stale-ms:6000}") long staleMillis,
@@ -58,6 +64,10 @@ public final class MonitoringStateService implements AutoCloseable {
         if (staleMillis < 1 || ttlMillis <= staleMillis || maxAttempts < 1 || maxAttempts > 4096) throw new IllegalArgumentException();
         this.authorization=authorization; this.sessions=sessions; this.ticker=ticker; this.maxAttempts=maxAttempts;
         staleNanos=Duration.ofMillis(staleMillis).toNanos(); ttlNanos=Duration.ofMillis(ttlMillis).toNanos();
+    }
+    MonitoringStateService(AuthorizationService authorization,RealtimeSessionRegistry sessions,LongSupplier ticker,
+            long staleMillis,long ttlMillis,int maxAttempts,boolean deltaEnabled) {
+        this(authorization,sessions,ticker,staleMillis,ttlMillis,maxAttempts);this.deltaEnabled=deltaEnabled;
     }
     private void writer(AuthenticatedUser user,String attempt) {
         if (closed) throw new StateRejectedException(ErrorCode.RETRYABLE_SERVER_ERROR);
@@ -85,10 +95,30 @@ public final class MonitoringStateService implements AutoCloseable {
     public synchronized Accepted full(AuthenticatedUser user,String attempt,String socket,String id,FullSnapshotPayload full) {
         writer(user,attempt);
         Entry entry=active(user,attempt,socket,full.collectorSessionId(),full.syncEpoch());
-        if (!entry.reducer.accept(id,full)) return new Accepted(entry.view,false);
+        if (!entry.reducer.accept(id,full)) return new Accepted(entry.view,false,entry.reducer.needsFull());
+        entry.requiresFull=false;
         entry.touched=ticker.getAsLong();
         entry.view=new MonitoringStateView(attempt,instance,entry.epoch,entry.collector,++revision,full.sequence(),"SYNCED",
                 full.policyVersion(),full.processes(),Instant.now().toString());
+        return new Accepted(entry.view,true);
+    }
+    public synchronized Accepted delta(AuthenticatedUser user,String attempt,String socket,String id,DeltaSnapshotPayload delta) {
+        writer(user,attempt);
+        Entry entry=active(user,attempt,socket,delta.collectorSessionId(),delta.syncEpoch());
+        if(!deltaEnabled) throw new StateRejectedException(ErrorCode.INVALID_STATE);
+        var outcome=entry.reducer.delta(id,delta);
+        if(outcome==MonitoringStateReducer.Outcome.DUPLICATE)return new Accepted(entry.view,false,entry.reducer.needsFull());
+        if(outcome==MonitoringStateReducer.Outcome.RESYNC) {
+            entry.requiresFull=true;
+            boolean changed=!entry.view.status().equals("UNSYNCED");
+            if(changed)entry.view=new MonitoringStateView(attempt,instance,entry.epoch,entry.collector,++revision,entry.reducer.sequence(),
+                    "UNSYNCED",FullSnapshotPayload.POLICY,entry.reducer.processes(),entry.view.receivedAt());
+            return new Accepted(entry.view,changed,true);
+        }
+        entry.requiresFull=false;
+        entry.touched=ticker.getAsLong();
+        entry.view=new MonitoringStateView(attempt,instance,entry.epoch,entry.collector,++revision,entry.reducer.sequence(),"SYNCED",
+                FullSnapshotPayload.POLICY,entry.reducer.processes(),Instant.now().toString());
         return new Accepted(entry.view,true);
     }
     private Entry active(AuthenticatedUser user,String attempt,String socket,String collector,String epoch) {
@@ -120,7 +150,7 @@ public final class MonitoringStateService implements AutoCloseable {
             authorization.requireRole(user,Role.PROCTOR); authorization.requireAttempt(user,attempt);
             Entry entry=entries.get(attempt);
             if (entry != null) {
-                if (ticker.getAsLong()-entry.touched >= staleNanos && !entry.view.status().equals("STALE")) { stale(entry); changed=true; }
+                if (ticker.getAsLong()-entry.touched >= staleNanos && !entry.view.status().equals("STALE") && !entry.requiresFull) { stale(entry); changed=true; }
                 result=entry.view;
             } else result=new MonitoringStateView(attempt,instance,null,null,revision,0,"UNSYNCED",FullSnapshotPayload.POLICY,List.of(),null);
         }
@@ -135,7 +165,7 @@ public final class MonitoringStateService implements AutoCloseable {
             entries.entrySet().removeIf(item -> {
                 Entry entry=item.getValue();
                 if (!sessions.isRegistered(entry.socket)) entry.closed=true;
-                if ((entry.closed || now-entry.touched >= staleNanos) && !entry.view.status().equals("STALE")) updates.add(stale(entry));
+                if ((entry.closed || now-entry.touched >= staleNanos) && !entry.view.status().equals("STALE") && (!entry.requiresFull || entry.closed)) updates.add(stale(entry));
                 if(now-entry.touched>=ttlNanos) {
                     updates.add(new MonitoringStateView(item.getKey(),instance,null,null,++revision,0,"UNSYNCED",FullSnapshotPayload.POLICY,List.of(),null));
                     return true;

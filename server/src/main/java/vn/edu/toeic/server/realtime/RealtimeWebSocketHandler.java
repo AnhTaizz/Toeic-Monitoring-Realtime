@@ -36,6 +36,8 @@ import vn.edu.toeic.server.monitoring.PresenceSnapshot;
 import vn.edu.toeic.server.monitoring.MonitoringStateService;
 import vn.edu.toeic.server.monitoring.StateRejectedException;
 import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
+import vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayload;
+import vn.edu.toeic.protocol.monitoring.MonitoringResyncPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.nio.charset.StandardCharsets;
 
@@ -92,10 +94,10 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
             String type = string(body, "type");
             attemptId = identifier(body, "attemptId", false);
             if ("PROCESS_OBSERVED".equals(type) || "MONITORING_GAP".equals(type)
-                    || type.startsWith("MONITORING_SYNC_") || "MONITORING_FULL".equals(type)
+                    || type.startsWith("MONITORING_SYNC_") || "MONITORING_FULL".equals(type) || "MONITORING_DELTA".equals(type)
                     || ("HEARTBEAT".equals(type) && attemptId!=null)) authorization.requireRole(user, Role.CANDIDATE);
             if (attemptId != null) authorization.requireAttempt(user, attemptId);
-            if ("MONITORING_SYNC_OPEN".equals(type) || "MONITORING_FULL".equals(type) || "MONITORING_SYNC_CLOSE".equals(type)) {
+            if ("MONITORING_SYNC_OPEN".equals(type) || "MONITORING_FULL".equals(type) || "MONITORING_DELTA".equals(type) || "MONITORING_SYNC_CLOSE".equals(type)) {
                 if (attemptId == null) throw new IllegalArgumentException();
                 JsonObject payload = body.getAsJsonObject("payload");
                 MonitoringStateService.Accepted result;
@@ -104,6 +106,14 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
                     FullSnapshotPayload full = FullSnapshotPayload.parse(payload);
                     result = state.full(user,attemptId,session.getId(),messageId,full);
                     acceptedSequence = full.sequence();
+                } else if("MONITORING_DELTA".equals(type)) {
+                    var delta=DeltaSnapshotPayload.parse(payload);
+                    result=state.delta(user,attemptId,session.getId(),messageId,delta);acceptedSequence=delta.sequence();
+                    if(result.resync() && !result.state().status().equals("SYNCED") && result.state().sequence()<delta.sequence()) {
+                        send(session,new MessageEnvelope<>(Protocol.VERSION,"MONITORING_RESYNC",UUID.randomUUID().toString(),requestId,attemptId,traceId,
+                                new MonitoringResyncPayload(result.state().collectorSessionId(),result.state().syncEpoch(),result.state().sequence(),"BASE_MISSING")));
+                        if(result.changed())state.publish(result.state());return;
+                    }
                 } else {
                     FullSnapshotPayload.fields(payload,"MONITORING_SYNC_OPEN".equals(type)
                             ? Set.of("collectorSessionId") : Set.of("collectorSessionId","syncEpoch"));
@@ -116,6 +126,7 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
                 accepted.addProperty("status","ACCEPTED"); accepted.addProperty("acknowledgedType",type);
                 accepted.addProperty("syncEpoch",result.state().syncEpoch());
                 if (acceptedSequence != null) accepted.addProperty("sequence",acceptedSequence);
+                if(result.resync())accepted.add("resync",gson.toJsonTree(new MonitoringResyncPayload(result.state().collectorSessionId(),result.state().syncEpoch(),result.state().sequence(),"BASE_MISSING")));
                 send(session,new MessageEnvelope<>(Protocol.VERSION,"ACK",UUID.randomUUID().toString(),requestId,attemptId,traceId,accepted));
                 if (result.changed()) state.publish(result.state());
                 return;
@@ -152,6 +163,7 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
             accepted.addProperty("status", "ACCEPTED");
             accepted.addProperty("acknowledgedType", "HEARTBEAT");
             accepted.addProperty("connectionId",session.getId());
+            if(state.deltaEnabled())accepted.addProperty("monitoringDelta",true);
             send(session, new MessageEnvelope<>(Protocol.VERSION, "ACK", UUID.randomUUID().toString(), requestId,
                     attemptId, traceId, accepted));
             presence.publish(acceptedPresence,traceId);
