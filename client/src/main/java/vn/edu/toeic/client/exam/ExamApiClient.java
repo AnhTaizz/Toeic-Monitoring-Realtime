@@ -44,7 +44,7 @@ import vn.edu.toeic.protocol.exam.TakeoverWriterResponse;
  * từ chối), {@link InvalidServerResponseException} (trả 2xx nhưng body không đọc được), và lỗi
  * mạng/timeout của HttpClient (không biết server đã xử lý hay chưa).
  */
-public final class ExamApiClient implements ExamGateway, AutoCloseable {
+public final class ExamApiClient implements ExamGateway, ExamHistoryGateway, AutoCloseable {
     private static final Pattern ATTEMPT_ID = Pattern.compile("[A-Za-z0-9_.:-]{1,128}");
 
     // Gson không tự đọc được java.time.Instant trên JDK 17+; thiếu adapter này thì mọi response
@@ -106,6 +106,23 @@ public final class ExamApiClient implements ExamGateway, AutoCloseable {
     public CompletableFuture<TakeoverWriterResponse> takeoverWriter(String attemptId, TakeoverWriterRequest request) {
         if (!validAttempt(attemptId)) return invalidAttempt();
         return post(attemptPath(attemptId, "takeover"), request, TakeoverWriterResponse.class);
+    }
+
+    /** Candidate-owned discovery proposal; never used to grant monitoring or writer scope. */
+    @Override
+    public CompletableFuture<CandidateAttemptPage> getCandidateAttempts(String afterAttemptId) {
+        if (afterAttemptId != null && !CandidateAttemptSummary.validId(afterAttemptId)) return invalidAttempt();
+        String path = "candidate/attempts?limit=50"
+                + (afterAttemptId == null ? "" : "&afterAttemptId=" + afterAttemptId);
+        return get(path, CandidateAttemptPage.class).thenApply(page -> {
+            if (page.attempts().size() > 50
+                    || (page.nextAfterAttemptId() != null && page.attempts().size() != 50)
+                    || (afterAttemptId != null && !page.attempts().isEmpty()
+                        && afterAttemptId.compareTo(page.attempts().getFirst().attemptId()) >= 0)) {
+                throw new InvalidServerResponseException();
+            }
+            return page;
+        });
     }
 
     /** Chỉ PROCTOR; server kiểm quyền. */

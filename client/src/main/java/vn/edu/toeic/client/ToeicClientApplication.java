@@ -16,6 +16,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import java.util.concurrent.atomic.AtomicBoolean;
 import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.client.monitoring.CandidateMonitoringSession;
@@ -37,6 +39,8 @@ import vn.edu.toeic.client.exam.CandidateExamView;
 import vn.edu.toeic.client.exam.ExamApiClient;
 import vn.edu.toeic.client.exam.ExamEntry;
 import vn.edu.toeic.client.exam.ExamSession;
+import vn.edu.toeic.client.exam.CandidateExamHistoryView;
+import vn.edu.toeic.client.exam.ScoreResultDialog;
 
 public final class ToeicClientApplication extends Application {
     private final BiFunction<MonitoringTransport,Consumer<MonitoringDelivery.Status>,CandidateMonitoringSession> monitoringFactory;
@@ -56,6 +60,7 @@ public final class ToeicClientApplication extends Application {
     private long monitoringGeneration;
     private ProctorDashboardView dashboard;
     private CandidateExamView activeExamView;
+    private CandidateExamHistoryView historyView;
 
     @Override
     public void start(Stage stage) {
@@ -248,8 +253,18 @@ public final class ToeicClientApplication extends Application {
         });
 
         VBox candidateControls = candidateMonitoringControls(stage, serverUrl, response, currentView);
+        historyView = new CandidateExamHistoryView(examApiClient, () -> currentView == viewGeneration && activeExamView == null,
+                () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."),
+                result -> ScoreResultDialog.show(stage, result,
+                        "Trạng thái kết thúc: " + result.state() + " · Điểm server: " + result.score(), null));
+        Tab room = new Tab("Phòng thi đang diễn ra", candidateControls);
+        Tab history = new Tab("Lịch sử / kết quả thi", historyView);
+        room.setClosable(false);
+        history.setClosable(false);
+        TabPane candidateTabs = new TabPane(room, history);
+        candidateTabs.setId("candidate-exam-tabs");
 
-        VBox userCard = new VBox(14, title, identity, new HBox(12, connectionStatus, availability), candidateControls, logout);
+        VBox userCard = new VBox(14, title, identity, new HBox(12, connectionStatus, availability), candidateTabs, logout);
         userCard.getStyleClass().add("card");
         userCard.setMaxWidth(800);
         userCard.setAlignment(Pos.CENTER);
@@ -259,12 +274,12 @@ public final class ToeicClientApplication extends Application {
         root.setAlignment(Pos.CENTER);
         root.setStyle("-fx-background-color: #0b0f19;");
 
-        stage.setScene(applyStyles(new Scene(root, 860, 640)));
+        stage.setScene(applyStyles(new Scene(root, 860, 760)));
         realtimeClient.connect(context);
     }
 
     private VBox candidateMonitoringControls(Stage stage, String serverUrl, LoginResponse login, long currentView) {
-        Label sectionTitle = new Label("DANH SÁCH CA THI & LƯỢT THI");
+        Label sectionTitle = new Label("PHÒNG THI ĐANG DIỄN RA (ACTIVE)");
         sectionTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: 800; -fx-text-fill: #38bdf8; -fx-letter-spacing: 1px;");
 
         ComboBox<String> attempts = new ComboBox<>();
@@ -427,6 +442,8 @@ public final class ToeicClientApplication extends Application {
                         return;
                     }
                     ExamEntry.Ready ready = (ExamEntry.Ready) outcome;
+                    // Portal history callbacks cannot open a result over a newly entered exam.
+                    if (historyView != null) { historyView.close(); historyView = null; }
                     activeExamView = new CandidateExamView(selectedAttempt, login.user().username(), ready.paper(),
                             ready.start(), examApiClient, realtimeClient,
                             () -> showRoleScene(stage, serverUrl, login),
@@ -509,6 +526,7 @@ public final class ToeicClientApplication extends Application {
         viewGeneration++;
         monitoringGeneration++;
         if (activeExamView != null) { activeExamView.close(); activeExamView = null; }
+        if (historyView != null) { historyView.close(); historyView = null; }
         if (dashboard != null) { dashboard.close(); dashboard = null; }
         if (monitoring != null) { monitoring.close(); monitoring = null; }
         monitoringAttempt = null;
