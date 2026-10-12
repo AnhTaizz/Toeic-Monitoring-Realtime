@@ -27,11 +27,11 @@ Mỗi lần chạy ghi đủ: commit SHA, OS/JDK/PostgreSQL, cấu hình, lệnh
 | ID | Tóm tắt | Owner / review | Task | Trạng thái | SHA | Bằng chứng |
 |---|---|---|---|---|---|---|
 | MT01 | Full snapshot hợp lệ; event không lặp mỗi poll; collector không chạy trên giám thị | C / B | T1-C2/C3, T2-C1/C2 | PARTIAL — C1/C2 kỹ thuật + process/proctor component REAL PASS; candidate GUI/LAN chưa đủ | C2 `fdac531`, source/JAR manifest | `evidence/t2-c2/2026-10-10-verification.md`; C1/ProcessHandle/Edge/gate/full separation hồi quy mới PASS |
-| MT02 | Replay cùng message sau mất ACK | C / B | T3-C3 | NOT RUN | | |
-| MT03 | Thiếu một delta → UNSYNCED, yêu cầu full | C / B | T3-C3 | NOT RUN | | |
-| MT04 | Delta epoch cũ không sửa state epoch mới | C / B | T3-C3/C4 | NOT RUN | | |
-| MT05 | Restart collector hoặc server → cần epoch và full mới | C / B | T3-C3/C4 | NOT RUN | | |
-| MT06 | Không lùi state; full và delta cho cùng state và event set | C / B | T3-C3 | NOT RUN | | |
+| MT02 | Replay cùng message sau mất ACK | C / B | T3-C3 | PARTIAL — replay duplicate/conflict PASS; fault-network ACK-loss/retry NOT MODELED | `d813cb1` | [C3 evidence](../evidence/t3-c3/2026-10-12-verification.md) |
+| MT03 | Thiếu một delta → UNSYNCED, yêu cầu full | C / B | T3-C3 | PARTIAL — acceptance replay gap/reorder/RESYNC/last-known/full recovery PASS; feedback live gate riêng | `d813cb1` | [C3 evidence](../evidence/t3-c3/2026-10-12-verification.md) |
+| MT04 | Delta epoch cũ không sửa state epoch mới | C / B | T3-C3/C4 | PARTIAL — replay old epoch after new full PASS; live hai desktop NOT RUN | `d813cb1` | [C3 evidence](../evidence/t3-c3/2026-10-12-verification.md) |
+| MT05 | Restart collector hoặc server → cần epoch và full mới | C / B | T3-C3/C4 | PARTIAL — replay transport reconnect/epoch-full1 PASS; restart/revoke real không mô hình C3 | `d813cb1` | [C3 evidence](../evidence/t3-c3/2026-10-12-verification.md) |
+| MT06 | Không lùi state; full và delta cho cùng state và event set | C / B | T3-C3 | PARTIAL —3workloads/replay full cao/late old/conflict/canonical metadata-event PASS; seeded NO_COMMON checkpoint ghi riêng | `d813cb1` | [C3 evidence](../evidence/t3-c3/2026-10-12-verification.md) |
 | MT07 | Event muộn, queue tràn; snapshot mới không xóa gap | C / B | T2-C2 | PARTIAL toàn luồng — late/dedup/conflict/gap/history/full-isolation/proctor component kỹ thuật PASS; candidate GUI/LAN NOT RUN | `fdac531` | `evidence/t2-c2/2026-10-10-verification.md`; REAL PG/HTTP/WS/collector worker, readings MOCK/faults SIMULATED; raw/ảnh riêng |
 | MT08 | Kill client → server tự chuyển UNKNOWN | C / B | T2-C2 | PARTIAL toàn luồng — hard-kill A4/B3/proctor component và C2 tự UNKNOWN/reconnect/history mới PASS; candidate GUI/LAN NOT RUN | C2 `fdac531`, nguồn/JAR trong metadata | `evidence/t2-c2/2026-10-10-verification.md`; kill JVM sở hữu REAL riêng, không gọi ngắt socket mô phỏng là kill |
 
@@ -385,3 +385,14 @@ Lượt package đầu mới thêm test ERROR STALE FAIL vì còn deadline ACK c
 | Human A/B review/whole gate/C3 campaign/fullcandidateGUI/LAN/E1/E2 | NOT RUN | Không giả approval hoặc prototype acceptance toàn case |
 
 Các lượt lỗi fixture/constructor oracle/manifest/DB chưa chạy được giữ trong evidence và sửa trước final. Không lấy kết quả dương cũ thay lượt mới.
+
+## T3-C3 · Kiểm tra mới12/10/2026
+
+- Baseline554 PASS22:16:59; final569/package PASS22:37:27 UTC+7 (protocol43/client376/server149/spike1),15new ReplayCampaignTest invocations.38focused replay tests PASS sau2lượt lỗi fixture label/comparison; không bỏ lỗi production bằng sửa oracle.
+- CLI campaign72cases=3MOCKworkloads ×12scenarios ×2modes và4ca âm detected; Java repeat nội bộ + full CLI lần2 byte-identical. Raw/code/JAR/sourceSha đúng; summary/matrix/checksum sinh từ file thực. UNKNOWN/presence/TTL/ACK-loss/retry/feedback/DB trong replay NOT MODELED.
+- Ca gap giữ last-known/UNSYNCED rồi full định kỳ hoặc newOPEN/full1 phục hồi; duplicate sau RESYNC không tự SYNCED. Event drop vẫn missingBusinessEvents=1, full không sửa history. Intentional delta/full/event mutations oracle FAIL/CLIexit1, bad config/checksum/TEST/nooverwrite exit2.
+- C3 script -RealScan PASS; real ProcessHandle trace47business/40delivered/7missing trong seeded cảmode. C1 CLI regression -RealScan PASS; T2-C3 -RealEdge PASS/owned cleanup, source REAL/replay network SIMULATED,45business/40delivered/5missing trong owned-edge seeded. Không so workloads hai lượt/performance.
+- Counterexample compiled against old C2 JAR expected PREVIOUS_CONNECTION actual LIVE FAIL; final actual PREVIOUS_CONNECTION PASS. Chỉ fix replayer receiving connection, không production server/transport/reducer/EventOrigin. First handwritten expected ghi LATE nhầm tên nhãn, sửa theo EventOrigin/PROTOCOL; log nguồn giữ. Seeded reconnect0common checkpoint là fault divergence đúng model, công khai NO_COMMON_SYNC_CHECKPOINT; oracle từng mode vẫn nguyên kiểm.
+- Không chạy lại live Spring/PG/WS smokes hoặc Python analyzer vì code liên quan không đổi; kết quả C2 là evidence cũ ghi riêng, không PASS mới. Human B/ChatGPT review NOT RUN theo opt-out; MT02–MT06 toàn gate giữ PARTIAL; T3-C4/GUI/LAN/E1/E2 NOT RUN. [Evidence](../evidence/t3-c3/2026-10-12-verification.md).
+
+- Kiểm cuối exact Git fixture bytes: auto text normalization đã làm manifest/expected blob LF khác workspace CRLF. Commit d813cb1 giữ exact byte; verified package569 PASS22:51:24 và campaign runb46f6a5e-e652-4ec4-8a8b-0201ba5b991a72PASS/4negative/77repeat identical,76case reports byte-identical với earlier d337 run, chỉ summary sourceSHA mới. Final REAL capture46business/40delivered/6missing; earlier47/40/7 giữ riêng, không so performance. JAR không đổi FB05E7D3;243source/blob hashes và222artifact/167gzip PASS. Runtime/doc workingtree ghi đúng dirty filenames; live/Python regressions không chạy thêm.

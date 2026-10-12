@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "artifactChecks": 222,
+  "gzipChecks": 167,
+  "repeatReportChecks": 77,
+  "sourceManifestChecks": 243,
+  "clientJarSha256": "fb05e7d30b9be60c2eb06db21eaa7c37dc3efbbb98a7b4f2939e1e8858d19f3b",
+  "packagedSource": "d813cb15b83ec640f3894486ff4c2defef268398",
+  "runtimeHead": "d813cb15b83ec640f3894486ff4c2defef268398",
+  "sourceBetweenBuildAndRuntime": "build/runtime same d813cb1; full source blobs/243manifest/JAR verified",
+  "oldCounterexampleJarSha256": "de170932f2444f4610ee37d34a2731f74416dfaff0d922d7739698d093e21361",
+  "sourceInheritedReplacement": [],
+  "campaignCases": 72,
+  "campaignNegativesDetected": 4,
+  "matrix": "generated from original summary",
+  "network": "NOT RUN",
+  "humanBReview": "NOT RUN",
+  "chatGPTPlanningReview": "NOT RUN existing opt-out",
+  "liveC4E1E2": "NOT RUN",
+  "verifiedRun": "b46f6a5e-e652-4ec4-8a8b-0201ba5b991a",
+  "verifiedWorkingTree": [
+    " M docs/KIEM_THU.md",
+    " M docs/MONITORING_BASELINE_METHOD.md",
+    " M docs/MONITORING_DELTA_ENCODER.md",
+    " M docs/MONITORING_DELTA_REDUCER.md",
+    " M docs/MONITORING_TRACE.md",
+    " M docs/NHAT_KY.md",
+    " M docs/PROTOCOL.md",
+    " M docs/README.md",
+    " M docs/TIEN_DO.md",
+    " M docs/thanh-vien/VAI_C.md",
+    " M evidence/README.md",
+    "?? evidence/t3-c3/"
+  ],
+  "earlierReportsUnchanged": 76,
+  "finalPackage": "569 PASS 22:51:24 UTC+7",
+  "finalReal": {
+    "business": 46,
+    "delivered": 40,
+    "missing": 6
+  },
+  "fixtureGitExactBytes": "PASS after exact manifest/expected byte commit; earlier runs retained"
+}

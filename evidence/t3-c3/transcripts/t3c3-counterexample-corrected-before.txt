@@ -1,0 +1,9 @@
+COUNTEREXAMPLE REPLAY event origin connection1, delivered after OPEN connection2: expected=PREVIOUS_CONNECTION actual=LIVE
+java.exe : Exception in thread "main" java.lang.AssertionError: REPLAY_MODEL_USES_ORIGIN_AS_CURRENT_CONNECTION
+At line:7 char:1
++ & "$jdk\bin\java.exe" -cp 'client/target/t3c3-counterexample-old;clie ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Exception in th...RENT_CONNECTION:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+	at vn.edu.toeic.client.monitoring.trace.LateEventCounterexample.main(LateEventCounterexample.java:16)

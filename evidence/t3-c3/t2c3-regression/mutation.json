@@ -1,0 +1,988 @@
+{
+  "schemaVersion": "monitoring-replay-result-v2",
+  "status": "FAIL",
+  "traceSource": "MOCK",
+  "traceChecksum": "adedb4a9ab24ce77244d7f4bfe2e27655adbf663193a8c0106fd021c37b6ea9e",
+  "workload": "REPLAY full; shared client state/event delivery; shared C1 reducer",
+  "faultLabel": "SIMULATED",
+  "encoderAck": "SIMULATED baseline drain; not ACK of faulted network",
+  "presence": "NOT_SIMULATED; no heartbeat UNKNOWN/timeout/TTL inference",
+  "config": {
+    "seed": 0,
+    "duplicatePercent": 0,
+    "dropPercent": 0,
+    "reorderPercent": 0,
+    "reconnectAt": 0,
+    "dropFullAt": 0,
+    "mutateFullAt": 2
+  },
+  "businessSteps": [
+    {
+      "record": 1,
+      "observation": "START",
+      "processKeys": [],
+      "newEventIds": []
+    },
+    {
+      "record": 2,
+      "observation": "OBSERVATION",
+      "processKeys": [],
+      "newEventIds": []
+    },
+    {
+      "record": 3,
+      "observation": "OBSERVATION",
+      "processKeys": [
+        "MOCK-collector|42|2026-10-10T00:00:00Z"
+      ],
+      "newEventIds": [
+        "replay-event-1"
+      ]
+    },
+    {
+      "record": 4,
+      "observation": "OBSERVATION",
+      "processKeys": [
+        "MOCK-collector|42|2026-10-10T00:00:00Z"
+      ],
+      "newEventIds": []
+    },
+    {
+      "record": 5,
+      "observation": "OBSERVATION",
+      "processKeys": [],
+      "newEventIds": []
+    },
+    {
+      "record": 6,
+      "observation": "STOP",
+      "processKeys": [],
+      "newEventIds": []
+    }
+  ],
+  "cleanChecks": [
+    {
+      "operation": "DELIVER_CONTROL",
+      "message": "MONITORING_SYNC_OPEN@record1/message1",
+      "record": 1,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "UNSYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 0,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "UNSYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 0,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_FULL@record2/message2",
+      "record": 2,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_FULL@record3/message3",
+      "record": 3,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-collector|42|2026-10-10T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-collector|42|2026-10-10T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "PROCESS_OBSERVED@record3/message4",
+      "record": 3,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-collector|42|2026-10-10T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-collector|42|2026-10-10T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 1,
+      "actualEvents": 1,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_FULL@record4/message5",
+      "record": 4,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 3,
+        "processKeys": [
+          "MOCK-collector|42|2026-10-10T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 3,
+        "processKeys": [
+          "MOCK-collector|42|2026-10-10T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 1,
+      "actualEvents": 1,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_FULL@record5/message6",
+      "record": 5,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 1,
+      "actualEvents": 1,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER_CONTROL",
+      "message": "MONITORING_SYNC_CLOSE@record6/message7",
+      "record": 6,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "STALE",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "STALE",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 1,
+      "actualEvents": 1,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    }
+  ],
+  "faultChecks": [
+    {
+      "operation": "DELIVER_CONTROL",
+      "message": "MONITORING_SYNC_OPEN@record1/message1",
+      "record": 1,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "UNSYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 0,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "UNSYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 0,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_FULL@record2/message2",
+      "record": 2,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_FULL@record3/message3",
+      "record": 3,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-collector|42|2026-10-10T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": false,
+      "reason": "OUTCOME_STATE_OR_EVENT_SET_MISMATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "PROCESS_OBSERVED@record3/message4",
+      "record": 3,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-collector|42|2026-10-10T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 1,
+      "actualEvents": 1,
+      "match": false,
+      "reason": "OUTCOME_STATE_OR_EVENT_SET_MISMATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_FULL@record4/message5",
+      "record": 4,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 3,
+        "processKeys": [
+          "MOCK-collector|42|2026-10-10T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 3,
+        "processKeys": [
+          "MOCK-collector|42|2026-10-10T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 1,
+      "actualEvents": 1,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER",
+      "message": "MONITORING_FULL@record5/message6",
+      "record": 5,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 1,
+      "actualEvents": 1,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    },
+    {
+      "operation": "DELIVER_CONTROL",
+      "message": "MONITORING_SYNC_CLOSE@record6/message7",
+      "record": 6,
+      "expectedOutcome": "ACCEPTED",
+      "actualOutcome": "ACCEPTED",
+      "expectedState": {
+        "status": "STALE",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "STALE",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 1,
+      "actualEvents": 1,
+      "match": true,
+      "reason": "STATE_AND_EVENT_SET_MATCH"
+    }
+  ],
+  "observationChecks": [
+    {
+      "operation": "OBSERVATION",
+      "message": "raw@record2",
+      "record": 2,
+      "expectedOutcome": "SYNCED",
+      "actualOutcome": "SYNCED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "RAW_PROCESS_AND_METADATA_MATCH"
+    },
+    {
+      "operation": "OBSERVATION",
+      "message": "raw@record3",
+      "record": 3,
+      "expectedOutcome": "SYNCED",
+      "actualOutcome": "SYNCED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-collector|42|2026-10-10T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 2,
+        "processKeys": [
+          "MOCK-collector|42|2026-10-10T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "RAW_PROCESS_AND_METADATA_MATCH"
+    },
+    {
+      "operation": "OBSERVATION",
+      "message": "raw@record4",
+      "record": 4,
+      "expectedOutcome": "SYNCED",
+      "actualOutcome": "SYNCED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 3,
+        "processKeys": [
+          "MOCK-collector|42|2026-10-10T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 3,
+        "processKeys": [
+          "MOCK-collector|42|2026-10-10T00:00:00Z"
+        ],
+        "processes": [
+          {
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE"
+          }
+        ]
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "RAW_PROCESS_AND_METADATA_MATCH"
+    },
+    {
+      "operation": "OBSERVATION",
+      "message": "raw@record5",
+      "record": 5,
+      "expectedOutcome": "SYNCED",
+      "actualOutcome": "SYNCED",
+      "expectedState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [],
+        "processes": []
+      },
+      "actualState": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 4,
+        "processKeys": [],
+        "processes": []
+      },
+      "expectedEvents": 0,
+      "actualEvents": 0,
+      "match": true,
+      "reason": "RAW_PROCESS_AND_METADATA_MATCH"
+    }
+  ],
+  "businessEvents": {
+    "replay-event-1": {
+      "eventId": "replay-event-1",
+      "collectorSessionId": "MOCK-collector",
+      "policyVersion": "process-policy-v1",
+      "pid": 42,
+      "processName": "msedge.exe",
+      "startInstant": "2026-10-10T00:00:00Z",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-10T00:00:00.200Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "deliveryStatus": "LIVE"
+    }
+  },
+  "deliveredEvents": {
+    "replay-event-1": {
+      "eventId": "replay-event-1",
+      "collectorSessionId": "MOCK-collector",
+      "policyVersion": "process-policy-v1",
+      "pid": 42,
+      "processName": "msedge.exe",
+      "startInstant": "2026-10-10T00:00:00Z",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-10T00:00:00.200Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "deliveryStatus": "LIVE"
+    }
+  },
+  "missingBusinessEvents": [],
+  "issues": [
+    "FAULT_MISMATCH"
+  ],
+  "scenario": "legacy-seeded",
+  "faultSchedule": [
+    {
+      "operation": "DELIVER_CONTROL",
+      "frame": {
+        "ordinal": 1,
+        "source": {
+          "index": 1,
+          "type": "START",
+          "elapsedNanos": 0,
+          "collectorSessionId": "MOCK-collector",
+          "policyVersion": "process-policy-v1",
+          "scanDurationNanos": 0,
+          "processes": []
+        },
+        "scan": 0,
+        "generation": 1,
+        "expectedSequence": 0,
+        "message": {
+          "protocolVersion": "v0",
+          "type": "MONITORING_SYNC_OPEN",
+          "messageId": "replay-full-request-1",
+          "requestId": "replay-full-request-1",
+          "attemptId": "SIMULATED-attempt",
+          "traceId": "replay-full-trace-1",
+          "payload": {
+            "collectorSessionId": "MOCK-collector"
+          }
+        }
+      },
+      "atRecord": 1
+    },
+    {
+      "operation": "DELIVER",
+      "frame": {
+        "ordinal": 2,
+        "source": {
+          "index": 2,
+          "type": "OBSERVATION",
+          "elapsedNanos": 100000000,
+          "collectorSessionId": "MOCK-collector",
+          "policyVersion": "process-policy-v1",
+          "scanDurationNanos": 0,
+          "processes": []
+        },
+        "scan": 1,
+        "generation": 1,
+        "expectedSequence": 1,
+        "message": {
+          "protocolVersion": "v0",
+          "type": "MONITORING_FULL",
+          "messageId": "replay-full-request-2",
+          "requestId": "replay-full-request-2",
+          "attemptId": "SIMULATED-attempt",
+          "traceId": "replay-full-trace-2",
+          "payload": {
+            "collectorSessionId": "MOCK-collector",
+            "syncEpoch": "SIMULATED-epoch-1",
+            "sequence": 1,
+            "policyVersion": "process-policy-v1",
+            "processes": []
+          }
+        }
+      },
+      "atRecord": 2
+    },
+    {
+      "operation": "DELIVER",
+      "frame": {
+        "ordinal": 3,
+        "source": {
+          "index": 3,
+          "type": "OBSERVATION",
+          "elapsedNanos": 200000000,
+          "collectorSessionId": "MOCK-collector",
+          "policyVersion": "process-policy-v1",
+          "scanDurationNanos": 0,
+          "processes": [
+            {
+              "pid": 42,
+              "processName": "msedge.exe",
+              "startInstant": "2026-10-10T00:00:00Z",
+              "metadataQuality": "COMPLETE"
+            }
+          ]
+        },
+        "scan": 2,
+        "generation": 1,
+        "expectedSequence": 2,
+        "message": {
+          "protocolVersion": "v0",
+          "type": "MONITORING_FULL",
+          "messageId": "replay-full-request-3",
+          "requestId": "replay-full-request-3",
+          "attemptId": "SIMULATED-attempt",
+          "traceId": "replay-full-trace-3",
+          "payload": {
+            "collectorSessionId": "MOCK-collector",
+            "syncEpoch": "SIMULATED-epoch-1",
+            "sequence": 2,
+            "policyVersion": "process-policy-v1",
+            "processes": []
+          }
+        }
+      },
+      "atRecord": 3
+    },
+    {
+      "operation": "DELIVER",
+      "frame": {
+        "ordinal": 4,
+        "source": {
+          "index": 3,
+          "type": "OBSERVATION",
+          "elapsedNanos": 200000000,
+          "collectorSessionId": "MOCK-collector",
+          "policyVersion": "process-policy-v1",
+          "scanDurationNanos": 0,
+          "processes": [
+            {
+              "pid": 42,
+              "processName": "msedge.exe",
+              "startInstant": "2026-10-10T00:00:00Z",
+              "metadataQuality": "COMPLETE"
+            }
+          ]
+        },
+        "scan": 2,
+        "generation": 1,
+        "expectedSequence": 2,
+        "message": {
+          "protocolVersion": "v0",
+          "type": "PROCESS_OBSERVED",
+          "messageId": "replay-request-1",
+          "requestId": "replay-request-1",
+          "attemptId": "SIMULATED-attempt",
+          "traceId": "replay-trace-1",
+          "payload": {
+            "eventId": "replay-event-1",
+            "collectorSessionId": "MOCK-collector",
+            "policyVersion": "process-policy-v1",
+            "pid": 42,
+            "processName": "msedge.exe",
+            "startInstant": "2026-10-10T00:00:00Z",
+            "metadataQuality": "COMPLETE",
+            "observedAt": "2026-10-10T00:00:00.200Z",
+            "observationContext": "CONNECTED",
+            "observationConnectionId": "SIMULATED-connection-1"
+          }
+        }
+      },
+      "atRecord": 3
+    },
+    {
+      "operation": "DELIVER",
+      "frame": {
+        "ordinal": 5,
+        "source": {
+          "index": 4,
+          "type": "OBSERVATION",
+          "elapsedNanos": 300000000,
+          "collectorSessionId": "MOCK-collector",
+          "policyVersion": "process-policy-v1",
+          "scanDurationNanos": 0,
+          "processes": [
+            {
+              "pid": 42,
+              "processName": "msedge.exe",
+              "startInstant": "2026-10-10T00:00:00Z",
+              "metadataQuality": "COMPLETE"
+            }
+          ]
+        },
+        "scan": 3,
+        "generation": 1,
+        "expectedSequence": 3,
+        "message": {
+          "protocolVersion": "v0",
+          "type": "MONITORING_FULL",
+          "messageId": "replay-full-request-4",
+          "requestId": "replay-full-request-4",
+          "attemptId": "SIMULATED-attempt",
+          "traceId": "replay-full-trace-4",
+          "payload": {
+            "collectorSessionId": "MOCK-collector",
+            "syncEpoch": "SIMULATED-epoch-1",
+            "sequence": 3,
+            "policyVersion": "process-policy-v1",
+            "processes": [
+              {
+                "pid": 42,
+                "processName": "msedge.exe",
+                "startInstant": "2026-10-10T00:00:00Z",
+                "metadataQuality": "COMPLETE"
+              }
+            ]
+          }
+        }
+      },
+      "atRecord": 4
+    },
+    {
+      "operation": "DELIVER",
+      "frame": {
+        "ordinal": 6,
+        "source": {
+          "index": 5,
+          "type": "OBSERVATION",
+          "elapsedNanos": 400000000,
+          "collectorSessionId": "MOCK-collector",
+          "policyVersion": "process-policy-v1",
+          "scanDurationNanos": 0,
+          "processes": []
+        },
+        "scan": 4,
+        "generation": 1,
+        "expectedSequence": 4,
+        "message": {
+          "protocolVersion": "v0",
+          "type": "MONITORING_FULL",
+          "messageId": "replay-full-request-5",
+          "requestId": "replay-full-request-5",
+          "attemptId": "SIMULATED-attempt",
+          "traceId": "replay-full-trace-5",
+          "payload": {
+            "collectorSessionId": "MOCK-collector",
+            "syncEpoch": "SIMULATED-epoch-1",
+            "sequence": 4,
+            "policyVersion": "process-policy-v1",
+            "processes": []
+          }
+        }
+      },
+      "atRecord": 5
+    },
+    {
+      "operation": "DELIVER_CONTROL",
+      "frame": {
+        "ordinal": 7,
+        "source": {
+          "index": 6,
+          "type": "STOP",
+          "elapsedNanos": 500000000,
+          "collectorSessionId": "MOCK-collector",
+          "policyVersion": "process-policy-v1",
+          "scanDurationNanos": 0,
+          "processes": []
+        },
+        "scan": 4,
+        "generation": 1,
+        "expectedSequence": 4,
+        "message": {
+          "protocolVersion": "v0",
+          "type": "MONITORING_SYNC_CLOSE",
+          "messageId": "replay-full-request-6",
+          "requestId": "replay-full-request-6",
+          "attemptId": "SIMULATED-attempt",
+          "traceId": "replay-full-trace-6",
+          "payload": {
+            "collectorSessionId": "MOCK-collector",
+            "syncEpoch": "SIMULATED-epoch-1"
+          }
+        }
+      },
+      "atRecord": 6
+    }
+  ],
+  "resyncRequests": [],
+  "recoveryPoints": [
+    {
+      "atRecord": 2,
+      "message": "MONITORING_FULL@record2/message2",
+      "state": {
+        "status": "SYNCED",
+        "epoch": "SIMULATED-epoch-1",
+        "sequence": 1,
+        "processKeys": [],
+        "processes": []
+      },
+      "reason": "FIRST_FULL_OR_PERIODIC_OR_RECONNECT_RECOVERY; no automatic feedback modeled"
+    }
+  ],
+  "lastDataState": {
+    "status": "SYNCED",
+    "epoch": "SIMULATED-epoch-1",
+    "sequence": 4,
+    "processKeys": [],
+    "processes": []
+  },
+  "expectedDeliveredEvents": {
+    "replay-event-1": {
+      "eventId": "replay-event-1",
+      "collectorSessionId": "MOCK-collector",
+      "policyVersion": "process-policy-v1",
+      "pid": 42,
+      "processName": "msedge.exe",
+      "startInstant": "2026-10-10T00:00:00Z",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-10T00:00:00.200Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "SIMULATED-connection-1",
+      "deliveryStatus": "LIVE"
+    }
+  },
+  "mutation": {
+    "fullScan": 2,
+    "deltaScan": 0,
+    "eventOrdinal": 0
+  }
+}

@@ -1,0 +1,1 @@
+CAMPAIGN FAIL cases=72 negativeChecks=4; REPLAY/ACK baseline SIMULATED, no live gate/E1/E2

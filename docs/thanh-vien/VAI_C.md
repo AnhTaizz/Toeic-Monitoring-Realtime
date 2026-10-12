@@ -257,7 +257,7 @@ Dùng replayer chạy ba loại trace (ít thay đổi, nhiều thay đổi, có
 
 **Xong khi:** MT02–MT06 có bằng chứng, mỗi loại trace có file lưu lại.
 
-**Ghi chú làm dở:** —
+**Bàn giao12/10/2026:** C3 code dc87fcc/runtime d813cb1 từ main6a41031;569tests/72replay cases/4negative/repeat/CLI ProcessHandle-owned Edge PASS. [Guide](../MONITORING_DELTA_FAULT_REPLAY.md), [evidence](../../evidence/t3-c3/2026-10-12-verification.md), QD18. Three MOCK traces/expected manual, production C2 reducer, raw oracle independent, ID/content/checkpoints/recovery/missing events và fault schedules lưu. ACK baseline enumeration, resync recorded/no feedback; NOT MODELED ACK-loss/retry/presence/TTL/DB. Event replay late receiving connection sửa PREVIOUS_CONNECTION, counterexample old/final giữ. Full default, MT02–MT06 PARTIAL toàn gate; B human review/live C4/LAN/GUI/E1/E2 NOT RUN. Không sửa tracker/exam/.env/migration hoặc tự C4/gate; Git cuối PR/final.
 
 ### T3-C4 · Tích hợp delta thật rồi quyết định giữ hay cắt
 `4h` · phụ thuộc: T3-C3, T3-A3 · review: B

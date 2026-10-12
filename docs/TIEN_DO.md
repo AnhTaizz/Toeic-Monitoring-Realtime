@@ -19,7 +19,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
 | B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; chuẩn bị Chặng 2 | `feat/t1-b3-proctor-dashboard` |
-| C | _chưa gán_ | T3-C2 reducer/resync/freshness thử nghiệm; dừng sau C2 | Code1c3f982, oracle4042b1c từ main144fe55;554tests và live harness PASS | A/B review hooks; T3-C3 gate chưa làm, full default | `feat/t3-c2-monitoring-delta-reducer` |
+| C | _chưa gán_ | T3-C3 replay acceptance campaign; dừng sau C3 | Code dc87fcc/runtime d813cb1 từ main6a41031;569tests và CLI72cases/4negative/repeat PASS | B review model/coverage; live T3-C4/gate/ACK-loss còn riêng, full default | `feat/t3-c3-monitoring-delta-fault-replay` |
 
 ## Đang bị chặn
 
@@ -88,3 +88,9 @@ C4 từ main f6d46b2, code0164297. [Hướng dẫn](CONTROLLED_PROCESS_HARNESS.m
 ## Bàn giao T3-C2 ngày12/10/2026
 
 Dùng lại AuthorizationService/SessionAuthenticationService/MonitoringStateService C1 và registry/maintenance. Thêm lõi MonitoringStateReducer, resync DTO/handler/parser/client hook, optional heartbeat capability và empty delta từ scan mới; candidate factory full không đổi. T3-A3 chưa tự đánh dấu DONE; A/B cần review auth/binding/store/global lock/ACK/push/parser/capability/clock/lifecycle. [Evidence](../evidence/t3-c2/2026-10-12-verification.md), QD17. Gate MT02–MT06/E1/E2/full candidate GUI/LAN/human review NOT RUN; không thay tracker. Dừng T3-C2, chưa C3/C4. Git cuối trong PR/final.
+
+## Bàn giao T3-C3 ngày12/10/2026
+
+- [Guide](MONITORING_DELTA_FAULT_REPLAY.md), [evidence](../evidence/t3-c3/2026-10-12-verification.md):3MOCKproduction-schema traces/handwritten expected,72positive acceptance replay cases/4detected negatives, summary sinh Java, repeat report byte-identical. Java569/PASS (+15), CLI/ProcessHandle/owned Edge regressions PASS; không source/network benchmark.
+- Fix replayer receiving connection dùng PREVIOUS_CONNECTION đúng contract; không sửa encoder/reducer/server/transport production. ACK baseline enumeration, resync recorded/no feedback; retry/ACK-loss/presence/TTL/network/DB trong replay NOT MODELED. Seeded reconnect có0common synced checkpoints ghi riêng, không claim state equivalence ở đó.
+- MT02–MT06 PARTIAL cấp toàn gate với evidence REPLAY; T3-C4/human B/GUI/LAN/hai desktop/E1/E2 NOT RUN. Không tự quyết QD10/bật delta hoặc thay tracker/.env/kế hoạch gốc/migrations/exam/PR A-B. Git cuối trong PR/final; giữ nhánh C3 và sync main an toàn theo ủy quyền.
