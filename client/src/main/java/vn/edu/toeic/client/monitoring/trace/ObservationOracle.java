@@ -17,7 +17,7 @@ import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload.Process;
 public final class ObservationOracle {
     public record BusinessStep(long record,String observation,List<String> processKeys,List<String> newEventIds) { }
     public record State(String status,String epoch,long sequence,List<String> processKeys,List<Process> processes) { }
-    private record Version(long sequence,List<Process> processes) { }
+    private record Version(long sequence,List<Process> processes,String type) { }
     private final Map<String,JsonObject> businessEvents=new TreeMap<>(),deliveredEvents=new TreeMap<>();
     private final List<BusinessStep> businessSteps;
     private final LinkedHashMap<String,Version> recent=new LinkedHashMap<>();
@@ -95,14 +95,14 @@ public final class ObservationOracle {
         if(!type.equals("MONITORING_FULL")&&!type.equals("MONITORING_DELTA"))return "INVALID_INPUT";
         if(closed)return "STALE";
         long version=frame.expectedSequence();Version byId=recent.get(frame.message().messageId());
-        if(byId!=null)return byId.sequence()==version&&byId.processes().equals(frame.source().productionProcesses())?"DUPLICATE":"CONFLICT";
+        if(byId!=null)return byId.type().equals(type)&&byId.sequence()==version&&byId.processes().equals(frame.source().productionProcesses())?"DUPLICATE":"CONFLICT";
         for(var known:recent.values())if(known.sequence()==version) {
-            if(!known.processes().equals(frame.source().productionProcesses()))return "CONFLICT";
-            remember(frame.message().messageId(),new Version(version,frame.source().productionProcesses()));return "DUPLICATE";
+            if(!known.type().equals(type)||!known.processes().equals(frame.source().productionProcesses()))return "CONFLICT";
+            remember(frame.message().messageId(),new Version(version,frame.source().productionProcesses(),type));return "DUPLICATE";
         }
         if(version<=sequence)return "STALE";
         if(sequence==0&&version!=1)return "INVALID_INPUT";
-        if(type.equals("MONITORING_DELTA")&&(sequence==0||version!=sequence+1))return "INVALID_INPUT";
+        if(type.equals("MONITORING_DELTA")&&(status.equals("UNSYNCED")||sequence==0||version!=sequence+1)){status="UNSYNCED";return "RESYNC";}
         sequence=version;processes=frame.source().productionProcesses();status="SYNCED";remember(frame.message().messageId(),new Version(version,processes));return "ACCEPTED";
     }
     private void remember(String id,Version version){recent.put(id,version);if(recent.size()>64)recent.remove(recent.keySet().iterator().next());}
