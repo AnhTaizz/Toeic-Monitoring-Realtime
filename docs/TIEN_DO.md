@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-Cập nhật ba nhánh chờ push: 13/10/2026 — (1) `sync/pr23-main-20261013` = PR #23 đã đồng bộ main `cb30f3d`, 596 test; (2) `feat/backend-candidate-attempt-history-20261013` = API lịch sử xếp trên (1), 602 test; (3) `feat/javafx-exam-client-20261013` = client của B xếp trên (2), code `3997fef`, 717 test, smoke 28/0 GAP, 5 kịch bản GUI bổ sung PASS. Smoke T3-C4 của C chưa PASS trên máy build (kể cả bản không có client của B). Agent-driven; human review, LAN NOT RUN; chưa push/merge. [Evidence](../evidence/b-accept-02-20261013/2026-10-13-verification.md). T2-B5 mới có [bản thiết kế](THIET_KE_T2_B5_TIEN_DO.md).
+Cập nhật ba nhánh đã push, chưa merge: 13/10/2026 — người dùng cho phép push; PR #23 trên GitHub đã ở `412b7ec`, hai nhánh còn lại là nhánh mới chưa mở PR, nhánh `test/javafx-full-ui-testing` của PR #17 chưa đổi. (1) `sync/pr23-main-20261013` = PR #23 đã đồng bộ main `cb30f3d`, 596 test; (2) `feat/backend-candidate-attempt-history-20261013` = API lịch sử xếp trên (1), 602 test; (3) `feat/javafx-exam-client-20261013` = client của B xếp trên (2), code `3997fef`, 717 test, smoke 28/0 GAP, 5 kịch bản GUI bổ sung PASS. Smoke T3-C4 của C chưa PASS trên máy build (kể cả bản không có client của B). Agent-driven; human review, LAN NOT RUN; chưa merge. [Evidence](../evidence/b-accept-02-20261013/2026-10-13-verification.md). T2-B5 mới có [bản thiết kế](THIET_KE_T2_B5_TIEN_DO.md).
 
 Cập nhật T3-C4:13/10/2026 — candidate Application chọn DELTA opt-in + capability hiện tại, FULL mặc định. Code/test sourced9475eb; Java579 PASS. [Guide](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-13-verification.md). LOCAL preparation riêng với replay; gate20/10/LAN hai máy/human B review chưa chốt, T3-A3 không tự đánh dấu DONE, E1/E2 NOT RUN.
 
@@ -40,7 +40,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
-| B | _chưa gán_ | Nhánh client sạch chờ review; T2-B4 PARTIAL; T2-B5 mới thiết kế | Code `3997fef`: package 717, smoke 28/0 GAP, 5 kịch bản GUI bổ sung PASS | Chạy lại smoke T3-C4 với C; LAN và máy thứ hai; thành viên tự kiểm; A trả lời câu hỏi API của T2-B5 | `feat/javafx-exam-client-20261013` (local, chờ push) |
+| B | _chưa gán_ | Nhánh client sạch chờ review; T2-B4 PARTIAL; T2-B5 mới thiết kế | Code `3997fef`: package 717, smoke 28/0 GAP, 5 kịch bản GUI bổ sung PASS | Chạy lại smoke T3-C4 với C; LAN và máy thứ hai; thành viên tự kiểm; A trả lời câu hỏi API của T2-B5 | `feat/javafx-exam-client-20261013` (đã push, chưa mở PR) |
 | C | _chưa gán_ | T3-C4 tích hợp Application/live preparation; gate PARTIAL | Coded9475eb,579Java PASS; kết quả live/hồi quy xem evidence | LAN hai máy, human A/B review và gate20/10; FULL default | `feat/t3-c4-monitoring-delta-live-gate` |
 
 ## Đang bị chặn

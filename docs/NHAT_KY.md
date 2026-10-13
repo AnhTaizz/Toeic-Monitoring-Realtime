@@ -514,3 +514,12 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Còn dở: toàn bộ phần cài đặt T2-B5.
 - Tiếp theo: A trả lời bốn câu hỏi ở mục 8 của bản thiết kế, rồi B cài.
 - Cần người khác: A chọn phương án API (ghi ở mục "Đang chờ quyết" của `QUYET_DINH.md`).
+
+## 2026-10-13 · A, B · Push ba nhánh xếp chồng
+- Thời lượng: cùng phiên Agent.
+- Đã làm: người dùng cho phép push. Quét các commit mới trước khi đẩy: không có token, `.env`, đường dẫn cá nhân hay tên ứng dụng của máy build trong phần mới thêm. Đẩy `sync/pr23-main-20261013` lên `fix/backend-exam-p0-20261011` (fast-forward `4753149` → `412b7ec`, PR #23 cập nhật tại chỗ); đẩy `feat/backend-candidate-attempt-history-20261013` (`8787767`) và `feat/javafx-exam-client-20261013` (`e759885`) thành nhánh mới. Không force, không merge.
+- Commit: không có commit code mới; mục này nằm trong commit tài liệu kế tiếp của nhánh client.
+- Đã kiểm: `git fetch` sau khi đẩy cho thấy ba nhánh remote trùng đầu nhánh cục bộ; main vẫn `cb30f3d`; nhánh `test/javafx-full-ui-testing` của PR #17 vẫn `2f5fc66`.
+- Còn dở: chưa mở PR cho hai nhánh mới; PR #17 chưa được cập nhật hay đóng; smoke T3-C4 chưa PASS trên nhánh client.
+- Tiếp theo: merge PR #23 trên web, rồi mở PR API lịch sử (base `main`), rồi PR client. Máy build không có `gh` nên thao tác PR làm trên giao diện GitHub.
+- Cần người khác: C review PR #23 và chạy lại smoke T3-C4; nhóm quyết định PR #17 dùng tiếp (fast-forward lên nhánh client) hay đóng để mở PR mới.
