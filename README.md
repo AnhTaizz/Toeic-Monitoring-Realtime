@@ -86,7 +86,7 @@ AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> listener);
 
 - C dùng interface, không dùng raw WebSocket. Subscription trả AutoCloseable để gỡ listener; callback không bảo đảm FX thread.
 - `send` hoàn thành khi socket write xong; ACK/ERROR đi qua `onMessage`. ACK pending được xóa khi disconnect, không replay event tự động. C3 quản lý eventId/queue/retry và đối soát business ACK.
-- HEARTBEAT, PROCESS_OBSERVED và MONITORING_GAP đã nhận ACK server thật. Event/gap chỉ được ACK sau COMMIT. T2-C1 thêm OPEN/FULL/CLOSE/MONITOR_STATE theo contract ở cuối PROTOCOL; ACK FULL xác nhận state RAM, delta chưa có.
+- HEARTBEAT, PROCESS_OBSERVED và MONITORING_GAP đã nhận ACK server thật. Event/gap chỉ được ACK sau COMMIT. T2-C1 thêm OPEN/FULL/CLOSE/MONITOR_STATE theo contract ở cuối PROTOCOL; ACK FULL xác nhận state RAM. Delta thử nghiệm đã có ở T3-C2/C4; FULL vẫn mặc định, gate chưa chốt.
 - C2 có thể dùng trạng thái kết nối và ranh giới transport; việc nối collector không được triển khai trong B2.
 
 Unit tests dùng MOCK socket/clock ghi nhãn; HTTP handshake tests chạy network với fixture response 401/503. Real smoke riêng dùng PostgreSQL + production Spring server + chính RealtimeClient B, kiểm candidate/proctor, heartbeat ACK, stop/restart server, revoke/expire, retry budget và shutdown:
@@ -106,7 +106,7 @@ Script đọc .env vào process, không reset DB, không in credential; harness 
 - WebSocket: `ws://<server>:8080/ws/v1/realtime` (dùng `wss://` khi server triển khai TLS). Header handshake cũng là `Authorization: Bearer <token>`; endpoint không nhận query. Không log/password/token trong URL. Kết nối mới/reconnect phải gửi lại credential.
 - Server lookup SHA-256 trong `login_sessions`, kiểm expires/revoked/user enabled; WS kiểm lại mỗi message. 401 là thiếu/sai/hết hạn/revoked credential, 403 là sai role/scope. Session bị vô hiệu trên WS nhận ERROR UNAUTHORIZED rồi đóng 1008.
 - `AuthenticatedUser`/principal lấy từ DB; `AuthorizationService.requireRole` và `requireAttempt` chạy trước nghiệp vụ. A3 dùng assignment JDBC: candidate sở hữu/proctor được phân công vào attempt ACTIVE. Không có assignment thì scope rỗng; không tự cấp lượt khi login.
-- Heartbeat không có attemptId là ping transport cho phiên authenticated, chưa chứng minh monitoring. A4 scoped heartbeat bắt buộc candidate ACTIVE scope và collectorSessionId, ACK sau presence COMMIT; event/gap ACK sau COMMIT tương ứng. State/delta chưa cài.
+- Heartbeat không có attemptId là ping transport cho phiên authenticated, chưa chứng minh monitoring. A4 scoped heartbeat bắt buộc candidate ACTIVE scope và collectorSessionId, ACK sau presence COMMIT; event/gap ACK sau COMMIT tương ứng. State FULL và DELTA thử nghiệm hiện đã có; heartbeat vẫn không xác nhận độ mới của process.
 - Envelope mẫu, field bắt buộc, ACK/ERROR và handoff cho B2 ở [PROTOCOL](docs/PROTOCOL.md). B cần cho phép heartbeat/ACK unscoped, cài opener header auth, xử lý ERROR và auth lại khi reconnect. B2 đã consume contract trong phiên riêng sau khi PR #2 merge; thao tác Git cuối xem report.
 - WS giới hạn message/buffer 65.536 byte và send timeout 5.000ms qua `WS_MAX_MESSAGE_BYTES`, `WS_SEND_BUFFER_BYTES`, `WS_SEND_TIMEOUT_MS`. Tất cả send đi qua `ConcurrentWebSocketSessionDecorator`.
 
@@ -334,4 +334,6 @@ Sau `mvn package`, chạy `powershell -NoProfile -ExecutionPolicy Bypass -File s
 
 ## Phương pháp baseline monitoring (T2-C5)
 
-Đọc [phương pháp baseline](docs/MONITORING_BASELINE_METHOD.md) để phân biệt event/state/presence/gap, identity, policy production/TEST, byte tầng ứng dụng và clock. Tài liệu chốt cách đối chiếu C4, giới hạn target200ms và checklist trước E1/E2; còn thiếu marker cửa sổ đo, resource sampler/analyzer E1 và delta/E2. Đây là tài liệu phương pháp, không phải nghiệm thu E1/E2 hoặc human B review.
+Đọc [bản nháp báo cáo đồng bộ và giới hạn T3-C5](docs/MONITORING_SYNC_REPORT_DRAFT.md) để theo dõi ví dụ FULL → DELTA → retry → RESYNC và phạm vi bằng chứng. FULL vẫn mặc định; LAN hai máy và B review chưa chạy.
+
+Đọc [phương pháp baseline](docs/MONITORING_BASELINE_METHOD.md) để phân biệt event/state/presence/gap, identity, policy production/TEST, byte tầng ứng dụng và clock. Tài liệu chốt cách đối chiếu C4, giới hạn target200ms và checklist trước E1/E2; còn thiếu marker cửa sổ đo, resource sampler/analyzer E1 và phép đo E2; delta thử nghiệm đã có, gate chưa chốt. Đây là tài liệu phương pháp, không phải nghiệm thu E1/E2 hoặc human B review.

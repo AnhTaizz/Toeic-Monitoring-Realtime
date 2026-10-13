@@ -262,7 +262,7 @@ Dùng replayer chạy ba loại trace (ít thay đổi, nhiều thay đổi, có
 ### T3-C4 · Tích hợp delta thật rồi quyết định giữ hay cắt
 `4h` · phụ thuộc: T3-C3, T3-A3 · review: B
 
-Chạy thật trên hai desktop: epoch cũ, mất ACK, khởi động lại client, khởi động lại server. Ngày 20/10 chốt QD-10 cùng B và ghi vào `docs/QUYET_DINH.md`.
+Chạy thật trên hai desktop: epoch cũ, mất ACK, khởi động lại client, khởi động lại server. Ngày 20/10 chốt gate cùng B và ghi vào `docs/QUYET_DINH.md`; QD-19 đang ghi bàn giao chưa chốt, QD-10 đã dùng cho presence nên không ghi đè.
 
 - **Qua:** delta bật được bằng cấu hình; full vẫn là đường chạy dự phòng.
 - **Không qua:** delta tắt mặc định; dùng giờ còn lại để ổn định full snapshot và lưu trace lỗi kèm kết quả mong đợi/thực tế.
@@ -274,7 +274,9 @@ Chạy thật trên hai desktop: epoch cũ, mất ACK, khởi động lại clie
 
 Viết: state và event tách biệt ra sao, khoảng trống không phục hồi được, full là phương án dự phòng. Nếu gate không qua, ghi rõ delta là thử nghiệm.
 
-**Ghi chú làm dở:** —
+**Bàn giao 13/10/2026:** [Bản nháp đồng bộ và giới hạn](../MONITORING_SYNC_REPORT_DRAFT.md), đối chiếu main `f97c081`; [kiểm tra tài liệu](../../evidence/t3-c5/2026-10-13-verification.md). Có ví dụ FULL/DELTA/retry/RESYNC, tách state/event/presence/gap và bằng chứng C1–C4 đúng SHA. Không chạy lại runtime, không đổi tracker/kế hoạch/QD hoặc bật delta.
+
+**Ghi chú làm dở:** B review bản nháp NOT RUN; C4 gate NOT_DECIDED/PARTIAL, còn LAN hai máy và review A/B. Merge tài liệu không chốt gate; dừng sau C5, chưa E1/E2/chặng 4.
 
 ---
 

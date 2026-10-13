@@ -1,5 +1,7 @@
 # T2-C5 — Phương pháp baseline monitoring
 
+Đối chiếu hiện trạng T3-C5 (13/10/2026, main `f97c081`): [bản nháp đồng bộ và giới hạn](MONITORING_SYNC_REPORT_DRAFT.md). Server delta, scan refresh và candidate opt-in đã có từ T3-C2/C4; các đoạn theo ngày cũ ghi “chưa có/chưa chạy” bên dưới mô tả phạm vi task lúc đó. FULL vẫn mặc định; local C4 có bằng chứng riêng, LAN hai máy/B review/gate vẫn chưa chốt.
+
 **Cập nhật T3-C3 ngày12/10/2026:** [Chiến dịch replay/model và CLI](MONITORING_DELTA_FAULT_REPLAY.md) đã có72cases/3workload/12fault scenarios cho full và delta; production reducer C2, oracle raw độc lập. ACK baseline enumeration và data faults SIMULATED, resync recorded/no feedback, retry/ACK-loss/presence/live gate/E1/E2 NOT MODELED hoặc NOT RUN. Các đoạn ghi delta drop/reorder chưa hỗ trợ bên dưới là phạm vi task trước; full vẫn mặc định.
 
 **Cập nhật T3-C2 ngày12/10/2026:** [Reducer/resync/capability và scan refresh](MONITORING_DELTA_REDUCER.md) đã có qua flag thử nghiệm, production vẫn full. Các mô tả “chưa có server delta/adapter giả/freshness chưa chốt” dưới đây ghi phạm vi task trước; C2 thay adapter replay bằng lõi production, empty delta từ scan mới sau2s và full30s chỉ từ scan mới. Không E1/E2 hoặc gate MT02–MT06.

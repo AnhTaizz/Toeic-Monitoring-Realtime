@@ -451,3 +451,11 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Save/submit giữ phần Listening sau gián đoạn; Reading tiếp tục trong deadline. Assigned proctor tạo replacement mới idempotent, old answers/deadline/history giữ nguyên; timeout vẫn chấm kèm marker.
 - REAL HTTP/WS/PG/Flyway PASS29 gồm10 test Listening mới +19 regression; restart Spring thật, worker tự động, upgrade V9→V10, deferred COMMIT rollback và LT04 PASS. Lượt đầu lỗi SQL timestamp đã sửa và giữ log.
 - Contract docs/LISTENING_LIFECYCLE.md; evidence/t3-a2/2026-10-13-verification.md. GUI/audio thật/LAN/human C review chưa chạy; không sửa tracker/kế hoạch gốc hoặc ghi giờ chưa đo.
+
+## 13/10/2026 — C · T3-C5 bản nháp đồng bộ và giới hạn
+
+- Fetch main `f97c081ed87184ff80e0778e2d4f9a9133f9c6b0`, workspace sạch; tạo `docs/t3-c5-monitoring-sync-report`. Main đã có Listening của A; kiểm quyền đọc bài sau chốt tách khỏi scope monitoring ACTIVE.
+- Viết [bản nháp](MONITORING_SYNC_REPORT_DRAFT.md): state/event/presence/gap, ACK RAM/DB, FULL/DELTA/epoch/base/retry/RESYNC, độ mới và cleanup; dẫn bằng chứng C1–C4, không sao chép raw. Sửa vài mô tả hiện trạng cũ ở README/index/progress, chú thích phạm vi lịch sử trong protocol/baseline; không tạo QD mới.
+- [Kiểm tra tài liệu](../evidence/t3-c5/2026-10-13-verification.md): source/default/method, link/anchor, provenance bảng evidence và diff. Không chạy lại runtime hoặc gọi số test cũ là kết quả main mới. Output tạm ở target/, chỉ một report Markdown C5 được lưu.
+- B review bản nháp và A/B review gate NOT RUN; không dùng ChatGPT planning/review theo opt-out trước đó. C4 gate NOT_DECIDED/PARTIAL, FULL mặc định; LAN hai máy/E1/E2 chưa chạy. Giữ tracker/kế hoạch gốc/runtime/migration/.env/artifact cũ.
+- Người dùng ủy quyền commit/push/PR/merge commit nếu không blocker, giữ nhánh và đồng bộ main an toàn; Git cuối xem PR/final. Dừng sau T3-C5.

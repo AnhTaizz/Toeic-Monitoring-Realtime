@@ -12,6 +12,7 @@ Thư mục này là nơi ghi lại việc đang làm, để bất kỳ ai (hoặ
 | [PROTOCOL.md](PROTOCOL.md) | Danh mục endpoint và message đang dùng thật | C (monitoring), A (auth, thi) | Khi thêm hoặc đổi message |
 | [AUDIO_RESOURCES.md](AUDIO_RESOURCES.md) | T3-A1: cấp tài nguyên, manifest/checksum, READY và gate start; contract cho B/A2 | A | Khi đổi contract audio |
 | [LISTENING_LIFECYCLE.md](LISTENING_LIFECYCLE.md) | T3-A2: lệnh start WS, heartbeat/gián đoạn, khóa đáp án và tổ chức lại | A | Khi đổi contract Listening |
+| [MONITORING_SYNC_REPORT_DRAFT.md](MONITORING_SYNC_REPORT_DRAFT.md) | T3-C5: giải thích đồng bộ, ACK, ví dụ phục hồi, bằng chứng và giới hạn gate | C | Khi đối chiếu báo cáo với source |
 | [MONITORING_BASELINE_METHOD.md](MONITORING_BASELINE_METHOD.md) | Phương pháp baseline, định nghĩa E1/E2, nguồn đối chiếu và checklist B review | C | Trước khi đo hoặc đổi định nghĩa |
 | [MONITORING_MEASUREMENTS.md](MONITORING_MEASUREMENTS.md) | Schema JSONL, byte/outcome, cấu hình và tái tạo summary C4 | C | Khi đổi cách đo |
 | [PROCESS_MONITORING_SURVEY.md](PROCESS_MONITORING_SURVEY.md) | ProcessHandle/WMI, nguồn chính thức và giới hạn quan sát | C | Khi khảo sát phương pháp |
@@ -51,10 +52,10 @@ T2-C3: [trace/schema/lệnh CLI](MONITORING_TRACE.md), [evidence/checksums](../e
 
 T2-C4: [harness/CLI/ground truth/clock mapping/TEST policy](CONTROLLED_PROCESS_HARNESS.md), [evidence thực chạy](../evidence/t2-c4/2026-10-10-verification.md). Java493 PASS, Windows30child đủ ba nhóm, artifact/cleanup PASS; Human B review và E1/E2 NOT RUN. Dừng sau C4.
 
-- [T3-C1 encoder delta candidate: contract, ACK, lifecycle và replay](MONITORING_DELTA_ENCODER.md). Production vẫn full; server/gate delta chưa có.
+- [T3-C1 encoder delta candidate: contract, ACK, lifecycle và replay](MONITORING_DELTA_ENCODER.md). FULL vẫn mặc định; server delta đã có ở T3-C2, tích hợp opt-in ở T3-C4; gate chưa chốt.
 
 - [T3-C2 reducer delta/resync, capability thử nghiệm và scan freshness](MONITORING_DELTA_REDUCER.md). Full mặc định, gate chưa chạy.
 
-- T3-C3: [Replay delta faults và campaign](MONITORING_DELTA_FAULT_REPLAY.md) —3MOCKworkloads/72cases/4negative/deterministic reports, full default; ACK-loss/live gate/E1/E2 chưa chạy.
+- T3-C3: [Replay delta faults và campaign](MONITORING_DELTA_FAULT_REPLAY.md) —3MOCKworkloads/72cases/4negative/deterministic reports, full default; ACK-loss không thuộc mô hình replay; kiểm local C4 xem link bên dưới, LAN/gate/E1/E2 chưa chốt.
 
 - T3-C4: [Candidate thật, cấu hình FULL/DELTA và checklist live gate](MONITORING_DELTA_LIVE_GATE.md). FULL mặc định, nghiệm thu LAN/human B review còn riêng.
