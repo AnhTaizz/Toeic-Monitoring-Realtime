@@ -1,0 +1,30 @@
+PASS Spring Boot jar thật chạy trên PostgreSQL thật, Flyway tạo schema tạm
+PASS PROCTOR import đề thử và tạo 3 ca (600 s, 4 s, 3 s) trên schema tạm t2b_smoke_2cfc8c12bb96
+PASS JSON đề gửi cho thí sinh không có trường đáp án đúng
+PASS Vào phòng thi: server cấp writerEpoch mới (1 -> 2), revision 0, chưa có đáp án
+PASS Server tính giờ ngay khi vào phòng thi, trước khi có đáp án; takeover và status cùng deadline
+PASS Đề 4 câu được gom thành 3 nhóm (2 câu chung đoạn văn)
+PASS Autosave đầu: server lưu revision 1 đúng toàn bộ map; client chỉ báo Đã lưu sau ACK
+PASS Client giữ deadline từ takeover sau lần lưu đầu, không tự đặt/reset
+PASS Sửa liên tiếp + bỏ chọn: server giữ đúng bản cuối ở revision 5, không mất thay đổi
+PASS Máy thứ hai vào thi: writerEpoch 3, nhận đúng answers/revision server đang giữ
+PASS Writer cũ (epoch 2) bị server từ chối STALE: không ghi được, client khóa và báo bị thay writer
+PASS Writer mới (epoch 3) lưu tiếp được ở revision 6
+PASS Lấy lại quyền ghi: epoch 4, nạp bản server, bỏ thay đổi chưa lưu của phiên cũ, revision không lùi
+PASS Mất ACK: client gửi lại đúng request cũ (cùng requestId, revision 7) và server trả ALREADY_SAVED
+PASS Mất mạng: server ở revision 7, client ở revision 9 và báo CHƯA LƯU ĐƯỢC (không báo Đã lưu)
+PASS Reconnect cùng writer (server 7 / client 9): giữ bản trên máy, gửi lại đúng request revision 9, không dùng lại số cũ
+PASS Bấm nộp hai lần chỉ sinh một bài nộp; mọi lần gửi lại (1 lần gửi) dùng đúng payload đã đóng băng
+PASS Mất response nộp bài: client chỉ báo đã nộp sau khi server xác nhận; kết quả hiển thị là của server (2/4)
+PASS Gửi lại đúng request nộp đã đóng băng: server trả lại kết quả cũ, không chấm lần hai
+PASS Bài đã chốt: request nộp khác bị từ chối INVALID_STATE
+PASS Bài đã chốt: autosave muộn bị từ chối INVALID_STATE
+PASS Sau các lần gửi muộn, bài đã chốt không đổi đáp án và điểm
+PASS Mở lại lượt đã chốt: chỉ trả kết quả, không xin quyền ghi
+PASS Hết giờ theo đồng hồ máy: client khóa sửa và khóa nộp
+PASS Sau khi hết giờ: client không tự nộp, không mở lại sửa
+PASS Server chốt TIMED_OUT, chấm trên bản đã lưu (1 câu đúng); client nói rõ thay đổi chưa xác nhận không được tính
+PASS Nộp sau hạn bị server từ chối (INVALID_STATE)
+PASS Nộp sau deadline: server không nhận, client không báo nộp thành công (phase FINAL)
+T2-B exam flow REAL PostgreSQL/Spring/HTTP smoke: 28 checks PASS, 0 GAP phía server; GUI JavaFX và WebSocket NOT RUN trong smoke này
+CLEANUP stopped owned server and removed owned schema t2b_smoke_2cfc8c12bb96

@@ -1,0 +1,60 @@
+2026-10-13T01:23:49.0631977Z environment: schema=b_step4_40542af948cc server pid=2656 port=18190 relay pid=36780 port=18191 source=3997fef915828f3540da1bb464370804f4e052b6
+2026-10-13T01:24:01.3756585Z client JVM started tag=proctor pid=24384 port=18190 args=-Dtoeic.sample.durationSeconds=900
+2026-10-13T01:24:02.8686623Z login submitted for proctor1 in pid 24384 (window not brought to foreground)
+2026-10-13T01:24:19.5145885Z posted click on Button '⚡ Khởi tạo Đề & Ca Thi Mẫu (10 câu)' in pid 24384
+2026-10-13T01:24:25.1546414Z seed click 1 done; attempts in DB: 2
+2026-10-13T01:24:25.3526552Z posted click on Button '⚡ Khởi tạo Đề & Ca Thi Mẫu (10 câu)' in pid 24384
+2026-10-13T01:24:30.8010134Z seed click 2 done; attempts in DB: 4
+2026-10-13T01:24:30.9991306Z posted click on Button '⚡ Khởi tạo Đề & Ca Thi Mẫu (10 câu)' in pid 24384
+2026-10-13T01:24:36.5218352Z seed click 3 done; attempts in DB: 6
+2026-10-13T01:24:51.2948715Z client JVM started tag=c1-conflict pid=33812 port=18191 args=
+2026-10-13T01:24:52.8976108Z login submitted for candidate1 in pid 33812 (window not brought to foreground)
+2026-10-13T01:25:26.6692001Z S0 monitoring mode line: start monitoring manually
+2026-10-13T01:25:27.2387878Z posted click on Button 'Bắt đầu giám sát' in pid 33812
+2026-10-13T01:25:33.0420396Z screenshot s0-01-candidate-monitoring-mode.png
+2026-10-13T01:25:33.2191043Z posted click on Button 'Dừng giám sát' in pid 33812
+2026-10-13T01:25:36.3520951Z S1 conflict: enter exam room
+2026-10-13T01:25:36.5092894Z posted click on Button '✍️ VÀO PHÒNG THI & LÀM BÀI' in pid 33812
+2026-10-13T01:25:55.8834132Z screenshot s1-01-exam-entered-revision0.png
+2026-10-13T01:26:39.1194868Z posted click on Button '' in pid 33812
+2026-10-13T01:27:01.3770962Z S1 inject: out-of-band POST answers as candidate1 (second login session, no takeover) writerEpoch=2 answerRevision=2 answers={L1:C} -- SIMULATED second writer with the same epoch
+2026-10-13T01:27:02.2062978Z S1 GUI: candidate changes question 1 to B (client will send revision 2 with different content)
+2026-10-13T01:27:02.5146894Z posted click on Button '' in pid 33812
+2026-10-13T01:27:09.6431168Z screenshot s1-02-conflict-same-revision.png
+2026-10-13T01:27:21.3467379Z S1 GUI: click 'Nap ban cua server'
+2026-10-13T01:27:21.9211941Z posted click on Button 'Nạp bản của server' in pid 33812
+2026-10-13T01:27:28.7811237Z screenshot s1-03-after-loading-server-copy.png
+2026-10-13T01:27:28.7882095Z S1 GUI: change question 1 to D after reload
+2026-10-13T01:27:28.9610652Z posted click on Button '' in pid 33812
+2026-10-13T01:27:49.3924217Z S2 revoke: server-side revoked_at set on the GUI's login session of candidate1 (row id 2); the second API session is left alone
+2026-10-13T01:27:50.4109364Z S2 GUI: change question 1 to A after the token was revoked
+2026-10-13T01:28:37.4403811Z screenshot s2-01-token-revoked-back-to-login.png
+2026-10-13T01:28:37.8292820Z S2 observed: client left the exam room to the login screen with 'Phien het hieu luc' before any further change; server attempt unchanged: SESSION-BENCHMARK-5342-candidate1 state=ACTIVE epoch=2 rev=3 answers={"L1":"D"} submitted=- correct=-/-
+2026-10-13T01:28:39.7006469Z login submitted for candidate1 in pid 33812 (window not brought to foreground)
+2026-10-13T01:28:44.1126180Z posted click on Button '✍️ VÀO PHÒNG THI & LÀM BÀI' in pid 33812
+2026-10-13T01:28:50.9948062Z screenshot s2-02-relogin-restored-from-server.png
+2026-10-13T01:29:02.8782432Z S3a WS loss regression on this build: relay closes WebSocket sockets only
+2026-10-13T01:29:05.4113426Z screenshot s3-01-ws-lost-editing-locked.png
+2026-10-13T01:29:22.7075564Z screenshot s3-01-ws-lost-editing-locked.png
+2026-10-13T01:29:26.2386550Z S3a WS loss: sampled option state for 4 s after the relay closed the WebSocket; locked sample seen=True
+2026-10-13T01:29:40.5888308Z S3b GUI: click submit while the relay is armed to discard the submit response
+2026-10-13T01:29:41.2620934Z posted click on Button '🚀 Nộp Bài Thi' in pid 33812
+2026-10-13T01:29:55.6409365Z S3b GUI: confirmed submit (Yes)
+2026-10-13T01:30:22.5435346Z screenshot s3-02-submit-response-lost-then-server-confirmed.png
+2026-10-13T01:30:23.5196522Z S3b result: SESSION-BENCHMARK-5342-candidate1 state=SUBMITTED epoch=3 rev=3 answers={"L1":"D"} submitted=01:29:55 correct=0/10; submit rows=1
+2026-10-13T01:30:23.8250700Z S4 seed: inserted 55 MOCK final attempts (MOCK-HIST-001..055) for candidate1 by SQL in the temporary schema
+2026-10-13T01:30:36.4837733Z posted click on Button 'Hoàn Tất & Thoát' in pid 33812
+2026-10-13T01:31:27.6528168Z S4 GUI: invoked 'Thoat man thi' to leave the final result view
+2026-10-13T01:31:44.7249591Z S4 GUI: opened the history tab
+2026-10-13T01:32:10.4508352Z S4 GUI: closed the score dialog with its own button (posted click to the dialog window)
+2026-10-13T01:32:31.1573275Z screenshot s4-01-history-first-page-50.png
+2026-10-13T01:32:31.5621652Z S4 GUI: first page shows 50 rows; click 'Tai them luot thi'
+2026-10-13T01:32:31.7378660Z posted click on Button 'Tải thêm lượt thi' in pid 33812
+2026-10-13T01:32:36.2129238Z screenshot s4-02-history-after-load-more-58.png
+2026-10-13T01:32:37.1891711Z S4 result: GUI rows after load-more=56; DB expects 58; HTTP pages 50+8
+2026-10-13T01:32:59.8111224Z S5 GUI: proctor dashboard refresh after one attempt was submitted
+2026-10-13T01:33:00.4388995Z posted click on Button 'Làm mới quyền và dữ liệu' in pid 24384
+2026-10-13T01:33:06.5388980Z screenshot s5-01-proctor-roster-active-only.png
+2026-10-13T01:33:47.1890261Z client JVM tag=c1 pid=33812 closed by window close; exited=True
+2026-10-13T01:33:48.1040628Z client JVM tag=proctor pid=24384 closed by window close; exited=True
+2026-10-13T01:33:55.7350856Z cleanup: clients closed, relay and server stopped, schema b_step4_40542af948cc dropped

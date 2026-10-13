@@ -62,3 +62,4 @@ Mục lục chỉ tổ chức bằng chứng đã có, không xác nhận task h
 
 - B-ACCEPT-01 phía B: [nghiệm thu GUI cuối](b-accept-01-20261013/2026-10-13-verification.md) — bản ghép `6816ff5`, Maven 695, smoke 28/0 GAP, GUI 12/12 PASS, 1 lỗi P1 mới chưa sửa; nhánh cục bộ, chưa push.
 - B-ACCEPT-01 phía B, sau sửa lỗi: [sửa P1 và nghiệm thu lại](b-accept-01-fix-20261013/2026-10-13-verification.md) — `b54a8ad`, Maven 707, smoke 28/0 GAP, hồi quy 5/5, GUI 12/12 PASS. Hai thư mục `b-accept-01-*` là bản đã che tên tiến trình/PID (xem `REDACTION.md` trong từng thư mục).
+- Vai B, nhánh client sạch: [review chéo A→B và nghiệm thu bổ sung](b-accept-02-20261013/2026-10-13-verification.md) — `3997fef`, Maven 717, smoke 28/0 GAP, 5 kịch bản GUI PASS; smoke T3-C4 chưa PASS; LAN chưa chạy.

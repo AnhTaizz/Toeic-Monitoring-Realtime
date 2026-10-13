@@ -1,0 +1,32 @@
+## lượt 1, nhánh client `7faaa48` (nhãn nút của B chưa đổi)
+T3-C4 LOCAL FAIL phase=MIGRATION class=IllegalStateException
+T3-C4 LOCAL artifacts: <server/target/t3c4-live/...> exit=1; human gate/LAN not confirmed.
+
+## lượt 2, nhánh client sau khi đổi nhãn (cây code của `3997fef`)
+PASS START_candidate-delta-default · REAL Application buttons/HTTP/WS/source
+PASS START_candidate-full-default · REAL Application buttons/HTTP/WS/source
+PASS PROCTOR_NO_COLLECTOR · REAL GUI role/HTTP/WS
+PASS REAL_EDGE_IDENTITY_METADATA · REAL OS/collector/encoder/server/HTTP/push
+PASS UNCHANGED_FRESH_30S · REAL time/ProcessHandle
+PASS DEFAULT_APP_FACTORY_DELTA · REAL default factory/client/WS
+PASS EVENT_HISTORY_SEPARATE · REAL PostgreSQL
+PASS CANDIDATE_ISOLATION · REAL hard-kill, one host
+T3-C4 LOCAL FAIL phase=KILL_RESTART_CANDIDATE class=IllegalStateException
+PASS CLEANUP_candidate-full-default · REAL Application.stop/owned child
+PASS CLEANUP_candidate-delta-instrumented · REAL Application.stop/owned child
+T3-C4 LOCAL artifacts: <server/target/t3c4-live/...> exit=1; human gate/LAN not confirmed.
+
+## lượt đối chứng, nhánh API lịch sử `d874ec5` (không có client của B)
+PASS START_candidate-delta-default · REAL Application buttons/HTTP/WS/source
+PASS START_candidate-full-default · REAL Application buttons/HTTP/WS/source
+PASS PROCTOR_NO_COLLECTOR · REAL GUI role/HTTP/WS
+T3-C4 LOCAL FAIL phase=NORMAL_REAL_EDGE class=IllegalStateException
+PASS CLEANUP_candidate-delta-default · REAL Application.stop/owned child
+PASS CLEANUP_candidate-full-default · REAL Application.stop/owned child
+T3-C4 LOCAL artifacts: <server/target/t3c4-live/...> exit=1; human gate/LAN not confirmed.
+
+## lượt 3, nhánh client `3997fef`
+T3-C4 LOCAL FAIL phase=MIGRATION class=IllegalStateException
+PASS CLEANUP_candidate-delta-default · REAL Application.stop/owned child
+PASS CLEANUP_candidate-full-default · REAL Application.stop/owned child
+T3-C4 LOCAL artifacts: <server/target/t3c4-live/...> exit=1; human gate/LAN not confirmed.

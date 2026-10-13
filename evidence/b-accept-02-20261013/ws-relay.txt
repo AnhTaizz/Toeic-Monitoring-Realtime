@@ -1,0 +1,11 @@
+2026-10-13T01:23:45.8101045Z relay started; forwards bytes unchanged, generates no response
+2026-10-13T01:24:54.5311109Z WebSocket opened through relay id=3
+2026-10-13T01:28:39.9498085Z WebSocket opened through relay id=9
+2026-10-13T01:29:02.9739146Z closed WebSocket sockets on request; count=1
+2026-10-13T01:29:04.0111840Z WebSocket opened through relay id=10
+2026-10-13T01:29:22.2096740Z closed WebSocket sockets on request; count=1
+2026-10-13T01:29:23.2226457Z WebSocket opened through relay id=11
+2026-10-13T01:29:40.0065088Z armed: discard the response of the next POST .../submit
+2026-10-13T01:29:55.6765568Z submit request forwarded to server; its response will be discarded, connection id=12
+2026-10-13T01:29:55.8094529Z server response discarded, not delivered to client; first bytes='HTTP/1.1 200' length=433; closing client socket id=12
+2026-10-13T01:31:27.6504932Z WebSocket opened through relay id=16

@@ -496,3 +496,21 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Còn dở: kiểm roster ACTIVE-only trên dashboard sau khi lượt đã chốt chưa chạy lại ở lượt này (dashboard đang báo dữ liệu cũ sau khi dừng server có chủ đích); GUI cho xung đột, 401, nộp khi mất response chưa chạy trên bản này.
 - Tiếp theo: người dùng review và quyết định push nhánh sạch.
 - Cần người khác: A review tích hợp và bản sửa; thành viên tự kiểm GUI và chạy trên máy thứ hai. Bằng chứng `evidence/b-accept-01-fix-20261013/2026-10-13-verification.md`.
+
+## 2026-10-13 · B · Nhánh client sạch trên main T3-C4, nghiệm thu bổ sung
+- Thời lượng: một phiên Agent; giờ của thành viên chưa ghi.
+- Đã làm: dựng `feat/javafx-exam-client-20261013` trên nhánh API lịch sử: merge đầu PR #17, cherry-pick client lịch sử và bản sửa P1, đưa tài liệu cùng bằng chứng đã che. Hai thư mục bằng chứng 12/10 chưa che không vào nhánh. Giải conflict `ToeicClientApplication.java` với T3-C4 (giữ màn của B, lấy factory và dòng chế độ của C). Đổi hai nhãn nút về đúng chữ trên main vì harness T3-C4 tìm nút theo chữ.
+- Commit: `ee8ab4f`, `7306aaa`, `be9fd04`, `7faaa48`, `3997fef`, `00abda5` và commit tài liệu kế tiếp. Không push.
+- Đã kiểm: `mvn package` 717 PASS, 0 skip với PostgreSQL thật; `ExamFlowPostgresSmoke` 28 PASS / 0 GAP; GUI thật 5 kịch bản bổ sung đều PASS (xung đột cùng revision, token bị thu hồi, mất WebSocket và mất response khi nộp, phân trang lịch sử trên 50, roster chỉ ACTIVE).
+- Còn dở: `smoke-t3c4.ps1` của C FAIL cả ba lượt trên nhánh client; lượt đối chứng không có client của B cũng FAIL, nên chưa quy được cho bên nào. LAN và máy thứ hai chưa chạy.
+- Tiếp theo: người dùng quyết định push ba nhánh theo thứ tự PR #23 → API lịch sử → client.
+- Cần người khác: C chạy lại smoke T3-C4 trên máy rảnh và xác nhận việc đổi nhãn; A review nhánh client. Bằng chứng `evidence/b-accept-02-20261013/2026-10-13-verification.md`.
+
+## 2026-10-13 · B · T2-B5: thiết kế màn tiến độ, chưa cài
+- Thời lượng: cùng phiên Agent.
+- Đã làm: viết `docs/THIET_KE_T2_B5_TIEN_DO.md`: nguyên tắc chỉ dùng số server đã xác nhận, bố cục tab tiến độ, dữ liệu hiện có và còn thiếu, hai phương án API (dùng `GET status` sẵn có, hoặc endpoint đọc riêng cho giám thị) kèm khuyến nghị, phần client và các bước lấy bằng chứng.
+- Commit: cùng commit tài liệu của mục trên.
+- Đã kiểm: chưa kiểm gì; đây là tài liệu thiết kế, chưa có code.
+- Còn dở: toàn bộ phần cài đặt T2-B5.
+- Tiếp theo: A trả lời bốn câu hỏi ở mục 8 của bản thiết kế, rồi B cài.
+- Cần người khác: A chọn phương án API (ghi ở mục "Đang chờ quyết" của `QUYET_DINH.md`).

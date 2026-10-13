@@ -22,6 +22,7 @@ Ghi lại lựa chọn đã chốt để sau này không phải tranh luận l�
 | QD-07 | Định dạng audio và cách đóng gói tài nguyên | B | 08/10 | T1-B4 |
 | QD-09 | Quy tắc chấm điểm nội bộ (câu sai, câu trống) | A | 12/10 | T2-A3 |
 | QD-10 | Giữ hay cắt delta khỏi bản chính | C, B duyệt | 20/10 | T3-C4 |
+| QD-24 | Nguồn dữ liệu cho màn tiến độ giám thị: endpoint đọc riêng hay dùng `GET status` sẵn có ([thiết kế](THIET_KE_T2_B5_TIEN_DO.md)) | A, theo đề xuất của B | trước 27/10 | T2-B5 |
 
 Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 

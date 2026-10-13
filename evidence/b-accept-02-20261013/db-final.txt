@@ -1,0 +1,23 @@
+# attempt row
+SESSION-BENCHMARK-5342-candidate1 state=SUBMITTED epoch=3 rev=3 answers={"L1":"D"} submitted=01:29:55 correct=0/10
+# autosave requests (revision epoch time-UTC map)
+1 epoch=2 at=01:26:39.977 {"L1":"A"}
+2 epoch=2 at=01:27:01.410 {"L1":"C"}
+3 epoch=2 at=01:27:29.773 {"L1":"D"}
+# submit requests (writer_epoch|answer_revision|decision UTC)
+3|3|01:29:55.734
+# candidate1 attempts by state
+ACTIVE=2
+SUBMITTED=45
+TIMED_OUT=11
+# ACTIVE attempts assigned to proctor1
+SESSION-BENCHMARK-5342-candidate2
+SESSION-BENCHMARK-9446-candidate1
+SESSION-BENCHMARK-9446-candidate2
+SESSION-BENCHMARK-999-candidate1
+SESSION-BENCHMARK-999-candidate2
+# login sessions of candidate1 (row id, revoked)
+2 revoked=true
+3 revoked=false
+4 revoked=false
+5 revoked=false

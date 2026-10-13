@@ -510,3 +510,21 @@ Commit `b54a8ad` trên nhánh cục bộ `integrate/b-accept-01-public-20261013`
 | Thành viên tự kiểm, LAN, review A, smoke monitoring của C | NOT RUN | — |
 
 Không đổi trạng thái AT/MT/LT/IT trong bảng chính; `TRACKER.json` giữ nguyên.
+
+## Vai B — nhánh client sạch trên main T3-C4, nghiệm thu bổ sung, 13/10/2026 (local, chờ push)
+
+Code tại `3997fef` trên nhánh cục bộ `feat/javafx-exam-client-20261013` (xếp trên nhánh API lịch sử và PR #23 đã đồng bộ). Chi tiết: `evidence/b-accept-02-20261013/2026-10-13-verification.md`.
+
+| Kiểm tra | Kết quả | Ghi chú |
+|---|---|---|
+| `mvn package` với `TOEIC_PG_INTEGRATION=true` | PASS 717, 0 skip | protocol 43, client 501, server 172, spike 1 |
+| `ExamFlowPostgresSmoke` | PASS 28, 0 GAP | REAL server JAR/HTTP/PostgreSQL |
+| GUI: xung đột cùng revision | PASS | lệnh chèn revision qua phiên thứ hai là SIMULATED |
+| GUI: token bị thu hồi khi đang thi | PASS theo đường heartbeat | ca autosave nhận 401 trên GUI: NOT RUN (chỉ có test tự động) |
+| GUI: mất WebSocket (hồi quy sau T3-C4), mất response khi nộp | PASS, PASS | relay bỏ response là SIMULATED; DB có đúng 1 bản nộp |
+| GUI: phân trang lịch sử trên 50 lượt | PASS | 55 lượt MOCK chèn bằng SQL; 50 → 56 dòng |
+| GUI: roster chỉ ACTIVE sau khi lượt chốt | PASS | 6 → 5 dòng, khớp DB |
+| `scripts/smoke-t3c4.ps1` trên nhánh client | **FAIL** 3/3 lượt | lượt 1 do lệch nhãn nút (đã sửa); hai lượt sau timeout ở pha khác nhau; lượt đối chứng không có client của B cũng FAIL |
+| LAN, máy thứ hai, thành viên tự kiểm, review của thành viên A | NOT RUN | — |
+
+Agent-driven. Không đổi trạng thái AT/MT/LT/IT trong bảng chính; `TRACKER.json` giữ nguyên.

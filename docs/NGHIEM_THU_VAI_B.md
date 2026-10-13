@@ -2,6 +2,8 @@
 
 **Fix B-ACCEPT-01 12/10:** client history chuẩn bị ở770c896, test/package651 và FX component MOCK PASS; API list owner còn PROPOSED/chờ A review, backend thiếu route. Chưa12/12GUI, không ghép PASS cũ. [Contract cho A](CONTRACT_B_ACCEPT_01_PROPOSAL.md), report mới (bản gốc 12/10 chưa che thông tin máy, chỉ giữ ở máy build). B4/P1 vẫn PARTIAL/OPEN.
 
+**Cập nhật 13/10/2026, nhánh sạch trên main T3-C4:** [nghiệm thu bổ sung](../evidence/b-accept-02-20261013/2026-10-13-verification.md) trên `3997fef`: Maven 717, smoke 28/0 GAP, 5 kịch bản GUI còn thiếu đều PASS; smoke T3-C4 của C chưa PASS trên nhánh này; LAN, thành viên tự kiểm, review của A NOT RUN.
+
 **Cập nhật 13/10/2026, sau sửa lỗi:** [nghiệm thu lại](../evidence/b-accept-01-fix-20261013/2026-10-13-verification.md) trên `b54a8ad`: lỗi P1 làm mới danh sách đã sửa; hồi quy 5/5 và 12/12 ca GUI PASS, chạy lại toàn bộ; thành viên tự kiểm, LAN, review A NOT RUN.
 
 **Cập nhật 13/10/2026:** [nghiệm thu B-ACCEPT-01](../evidence/b-accept-01-20261013/2026-10-13-verification.md) trên `6816ff5`: 12/12 ca GUI PASS, tab lịch sử mở lại được lượt `SUBMITTED` và `TIMED_OUT` trong JVM mới; 1 lỗi P1 mới ở làm mới danh sách lượt thi, chưa sửa; thành viên tự kiểm, LAN, review A NOT RUN.
