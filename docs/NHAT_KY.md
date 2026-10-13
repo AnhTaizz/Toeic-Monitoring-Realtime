@@ -440,3 +440,12 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Còn dở: GUI production của B chưa chạy nên B-ACCEPT-01 chưa đóng; sai phương thức HTTP vẫn trả 500 (ngoài phạm vi giao việc, chỉ ghi nhận); chưa đo truy vấn với số lượt lớn.
 - Tiếp theo: người dùng quyết định push/merge; B ghép với `770c896` và chạy lại GUI.
 - Cần người khác: B chạy GUI production theo mục 5 của evidence; C review phần auth/handler lỗi của A. Bằng chứng `evidence/t2-a-history/2026-10-12-verification.md`.
+
+## 2026-10-13 · A · API lịch sử: xếp lại trên PR #23 đã đồng bộ
+- Thời lượng: một phiên Agent; giờ của thành viên chưa ghi.
+- Đã làm: tạo nhánh `feat/backend-candidate-attempt-history-20261013` từ `sync/pr23-main-20261013` và cherry-pick đúng ba commit lịch sử (`e81961e`, `33a2932`, `7bdac52`), bỏ năm bản sao P0 của nhánh cũ để P0 chỉ vào main qua PR #23. Conflict chỉ ở tài liệu, giữ cả hai phía; quyết định lịch sử đổi số QD-19 → QD-23.
+- Commit: `ae05e48`, `ba8dac7`, `19f669e` và commit tài liệu kế tiếp. Không push.
+- Đã kiểm: `git diff 7bdac52 19f669e -- server/src/main protocol` rỗng; `mvn package` 602 PASS, 0 skip với PostgreSQL thật (lượt đầu treo do máy ngủ, đã hủy và chạy lại).
+- Còn dở: sai phương thức HTTP vẫn trả 500 (đã ghi nhận từ 12/10, chưa sửa).
+- Tiếp theo: mở PR sau khi PR #23 vào main; nhánh client của B xếp trên nhánh này.
+- Cần người khác: C review; A quyết định có sửa 405 hay không. Bằng chứng `evidence/t2-a-history/2026-10-13-restack.md`.
