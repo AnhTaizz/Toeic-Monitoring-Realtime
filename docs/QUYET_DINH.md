@@ -180,3 +180,11 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Read history tách scope ACTIVE, scheduler exam riêng và chốt theo answers đã commit. [Review A/B](REVIEW_A_PR17.md).
 
 Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`, QD-17 và QD-18 đã thuộc T3-C2/T3-C3 của C, nên quyết định deadline của A (trước mang số QD-18 trên nhánh này) đổi thành QD-21. QD-20 và QD-22 dành cho hai quyết định của B trên PR #17 (mất WebSocket; `writerEpoch` khi vào thi); các mục đó vào main cùng PR tương ứng. Đồng bộ lần hai với main `cb30f3d`: QD-19 đã thuộc T3-C4 của C, nên quyết định API lịch sử lượt thi của A (bản ghép cục bộ trước đó ghi QD-19) mang số QD-23.
+
+## QD-24 · Tài nguyên audio ngoài JAR, READY theo manifest/writer và gate start bền vững
+
+- Ngày13/10/2026 · T3-A1 theo yêu cầu người dùng · Human C review NOT RUN.
+- Người tổ chức cấp file vào `TOEIC_AUDIO_ROOT/<examId>/<audioFile>`; server chỉ cho đúng chủ lượt tải các file Listening được đề tham chiếu. Không tải cả thư mục/gói đề; không gửi đáp án hoặc credential trong URL. Manifest chứa tên/kích thước/SHA-256, định danh cả ca và nội dung. MP3/WAV/M4A là allow-list phục vụ byte; QD-07 và codec thực tế JavaFX vẫn chờ B kiểm package.
+- READY là báo cáo client về checksum/thử loa, lưu DB theo attemptId + writerEpoch + manifestId; takeover hoặc tài nguyên đổi làm READY cũ không hợp lệ. Client gửi ready=false khi chuẩn bị lại/phát hiện lỗi. Server không thể chứng minh nội dung file local hoặc khả năng nghe của người dùng.
+- HTTP start khóa ca rồi tất cả lượt, dùng clock_timestamp sau khóa, chỉ ghi khi mọi lượt có READY hợp lệ. Lưu startId/manifest/startedAt trong một COMMIT; retry giữ cùng ID. Không đổi deadline/answers/writer của lượt. A2 nối WS/phase/gián đoạn vào startId này; chưa có playback trong A1.
+- Contract và giới hạn: [AUDIO_RESOURCES.md](AUDIO_RESOURCES.md). Evidence: [T3-A1](../evidence/t3-a1/2026-10-13-verification.md). Không thêm dependency hoặc sửa migration cũ.

@@ -6,6 +6,8 @@ Log và bằng chứng được tập trung theo task tại [evidence/README.md]
 
 ## Yêu cầu môi trường
 
+T3-A1 bổ sung API audio/manifest/READY và gate start Listening. Cách đặt tài nguyên, contract cho client và smoke PostgreSQL: [docs/AUDIO_RESOURCES.md](docs/AUDIO_RESOURCES.md). GUI tải/checksum/thử loa T3-B1 và lệnh WS/gián đoạn T3-A2 chưa được triển khai trong thay đổi này.
+
 - Windows 11 x64
 - JDK 21 (đã kiểm với Oracle JDK 21.0.8)
 - Maven 3.9+
