@@ -1,0 +1,133 @@
+﻿{
+    "codeCommit":  "9ed067ae7c93e0291ba3a44745797593bd64c806",
+    "branch":  "feat/t3-a1-audio-manifest-ready",
+    "originalValidationSnapshot":  "source-audit.json",
+    "sources":  [
+                    {
+                        "path":  ".env.example",
+                        "testedWorkspaceSha256":  "19b8a16eaccde54c12f7fcbf7a2375f1b33cf7ffe6206e1aa4c3c067081d880a",
+                        "gitBlobSha1":  "54d6174ded91c31301fb31ed32f43f607f04dd5d",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  ".gitignore",
+                        "testedWorkspaceSha256":  "05a5e9bb33dc44547f99e16852ff9d9e415734dfab8b3cd61ead4c5aa2e264eb",
+                        "gitBlobSha1":  "e3c33b59f44513bb363db8af791d5195f9f778a0",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/AudioFileDto.java",
+                        "testedWorkspaceSha256":  "fe4314a6bb2b84b8d0d2ee3f455d7c892472f6fbfd4d7c1ff6675eae9a4cf926",
+                        "gitBlobSha1":  "d80088594f51f647a08537c8be529ed3a5049749",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/AudioManifestResponse.java",
+                        "testedWorkspaceSha256":  "b276e047b0e3f4c0c2e6c055baae669c9e9b83a70f99815480442db26726ed64",
+                        "gitBlobSha1":  "f59787421bd6fc791836e094fb5661524979aa72",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/AudioReadyRequest.java",
+                        "testedWorkspaceSha256":  "1e43b3315d99badb43279d4b19c45c4212cf7fc77c62bf6405a05ccb1c418731",
+                        "gitBlobSha1":  "ceb003e268e3d89b202204ebfbbae3d182fa3442",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/AudioReadyResponse.java",
+                        "testedWorkspaceSha256":  "38f20cf8022b301eb09bad0ea40c64394034f652f41fb2568d607438a6294ae6",
+                        "gitBlobSha1":  "020992369150c6147297d1ea38d5f7baec51c63d",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/ListeningStartRequest.java",
+                        "testedWorkspaceSha256":  "f9e8b320e8d215123495d79608ac02030d3ac47ea8849ad715fcd4a7c48cdc17",
+                        "gitBlobSha1":  "d715d7369b079c62eb55a1abe446412b8b37487f",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/ListeningStartResponse.java",
+                        "testedWorkspaceSha256":  "4453ede945391521d6896dd5621df6676be4f6a0fa87f0728c3d86e285b62f89",
+                        "gitBlobSha1":  "7947dd0b1a9bcd64cc524ef579a3af5a272a6be3",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/SessionAudioReadinessResponse.java",
+                        "testedWorkspaceSha256":  "4c53324f3d8dcff731a7fb867250bfb380733343974617e86f46947c70f270f2",
+                        "gitBlobSha1":  "66de6b5ca98ac041898116e20904cd2771123701",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "scripts/smoke-t3a1.ps1",
+                        "testedWorkspaceSha256":  "9e67bf8f76362a005042fccb8b654074997e6341ac153bdeeb821811784f689c",
+                        "gitBlobSha1":  "5aa0e90facc366a630246bfbe8b01acf5f4a3a13",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "scripts/start-monitoring-server.ps1",
+                        "testedWorkspaceSha256":  "b13a3c9ebd07a1d9d4e941e34724e95def0b933064dee5fe1dbe940049ab2372",
+                        "gitBlobSha1":  "8eec1b806d11ba8704322d30ad20553867e26782",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/audio/AudioCatalog.java",
+                        "testedWorkspaceSha256":  "247c841fbd23a58fa80ce533c249a5d85dcf9db7bd6f2795f1bf9d2c3ab9be86",
+                        "gitBlobSha1":  "e48c56ca285f20b977f2b6535db831aab1beb4a2",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/audio/AudioController.java",
+                        "testedWorkspaceSha256":  "6a862d6f7c4711a4e36ae30144fdef6a5a021b27f77c0f7afeb07b347d78e5b5",
+                        "gitBlobSha1":  "31387fdcff41c3dd5e20b8a7c3ba0b041840572a",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/audio/AudioReadinessPolicy.java",
+                        "testedWorkspaceSha256":  "6a4016d377b23281ce1d26c410eefb05a9d2fe23fed76139206b96b1273bb231",
+                        "gitBlobSha1":  "038affabb2bb7134df1677e752438c7f5667ced5",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/audio/AudioService.java",
+                        "testedWorkspaceSha256":  "5138450d2b01c8216b48716164f732d6cb957864bfc5b30a2044ce79972c7644",
+                        "gitBlobSha1":  "2f7533e936b746a207d8e27d59f9100e75f3ec78",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "server/src/main/resources/application.properties",
+                        "testedWorkspaceSha256":  "e55bae2d857f55ec708f35ddf0bb90b552ae45d4601e28072d1f4c17e50bf07c",
+                        "gitBlobSha1":  "4f1182f5e4f16a5036cb0555bf5ceed98bd4b1d7",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "server/src/main/resources/db/migration/V9__audio_readiness.sql",
+                        "testedWorkspaceSha256":  "8b645eec7320e0a5ac04e97ba9dc00fc6f29037eb8c8e2a739ed2b8b7b382e88",
+                        "gitBlobSha1":  "8ac01d858261b8c3fc671003b0f8d0554096a769",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "server/src/test/java/vn/edu/toeic/server/audio/AudioAuthorizationTest.java",
+                        "testedWorkspaceSha256":  "a9cbed16ac01de1e5bdec383221f3a89df0843ac47f2c1a46ca2566640701607",
+                        "gitBlobSha1":  "c5f83dd1e5963e8874195b2eb8b6a5ba3f6b6236",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "server/src/test/java/vn/edu/toeic/server/audio/AudioCatalogTest.java",
+                        "testedWorkspaceSha256":  "8c12e3617caaa0a9144f088ede318d9e5efc74debc42665e024f17b53f9e1c79",
+                        "gitBlobSha1":  "e1ac4acc070c119d298ee27b4a020f6a692571d3",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "server/src/test/java/vn/edu/toeic/server/audio/AudioReadinessPolicyTest.java",
+                        "testedWorkspaceSha256":  "8afc299413880f6f36b6690c3911fa1c2abaf20b388daf47a5dccf72e3526633",
+                        "gitBlobSha1":  "70f19812b9e9e3f4a56a1b24a71f283f5cd2a708",
+                        "matchesTestedSource":  true
+                    },
+                    {
+                        "path":  "server/src/test/java/vn/edu/toeic/server/audio/AudioRuntimePostgresTest.java",
+                        "testedWorkspaceSha256":  "7e1a37eb1aa31d4783eeedb1977a992e39da94644b24b60e765e8bd2013c40b1",
+                        "gitBlobSha1":  "ebd93d08d80d1d7d92a1f62018adc2810c5ef458",
+                        "matchesTestedSource":  true
+                    }
+                ]
+}

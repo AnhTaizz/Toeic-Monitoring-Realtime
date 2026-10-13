@@ -119,7 +119,13 @@ ACK thành công chỉ được phát sau khi thao tác tương ứng đã đư�
 | `POST /api/v1/attempts/{attemptId}/submit` | Thí sinh sở hữu | requestId, attemptId, writerEpoch, answerRevision, answers | trạng thái chốt và điểm | 401/403; 409 STALE/CONFLICT/INVALID_STATE/EXPIRED | T2-A3 | Đã cài |
 | `GET /api/v1/attempts/{attemptId}/status` | Chủ lượt / giám thị phân công | Bearer | CandidateAttemptStatusResponse, xem T2-A4 | 401/403; 500/503 | T2-A4 | Đã cài |
 | `POST /api/v1/attempts/{attemptId}/takeover` | Thí sinh sở hữu | requestId, attemptId, clientSessionId tùy chọn | writerEpoch, savedRevision, state, deadlineAt, answers | 401/403; 409 INVALID_STATE/EXPIRED | T2-A4 | Đã cài |
-| _manifest và tải audio_ | Thí sinh | | | | T3-A1 | Chưa có |
+| `GET /api/v1/attempts/{attemptId}/audio/manifest` | Thí sinh sở hữu lượt ACTIVE | Bearer | `protocolVersion`, `attemptId`, `sessionId`, `manifestId`, `files: [{fileName,sizeBytes,sha256}]` | 401/403; 409 `INVALID_STATE`/`EXPIRED`/`CONFLICT` | T3-A1 | Đã cài |
+| `GET /api/v1/attempts/{attemptId}/audio/files/{fileName}?manifestId=...` | Thí sinh sở hữu | Bearer; tên file từ manifest; manifestId không chứa credential | Binary; `Content-Length`, `X-Audio-SHA256`, `Cache-Control: no-store` | 401/403; 409 khi manifest/file không hợp lệ | T3-A1 | Đã cài |
+| `POST /api/v1/attempts/{attemptId}/audio/ready` | Thí sinh sở hữu | `requestId`, `attemptId`, `writerEpoch`, `ready`, `manifestId`, `checksums: {fileName:sha256}`, `speakerTestPassed` | `protocolVersion`, `requestId`, `attemptId`, `writerEpoch`, `ready`, `manifestId`, `readyAt` | 400; 401/403; 409 `STALE`/`EXPIRED`/`CONFLICT`/`INVALID_STATE`; lỗi COMMIT không ACK | T3-A1 | Đã cài |
+| `GET /api/v1/sessions/{sessionId}/audio/readiness` | Giám thị phân công vào ca | Bearer | `protocolVersion`, `sessionId`, `manifestId`, `allReady`, `attempts: [{attemptId,ready}]` | 401/403; 409 thiếu tài nguyên | T3-A1 | Đã cài |
+| `POST /api/v1/sessions/{sessionId}/listening/start` | Giám thị phân công vào ca | `requestId`, `manifestId` | `protocolVersion`, `requestId`, `sessionId`, `manifestId`, `startId`, `startedAt` | 401/403; 409 chưa đủ READY/ca không hợp lệ; lỗi COMMIT không success | T3-A1, bàn giao A2 | Gate HTTP đã cài; WS/phát/gián đoạn chưa có |
+
+Contract chi tiết và thứ tự client chuẩn bị: [AUDIO_RESOURCES.md](AUDIO_RESOURCES.md). START HTTP mới là cấp phép bền vững; message phát audio qua WS và chính sách gián đoạn thuộc T3-A2/B2/B3.
 
 Request/response login mẫu (`MOCK` về giá trị ID/token, đúng schema code đang chạy):
 

@@ -431,3 +431,16 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Còn dở: chưa push. Nếu main tiến tiếp trước khi merge thì phải đồng bộ thêm.
 - Tiếp theo: xếp lại nhánh API lịch sử và nhánh client của B trên commit này.
 - Cần người khác: C review PR #23. Bằng chứng `evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md`.
+
+## 2026-10-13 · A · T3-A1 audio/READY
+- Theo yêu cầu mới: hoàn tác toàn bộ T3-B1 của phiên trước, triển khai T3-A1 trên main 80ee1ba (working tree chưa commit).
+- Manifest/tải audio theo owner và file tham chiếu, SHA-256/size, READY gắn writer/manifest, V9, proctor readiness và gate start mọi lượt trong transaction. Không thay deadline/answers/monitoring.
+- Maven package PASS600 test chạy (16opt-in skip); lượt riêng HTTP/PG/Flyway PASS8audio+11exam. Các lỗi env/JDBC/fixture ban đầu giữ trong evidence và đã sửa; rollback khi COMMIT lỗi, concurrent start và expired-after-lock-wait PASS.
+- Contract B/A2: docs/AUDIO_RESOURCES.md. Evidence: evidence/t3-a1/2026-10-13-verification.md.
+- Human C review, B1/GUI/audio package/máy thứ hai NOT RUN. A2 WS/playback/gián đoạn chưa làm; không đổi tracker/kế hoạch hoặc ghi giờ chưa đo.
+
+## 2026-10-13 · A · Chia commit và bàn giao nhánh T3-A1
+- Theo yêu cầu người dùng, tạo nhánh feat/t3-a1-audio-manifest-ready từ main 80ee1ba và chia commit theo DTO/schema, API, test, contract và evidence.
+- Code/schema:363bb90 +8f98e11; test/smoke:9ed067a. Không sửa code đã kiểm thử; hash đối chiếu tại evidence/t3-a1/committed-code-audit.json.
+- Evidence giữ kết quả600test +19PostgreSQL và log lỗi ban đầu. Git attributes giữ nguyên byte transcript để checksum không đổi khi checkout; source-audit.json là snapshot workspace trước commit.
+- T3-B1 đã hoàn tác; C review/T3-A2/package/LAN vẫn theo giới hạn trong báo cáo. Người dùng yêu cầu push nhánh; trạng thái remote cuối xem history Git và phản hồi bàn giao.

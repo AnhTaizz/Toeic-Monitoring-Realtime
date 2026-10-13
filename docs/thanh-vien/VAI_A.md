@@ -229,7 +229,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** thiếu READY thì lệnh start bị từ chối; thí sinh ngoài ca không tải được file.
 
-**Ghi chú làm dở:** —
+**Bàn giao 13/10/2026:** T3-A1 có manifest/tải audio đúng chủ lượt, checksum/size từ file tham chiếu của đề, PostgreSQL V9 READY theo writerEpoch/manifest, giám thị xem readiness và HTTP start gate mọi lượt. REAL HTTP/PG/Flyway:8 test mới +11 regression bài thi PASS; thiếu READY/foreign download/withdraw/takeover/đổi một byte/mất file/clock sau lock wait/deferred COMMIT failure/concurrent start PASS. Contract B/A2 tại [AUDIO_RESOURCES.md](../AUDIO_RESOURCES.md), evidence [t3-a1](../../evidence/t3-a1/2026-10-13-verification.md). T3-B1 đã hoàn tác theo yêu cầu; T3-A2 WS/playback/gián đoạn, T1-B4/package/LAN và human C review chưa chạy. Không ghi duyệt thay C hoặc đổi kế hoạch/tracker.
 
 ### T3-A2 · Start, gián đoạn Listening và lượt thi mới
 `4h` · phụ thuộc: T3-A1, T2-A3 · review: C
