@@ -1,0 +1,2 @@
+REPLAY PASS source=MOCK faults=SIMULATED cleanSteps=7 faultSteps=7 businessEvents=1 deliveredEvents=1
+REPLAY is not live desktop/network/auth/commit verification or E1/E2 measurement.

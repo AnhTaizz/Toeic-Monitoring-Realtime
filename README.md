@@ -1,5 +1,7 @@
 # TOEIC Monitoring Realtime
 
+Nhánh tích hợp B từ PR #17 + main12e2838 có màn thi JavaFX, gỡ password demo và giữ full/gap giám thị. [Trạng thái kiểm mới](evidence/b-integration/2026-10-11-verification.md), [checklist gate/B4 và blocker A](docs/NGHIEM_THU_VAI_B.md), [review C](docs/REVIEW_B_MONITORING.md). Package565/Python10/FX fixture PASS; nghiệm thu PostgreSQL/toàn luồng/LAN vẫn còn thiếu, B3/B4 PARTIAL.
+
 Spring Boot server, JavaFX client hai role, PostgreSQL và collector `ProcessHandle`. Event/queue/retry, heartbeat/presence/history và dashboard chặng 1 đã có. Server có backend thi chặng 2; T2-C1 thêm full snapshot và tab **Process hiện tại**. Delta, GUI thi toàn luồng và đóng gói trên máy thứ hai chưa được nghiệm thu. Các mục chặng 1 bên dưới mô tả phạm vi lịch sử của từng task; phần full hiện tại ở cuối.
 
 Log và bằng chứng được tập trung theo task tại [evidence/README.md](evidence/README.md). Khi đọc dự án trên GitHub hoặc chuẩn bị prompt cho chat web, bắt đầu từ [tiến độ](docs/TIEN_DO.md), [protocol](docs/PROTOCOL.md), [kiểm thử](docs/KIEM_THU.md), rồi đối chiếu báo cáo và artifact của task trong mục lục bằng chứng.
@@ -333,3 +335,30 @@ Sau `mvn package`, chạy `powershell -NoProfile -ExecutionPolicy Bypass -File s
 ## Phương pháp baseline monitoring (T2-C5)
 
 Đọc [phương pháp baseline](docs/MONITORING_BASELINE_METHOD.md) để phân biệt event/state/presence/gap, identity, policy production/TEST, byte tầng ứng dụng và clock. Tài liệu chốt cách đối chiếu C4, giới hạn target200ms và checklist trước E1/E2; còn thiếu marker cửa sổ đo, resource sampler/analyzer E1 và delta/E2. Đây là tài liệu phương pháp, không phải nghiệm thu E1/E2 hoặc human B review.
+
+## Luồng thi T2-B (màn thí sinh)
+
+Giám thị bấm "Khởi tạo Đề & Ca Thi Mẫu" (đề `MOCK` 10 câu, chỉ để phát triển và demo); thí sinh bấm "Làm mới danh sách ca thi" rồi "Vào Phòng Thi". Đáp án được gửi sau mỗi thay đổi và chỉ ghi "Đã lưu" khi server xác nhận đúng revision đang có trên máy. Mất kết nối realtime thì khóa sửa đáp án cho tới khi kết nối lại. Hết giờ thì client khóa và hỏi server, không tự nộp. Mở cùng lượt thi trên máy thứ hai sẽ lấy quyền ghi của máy đầu.
+
+Tham số tùy chọn khi chạy client (truyền trong dấu ngoặc kép ở PowerShell):
+
+| Property | Mặc định | Ý nghĩa |
+|---|---|---|
+| `toeic.exam.autosaveDebounceMillis` | 800 | Chờ không có thay đổi rồi mới gửi autosave |
+| `toeic.exam.retryInitialMillis`, `toeic.exam.retryMaxMillis` | 1000, 8000 | Khoảng chờ giữa các lần gửi lại |
+| `toeic.exam.maxRetries` | 4 | Số lần tự gửi lại trước khi chờ bấm "Thử lại" |
+| `toeic.exam.statusPollMillis`, `toeic.exam.maxStatusPolls` | 1000, 30 | Hỏi trạng thái lượt thi sau khi hết giờ |
+| `toeic.exam.httpTimeoutMillis` | 10000 | Timeout mỗi request của màn thi |
+| `toeic.sample.durationSeconds` | 2700 | Thời lượng ca mẫu do giám thị tạo; đặt nhỏ để thử hết giờ |
+
+Smoke với server và PostgreSQL thật (không mở GUI). Nó chạy server trên một schema tạm rồi xóa schema đó, không reset DB:
+
+```powershell
+docker compose up -d --wait
+mvn package
+# nạp DB_NAME/DB_USER/DB_PASSWORD/DB_PORT từ .env vào terminal trước
+$gson = "$env:USERPROFILE\.m2\repository\com\google\code\gson\gson\2.13.2\gson-2.13.2.jar"
+java -cp "client\target\test-classes;client\target\classes;protocol\target\classes;$gson" vn.edu.toeic.client.exam.ExamFlowPostgresSmoke
+```
+
+Dòng `GAP` trong kết quả là hành vi server đang chặn hợp đồng, không phải PASS. Giới hạn hiện tại: chưa phát audio Listening; chưa hiển thị được kết quả hết giờ và chưa mở lại được lượt đã chốt vì server (xem `docs/TIEN_DO.md`); client không lưu đáp án ra đĩa. Không thêm thư viện ngoài. Bằng chứng: [evidence T2-B](evidence/t2-b/2026-10-09-verification.md).

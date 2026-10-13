@@ -323,10 +323,23 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 - A cần review V8/event/gap service/HTTP/WS commit/permission/ACK; B cần review RealtimeClient/adapter/parser/controller/model/view/lifecycle. Human A/B review NOT RUN, ChatGPT planning/review NOT RUN theo lựa chọn không kết nối của người dùng. MT01/MT07/MT08 PARTIAL toàn luồng: candidate GUI/LAN NOT RUN; không giả thành viên đã duyệt. Người dùng đã ủy quyền commit/push/PR/merge commit nếu không blocker và giữ C2; Git cuối ở báo cáo bàn giao.
 - Không sửa .env/tracker/kế hoạch/nguồn/V1–V7 hoặc reset shared DB, không bật EnableScheduling/chạm ExamTimeoutService. Dừng sau C2; không làm C3–C5/delta/E1/E2. Legacy/trước ACK đầu UNSPECIFIED, LIVE chỉ cùng socket; không chứng minh chống client sửa. Gap mới cần refresh; queue/full vẫn RAM như contract cũ.
 
+## 2026-10-09 · B · T2-B1…T2-B4 trên PR #17
+- Thời lượng: một phiên Agent; giờ của thành viên chưa ghi.
+- Đã làm: review PR #17 (`0a4ea38`, 0 comment review trên GitHub) rồi sửa. Lỗi chặn tìm thấy: `ExamApiClient` không parse được `Instant` nên mọi status/autosave/submit/takeover đều thành "phản hồi không hợp lệ", màn thi chưa từng mở được với server thật; `triggerAutosave` bỏ mất thay đổi khi đang có request; ACK cũ vẫn báo "Đã lưu"; hết giờ thì tự nộp và mở hộp thoại trong `Timeline`; deadline null gây NPE; nộp lại sinh requestId mới; mất WS chỉ đổi màu badge. Thêm `ExamSession` (không phụ thuộc JavaFX, chạy trên một luồng owner), `ExamPaper`, `ExamEntry`, `ExamSettings`, `ExamGateway`, `ExamApiException`; viết lại `CandidateExamView` thành lớp chỉ vẽ; tách đề mẫu sang `SampleExamSeeder` (MOCK) và cho bấm tạo ca nhiều lần; đóng `ExamApiClient` của dashboard khi đăng xuất.
+- Commit: `639ab21`, `2f2aa21`, `e63907d`, `c03b859`, `e362ed9` và commit tài liệu kế tiếp (nhánh `test/javafx-full-ui-testing`).
+- Đã kiểm: `mvn package` 441/441; `ExamFlowPostgresSmoke` với Spring Boot jar và PostgreSQL 18.6 thật: 28 PASS, 3 GAP server; GUI thật qua UI Automation: vào thi, lưu, bỏ chọn, nhóm đoạn văn, tắt/bật server, nộp và xem điểm 2/10, hai cửa sổ takeover, đóng cửa sổ, hết giờ. Lượt smoke đầu lộ ra fixture của test chép mẫu JSON sai trong tài liệu và hai lỗi server; các lượt đó không dùng làm bằng chứng PASS.
+- Còn dở: hiển thị `TIMED_OUT` và mở lại lượt đã chốt chưa nghiệm thu được với server thật; nhánh xung đột và 401 mới có test MOCK; chưa làm T2-B5.
+- Tiếp theo: sau khi A sửa, chạy lại smoke (ba dòng GAP phải thành PASS) và chạy checklist GUI bằng tay trên hai máy.
+- Cần người khác: A — cho đọc status/exam của lượt đã chốt, bật `@EnableScheduling` cho job hết giờ, quyết thời điểm đặt deadline, sửa mẫu JSON status, review QD-12 và QD-13, review PR #17. Bằng chứng `evidence/t2-b/2026-10-09-verification.md`.
 
-
-
-
+## 2026-10-09 · B · T2-B3, T2-B4 trên PR #17 (lượt bổ sung)
+- Thời lượng: tiếp phiên Agent cùng ngày.
+- Đã làm: thêm `ExamSession.probeSession` — khi realtime dừng hẳn (`FAILED`) thì hỏi server qua HTTP; 401 kết thúc phiên và đưa về màn đăng nhập, mất mạng thì giữ khóa và hướng dẫn rời phòng thi. Màn thí sinh tự làm mới danh sách lượt thi mỗi lần mở. Nhãn lưu không còn ghi "Đã lưu" khi đang xung đột.
+- Commit: `d50891e` và commit tài liệu kế tiếp.
+- Đã kiểm: `mvn package` 442/442; smoke REAL 28 PASS + 3 GAP; GUI thật agent-driven: xung đột cùng revision rồi nạp bản server, realtime `FAILED` rồi rời phòng thi và vào lại (epoch mới, đúng bản server), thu hồi phiên → về màn đăng nhập, nộp bài → danh sách lượt thi được làm mới. Dữ liệu xung đột và thu hồi phiên tạo bằng SQL trên schema tạm của lượt chạy.
+- Còn dở: như mục trước; ba điểm server vẫn chặn hết giờ và đọc lượt đã chốt. Ghi nhận thêm: màn đăng nhập của PR có nút điền sẵn tài khoản `MOCK` kèm mật khẩu mặc định trong mã client; cần gỡ hoặc ẩn trước bản phát hành (T5-B2).
+- Tiếp theo: không đổi.
+- Cần người khác: không đổi. Bằng chứng `evidence/t2-b/2026-10-09-verification.md` mục 4b.
 
 ## 10/10/2026 — C: T2-C3 observation trace/replay/oracle
 
@@ -449,3 +462,11 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Còn dở: sai phương thức HTTP vẫn trả 500 (đã ghi nhận từ 12/10, chưa sửa).
 - Tiếp theo: mở PR sau khi PR #23 vào main; nhánh client của B xếp trên nhánh này.
 - Cần người khác: C review; A quyết định có sửa 405 hay không. Bằng chứng `evidence/t2-a-history/2026-10-13-restack.md`.
+
+## 11/10/2026 — B: ổn định PR #17 với main C1–C5
+
+- Worktree riêng và nhánh `stabilize/pr17-main-20261011` từ PR17 41da669; merge main12e2838, xử lý7conflict giữ C full/gap/lifecycle và B exam/seeder/UI. Giữ nguyên workspace gốc, worktree PR17 cũ và3untracked file, không trộn B4 cũ.
+- Gỡ password demo client/smoke fallback; fresh scope trước vào thi, chỉ reuse monitoring cùng attempt, không nuốt lỗi start, khóa selection khi active/đợi stop future. Guard6 + manual FX component smoke mới.
+- Package565/Python10 PASS, FX controls REAL với gateway/WS MOCK PASS, C3 replay PASS/mutation EXPECTED FAIL, C4 join archived byte-identical27/3/0, ledger104file/gzip3/security JAR PASS. Source metadata dirty/in-progress trong evidence; không giả SHA commit về sau là SHA lúc build. PostgreSQL/full GUI/LAN/image/audio/E1/E2 NOT RUN; Docker engine chưa hoạt động.
+- [Report](../evidence/b-integration/2026-10-11-verification.md), [review C](REVIEW_B_MONITORING.md), [checklist + B4 plan](NGHIEM_THU_VAI_B.md). Review do agent Vai B, human A/B approval NOT RUN. Ba blocker A về status chốt/scheduler/deadline vẫn còn; không sửa backend.
+- Đổi hai QD B cũ12/13 thành16/17 để tránh trùng C; các reference lịch sử trong evidence09/10 giữ nguyên và phải đọc theo mapping này. Chưa push/merge main; đích push chỉ nhánh PR17 sau user grant, không force-push. Giờ thực tế/tracker/kế hoạch không điền thay.

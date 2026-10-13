@@ -1,0 +1,7 @@
+thg 10 11, 2026 3:50:58 CH com.sun.javafx.application.PlatformImpl startup
+WARNING: Unsupported JavaFX configuration: classes were loaded from 'unnamed module @31cefde0'
+PASS REAL login controls: all three demo shortcuts clear the password
+PASS REAL CandidateExamView/ExamSession controls: autosave ACK, disconnect lock, reconnect reconciliation, late ACK after close; MOCK gateway/WS
+PASS REAL ProctorDashboardView controls: C1 current process/C2 gap tabs plus B sample action; disconnected fixture, no HTTP/WS
+PASS REAL JavaFX component smoke: login shortcuts, candidate autosave/reconnect/close, proctor C1/C2 tabs; MOCK gateway/WS state
+NOT RUN PostgreSQL, production WS, full candidate-to-proctor flow, human acceptance, LAN, E1/E2

@@ -172,6 +172,17 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Local dùng default candidate/proctor Applications thật + REAL ProcessHandle/Edge/PG/HTTP/WS, TEST seams chỉ gây fault. ACK observer drop/base/source/DB trigger SIMULATED, không đo mất gói vật lý. Raw thiếu FINAL do hard-kill giữ INCOMPLETE; không kết luận byte/latency/benchmark.
 - **Gate chưa chốt, FULL vẫn mặc định.** Thiếu môi trường/review không là lỗi delta đã chứng minh. A review auth/binding/scope notification/maintenance, B review factory/callback/guard/UX và chạy LAN. Không đánh dấu T3-A3 DONE thay A. [Guide](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-13-verification.md); acceptance PARTIAL có thể merge code an toàn với opt-in off, không giả approval hoặc tự T3-C5/E1/E2.
 
+## QD-20 · Mất WebSocket khi đang thi: khóa sửa, không khóa nộp
+
+- Ngày: 2026-10-09 · Người quyết: B (phiên Agent) · Review A: NOT RUN.
+- Lựa chọn: khi kết nối realtime không ở `CONNECTED`, màn thi khóa chọn/đổi/bỏ chọn đáp án. Request HTTP đang chạy vẫn chạy tiếp và kết quả của nó vẫn được ghi nhận; nút nộp bài vẫn dùng được. Khi `CONNECTED` trở lại, client đọc status và đối chiếu xong mới mở khóa.
+- Lý do: mất WS nghĩa là server không còn xác nhận được giám sát, nên không cho làm tiếp. Nhưng WS và HTTP là hai kênh riêng: mất WS không chứng minh bản lưu thất bại hay thành công, nên nhãn lưu chỉ đổi theo ACK. Cho nộp để thí sinh không bị kẹt khi WS ở `FAILED`; server vẫn quyết định nhận hay không.
+- Hệ quả: đây chỉ là phản hồi giao diện; server vẫn nhận autosave từ một client đã sửa để bỏ khóa. Nếu nhóm muốn cấm cả nộp bài khi mất WS thì phải đổi ở cả hai phía.
+- Kiểm chứng: `ExamSessionTest.losingTheWebSocketLocksEditingButDoesNotChangeWhatTheServerConfirmed`; GUI thật tắt/bật server; `evidence/t2-b/2026-10-09-verification.md`.
+- Liên quan: T2-B3, T2-B4, T3-B3 (Listening có chính sách riêng, không dùng lại nhánh này).
+
+Ghi chú tích hợp11/10/2026: quyết định B trước đây đánh số QD-12/QD-13 trên PR17 đã đổi thành QD-16/QD-17 trong tài liệu hợp nhất để giữ số QD12–15 của C. Nội dung quyết định B giữ nguyên; evidence09/10 có số cũ được giữ đúng lịch sử. [Sửa guard vào thi và checklist](NGHIEM_THU_VAI_B.md).
+
 ## QD-21 · Deadline bắt đầu khi thí sinh nhận quyền ghi để vào thi
 
 - Ngày11/10/2026 · Vai A (Agent) · Human review NOT RUN · nhánh P0 chưa merge.
@@ -180,6 +191,15 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Read history tách scope ACTIVE, scheduler exam riêng và chốt theo answers đã commit. [Review A/B](REVIEW_A_PR17.md).
 
 Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`, QD-17 và QD-18 đã thuộc T3-C2/T3-C3 của C, nên quyết định deadline của A (trước mang số QD-18 trên nhánh này) đổi thành QD-21. QD-20 và QD-22 dành cho hai quyết định của B trên PR #17 (mất WebSocket; `writerEpoch` khi vào thi); các mục đó vào main cùng PR tương ứng. Đồng bộ lần hai với main `cb30f3d`: QD-19 đã thuộc T3-C4 của C, nên quyết định API lịch sử lượt thi của A (bản ghép cục bộ trước đó ghi QD-19) mang số QD-23.
+
+## QD-22 · Vào phòng thi là xin writerEpoch mới
+
+- Ngày: 2026-10-09 · Người quyết: B (phiên Agent) · Review A: NOT RUN.
+- Lựa chọn: mỗi lần mở màn thi, client gọi `POST /attempts/{id}/takeover` và làm bài bằng epoch server vừa cấp, không dùng epoch đọc từ `GET /status`. Thứ tự: đọc status (lượt đã chốt thì chỉ hiện kết quả) → tải và kiểm tra đề → takeover.
+- Lý do: status trả cùng một epoch cho mọi máy. Nếu chỉ đọc status, hai máy cùng tài khoản giữ chung epoch và server không chặn được máy cũ; hợp đồng mục 2 coi mở lại ứng dụng là writer mới.
+- Hệ quả: vào thi trên máy thứ hai làm máy đầu bị từ chối `STALE` ở lần lưu kế tiếp; máy đầu khóa và phải bấm lấy lại quyền ghi, khi đó bản chưa lưu của nó bị bỏ. Nút takeover không còn hiện thường trực. Epoch tăng mỗi lần vào thi, kể cả cùng một máy.
+- Kiểm chứng: `ExamPaperAndEntryTest`, `ExamSessionTest.staleWriterEpochBlocksThisSessionUntilItIsGrantedANewEpoch`, REAL smoke và GUI hai cửa sổ; `evidence/t2-b/2026-10-09-verification.md`.
+- Liên quan: T2-B4, AT09, AT11.
 
 ## QD-23 · Lịch sử lượt thi tách khỏi scope monitoring, phân trang theo attemptId
 

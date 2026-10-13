@@ -10,6 +10,10 @@ Cập nhật mới T3-C2: 12/10/2026 — reducer production/resync/capability/sc
 
 Mốc C5 trước đó: 11/10/2026 — T2-C5 tài liệu phương pháp và đối chiếu protocol hoàn tất từ main82557bf. Không đổi runtime; không chạy lại Java493/smoke/E1/E2. Kiểm tra mới là source/link/schema/default/evidence integrity. B human review trước phép đo NOT RUN; marker cửa sổ E1, resource sampler/analyzer và delta/E2 còn thiếu. Giữ các kết quả C1–C4 theo evidence gốc.
 
+Cập nhật lần cuối: **11/10/2026 — tích hợp ổn định Vai B** từ PR #17 `41da669` và main `12e2838` trong worktree/nhánh local riêng. Merge conflict dashboard và tài liệu đã xử lý; gỡ password demo, sửa fresh-scope/same-attempt/stop guard. Maven package **565 PASS**, Python10, REAL FX component với gateway/WS state MOCK PASS; PostgreSQL/full GUI/LAN **NOT RUN** do Docker engine chưa hoạt động. [Evidence](../evidence/b-integration/2026-10-11-verification.md), [checklist và blocker A](NGHIEM_THU_VAI_B.md), [review C của agent Vai B](REVIEW_B_MONITORING.md). Chưa push/chưa merge main; human A/B approval và E1/E2 NOT RUN.
+
+C đã hoàn tất T2-C5 tài liệu phương pháp trên main; window/sampler/analyzer E1 và delta/E2 còn thiếu. Kết quả C1–C4 giữ provenance gốc. B1/B2 CODE_COMPLETE; B3/B4 PARTIAL do ba blocker server, chưa làm T2-B5/Listening/delta.
+
 File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
 
 10/10/2026: thêm [mục lục log và bằng chứng](../evidence/README.md) theo task để đọc trên GitHub và chuẩn bị prompt cho chat web. Kết quả kiểm thử và trạng thái nghiệm thu giữ theo báo cáo của từng lượt chạy.
@@ -24,7 +28,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
-| B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; chuẩn bị Chặng 2 | `feat/t1-b3-proctor-dashboard` |
+| B | _chưa gán_ | Ổn định PR17 với main C1–C5; B1/B2 CODE_COMPLETE, B3/B4 PARTIAL | Package565/Python10/FX fixture PASS; review source/evidence C; password demo gỡ; guard entry/switch/stop | A xử lý3blocker và review; production smoke/GUI/LAN sau fix; chưa push, chưa merge main | `stabilize/pr17-main-20261011` (đích PR17: `test/javafx-full-ui-testing`) |
 | C | _chưa gán_ | T3-C4 tích hợp Application/live preparation; gate PARTIAL | Coded9475eb,579Java PASS; kết quả live/hồi quy xem evidence | LAN hai máy, human A/B review và gate20/10; FULL default | `feat/t3-c4-monitoring-delta-live-gate` |
 
 ## Đang bị chặn
@@ -32,6 +36,9 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 - [13/10] Nhánh để mở PR cho API lịch sử là `feat/backend-candidate-attempt-history-20261013` (`19f669e`, xếp trên PR #23 đã đồng bộ, 602 test PASS); nhánh `…-20261012` bên dưới là bản cũ có lặp commit P0, không dùng để push.
 - [12/10] B-ACCEPT-01: backend đã sẵn ở nhánh cục bộ `fix/backend-candidate-attempt-history-20261012` (`33a2932`) nhưng chưa push/merge — cần người dùng quyết định đưa nhánh lên và ghép với nhánh tích hợp của B (`770c896`), rồi B chạy lại GUI production theo mục 5 của evidence — hạn gate 15/10.
 - [12/10] Gọi sai phương thức HTTP (ví dụ `POST` vào route chỉ có `GET`) vẫn trả 500 thay vì 405 — A xem có sửa cùng handler lỗi không; không chặn B-ACCEPT-01.
+- [09/10] B bị chặn nghiệm thu T2-B3/T2-B4 (đọc kết quả, mở lại lượt đã chốt) — bởi `GET /attempts/{id}/status` và `/exam` trả 403 cho chính thí sinh sở hữu khi lượt đã `SUBMITTED`/`TIMED_OUT` (`JdbcAttemptScopeStore.canAccess` chỉ nhận `state = 'ACTIVE'`) — cần A cho phép đọc lượt đã chốt trong phạm vi quyền, đúng hợp đồng mục 2 bước 4 — hạn trước gate 12/10.
+- [09/10] B bị chặn nghiệm thu hết giờ (T2-B3) — bởi job `ExamTimeoutService` không chạy trong bản jar vì server thiếu `@EnableScheduling`; lượt quá hạn vẫn `ACTIVE`, không có `TIMED_OUT` và điểm — cần A bật scheduling và thêm test không gọi `processTimeouts()` bằng tay — hạn trước gate 12/10.
+- [09/10] Cần A quyết: deadline hiện chỉ được đặt ở lần autosave đầu tiên, thí sinh chưa chọn câu nào thì không bị tính giờ; response autosave cũng không mang deadline nên client phải đọc thêm status — hạn trước gate 15/10.
 - T2-C2 human A/B review: **NOT RUN**, không ngăn code/test/PR/merge đã được người dùng ủy quyền nếu GitHub không có yêu cầu bắt buộc thiếu. [Evidence C2](../evidence/t2-c2/2026-10-10-verification.md). MT01/MT07/MT08 giữ PARTIAL cấp toàn hệ thống do candidate GUI/LAN chưa chạy; các kiểm tra kỹ thuật mới PASS có nhãn REAL/MOCK/SIMULATED. Origin legacy/trước heartbeat ACK đầu UNSPECIFIED; queue RAM/full RAM một JVM, gap mới cần HTTP refresh.
 - C1 lỗi annotation Scheduled đã sửa bằng worker riêng và merge PR#18 tại683adfc. Nhánh C1 giữ local/remote. Không bật scheduling toàn app hoặc sửa ExamTimeoutService; issue scheduler bài thi chuyển A xem riêng. [Evidence sửa C1](../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md). C2 đã chạy lại hồi quy tự STALE/TTL/capacity/shutdown PASS.
 
@@ -57,8 +64,8 @@ Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì
 | 04/10 | B → C | Interface collector → network | MonitoringTransport B2 send=write, ACK/ERROR riêng; C3 dùng event contract A3, state chưa có |
 | 04/10 | A → B | Cách gửi credential HTTP/WS, phạm vi subscription | Bearer header; B3 đã consume warning/timeline, HTTP scope refresh và dedupe attempt/event |
 | 04/10 | A → B, C | Scoped heartbeat, roster/presence/history | A4 V4; B3 consume roster/history/push presence, revision, stale và HTTP recovery; REAL integration PASS; schema không đổi |
-| 09/10 | A → B, C | Import đề, answers/revision, requestId, writerEpoch, deadline/state, mã lỗi | Chưa có |
-| 12/10 | A → B | Trạng thái đã chốt, takeover writer, state khi reconnect | Chưa có |
+| 09/10 | A → B, C | Import đề, answers/revision, requestId, writerEpoch, deadline/state, mã lỗi | A đã có trên main (T2-A1..A3); B đã consume trên PR #17, REAL smoke PASS; deadline còn lệch (xem mục bị chặn) |
+| 12/10 | A → B | Trạng thái đã chốt, takeover writer, state khi reconnect | Takeover và status khi ACTIVE: có, B đã consume; trạng thái đã chốt: status trả 403 và job hết giờ không chạy, đang chờ A |
 | 16/10 | A + B → C | Audio manifest, READY/start/interrupted | Chưa có |
 | 16/10, khóa 18/10 | C → A, B | Monitoring epoch/base/sequence, định nghĩa metric | C1 OPEN/full/CLOSE/epoch/sequence/state đã merge; C2 bổ sung EventOrigin/deliveryStatus và HTTP gap theo QD-13, server trước client mới; T3-C2 encoder/reducer/base/resync/freshness có qua capability/flag thử nghiệm; gate và metric E1-E2 chưa có; human A/B review NOT RUN |
 

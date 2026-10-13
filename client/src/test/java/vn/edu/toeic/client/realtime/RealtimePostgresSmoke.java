@@ -47,7 +47,8 @@ public final class RealtimePostgresSmoke {
         try (LoginApiClient login = new LoginApiClient()) {
             startServer();
             String origin = "http://127.0.0.1:" + port;
-            String password = System.getenv().getOrDefault("TOEIC_SEED_PASSWORD", "ChangeMe123!"); // MOCK dev seed
+            String password = System.getenv("TOEIC_SEED_PASSWORD");
+            if (password == null || password.isBlank()) throw new IllegalStateException("TOEIC_SEED_PASSWORD is required for the TEST smoke");
             LoginResponse candidate = login.login(origin, "candidate1", password).get(15, TimeUnit.SECONDS);
             remember(candidate.token());
             check(candidate.attemptScope().isEmpty(), "No invented attempt");

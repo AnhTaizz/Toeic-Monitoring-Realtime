@@ -57,3 +57,7 @@ Mục lục chỉ tổ chức bằng chứng đã có, không xác nhận task h
 
 - B-ACCEPT-01 phía A: [API lịch sử lượt thi của thí sinh](t2-a-history/2026-10-12-verification.md) — 592 test với PostgreSQL thật, kiểm chéo client B `770c896` 13/13; nhánh cục bộ chưa merge, GUI của B chưa chạy.
 - API lịch sử, nhánh để mở PR: [xếp lại trên PR #23 đã đồng bộ](t2-a-history/2026-10-13-restack.md) — `19f669e`, 602 test PASS, không lặp commit P0.
+
+## Vai B — tích hợp ổn định PR #17, 11/10/2026
+
+[Báo cáo](b-integration/2026-10-11-verification.md), [Java counts](b-integration/java-test-counts.json), [package log](b-integration/maven-package.txt), [FX component](b-integration/gui-component.txt), [integrity](b-integration/evidence-integrity.json), [metadata](b-integration/run-metadata.json). Package565/Python10 PASS; REAL FX + MOCK gateway/WS state; fresh PostgreSQL/full GUI/LAN/B4/E1/E2 NOT RUN. Checklist/review nằm trong docs; không ghi approval của thành viên.

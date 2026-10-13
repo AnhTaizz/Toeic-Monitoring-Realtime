@@ -1,0 +1,28 @@
+{
+  "t2-c1": {
+    "checked": 13,
+    "mismatches": []
+  },
+  "t2-c1/scheduling-fix": {
+    "checked": 14,
+    "mismatches": []
+  },
+  "t2-c2": {
+    "checked": 22,
+    "mismatches": []
+  },
+  "t2-c3": {
+    "checked": 27,
+    "gzipRestored": 3,
+    "mismatches": []
+  },
+  "t2-c4": {
+    "checked": 28,
+    "mismatches": []
+  },
+  "jar": {
+    "sha256": "6a4d08d3c3360537201092ed75d0ef2034a7c1cff45eb7bd912dd075b25306a0",
+    "hardcodedDemoValueEntries": [],
+    "testHarnessEntries": []
+  }
+}
