@@ -1,5 +1,7 @@
 # Protocol đang dùng
 
+Đối chiếu hiện trạng T3-C5 (13/10/2026, main `f97c081`): [bản nháp đồng bộ và giới hạn](MONITORING_SYNC_REPORT_DRAFT.md). Server delta, scan refresh và candidate opt-in đã có từ T3-C2/C4; các đoạn theo ngày cũ ghi “chưa có/chưa chạy” bên dưới mô tả phạm vi task lúc đó. FULL vẫn mặc định; local C4 có bằng chứng riêng, LAN hai máy/B review/gate vẫn chưa chốt.
+
 **Trạng thái: v0 có login/Bearer, C3 event/queue/retry, A4 heartbeat/presence/history và B3 dashboard. T2-C1 bổ sung OPEN/full/CLOSE, state RAM, HTTP/MONITOR_STATE và tab process hiện tại. T3-C2 có reducer delta/resync và capability thử nghiệm; server/client delta mặc định tắt, candidate factory vẫn full.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`; không chép lại ở đây. Các mục chặng 1 bên dưới ghi phạm vi lịch sử tại thời điểm task đó; contract T2-C1 ở cuối là phần bổ sung hiện tại.
 
 Owner: C (monitoring, khung message chung), A (auth, ca thi, lưu/nộp). Người dùng: B.

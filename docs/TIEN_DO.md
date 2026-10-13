@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+Cập nhật T3-C5: 13/10/2026 — [bản nháp đồng bộ và giới hạn](MONITORING_SYNC_REPORT_DRAFT.md) đối chiếu main `f97c081`. Chỉ tài liệu; [kiểm tra mới](../evidence/t3-c5/2026-10-13-verification.md) không chạy lại runtime. C4 gate NOT_DECIDED/PARTIAL, FULL mặc định; LAN hai máy và B review còn thiếu.
+
 Cập nhật T3-A2:13/10/2026 — backend start WS sau COMMIT, playback/heartbeat/gián đoạn, khóa đáp án Listening và tổ chức lại đã triển khai trên nhánh `feat/t3-a2-listening-lifecycle`. Full package với PostgreSQL bật PASS629, 0 skip; REAL HTTP/WS/PG/Flyway subset PASS29 (10 Listening +8 audio +11 exam), gồm restart Spring thật và nâng cấp V9→V10. [Contract](LISTENING_LIFECYCLE.md), [evidence](../evidence/t3-a2/2026-10-13-verification.md). B UI/audio/LAN và human C review chưa chạy; tracker/kế hoạch gốc giữ nguyên.
 
 Mốc T3-A1 trước T3-A2: triển khai audio/manifest/READY/gate từ main `80ee1ba`, bàn giao `feat/t3-a1-audio-manifest-ready`, code/test `9ed067a`. Package PASS600 test thường,16 opt-in skip; lượt riêng REAL HTTP/PG/Flyway PASS19. [Contract audio](AUDIO_RESOURCES.md), [evidence lịch sử](../evidence/t3-a1/2026-10-13-verification.md). T3-A1 đã merge PR #29 trên main `8894452`; T3-B1 vẫn đã hoàn tác theo yêu cầu.
@@ -27,7 +29,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
 | B | _chưa gán_ | T1-B3 code-complete, dừng sau bàn giao | Dashboard/API/model/parser, 331 tests và REAL integration/GUI proctor component PASS | Human A review, GUI candidate toàn luồng, LAN/package máy khác NOT RUN; chuẩn bị Chặng 2 | `feat/t1-b3-proctor-dashboard` |
-| C | _chưa gán_ | T3-C4 tích hợp Application/live preparation; gate PARTIAL | Coded9475eb,579Java PASS; kết quả live/hồi quy xem evidence | LAN hai máy, human A/B review và gate20/10; FULL default | `feat/t3-c4-monitoring-delta-live-gate` |
+| C | _chưa gán_ | T3-C5 bản nháp tài liệu đã viết; chờ B review | Báo cáo đồng bộ/giới hạn đối chiếu main `f97c081`; kiểm tài liệu riêng | LAN hai máy, human A/B review và gate 20/10 NOT_DECIDED/PARTIAL; FULL default | `docs/t3-c5-monitoring-sync-report` |
 
 ## Đang bị chặn
 
@@ -36,7 +38,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 
 - C4 human B review: **NOT RUN**; A/B cần xem RealtimeClient và handler/registry hooks. Đã kiểm BYTE/fragment/retry/concurrent-decorator/failure/cleanup và B3 regression. Log COMPLETE chỉ cho file đã cung cấp; chưa đo CPU/memory/latency/miss-rate hoặc lợi ích delta. ProcessHandle scan REAL riêng, event/overflow MOCK; WMI/ETW chỉ khảo sát. Không tự làm B4/chặng2/E1/E2.
 
-- GUI manual end-to-end: **NOT RUN** — B3 đã mở Stage JavaFX thật bằng harness và thao tác controls proctor, có ảnh UNKNOWN/recovery/stale. Chưa thao tác toàn app login/candidate/process thật → proctor; cần người dùng kiểm candidate/proctor/sai mật khẩu/server tắt. Component proctor PASS không thay toàn MT01/MT08.
+- GUI manual end-to-end: **NOT RUN** — người dùng/B chưa nghiệm thu thủ công. T3-C4 đã tự động thao tác candidate/proctor Application thật và ProcessHandle/Edge trên một máy, bổ sung cho B3 component trước đó; [evidence C4](../evidence/t3-c4/2026-10-13-verification.md). Local automation không thay LAN hai máy hoặc toàn MT01/MT08.
 - LAN second-machine test: **NOT RUN** — chưa có máy Windows thứ hai thật được cung cấp cho phiên này; không thay bằng localhost.
 - Review C→A2 và A→B2: **NOT RUN trong phiên Agent**; không ghi duyệt thay thành viên. Task.txt C2 cho phép merge khi code acceptance/PR mergeability PASS; review B→C2 cũng NOT RUN. PR #2/#3 đã merge, Git C2 cuối xem final report.
 - PR #1 đã merge trên main `34a7835`; các mục GUI/LAN thiếu chứng cứ lịch sử vẫn NOT RUN.

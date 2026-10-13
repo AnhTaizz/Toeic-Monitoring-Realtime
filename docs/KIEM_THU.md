@@ -432,3 +432,7 @@ Không đổi trạng thái AT/MT/LT/IT trong bảng chính; `TRACKER.json` gi�
 ### Backend A — PR #23 đồng bộ lần hai với main T3-C4, 13/10/2026 (local, chờ push)
 
 Main tiến lên `cb30f3d` (PR #27) trong lúc làm, nên nhánh `sync/pr23-main-20261013` được merge thêm một lần: commit `c64503f`. `mvn package` với `TOEIC_PG_INTEGRATION=true`: **PASS 596**, 0 skip (protocol 43, client 386, server 166, spike 1; 11 test PostgreSQL thật). Smoke C1, C2 PASS; Python 10 PASS. Smoke T3-C4, GUI, LAN, human review: NOT RUN. Bảng 586 ở mục "PR #23 đồng bộ main T3-C3" là của commit `9713658` trước đó. Chi tiết: `evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md`.
+
+## T3-C5 · Kiểm tra bản nháp tài liệu · 13/10/2026
+
+Đối chiếu source main `f97c081`, class/method/defaults/quyền monitoring, liên kết và anchor, bảng evidence C1–C4, phạm vi diff. Kết quả mới xem [báo cáo kiểm tra](../evidence/t3-c5/2026-10-13-verification.md); không chạy lại Java/Python runtime/smoke/GUI/LAN/E1/E2. Các số PASS trước đó giữ task/SHA/môi trường gốc, không gán cho main mới. FULL mặc định, gate NOT_DECIDED/PARTIAL; B review NOT RUN. Không nâng trạng thái MT toàn hệ thống.
