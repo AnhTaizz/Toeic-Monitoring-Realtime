@@ -101,7 +101,7 @@ public final class ToeicClientApplication extends Application {
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Mật khẩu");
 
-        Button loginButton = new Button("Đăng Nhập Ngay");
+        Button loginButton = new Button("Đăng nhập");
         loginButton.getStyleClass().add("btn-primary");
         loginButton.setMaxWidth(Double.MAX_VALUE);
 
@@ -301,7 +301,7 @@ public final class ToeicClientApplication extends Application {
         Button refreshScopeBtn = new Button("🔄 Làm mới danh sách ca thi");
         refreshScopeBtn.getStyleClass().add("button");
 
-        Button manualMonitoringStart = new Button("Bật giám sát tiến trình");
+        Button manualMonitoringStart = new Button("Bắt đầu giám sát");
         manualMonitoringStart.getStyleClass().add("button");
 
         Button manualMonitoringStop = new Button("Dừng giám sát");
