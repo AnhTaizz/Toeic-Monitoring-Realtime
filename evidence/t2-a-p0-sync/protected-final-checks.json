@@ -1,0 +1,22 @@
+{
+  "protected_uncommitted_sha256": {
+    "scripts/launcher-manifest.ps1": "f03e74acd32930e0a779cd3921e0c74c8951925a32e1f08c3962806a5d1a8e05",
+    "scripts/test-launcher-manifest.ps1": "f8a94279352578aaf6c73292ea888e49d05ac60cfdd5d0a6a7d5fb4b2dc091b7",
+    "task.txt": "303226cf46e5d94c1fcadcd4addd94d1914c97a5bae3b8be3859d2cdf20abf69"
+  },
+  "b4_head": "568be803be2758eed7954e3e70818496dfe45569",
+  "local_main": "82557bf4a5daddd213469196c3501968b3bbe21e",
+  "main_remote": "144fe559c5cf2d5a9608d3cf804cd2adb22bca70",
+  "a_remote": "6cfe7c4b46ee550497e33591b891f214e8df08b3",
+  "pr17_remote": "2f5fc66d1220f1e860f7c3beced86ef3f294ac46",
+  "a_production_unchanged_after_tests": true,
+  "c_encoder_transport_tests_preserved": true,
+  "historical_a_artifacts_checked": 26,
+  "historical_c_artifacts_checked": 60,
+  "owned_cluster_stopped": true,
+  "test_schemas_left": 0,
+  "public_tables": 0,
+  "client_connections_left": 0,
+  "pushed": false,
+  "merged_remote_prs": false
+}

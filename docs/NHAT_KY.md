@@ -413,3 +413,21 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 Base main ee714fc/C3PR26, branch feat/t3-c4-monitoring-delta-live-gate, code2d867c2 + fix stdoutd9475eb. Java579/PASS, factory production opt-in/current capability, pinned mode, reconnect fresh OPEN/full, safe fallback. Counterexample malformed ACK bật delta trên C3 giữ failure trước/sau. Live exploratory source treo + attempt CLOSED: server FORBIDDEN nhưng coordinator còn active; thêm scoped-heartbeat callback có collector/socket guard, unit và rerun thực kiểm lại. Các lượt lỗi giữ artifact, không sửa raw thành PASS. [Guide](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-13-verification.md) ghi final live/hồi quy/manifest.
 
 Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schema/REAL ProcessHandle/owned Edge; fault injection SIMULATED. QD19, QD10presence nguyên trạng; gate20/10 chưa diễn ra, LAN/human B/A review NOT RUN, không E1/E2/C5/Listening/taskA3 DONE. `.env`/tracker/kế hoạch gốc/migrations/exam/PR A-B giữ phạm vi người dùng. Git push/PR/merge cuối xem PR/final; merge code opt-in off không là human approval/gate acceptance.
+
+## 2026-10-13 · A · PR #23: đồng bộ main T3-C3, review lại ba sửa P0
+- Thời lượng: một phiên Agent; giờ của thành viên chưa ghi.
+- Đã làm: merge `origin/main` `ee714fc` vào head PR #23 `4753149` trên nhánh cục bộ `sync/pr23-main-20261013`. Conflict chỉ ở tài liệu; quyết định deadline của A đổi số QD-18 → QD-21 vì main đã dùng QD-17/QD-18 cho T3-C2/T3-C3. Đọc lại diff production của ba sửa P0 và ghi bốn điểm không chặn merge.
+- Commit: `9713658` (merge) và commit tài liệu kế tiếp. Không push.
+- Đã kiểm: `mvn package` 586 PASS, 0 skip với PostgreSQL thật; smoke C1 và C2 PASS; Python 10 PASS (bằng Python 3.14, bản 3.9 trên PATH không chạy được script).
+- Còn dở: chưa push nên PR #23 trên GitHub vẫn báo conflict.
+- Tiếp theo: người dùng cho phép push thì PR #23 merge được; sau đó PR API lịch sử, rồi PR client của B.
+- Cần người khác: C review PR #23 (review xoay vòng C xem A); A xem bốn ghi nhận trong `evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md`.
+
+## 2026-10-13 · A · PR #23: đồng bộ lần hai với main T3-C4
+- Thời lượng: cùng phiên Agent.
+- Đã làm: `origin/main` tiến lên `cb30f3d` (PR #27, T3-C4) sau lần đồng bộ đầu, nên merge thêm một lần. Conflict chỉ ở tài liệu. Main đã dùng QD-19 cho T3-C4, nên sửa ghi chú đánh số: quyết định API lịch sử của A sẽ mang số QD-23.
+- Commit: `c64503f` (merge) và commit tài liệu kế tiếp. Không push.
+- Đã kiểm: `mvn package` 596 PASS, 0 skip với PostgreSQL thật; smoke C1, C2 PASS; Python 10 PASS.
+- Còn dở: chưa push. Nếu main tiến tiếp trước khi merge thì phải đồng bộ thêm.
+- Tiếp theo: xếp lại nhánh API lịch sử và nhánh client của B trên commit này.
+- Cần người khác: C review PR #23. Bằng chứng `evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md`.

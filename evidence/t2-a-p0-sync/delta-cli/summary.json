@@ -1,0 +1,62 @@
+{
+  "cases": [
+    {
+      "name": "fixture-full",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "name": "fixture-delta",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "name": "reconnect-full",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "name": "reconnect-delta",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "name": "negative-delta",
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "name": "negative-full",
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "name": "unsupported-delta-faults",
+      "exit": 2,
+      "expected": 2
+    },
+    {
+      "name": "legacy-full-faults",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "name": "test-schema-refused",
+      "exit": 2,
+      "expected": 2
+    },
+    {
+      "name": "real-full",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "name": "real-delta",
+      "exit": 0,
+      "expected": 0
+    }
+  ],
+  "realScan": true,
+  "networkAck": "SIMULATED",
+  "productionDelta": "DISABLED"
+}

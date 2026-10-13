@@ -171,3 +171,12 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Sửa hai lỗi có evidence: ACK malformed connectionId không được bật capability; FORBIDDEN của scoped heartbeat phải báo coordinator dừng đúng collector/socket dù source treo và không có state pending. Transient DB không coi revoke, callback cũ không dừng lượt mới. Chỉ callback nội bộ, không đổi schema/wire/migration hoặc thi/Listening.
 - Local dùng default candidate/proctor Applications thật + REAL ProcessHandle/Edge/PG/HTTP/WS, TEST seams chỉ gây fault. ACK observer drop/base/source/DB trigger SIMULATED, không đo mất gói vật lý. Raw thiếu FINAL do hard-kill giữ INCOMPLETE; không kết luận byte/latency/benchmark.
 - **Gate chưa chốt, FULL vẫn mặc định.** Thiếu môi trường/review không là lỗi delta đã chứng minh. A review auth/binding/scope notification/maintenance, B review factory/callback/guard/UX và chạy LAN. Không đánh dấu T3-A3 DONE thay A. [Guide](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-13-verification.md); acceptance PARTIAL có thể merge code an toàn với opt-in off, không giả approval hoặc tự T3-C5/E1/E2.
+
+## QD-21 · Deadline bắt đầu khi thí sinh nhận quyền ghi để vào thi
+
+- Ngày11/10/2026 · Vai A (Agent) · Human review NOT RUN · nhánh P0 chưa merge.
+- Dùng POST takeover hiện có làm mốc entry: dưới khóa hàng và sau kiểm owner/ACTIVE, server đặt deadline chưa có bằng clock_timestamp()+duration ca và trả field deadlineAt hiện có. Hai máy được tuần tự hóa; takeover/reconnect sau giữ nguyên deadline. Status/exam GET không khởi tạo giờ.
+- PR17 luôn takeover sau status/exam, nên không đổi wire/DTO/client production. Legacy save-first được giữ; ca chưa vào vẫn chưa bắt đầu giờ. WriterEpoch vẫn tăng mỗi entry (QD16 trên PR17), không được dùng epoch full của C làm writerEpoch.
+- Read history tách scope ACTIVE, scheduler exam riêng và chốt theo answers đã commit. [Review A/B](REVIEW_A_PR17.md).
+
+Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`, QD-17 và QD-18 đã thuộc T3-C2/T3-C3 của C, nên quyết định deadline của A (trước mang số QD-18 trên nhánh này) đổi thành QD-21. QD-20 và QD-22 dành cho hai quyết định của B trên PR #17 (mất WebSocket; `writerEpoch` khi vào thi); các mục đó vào main cùng PR tương ứng. Đồng bộ lần hai với main `cb30f3d`: QD-19 đã thuộc T3-C4 của C, nên quyết định API lịch sử lượt thi của A (bản ghép cục bộ trước đó ghi QD-19) mang số QD-23.

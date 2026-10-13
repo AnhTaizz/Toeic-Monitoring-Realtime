@@ -1,0 +1,24 @@
+Tests run: 43, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 376, Failures: 0, Errors: 0, Skipped: 0
+PASS concurrent entry/reconnect/reopen/takeover: one persisted deadline, old writer STALE
+PASS PostgreSQL row contention: HTTP submit AND autonomous scheduler wait across deadline; submit rejected; scheduler finalizes acknowledged answers once
+PASS submit retry/IDOR/idempotency/late save and autonomous scans: one SUBMITTED result
+PASS CLOSED remains forbidden for exam reads
+PASS INTERRUPTED remains forbidden for exam reads
+PASS autonomous runtime timeout with zero answers: TIMED_OUT, score 0/2, terminal result readable
+PASS read gates ACTIVE: owner/assigned allowed; foreign/unauth/revoked denied; ACTIVE scope preserved
+PASS read gates SUBMITTED: owner/assigned allowed; foreign/unauth/revoked denied; ACTIVE scope preserved
+PASS read gates TIMED_OUT: owner/assigned allowed; foreign/unauth/revoked denied; ACTIVE scope preserved
+PASS legacy first-save compatibility and takeover preserve existing deadline
+PASS timeout uses acknowledged revision only; rejected/unsubmitted answers excluded, repeated scans immutable
+PASS runtime shutdown: exam scheduler and monitoring workers stopped
+PASS removed only owned test schema t2a_p0_c378eb2d1fb644a1b443091ed886f7dd
+Tests run: 166, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+Reactor Summary for TOEIC Monitoring Realtime 0.1.0-SNAPSHOT:
+TOEIC Monitoring Realtime .......................... SUCCESS [  0.010 s]
+TOEIC Protocol ..................................... SUCCESS [ 22.129 s]
+TOEIC JavaFX Client ................................ SUCCESS [ 46.035 s]
+TOEIC Server ....................................... SUCCESS [ 27.819 s]
+TOEIC ProcessHandle Spike .......................... SUCCESS [  1.162 s]
+BUILD SUCCESS

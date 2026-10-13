@@ -61,9 +61,7 @@ public class ExamService {
 
     @Transactional
     public AutosaveAnswersResponse autosaveAnswers(AuthenticatedUser candidate, AutosaveAnswersRequest request) {
-        if (candidate.role() != Role.CANDIDATE) {
-            throw AccessDeniedException.forbidden();
-        }
+        authorizationService.requireRole(candidate, Role.CANDIDATE);
         if (request.requestId() == null || request.requestId().isBlank()) {
             throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "requestId không được để trống", request.requestId());
         }
@@ -134,11 +132,8 @@ public class ExamService {
                 throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.EXPIRED, "Đã quá thời gian làm bài (deadline exceeded)", request.requestId());
             }
         } else {
-            Instant newDeadline = decisionAt.plusSeconds(attempt.durationSeconds() > 0 ? attempt.durationSeconds() : 7200);
-            jdbc.sql("UPDATE monitoring_attempts SET deadline_at = :deadlineAt WHERE attempt_id = :attemptId")
-                    .param("deadlineAt", java.sql.Timestamp.from(newDeadline))
-                    .param("attemptId", request.attemptId())
-                    .update();
+            // Compatibility for older clients that save without an entry/takeover request.
+            initializeDeadline(request.attemptId(), decisionAt, attempt.durationSeconds());
         }
 
         if (attempt.examId() == null || attempt.examId().isBlank()) {
@@ -338,7 +333,7 @@ public class ExamService {
 
     @Transactional(readOnly = true)
     public CandidateExamDto getCandidateExam(AuthenticatedUser user, String attemptId) {
-        authorizationService.requireAttempt(user, attemptId);
+        authorizationService.requireExamRead(user, attemptId);
 
         String examId = jdbc.sql("""
                 SELECT COALESCE(a.exam_id, s.exam_id) FROM monitoring_attempts a
@@ -557,9 +552,7 @@ public class ExamService {
 
     @Transactional
     public SubmitExamResponse submitExam(AuthenticatedUser candidate, SubmitExamRequest request) {
-        if (candidate.role() != Role.CANDIDATE) {
-            throw AccessDeniedException.forbidden();
-        }
+        authorizationService.requireRole(candidate, Role.CANDIDATE);
         if (request.requestId() == null || request.requestId().isBlank()) {
             throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "requestId không được để trống", request.requestId());
         }
@@ -866,6 +859,7 @@ public class ExamService {
         jdbc.sql("""
                 UPDATE monitoring_attempts
                 SET state = 'TIMED_OUT',
+                    submitted_at = :decisionAt,
                     total_questions = :totalQuestions,
                     correct_count = :correctCount,
                     listening_correct = :listeningCorrect,
@@ -873,6 +867,7 @@ public class ExamService {
                     score = :score
                 WHERE attempt_id = :attemptId
                 """)
+                .param("decisionAt", java.sql.Timestamp.from(decisionAt))
                 .param("totalQuestions", score.totalQuestions())
                 .param("correctCount", score.correctCount())
                 .param("listeningCorrect", score.listeningCorrect())
@@ -882,6 +877,16 @@ public class ExamService {
                 .update();
 
         return true;
+    }
+
+    /** Caller holds the attempt row lock. A persisted deadline is never reset by entry/reconnect. */
+    private Instant initializeDeadline(String attemptId, Instant decisionAt, int durationSeconds) {
+        Instant deadlineAt = decisionAt.plusSeconds(durationSeconds > 0 ? durationSeconds : 7200);
+        jdbc.sql("UPDATE monitoring_attempts SET deadline_at = :deadlineAt WHERE attempt_id = :attemptId AND deadline_at IS NULL")
+                .param("deadlineAt", java.sql.Timestamp.from(deadlineAt))
+                .param("attemptId", attemptId)
+                .update();
+        return deadlineAt;
     }
 
     @Transactional(readOnly = true)
@@ -899,9 +904,7 @@ public class ExamService {
 
     @Transactional
     public TakeoverWriterResponse takeoverWriter(AuthenticatedUser user, TakeoverWriterRequest request) {
-        if (user.role() != Role.CANDIDATE) {
-            throw AccessDeniedException.forbidden();
-        }
+        authorizationService.requireRole(user, Role.CANDIDATE);
         if (request.requestId() == null || request.requestId().isBlank()) {
             throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "requestId không được để trống", request.requestId());
         }
@@ -916,13 +919,18 @@ public class ExamService {
                 long writerEpoch,
                 long savedRevision,
                 String state,
-                String answersJson
+                String answersJson,
+                String examId,
+                int durationSeconds
         ) {}
 
         AttemptLockRow attempt = jdbc.sql("""
                 SELECT a.attempt_id, a.candidate_user_id, a.deadline_at,
-                       a.writer_epoch, a.saved_revision, a.state, a.answers_json
+                       a.writer_epoch, a.saved_revision, a.state, a.answers_json,
+                       COALESCE(a.exam_id, s.exam_id) AS exam_id,
+                       COALESCE(s.duration_seconds, 7200) AS duration_seconds
                 FROM monitoring_attempts a
+                LEFT JOIN exam_sessions s ON s.session_id = a.session_id
                 WHERE a.attempt_id = :attemptId
                 FOR UPDATE OF a
                 """)
@@ -934,7 +942,9 @@ public class ExamService {
                         rs.getLong("writer_epoch"),
                         rs.getLong("saved_revision"),
                         rs.getString("state"),
-                        rs.getString("answers_json")
+                        rs.getString("answers_json"),
+                        rs.getString("exam_id"),
+                        rs.getInt("duration_seconds")
                 ))
                 .optional()
                 .orElseThrow(() -> new ExamApiException(HttpStatus.FORBIDDEN, ErrorCode.FORBIDDEN, "Không tìm thấy lượt thi hoặc không có quyền", request.requestId()));
@@ -945,6 +955,20 @@ public class ExamService {
 
         if (!"ACTIVE".equalsIgnoreCase(attempt.state())) {
             throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.INVALID_STATE, "Lượt thi không ở trạng thái làm bài (state=" + attempt.state() + ")", request.requestId());
+        }
+
+        if (attempt.examId() == null || attempt.examId().isBlank()) {
+            throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT,
+                    "Lượt thi chưa được gán đề thi", request.requestId());
+        }
+        // Entry time is decided by the DB after obtaining the same row lock as save/submit/timeout.
+        Instant decisionAt = jdbc.sql("SELECT clock_timestamp()").query(Instant.class).single();
+        Instant deadlineAt = attempt.deadlineAt();
+        if (deadlineAt == null) {
+            deadlineAt = initializeDeadline(request.attemptId(), decisionAt, attempt.durationSeconds());
+        } else if (!decisionAt.isBefore(deadlineAt)) {
+            throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.EXPIRED,
+                    "Đã quá thời gian làm bài (deadline exceeded)", request.requestId());
         }
 
         long newWriterEpoch = attempt.writerEpoch() + 1;
@@ -972,14 +996,14 @@ public class ExamService {
                 newWriterEpoch,
                 attempt.savedRevision(),
                 attempt.state(),
-                attempt.deadlineAt(),
+                deadlineAt,
                 answers
         );
     }
 
     @Transactional(readOnly = true)
     public CandidateAttemptStatusResponse getAttemptStatus(AuthenticatedUser user, String attemptId) {
-        authorizationService.requireAttempt(user, attemptId);
+        authorizationService.requireExamRead(user, attemptId);
 
         record StatusRow(
                 String attemptId,

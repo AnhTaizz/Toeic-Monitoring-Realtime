@@ -1,0 +1,67 @@
+diff --git a/client/src/test/java/vn/edu/toeic/client/exam/ExamFlowPostgresSmoke.java b/client/src/test/java/vn/edu/toeic/client/exam/ExamFlowPostgresSmoke.java
+index 8931a84..40f6c0d 100644
+--- a/client/src/test/java/vn/edu/toeic/client/exam/ExamFlowPostgresSmoke.java
++++ b/client/src/test/java/vn/edu/toeic/client/exam/ExamFlowPostgresSmoke.java
+@@ -129,7 +129,9 @@ public final class ExamFlowPostgresSmoke {
+         ExamEntry.Ready entry = (ExamEntry.Ready) ExamEntry.open(deviceA, attempt).get(15, TimeUnit.SECONDS);
+         check(entry.start().writerEpoch() == 2 && entry.start().savedRevision() == 0 && entry.start().answers().isEmpty(),
+                 "Vào phòng thi: server cấp writerEpoch mới (1 -> 2), revision 0, chưa có đáp án");
+-        check(entry.start().deadlineAt() == null, "Server chưa tính giờ trước lần lưu đầu (deadlineAt null)");
++        check(entry.start().deadlineAt() != null && entry.start().deadlineAt().equals(
++                        deviceA.getAttemptStatus(attempt).get(10, TimeUnit.SECONDS).deadlineAt()),
++                "Server tính giờ ngay khi vào phòng thi, trước khi có đáp án; takeover và status cùng deadline");
+         check(entry.paper().questions().size() == 4 && entry.paper().groups().size() == 3,
+                 "Đề 4 câu được gom thành 3 nhóm (2 câu chung đoạn văn)");
+ 
+@@ -144,7 +146,7 @@ public final class ExamFlowPostgresSmoke {
+                 "Autosave đầu: server lưu revision 1 đúng toàn bộ map; client chỉ báo Đã lưu sau ACK");
+         probeA.await(view -> view.deadlineAt() != null, 10, "deadline từ server");
+         check(status.deadlineAt() != null && status.deadlineAt().equals(probeA.latest.deadlineAt()),
+-                "Client lấy deadline từ server sau lần lưu đầu, không tự đặt");
++                "Client giữ deadline từ takeover sau lần lưu đầu, không tự đặt/reset");
+ 
+         on(() -> {
+             sessionA.selectAnswer("R2", "B");
+@@ -254,7 +256,8 @@ public final class ExamFlowPostgresSmoke {
+         Probe probe = new Probe();
+         ExamSession session = open(entry, lossy, probe);
+         on(() -> session.selectAnswer("R1", "A"));
+-        probe.await(view -> view.saveState() == SaveState.SAVED && view.deadlineAt() != null, 10, "bắt đầu tính giờ");
++        probe.await(view -> view.saveState() == SaveState.SAVED && view.confirmedRevision() == 1
++                && view.deadlineAt() != null, 10, "server xác nhận revision 1 trước deadline");
+ 
+         // Thay đổi này không tới được server: lúc hết giờ nó vẫn là bản chưa được xác nhận.
+         lossy.blockSaves.set(true);
+@@ -293,7 +296,7 @@ public final class ExamFlowPostgresSmoke {
+         Probe probe = new Probe();
+         ExamSession session = open(entry, lossy, probe);
+         on(() -> session.selectAnswer("R1", "A"));
+-        ExamSession.View started = probe.await(view -> view.saveState() == SaveState.SAVED && view.deadlineAt() != null,
++        ExamSession.View started = probe.await(view -> view.saveState() == SaveState.SAVED && view.confirmedRevision() == 1 && view.deadlineAt() != null,
+                 10, "bắt đầu tính giờ");
+ 
+         // Không chạy đồng hồ client: mô phỏng máy có giờ chạy chậm, người dùng bấm nộp sau hạn của server.
+@@ -434,14 +437,15 @@ public final class ExamFlowPostgresSmoke {
+                 server.destroyForcibly();
+                 server.waitFor(10, TimeUnit.SECONDS);
+             }
+-            // Tên schema do smoke tự sinh (chỉ chữ thường và số) nên ghép vào câu lệnh là an toàn.
+-            Process drop = new ProcessBuilder("docker.exe", "exec", "-i", "toeic-db", "psql", "-U", env("DB_USER", "toeic"),
+-                    "-d", env("DB_NAME", "toeic"), "-v", "ON_ERROR_STOP=1", "-q", "-c",
+-                    "DROP SCHEMA IF EXISTS " + schema + " CASCADE").redirectErrorStream(true)
+-                    .redirectOutput(ProcessBuilder.Redirect.DISCARD).start();
+-            boolean dropped = drop.waitFor(20, TimeUnit.SECONDS) && drop.exitValue() == 0;
+-            System.out.println(dropped ? "CLEANUP đã dừng server của smoke và xóa schema tạm " + schema
+-                    : "CLEANUP CHƯA xóa được schema tạm " + schema + "; cần xóa tay");
++            // Drop only this smoke's owned schema on the same DB connection, independent of Docker.
++            if (!schema.matches("t2b_smoke_[a-f0-9]{12}")) throw new IllegalStateException("Unsafe TEST schema");
++            String url = "jdbc:postgresql://" + env("DB_HOST", "127.0.0.1") + ":" + env("DB_PORT", "5432")
++                    + "/" + env("DB_NAME", "toeic");
++            try (java.sql.Connection db = java.sql.DriverManager.getConnection(url, env("DB_USER", "toeic"),
++                    env("DB_PASSWORD", "")); java.sql.Statement statement = db.createStatement()) {
++                statement.execute("DROP SCHEMA " + schema + " CASCADE");
++            }
++            System.out.println("CLEANUP stopped owned server and removed owned schema " + schema);
+         } catch (Exception failure) {
+             System.out.println("CLEANUP lỗi (" + failure.getClass().getSimpleName() + "); schema tạm " + schema + " có thể còn");
+         }

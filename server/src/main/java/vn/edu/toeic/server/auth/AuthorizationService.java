@@ -17,4 +17,10 @@ public final class AuthorizationService {
             throw AccessDeniedException.forbidden();
         }
     }
+    public void requireExamRead(AuthenticatedUser user, String attemptId) {
+        if (user == null) throw AccessDeniedException.unauthorized();
+        if (attemptId == null || attemptId.isBlank() || !scopes.canReadExam(user, attemptId)) {
+            throw AccessDeniedException.forbidden();
+        }
+    }
 }

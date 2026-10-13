@@ -42,8 +42,14 @@ evidence/t2-c3/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr
 # C4 ground truth, observation and manifest checksums retain exact bytes.
 evidence/t2-c4/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
+# Backend P0 evidence checksums cover exact captured bytes (Windows logs may use CRLF).
+evidence/t2-a-p0/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
 # T3-C1 trace/replay/transcript checksums cover exact bytes.
 evidence/t3-c1/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Backend P0/main synchronization evidence retains exact captured bytes.
+evidence/t2-a-p0-sync/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
 
 # T3-C2 verification artifacts retain exact bytes/checksums.
 evidence/t3-c2/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

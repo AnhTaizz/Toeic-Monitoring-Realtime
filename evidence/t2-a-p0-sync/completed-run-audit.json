@@ -1,0 +1,30 @@
+{
+  "mvn-test.log": {
+    "sha256": "a48313613406ddac7657b472c2bd733a7bd38ef4108873a38c76f33502f1be8a",
+    "bytes": 476407
+  },
+  "mvn-package.log": {
+    "sha256": "f97395179d2956efa1c649149814fc7cd9a28895f40c0445ac9ec7afebe9b331",
+    "bytes": 479862
+  },
+  "c1-smoke.log": {
+    "sha256": "37665839ddfd8fd1606c8797441f8c2b65fedb2b95046c6411ab7a11cb2609be",
+    "bytes": 3755
+  },
+  "c2-smoke.log": {
+    "sha256": "3c7ce913648c491b47a450f5de9a5d96495ece9840fa5c57e8b9f82c2b7f8984",
+    "bytes": 3809
+  },
+  "delta-cli.log": {
+    "sha256": "0d7b612f402d78b2e4514ea335cf794a81dd9244795f4edc0b7522ce618b8141",
+    "bytes": 3252
+  },
+  "python-tests.log": {
+    "sha256": "7990f93274981e700915f8d8eb64769afa8ffc534d3a6df6243cabd35080416d",
+    "bytes": 1747
+  },
+  "b-exam-flow-smoke.log": {
+    "sha256": "6cead08d74129ab947e62bd3560e3b46223b76b2da1a50daec5bdb83b43cdb85",
+    "bytes": 3035
+  }
+}

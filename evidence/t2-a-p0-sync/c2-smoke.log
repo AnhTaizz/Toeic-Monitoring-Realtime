@@ -1,0 +1,25 @@
+01:49:49.009 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:56261/p0_test (PostgreSQL 18.1)
+01:49:49.219 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "late_events_test_b40613165f5548a2a02335859d2be075"."flyway_schema_history" does not exist yet
+01:49:49.232 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.064s)
+01:49:49.252 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "late_events_test_b40613165f5548a2a02335859d2be075"."flyway_schema_history" ...
+01:49:49.427 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "late_events_test_b40613165f5548a2a02335859d2be075": << Empty Schema >>
+01:49:49.451 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "late_events_test_b40613165f5548a2a02335859d2be075" to version "1 - auth schema"
+01:49:49.519 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "late_events_test_b40613165f5548a2a02335859d2be075" to version "2 - monitoring events"
+01:49:49.655 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "late_events_test_b40613165f5548a2a02335859d2be075" to version "3 - monitoring gaps"
+01:49:49.718 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "late_events_test_b40613165f5548a2a02335859d2be075" to version "4 - monitoring presence"
+01:49:49.842 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "late_events_test_b40613165f5548a2a02335859d2be075" to version "5 - exams and sessions"
+01:49:49.987 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "late_events_test_b40613165f5548a2a02335859d2be075" to version "6 - exam autosave requests"
+01:49:50.037 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "late_events_test_b40613165f5548a2a02335859d2be075" to version "7 - exam submits"
+01:49:50.127 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 7 migrations to schema "late_events_test_b40613165f5548a2a02335859d2be075", now at version v7 (execution time 00:00.305s)
+2026-10-12T01:50:12.023+07:00  INFO 28236 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T01:50:12.048+07:00  INFO 28236 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms
+PASS REAL V7 preexisting event -> V8 preserves identity/timestamp; old provenance remains UNSPECIFIED
+PASS legacy event accepted with UNSPECIFIED delivery; no unsynchronized-clock lateness inference
+PASS REAL automatic UNKNOWN/reconnect ONLINE/late event history; reads MOCK, outage and withheld write SIMULATED; B unaffected; interruption retained, droppedCount0/gaps0
+PASS REAL late dedup/conflict/frozen metadata/full isolation and deferred COMMIT rollback/retry; skewed client date2099 does not infer network latency
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS MOCK queue capacity1 drop2; REAL gap HTTP/store/retry/conflict/full-history preservation; gap ACK loss SIMULATED
+PASS REAL role/foreign/CLOSED/assignment/token revoke checks including duplicate paths; no permission widening
+PASS owned C2 schema/context/client resources cleaned; public/dev untouched
+T2-C2 REAL Spring/PG/HTTP/WS/collector-worker PASS; process readings MOCK; disconnect/write/ACK loss SIMULATED; full candidate GUI/LAN/human A/B review NOT RUN

@@ -116,8 +116,9 @@ ACK thành công chỉ được phát sau khi thao tác tương ứng đã đư�
 | `POST /api/v1/sessions` | Giám thị | `sessionId`, `examId`, `title`, `durationSeconds`, `proctorUsernames`, `candidateUsernames` | `sessionId`, `examId`, `title`, `durationSeconds`, `state`, `createdAttempts: [{attemptId, candidateUsername, state}]` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 | T2-A1 | Đã cài |
 | `GET /api/v1/attempts/{attemptId}/exam` | Thí sinh / Giám thị phân công | Header Bearer | `examId`, `title`, `description`, `totalQuestions`, `questions` (**TUYỆT ĐỐI KHÔNG CÓ `correctOption`**) | 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 | T2-A1 | Đã cài |
 | `POST /api/v1/attempts/{attemptId}/answers` | Thí sinh sở hữu | `requestId`, `attemptId`, `writerEpoch`, `answerRevision`, `answers: {qId: optId}` | `requestId`, `attemptId`, `status`, `savedRevision`, `writerEpoch`, `decisionAt` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 409 `STALE`/`CONFLICT`/`INVALID_STATE`/`EXPIRED` | T2-A2 | Đã cài |
-| _submit_ | Thí sinh | | | | T2-A3 | Chưa có |
-| _trạng thái attempt (answers, revision, state, deadline)_ | Thí sinh | | | | T2-A4 | Chưa có |
+| `POST /api/v1/attempts/{attemptId}/submit` | Thí sinh sở hữu | requestId, attemptId, writerEpoch, answerRevision, answers | trạng thái chốt và điểm | 401/403; 409 STALE/CONFLICT/INVALID_STATE/EXPIRED | T2-A3 | Đã cài |
+| `GET /api/v1/attempts/{attemptId}/status` | Chủ lượt / giám thị phân công | Bearer | CandidateAttemptStatusResponse, xem T2-A4 | 401/403; 500/503 | T2-A4 | Đã cài |
+| `POST /api/v1/attempts/{attemptId}/takeover` | Thí sinh sở hữu | requestId, attemptId, clientSessionId tùy chọn | writerEpoch, savedRevision, state, deadlineAt, answers | 401/403; 409 INVALID_STATE/EXPIRED | T2-A4 | Đã cài |
 | _manifest và tải audio_ | Thí sinh | | | | T3-A1 | Chưa có |
 
 Request/response login mẫu (`MOCK` về giá trị ID/token, đúng schema code đang chạy):
@@ -637,7 +638,7 @@ Cross-owner tối thiểu: B RealtimeClient, A RealtimeWebSocketHandler/Realtime
 ### 4. Tác vụ Timeout Định kỳ (`ExamTimeoutService` - AT08)
 - Định kỳ quét các attempt quá hạn (`state = 'ACTIVE'` và `deadline_at <= clock_timestamp()`).
 - Mở transaction khóa bi quan `FOR UPDATE OF a`, kiểm tra lại với `clock_timestamp()`.
-- Chấm điểm trên bộ đáp án đã lưu (`saved_answers`), cập nhật trạng thái `TIMED_OUT` và lưu điểm số vào DB.
+- Chấm điểm trên bộ đáp án đã lưu (`answers_json`), cập nhật `TIMED_OUT`, điểm và `submitted_at` là giờ chốt timeout.
 - Timeout không nhận đáp án mới từ client; mọi request nộp bài sau đó đều bị từ chối 409 `INVALID_STATE`.
 
 ## Contract T2-A4 — Phiên Ghi (Takeover Writer) và Kiểm Thử Tranh Chấp (05/10/2026)
@@ -670,6 +671,7 @@ Cross-owner tối thiểu: B RealtimeClient, A RealtimeWebSocketHandler/Realtime
 - Cơ chế hoạt động:
   - Khóa bi quan `SELECT ... FOR UPDATE OF a`.
   - Kiểm tra trạng thái bài thi: nếu không ở trạng thái `ACTIVE` (ví dụ `SUBMITTED`, `TIMED_OUT`) -> từ chối với 409 `INVALID_STATE`.
+  - Sau khóa, lấy `clock_timestamp()`. Nếu chưa có deadline thì đặt `deadline_at = decisionAt + duration_seconds` trong cùng transaction; nếu deadline đã có thì giữ nguyên và từ chối 409 `EXPIRED` khi quá hạn.
   - Tăng `writer_epoch = writer_epoch + 1`.
   - Commit transaction và trả về trạng thái phiên thi mới nhất cùng `writerEpoch` mới. Mọi writer cũ giữ `writerEpoch` cũ sẽ bị chặn với 409 `STALE` (AT09).
 
@@ -682,18 +684,19 @@ Cross-owner tối thiểu: B RealtimeClient, A RealtimeWebSocketHandler/Realtime
   "attemptId": "SESSION-T2A4-candidate1",
   "sessionId": "SESSION-T2A4",
   "examId": "EXAM-TOEIC-SAMPLE-10",
-  "candidateUsername": "candidate1",
   "writerEpoch": 2,
   "savedRevision": 42,
   "state": "ACTIVE",
-  "startedAt": "2026-10-05T16:00:00Z",
   "deadlineAt": "2026-10-05T18:00:00Z",
   "answers": {
     "L1": "A",
     "R1": "B"
   },
-  "totalQuestions": 4,
-  "score": null,
+  "totalQuestions": 0,
+  "correctCount": 0,
+  "listeningCorrect": 0,
+  "readingCorrect": 0,
+  "score": 0,
   "submittedAt": null
 }
 ```
@@ -778,6 +781,15 @@ Server FullSnapshotReducer delegate lõi FullStateReducer trong protocol; CLI c�
 C4 không thêm HTTP/WS message, không đổi FullSnapshotPayload hoặc 8 tên executable production. `ProcessSelection` là điểm chọn process trong collector; mặc định vẫn `ProcessPolicy`. Chỉ harness truyền `OwnedProcessPolicy` cho root child do mình tạo.
 
 Trace TEST dùng cặp schema/policy `monitoring-observation-trace-test-v1` / `test-owned-process-v1`; reader C3 nhận schema an toàn này nhưng replay/network driver production từ chối. Dữ liệu tên/start thiếu được giữ UNREADABLE; không ép Java child thành ứng dụng production. Ground truth `controlled-ground-truth-v1` có parent clock mapping, checksum, identity và trạng thái cleanup. [Contract/lệnh/giới hạn C4](CONTROLLED_PROCESS_HARNESS.md).
+
+## Sửa P0 backend — 11/10/2026 (nhánh A, chưa merge)
+
+- `/exam` và `/status`: quyền đọc riêng cho ACTIVE/SUBMITTED/TIMED_OUT, candidate sở hữu hoặc proctor có assignment hiện tại. CLOSED/INTERRUPTED/unknown vẫn 403. Kiểm quyền trước mọi nhánh dữ liệu. `canAccess`, auth/me, roster và toàn WS/event/full/gap của C giữ ACTIVE-only.
+- Lần takeover thành công đầu tiên là vào thi: server đặt deadline bằng đồng hồ PostgreSQL sau row lock, trả field `deadlineAt` đã có. Hai máy vào đồng thời cùng nhận một deadline; reconnect/status/proctor đọc không reset hoặc bắt đầu giờ. Lượt được cấp nhưng chưa vào thi có deadline null; không tính thời gian từ lúc tạo ca. Legacy client save không takeover vẫn được khởi tạo deadline lần đầu, không đổi deadline cũ.
+- Scheduler default bật, scan mỗi 1000ms sau lần chạy trước; cấu hình `EXAM_TIMEOUT_SCHEDULER_ENABLED`, `EXAM_TIMEOUT_SCAN_INTERVAL_MS`. `@EnableScheduling` trong config exam, task dùng riêng `examTimeoutScheduler`; worker presence/full của C không thay đổi. Deadline là mốc cấm ghi; job chốt sau mốc ở lần scan khả dụng, không cam kết độ trễ tuyệt đối khi DB chậm.
+- Timeout chấm answers đã commit, khóa và kiểm lại ACTIVE/deadline; không chấm SUBMITTED/TIMED_OUT lần nữa. `submittedAt` với TIMED_OUT là giờ chốt server, không có nghĩa client đã bấm submit.
+- Không đổi endpoint, DTO, wire version hay migration. Status không có candidateUsername/startedAt; các điểm và totalQuestions hiện là số 0 trước khi chấm (không dùng chúng làm tổng số câu trên UI; lấy CandidateExamDto).
+- QD-16 của B phù hợp với writerEpoch; QD-17 phù hợp vì HTTP submit độc lập WS, vẫn kiểm owner/epoch/deadline/state. [Review phối hợp A/B](REVIEW_A_PR17.md).
 
 ## T3-C1 · Contract candidate delta, chưa bật production
 

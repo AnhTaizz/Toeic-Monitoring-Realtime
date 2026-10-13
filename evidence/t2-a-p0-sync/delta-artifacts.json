@@ -1,0 +1,54 @@
+[
+  {
+    "path": "delta-cli/fixture-delta.json.gz",
+    "sha256": "bfd83d78f2a9d812b13d22c11ffda532a083f171fb60617e648f6133ec6b12ab",
+    "originalSha256": "d2f3cdaf3e4f9c67d36bbb4b24410893adfd5cc7b710732d8df1eb7d2d66beb5"
+  },
+  {
+    "path": "delta-cli/fixture-full.json.gz",
+    "sha256": "544e4b4baeb918aac4f0c7eacbd42686467c29d42ec4befd31f8b7ced46b96fb",
+    "originalSha256": "3052f71821dae482481e05c48e7ae21c48f9ea000ca0f2164fdd33c5e45ae931"
+  },
+  {
+    "path": "delta-cli/legacy-full-faults.json",
+    "sha256": "b52b966b1f96a8c9f9d2f4f21a67ccfa02ec9954122279d8fc5c18cb9b9f2898"
+  },
+  {
+    "path": "delta-cli/negative-delta.json.gz",
+    "sha256": "6dce060e505438ea2c30d881ebdb611534a66cf3618ca7d8c1fe2ba2a0a80334",
+    "originalSha256": "a264585efefd413a22ee492d3084f3abefdf4a953fc7c711c78d7b62a80b5f1d"
+  },
+  {
+    "path": "delta-cli/negative-full.json.gz",
+    "sha256": "51f119a345becb7e5a265b8ada4613a3e08b72a66895d3616e78ef7b240617d8",
+    "originalSha256": "6948e642b2f3cae5e06b383a2f6c15d43c5de3342f86f75bff9c47d92b297bbf"
+  },
+  {
+    "path": "delta-cli/real-delta.json.gz",
+    "sha256": "494a88df2997c3403e2577d4c59cc3bbf4526eebe6fe2d59cf1a2f004e01253b",
+    "originalSha256": "12fc5296c9475ebc3a45e07c69ee395fe27bf65e4fc06338149786cdc11abf79"
+  },
+  {
+    "path": "delta-cli/real-full.json.gz",
+    "sha256": "cff0db35f9341e5cf38c9eb074b5da7c568d1741f899ce79a7e6fe1fb4742789",
+    "originalSha256": "2d18b3602731e2e55f228043fcd662319b75f345cc80f9b0b643219a3b9b6c13"
+  },
+  {
+    "path": "delta-cli/real-processhandle.jsonl",
+    "sha256": "649f634328feb293e2ee68d96cfc807f86a0ddc791f2cdaaabec2db79f77a62e"
+  },
+  {
+    "path": "delta-cli/reconnect-delta.json.gz",
+    "sha256": "51391e70f34e02dc08447c3cec886acc1c14c1af9df18bc47b685b1afa235200",
+    "originalSha256": "2ddf41df3a1620ce3f0d74247998e6187cc83eeb369baa5764b83637fc50c64c"
+  },
+  {
+    "path": "delta-cli/reconnect-full.json.gz",
+    "sha256": "c1cfefebe0ba41fe80e8011f4f06509a30df27c347375f26851fa65c605884e4",
+    "originalSha256": "b2969d86c32e3aa59d65826f22d9d9980e7a38fe896bad907c4d63e68cabc900"
+  },
+  {
+    "path": "delta-cli/summary.json",
+    "sha256": "f068a3f82c0e23ddc489fd127b05c78bbdf910d6857c04d370ff95079b093fae"
+  }
+]

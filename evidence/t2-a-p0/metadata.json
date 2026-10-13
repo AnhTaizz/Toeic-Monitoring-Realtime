@@ -1,0 +1,28 @@
+{
+  "a_tested_production_commit": "92027d7413cb7ca71f683fdfd961b0c6a3edc742",
+  "integrated_base": "2f5fc66d1220f1e860f7c3beced86ef3f294ac46",
+  "integrated_head": "e9337791a706da54b76deec172ce212d445c913c",
+  "main_base": "12e28386169c42b88883f23a5053baeb8fb0c3c9",
+  "postgres_version": "18.1",
+  "postgres_origin": "owned native Windows cluster, loopback port 56261",
+  "database": "p0_test",
+  "java": "Oracle JDK 21.0.8",
+  "maven": "3.9.11",
+  "pg_integration_environment": "true",
+  "secrets": "runtime generated; never copied into evidence",
+  "source_snapshot_note": "production source same as 92027d7; later C1 manual harness changes are test-only",
+  "a_manual_c1_test_commit": "4291a4e",
+  "artifacts": {
+    "a_server_jar_sha256": "4938d3cb90a52890786e84db65369a35ed0fd28c7a6ccd5b22bc9c57c9edb99f",
+    "a_client_jar_sha256": "9d356faeaa9340148077971064143711bd52c71107afa324d419e2800ee9efc0",
+    "integrated_server_jar_sha256": "8cbd6a9d40ddfaf5f310462c4a5b4d792220d039d78734f87a265202824f2c03",
+    "integrated_client_jar_sha256": "43d1fd5ce956e25290fffa49eaee6ac4ad3d940394517031afa0ccb7f7c46c1b"
+  },
+  "owned_cluster_stopped": true,
+  "temporary_full_integration_head": "b2c17c8d580550a086435e152eb3c0354d8456f6",
+  "temporary_full_integration_note": "Full local merge of backend 30e9199, preserving both docs sides; code same as package/smoke; no remote branch modified.",
+  "document_conflicts_resolved_in_temporary_worktree": [
+    "docs/KIEM_THU.md",
+    "docs/QUYET_DINH.md"
+  ]
+}

@@ -348,6 +348,12 @@ C5 là thay đổi tài liệu. [Phương pháp](MONITORING_BASELINE_METHOD.md),
 
 MT01/MT07/MT08 giữ PARTIAL toàn hệ thống; MT02–MT06 delta và E1/E2 không nâng PASS. Merge tài liệu không thay review của B hoặc nghiệm thu GUI/LAN.
 
+## Backend P0 unblock PR17 — 11/10/2026 (local, chưa merge)
+
+Nhánh A từ main12e2838: Maven test/package510 PASS, tích hợp tạm PR17 package582 PASS, đều bật11 regression PG thực và không skip. Native PostgreSQL18.1 cluster test riêng; không reset DB dev. Ba GAP B: owner/assigned proctor đọc SUBMITTED/TIMED_OUT, scheduler tự chốt và deadline bắt đầu ngay takeover entry **PASS kỹ thuật**. B smoke JAR/PG/HTTP28 PASS,0GAP; C1 full/reconnect/autonomous STALE/TTL và C2 late/gap/history/permission hồi quy PASS; Python10 PASS.
+
+[Evidence P0 mới](../evidence/t2-a-p0/2026-10-11-verification.md) ghi source/hash, logs, fixture patch và lỗi exploratory. Không sửa các evidence lịch sử B/C hoặc TRACKER. T2-B3/B4 vẫn PARTIAL; human review, full GUI candidate/proctor, server-off/reconnect, LAN/app-image/audio máy thứ hai NOT RUN. E1/E2 không thay trạng thái. Remote PR17 chưa có commit A cho đến khi được phép push và tích hợp.
+
 ## T3-C1 — encoder delta candidate (11/10/2026)
 
 [Guide](MONITORING_DELTA_ENCODER.md), [evidence](../evidence/t3-c1/2026-10-11-verification.md). Baseline mới493 PASS; final531 Java PASS (protocol35/client353/server142/spike1), 38 mới. Test snapshot/clock/transport MOCK, scheduled worker REAL; CLI thực thi thật nhưng network/ACK/epoch/adapter SIMULATED. Production vẫn full.
@@ -366,6 +372,12 @@ MT01/MT07/MT08 giữ PARTIAL toàn hệ thống; MT02–MT06 delta và E1/E2 kh�
 | MT02–MT06 gate/live delta/E1/E2/human A/B review | NOT RUN | Không nâng status27case/tracker từ component tests |
 
 Lượt package đầu mới thêm test ERROR STALE FAIL vì còn deadline ACK cũ; sửa deadline rejection candidate về now, bản sửa529 PASS; bổ sung2ca pending-ACK, final531 PASS. Không lấy lượt lỗi làm PASS. Hồi quy DB đầu dừng MIGRATION do Docker chưa chạy; bật Docker/compose volume cũ rồi chạy lại PASS. Kết quả hồi quy mạng/DB mới ghi trong evidence, không suy từ529unit.
+
+## Backend A sync main T3-C1 — 12/10/2026 (local, chờ push)
+
+Merge A6cfe7c4 + main144fe55 thành cadd98d, giữ P0 và encoder/transport/regression C. Maven test/package **548PASS**, checkout detached PR17+A/main package **620PASS**, đều0fail/error/skip và gồm11PG runtime +38test C mới. Smoke B **28PASS/0GAP**, C1/C2/CLI regression PASS, Python10PASS. Scheduler exam riêng, C tự STALE/TTL/presence và shutdown PASS; bài trắng tự TIMED_OUT0/2. [Evidence mới](../evidence/t2-a-p0-sync/2026-10-12-verification.md) ghi source/code/fixture hashes, logs và giới hạn.
+
+PR23 remote vẫn6cfe7c4, PR17 vẫn2f5fc66; chưa push local sync/chưa merge/human review. B3/B4 vẫnPARTIAL; full GUI/server-off/LAN/app-image/audio máy thứ hai/live delta/gate/E1/E2 NOT RUN. Không thay tracker hoặc evidence lịch sử.
 
 ## T3-C2 — reducer/resync/freshness (12/10/2026)
 
@@ -402,3 +414,21 @@ Các lượt lỗi fixture/constructor oracle/manifest/DB chưa chạy được 
 [Guide](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-13-verification.md). Source d9475eb,579Java/package PASS,42local assertions +7affected smoke commands latestPASS; previousfailures retained. OneWindows host/default actual candidate/proctor Applications/two childJVMs/REALProcessHandle-ownedEdge/PG/HTTP/WS. Fault observer/base/source/DB seams SIMULATED, nophysicalpacketloss measurement. Fulldefault, gate20/10notdecided, humanA/B/LANNOTRUN.
 
 MT01/MT07/MT08 thêm LOCAL actualcandidate/proctor Start/FULLfallback/DELTA/history/push/ownedkill/isolation/cleanup PASS, nhưng toàncase vẫn PARTIAL choLAN/human/fullflow. IT02 LOCAL monitoring subset2candidate+1proctor/scopeforgery/kill/isolation PASS; IT03 sourcepark+heartbeat/UI IPC/worker0 subsetPASS. Không nghiệm thu wholeexam/Listening/packageIT01 hoặc IT04; bảng NOT RUN của toànIT giữ nguyên. Replay oracleC3 vàlocalC4 táchriêng; không nângMT02–MT06 gate/E1/E2 thànhPASS.
+
+## Backend A — PR #23 đồng bộ main T3-C3 và review lại P0, 13/10/2026 (local, chờ push)
+
+Commit `9713658` trên nhánh cục bộ `sync/pr23-main-20261013` = head PR #23 `4753149` + main `ee714fc`. Chi tiết: `evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md`.
+
+| Kiểm tra | Kết quả | Ghi chú |
+|---|---|---|
+| `mvn package` với `TOEIC_PG_INTEGRATION=true` | PASS 586, 0 skip | protocol 43, client 376, server 166, spike 1; gồm 11 test `ExamRuntimePostgresTest` trên PostgreSQL thật |
+| Smoke C1 full snapshot, smoke C2 late event/gap | PASS | REAL HTTP/WS/PG trên schema riêng; nhãn MOCK/SIMULATED như script ghi |
+| Python analyzer | PASS 10 | Python 3.14; lượt đầu bằng Python 3.9 trên PATH lỗi do phiên bản, không tính |
+| Review lại ba sửa P0 (đọc sau khi chốt, scheduler hết giờ, deadline khi vào thi) | Đạt, 4 ghi nhận không chặn | Agent review; human review NOT RUN |
+| `ExamFlowPostgresSmoke`, GUI, LAN | NOT RUN trên nhánh này | chạy ở nhánh client của B |
+
+Không đổi trạng thái AT/MT/LT/IT trong bảng chính; `TRACKER.json` giữ nguyên.
+
+### Backend A — PR #23 đồng bộ lần hai với main T3-C4, 13/10/2026 (local, chờ push)
+
+Main tiến lên `cb30f3d` (PR #27) trong lúc làm, nên nhánh `sync/pr23-main-20261013` được merge thêm một lần: commit `c64503f`. `mvn package` với `TOEIC_PG_INTEGRATION=true`: **PASS 596**, 0 skip (protocol 43, client 386, server 166, spike 1; 11 test PostgreSQL thật). Smoke C1, C2 PASS; Python 10 PASS. Smoke T3-C4, GUI, LAN, human review: NOT RUN. Bảng 586 ở mục "PR #23 đồng bộ main T3-C3" là của commit `9713658` trước đó. Chi tiết: `evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md`.

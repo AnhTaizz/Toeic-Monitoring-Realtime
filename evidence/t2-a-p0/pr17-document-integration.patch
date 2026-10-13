@@ -1,0 +1,31 @@
+diff --git a/docs/KIEM_THU.md b/docs/KIEM_THU.md
+index 1de0bba..d57ccad 100644
+--- a/docs/KIEM_THU.md
++++ b/docs/KIEM_THU.md
+@@ -368,3 +368,11 @@ MT01/MT07/MT08 giữ PARTIAL toàn hệ thống; MT02–MT06 delta và E1/E2 kh
+ ## Vai B tích hợp C1–C5 — 11/10/2026
+ 
+ [Evidence mới](../evidence/b-integration/2026-10-11-verification.md): main12e2838 + PR17 41da669 trong worktree riêng, source dirty/in-progress ghi metadata/hashes. Package565 PASS (protocol32/client390/server142/spike1), Python10 PASS. REAL JavaFX component: password shortcut, CandidateExamView autosave/reconnect/close và ProctorDashboardView bốn tab/sample action PASS; gateway/WS state MOCK/SIMULATED, không PostgreSQL/full GUI/LAN. Guard6 kiểm fresh scope, active attempt, FULL ACK pending và cleanup. C3 replay fixture PASS + mutation EXPECTED FAIL; C4 archived join byte-identical27/3/0; ledger104file/3gzip PASS. [Agent B review C](REVIEW_B_MONITORING.md), human A/B approval NOT RUN. E1/E2 và MT delta không nâng PASS; AT11/MT01/MT07/MT08 còn PARTIAL. Docker engine không hoạt động nên production smoke NOT RUN; ba blocker A vẫn còn, xem [checklist](NGHIEM_THU_VAI_B.md). Không sửa tracker hoặc old evidence.
++
++Ghi chú: mục Vai B phía trên ghi lượt chạy trước khi có fix A; kết quả P0 mới ở dưới chỉ thuộc bản tích hợp local, chưa được merge lên remote.
++
++## Backend P0 unblock PR17 — 11/10/2026 (local, chưa merge)
++
++Nhánh A từ main12e2838: Maven test/package510 PASS, tích hợp tạm PR17 package582 PASS, đều bật11 regression PG thực và không skip. Native PostgreSQL18.1 cluster test riêng; không reset DB dev. Ba GAP B: owner/assigned proctor đọc SUBMITTED/TIMED_OUT, scheduler tự chốt và deadline bắt đầu ngay takeover entry **PASS kỹ thuật**. B smoke JAR/PG/HTTP28 PASS,0GAP; C1 full/reconnect/autonomous STALE/TTL và C2 late/gap/history/permission hồi quy PASS; Python10 PASS.
++
++[Evidence P0 mới](../evidence/t2-a-p0/2026-10-11-verification.md) ghi source/hash, logs, fixture patch và lỗi exploratory. Không sửa các evidence lịch sử B/C hoặc TRACKER. T2-B3/B4 vẫn PARTIAL; human review, full GUI candidate/proctor, server-off/reconnect, LAN/app-image/audio máy thứ hai NOT RUN. E1/E2 không thay trạng thái. Remote PR17 chưa có commit A cho đến khi được phép push và tích hợp.
+diff --git a/docs/QUYET_DINH.md b/docs/QUYET_DINH.md
+index 0de2ef5..cd54140 100644
+--- a/docs/QUYET_DINH.md
++++ b/docs/QUYET_DINH.md
+@@ -157,3 +157,10 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
+ - Liên quan: T2-B3, T2-B4, T3-B3 (Listening có chính sách riêng, không dùng lại nhánh này).
+ 
+ Ghi chú tích hợp11/10/2026: quyết định B trước đây đánh số QD-12/QD-13 trên PR17 đã đổi thành QD-16/QD-17 trong tài liệu hợp nhất để giữ số QD12–15 của C. Nội dung quyết định B giữ nguyên; evidence09/10 có số cũ được giữ đúng lịch sử. [Sửa guard vào thi và checklist](NGHIEM_THU_VAI_B.md).
++
++## QD-18 · Deadline bắt đầu khi thí sinh nhận quyền ghi để vào thi
++
++- Ngày11/10/2026 · Vai A (Agent) · Human review NOT RUN · nhánh P0 chưa merge.
++- Dùng POST takeover hiện có làm mốc entry: dưới khóa hàng và sau kiểm owner/ACTIVE, server đặt deadline chưa có bằng clock_timestamp()+duration ca và trả field deadlineAt hiện có. Hai máy được tuần tự hóa; takeover/reconnect sau giữ nguyên deadline. Status/exam GET không khởi tạo giờ.
++- PR17 luôn takeover sau status/exam, nên không đổi wire/DTO/client production. Legacy save-first được giữ; ca chưa vào vẫn chưa bắt đầu giờ. WriterEpoch vẫn tăng mỗi entry (QD16 trên PR17), không được dùng epoch full của C làm writerEpoch.
++- Read history tách scope ACTIVE, scheduler exam riêng và chốt theo answers đã commit. [Review A/B](REVIEW_A_PR17.md).
