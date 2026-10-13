@@ -13,5 +13,6 @@ public record SubmitExamResponse(
         int score,
         Instant submittedAt,
         Instant decisionAt,
-        long savedRevision
+        long savedRevision,
+        boolean listeningInterrupted
 ) {}
