@@ -10,7 +10,8 @@ import vn.edu.toeic.server.auth.*;
 class AudioAuthorizationTest {
     private final JdbcClient jdbc = mock(JdbcClient.class);
     private final AudioCatalog catalog = mock(AudioCatalog.class);
-    private final AudioService service = new AudioService(jdbc, new AuthorizationService((user, attempt) -> false), catalog);
+    private final AudioService service = new AudioService(jdbc, new AuthorizationService((user, attempt) -> false), catalog,
+            mock(org.springframework.context.ApplicationEventPublisher.class));
     @Test void unauthenticatedCallsRejectBeforeDatabaseOrResourceAccess() {
         assertThatThrownBy(() -> service.candidateManifest(null, "a")).isInstanceOf(AccessDeniedException.class);
         assertThatThrownBy(() -> service.download(null, "a", "file", "m")).isInstanceOf(AccessDeniedException.class);

@@ -52,11 +52,12 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
     private final MonitoringGapService gaps;
     private final MonitoringPresenceService presence;
     private final MonitoringStateService state;
+    private final vn.edu.toeic.server.audio.ListeningService listening;
     private final Gson gson = new GsonBuilder().setStrictness(Strictness.STRICT).serializeNulls().create();
     @Autowired public RealtimeWebSocketHandler(SessionAuthenticationService authentication, AuthorizationService authorization,
             @Value("${toeic.ws.max-message-bytes:65536}") int maxMessageBytes,
             RealtimeSessionRegistry sessions, MonitoringEventService events, MonitoringGapService gaps, MonitoringPresenceService presence,
-            MonitoringStateService state) {
+            MonitoringStateService state, vn.edu.toeic.server.audio.ListeningService listening) {
         this.authentication = authentication;
         this.authorization = authorization;
         this.maxMessageBytes = maxMessageBytes;
@@ -65,6 +66,7 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
         this.gaps = gaps;
         this.presence = presence;
         this.state = state;
+        this.listening = listening;
     }
     @Override public void afterConnectionEstablished(WebSocketSession session) {
         session.setTextMessageSizeLimit(maxMessageBytes);
@@ -97,6 +99,26 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
                     || type.startsWith("MONITORING_SYNC_") || "MONITORING_FULL".equals(type) || "MONITORING_DELTA".equals(type)
                     || ("HEARTBEAT".equals(type) && attemptId!=null)) authorization.requireRole(user, Role.CANDIDATE);
             if (attemptId != null) authorization.requireAttempt(user, attemptId);
+            if ("LISTENING_EVENT".equals(type) || "LISTENING_HEARTBEAT".equals(type)) {
+                authorization.requireRole(user,Role.CANDIDATE);
+                if (attemptId == null) throw new IllegalArgumentException();
+                JsonObject payload = body.getAsJsonObject("payload");
+                if (payload == null || !Set.of("startId","writerEpoch","event","reason").containsAll(payload.keySet())) throw new IllegalArgumentException();
+                JsonElement writer = payload.get("writerEpoch");
+                if (writer == null || !writer.isJsonPrimitive() || !writer.getAsJsonPrimitive().isNumber()) throw new IllegalArgumentException();
+                long epoch = writer.getAsBigDecimal().longValueExact();
+                String event = "LISTENING_HEARTBEAT".equals(type) ? "HEARTBEAT" : string(payload,"event");
+                if ("LISTENING_HEARTBEAT".equals(type) && payload.has("event")) throw new IllegalArgumentException();
+                String reason = payload.has("reason") && !payload.get("reason").isJsonNull() ? string(payload,"reason") : null;
+                var result = listening.event(user,attemptId,new vn.edu.toeic.protocol.audio.ListeningEventRequest(
+                        requestId,identifier(payload,"startId",true),epoch,event,reason));
+                // The transactional service has committed before the transport acknowledges the event.
+                JsonObject accepted = new JsonObject(); accepted.addProperty("status","ACCEPTED");
+                accepted.addProperty("acknowledgedType",type); accepted.addProperty("phase",result.phase());
+                accepted.addProperty("interrupted",result.interrupted());
+                send(session,new MessageEnvelope<>(Protocol.VERSION,"ACK",UUID.randomUUID().toString(),requestId,attemptId,traceId,accepted));
+                return;
+            }
             if ("MONITORING_SYNC_OPEN".equals(type) || "MONITORING_FULL".equals(type) || "MONITORING_DELTA".equals(type) || "MONITORING_SYNC_CLOSE".equals(type)) {
                 if (attemptId == null) throw new IllegalArgumentException();
                 JsonObject payload = body.getAsJsonObject("payload");
@@ -167,6 +189,8 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
             send(session, new MessageEnvelope<>(Protocol.VERSION, "ACK", UUID.randomUUID().toString(), requestId,
                     attemptId, traceId, accepted));
             presence.publish(acceptedPresence,traceId);
+        } catch (vn.edu.toeic.server.exam.ExamApiException exception) {
+            sendError(session,exception.code(),exception.getMessage(),false,requestId,attemptId,traceId);
         } catch (StateRejectedException exception) {
             sendError(session, exception.code(), exception.getMessage(), exception.code()==ErrorCode.RETRYABLE_SERVER_ERROR,requestId,attemptId,traceId);
         } catch (EventConflictException exception) {

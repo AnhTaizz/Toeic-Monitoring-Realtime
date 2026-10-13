@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 import vn.edu.toeic.protocol.ErrorCode;
 import vn.edu.toeic.protocol.Protocol;
@@ -21,8 +22,11 @@ public class AudioService {
     private final JdbcClient jdbc;
     private final AuthorizationService authorization;
     private final AudioCatalog catalog;
-    public AudioService(JdbcClient jdbc, AuthorizationService authorization, AudioCatalog catalog) {
+    private final ApplicationEventPublisher publisher;
+    public record StartAuthorized(String sessionId, String startId) {}
+    public AudioService(JdbcClient jdbc, AuthorizationService authorization, AudioCatalog catalog, ApplicationEventPublisher publisher) {
         this.jdbc = jdbc; this.authorization = authorization; this.catalog = catalog;
+        this.publisher = publisher;
     }
     private record Session(String id, String examId, String state, String startId, String manifestId, Instant startedAt) {}
     private record Attempt(String id, String sessionId, String state, long writerEpoch, Instant deadline) {}
@@ -169,8 +173,11 @@ public class AudioService {
         var manifest = manifest(session);
         if (!manifest.manifestId().equals(request.manifestId())) throw error(ErrorCode.CONFLICT, "Manifest start không khớp.", request.requestId());
         // Same start authorization is returned on retry; no second start, no deadline reset.
-        if (session.startId() != null) return new ListeningStartResponse(Protocol.VERSION, request.requestId(), sessionId,
-                session.manifestId(), session.startId(), session.startedAt());
+        if (session.startId() != null) {
+            publisher.publishEvent(new StartAuthorized(sessionId, session.startId()));
+            return new ListeningStartResponse(Protocol.VERSION, request.requestId(), sessionId,
+                    session.manifestId(), session.startId(), session.startedAt());
+        }
         if (!"SCHEDULED".equals(session.state())) throw error(ErrorCode.INVALID_STATE, "Ca thi không ở bước chuẩn bị.", request.requestId());
         var rows = roster(session, true);
         Instant decisionAt = now(); // After session and all attempt locks, including lock waits and file verification.
@@ -182,6 +189,14 @@ public class AudioService {
                     listening_manifest_id = :manifest, started_at = :at WHERE session_id = :session
                 """).param("start", startId).param("manifest", manifest.manifestId())
                 .param("at", java.sql.Timestamp.from(decisionAt)).param("session", sessionId).update();
+        jdbc.sql("""
+                UPDATE monitoring_attempts a SET listening_start_id = :start, listening_manifest_id = :manifest,
+                    listening_writer_epoch = a.writer_epoch, listening_authorized_at = :at, listening_last_seen_at = :at,
+                    deadline_at = COALESCE(a.deadline_at, CAST(:at AS TIMESTAMPTZ) + s.duration_seconds * INTERVAL '1 second')
+                FROM exam_sessions s WHERE a.session_id = s.session_id AND s.session_id = :session
+                """).param("start", startId).param("manifest", manifest.manifestId())
+                .param("at", java.sql.Timestamp.from(decisionAt)).param("session", sessionId).update();
+        publisher.publishEvent(new StartAuthorized(sessionId, startId));
         return new ListeningStartResponse(Protocol.VERSION, request.requestId(), sessionId, manifest.manifestId(), startId, decisionAt);
     }
     private static void validateRequest(String requestId) {

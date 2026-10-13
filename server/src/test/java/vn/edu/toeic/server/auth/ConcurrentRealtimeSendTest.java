@@ -48,7 +48,7 @@ class ConcurrentRealtimeSendTest {
         var registry = new RealtimeSessionRegistry(authentication, authorization, 5000, 65_536,measurement);
         RealtimeWebSocketHandler handler = new RealtimeWebSocketHandler(authentication, authorization, 65_536,
                 registry, mock(MonitoringEventService.class), mock(MonitoringGapService.class), mock(MonitoringPresenceService.class),
-                mock(vn.edu.toeic.server.monitoring.MonitoringStateService.class));
+                mock(vn.edu.toeic.server.monitoring.MonitoringStateService.class), mock(vn.edu.toeic.server.audio.ListeningService.class));
         WebSocketSession socket = mock(WebSocketSession.class);
         Map<String, Object> attributes = new ConcurrentHashMap<>();
         attributes.put(SessionAuthenticationService.TOKEN_HASH_ATTRIBUTE, "MOCK-hash");

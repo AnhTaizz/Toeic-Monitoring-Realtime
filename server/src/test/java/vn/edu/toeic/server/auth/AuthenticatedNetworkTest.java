@@ -318,6 +318,7 @@ class AuthenticatedNetworkTest {
     static class NetworkFixture {
         @Bean vn.edu.toeic.server.monitoring.MonitoringStateService mockStateService() { return mock(vn.edu.toeic.server.monitoring.MonitoringStateService.class); }
         @Bean MonitoringGapService mockGapService() { return mock(MonitoringGapService.class); }
+        @Bean vn.edu.toeic.server.audio.ListeningService mockListeningService() { return mock(vn.edu.toeic.server.audio.ListeningService.class); }
         @Bean MonitoringPresenceService mockPresenceService() { return mock(MonitoringPresenceService.class); }
         @Bean JdbcClient mockJdbc() { return mock(JdbcClient.class); }
         @Bean MonitoringEventService mockEventService() { return mock(MonitoringEventService.class); }

@@ -84,6 +84,26 @@ public final class RealtimeSessionRegistry {
         pushAssignedProctors(presence.attemptId(),"MONITOR_PRESENCE",presence,traceId);
     }
     public boolean isRegistered(String socket) { return sessions.containsKey(socket); }
+    public void startListening(vn.edu.toeic.protocol.audio.ListeningStartCommand command) {
+        pushListening(command.attemptId(), "LISTENING_START", command.startId(), command, true);
+    }
+    public void listeningStatus(vn.edu.toeic.protocol.audio.ListeningStatusResponse status, String traceId) {
+        pushListening(status.attemptId(), "LISTENING_STATUS", UUID.randomUUID().toString(), status, false);
+    }
+    private void pushListening(String attempt, String type, String messageId, Object payload, boolean candidateOnly) {
+        for (WebSocketSession target : sessions.values()) {
+            try {
+                Object hash = target.getAttributes().get(SessionAuthenticationService.TOKEN_HASH_ATTRIBUTE);
+                if (!(hash instanceof String tokenHash)) continue;
+                AuthenticatedUser current = authentication.authenticateHash(tokenHash);
+                if (current.role() != Role.CANDIDATE && (candidateOnly || current.role() != Role.PROCTOR)) continue;
+                authorization.requireExamRead(current,attempt);
+                send(target, new MessageEnvelope<>(Protocol.VERSION,type,messageId,null,attempt,UUID.randomUUID().toString(),payload));
+            } catch (AccessDeniedException denied) {
+                if (denied.status() == 401) close(target,CloseStatus.POLICY_VIOLATION);
+            } catch (RuntimeException ignored) { /* HTTP status remains authoritative. */ }
+        }
+    }
     public void stateAssignedProctors(MonitoringStateView state,String traceId) {
         pushAssignedProctors(state.attemptId(),"MONITOR_STATE",state,traceId);
     }
