@@ -1,0 +1,98 @@
+2026-10-12T17:33:44.9743741Z run start; code under test = b54a8ad539312a6d759d82c101734b162545a668; worktree dirty files = 0; schema t2b_accept02_5c0ea4da5c
+2026-10-12T17:33:55.6808232Z server JAR started pid=31764 port=18082 (temporary schema only)
+2026-10-12T17:34:01.6369128Z client JVM started tag=c1-jvm1 pid=33336 port=18083 args=
+2026-10-12T17:35:12.5830281Z login submitted for candidate1 in pid 33336 (window not brought to foreground)
+2026-10-12T17:35:18.5146099Z screenshot r1-01-login-no-active-attempt.png
+2026-10-12T17:35:20.6063490Z candidate1 clicked refresh with an empty list
+2026-10-12T17:35:43.4294734Z client JVM started tag=proctor-a pid=7888 port=18082 args=-Dtoeic.sample.durationSeconds=900
+2026-10-12T17:35:49.9410759Z login submitted for proctor1 in pid 7888 (window not brought to foreground)
+2026-10-12T17:35:54.1955467Z screenshot 01-proctor-login.png
+2026-10-12T17:35:56.2403513Z proctor clicked create sample exam and session (900 s)
+2026-10-12T17:36:01.8042627Z screenshot 02-proctor-created-session.png
+2026-10-12T17:36:03.9328676Z candidate1 clicked refresh after the proctor created the session (list was empty, nothing selected)
+2026-10-12T17:36:07.1792018Z screenshot r1-02-refresh-shows-new-attempt.png
+2026-10-12T17:36:09.5515888Z candidate1 clicked enter exam for SESSION-BENCHMARK-6216-candidate1
+2026-10-12T17:36:12.7924888Z screenshot 04-entry-no-answers.png
+2026-10-12T17:36:27.8571791Z screenshot 03-candidate-exam.png
+2026-10-12T17:36:33.8282856Z screenshot 05-reading-await-ack.png
+2026-10-12T17:36:33.8338883Z candidate1 chose R1=B (expect revision 1)
+2026-10-12T17:36:37.3365897Z screenshot 06-reading-saved.png
+2026-10-12T17:36:39.4382050Z candidate1 changed R1 to A (expect revision 2)
+2026-10-12T17:36:45.0013360Z candidate1 cleared R1 (expect revision 3)
+2026-10-12T17:36:48.4725894Z screenshot 08-reading-cleared.png
+2026-10-12T17:36:50.5644227Z candidate1 chose R1=B again (expect revision 4)
+2026-10-12T17:36:59.0692919Z candidate1 chose R4=D (expect revision 5)
+2026-10-12T17:37:02.6137018Z screenshot 09-reading-group.png
+2026-10-12T17:37:26.0682640Z proctor selected the row of SESSION-BENCHMARK-6216-candidate1
+2026-10-12T17:37:30.6829072Z screenshot 11-proctor-process-state.png
+2026-10-12T17:37:33.2768010Z screenshot 12-proctor-warning-tab.png
+2026-10-12T17:37:34.0766387Z requested the relay to close the WebSocket socket (HTTP path stays up)
+2026-10-12T17:37:34.7055378Z screenshot 13-ws-disconnected.png
+2026-10-12T17:37:38.9472512Z screenshot 14-ws-reconnected.png
+2026-10-12T17:37:53.3792234Z proctor selected the row of SESSION-BENCHMARK-6216-candidate1 (second attempt; the first UI Automation query failed)
+2026-10-12T17:37:59.8854163Z screenshot 11-proctor-process-state.png
+2026-10-12T17:38:02.2961939Z screenshot 12-proctor-warning-tab.png
+2026-10-12T17:38:33.3855862Z proctor selected the row of SESSION-BENCHMARK-6216-candidate1 by a posted mouse click
+2026-10-12T17:38:39.1940112Z screenshot 11-proctor-process-state.png
+2026-10-12T17:38:42.8258200Z screenshot 12-proctor-warning-tab.png
+2026-10-12T17:39:02.1199118Z client JVM started tag=c1-twin pid=17872 port=18083 args=
+2026-10-12T17:39:04.9075446Z login submitted for candidate1 in pid 17872 (window not brought to foreground)
+2026-10-12T17:39:09.2596374Z twin window entered the same attempt
+2026-10-12T17:39:12.3352324Z screenshot 15-twin-takeover.png
+2026-10-12T17:39:13.5869802Z old window (epoch 2) chose L1=C; the server must reject it
+2026-10-12T17:39:18.9427332Z screenshot 16-old-writer-blocked.png
+2026-10-12T17:39:19.9562362Z client JVM tag=c1-twin pid=17872 closed by window close; exited=True
+2026-10-12T17:39:20.9061868Z client JVM tag=c1-jvm1 pid=33336 closed by window close; exited=True
+2026-10-12T17:39:26.7290457Z client JVM started tag=c1-jvm3 pid=6724 port=18083 args=
+2026-10-12T17:39:28.9834211Z login submitted for candidate1 in pid 6724 (window not brought to foreground)
+2026-10-12T17:39:32.8538589Z new JVM re-entered the ACTIVE attempt
+2026-10-12T17:39:35.7439779Z screenshot 18-reopened-restored.png
+2026-10-12T17:39:57.2975492Z stopped the test server process pid=31764; PostgreSQL keeps running
+2026-10-12T17:39:59.5675802Z screenshot 20-server-off-locked.png
+2026-10-12T17:40:00.2598112Z screenshot 21-submit-confirm.png
+2026-10-12T17:40:00.2743851Z candidate1 confirmed submit while the server is off
+2026-10-12T17:40:38.5738636Z screenshot 23-offline-submit-failed.png
+2026-10-12T17:40:50.8148075Z restarted the test server pid=34436 on the same schema
+2026-10-12T17:40:50.9562576Z candidate1 clicked retry for the frozen submit
+2026-10-12T17:40:53.6411737Z screenshot 24-submit-score-dialog.png
+2026-10-12T17:40:59.0969421Z screenshot 25-home-after-submit.png
+2026-10-12T17:41:18.3496517Z client JVM tag=proctor-a pid=7888 closed by window close; exited=True
+2026-10-12T17:41:21.0869078Z client JVM started tag=proctor-b pid=34732 port=18082 args=-Dtoeic.sample.durationSeconds=40
+2026-10-12T17:41:23.5035549Z login submitted for proctor1 in pid 34732 (window not brought to foreground)
+2026-10-12T17:41:27.6864136Z proctor created a second sample session (40 s)
+2026-10-12T17:41:33.2231310Z screenshot 26-proctor-short-session.png
+2026-10-12T17:41:33.4111783Z candidate1 clicked refresh (list empty, nothing selected) after the proctor created the 40 s session
+2026-10-12T17:41:36.6945857Z screenshot r2-01-refresh-after-new-session.png
+2026-10-12T17:41:36.8656308Z candidate1 entered the 40 s attempt SESSION-BENCHMARK-7675-candidate1 and will not answer
+2026-10-12T17:41:39.7267131Z screenshot 27-blank-timer-running.png
+2026-10-12T17:42:19.5917386Z screenshot 28-timeout-score-dialog.png
+2026-10-12T17:42:45.8560332Z client JVM tag=c1-jvm3 pid=6724 closed by window close; exited=True
+2026-10-12T17:42:57.2586854Z client JVM started tag=c1-jvm4-history pid=35388 port=18082 args=
+2026-10-12T17:42:59.6343171Z login submitted for candidate1 in pid 35388 (window not brought to foreground)
+2026-10-12T17:43:04.9787189Z screenshot 30-new-jvm-active-tab.png
+2026-10-12T17:43:05.1436987Z new JVM: candidate1 opened the history tab
+2026-10-12T17:43:08.5217572Z screenshot 31-history-tab-both-finals.png
+2026-10-12T17:43:09.6277513Z candidate1 opened the SUBMITTED result from the history tab
+2026-10-12T17:43:10.8705383Z screenshot 32-history-result-submitted.png
+2026-10-12T17:43:13.9759153Z candidate1 opened the TIMED_OUT result from the history tab
+2026-10-12T17:43:15.1559362Z screenshot 33-history-result-timed-out.png
+2026-10-12T17:43:42.1498575Z client JVM started tag=c2-jvm pid=32904 port=18082 args=
+2026-10-12T17:43:44.5801637Z login submitted for candidate2 in pid 32904 (window not brought to foreground)
+2026-10-12T17:43:50.2146748Z screenshot 35-candidate2-active-tab.png
+2026-10-12T17:43:53.6064808Z screenshot 36-candidate2-history-empty.png
+2026-10-12T17:43:53.6143291Z candidate2 opened its history tab
+2026-10-12T17:44:16.6485868Z TEST SQL on the temporary schema: closed the attempt selected in candidate2's picker (SESSION-BENCHMARK-6216-candidate2)
+2026-10-12T17:44:16.7251500Z candidate2 clicked refresh after its selected attempt was revoked
+2026-10-12T17:44:20.2400950Z screenshot r4-01-selected-attempt-revoked.png
+2026-10-12T17:44:20.2637429Z stopped the test server to make the refresh fail
+2026-10-12T17:44:22.3823191Z candidate2 clicked refresh while the server is down
+2026-10-12T17:44:28.6779808Z screenshot r5-01-refresh-network-error.png
+2026-10-12T17:44:36.6574159Z restarted the test server pid=3840
+2026-10-12T17:44:36.7343790Z candidate2 clicked refresh again
+2026-10-12T17:44:41.1058547Z screenshot r5-02-refresh-retry-ok.png
+2026-10-12T17:45:01.3297876Z screenshot 37-proctor-roster-active-only.png
+2026-10-12T17:45:01.3638964Z proctor refreshed the dashboard; roster lists ACTIVE attempts only
+2026-10-12T17:45:03.0197550Z client JVM tag=c1-jvm4-history pid=35388 closed by window close; exited=True
+2026-10-12T17:45:03.8718985Z client JVM tag=c2-jvm pid=32904 closed by window close; exited=True
+2026-10-12T17:45:04.8030787Z client JVM tag=proctor-b pid=34732 closed by window close; exited=True
+2026-10-12T17:45:06.8425590Z stopped relay and test server

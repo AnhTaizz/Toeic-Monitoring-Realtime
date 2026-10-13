@@ -396,6 +396,18 @@ Merge A6cfe7c4 + main144fe55 thành cadd98d, giữ P0 và encoder/transport/regr
 
 PR23 remote vẫn6cfe7c4, PR17 vẫn2f5fc66; chưa push local sync/chưa merge/human review. B3/B4 vẫnPARTIAL; full GUI/server-off/LAN/app-image/audio máy thứ hai/live delta/gate/E1/E2 NOT RUN. Không thay tracker hoặc evidence lịch sử.
 
+## Vai B tích hợp C1–C5 — 11/10/2026
+
+[Evidence mới](../evidence/b-integration/2026-10-11-verification.md): main12e2838 + PR17 41da669 trong worktree riêng, source dirty/in-progress ghi metadata/hashes. Package565 PASS (protocol32/client390/server142/spike1), Python10 PASS. REAL JavaFX component: password shortcut, CandidateExamView autosave/reconnect/close và ProctorDashboardView bốn tab/sample action PASS; gateway/WS state MOCK/SIMULATED, không PostgreSQL/full GUI/LAN. Guard6 kiểm fresh scope, active attempt, FULL ACK pending và cleanup. C3 replay fixture PASS + mutation EXPECTED FAIL; C4 archived join byte-identical27/3/0; ledger104file/3gzip PASS. [Agent B review C](REVIEW_B_MONITORING.md), human A/B approval NOT RUN. E1/E2 và MT delta không nâng PASS; AT11/MT01/MT07/MT08 còn PARTIAL. Docker engine không hoạt động nên production smoke NOT RUN; ba blocker A vẫn còn, xem [checklist](NGHIEM_THU_VAI_B.md). Không sửa tracker hoặc old evidence.
+
+## T2 Vai B — GUI production acceptance 12/10/2026
+
+Maven test/package620 PASS (11PG,38T3-C1 đã tính trong tổng); B smoke28PASS/0GAP; C1/C2/CLI/Python hồi quy PASS. JavaFX production + server JAR + PostgreSQL native cluster cô lập: 11/12 ca PASS, mở lại FAIL ở bài đã chốt; ACTIVE restore PASS. P1 B-ACCEPT-01 còn mở; B4 PARTIAL. Human/LAN/audio/package/E1/E2 NOT RUN. Không suy từ MOCK/SIMULATED hoặc evidence cũ. Báo cáo/bằng chứng (bản gốc 12/10 chưa che thông tin máy, chỉ giữ ở máy build).
+
+## B-ACCEPT-01 — client read-only chuẩn bị / backend API blocked, 12/10/2026
+
+Cập nhật fix B-ACCEPT-01: client read-only history chuẩn bị ở770c896, Maven test/package651 PASS (31B mới), FX component REAL controls/MOCK gateway PASS. Contract candidate-owned list **PROPOSED/chờ A review**; backend chưa có endpoint (REAL probe500/NoResourceFoundException), GUI production regression chưa chạy. B-ACCEPT-01 vẫn OPEN/P1, T2-B4 PARTIAL; PR17 chưa đủ điều kiện merge. Báo cáo mới (bản gốc 12/10 chưa che thông tin máy, chỉ giữ ở máy build), [contract](CONTRACT_B_ACCEPT_01_PROPOSAL.md). Không đổi backend/protocol/monitoring, không push/merge/B4/T2-B5/Listening/delta.
+
 ## T3-C2 — reducer/resync/freshness (12/10/2026)
 
 [Guide](MONITORING_DELTA_REDUCER.md), [evidence](../evidence/t3-c2/2026-10-12-verification.md). Baseline531 mới PASS; final554 Java/package PASS (protocol43/client361/server149/spike1), Python10 PASS.23test mới = core6/measurement2/client freshness-resync5/parser2/oracle1/server7. Không nâng gate MT02–MT06 hoặc tracker.
@@ -468,6 +480,33 @@ Không đổi trạng thái AT01–AT11 hay IT01–IT04; `TRACKER.json` giữ ng
 
 Nhánh cục bộ `feat/backend-candidate-attempt-history-20261013` tại `19f669e`: ba commit lịch sử đặt trên `sync/pr23-main-20261013`, không lặp commit P0. `server/src/main` và `protocol/` trùng từng byte với `7bdac52`. `mvn package` với `TOEIC_PG_INTEGRATION=true`: **PASS 602**, 0 skip (protocol 43, client 386, server 172, spike 1). Quyết định lịch sử mang số QD-23 vì main đã dùng QD-19. Chi tiết: `evidence/t2-a-history/2026-10-13-restack.md`. GUI, LAN, review C→A: NOT RUN.
 
-## Vai B tích hợp C1–C5 — 11/10/2026
+## B-ACCEPT-01 — nghiệm thu GUI cuối phía B, 13/10/2026
 
-[Evidence mới](../evidence/b-integration/2026-10-11-verification.md): main12e2838 + PR17 41da669 trong worktree riêng, source dirty/in-progress ghi metadata/hashes. Package565 PASS (protocol32/client390/server142/spike1), Python10 PASS. REAL JavaFX component: password shortcut, CandidateExamView autosave/reconnect/close và ProctorDashboardView bốn tab/sample action PASS; gateway/WS state MOCK/SIMULATED, không PostgreSQL/full GUI/LAN. Guard6 kiểm fresh scope, active attempt, FULL ACK pending và cleanup. C3 replay fixture PASS + mutation EXPECTED FAIL; C4 archived join byte-identical27/3/0; ledger104file/3gzip PASS. [Agent B review C](REVIEW_B_MONITORING.md), human A/B approval NOT RUN. E1/E2 và MT delta không nâng PASS; AT11/MT01/MT07/MT08 còn PARTIAL. Docker engine không hoạt động nên production smoke NOT RUN; ba blocker A vẫn còn, xem [checklist](NGHIEM_THU_VAI_B.md). Không sửa tracker hoặc old evidence.
+Commit `6816ff5` trên nhánh cục bộ `integrate/b-accept-01-20261013`; Windows 11, JDK 21.0.8, PostgreSQL 18.6. Chi tiết: `evidence/b-accept-01-20261013/2026-10-13-verification.md`.
+
+| Kiểm tra | Kết quả | Ghi chú |
+|---|---|---|
+| `mvn test`, `mvn package` với `TOEIC_PG_INTEGRATION=true` | PASS 695, 0 skip | protocol 43, client 479, server 172, spike 1 |
+| `ExamFlowPostgresSmoke` | PASS 28, 0 GAP | REAL server JAR/HTTP/PostgreSQL; không GUI, không WS |
+| 12 ca JavaFX production | PASS 12/12 | agent-driven UI Automation; server JAR và PostgreSQL thật trên schema tạm; lần trước 11/12 |
+| Mở lại lượt `SUBMITTED` và `TIMED_OUT` từ JVM mới | PASS | tab lịch sử; không takeover, không bật collector; DB trước và sau giống hệt |
+| Thí sinh khác, monitoring ACTIVE-only | PASS | GUI lịch sử rỗng; HTTP 403 khi đọc lượt của người khác và khi proctor đọc event của lượt đã chốt |
+| Làm mới danh sách lượt thi khi chưa chọn lượt | FAIL (P1 mới) trên `6816ff5` | `NullPointerException` ở `ToeicClientApplication.java:330`; đã sửa ở mục dưới |
+| Thành viên tự kiểm, LAN, review A, smoke monitoring của C | NOT RUN | — |
+
+Không đổi trạng thái AT/MT/LT/IT trong bảng chính; `TRACKER.json` giữ nguyên.
+
+## B-ACCEPT-01 — sau sửa lỗi P1 làm mới danh sách, 13/10/2026
+
+Commit `b54a8ad` trên nhánh cục bộ `integrate/b-accept-01-public-20261013`; Windows 11, JDK 21.0.8, PostgreSQL 18.6. Chi tiết: `evidence/b-accept-01-fix-20261013/2026-10-13-verification.md`.
+
+| Kiểm tra | Kết quả | Ghi chú |
+|---|---|---|
+| `mvn package` với `TOEIC_PG_INTEGRATION=true` | PASS 707, 0 skip | protocol 43, client 491, server 172, spike 1; 12 test mới của `AttemptRefreshTest` |
+| `ExamFlowPostgresSmoke` | PASS 28, 0 GAP | REAL server JAR/HTTP/PostgreSQL |
+| Hồi quy GUI của lỗi: R1–R5 | PASS 5/5 | rỗng → làm mới; rỗng → có ca mới → vào thi không đăng nhập lại; JVM mới không có lượt ACTIVE; lượt đang chọn bị thu hồi; lỗi mạng rồi thử lại |
+| 12 ca JavaFX production, chạy lại toàn bộ | PASS 12/12 | agent-driven; server JAR và PostgreSQL thật trên schema tạm; log autosave chỉ có thay đổi do script gửi |
+| Roster ACTIVE-only trên dashboard sau khi lượt đã chốt | NOT RUN | dashboard báo dữ liệu cũ sau khi dừng server có chủ đích; ACTIVE-only đã kiểm qua HTTP |
+| Thành viên tự kiểm, LAN, review A, smoke monitoring của C | NOT RUN | — |
+
+Không đổi trạng thái AT/MT/LT/IT trong bảng chính; `TRACKER.json` giữ nguyên.

@@ -1,0 +1,16 @@
+candidate2 list: HTTP 200 ids=SESSION-BENCHMARK-6216-candidate2:ACTIVE,SESSION-BENCHMARK-7675-candidate2:ACTIVE
+candidate2 GET status of candidate1's SESSION-BENCHMARK-6216-candidate1 : HTTP 403 FORBIDDEN
+candidate2 GET exam of candidate1's SESSION-BENCHMARK-6216-candidate1 : HTTP 403 FORBIDDEN
+proctor monitoring events of decided SESSION-BENCHMARK-6216-candidate1 : HTTP 403 FORBIDDEN
+candidate1 takeover on decided SESSION-BENCHMARK-6216-candidate1 : HTTP 409 INVALID_STATE
+candidate2 GET status of candidate1's SESSION-BENCHMARK-7675-candidate1 : HTTP 403 FORBIDDEN
+candidate2 GET exam of candidate1's SESSION-BENCHMARK-7675-candidate1 : HTTP 403 FORBIDDEN
+proctor monitoring events of decided SESSION-BENCHMARK-7675-candidate1 : HTTP 403 FORBIDDEN
+candidate1 takeover on decided SESSION-BENCHMARK-7675-candidate1 : HTTP 409 INVALID_STATE
+candidate1 list: HTTP 200 ids=SESSION-BENCHMARK-6216-candidate1:SUBMITTED,SESSION-BENCHMARK-7675-candidate1:TIMED_OUT
+candidate1 auth/me attemptScope=[]
+candidate2 auth/me attemptScope=[SESSION-BENCHMARK-6216-candidate2,SESSION-BENCHMARK-7675-candidate2]
+proctor monitoring events of ACTIVE SESSION-BENCHMARK-6216-candidate2 : HTTP 200
+proctor list: HTTP 403 FORBIDDEN
+unknown API route: HTTP 404 INVALID_INPUT
+writer epochs after probes: SESSION-BENCHMARK-6216-candidate1=4, SESSION-BENCHMARK-6216-candidate2=1, SESSION-BENCHMARK-7675-candidate1=2, SESSION-BENCHMARK-7675-candidate2=1

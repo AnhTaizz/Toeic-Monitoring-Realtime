@@ -450,4 +450,4 @@ Lần takeover đầu tiên khi vào thi đặt deadline bằng clock_timestamp(
 
 Scheduler exam default1000ms, bean riêng examTimeoutScheduler và EnableScheduling; C giữ hai worker riêng. Timeout ghi submitted_at là giờ chốt và tính từ answers_json đã commit; transaction không sửa lượt đã chốt. Mẫu status ở mục3 đã đối chiếu record thật: không candidateUsername/startedAt, số điểm0 trước chấm. Mẫu lỗi sơ đồ là rút gọn; wire HTTP thật vẫn dùng envelope error.code như PROTOCOL.
 
-[Review QD16/QD17 và cách tích hợp](REVIEW_A_PR17.md). Evidence P0 sẽ ghi riêng, không biến báo cáo lịch sử B hay human review thành PASS.
+[Review QD22/QD20 và cách tích hợp](REVIEW_A_PR17.md). Evidence P0 sẽ ghi riêng, không biến báo cáo lịch sử B hay human review thành PASS.

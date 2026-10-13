@@ -1,0 +1,17 @@
+candidate2 list: HTTP 200 ids=SESSION-BENCHMARK-3007-candidate2:ACTIVE,SESSION-BENCHMARK-6980-candidate2:ACTIVE
+candidate2 GET status of candidate1's SESSION-BENCHMARK-6980-candidate1 : HTTP 403 FORBIDDEN
+candidate2 GET exam of candidate1's SESSION-BENCHMARK-6980-candidate1 : HTTP 403 FORBIDDEN
+candidate2 GET status of candidate1's SESSION-BENCHMARK-3007-candidate1 : HTTP 403 FORBIDDEN
+candidate2 GET exam of candidate1's SESSION-BENCHMARK-3007-candidate1 : HTTP 403 FORBIDDEN
+candidate2 list with a candidate1-style cursor: HTTP 200 rows owned by candidate1=0
+candidate1 list: HTTP 200 ids=SESSION-BENCHMARK-3007-candidate1:TIMED_OUT,SESSION-BENCHMARK-6980-candidate1:SUBMITTED keys=attemptId/sessionId/examId/examTitle/sessionTitle/state/submittedAt
+candidate1 auth/me attemptScope: HTTP 200 scope=[]
+candidate2 auth/me attemptScope: scope=[SESSION-BENCHMARK-3007-candidate2,SESSION-BENCHMARK-6980-candidate2]
+proctor monitoring events of final SESSION-BENCHMARK-6980-candidate1 : HTTP 403 FORBIDDEN
+candidate1 takeover on final SESSION-BENCHMARK-6980-candidate1 : HTTP 409 INVALID_STATE
+proctor monitoring events of final SESSION-BENCHMARK-3007-candidate1 : HTTP 403 FORBIDDEN
+candidate1 takeover on final SESSION-BENCHMARK-3007-candidate1 : HTTP 409 INVALID_STATE
+proctor monitoring events of ACTIVE SESSION-BENCHMARK-6980-candidate2 : HTTP 200
+proctor list: HTTP 403 FORBIDDEN
+unknown API route: HTTP 404 INVALID_INPUT
+epochs after probes: SESSION-BENCHMARK-3007-candidate1=2, SESSION-BENCHMARK-3007-candidate2=1, SESSION-BENCHMARK-6980-candidate1=4, SESSION-BENCHMARK-6980-candidate2=1

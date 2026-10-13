@@ -1,0 +1,2 @@
+SESSION-BENCHMARK-3007-candidate1 state=TIMED_OUT epoch=2 rev=0 events=41 presence=UNKNOWN@17:07:33
+SESSION-BENCHMARK-6980-candidate1 state=SUBMITTED epoch=4 rev=9 events=126 presence=UNKNOWN@17:02:08

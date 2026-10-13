@@ -1,0 +1,6 @@
+Exception in thread "JavaFX Application Thread" java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "o" is null
+	at java.base/java.util.ImmutableCollections$Set12.contains(ImmutableCollections.java:817)
+	at vn.edu.toeic.client.ToeicClientApplication.lambda$candidateMonitoringControls$21(ToeicClientApplication.java:330)
+Exception in thread "JavaFX Application Thread" java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "o" is null
+	at java.base/java.util.ImmutableCollections$Set12.contains(ImmutableCollections.java:817)
+	at vn.edu.toeic.client.ToeicClientApplication.lambda$candidateMonitoringControls$21(ToeicClientApplication.java:330)

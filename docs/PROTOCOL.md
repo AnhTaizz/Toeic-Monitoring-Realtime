@@ -224,6 +224,7 @@ Giá trị thử nghiệm theo hợp đồng, phải ghi lại giá trị thật
 | 04/10/2026 | QD-03 Bearer header; endpoint WS thật, heartbeat transport/ACK/ERROR, auth/role/scope guard | A (T1-A2) | B2 cần tích hợp ở phiên riêng; chưa sửa nhánh B2 |
 | 12/10/2026 | Thêm `GET /api/v1/candidate/attempts` và hai DTO lịch sử; route API không tồn tại trả 404 thay cho 500. Nhánh cục bộ `fix/backend-candidate-attempt-history-20261012`, chưa merge | A | B: client `770c896` chạy nguyên trạng, còn chạy lại GUI production |
 | 09/10/2026 | B consume T2-A1…A4 trên PR #17; ghi 4 điểm server khác tài liệu; không đổi endpoint/DTO | B | A cần xử lý các điểm 1–3 và sửa mẫu JSON status |
+| 12/10/2026 | Thêm `GET /api/v1/candidate/attempts` và hai DTO lịch sử; route API không tồn tại trả 404 thay cho 500. Nhánh cục bộ `fix/backend-candidate-attempt-history-20261012`, chưa merge | A | B: client `770c896` chạy nguyên trạng, còn chạy lại GUI production |
 
 ## Contract T1-A2 và handoff cho B2
 
@@ -715,7 +716,7 @@ Không thêm hay đổi endpoint, message hoặc DTO. Phần này ghi cách clie
 
 | Bước của client | Endpoint | Ghi chú |
 |---|---|---|
-| Vào phòng thi | `GET /status` → `GET /exam` → `POST /takeover` | Làm bài bằng `writerEpoch` do takeover trả (QD-16) |
+| Vào phòng thi | `GET /status` → `GET /exam` → `POST /takeover` | Làm bài bằng `writerEpoch` do takeover trả (QD-22) |
 | Autosave | `POST /answers` | Toàn bộ map; retry giữ nguyên requestId, epoch, revision, answers; chỉ coi là ACK khi `status` là `SAVED`/`ALREADY_SAVED` và `savedRevision` bằng revision đã gửi |
 | Biết deadline | `GET /status` sau ACK đầu tiên | Response autosave không có `deadlineAt` |
 | Nộp bài | `POST /submit` | Một payload đóng băng; bài chưa sửa lần nào nộp với `answerRevision = 1` vì server từ chối 0 |
@@ -819,7 +820,7 @@ Trace TEST dùng cặp schema/policy `monitoring-observation-trace-test-v1` / `t
 - Scheduler default bật, scan mỗi 1000ms sau lần chạy trước; cấu hình `EXAM_TIMEOUT_SCHEDULER_ENABLED`, `EXAM_TIMEOUT_SCAN_INTERVAL_MS`. `@EnableScheduling` trong config exam, task dùng riêng `examTimeoutScheduler`; worker presence/full của C không thay đổi. Deadline là mốc cấm ghi; job chốt sau mốc ở lần scan khả dụng, không cam kết độ trễ tuyệt đối khi DB chậm.
 - Timeout chấm answers đã commit, khóa và kiểm lại ACTIVE/deadline; không chấm SUBMITTED/TIMED_OUT lần nữa. `submittedAt` với TIMED_OUT là giờ chốt server, không có nghĩa client đã bấm submit.
 - Không đổi endpoint, DTO, wire version hay migration. Status không có candidateUsername/startedAt; các điểm và totalQuestions hiện là số 0 trước khi chấm (không dùng chúng làm tổng số câu trên UI; lấy CandidateExamDto).
-- QD-16 của B phù hợp với writerEpoch; QD-17 phù hợp vì HTTP submit độc lập WS, vẫn kiểm owner/epoch/deadline/state. [Review phối hợp A/B](REVIEW_A_PR17.md).
+- QD-22 của B phù hợp với writerEpoch; QD-20 phù hợp vì HTTP submit độc lập WS, vẫn kiểm owner/epoch/deadline/state. [Review phối hợp A/B](REVIEW_A_PR17.md).
 
 ## T3-C1 · Contract candidate delta, chưa bật production
 

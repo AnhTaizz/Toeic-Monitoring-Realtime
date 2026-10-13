@@ -1,0 +1,11 @@
+# exam_autosave_requests cua SESSION-BENCHMARK-6980-candidate1 (gio UTC), doc truc tiep tu PostgreSQL
+1 epoch=2 at=16:58:48.062 {"R1":"B"}
+2 epoch=2 at=16:58:52.751 {"R1":"A"}
+3 epoch=2 at=16:58:56.163 {}
+4 epoch=2 at=16:58:59.706 {"R1":"B"}
+5 epoch=2 at=16:59:04.061 {"R1":"B","R4":"D"}
+6 epoch=4 at=17:01:58.319 {"R1":"C","R4":"D"}
+7 epoch=4 at=17:01:59.363 {"R1":"B","R4":"D"}
+8 epoch=4 at=17:02:01.826 {"R1":"A","R4":"D"}
+9 epoch=4 at=17:02:03.488 {"R1":"B","R4":"D"}
+# Revision 6-9 khong do script gui: xem muc "Thao tac ngoai script" trong bao cao.

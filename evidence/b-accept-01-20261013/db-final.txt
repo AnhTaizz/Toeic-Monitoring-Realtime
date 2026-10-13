@@ -1,0 +1,4 @@
+SESSION-BENCHMARK-3007-candidate1 TIMED_OUT epoch=2 rev=0 score=0 answers={}
+SESSION-BENCHMARK-3007-candidate2 ACTIVE epoch=1 rev=0 score=null answers={}
+SESSION-BENCHMARK-6980-candidate1 SUBMITTED epoch=4 rev=9 score=2 answers={"R1":"B","R4":"D"}
+SESSION-BENCHMARK-6980-candidate2 ACTIVE epoch=1 rev=0 score=null answers={}

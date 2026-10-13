@@ -1,0 +1,87 @@
+2026-10-12T16:55:09.6042981Z run start; code under test = 6816ff54fb123d10b551b93dbda92ad7622d5626; schema t2b_accept01_fb82713c6d
+2026-10-12T16:55:18.6133718Z server JAR started pid=7396 port=18082 (temporary schema, Flyway inside that schema only)
+2026-10-12T16:55:25.7928662Z client JVM started tag=proctor-a pid=16420 port=18082 args=-Dtoeic.sample.durationSeconds=900
+2026-10-12T16:55:27.4915784Z login submitted for proctor1 in pid 16420
+2026-10-12T16:56:18.6604175Z screenshot 00-debug-login.png
+2026-10-12T16:56:36.6206536Z login submitted for proctor1 in pid 16420
+2026-10-12T16:57:53.4085420Z login submitted for proctor1 in pid 16420
+2026-10-12T16:57:56.9713477Z screenshot 01-proctor-login.png
+2026-10-12T16:57:57.0080680Z proctor clicked create sample exam and session (900 s)
+2026-10-12T16:58:02.6327128Z screenshot 02-proctor-created-session.png
+2026-10-12T16:58:20.3086152Z client JVM started tag=c1-jvm1 pid=15696 port=18083 args=
+2026-10-12T16:58:23.3785855Z login submitted for candidate1 in pid 15696
+2026-10-12T16:58:27.7626683Z screenshot 03-candidate-login.png
+2026-10-12T16:58:28.4013631Z candidate1 clicked enter exam for SESSION-BENCHMARK-6980-candidate1
+2026-10-12T16:58:31.9155215Z screenshot 04-entry-no-answers.png
+2026-10-12T16:58:48.1364422Z screenshot 05-reading-await-ack.png
+2026-10-12T16:58:48.1579581Z candidate1 chose R1=B
+2026-10-12T16:58:51.8061753Z screenshot 06-reading-saved.png
+2026-10-12T16:58:51.8757131Z candidate1 changed R1 to A
+2026-10-12T16:58:55.3479166Z candidate1 cleared R1
+2026-10-12T16:58:58.8117111Z screenshot 08-reading-cleared.png
+2026-10-12T16:58:58.8918771Z candidate1 chose R1=B again
+2026-10-12T16:59:06.6573631Z screenshot 09-reading-group.png
+2026-10-12T16:59:24.9607890Z proctor selected the row of SESSION-BENCHMARK-6980-candidate1
+2026-10-12T16:59:29.7869318Z screenshot 11-proctor-warnings.png
+2026-10-12T16:59:51.3846361Z screenshot 12-proctor-warning-tab.png
+2026-10-12T16:59:51.4109801Z proctor opened the process warning tab for SESSION-BENCHMARK-6980-candidate1
+2026-10-12T17:00:06.8893358Z requested the relay to close the WebSocket socket (HTTP path stays up)
+2026-10-12T17:00:07.6095390Z screenshot 13-ws-disconnected.png
+2026-10-12T17:00:12.0391685Z screenshot 14-ws-reconnected.png
+2026-10-12T17:00:32.3136100Z client JVM started tag=c1-twin pid=29576 port=18083 args=
+2026-10-12T17:00:35.6992441Z login submitted for candidate1 in pid 29576
+2026-10-12T17:00:39.6671531Z twin window entered the same attempt
+2026-10-12T17:00:42.6934863Z screenshot 15-twin-takeover.png
+2026-10-12T17:00:43.9360532Z old window (epoch 2) chose L1=C
+2026-10-12T17:00:49.5149548Z screenshot 16-old-writer-blocked.png
+2026-10-12T17:00:50.7319194Z client JVM tag=c1-twin pid=29576 closed by window close; exited=True
+2026-10-12T17:01:09.1855501Z client JVM tag=c1-jvm1 pid=15696 closed by window close; exited=True
+2026-10-12T17:01:14.9631100Z client JVM started tag=c1-jvm3 pid=34960 port=18083 args=
+2026-10-12T17:01:43.2111505Z login submitted for candidate1 in pid 34960
+2026-10-12T17:01:47.3620038Z new JVM re-entered the ACTIVE attempt
+2026-10-12T17:01:52.5804173Z screenshot 18-reopened-restored.png
+2026-10-12T17:02:09.9309249Z stopped the test server process pid=7396; PostgreSQL keeps running
+2026-10-12T17:02:12.4249878Z screenshot 20-server-off-locked.png
+2026-10-12T17:02:13.3053268Z screenshot 21-submit-confirm.png
+2026-10-12T17:02:13.3322896Z candidate1 confirmed submit while the server is off
+2026-10-12T17:02:51.5216280Z screenshot 23-offline-submit-failed.png
+2026-10-12T17:03:42.0281852Z restarted the test server pid=32348 on the same schema
+2026-10-12T17:03:42.7498699Z candidate1 clicked retry for the frozen submit
+2026-10-12T17:03:45.6473191Z screenshot 24-submit-score-dialog.png
+2026-10-12T17:03:51.1690892Z screenshot 25-home-after-submit.png
+2026-10-12T17:04:10.6615250Z client JVM tag=proctor-a pid=16420 closed by window close; exited=True
+2026-10-12T17:04:14.8239731Z client JVM started tag=proctor-b pid=10036 port=18082 args=-Dtoeic.sample.durationSeconds=40
+2026-10-12T17:04:20.2669266Z login submitted for proctor1 in pid 10036
+2026-10-12T17:04:23.0444385Z proctor created a second sample session (40 s)
+2026-10-12T17:04:28.8008044Z screenshot 26-proctor-short-session.png
+2026-10-12T17:04:32.2581495Z candidate1 entered the 40 s attempt and will not answer
+2026-10-12T17:06:28.0459580Z screenshot 26b-refresh-stuck-npe.png
+2026-10-12T17:06:28.0526677Z DEFECT observed: refresh from an empty attempt list left the candidate home stuck (NullPointerException in client stderr)
+2026-10-12T17:06:31.7717269Z workaround: candidate1 logged out to log in again
+2026-10-12T17:06:36.6575917Z login submitted for candidate1 in pid 34960
+2026-10-12T17:06:51.9411465Z candidate1 entered the 40 s attempt SESSION-BENCHMARK-3007-candidate1 and will not answer
+2026-10-12T17:06:55.8174207Z screenshot 27-blank-timer-running.png
+2026-10-12T17:07:34.6916051Z screenshot 28-timeout-score-dialog.png
+2026-10-12T17:08:04.8233673Z client JVM tag=c1-jvm3 pid=34960 closed by window close; exited=True
+2026-10-12T17:08:16.7621340Z client JVM started tag=c1-jvm4-history pid=31252 port=18082 args=
+2026-10-12T17:08:20.0462211Z login submitted for candidate1 in pid 31252
+2026-10-12T17:08:26.4862281Z screenshot 30-new-jvm-active-tab.png
+2026-10-12T17:08:26.6064218Z new JVM: candidate1 opened the history tab
+2026-10-12T17:08:30.1839957Z screenshot 31-history-tab-both-finals.png
+2026-10-12T17:08:49.2080141Z candidate1 opened the SUBMITTED result from the history tab
+2026-10-12T17:08:50.6618378Z screenshot 32-history-result-submitted.png
+2026-10-12T17:08:53.8375904Z candidate1 opened the TIMED_OUT result from the history tab
+2026-10-12T17:08:55.1036798Z screenshot 33-history-result-timed-out.png
+2026-10-12T17:09:27.5845672Z screenshot 34-active-tab-status-stuck.png
+2026-10-12T17:09:27.6071730Z DEFECT observed again: login with zero ACTIVE attempts leaves the active-tab status at the checking message (NullPointerException in stderr)
+2026-10-12T17:09:30.9132034Z client JVM started tag=c2-jvm pid=23520 port=18082 args=
+2026-10-12T17:09:35.0125367Z login submitted for candidate2 in pid 23520
+2026-10-12T17:09:40.6330686Z screenshot 35-candidate2-active-tab.png
+2026-10-12T17:09:44.0897689Z screenshot 36-candidate2-history-empty.png
+2026-10-12T17:09:44.1019776Z candidate2 opened its history tab
+2026-10-12T17:10:37.5113503Z screenshot 37-proctor-roster-active-only.png
+2026-10-12T17:10:37.5421693Z proctor refreshed the dashboard; roster lists ACTIVE attempts only
+2026-10-12T17:10:38.6679891Z client JVM tag=c1-jvm4-history pid=31252 closed by window close; exited=True
+2026-10-12T17:10:39.6073507Z client JVM tag=c2-jvm pid=23520 closed by window close; exited=True
+2026-10-12T17:10:40.6687900Z client JVM tag=proctor-b pid=10036 closed by window close; exited=True
+2026-10-12T17:10:42.7390998Z stopped relay and test server

@@ -1,6 +1,8 @@
 # B-ACCEPT-01 — candidate attempt discovery, đề xuất để A review
 
-**Trạng thái: PROPOSED / CHƯA ĐƯỢC A THỐNG NHẤT, backend chưa triển khai.** Client B được chuẩn bị theo bản đề xuất này; không coi đó là API đã chốt hoặc nghiệm thu production. Không đổi `auth/me`, monitoring scope, DTO protocol hiện hành hoặc backend production trong lượt B.
+**Cập nhật 13/10/2026: A đã cài nguyên đề xuất này tại `7bdac52`, không đổi URL, tham số hay tên trường; contract chính thức nằm ở `docs/PROTOCOL.md` mục "Contract B-ACCEPT-01" và QD-23 (các bản ghép cục bộ 12–13/10 ghi QD-19). Client B chạy nguyên trạng trên bản ghép `6816ff5`. Phần dưới là bản đề xuất gốc, giữ làm lịch sử.**
+
+**Trạng thái lúc viết: PROPOSED / CHƯA ĐƯỢC A THỐNG NHẤT, backend chưa triển khai.** Client B được chuẩn bị theo bản đề xuất này; không coi đó là API đã chốt hoặc nghiệm thu production. Không đổi `auth/me`, monitoring scope, DTO protocol hiện hành hoặc backend production trong lượt B.
 
 ## Root cause từ sáu file đã kiểm
 

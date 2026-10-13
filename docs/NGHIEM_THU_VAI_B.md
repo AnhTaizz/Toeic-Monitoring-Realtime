@@ -1,4 +1,12 @@
-# Vai B — checklist tích hợp và nghiệm thu, 11/10/2026
+# Vai B — checklist tích hợp và nghiệm thu
+
+**Fix B-ACCEPT-01 12/10:** client history chuẩn bị ở770c896, test/package651 và FX component MOCK PASS; API list owner còn PROPOSED/chờ A review, backend thiếu route. Chưa12/12GUI, không ghép PASS cũ. [Contract cho A](CONTRACT_B_ACCEPT_01_PROPOSAL.md), report mới (bản gốc 12/10 chưa che thông tin máy, chỉ giữ ở máy build). B4/P1 vẫn PARTIAL/OPEN.
+
+**Cập nhật 13/10/2026, sau sửa lỗi:** [nghiệm thu lại](../evidence/b-accept-01-fix-20261013/2026-10-13-verification.md) trên `b54a8ad`: lỗi P1 làm mới danh sách đã sửa; hồi quy 5/5 và 12/12 ca GUI PASS, chạy lại toàn bộ; thành viên tự kiểm, LAN, review A NOT RUN.
+
+**Cập nhật 13/10/2026:** [nghiệm thu B-ACCEPT-01](../evidence/b-accept-01-20261013/2026-10-13-verification.md) trên `6816ff5`: 12/12 ca GUI PASS, tab lịch sử mở lại được lượt `SUBMITTED` và `TIMED_OUT` trong JVM mới; 1 lỗi P1 mới ở làm mới danh sách lượt thi, chưa sửa; thành viên tự kiểm, LAN, review A NOT RUN.
+
+**Cập nhật 12/10/2026:** nghiệm thu mới (bản gốc 12/10 chưa che thông tin máy, chỉ giữ ở máy build) chạy app production/server/PG thật: 11/12 ca PASS; mở lại ACTIVE PASS nhưng bài đã chốt không chọn được từ app mới (P1 B-ACCEPT-01). Ba blocker A dưới đây đã được PR23 xử lý và kiểm trên tích hợp local; phần checklist/bảng11/10 giữ làm baseline lịch sử. T2-B4 PARTIAL; human A review/LAN NOT RUN; không push/merge. Mã quyết định hiện hành sau lần ghép 12/10: QD-22 writerEpoch entry của B, QD-20 mất WebSocket của B, QD-21 deadline của A; QD-16/17/18 là của C.
 
 Gate thi cơ bản: **12/10/2026**. Nguồn tích hợp là PR #17 `41da669` và main `12e2838`. Checklist này là việc cần chạy; chưa tự đánh dấu nghiệm thu vì có test đơn vị hoặc component smoke. [Báo cáo lượt ổn định](../evidence/b-integration/2026-10-11-verification.md), [review C](REVIEW_B_MONITORING.md).
 
@@ -28,7 +36,7 @@ Gate thi cơ bản: **12/10/2026**. Nguồn tích hợp là PR #17 `41da669` và
 
 FAULT SIMULATED và dữ liệu MOCK phải ghi riêng khỏi network/DB/process REAL. Không gọi hai JVM localhost là hai máy LAN. Không nâng AT11/MT01/MT07/MT08/IT hoặc E1/E2 thành PASS toàn hệ thống từ bảng này.
 
-## Blocker cần A giải quyết
+## Ba blocker A lịch sử 11/10 — đã PASS trên bản tích hợp 12/10
 
 1. **A1 — đọc lượt đã chốt:** `ExamService.getAttemptStatus()` dùng `requireAttempt`; `JdbcAttemptScopeStore.canAccess()` chỉ nhận ACTIVE. Cho candidate owner/proctor được phân công đọc kết quả SUBMITTED/TIMED_OUT theo hợp đồng, đồng thời giữ guard ghi và monitoring. Kiểm owner/foreign/role trước và sau submit bằng server thật.
 2. **A2 — tự hết giờ:** `ExamTimeoutService.processTimeouts()` có Scheduled nhưng app chưa có scheduling processor. A chọn lifecycle phù hợp và thêm test Spring thật không gọi hàm bằng tay. Kiểm chấm đúng một lần khi timeout/save/submit đồng thời; hồi quy worker full/presence của C.
@@ -51,7 +59,7 @@ Lượt này **không build app-image, không thêm javafx-media, không phát a
 ## Điều kiện merge PR #17
 
 - [ ] Push bản đã kiểm lên đúng nhánh PR #17 sau khi người dùng cấp quyền; remote chưa bị cập nhật bởi người khác; không force-push.
-- [ ] Review lại diff với main mới nhất, không conflict; backend/protocol giữ đúng main, A xem QD-16/17 và ba blocker.
+- [ ] Review lại diff với main mới nhất, không conflict; backend/protocol giữ đúng main, A xem QD-22/QD-20 và ba blocker.
 - [ ] Chạy lại Maven package và smoke PostgreSQL + candidate/proctor toàn luồng sau fix A; giữ PASS/FAIL/GAP có bằng chứng.
 - [ ] A review và các check/review bắt buộc của GitHub (nếu có) hoàn tất; không suy ra không có rule từ danh sách commit statuses trống.
 - [ ] Ghi rõ phần LAN/package máy khác còn thiếu nếu chưa được nghiệm thu; không ghi B3/B4 hoàn tất toàn hệ thống.

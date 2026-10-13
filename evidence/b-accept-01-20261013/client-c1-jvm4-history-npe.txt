@@ -1,0 +1,4 @@
+Exception in thread "JavaFX Application Thread" java.lang.NullPointerException
+	at java.base/java.util.Objects.requireNonNull(Objects.java:233)
+	at java.base/java.util.ImmutableCollections$SetN.contains(ImmutableCollections.java:944)
+	at vn.edu.toeic.client.ToeicClientApplication.lambda$candidateMonitoringControls$21(ToeicClientApplication.java:330)

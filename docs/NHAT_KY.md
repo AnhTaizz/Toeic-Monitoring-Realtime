@@ -395,6 +395,22 @@ Viết ngắn và cụ thể. Dòng "Đã kiểm" ghi đúng cái đã chạy; c
 
 - Log PowerShell gốc là UTF-16 BOM; bước sao chép transcript đầu đọc sai UTF-8, dẫn NUL/binary diff. Đã tạo lại bản sao từ đúng log gốc, decode BOM→UTF-8/LF/sanitized prefixes; originalSHA không đổi, derivedSHA cập nhật và không NUL/replacement. Không thay runtime hoặc chạy lại tests vì sửa format evidence. Privacy/source/hash audit chạy lại trước PR; không giả raw/test PASS mới.
 
+## 11/10/2026 — B: ổn định PR #17 với main C1–C5
+
+- Worktree riêng và nhánh `stabilize/pr17-main-20261011` từ PR17 41da669; merge main12e2838, xử lý7conflict giữ C full/gap/lifecycle và B exam/seeder/UI. Giữ nguyên workspace gốc, worktree PR17 cũ và3untracked file, không trộn B4 cũ.
+- Gỡ password demo client/smoke fallback; fresh scope trước vào thi, chỉ reuse monitoring cùng attempt, không nuốt lỗi start, khóa selection khi active/đợi stop future. Guard6 + manual FX component smoke mới.
+- Package565/Python10 PASS, FX controls REAL với gateway/WS MOCK PASS, C3 replay PASS/mutation EXPECTED FAIL, C4 join archived byte-identical27/3/0, ledger104file/gzip3/security JAR PASS. Source metadata dirty/in-progress trong evidence; không giả SHA commit về sau là SHA lúc build. PostgreSQL/full GUI/LAN/image/audio/E1/E2 NOT RUN; Docker engine chưa hoạt động.
+- [Report](../evidence/b-integration/2026-10-11-verification.md), [review C](REVIEW_B_MONITORING.md), [checklist + B4 plan](NGHIEM_THU_VAI_B.md). Review do agent Vai B, human A/B approval NOT RUN. Ba blocker A về status chốt/scheduler/deadline vẫn còn; không sửa backend.
+- Đổi hai QD B cũ12/13 thành16/17 để tránh trùng C; các reference lịch sử trong evidence09/10 giữ nguyên và phải đọc theo mapping này. Chưa push/merge main; đích push chỉ nhánh PR17 sau user grant, không force-push. Giờ thực tế/tracker/kế hoạch không điền thay.
+
+## 12/10/2026 — Vai B nghiệm thu GUI thật
+
+Tích hợp local main144fe559/PR23-4753149/PR17-2f5fc66 tại b8ebe67, conflict chỉ docs giữ A/B/C; writerEpoch B chuyểnQD19. Không đổi backend production hoặc bật delta. Test/package620, Bsmoke28/0GAP, C1/C2/T3-C1/Python PASS; GUI thật11PASS/1FAIL, P1 final-result picker sau login mới. Giữ B4/files local, dừng owned test resources, không push/merge/T2-B5/Listening. Báo cáo/bằng chứng (bản gốc 12/10 chưa che thông tin máy, chỉ giữ ở máy build).
+
+## B-ACCEPT-01 — client read-only chuẩn bị / backend API blocked, 12/10/2026
+
+Cập nhật fix B-ACCEPT-01: client read-only history chuẩn bị ở770c896, Maven test/package651 PASS (31B mới), FX component REAL controls/MOCK gateway PASS. Contract candidate-owned list **PROPOSED/chờ A review**; backend chưa có endpoint (REAL probe500/NoResourceFoundException), GUI production regression chưa chạy. B-ACCEPT-01 vẫn OPEN/P1, T2-B4 PARTIAL; PR17 chưa đủ điều kiện merge. Báo cáo mới (bản gốc 12/10 chưa che thông tin máy, chỉ giữ ở máy build), [contract](CONTRACT_B_ACCEPT_01_PROPOSAL.md). Không đổi backend/protocol/monitoring, không push/merge/B4/T2-B5/Listening/delta.
+
 ## 12/10/2026 — C: T3-C2 reducer delta phía server
 
 - Fetch/base144fe55 sau PR24, branch feat/t3-c2-monitoring-delta-reducer; PR17/23 giữ riêng. Code/contract/harness1c3f982, independent oracle cca9003/e241cc6, sửa constructor oracle4042b1c. Final runtime source4042b1c, docs/evidence commit và PR/merge SHA cuối trong PR/final; không sửa runtime sau package/smokes.
@@ -463,10 +479,20 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Tiếp theo: mở PR sau khi PR #23 vào main; nhánh client của B xếp trên nhánh này.
 - Cần người khác: C review; A quyết định có sửa 405 hay không. Bằng chứng `evidence/t2-a-history/2026-10-13-restack.md`.
 
-## 11/10/2026 — B: ổn định PR #17 với main C1–C5
+## 2026-10-13 · B · Nghiệm thu GUI cuối cho B-ACCEPT-01
+- Thời lượng: một phiên Agent; giờ của thành viên chưa ghi.
+- Đã làm: tạo worktree `Toeic-Monitoring-Realtime-b-accept01`, nhánh `integrate/b-accept-01-20261013` từ `6381ddf`, merge cục bộ A-history `7bdac52`. Giải 8 xung đột (6 tài liệu, `.gitattributes`, một file test), không đụng code production. Đổi ba quyết định trùng số của phía B thành QD-20, QD-21, QD-22.
+- Commit: `6816ff5` (merge) và commit bằng chứng kế tiếp. Không push, không merge PR/main.
+- Đã kiểm: `mvn test` và `mvn package` 695 PASS, 0 skip, `TOEIC_PG_INTEGRATION=true` trên PostgreSQL 18.6; `ExamFlowPostgresSmoke` 28 PASS / 0 GAP; 12 ca JavaFX production trên server JAR và PostgreSQL thật đều PASS; các bước B-ACCEPT-01 (hai lượt đã chốt hiện ở tab lịch sử trong JVM mới, xem kết quả không takeover và không bật collector, thí sinh khác bị 403, monitoring ACTIVE-only) đều đạt. Server GUI chạy trên schema tạm đã xóa; `public` không bị đụng.
+- Còn dở: lỗi P1 ở `ToeicClientApplication.java:330` (làm mới danh sách khi chưa chọn lượt) chưa sửa vì cần được phép đổi code production. Trong lúc chạy có 4 lần đổi đáp án không do script gửi (cửa sổ thử nghiệm ở foreground); đã ghi rõ trong bằng chứng. Smoke monitoring của C không chạy lại.
+- Tiếp theo: người dùng review; nếu đồng ý thì sửa lỗi P1 kèm test rồi chạy lại ca liên quan.
+- Cần người khác: A review tích hợp và QD-20/21/22; thành viên tự kiểm GUI và chạy trên máy thứ hai. Bằng chứng `evidence/b-accept-01-20261013/2026-10-13-verification.md`.
 
-- Worktree riêng và nhánh `stabilize/pr17-main-20261011` từ PR17 41da669; merge main12e2838, xử lý7conflict giữ C full/gap/lifecycle và B exam/seeder/UI. Giữ nguyên workspace gốc, worktree PR17 cũ và3untracked file, không trộn B4 cũ.
-- Gỡ password demo client/smoke fallback; fresh scope trước vào thi, chỉ reuse monitoring cùng attempt, không nuốt lỗi start, khóa selection khi active/đợi stop future. Guard6 + manual FX component smoke mới.
-- Package565/Python10 PASS, FX controls REAL với gateway/WS MOCK PASS, C3 replay PASS/mutation EXPECTED FAIL, C4 join archived byte-identical27/3/0, ledger104file/gzip3/security JAR PASS. Source metadata dirty/in-progress trong evidence; không giả SHA commit về sau là SHA lúc build. PostgreSQL/full GUI/LAN/image/audio/E1/E2 NOT RUN; Docker engine chưa hoạt động.
-- [Report](../evidence/b-integration/2026-10-11-verification.md), [review C](REVIEW_B_MONITORING.md), [checklist + B4 plan](NGHIEM_THU_VAI_B.md). Review do agent Vai B, human A/B approval NOT RUN. Ba blocker A về status chốt/scheduler/deadline vẫn còn; không sửa backend.
-- Đổi hai QD B cũ12/13 thành16/17 để tránh trùng C; các reference lịch sử trong evidence09/10 giữ nguyên và phải đọc theo mapping này. Chưa push/merge main; đích push chỉ nhánh PR17 sau user grant, không force-push. Giờ thực tế/tracker/kế hoạch không điền thay.
+## 2026-10-13 · B · Sửa lỗi P1 làm mới danh sách lượt thi, nghiệm thu lại
+- Thời lượng: một phiên Agent; giờ của thành viên chưa ghi.
+- Đã làm: xác nhận root cause — `Set.contains(null)` trên `Set` bất biến khi ô chọn lượt rỗng, ném `NullPointerException` giữa callback làm mới. Tách quyết định ra lớp thuần `AttemptRefresh`, `ToeicClientApplication` chỉ áp kết quả lên control; thêm `AttemptRefreshTest` (12 test). Dựng nhánh sạch để push từ `6816ff5` + commit sửa, vì bằng chứng gốc chưa che của lượt trước nằm trong nhánh cũ. Tạo bản bằng chứng đã che tên tiến trình/PID.
+- Commit: `b54a8ad` (sửa lỗi, nhánh `integrate/b-accept-01-public-20261013`) và commit bằng chứng kế tiếp; `301a2e8` là cùng bản sửa trên nhánh giữ bản gốc. Không push.
+- Đã kiểm: `mvn package` 707 PASS, 0 skip với PostgreSQL thật trên `b54a8ad`; `ExamFlowPostgresSmoke` 28 PASS / 0 GAP; GUI thật: 5 kịch bản hồi quy của lỗi và đủ 12 ca đều PASS trên bản sửa; log autosave của server chỉ có đúng các thay đổi do script gửi.
+- Còn dở: kiểm roster ACTIVE-only trên dashboard sau khi lượt đã chốt chưa chạy lại ở lượt này (dashboard đang báo dữ liệu cũ sau khi dừng server có chủ đích); GUI cho xung đột, 401, nộp khi mất response chưa chạy trên bản này.
+- Tiếp theo: người dùng review và quyết định push nhánh sạch.
+- Cần người khác: A review tích hợp và bản sửa; thành viên tự kiểm GUI và chạy trên máy thứ hai. Bằng chứng `evidence/b-accept-01-fix-20261013/2026-10-13-verification.md`.

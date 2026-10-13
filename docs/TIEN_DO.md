@@ -4,6 +4,16 @@ Cập nhật T3-C4:13/10/2026 — candidate Application chọn DELTA opt-in + ca
 
 Cập nhật backend A: 13/10/2026 — nhánh cục bộ `sync/pr23-main-20261013` tại `c64503f` đưa ba sửa P0 của PR #23 lên trên main `cb30f3d` (đã gồm T3-C4). Maven package 596 PASS, 0 skip, có PostgreSQL thật; smoke C1/C2 PASS; Python 10 PASS. Review lại ba sửa P0: đạt, có 4 ghi nhận không chặn. Agent-driven; human review NOT RUN; chưa push/merge. [Evidence](../evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md).
 
+Cập nhật sau sửa lỗi P1: 13/10/2026 — nhánh cục bộ `integrate/b-accept-01-public-20261013` tại `b54a8ad` = bản ghép `6816ff5` + một commit sửa làm mới danh sách lượt thi (`AttemptRefresh`). Maven package 707 PASS, 0 skip, có PostgreSQL thật; ExamFlowPostgresSmoke 28 PASS / 0 GAP; JavaFX production: 5/5 kịch bản hồi quy của lỗi và **12/12 ca PASS, chạy lại toàn bộ trên bản sửa**. Không còn lỗi P1 đã biết ở luồng thi. Agent-driven; thành viên tự kiểm, LAN, review A NOT RUN; không push/merge. [Evidence](../evidence/b-accept-01-fix-20261013/2026-10-13-verification.md).
+
+Cập nhật nghiệm thu B-ACCEPT-01: 13/10/2026 — nhánh cục bộ `integrate/b-accept-01-20261013` tại `6816ff5` ghép client B (`6381ddf`) với A-history (`7bdac52`: main `ee714fc`, ba fix P0, API lịch sử). Maven test/package 695 PASS, 0 skip, có PostgreSQL thật; ExamFlowPostgresSmoke 28 PASS / 0 GAP; JavaFX production + server JAR + PostgreSQL thật: **12/12 ca PASS**, lượt `SUBMITTED` và `TIMED_OUT` mở lại được từ tab lịch sử trong JVM mới. Phát hiện 1 lỗi P1 mới ở client (làm mới danh sách khi chưa chọn lượt → NullPointerException), chưa sửa. Agent-driven; thành viên tự kiểm, LAN, review A NOT RUN; không push/merge. [Evidence](../evidence/b-accept-01-20261013/2026-10-13-verification.md).
+
+Cập nhật fix B-ACCEPT-01: client read-only history chuẩn bị ở770c896, Maven test/package651 PASS (31B mới), FX component REAL controls/MOCK gateway PASS. Contract candidate-owned list **PROPOSED/chờ A review**; backend chưa có endpoint (REAL probe500/NoResourceFoundException), GUI production regression chưa chạy. B-ACCEPT-01 vẫn OPEN/P1, T2-B4 PARTIAL; PR17 chưa đủ điều kiện merge. Báo cáo mới (bản gốc 12/10 chưa che thông tin máy, chỉ giữ ở máy build), [contract](CONTRACT_B_ACCEPT_01_PROPOSAL.md). Không đổi backend/protocol/monitoring, không push/merge/B4/T2-B5/Listening/delta.
+
+Cập nhật Vai B 12/10/2026: worktree tích hợp riêng main144fe559 + PR23/4753149 + PR17/2f5fc66, commit **b8ebe67**. Maven test/package620 PASS, B smoke28/0GAP, C1/C2/T3-C1 hồi quy PASS. JavaFX production + server/PG thật: **11/12 ca PASS, ca mở lại FAIL khi bài đã chốt**; ACTIVE restore PASS. P1 B-ACCEPT-01: picker chỉ có scope ACTIVE, không mở lại kết quả SUBMITTED từ app mới. T2-B4 PARTIAL; chưa T2-B5/Listening. Báo cáo/evidence mới (bản gốc 12/10 chưa che thông tin máy, chỉ giữ ở máy build). Không push/merge; B4/files chưa commit giữ nguyên.
+
+Cập nhật mới T3-C1: 11/10/2026 — encoder delta candidate/replay đã triển khai; production vẫn full, server T3-C2/gate chưa có. Human B review/E1/E2 NOT RUN. [Hướng dẫn](MONITORING_DELTA_ENCODER.md), [evidence](../evidence/t3-c1/2026-10-11-verification.md).
+
 Cập nhật B-ACCEPT-01 phía A: 12/10/2026 — `GET /api/v1/candidate/attempts` (lịch sử lượt thi của thí sinh) đã cài theo đúng đề xuất của B, kèm sửa route không tồn tại trả 404 thay cho 500. Nhánh cục bộ `fix/backend-candidate-attempt-history-20261012` tại `33a2932`, base `main` `ee714fc` + 5 commit P0; **chưa push, chưa merge**. `mvn package` 592/592 với PostgreSQL thật; client B `770c896` gọi server này PASS 13/13. GUI production của B và review C→A NOT RUN. [Evidence](../evidence/t2-a-history/2026-10-12-verification.md).
 
 Cập nhật mới T3-C2: 12/10/2026 — reducer production/resync/capability/scan freshness thử nghiệm có; full vẫn default. Java554/Python10 và REAL Spring/PG/WS/restart, CLI/hồi quy PASS. Readings MOCK trong delta smoke; gate/LAN/human A/B/E1/E2 NOT RUN. [Guide](MONITORING_DELTA_REDUCER.md), [evidence](../evidence/t3-c2/2026-10-12-verification.md).
@@ -28,12 +38,15 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
-| B | _chưa gán_ | Ổn định PR17 với main C1–C5; B1/B2 CODE_COMPLETE, B3/B4 PARTIAL | Package565/Python10/FX fixture PASS; review source/evidence C; password demo gỡ; guard entry/switch/stop | A xử lý3blocker và review; production smoke/GUI/LAN sau fix; chưa push, chưa merge main | `stabilize/pr17-main-20261011` (đích PR17: `test/javafx-full-ui-testing`) |
+| B | _chưa gán_ | Sửa P1 và nghiệm thu lại xong, chờ review; T2-B4 PARTIAL | Bản sửa `b54a8ad`; package 707, smoke 28/0 GAP; hồi quy 5/5, GUI 12/12 PASS | Người dùng review rồi quyết định push; thành viên tự kiểm, LAN, review A; chưa làm T2-B5 | `integrate/b-accept-01-public-20261013` (local, bản để push) |
 | C | _chưa gán_ | T3-C4 tích hợp Application/live preparation; gate PARTIAL | Coded9475eb,579Java PASS; kết quả live/hồi quy xem evidence | LAN hai máy, human A/B review và gate20/10; FULL default | `feat/t3-c4-monitoring-delta-live-gate` |
 
 ## Đang bị chặn
 
+- [13/10] ~~P1 client làm mới danh sách lượt thi khi chưa chọn lượt (`NullPointerException`)~~ — **đã sửa** tại `b54a8ad`, có 12 test và đã chạy lại GUI. [Proof](../evidence/b-accept-01-fix-20261013/2026-10-13-verification.md).
+- [13/10] B-ACCEPT-01: các bước kiểm đã đạt trên `6816ff5` (agent-driven); chờ người dùng review và quyết định đóng. Hai dòng B-ACCEPT-01 ngày 12/10 bên dưới là trạng thái trước lần ghép này.
 - [13/10] Nhánh để mở PR cho API lịch sử là `feat/backend-candidate-attempt-history-20261013` (`19f669e`, xếp trên PR #23 đã đồng bộ, 602 test PASS); nhánh `…-20261012` bên dưới là bản cũ có lặp commit P0, không dùng để push.
+- [12/10] **P1 B-ACCEPT-01:** kết quả đã chốt đọc được qua API owner nhưng không xuất hiện trong picker GUI sau login mới. Cần A/B thống nhất đường exam-read riêng với monitoring ACTIVE; không mở rộng monitoring scope. Proof (bản gốc 12/10 chưa che thông tin máy, chỉ giữ ở máy build). Ba P0 A cũ (final read/scheduler/deadline) đã PASS kỹ thuật và GUI trên tích hợp local; PR23 chưa merge main.
 - [12/10] B-ACCEPT-01: backend đã sẵn ở nhánh cục bộ `fix/backend-candidate-attempt-history-20261012` (`33a2932`) nhưng chưa push/merge — cần người dùng quyết định đưa nhánh lên và ghép với nhánh tích hợp của B (`770c896`), rồi B chạy lại GUI production theo mục 5 của evidence — hạn gate 15/10.
 - [12/10] Gọi sai phương thức HTTP (ví dụ `POST` vào route chỉ có `GET`) vẫn trả 500 thay vì 405 — A xem có sửa cùng handler lỗi không; không chặn B-ACCEPT-01.
 - [09/10] B bị chặn nghiệm thu T2-B3/T2-B4 (đọc kết quả, mở lại lượt đã chốt) — bởi `GET /attempts/{id}/status` và `/exam` trả 403 cho chính thí sinh sở hữu khi lượt đã `SUBMITTED`/`TIMED_OUT` (`JdbcAttemptScopeStore.canAccess` chỉ nhận `state = 'ACTIVE'`) — cần A cho phép đọc lượt đã chốt trong phạm vi quyền, đúng hợp đồng mục 2 bước 4 — hạn trước gate 12/10.
@@ -44,7 +57,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 
 - C4 human B review: **NOT RUN**; A/B cần xem RealtimeClient và handler/registry hooks. Đã kiểm BYTE/fragment/retry/concurrent-decorator/failure/cleanup và B3 regression. Log COMPLETE chỉ cho file đã cung cấp; chưa đo CPU/memory/latency/miss-rate hoặc lợi ích delta. ProcessHandle scan REAL riêng, event/overflow MOCK; WMI/ETW chỉ khảo sát. Không tự làm B4/chặng2/E1/E2.
 
-- GUI manual end-to-end: **NOT RUN** — B3 đã mở Stage JavaFX thật bằng harness và thao tác controls proctor, có ảnh UNKNOWN/recovery/stale. Chưa thao tác toàn app login/candidate/process thật → proctor; cần người dùng kiểm candidate/proctor/sai mật khẩu/server tắt. Component proctor PASS không thay toàn MT01/MT08.
+- GUI production agent-driven đã chạy12/10: login/Reading/save/submit/timeout/process→proctor/server-off/WS/takeover; 11PASS/1FAIL ở final reopening (ACTIVE restore PASS). Thành viên tự thao tác và LAN vẫn NOT RUN; không nâng MT01/MT08/E1/E2 toàn hệ thống.
 - LAN second-machine test: **NOT RUN** — chưa có máy Windows thứ hai thật được cung cấp cho phiên này; không thay bằng localhost.
 - Review C→A2 và A→B2: **NOT RUN trong phiên Agent**; không ghi duyệt thay thành viên. Task.txt C2 cho phép merge khi code acceptance/PR mergeability PASS; review B→C2 cũng NOT RUN. PR #2/#3 đã merge, Git C2 cuối xem final report.
 - PR #1 đã merge trên main `34a7835`; các mục GUI/LAN thiếu chứng cứ lịch sử vẫn NOT RUN.
@@ -82,7 +95,7 @@ Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì
 | Vai | Giờ đã dùng | Giờ còn lại ước tính | Ghi chú |
 |---|---:|---:|---|
 | A | — | — | |
-| B | — | — | |
+| B | _chưa gán_ | Nghiệm thu T2 GUI thực; B4 PARTIAL | Tích hợp b8ebe67; test/package620, smoke28/0GAP; GUI11PASS/1FAIL | P1 mở lại kết quả đã chốt, human A review và LAN; không push/merge | `integrate/t2b-acceptance-20261012` (local riêng) |
 | C | — | — | T3-C1 candidate encoder/test/replay có; B review/live delta/gate và E1/E2 NOT RUN. Không điền giờ chưa đo. |
 
 ## Bàn giao T2-C3 ngày10/10/2026

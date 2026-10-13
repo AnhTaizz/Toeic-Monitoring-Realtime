@@ -181,16 +181,12 @@ Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 - Kiểm chứng: `ExamSessionTest.losingTheWebSocketLocksEditingButDoesNotChangeWhatTheServerConfirmed`; GUI thật tắt/bật server; `evidence/t2-b/2026-10-09-verification.md`.
 - Liên quan: T2-B3, T2-B4, T3-B3 (Listening có chính sách riêng, không dùng lại nhánh này).
 
-Ghi chú tích hợp11/10/2026: quyết định B trước đây đánh số QD-12/QD-13 trên PR17 đã đổi thành QD-16/QD-17 trong tài liệu hợp nhất để giữ số QD12–15 của C. Nội dung quyết định B giữ nguyên; evidence09/10 có số cũ được giữ đúng lịch sử. [Sửa guard vào thi và checklist](NGHIEM_THU_VAI_B.md).
-
 ## QD-21 · Deadline bắt đầu khi thí sinh nhận quyền ghi để vào thi
 
 - Ngày11/10/2026 · Vai A (Agent) · Human review NOT RUN · nhánh P0 chưa merge.
 - Dùng POST takeover hiện có làm mốc entry: dưới khóa hàng và sau kiểm owner/ACTIVE, server đặt deadline chưa có bằng clock_timestamp()+duration ca và trả field deadlineAt hiện có. Hai máy được tuần tự hóa; takeover/reconnect sau giữ nguyên deadline. Status/exam GET không khởi tạo giờ.
-- PR17 luôn takeover sau status/exam, nên không đổi wire/DTO/client production. Legacy save-first được giữ; ca chưa vào vẫn chưa bắt đầu giờ. WriterEpoch vẫn tăng mỗi entry (QD16 trên PR17), không được dùng epoch full của C làm writerEpoch.
+- PR17 luôn takeover sau status/exam, nên không đổi wire/DTO/client production. Legacy save-first được giữ; ca chưa vào vẫn chưa bắt đầu giờ. WriterEpoch vẫn tăng mỗi entry (QD-22; trước đây QD16 trên PR17), không được dùng epoch full của C làm writerEpoch.
 - Read history tách scope ACTIVE, scheduler exam riêng và chốt theo answers đã commit. [Review A/B](REVIEW_A_PR17.md).
-
-Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`, QD-17 và QD-18 đã thuộc T3-C2/T3-C3 của C, nên quyết định deadline của A (trước mang số QD-18 trên nhánh này) đổi thành QD-21. QD-20 và QD-22 dành cho hai quyết định của B trên PR #17 (mất WebSocket; `writerEpoch` khi vào thi); các mục đó vào main cùng PR tương ứng. Đồng bộ lần hai với main `cb30f3d`: QD-19 đã thuộc T3-C4 của C, nên quyết định API lịch sử lượt thi của A (bản ghép cục bộ trước đó ghi QD-19) mang số QD-23.
 
 ## QD-22 · Vào phòng thi là xin writerEpoch mới
 
@@ -210,3 +206,5 @@ Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`
 - Kèm theo: route API không tồn tại trả 404 `INVALID_INPUT` thay cho 500. `ErrorCode` không có mã riêng cho "không tìm thấy" và không thêm mã mới để khỏi đổi contract lỗi v0.
 - Kiểm chứng: `ExamRuntimePostgresTest` (PostgreSQL thật) và kiểm chéo với client B `770c896`; `evidence/t2-a-history/2026-10-12-verification.md`.
 - Liên quan: B-ACCEPT-01, T2-A4, T2-B4, AT01, AT11.
+
+Ghi chú đánh số, cập nhật 13/10/2026. Số hiện hành: QD-16 đến QD-19 là của C (delta T3-C1, reducer T3-C2, replay T3-C3, candidate opt-in T3-C4); QD-20 mất WebSocket khi đang thi (B); QD-21 deadline khi nhận quyền ghi (A); QD-22 `writerEpoch` mới khi vào phòng thi (B); QD-23 lịch sử lượt thi (A). Số cũ còn gặp trong bằng chứng và nhật ký: hai quyết định của B từng là QD-12/QD-13 (09/10) rồi QD-16/QD-17 (11/10, trên PR #17); quyết định deadline của A từng là QD-18; các bản ghép cục bộ 12–13/10 ghi lịch sử lượt thi là QD-19. Nội dung các quyết định không đổi; bằng chứng cũ giữ số tại thời điểm ghi.

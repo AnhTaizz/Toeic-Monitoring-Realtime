@@ -53,11 +53,12 @@ Mục lục chỉ tổ chức bằng chứng đã có, không xác nhận task h
 
 - Backend A, PR #23: [đồng bộ main T3-C3 và review lại P0](t2-a-p0-sync-20261013/2026-10-13-verification.md) — `c64503f` (sau hai lần đồng bộ main), Maven 596, smoke C1/C2, Python 10 PASS; human review, GUI, LAN chưa chạy.
 
-- Backend A, PR #23: [đồng bộ main T3-C3 và review lại P0](t2-a-p0-sync-20261013/2026-10-13-verification.md) — `9713658`, Maven 586, smoke C1/C2, Python 10 PASS; human review, GUI, LAN chưa chạy.
-
 - B-ACCEPT-01 phía A: [API lịch sử lượt thi của thí sinh](t2-a-history/2026-10-12-verification.md) — 592 test với PostgreSQL thật, kiểm chéo client B `770c896` 13/13; nhánh cục bộ chưa merge, GUI của B chưa chạy.
 - API lịch sử, nhánh để mở PR: [xếp lại trên PR #23 đã đồng bộ](t2-a-history/2026-10-13-restack.md) — `19f669e`, 602 test PASS, không lặp commit P0.
 
 ## Vai B — tích hợp ổn định PR #17, 11/10/2026
 
 [Báo cáo](b-integration/2026-10-11-verification.md), [Java counts](b-integration/java-test-counts.json), [package log](b-integration/maven-package.txt), [FX component](b-integration/gui-component.txt), [integrity](b-integration/evidence-integrity.json), [metadata](b-integration/run-metadata.json). Package565/Python10 PASS; REAL FX + MOCK gateway/WS state; fresh PostgreSQL/full GUI/LAN/B4/E1/E2 NOT RUN. Checklist/review nằm trong docs; không ghi approval của thành viên.
+
+- B-ACCEPT-01 phía B: [nghiệm thu GUI cuối](b-accept-01-20261013/2026-10-13-verification.md) — bản ghép `6816ff5`, Maven 695, smoke 28/0 GAP, GUI 12/12 PASS, 1 lỗi P1 mới chưa sửa; nhánh cục bộ, chưa push.
+- B-ACCEPT-01 phía B, sau sửa lỗi: [sửa P1 và nghiệm thu lại](b-accept-01-fix-20261013/2026-10-13-verification.md) — `b54a8ad`, Maven 707, smoke 28/0 GAP, hồi quy 5/5, GUI 12/12 PASS. Hai thư mục `b-accept-01-*` là bản đã che tên tiến trình/PID (xem `REDACTION.md` trong từng thư mục).
