@@ -1,0 +1,40 @@
+param([string]$JavaHome = $env:JAVA_HOME)
+$ErrorActionPreference = 'Stop'
+$projectRoot = Split-Path -Parent $PSScriptRoot
+$previousValues = @{}
+Push-Location $projectRoot
+try {
+    if (-not (Test-Path -LiteralPath '.env')) { throw 'Local .env is required for PostgreSQL smoke.' }
+    foreach ($key in @('DB_HOST', 'DB_PORT', 'DB_NAME', 'DB_USER', 'DB_PASSWORD', 'TOEIC_SEED_PASSWORD')) {
+        $previousValues[$key] = [Environment]::GetEnvironmentVariable($key, 'Process')
+    }
+    foreach ($line in Get-Content -LiteralPath '.env' -Encoding UTF8) {
+        if ($line -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD)\s*=(.*)$') {
+            $key = $Matches[1]
+            [Environment]::SetEnvironmentVariable($key, $Matches[2].Trim().Trim('"').Trim("'"), 'Process')
+        }
+    }
+    # Same development defaults as application.properties; seed applies only to owned test schemas.
+    $defaults = @{ DB_HOST = '127.0.0.1'; DB_PORT = '5432'; DB_NAME = 'toeic'; DB_USER = 'toeic'; TOEIC_SEED_PASSWORD = 'ChangeMe123!' }
+    foreach ($key in $defaults.Keys) {
+        if (-not [Environment]::GetEnvironmentVariable($key, 'Process')) {
+            [Environment]::SetEnvironmentVariable($key, $defaults[$key], 'Process')
+        }
+    }
+    foreach ($key in @('JAVA_HOME', 'PATH', 'TOEIC_PG_INTEGRATION')) {
+        $previousValues[$key] = [Environment]::GetEnvironmentVariable($key, 'Process')
+    }
+    if ($JavaHome) {
+        $env:JAVA_HOME = $JavaHome
+        $env:PATH = (Join-Path $JavaHome 'bin') + [IO.Path]::PathSeparator + $env:PATH
+    }
+    $env:TOEIC_PG_INTEGRATION = 'true'
+    & mvn -B -o "-Dmaven.repo.local=$env:USERPROFILE/.m2/repository" -pl server -am test `
+        '-Dtest=AudioRuntimePostgresTest,ExamRuntimePostgresTest' '-Dsurefire.failIfNoSpecifiedTests=false'
+    if ($LASTEXITCODE -ne 0) { throw 'T3-A1 PostgreSQL smoke or existing exam regression failed.' }
+} finally {
+    foreach ($key in $previousValues.Keys) {
+        [Environment]::SetEnvironmentVariable($key, $previousValues[$key], 'Process')
+    }
+    Pop-Location
+}
