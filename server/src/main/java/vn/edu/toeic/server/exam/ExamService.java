@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.regex.Pattern;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
@@ -42,7 +41,7 @@ public class ExamService {
     private static final Gson GSON = new Gson();
     private static final int DEFAULT_HISTORY_LIMIT = 50;
     private static final int MAX_HISTORY_LIMIT = 100;
-    private static final Pattern ATTEMPT_ID = Pattern.compile("[A-Za-z0-9_.:-]{1,128}");
+    private static final int MAX_HISTORY_CURSOR_CHARACTERS = 128;
 
     private final JdbcClient jdbc;
     private final ExamValidationService validationService;
@@ -74,7 +73,10 @@ public class ExamService {
             String afterAttemptId) {
         authorizationService.requireRole(candidate, Role.CANDIDATE);
         int limit = parseHistoryLimit(limitParameter);
-        if (afterAttemptId != null && !ATTEMPT_ID.matcher(afterAttemptId).matches()) {
+        // Match PostgreSQL VARCHAR(128), including Unicode and spaces, without changing the cursor.
+        if (afterAttemptId != null && (afterAttemptId.isEmpty()
+                || afterAttemptId.codePointCount(0, afterAttemptId.length()) > MAX_HISTORY_CURSOR_CHARACTERS
+                || afterAttemptId.indexOf('\0') >= 0)) {
             throw ExamApiException.invalidInput("afterAttemptId không hợp lệ");
         }
 
