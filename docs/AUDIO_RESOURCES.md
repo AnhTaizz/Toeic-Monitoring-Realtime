@@ -65,9 +65,9 @@ Giám thị được gán trong `exam_session_proctors` xem `GET /api/v1/session
 
 Start lấy khóa ca rồi toàn bộ lượt theo thứ tự attemptId. Sau khi khóa và kiểm tài nguyên, server dùng `clock_timestamp()` để quyết định. Ca phải SCHEDULED, có ít nhất một thí sinh, và **mọi lượt trong ca** phải ACTIVE, chưa hết deadline, tài khoản enabled, đúng đề, có READY khớp manifest và writerEpoch hiện tại. Không bỏ qua lượt chưa READY hoặc đã chốt.
 
-Start hợp lệ ghi `IN_PROGRESS`, `listening_start_id`, `listening_manifest_id` và startedAt trong cùng transaction. Retry/concurrent start trả cùng startId và startedAt; không tạo lần start thứ hai. Không thay answers, savedRevision, writerEpoch hoặc deadline của bất kỳ lượt nào. Ca CLOSED không start được; lỗi COMMIT rollback và trả lỗi thay cho success.
+Start hợp lệ ghi `IN_PROGRESS`, `listening_start_id`, `listening_manifest_id` và startedAt trong cùng transaction. Retry/concurrent start trả cùng startId và startedAt; không tạo lần start thứ hai. Không thay answers, savedRevision hoặc writerEpoch. T3-A2 khởi tạo deadline chưa có bằng startedAt + durationSeconds; deadline đã có được giữ nguyên. Ca CLOSED không start được; lỗi COMMIT rollback và trả lỗi thay cho success.
 
-T3-A2 sẽ dùng startId bền vững này để gửi lệnh WS, thêm deadline/phase trong lệnh, ghi playbackStarted, timeout/gián đoạn và tổ chức lại. T3-A1 chưa phát lệnh WS hoặc bật playback, chưa thực hiện chính sách gián đoạn. Không dùng response HTTP để tự phát lại sau reconnect.
+T3-A2 dùng startId bền vững này để gửi lệnh WS sau COMMIT, ghi playback/heartbeat/gián đoạn và tổ chức lại. Contract hiện tại tại [LISTENING_LIFECYCLE.md](LISTENING_LIFECYCLE.md). Không dùng response HTTP hoặc status GET để tự phát lại sau reconnect.
 
 ## Chạy kiểm thử
 

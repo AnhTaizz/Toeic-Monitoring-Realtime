@@ -244,7 +244,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** phần server của LT04 chạy được; lệnh start lặp không tạo trạng thái mới.
 
-**Ghi chú làm dở:** —
+**Bàn giao 13/10/2026:** backend đã có WS start sau COMMIT với startId bền vững, Listening event/heartbeat và cờ gián đoạn V10. Save/submit chặn thêm/sửa/xóa Listening, vẫn cho Reading trong deadline cũ. Chỉ assigned proctor tổ chức lại thành ca/lượt mới; retry đồng thời idempotent, không đổi lượt cũ, timeout giữ marker. REAL HTTP/WS/PG/Flyway PASS29 gồm10 Listening mới,8 audio và11 exam regression; restart Spring và upgrade V9→V10 PASS. [Contract B](../LISTENING_LIFECYCLE.md), [evidence](../../evidence/t3-a2/2026-10-13-verification.md). Human C review/GUI/audio/LAN chưa chạy; không ghi duyệt thay C hoặc đổi tracker/kế hoạch.
 
 ### T3-A3 · Hook cho delta và xử lý lỗi server
 `4h` · phụ thuộc: T2-A4, T2-C1 · review: C

@@ -1,6 +1,8 @@
 # Tiến độ hiện tại
 
-Cập nhật T3-A1:13/10/2026 — đã hoàn tác T3-B1 theo yêu cầu và triển khai backend audio/manifest/READY/gate start từ main `80ee1ba`. Nhánh bàn giao `feat/t3-a1-audio-manifest-ready`, code/test tại `9ed067a`; commit tài liệu/evidence riêng. Maven package PASS600 test thường,16 opt-in skip; lượt riêng REAL HTTP/PG/Flyway PASS19 (8audio +11exam). [Contract B/A2](AUDIO_RESOURCES.md), [evidence](../evidence/t3-a1/2026-10-13-verification.md). Human C review/package audio/GUI/LAN NOT RUN; T3-A2 WS/playback/gián đoạn chưa triển khai. Tracker/kế hoạch gốc giữ nguyên.
+Cập nhật T3-A2:13/10/2026 — backend start WS sau COMMIT, playback/heartbeat/gián đoạn, khóa đáp án Listening và tổ chức lại đã triển khai trên nhánh `feat/t3-a2-listening-lifecycle`. Full package với PostgreSQL bật PASS629, 0 skip; REAL HTTP/WS/PG/Flyway subset PASS29 (10 Listening +8 audio +11 exam), gồm restart Spring thật và nâng cấp V9→V10. [Contract](LISTENING_LIFECYCLE.md), [evidence](../evidence/t3-a2/2026-10-13-verification.md). B UI/audio/LAN và human C review chưa chạy; tracker/kế hoạch gốc giữ nguyên.
+
+Mốc T3-A1 trước T3-A2: triển khai audio/manifest/READY/gate từ main `80ee1ba`, bàn giao `feat/t3-a1-audio-manifest-ready`, code/test `9ed067a`. Package PASS600 test thường,16 opt-in skip; lượt riêng REAL HTTP/PG/Flyway PASS19. [Contract audio](AUDIO_RESOURCES.md), [evidence lịch sử](../evidence/t3-a1/2026-10-13-verification.md). T3-A1 đã merge PR #29 trên main `8894452`; T3-B1 vẫn đã hoàn tác theo yêu cầu.
 
 Cập nhật T3-C4:13/10/2026 — candidate Application chọn DELTA opt-in + capability hiện tại, FULL mặc định. Code/test sourced9475eb; Java579 PASS. [Guide](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-13-verification.md). LOCAL preparation riêng với replay; gate20/10/LAN hai máy/human B review chưa chốt, T3-A3 không tự đánh dấu DONE, E1/E2 NOT RUN.
 

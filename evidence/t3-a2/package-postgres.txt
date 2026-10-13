@@ -1,0 +1,40 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] TOEIC Monitoring Realtime                                          [pom]
+[INFO] TOEIC Protocol                                                     [jar]
+[INFO] TOEIC JavaFX Client                                                [jar]
+[INFO] TOEIC Server                                                       [jar]
+[INFO] TOEIC ProcessHandle Spike                                          [jar]
+[INFO] 
+[INFO] ---------------< vn.edu.toeic:toeic-monitoring-realtime >---------------
+[INFO] Building TOEIC Monitoring Realtime 0.1.0-SNAPSHOT                  [1/5]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] -----------------------< vn.edu.toeic:protocol >------------------------
+[INFO] Building TOEIC Protocol 0.1.0-SNAPSHOT                             [2/5]
+[INFO]   from protocol\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ protocol ---
+[INFO] skip non existing resourceDirectory C:\Users\Lenovo\OneDrive\M�y t�nh\LTM\Toeic-Monitoring-Realtime\protocol\src\main\resources
+[INFO] skip non existing resourceDirectory C:\Users\Lenovo\OneDrive\M�y t�nh\LTM\Toeic-Monitoring-Realtime\protocol\src\main\resources
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ protocol ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ protocol ---
+[INFO] skip non existing resourceDirectory C:\Users\Lenovo\OneDrive\M�y t�nh\LTM\Toeic-Monitoring-Realtime\protocol\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ protocol ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ protocol ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running vn.edu.toeic.protocol.measurement.MessageMeasurementsTest

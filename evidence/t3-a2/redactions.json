@@ -1,0 +1,30 @@
+{
+    "policy":  "Remove exact local credential strings, including incidental matches in library property names. No secret values or hashes are recorded.",
+    "redactions":  [
+                       {
+                           "path":  "evidence/t3-a2/package-final.txt",
+                           "key":  "DB_PASSWORD",
+                           "matches":  10
+                       },
+                       {
+                           "path":  "evidence/t3-a2/postgres-final.txt",
+                           "key":  "DB_PASSWORD",
+                           "matches":  10
+                       },
+                       {
+                           "path":  "evidence/t3-a2/postgres-first.txt",
+                           "key":  "DB_PASSWORD",
+                           "matches":  6
+                       },
+                       {
+                           "path":  "evidence/t3-a2/postgres-second.txt",
+                           "key":  "DB_PASSWORD",
+                           "matches":  6
+                       },
+                       {
+                           "path":  "evidence/t3-a2/postgres-upgrade.txt",
+                           "key":  "DB_PASSWORD",
+                           "matches":  10
+                       }
+                   ]
+}

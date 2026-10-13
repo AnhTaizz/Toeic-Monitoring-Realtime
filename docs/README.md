@@ -11,6 +11,7 @@ Thư mục này là nơi ghi lại việc đang làm, để bất kỳ ai (hoặ
 | [QUYET_DINH.md](QUYET_DINH.md) | Các quyết định kỹ thuật đã chốt và đang chờ chốt | Người ra quyết định, reviewer duyệt | Khi chốt một lựa chọn |
 | [PROTOCOL.md](PROTOCOL.md) | Danh mục endpoint và message đang dùng thật | C (monitoring), A (auth, thi) | Khi thêm hoặc đổi message |
 | [AUDIO_RESOURCES.md](AUDIO_RESOURCES.md) | T3-A1: cấp tài nguyên, manifest/checksum, READY và gate start; contract cho B/A2 | A | Khi đổi contract audio |
+| [LISTENING_LIFECYCLE.md](LISTENING_LIFECYCLE.md) | T3-A2: lệnh start WS, heartbeat/gián đoạn, khóa đáp án và tổ chức lại | A | Khi đổi contract Listening |
 | [MONITORING_BASELINE_METHOD.md](MONITORING_BASELINE_METHOD.md) | Phương pháp baseline, định nghĩa E1/E2, nguồn đối chiếu và checklist B review | C | Trước khi đo hoặc đổi định nghĩa |
 | [MONITORING_MEASUREMENTS.md](MONITORING_MEASUREMENTS.md) | Schema JSONL, byte/outcome, cấu hình và tái tạo summary C4 | C | Khi đổi cách đo |
 | [PROCESS_MONITORING_SURVEY.md](PROCESS_MONITORING_SURVEY.md) | ProcessHandle/WMI, nguồn chính thức và giới hạn quan sát | C | Khi khảo sát phương pháp |

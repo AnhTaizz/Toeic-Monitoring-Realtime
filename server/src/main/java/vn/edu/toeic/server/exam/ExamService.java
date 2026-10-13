@@ -41,6 +41,8 @@ public class ExamService {
     private final JdbcClient jdbc;
     private final ExamValidationService validationService;
     private final AuthorizationService authorizationService;
+    @org.springframework.beans.factory.annotation.Value("${toeic.listening.heartbeat-timeout-ms:6000}")
+    private long listeningTimeoutMillis = 6000;
 
     public record ScoringResult(
             int totalQuestions,
@@ -231,6 +233,7 @@ public class ExamService {
             }
         }
 
+        requireListeningUnchanged(request.attemptId(), attempt.examId(), attempt.answersJson(), request.answers(), request.requestId());
         jdbc.sql("""
                 UPDATE monitoring_attempts
                 SET answers_json = :canonicalJson, saved_revision = :savedRevision
@@ -662,7 +665,8 @@ public class ExamService {
                         prev.score(),
                         prev.submittedAt(),
                         prev.decisionAt(),
-                        prev.answerRevision()
+                        prev.answerRevision(),
+                        listeningInterrupted(request.attemptId())
                 );
             } else {
                 throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.CONFLICT, "RequestId đã được sử dụng với payload khác", request.requestId());
@@ -734,6 +738,7 @@ public class ExamService {
             throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.CONFLICT, "Cùng revision (" + request.answerRevision() + ") nhưng nội dung khác", request.requestId());
         }
 
+        requireListeningUnchanged(request.attemptId(), attempt.examId(), attempt.answersJson(), request.answers(), request.requestId());
         ScoringResult score = calculateScore(attempt.examId(), request.answers());
 
         jdbc.sql("""
@@ -796,7 +801,8 @@ public class ExamService {
                 score.score(),
                 decisionAt,
                 decisionAt,
-                request.answerRevision()
+                request.answerRevision(),
+                listeningInterrupted(request.attemptId())
         );
     }
 
@@ -854,6 +860,7 @@ public class ExamService {
             }
         }
 
+        markSilentListening(attemptId);
         ScoringResult score = calculateScore(attempt.examId(), answers);
 
         jdbc.sql("""
@@ -971,6 +978,13 @@ public class ExamService {
                     "Đã quá thời gian làm bài (deadline exceeded)", request.requestId());
         }
 
+        // Reopening/replacing a writer must never resume authorized playback or extend its deadline.
+        jdbc.sql("""
+                UPDATE monitoring_attempts SET listening_interrupted = TRUE,
+                    listening_interrupted_at = :at, listening_interruption_reason = 'WRITER_TAKEOVER'
+                WHERE attempt_id = :a AND listening_start_id IS NOT NULL
+                  AND playback_completed_at IS NULL AND NOT listening_interrupted
+                """).param("at", java.sql.Timestamp.from(decisionAt)).param("a",request.attemptId()).update();
         long newWriterEpoch = attempt.writerEpoch() + 1;
 
         jdbc.sql("UPDATE monitoring_attempts SET writer_epoch = :newEpoch WHERE attempt_id = :attemptId")
@@ -1020,7 +1034,8 @@ public class ExamService {
                 int correctCount,
                 int listeningCorrect,
                 int readingCorrect,
-                int score
+                int score,
+                boolean listeningInterrupted
         ) {}
 
         StatusRow row = jdbc.sql("""
@@ -1030,7 +1045,7 @@ public class ExamService {
                        COALESCE(a.correct_count, 0) AS correct_count,
                        COALESCE(a.listening_correct, 0) AS listening_correct,
                        COALESCE(a.reading_correct, 0) AS reading_correct,
-                       COALESCE(a.score, 0) AS score
+                       COALESCE(a.score, 0) AS score, a.listening_interrupted
                 FROM monitoring_attempts a
                 LEFT JOIN exam_sessions s ON s.session_id = a.session_id
                 WHERE a.attempt_id = :attemptId
@@ -1051,7 +1066,8 @@ public class ExamService {
                         rs.getInt("correct_count"),
                         rs.getInt("listening_correct"),
                         rs.getInt("reading_correct"),
-                        rs.getInt("score")
+                        rs.getInt("score"),
+                        rs.getBoolean("listening_interrupted")
                 ))
                 .optional()
                 .orElseThrow(() -> new ExamApiException(HttpStatus.FORBIDDEN, ErrorCode.FORBIDDEN, "Không tìm thấy lượt thi", "status-query"));
@@ -1086,8 +1102,39 @@ public class ExamService {
                 row.listeningCorrect(),
                 row.readingCorrect(),
                 row.score(),
-                answers
+                answers,
+                row.listeningInterrupted()
         );
+    }
+
+    private boolean listeningInterrupted(String attemptId) {
+        return jdbc.sql("SELECT listening_interrupted FROM monitoring_attempts WHERE attempt_id = :a")
+                .param("a",attemptId).query(Boolean.class).single();
+    }
+    /** Caller holds the attempt row lock. Also closes the gap before the maintenance worker's next scan. */
+    private void markSilentListening(String attemptId) {
+        jdbc.sql("""
+                UPDATE monitoring_attempts SET listening_interrupted = TRUE,
+                    listening_interrupted_at = clock_timestamp(), listening_interruption_reason = 'HEARTBEAT_TIMEOUT'
+                WHERE attempt_id = :a AND listening_start_id IS NOT NULL AND playback_completed_at IS NULL
+                  AND NOT listening_interrupted
+                  AND listening_last_seen_at + :timeout * INTERVAL '1 millisecond' <= clock_timestamp()
+                """).param("a",attemptId).param("timeout",listeningTimeoutMillis).update();
+    }
+    private void requireListeningUnchanged(String attemptId, String examId, String savedJson,
+            Map<String,String> incoming, String requestId) {
+        markSilentListening(attemptId);
+        if (!listeningInterrupted(attemptId)) return;
+        @SuppressWarnings("unchecked")
+        Map<String,String> saved = savedJson == null || savedJson.isBlank() ? Map.of() : GSON.fromJson(savedJson,Map.class);
+        Map<String,String> next = incoming == null ? Map.of() : incoming;
+        List<String> ids = jdbc.sql("SELECT question_id FROM exam_questions WHERE exam_id = :e AND section = 'LISTENING'")
+                .param("e",examId).query(String.class).list();
+        for (String id : ids) {
+            if (!java.util.Objects.equals(saved.get(id),next.get(id)))
+                throw new ExamApiException(HttpStatus.CONFLICT,ErrorCode.INVALID_STATE,
+                        "Listening đã gián đoạn; không được thay đổi đáp án Listening",requestId);
+        }
     }
 }
 

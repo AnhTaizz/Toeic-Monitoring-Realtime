@@ -18,7 +18,8 @@ public record CandidateAttemptStatusResponse(
         int listeningCorrect,
         int readingCorrect,
         int score,
-        Map<String, String> answers
+        Map<String, String> answers,
+        boolean listeningInterrupted
 ) {
     public CandidateAttemptStatusResponse {
         answers = answers == null ? Collections.emptyMap() : Collections.unmodifiableMap(answers);
