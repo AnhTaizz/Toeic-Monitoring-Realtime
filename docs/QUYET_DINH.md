@@ -196,3 +196,13 @@ Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`
 - Heartbeat Listening mang startId/writerEpoch riêng, 2s/timeout6s theo tham số khởi đầu hợp đồng. Không thay presence/full/delta của C. Worker riêng quét DB; mọi event/save/submit kiểm dưới khóa hàng và dùng DB clock, không cho heartbeat đến muộn phục hồi Listening. Restart/takeover chưa COMPLETED giữ cờ gián đoạn; nâng V9→V10 cũng bảo vệ ca đã start.
 - Gián đoạn là cờ riêng, không dùng state INTERRUPTED để cắt Reading/lịch sử. Server đóng băng phần LISTENING của answers đã commit; Reading vẫn ghi trong deadline. Status/submit/chốt timeout giữ marker. Giám thị được gán tạo replacement mới, READY/start riêng, không reset/xóa dữ liệu lượt cũ.
 - Mỗi lượt cũ có một replacement trực tiếp; retry cùng request/payload trả cùng ID, request khác trả CONFLICT. Không dùng status hoặc HTTP response để autoplay. Adapter/media/GUI B tiếp tục theo [contract](LISTENING_LIFECYCLE.md); [evidence T3-A2](../evidence/t3-a2/2026-10-13-verification.md).
+
+## QD-23 · Lịch sử lượt thi tách khỏi scope monitoring, phân trang theo attemptId
+
+- Ngày: 2026-10-12 · Người quyết: A (phiên Agent, theo đề xuất của B) · Review C: NOT RUN.
+- Lựa chọn: thêm endpoint đọc riêng `GET /api/v1/candidate/attempts` để thí sinh khám phá lượt thi của mình, thay vì nới `auth/me.attemptScope`. Sắp xếp và phân trang keyset theo `attemptId` với `COLLATE "C"`; `limit` 1..100, mặc định 50.
+- Lý do: `attemptScope` là quyền monitoring và ghi, chỉ gồm lượt `ACTIVE`; đưa lượt đã chốt vào đó sẽ mở lại quyền gửi heartbeat/event cho lượt đã chốt. `attemptId` là khóa duy nhất có sẵn nên không cần migration hay cột thời gian mới. Collation mặc định của DB là `en_US`, sắp `a` trước `B`; client so bằng `String.compareTo` nên server phải ép thứ tự byte.
+- Hệ quả: thứ tự không phải "mới nhất trước"; không có snapshot xuyên trang. Lượt đã chốt thiếu `submitted_at` bị ẩn. Danh sách chỉ để tìm ID; kết quả vẫn đọc qua `GET /status` và được kiểm quyền lại ở đó.
+- Kèm theo: route API không tồn tại trả 404 `INVALID_INPUT` thay cho 500. `ErrorCode` không có mã riêng cho "không tìm thấy" và không thêm mã mới để khỏi đổi contract lỗi v0.
+- Kiểm chứng: `ExamRuntimePostgresTest` (PostgreSQL thật) và kiểm chéo với client B `770c896`; `evidence/t2-a-history/2026-10-12-verification.md`.
+- Liên quan: B-ACCEPT-01, T2-A4, T2-B4, AT01, AT11.

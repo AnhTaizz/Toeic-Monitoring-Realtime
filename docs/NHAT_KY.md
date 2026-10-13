@@ -459,3 +459,21 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - [Kiểm tra tài liệu](../evidence/t3-c5/2026-10-13-verification.md): source/default/method, link/anchor, provenance bảng evidence và diff. Không chạy lại runtime hoặc gọi số test cũ là kết quả main mới. Output tạm ở target/, chỉ một report Markdown C5 được lưu.
 - B review bản nháp và A/B review gate NOT RUN; không dùng ChatGPT planning/review theo opt-out trước đó. C4 gate NOT_DECIDED/PARTIAL, FULL mặc định; LAN hai máy/E1/E2 chưa chạy. Giữ tracker/kế hoạch gốc/runtime/migration/.env/artifact cũ.
 - Người dùng ủy quyền commit/push/PR/merge commit nếu không blocker, giữ nhánh và đồng bộ main an toàn; Git cuối xem PR/final. Dừng sau T3-C5.
+
+## 2026-10-12 · A · B-ACCEPT-01: API lịch sử lượt thi
+- Thời lượng: hai phiên Agent (Codex rồi Claude); giờ của thành viên chưa ghi.
+- Đã làm: Codex cài `GET /api/v1/candidate/attempts`, hai DTO `CandidateAttemptPageResponse`/`CandidateAttemptSummaryDto`, handler 404 cho `NoResourceFoundException` và ba test PostgreSQL (`e81961e`). Phiên Claude nhận lại: chạy toàn bộ test, thêm hai test (thứ tự byte dưới DB `en_US`, biên phân trang, lượt cũ và lượt chốt thiếu `submitted_at` bị ẩn, phiên thu hồi), kiểm chéo bằng client của B, viết contract chính thức và bằng chứng.
+- Commit: `e81961e` (Codex), `33a2932` và commit tài liệu kế tiếp, nhánh `fix/backend-candidate-attempt-history-20261012`. Không push, không merge.
+- Đã kiểm: `mvn test` 590/590 trên `e81961e`; `mvn package` 592/592 trên `33a2932`, đều với `TOEIC_PG_INTEGRATION=true` trên PostgreSQL 18.6; client B `770c896` gọi server jar của nhánh này PASS 13/13 (HTTP + PostgreSQL thật, có lượt `SUBMITTED` và `TIMED_OUT` thật).
+- Còn dở: GUI production của B chưa chạy nên B-ACCEPT-01 chưa đóng; sai phương thức HTTP vẫn trả 500 (ngoài phạm vi giao việc, chỉ ghi nhận); chưa đo truy vấn với số lượt lớn.
+- Tiếp theo: người dùng quyết định push/merge; B ghép với `770c896` và chạy lại GUI.
+- Cần người khác: B chạy GUI production theo mục 5 của evidence; C review phần auth/handler lỗi của A. Bằng chứng `evidence/t2-a-history/2026-10-12-verification.md`.
+
+## 2026-10-13 · A · API lịch sử: xếp lại trên PR #23 đã đồng bộ
+- Thời lượng: một phiên Agent; giờ của thành viên chưa ghi.
+- Đã làm: tạo nhánh `feat/backend-candidate-attempt-history-20261013` từ `sync/pr23-main-20261013` và cherry-pick đúng ba commit lịch sử (`e81961e`, `33a2932`, `7bdac52`), bỏ năm bản sao P0 của nhánh cũ để P0 chỉ vào main qua PR #23. Conflict chỉ ở tài liệu, giữ cả hai phía; quyết định lịch sử đổi số QD-19 → QD-23.
+- Commit: `ae05e48`, `ba8dac7`, `19f669e` và commit tài liệu kế tiếp. Không push.
+- Đã kiểm: `git diff 7bdac52 19f669e -- server/src/main protocol` rỗng; `mvn package` 602 PASS, 0 skip với PostgreSQL thật (lượt đầu treo do máy ngủ, đã hủy và chạy lại).
+- Còn dở: sai phương thức HTTP vẫn trả 500 (đã ghi nhận từ 12/10, chưa sửa).
+- Tiếp theo: mở PR sau khi PR #23 vào main; nhánh client của B xếp trên nhánh này.
+- Cần người khác: C review; A quyết định có sửa 405 hay không. Bằng chứng `evidence/t2-a-history/2026-10-13-restack.md`.

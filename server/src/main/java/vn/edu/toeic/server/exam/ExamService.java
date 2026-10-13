@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,8 @@ import vn.edu.toeic.protocol.exam.ExamImportResponse;
 import vn.edu.toeic.protocol.exam.ExamOptionImportDto;
 import vn.edu.toeic.protocol.exam.ExamQuestionImportDto;
 import vn.edu.toeic.protocol.exam.CandidateAttemptStatusResponse;
+import vn.edu.toeic.protocol.exam.CandidateAttemptPageResponse;
+import vn.edu.toeic.protocol.exam.CandidateAttemptSummaryDto;
 import vn.edu.toeic.protocol.exam.SubmitExamRequest;
 import vn.edu.toeic.protocol.exam.SubmitExamResponse;
 import vn.edu.toeic.protocol.exam.TakeoverWriterRequest;
@@ -37,6 +40,9 @@ import vn.edu.toeic.server.auth.AuthorizationService;
 public class ExamService {
 
     private static final Gson GSON = new Gson();
+    private static final int DEFAULT_HISTORY_LIMIT = 50;
+    private static final int MAX_HISTORY_LIMIT = 100;
+    private static final Pattern ATTEMPT_ID = Pattern.compile("[A-Za-z0-9_.:-]{1,128}");
 
     private final JdbcClient jdbc;
     private final ExamValidationService validationService;
@@ -59,6 +65,79 @@ public class ExamService {
         this.jdbc = jdbc;
         this.validationService = validationService;
         this.authorizationService = authorizationService;
+    }
+
+    @Transactional(readOnly = true)
+    public CandidateAttemptPageResponse listCandidateAttempts(
+            AuthenticatedUser candidate,
+            String limitParameter,
+            String afterAttemptId) {
+        authorizationService.requireRole(candidate, Role.CANDIDATE);
+        int limit = parseHistoryLimit(limitParameter);
+        if (afterAttemptId != null && !ATTEMPT_ID.matcher(afterAttemptId).matches()) {
+            throw ExamApiException.invalidInput("afterAttemptId không hợp lệ");
+        }
+
+        String cursorClause = afterAttemptId == null
+                ? ""
+                : "AND a.attempt_id COLLATE \"C\" > CAST(:afterAttemptId AS VARCHAR) COLLATE \"C\"\n";
+        var historyQuery = jdbc.sql("""
+                SELECT a.attempt_id, a.session_id, a.exam_id,
+                       e.title AS exam_title, s.title AS session_title,
+                       a.state,
+                       CASE WHEN a.state = 'ACTIVE' THEN NULL ELSE a.submitted_at END AS submitted_at
+                FROM monitoring_attempts a
+                JOIN exam_sessions s ON s.session_id = a.session_id
+                JOIN exams e ON e.exam_id = a.exam_id AND e.exam_id = s.exam_id
+                WHERE a.candidate_user_id = :candidateUserId
+                  AND a.state IN ('ACTIVE', 'SUBMITTED', 'TIMED_OUT')
+                  AND (a.state = 'ACTIVE' OR a.submitted_at IS NOT NULL)
+                """ + cursorClause + """
+                ORDER BY a.attempt_id COLLATE "C" ASC
+                LIMIT :fetchLimit
+                """)
+                .param("candidateUserId", candidate.userId())
+                .param("fetchLimit", limit + 1);
+        if (afterAttemptId != null) {
+            historyQuery = historyQuery.param("afterAttemptId", afterAttemptId);
+        }
+        List<CandidateAttemptSummaryDto> rows = historyQuery
+                .query((rs, rowNum) -> new CandidateAttemptSummaryDto(
+                        rs.getString("attempt_id"),
+                        rs.getString("session_id"),
+                        rs.getString("exam_id"),
+                        rs.getString("exam_title"),
+                        rs.getString("session_title"),
+                        rs.getString("state"),
+                        rs.getTimestamp("submitted_at") == null
+                                ? null
+                                : rs.getTimestamp("submitted_at").toInstant()))
+                .list();
+
+        boolean hasMore = rows.size() > limit;
+        List<CandidateAttemptSummaryDto> page = hasMore
+                ? List.copyOf(rows.subList(0, limit))
+                : List.copyOf(rows);
+        String nextCursor = hasMore ? page.getLast().attemptId() : null;
+        return new CandidateAttemptPageResponse(page, nextCursor);
+    }
+
+    private static int parseHistoryLimit(String value) {
+        if (value == null) {
+            return DEFAULT_HISTORY_LIMIT;
+        }
+        if (value.isBlank() || !value.chars().allMatch(Character::isDigit)) {
+            throw ExamApiException.invalidInput("limit phải là số nguyên từ 1 đến 100");
+        }
+        try {
+            int limit = Integer.parseInt(value);
+            if (limit < 1 || limit > MAX_HISTORY_LIMIT) {
+                throw ExamApiException.invalidInput("limit phải nằm trong khoảng 1 đến 100");
+            }
+            return limit;
+        } catch (NumberFormatException exception) {
+            throw ExamApiException.invalidInput("limit phải là số nguyên từ 1 đến 100");
+        }
     }
 
     @Transactional

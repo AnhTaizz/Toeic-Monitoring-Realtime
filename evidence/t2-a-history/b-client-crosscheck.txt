@@ -1,0 +1,14 @@
+PASS fixture: 53 attempts for candidate1 and 1 for candidate2 created through the proctor API
+PASS server scheduler finalized the 2-second attempt as TIMED_OUT without any client call
+PASS B client page 1: 50 rows parsed and validated by CandidateAttemptPage, cursor = last attemptId
+PASS B client page 2 via afterAttemptId: remaining 3 rows, nextAfterAttemptId null
+PASS 53 distinct rows across pages, all owned by candidate1, exam and session titles present
+PASS real SUBMITTED and real TIMED_OUT rows carry submittedAt; B's finished() is true for both
+PASS the other 51 rows are ACTIVE with submittedAt null
+PASS candidate2 sees only its own attempt
+PASS candidate2 using candidate1's cursor still gets no candidate1 row
+PASS proctor token is rejected with FORBIDDEN
+PASS B's result path: GET status of the SUBMITTED attempt returns the server score 1/2
+PASS B's result path: GET status of the TIMED_OUT attempt returns the server score 0/2
+PASS candidate2 cannot read candidate1's final result
+B client 770c896 x A history server cross-check: 13 checks PASS (REAL HTTP/PostgreSQL, no GUI)
