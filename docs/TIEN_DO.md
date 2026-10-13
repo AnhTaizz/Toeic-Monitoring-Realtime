@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+Fix P1 cursor PR #28 — 13/10/2026 (local): code/test `00b1df1` tích hợp main `2e784fa`; validator theo128 ký tự PostgreSQL, không trim/normalize; Maven test/package638 PASS, PG37 PASS, probe history+Listening11/11. Diff giữ21file history gốc; chưa push/retarget/bỏ Draft/merge. B còn validator ASCII/URL encoding cần sửa riêng; nguy cơ sessionId+username vượt128 (500+rollback) chưa sửa theo phạm vi được cho phép. Evidence local `target/pr28-cursor-20261013/REPORT.md`; GUI/human review NOT RUN.
+
 Cập nhật T3-C5: 13/10/2026 — [bản nháp đồng bộ và giới hạn](MONITORING_SYNC_REPORT_DRAFT.md) đối chiếu main `f97c081`. Chỉ tài liệu; [kiểm tra mới](../evidence/t3-c5/2026-10-13-verification.md) không chạy lại runtime. C4 gate NOT_DECIDED/PARTIAL, FULL mặc định; LAN hai máy và B review còn thiếu.
 
 Cập nhật T3-A2:13/10/2026 — backend start WS sau COMMIT, playback/heartbeat/gián đoạn, khóa đáp án Listening và tổ chức lại đã triển khai trên nhánh `feat/t3-a2-listening-lifecycle`. Full package với PostgreSQL bật PASS629, 0 skip; REAL HTTP/WS/PG/Flyway subset PASS29 (10 Listening +8 audio +11 exam), gồm restart Spring thật và nâng cấp V9→V10. [Contract](LISTENING_LIFECYCLE.md), [evidence](../evidence/t3-a2/2026-10-13-verification.md). B UI/audio/LAN và human C review chưa chạy; tracker/kế hoạch gốc giữ nguyên.

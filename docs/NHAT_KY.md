@@ -477,3 +477,11 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Còn dở: sai phương thức HTTP vẫn trả 500 (đã ghi nhận từ 12/10, chưa sửa).
 - Tiếp theo: mở PR sau khi PR #23 vào main; nhánh client của B xếp trên nhánh này.
 - Cần người khác: C review; A quyết định có sửa 405 hay không. Bằng chứng `evidence/t2-a-history/2026-10-13-restack.md`.
+
+## 2026-10-13 · A/Integration · Fix P1 cursor PR #28 theo ủy quyền
+- Thời lượng: phiên Agent, chưa ghi giờ thành viên.
+- Đã làm: sửa riêng validator history theo VARCHAR128/code point, không trim/normalize; thêm3PostgreSQL regression; giữSQL/owner/DTO/monitoring/Listening/schema. Code/test commit `00b1df1`, tích hợp main2e784fa trên merge4362d89.
+- Đã kiểm: Maven test/package638 PASS mỗi lượt, PG37, probe nguyên bản11/11. Mixed limit1/2/3, Unicode/space/URL-encoding/biên128-129 và foreign owner PASS.
+- Còn dở: code chỉ local, chưa push/retarget/bỏDraft/merge; B cần validator/encode/byte order riêng. API tạo ca oversizedID vẫn500+rollback, nằm ngoài scope. GUI/LAN/human review NOT RUN.
+- Tiếp theo: người dùng review bản local và cho phép riêng trước push; sau push kiểm diff/checks/mergeability rồi mới retarget/merge theo phép riêng.
+- Evidence: local `target/pr28-cursor-20261013/REPORT.md`; bảo toàn evidence gốc, B4, worktree khác và file chưa commit; không prune hoặc bật production delta.

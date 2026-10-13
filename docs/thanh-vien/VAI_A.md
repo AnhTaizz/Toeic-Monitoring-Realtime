@@ -358,3 +358,7 @@ Kiến trúc server, thiết kế giao tiếp mạng, phân quyền, giao dịch
 - Server xử lý nhiều client đồng thời bằng cơ chế gì?
 
 Bạn cũng phải vẽ lại được luồng của B (autosave phía client) và của C (full snapshot, epoch).
+
+### Ghi chú fix P1 cursor PR #28 — 13/10/2026
+
+Backend P1 đã PASS local trên code/test `00b1df1` + main `2e784fa`: validator không rỗng/NUL/quá128 code point, không trim/normalize; SQL/DTO/owner/Listening/schema giữ nguyên. Maven test/package638, PG37 và probe11/11 PASS. Chuẩn bị local để người dùng review trước push; không retarget/merge/bỏ Draft. B cần sửa validator ASCII/URL encoding/UTF-8 byte ordering riêng. Nguy cơ sessionId+username vượt128 đã tái hiện500+rollback, chưa sửa API tạo ca hoặc schema. Evidence local `target/pr28-cursor-20261013/REPORT.md`; GUI/human review NOT RUN.

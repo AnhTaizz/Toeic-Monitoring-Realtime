@@ -851,9 +851,9 @@ Trạng thái: **đã cài và kiểm trên nhánh `fix/backend-candidate-attemp
 ### 1. Endpoint `GET /api/v1/candidate/attempts` (chỉ CANDIDATE)
 
 - Header: `Authorization: Bearer <token>`. Server lấy người dùng từ phiên; không nhận `userId`, `candidateId`, `username`.
-- Query: `limit` (tùy chọn, số nguyên 1..100, mặc định 50) và `afterAttemptId` (tùy chọn, khớp `[A-Za-z0-9_.:-]{1,128}`). Tham số khác, tham số lặp lại, giá trị rỗng hoặc sai dạng → 400 `INVALID_INPUT`.
+- Query: `limit` (tùy chọn, số nguyên 1..100, mặc định 50) và `afterAttemptId` (tùy chọn, không rỗng, tối đa 128 Unicode code point theo `VARCHAR(128)`, không chứa NUL). Khoảng trắng, Unicode và ký tự đặc biệt được giữ nguyên; không trim hoặc chuẩn hóa. Client phải URL-encode giá trị cursor theo UTF-8. Tham số khác, tham số lặp lại, cursor rỗng/quá giới hạn/NUL hoặc limit sai → 400 `INVALID_INPUT`.
 - Trả các lượt thi của chính thí sinh có ca thi và đề hợp lệ, ở trạng thái `ACTIVE`, `SUBMITTED` hoặc `TIMED_OUT`. Không trả `CLOSED`, `INTERRUPTED`, lượt monitoring cũ không gắn ca thi.
-- Thứ tự: `attemptId` tăng dần theo byte (`COLLATE "C"`), trùng với `String.compareTo` phía client. Đây không phải thứ tự thời gian.
+- Thứ tự: `attemptId` tăng dần theo byte UTF-8 (`COLLATE "C"`). Đây không phải thứ tự thời gian. `String.compareTo` dùng UTF-16 và có thể khác thứ tự này khi trộn ký tự ngoài BMP với một số ký tự BMP; client cần đối chiếu theo thứ tự byte UTF-8.
 - Phân trang keyset: server đọc `limit + 1` dòng. Còn trang thì `nextAfterAttemptId` là `attemptId` cuối của trang, hết thì `null`. Cursor chỉ là vị trí; nó không cấp quyền và không cần tồn tại.
 - Response có header `Cache-Control: no-store`.
 
@@ -897,3 +897,7 @@ Trước thay đổi này route không tồn tại trả 500 `RETRYABLE_SERVER_E
 2. Điều kiện nối bảng chặt hơn SQL phác thảo: đề của lượt thi phải trùng đề của ca thi.
 
 Bằng chứng: `evidence/t2-a-history/2026-10-12-verification.md`.
+
+### Làm rõ cursor theo dữ liệu đã lưu — 13/10/2026
+
+Fix P1 theo cho phép của người dùng: mọi ID không rỗng lưu hợp lệ trong `VARCHAR(128)` đều được dùng nguyên dạng làm cursor. SQL vẫn bind parameter và keyset `COLLATE "C"`; dấu nháy không phải SQL khi là giá trị bind. Không nới owner/monitoring hoặc đổi DTO. Backend code/test `00b1df18d89f3b01a5864dc4aa689c22186943fa`: Maven test/package638, PostgreSQL37 và probe history+Listening11/11 PASS trên main `2e784fa`. Client B `d425182` còn validator ASCII và ghép query không encode; cần B đồng bộ riêng, không kết luận GUI đã PASS. Nguy cơ tạo ca có sessionId+username vượt128 ký tự vẫn nằm ngoài fix này. Evidence local: `target/pr28-cursor-20261013/REPORT.md`; chưa push/retarget/merge.

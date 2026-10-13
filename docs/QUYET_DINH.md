@@ -206,3 +206,7 @@ Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`
 - Kèm theo: route API không tồn tại trả 404 `INVALID_INPUT` thay cho 500. `ErrorCode` không có mã riêng cho "không tìm thấy" và không thêm mã mới để khỏi đổi contract lỗi v0.
 - Kiểm chứng: `ExamRuntimePostgresTest` (PostgreSQL thật) và kiểm chéo với client B `770c896`; `evidence/t2-a-history/2026-10-12-verification.md`.
 - Liên quan: B-ACCEPT-01, T2-A4, T2-B4, AT01, AT11.
+
+### QD-23 · Bổ sung phạm vi cursor — 13/10/2026
+
+Theo yêu cầu người dùng, validator cursor nhận nguyên giá trị không rỗng, không NUL, tối đa128 Unicode code point như PostgreSQL `VARCHAR(128)`, thay regex ASCII để không từ chối cursor do server phát. Không trim/normalization, SQL parameter binding và byte UTF-8/C order giữ nguyên. B phải URL-encode và đồng bộ validator/ordering ở lượt riêng; không sửa client trong fix A này. Không đổi schema hoặc API tạo ca; vượt128 do ghép ID là rủi ro riêng đã tái hiện500+rollback. Regression PostgreSQL mới có mixed-ID/limit1,2,3/foreign owner/biên128-129/NUL; code `00b1df1`, Maven test/package638 và probe11/11 PASS. Evidence local `target/pr28-cursor-20261013/REPORT.md`; human review và GUI NOT RUN.
