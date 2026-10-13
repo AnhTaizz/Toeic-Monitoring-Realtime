@@ -106,3 +106,5 @@ $RECYCLE.BIN/
 .DS_Store
 # Observation recorder output is local; curated evidence/fixtures are stored separately.
 /traces/
+# Operator-provisioned exam audio is local; test fixtures are generated in target/.
+/audio-resources/
