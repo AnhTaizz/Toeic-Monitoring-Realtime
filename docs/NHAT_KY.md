@@ -444,3 +444,10 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Code/schema:363bb90 +8f98e11; test/smoke:9ed067a. Không sửa code đã kiểm thử; hash đối chiếu tại evidence/t3-a1/committed-code-audit.json.
 - Evidence giữ kết quả600test +19PostgreSQL và log lỗi ban đầu. Git attributes giữ nguyên byte transcript để checksum không đổi khi checkout; source-audit.json là snapshot workspace trước commit.
 - T3-B1 đã hoàn tác; C review/T3-A2/package/LAN vẫn theo giới hạn trong báo cáo. Người dùng yêu cầu push nhánh; trạng thái remote cuối xem history Git và phản hồi bàn giao.
+
+## 2026-10-13 · A · T3-A2 Listening lifecycle
+- Theo yêu cầu tiếp tục A2, tạo nhánh feat/t3-a2-listening-lifecycle; T3-A1 đã merge PR #29 vào main8894452 với cùng tree nhánh A1.
+- V10 + DTO/API/WS: start sau COMMIT, retry cùng ID, playback/event/heartbeat và interruption bền vững; không đổi monitoring C hoặc client GUI.
+- Save/submit giữ phần Listening sau gián đoạn; Reading tiếp tục trong deadline. Assigned proctor tạo replacement mới idempotent, old answers/deadline/history giữ nguyên; timeout vẫn chấm kèm marker.
+- REAL HTTP/WS/PG/Flyway PASS29 gồm10 test Listening mới +19 regression; restart Spring thật, worker tự động, upgrade V9→V10, deferred COMMIT rollback và LT04 PASS. Lượt đầu lỗi SQL timestamp đã sửa và giữ log.
+- Contract docs/LISTENING_LIFECYCLE.md; evidence/t3-a2/2026-10-13-verification.md. GUI/audio thật/LAN/human C review chưa chạy; không sửa tracker/kế hoạch gốc hoặc ghi giờ chưa đo.

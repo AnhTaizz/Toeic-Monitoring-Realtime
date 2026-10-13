@@ -188,3 +188,11 @@ Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`
 - READY là báo cáo client về checksum/thử loa, lưu DB theo attemptId + writerEpoch + manifestId; takeover hoặc tài nguyên đổi làm READY cũ không hợp lệ. Client gửi ready=false khi chuẩn bị lại/phát hiện lỗi. Server không thể chứng minh nội dung file local hoặc khả năng nghe của người dùng.
 - HTTP start khóa ca rồi tất cả lượt, dùng clock_timestamp sau khóa, chỉ ghi khi mọi lượt có READY hợp lệ. Lưu startId/manifest/startedAt trong một COMMIT; retry giữ cùng ID. Không đổi deadline/answers/writer của lượt. A2 nối WS/phase/gián đoạn vào startId này; chưa có playback trong A1.
 - Contract và giới hạn: [AUDIO_RESOURCES.md](AUDIO_RESOURCES.md). Evidence: [T3-A1](../evidence/t3-a1/2026-10-13-verification.md). Không thêm dependency hoặc sửa migration cũ.
+
+## QD-25 · Listening lifecycle bền vững và heartbeat riêng
+
+- Ngày13/10/2026 · T3-A2 theo yêu cầu người dùng · Human C review chưa chạy.
+- Tái sử dụng startId của A1. Metadata Listening của lượt và deadline chưa có được ghi cùng start; deadline cũ giữ nguyên. WS command/status chỉ phát sau COMMIT, kiểm lại auth/scope; explicit retry gửi cùng ID cho ARMED hợp lệ, không gửi khi reconnect hoặc playback đã bắt đầu/gián đoạn.
+- Heartbeat Listening mang startId/writerEpoch riêng, 2s/timeout6s theo tham số khởi đầu hợp đồng. Không thay presence/full/delta của C. Worker riêng quét DB; mọi event/save/submit kiểm dưới khóa hàng và dùng DB clock, không cho heartbeat đến muộn phục hồi Listening. Restart/takeover chưa COMPLETED giữ cờ gián đoạn; nâng V9→V10 cũng bảo vệ ca đã start.
+- Gián đoạn là cờ riêng, không dùng state INTERRUPTED để cắt Reading/lịch sử. Server đóng băng phần LISTENING của answers đã commit; Reading vẫn ghi trong deadline. Status/submit/chốt timeout giữ marker. Giám thị được gán tạo replacement mới, READY/start riêng, không reset/xóa dữ liệu lượt cũ.
+- Mỗi lượt cũ có một replacement trực tiếp; retry cùng request/payload trả cùng ID, request khác trả CONFLICT. Không dùng status hoặc HTTP response để autoplay. Adapter/media/GUI B tiếp tục theo [contract](LISTENING_LIFECYCLE.md); [evidence T3-A2](../evidence/t3-a2/2026-10-13-verification.md).
