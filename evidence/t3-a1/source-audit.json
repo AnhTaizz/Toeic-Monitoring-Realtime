@@ -1,0 +1,160 @@
+﻿{
+    "baseCommit":  "80ee1ba7c0b78d1ff1a5bdc8e748a73407df8216",
+    "workingTreeUncommitted":  true,
+    "clientDiffEmpty":  true,
+    "jdk":  "Microsoft OpenJDK 21.0.9",
+    "sources":  [
+                    {
+                        "path":  ".env.example",
+                        "sha256":  "19b8a16eaccde54c12f7fcbf7a2375f1b33cf7ffe6206e1aa4c3c067081d880a"
+                    },
+                    {
+                        "path":  ".gitignore",
+                        "sha256":  "05a5e9bb33dc44547f99e16852ff9d9e415734dfab8b3cd61ead4c5aa2e264eb"
+                    },
+                    {
+                        "path":  "docs/AUDIO_RESOURCES.md",
+                        "sha256":  "3f9d1b6be25ed883acac757460a7a4f32d6d4587072f52a425a556044085be81"
+                    },
+                    {
+                        "path":  "docs/KIEM_THU.md",
+                        "sha256":  "c09f46684de692588b09c8503487e96584a47c7122e8e2ff84454a71429df78e"
+                    },
+                    {
+                        "path":  "docs/NHAT_KY.md",
+                        "sha256":  "77cb0c53bfecc401021032e211894c5491a7f53177ecb2169352eda67e52f6a3"
+                    },
+                    {
+                        "path":  "docs/PROTOCOL.md",
+                        "sha256":  "ef65c970e6c124e3a6182aaa4ecd9d28bc723e489068ac9c93c0d157562b27c6"
+                    },
+                    {
+                        "path":  "docs/QUYET_DINH.md",
+                        "sha256":  "d314f8197955ee2d09e9ad977b03a426a2f7721faeea5c39772bb1a059f386fb"
+                    },
+                    {
+                        "path":  "docs/README.md",
+                        "sha256":  "873b0488b3b63cdb62bab6e8568b494727af595b80b9dc868c961af3baccc585"
+                    },
+                    {
+                        "path":  "docs/thanh-vien/VAI_A.md",
+                        "sha256":  "396710a963650cc7d894754c408a3e409e14d10bf96ac6d0a855ba69b24e9099"
+                    },
+                    {
+                        "path":  "docs/TIEN_DO.md",
+                        "sha256":  "f856577a26b35e96c49bd7f33af0e86433fa7ac969609934c28e2c3c4ad0977d"
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/AudioFileDto.java",
+                        "sha256":  "fe4314a6bb2b84b8d0d2ee3f455d7c892472f6fbfd4d7c1ff6675eae9a4cf926"
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/AudioManifestResponse.java",
+                        "sha256":  "b276e047b0e3f4c0c2e6c055baae669c9e9b83a70f99815480442db26726ed64"
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/AudioReadyRequest.java",
+                        "sha256":  "1e43b3315d99badb43279d4b19c45c4212cf7fc77c62bf6405a05ccb1c418731"
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/AudioReadyResponse.java",
+                        "sha256":  "38f20cf8022b301eb09bad0ea40c64394034f652f41fb2568d607438a6294ae6"
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/ListeningStartRequest.java",
+                        "sha256":  "f9e8b320e8d215123495d79608ac02030d3ac47ea8849ad715fcd4a7c48cdc17"
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/ListeningStartResponse.java",
+                        "sha256":  "4453ede945391521d6896dd5621df6676be4f6a0fa87f0728c3d86e285b62f89"
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/SessionAudioReadinessResponse.java",
+                        "sha256":  "4c53324f3d8dcff731a7fb867250bfb380733343974617e86f46947c70f270f2"
+                    },
+                    {
+                        "path":  "README.md",
+                        "sha256":  "68f73b9bb720e9928ba4c02fe771586cc0b8c463e0109aea7656049122733116"
+                    },
+                    {
+                        "path":  "scripts/smoke-t3a1.ps1",
+                        "sha256":  "9e67bf8f76362a005042fccb8b654074997e6341ac153bdeeb821811784f689c"
+                    },
+                    {
+                        "path":  "scripts/start-monitoring-server.ps1",
+                        "sha256":  "b13a3c9ebd07a1d9d4e941e34724e95def0b933064dee5fe1dbe940049ab2372"
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/audio/AudioCatalog.java",
+                        "sha256":  "247c841fbd23a58fa80ce533c249a5d85dcf9db7bd6f2795f1bf9d2c3ab9be86"
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/audio/AudioController.java",
+                        "sha256":  "6a862d6f7c4711a4e36ae30144fdef6a5a021b27f77c0f7afeb07b347d78e5b5"
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/audio/AudioReadinessPolicy.java",
+                        "sha256":  "6a4016d377b23281ce1d26c410eefb05a9d2fe23fed76139206b96b1273bb231"
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/audio/AudioService.java",
+                        "sha256":  "5138450d2b01c8216b48716164f732d6cb957864bfc5b30a2044ce79972c7644"
+                    },
+                    {
+                        "path":  "server/src/main/resources/application.properties",
+                        "sha256":  "e55bae2d857f55ec708f35ddf0bb90b552ae45d4601e28072d1f4c17e50bf07c"
+                    },
+                    {
+                        "path":  "server/src/main/resources/db/migration/V9__audio_readiness.sql",
+                        "sha256":  "8b645eec7320e0a5ac04e97ba9dc00fc6f29037eb8c8e2a739ed2b8b7b382e88"
+                    },
+                    {
+                        "path":  "server/src/test/java/vn/edu/toeic/server/audio/AudioAuthorizationTest.java",
+                        "sha256":  "a9cbed16ac01de1e5bdec383221f3a89df0843ac47f2c1a46ca2566640701607"
+                    },
+                    {
+                        "path":  "server/src/test/java/vn/edu/toeic/server/audio/AudioCatalogTest.java",
+                        "sha256":  "8c12e3617caaa0a9144f088ede318d9e5efc74debc42665e024f17b53f9e1c79"
+                    },
+                    {
+                        "path":  "server/src/test/java/vn/edu/toeic/server/audio/AudioReadinessPolicyTest.java",
+                        "sha256":  "8afc299413880f6f36b6690c3911fa1c2abaf20b388daf47a5dccf72e3526633"
+                    },
+                    {
+                        "path":  "server/src/test/java/vn/edu/toeic/server/audio/AudioRuntimePostgresTest.java",
+                        "sha256":  "7e1a37eb1aa31d4783eeedb1977a992e39da94644b24b60e765e8bd2013c40b1"
+                    }
+                ],
+    "artifacts":  [
+                      {
+                          "path":  "server/target/server-0.1.0-SNAPSHOT.jar",
+                          "sha256":  "4930fd7dab4bc4245622e0443d5af381b9d01ba332e705e614d011f06f2168cf"
+                      },
+                      {
+                          "path":  "client/target/client-0.1.0-SNAPSHOT-all.jar",
+                          "sha256":  "5b49c173ecf7380c35fd4be05b0e9d4ae1aae099641d53645c259abb58a1b306"
+                      },
+                      {
+                          "path":  "protocol/target/protocol-0.1.0-SNAPSHOT.jar",
+                          "sha256":  "bdcbb91dc1ab8a4b4d75478b51453fd2139741337eb9e061f0a196c4eafa3889"
+                      }
+                  ],
+    "transcripts":  [
+                        {
+                            "path":  "evidence/t3-a1/mvn-package.txt",
+                            "sha256":  "326669ffbe58c01502d3f2b02069693576e405cd8b331b90b0713a0f71ff14ee"
+                        },
+                        {
+                            "path":  "evidence/t3-a1/postgres-smoke-initial-env-failure.txt",
+                            "sha256":  "219cc0190da5f42e96054b1c30da562f99bc84efc88459c2bc69f94a7c435183"
+                        },
+                        {
+                            "path":  "evidence/t3-a1/postgres-smoke-initial-jdbc-failure.txt",
+                            "sha256":  "1d9edbca9b5c046405fe78d998be6b4c6c6476537c33d3bbf3f58352ffb82559"
+                        },
+                        {
+                            "path":  "evidence/t3-a1/postgres-smoke.txt",
+                            "sha256":  "f5e2059495c3805633503c2277cb8157d58098cf98f6dd4ebb9ce7257ae99e66"
+                        }
+                    ]
+}

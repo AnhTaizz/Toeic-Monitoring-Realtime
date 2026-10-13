@@ -1,0 +1,115 @@
+﻿[
+    {
+        "suite":  "vn.edu.toeic.server.audio.AudioRuntimePostgresTest",
+        "tests":  8,
+        "failures":  0,
+        "errors":  0,
+        "skipped":  0,
+        "cases":  [
+                      {
+                          "name":  "withdrawalAndWriterTakeoverInvalidateReadiness",
+                          "seconds":  "0.494",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "deadlineIsRecheckedAfterWaitingForAttemptLock",
+                          "seconds":  "1.286",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "noReadyOrIncompleteAttestationCannotStartAndAllReadyStartsExactlyOnce",
+                          "seconds":  "0.305",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "startedManifestCannotBeReplaced",
+                          "seconds":  "0.149",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "databaseCommitFailureDoesNotAckReadyOrStart",
+                          "seconds":  "0.204",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "authenticatedEndpointsAllowOnlyOwnerAndSessionProctor",
+                          "seconds":  "0.21",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "expiredClosedDisabledAndEmptySessionsFailStart",
+                          "seconds":  "0.505",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "changedOrMissingAudioRejectsExistingReadyAndCannotLeakNewFiles",
+                          "seconds":  "0.158",
+                          "result":  "PASS"
+                      }
+                  ]
+    },
+    {
+        "suite":  "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+        "tests":  11,
+        "failures":  0,
+        "errors":  0,
+        "skipped":  0,
+        "cases":  [
+                      {
+                          "name":  "concurrentFirstEntriesReconnectAndTakeoverKeepOneDeadline",
+                          "seconds":  "0.164",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "submitAndTimeoutContendOnPostgresRowAcrossDeadline",
+                          "seconds":  "1.161",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "submitRetryAuthorizationAndIdempotencyKeepFinalResultImmutable",
+                          "seconds":  "0.37",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "otherInactiveStatesFailClosed(String)[1]",
+                          "seconds":  "0.068",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "otherInactiveStatesFailClosed(String)[2]",
+                          "seconds":  "0.046",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "unansweredAttemptTimesOutByAutonomousRuntimeScheduler",
+                          "seconds":  "1.122",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "readsRequireOwnershipOrAssignmentForEveryState(String)[1]",
+                          "seconds":  "0.143",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "readsRequireOwnershipOrAssignmentForEveryState(String)[2]",
+                          "seconds":  "0.134",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "readsRequireOwnershipOrAssignmentForEveryState(String)[3]",
+                          "seconds":  "0.138",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "legacyAutosaveWithoutTakeoverStartsDeadlineWithoutReset",
+                          "seconds":  "0.059",
+                          "result":  "PASS"
+                      },
+                      {
+                          "name":  "timeoutScoresOnlyServerAcknowledgedAnswersAndNeverScoresAgain",
+                          "seconds":  "2.425",
+                          "result":  "PASS"
+                      }
+                  ]
+    }
+]

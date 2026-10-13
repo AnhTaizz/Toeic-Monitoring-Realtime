@@ -39,6 +39,8 @@
 
 ## Cách lưu log mới
 
+T3-A1: [API audio/READY và gate start](t3-a1/2026-10-13-verification.md), [19 test PostgreSQL](t3-a1/postgres-results.json). T3-B1 đã hoàn tác; playback/WS/gián đoạn Listening thuộc các task kế tiếp.
+
 - Lưu theo task trong `evidence/<task>/`; một lượt chạy bổ sung có thể dùng thư mục con riêng. Thêm báo cáo và liên kết vào mục lục này khi có bằng chứng mới.
 - Transcript build/test dùng `.txt`; dữ liệu đo dùng JSONL/JSON/CSV; ảnh dùng PNG. Các định dạng này có thể commit theo cấu hình Git hiện tại. Log chạy local trong `logs/`, file `*.log`, `target/` và `/traces/` vẫn là dữ liệu tạm.
 - Báo cáo ghi SHA, môi trường, cấu hình, lệnh, kết quả thật, giới hạn và đường dẫn artifact. Phân biệt REAL, MOCK, SIMULATED và REPLAY; giữ cả kết quả lỗi giúp giải thích thay đổi.

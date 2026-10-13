@@ -41,7 +41,7 @@ Full-only retry/epoch/order/reconnect đã kiểm trong acceptance T2-C1 bên d�
 
 | ID | Tóm tắt | Owner / review | Task | Trạng thái | SHA | Bằng chứng |
 |---|---|---|---|---|---|---|
-| LT01 | Thiếu audio hoặc sai checksum → không READY | B / A | T3-B1 | NOT RUN | | |
+| LT01 | Thiếu audio hoặc sai checksum → không READY | B / A | T3-B1 | PARTIAL — gate backend T3-A1 PASS; checksum file local/GUI/package B1 chưa chạy | Working tree T3-A1 trên main | `evidence/t3-a1/2026-10-13-verification.md` |
 | LT02 | Start lặp không phát lại; lỗi media khóa và ghi gián đoạn | B / A | T3-B2/B3 | NOT RUN | | |
 | LT03 | Mất mạng giữa audio; mở lại không tự phát hay resume | B / A | T3-B3 | NOT RUN | | |
 | LT04 | Tổ chức lại: attempt mới, dữ liệu và deadline cũ giữ nguyên | B / A | T3-B4, T3-A2 | NOT RUN | | |

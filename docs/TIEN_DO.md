@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+Cập nhật T3-A1:13/10/2026 — đã hoàn tác T3-B1 theo yêu cầu và triển khai backend audio/manifest/READY/gate start từ main `80ee1ba`. Nhánh bàn giao `feat/t3-a1-audio-manifest-ready`, code/test tại `9ed067a`; commit tài liệu/evidence riêng. Maven package PASS600 test thường,16 opt-in skip; lượt riêng REAL HTTP/PG/Flyway PASS19 (8audio +11exam). [Contract B/A2](AUDIO_RESOURCES.md), [evidence](../evidence/t3-a1/2026-10-13-verification.md). Human C review/package audio/GUI/LAN NOT RUN; T3-A2 WS/playback/gián đoạn chưa triển khai. Tracker/kế hoạch gốc giữ nguyên.
+
 Cập nhật T3-C4:13/10/2026 — candidate Application chọn DELTA opt-in + capability hiện tại, FULL mặc định. Code/test sourced9475eb; Java579 PASS. [Guide](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-13-verification.md). LOCAL preparation riêng với replay; gate20/10/LAN hai máy/human B review chưa chốt, T3-A3 không tự đánh dấu DONE, E1/E2 NOT RUN.
 
 Cập nhật backend A: 13/10/2026 — nhánh cục bộ `sync/pr23-main-20261013` tại `c64503f` đưa ba sửa P0 của PR #23 lên trên main `cb30f3d` (đã gồm T3-C4). Maven package 596 PASS, 0 skip, có PostgreSQL thật; smoke C1/C2 PASS; Python 10 PASS. Review lại ba sửa P0: đạt, có 4 ghi nhận không chặn. Agent-driven; human review NOT RUN; chưa push/merge. [Evidence](../evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md).
