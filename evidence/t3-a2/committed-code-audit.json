@@ -1,0 +1,146 @@
+{
+    "branch":  "feat/t3-a2-listening-lifecycle",
+    "docsCommit":  "aa56ccb",
+    "verifiedTree":  "aa56ccb24833a87e804c31a8786014d8a18fe3eb",
+    "base":  "88944529ca4d66d4acb5d025843975a417df45b3",
+    "matchedFiles":  22,
+    "scope":  "Same source and JARs as PASS629 full package; normalized LF source hashes match Git blobs. No production client or old migrations changed.",
+    "records":  [
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/ListeningEventRequest.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "fa5a61dca8c2f269593075d3fc3fd108b4524a9b9aa989e5f7945e2d5aac5184",
+                        "testedNormalizedLfSha256":  "fa5a61dca8c2f269593075d3fc3fd108b4524a9b9aa989e5f7945e2d5aac5184"
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/ListeningReorganizeRequest.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "f90a18d90a9956c2e724902fa2b84815b58ae8d473ccabf4f0d8574c4257ba42",
+                        "testedNormalizedLfSha256":  "f90a18d90a9956c2e724902fa2b84815b58ae8d473ccabf4f0d8574c4257ba42"
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/ListeningReorganizeResponse.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "c71dbe96af11721d03b2d51094facc8afc80ff9686212363832446be65bd3e5d",
+                        "testedNormalizedLfSha256":  "c71dbe96af11721d03b2d51094facc8afc80ff9686212363832446be65bd3e5d"
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/ListeningStartCommand.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "37b34a76e56c3bf579dbe1152e8fe739743110ceb36ccbab03ea4102223869be",
+                        "testedNormalizedLfSha256":  "37b34a76e56c3bf579dbe1152e8fe739743110ceb36ccbab03ea4102223869be"
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/ListeningStatusResponse.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "8ac5c102c4c1c4b50b07ad3b768cdc3bd4b735a643eeca9c8e092c08cc45f697",
+                        "testedNormalizedLfSha256":  "8ac5c102c4c1c4b50b07ad3b768cdc3bd4b735a643eeca9c8e092c08cc45f697"
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/CandidateAttemptStatusResponse.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "fd4b2f4649e8ac40024eac174b006bec7622d3860a6957b81ca7c5e392407aa3",
+                        "testedNormalizedLfSha256":  "fd4b2f4649e8ac40024eac174b006bec7622d3860a6957b81ca7c5e392407aa3"
+                    },
+                    {
+                        "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/SubmitExamResponse.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "7a386ab12878d2cb3ad6bb6b8d9b4b7d0b0c6ce8d279e2ac41d0c8cd29730adc",
+                        "testedNormalizedLfSha256":  "7a386ab12878d2cb3ad6bb6b8d9b4b7d0b0c6ce8d279e2ac41d0c8cd29730adc"
+                    },
+                    {
+                        "path":  "scripts/smoke-t3a2.ps1",
+                        "matches":  true,
+                        "committedBlobSha256":  "7504d666f126160d1e1abb81fc09fbc2e1b13756ff455b38e568ee39d2be56e9",
+                        "testedNormalizedLfSha256":  "7504d666f126160d1e1abb81fc09fbc2e1b13756ff455b38e568ee39d2be56e9"
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/audio/AudioService.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "35d242c6ffa1aa0f6dabcfd9d39b6ef81a68780b702fafc74bfea0d2c749bc47",
+                        "testedNormalizedLfSha256":  "35d242c6ffa1aa0f6dabcfd9d39b6ef81a68780b702fafc74bfea0d2c749bc47"
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/audio/ListeningController.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "2d9b622ae2d990a2101cc03919c0f69ec8bec27b6d5dc6de7a7ab146532b76c6",
+                        "testedNormalizedLfSha256":  "2d9b622ae2d990a2101cc03919c0f69ec8bec27b6d5dc6de7a7ab146532b76c6"
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/audio/ListeningDelivery.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "052488393a22968ef3ef2769dbb43439fc559aad27f7068b035c4468e44485a4",
+                        "testedNormalizedLfSha256":  "052488393a22968ef3ef2769dbb43439fc559aad27f7068b035c4468e44485a4"
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/audio/ListeningMaintenance.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "9492d770269b7cfcc9eae4747fc6df7723d26b2695a19523613d550d04055cc0",
+                        "testedNormalizedLfSha256":  "9492d770269b7cfcc9eae4747fc6df7723d26b2695a19523613d550d04055cc0"
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/audio/ListeningService.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "6c13bfd72d9360a48053fd99bc276ca13b648df86124b162d3b78204f025e373",
+                        "testedNormalizedLfSha256":  "6c13bfd72d9360a48053fd99bc276ca13b648df86124b162d3b78204f025e373"
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/exam/ExamService.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "c8c9e2d2a6af80ed9eb4ab12454241eee1610b4a10bec387ac6ddd23b792e477",
+                        "testedNormalizedLfSha256":  "c8c9e2d2a6af80ed9eb4ab12454241eee1610b4a10bec387ac6ddd23b792e477"
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeSessionRegistry.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "3485fe9c230395ac5b2a93f500fe0aff2d9afc28decb5ed5c6b7629fe49b0e56",
+                        "testedNormalizedLfSha256":  "3485fe9c230395ac5b2a93f500fe0aff2d9afc28decb5ed5c6b7629fe49b0e56"
+                    },
+                    {
+                        "path":  "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeWebSocketHandler.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "4c9086e990526c0cea6cd357d6e067933d3f2df0d722615bd14dde86995da2ce",
+                        "testedNormalizedLfSha256":  "4c9086e990526c0cea6cd357d6e067933d3f2df0d722615bd14dde86995da2ce"
+                    },
+                    {
+                        "path":  "server/src/main/resources/application.properties",
+                        "matches":  true,
+                        "committedBlobSha256":  "f4f6698250d774ecf10821fa30ba2cc7694b6354bd94abed6a5a90739cf2b551",
+                        "testedNormalizedLfSha256":  "f4f6698250d774ecf10821fa30ba2cc7694b6354bd94abed6a5a90739cf2b551"
+                    },
+                    {
+                        "path":  "server/src/main/resources/db/migration/V10__listening_lifecycle.sql",
+                        "matches":  true,
+                        "committedBlobSha256":  "7e5b4f1e94540b3c8010db6b1e440c70ea36529239f9ce6e7706787f7722fbde",
+                        "testedNormalizedLfSha256":  "7e5b4f1e94540b3c8010db6b1e440c70ea36529239f9ce6e7706787f7722fbde"
+                    },
+                    {
+                        "path":  "server/src/test/java/vn/edu/toeic/server/audio/AudioAuthorizationTest.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "f2528f5094e484295accfb4e74e2a8fcee390cdac0c01a04155cdd8b403c2b59",
+                        "testedNormalizedLfSha256":  "f2528f5094e484295accfb4e74e2a8fcee390cdac0c01a04155cdd8b403c2b59"
+                    },
+                    {
+                        "path":  "server/src/test/java/vn/edu/toeic/server/audio/ListeningRuntimePostgresTest.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "e22b4e91280ccbb0207875579db95453ecf67a577701191585a9d24418621915",
+                        "testedNormalizedLfSha256":  "e22b4e91280ccbb0207875579db95453ecf67a577701191585a9d24418621915"
+                    },
+                    {
+                        "path":  "server/src/test/java/vn/edu/toeic/server/auth/AuthenticatedNetworkTest.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "7b4f089120ce48fa97b277ae28b43001325bd8ed345683799ed6e0a8f0255ea9",
+                        "testedNormalizedLfSha256":  "7b4f089120ce48fa97b277ae28b43001325bd8ed345683799ed6e0a8f0255ea9"
+                    },
+                    {
+                        "path":  "server/src/test/java/vn/edu/toeic/server/auth/ConcurrentRealtimeSendTest.java",
+                        "matches":  true,
+                        "committedBlobSha256":  "571f756928a510214d37e6456c5316f7d324a159cd9a21a254ec407bb2f0950e",
+                        "testedNormalizedLfSha256":  "571f756928a510214d37e6456c5316f7d324a159cd9a21a254ec407bb2f0950e"
+                    }
+                ],
+    "jarHashesVerified":  5,
+    "transcriptHashesVerified":  6,
+    "codeCommit":  "7c7b4b3",
+    "testCommit":  "56a0183"
+}

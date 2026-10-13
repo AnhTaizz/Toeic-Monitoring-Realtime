@@ -1,0 +1,199 @@
+{
+    "inputs":  [
+                   {
+                       "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/ListeningEventRequest.java",
+                       "sha256":  "fa5a61dca8c2f269593075d3fc3fd108b4524a9b9aa989e5f7945e2d5aac5184",
+                       "normalizedLfSha256":  "fa5a61dca8c2f269593075d3fc3fd108b4524a9b9aa989e5f7945e2d5aac5184",
+                       "bytes":  235
+                   },
+                   {
+                       "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/ListeningReorganizeRequest.java",
+                       "sha256":  "f90a18d90a9956c2e724902fa2b84815b58ae8d473ccabf4f0d8574c4257ba42",
+                       "normalizedLfSha256":  "f90a18d90a9956c2e724902fa2b84815b58ae8d473ccabf4f0d8574c4257ba42",
+                       "bytes":  135
+                   },
+                   {
+                       "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/ListeningReorganizeResponse.java",
+                       "sha256":  "c71dbe96af11721d03b2d51094facc8afc80ff9686212363832446be65bd3e5d",
+                       "normalizedLfSha256":  "c71dbe96af11721d03b2d51094facc8afc80ff9686212363832446be65bd3e5d",
+                       "bytes":  230
+                   },
+                   {
+                       "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/ListeningStartCommand.java",
+                       "sha256":  "37b34a76e56c3bf579dbe1152e8fe739743110ceb36ccbab03ea4102223869be",
+                       "normalizedLfSha256":  "37b34a76e56c3bf579dbe1152e8fe739743110ceb36ccbab03ea4102223869be",
+                       "bytes":  268
+                   },
+                   {
+                       "path":  "protocol/src/main/java/vn/edu/toeic/protocol/audio/ListeningStatusResponse.java",
+                       "sha256":  "8ac5c102c4c1c4b50b07ad3b768cdc3bd4b735a643eeca9c8e092c08cc45f697",
+                       "normalizedLfSha256":  "8ac5c102c4c1c4b50b07ad3b768cdc3bd4b735a643eeca9c8e092c08cc45f697",
+                       "bytes":  605
+                   },
+                   {
+                       "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/CandidateAttemptStatusResponse.java",
+                       "sha256":  "5a1b728cbd9a80bec4b2dc4df53ccaf4250bca5359e263db30e6fb73eeab2908",
+                       "normalizedLfSha256":  "fd4b2f4649e8ac40024eac174b006bec7622d3860a6957b81ca7c5e392407aa3",
+                       "bytes":  757
+                   },
+                   {
+                       "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/SubmitExamResponse.java",
+                       "sha256":  "47307b9cf202c7a8c0fe830a5b088bd73bafb4a5df4b9074773f1d01793fb1ca",
+                       "normalizedLfSha256":  "7a386ab12878d2cb3ad6bb6b8d9b4b7d0b0c6ce8d279e2ac41d0c8cd29730adc",
+                       "bytes":  448
+                   },
+                   {
+                       "path":  "scripts/smoke-t3a2.ps1",
+                       "sha256":  "7504d666f126160d1e1abb81fc09fbc2e1b13756ff455b38e568ee39d2be56e9",
+                       "normalizedLfSha256":  "7504d666f126160d1e1abb81fc09fbc2e1b13756ff455b38e568ee39d2be56e9",
+                       "bytes":  2711
+                   },
+                   {
+                       "path":  "server/src/main/java/vn/edu/toeic/server/audio/AudioService.java",
+                       "sha256":  "35d242c6ffa1aa0f6dabcfd9d39b6ef81a68780b702fafc74bfea0d2c749bc47",
+                       "normalizedLfSha256":  "35d242c6ffa1aa0f6dabcfd9d39b6ef81a68780b702fafc74bfea0d2c749bc47",
+                       "bytes":  15099
+                   },
+                   {
+                       "path":  "server/src/main/java/vn/edu/toeic/server/audio/ListeningController.java",
+                       "sha256":  "2d9b622ae2d990a2101cc03919c0f69ec8bec27b6d5dc6de7a7ab146532b76c6",
+                       "normalizedLfSha256":  "2d9b622ae2d990a2101cc03919c0f69ec8bec27b6d5dc6de7a7ab146532b76c6",
+                       "bytes":  1679
+                   },
+                   {
+                       "path":  "server/src/main/java/vn/edu/toeic/server/audio/ListeningDelivery.java",
+                       "sha256":  "052488393a22968ef3ef2769dbb43439fc559aad27f7068b035c4468e44485a4",
+                       "normalizedLfSha256":  "052488393a22968ef3ef2769dbb43439fc559aad27f7068b035c4468e44485a4",
+                       "bytes":  1442
+                   },
+                   {
+                       "path":  "server/src/main/java/vn/edu/toeic/server/audio/ListeningMaintenance.java",
+                       "sha256":  "9492d770269b7cfcc9eae4747fc6df7723d26b2695a19523613d550d04055cc0",
+                       "normalizedLfSha256":  "9492d770269b7cfcc9eae4747fc6df7723d26b2695a19523613d550d04055cc0",
+                       "bytes":  1684
+                   },
+                   {
+                       "path":  "server/src/main/java/vn/edu/toeic/server/audio/ListeningService.java",
+                       "sha256":  "6c13bfd72d9360a48053fd99bc276ca13b648df86124b162d3b78204f025e373",
+                       "normalizedLfSha256":  "6c13bfd72d9360a48053fd99bc276ca13b648df86124b162d3b78204f025e373",
+                       "bytes":  14186
+                   },
+                   {
+                       "path":  "server/src/main/java/vn/edu/toeic/server/exam/ExamService.java",
+                       "sha256":  "0b3af0418857364236d0d99b892ab21207d2a794f4a9dc2fe129079d8ddae062",
+                       "normalizedLfSha256":  "c8c9e2d2a6af80ed9eb4ab12454241eee1610b4a10bec387ac6ddd23b792e477",
+                       "bytes":  56531
+                   },
+                   {
+                       "path":  "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeSessionRegistry.java",
+                       "sha256":  "8a4dc3fa4f955ec0ea29e9300b5305647f7c74be265be93e0d0fd457ac61d081",
+                       "normalizedLfSha256":  "3485fe9c230395ac5b2a93f500fe0aff2d9afc28decb5ed5c6b7629fe49b0e56",
+                       "bytes":  8708
+                   },
+                   {
+                       "path":  "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeWebSocketHandler.java",
+                       "sha256":  "eed43c1bec41cb47f4e0e99f2dbd5902f49e033adeb86f866ffaf3a347e8ba6e",
+                       "normalizedLfSha256":  "4c9086e990526c0cea6cd357d6e067933d3f2df0d722615bd14dde86995da2ce",
+                       "bytes":  16897
+                   },
+                   {
+                       "path":  "server/src/main/resources/application.properties",
+                       "sha256":  "174a1cd68246995102318b31ee2b307017f8c51e145be2892214a8e0e8f2b04b",
+                       "normalizedLfSha256":  "f4f6698250d774ecf10821fa30ba2cc7694b6354bd94abed6a5a90739cf2b551",
+                       "bytes":  2183
+                   },
+                   {
+                       "path":  "server/src/main/resources/db/migration/V10__listening_lifecycle.sql",
+                       "sha256":  "7e5b4f1e94540b3c8010db6b1e440c70ea36529239f9ce6e7706787f7722fbde",
+                       "normalizedLfSha256":  "7e5b4f1e94540b3c8010db6b1e440c70ea36529239f9ce6e7706787f7722fbde",
+                       "bytes":  3190
+                   },
+                   {
+                       "path":  "server/src/test/java/vn/edu/toeic/server/audio/AudioAuthorizationTest.java",
+                       "sha256":  "f2528f5094e484295accfb4e74e2a8fcee390cdac0c01a04155cdd8b403c2b59",
+                       "normalizedLfSha256":  "f2528f5094e484295accfb4e74e2a8fcee390cdac0c01a04155cdd8b403c2b59",
+                       "bytes":  2150
+                   },
+                   {
+                       "path":  "server/src/test/java/vn/edu/toeic/server/audio/ListeningRuntimePostgresTest.java",
+                       "sha256":  "e22b4e91280ccbb0207875579db95453ecf67a577701191585a9d24418621915",
+                       "normalizedLfSha256":  "e22b4e91280ccbb0207875579db95453ecf67a577701191585a9d24418621915",
+                       "bytes":  32212
+                   },
+                   {
+                       "path":  "server/src/test/java/vn/edu/toeic/server/auth/AuthenticatedNetworkTest.java",
+                       "sha256":  "268414a733bcc589773e9bdbb409d032cd37d5c920aff1ea067994f4881d8809",
+                       "normalizedLfSha256":  "7b4f089120ce48fa97b277ae28b43001325bd8ed345683799ed6e0a8f0255ea9",
+                       "bytes":  23735
+                   },
+                   {
+                       "path":  "server/src/test/java/vn/edu/toeic/server/auth/ConcurrentRealtimeSendTest.java",
+                       "sha256":  "e696cae688e9edcef62d4696ef6c3ab909149cd3459206449f4832dc97b10c7a",
+                       "normalizedLfSha256":  "571f756928a510214d37e6456c5316f7d324a159cd9a21a254ec407bb2f0950e",
+                       "bytes":  7014
+                   }
+               ],
+    "transcripts":  [
+                        {
+                            "path":  "evidence/t3-a2/package-final.txt",
+                            "sha256":  "cd6856ef9c73c5f5853db77ac117b5e6fd348ef54fbe3be26de0d842af795888",
+                            "bytes":  1718132
+                        },
+                        {
+                            "path":  "evidence/t3-a2/package-postgres.txt",
+                            "sha256":  "74a1252621e2195ff46265d7e5f7b6c486d3f87ea5e638c23f296419ae26fa10",
+                            "bytes":  2386
+                        },
+                        {
+                            "path":  "evidence/t3-a2/postgres-final.txt",
+                            "sha256":  "eaab26e2ce3d27538a1b24389286671dc2e3a4da49395d818379ae48405615f7",
+                            "bytes":  1679127
+                        },
+                        {
+                            "path":  "evidence/t3-a2/postgres-first.txt",
+                            "sha256":  "780c5c2dd29aee40916e5a3e4b186226ec66bba49cad341d19dc574d6487c1fb",
+                            "bytes":  1216653
+                        },
+                        {
+                            "path":  "evidence/t3-a2/postgres-second.txt",
+                            "sha256":  "2aded425d4774147915589e28c161b6bdce0bc7918a0c477762824f26a297831",
+                            "bytes":  1524969
+                        },
+                        {
+                            "path":  "evidence/t3-a2/postgres-upgrade.txt",
+                            "sha256":  "5d115eea9b10a2b9d84a5b19de6ff7e5bd21b0c8716f6cf71528f1dd8cf5d546",
+                            "bytes":  1694704
+                        }
+                    ],
+    "baseCommit":  "f6e94db857ceecafa4aa440320006a6e2f9caa56",
+    "branch":  "feat/t3-a2-listening-lifecycle",
+    "artifacts":  [
+                      {
+                          "path":  "protocol/target/protocol-0.1.0-SNAPSHOT.jar",
+                          "sha256":  "73e21671877a34d4a5107f91b72207c6c02ec8a38941f4a027c30d6a7e587bdd",
+                          "bytes":  91127
+                      },
+                      {
+                          "path":  "client/target/client-0.1.0-SNAPSHOT.jar",
+                          "sha256":  "e653b4b9624ce77409b13faeada6971d9549ab7e772c1e903a7276666ec5e424",
+                          "bytes":  326054
+                      },
+                      {
+                          "path":  "client/target/client-0.1.0-SNAPSHOT-all.jar",
+                          "sha256":  "a7451b92099758b33e04cbc6d4172f4863f3253e7b1523d2bb3349b3513fff2e",
+                          "bytes":  10055837
+                      },
+                      {
+                          "path":  "server/target/server-0.1.0-SNAPSHOT.jar",
+                          "sha256":  "eab16734fa686adf3ab865b7ac30f1cb2ef6d35c3983f8cf27193aaa5374269b",
+                          "bytes":  25247036
+                      },
+                      {
+                          "path":  "monitoring-spike/target/monitoring-spike-0.1.0-SNAPSHOT.jar",
+                          "sha256":  "db8de1b6108dadbad7383672ab24475f4aa8d9bb1c7c2fbca5e611ca38a3bb27",
+                          "bytes":  6376
+                      }
+                  ],
+    "mainCommit":  "88944529ca4d66d4acb5d025843975a417df45b3",
+    "normalization":  "Source normalized LF hashes allow Git text newline conversion; transcript hashes cover exact UTF-8 bytes converted from PowerShell UTF-16 captures, with exact local credential-string matches redacted (including incidental property-name matches)."
+}

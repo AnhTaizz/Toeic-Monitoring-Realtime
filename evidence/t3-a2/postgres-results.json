@@ -1,0 +1,31 @@
+{
+    "totals":  {
+                   "skipped":  0,
+                   "errors":  0,
+                   "tests":  29,
+                   "failures":  0
+               },
+    "suites":  [
+                   {
+                       "name":  "vn.edu.toeic.server.audio.AudioRuntimePostgresTest",
+                       "tests":  8,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0
+                   },
+                   {
+                       "name":  "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+                       "tests":  10,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0
+                   },
+                   {
+                       "name":  "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+                       "tests":  11,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0
+                   }
+               ]
+}
