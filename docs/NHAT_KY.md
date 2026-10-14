@@ -524,3 +524,8 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Visual QA phát hiện prepare button không nhận thay đổi playback; sửa387ed99, package833 PASS mới. GUI proctor ban đầu chỉ check HTTP nên ảnh loading; siết roster+state đã render. Assertion literal SYNCED-label FAIL vì UI dùng nhãn quan sát; d809a00 kiểm đúng nhãn và exact HTTP SYNCED, GUI final8nhóm PASS với6ảnh.
 - C1 lần đầu driver thiếu heartbeat200ms trong script chuẩn (default2s lớn hơn timeout800ms của smoke) FAIL; dùng đúng flag rồi FULL/epoch/reconnect/autoSTALE/TTL/cleanup PASS. C2 late/gap/UNKNOWN/retry/conflict/permissions PASS mới. Không đổi monitoring runtime hoặc gọi faults MOCK/SIMULATED là dữ liệu production.
 - Raw/log/ảnh/version/hash và các lượt lỗi giữ riêng; audit credential match0. B review thêm contrast của roster selected row (P2), A review rawID ACTIVE/oversized generatedID/wrong-method500 (P1/P2); human/LAN/installer/E1/E2 vẫn NOT RUN.
+
+
+### Công bố nhánh tích hợp
+
+Git WSL không có credential HTTPS nên push bị chặn ở auth, không phải review hay code. Git Windows dùng credential đã lưu đã push f853e13 tới riêng integration/reading-listening-20261015, không main/force-push. Git blob/provenance hashes khớp; thêm attribute giữ exact public UTF8/LF để checksum không đổi khi checkout Windows. Source/runtime/test results không đổi. Draft PR đang tạo; cập nhật URL sau khi server xác nhận.
