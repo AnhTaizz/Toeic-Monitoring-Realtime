@@ -24,4 +24,3 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-t3b1.ps1 -Jav
 ```
 
 Script vẫn mang tên T3-B1 vì B2/B3 mở rộng cùng pipeline audio client và app-image. Tổ chức lại sau gián đoạn thuộc T3-B4; client không xóa marker hoặc cấp quyền nghe lại cho start cũ.
-
