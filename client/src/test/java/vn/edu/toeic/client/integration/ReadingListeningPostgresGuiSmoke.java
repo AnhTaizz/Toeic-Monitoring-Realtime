@@ -111,6 +111,7 @@ public final class ReadingListeningPostgresGuiSmoke {
                 Map.of("requestId", "GUI-START-" + run, "manifestId", manifest));
         until(() -> "PLAYING".equals(response("/api/v1/attempts/" + listening + "/listening/status", candidateToken, null).get("phase").getAsString()), "Real Media/STARTED");
         check(status(listening).writerEpoch() == sharedWriter, "Start uses exact shared writer");
+        until(() -> !enabledText(candidateStage, "Tải / chuẩn bị lại audio"), "Preparation disabled while Media plays");
         pass("Reading + Listening same Application; REAL WAV/READY/STARTED with one writer; speaker confirmation SIMULATED");
         clickId(candidateStage, "palette-R1"); clickId(candidateStage, "option-R1-A");
         until(() -> "A".equals(status(listening).answers().get("R1")), "Reading during Listening");
@@ -129,8 +130,17 @@ public final class ReadingListeningPostgresGuiSmoke {
         pass("REAL server restart stops/locks Listening without replay; Reading continues with frozen Listening answers"); screenshot(candidateStage, "05-interrupted.png");
         proctorApp = fx(ToeicClientApplication::new); proctorStage = fx(Stage::new);
         fx(() -> { proctorApp.start(proctorStage); return null; }); login(proctorStage, "proctor1");
-        until(() -> response("/api/v1/monitoring/attempts/" + listening + "/state", proctorToken, null).toString().contains("SYNCED"), "FULL state after restart");
+        until(() -> "SYNCED".equals(response("/api/v1/monitoring/attempts/" + listening + "/state", proctorToken, null).get("status").getAsString()), "FULL state after restart");
         check(!response("/api/v1/monitoring/attempts", proctorToken, null).toString().contains(reading), "Final attempt stays outside monitoring scope");
+        until(() -> fx(() -> proctorStage.getScene().getRoot().lookupAll(".table-view").stream()
+                .filter(TableView.class::isInstance).map(TableView.class::cast)
+                .anyMatch(table -> table.getItems().toString().contains(listening))), "Proctor roster rendered");
+        fx(() -> { proctorStage.getScene().getRoot().lookupAll(".table-view").stream()
+                .filter(TableView.class::isInstance).map(TableView.class::cast)
+                .filter(table -> table.getItems().toString().contains(listening)).findFirst().orElseThrow()
+                .getSelectionModel().select(0); return null; });
+        until(() -> fx(() -> proctorStage.getScene().getRoot().lookupAll(".label").stream().filter(Label.class::isInstance)
+                .map(Label.class::cast).anyMatch(label -> label.getText().contains("SYNCED") && !label.getText().contains("UNSYNCED"))), "Proctor FULL SYNCED rendered");
         pass("REAL proctor Application/HTTP roster + candidate FULL state; final attempt excluded"); screenshot(proctorStage, "06-proctor.png");
         JsonObject result = new JsonObject(); result.addProperty("passed", passed); result.addProperty("schema", schema);
         result.addProperty("readingWriter", readingWriter); result.addProperty("sharedWriter", sharedWriter);
@@ -178,8 +188,14 @@ public final class ReadingListeningPostgresGuiSmoke {
         server = process.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.appendTo(output.resolve("owned-server.log").toFile())).start();
         until(() -> {
             if (!server.isAlive()) throw new IllegalStateException("Owned server exited");
-            try { return http.send(HttpRequest.newBuilder(URI.create(origin + "/api/v1/auth/me")).timeout(Duration.ofSeconds(1)).GET().build(), HttpResponse.BodyHandlers.discarding()).statusCode() == 401; }
-            catch (java.io.IOException pending) { return false; }
+            try {
+                if (http.send(HttpRequest.newBuilder(URI.create(origin + "/api/v1/auth/me")).timeout(Duration.ofSeconds(1)).GET().build(), HttpResponse.BodyHandlers.discarding()).statusCode() != 401) return false;
+                // Tomcat can accept requests before the seed ApplicationRunner finishes.
+                try (Connection db = db(); Statement sql = db.createStatement(); ResultSet rows = sql.executeQuery(
+                        "SELECT count(*) FROM " + schema + ".user_accounts WHERE username IN ('candidate1','candidate2','proctor1')")) {
+                    return rows.next() && rows.getInt(1) == 3;
+                }
+            } catch (java.io.IOException | SQLException pending) { return false; }
         }, "Owned Spring server");
     }
     private void restartServer(Path root) throws Exception { stopServer(); startServer(root); }

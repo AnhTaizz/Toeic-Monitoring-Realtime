@@ -52,6 +52,7 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
         AudioFiles audioFiles=new AudioFiles(cache.resolve("files"));
         preparation = new AudioPreparation(api, audioFiles, cache.resolve("speaker"), ignored -> queueRender());
         playback=new ListeningPlaybackPane(listeningApi,audioFiles,new ListeningPlaybackJournal(cache.resolve("playback-started")),preparation,scope,realtime);
+        playback.onStateChanged(this::queueRender);
         getChildren().addAll(new Label("Chuẩn bị Listening"), attempts, prepare, progress,
                 new HBox(8, test, heard), ready, connection, status,playback);
         attempts.setOnAction(event -> { disposePlayer(); preparation.selectionChanged(); render(); });
