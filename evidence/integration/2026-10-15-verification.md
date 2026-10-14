@@ -49,7 +49,7 @@ GUI thực tế: Reading autosave và timer; server restart/reconnect giữ epoc
 - GUI ban đầu PASS8 limited checks; visual QA thấy nút prepare chưa theo playback và ảnh proctor loading. Sửa runtime387ed99 rồi package833PASS lại; siết roster/state UI. [Literal status label FAIL](failed-gui-literal-status-label.txt): UI đang dùng nhãn quan sát, không literal SYNCED. d809a00 kiểm nhãn quan sát thực + exact HTTP SYNCED; final8PASS, không đổi UI để né test.
 - [C1 driver thiếu heartbeatflag FAIL](failed-full-missing-heartbeat-flag.txt): default2s lớn hơn presence800ms của smoke. Dùng heartbeat200ms như script đã xác minh, rồi C1PASS; không thay heartbeat/timeout production hoặc source C.
 
-Raw không chỉnh tay; bản public là excerpt/copy có provenance SHA và thay prefix private khi cần. Không dùng776/669 của các nhánh riêng làm PASS của nhánh này. Credential/token audit trước commit:0match actual secret values (không ghi giá trị vào report).
+Raw không chỉnh tay; bản public là excerpt/copy UTF-8/LF có provenance SHA và thay prefix private khi cần. LF công khai được chuẩn hóa riêng để SHA khớp blob Git, không sửa raw gốc. Không dùng776/669 của các nhánh riêng làm PASS của nhánh này. Credential/token audit trước commit:0match actual secret values (không ghi giá trị vào report).
 
 ## Còn thiếu và owner review
 
