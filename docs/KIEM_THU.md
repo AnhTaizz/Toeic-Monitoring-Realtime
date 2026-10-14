@@ -41,7 +41,7 @@ Full-only retry/epoch/order/reconnect đã kiểm trong acceptance T2-C1 bên d�
 
 | ID | Tóm tắt | Owner / review | Task | Trạng thái | SHA | Bằng chứng |
 |---|---|---|---|---|---|---|
-| LT01 | Thiếu audio hoặc sai checksum → không READY | B / A | T3-B1 | PARTIAL — gate backend T3-A1 PASS; checksum file local/GUI/package B1 chưa chạy | Working tree T3-A1 trên main | `evidence/t3-a1/2026-10-13-verification.md` |
+| LT01 | Thiếu audio hoặc sai checksum → không READY | B / A | T3-B1 | PARTIAL — local bytes + production HTTP/PG + view/Media/app-image Unicode PASS; xác nhận nghe thủ công/review A/máy thứ hai NOT RUN | `89082e3d43a322c0e0e210f393cc3b4bf49bd7da` | [T3-B1](../evidence/t3-b1/2026-10-14-verification.md), [backend A1](../evidence/t3-a1/2026-10-13-verification.md) |
 | LT02 | Start lặp không phát lại; lỗi media khóa và ghi gián đoạn | B / A | T3-B2/B3 | PARTIAL — backend T3-A2 PASS; media/GUI B chưa chạy | Nhánh feat/t3-a2-listening-lifecycle | `evidence/t3-a2/2026-10-13-verification.md` |
 | LT03 | Mất mạng giữa audio; mở lại không tự phát hay resume | B / A | T3-B3 | PARTIAL — backend timeout/takeover/restart PASS; audio/reconnect GUI B chưa chạy | Nhánh feat/t3-a2-listening-lifecycle | `evidence/t3-a2/2026-10-13-verification.md` |
 | LT04 | Tổ chức lại: attempt mới, dữ liệu và deadline cũ giữ nguyên | B / A | T3-B4, T3-A2 | PARTIAL — phần server PASS; giao diện B4/LAN chưa chạy | Nhánh feat/t3-a2-listening-lifecycle | `evidence/t3-a2/2026-10-13-verification.md` |

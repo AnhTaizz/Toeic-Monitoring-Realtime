@@ -216,7 +216,7 @@ Gate 22/10: LT01–LT04 và chạy được trên máy thứ hai.
 
 **Xong khi:** LT01 chạy được: xóa một file hoặc sửa một byte thì không READY.
 
-**Ghi chú làm dở:** —
+**Ghi chú bàn giao 14/10:** T3-B1 code complete trên `feat/t3-b1-audio-download-readiness`, base main `2e784fa`, source `89082e3d43a322c0e0e210f393cc3b4bf49bd7da`. Adapter Bearer/manifest/writer exact long, cache `.part`/SHA-256 và worker riêng; candidate view có progress, WAV mẫu riêng và nút xác nhận nghe; kiểm lại byte local trước READY, chỉ hiện READY sau ACK đúng request/scope/writer/manifest. Tải lại xóa READY cũ và giữ writer trong cùng phiên; disconnect/đổi lượt/đóng view loại callback cũ. Java657 PASS, 0skip với Spring/HTTP/PG/Flyway thật; app-image runtime21.0.9 ở thư mục Unicode/khoảng trắng PASS6 checks, gồm Media lỗi và tự thoát. Build dùng argv ASCII và Windows SDK mt.exe nhúng UTF-8 cho launcher mới sinh; không đổi locale/JDK. [Guide](../AUDIO_CLIENT_PREPARATION.md), [evidence](../../evidence/t3-b1/2026-10-14-verification.md). Xác nhận nghe trong automation là SIMULATED; human A review, nghe thủ công, LAN/máy thứ hai NOT RUN. Tracker IN_PROGRESS, giờ null. Khi ghép Reading truyền writer hiện tại, không takeover lần hai; B2 phải verify cache lại trước phát. Không làm B2/B3/bộ cài.
 
 ### T3-B2 · Phát Listening theo lệnh server
 `4h` · phụ thuộc: T3-B1, T3-A2 · review: A

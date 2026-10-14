@@ -1,6 +1,6 @@
 # T3-A1 — Audio manifest, tải tài nguyên và READY
 
-Backend phục vụ metadata và audio cho đúng chủ lượt thi, ghi READY vào PostgreSQL, và chặn start Listening khi chưa đủ điều kiện. Client T3-B1 đã được hoàn tác theo yêu cầu; giao diện tải/checksum/thử loa sẽ dùng contract dưới đây khi triển khai lại.
+Backend phục vụ metadata và audio cho đúng chủ lượt thi, ghi READY vào PostgreSQL, và chặn start Listening khi chưa đủ điều kiện. Client T3-B1 được triển khai lại trên branch riêng ngày 14/10/2026; xem [luồng chuẩn bị JavaFX](AUDIO_CLIENT_PREPARATION.md) và bằng chứng riêng, không thay đổi contract bên dưới.
 
 ## Cấp tài nguyên cho server
 

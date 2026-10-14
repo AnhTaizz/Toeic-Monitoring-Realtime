@@ -1,0 +1,61 @@
+{
+    "task":  "T3-B1",
+    "date":  "2026-10-14",
+    "timezone":  "Asia/Bangkok",
+    "branch":  "feat/t3-b1-audio-download-readiness",
+    "baseCommit":  "2e784fa",
+    "sourceCommit":  "89082e3d43a322c0e0e210f393cc3b4bf49bd7da",
+    "os":  "Microsoft Windows NT 10.0.26300.0",
+    "jdk":  "Microsoft OpenJDK 21.0.9",
+    "javafx":  "21.0.12",
+    "maven":  "3.9.16",
+    "database":  "Project Docker postgres:18, loopback port 5433; isolated owned schemas, Flyway V1-V10",
+    "commands":  [
+                     "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-t3b1.ps1 -JavaHome \u003cJDK21\u003e -Postgres -PackageSmoke (Maven phase PASS; initial package phase FAIL before fixes)",
+                     "mvn -B -o -Dmaven.repo.local=\u003cexisting cache\u003e -pl client -am test-compile (TEST launcher natural shutdown change only)",
+                     "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-t3b1-package.ps1 -JavaHome \u003cJDK21\u003e -OutputDirectory \u003cverified output\u003e (final PASS)"
+                 ],
+    "tests":  {
+                  "protocol":  43,
+                  "client":  413,
+                  "server":  200,
+                  "spike":  1,
+                  "total":  657,
+                  "failures":  0,
+                  "errors":  0,
+                  "skipped":  0,
+                  "newClientCases":  27,
+                  "newPostgresClientCase":  1,
+                  "packageChecks":  6
+              },
+    "labels":  {
+                   "postgresClientTest":  "REAL client/API/files/HTTP/Spring/PG; speaker completion and hearing confirmation SIMULATED",
+                   "package":  "REAL production view/cache/JavaFX PCM WAV/bundled runtime/Unicode paths; MOCK API/WS state; automated hearing confirmation SIMULATED",
+                   "humanAReview":  "NOT RUN",
+                   "humanHearing":  "NOT RUN",
+                   "secondMachineLan":  "NOT RUN",
+                   "installerExeMsi":  "NOT RUN / T3-B5",
+                   "fullApplicationLoginCandidateProctorGui":  "NOT RUN in B1; component package smoke only"
+               },
+    "package":  {
+                    "imagePath":  "C:\\Users\\Lenovo\\OneDrive\\Máy tính\\LTM\\Toeic-Monitoring-Realtime\\jpackage-out\\t3b1-e29dc77d8d5f4d0f9b7fd58422f61d54\\Đóng gói audio có dấu và khoảng trắng\\ToeicMonitor",
+                    "runtime":  "21.0.9",
+                    "launcherManifest":  "Original DPI/asInvoker preserved, activeCodePage=UTF-8 via Windows SDK mt.exe; Windows locale and installed JDK/DLL unchanged",
+                    "clientJarSha256":  "517bd14a55b38baac41b31db452765d4e60b93307bb1085f610a64b077be9a29",
+                    "testHarnessJarSha256":  "9c3561b3379fc28a2bf045d1957464c4136689fe0065ebf02b942264ca7c4dc3",
+                    "mainLauncherSha256":  "b234f4f716af260bbdfb897356e64f0e77cd58f4aff469993404841c3fe48c5e",
+                    "smokeLauncherSha256":  "fcb7cb4c4372328e35cd71271696f239dff61e1519e12fb572d0d63d112172eb"
+                },
+    "logEncoding":  "Maven PowerShell combined transcript decoded to UTF-8 for GitHub; stdout/stderr native smoke captured separately as UTF-8, no content trimming",
+    "nativeMavenTranscriptSha256":  "2205b4f606a036c037c56a7bdb7361af05afa89f302f028ee097fe4f0848400d",
+    "initialFailures":  [
+                            "Sandbox denied javac cache access; elevated offline test used",
+                            "PowerShell Stop on expected test stderr; handled by Maven exit code",
+                            ".env omitted DB_HOST; script added standard defaults",
+                            "Docker initially off; native 5432 credentials rejected; project DB 5433 started without reset",
+                            "jpackage native argv lost Unicode; ASCII build paths and Unicode copy",
+                            "JDK 21 launcher could not locate java.dll in Unicode directory; UTF-8 application manifest",
+                            "mt.exe initially blocked by generated ReadOnly EXE; temporarily clear/restore attribute on owned launcher",
+                            "Start-Process wrapper exit reporting replaced with owned Diagnostics.Process handle"
+                        ]
+}

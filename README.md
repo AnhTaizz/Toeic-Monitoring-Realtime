@@ -337,3 +337,7 @@ Sau `mvn package`, chạy `powershell -NoProfile -ExecutionPolicy Bypass -File s
 Đọc [bản nháp báo cáo đồng bộ và giới hạn T3-C5](docs/MONITORING_SYNC_REPORT_DRAFT.md) để theo dõi ví dụ FULL → DELTA → retry → RESYNC và phạm vi bằng chứng. FULL vẫn mặc định; LAN hai máy và B review chưa chạy.
 
 Đọc [phương pháp baseline](docs/MONITORING_BASELINE_METHOD.md) để phân biệt event/state/presence/gap, identity, policy production/TEST, byte tầng ứng dụng và clock. Tài liệu chốt cách đối chiếu C4, giới hạn target200ms và checklist trước E1/E2; còn thiếu marker cửa sổ đo, resource sampler/analyzer E1 và phép đo E2; delta thử nghiệm đã có, gate chưa chốt. Đây là tài liệu phương pháp, không phải nghiệm thu E1/E2 hoặc human B review.
+
+## Chuẩn bị audio Listening (T3-B1)
+
+Candidate có phần tải audio, tiến độ/checksum, thử loa bằng WAV mẫu riêng và xác nhận READY theo response server. Xóa/sửa file local trước khi xác nhận sẽ chặn READY. Xem [hướng dẫn, cache và lệnh build/package](docs/AUDIO_CLIENT_PREPARATION.md), [bằng chứng kiểm thử](evidence/t3-b1/2026-10-14-verification.md). Phát đề theo lệnh start thuộc T3-B2/B3.

@@ -525,9 +525,9 @@
       "dependencies": "T1-B4; T3-A1 (contract)",
       "title": "Tải audio, checksum và thử loa",
       "acceptance": "File thiếu/hỏng chặn READY; đường dẫn có dấu/khoảng trắng thử trong package; có audio mẫu trước thi; task mạng/tệp ngoài UI.",
-      "status": "TODO",
+      "status": "IN_PROGRESS",
       "actual_hours": null,
-      "evidence": null
+      "evidence": "evidence/t3-b1/2026-10-14-verification.md; CODE_COMPLETE, automated local/HTTP/PG/package PASS; human A review/hearing/second-machine NOT RUN"
     },
     {
       "id": "T3-B2",

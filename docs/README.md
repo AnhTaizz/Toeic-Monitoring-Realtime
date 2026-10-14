@@ -10,6 +10,7 @@ Thư mục này là nơi ghi lại việc đang làm, để bất kỳ ai (hoặ
 | [NHAT_KY.md](NHAT_KY.md) | Nhật ký từng buổi: đã làm gì, commit nào, còn dở gì | Người vừa làm | Cuối mỗi buổi làm |
 | [QUYET_DINH.md](QUYET_DINH.md) | Các quyết định kỹ thuật đã chốt và đang chờ chốt | Người ra quyết định, reviewer duyệt | Khi chốt một lựa chọn |
 | [PROTOCOL.md](PROTOCOL.md) | Danh mục endpoint và message đang dùng thật | C (monitoring), A (auth, thi) | Khi thêm hoặc đổi message |
+| [AUDIO_CLIENT_PREPARATION.md](AUDIO_CLIENT_PREPARATION.md) | Tải/checksum/thử loa/READY trên candidate và cách kiểm package T3-B1 | B | Khi đổi luồng chuẩn bị audio |
 | [AUDIO_RESOURCES.md](AUDIO_RESOURCES.md) | T3-A1: cấp tài nguyên, manifest/checksum, READY và gate start; contract cho B/A2 | A | Khi đổi contract audio |
 | [LISTENING_LIFECYCLE.md](LISTENING_LIFECYCLE.md) | T3-A2: lệnh start WS, heartbeat/gián đoạn, khóa đáp án và tổ chức lại | A | Khi đổi contract Listening |
 | [MONITORING_SYNC_REPORT_DRAFT.md](MONITORING_SYNC_REPORT_DRAFT.md) | T3-C5: giải thích đồng bộ, ACK, ví dụ phục hồi, bằng chứng và giới hạn gate | C | Khi đối chiếu báo cáo với source |

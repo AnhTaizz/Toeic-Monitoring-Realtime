@@ -1,6 +1,6 @@
 # T3-A2 · Start, gián đoạn Listening và tổ chức lại
 
-Backend dùng gate READY của [T3-A1](AUDIO_RESOURCES.md). Migration V10 lưu trạng thái Listening riêng trên lượt thi; cờ gián đoạn không đổi state ACTIVE thành INTERRUPTED, nên Reading và lịch sử vẫn dùng quyền hiện có. Giao diện, media player và adapter Listening của B chưa triển khai; kiểm thử dùng HTTP/WebSocket thật với audio fixture, không xác nhận loa hoặc codec JavaFX.
+Backend dùng gate READY của [T3-A1](AUDIO_RESOURCES.md). Migration V10 lưu trạng thái Listening riêng trên lượt thi; cờ gián đoạn không đổi state ACTIVE thành INTERRUPTED, nên Reading và lịch sử vẫn dùng quyền hiện có. B đã thêm [chuẩn bị audio T3-B1](AUDIO_CLIENT_PREPARATION.md) trên branch riêng ngày 14/10/2026; phát đề theo start và adapter lifecycle T3-B2/B3 chưa triển khai. Kiểm thử backend dùng HTTP/WebSocket thật với audio fixture, không xác nhận loa hoặc codec JavaFX.
 
 ## Start và lệnh WebSocket
 

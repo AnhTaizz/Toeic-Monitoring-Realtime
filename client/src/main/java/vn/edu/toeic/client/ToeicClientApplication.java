@@ -30,6 +30,8 @@ import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.RealtimeClient;
 import vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpener;
 import vn.edu.toeic.client.dashboard.ProctorDashboardView;
+import vn.edu.toeic.client.audio.AudioPreparationView;
+import javafx.scene.control.ScrollPane;
 
 public final class ToeicClientApplication extends Application {
     private final BiFunction<MonitoringTransport,Consumer<MonitoringDelivery.Status>,CandidateMonitoringSession> monitoringFactory;
@@ -46,6 +48,7 @@ public final class ToeicClientApplication extends Application {
     private CandidateMonitoringSession monitoring;
     private long monitoringGeneration;
     private ProctorDashboardView dashboard;
+    private AudioPreparationView audioPreparation;
 
     @Override
     public void start(Stage stage) {
@@ -176,11 +179,16 @@ public final class ToeicClientApplication extends Application {
         });
 
         VBox content = new VBox(16, title, identity, connectionStatus, availability, networkControls, logout);
-        if ("CANDIDATE".equals(response.user().role())) content.getChildren().add(content.getChildren().size() - 1,
-                candidateMonitoringControls(serverUrl, response, currentView));
+        if ("CANDIDATE".equals(response.user().role())) {
+            content.getChildren().add(content.getChildren().size() - 1, candidateMonitoringControls(serverUrl, response, currentView));
+            audioPreparation = new AudioPreparationView(serverUrl, response.token(), scope, newClient);
+            content.getChildren().add(content.getChildren().size() - 1, audioPreparation);
+        }
         content.setPadding(new Insets(36));
         content.setAlignment(Pos.TOP_CENTER);
-        BorderPane root = new BorderPane(content);
+        ScrollPane scroll = new ScrollPane(content);
+        scroll.setFitToWidth(true);
+        BorderPane root = new BorderPane(scroll);
         stage.setScene(new Scene(root, 720, 600));
         // Hai role dùng chung transport; candidate starts monitoring only through explicit controls.
         realtimeClient.connect(context);
@@ -283,6 +291,7 @@ public final class ToeicClientApplication extends Application {
         viewGeneration++;
         monitoringGeneration++;
         if (dashboard!=null) { dashboard.close(); dashboard=null; }
+        if (audioPreparation != null) { audioPreparation.close(); audioPreparation = null; }
         if (monitoring != null) { monitoring.close(); monitoring = null; }
         if (problemSubscription != null) {
             try { problemSubscription.close(); } catch (Exception ignored) { }
