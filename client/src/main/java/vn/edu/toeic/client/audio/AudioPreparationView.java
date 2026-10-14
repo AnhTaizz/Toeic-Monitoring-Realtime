@@ -11,7 +11,7 @@ import javafx.scene.media.*;
 import javafx.util.Duration;
 import vn.edu.toeic.client.realtime.*;
 
-/** Candidate preparation only. Exam playback/start commands belong to T3-B2. */
+/** Candidate preparation and one-shot Listening playback. */
 public final class AudioPreparationView extends VBox implements AutoCloseable {
     private final ComboBox<String> attempts = new ComboBox<>();
     private final Button prepare = new Button("Tải / chuẩn bị lại audio");
@@ -20,21 +20,31 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
     private final ProgressBar progress = new ProgressBar(0);
     private final AtomicBoolean updateQueued = new AtomicBoolean();
     private final AudioPreparation preparation;
+    private final ListeningPlaybackPane playback;
     private AutoCloseable subscription;
     private MediaPlayer player;
     private final PauseTransition mediaTimeout = new PauseTransition(Duration.seconds(15));
     private boolean connected, closed;
 
     public AudioPreparationView(String serverUrl, String token, Collection<String> scope, RealtimeClient realtime) {
-        this(new AudioApiClient(serverUrl, token), cacheRoot(), scope, realtime);
+        this(new AudioApiClient(serverUrl, token), new ListeningApiClient(serverUrl,token), cacheRoot(), scope, realtime);
     }
     AudioPreparationView(AudioApi api, Path cache, Collection<String> scope, MonitoringTransport realtime) {
+        this(api,new ListeningApi(){
+            public vn.edu.toeic.protocol.exam.CandidateExamDto exam(String attempt)throws Exception{throw new java.io.IOException("MOCK playback API chưa cấu hình");}
+            public vn.edu.toeic.protocol.audio.ListeningStatusResponse event(String attempt,vn.edu.toeic.protocol.audio.ListeningEventRequest request)throws Exception{throw new java.io.IOException("MOCK playback API chưa cấu hình");}
+            public void close(){}
+        },cache,scope,realtime);
+    }
+    AudioPreparationView(AudioApi api,ListeningApi listeningApi, Path cache, Collection<String> scope, MonitoringTransport realtime) {
         setSpacing(8);
         attempts.getItems().setAll(scope.stream().sorted().toList()); attempts.getSelectionModel().selectFirst();
         status.setWrapText(true); connection.setWrapText(true); progress.setMaxWidth(Double.MAX_VALUE);
-        preparation = new AudioPreparation(api, new AudioFiles(cache.resolve("files")), cache.resolve("speaker"), ignored -> queueRender());
+        AudioFiles audioFiles=new AudioFiles(cache.resolve("files"));
+        preparation = new AudioPreparation(api, audioFiles, cache.resolve("speaker"), ignored -> queueRender());
+        playback=new ListeningPlaybackPane(listeningApi,audioFiles,new ListeningPlaybackJournal(cache.resolve("playback-started")),preparation,realtime);
         getChildren().addAll(new Label("Chuẩn bị Listening"), attempts, prepare, progress,
-                new HBox(8, test, heard), ready, connection, status);
+                new HBox(8, test, heard), ready, connection, status,playback);
         attempts.setOnAction(event -> { disposePlayer(); preparation.selectionChanged(); render(); });
         prepare.setOnAction(event -> { disposePlayer(); preparation.prepare(attempts.getValue()); });
         test.setOnAction(event -> playSample());
@@ -60,7 +70,10 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
     }
     private void render() {
         var state = preparation.snapshot(); var phase = state.phase();
-        boolean busy = Set.of(AudioPreparation.Phase.PREPARING, AudioPreparation.Phase.REPORTING, AudioPreparation.Phase.TESTING).contains(phase);
+        boolean playbackLocked=Set.of(ListeningPlayback.Phase.PREPARING,ListeningPlayback.Phase.READY_TO_PLAY,
+                ListeningPlayback.Phase.PLAYING,ListeningPlayback.Phase.COMPLETING,ListeningPlayback.Phase.COMPLETED,
+                ListeningPlayback.Phase.BLOCKED).contains(playback.playback().snapshot().phase());
+        boolean busy = playbackLocked||Set.of(AudioPreparation.Phase.PREPARING, AudioPreparation.Phase.REPORTING, AudioPreparation.Phase.TESTING).contains(phase);
         attempts.setDisable(busy);
         prepare.setDisable(!connected || busy || attempts.getValue() == null);
         test.setDisable(!connected || !Set.of(AudioPreparation.Phase.FILES_READY, AudioPreparation.Phase.AWAITING_CONFIRMATION,
@@ -95,7 +108,7 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
         if (old != null) { old.stop(); old.dispose(); }
     }
     @Override public void close() {
-        closed = true; disposePlayer(); preparation.close();
+        closed = true; disposePlayer(); playback.close(); preparation.close();
         if (subscription != null) try { subscription.close(); } catch (Exception ignored) { }
         subscription = null;
     }
