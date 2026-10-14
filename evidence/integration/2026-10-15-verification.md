@@ -1,6 +1,6 @@
 # Kiểm chứng tích hợp Reading/Listening/history — 15/10/2026
 
-**PARTIAL cấp nghiệm thu toàn hệ thống; integration gate local PASS, sẵn sàng Draft PR cho A/B/C review.** Không merge main. Human review, LAN hai máy, rút mạng/kill app thủ công, installer và E1/E2/load NOT RUN. ID ACTIVE đặc biệt còn contract QD29; code từ chối mở bài không giám sát.
+**PARTIAL cấp nghiệm thu toàn hệ thống; integration gate local PASS, sẵn sàng Draft PR cho A/B/C review.** [Draft PR #35](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/35) đã tạo trên main8f5ac40; không merge main. Human review, LAN hai máy, rút mạng/kill app thủ công, installer và E1/E2/load NOT RUN. ID ACTIVE đặc biệt còn contract QD29; code từ chối mở bài không giám sát.
 
 ## Source và môi trường
 

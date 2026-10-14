@@ -529,3 +529,10 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 ### Công bố nhánh tích hợp
 
 Git WSL không có credential HTTPS nên push bị chặn ở auth, không phải review hay code. Git Windows dùng credential đã lưu đã push f853e13 tới riêng integration/reading-listening-20261015, không main/force-push. Git blob/provenance hashes khớp; thêm attribute giữ exact public UTF8/LF để checksum không đổi khi checkout Windows. Source/runtime/test results không đổi. Draft PR đang tạo; cập nhật URL sau khi server xác nhận.
+
+
+### Draft PR và bàn giao cuối
+
+- Git Windows push872d12b thành công; GitHub tạo [Draft PR#35](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/35), base main8f5ac40, head integration/reading-listening-20261015. Không merge, không request human approval thay A/B/C.
+- Chốt local gate: clean833/package833 (runtime387ed99), GUI8nhóm/proctor đã render (harnessd809a00), ExamFlow28/0GAP và concurrency AT01/07/09/10 + C1/C2 PASS trên final JARs. Tất cả logs/source/JAR/derived hashes/6ảnh có evidence; transcript exact-byte attributes bảo toàn checksum khi checkout Windows.
+- Whole acceptance PARTIAL: QD29 ID ACTIVE đặc biệt, human/LAN/installer/gate delta/E1/E2/load chưa nghiệm thu. Main local6a41031 và refs/worktrees/file chưa commit của người khác giữ nguyên; branch integration sạch, chỉ docs-link cập nhật sau PR.
