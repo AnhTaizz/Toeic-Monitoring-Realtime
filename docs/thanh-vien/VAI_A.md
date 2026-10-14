@@ -362,3 +362,10 @@ Bạn cũng phải vẽ lại được luồng của B (autosave phía client) v
 ### Ghi chú fix P1 cursor PR #28 — 13/10/2026
 
 Backend P1 đã PASS local trên code/test `00b1df1` + main `2e784fa`: validator không rỗng/NUL/quá128 code point, không trim/normalize; SQL/DTO/owner/Listening/schema giữ nguyên. Maven test/package638, PG37 và probe11/11 PASS. Chuẩn bị local để người dùng review trước push; không retarget/merge/bỏ Draft. B cần sửa validator ASCII/URL encoding/UTF-8 byte ordering riêng. Nguy cơ sessionId+username vượt128 đã tái hiện500+rollback, chưa sửa API tạo ca hoặc schema. Evidence local `target/pr28-cursor-20261013/REPORT.md`; GUI/human review NOT RUN.
+
+
+## Bàn giao tích hợp15/10/2026
+
+Nhánh `integration/reading-listening-20261015`, base8f5ac40, history2ca4121 và Reading65f5123. Guide `docs/INTEGRATION_READING_LISTENING.md`; evidence `evidence/integration/2026-10-15-verification.md`. Phạm vi review: A: history/query-status/scope/ownership. Clean test833 PASS (protocol43/client569/server220/spike1), PostgreSQL18.6 thật và 0skip; package833 PASS. GUI smoke8nhóm PASS mới; chưa nâng toàn case human/LAN. FULL default, tracker không đổi.
+
+**Ghi chú làm dở:** human A/B/C/LAN hai máy/installer/E1/E2 NOT RUN; ID ACTIVE đặc biệt còn contract QD29. Không dùng alias đọc status làm quyền monitoring; không merge main khi chưa được người dùng chấp thuận. Kết quả cuối/SHA/log trong evidence, không kế thừa PASS nhánh nguồn.

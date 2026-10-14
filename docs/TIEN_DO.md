@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+15/10/2026 — tích hợp Reading/Listening/history trên `integration/reading-listening-20261015`, base main8f5ac40, history2ca4121 và Reading65f5123. Code9115776: một ExamSession/writer cho hai phần; query status an toàn cho raw ID; scope HTTP không nới monitoring v0. Clean test833 và package833 PASS với PostgreSQL18.6 thật, 0skip. GUI production smoke8nhóm PASS mới trên d809a00, proctor roster/quan sát đã render; C1/C2 hồi quy PASS; [guide](INTEGRATION_READING_LISTENING.md), [evidence mới](../evidence/integration/2026-10-15-verification.md). Chưa push/merge; human A/B/C/LAN/installer/E1/E2 NOT RUN, ID ACTIVE đặc biệt chờ contract QD29. Những cập nhật cũ bên dưới giữ ngày/SHA lịch sử.
+
 Cập nhật T3-B3: 14/10/2026 — branch `feat/t3-b3-listening-interruption-recovery` kế thừa T3-B2; Media/mạng lỗi dừng player, ghi marker và gửi INTERRUPTED, reconnect/mở lại GET status rồi giữ khóa, không replay/resume. Java669/669 PASS với PostgreSQL thật; app-image Unicode PASS8, có MediaPlayer thật dừng giữa audio và reconnect không phát lại. [Hướng dẫn](LISTENING_INTERRUPTION_RECOVERY.md), [evidence](../evidence/t3-b3/2026-10-14-verification.md). Code complete; review A, rút mạng/kill app thủ công, LAN/máy thứ hai và nghe thủ công chưa chạy. T2-B4 chưa có trên nhánh nên policy Listening tách riêng và gate ghép Reading còn chờ; tracker IN_PROGRESS, giờ null.
 
 Cập nhật T3-B2: 14/10/2026 — branch `feat/t3-b2-listening-playback` kế thừa T3-B1; nhận `LISTENING_START`, kiểm writer/manifest/SHA-256, journal chống replay, playlist JavaFX và câu hỏi theo `audioFile`, báo STARTED/heartbeat/COMPLETED đã triển khai. Java666/666 PASS với PostgreSQL thật; app-image Unicode PASS7. [Hướng dẫn](LISTENING_CLIENT_PLAYBACK.md), [evidence](../evidence/t3-b2/2026-10-14-verification.md). Source `987d9b27f400c339a50914de11de6d094649a271`; code complete, review A/LAN/máy thứ hai/nghe thủ công chưa chạy. B3 còn event gián đoạn và reconnect policy; tracker IN_PROGRESS, giờ null.
@@ -30,15 +32,15 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 
 ## Đang ở đâu
 
-- Chặng: **2** (09–16/10) — Bắt đầu triển khai thi và giám sát.
-- Gate kế tiếp: **12/10 thi cơ bản** — nộp bài, chấm điểm, lưu đáp án, đổi câu hỏi, timer.
+- Chặng: **2, gate tích hợp ngày15–16/10**; backend, Listening B1–B3 và monitoring chặng3 đã có source, đang nghiệm thu bản chung Reading/Listening.
+- Gate hiện tại: **15–16/10 lưu/nộp/reconnect + Reading/Listening chung writer**; LAN/human và gate delta20/10 vẫn riêng.
 
 ## Mỗi người
 
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
-| A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
-| B | _chưa gán_ | T3-B3 code complete, bàn giao interruption/reconnect | B1 chuẩn bị + B2 playback + B3 dừng/ghi gián đoạn và không resume; Java669 PASS, app-image Unicode 8 checks PASS | Review A, thử rút mạng/kill app/nghe/LAN; ghép T2-B4 khi nhánh có sẵn | `feat/t3-b3-listening-interruption-recovery` |
+| A | _chưa gán_ | Backend thi/P0 và Listening A1–A2 đã merge; review integration | History/query status vào nhánh tích hợp; PostgreSQL regression PASS | Review route/quyền/ID và QD29; không tự ghi DONE | integration/reading-listening-20261015 |
+| B | _chưa gán_ | Reading và Listening chung Application/writer trên nhánh tích hợp | Clean test/package833 PASS; GUI production8nhóm PASS, C1/C2 PASS | A/B/C review, GUI/LAN, contract ID ACTIVE đặc biệt; B4/B5 riêng | integration/reading-listening-20261015 |
 | C | _chưa gán_ | T3-C5 bản nháp tài liệu đã viết; chờ B review | Báo cáo đồng bộ/giới hạn đối chiếu main `f97c081`; kiểm tài liệu riêng | LAN hai máy, human A/B review và gate 20/10 NOT_DECIDED/PARTIAL; FULL default | `docs/t3-c5-monitoring-sync-report` |
 
 ## Đang bị chặn
@@ -71,8 +73,8 @@ Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì
 | 04/10 | B → C | Interface collector → network | MonitoringTransport B2 send=write, ACK/ERROR riêng; C3 dùng event contract A3, state chưa có |
 | 04/10 | A → B | Cách gửi credential HTTP/WS, phạm vi subscription | Bearer header; B3 đã consume warning/timeline, HTTP scope refresh và dedupe attempt/event |
 | 04/10 | A → B, C | Scoped heartbeat, roster/presence/history | A4 V4; B3 consume roster/history/push presence, revision, stale và HTTP recovery; REAL integration PASS; schema không đổi |
-| 09/10 | A → B, C | Import đề, answers/revision, requestId, writerEpoch, deadline/state, mã lỗi | Chưa có |
-| 12/10 | A → B | Trạng thái đã chốt, takeover writer, state khi reconnect | Chưa có |
+| 09/10 | A → B, C | Import đề, answers/revision, requestId, writerEpoch, deadline/state, mã lỗi | Xem contract/source mới và bằng chứng theo task; hàng lịch sử chưa được nghiệm thu toàn luồng |
+| 12/10 | A → B | Trạng thái đã chốt, takeover writer, state khi reconnect | Xem contract/source mới và bằng chứng theo task; hàng lịch sử chưa được nghiệm thu toàn luồng |
 | 16/10 | A + B → C | Audio manifest, READY/start/interrupted | A1/A2 backend đã có; B1 tải/checksum/thử loa/READY đã có trên branch riêng; B2/B3 playback/gián đoạn phía client chưa có |
 | 16/10, khóa 18/10 | C → A, B | Monitoring epoch/base/sequence, định nghĩa metric | C1 OPEN/full/CLOSE/epoch/sequence/state đã merge; C2 bổ sung EventOrigin/deliveryStatus và HTTP gap theo QD-13, server trước client mới; T3-C2 encoder/reducer/base/resync/freshness có qua capability/flag thử nghiệm; gate và metric E1-E2 chưa có; human A/B review NOT RUN |
 

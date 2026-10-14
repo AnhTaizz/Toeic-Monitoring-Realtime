@@ -905,3 +905,11 @@ Bằng chứng: `evidence/t2-a-history/2026-10-12-verification.md`.
 ### Làm rõ cursor theo dữ liệu đã lưu — 13/10/2026
 
 Fix P1 theo cho phép của người dùng: mọi ID không rỗng lưu hợp lệ trong `VARCHAR(128)` đều được dùng nguyên dạng làm cursor. SQL vẫn bind parameter và keyset `COLLATE "C"`; dấu nháy không phải SQL khi là giá trị bind. Không nới owner/monitoring hoặc đổi DTO. Backend code/test `00b1df18d89f3b01a5864dc4aa689c22186943fa`: Maven test/package638, PostgreSQL37 và probe history+Listening11/11 PASS trên main `2e784fa`. Client B `d425182` còn validator ASCII và ghép query không encode; cần B đồng bộ riêng, không kết luận GUI đã PASS. Nguy cơ tạo ca có sessionId+username vượt128 ký tự vẫn nằm ngoài fix này. Evidence local: `target/pr28-cursor-20261013/REPORT.md`; chưa push/retarget/merge.
+
+
+## Tích hợp Reading/Listening/history — 15/10/2026
+
+- `GET /api/v1/attempts/status?attemptId=<raw UTF-8 encoded once>`: alias chỉ đọc của GET status cũ, cho ID chứa slash/dot-segment. Bearer và kiểm owner/assigned proctor như cũ; trả cùng `CandidateAttemptStatusResponse`, gồm cờ `listeningInterrupted`, `Cache-Control: no-store`. Chỉ đúng một query `attemptId`, không thêm field; thiếu/rỗng/NUL/unpaired-surrogate/quá128 code point/lặp/field lạ →400 INVALID_INPUT. Không nới encoded-slash policy của Tomcat. Foreign owner →403; không đăng nhập →401. Client dùng alias cho slash/dot; path thường giữ tương thích.
+- Scope HTTP là tập ID DB raw được server cấp. Realtime Session giữ được tập này để login/history không sập vì ID đặc biệt; đây không phải quyền gửi WS mới. Heartbeat/envelope/process v0 vẫn giữ ASCII `[A-Za-z0-9_.:-]{1,128}`. Candidate UI từ chối start/entry với ID không tương thích monitoring, không mở bài không giám sát. A/B/C cần chốt contract ID ACTIVE; các đường ghi/audio slash chưa đổi.
+- Trong màn thi, `ExamSession` là owner duy nhất của writer/answers/revision. Audio nhận writer hiện tại và không takeover lần nữa. `LISTENING_STATUS` đúng attempt làm client đọc trạng thái authoritative; Listening bị gián đoạn thì player dừng và đáp án Listening theo bản server, Reading có thể tiếp tục trong deadline. Reconnect/status không phát lại. Không đổi DTO wire, migration, auth hay monitoring default FULL.
+- Chi tiết vòng đời: [guide tích hợp](INTEGRATION_READING_LISTENING.md). Evidence mới tách khỏi số test của các nhánh nguồn.

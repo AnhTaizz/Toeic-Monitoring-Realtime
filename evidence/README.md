@@ -63,3 +63,8 @@ Mục lục chỉ tổ chức bằng chứng đã có, không xác nhận task h
 
 - B-ACCEPT-01 phía A: [API lịch sử lượt thi của thí sinh](t2-a-history/2026-10-12-verification.md) — 592 test với PostgreSQL thật, kiểm chéo client B `770c896` 13/13; nhánh cục bộ chưa merge, GUI của B chưa chạy.
 - API lịch sử, nhánh để mở PR: [xếp lại trên PR #23 đã đồng bộ](t2-a-history/2026-10-13-restack.md) — `19f669e`, 602 test PASS, không lặp commit P0.
+
+
+## Tích hợp Reading/Listening/history —15/10/2026
+
+[Verification mới](integration/2026-10-15-verification.md):833tests/0skip; actual GUI8nhóm; ExamFlow28; concurrency/monitoring regression; source/JAR/log hashes và6ảnh. Human/LAN/E1/E2 NOT RUN; FULL default; không nâng tracker/gate từ số unit tests.

@@ -1,0 +1,349 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] TOEIC Monitoring Realtime                                          [pom]
+[INFO] TOEIC Protocol                                                     [jar]
+[INFO] TOEIC JavaFX Client                                                [jar]
+[INFO] TOEIC Server                                                       [jar]
+[INFO] TOEIC ProcessHandle Spike                                          [jar]
+[INFO] 
+[INFO] ---------------< vn.edu.toeic:toeic-monitoring-realtime >---------------
+[INFO] Building TOEIC Monitoring Realtime 0.1.0-SNAPSHOT                  [1/5]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] -----------------------< vn.edu.toeic:protocol >------------------------
+[INFO] Building TOEIC Protocol 0.1.0-SNAPSHOT                             [2/5]
+[INFO]   from protocol\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ protocol ---
+[INFO] skip non existing resourceDirectory <PROJECT>\protocol\src\main\resources
+[INFO] skip non existing resourceDirectory <PROJECT>\protocol\src\main\resources
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ protocol ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ protocol ---
+[INFO] skip non existing resourceDirectory <PROJECT>\protocol\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ protocol ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ protocol ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running vn.edu.toeic.protocol.measurement.MessageMeasurementsTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.912 s -- in vn.edu.toeic.protocol.measurement.MessageMeasurementsTest
+[INFO] Running vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.058 s -- in vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest
+[INFO] Running vn.edu.toeic.protocol.monitoring.EventOriginTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in vn.edu.toeic.protocol.monitoring.EventOriginTest
+[INFO] Running vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.068 s -- in vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest
+[INFO] Running vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.166 s -- in vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 43, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ protocol ---
+[INFO] 
+[INFO] ------------------------< vn.edu.toeic:client >-------------------------
+[INFO] Building TOEIC JavaFX Client 0.1.0-SNAPSHOT                        [3/5]
+[INFO]   from client\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ client ---
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ client ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 85 source files with javac [debug parameters release 21] to target\classes
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ client ---
+[INFO] Copying 9 resources from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ client ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 56 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] /E:/Project/Toeic-Monitoring-Realtime/target/integration-reading-listening-20261015/worktree/client/src/test/java/vn/edu/toeic/client/integration/ReadingListeningPostgresGuiSmoke.java: <PROJECT>\client\src\test\java\vn\edu\toeic\client\integration\ReadingListeningPostgresGuiSmoke.java uses unchecked or unsafe operations.
+[INFO] /E:/Project/Toeic-Monitoring-Realtime/target/integration-reading-listening-20261015/worktree/client/src/test/java/vn/edu/toeic/client/integration/ReadingListeningPostgresGuiSmoke.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ client ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running vn.edu.toeic.client.AttemptRefreshTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.694 s -- in vn.edu.toeic.client.AttemptRefreshTest
+[INFO] Running vn.edu.toeic.client.audio.AudioApiClientTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.347 s -- in vn.edu.toeic.client.audio.AudioApiClientTest
+[INFO] Running vn.edu.toeic.client.audio.AudioFilesTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.243 s -- in vn.edu.toeic.client.audio.AudioFilesTest
+[INFO] Running vn.edu.toeic.client.audio.AudioPreparationTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.881 s -- in vn.edu.toeic.client.audio.AudioPreparationTest
+[INFO] Running vn.edu.toeic.client.audio.ListeningApiClientTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.097 s -- in vn.edu.toeic.client.audio.ListeningApiClientTest
+[INFO] Running vn.edu.toeic.client.audio.ListeningPlaybackTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.192 s -- in vn.edu.toeic.client.audio.ListeningPlaybackTest
+[INFO] Running vn.edu.toeic.client.dashboard.DashboardControllerTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.152 s -- in vn.edu.toeic.client.dashboard.DashboardControllerTest
+[INFO] Running vn.edu.toeic.client.dashboard.DashboardModelTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.054 s -- in vn.edu.toeic.client.dashboard.DashboardModelTest
+[INFO] Running vn.edu.toeic.client.dashboard.FullStateDashboardTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s -- in vn.edu.toeic.client.dashboard.FullStateDashboardTest
+[INFO] Running vn.edu.toeic.client.dashboard.LateEventsAndGapsTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in vn.edu.toeic.client.dashboard.LateEventsAndGapsTest
+[INFO] Running vn.edu.toeic.client.dashboard.MonitoringApiClientTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.672 s -- in vn.edu.toeic.client.dashboard.MonitoringApiClientTest
+[INFO] Running vn.edu.toeic.client.dashboard.MonitoringJsonTest
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 s -- in vn.edu.toeic.client.dashboard.MonitoringJsonTest
+[INFO] Running vn.edu.toeic.client.exam.ExamApiClientTest
+[INFO] Tests run: 27, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.834 s -- in vn.edu.toeic.client.exam.ExamApiClientTest
+[INFO] Running vn.edu.toeic.client.exam.ExamHistoryReadTest
+[INFO] Tests run: 41, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.862 s -- in vn.edu.toeic.client.exam.ExamHistoryReadTest
+[INFO] Running vn.edu.toeic.client.exam.ExamPaperAndEntryTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 s -- in vn.edu.toeic.client.exam.ExamPaperAndEntryTest
+[INFO] Running vn.edu.toeic.client.exam.ExamSessionTest
+[INFO] Tests run: 45, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.133 s -- in vn.edu.toeic.client.exam.ExamSessionTest
+[INFO] Running vn.edu.toeic.client.exam.ExamSessionThreadingTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in vn.edu.toeic.client.exam.ExamSessionThreadingTest
+[INFO] Running vn.edu.toeic.client.ExamMonitoringIntegrationTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.139 s -- in vn.edu.toeic.client.ExamMonitoringIntegrationTest
+[INFO] Running vn.edu.toeic.client.LoginApiClientTest
+[INFO] Tests run: 39, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.758 s -- in vn.edu.toeic.client.LoginApiClientTest
+[INFO] Running vn.edu.toeic.client.monitoring.CandidateModeSessionTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.490 s -- in vn.edu.toeic.client.monitoring.CandidateModeSessionTest
+[INFO] Running vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest
+[INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.275 s -- in vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest
+[INFO] Running vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.057 s -- in vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest
+[INFO] Running vn.edu.toeic.client.monitoring.harness.ControlledProcessHarnessTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.06 s -- in vn.edu.toeic.client.monitoring.harness.ControlledProcessHarnessTest
+[INFO] Running vn.edu.toeic.client.monitoring.harness.HarnessArtifactsTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.191 s -- in vn.edu.toeic.client.monitoring.harness.HarnessArtifactsTest
+[INFO] Running vn.edu.toeic.client.monitoring.harness.HarnessCliTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.062 s -- in vn.edu.toeic.client.monitoring.harness.HarnessCliTest
+[INFO] Running vn.edu.toeic.client.monitoring.harness.HarnessPlanTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in vn.edu.toeic.client.monitoring.harness.HarnessPlanTest
+[INFO] Running vn.edu.toeic.client.monitoring.harness.ObservationJoinerTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s -- in vn.edu.toeic.client.monitoring.harness.ObservationJoinerTest
+[INFO] Running vn.edu.toeic.client.monitoring.harness.TestTracePolicyTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s -- in vn.edu.toeic.client.monitoring.harness.TestTracePolicyTest
+[INFO] Running vn.edu.toeic.client.monitoring.MonitoringDeliveryTest
+[INFO] Tests run: 33, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 s -- in vn.edu.toeic.client.monitoring.MonitoringDeliveryTest
+[INFO] Running vn.edu.toeic.client.monitoring.ProcessCollectorTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.428 s -- in vn.edu.toeic.client.monitoring.ProcessCollectorTest
+[INFO] Running vn.edu.toeic.client.monitoring.ProcessCollectorTraceTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.093 s -- in vn.edu.toeic.client.monitoring.ProcessCollectorTraceTest
+[INFO] Running vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.067 s -- in vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest
+[INFO] Running vn.edu.toeic.client.monitoring.trace.DeltaReplayTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.623 s -- in vn.edu.toeic.client.monitoring.trace.DeltaReplayTest
+[INFO] Running vn.edu.toeic.client.monitoring.trace.HandwrittenTraceTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in vn.edu.toeic.client.monitoring.trace.HandwrittenTraceTest
+[INFO] Running vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.42 s -- in vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest
+[INFO] Running vn.edu.toeic.client.monitoring.trace.ReplayEngineTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 s -- in vn.edu.toeic.client.monitoring.trace.ReplayEngineTest
+[INFO] Running vn.edu.toeic.client.monitoring.trace.TraceCliTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.078 s -- in vn.edu.toeic.client.monitoring.trace.TraceCliTest
+[INFO] Running vn.edu.toeic.client.monitoring.trace.TraceReaderTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.421 s -- in vn.edu.toeic.client.monitoring.trace.TraceReaderTest
+[INFO] Running vn.edu.toeic.client.monitoring.trace.TraceRecorderTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.147 s -- in vn.edu.toeic.client.monitoring.trace.TraceRecorderTest
+[INFO] Running vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpenerTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.087 s -- in vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpenerTest
+[INFO] Running vn.edu.toeic.client.realtime.RealtimeClientTest
+[INFO] Tests run: 60, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.300 s -- in vn.edu.toeic.client.realtime.RealtimeClientTest
+[INFO] Running vn.edu.toeic.client.ScopeLookupTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.151 s -- in vn.edu.toeic.client.ScopeLookupTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 569, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ client ---
+[INFO] Building jar: <PROJECT>\client\target\client-0.1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- shade:3.6.1:shade (default) @ client ---
+[INFO] Attaching shaded artifact.
+[INFO] 
+[INFO] ------------------------< vn.edu.toeic:server >-------------------------
+[INFO] Building TOEIC Server 0.1.0-SNAPSHOT                               [4/5]
+[INFO]   from server\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ server ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 10 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ server ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ server ---
+[INFO] skip non existing resourceDirectory <PROJECT>\server\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ server ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 37 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ server ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running vn.edu.toeic.server.audio.AudioAuthorizationTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.488 s -- in vn.edu.toeic.server.audio.AudioAuthorizationTest
+[INFO] Running vn.edu.toeic.server.audio.AudioCatalogTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.740 s -- in vn.edu.toeic.server.audio.AudioCatalogTest
+[INFO] Running vn.edu.toeic.server.audio.AudioReadinessPolicyTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s -- in vn.edu.toeic.server.audio.AudioReadinessPolicyTest
+[INFO] Running vn.edu.toeic.server.audio.AudioRuntimePostgresTest
+PASS READY withdrawal/takeover invalidation and fresh writer re-attestation
+PASS clock_timestamp after attempt lock wait rejects expired READY
+PASS READY checksum/speaker gate, all-candidates gate, persisted duplicate/concurrent start ID
+PASS T3-B2 REAL client/HTTP/PG: mapped questions, exact writer, STARTED/COMPLETED and duplicate start blocked
+PASS T3-B1 REAL client/HTTP/PG: missing/one-byte-corrupt local cache blocks READY/start; reload recovers; prepare withdraws; speaker confirmation SIMULATED
+PASS deferred PostgreSQL COMMIT failures rollback READY/start and return no success
+PASS audio/manifest/READY/start ownership, role, assignment and answer-key exclusion
+PASS one-byte mutation/missing resource invalidates effective readiness/start
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 19.64 s -- in vn.edu.toeic.server.audio.AudioRuntimePostgresTest
+[INFO] Running vn.edu.toeic.server.audio.ListeningRuntimePostgresTest
+PASS LT04: media interruption persisted, Listening change/add/delete blocked in save+submit, Reading allowed, score marker retained
+PASS real Flyway V9->V10 upgrade of existing start: answers/writer/revision/deadline intact, replay blocked
+PASS real deferred COMMIT rollback: no start push, no event ACK, no persisted interruption
+PASS Listening heartbeat ACK, server timeout scan, late heartbeat cannot resume, pre-scan save gate
+PASS actual Spring restart with persisted login/answers/deadline, no replay, automatic timeout worker
+PASS takeover/restart interruption, no resume, immutable old answers/deadline
+PASS LT04 assigned-proctor-only concurrent reorganization: fresh attempt, old answers/deadline intact, old timeout score+marker retained
+PASS Listening event/status ownership, role, current writer, start ID and strict frame validation
+PASS completion idempotency, no replay, no false interruption after Listening ends
+PASS committed/scoped WS command, stable retry ID/deadline, no replay after playback/reconnect
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 17.14 s -- in vn.edu.toeic.server.audio.ListeningRuntimePostgresTest
+[INFO] Running vn.edu.toeic.server.auth.AuthenticatedNetworkTest
+[INFO] Tests run: 36, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.615 s -- in vn.edu.toeic.server.auth.AuthenticatedNetworkTest
+[INFO] Running vn.edu.toeic.server.auth.AuthServiceTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 s -- in vn.edu.toeic.server.auth.AuthServiceTest
+[INFO] Running vn.edu.toeic.server.auth.ConcurrentRealtimeSendTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.436 s -- in vn.edu.toeic.server.auth.ConcurrentRealtimeSendTest
+[INFO] Running vn.edu.toeic.server.auth.RealtimeMeasurementTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.415 s -- in vn.edu.toeic.server.auth.RealtimeMeasurementTest
+[INFO] Running vn.edu.toeic.server.auth.SessionAuthenticationTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.102 s -- in vn.edu.toeic.server.auth.SessionAuthenticationTest
+[INFO] Running vn.edu.toeic.server.exam.ExamControllerTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.406 s -- in vn.edu.toeic.server.exam.ExamControllerTest
+[INFO] Running vn.edu.toeic.server.exam.ExamReadAuthorizationTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.252 s -- in vn.edu.toeic.server.exam.ExamReadAuthorizationTest
+[INFO] Running vn.edu.toeic.server.exam.ExamRuntimePostgresTest
+PASS unknown API route: structured 404, not generic 500
+PASS candidate history deterministic keyset pagination/limits/cursor validation/foreign cursor isolation
+PASS candidate history ownership/role/states/field whitelist/no-store; auth scope and writer epoch unchanged
+PASS concurrent entry/reconnect/reopen/takeover: one persisted deadline, old writer STALE
+PASS PostgreSQL row contention: HTTP submit AND autonomous scheduler wait across deadline; submit rejected; scheduler finalizes acknowledged answers once
+PASS submit retry/IDOR/idempotency/late save and autonomous scans: one SUBMITTED result
+PASS empty/NUL rejected; whitespace and SQL-looking cursors remain literal bound positions, no trimming/normalization or role widening
+PASS cursor boundary: 128 PostgreSQL characters accepted including supplementary Unicode; 129 rejected
+KNOWN OUT-OF-SCOPE createSession risk: 128-character sessionId plus username -> HTTP 500; transaction rolls back; API/schema unchanged
+PASS mixed server-issued cursors roundtrip: A bad, leading spaces, Unicode/NFC/NFD/supplementary, URL metacharacters/control characters/SQL-looking ID; limits 1/2/3, exact C byte order, no duplicates/lost rows, foreign isolation
+PASS CLOSED remains forbidden for exam reads
+PASS INTERRUPTED remains forbidden for exam reads
+PASS autonomous runtime timeout with zero answers: TIMED_OUT, score 0/2, terminal result readable
+PASS candidate history ASCII/C order under en_US database collation; exact-fit, past-end and unknown cursor boundaries
+PASS read gates ACTIVE: owner/assigned allowed; foreign/unauth/revoked denied; ACTIVE scope preserved
+PASS read gates SUBMITTED: owner/assigned allowed; foreign/unauth/revoked denied; ACTIVE scope preserved
+PASS read gates TIMED_OUT: owner/assigned allowed; foreign/unauth/revoked denied; ACTIVE scope preserved
+PASS legacy first-save compatibility and takeover preserve existing deadline
+PASS timeout uses acknowledged revision only; rejected/unsubmitted answers excluded, repeated scans immutable
+PASS candidate history hides legacy monitoring-only and untimestamped final rows; TIMED_OUT listed; revoked/unknown token 401; POST not served (HTTP 500)
+PASS runtime shutdown: exam scheduler and monitoring workers stopped
+PASS removed only owned test schema t2a_p0_bd0670d455b84fd7b50eb43b7bdd6287
+[INFO] Tests run: 29, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.56 s -- in vn.edu.toeic.server.exam.ExamRuntimePostgresTest
+[INFO] Running vn.edu.toeic.server.exam.ExamTimeoutSchedulingTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.305 s -- in vn.edu.toeic.server.exam.ExamTimeoutSchedulingTest
+[INFO] Running vn.edu.toeic.server.exam.ExamValidationTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in vn.edu.toeic.server.exam.ExamValidationTest
+[INFO] Running vn.edu.toeic.server.monitoring.FullSnapshotReducerTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.089 s -- in vn.edu.toeic.server.monitoring.FullSnapshotReducerTest
+[INFO] Running vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.208 s -- in vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest
+[INFO] Running vn.edu.toeic.server.monitoring.MonitoringGapTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.072 s -- in vn.edu.toeic.server.monitoring.MonitoringGapTestPRESENCE_SCAN retryable failure; no success push
+[INFO] Running vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 s -- in vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest
+[INFO] Running vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.072 s -- in vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest
+[INFO] Running vn.edu.toeic.server.monitoring.MonitoringStateServiceTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.073 s -- in vn.edu.toeic.server.monitoring.MonitoringStateServiceTest
+[INFO] Running vn.edu.toeic.server.monitoring.ProcessEventTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 s -- in vn.edu.toeic.server.monitoring.ProcessEventTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 220, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ server ---
+[INFO] 
+[INFO] --- spring-boot:4.1.1:repackage (repackage) @ server ---
+[INFO] Replacing main artifact <PROJECT>\server\target\server-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to <PROJECT>\server\target\server-0.1.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] -------------------< vn.edu.toeic:monitoring-spike >--------------------
+[INFO] Building TOEIC ProcessHandle Spike 0.1.0-SNAPSHOT                  [5/5]
+[INFO]   from monitoring-spike\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ monitoring-spike ---
+[INFO] skip non existing resourceDirectory <PROJECT>\monitoring-spike\src\main\resources
+[INFO] skip non existing resourceDirectory <PROJECT>\monitoring-spike\src\main\resources
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ monitoring-spike ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ monitoring-spike ---
+[INFO] skip non existing resourceDirectory <PROJECT>\monitoring-spike\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ monitoring-spike ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ monitoring-spike ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running vn.edu.toeic.monitoring.ProcessObservationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.150 s -- in vn.edu.toeic.monitoring.ProcessObservationTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ monitoring-spike ---
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for TOEIC Monitoring Realtime 0.1.0-SNAPSHOT:
+[INFO] 
+[INFO] TOEIC Monitoring Realtime .......................... SUCCESS [  0.006 s]
+[INFO] TOEIC Protocol ..................................... SUCCESS [  5.727 s]
+[INFO] TOEIC JavaFX Client ................................ SUCCESS [01:03 min]
+[INFO] TOEIC Server ....................................... SUCCESS [01:15 min]
+[INFO] TOEIC ProcessHandle Spike .......................... SUCCESS [  1.540 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:26 min
+[INFO] Finished at: 2026-10-15T00:33:34+07:00
+[INFO] ------------------------------------------------------------------------

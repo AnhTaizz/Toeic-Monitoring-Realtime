@@ -227,3 +227,16 @@ Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`
 ### QD-23 · Bổ sung phạm vi cursor — 13/10/2026
 
 Theo yêu cầu người dùng, validator cursor nhận nguyên giá trị không rỗng, không NUL, tối đa128 Unicode code point như PostgreSQL `VARCHAR(128)`, thay regex ASCII để không từ chối cursor do server phát. Không trim/normalization, SQL parameter binding và byte UTF-8/C order giữ nguyên. B phải URL-encode và đồng bộ validator/ordering ở lượt riêng; không sửa client trong fix A này. Không đổi schema hoặc API tạo ca; vượt128 do ghép ID là rủi ro riêng đã tái hiện500+rollback. Regression PostgreSQL mới có mixed-ID/limit1,2,3/foreign owner/biên128-129/NUL; code `00b1df1`, Maven test/package638 và probe11/11 PASS. Evidence local `target/pr28-cursor-20261013/REPORT.md`; human review và GUI NOT RUN.
+
+
+## QD-28 · Một owner writer cho Reading và Listening trong màn thi
+
+Ngày15/10/2026 · Nhánh integration/reading-listening-20261015 · Theo task.txt; human A/B/C review NOT RUN.
+
+ExamEntry cấp writer cho lần vào ACTIVE; CandidateExamView sở hữu ExamSession và truyền đúng epoch cho phần audio cùng attempt. Không có audio takeover hoặc autoplay khi đọc status/reconnect/history. Callback Media/API có generation và guard đóng view. Khi writer/state không hợp lệ, đóng audio/worker/subscription; reclaim rõ ràng mới cấp writer khác. Gián đoạn Listening được đối chiếu với server rồi chỉ phần Listening trong full-map bị giữ theo bản đã commit; Reading không mất thay đổi và revision không giảm. Query status alias xử lý slash như dữ liệu, giữ Tomcat path policy và service authorization. A review route/scope, B review view/session/Media/lifecycle; C review collector/realtime hooks. Không thay transaction/schema/delta default.
+
+## QD-29 · Contract ID ACTIVE đặc biệt còn chờ A/B/C
+
+Ngày15/10/2026 · ĐANG CHỜ, không coi là đã duyệt.
+
+History/DB nhận raw Unicode/space/slash tối đa128 code point; monitoring v0 đang dùng ASCII cho attempt envelope/heartbeat. Phiên tích hợp sửa scope HTTP để không làm login/history thất bại, thêm query đọc status và giữ giới hạn WS hiện có. UI không mở một bài ACTIVE không giám sát. Cần A/B/C chọn: giới hạn/chuẩn hóa ID khi cấp lượt bằng quy tắc mới có kiểm thử, hoặc mở rộng riêng typed attemptId qua toàn bộ monitoring/audio endpoints. Không tự mở rộng messageId/collectorId, không nới container toàn server. Rủi ro sessionId+username vượt128 và sai HTTP method trả500 giữ ở backlog A, ngoài tích hợp P0.

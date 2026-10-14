@@ -507,3 +507,20 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Còn dở: code chỉ local, chưa push/retarget/bỏDraft/merge; B cần validator/encode/byte order riêng. API tạo ca oversizedID vẫn500+rollback, nằm ngoài scope. GUI/LAN/human review NOT RUN.
 - Tiếp theo: người dùng review bản local và cho phép riêng trước push; sau push kiểm diff/checks/mergeability rồi mới retarget/merge theo phép riêng.
 - Evidence: local `target/pr28-cursor-20261013/REPORT.md`; bảo toàn evidence gốc, B4, worktree khác và file chưa commit; không prune hoặc bật production delta.
+
+
+## 15/10/2026 — Integration: Reading, Listening và history
+
+- Nhận task.txt, audit/fetch/PR17-28-34/SHA/worktree; giữ main6a41031, mọi nhánh/worktree cũ và4file untracked. Worktree mới `target/integration-reading-listening-20261015/worktree` từ origin/main8f5ac40; nhánh `integration/reading-listening-20261015`.
+- Merge history2ca4121 tại81ae662; conflict chỉ3doc, hợp nhất cả history và Listening. Lấy từng file Reading từ65f5123/d425182, không merge mù PR17; compose Application/view tại9115776, giữ pipeline audio B1–B3 của main và FULL default.
+- ExamSession sở hữu writer/answers; audio nhận epoch, không takeover. Status/heartbeat/Media/callback có guard; server-interrupted đóng băng Listening theo bản server và giữ Reading local. Query status alias giữ owner/scope và Tomcat encoded-slash policy. HTTP scope raw không nới WS v0; QD28/29 ghi owner review và quyết định ID còn chờ.
+- Targeted142 PASS sau5FAILassertion path cũ; PG49 PASS mới. Clean test9115776 và package3f4d5d6 đều833 PASS,0skip trên JDK21.0.8/Maven3.9.11/Windows11/PostgreSQL18.6. GUI harness actual Application/JAR/Media/PG/WS/restart đang kiểm; firstFAIL do port readiness trước seed commit, sửa precondition count3users, giữ log gốc. Không ghi PASS GUI khi chưa chạy xong.
+- PS native runner bị treo và native cmd quoting lần đầu FAIL; chuyển runner môi trường/nativecmd, credentials chỉ qua env. Docker service db bật bằng fileCompose/EnvFile cụ thể sau rejection của auto-review khi target chưa rõ; giữ volume và hai container khác. Test dùng schema owned, không reset public.
+- Tài liệu/guide/protocol/owner handoff cập nhật; tracker/kế hoạch gốc/.env/migrations/raw cũ giữ nguyên. Evidence cuối `evidence/integration/2026-10-15-verification.md`; human A/B/C/LAN/installer/E1/E2 NOT RUN. Chưa merge main; push/Draft PR sau khi đủ evidence hoặc bàn giao PARTIAL có blocker cụ thể.
+
+
+### Chốt kiểm tra runtime và GUI trong phiên tích hợp
+
+- Visual QA phát hiện prepare button không nhận thay đổi playback; sửa387ed99, package833 PASS mới. GUI proctor ban đầu chỉ check HTTP nên ảnh loading; siết roster+state đã render. Assertion literal SYNCED-label FAIL vì UI dùng nhãn quan sát; d809a00 kiểm đúng nhãn và exact HTTP SYNCED, GUI final8nhóm PASS với6ảnh.
+- C1 lần đầu driver thiếu heartbeat200ms trong script chuẩn (default2s lớn hơn timeout800ms của smoke) FAIL; dùng đúng flag rồi FULL/epoch/reconnect/autoSTALE/TTL/cleanup PASS. C2 late/gap/UNKNOWN/retry/conflict/permissions PASS mới. Không đổi monitoring runtime hoặc gọi faults MOCK/SIMULATED là dữ liệu production.
+- Raw/log/ảnh/version/hash và các lượt lỗi giữ riêng; audit credential match0. B review thêm contrast của roster selected row (P2), A review rawID ACTIVE/oversized generatedID/wrong-method500 (P1/P2); human/LAN/installer/E1/E2 vẫn NOT RUN.
