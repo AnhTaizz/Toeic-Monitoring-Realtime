@@ -3,9 +3,12 @@ package vn.edu.toeic.server.exam;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.time.Duration;
@@ -59,6 +62,7 @@ class ExamRuntimePostgresTest {
         properties.put("toeic.seed.password", required("TOEIC_SEED_PASSWORD"));
         properties.put("exam.timeout.scan-interval-ms", "100");
         properties.put("exam.timeout.scheduler.enabled", "true");
+        properties.put("debug", "false");
         properties.put("logging.level.root", "WARN");
         SpringApplication app = new SpringApplication(ToeicServerApplication.class);
         app.setBannerMode(Banner.Mode.OFF);
@@ -140,6 +144,261 @@ class ExamRuntimePostgresTest {
             expect(get(path(attempt, "exam"), token), 403);
         }
         System.out.println("PASS " + state + " remains forbidden for exam reads");
+    }
+
+    @Test void candidateAttemptHistoryIsOwnedRoleProtectedAndFieldWhitelisted() throws Exception {
+        String active = attempt(60);
+        String submitted = attempt(60);
+        String timedOut = attempt(60);
+        String closed = attempt(60);
+        String interrupted = attempt(60);
+        String foreign = attemptFor("candidate2", 60);
+        setFinalState(submitted, "SUBMITTED");
+        setFinalState(timedOut, "TIMED_OUT");
+        jdbc.sql("UPDATE monitoring_attempts SET state = 'CLOSED' WHERE attempt_id = :a").param("a", closed).update();
+        jdbc.sql("UPDATE monitoring_attempts SET state = 'INTERRUPTED' WHERE attempt_id = :a").param("a", interrupted).update();
+        long writerEpochBefore = jdbc.sql("SELECT writer_epoch FROM monitoring_attempts WHERE attempt_id = :a")
+                .param("a", submitted).query(Long.class).single();
+
+        HttpResponse<String> response = expect(get("/api/v1/candidate/attempts?limit=100", candidateToken), 200);
+        assertThat(response.headers().firstValue("Cache-Control")).hasValueSatisfying(value -> assertThat(value).contains("no-store"));
+        JsonArray attempts = json(response).getAsJsonArray("attempts");
+        Set<String> ids = new HashSet<>();
+        for (var element : attempts) ids.add(element.getAsJsonObject().get("attemptId").getAsString());
+        assertThat(ids).contains(active, submitted, timedOut).doesNotContain(closed, interrupted, foreign);
+
+        JsonObject activeSummary = summary(attempts, active);
+        JsonObject submittedSummary = summary(attempts, submitted);
+        assertThat(activeSummary.keySet()).containsExactlyInAnyOrder(
+                "attemptId", "sessionId", "examId", "examTitle", "sessionTitle", "state", "submittedAt");
+        assertThat(activeSummary.get("state").getAsString()).isEqualTo("ACTIVE");
+        assertThat(activeSummary.get("submittedAt").isJsonNull()).isTrue();
+        assertThat(submittedSummary.get("state").getAsString()).isEqualTo("SUBMITTED");
+        assertThat(submittedSummary.get("submittedAt").isJsonNull()).isFalse();
+        assertThat(response.body()).doesNotContain(
+                "correctOption", "answers", "writerEpoch", "savedRevision", "candidateUserId",
+                "score", "process", "policy", "token");
+
+        JsonArray foreignList = json(expect(get("/api/v1/candidate/attempts?limit=100", otherCandidateToken), 200))
+                .getAsJsonArray("attempts");
+        assertThat(summaryIds(foreignList)).contains(foreign).doesNotContain(active, submitted, timedOut);
+        expect(get("/api/v1/candidate/attempts", proctorToken), 403);
+        expect(get("/api/v1/candidate/attempts", null), 401);
+        expectCode(get("/api/v1/candidate/attempts?candidateUserId=1", candidateToken), 400, "INVALID_INPUT");
+
+        JsonArray scope = json(expect(get("/api/v1/auth/me", candidateToken), 200)).getAsJsonArray("attemptScope");
+        assertThat(scope.toString()).contains(active).doesNotContain(submitted, timedOut);
+        assertThat(jdbc.sql("SELECT writer_epoch FROM monitoring_attempts WHERE attempt_id = :a")
+                .param("a", submitted).query(Long.class).single()).isEqualTo(writerEpochBefore);
+        System.out.println("PASS candidate history ownership/role/states/field whitelist/no-store; auth scope and writer epoch unchanged");
+    }
+
+    @Test void candidateAttemptHistoryUsesBoundedDeterministicKeysetPagination() throws Exception {
+        for (int i = 0; i < 5; i++) attempt(60);
+        String foreignCursor = attemptFor("candidate2", 60);
+        List<String> expected = jdbc.sql("""
+                SELECT a.attempt_id
+                FROM monitoring_attempts a
+                JOIN exam_sessions s ON s.session_id = a.session_id
+                JOIN exams e ON e.exam_id = a.exam_id AND e.exam_id = s.exam_id
+                JOIN user_accounts u ON u.id = a.candidate_user_id
+                WHERE u.username = 'candidate1'
+                  AND a.state IN ('ACTIVE', 'SUBMITTED', 'TIMED_OUT')
+                  AND (a.state = 'ACTIVE' OR a.submitted_at IS NOT NULL)
+                ORDER BY a.attempt_id COLLATE "C" ASC
+                """).query(String.class).list();
+
+        List<String> actual = new ArrayList<>();
+        Set<String> unique = new HashSet<>();
+        String cursor = null;
+        for (int pageNumber = 0; pageNumber < 100; pageNumber++) {
+            String path = "/api/v1/candidate/attempts?limit=2"
+                    + (cursor == null ? "" : "&afterAttemptId=" + cursor);
+            JsonObject page = json(expect(get(path, candidateToken), 200));
+            JsonArray attempts = page.getAsJsonArray("attempts");
+            assertThat(attempts.size()).isLessThanOrEqualTo(2);
+            for (var element : attempts) {
+                String attemptId = element.getAsJsonObject().get("attemptId").getAsString();
+                if (!actual.isEmpty()) assertThat(attemptId.compareTo(actual.getLast())).isPositive();
+                assertThat(unique.add(attemptId)).isTrue();
+                actual.add(attemptId);
+            }
+            if (page.get("nextAfterAttemptId").isJsonNull()) break;
+            assertThat(attempts).isNotEmpty();
+            cursor = page.get("nextAfterAttemptId").getAsString();
+            assertThat(cursor).isEqualTo(actual.getLast());
+        }
+        assertThat(actual).containsExactlyElementsOf(expected);
+
+        for (String invalid : List.of(
+                "/api/v1/candidate/attempts?limit=0",
+                "/api/v1/candidate/attempts?limit=101",
+                "/api/v1/candidate/attempts?limit=abc",
+                "/api/v1/candidate/attempts?limit=1&limit=2",
+                "/api/v1/candidate/attempts?afterAttemptId=",
+                "/api/v1/candidate/attempts?afterAttemptId=%00")) {
+            expectCode(get(invalid, candidateToken), 400, "INVALID_INPUT");
+        }
+        assertThat(summaryIds(json(expect(get(
+                "/api/v1/candidate/attempts?limit=100&afterAttemptId=" + foreignCursor,
+                candidateToken), 200)).getAsJsonArray("attempts"))).doesNotContain(foreignCursor);
+        System.out.println("PASS candidate history deterministic keyset pagination/limits/cursor validation/foreign cursor isolation");
+    }
+
+    @Test void candidateAttemptHistoryRoundTripsMixedServerCursorsWithoutChangingIds() throws Exception {
+        String owner = "historymixed";
+        String token = historyCandidate(owner);
+        List<String> created = new ArrayList<>();
+        for (String session : List.of("A bad", " A leading", "A bad ", "B+&%?#/\\\"'=\t\r\n",
+                "C' OR '1'='1", "Ca thi tiếng Việt", "Café", "Cafe\u0301", "\uE000-private", "🚀-audio")) {
+            created.add(historyAttempt(session, owner));
+        }
+        List<String> expected = created.stream().sorted(ExamRuntimePostgresTest::compareUtf8).toList();
+        for (int limit : List.of(1, 2, 3)) assertHistoryPages(token, expected, limit);
+        for (int index = 0; index < expected.size(); index++) {
+            JsonObject page = json(expect(get(historyPath(1, expected.get(index)), token), 200));
+            List<String> next = page.getAsJsonArray("attempts").asList().stream()
+                    .map(row -> row.getAsJsonObject().get("attemptId").getAsString()).toList();
+            assertThat(next).containsExactlyElementsOf(expected.subList(index + 1, Math.min(index + 2, expected.size())));
+        }
+        JsonArray foreign = json(expect(get("/api/v1/candidate/attempts?limit=100", candidateToken), 200)).getAsJsonArray("attempts");
+        assertThat(summaryIds(foreign)).doesNotContainAnyElementsOf(created);
+        JsonArray afterForeignCursor = json(expect(get(historyPath(100, created.getFirst()), candidateToken), 200)).getAsJsonArray("attempts");
+        assertThat(summaryIds(afterForeignCursor)).doesNotContainAnyElementsOf(created);
+        System.out.println("PASS mixed server-issued cursors roundtrip: A bad, leading spaces, Unicode/NFC/NFD/supplementary, "
+                + "URL metacharacters/control characters/SQL-looking ID; limits 1/2/3, exact C byte order, no duplicates/lost rows, foreign isolation");
+    }
+
+    @Test void candidateAttemptHistoryCursorLengthMatchesPostgresVarcharCharacters() throws Exception {
+        String owner = "historylength";
+        String token = historyCandidate(owner);
+        int sessionCharacters = 128 - ("-" + owner).length();
+        List<String> created = new ArrayList<>();
+        for (String session : List.of("L".repeat(sessionCharacters), "界".repeat(sessionCharacters), "🚀".repeat(sessionCharacters))) {
+            String attemptId = historyAttempt(session, owner);
+            created.add(attemptId);
+            assertThat(attemptId.codePointCount(0, attemptId.length())).isEqualTo(128);
+            assertThat(jdbc.sql("SELECT char_length(attempt_id) FROM monitoring_attempts WHERE attempt_id = :a")
+                    .param("a", attemptId).query(Integer.class).single()).isEqualTo(128);
+            expect(get(historyPath(1, attemptId), token), 200);
+        }
+        assertThat(created.getLast().length()).as("supplementary characters occupy two UTF-16 units").isGreaterThan(128);
+        assertHistoryPages(token, created.stream().sorted(ExamRuntimePostgresTest::compareUtf8).toList(), 1);
+        for (String tooLong : List.of("x".repeat(129), "界".repeat(129), "🚀".repeat(129))) {
+            expectCode(get(historyPath(1, tooLong), token), 400, "INVALID_INPUT");
+        }
+        // Separate existing createSession risk: a legal 128-character sessionId plus username exceeds attempt VARCHAR(128).
+        String oversizedSession = "OVERFLOW-" + "x".repeat(128 - "OVERFLOW-".length());
+        expect(post("/api/v1/sessions", new CreateSessionRequest(oversizedSession, examId, "TEST length risk", 60,
+                List.of("proctor1"), List.of(owner)), proctorToken), 500);
+        assertThat(jdbc.sql("SELECT count(*) FROM exam_sessions WHERE session_id = :s")
+                .param("s", oversizedSession).query(Long.class).single()).isZero();
+        System.out.println("PASS cursor boundary: 128 PostgreSQL characters accepted including supplementary Unicode; 129 rejected");
+        System.out.println("KNOWN OUT-OF-SCOPE createSession risk: 128-character sessionId plus username -> HTTP 500; transaction rolls back; API/schema unchanged");
+    }
+
+    @Test void candidateAttemptHistoryRejectsEmptyAndNulButBindsOtherCursorTextLiterally() throws Exception {
+        String owner = "historyliteral";
+        String token = historyCandidate(owner);
+        List<String> created = new ArrayList<>();
+        for (String session : List.of(" A", "A", "B")) created.add(historyAttempt(session, owner));
+        expectCode(get(historyPath(1, ""), token), 400, "INVALID_INPUT");
+        expectCode(get(historyPath(1, "a\0b"), token), 400, "INVALID_INPUT");
+        for (String cursor : List.of(" ", " A-" + owner + " ", "'OR'1'='1", "é", "e\u0301")) {
+            List<String> expected = created.stream().filter(id -> compareUtf8(id, cursor) > 0)
+                    .sorted(ExamRuntimePostgresTest::compareUtf8).toList();
+            JsonArray rows = json(expect(get(historyPath(100, cursor), token), 200)).getAsJsonArray("attempts");
+            assertThat(rows.asList().stream().map(row -> row.getAsJsonObject().get("attemptId").getAsString()).toList())
+                    .containsExactlyElementsOf(expected);
+        }
+        assertThat(jdbc.sql("SELECT count(*) FROM monitoring_attempts WHERE candidate_user_id = "
+                + "(SELECT id FROM user_accounts WHERE username = :u)").param("u", owner).query(Long.class).single()).isEqualTo(3);
+        expect(get(historyPath(1, "A bad-candidate1"), proctorToken), 403);
+        expect(get(historyPath(1, "A bad-candidate1"), null), 401);
+        System.out.println("PASS empty/NUL rejected; whitespace and SQL-looking cursors remain literal bound positions, no trimming/normalization or role widening");
+    }
+
+    @Test void candidateAttemptHistoryOrdersByAsciiAndHandlesPageBoundaries() throws Exception {
+        // The database default collation is en_US: without COLLATE "C" it sorts 'a' before 'B' and B's client rejects the page.
+        String run = "HIST-" + id().substring(0, 8);
+        List<String> created = new ArrayList<>();
+        for (String sessionId : List.of(run + "_c", run + "-a", run + ".d", run + "-B")) {
+            expect(post("/api/v1/sessions", new CreateSessionRequest(sessionId, examId, "TEST history order", 60,
+                    List.of("proctor1"), List.of("candidate2")), proctorToken), 200);
+            created.add(sessionId + "-candidate2");
+        }
+        List<String> all = new ArrayList<>(summaryIds(json(expect(get(
+                "/api/v1/candidate/attempts?limit=100", otherCandidateToken), 200)).getAsJsonArray("attempts")));
+        assertThat(all).containsAll(created).hasSizeLessThan(100);
+        Collections.sort(all);
+        List<String> paged = new ArrayList<>();
+        String cursor = null;
+        do {
+            JsonObject page = json(expect(get("/api/v1/candidate/attempts?limit=1"
+                    + (cursor == null ? "" : "&afterAttemptId=" + cursor), otherCandidateToken), 200));
+            assertThat(page.keySet()).containsExactlyInAnyOrder("attempts", "nextAfterAttemptId");
+            for (var element : page.getAsJsonArray("attempts")) paged.add(element.getAsJsonObject().get("attemptId").getAsString());
+            cursor = page.get("nextAfterAttemptId").isJsonNull() ? null : page.get("nextAfterAttemptId").getAsString();
+        } while (cursor != null && paged.size() <= all.size());
+        assertThat(paged).as("byte order of String.compareTo, one row per page").containsExactlyElementsOf(all);
+        assertThat(paged.indexOf(run + "-B-candidate2")).isLessThan(paged.indexOf(run + "-a-candidate2"));
+        assertThat(paged.indexOf(run + "-a-candidate2")).isLessThan(paged.indexOf(run + ".d-candidate2"));
+        assertThat(paged.indexOf(run + ".d-candidate2")).isLessThan(paged.indexOf(run + "_c-candidate2"));
+
+        JsonObject exactFit = json(expect(get("/api/v1/candidate/attempts?limit=" + all.size(), otherCandidateToken), 200));
+        assertThat(exactFit.getAsJsonArray("attempts")).hasSize(all.size());
+        assertThat(exactFit.get("nextAfterAttemptId").isJsonNull()).as("exactly limit rows: no extra page").isTrue();
+        JsonObject pastEnd = json(expect(get("/api/v1/candidate/attempts?afterAttemptId=" + all.getLast(), otherCandidateToken), 200));
+        assertThat(pastEnd.getAsJsonArray("attempts")).isEmpty();
+        assertThat(pastEnd.get("nextAfterAttemptId").isJsonNull()).isTrue();
+        // The cursor is only a position: an ID that does not exist still returns just the caller's own later rows.
+        JsonArray afterUnknown = json(expect(get("/api/v1/candidate/attempts?limit=100&afterAttemptId=" + run + "-Z",
+                otherCandidateToken), 200)).getAsJsonArray("attempts");
+        assertThat(summaryIds(afterUnknown)).contains(run + "-a-candidate2", run + ".d-candidate2", run + "_c-candidate2")
+                .doesNotContain(run + "-B-candidate2");
+        System.out.println("PASS candidate history ASCII/C order under en_US database collation; exact-fit, past-end and unknown cursor boundaries");
+    }
+
+    @Test void candidateAttemptHistoryHidesNonExamRowsAndRejectsRevokedSessions() throws Exception {
+        long candidateId = jdbc.sql("SELECT id FROM user_accounts WHERE username = 'candidate1'").query(Long.class).single();
+        String legacy = "LEGACY-" + id();
+        jdbc.sql("INSERT INTO monitoring_attempts (attempt_id, candidate_user_id, state) VALUES (:a, :u, 'ACTIVE')")
+                .param("a", legacy).param("u", candidateId).update();
+        String finalWithoutTimestamp = attempt(60);
+        jdbc.sql("UPDATE monitoring_attempts SET state = 'SUBMITTED', submitted_at = NULL WHERE attempt_id = :a")
+                .param("a", finalWithoutTimestamp).update();
+        String timedOut = attempt(60);
+        setFinalState(timedOut, "TIMED_OUT");
+
+        JsonArray attempts = json(expect(get("/api/v1/candidate/attempts?limit=100", candidateToken), 200)).getAsJsonArray("attempts");
+        assertThat(summaryIds(attempts)).contains(timedOut).doesNotContain(legacy, finalWithoutTimestamp);
+        JsonObject timedOutSummary = summary(attempts, timedOut);
+        assertThat(timedOutSummary.keySet()).containsExactlyInAnyOrder(
+                "attemptId", "sessionId", "examId", "examTitle", "sessionTitle", "state", "submittedAt");
+        assertThat(timedOutSummary.get("state").getAsString()).isEqualTo("TIMED_OUT");
+        assertThat(Instant.parse(timedOutSummary.get("submittedAt").getAsString())).isBeforeOrEqualTo(Instant.now());
+        // History only discovers IDs: results are still read through GET status under exam-read; ACTIVE scope is unchanged.
+        expect(get(path(timedOut, "status"), candidateToken), 200);
+        expect(get(path(timedOut, "status"), otherCandidateToken), 403);
+        assertThat(json(expect(get("/api/v1/auth/me", candidateToken), 200)).getAsJsonArray("attemptScope").toString())
+                .contains(legacy).doesNotContain(timedOut);
+
+        String revokedToken = login("candidate2");
+        jdbc.sql("UPDATE login_sessions SET revoked_at = clock_timestamp() WHERE id = (SELECT max(id) FROM login_sessions)").update();
+        expectCode(get("/api/v1/candidate/attempts", revokedToken), 401, "UNAUTHORIZED");
+        expect(get("/api/v1/candidate/attempts", "TEST-not-a-session-token"), 401);
+        int wrongMethod = post("/api/v1/candidate/attempts", Map.of("candidateUserId", candidateId), candidateToken).statusCode();
+        assertThat(wrongMethod).as("list is read-only").isGreaterThanOrEqualTo(400);
+        System.out.println("PASS candidate history hides legacy monitoring-only and untimestamped final rows; TIMED_OUT listed; "
+                + "revoked/unknown token 401; POST not served (HTTP " + wrongMethod + ")");
+    }
+
+    @Test void unknownApiRouteReturnsStructured404InsteadOf500() throws Exception {
+        HttpResponse<String> response = expect(get("/api/v1/route-that-does-not-exist", candidateToken), 404);
+        JsonObject error = json(response).getAsJsonObject("error");
+        assertThat(error.get("code").getAsString()).isEqualTo("INVALID_INPUT");
+        assertThat(error.get("retryable").getAsBoolean()).isFalse();
+        System.out.println("PASS unknown API route: structured 404, not generic 500");
     }
 
     @Test void concurrentFirstEntriesReconnectAndTakeoverKeepOneDeadline() throws Exception {
@@ -283,10 +542,75 @@ class ExamRuntimePostgresTest {
         throw new AssertionError("Autonomous runtime scheduler did not finalize attempt");
     }
     private JsonObject status(String attempt) throws Exception { return json(expect(get(path(attempt, "status"), candidateToken), 200)); }
-    private String attempt(int seconds) throws Exception {
+    private String attempt(int seconds) throws Exception { return attemptFor("candidate1", seconds); }
+    private String attemptFor(String candidateUsername, int seconds) throws Exception {
         String session = "P0-" + id();
-        expect(post("/api/v1/sessions", new CreateSessionRequest(session, examId, "TEST P0 session", seconds, List.of("proctor1"), List.of("candidate1")), proctorToken), 200);
-        return session + "-candidate1";
+        expect(post("/api/v1/sessions", new CreateSessionRequest(session, examId, "TEST P0 session", seconds,
+                List.of("proctor1"), List.of(candidateUsername)), proctorToken), 200);
+        return session + "-" + candidateUsername;
+    }
+    private void setFinalState(String attemptId, String state) {
+        jdbc.sql("""
+                UPDATE monitoring_attempts
+                SET state = :state, submitted_at = clock_timestamp(), total_questions = 2,
+                    correct_count = 1, listening_correct = 0, reading_correct = 1, score = 1
+                WHERE attempt_id = :attemptId
+                """).param("state", state).param("attemptId", attemptId).update();
+    }
+    private static JsonObject summary(JsonArray attempts, String attemptId) {
+        for (var element : attempts) {
+            JsonObject item = element.getAsJsonObject();
+            if (attemptId.equals(item.get("attemptId").getAsString())) return item;
+        }
+        throw new AssertionError("Missing attempt summary " + attemptId);
+    }
+    private static Set<String> summaryIds(JsonArray attempts) {
+        Set<String> ids = new HashSet<>();
+        for (var element : attempts) ids.add(element.getAsJsonObject().get("attemptId").getAsString());
+        return ids;
+    }
+    private String historyCandidate(String username) throws Exception {
+        jdbc.sql("""
+                INSERT INTO user_accounts (username, display_name, role, password_hash)
+                SELECT :u, 'TEST history cursor', 'CANDIDATE', password_hash
+                FROM user_accounts WHERE username = 'candidate1'
+                """).param("u", username).update();
+        return login(username);
+    }
+    private String historyAttempt(String session, String username) throws Exception {
+        expect(post("/api/v1/sessions", new CreateSessionRequest(session, examId, "TEST history cursor", 60,
+                List.of("proctor1"), List.of(username)), proctorToken), 200);
+        return session + "-" + username;
+    }
+    private void assertHistoryPages(String token, List<String> expected, int limit) throws Exception {
+        List<String> actual = new ArrayList<>();
+        Set<String> unique = new HashSet<>();
+        String cursor = null;
+        for (int pageNumber = 0; pageNumber <= expected.size(); pageNumber++) {
+            JsonObject page = json(expect(get(historyPath(limit, cursor), token), 200));
+            JsonArray rows = page.getAsJsonArray("attempts");
+            assertThat(rows.size()).isLessThanOrEqualTo(limit);
+            for (var element : rows) {
+                String attemptId = element.getAsJsonObject().get("attemptId").getAsString();
+                assertThat(unique.add(attemptId)).as("no duplicate across pages").isTrue();
+                actual.add(attemptId);
+            }
+            if (page.get("nextAfterAttemptId").isJsonNull()) {
+                assertThat(actual).containsExactlyElementsOf(expected);
+                return;
+            }
+            assertThat(rows).isNotEmpty();
+            cursor = page.get("nextAfterAttemptId").getAsString();
+            assertThat(cursor).isEqualTo(actual.getLast());
+        }
+        throw new AssertionError("History pagination did not terminate");
+    }
+    private static String historyPath(int limit, String cursor) {
+        return "/api/v1/candidate/attempts?limit=" + limit
+                + (cursor == null ? "" : "&afterAttemptId=" + URLEncoder.encode(cursor, StandardCharsets.UTF_8));
+    }
+    private static int compareUtf8(String first, String second) {
+        return Arrays.compareUnsigned(first.getBytes(StandardCharsets.UTF_8), second.getBytes(StandardCharsets.UTF_8));
     }
     private TakeoverWriterRequest takeover(String attempt) { return new TakeoverWriterRequest(id(), attempt, "TEST-device-" + id()); }
     private String login(String username) throws Exception {

@@ -201,7 +201,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** AT01, AT07, AT09, AT10 có bằng chứng; chạy lại nhiều lần cho cùng kết quả.
 
-**Ghi chú làm dở:** 05/10/2026, T2-A4 code-complete trên `feat/t2-a4-concurrency-and-takeover`: Endpoint `POST /api/v1/attempts/{attemptId}/takeover` (tăng `writerEpoch` dưới khóa bi quan `FOR UPDATE OF a`), `GET /api/v1/attempts/{attemptId}/status` trả về state/answers/revision/epoch/score. Test tranh chấp đa luồng `ExamConcurrencyPostgresSmoke` kiểm thử AT01 (cách ly phân quyền thí sinh), AT07 (giữ khóa bi quan qua deadline), AT09 (takeover writer và chặn stale epoch đang chờ lock), AT10 (từ chối nộp bài/lưu bài sau deadline ngay lập tức bằng `clock_timestamp()` sau khóa). Script `scripts/smoke-t2a4.ps1` chạy PASS hoàn toàn trên PostgreSQL 18.6 thật và 375/375 unit tests PASS. Bằng chứng lưu tại `evidence/t2-a4/2026-10-05-verification.md`. Chuẩn bị T2-A5.
+**Ghi chú làm dở:** 05/10/2026, T2-A4 code-complete trên `feat/t2-a4-concurrency-and-takeover`: Endpoint `POST /api/v1/attempts/{attemptId}/takeover` (tăng `writerEpoch` dưới khóa bi quan `FOR UPDATE OF a`), `GET /api/v1/attempts/{attemptId}/status` trả về state/answers/revision/epoch/score. Test tranh chấp đa luồng `ExamConcurrencyPostgresSmoke` kiểm thử AT01 (cách ly phân quyền thí sinh), AT07 (giữ khóa bi quan qua deadline), AT09 (takeover writer và chặn stale epoch đang chờ lock), AT10 (từ chối nộp bài/lưu bài sau deadline ngay lập tức bằng `clock_timestamp()` sau khóa). Script `scripts/smoke-t2a4.ps1` chạy PASS hoàn toàn trên PostgreSQL 18.6 thật và 375/375 unit tests PASS. Bằng chứng lưu tại `evidence/t2-a4/2026-10-05-verification.md`. Chuẩn bị T2-A5. Bổ sung 12/10 (B-ACCEPT-01): thêm `GET /api/v1/candidate/attempts` để thí sinh tìm lượt thi của mình, tách khỏi `attemptScope` (QD-23), và route không tồn tại trả 404; nhánh cục bộ `fix/backend-candidate-attempt-history-20261012` `33a2932`, 592 test PASS với PostgreSQL thật, chưa push/merge, review C NOT RUN. Còn lại: sai phương thức HTTP vẫn 500. Evidence `evidence/t2-a-history/2026-10-12-verification.md`.
 
 ### T2-A5 · Tài liệu giao dịch và bằng chứng quyền
 `2h` · phụ thuộc: T2-A4 · review: C
@@ -358,3 +358,7 @@ Kiến trúc server, thiết kế giao tiếp mạng, phân quyền, giao dịch
 - Server xử lý nhiều client đồng thời bằng cơ chế gì?
 
 Bạn cũng phải vẽ lại được luồng của B (autosave phía client) và của C (full snapshot, epoch).
+
+### Ghi chú fix P1 cursor PR #28 — 13/10/2026
+
+Backend P1 đã PASS local trên code/test `00b1df1` + main `2e784fa`: validator không rỗng/NUL/quá128 code point, không trim/normalize; SQL/DTO/owner/Listening/schema giữ nguyên. Maven test/package638, PG37 và probe11/11 PASS. Chuẩn bị local để người dùng review trước push; không retarget/merge/bỏ Draft. B cần sửa validator ASCII/URL encoding/UTF-8 byte ordering riêng. Nguy cơ sessionId+username vượt128 đã tái hiện500+rollback, chưa sửa API tạo ca hoặc schema. Evidence local `target/pr28-cursor-20261013/REPORT.md`; GUI/human review NOT RUN.

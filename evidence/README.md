@@ -60,3 +60,6 @@ Mục lục chỉ tổ chức bằng chứng đã có, không xác nhận task h
 - **T3-C4 ·13/10/2026:** [candidate thật/live preparation và final evidence](t3-c4/2026-10-13-verification.md):579Java/42localassertions/7regression commands latestPASS; failures/raw/checksums retained; FULLdefault, LAN/humanB/gate20/10 NOT DECIDED, noE1/E2.
 
 - Backend A, PR #23: [đồng bộ main T3-C3 và review lại P0](t2-a-p0-sync-20261013/2026-10-13-verification.md) — `c64503f` (sau hai lần đồng bộ main), Maven 596, smoke C1/C2, Python 10 PASS; human review, GUI, LAN chưa chạy.
+
+- B-ACCEPT-01 phía A: [API lịch sử lượt thi của thí sinh](t2-a-history/2026-10-12-verification.md) — 592 test với PostgreSQL thật, kiểm chéo client B `770c896` 13/13; nhánh cục bộ chưa merge, GUI của B chưa chạy.
+- API lịch sử, nhánh để mở PR: [xếp lại trên PR #23 đã đồng bộ](t2-a-history/2026-10-13-restack.md) — `19f669e`, 602 test PASS, không lặp commit P0.

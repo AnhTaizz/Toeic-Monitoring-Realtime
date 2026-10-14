@@ -15,6 +15,10 @@ public class ExamApiException extends RuntimeException {
         this.requestId = requestId;
     }
 
+    public static ExamApiException invalidInput(String message) {
+        return new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, message, null);
+    }
+
     public HttpStatus status() {
         return status;
     }

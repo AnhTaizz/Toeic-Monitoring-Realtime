@@ -436,3 +436,27 @@ Main tiến lên `cb30f3d` (PR #27) trong lúc làm, nên nhánh `sync/pr23-main
 ## T3-C5 · Kiểm tra bản nháp tài liệu · 13/10/2026
 
 Đối chiếu source main `f97c081`, class/method/defaults/quyền monitoring, liên kết và anchor, bảng evidence C1–C4, phạm vi diff. Kết quả mới xem [báo cáo kiểm tra](../evidence/t3-c5/2026-10-13-verification.md); không chạy lại Java/Python runtime/smoke/GUI/LAN/E1/E2. Các số PASS trước đó giữ task/SHA/môi trường gốc, không gán cho main mới. FULL mặc định, gate NOT_DECIDED/PARTIAL; B review NOT RUN. Không nâng trạng thái MT toàn hệ thống.
+
+## B-ACCEPT-01 phía A — API lịch sử lượt thi (12/10/2026)
+
+SHA `33a2932` trên nhánh cục bộ `fix/backend-candidate-attempt-history-20261012` (base `main` `ee714fc` + 5 commit P0), Windows 11, JDK 21.0.8, PostgreSQL 18.6. Chi tiết: `evidence/t2-a-history/2026-10-12-verification.md`.
+
+| Kiểm tra | Kết quả | Ghi chú |
+|---|---|---|
+| `mvn test`, `mvn package` với `TOEIC_PG_INTEGRATION=true` | PASS 592/592 | protocol 43, client 376, server 172, spike 1; bản Codex để lại (`e81961e`) là 590/590 |
+| Endpoint lịch sử: chủ sở hữu, thí sinh khác, role, phiên thu hồi, phân trang, whitelist trường | PASS REAL | Spring runtime + HTTP + PostgreSQL thật, schema riêng tự xóa; 4 test |
+| Route API không tồn tại | PASS | 404 `INVALID_INPUT`, không còn 500 |
+| Client B `770c896` gọi server nhánh này | PASS REAL 13/13 | HTTP + PostgreSQL thật, không GUI; `SUBMITTED` và `TIMED_OUT` thật |
+| GUI production của B, review C→A, LAN | NOT RUN | B-ACCEPT-01 chưa đóng cho tới khi B chạy lại GUI |
+
+Không đổi trạng thái AT01–AT11 hay IT01–IT04; `TRACKER.json` giữ nguyên.
+
+### API lịch sử xếp lại trên PR #23 đã đồng bộ — 13/10/2026
+
+Nhánh cục bộ `feat/backend-candidate-attempt-history-20261013` tại `19f669e`: ba commit lịch sử đặt trên `sync/pr23-main-20261013`, không lặp commit P0. `server/src/main` và `protocol/` trùng từng byte với `7bdac52`. `mvn package` với `TOEIC_PG_INTEGRATION=true`: **PASS 602**, 0 skip (protocol 43, client 386, server 172, spike 1). Quyết định lịch sử mang số QD-23 vì main đã dùng QD-19. Chi tiết: `evidence/t2-a-history/2026-10-13-restack.md`. GUI, LAN, review C→A: NOT RUN.
+
+## PR #28 — fix P1 cursor sau tích hợp main T3-A1/T3-A2, 13/10/2026
+
+SHA code/test `00b1df18d89f3b01a5864dc4aa689c22186943fa`, main `2e784fa`. Maven test và package:638 PASS mỗi lượt,0failure/error/skip; protocol43/client386/server208/spike1. PostgreSQL runtime37 (Exam19/Audio8/Listening10), là subset của638. Thêm3regression thật: mixed-ID `A bad`/Unicode/NFC/NFD/emoji/ký tự URL/SQL-looking, limit1/2/3 không trùng/mất lượt; biên128 PostgreSQL ký tự và129 bị400; rỗng/NUL bị400, cursor khác bind literal, 401/403 giữ nguyên. Probe nguyên bản từ lượt BLOCK10/1 nay11/11 PASS, exit0; HTTP/Spring/PG REAL, audio attestation MOCK, không GUI.
+
+Chẩn đoán riêng: sessionId128+username13 gây attemptId142, POST tạo ca500 và rollback; không đánh dấu chức năng này đã sửa/PASS. Client B còn regex ASCII/không encode; GUI B/LAN/human review NOT RUN. C1/C2/ExamConcurrency smokes ngoài37 runtime chưa chạy lại trong fix này; không kế thừa PASS từ SHA4362d89. Evidence local `target/pr28-cursor-20261013/REPORT.md` và các log/counts/XML trong cùng thư mục. Tracker/bảng nghiệm thu gốc giữ nguyên.

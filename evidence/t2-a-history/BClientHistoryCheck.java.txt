@@ -1,0 +1,151 @@
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import vn.edu.toeic.client.LoginApiClient;
+import vn.edu.toeic.client.exam.CandidateAttemptPage;
+import vn.edu.toeic.client.exam.CandidateAttemptSummary;
+import vn.edu.toeic.client.exam.ExamApiClient;
+import vn.edu.toeic.client.exam.ExamApiException;
+import vn.edu.toeic.protocol.exam.CandidateAttemptStatusResponse;
+import vn.edu.toeic.protocol.exam.CreateSessionRequest;
+import vn.edu.toeic.protocol.exam.ExamImportRequest;
+import vn.edu.toeic.protocol.exam.ExamOptionImportDto;
+import vn.edu.toeic.protocol.exam.ExamQuestionImportDto;
+import vn.edu.toeic.protocol.exam.SubmitExamRequest;
+import vn.edu.toeic.protocol.exam.TakeoverWriterRequest;
+import vn.edu.toeic.protocol.exam.TakeoverWriterResponse;
+
+/**
+ * Cross-check, not part of either branch: B's client classes built from commit 770c896 call A's
+ * server built from the history branch, over real HTTP and PostgreSQL. Seed accounts are MOCK/dev.
+ */
+public class BClientHistoryCheck {
+    private static int passed;
+
+    public static void main(String[] args) throws Exception {
+        String origin = args[0];
+        String password = System.getenv().getOrDefault("TOEIC_SEED_PASSWORD", "ChangeMe123!");
+        String run = "XCHK-" + UUID.randomUUID().toString().substring(0, 6);
+        String exam = run + "-EXAM";
+        try (LoginApiClient login = new LoginApiClient()) {
+            String proctorToken = login.login(origin, "proctor1", password).get(15, TimeUnit.SECONDS).token();
+            String candidateToken = login.login(origin, "candidate1", password).get(15, TimeUnit.SECONDS).token();
+            String otherToken = login.login(origin, "candidate2", password).get(15, TimeUnit.SECONDS).token();
+            try (ExamApiClient proctor = new ExamApiClient(origin, proctorToken);
+                 ExamApiClient candidate = new ExamApiClient(origin, candidateToken);
+                 ExamApiClient other = new ExamApiClient(origin, otherToken)) {
+                proctor.importExam(new ExamImportRequest(exam, "XCHK exam", "cross-check fixture",
+                        List.of(question("R1", 1), question("R2", 2)))).get(15, TimeUnit.SECONDS);
+                for (int i = 0; i < 53; i++) {
+                    proctor.createSession(new CreateSessionRequest(run + "-S" + String.format("%02d", i), exam,
+                            "XCHK session " + i, i == 0 ? 2 : 600, List.of("proctor1"), List.of("candidate1")))
+                            .get(15, TimeUnit.SECONDS);
+                }
+                proctor.createSession(new CreateSessionRequest(run + "-OTHER", exam, "XCHK other", 600,
+                        List.of("proctor1"), List.of("candidate2"))).get(15, TimeUnit.SECONDS);
+                pass("fixture: 53 attempts for candidate1 and 1 for candidate2 created through the proctor API");
+
+                String timedOut = run + "-S00-candidate1";
+                String submitted = run + "-S01-candidate1";
+                candidate.getExam(timedOut).get(15, TimeUnit.SECONDS);
+                candidate.takeoverWriter(timedOut, new TakeoverWriterRequest(id(), timedOut, "XCHK-device")).get(15, TimeUnit.SECONDS);
+                TakeoverWriterResponse writer = candidate.takeoverWriter(submitted,
+                        new TakeoverWriterRequest(id(), submitted, "XCHK-device")).get(15, TimeUnit.SECONDS);
+                candidate.submitExam(submitted, new SubmitExamRequest(id(), submitted, writer.writerEpoch(), 1,
+                        Map.of("R1", "A"))).get(15, TimeUnit.SECONDS);
+                long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(30);
+                String state = "ACTIVE";
+                while (!"TIMED_OUT".equals(state) && System.nanoTime() < deadline) {
+                    Thread.sleep(250);
+                    state = candidate.getAttemptStatus(timedOut).get(15, TimeUnit.SECONDS).state();
+                }
+                check("TIMED_OUT".equals(state), "server scheduler finalized the 2-second attempt as TIMED_OUT without any client call");
+
+                CandidateAttemptPage first = candidate.getCandidateAttempts(null).get(15, TimeUnit.SECONDS);
+                check(first.attempts().size() == 50 && first.nextAfterAttemptId() != null
+                                && first.nextAfterAttemptId().equals(first.attempts().getLast().attemptId()),
+                        "B client page 1: 50 rows parsed and validated by CandidateAttemptPage, cursor = last attemptId");
+                CandidateAttemptPage second = candidate.getCandidateAttempts(first.nextAfterAttemptId()).get(15, TimeUnit.SECONDS);
+                check(second.attempts().size() == 3 && second.nextAfterAttemptId() == null,
+                        "B client page 2 via afterAttemptId: remaining 3 rows, nextAfterAttemptId null");
+                List<CandidateAttemptSummary> all = new ArrayList<>(first.attempts());
+                all.addAll(second.attempts());
+                check(all.stream().map(CandidateAttemptSummary::attemptId).distinct().count() == 53
+                                && all.stream().allMatch(item -> item.attemptId().endsWith("-candidate1")
+                                        && item.examId().equals(exam) && item.examTitle().equals("XCHK exam")),
+                        "53 distinct rows across pages, all owned by candidate1, exam and session titles present");
+                CandidateAttemptSummary timedOutRow = find(all, timedOut);
+                CandidateAttemptSummary submittedRow = find(all, submitted);
+                check("TIMED_OUT".equals(timedOutRow.state()) && timedOutRow.submittedAt() != null
+                                && "SUBMITTED".equals(submittedRow.state()) && submittedRow.submittedAt() != null
+                                && !submittedRow.submittedAt().isAfter(Instant.now()),
+                        "real SUBMITTED and real TIMED_OUT rows carry submittedAt; B's finished() is true for both");
+                check(all.stream().filter(item -> !item.finished()).allMatch(item -> "ACTIVE".equals(item.state())
+                                && item.submittedAt() == null) && all.stream().filter(CandidateAttemptSummary::finished).count() == 2,
+                        "the other 51 rows are ACTIVE with submittedAt null");
+
+                CandidateAttemptPage foreign = other.getCandidateAttempts(null).get(15, TimeUnit.SECONDS);
+                check(foreign.attempts().size() == 1 && foreign.attempts().getFirst().attemptId().equals(run + "-OTHER-candidate2")
+                                && foreign.nextAfterAttemptId() == null,
+                        "candidate2 sees only its own attempt");
+                check(other.getCandidateAttempts(first.nextAfterAttemptId()).get(15, TimeUnit.SECONDS).attempts().stream()
+                                .noneMatch(item -> item.attemptId().endsWith("-candidate1")),
+                        "candidate2 using candidate1's cursor still gets no candidate1 row");
+                check("FORBIDDEN".equals(rejection(() -> proctor.getCandidateAttempts(null).get(15, TimeUnit.SECONDS))),
+                        "proctor token is rejected with FORBIDDEN");
+
+                CandidateAttemptStatusResponse result = candidate.getAttemptStatus(submitted).get(15, TimeUnit.SECONDS);
+                check("SUBMITTED".equals(result.state()) && result.correctCount() == 1 && result.totalQuestions() == 2,
+                        "B's result path: GET status of the SUBMITTED attempt returns the server score 1/2");
+                CandidateAttemptStatusResponse timeoutResult = candidate.getAttemptStatus(timedOut).get(15, TimeUnit.SECONDS);
+                check("TIMED_OUT".equals(timeoutResult.state()) && timeoutResult.correctCount() == 0,
+                        "B's result path: GET status of the TIMED_OUT attempt returns the server score 0/2");
+                check("FORBIDDEN".equals(rejection(() -> other.getAttemptStatus(submitted).get(15, TimeUnit.SECONDS))),
+                        "candidate2 cannot read candidate1's final result");
+            }
+        }
+        System.out.println("B client 770c896 x A history server cross-check: " + passed + " checks PASS (REAL HTTP/PostgreSQL, no GUI)");
+    }
+
+    private interface Call {
+        Object run() throws Exception;
+    }
+
+    private static String rejection(Call call) throws Exception {
+        try {
+            call.run();
+            return "ACCEPTED";
+        } catch (ExecutionException failure) {
+            return failure.getCause() instanceof ExamApiException rejected ? rejected.code()
+                    : failure.getCause().getClass().getSimpleName();
+        }
+    }
+
+    private static CandidateAttemptSummary find(List<CandidateAttemptSummary> all, String attemptId) {
+        return all.stream().filter(item -> item.attemptId().equals(attemptId)).findFirst()
+                .orElseThrow(() -> new IllegalStateException("missing " + attemptId));
+    }
+
+    private static ExamQuestionImportDto question(String id, int order) {
+        return new ExamQuestionImportDto(id, "READING", 5, null, null, null, "XCHK prompt " + id, "A", order,
+                List.of(new ExamOptionImportDto("A", "XCHK A", 1), new ExamOptionImportDto("B", "XCHK B", 2)));
+    }
+
+    private static String id() {
+        return UUID.randomUUID().toString();
+    }
+
+    private static void check(boolean condition, String label) {
+        if (!condition) throw new IllegalStateException("FAIL " + label);
+        pass(label);
+    }
+
+    private static void pass(String label) {
+        passed++;
+        System.out.println("PASS " + label);
+    }
+}

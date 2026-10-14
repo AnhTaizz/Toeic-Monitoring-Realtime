@@ -234,6 +234,7 @@ Giá trị thử nghiệm theo hợp đồng, phải ghi lại giá trị thật
 |---|---|---|---|
 | 03/10/2026 | Chốt login REST, envelope/message MOCK v0 và mã lỗi v0 cho T1-A1/T1-C1 | A + C | Client T1-B1 |
 | 04/10/2026 | QD-03 Bearer header; endpoint WS thật, heartbeat transport/ACK/ERROR, auth/role/scope guard | A (T1-A2) | B2 cần tích hợp ở phiên riêng; chưa sửa nhánh B2 |
+| 12/10/2026 | Thêm `GET /api/v1/candidate/attempts` và hai DTO lịch sử; route API không tồn tại trả 404 thay cho 500. Nhánh cục bộ `fix/backend-candidate-attempt-history-20261012`, chưa merge | A | B: client `770c896` chạy nguyên trạng, còn chạy lại GUI production |
 
 ## Contract T1-A2 và handoff cho B2
 
@@ -846,3 +847,61 @@ CandidateMonitoringSession.start chọn DELTA khi local opt-in và RealtimeClien
 Callback nội bộ onMonitoringAccessRejected chỉ phát FORBIDDEN/UNAUTHORIZED khi khớp heartbeat pending/attempt/trace, mang collectorSessionId/socket generation. Coordinator chỉ dừng đúng collector/lượt/socket hiện tại, tháo heartbeat/capability/rejection listeners. Lỗi DB retryable không coi mất quyền; global UNAUTHORIZED giữ semantics đăng nhập lại. Stop/logout dọn worker/queue RAM hiện có. Full/delta ACK vẫn RAM, event/gap ACK vẫn sau COMMIT; proctor không collector. Nhãn UI mode an toàn không chứa token/password.
 
 Gate20/10 chưa diễn ra; local13/10 là preparation, LAN hai máy và B review NOT RUN. QD10 presence giữ nguyên, không đổi STALE6s/TTL5min bằng heartbeat hoặc nâng E1/E2.
+
+## Contract B-ACCEPT-01 — Lịch sử lượt thi của thí sinh (12/10/2026)
+
+Trạng thái: **đã cài và kiểm trên nhánh `fix/backend-candidate-attempt-history-20261012` (`33a2932`), chưa push, chưa merge**. A nhận nguyên đề xuất của B trong `docs/CONTRACT_B_ACCEPT_01_PROPOSAL.md` (commit `770c896`), không đổi URL, tham số hay tên trường. Hai điểm A làm rõ thêm nằm ở cuối mục.
+
+### 1. Endpoint `GET /api/v1/candidate/attempts` (chỉ CANDIDATE)
+
+- Header: `Authorization: Bearer <token>`. Server lấy người dùng từ phiên; không nhận `userId`, `candidateId`, `username`.
+- Query: `limit` (tùy chọn, số nguyên 1..100, mặc định 50) và `afterAttemptId` (tùy chọn, không rỗng, tối đa 128 Unicode code point theo `VARCHAR(128)`, không chứa NUL). Khoảng trắng, Unicode và ký tự đặc biệt được giữ nguyên; không trim hoặc chuẩn hóa. Client phải URL-encode giá trị cursor theo UTF-8. Tham số khác, tham số lặp lại, cursor rỗng/quá giới hạn/NUL hoặc limit sai → 400 `INVALID_INPUT`.
+- Trả các lượt thi của chính thí sinh có ca thi và đề hợp lệ, ở trạng thái `ACTIVE`, `SUBMITTED` hoặc `TIMED_OUT`. Không trả `CLOSED`, `INTERRUPTED`, lượt monitoring cũ không gắn ca thi.
+- Thứ tự: `attemptId` tăng dần theo byte UTF-8 (`COLLATE "C"`). Đây không phải thứ tự thời gian. `String.compareTo` dùng UTF-16 và có thể khác thứ tự này khi trộn ký tự ngoài BMP với một số ký tự BMP; client cần đối chiếu theo thứ tự byte UTF-8.
+- Phân trang keyset: server đọc `limit + 1` dòng. Còn trang thì `nextAfterAttemptId` là `attemptId` cuối của trang, hết thì `null`. Cursor chỉ là vị trí; nó không cấp quyền và không cần tồn tại.
+- Response có header `Cache-Control: no-store`.
+
+```json
+{
+  "attempts": [
+    {
+      "attemptId": "SESSION-TEST-candidate1",
+      "sessionId": "SESSION-TEST",
+      "examId": "EXAM-READING-TEST",
+      "examTitle": "Reading sample",
+      "sessionTitle": "Ca TEST",
+      "state": "SUBMITTED",
+      "submittedAt": "2026-10-12T08:43:32.535928Z"
+    }
+  ],
+  "nextAfterAttemptId": null
+}
+```
+
+DTO trong `protocol`: `CandidateAttemptPageResponse(attempts, nextAfterAttemptId)` và `CandidateAttemptSummaryDto(attemptId, sessionId, examId, examTitle, sessionTitle, state, submittedAt)`. `submittedAt` là `null` khi `ACTIVE`, là thời điểm server chốt khi `SUBMITTED`/`TIMED_OUT`. Không có đáp án, `correctOption`, `writerEpoch`, `savedRevision`, điểm, mã người dùng hay dữ liệu monitoring; điểm vẫn đọc qua `GET /api/v1/attempts/{attemptId}/status`.
+
+### 2. Lỗi
+
+| Tình huống | HTTP | `error.code` |
+|---|---|---|
+| Không token, token lạ, phiên hết hạn hoặc bị thu hồi | 401 | `UNAUTHORIZED` |
+| Role không phải CANDIDATE | 403 | `FORBIDDEN` |
+| `limit`/`afterAttemptId` sai, tham số lạ hoặc lặp | 400 | `INVALID_INPUT` |
+| Route API không tồn tại (mọi đường dẫn) | 404 | `INVALID_INPUT`, `retryable = false` |
+
+Trước thay đổi này route không tồn tại trả 500 `RETRYABLE_SERVER_ERROR`.
+
+### 3. Những gì không đổi
+
+`GET /api/v1/auth/me` và `attemptScope` vẫn chỉ gồm lượt `ACTIVE`; quyền monitoring, WebSocket, autosave, submit, takeover vẫn ACTIVE-only. Gọi endpoint này không đổi `writerEpoch` hay bất kỳ dòng nào.
+
+### 4. Hai điểm A làm rõ so với đề xuất
+
+1. Lượt đã chốt có `submitted_at` rỗng không được liệt kê (đề xuất yêu cầu `submittedAt` không null cho lượt đã chốt nhưng không nói xử lý dòng vi phạm). Chỉ gặp ở DB đã chạy bản server trước fix P0.
+2. Điều kiện nối bảng chặt hơn SQL phác thảo: đề của lượt thi phải trùng đề của ca thi.
+
+Bằng chứng: `evidence/t2-a-history/2026-10-12-verification.md`.
+
+### Làm rõ cursor theo dữ liệu đã lưu — 13/10/2026
+
+Fix P1 theo cho phép của người dùng: mọi ID không rỗng lưu hợp lệ trong `VARCHAR(128)` đều được dùng nguyên dạng làm cursor. SQL vẫn bind parameter và keyset `COLLATE "C"`; dấu nháy không phải SQL khi là giá trị bind. Không nới owner/monitoring hoặc đổi DTO. Backend code/test `00b1df18d89f3b01a5864dc4aa689c22186943fa`: Maven test/package638, PostgreSQL37 và probe history+Listening11/11 PASS trên main `2e784fa`. Client B `d425182` còn validator ASCII và ghép query không encode; cần B đồng bộ riêng, không kết luận GUI đã PASS. Nguy cơ tạo ca có sessionId+username vượt128 ký tự vẫn nằm ngoài fix này. Evidence local: `target/pr28-cursor-20261013/REPORT.md`; chưa push/retarget/merge.

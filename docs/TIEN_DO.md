@@ -6,6 +6,8 @@ Cập nhật T3-B2: 14/10/2026 — branch `feat/t3-b2-listening-playback` kế t
 
 Cập nhật T3-B1: 14/10/2026 — branch `feat/t3-b1-audio-download-readiness` từ main `2e784fa`; tải/checksum nền, WAV thử loa riêng, xác nhận nghe và READY có ACK đã triển khai. Java 657/657 PASS (PostgreSQL thật, 0 skip); 6 kiểm tra view/media trong app-image Unicode PASS. [Hướng dẫn](AUDIO_CLIENT_PREPARATION.md), [evidence](../evidence/t3-b1/2026-10-14-verification.md). Source `89082e3d43a322c0e0e210f393cc3b4bf49bd7da`; code complete, review A/thử nghe thủ công/LAN/máy thứ hai chưa chạy; tracker IN_PROGRESS, không ghi giờ chưa đo.
 
+Fix P1 cursor PR #28 — 13/10/2026 (local): code/test `00b1df1` tích hợp main `2e784fa`; validator theo128 ký tự PostgreSQL, không trim/normalize; Maven test/package638 PASS, PG37 PASS, probe history+Listening11/11. Diff giữ21file history gốc; chưa push/retarget/bỏ Draft/merge. B còn validator ASCII/URL encoding cần sửa riêng; nguy cơ sessionId+username vượt128 (500+rollback) chưa sửa theo phạm vi được cho phép. Evidence local `target/pr28-cursor-20261013/REPORT.md`; GUI/human review NOT RUN.
+
 Cập nhật T3-C5: 13/10/2026 — [bản nháp đồng bộ và giới hạn](MONITORING_SYNC_REPORT_DRAFT.md) đối chiếu main `f97c081`. Chỉ tài liệu; [kiểm tra mới](../evidence/t3-c5/2026-10-13-verification.md) không chạy lại runtime. C4 gate NOT_DECIDED/PARTIAL, FULL mặc định; LAN hai máy và B review còn thiếu.
 
 Cập nhật T3-A2:13/10/2026 — backend start WS sau COMMIT, playback/heartbeat/gián đoạn, khóa đáp án Listening và tổ chức lại đã triển khai trên nhánh `feat/t3-a2-listening-lifecycle`. Full package với PostgreSQL bật PASS629, 0 skip; REAL HTTP/WS/PG/Flyway subset PASS29 (10 Listening +8 audio +11 exam), gồm restart Spring thật và nâng cấp V9→V10. [Contract](LISTENING_LIFECYCLE.md), [evidence](../evidence/t3-a2/2026-10-13-verification.md). B UI/audio/LAN và human C review chưa chạy; tracker/kế hoạch gốc giữ nguyên.
@@ -15,6 +17,8 @@ Mốc T3-A1 trước T3-A2: triển khai audio/manifest/READY/gate từ main `80
 Cập nhật T3-C4:13/10/2026 — candidate Application chọn DELTA opt-in + capability hiện tại, FULL mặc định. Code/test sourced9475eb; Java579 PASS. [Guide](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-13-verification.md). LOCAL preparation riêng với replay; gate20/10/LAN hai máy/human B review chưa chốt, T3-A3 không tự đánh dấu DONE, E1/E2 NOT RUN.
 
 Cập nhật backend A: 13/10/2026 — nhánh cục bộ `sync/pr23-main-20261013` tại `c64503f` đưa ba sửa P0 của PR #23 lên trên main `cb30f3d` (đã gồm T3-C4). Maven package 596 PASS, 0 skip, có PostgreSQL thật; smoke C1/C2 PASS; Python 10 PASS. Review lại ba sửa P0: đạt, có 4 ghi nhận không chặn. Agent-driven; human review NOT RUN; chưa push/merge. [Evidence](../evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md).
+
+Cập nhật B-ACCEPT-01 phía A: 12/10/2026 — `GET /api/v1/candidate/attempts` (lịch sử lượt thi của thí sinh) đã cài theo đúng đề xuất của B, kèm sửa route không tồn tại trả 404 thay cho 500. Nhánh cục bộ `fix/backend-candidate-attempt-history-20261012` tại `33a2932`, base `main` `ee714fc` + 5 commit P0; **chưa push, chưa merge**. `mvn package` 592/592 với PostgreSQL thật; client B `770c896` gọi server này PASS 13/13. GUI production của B và review C→A NOT RUN. [Evidence](../evidence/t2-a-history/2026-10-12-verification.md).
 
 Cập nhật mới T3-C2: 12/10/2026 — reducer production/resync/capability/scan freshness thử nghiệm có; full vẫn default. Java554/Python10 và REAL Spring/PG/WS/restart, CLI/hồi quy PASS. Readings MOCK trong delta smoke; gate/LAN/human A/B/E1/E2 NOT RUN. [Guide](MONITORING_DELTA_REDUCER.md), [evidence](../evidence/t3-c2/2026-10-12-verification.md).
 
@@ -39,6 +43,9 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 
 ## Đang bị chặn
 
+- [13/10] Nhánh để mở PR cho API lịch sử là `feat/backend-candidate-attempt-history-20261013` (`19f669e`, xếp trên PR #23 đã đồng bộ, 602 test PASS); nhánh `…-20261012` bên dưới là bản cũ có lặp commit P0, không dùng để push.
+- [12/10] B-ACCEPT-01: backend đã sẵn ở nhánh cục bộ `fix/backend-candidate-attempt-history-20261012` (`33a2932`) nhưng chưa push/merge — cần người dùng quyết định đưa nhánh lên và ghép với nhánh tích hợp của B (`770c896`), rồi B chạy lại GUI production theo mục 5 của evidence — hạn gate 15/10.
+- [12/10] Gọi sai phương thức HTTP (ví dụ `POST` vào route chỉ có `GET`) vẫn trả 500 thay vì 405 — A xem có sửa cùng handler lỗi không; không chặn B-ACCEPT-01.
 - T2-C2 human A/B review: **NOT RUN**, không ngăn code/test/PR/merge đã được người dùng ủy quyền nếu GitHub không có yêu cầu bắt buộc thiếu. [Evidence C2](../evidence/t2-c2/2026-10-10-verification.md). MT01/MT07/MT08 giữ PARTIAL cấp toàn hệ thống do candidate GUI/LAN chưa chạy; các kiểm tra kỹ thuật mới PASS có nhãn REAL/MOCK/SIMULATED. Origin legacy/trước heartbeat ACK đầu UNSPECIFIED; queue RAM/full RAM một JVM, gap mới cần HTTP refresh.
 - C1 lỗi annotation Scheduled đã sửa bằng worker riêng và merge PR#18 tại683adfc. Nhánh C1 giữ local/remote. Không bật scheduling toàn app hoặc sửa ExamTimeoutService; issue scheduler bài thi chuyển A xem riêng. [Evidence sửa C1](../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md). C2 đã chạy lại hồi quy tự STALE/TTL/capacity/shutdown PASS.
 

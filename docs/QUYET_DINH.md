@@ -213,3 +213,17 @@ Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`
 - Dedupe key là attemptId + writerEpoch + startId. Worker reserve marker bằng CREATE_NEW trước Media; marker tồn tại chặn replay cả sau restart. Crash sau reserve nhưng trước loa là fail-closed và cần lượt tổ chức lại, không xóa marker để nghe lại.
 - JavaFX chỉ render/MediaPlayer. Worker ghi timestamp local, gửi STARTED, heartbeat 2 giây và COMPLETED qua HTTP để nhận status sau COMMIT. Thời điểm local không thay server clock và không cam kết đồng bộ sample giữa máy.
 - Câu hỏi được nhóm đúng tên file manifest và sắp theo orderIndex; thiếu mapping chặn phát. Media/network failure khóa ngay, còn event INTERRUPTED/status/reconnect thuộc T3-B3. [Hướng dẫn](LISTENING_CLIENT_PLAYBACK.md), [bằng chứng](../evidence/t3-b2/2026-10-14-verification.md).
+
+## QD-23 · Lịch sử lượt thi tách khỏi scope monitoring, phân trang theo attemptId
+
+- Ngày: 2026-10-12 · Người quyết: A (phiên Agent, theo đề xuất của B) · Review C: NOT RUN.
+- Lựa chọn: thêm endpoint đọc riêng `GET /api/v1/candidate/attempts` để thí sinh khám phá lượt thi của mình, thay vì nới `auth/me.attemptScope`. Sắp xếp và phân trang keyset theo `attemptId` với `COLLATE "C"`; `limit` 1..100, mặc định 50.
+- Lý do: `attemptScope` là quyền monitoring và ghi, chỉ gồm lượt `ACTIVE`; đưa lượt đã chốt vào đó sẽ mở lại quyền gửi heartbeat/event cho lượt đã chốt. `attemptId` là khóa duy nhất có sẵn nên không cần migration hay cột thời gian mới. Collation mặc định của DB là `en_US`, sắp `a` trước `B`; client so bằng `String.compareTo` nên server phải ép thứ tự byte.
+- Hệ quả: thứ tự không phải "mới nhất trước"; không có snapshot xuyên trang. Lượt đã chốt thiếu `submitted_at` bị ẩn. Danh sách chỉ để tìm ID; kết quả vẫn đọc qua `GET /status` và được kiểm quyền lại ở đó.
+- Kèm theo: route API không tồn tại trả 404 `INVALID_INPUT` thay cho 500. `ErrorCode` không có mã riêng cho "không tìm thấy" và không thêm mã mới để khỏi đổi contract lỗi v0.
+- Kiểm chứng: `ExamRuntimePostgresTest` (PostgreSQL thật) và kiểm chéo với client B `770c896`; `evidence/t2-a-history/2026-10-12-verification.md`.
+- Liên quan: B-ACCEPT-01, T2-A4, T2-B4, AT01, AT11.
+
+### QD-23 · Bổ sung phạm vi cursor — 13/10/2026
+
+Theo yêu cầu người dùng, validator cursor nhận nguyên giá trị không rỗng, không NUL, tối đa128 Unicode code point như PostgreSQL `VARCHAR(128)`, thay regex ASCII để không từ chối cursor do server phát. Không trim/normalization, SQL parameter binding và byte UTF-8/C order giữ nguyên. B phải URL-encode và đồng bộ validator/ordering ở lượt riêng; không sửa client trong fix A này. Không đổi schema hoặc API tạo ca; vượt128 do ghép ID là rủi ro riêng đã tái hiện500+rollback. Regression PostgreSQL mới có mixed-ID/limit1,2,3/foreign owner/biên128-129/NUL; code `00b1df1`, Maven test/package638 và probe11/11 PASS. Evidence local `target/pr28-cursor-20261013/REPORT.md`; human review và GUI NOT RUN.
