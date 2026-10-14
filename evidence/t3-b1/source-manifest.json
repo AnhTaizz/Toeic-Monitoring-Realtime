@@ -1,0 +1,66 @@
+[
+    {
+        "path":  "client/pom.xml",
+        "sha256":  "c916d7b778786b97ed9479a4d07bf2f553bfbcb89c217dec6b583686c0adba20"
+    },
+    {
+        "path":  "client/src/main/java/vn/edu/toeic/client/audio/AudioApi.java",
+        "sha256":  "0131d4ade48d27dd8b45f4d36dfbd67530deeecb7dda5f858d5cdb36cf2f5186"
+    },
+    {
+        "path":  "client/src/main/java/vn/edu/toeic/client/audio/AudioApiClient.java",
+        "sha256":  "53ed3bb242dcdb7bc312a8626c26fb1baf5cf5fb60662906406057ec946473cc"
+    },
+    {
+        "path":  "client/src/main/java/vn/edu/toeic/client/audio/AudioFiles.java",
+        "sha256":  "c07ea00a7a7c10e762068872863aee596aa1d3e04e65306eb812a5adc0786efa"
+    },
+    {
+        "path":  "client/src/main/java/vn/edu/toeic/client/audio/AudioPreparation.java",
+        "sha256":  "383c353d80d326ead09a912c7d5e6ef8aec639c09dfa0425f2221a6618798751"
+    },
+    {
+        "path":  "client/src/main/java/vn/edu/toeic/client/audio/AudioPreparationView.java",
+        "sha256":  "e950591f06a1bd8ae2e7468983cf35f7c7280331852b6c8fe06d9d568f5d12fb"
+    },
+    {
+        "path":  "client/src/main/java/vn/edu/toeic/client/audio/SpeakerSample.java",
+        "sha256":  "a8d0eb6af97c3cc9751d793c744b10eb7d76f1cb09fd0215bf17d96d9a8a95c1"
+    },
+    {
+        "path":  "client/src/main/java/vn/edu/toeic/client/ToeicClientApplication.java",
+        "sha256":  "d2472a423e401a66c9667fcd6c57ab30e810ab6dc90e17e76af56e43dccf1f10"
+    },
+    {
+        "path":  "client/src/test/java/vn/edu/toeic/client/audio/AudioApiClientTest.java",
+        "sha256":  "52f282fabdd446d9b82b7d8e812d16e9295700a1186c8bd9e2cf777e3de3661a"
+    },
+    {
+        "path":  "client/src/test/java/vn/edu/toeic/client/audio/AudioFilesTest.java",
+        "sha256":  "1eaa62effc121e7a8d1b9aca2cb259d59be81331b93f057d1d06e5f5c1bd625c"
+    },
+    {
+        "path":  "client/src/test/java/vn/edu/toeic/client/audio/AudioPackageSmoke.java",
+        "sha256":  "fea0c8eee18e13096639012f7c570600a902fa2edc5d5059147455fb5a4fbde3"
+    },
+    {
+        "path":  "client/src/test/java/vn/edu/toeic/client/audio/AudioPreparationTest.java",
+        "sha256":  "e79dc3241bdf8d5b96d914f6a0115873d6b138e6ced83ea1a3af048a38fe8575"
+    },
+    {
+        "path":  "scripts/package-t3b1.ps1",
+        "sha256":  "df7dea3ee27945350aea93e8634f630973e46ad7ed0316ebc75f40978b53b5d7"
+    },
+    {
+        "path":  "scripts/smoke-t3b1-package.ps1",
+        "sha256":  "20afbaef584ccad9cd9b01f0861e9e26d8330460cc8454c7d2e0e4dfa3147b8a"
+    },
+    {
+        "path":  "scripts/verify-t3b1.ps1",
+        "sha256":  "2d511f5c04b5bd77010d4ba88500b4e8ab3ca558ad46dff1dbfbc89105cab963"
+    },
+    {
+        "path":  "server/src/test/java/vn/edu/toeic/server/audio/AudioRuntimePostgresTest.java",
+        "sha256":  "5bcc9ea5f201a95415653932854b6991ddb87e897d4d2099602bf9df09917b34"
+    }
+]

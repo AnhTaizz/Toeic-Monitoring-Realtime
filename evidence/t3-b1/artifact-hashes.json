@@ -1,0 +1,46 @@
+[
+    {
+        "path":  "2026-10-14-verification.md",
+        "sha256":  "dfc84dcef0545c5f4a1c8a35dd98511646180c515806e071b60e93b29ddead07"
+    },
+    {
+        "path":  "maven-package.txt",
+        "sha256":  "cc55257e28a74159c77c0df9ccd149d7e4b4cf92e1a6826e2d3c5d68c0e9f59a"
+    },
+    {
+        "path":  "metadata.json",
+        "sha256":  "2433cb1043a80d54689831f12ce541922664241314e6833c1d5994ffd5753602"
+    },
+    {
+        "path":  "package-result.txt",
+        "sha256":  "4e18c23adedd9f50a016b972d796b273a627f0375352abe6992725ac5a5b8bc1"
+    },
+    {
+        "path":  "package-stderr.txt",
+        "sha256":  "3e315284a71c1db80ee99a160da510f6a9a3d78b92ba436ce6b020c3adefe4ee"
+    },
+    {
+        "path":  "package-stdout.txt",
+        "sha256":  "4e18c23adedd9f50a016b972d796b273a627f0375352abe6992725ac5a5b8bc1"
+    },
+    {
+        "path":  "screenshots/corrupt-file.png",
+        "sha256":  "283631637e4754dcf7e4fc8ad432756be135a7653e60ac2afa194ed10f82d36d"
+    },
+    {
+        "path":  "screenshots/missing-file.png",
+        "sha256":  "97255c87b678335dcf33ddc1ae78b3831c1e6192201d3f8f4dd1eb0c5ed4a41b"
+    },
+    {
+        "path":  "screenshots/ready.png",
+        "sha256":  "ae7d1e686d5498ac1abdeb9572e5539c087047b4a1cc5f01a9fa4042a1ca3758"
+    },
+    {
+        "path":  "source-manifest.json",
+        "sha256":  "cce6d552817261c6208054a9529edf0772927f0093dd716dc0d137c62731d45e"
+    },
+    {
+        "path":  "test-results.json",
+        "sha256":  "e2693921bdd6d960e536027aa8c3124a7ca62417aff93002cba139817f1cbe3e"
+    }
+]

@@ -39,6 +39,8 @@
 
 ## Cách lưu log mới
 
+T3-B1: [Tải/checksum/thử loa/READY phía client](t3-b1/2026-10-14-verification.md), [metadata và kết quả](t3-b1/metadata.json). Java657 PASS với PG thật; app-image Unicode 6 checks PASS. Human A review/xác nhận nghe thủ công/máy thứ hai chưa chạy; T3-B1 hiện code complete trên branch riêng.
+
 T3-A1: [API audio/READY và gate start](t3-a1/2026-10-13-verification.md), [19 test PostgreSQL](t3-a1/postgres-results.json). T3-B1 đã hoàn tác; playback/WS/gián đoạn Listening thuộc các task kế tiếp.
 
 - Lưu theo task trong `evidence/<task>/`; một lượt chạy bổ sung có thể dùng thư mục con riêng. Thêm báo cáo và liên kết vào mục lục này khi có bằng chứng mới.

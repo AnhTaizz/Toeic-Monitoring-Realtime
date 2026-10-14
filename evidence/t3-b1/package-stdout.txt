@@ -1,0 +1,6 @@
+PASS REAL FX responsive while MOCK takeover waits 700ms
+PASS one-byte-corrupt REAL local file blocks READY in production view
+PASS REAL JavaFX PCM WAV completed; automated hearing confirmation; MOCK correlated READY ACK
+PASS deleted REAL local file blocks READY in production view
+PASS missing speaker sample raises REAL media error; READY stays locked
+PASS view/player/worker shutdown; bundled runtime=21.0.9
