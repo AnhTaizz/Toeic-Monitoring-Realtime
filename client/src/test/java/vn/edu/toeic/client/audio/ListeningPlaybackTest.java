@@ -25,14 +25,18 @@ class ListeningPlaybackTest {
 
     private final class Fixture implements ListeningApi {
         final List<String> events=new CopyOnWriteArrayList<>();
-        CandidateExamDto exam=ListeningPlaybackTest.this.exam();boolean interrupted;
+        final List<ListeningEventRequest> requests=new CopyOnWriteArrayList<>();
+        CandidateExamDto exam=ListeningPlaybackTest.this.exam();boolean interrupted;String statusPhase="NOT_STARTED";
         public CandidateExamDto exam(String attempt){return exam;}
+        public ListeningStatusResponse status(String attempt){return response(null,attempt,statusPhase,"INTERRUPTED".equals(statusPhase));}
         public ListeningStatusResponse event(String attempt,ListeningEventRequest request){
-            events.add(request.event());String phase=switch(request.event()){case "STARTED","HEARTBEAT"->"PLAYING";case "COMPLETED"->"COMPLETED";default->"INTERRUPTED";};
-            return new ListeningStatusResponse("v0",request.requestId(),attempt,"SESSION",request.startId(),manifest.manifestId(),request.writerEpoch(),
-                    interrupted?"INTERRUPTED":phase,Instant.now().plusSeconds(100),Instant.now(),"COMPLETED".equals(phase)?Instant.now():null,
-                    interrupted,interrupted?Instant.now():null,interrupted?"HEARTBEAT_TIMEOUT":null);
+            events.add(request.event());requests.add(request);String phase=switch(request.event()){case "STARTED","HEARTBEAT"->"PLAYING";case "COMPLETED"->"COMPLETED";default->"INTERRUPTED";};
+            statusPhase=interrupted?"INTERRUPTED":phase;
+            return response(request.requestId(),attempt,interrupted?"INTERRUPTED":phase,interrupted||"INTERRUPTED".equals(phase));
         }
+        private ListeningStatusResponse response(String request,String attempt,String phase,boolean stopped){return new ListeningStatusResponse("v0",request,attempt,"SESSION","START",manifest.manifestId(),9007199254740993L,
+                phase,Instant.now().plusSeconds(100),"NOT_STARTED".equals(phase)||"ARMED".equals(phase)?null:Instant.now(),"COMPLETED".equals(phase)?Instant.now():null,
+                stopped,stopped?Instant.now():null,stopped?"HEARTBEAT_TIMEOUT":null);}
         public void close(){}
     }
     @BeforeEach void setup()throws Exception{
@@ -79,6 +83,37 @@ class ListeningPlaybackTest {
         playback.accept(start());await(()->playback.snapshot().phase()==ListeningPlayback.Phase.READY_TO_PLAY);api.interrupted=true;
         playback.mediaPlaying(playback.snapshot().generation(),0);await(()->playback.snapshot().phase()==ListeningPlayback.Phase.BLOCKED);
         assertThat(playback.snapshot().message()).contains("Server");
+    }
+    @Test void mediaErrorStopsLocksPersistsAndReportsInterruption()throws Exception{
+        playback.accept(start());await(()->playback.snapshot().phase()==ListeningPlayback.Phase.READY_TO_PLAY);
+        playback.mediaFailed(playback.snapshot().generation());
+        await(()->api.events.contains("INTERRUPTED"));
+        assertThat(playback.snapshot().phase()).isEqualTo(ListeningPlayback.Phase.BLOCKED);
+        assertThat(api.requests).filteredOn(r->"INTERRUPTED".equals(r.event())).singleElement()
+                .extracting(ListeningEventRequest::reason).isEqualTo("MEDIA_ERROR");
+        assertThat(Files.readString(Files.list(directory.resolve("journal")).findFirst().orElseThrow()))
+                .contains("\"interrupted\":true","MEDIA_ERROR");
+    }
+    @Test void networkLossDuringPlaybackReportsAndNeverResumes()throws Exception{
+        playback.accept(start());await(()->playback.snapshot().phase()==ListeningPlayback.Phase.READY_TO_PLAY);
+        long run=playback.snapshot().generation();playback.mediaPlaying(run,0);await(()->api.events.contains("STARTED"));
+        playback.connectionLost();await(()->api.events.contains("INTERRUPTED"));
+        assertThat(api.requests).filteredOn(r->"INTERRUPTED".equals(r.event())).singleElement()
+                .extracting(ListeningEventRequest::reason).isEqualTo("NETWORK_LOST");
+        assertThat(playback.beginSegment()).isNull();
+        playback.connected(List.of("ATTEMPT"));await(()->playback.snapshot().phase()==ListeningPlayback.Phase.BLOCKED);
+        assertThat(playback.beginSegment()).isNull();
+    }
+    @Test void reopenQueriesServerAndNeverReplaysActiveOrInterruptedListening()throws Exception{
+        api.statusPhase="PLAYING";playback.connected(List.of("ATTEMPT"));
+        await(()->api.events.contains("INTERRUPTED"));
+        assertThat(playback.snapshot().phase()).isEqualTo(ListeningPlayback.Phase.BLOCKED);
+        assertThat(api.events).doesNotContain("STARTED");assertThat(playback.beginSegment()).isNull();
+
+        playback.close();api=new Fixture();api.statusPhase="INTERRUPTED";
+        playback=new ListeningPlayback(api,files,new ListeningPlaybackJournal(directory.resolve("journal-reopen")),()->Optional.of(context),ignored->{});
+        playback.connected(List.of("ATTEMPT"));await(()->playback.snapshot().phase()==ListeningPlayback.Phase.BLOCKED);
+        assertThat(api.events).isEmpty();assertThat(playback.beginSegment()).isNull();
     }
     private MessageEnvelope<JsonObject> start(){JsonObject p=new JsonObject();p.addProperty("startId","START");p.addProperty("sessionId","SESSION");p.addProperty("attemptId","ATTEMPT");p.addProperty("manifestId",manifest.manifestId());p.addProperty("writerEpoch",9007199254740993L);p.addProperty("startedAt",Instant.now().minusSeconds(1).toString());p.addProperty("deadlineAt",Instant.now().plusSeconds(100).toString());return new MessageEnvelope<>("v0","LISTENING_START","START",null,"ATTEMPT","trace",p);}
     private CandidateExamDto exam(){return new CandidateExamDto("EXAM","MOCK",null,3,List.of(question("L1","a.wav",1),question("L2","a.wav",2),question("L3","b.wav",3)));}

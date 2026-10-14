@@ -30,17 +30,21 @@ public final class AudioPackageSmoke {
     private static int ticks;
     private static final class Transport implements MonitoringTransport {
         final List<Consumer<MessageEnvelope<JsonObject>>> listeners=new CopyOnWriteArrayList<>();
-        public ConnectionState connectionState() { return ConnectionState.CONNECTED; }
-        public AutoCloseable onConnectionState(Consumer<ConnectionState> c) { return () -> {}; }
+        final List<Consumer<ConnectionState>> stateListeners=new CopyOnWriteArrayList<>();
+        volatile ConnectionState state=ConnectionState.CONNECTED;
+        public ConnectionState connectionState() { return state; }
+        public AutoCloseable onConnectionState(Consumer<ConnectionState> c) { stateListeners.add(c);return () -> stateListeners.remove(c); }
         public AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> c) { listeners.add(c);return () -> listeners.remove(c); }
         public CompletableFuture<Void> send(MessageEnvelope<JsonObject> m) { return CompletableFuture.completedFuture(null); }
         void emit(MessageEnvelope<JsonObject> message){listeners.forEach(listener->listener.accept(message));}
+        void state(ConnectionState next){state=next;stateListeners.forEach(listener->listener.accept(next));}
     }
     private static final class Api implements AudioApi,ListeningApi {
         byte[] bytes;
         AudioManifestResponse manifest;
         final List<AudioReadyRequest> reports = new CopyOnWriteArrayList<>();
         final List<ListeningEventRequest> listeningEvents=new CopyOnWriteArrayList<>();
+        volatile String listeningPhase="NOT_STARTED";
         public long acquireWriter(String a) throws Exception { Thread.sleep(700); return 2; }
         public AudioManifestResponse manifest(String a) { return manifest; }
         public InputStream download(String a, String m, AudioFileDto f) { return new ByteArrayInputStream(bytes); }
@@ -50,10 +54,15 @@ public final class AudioPackageSmoke {
         public CandidateExamDto exam(String attempt){return new CandidateExamDto("MOCK-EXAM","Đề nghe MOCK",null,1,List.of(
                 new CandidateQuestionDto("L1","LISTENING",1,"G1",null,manifest.files().getFirst().fileName(),"Bạn nghe thấy âm nào?",1,
                         List.of(new CandidateOptionDto("A","Âm mẫu 440 Hz",1),new CandidateOptionDto("B","Im lặng",2)))));}
+        public ListeningStatusResponse status(String attempt){boolean active=!"NOT_STARTED".equals(listeningPhase);boolean stopped="INTERRUPTED".equals(listeningPhase);
+            return new ListeningStatusResponse("v0",null,attempt,"MOCK-SESSION",active?"MOCK-START":null,active?manifest.manifestId():null,2,listeningPhase,
+                Instant.now().plusSeconds(60),Set.of("PLAYING","COMPLETED","INTERRUPTED").contains(listeningPhase)?Instant.now():null,
+                "COMPLETED".equals(listeningPhase)?Instant.now():null,stopped,stopped?Instant.now():null,stopped?"NETWORK_LOST":null);}
         public ListeningStatusResponse event(String attempt,ListeningEventRequest request){
-            listeningEvents.add(request);String phase="COMPLETED".equals(request.event())?"COMPLETED":"PLAYING";
+            listeningEvents.add(request);String phase=switch(request.event()){case "COMPLETED"->"COMPLETED";case "INTERRUPTED"->"INTERRUPTED";default->"PLAYING";};listeningPhase=phase;
+            boolean stopped="INTERRUPTED".equals(phase);
             return new ListeningStatusResponse("v0",request.requestId(),attempt,"MOCK-SESSION",request.startId(),manifest.manifestId(),request.writerEpoch(),phase,
-                    Instant.now().plusSeconds(60),Instant.now(),"COMPLETED".equals(phase)?Instant.now():null,false,null,null);
+                    Instant.now().plusSeconds(60),Instant.now(),"COMPLETED".equals(phase)?Instant.now():null,stopped,stopped?Instant.now():null,stopped?request.reason():null);
         }
         public void close() {}
     }
@@ -101,6 +110,7 @@ public final class AudioPackageSmoke {
             screenshot(output.resolve("listening-completed.png"));
 
             // Start completion intentionally locks preparation for this attempt; remaining B1 regressions use a fresh view.
+            api.listeningPhase="NOT_STARTED";
             fx(()->{view.close();view=new AudioPreparationView(api,api,output.resolve("Bộ nhớ audio có dấu và khoảng trắng 2"),List.of("MOCK-ATTEMPT"),transport);stage.getScene().setRoot(new VBox(12,view));return null;});
             fire("Tải / chuẩn bị lại audio"); waitFor("Thử loa"); fire("Thử loa"); waitFor("Tôi nghe được"); fire("Tôi nghe được");
             local = new AudioFiles(output.resolve("Bộ nhớ audio có dấu và khoảng trắng 2/files")).file(api.manifest,api.manifest.files().getFirst());Files.delete(local);
@@ -116,6 +126,22 @@ public final class AudioPackageSmoke {
             }
             fire("Thử loa"); waitText("Thử loa thất bại");
             result.add("PASS missing speaker sample raises REAL media error; READY stays locked");
+
+            api.listeningPhase="NOT_STARTED";
+            fx(()->{view.close();view=new AudioPreparationView(api,api,output.resolve("Bộ nhớ LT03"),List.of("MOCK-ATTEMPT"),transport);stage.getScene().setRoot(new VBox(12,view));return null;});
+            fire("Tải / chuẩn bị lại audio");waitFor("Thử loa");fire("Thử loa");waitFor("Tôi nghe được");fire("Tôi nghe được");
+            fire("Xác nhận sẵn sàng");waitText("Server đã xác nhận READY");
+            long starts=api.listeningEvents.stream().filter(e->"STARTED".equals(e.event())).count();
+            transport.emit(command);await(()->api.listeningEvents.stream().filter(e->"STARTED".equals(e.event())).count()>starts);
+            transport.state(ConnectionState.DISCONNECTED);waitText("NETWORK_LOST");
+            if(api.listeningEvents.stream().noneMatch(e->"INTERRUPTED".equals(e.event())&&"NETWORK_LOST".equals(e.reason())))
+                throw new IllegalStateException("Network loss was not reported");
+            long startsAfterLoss=api.listeningEvents.stream().filter(e->"STARTED".equals(e.event())).count();
+            transport.state(ConnectionState.CONNECTED);waitText("gián đoạn");transport.emit(command);Thread.sleep(300);
+            if(api.listeningEvents.stream().filter(e->"STARTED".equals(e.event())).count()!=startsAfterLoss)
+                throw new IllegalStateException("Reconnect replayed Listening");
+            result.add("PASS LT03 REAL MediaPlayer stops on disconnect; reconnect queries status and never replays");
+            screenshot(output.resolve("listening-network-interrupted.png"));
             fx(() -> { view.close(); clock.stop(); stage.close(); return null; });
             result.add("PASS view/player/worker shutdown; bundled runtime=" + System.getProperty("java.version"));
             exit = 0;

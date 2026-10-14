@@ -22,6 +22,7 @@ class ListeningApiClientTest {
             assertThat(exchange.getRequestURI().toString()).doesNotContain("TEST_ONLY_TOKEN");
             String path=exchange.getRequestURI().getPath();String request=new String(exchange.getRequestBody().readAllBytes(),StandardCharsets.UTF_8);byte[] response;
             if(path.endsWith("/exam"))response=(override==null?json.toJson(exam()):override).getBytes(StandardCharsets.UTF_8);
+            else if(path.endsWith("/listening/status"))response=(override==null?status(null,"START","9007199254740993"):override).getBytes(StandardCharsets.UTF_8);
             else{JsonObject sent=JsonParser.parseString(request).getAsJsonObject();response=(override==null?status(sent.get("requestId").getAsString(),sent.get("startId").getAsString(),sent.get("writerEpoch").getAsString()):override).getBytes(StandardCharsets.UTF_8);}
             exchange.sendResponseHeaders(status,response.length);exchange.getResponseBody().write(response);
         }});server.start();api=new ListeningApiClient("http://127.0.0.1:"+server.getAddress().getPort(),"TEST_ONLY_TOKEN");
@@ -31,6 +32,7 @@ class ListeningApiClientTest {
         assertThat(api.exam("ATTEMPT").questions()).singleElement().satisfies(q->{assertThat(q.audioFile()).isEqualTo("đoạn nghe.wav");assertThat(q.options()).extracting(CandidateOptionDto::optionText).containsExactly("Một");});
         var request=new ListeningEventRequest("REQ","START",9007199254740993L,"STARTED",null);
         var ack=api.event("ATTEMPT",request);assertThat(ack.writerEpoch()).isEqualTo(9007199254740993L);assertThat(ack.phase()).isEqualTo("PLAYING");
+        assertThat(api.status("ATTEMPT").requestId()).isNull();
     }
     @Test void rejectsMalformedExamUncorrelatedEventAndHttpErrors(){
         override="{broken";assertThatThrownBy(()->api.exam("ATTEMPT")).isInstanceOf(IOException.class);
@@ -43,5 +45,5 @@ class ListeningApiClientTest {
         api.close();assertThatThrownBy(()->api.exam("ATTEMPT")).isInstanceOf(IOException.class).hasMessageContaining("đóng");
     }
     private CandidateExamDto exam(){return new CandidateExamDto("EXAM","Đề MOCK",null,1,List.of(new CandidateQuestionDto("L1","LISTENING",1,"G",null,"đoạn nghe.wav","Chọn đáp án",1,List.of(new CandidateOptionDto("A","Một",1)))));}
-    private String status(String request,String start,String writer){return "{\"protocolVersion\":\"v0\",\"requestId\":\""+request+"\",\"attemptId\":\"ATTEMPT\",\"sessionId\":\"SESSION\",\"startId\":\""+start+"\",\"manifestId\":\""+"a".repeat(64)+"\",\"writerEpoch\":"+writer+",\"phase\":\"PLAYING\",\"deadlineAt\":\"2026-10-14T11:00:00Z\",\"playbackStartedAt\":\"2026-10-14T10:00:01Z\",\"interrupted\":false}";}
+    private String status(String request,String start,String writer){return "{\"protocolVersion\":\"v0\",\"requestId\":"+(request==null?"null":"\""+request+"\"")+",\"attemptId\":\"ATTEMPT\",\"sessionId\":\"SESSION\",\"startId\":\""+start+"\",\"manifestId\":\""+"a".repeat(64)+"\",\"writerEpoch\":"+writer+",\"phase\":\"PLAYING\",\"deadlineAt\":\"2026-10-14T11:00:00Z\",\"playbackStartedAt\":\"2026-10-14T10:00:01Z\",\"interrupted\":false}";}
 }
