@@ -96,6 +96,48 @@ class AudioRuntimePostgresTest {
         return new Fixture(session, exam, first, second, manifest.manifestId(), Map.of("sample.wav", manifest.files().getFirst().sha256()), audio);
     }
 
+    @Test void clientPreparationChecksRealLocalBytesBeforeReadyOnProductionHttpAndPostgres() throws Exception {
+        var f = fixture();
+        Path cache = resources.resolve("T3-B1 Bộ nhớ local có dấu và khoảng trắng");
+        var files = new vn.edu.toeic.client.audio.AudioFiles(cache.resolve("files"));
+        try (var api = new vn.edu.toeic.client.audio.AudioApiClient(base, candidate1);
+             var preparation = new vn.edu.toeic.client.audio.AudioPreparation(api, files, cache.resolve("speaker"), ignored -> {})) {
+            preparation.prepare(f.first()); awaitClientPhase(preparation, vn.edu.toeic.client.audio.AudioPreparation.Phase.FILES_READY);
+            var manifest = api.manifest(f.first()); Path local = files.file(manifest, manifest.files().getFirst());
+            // Media completion and the user's hearing confirmation are SIMULATED here; HTTP/files/DB are REAL.
+            long run = preparation.testSpeaker(); preparation.speakerCompleted(run); preparation.confirmSpeaker();
+            byte[] original = Files.readAllBytes(local), changed = original.clone(); changed[44] ^= 1; Files.write(local, changed);
+            preparation.reportReady(); awaitClientPhase(preparation, vn.edu.toeic.client.audio.AudioPreparation.Phase.ERROR);
+            assertThat(preparation.snapshot().message()).contains("SHA-256");
+            assertThat(json(expect(get(readinessPath(f), proctor), 200)).get("allReady").getAsBoolean()).isFalse();
+            expectCode(post(startPath(f), new ListeningStartRequest(id(), f.manifest()), proctor), 409, "INVALID_STATE");
+
+            preparation.prepare(f.first()); awaitClientPhase(preparation, vn.edu.toeic.client.audio.AudioPreparation.Phase.FILES_READY);
+            run = preparation.testSpeaker(); preparation.speakerCompleted(run); preparation.confirmSpeaker(); Files.delete(local);
+            preparation.reportReady(); awaitClientPhase(preparation, vn.edu.toeic.client.audio.AudioPreparation.Phase.ERROR);
+            assertThat(preparation.snapshot().message()).contains("thiếu");
+            assertThat(jdbc.sql("SELECT count(*) FROM attempt_audio_readiness WHERE attempt_id = :a")
+                    .param("a", f.first()).query(Long.class).single()).isZero();
+
+            preparation.prepare(f.first()); awaitClientPhase(preparation, vn.edu.toeic.client.audio.AudioPreparation.Phase.FILES_READY);
+            run = preparation.testSpeaker(); preparation.speakerCompleted(run); preparation.confirmSpeaker(); preparation.reportReady();
+            awaitClientPhase(preparation, vn.edu.toeic.client.audio.AudioPreparation.Phase.READY);
+            assertThat(jdbc.sql("SELECT writer_epoch FROM attempt_audio_readiness WHERE attempt_id = :a")
+                    .param("a", f.first()).query(Long.class).single()).isEqualTo(2L);
+            assertThat(Files.readAllBytes(local)).isEqualTo(original);
+            preparation.prepare(f.first()); awaitClientPhase(preparation, vn.edu.toeic.client.audio.AudioPreparation.Phase.FILES_READY);
+            assertThat(jdbc.sql("SELECT count(*) FROM attempt_audio_readiness WHERE attempt_id = :a")
+                    .param("a", f.first()).query(Long.class).single()).isZero();
+        }
+        System.out.println("PASS T3-B1 REAL client/HTTP/PG: missing/one-byte-corrupt local cache blocks READY/start; reload recovers; prepare withdraws; speaker confirmation SIMULATED");
+    }
+    private static void awaitClientPhase(vn.edu.toeic.client.audio.AudioPreparation preparation,
+                                         vn.edu.toeic.client.audio.AudioPreparation.Phase phase) throws Exception {
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10);
+        while (preparation.snapshot().phase() != phase && System.nanoTime() < deadline) Thread.sleep(10);
+        assertThat(preparation.snapshot().phase()).withFailMessage(preparation.snapshot().message()).isEqualTo(phase);
+    }
+
     @Test void authenticatedEndpointsAllowOnlyOwnerAndSessionProctor() throws Exception {
         var f = fixture();
         String download = audioPath(f.first(), "files/sample.wav") + "?manifestId=" + f.manifest();
