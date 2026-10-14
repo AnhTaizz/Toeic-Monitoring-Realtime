@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.*;
 import org.junit.jupiter.api.*;
@@ -136,6 +137,42 @@ class AudioRuntimePostgresTest {
         long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10);
         while (preparation.snapshot().phase() != phase && System.nanoTime() < deadline) Thread.sleep(10);
         assertThat(preparation.snapshot().phase()).withFailMessage(preparation.snapshot().message()).isEqualTo(phase);
+    }
+
+    @Test void productionClientConsumesOneStartAndPersistsPlaybackLifecycle() throws Exception {
+        var f=fixture();Path cache=resources.resolve("T3-B2 playback cache có dấu");
+        var files=new vn.edu.toeic.client.audio.AudioFiles(cache.resolve("files"));
+        try(var audio=new vn.edu.toeic.client.audio.AudioApiClient(base,candidate1);
+            var preparation=new vn.edu.toeic.client.audio.AudioPreparation(audio,files,cache.resolve("speaker"),ignored->{})){
+            preparation.prepare(f.first());awaitClientPhase(preparation,vn.edu.toeic.client.audio.AudioPreparation.Phase.FILES_READY);
+            long speaker=preparation.testSpeaker();preparation.speakerCompleted(speaker);preparation.confirmSpeaker();preparation.reportReady();
+            awaitClientPhase(preparation,vn.edu.toeic.client.audio.AudioPreparation.Phase.READY);
+            expect(post(audioPath(f.second(),"ready"),ready(f,f.second(),1,true),candidate2),200);
+            JsonObject started=json(expect(post(startPath(f),new ListeningStartRequest(id(),f.manifest()),proctor),200));
+            Instant deadline=jdbc.sql("SELECT deadline_at FROM monitoring_attempts WHERE attempt_id=:a").param("a",f.first()).query(Instant.class).single();
+            JsonObject payload=new JsonObject();payload.addProperty("startId",started.get("startId").getAsString());payload.addProperty("sessionId",f.session());
+            payload.addProperty("attemptId",f.first());payload.addProperty("manifestId",f.manifest());payload.addProperty("writerEpoch",2);
+            payload.addProperty("startedAt",started.get("startedAt").getAsString());payload.addProperty("deadlineAt",deadline.toString());
+            var envelope=new vn.edu.toeic.protocol.ws.MessageEnvelope<>("v0","LISTENING_START",started.get("startId").getAsString(),null,f.first(),id(),payload);
+            try(var listening=new vn.edu.toeic.client.audio.ListeningApiClient(base,candidate1);
+                var playback=new vn.edu.toeic.client.audio.ListeningPlayback(listening,files,
+                        new vn.edu.toeic.client.audio.ListeningPlaybackJournal(cache.resolve("journal")),preparation::playbackContext,ignored->{})){
+                playback.accept(envelope);playback.accept(envelope);awaitPlaybackPhase(playback,vn.edu.toeic.client.audio.ListeningPlayback.Phase.READY_TO_PLAY);
+                assertThat(playback.snapshot().current().questions()).extracting(vn.edu.toeic.client.audio.ListeningPlayback.Question::id).containsExactly("L1","L2");
+                long run=playback.snapshot().generation();playback.mediaPlaying(run,0);playback.mediaCompleted(run,0);
+                awaitPlaybackPhase(playback,vn.edu.toeic.client.audio.ListeningPlayback.Phase.COMPLETED);
+                playback.accept(envelope);assertThat(playback.snapshot().phase()).isEqualTo(vn.edu.toeic.client.audio.ListeningPlayback.Phase.COMPLETED);
+            }
+            assertThat(jdbc.sql("SELECT playback_started_at IS NOT NULL AND playback_completed_at IS NOT NULL FROM monitoring_attempts WHERE attempt_id=:a")
+                    .param("a",f.first()).query(Boolean.class).single()).isTrue();
+        }
+        System.out.println("PASS T3-B2 REAL client/HTTP/PG: mapped questions, exact writer, STARTED/COMPLETED and duplicate start blocked");
+    }
+    private static void awaitPlaybackPhase(vn.edu.toeic.client.audio.ListeningPlayback playback,
+                                           vn.edu.toeic.client.audio.ListeningPlayback.Phase phase)throws Exception{
+        long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(10);
+        while(playback.snapshot().phase()!=phase&&System.nanoTime()<deadline)Thread.sleep(10);
+        assertThat(playback.snapshot().phase()).withFailMessage(playback.snapshot().message()).isEqualTo(phase);
     }
 
     @Test void authenticatedEndpointsAllowOnlyOwnerAndSessionProctor() throws Exception {

@@ -31,6 +31,20 @@ import vn.edu.toeic.protocol.measurement.MessageMeasurements.Outcome;
 
 /** All sockets/openers in this class are MOCK, never authenticated server proof. */
 class RealtimeClientTest {
+    @Test void listeningStartRequiresExactScopeMessageIdWriterAndPayloadBeforePublish() {
+        try(Fixture f=new Fixture()) {
+            f.connect();JsonObject p=new JsonObject();p.addProperty("startId","START-1");p.addProperty("sessionId","SESSION-1");
+            p.addProperty("attemptId","mock-attempt-A");p.addProperty("manifestId","a".repeat(64));p.addProperty("writerEpoch",9007199254740993L);
+            p.addProperty("startedAt","2026-10-14T10:00:00Z");p.addProperty("deadlineAt","2026-10-14T11:00:00Z");
+            f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","LISTENING_START","WRONG",null,"mock-attempt-A","trace",p)),true);
+            assertThat(f.messages).isEmpty();
+            f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","LISTENING_START","START-1",null,"outside-scope","trace",p)),true);
+            assertThat(f.messages).isEmpty();
+            f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","LISTENING_START","START-1",null,"mock-attempt-A","trace",p)),true);
+            assertThat(f.messages).singleElement().satisfies(message->assertThat(message.type()).isEqualTo("LISTENING_START"));
+            assertThat(f.messages.getFirst().payload().get("writerEpoch").getAsString()).isEqualTo("9007199254740993");
+        }
+    }
     @Test void scopedHeartbeatRejectionCallbackRequiresCorrelationAndExcludesTransientDbFailure() {
         try(Fixture f=new Fixture()) {
             var rejected=new ArrayList<MonitoringTransport.MonitoringAccessRejection>();f.client.onMonitoringAccessRejected(rejected::add);f.connect();f.clock.advance(Duration.ofSeconds(2));

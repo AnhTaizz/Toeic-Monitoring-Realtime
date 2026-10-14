@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import vn.edu.toeic.client.realtime.*;
 import vn.edu.toeic.protocol.audio.*;
+import vn.edu.toeic.protocol.exam.*;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
 /** TEST launcher only: REAL production view/cache/JavaFX WAV playback, MOCK API and automated hearing confirmation. */
@@ -28,20 +29,31 @@ public final class AudioPackageSmoke {
     private static Timeline clock;
     private static int ticks;
     private static final class Transport implements MonitoringTransport {
+        final List<Consumer<MessageEnvelope<JsonObject>>> listeners=new CopyOnWriteArrayList<>();
         public ConnectionState connectionState() { return ConnectionState.CONNECTED; }
         public AutoCloseable onConnectionState(Consumer<ConnectionState> c) { return () -> {}; }
-        public AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> c) { return () -> {}; }
+        public AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> c) { listeners.add(c);return () -> listeners.remove(c); }
         public CompletableFuture<Void> send(MessageEnvelope<JsonObject> m) { return CompletableFuture.completedFuture(null); }
+        void emit(MessageEnvelope<JsonObject> message){listeners.forEach(listener->listener.accept(message));}
     }
-    private static final class Api implements AudioApi {
+    private static final class Api implements AudioApi,ListeningApi {
         byte[] bytes;
         AudioManifestResponse manifest;
         final List<AudioReadyRequest> reports = new CopyOnWriteArrayList<>();
+        final List<ListeningEventRequest> listeningEvents=new CopyOnWriteArrayList<>();
         public long acquireWriter(String a) throws Exception { Thread.sleep(700); return 2; }
         public AudioManifestResponse manifest(String a) { return manifest; }
         public InputStream download(String a, String m, AudioFileDto f) { return new ByteArrayInputStream(bytes); }
         public AudioReadyResponse ready(AudioReadyRequest r) {
             reports.add(r); return new AudioReadyResponse("v0", r.requestId(), r.attemptId(), r.writerEpoch(), r.ready(), r.manifestId(), r.ready() ? Instant.now() : null);
+        }
+        public CandidateExamDto exam(String attempt){return new CandidateExamDto("MOCK-EXAM","Đề nghe MOCK",null,1,List.of(
+                new CandidateQuestionDto("L1","LISTENING",1,"G1",null,manifest.files().getFirst().fileName(),"Bạn nghe thấy âm nào?",1,
+                        List.of(new CandidateOptionDto("A","Âm mẫu 440 Hz",1),new CandidateOptionDto("B","Im lặng",2)))));}
+        public ListeningStatusResponse event(String attempt,ListeningEventRequest request){
+            listeningEvents.add(request);String phase="COMPLETED".equals(request.event())?"COMPLETED":"PLAYING";
+            return new ListeningStatusResponse("v0",request.requestId(),attempt,"MOCK-SESSION",request.startId(),manifest.manifestId(),request.writerEpoch(),phase,
+                    Instant.now().plusSeconds(60),Instant.now(),"COMPLETED".equals(phase)?Instant.now():null,false,null,null);
         }
         public void close() {}
     }
@@ -54,8 +66,9 @@ public final class AudioPackageSmoke {
                     List.of(new AudioFileDto("đoạn nghe có dấu.wav", api.bytes.length, AudioFiles.hash(api.bytes))));
             CountDownLatch started = new CountDownLatch(1); Platform.startup(started::countDown);
             if (!started.await(10, TimeUnit.SECONDS)) throw new IllegalStateException("FX startup timeout");
+            Transport transport=new Transport();
             fx(() -> {
-                view = new AudioPreparationView(api, output.resolve("Bộ nhớ audio có dấu và khoảng trắng"), List.of("MOCK-ATTEMPT"), new Transport());
+                view = new AudioPreparationView(api,api, output.resolve("Bộ nhớ audio có dấu và khoảng trắng"), List.of("MOCK-ATTEMPT"), transport);
                 Label pulse = new Label(); clock = new Timeline(new KeyFrame(Duration.millis(20), e -> pulse.setText("UI pulse " + ++ticks)));
                 clock.setCycleCount(Animation.INDEFINITE); clock.play();
                 stage = new Stage(); stage.setTitle("T3-B1 TEST package · MOCK API · REAL WAV media");
@@ -78,7 +91,19 @@ public final class AudioPackageSmoke {
             result.add("PASS REAL JavaFX PCM WAV completed; automated hearing confirmation; MOCK correlated READY ACK");
             screenshot(output.resolve("ready.png"));
 
-            fire("Tải / chuẩn bị lại audio"); waitFor("Thử loa"); fire("Thử loa"); waitFor("Tôi nghe được"); fire("Tôi nghe được"); Files.delete(local);
+            JsonObject start=new JsonObject();start.addProperty("startId","MOCK-START");start.addProperty("sessionId","MOCK-SESSION");
+            start.addProperty("attemptId","MOCK-ATTEMPT");start.addProperty("manifestId",api.manifest.manifestId());start.addProperty("writerEpoch",2);
+            start.addProperty("startedAt",Instant.now().minusSeconds(1).toString());start.addProperty("deadlineAt",Instant.now().plusSeconds(60).toString());
+            var command=new MessageEnvelope<>("v0","LISTENING_START","MOCK-START",null,"MOCK-ATTEMPT","MOCK-trace",start);
+            transport.emit(command);waitText("Server đã xác nhận phát xong Listening");transport.emit(command);Thread.sleep(300);
+            if(api.listeningEvents.stream().filter(e->"STARTED".equals(e.event())).count()!=1)throw new IllegalStateException("Duplicate start replayed");
+            result.add("PASS REAL exam WAV playback maps candidate question and duplicate startId does not replay");
+            screenshot(output.resolve("listening-completed.png"));
+
+            // Start completion intentionally locks preparation for this attempt; remaining B1 regressions use a fresh view.
+            fx(()->{view.close();view=new AudioPreparationView(api,api,output.resolve("Bộ nhớ audio có dấu và khoảng trắng 2"),List.of("MOCK-ATTEMPT"),transport);stage.getScene().setRoot(new VBox(12,view));return null;});
+            fire("Tải / chuẩn bị lại audio"); waitFor("Thử loa"); fire("Thử loa"); waitFor("Tôi nghe được"); fire("Tôi nghe được");
+            local = new AudioFiles(output.resolve("Bộ nhớ audio có dấu và khoảng trắng 2/files")).file(api.manifest,api.manifest.files().getFirst());Files.delete(local);
             long before = api.reports.stream().filter(AudioReadyRequest::ready).count();
             fire("Xác nhận sẵn sàng"); waitText("Audio thiếu");
             if (api.reports.stream().filter(AudioReadyRequest::ready).count() != before) throw new IllegalStateException("Missing file reported READY");
@@ -86,7 +111,7 @@ public final class AudioPackageSmoke {
             screenshot(output.resolve("missing-file.png"));
 
             fire("Tải / chuẩn bị lại audio"); waitFor("Thử loa");
-            try (var paths = Files.list(output.resolve("Bộ nhớ audio có dấu và khoảng trắng/speaker"))) {
+            try (var paths = Files.list(output.resolve("Bộ nhớ audio có dấu và khoảng trắng 2/speaker"))) {
                 for (Path path : paths.toList()) Files.delete(path);
             }
             fire("Thử loa"); waitText("Thử loa thất bại");
