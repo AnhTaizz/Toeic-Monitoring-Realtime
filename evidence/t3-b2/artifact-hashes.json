@@ -1,0 +1,11 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "maven-package.txt": "44d253796475228cb0a4ad41b318ab3b37b0858e2c543e046903a041803b6cf1",
+    "package-result.txt": "8d4e9ad9509abfc230eb801588f1ce72ea00e7de5010a6d0b789a6c5c976a41c",
+    "package-stdout.txt": "8d4e9ad9509abfc230eb801588f1ce72ea00e7de5010a6d0b789a6c5c976a41c",
+    "package-stderr.txt": "3085947f9a7055df24a4c4a188bc26622e4feb372ce19deaf50165981adf547d",
+    "playback-started.json": "4417f133cae215f5b7545f1dc9329d5543118209b74680faec0f19776bf9de4e",
+    "screenshots/listening-completed.png": "cd0ebd0a0f033a8e47df6ecde4d7b1c19415f74d9e0d3662ac641ec42be37468"
+  }
+}

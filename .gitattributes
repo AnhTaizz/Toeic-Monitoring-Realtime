@@ -69,3 +69,6 @@ evidence/t3-a2/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
 
 # T3-B1 package transcripts, screenshots and audit hashes retain verified bytes.
 evidence/t3-b1/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
+# T3-B2 package transcripts, playback journal and screenshots retain verified bytes.
+evidence/t3-b2/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
