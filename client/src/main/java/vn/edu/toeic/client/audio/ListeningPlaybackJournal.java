@@ -33,6 +33,24 @@ public final class ListeningPlaybackJournal {
             catch(AtomicMoveNotSupportedException ignored){Files.move(temporary,marker,StandardCopyOption.REPLACE_EXISTING);}
         } finally {Files.deleteIfExists(temporary);}
     }
+    public synchronized void interrupted(ListeningStartCommand command,String reason,String requestId,Instant at,boolean playbackStarted) throws IOException {
+        replace(command,Map.of("attemptId",command.attemptId(),"startId",command.startId(),
+                "writerEpoch",command.writerEpoch(),"playbackStarted",playbackStarted,"interrupted",true,
+                "interruptionReason",reason,"interruptionRequestId",requestId,"interruptedAt",at.toString()));
+    }
+    public synchronized void completed(ListeningStartCommand command,Instant at) throws IOException {
+        replace(command,Map.of("attemptId",command.attemptId(),"startId",command.startId(),
+                "writerEpoch",command.writerEpoch(),"playbackStarted",true,"completed",true,"completedAt",at.toString()));
+    }
+    private void replace(ListeningStartCommand command,Object value) throws IOException {
+        Files.createDirectories(directory);
+        Path marker=marker(command),temporary=Files.createTempFile(directory,"state-",".tmp");
+        try {
+            Files.writeString(temporary,json(value),StandardCharsets.UTF_8);
+            try { Files.move(temporary,marker,StandardCopyOption.ATOMIC_MOVE,StandardCopyOption.REPLACE_EXISTING); }
+            catch(AtomicMoveNotSupportedException ignored){Files.move(temporary,marker,StandardCopyOption.REPLACE_EXISTING);}
+        } finally {Files.deleteIfExists(temporary);}
+    }
     Path marker(ListeningStartCommand command){return directory.resolve(hash(command.attemptId()+"\0"+command.writerEpoch()+"\0"+command.startId())+".json");}
     private static String hash(String value){try{return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(value.getBytes(StandardCharsets.UTF_8)));}catch(Exception impossible){throw new IllegalStateException(impossible);}}
     private static String json(Object value){return new GsonBuilder().disableHtmlEscaping().create().toJson(value)+"\n";}

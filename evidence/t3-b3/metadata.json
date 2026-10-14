@@ -1,0 +1,36 @@
+{
+  "task": "T3-B3",
+  "date": "2026-10-14",
+  "timezone": "Asia/Bangkok",
+  "branch": "feat/t3-b3-listening-interruption-recovery",
+  "parentT3B2": "b89667ddd6bf557dc72c862606100cf6eefdcc88",
+  "sourceCommit": "d22b0c5793710ad27f9f9421a612ff37f5c062a6",
+  "os": "Microsoft Windows NT 10.0.26300.0",
+  "jdk": "Microsoft OpenJDK 21.0.9",
+  "javafx": "21.0.12",
+  "maven": "3.9.16",
+  "database": "Project Docker postgres:18, loopback port 5433; isolated owned schemas, Flyway V1-V10",
+  "tests": {
+    "protocol": 43,
+    "client": 424,
+    "server": 201,
+    "spike": 1,
+    "total": 669,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "listeningPlayback": 7,
+    "listeningApi": 3,
+    "packageChecks": 8
+  },
+  "labels": {
+    "mavenPostgres": "REAL Spring/Flyway/PostgreSQL suites; client media callbacks SIMULATED",
+    "package": "REAL production view/cache/journal/JavaFX PCM WAV/bundled runtime/Unicode paths; MOCK API/realtime",
+    "readingPolicy": "ISOLATED; T2-B4 dependency unavailable on branch",
+    "humanAReview": "NOT RUN",
+    "manualCablePullAndKill": "NOT RUN",
+    "humanHearing": "NOT RUN",
+    "secondMachineLan": "NOT RUN",
+    "mp3M4aCodec": "NOT RUN"
+  }
+}

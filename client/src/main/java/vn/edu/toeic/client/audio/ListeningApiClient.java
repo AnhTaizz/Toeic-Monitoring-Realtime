@@ -105,5 +105,14 @@ public final class ListeningApiClient implements ListeningApi {
         } catch (RuntimeException malformed) { throw new IOException("Server chưa xác nhận event Listening hợp lệ."); }
     }
 
+    @Override public ListeningStatusResponse status(String attempt) throws Exception {
+        JsonObject body = request(attemptPath(attempt) + "/listening/status", null);
+        try {
+            ListeningStatusResponse status = ListeningMessages.status(body);
+            if (!attempt.equals(status.attemptId()) || status.requestId() != null) throw new IllegalArgumentException();
+            return status;
+        } catch (RuntimeException malformed) { throw new IOException("Trạng thái Listening từ server không hợp lệ."); }
+    }
+
     @Override public void close() { token = null; http.shutdownNow(); }
 }

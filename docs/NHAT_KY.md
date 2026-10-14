@@ -474,3 +474,10 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Dedupe attempt/writer/startId trong RAM và bằng marker CREATE_NEW. Cache được SHA-256 lại trước reserve; lệnh phải khớp context READY. `onPlaying` ghi local và gửi STARTED; heartbeat 2 giây; file cuối gửi COMPLETED. Không autoplay từ HTTP/status/reconnect.
 - Full package bật PostgreSQL PASS666, 0skip: protocol43 + client421 + server201 + spike1. Case client/HTTP/Spring/PG thật xác nhận mapping câu hỏi, exact writer, STARTED/COMPLETED và duplicate bị chặn. Package Unicode runtime21.0.9 PASS7 với Media WAV thật; API/WS fixture MOCK.
 - Source/test `987d9b27f400c339a50914de11de6d094649a271`; [guide](LISTENING_CLIENT_PLAYBACK.md), [evidence](../evidence/t3-b2/2026-10-14-verification.md). B3 interruption/reconnect, review A, human hearing, LAN/máy thứ hai và MP3/M4A NOT RUN. Tracker chỉ T3-B2 IN_PROGRESS, actual_hours null.
+
+## 14/10/2026 — B · T3-B3 gián đoạn và mở lại Listening
+
+- Tạo `feat/t3-b3-listening-interruption-recovery` từ B2. Thêm status GET production, state RECOVERING/BLOCKED, hủy MediaPlayer/heartbeat khi lỗi, marker interruption bền và event `MEDIA_ERROR`/`NETWORK_LOST` có request ổn định để retry.
+- Mở view/reconnect đọc trạng thái authoritative. `INTERRUPTED` và `COMPLETED` không phát; `ARMED`/`PLAYING` còn dang dở fail closed và báo mất kết nối. Không dùng hay sửa `ExamSession`; T2-B4 chưa có trên nhánh nên gate kết hợp Reading còn chờ.
+- Full package Microsoft JDK21.0.9 + PostgreSQL thật PASS669, 0skip (protocol43/client424/server201/spike1). App-image Unicode PASS8; JavaFX MediaPlayer thật dừng giữa audio khi transport disconnect, marker ghi NETWORK_LOST, reconnect/status và start trùng không replay.
+- [Guide](LISTENING_INTERRUPTION_RECOVERY.md), [evidence](../evidence/t3-b3/2026-10-14-verification.md). Review A, human hearing, rút mạng/kill app thủ công, LAN/máy thứ hai và MP3/M4A NOT RUN; tracker T3-B3 IN_PROGRESS, actual_hours null.

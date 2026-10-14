@@ -1,0 +1,9 @@
+{
+  "algorithm": "SHA-256",
+  "artifacts": {
+    "maven-package.txt": "40360106157defa7361c5cfd1a2bee37894bd25ef24d3770c8775548ebb51f6e",
+    "package-result.txt": "5b9b4b59b1592fa9979e90e2497e8369625776458681fcfe7e3cf2a58a6f077a",
+    "screenshots/listening-network-interrupted.png": "d19ac4edd8b4bab6491d7087ec134eb2ea827117bee362c8bebbcf5f51d56487",
+    "interrupted-marker.json": "ea440b1245d30f229c14122eff0764b231c9f9141dabd4ade13c83b137fc84ed"
+  }
+}

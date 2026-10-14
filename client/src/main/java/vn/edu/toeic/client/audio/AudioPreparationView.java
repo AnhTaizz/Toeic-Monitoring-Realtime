@@ -32,6 +32,7 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
     AudioPreparationView(AudioApi api, Path cache, Collection<String> scope, MonitoringTransport realtime) {
         this(api,new ListeningApi(){
             public vn.edu.toeic.protocol.exam.CandidateExamDto exam(String attempt)throws Exception{throw new java.io.IOException("MOCK playback API chưa cấu hình");}
+            public vn.edu.toeic.protocol.audio.ListeningStatusResponse status(String attempt)throws Exception{throw new java.io.IOException("MOCK playback API chưa cấu hình");}
             public vn.edu.toeic.protocol.audio.ListeningStatusResponse event(String attempt,vn.edu.toeic.protocol.audio.ListeningEventRequest request)throws Exception{throw new java.io.IOException("MOCK playback API chưa cấu hình");}
             public void close(){}
         },cache,scope,realtime);
@@ -42,7 +43,7 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
         status.setWrapText(true); connection.setWrapText(true); progress.setMaxWidth(Double.MAX_VALUE);
         AudioFiles audioFiles=new AudioFiles(cache.resolve("files"));
         preparation = new AudioPreparation(api, audioFiles, cache.resolve("speaker"), ignored -> queueRender());
-        playback=new ListeningPlaybackPane(listeningApi,audioFiles,new ListeningPlaybackJournal(cache.resolve("playback-started")),preparation,realtime);
+        playback=new ListeningPlaybackPane(listeningApi,audioFiles,new ListeningPlaybackJournal(cache.resolve("playback-started")),preparation,scope,realtime);
         getChildren().addAll(new Label("Chuẩn bị Listening"), attempts, prepare, progress,
                 new HBox(8, test, heard), ready, connection, status,playback);
         attempts.setOnAction(event -> { disposePlayer(); preparation.selectionChanged(); render(); });

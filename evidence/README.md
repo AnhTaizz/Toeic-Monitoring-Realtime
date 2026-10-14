@@ -43,6 +43,8 @@ T3-B1: [Tải/checksum/thử loa/READY phía client](t3-b1/2026-10-14-verificati
 
 T3-B2: [Phát Listening theo lệnh server](t3-b2/2026-10-14-verification.md), [metadata](t3-b2/metadata.json). Java666 PASS với PG thật; app-image Unicode 7 checks PASS, gồm Media WAV và duplicate start không replay. Gián đoạn/reconnect B3, human A review/LAN/máy thứ hai chưa chạy.
 
+T3-B3: [Gián đoạn và mở lại Listening](t3-b3/2026-10-14-verification.md), [metadata](t3-b3/metadata.json). Java669 PASS với PG thật; app-image Unicode 8 checks PASS, gồm MediaPlayer dừng khi disconnect, marker NETWORK_LOST và reconnect không replay. Review A/rút mạng/kill app thủ công/LAN/máy thứ hai chưa chạy.
+
 T3-A1: [API audio/READY và gate start](t3-a1/2026-10-13-verification.md), [19 test PostgreSQL](t3-a1/postgres-results.json). T3-B1 đã hoàn tác; playback/WS/gián đoạn Listening thuộc các task kế tiếp.
 
 - Lưu theo task trong `evidence/<task>/`; một lượt chạy bổ sung có thể dùng thư mục con riêng. Thêm báo cáo và liên kết vào mục lục này khi có bằng chứng mới.

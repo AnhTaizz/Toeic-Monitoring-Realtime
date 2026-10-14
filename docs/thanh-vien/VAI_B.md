@@ -244,7 +244,7 @@ Gate 22/10: LT01–LT04 và chạy được trên máy thứ hai.
 
 **Xong khi:** LT02 (lỗi media) và LT03 chạy được: rút mạng giữa audio, kill rồi mở lại, đều không nghe lại được.
 
-**Ghi chú làm dở:** —
+**Ghi chú bàn giao 14/10:** T3-B3 code complete trên `feat/t3-b3-listening-interruption-recovery`, kế thừa B2. Client dừng/hủy MediaPlayer ngay khi lỗi media hoặc realtime mất kết nối, hủy heartbeat, ghi marker và gửi `INTERRUPTED` với `MEDIA_ERROR`/`NETWORK_LOST`; reconnect/mở view luôn GET status và không có nhánh autoplay/resume. Server `INTERRUPTED` giữ khóa; `ARMED`/`PLAYING` còn dang dở được fail closed và báo mất kết nối. Policy nằm riêng trong Listening, không nhập hay gọi reconnect Reading; T2-B4 chưa có trên nhánh nên gate tích hợp chung còn chờ. Java669 PASS, 0skip với PostgreSQL thật; app-image Unicode PASS8, gồm MediaPlayer thật dừng khi disconnect và reconnect không replay. [Guide](../LISTENING_INTERRUPTION_RECOVERY.md), [evidence](../../evidence/t3-b3/2026-10-14-verification.md). Review A, rút mạng/kill app thủ công, LAN/máy thứ hai và nghe thủ công NOT RUN; tracker IN_PROGRESS, giờ null.
 
 ### T3-B4 · Giao diện giám thị điều khiển ca
 `4h` · phụ thuộc: T3-B3, T3-A2 · review: A
