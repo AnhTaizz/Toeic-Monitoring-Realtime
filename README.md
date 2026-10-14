@@ -6,7 +6,7 @@ Log và bằng chứng được tập trung theo task tại [evidence/README.md]
 
 ## Yêu cầu môi trường
 
-T3-A1 có API audio/manifest/READY và gate start: [docs/AUDIO_RESOURCES.md](docs/AUDIO_RESOURCES.md). T3-A2 thêm lệnh WS sau COMMIT, trạng thái/gián đoạn Listening và lượt thi mới: [docs/LISTENING_LIFECYCLE.md](docs/LISTENING_LIFECYCLE.md). Giao diện tải/phát audio của B chưa triển khai.
+T3-A1 có API audio/manifest/READY và gate start: [docs/AUDIO_RESOURCES.md](docs/AUDIO_RESOURCES.md). T3-A2 thêm lệnh WS sau COMMIT, trạng thái/gián đoạn Listening và lượt thi mới: [docs/LISTENING_LIFECYCLE.md](docs/LISTENING_LIFECYCLE.md). Candidate đã có chuẩn bị audio T3-B1 và phát một lần theo lệnh server T3-B2; chính sách gián đoạn/reconnect đầy đủ tiếp tục ở T3-B3.
 
 - Windows 11 x64
 - JDK 21 (đã kiểm với Oracle JDK 21.0.8)
@@ -340,4 +340,8 @@ Sau `mvn package`, chạy `powershell -NoProfile -ExecutionPolicy Bypass -File s
 
 ## Chuẩn bị audio Listening (T3-B1)
 
-Candidate có phần tải audio, tiến độ/checksum, thử loa bằng WAV mẫu riêng và xác nhận READY theo response server. Xóa/sửa file local trước khi xác nhận sẽ chặn READY. Xem [hướng dẫn, cache và lệnh build/package](docs/AUDIO_CLIENT_PREPARATION.md), [bằng chứng kiểm thử](evidence/t3-b1/2026-10-14-verification.md). Phát đề theo lệnh start thuộc T3-B2/B3.
+Candidate có phần tải audio, tiến độ/checksum, thử loa bằng WAV mẫu riêng và xác nhận READY theo response server. Xóa/sửa file local trước khi xác nhận sẽ chặn READY. Xem [hướng dẫn, cache và lệnh build/package](docs/AUDIO_CLIENT_PREPARATION.md), [bằng chứng kiểm thử](evidence/t3-b1/2026-10-14-verification.md).
+
+## Phát bài Listening (T3-B2)
+
+Sau READY, candidate chỉ phát từ `LISTENING_START` hợp lệ trên WebSocket. Client kiểm lại manifest/writer/cache, tải đề candidate, ghép câu hỏi theo `audioFile`, lưu journal `playbackStarted` và gửi `STARTED`, heartbeat, `COMPLETED`. Cùng `startId` không phát lại, kể cả sau khi journal đã được tạo. Xem [luồng playback](docs/LISTENING_CLIENT_PLAYBACK.md) và [bằng chứng](evidence/t3-b2/2026-10-14-verification.md). Mất mạng/lỗi Media và phục hồi không tự động thuộc T3-B3.

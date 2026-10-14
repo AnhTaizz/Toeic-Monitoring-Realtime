@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+Cập nhật T3-B2: 14/10/2026 — branch `feat/t3-b2-listening-playback` kế thừa T3-B1; nhận `LISTENING_START`, kiểm writer/manifest/SHA-256, journal chống replay, playlist JavaFX và câu hỏi theo `audioFile`, báo STARTED/heartbeat/COMPLETED đã triển khai. Java666/666 PASS với PostgreSQL thật; app-image Unicode PASS7. [Hướng dẫn](LISTENING_CLIENT_PLAYBACK.md), [evidence](../evidence/t3-b2/2026-10-14-verification.md). Source `987d9b27f400c339a50914de11de6d094649a271`; code complete, review A/LAN/máy thứ hai/nghe thủ công chưa chạy. B3 còn event gián đoạn và reconnect policy; tracker IN_PROGRESS, giờ null.
+
 Cập nhật T3-B1: 14/10/2026 — branch `feat/t3-b1-audio-download-readiness` từ main `2e784fa`; tải/checksum nền, WAV thử loa riêng, xác nhận nghe và READY có ACK đã triển khai. Java 657/657 PASS (PostgreSQL thật, 0 skip); 6 kiểm tra view/media trong app-image Unicode PASS. [Hướng dẫn](AUDIO_CLIENT_PREPARATION.md), [evidence](../evidence/t3-b1/2026-10-14-verification.md). Source `89082e3d43a322c0e0e210f393cc3b4bf49bd7da`; code complete, review A/thử nghe thủ công/LAN/máy thứ hai chưa chạy; tracker IN_PROGRESS, không ghi giờ chưa đo.
 
 Cập nhật T3-C5: 13/10/2026 — [bản nháp đồng bộ và giới hạn](MONITORING_SYNC_REPORT_DRAFT.md) đối chiếu main `f97c081`. Chỉ tài liệu; [kiểm tra mới](../evidence/t3-c5/2026-10-13-verification.md) không chạy lại runtime. C4 gate NOT_DECIDED/PARTIAL, FULL mặc định; LAN hai máy và B review còn thiếu.
@@ -30,7 +32,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
-| B | _chưa gán_ | T3-B1 code complete, bàn giao audio preparation | Tải/checksum/thử loa/READY; Java 657 PASS, app-image Unicode 6 checks PASS | Review A, thử nghe thủ công; T3-B2 dùng writer/manifest/cache đã kiểm, không takeover lần hai khi ghép Reading | `feat/t3-b1-audio-download-readiness` |
+| B | _chưa gán_ | T3-B2 code complete, bàn giao playback theo start | B1 chuẩn bị + B2 dedupe/playlist/câu hỏi/lifecycle; Java666 PASS, app-image Unicode 7 checks PASS | Review A, thử nghe/LAN; T3-B3 báo gián đoạn và reconnect không resume | `feat/t3-b2-listening-playback` |
 | C | _chưa gán_ | T3-C5 bản nháp tài liệu đã viết; chờ B review | Báo cáo đồng bộ/giới hạn đối chiếu main `f97c081`; kiểm tài liệu riêng | LAN hai máy, human A/B review và gate 20/10 NOT_DECIDED/PARTIAL; FULL default | `docs/t3-c5-monitoring-sync-report` |
 
 ## Đang bị chặn

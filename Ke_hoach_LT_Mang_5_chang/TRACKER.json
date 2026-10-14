@@ -538,9 +538,9 @@
       "dependencies": "T3-B1; T3-A2",
       "title": "Phát Listening từ lệnh server",
       "acceptance": "Start ID trùng không phát lại; ghi local playbackStarted; đoạn nghe và câu hỏi khớp; chỉ mô phỏng phạm vi đã chọn, không hứa đồng bộ audio tuyệt đối.",
-      "status": "TODO",
+      "status": "IN_PROGRESS",
       "actual_hours": null,
-      "evidence": null
+      "evidence": "evidence/t3-b2/2026-10-14-verification.md; CODE_COMPLETE, automated local/HTTP/PG/package PASS; human A review/LAN/second-machine NOT RUN"
     },
     {
       "id": "T3-B3",

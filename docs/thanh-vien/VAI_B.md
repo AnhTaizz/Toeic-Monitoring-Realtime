@@ -230,7 +230,7 @@ Gate 22/10: LT01–LT04 và chạy được trên máy thứ hai.
 
 **Xong khi:** phần start lặp của LT02 chạy được.
 
-**Ghi chú làm dở:** —
+**Ghi chú bàn giao 14/10:** T3-B2 code complete trên `feat/t3-b2-listening-playback`, kế thừa branch B1. `RealtimeClient` chỉ chuyển lệnh start/status đúng scope/schema; coordinator kiểm lại SHA-256, writer và manifest đã READY, lấy đề candidate ở worker, ghép câu theo `audioFile`, ghi journal local rồi phát playlist. `onPlaying` gửi STARTED, heartbeat 2 giây và COMPLETED qua production HTTP; trùng attempt/writer/startId bị chặn trong RAM và sau journal. Java666 PASS, 0skip với Spring/HTTP/PG/Flyway thật; app-image Unicode PASS7 gồm JavaFX Media và duplicate start không phát lại. [Guide](../LISTENING_CLIENT_PLAYBACK.md), [evidence](../../evidence/t3-b2/2026-10-14-verification.md). Media error/mất mạng chỉ khóa an toàn; báo INTERRUPTED và phục hồi theo policy thuộc B3. Review A, LAN/máy thứ hai, nghe thủ công, MP3/M4A NOT RUN; tracker IN_PROGRESS, giờ null.
 
 ### T3-B3 · Gián đoạn và mở lại đúng chính sách
 `4h` · phụ thuộc: T3-B2, T2-B4 · review: A
