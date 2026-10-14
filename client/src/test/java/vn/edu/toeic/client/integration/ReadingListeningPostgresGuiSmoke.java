@@ -40,7 +40,11 @@ public final class ReadingListeningPostgresGuiSmoke {
         ReadingListeningPostgresGuiSmoke smoke = new ReadingListeningPostgresGuiSmoke();
         int exit = 0;
         try { smoke.run(); }
-        catch (Throwable failure) { System.out.println("FAIL " + failure.getClass().getSimpleName() + ": " + failure.getMessage()); exit = 1; }
+        catch (Throwable failure) {
+            System.out.println("FAIL " + failure.getClass().getSimpleName() + ": " + failure.getMessage()); exit = 1;
+            try { if (smoke.proctorStage != null) smoke.screenshot(smoke.proctorStage, "failed-proctor.png"); }
+            catch (Exception ignored) { }
+        }
         finally { smoke.cleanup(); }
         System.out.println("GUI_INTEGRATION passed=" + smoke.passed + " exit=" + exit);
         System.exit(exit);
@@ -139,8 +143,9 @@ public final class ReadingListeningPostgresGuiSmoke {
                 .filter(TableView.class::isInstance).map(TableView.class::cast)
                 .filter(table -> table.getItems().toString().contains(listening)).findFirst().orElseThrow()
                 .getSelectionModel().select(0); return null; });
-        until(() -> fx(() -> proctorStage.getScene().getRoot().lookupAll(".label").stream().filter(Label.class::isInstance)
-                .map(Label.class::cast).anyMatch(label -> label.getText().contains("SYNCED") && !label.getText().contains("UNSYNCED"))), "Proctor FULL SYNCED rendered");
+        until(() -> fx(() -> proctorStage.getScene().lookup("#dashboard-current-status") instanceof Label label
+                && label.getText().contains("Quan sát gần nhất") && label.getText().contains("Đã đồng bộ")),
+                "Proctor full observation rendered without stale/loading flags");
         pass("REAL proctor Application/HTTP roster + candidate FULL state; final attempt excluded"); screenshot(proctorStage, "06-proctor.png");
         JsonObject result = new JsonObject(); result.addProperty("passed", passed); result.addProperty("schema", schema);
         result.addProperty("readingWriter", readingWriter); result.addProperty("sharedWriter", sharedWriter);
