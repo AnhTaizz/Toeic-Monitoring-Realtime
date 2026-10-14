@@ -1,6 +1,6 @@
 # T3-A2 · Start, gián đoạn Listening và tổ chức lại
 
-Backend dùng gate READY của [T3-A1](AUDIO_RESOURCES.md). Migration V10 lưu trạng thái Listening riêng trên lượt thi; cờ gián đoạn không đổi state ACTIVE thành INTERRUPTED, nên Reading và lịch sử vẫn dùng quyền hiện có. B đã thêm [chuẩn bị audio T3-B1](AUDIO_CLIENT_PREPARATION.md) và [phát theo start T3-B2](LISTENING_CLIENT_PLAYBACK.md) trên các branch phụ thuộc ngày 14/10/2026. Chính sách gián đoạn/reconnect T3-B3 chưa triển khai đầy đủ.
+Backend dùng gate READY của [T3-A1](AUDIO_RESOURCES.md). Migration V10 lưu trạng thái Listening riêng trên lượt thi; cờ gián đoạn không đổi state ACTIVE thành INTERRUPTED, nên Reading và lịch sử vẫn dùng quyền hiện có. B đã thêm [chuẩn bị audio T3-B1](AUDIO_CLIENT_PREPARATION.md), [phát theo start T3-B2](LISTENING_CLIENT_PLAYBACK.md) và [gián đoạn/reconnect T3-B3](LISTENING_INTERRUPTION_RECOVERY.md) trên các branch phụ thuộc ngày 14/10/2026.
 
 ## Start và lệnh WebSocket
 

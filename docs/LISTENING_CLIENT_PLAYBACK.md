@@ -21,7 +21,7 @@ Nếu ứng dụng dừng sau reserve nhưng trước `onPlaying`, marker vẫn 
 
 ## Phạm vi B2 và bàn giao B3
 
-B2 khóa playback khi Media hoặc event server lỗi. Nó chưa gửi INTERRUPTED cho `MEDIA_ERROR`/`NETWORK_LOST`, chưa đọc status để render policy sau reconnect và không tự resume. Các hành vi đó thuộc T3-B3. Heartbeat hiện dùng HTTP production; monitoring heartbeat không thay thế nó. MP3/M4A nằm trong allow-list backend nhưng package smoke B2 chỉ nghiệm thu WAV PCM.
+B3 đã nối phần bàn giao này trong [policy gián đoạn/reconnect](LISTENING_INTERRUPTION_RECOVERY.md): lỗi Media/mạng dừng player, ghi/gửi INTERRUPTED; mở lại đọc status và không resume/autoplay. Heartbeat dùng HTTP production; monitoring heartbeat không thay thế nó. MP3/M4A nằm trong allow-list backend nhưng package smoke hiện chỉ nghiệm thu WAV PCM.
 
 ## Kiểm chứng
 
