@@ -1,10 +1,12 @@
 package vn.edu.toeic.client.audio;
 
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.*;
+import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
 
 /** JavaFX renderer/player; the coordinator owns validation, dedupe, journal and server events. */
@@ -14,15 +16,28 @@ final class ListeningPlaybackPane extends VBox implements AutoCloseable {
     private final ListeningPlayback playback;
     private final AtomicBoolean queued=new AtomicBoolean();
     private AutoCloseable messages;
+    private AutoCloseable connections;
     private MediaPlayer player;
+    private ConnectionState connectionState;
     private boolean closed;
 
     ListeningPlaybackPane(ListeningApi api,AudioFiles files,ListeningPlaybackJournal journal,
-                          AudioPreparation preparation,MonitoringTransport realtime){
+                          AudioPreparation preparation,Collection<String> attemptScope,MonitoringTransport realtime){
         setSpacing(8);status.setWrapText(true);
         getChildren().addAll(new Label("Bài thi Listening"),status,questions);
         playback=new ListeningPlayback(api,files,journal,preparation::playbackContext,ignored->queueRender());
         messages=realtime.onMessage(message->{if("LISTENING_START".equals(message.type()))playback.accept(message);});
+        List<String> scope=List.copyOf(attemptScope);
+        connectionState=realtime.connectionState();
+        connections=realtime.onConnectionState(state->Platform.runLater(()->{
+            if(closed||state==connectionState)return;
+            connectionState=state;
+            if(state==ConnectionState.CONNECTED)playback.connected(scope);
+            else{disposePlayer();playback.connectionLost();}
+            render();
+        }));
+        if(connectionState==ConnectionState.CONNECTED)playback.connected(scope);
+        else playback.connectionLost();
         render();
     }
     ListeningPlayback playback(){return playback;}
@@ -54,5 +69,9 @@ final class ListeningPlaybackPane extends VBox implements AutoCloseable {
         }catch(RuntimeException failure){disposePlayer();playback.mediaFailed(run);}
     }
     private void disposePlayer(){MediaPlayer old=player;player=null;if(old!=null){old.stop();old.dispose();}}
-    @Override public void close(){closed=true;disposePlayer();playback.close();if(messages!=null)try{messages.close();}catch(Exception ignored){}messages=null;}
+    @Override public void close(){
+        closed=true;disposePlayer();playback.close();
+        if(messages!=null)try{messages.close();}catch(Exception ignored){}messages=null;
+        if(connections!=null)try{connections.close();}catch(Exception ignored){}connections=null;
+    }
 }
