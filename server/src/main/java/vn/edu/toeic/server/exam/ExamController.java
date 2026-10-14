@@ -154,6 +154,21 @@ public class ExamController {
         return ResponseEntity.ok(response);
     }
 
+    /** Read-only alias for raw database IDs containing path separators. No container URL relaxation. */
+    @GetMapping("/attempts/status")
+    public ResponseEntity<vn.edu.toeic.protocol.exam.CandidateAttemptStatusResponse> getAttemptStatusByQuery(
+            HttpServletRequest httpRequest) {
+        AuthenticatedUser user = (AuthenticatedUser) httpRequest.getUserPrincipal();
+        if (user == null) throw AccessDeniedException.unauthorized();
+        if (!Set.of("attemptId").containsAll(httpRequest.getParameterMap().keySet()))
+            throw ExamApiException.invalidInput("Query parameter không được hỗ trợ");
+        rejectRepeatedParameter(httpRequest, "attemptId");
+        String id = httpRequest.getParameter("attemptId");
+        if (!vn.edu.toeic.protocol.exam.AttemptIdentifier.valid(id))
+            throw ExamApiException.invalidInput("attemptId không hợp lệ");
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(examService.getAttemptStatus(user, id));
+    }
+
     @GetMapping("/attempts/{attemptId}/status")
     public ResponseEntity<vn.edu.toeic.protocol.exam.CandidateAttemptStatusResponse> getAttemptStatus(
             HttpServletRequest httpRequest,

@@ -62,6 +62,15 @@ public final class ListeningPlayback implements AutoCloseable {
             publish(run,Phase.RECOVERING,"Mất kết nối; audio bị khóa cho đến khi đối chiếu lại với server.",List.of(),-1,null);
         }
     }
+    public synchronized void authoritativeStatus(ListeningStatusResponse status) {
+        if (snapshot.phase() == Phase.CLOSED || command == null || !command.attemptId().equals(status.attemptId())
+                || !command.startId().equals(status.startId()) || command.writerEpoch() != status.writerEpoch()
+                || !status.interrupted()) return;
+        cancelHeartbeat();
+        long run = ++generation;
+        publish(run, Phase.BLOCKED, "Server xác nhận Listening đã gián đoạn; chờ giám thị xử lý.",
+                snapshot.segments(), snapshot.segmentIndex(), snapshot.playbackStarted());
+    }
     public synchronized void accept(MessageEnvelope<JsonObject> envelope){
         if(snapshot.phase()==Phase.CLOSED)return;
         final ListeningStartCommand received;

@@ -25,9 +25,17 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
     private MediaPlayer player;
     private final PauseTransition mediaTimeout = new PauseTransition(Duration.seconds(15));
     private boolean connected, closed;
+    private long sharedWriter;
 
     public AudioPreparationView(String serverUrl, String token, Collection<String> scope, RealtimeClient realtime) {
         this(new AudioApiClient(serverUrl, token), new ListeningApiClient(serverUrl,token), cacheRoot(), scope, realtime);
+    }
+    /** One attempt and the authoritative writer already owned by the open exam. */
+    public AudioPreparationView(String serverUrl, String token, String attempt, long writer, RealtimeClient realtime) {
+        this(serverUrl, token, List.of(attempt), realtime);
+        if (writer < 1) throw new IllegalArgumentException("Phiên ghi không hợp lệ.");
+        sharedWriter = writer;
+        attempts.setVisible(false); attempts.setManaged(false);
     }
     AudioPreparationView(AudioApi api, Path cache, Collection<String> scope, MonitoringTransport realtime) {
         this(api,new ListeningApi(){
@@ -47,7 +55,7 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
         getChildren().addAll(new Label("Chuẩn bị Listening"), attempts, prepare, progress,
                 new HBox(8, test, heard), ready, connection, status,playback);
         attempts.setOnAction(event -> { disposePlayer(); preparation.selectionChanged(); render(); });
-        prepare.setOnAction(event -> { disposePlayer(); preparation.prepare(attempts.getValue()); });
+        prepare.setOnAction(event -> { disposePlayer(); preparation.prepare(attempts.getValue(), sharedWriter); });
         test.setOnAction(event -> playSample());
         heard.setOnAction(event -> preparation.confirmSpeaker()); ready.setOnAction(event -> preparation.reportReady());
         subscription = realtime.onConnectionState(state -> Platform.runLater(() -> {
@@ -94,7 +102,11 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
                 disposePlayer(); preparation.speakerFailed(run);
             };
             playing.setOnError(failure); playing.getMedia().setOnError(failure);
-            playing.setOnReady(() -> { if (player == playing && !closed) playing.play(); });
+            playing.setOnReady(() -> {
+                var current = preparation.snapshot();
+                if (player == playing && !closed && current.generation() == run
+                        && current.phase() == AudioPreparation.Phase.TESTING) playing.play();
+            });
             playing.setOnEndOfMedia(() -> {
                 if (player != playing || closed) return;
                 disposePlayer(); preparation.speakerCompleted(run);

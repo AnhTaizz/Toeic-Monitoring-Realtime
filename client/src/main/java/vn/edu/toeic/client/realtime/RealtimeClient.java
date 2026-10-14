@@ -89,7 +89,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     public record Session(Set<String> attemptScope, String heartbeatAttemptId, String collectorSessionId) {
         public Session {
             attemptScope = Set.copyOf(attemptScope);
-            if (attemptScope.stream().anyMatch(id -> !validIdentifier(id))
+            if (attemptScope.stream().anyMatch(id -> !vn.edu.toeic.protocol.exam.AttemptIdentifier.valid(id))
                     || (heartbeatAttemptId != null && (!validIdentifier(heartbeatAttemptId)
                     || !attemptScope.contains(heartbeatAttemptId)))
                     || (collectorSessionId != null && !validIdentifier(collectorSessionId))) {

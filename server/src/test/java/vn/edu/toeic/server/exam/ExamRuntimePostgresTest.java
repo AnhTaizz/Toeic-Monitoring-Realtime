@@ -639,4 +639,24 @@ class ExamRuntimePostgresTest {
     }
     private static boolean ownedWorkersAlive() { return Thread.getAllStackTraces().keySet().stream().anyMatch(t -> t.isAlive() &&
             (t.getName().startsWith("exam-timeout-") || t.getName().equals("toeic-state-maintenance") || t.getName().equals("toeic-presence-timeout"))); }
+    @ParameterizedTest
+    @ValueSource(strings = {"ASCII", "A space", "A/slash", "A%percent", "A?query", "A&pair", "A-đề", "A-e\u0301", "A-é"})
+    void queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String session) throws Exception {
+        String rawAttempt = historyAttempt(session + "-" + id(), "candidate1");
+        String route = "/api/v1/attempts/status?attemptId=" + java.net.URLEncoder.encode(rawAttempt, java.nio.charset.StandardCharsets.UTF_8);
+        JsonObject status = json(expect(get(route, candidateToken), 200));
+        assertThat(status.get("attemptId").getAsString()).isEqualTo(rawAttempt);
+        expectCode(get(route, otherCandidateToken), 403, "FORBIDDEN");
+        expectCode(get(route, null), 401, "UNAUTHORIZED");
+        expectCode(get(route + "&attemptId=foreign", candidateToken), 400, "INVALID_INPUT");
+        expectCode(get(route + "&extra=1", candidateToken), 400, "INVALID_INPUT");
+        if (session.contains("/")) expect(get("/api/v1/attempts/" + java.net.URLEncoder.encode(rawAttempt, java.nio.charset.StandardCharsets.UTF_8) + "/status", candidateToken), 400);
+    }
+
+    @Test void queryStatusRejectsMissingEmptyAndOversizedIds() throws Exception {
+        for (String value : List.of("", "a".repeat(129), "%00"))
+            expectCode(get("/api/v1/attempts/status?attemptId=" + value, candidateToken), 400, "INVALID_INPUT");
+        expectCode(get("/api/v1/attempts/status", candidateToken), 400, "INVALID_INPUT");
+    }
+
 }
