@@ -10,6 +10,8 @@ import vn.edu.toeic.protocol.audio.*;
 public final class AudioPreparation implements AutoCloseable {
     public enum Phase { IDLE, PREPARING, FILES_READY, TESTING, AWAITING_CONFIRMATION, SPEAKER_CONFIRMED, REPORTING, READY, ERROR, CLOSED }
     public record Snapshot(long generation, Phase phase, double progress, String message, Path sample) {}
+    /** Exact READY scope reused by playback; no second writer takeover is allowed. */
+    public record PlaybackContext(String attemptId, long writerEpoch, AudioManifestResponse manifest) {}
     private final AudioApi api;
     private final AudioFiles files;
     private final Path sampleDirectory;
@@ -26,6 +28,10 @@ public final class AudioPreparation implements AutoCloseable {
         this.api = api; this.files = files; this.sampleDirectory = sampleDirectory; this.listener = listener;
     }
     public Snapshot snapshot() { return snapshot; }
+    public synchronized Optional<PlaybackContext> playbackContext() {
+        return snapshot.phase() == Phase.READY && manifest != null && writer > 0
+                ? Optional.of(new PlaybackContext(attempt, writer, manifest)) : Optional.empty();
+    }
     public synchronized void selectionChanged() {
         if (!busy() && snapshot.phase() != Phase.CLOSED)
             publish(++generation, Phase.IDLE, 0, "Chọn lượt thi để chuẩn bị audio.");

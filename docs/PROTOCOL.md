@@ -125,7 +125,9 @@ ACK thành công chỉ được phát sau khi thao tác tương ứng đã đư�
 | `GET /api/v1/attempts/{attemptId}/audio/files/{fileName}?manifestId=...` | Thí sinh sở hữu | Bearer; tên file từ manifest; manifestId không chứa credential | Binary; `Content-Length`, `X-Audio-SHA256`, `Cache-Control: no-store` | 401/403; 409 khi manifest/file không hợp lệ | T3-A1 | Đã cài |
 | `POST /api/v1/attempts/{attemptId}/audio/ready` | Thí sinh sở hữu | `requestId`, `attemptId`, `writerEpoch`, `ready`, `manifestId`, `checksums: {fileName:sha256}`, `speakerTestPassed` | `protocolVersion`, `requestId`, `attemptId`, `writerEpoch`, `ready`, `manifestId`, `readyAt` | 400; 401/403; 409 `STALE`/`EXPIRED`/`CONFLICT`/`INVALID_STATE`; lỗi COMMIT không ACK | T3-A1 | Đã cài |
 | `GET /api/v1/sessions/{sessionId}/audio/readiness` | Giám thị phân công vào ca | Bearer | `protocolVersion`, `sessionId`, `manifestId`, `allReady`, `attempts: [{attemptId,ready}]` | 401/403; 409 thiếu tài nguyên | T3-A1 | Đã cài |
-| `POST /api/v1/sessions/{sessionId}/listening/start` | Giám thị phân công vào ca | `requestId`, `manifestId` | `protocolVersion`, `requestId`, `sessionId`, `manifestId`, `startId`, `startedAt` | 401/403; 409 chưa đủ READY/ca không hợp lệ; lỗi COMMIT không success | T3-A1, bàn giao A2 | Gate HTTP đã cài; WS/phát/gián đoạn chưa có |
+| `POST /api/v1/sessions/{sessionId}/listening/start` | Giám thị phân công vào ca | `requestId`, `manifestId` | `protocolVersion`, `requestId`, `sessionId`, `manifestId`, `startId`, `startedAt` | 401/403; 409 chưa đủ READY/ca không hợp lệ; lỗi COMMIT không success | T3-A1/A2 | Đã cài; WS start sau COMMIT |
+| `GET /api/v1/attempts/{attemptId}/listening/status` | Chủ lượt / giám thị phân công | Bearer | ListeningStatusResponse | 401/403 | T3-A2 | Đã cài; chỉ đọc, không autoplay |
+| `POST /api/v1/attempts/{attemptId}/listening/events` | Chủ lượt | `requestId`, `startId`, `writerEpoch`, `event`, `reason` | ListeningStatusResponse sau COMMIT | 400/401/403; 409 STALE/CONFLICT/INVALID_STATE/EXPIRED | T3-A2/B2 | Server và client B2 đã cài |
 
 Contract chi tiết và thứ tự client chuẩn bị: [AUDIO_RESOURCES.md](AUDIO_RESOURCES.md). START HTTP mới là cấp phép bền vững; message phát audio qua WS và chính sách gián đoạn thuộc T3-A2/B2/B3.
 
@@ -177,7 +179,9 @@ Token chỉ trả trong JSON body của login. Request HTTP `/api/**` sau login 
 | `MONITOR_STATE` | server → giám thị được phân công | trạng thái hiện tại có revision | Không | T2-C1 | Contract v1 trong nhánh tích hợp |
 | `MONITORING_DELTA` | candidate thử nghiệm → server | collectorSessionId, syncEpoch, baseSequence, sequence, policyVersion, added, removed | ACK RAM | T3-C1/C2 | Có; cần server flag + client opt-in/capability, full default |
 | `MONITORING_RESYNC` | server → candidate | collectorSessionId, syncEpoch, currentSequence, reason | Correlated reply, không ACK message chưa áp | T3-C2 | Có khi thiếu base; full mới phục hồi |
-| _READY / start / interrupted (Listening)_ | hai chiều | | | T3-A2, T3-B2 | Chưa có |
+| `LISTENING_START` | server → candidate đúng lượt | start/session/attempt/manifest/writer/server timestamps | Không; client báo event riêng | T3-A2/B2 | Server và client playback đã cài |
+| `LISTENING_STATUS` | server → candidate/proctor đúng scope | ListeningStatusResponse | Không | T3-A2/B2 | Server và parser client đã cài |
+| `LISTENING_EVENT` / `LISTENING_HEARTBEAT` | candidate → server | startId, writerEpoch, event/reason | ACK sau COMMIT | T3-A2 | Server đã cài; B2 dùng HTTP tương đương |
 
 ## Mã lỗi
 

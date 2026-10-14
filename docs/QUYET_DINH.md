@@ -205,3 +205,11 @@ Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`
 - Mẫu thử loa WAV PCM một giây được sinh ngoài UI, không dùng audio đề. Media phát hết chỉ mở nút xác nhận nghe; không tự suy ra người dùng đã nghe. Media lỗi chặn READY. JavaFX Media dùng cùng version 21.0.12 với controls. MP3/M4A vẫn là allow-list byte theo A1, chưa được B1 nghiệm thu codec.
 - Cache nằm ngoài app-image, theo hash attempt/manifest; `.part` chỉ đổi thành file đích sau checksum. B2 phải kiểm lại cache ngay trước playback. B1 không nối start/playback/gián đoạn đề; bộ cài và máy thứ hai giữ ở B5. [Hướng dẫn](AUDIO_CLIENT_PREPARATION.md), [bằng chứng](../evidence/t3-b1/2026-10-14-verification.md).
 - Package local phát hiện launcher JDK 21 không tìm runtime trong thư mục Unicode. Build dùng argv ASCII và Windows SDK `mt.exe` để thêm UTF-8 vào manifest launcher mới sinh, giữ DPI/asInvoker gốc; runtime vẫn 21.0.9. Không đổi locale Windows hoặc patch JDK/DLL. Windows hỗ trợ setting này từ 1903 theo [Microsoft](https://learn.microsoft.com/en-us/windows/apps/design/globalizing/use-utf8-code-page); package smoke trên máy hiện tại kiểm lại cả WAV và view production.
+
+## QD-27 · Playback một lần theo startId và journal fail-closed
+
+- Ngày 14/10/2026 · T3-B2 · review A chưa chạy. Branch kế thừa T3-B1 để dùng cùng writer/manifest/cache READY; không takeover hoặc nhập nhánh Reading.
+- Chỉ `LISTENING_START` WS hợp lệ cấp quyền phát. Client kiểm envelope/scope, so exact attempt/writer/manifest, SHA-256 lại cache và ghép đề candidate theo `audioFile`. HTTP start/status/reconnect không autoplay.
+- Dedupe key là attemptId + writerEpoch + startId. Worker reserve marker bằng CREATE_NEW trước Media; marker tồn tại chặn replay cả sau restart. Crash sau reserve nhưng trước loa là fail-closed và cần lượt tổ chức lại, không xóa marker để nghe lại.
+- JavaFX chỉ render/MediaPlayer. Worker ghi timestamp local, gửi STARTED, heartbeat 2 giây và COMPLETED qua HTTP để nhận status sau COMMIT. Thời điểm local không thay server clock và không cam kết đồng bộ sample giữa máy.
+- Câu hỏi được nhóm đúng tên file manifest và sắp theo orderIndex; thiếu mapping chặn phát. Media/network failure khóa ngay, còn event INTERRUPTED/status/reconnect thuộc T3-B3. [Hướng dẫn](LISTENING_CLIENT_PLAYBACK.md), [bằng chứng](../evidence/t3-b2/2026-10-14-verification.md).

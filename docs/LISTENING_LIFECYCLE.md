@@ -1,6 +1,6 @@
 # T3-A2 · Start, gián đoạn Listening và tổ chức lại
 
-Backend dùng gate READY của [T3-A1](AUDIO_RESOURCES.md). Migration V10 lưu trạng thái Listening riêng trên lượt thi; cờ gián đoạn không đổi state ACTIVE thành INTERRUPTED, nên Reading và lịch sử vẫn dùng quyền hiện có. B đã thêm [chuẩn bị audio T3-B1](AUDIO_CLIENT_PREPARATION.md) trên branch riêng ngày 14/10/2026; phát đề theo start và adapter lifecycle T3-B2/B3 chưa triển khai. Kiểm thử backend dùng HTTP/WebSocket thật với audio fixture, không xác nhận loa hoặc codec JavaFX.
+Backend dùng gate READY của [T3-A1](AUDIO_RESOURCES.md). Migration V10 lưu trạng thái Listening riêng trên lượt thi; cờ gián đoạn không đổi state ACTIVE thành INTERRUPTED, nên Reading và lịch sử vẫn dùng quyền hiện có. B đã thêm [chuẩn bị audio T3-B1](AUDIO_CLIENT_PREPARATION.md) và [phát theo start T3-B2](LISTENING_CLIENT_PLAYBACK.md) trên các branch phụ thuộc ngày 14/10/2026. Chính sách gián đoạn/reconnect T3-B3 chưa triển khai đầy đủ.
 
 ## Start và lệnh WebSocket
 
@@ -22,7 +22,7 @@ Sau COMMIT, server gửi `LISTENING_START` trên `/ws/v1/realtime` tới các k�
 
 Ví dụ dùng ID/hash minh họa. startedAt là mốc server cấp quyền, không phải thời điểm loa thực sự bắt đầu. Lỗi COMMIT không phát lệnh. Socket delivery là best effort; giám thị có thể retry để gửi cùng ID cho lượt còn ARMED, chưa timeout, đúng writer. Sau STARTED/COMPLETED/gián đoạn, server không phát lại lệnh cho lượt đó. Reconnect không tự nhận lệnh start.
 
-B phải deduplicate startId trong lượt/writer hiện tại, kiểm attempt/manifest/writer và tài nguyên local trước khi phát; không coi lần nhận lặp là quyền nghe lại. Không tự autoplay từ HTTP start hoặc status. Mở app mới phải dùng takeover; nếu playback chưa hoàn tất thì server ghi WRITER_TAKEOVER và khóa Listening. Adapter RealtimeClient hiện tại cần được B nối thêm các message Listening dưới đây.
+Client T3-B2 deduplicate theo attempt/writer/startId, kiểm attempt/manifest/writer và SHA-256 local trước khi phát; journal local giữ lệnh đã dành/phát để mở lại không coi ID cũ là quyền nghe lại. Chỉ `LISTENING_START` hợp lệ mới tạo playlist; HTTP start/status không tự phát. Mở app mới phải dùng takeover; nếu playback chưa hoàn tất thì server ghi WRITER_TAKEOVER và khóa Listening. `RealtimeClient` kiểm chặt và chuyển tiếp `LISTENING_START`/`LISTENING_STATUS`; event playback dùng HTTP production để nhận response trạng thái sau COMMIT.
 
 ## Báo playback và heartbeat
 

@@ -36,6 +36,7 @@ import vn.edu.toeic.protocol.monitoring.MonitoringResyncPayload;
 import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
 import vn.edu.toeic.protocol.monitoring.EventOrigin;
 import java.nio.charset.StandardCharsets;
+import vn.edu.toeic.client.audio.ListeningMessages;
 import vn.edu.toeic.protocol.measurement.MessageMeasurements;
 import vn.edu.toeic.protocol.measurement.MessageMeasurements.Endpoint;
 
@@ -537,6 +538,13 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
             } else if ("MONITOR_WARNING".equals(message.type()) || "MONITOR_PRESENCE".equals(message.type())) {
                 validateScope(message.attemptId());
                 MonitoringJson.push(message); // Unsolicited push never consumes pending ACK correlation.
+            } else if ("LISTENING_START".equals(message.type())) {
+                validateScope(message.attemptId());
+                ListeningMessages.start(message);
+            } else if ("LISTENING_STATUS".equals(message.type())) {
+                validateScope(message.attemptId());
+                var status=ListeningMessages.status(message.payload());
+                if(message.requestId()!=null||!status.attemptId().equals(message.attemptId()))throw new IllegalArgumentException();
             } else throw new IllegalArgumentException();
             publish(message);
         } catch (RuntimeException ignored) { problem(); }

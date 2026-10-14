@@ -1,0 +1,38 @@
+{
+  "task": "T3-B2",
+  "date": "2026-10-14",
+  "timezone": "Asia/Bangkok",
+  "branch": "feat/t3-b2-listening-playback",
+  "parentT3B1": "7b295f67088c0421eac24499edf62396fd5f15c5",
+  "baseMain": "2e784fa",
+  "sourceCommit": "987d9b27f400c339a50914de11de6d094649a271",
+  "os": "Microsoft Windows NT 10.0.26300.0",
+  "jdk": "Microsoft OpenJDK 21.0.9",
+  "javafx": "21.0.12",
+  "maven": "3.9.16",
+  "database": "Project Docker postgres:18, loopback port 5433; isolated owned schemas, Flyway V1-V10",
+  "tests": {
+    "protocol": 43,
+    "client": 421,
+    "server": 201,
+    "spike": 1,
+    "total": 666,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "newClientCases": 8,
+    "newPostgresPlaybackCase": 1,
+    "packageChecks": 7
+  },
+  "labels": {
+    "postgresPlayback": "REAL production client HTTP/Spring/Flyway/PG/files/journal; Media callbacks SIMULATED",
+    "package": "REAL production view/cache/journal/JavaFX PCM WAV/bundled runtime/Unicode paths; MOCK API/WS command",
+    "humanAReview": "NOT RUN",
+    "humanHearing": "NOT RUN",
+    "secondMachineLan": "NOT RUN",
+    "mp3M4aCodec": "NOT RUN",
+    "t3b3InterruptionReconnect": "NOT IMPLEMENTED"
+  },
+  "packageImage": "C:\\Users\\Lenovo\\OneDrive\\Máy tính\\LTM\\Toeic-Monitoring-Realtime\\jpackage-out\\t3b1-65d73cf30b754f79bb8e7bbdad896cfd\\Đóng gói audio có dấu và khoảng trắng\\ToeicMonitor",
+  "initialPackageFailure": "TEST harness deleted the first view's speaker sample after switching to a second cache; corrected fixture path, rebuilt a fresh image, PASS7"
+}
