@@ -219,3 +219,32 @@ Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`
 - Ngày 15/10/2026 · T3-B5 · Human A review NOT RUN. Dùng jpackage JDK21 + WiX3.14.1 để tạo MSI thực, không gọi app-image là installer; tái sử dụng manifest UTF-8 B1 bằng Microsoft SDK mt.exe. Tool portable được đặt trong ignored target, không đổi JDK/dependency/locale toàn hệ thống.
 - MSI cài client/runtime/JavaFX cho tài khoản hiện tại; server/PostgreSQL/audio và credential tách riêng. URL server cấu hình ở login hoặc environment. Cache/journal mặc định LOCALAPPDATA, app đọc thư mục cài; gỡ MSI giữ journal chống replay. FULL mặc định, không đổi contract/backend hoặc ghép PR35.
 - Build từ Git sạch, metadata commit/version/dirty/tool/JAR hash và sidecar MSI SHA-256. JAR/staging chỉ chứa runtime production; external TEST agent nằm ngoài installer. Kiểm local bằng tài khoản không elevated với ACL deny write, Unicode install, DLL runtime thực, UI/audio và gỡ. [Hướng dẫn](WINDOWS_INSTALLER.md), [evidence](../evidence/t3-b5/2026-10-15-verification.md). Máy hai/nghe thật/LAN/review còn riêng, IT01 PARTIAL.
+
+## QD-23 · Lịch sử lượt thi tách khỏi scope monitoring, phân trang theo attemptId
+
+- Ngày: 2026-10-12 · Người quyết: A (phiên Agent, theo đề xuất của B) · Review C: NOT RUN.
+- Lựa chọn: thêm endpoint đọc riêng `GET /api/v1/candidate/attempts` để thí sinh khám phá lượt thi của mình, thay vì nới `auth/me.attemptScope`. Sắp xếp và phân trang keyset theo `attemptId` với `COLLATE "C"`; `limit` 1..100, mặc định 50.
+- Lý do: `attemptScope` là quyền monitoring và ghi, chỉ gồm lượt `ACTIVE`; đưa lượt đã chốt vào đó sẽ mở lại quyền gửi heartbeat/event cho lượt đã chốt. `attemptId` là khóa duy nhất có sẵn nên không cần migration hay cột thời gian mới. Collation mặc định của DB là `en_US`, sắp `a` trước `B`; client so bằng `String.compareTo` nên server phải ép thứ tự byte.
+- Hệ quả: thứ tự không phải "mới nhất trước"; không có snapshot xuyên trang. Lượt đã chốt thiếu `submitted_at` bị ẩn. Danh sách chỉ để tìm ID; kết quả vẫn đọc qua `GET /status` và được kiểm quyền lại ở đó.
+- Kèm theo: route API không tồn tại trả 404 `INVALID_INPUT` thay cho 500. `ErrorCode` không có mã riêng cho "không tìm thấy" và không thêm mã mới để khỏi đổi contract lỗi v0.
+- Kiểm chứng: `ExamRuntimePostgresTest` (PostgreSQL thật) và kiểm chéo với client B `770c896`; `evidence/t2-a-history/2026-10-12-verification.md`.
+- Liên quan: B-ACCEPT-01, T2-A4, T2-B4, AT01, AT11.
+
+### QD-23 · Bổ sung phạm vi cursor — 13/10/2026
+
+Theo yêu cầu người dùng, validator cursor nhận nguyên giá trị không rỗng, không NUL, tối đa128 Unicode code point như PostgreSQL `VARCHAR(128)`, thay regex ASCII để không từ chối cursor do server phát. Không trim/normalization, SQL parameter binding và byte UTF-8/C order giữ nguyên. B phải URL-encode và đồng bộ validator/ordering ở lượt riêng; không sửa client trong fix A này. Không đổi schema hoặc API tạo ca; vượt128 do ghép ID là rủi ro riêng đã tái hiện500+rollback. Regression PostgreSQL mới có mixed-ID/limit1,2,3/foreign owner/biên128-129/NUL; code `00b1df1`, Maven test/package638 và probe11/11 PASS. Evidence local `target/pr28-cursor-20261013/REPORT.md`; human review và GUI NOT RUN.
+
+
+## QD-30 · Một owner writer cho Reading và Listening trong màn thi
+
+Ngày15/10/2026 · Nhánh integration/reading-listening-20261015 · Theo task.txt; human A/B/C review NOT RUN.
+
+ExamEntry cấp writer cho lần vào ACTIVE; CandidateExamView sở hữu ExamSession và truyền đúng epoch cho phần audio cùng attempt. Không có audio takeover hoặc autoplay khi đọc status/reconnect/history. Callback Media/API có generation và guard đóng view. Khi writer/state không hợp lệ, đóng audio/worker/subscription; reclaim rõ ràng mới cấp writer khác. Gián đoạn Listening được đối chiếu với server rồi chỉ phần Listening trong full-map bị giữ theo bản đã commit; Reading không mất thay đổi và revision không giảm. Query status alias xử lý slash như dữ liệu, giữ Tomcat path policy và service authorization. A review route/scope, B review view/session/Media/lifecycle; C review collector/realtime hooks. Không thay transaction/schema/delta default.
+
+## QD-29 · Contract ID ACTIVE đặc biệt còn chờ A/B/C
+
+Ngày15/10/2026 · ĐANG CHỜ, không coi là đã duyệt.
+
+History/DB nhận raw Unicode/space/slash tối đa128 code point; monitoring v0 đang dùng ASCII cho attempt envelope/heartbeat. Phiên tích hợp sửa scope HTTP để không làm login/history thất bại, thêm query đọc status và giữ giới hạn WS hiện có. UI không mở một bài ACTIVE không giám sát. Cần A/B/C chọn: giới hạn/chuẩn hóa ID khi cấp lượt bằng quy tắc mới có kiểm thử, hoặc mở rộng riêng typed attemptId qua toàn bộ monitoring/audio endpoints. Không tự mở rộng messageId/collectorId, không nới container toàn server. Rủi ro sessionId+username vượt128 và sai HTTP method trả500 giữ ở backlog A, ngoài tích hợp P0.
+
+Ghi chú tích hợp: main dùng QD-28 cho MSI; PR #35 từng dùng cùng số cho shared writer. Trong bản thống nhất, shared writer mang QD-30, QD-28 giữ MSI, QD-29 giữ contract ID. Evidence cũ được đọc theo SHA/ngữ cảnh gốc, không sửa nội dung lịch sử. Human A/B/C review vẫn chưa thực hiện.

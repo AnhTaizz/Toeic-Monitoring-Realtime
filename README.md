@@ -1,5 +1,7 @@
 # TOEIC Monitoring Realtime
 
+Nhánh tích hợp đã ghép Reading/autosave/submit/reconnect/history và Listening B1–B3 trong cùng Application, dùng một writer của phiên thi. [Luồng và cách chạy](docs/INTEGRATION_READING_LISTENING.md), [evidence mới](evidence/integration/2026-10-15-verification.md). FULL vẫn mặc định; human/LAN/installer/gate delta/E1/E2 chưa được nghiệm thu. Các mục cũ bên dưới giữ phạm vi lịch sử.
+
 Spring Boot server, JavaFX client hai role, PostgreSQL và collector `ProcessHandle`. Event/queue/retry, heartbeat/presence/history và dashboard chặng 1 đã có. Server có backend thi chặng 2; T2-C1 thêm full snapshot và tab **Process hiện tại**. Delta, GUI thi toàn luồng và đóng gói trên máy thứ hai chưa được nghiệm thu. Các mục chặng 1 bên dưới mô tả phạm vi lịch sử của từng task; phần full hiện tại ở cuối.
 
 Log và bằng chứng được tập trung theo task tại [evidence/README.md](evidence/README.md). Khi đọc dự án trên GitHub hoặc chuẩn bị prompt cho chat web, bắt đầu từ [tiến độ](docs/TIEN_DO.md), [protocol](docs/PROTOCOL.md), [kiểm thử](docs/KIEM_THU.md), rồi đối chiếu báo cáo và artifact của task trong mục lục bằng chứng.

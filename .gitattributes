@@ -72,3 +72,6 @@ evidence/t3-b1/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
 
 # T3-B2 package transcripts, playback journal and screenshots retain verified bytes.
 evidence/t3-b2/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
+# Integration evidence publishes verified exact UTF-8/LF bytes; preserve hashes on Windows checkout.
+evidence/integration/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol

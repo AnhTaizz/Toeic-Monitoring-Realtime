@@ -1,0 +1,59 @@
+00:51:43.014 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:5433/toeic (PostgreSQL 18.6)
+00:51:43.363 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "t2a4_smoke_04cd65958cc84009b498cf23cb6bb776"."flyway_schema_history" does not exist yet
+00:51:43.381 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 10 migrations (execution time 00:00.121s)
+00:51:43.433 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "t2a4_smoke_04cd65958cc84009b498cf23cb6bb776"."flyway_schema_history" ...
+00:51:43.653 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "t2a4_smoke_04cd65958cc84009b498cf23cb6bb776": << Empty Schema >>
+00:51:43.724 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "t2a4_smoke_04cd65958cc84009b498cf23cb6bb776" to version "1 - auth schema"
+00:51:43.862 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "t2a4_smoke_04cd65958cc84009b498cf23cb6bb776" to version "2 - monitoring events"
+00:51:43.952 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "t2a4_smoke_04cd65958cc84009b498cf23cb6bb776" to version "3 - monitoring gaps"
+00:51:44.037 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "t2a4_smoke_04cd65958cc84009b498cf23cb6bb776" to version "4 - monitoring presence"
+00:51:44.141 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "t2a4_smoke_04cd65958cc84009b498cf23cb6bb776" to version "5 - exams and sessions"
+00:51:44.292 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "t2a4_smoke_04cd65958cc84009b498cf23cb6bb776" to version "6 - exam autosave requests"
+00:51:44.361 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "t2a4_smoke_04cd65958cc84009b498cf23cb6bb776" to version "7 - exam submits"
+00:51:44.434 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "t2a4_smoke_04cd65958cc84009b498cf23cb6bb776" to version "8 - monitoring event delivery"
+00:51:44.488 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "t2a4_smoke_04cd65958cc84009b498cf23cb6bb776" to version "9 - audio readiness"
+00:51:44.555 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "t2a4_smoke_04cd65958cc84009b498cf23cb6bb776" to version "10 - listening lifecycle"
+00:51:44.658 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 10 migrations to schema "t2a4_smoke_04cd65958cc84009b498cf23cb6bb776", now at version v10 (execution time 00:00.419s)
+PASS Flyway migrations in temporary schema: t2a4_smoke_04cd65958cc84009b498cf23cb6bb776
+2026-10-15T00:51:57.266+07:00  INFO 3456 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-15T00:51:57.267+07:00  INFO 3456 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+PASS: Login for proctor1 succeeded
+PASS: Login for candidate1 succeeded
+PASS: Login for candidate2 succeeded
+PASS: Proctor imported exam successfully
+PASS: Proctor created session successfully
+--- Running AT01: Cross-Candidate Access Isolation ---
+PASS: AT01: Candidate2 cannot autosave on Candidate1 attempt (403)
+PASS: AT01: Candidate2 cannot submit Candidate1 attempt (403)
+PASS: AT01: Candidate2 cannot takeover Candidate1 writer (403)
+PASS: AT01: Candidate2 cannot get exam for Candidate1 attempt (403)
+PASS: AT01: Candidate2 cannot get status for Candidate1 attempt (403)
+PASS: Candidate1 submitted attempt1 successfully
+PASS: AT01: After submit, Candidate2 cannot get status for Candidate1 attempt (403)
+--- Running AT07: Pessimistic Lock Held Past Deadline ---
+DB Connection acquired lock FOR UPDATE on SESSION-T2A4-candidate2
+PASS: Lock holder acquired pessimistic lock
+DB Connection committed and released lock on SESSION-T2A4-candidate2
+PASS: AT07: HTTP request completed after lock release
+PASS: AT07: Request blocked waiting for lock past deadline is rejected with 409
+PASS: AT07: Response error code is EXPIRED
+--- Running AT09: Writer Takeover & Stale Writer Concurrency ---
+PASS: AT09 lock holder acquired lock
+PASS: AT09: Writer 1 request completed
+PASS: AT09: Writer 1 with stale epoch rejected with 409
+PASS: AT09: Error code is STALE
+PASS: AT09: Takeover writer endpoint returns 200 OK
+PASS: AT09: New writerEpoch is 3
+PASS: AT09: Writer 2 with writerEpoch=3 saves successfully
+PASS: Status endpoint returns 200 OK on reconnect
+PASS: Status has writerEpoch = 3
+PASS: Status has savedRevision = 1
+PASS: Status has state = ACTIVE
+PASS: Status answers contains L1=A
+--- Running AT10: Tampering After Final & Delayed Timeout Job ---
+PASS: AT10: Save after deadline rejected with 409 EXPIRED without waiting for timeout job
+PASS: AT10: Error is EXPIRED
+PASS: AT10: Submit after deadline rejected with 409 EXPIRED without waiting for timeout job
+PASS: AT10: Error is EXPIRED
+T2-A4 REAL PostgreSQL 18 Concurrency Verification (AT01, AT07, AT09, AT10) PASS!
+Cleaned up temporary schema: t2a4_smoke_04cd65958cc84009b498cf23cb6bb776

@@ -1,6 +1,8 @@
 package vn.edu.toeic.server.exam;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Set;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.edu.toeic.protocol.exam.CandidateExamDto;
+import vn.edu.toeic.protocol.exam.CandidateAttemptPageResponse;
 import vn.edu.toeic.protocol.exam.CreateSessionRequest;
 import vn.edu.toeic.protocol.exam.CreateSessionResponse;
 import vn.edu.toeic.protocol.exam.ExamImportRequest;
@@ -19,6 +22,8 @@ import vn.edu.toeic.server.auth.AuthenticatedUser;
 @RestController
 @RequestMapping("/api/v1")
 public class ExamController {
+
+    private static final Set<String> CANDIDATE_ATTEMPT_PARAMETERS = Set.of("limit", "afterAttemptId");
 
     private final ExamService examService;
 
@@ -48,6 +53,33 @@ public class ExamController {
         }
         CreateSessionResponse response = examService.createSession(user, request);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/candidate/attempts")
+    public ResponseEntity<CandidateAttemptPageResponse> listCandidateAttempts(HttpServletRequest httpRequest) {
+        AuthenticatedUser user = (AuthenticatedUser) httpRequest.getUserPrincipal();
+        if (user == null) {
+            throw AccessDeniedException.unauthorized();
+        }
+        if (!CANDIDATE_ATTEMPT_PARAMETERS.containsAll(httpRequest.getParameterMap().keySet())) {
+            throw ExamApiException.invalidInput("Query parameter không được hỗ trợ");
+        }
+        rejectRepeatedParameter(httpRequest, "limit");
+        rejectRepeatedParameter(httpRequest, "afterAttemptId");
+        CandidateAttemptPageResponse response = examService.listCandidateAttempts(
+                user,
+                httpRequest.getParameter("limit"),
+                httpRequest.getParameter("afterAttemptId"));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
+                .body(response);
+    }
+
+    private static void rejectRepeatedParameter(HttpServletRequest request, String name) {
+        String[] values = request.getParameterValues(name);
+        if (values != null && values.length != 1) {
+            throw ExamApiException.invalidInput("Query parameter '" + name + "' không được lặp lại");
+        }
     }
 
     @GetMapping("/attempts/{attemptId}/exam")
@@ -120,6 +152,21 @@ public class ExamController {
         }
         vn.edu.toeic.protocol.exam.TakeoverWriterResponse response = examService.takeoverWriter(user, request);
         return ResponseEntity.ok(response);
+    }
+
+    /** Read-only alias for raw database IDs containing path separators. No container URL relaxation. */
+    @GetMapping("/attempts/status")
+    public ResponseEntity<vn.edu.toeic.protocol.exam.CandidateAttemptStatusResponse> getAttemptStatusByQuery(
+            HttpServletRequest httpRequest) {
+        AuthenticatedUser user = (AuthenticatedUser) httpRequest.getUserPrincipal();
+        if (user == null) throw AccessDeniedException.unauthorized();
+        if (!Set.of("attemptId").containsAll(httpRequest.getParameterMap().keySet()))
+            throw ExamApiException.invalidInput("Query parameter không được hỗ trợ");
+        rejectRepeatedParameter(httpRequest, "attemptId");
+        String id = httpRequest.getParameter("attemptId");
+        if (!vn.edu.toeic.protocol.exam.AttemptIdentifier.valid(id))
+            throw ExamApiException.invalidInput("attemptId không hợp lệ");
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(examService.getAttemptStatus(user, id));
     }
 
     @GetMapping("/attempts/{attemptId}/status")

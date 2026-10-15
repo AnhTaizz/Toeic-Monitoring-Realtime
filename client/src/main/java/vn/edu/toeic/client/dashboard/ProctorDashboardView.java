@@ -10,6 +10,7 @@ import java.util.function.Function;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -53,11 +54,23 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
         ZoneId zone=ZoneId.of(System.getProperty("toeic.dashboard.timezone",ZoneId.systemDefault().getId()));
         times=DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss.SSS").withZone(zone);
         setPadding(new Insets(20));
-        Label title=new Label("Giám sát thí sinh"); title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-        banner.setId("dashboard-status"); banner.setWrapText(true); banner.setStyle("-fx-font-weight: bold;");
-        refresh.setId("dashboard-refresh"); logout.setId("dashboard-logout"); logout.setOnAction(event -> onLogout.run());
-        setTop(new VBox(10,title,new Label(login.user().displayName()+" · "+login.user().username()),banner,
-                new HBox(12,refresh,logout),new Label("Giờ hiển thị: "+zone+". Thời điểm quan sát do máy thí sinh báo; thời điểm nhận do server ghi.")));
+        Label title=new Label("Hệ Thống Giám Sát Ca Thi TOEIC"); title.getStyleClass().add("title-large");
+        banner.setId("dashboard-status"); banner.setWrapText(true); banner.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #38bdf8;");
+        refresh.setId("dashboard-refresh"); refresh.getStyleClass().add("btn-primary");
+        logout.setId("dashboard-logout"); logout.getStyleClass().add("btn-danger"); logout.setOnAction(event -> onLogout.run());
+
+        Set<String> scope=login.attemptScope()==null?Set.of():Set.copyOf(login.attemptScope());
+        controller=new DashboardController(Role.PROCTOR,new MonitoringApiClient(serverUrl,login.token()),transport,
+                transport::updateScope,scope,this::accept,() -> Platform.runLater(() -> { if (!closed.get()) onExpired.run(); }));
+
+        HBox actions = new HBox(12, refresh, logout);
+        actions.setAlignment(Pos.CENTER_LEFT);
+
+        Label subHeader = new Label(login.user().displayName() + " (" + login.user().username() + ") · Giám thị coi thi");
+        subHeader.setStyle("-fx-text-fill: #94a3b8; -fx-font-weight: 600; -fx-font-size: 13px;");
+
+        setTop(new VBox(10, title, subHeader, banner, actions,
+                new Label("Giờ hiển thị: " + zone + ". Thời điểm quan sát do máy thí sinh báo; thời điểm nhận do server ghi.")));
         roster.setId("dashboard-roster"); roster.setPrefHeight(230); roster.setPlaceholder(new Label("Chưa có lượt ACTIVE được phân công."));
         column(roster,"Thí sinh",170,Presence::candidateDisplayName);
         column(roster,"Lượt thi",160,Presence::attemptId);
@@ -97,9 +110,6 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
         Tab controls=new Tab("Điều khiển ca / kết quả",sessionControls);controls.setClosable(false);
         BorderPane body=new BorderPane(new TabPane(current,timeline,interruptions,gapTab,controls)); body.setTop(list); setCenter(body);
         setBottom(new Label("UNKNOWN: server không còn xác nhận được liên lạc. Đây không phải kết luận gian lận."));
-        Set<String> scope=login.attemptScope()==null?Set.of():Set.copyOf(login.attemptScope());
-        controller=new DashboardController(Role.PROCTOR,new MonitoringApiClient(serverUrl,login.token()),transport,
-                transport::updateScope,scope,this::accept,() -> Platform.runLater(() -> { if (!closed.get()) onExpired.run(); }));
         refresh.setOnAction(event -> controller.refresh());
         roster.getSelectionModel().selectedItemProperty().addListener((observable,old,value) -> {
             if (!rendering && !closed.get()) controller.select(value==null?null:value.attemptId());

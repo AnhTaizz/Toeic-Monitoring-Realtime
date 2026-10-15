@@ -372,3 +372,10 @@ Thiết kế monitoring và đồng bộ, protocol, Related Work về phương p
 - Process bị phát hiện có chứng minh thí sinh gian lận không?
 
 Bạn cũng phải vẽ lại được luồng của A (khóa, deadline, commit rồi ACK) và của B (autosave, reconnect phía client).
+
+
+## Bàn giao tích hợp15/10/2026
+
+Nhánh `integration/reading-listening-20261015`, base8f5ac40, history2ca4121 và Reading65f5123. Guide `docs/INTEGRATION_READING_LISTENING.md`; evidence `evidence/integration/2026-10-15-verification.md`. Phạm vi review: C: collector/full/presence/transport hooks và giới hạn ID v0. Clean test833 PASS (protocol43/client569/server220/spike1), PostgreSQL18.6 thật và 0skip; package833 PASS. GUI smoke8nhóm PASS mới; chưa nâng toàn case human/LAN. FULL default, tracker không đổi.
+
+**Ghi chú làm dở:** human A/B/C/LAN hai máy/installer/E1/E2 NOT RUN; ID ACTIVE đặc biệt còn contract QD29. Không dùng alias đọc status làm quyền monitoring; không merge main khi chưa được người dùng chấp thuận. Kết quả cuối/SHA/log trong evidence, không kế thừa PASS nhánh nguồn.

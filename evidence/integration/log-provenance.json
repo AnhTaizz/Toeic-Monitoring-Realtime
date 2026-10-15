@@ -1,0 +1,79 @@
+[
+  {
+    "raw": "raw/native-1791997960402806533/maven.txt",
+    "rawSha256": "b1492a7b15f9741a0dc55246b4fc6d0438717f41e39ec7f8bf53cc8fad038a3a",
+    "derived": "maven-clean-test.txt",
+    "derivedSha256": "d4e498418f965fd43f82d9d5af448dd7c215f0826af559239836368e4ad2ac84",
+    "transform": "actual Maven/fixture result excerpts; private path prefixes replaced; raw bytes retained locally; public line endings normalized to LF to match Git blob bytes; original raw unchanged"
+  },
+  {
+    "raw": "raw/native-1791999064590388523/maven.txt",
+    "rawSha256": "992c7fec5d412737301059a164ee0f681577dd2ef4c5bf9df553484b746885c4",
+    "derived": "maven-package-final.txt",
+    "derivedSha256": "56104b95a17ce898fee4ad7a7405aae2cd40e7ecc75fa7313a26eef435e9b6b0",
+    "transform": "actual Maven/fixture result excerpts; private path prefixes replaced; raw bytes retained locally; public line endings normalized to LF to match Git blob bytes; original raw unchanged"
+  },
+  {
+    "raw": "raw/smoke-1791999766791264544/stdout.txt",
+    "rawSha256": "5b2ea3b31252b2be56ed5c280966fee7f42d3f106801be5a902a2aae027443d4",
+    "derived": "monitoring-full.txt",
+    "derivedSha256": "9c39cb2ba15a16619ded24e21a197ef816ce27bbc24dbea71224fafbb32925c3",
+    "transform": "stdout copy decoded UTF-8; raw bytes retained locally; native legacy output may already contain unrepresentable characters; public line endings normalized to LF to match Git blob bytes; original raw unchanged"
+  },
+  {
+    "raw": "raw/smoke-1791999944167060465/stdout.txt",
+    "rawSha256": "1aad527b1c7c665269d1a29e51f9eebe8d0f2bdbef695d956dd0e343ea12f776",
+    "derived": "monitoring-late-gap.txt",
+    "derivedSha256": "4e936e56aa8ce71988679fc4187f56d0cedc6b99d1a9c30a9144b0d1b5c28e83",
+    "transform": "stdout copy decoded UTF-8; raw bytes retained locally; native legacy output may already contain unrepresentable characters; public line endings normalized to LF to match Git blob bytes; original raw unchanged"
+  },
+  {
+    "raw": "raw/smoke-1791998896397037116/stdout.txt",
+    "rawSha256": "1fcada30f40da6c2a988b79ed0a6e8b6c33fec24f7667627f8fc50f14cd6a726",
+    "derived": "exam-flow-initial.txt",
+    "derivedSha256": "b00e9e503996276f236189d435e6b8f556afe5b63e2b78d454ef1714f5fcd8c5",
+    "transform": "stdout copy decoded UTF-8; raw bytes retained locally; native legacy output may already contain unrepresentable characters; public line endings normalized to LF to match Git blob bytes; original raw unchanged"
+  },
+  {
+    "raw": "raw/smoke-1791999537988173074/stdout.txt",
+    "rawSha256": "b14c4fe096c1f64878730dd4a96d9b4cff1f4964702f65984e5686df5d12891c",
+    "derived": "failed-full-missing-heartbeat-flag.txt",
+    "derivedSha256": "150d005233386fd74cb96806ebd1d83c0cb16f62dd750c1261d6846c8cf50ae0",
+    "transform": "stdout copy decoded UTF-8; raw bytes retained locally; native legacy output may already contain unrepresentable characters; public line endings normalized to LF to match Git blob bytes; original raw unchanged"
+  },
+  {
+    "raw": "raw/smoke-1791999304950863964/stdout.txt",
+    "rawSha256": "16b72c9b4c8717a7a75df70951b101114089585eccbff6256e6676e5216d9bf3",
+    "derived": "failed-gui-literal-status-label.txt",
+    "derivedSha256": "cef828a6cd521bb0557c1c437c1026785c95acde54aa5ce3df57188b856e52b1",
+    "transform": "stdout copy decoded UTF-8; raw bytes retained locally; native legacy output may already contain unrepresentable characters; public line endings normalized to LF to match Git blob bytes; original raw unchanged"
+  },
+  {
+    "raw": "raw/smoke-1791998516138368764/stdout.txt",
+    "rawSha256": "0b45ccfc6e360e6607a7944182e6c12b87e8c17de07ee68e55b0d67af53b444e",
+    "derived": "failed-gui-seed-readiness.txt",
+    "derivedSha256": "048be48daa2876620ad7befc93624e150187dfee10baf66bde44e7e30da3ea9f",
+    "transform": "stdout copy decoded UTF-8; raw bytes retained locally; native legacy output may already contain unrepresentable characters; public line endings normalized to LF to match Git blob bytes; original raw unchanged"
+  },
+  {
+    "raw": "raw/smoke-1792000091174687225/stdout.txt",
+    "rawSha256": "d3b2f82bb7c05acc385ed47e0605af58975d4c8d8b756d0064948821415eb6ca",
+    "derived": "gui-production.txt",
+    "derivedSha256": "c8f8231b13ea3e0f4f165413cae463fcf0855923213a790e8b046736f25aecdd",
+    "transform": "exact UTF-8 stdout copy; original retained; public line endings normalized to LF to match Git blob bytes; original raw unchanged"
+  },
+  {
+    "raw": "raw/smoke-1792000296244477093/stdout.txt",
+    "rawSha256": "5f0b3efcc788f75848813311ef12105e76057e01a8a0d8b759b6ac430958ce52",
+    "derived": "concurrency-postgresql.txt",
+    "derivedSha256": "23380b790ed0e78d7dfd186ee7139cc40b08685923d45b2a778353645134ac37",
+    "transform": "exact stdout copy; raw retained; public line endings normalized to LF to match Git blob bytes; original raw unchanged"
+  },
+  {
+    "raw": "raw/smoke-1792000515480281614/stdout.txt",
+    "rawSha256": "f1fb26a67cd873107c848682a4b33d4c7bde41ac4c3388bc56e5c02d11a79c62",
+    "derived": "exam-flow-final.txt",
+    "derivedSha256": "3d5f1edd172e9ecf836c6eac63fef31f60e49b9f8b845b01e8971d9036d3cbf4",
+    "transform": "exact UTF-8 stdout; raw retained; public line endings normalized to LF to match Git blob bytes; original raw unchanged"
+  }
+]

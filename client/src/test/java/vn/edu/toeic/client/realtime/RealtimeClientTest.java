@@ -776,4 +776,16 @@ class RealtimeClientTest {
         @Override public boolean isInputClosed() { return aborted; }
         @Override public void abort() { aborted = true; }
     }
+    @Test void rawHttpScopeDoesNotPreventLoginButNeverWidensMonitoringHeartbeatIds() {
+        for (String id : java.util.List.of("A space", "A/slash", "Ca-thi-đề", "A%2F")) {
+            assertThat(new RealtimeClient.Session(Set.of(id), null, null).attemptScope()).containsExactly(id);
+            assertThatThrownBy(() -> new RealtimeClient.Session(Set.of(id), id, "collector"))
+                    .isInstanceOf(IllegalArgumentException.class);
+        }
+        assertThatThrownBy(() -> new RealtimeClient.Session(Set.of("bad\0id"), null, null))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new RealtimeClient.Session(Set.of("x".repeat(129)), null, null))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
 }

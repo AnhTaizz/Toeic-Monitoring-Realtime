@@ -119,4 +119,16 @@ class ListeningPlaybackTest {
     private CandidateExamDto exam(){return new CandidateExamDto("EXAM","MOCK",null,3,List.of(question("L1","a.wav",1),question("L2","a.wav",2),question("L3","b.wav",3)));}
     private CandidateQuestionDto question(String id,String audio,int order){return new CandidateQuestionDto(id,"LISTENING",1,"G",null,audio,"Prompt "+id,order,List.of(new CandidateOptionDto("A","Option",1)));}
     private static void await(BooleanSupplier condition)throws Exception{long end=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);while(!condition.getAsBoolean()&&System.nanoTime()<end)Thread.sleep(10);assertThat(condition.getAsBoolean()).isTrue();}
+    @Test void matchingServerInterruptionStopsPlaylistAndRejectsOldMediaCallbacks() throws Exception {
+        playback.accept(start()); await(() -> playback.snapshot().phase() == ListeningPlayback.Phase.READY_TO_PLAY);
+        long oldRun = playback.snapshot().generation();
+        var status = new ListeningStatusResponse("v0", null, "ATTEMPT", "SESSION", "START", manifest.manifestId(),
+                9007199254740993L, "INTERRUPTED", Instant.now().plusSeconds(60), null, null, true, Instant.now(), "NETWORK_LOST");
+        playback.authoritativeStatus(status);
+        playback.mediaPlaying(oldRun, 0); playback.mediaCompleted(oldRun, 0);
+        assertThat(playback.snapshot().phase()).isEqualTo(ListeningPlayback.Phase.BLOCKED);
+        assertThat(playback.beginSegment()).isNull();
+        assertThat(api.events).isEmpty();
+    }
+
 }

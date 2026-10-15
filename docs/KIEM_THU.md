@@ -440,3 +440,44 @@ Main tiến lên `cb30f3d` (PR #27) trong lúc làm, nên nhánh `sync/pr23-main
 ## T3-B4 · Điều khiển ca và LT04 · 15/10/2026
 
 [Report B4](../evidence/t3-b4/2026-10-15-verification.md) phân biệt test thuần/MOCK gateway, HTTP loopback và JavaFX/Spring/HTTP/WS/PostgreSQL thật. LT04 kiểm mới khác ID, answers/revision/writer/deadline và hai dòng history MOCK đã lưu giữ nguyên; kiểm trước và sau job timeout thực, không gọi timeout bằng tay. Import GUI tự động đi cùng controller sau chọn path, chưa thao tác native FileChooser. Xác nhận nghe và fixture/audio/history là MOCK/SIMULATED đúng report. Không nâng LT/IT toàn hệ thống thành human/LAN PASS; review A, LAN, PR35 Reading+Listening và E1/E2 còn riêng. Tracker và các evidence cũ giữ nguyên.
+
+## B-ACCEPT-01 phía A — API lịch sử lượt thi (12/10/2026)
+
+SHA `33a2932` trên nhánh cục bộ `fix/backend-candidate-attempt-history-20261012` (base `main` `ee714fc` + 5 commit P0), Windows 11, JDK 21.0.8, PostgreSQL 18.6. Chi tiết: `evidence/t2-a-history/2026-10-12-verification.md`.
+
+| Kiểm tra | Kết quả | Ghi chú |
+|---|---|---|
+| `mvn test`, `mvn package` với `TOEIC_PG_INTEGRATION=true` | PASS 592/592 | protocol 43, client 376, server 172, spike 1; bản Codex để lại (`e81961e`) là 590/590 |
+| Endpoint lịch sử: chủ sở hữu, thí sinh khác, role, phiên thu hồi, phân trang, whitelist trường | PASS REAL | Spring runtime + HTTP + PostgreSQL thật, schema riêng tự xóa; 4 test |
+| Route API không tồn tại | PASS | 404 `INVALID_INPUT`, không còn 500 |
+| Client B `770c896` gọi server nhánh này | PASS REAL 13/13 | HTTP + PostgreSQL thật, không GUI; `SUBMITTED` và `TIMED_OUT` thật |
+| GUI production của B, review C→A, LAN | NOT RUN | B-ACCEPT-01 chưa đóng cho tới khi B chạy lại GUI |
+
+Không đổi trạng thái AT01–AT11 hay IT01–IT04; `TRACKER.json` giữ nguyên.
+
+### API lịch sử xếp lại trên PR #23 đã đồng bộ — 13/10/2026
+
+Nhánh cục bộ `feat/backend-candidate-attempt-history-20261013` tại `19f669e`: ba commit lịch sử đặt trên `sync/pr23-main-20261013`, không lặp commit P0. `server/src/main` và `protocol/` trùng từng byte với `7bdac52`. `mvn package` với `TOEIC_PG_INTEGRATION=true`: **PASS 602**, 0 skip (protocol 43, client 386, server 172, spike 1). Quyết định lịch sử mang số QD-23 vì main đã dùng QD-19. Chi tiết: `evidence/t2-a-history/2026-10-13-restack.md`. GUI, LAN, review C→A: NOT RUN.
+
+## PR #28 — fix P1 cursor sau tích hợp main T3-A1/T3-A2, 13/10/2026
+
+SHA code/test `00b1df18d89f3b01a5864dc4aa689c22186943fa`, main `2e784fa`. Maven test và package:638 PASS mỗi lượt,0failure/error/skip; protocol43/client386/server208/spike1. PostgreSQL runtime37 (Exam19/Audio8/Listening10), là subset của638. Thêm3regression thật: mixed-ID `A bad`/Unicode/NFC/NFD/emoji/ký tự URL/SQL-looking, limit1/2/3 không trùng/mất lượt; biên128 PostgreSQL ký tự và129 bị400; rỗng/NUL bị400, cursor khác bind literal, 401/403 giữ nguyên. Probe nguyên bản từ lượt BLOCK10/1 nay11/11 PASS, exit0; HTTP/Spring/PG REAL, audio attestation MOCK, không GUI.
+
+Chẩn đoán riêng: sessionId128+username13 gây attemptId142, POST tạo ca500 và rollback; không đánh dấu chức năng này đã sửa/PASS. Client B còn regex ASCII/không encode; GUI B/LAN/human review NOT RUN. C1/C2/ExamConcurrency smokes ngoài37 runtime chưa chạy lại trong fix này; không kế thừa PASS từ SHA4362d89. Evidence local `target/pr28-cursor-20261013/REPORT.md` và các log/counts/XML trong cùng thư mục. Tracker/bảng nghiệm thu gốc giữ nguyên.
+
+
+## Tích hợp Reading/Listening/history — 15/10/2026
+
+Nhánh `integration/reading-listening-20261015`, base8f5ac40; source runtime9115776, GUI harness3f4d5d6 (precondition seed đã sửa ở working tree khi chạy lại). `mvn -B -ntp -o clean test`: **833 PASS,0skip**, SHA9115776; package trên3f4d5d6: **833 PASS,0skip** (43protocol/569client/220server/1spike). PostgreSQL18.6/Spring/HTTP/WS thật ở49 runtime tests, là subset, không cộng vào833. Targeted trước đó142 PASS; không kế thừa776/669 của hai nhánh nguồn.
+
+Các kiểm tra mới gồm shared writer không takeover audio, callback cũ sau close, Listening server-interrupted giữ Reading local với revision tăng, raw UTF8 query status/owner/repeated/unknown query; scope HTTP raw không làm nới ASCII heartbeat v0. Lượt targeted đầu FAIL5 do assertions path cũ; cập nhật kiểm exact query round-trip/fixed origin và chạy lại PASS. GUI smoke đầu FAIL ở precondition seed; lượt sau PASS8 rồi visual QA bổ sung lock/proctor assertion. Lượt final d809a00 PASS8, exact HTTP SYNCED và nhãn quan sát UI đã render; preparation bị khóa khi playback, Reading còn lưu được sau Listening interruption. Raw giữ ngoài Maven target bị clean; derived/public evidence ở `evidence/integration/`.
+
+Giữ nguyên bảng27case và tracker: AT11/MT/LT/IT chỉ có các subset kỹ thuật theo bằng chứng mới, chưa tự nâng cả case PASS. Human/physical cable-pull/client kill/LAN/installer/codec MP3-M4A/gate delta/E1/E2/load NOT RUN. FULL default.
+
+
+### Kết quả cuối sau visual QA
+
+Runtime387ed99: package833 PASS,0skip sau sửa playback→preparation lock. Harnessd809a00: GUI production **8 nhóm PASS**, real Application/Media/WAV/HTTP/WS/JAR/PostgreSQL/restart; TEST đề/audio, xác nhận nghe SIMULATED. Proctor chọn row và nhãn quan sát đã đồng bộ thật; exact API status=SYNCED. C1 full/epoch/reconnect/autoSTALE-TTL và C2 late/gap/UNKNOWN/permission hồi quy PASS với heartbeat200ms theo script C; readings/faults MOCK/SIMULATED giữ nhãn. Lần C1 driver thiếu heartbeatflag FAIL retained; GUI literal SYNCED-label assertion FAIL retained rồi sửa theo nhãn quan sát đang dùng, không đổi UI để né kiểm tra. Ảnh/log/metadata/hash tại evidence/integration. Không đổi trạng thái27case/tracker/E1/E2.
+
+
+Chốt thêm d809a00/final JAR: ExamConcurrencyPostgresSmoke AT01/07/09/10 PASS; ExamFlowPostgresSmoke28PASS/0GAP (mất response/network wrapper SIMULATED; deviceA/B là2model cùngJVM). Evidence/log/source hashes ở evidence/integration; không đổi bảng27case.
