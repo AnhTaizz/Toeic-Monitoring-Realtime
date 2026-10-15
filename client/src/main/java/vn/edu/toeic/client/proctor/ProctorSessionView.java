@@ -61,7 +61,18 @@ public final class ProctorSessionView extends ScrollPane implements AutoCloseabl
         // Preserve selection when only unrelated result/status changes.
         var rows=s.readiness()==null?java.util.List.<SessionAudioReadinessResponse.Attempt>of():s.readiness().attempts();if(!readyTable.getItems().equals(rows))readyTable.getItems().setAll(rows);
         String typed=attempt.getEditor().getText();if(!attempt.getItems().equals(s.knownAttempts())){attempt.getItems().setAll(s.knownAttempts());attempt.getEditor().setText(typed);}
-        var r=s.result();var l=s.listening();result.setText((s.resultLoading()?"Đang tải… ":s.resultStale()?"Dữ liệu cũ / chưa xác nhận. ":"Server vừa xác nhận. ")+s.resultError()+(r==null?"":"\nLượt "+r.attemptId()+" · "+r.state()+" · điểm "+r.score()+" · đúng "+r.correctCount()+"/"+r.totalQuestions()+"\nwriterEpoch="+r.writerEpoch()+" · savedRevision="+r.savedRevision()+" · deadline="+r.deadlineAt()+"\nĐáp án đã lưu: "+r.answers())+(l==null?"":"\nListening="+l.phase()+" · interrupted="+l.interrupted()+" · lý do="+l.interruptionReason()));
+        var r=s.result();
+        var l=s.listening();
+        String resultText=s.resultLoading()?"Đang tải… ":s.resultStale()?"Dữ liệu cũ / chưa xác nhận. ":"Server vừa xác nhận. ";
+        resultText+=s.resultError();
+        if(r!=null){
+            String score="ACTIVE".equals(r.state())?"Chưa chốt điểm":"điểm "+r.score()+" · đúng "+r.correctCount()+"/"+r.totalQuestions();
+            resultText+="\nLượt "+r.attemptId()+" · "+r.state()+" · "+score;
+            resultText+="\nwriterEpoch="+r.writerEpoch()+" · savedRevision="+r.savedRevision()+" · deadline="+r.deadlineAt();
+            resultText+="\nĐáp án đã lưu: "+r.answers();
+        }
+        if(l!=null)resultText+="\nListening="+l.phase()+" · interrupted="+l.interrupted()+" · lý do="+l.interruptionReason();
+        result.setText(resultText);
         boolean retry=s.pendingReorganization()!=null;reorganize.setDisable(s.busy()||!attempt.getEditor().getText().trim().equals(s.attempt())||(!retry&&(s.resultStale()||l==null||!l.interrupted())));
         replacementSession.setDisable(s.busy()||retry);replacementTitle.setDisable(s.busy()||retry);
         if(retry){replacementSession.setText(s.pendingReorganization().newSessionId());replacementTitle.setText(s.pendingReorganization().title());}

@@ -85,6 +85,7 @@ final class ProctorControlsGuiScenario {
                 assertThat(history(jdbc,id)).isEqualTo(preservedHistory);
                 button(view,"proctor-open-replacement");await(()->!controls.controller().snapshot().resultStale()&&!controls.controller().snapshot().readyStale());
                 var fresh=controls.controller().snapshot();assertThat(fresh.result().answers()).isEmpty();assertThat(fresh.result().savedRevision()).isZero();assertThat(fresh.result().writerEpoch()).isEqualTo(1);assertThat(fresh.result().deadlineAt()).isNull();assertThat(fresh.readiness().allReady()).isFalse();
+                assertThat(fx(()->((Label)view.lookup("#proctor-attempt-result")).getText())).contains("Chưa chốt điểm");
                 await(()->{try{return "TIMED_OUT".equals(api.result(id).state());}catch(Exception e){return false;}});
                 attempt(view,id);await(()->!controls.controller().snapshot().resultStale());assertThat(controls.controller().snapshot().result().correctCount()).isEqualTo(2);assertThat(controls.controller().snapshot().result().score()).isEqualTo(2);assertThat(old(jdbc,id)).isEqualTo(preserved);
                 assertThat(controls.controller().snapshot().result().listeningInterrupted()).isTrue();assertThat(history(jdbc,id)).isEqualTo(preservedHistory);
