@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+Cập nhật T3-B4: 15/10/2026 — nhánh `feat/t3-b4-proctor-session-controls`, base main `8f5ac40`. [Tab điều khiển ca/kết quả](PROCTOR_SESSION_CONTROLS.md) dùng backend A1/A2, không đổi server production. Clean package source `06fd215`: **686 PASS, 0 skip**, GUI LT04 local, media rerun 8 checks và FULL dashboard smoke PASS. Lượt media đầu file lock giữ FAIL, nguyên nhân chưa chứng minh; xem [evidence](../evidence/t3-b4/2026-10-15-verification.md); human A review/nghe thủ công/LAN NOT RUN, PR35 draft giữ riêng. FULL mặc định, không B5/E1/E2.
+
 Cập nhật T3-B3: 14/10/2026 — branch `feat/t3-b3-listening-interruption-recovery` kế thừa T3-B2; Media/mạng lỗi dừng player, ghi marker và gửi INTERRUPTED, reconnect/mở lại GET status rồi giữ khóa, không replay/resume. Java669/669 PASS với PostgreSQL thật; app-image Unicode PASS8, có MediaPlayer thật dừng giữa audio và reconnect không phát lại. [Hướng dẫn](LISTENING_INTERRUPTION_RECOVERY.md), [evidence](../evidence/t3-b3/2026-10-14-verification.md). Code complete; review A, rút mạng/kill app thủ công, LAN/máy thứ hai và nghe thủ công chưa chạy. T2-B4 chưa có trên nhánh nên policy Listening tách riêng và gate ghép Reading còn chờ; tracker IN_PROGRESS, giờ null.
 
 Cập nhật T3-B2: 14/10/2026 — branch `feat/t3-b2-listening-playback` kế thừa T3-B1; nhận `LISTENING_START`, kiểm writer/manifest/SHA-256, journal chống replay, playlist JavaFX và câu hỏi theo `audioFile`, báo STARTED/heartbeat/COMPLETED đã triển khai. Java666/666 PASS với PostgreSQL thật; app-image Unicode PASS7. [Hướng dẫn](LISTENING_CLIENT_PLAYBACK.md), [evidence](../evidence/t3-b2/2026-10-14-verification.md). Source `987d9b27f400c339a50914de11de6d094649a271`; code complete, review A/LAN/máy thứ hai/nghe thủ công chưa chạy. B3 còn event gián đoạn và reconnect policy; tracker IN_PROGRESS, giờ null.
@@ -34,7 +36,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
-| B | _chưa gán_ | T3-B3 code complete, bàn giao interruption/reconnect | B1 chuẩn bị + B2 playback + B3 dừng/ghi gián đoạn và không resume; Java669 PASS, app-image Unicode 8 checks PASS | Review A, thử rút mạng/kill app/nghe/LAN; ghép T2-B4 khi nhánh có sẵn | `feat/t3-b3-listening-interruption-recovery` |
+| B | _chưa gán_ | T3-B4 điều khiển ca tối thiểu, kiểm LT04 local | Tab import/tạo ca/READY/start/kết quả/replacement; evidence riêng | A review, thành viên tự demo và LAN; phối hợp ghép tab vào PR35 | `feat/t3-b4-proctor-session-controls` |
 | C | _chưa gán_ | T3-C5 bản nháp tài liệu đã viết; chờ B review | Báo cáo đồng bộ/giới hạn đối chiếu main `f97c081`; kiểm tài liệu riêng | LAN hai máy, human A/B review và gate 20/10 NOT_DECIDED/PARTIAL; FULL default | `docs/t3-c5-monitoring-sync-report` |
 
 ## Đang bị chặn

@@ -253,7 +253,9 @@ Các thao tác: import đề và tạo ca, xem READY của từng thí sinh, sta
 
 **Xong khi:** phần giao diện của LT04 chạy được: tổ chức lại tạo attempt mới, attempt cũ vẫn xem được nguyên vẹn.
 
-**Ghi chú làm dở:** —
+**Bàn giao 15/10/2026:** [Điều khiển ca tối thiểu](../PROCTOR_SESSION_CONTROLS.md), [evidence](../../evidence/t3-b4/2026-10-15-verification.md). Source `06fd215`, clean Java686/0skip + REAL GUI integration LT04 + FULL dashboard smoke PASS; media rerun8PASS, initial file-lock FAIL giữ trong report. Backend A1/A2 giữ nguyên; UI trong dashboard hiện có, không lấy roster ACTIVE làm nguồn kết quả đã chốt. Callback có generation, request start/reorganize giữ ID/nội dung qua mất response; lượt mới READY lại và lượt cũ chỉ đọc.
+
+**Ghi chú làm dở:** Human A review/nghe thủ công/native FileChooser/LAN NOT RUN. Chưa ghép Reading/Listening PR35, chưa B5/E1/E2; FULL mặc định. Không đổi tracker/kế hoạch/.env/migration. Kết quả tests/GUI theo report B4, không dùng số cũ của B1–B3 làm lượt mới.
 
 ### T3-B5 · Bộ cài và audio trên máy thứ hai
 `2h` · phụ thuộc: T3-B4 · review: A
