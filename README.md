@@ -345,3 +345,9 @@ Candidate có phần tải audio, tiến độ/checksum, thử loa bằng WAV m�
 ## Phát và xử lý gián đoạn Listening (T3-B2/B3)
 
 Sau READY, candidate chỉ phát từ `LISTENING_START` hợp lệ trên WebSocket. Client kiểm lại manifest/writer/cache, tải đề candidate, ghép câu hỏi theo `audioFile`, lưu journal `playbackStarted` và gửi `STARTED`, heartbeat, `COMPLETED`. Cùng `startId` không phát lại, kể cả sau khi journal đã được tạo. Mất mạng hoặc lỗi Media dừng player, ghi/gửi `INTERRUPTED`; mở lại/reconnect đọc status và luôn giữ khóa với phiên dang dở hoặc đã gián đoạn, không resume/autoplay. Xem [luồng playback](docs/LISTENING_CLIENT_PLAYBACK.md), [policy B3](docs/LISTENING_INTERRUPTION_RECOVERY.md) và [bằng chứng](evidence/t3-b3/2026-10-14-verification.md).
+
+## T3-B4 — Điều khiển ca của giám thị
+
+Trong dashboard PROCTOR, mở tab **Điều khiển ca / kết quả**: import đề JSON, tạo ca/phân công bằng tài khoản đã có, xem READY từng lượt, start Listening, đọc kết quả cả lượt đã chốt và tổ chức lại lượt gián đoạn. [Hướng dẫn demo, JSON mẫu, retry và giới hạn](docs/PROCTOR_SESSION_CONTROLS.md), [bằng chứng B4](evidence/t3-b4/2026-10-15-verification.md). Audio phải được cấp riêng trên server; không có upload/editor hoặc danh mục mọi ca/user. Server quyết định quyền và READY/start/replacement. Lượt mới cần chuẩn bị lại; dữ liệu lượt cũ giữ nguyên. Pending chưa xác nhận giữ requestId/nội dung qua thử lại trong vòng đời view.
+
+Kiểm tra tự động trên PostgreSQL TEST và GUI thật: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-t3b4.ps1 -JavaHome '<JDK21>' -Gui`. Output local trong target/, không reset DB dev. Human A review/nghe thủ công/LAN còn riêng; không nghiệm thu PR35 Reading+Listening, B5/E1/E2 hoặc bật delta mặc định.

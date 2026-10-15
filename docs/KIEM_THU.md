@@ -44,7 +44,7 @@ Full-only retry/epoch/order/reconnect đã kiểm trong acceptance T2-C1 bên d�
 | LT01 | Thiếu audio hoặc sai checksum → không READY | B / A | T3-B1 | PARTIAL — local bytes + production HTTP/PG + view/Media/app-image Unicode PASS; xác nhận nghe thủ công/review A/máy thứ hai NOT RUN | `89082e3d43a322c0e0e210f393cc3b4bf49bd7da` | [T3-B1](../evidence/t3-b1/2026-10-14-verification.md), [backend A1](../evidence/t3-a1/2026-10-13-verification.md) |
 | LT02 | Start lặp không phát lại; lỗi media khóa và ghi gián đoạn | B / A | T3-B2/B3 | PARTIAL — start lặp, Media/câu hỏi/lifecycle và MEDIA_ERROR lock+journal+event PASS tự động; review A/lỗi codec thủ công chưa chạy | Branch T3-B3 | [T3-B3](../evidence/t3-b3/2026-10-14-verification.md), [backend A2](../evidence/t3-a2/2026-10-13-verification.md) |
 | LT03 | Mất mạng giữa audio; mở lại không tự phát hay resume | B / A | T3-B3 | PARTIAL — JavaFX MediaPlayer thật dừng khi disconnect, reconnect/status không replay PASS; backend timeout/takeover/restart PASS; rút mạng/kill app thủ công, LAN và review A chưa chạy | Branch T3-B3 | [T3-B3](../evidence/t3-b3/2026-10-14-verification.md), [backend A2](../evidence/t3-a2/2026-10-13-verification.md) |
-| LT04 | Tổ chức lại: attempt mới, dữ liệu và deadline cũ giữ nguyên | B / A | T3-B4, T3-A2 | PARTIAL — phần server PASS; giao diện B4/LAN chưa chạy | Nhánh feat/t3-a2-listening-lifecycle | `evidence/t3-a2/2026-10-13-verification.md` |
+| LT04 | Tổ chức lại: attempt mới, dữ liệu và deadline cũ giữ nguyên | B / A | T3-B4, T3-A2 | PARTIAL — server và GUI integration B4 local PASS; human/LAN chưa chạy | `06fd215` | [B4](../evidence/t3-b4/2026-10-15-verification.md), [A2](../evidence/t3-a2/2026-10-13-verification.md) |
 | IT01 | Chạy từ package trên máy không có IDE, đường dẫn có dấu | B / A | T1-B4, T3-B5, T5-B1 | NOT RUN | | |
 | IT02 | 2 thí sinh + 1 giám thị; một client gửi JSON sai hoặc rớt | A / C | T3-A4, T4-B1 | NOT RUN | | |
 | IT03 | Mạng hoặc quét chậm, UI vẫn phản hồi; đóng app dọn worker | B / A | T1-B2, T4-B1 | NOT RUN | | |
@@ -436,3 +436,7 @@ Main tiến lên `cb30f3d` (PR #27) trong lúc làm, nên nhánh `sync/pr23-main
 ## T3-C5 · Kiểm tra bản nháp tài liệu · 13/10/2026
 
 Đối chiếu source main `f97c081`, class/method/defaults/quyền monitoring, liên kết và anchor, bảng evidence C1–C4, phạm vi diff. Kết quả mới xem [báo cáo kiểm tra](../evidence/t3-c5/2026-10-13-verification.md); không chạy lại Java/Python runtime/smoke/GUI/LAN/E1/E2. Các số PASS trước đó giữ task/SHA/môi trường gốc, không gán cho main mới. FULL mặc định, gate NOT_DECIDED/PARTIAL; B review NOT RUN. Không nâng trạng thái MT toàn hệ thống.
+
+## T3-B4 · Điều khiển ca và LT04 · 15/10/2026
+
+[Report B4](../evidence/t3-b4/2026-10-15-verification.md) phân biệt test thuần/MOCK gateway, HTTP loopback và JavaFX/Spring/HTTP/WS/PostgreSQL thật. LT04 kiểm mới khác ID, answers/revision/writer/deadline và hai dòng history MOCK đã lưu giữ nguyên; kiểm trước và sau job timeout thực, không gọi timeout bằng tay. Import GUI tự động đi cùng controller sau chọn path, chưa thao tác native FileChooser. Xác nhận nghe và fixture/audio/history là MOCK/SIMULATED đúng report. Không nâng LT/IT toàn hệ thống thành human/LAN PASS; review A, LAN, PR35 Reading+Listening và E1/E2 còn riêng. Tracker và các evidence cũ giữ nguyên.
