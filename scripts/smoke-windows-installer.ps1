@@ -49,15 +49,29 @@ try {
     $plain.UseShellExecute=$false
     foreach($key in @('JAVA_HOME','JAVA_TOOL_OPTIONS','JDK_JAVA_OPTIONS','_JAVA_OPTIONS')){$plain.EnvironmentVariables.Remove($key)}
     $plain.EnvironmentVariables['PATH']="$env:SystemRoot\System32;$env:SystemRoot"
-    $plainProcess=[Diagnostics.Process]::Start($plain)
+    $plainProcess=[Diagnostics.Process]::Start($plain);$runtimeProcess=$null
     try {
         $limit=[DateTime]::UtcNow.AddSeconds(25)
-        do {$plainProcess.Refresh();if($plainProcess.HasExited){throw 'Ordinary launcher exited before login window.'};if([DateTime]::UtcNow -gt $limit){throw 'Login window did not open.'};Start-Sleep -Milliseconds 100} while($plainProcess.MainWindowTitle -ne 'TOEIC Monitor')
-        $jvm=@($plainProcess.Modules | Where-Object {$_.ModuleName -eq 'jvm.dll'})
+        do {
+            $plainProcess.Refresh();if($plainProcess.HasExited){throw 'Ordinary launcher exited before login window.'}
+            # Windows jpackage 21 forks another ToeicMonitor.exe for the JVM. Own only this direct child.
+            if(-not $runtimeProcess){
+                $child=Get-CimInstance Win32_Process -Filter "ParentProcessId=$($plainProcess.Id)" | Where-Object {$_.ExecutablePath -eq $plain.FileName} | Select-Object -First 1
+                if($child){$runtimeProcess=Get-Process -Id $child.ProcessId;[void]$runtimeProcess.Handle}
+            }
+            if($runtimeProcess){$runtimeProcess.Refresh()}
+            if([DateTime]::UtcNow -gt $limit){throw 'Login window did not open in owned JVM child.'}
+            Start-Sleep -Milliseconds 100
+        } while(-not $runtimeProcess -or $runtimeProcess.MainWindowTitle -ne 'TOEIC Monitor')
+        $jvm=@($runtimeProcess.Modules | Where-Object {$_.ModuleName -eq 'jvm.dll'})
         if($jvm.Count -ne 1 -or $jvm[0].FileName -ne (Join-Path $installRoot 'runtime/bin/server/jvm.dll')){throw 'Ordinary launcher did not load bundled JVM.'}
-        if(-not $plainProcess.CloseMainWindow() -or -not $plainProcess.WaitForExit(15000) -or $plainProcess.ExitCode -ne 0){throw 'Ordinary app did not close cleanly.'}
+        if(-not $runtimeProcess.CloseMainWindow() -or -not $runtimeProcess.WaitForExit(15000) -or -not $plainProcess.WaitForExit(5000) -or $runtimeProcess.ExitCode -ne 0 -or $plainProcess.ExitCode -ne 0){throw 'Ordinary app did not close cleanly.'}
         [IO.File]::WriteAllText((Join-Path $run 'ordinary-launch.txt'),"agent=NONE`r`nJAVA_HOME=REMOVED`r`nPATH=Windows only`r`njvm=$($jvm[0].FileName)`r`nclose=PASS`r`n",[Text.UTF8Encoding]::new($false))
-    } finally {if(-not $plainProcess.HasExited){$plainProcess.Kill();$plainProcess.WaitForExit()};$plainProcess.Dispose()}
+    } finally {
+        # Capture children before killing the wrapper, so failures cannot orphan an owned JVM.
+        if(-not $plainProcess.HasExited){Get-CimInstance Win32_Process -Filter "ParentProcessId=$($plainProcess.Id)" | Where-Object {$_.ExecutablePath -eq $plain.FileName} | ForEach-Object {Stop-Process -Id $_.ProcessId -ErrorAction SilentlyContinue};$plainProcess.Kill();$plainProcess.WaitForExit()}
+        if($runtimeProcess){$runtimeProcess.Dispose()};$plainProcess.Dispose()
+    }
     foreach($key in @('JAVA_HOME','PATH','JAVA_TOOL_OPTIONS','TOEIC_PG_INTEGRATION','TOEIC_PROCTOR_GUI','TOEIC_INSTALLED_CLIENT','DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','TOEIC_SEED_PASSWORD')){$previous[$key]=[Environment]::GetEnvironmentVariable($key,'Process')}
     if(Test-Path -LiteralPath '.env'){foreach($line in Get-Content -LiteralPath '.env' -Encoding UTF8){if($line -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD)\s*=(.*)$'){[Environment]::SetEnvironmentVariable($Matches[1],$Matches[2].Trim().Trim('"').Trim("'"),'Process')}}}
     $defaults=@{DB_HOST='127.0.0.1';DB_PORT='5432';DB_NAME='toeic';DB_USER='toeic';TOEIC_SEED_PASSWORD='ChangeMe123!'}

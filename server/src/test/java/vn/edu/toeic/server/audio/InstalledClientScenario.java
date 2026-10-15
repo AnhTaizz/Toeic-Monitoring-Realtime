@@ -38,9 +38,10 @@ final class InstalledClientScenario {
         Path local=Files.createDirectories(output.resolve("Hồ sơ người dùng có dấu")).toAbsolutePath();
         env.put("LOCALAPPDATA",local.toString());
         builder.redirectOutput(output.resolve("client.stdout").toFile()).redirectError(output.resolve("client.stderr").toFile());
-        Process process=builder.start();
+        Process process=builder.start();List<ProcessHandle> ownedChildren=new ArrayList<>();
         try {
-            await(process,output,()->Files.exists(output.resolve("ready.signal")),"installed READY");start.run();
+            await(process,output,()->Files.exists(output.resolve("ready.signal")),"installed READY");
+            ownedChildren.addAll(process.descendants().toList());start.run();
             await(process,output,()->Files.exists(output.resolve("playing.signal")),"native playback");
             // SIMULATED network fault: close actual owned server sockets, without changing firewall or OS network.
             var registry=context.getBean(RealtimeSessionRegistry.class);
@@ -51,13 +52,17 @@ final class InstalledClientScenario {
             Files.writeString(output.resolve("close.signal"),"TEST");
             if(!process.waitFor(35,TimeUnit.SECONDS))throw new AssertionError("Installed client did not exit normally");
             assertThat(process.exitValue()).isZero();assertThat(output.resolve("failed.txt")).doesNotExist();
+            assertThat(ownedChildren).noneMatch(ProcessHandle::isAlive);
             assertThat(output.resolve("passed.txt")).exists();assertThat(output.resolve("dashboard.signal")).exists();assertThat(output.resolve("full.signal")).exists();
             Path cache=local.resolve("TOEIC Monitor/audio-cache");
             try(var files=Files.walk(cache.resolve("playback-started"))){assertThat(files.filter(Files::isRegularFile).count()).isPositive();}
             try(var files=Files.walk(cache)){assertThat(files.anyMatch(p->p.getFileName().toString().endsWith(".part"))).isFalse();}
             System.out.println("B5 INSTALLED PASS real production EXE/runtime, write denied, login/B4/FULL/audio/READY/WS interruption/reconnect/normal close; hearing+socket fault SIMULATED. Output: "+output);
         } finally {
+            ownedChildren.addAll(process.descendants().toList());
+            for(var child:ownedChildren)if(child.isAlive())child.destroy();
             if(process.isAlive()){process.destroy();if(!process.waitFor(5,TimeUnit.SECONDS))process.destroyForcibly().waitFor(5,TimeUnit.SECONDS);}
+            for(var child:ownedChildren)if(child.isAlive())child.destroyForcibly();
             // Owned profile/cache is only TEST output under server/target, not shipped or user data.
         }
     }
