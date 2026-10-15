@@ -41,7 +41,8 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler({InvalidLoginRequestException.class, HttpMessageNotReadableException.class, InvalidExamException.class, IllegalArgumentException.class})
     ResponseEntity<ApiErrorResponse> invalidInput(Exception exception) {
-        String message = exception instanceof InvalidLoginRequestException invalid
+        String message = exception instanceof HttpMessageNotReadableException ? "JSON không hợp lệ"
+                : exception instanceof InvalidLoginRequestException invalid
                 ? invalid.getMessage()
                 : (exception.getMessage() != null && !exception.getMessage().isBlank()
                         ? exception.getMessage()
@@ -50,6 +51,15 @@ public class ApiExceptionHandler {
                 ? invalid.requestId()
                 : null;
         return error(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, message, false, requestId);
+    }
+
+    @ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
+    ResponseEntity<ApiErrorResponse> methodNotAllowed(org.springframework.web.HttpRequestMethodNotSupportedException exception) {
+        ResponseEntity<ApiErrorResponse> response = error(HttpStatus.METHOD_NOT_ALLOWED, ErrorCode.INVALID_INPUT,
+                "Phương thức HTTP không được hỗ trợ", false, null);
+        var builder = ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED);
+        if (exception.getSupportedHttpMethods() != null) builder.allow(exception.getSupportedHttpMethods().toArray(org.springframework.http.HttpMethod[]::new));
+        return builder.body(response.getBody());
     }
 
     @ExceptionHandler(NoResourceFoundException.class)

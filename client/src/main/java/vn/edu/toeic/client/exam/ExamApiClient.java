@@ -142,6 +142,53 @@ public final class ExamApiClient implements ExamGateway, ExamHistoryGateway, Aut
         return post("sessions", request, CreateSessionResponse.class);
     }
 
+    public CompletableFuture<vn.edu.toeic.protocol.exam.ProctorProgressPage> getProctorProgress(String cursor) {
+        if(cursor!=null&&!validAttempt(cursor))return invalidAttempt();
+        return get("proctor/attempts/progress?limit=50"+(cursor==null?"":"&afterAttemptId="+ExamIdentifiers.encode(cursor)),
+                vn.edu.toeic.protocol.exam.ProctorProgressPage.class).thenApply(page->{
+            if(page.readAt()==null||page.attempts().size()>50)throw new InvalidServerResponseException();
+            String previous=cursor;
+            for(var row:page.attempts()) {
+                if(!validAttempt(row.attemptId())||previous!=null&&ExamIdentifiers.compare(previous,row.attemptId())>=0
+                        ||!java.util.Set.of("ACTIVE","SUBMITTED","TIMED_OUT").contains(row.state())
+                        ||row.savedRevision()<0||row.answeredCount()<0||row.answeredCount()>row.totalQuestions()
+                        ||row.totalQuestions()<1||"ACTIVE".equals(row.state())&&row.correctCount()!=null)
+                    throw new InvalidServerResponseException();
+                previous=row.attemptId();
+            }
+            if(page.nextAfterAttemptId()!=null&&(page.attempts().size()!=50||!page.nextAfterAttemptId().equals(previous)))throw new InvalidServerResponseException();
+            return page;
+        });
+    }
+    public CompletableFuture<vn.edu.toeic.protocol.audio.SessionAudioReadinessResponse> getSessionReadiness(String session) {
+        if(!validAttempt(session))return invalidAttempt();
+        return get("sessions/"+ExamIdentifiers.encode(session)+"/audio/readiness",vn.edu.toeic.protocol.audio.SessionAudioReadinessResponse.class);
+    }
+    public CompletableFuture<vn.edu.toeic.protocol.audio.ListeningStartResponse> startListening(String session,vn.edu.toeic.protocol.audio.ListeningStartRequest request) {
+        if(!validAttempt(session))return invalidAttempt();
+        return post("sessions/"+ExamIdentifiers.encode(session)+"/listening/start",request,vn.edu.toeic.protocol.audio.ListeningStartResponse.class);
+    }
+    public CompletableFuture<vn.edu.toeic.protocol.audio.ListeningStatusResponse> getListeningStatus(String attempt) {
+        if(!vn.edu.toeic.protocol.exam.AttemptIdentifier.monitoringV0(attempt))return invalidAttempt();
+        return get(attemptPath(attempt,"listening/status"),vn.edu.toeic.protocol.audio.ListeningStatusResponse.class);
+    }
+    public CompletableFuture<vn.edu.toeic.protocol.audio.ListeningReorganizeResponse> reorganizeListening(String attempt,vn.edu.toeic.protocol.audio.ListeningReorganizeRequest request) {
+        if(!vn.edu.toeic.protocol.exam.AttemptIdentifier.monitoringV0(attempt))return invalidAttempt();
+        return post(attemptPath(attempt,"listening/reorganize"),request,vn.edu.toeic.protocol.audio.ListeningReorganizeResponse.class);
+    }
+    /** Read and parse off FX thread; preview confirmation belongs to caller, server validates import. */
+    public CompletableFuture<ExamImportRequest> readImportFile(java.nio.file.Path path) {
+        return CompletableFuture.supplyAsync(()->{
+            try(var input=java.nio.file.Files.newInputStream(path)) {
+                byte[] bytes=input.readNBytes(1024*1024+1);
+                if(bytes.length>1024*1024)throw new IllegalArgumentException("File đề vượt 1MiB");
+                var parsed=gson.fromJson(new String(bytes,StandardCharsets.UTF_8),ExamImportRequest.class);
+                if(parsed==null||parsed.examId()==null||parsed.title()==null||parsed.questions()==null||parsed.questions().isEmpty())throw new InvalidServerResponseException();
+                return parsed;
+            }catch(java.io.IOException failure){throw new CompletionException(failure);}
+        },worker);
+    }
+
     /** Validate raw database text; component encoding keeps it inside one URL segment. */
     private static boolean validAttempt(String attemptId) {
         return ExamIdentifiers.valid(attemptId);
@@ -213,6 +260,11 @@ public final class ExamApiClient implements ExamGateway, ExamHistoryGateway, Aut
     }
 
     /** Câu báo lỗi an toàn cho giao diện: không lặp lại body của server hay chi tiết exception. */
+    public static boolean sessionExpired(Throwable failure) {
+        while((failure instanceof CompletionException||failure instanceof java.util.concurrent.ExecutionException)&&failure.getCause()!=null)failure=failure.getCause();
+        return failure instanceof ExamApiException api&&api.statusCode()==401;
+    }
+
     public static String describe(Throwable failure) {
         Throwable cause = failure instanceof CompletionException && failure.getCause() != null
                 ? failure.getCause() : failure;

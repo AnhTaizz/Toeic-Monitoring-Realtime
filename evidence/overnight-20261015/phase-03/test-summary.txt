@@ -1,0 +1,199 @@
+RUN phase03-clean rawSha256=9fa77c21f63dd20df997e7d85b37c3182aa8ab67ce64f14d2e1017cc8c3bda72
+START 2026-10-15T07:20:50.624523+00:00
+COMMAND mvn -o -B -ntp clean test
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.188 s -- in vn.edu.toeic.protocol.exam.AttemptIdentifierBoundaryTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.709 s -- in vn.edu.toeic.protocol.measurement.MessageMeasurementsTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.094 s -- in vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in vn.edu.toeic.protocol.monitoring.EventOriginTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.059 s -- in vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.126 s -- in vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest
+[INFO] Tests run: 44, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD FAILURE
+END 2026-10-15T07:21:20.457813+00:00 EXIT 1
+RUN phase03-clean-retest rawSha256=3e2383d2f99ba38c89f93c3af30677f9e19a0e45bf4233b67f3c5ec1c88dd0a3
+START 2026-10-15T07:21:56.781675+00:00
+COMMAND mvn -o -B -ntp clean test
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.166 s -- in vn.edu.toeic.protocol.exam.AttemptIdentifierBoundaryTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.735 s -- in vn.edu.toeic.protocol.measurement.MessageMeasurementsTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 s -- in vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s -- in vn.edu.toeic.protocol.monitoring.EventOriginTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 s -- in vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.111 s -- in vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest
+[INFO] Tests run: 44, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.813 s -- in vn.edu.toeic.client.AttemptRefreshTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.289 s -- in vn.edu.toeic.client.audio.AudioApiClientTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.294 s -- in vn.edu.toeic.client.audio.AudioFilesTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.722 s -- in vn.edu.toeic.client.audio.AudioPreparationTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.144 s -- in vn.edu.toeic.client.audio.ListeningApiClientTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.752 s -- in vn.edu.toeic.client.audio.ListeningPlaybackTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.173 s -- in vn.edu.toeic.client.dashboard.DashboardControllerTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s -- in vn.edu.toeic.client.dashboard.DashboardModelTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s -- in vn.edu.toeic.client.dashboard.FullStateDashboardTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in vn.edu.toeic.client.dashboard.LateEventsAndGapsTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.794 s -- in vn.edu.toeic.client.dashboard.MonitoringApiClientTest
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.089 s -- in vn.edu.toeic.client.dashboard.MonitoringJsonTest
+[INFO] Tests run: 27, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.804 s -- in vn.edu.toeic.client.exam.ExamApiClientTest
+[INFO] Tests run: 41, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.015 s -- in vn.edu.toeic.client.exam.ExamHistoryReadTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.046 s -- in vn.edu.toeic.client.exam.ExamPaperAndEntryTest
+[INFO] Tests run: 45, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.139 s -- in vn.edu.toeic.client.exam.ExamSessionTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in vn.edu.toeic.client.exam.ExamSessionThreadingTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.154 s -- in vn.edu.toeic.client.ExamMonitoringIntegrationTest
+[INFO] Tests run: 39, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.750 s -- in vn.edu.toeic.client.LoginApiClientTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.408 s -- in vn.edu.toeic.client.monitoring.CandidateModeSessionTest
+[INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.391 s -- in vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.80 s -- in vn.edu.toeic.client.monitoring.harness.ControlledProcessHarnessTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in vn.edu.toeic.client.monitoring.harness.E1WindowTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.366 s -- in vn.edu.toeic.client.monitoring.harness.HarnessArtifactsTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.129 s -- in vn.edu.toeic.client.monitoring.harness.HarnessCliTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s -- in vn.edu.toeic.client.monitoring.harness.HarnessPlanTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.036 s -- in vn.edu.toeic.client.monitoring.harness.ObservationJoinerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 s -- in vn.edu.toeic.client.monitoring.harness.TestTracePolicyTest
+[INFO] Tests run: 33, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.112 s -- in vn.edu.toeic.client.monitoring.MonitoringDeliveryTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.432 s -- in vn.edu.toeic.client.monitoring.ProcessCollectorTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 s -- in vn.edu.toeic.client.monitoring.ProcessCollectorTraceTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.057 s -- in vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.729 s -- in vn.edu.toeic.client.monitoring.trace.DeltaReplayTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s -- in vn.edu.toeic.client.monitoring.trace.HandwrittenTraceTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 19.93 s -- in vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s -- in vn.edu.toeic.client.monitoring.trace.ReplayEngineTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.145 s -- in vn.edu.toeic.client.monitoring.trace.TraceCliTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.200 s -- in vn.edu.toeic.client.monitoring.trace.TraceReaderTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.305 s -- in vn.edu.toeic.client.monitoring.trace.TraceRecorderTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.107 s -- in vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpenerTest
+[INFO] Tests run: 60, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.319 s -- in vn.edu.toeic.client.realtime.RealtimeClientTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.125 s -- in vn.edu.toeic.client.ScopeLookupTest
+[INFO] Tests run: 571, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.408 s -- in vn.edu.toeic.server.audio.AudioAuthorizationTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.918 s -- in vn.edu.toeic.server.audio.AudioCatalogTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in vn.edu.toeic.server.audio.AudioReadinessPolicyTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 24.60 s -- in vn.edu.toeic.server.audio.AudioRuntimePostgresTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 25.53 s -- in vn.edu.toeic.server.audio.ListeningRuntimePostgresTest
+[INFO] Tests run: 36, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 17.24 s -- in vn.edu.toeic.server.auth.AuthenticatedNetworkTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s -- in vn.edu.toeic.server.auth.AuthServiceTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.385 s -- in vn.edu.toeic.server.auth.ConcurrentRealtimeSendTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.362 s -- in vn.edu.toeic.server.auth.RealtimeMeasurementTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s -- in vn.edu.toeic.server.auth.SessionAuthenticationTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.180 s -- in vn.edu.toeic.server.exam.ExamControllerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.299 s -- in vn.edu.toeic.server.exam.ExamReadAuthorizationTest
+[INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 19.00 s -- in vn.edu.toeic.server.exam.ExamRuntimePostgresTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.301 s -- in vn.edu.toeic.server.exam.ExamTimeoutSchedulingTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s -- in vn.edu.toeic.server.exam.ExamValidationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.094 s -- in vn.edu.toeic.server.monitoring.FullSnapshotReducerTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.244 s -- in vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.067 s -- in vn.edu.toeic.server.monitoring.MonitoringGapTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.088 s -- in vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 s -- in vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.046 s -- in vn.edu.toeic.server.monitoring.MonitoringStateServiceTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.468 s -- in vn.edu.toeic.server.monitoring.ProcessEventTest
+[INFO] Tests run: 223, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.198 s -- in vn.edu.toeic.monitoring.ProcessObservationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+END 2026-10-15T07:25:04.613441+00:00 EXIT 0
+RUN phase03-package rawSha256=ce1271c5b469c14d5ed26ba6dea699915d85b593ec3c17f82eabe286c684ccb6
+START 2026-10-15T07:25:19.229161+00:00
+COMMAND mvn -o -B -ntp package
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.177 s -- in vn.edu.toeic.protocol.exam.AttemptIdentifierBoundaryTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.775 s -- in vn.edu.toeic.protocol.measurement.MessageMeasurementsTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.077 s -- in vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in vn.edu.toeic.protocol.monitoring.EventOriginTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s -- in vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.109 s -- in vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest
+[INFO] Tests run: 44, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.674 s -- in vn.edu.toeic.client.AttemptRefreshTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.237 s -- in vn.edu.toeic.client.audio.AudioApiClientTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.214 s -- in vn.edu.toeic.client.audio.AudioFilesTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.423 s -- in vn.edu.toeic.client.audio.AudioPreparationTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.133 s -- in vn.edu.toeic.client.audio.ListeningApiClientTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.641 s -- in vn.edu.toeic.client.audio.ListeningPlaybackTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.156 s -- in vn.edu.toeic.client.dashboard.DashboardControllerTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 s -- in vn.edu.toeic.client.dashboard.DashboardModelTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in vn.edu.toeic.client.dashboard.FullStateDashboardTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in vn.edu.toeic.client.dashboard.LateEventsAndGapsTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.825 s -- in vn.edu.toeic.client.dashboard.MonitoringApiClientTest
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.083 s -- in vn.edu.toeic.client.dashboard.MonitoringJsonTest
+[INFO] Tests run: 27, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.965 s -- in vn.edu.toeic.client.exam.ExamApiClientTest
+[INFO] Tests run: 41, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.112 s -- in vn.edu.toeic.client.exam.ExamHistoryReadTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.046 s -- in vn.edu.toeic.client.exam.ExamPaperAndEntryTest
+[INFO] Tests run: 45, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 s -- in vn.edu.toeic.client.exam.ExamSessionTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in vn.edu.toeic.client.exam.ExamSessionThreadingTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.177 s -- in vn.edu.toeic.client.ExamMonitoringIntegrationTest
+[INFO] Tests run: 39, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.765 s -- in vn.edu.toeic.client.LoginApiClientTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.644 s -- in vn.edu.toeic.client.monitoring.CandidateModeSessionTest
+[INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.344 s -- in vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 s -- in vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.95 s -- in vn.edu.toeic.client.monitoring.harness.ControlledProcessHarnessTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in vn.edu.toeic.client.monitoring.harness.E1WindowTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.135 s -- in vn.edu.toeic.client.monitoring.harness.HarnessArtifactsTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s -- in vn.edu.toeic.client.monitoring.harness.HarnessCliTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in vn.edu.toeic.client.monitoring.harness.HarnessPlanTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s -- in vn.edu.toeic.client.monitoring.harness.ObservationJoinerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s -- in vn.edu.toeic.client.monitoring.harness.TestTracePolicyTest
+[INFO] Tests run: 33, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.100 s -- in vn.edu.toeic.client.monitoring.MonitoringDeliveryTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.447 s -- in vn.edu.toeic.client.monitoring.ProcessCollectorTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.081 s -- in vn.edu.toeic.client.monitoring.ProcessCollectorTraceTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.054 s -- in vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.682 s -- in vn.edu.toeic.client.monitoring.trace.DeltaReplayTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in vn.edu.toeic.client.monitoring.trace.HandwrittenTraceTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 14.87 s -- in vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.078 s -- in vn.edu.toeic.client.monitoring.trace.ReplayEngineTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.075 s -- in vn.edu.toeic.client.monitoring.trace.TraceCliTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.313 s -- in vn.edu.toeic.client.monitoring.trace.TraceReaderTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.175 s -- in vn.edu.toeic.client.monitoring.trace.TraceRecorderTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.131 s -- in vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpenerTest
+[INFO] Tests run: 60, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.329 s -- in vn.edu.toeic.client.realtime.RealtimeClientTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.205 s -- in vn.edu.toeic.client.ScopeLookupTest
+[INFO] Tests run: 571, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.498 s -- in vn.edu.toeic.server.audio.AudioAuthorizationTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.051 s -- in vn.edu.toeic.server.audio.AudioCatalogTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in vn.edu.toeic.server.audio.AudioReadinessPolicyTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 26.92 s -- in vn.edu.toeic.server.audio.AudioRuntimePostgresTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 23.33 s -- in vn.edu.toeic.server.audio.ListeningRuntimePostgresTest
+[INFO] Tests run: 36, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.95 s -- in vn.edu.toeic.server.auth.AuthenticatedNetworkTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.040 s -- in vn.edu.toeic.server.auth.AuthServiceTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.714 s -- in vn.edu.toeic.server.auth.ConcurrentRealtimeSendTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.898 s -- in vn.edu.toeic.server.auth.RealtimeMeasurementTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.117 s -- in vn.edu.toeic.server.auth.SessionAuthenticationTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.230 s -- in vn.edu.toeic.server.exam.ExamControllerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.277 s -- in vn.edu.toeic.server.exam.ExamReadAuthorizationTest
+[INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.80 s -- in vn.edu.toeic.server.exam.ExamRuntimePostgresTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.312 s -- in vn.edu.toeic.server.exam.ExamTimeoutSchedulingTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in vn.edu.toeic.server.exam.ExamValidationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.094 s -- in vn.edu.toeic.server.monitoring.FullSnapshotReducerTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.206 s -- in vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.058 s -- in vn.edu.toeic.server.monitoring.MonitoringGapTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.044 s -- in vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.068 s -- in vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s -- in vn.edu.toeic.server.monitoring.MonitoringStateServiceTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.070 s -- in vn.edu.toeic.server.monitoring.ProcessEventTest
+[INFO] Tests run: 223, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.162 s -- in vn.edu.toeic.monitoring.ProcessObservationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+END 2026-10-15T07:28:24.589793+00:00 EXIT 0
+RUN phase03-flow rawSha256=fe8f035f6fceae1f49e8bb51de8286dada559c456745ba6d204e4235febfdd50
+START 2026-10-15T07:28:36.528459+00:00
+COMMAND mvn JAVA -Duser.timezone=UTC -Dloader.path=client/target/test-classes,server/target/test-classes,client/target/client-0.1.0-SNAPSHOT-all.jar -Dloader.main=vn.edu.toeic.client.exam.ExamFlowPostgresSmoke -cp server/target/server-0.1.0-SNAPSHOT.jar org.springframework.boot.loader.launch.PropertiesLauncher
+T2-B exam flow REAL PostgreSQL/Spring/HTTP smoke: 41 checks PASS, 0 GAP ph�a server; GUI JavaFX v� WebSocket NOT RUN trong smoke n�y
+END 2026-10-15T07:29:05.883898+00:00 EXIT 0
+RUN phase03-gui rawSha256=c94991613839c62e6fd4f91503233810a8123d69bae484dceb056f43dbdc187d
+START 2026-10-15T07:29:06.469112+00:00
+COMMAND java -Duser.timezone=UTC -Dloader.path=client/target/test-classes,server/target/test-classes,client/target/client-0.1.0-SNAPSHOT-all.jar -Dintegration.output=jpackage-out/overnight-gui -Dloader.main=vn.edu.toeic.client.integration.ReadingListeningPostgresGuiSmoke -cp server/target/server-0.1.0-SNAPSHOT.jar org.springframework.boot.loader.launch.PropertiesLauncher
+GUI_INTEGRATION passed=8 exit=0
+END 2026-10-15T07:29:50.186112+00:00 EXIT 0
+RUN phase03-c1 rawSha256=f893a90e3ea77269b3aec067a3dff946b724524f5d0afd47cda34cf5819f2427
+START 2026-10-15T07:29:50.530327+00:00
+COMMAND java -Duser.timezone=UTC -Dloader.path=client/target/test-classes,server/target/test-classes,client/target/client-0.1.0-SNAPSHOT-all.jar -Dtoeic.realtime.heartbeatMillis=200 -Dloader.main=vn.edu.toeic.server.monitoring.FullSnapshotSmoke -cp server/target/server-0.1.0-SNAPSHOT.jar org.springframework.boot.loader.launch.PropertiesLauncher
+T2-C1 FAIL phase=MIGRATION class=BeanDefinitionOverrideException
+END 2026-10-15T07:30:00.442588+00:00 EXIT 1
+RUN phase03-c1-retest rawSha256=923a990a5fb15a5f80fb82ccc2e9282486047a52e651fa832a2f08fe201908e0
+START 2026-10-15T07:31:43.974397+00:00
+COMMAND java -Duser.timezone=UTC -Dtoeic.realtime.heartbeatMillis=200 -Dloader.path=jpackage-out/overnight-c1-classes,client/target/client-0.1.0-SNAPSHOT-all.jar -Dloader.main=vn.edu.toeic.server.monitoring.FullSnapshotSmoke -cp server/target/server-0.1.0-SNAPSHOT.jar org.springframework.boot.loader.launch.PropertiesLauncher
+T2-C1 REAL full snapshot smoke PASS; fault process sets MOCK; full candidate GUI/LAN/human review NOT RUN
+END 2026-10-15T07:32:16.235992+00:00 EXIT 0
+RUN phase03-c2-retest rawSha256=adeadbad21fb0d166804b78aaf13f583f82085c40cf2cc07ffe7d3eb0551cf2e
+START 2026-10-15T07:32:17.060646+00:00
+COMMAND java -Duser.timezone=UTC -Dtoeic.realtime.heartbeatMillis=100 -Dloader.path=jpackage-out/overnight-c2-classes,client/target/client-0.1.0-SNAPSHOT-all.jar -Dloader.main=vn.edu.toeic.server.monitoring.LateEventsAndGapsSmoke -cp server/target/server-0.1.0-SNAPSHOT.jar org.springframework.boot.loader.launch.PropertiesLauncher
+T2-C2 REAL Spring/PG/HTTP/WS/collector-worker PASS; process readings MOCK; disconnect/write/ACK loss SIMULATED; full candidate GUI/LAN/human A/B review NOT RUN
+END 2026-10-15T07:32:38.641211+00:00 EXIT 0

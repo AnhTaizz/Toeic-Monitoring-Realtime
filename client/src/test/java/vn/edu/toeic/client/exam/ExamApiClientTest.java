@@ -223,6 +223,30 @@ class ExamApiClientTest {
         }
     }
 
+    @Test void proctorProgressEncodesCursorOnceAndRejectsActiveResultLeak() throws Exception {
+        try(Fixture f=new Fixture()) {
+            f.body.set("{\"readAt\":\"2026-10-15T00:00:00Z\",\"attempts\":[],\"nextAfterAttemptId\":null}");
+            f.api.getProctorProgress("a/đề% +").get(3,TimeUnit.SECONDS);
+            assertThat(java.net.URLDecoder.decode(f.path.get().split("afterAttemptId=",2)[1],StandardCharsets.UTF_8)).isEqualTo("a/đề% +");
+            assertThat(f.path.get()).startsWith("/api/v1/proctor/attempts/progress?limit=50&");
+            f.body.set("{\"readAt\":\"2026-10-15T00:00:00Z\",\"attempts\":[{\"attemptId\":\"A\",\"sessionId\":\"S\",\"state\":\"ACTIVE\",\"savedRevision\":42,\"answeredCount\":1,\"totalQuestions\":2,\"correctCount\":1}],\"nextAfterAttemptId\":null}");
+            assertThatThrownBy(()->f.api.getProctorProgress(null).join()).hasCauseInstanceOf(InvalidServerResponseException.class);
+        }
+    }
+    @Test void proctorListeningUsesAuthorizedApiAndImmutableStartBody()throws Exception {
+        try(Fixture f=new Fixture()) {
+            f.body.set("{\"protocolVersion\":\"1\",\"sessionId\":\"S\",\"manifestId\":\"m\",\"allReady\":false,\"attempts\":[]}");
+            assertThat(f.api.getSessionReadiness("S").get(3,TimeUnit.SECONDS).allReady()).isFalse();
+            assertThat(f.path.get()).isEqualTo("/api/v1/sessions/S/audio/readiness");
+            f.body.set("{\"requestId\":\"same-request\",\"sessionId\":\"S\",\"manifestId\":\"m\",\"startId\":\"START\",\"startedAt\":\"2026-10-15T00:00:00Z\"}");
+            var request=new vn.edu.toeic.protocol.audio.ListeningStartRequest("same-request","m");
+            f.api.startListening("S",request).get(3,TimeUnit.SECONDS);String body=f.requestBody.get();
+            f.api.startListening("S",request).get(3,TimeUnit.SECONDS);assertThat(f.requestBody.get()).isEqualTo(body);
+            assertThat(f.authorization.get()).isEqualTo("Bearer MOCK-token-only");
+            assertThat(f.path.get()).isEqualTo("/api/v1/sessions/S/listening/start");
+        }
+    }
+
     private static final class Fixture implements AutoCloseable {
         final HttpServer server;
         final ExecutorService executor = Executors.newSingleThreadExecutor();

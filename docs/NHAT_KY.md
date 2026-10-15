@@ -536,3 +536,45 @@ Git WSL không có credential HTTPS nên push bị chặn ở auth, không phả
 - Git Windows push872d12b thành công; GitHub tạo [Draft PR#35](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/35), base main8f5ac40, head integration/reading-listening-20261015. Không merge, không request human approval thay A/B/C.
 - Chốt local gate: clean833/package833 (runtime387ed99), GUI8nhóm/proctor đã render (harnessd809a00), ExamFlow28/0GAP và concurrency AT01/07/09/10 + C1/C2 PASS trên final JARs. Tất cả logs/source/JAR/derived hashes/6ảnh có evidence; transcript exact-byte attributes bảo toàn checksum khi checkout Windows.
 - Whole acceptance PARTIAL: QD29 ID ACTIVE đặc biệt, human/LAN/installer/gate delta/E1/E2/load chưa nghiệm thu. Main local6a41031 và refs/worktrees/file chưa commit của người khác giữ nguyên; branch integration sạch, chỉ docs-link cập nhật sau PR.
+
+## 15/10/2026 — B overnight phase 01 (backend A/C cần review)
+
+- Worktree anh em/branch `agent/b-overnight-followups-20261015` từ remote11c5da9, main8f5ac40 đã fetch/ls-remote. Không sửa worktree/file dirty cũ.
+- ID issuance fail-closed, collision không reopen final, 405 và API progress có phân quyền. Không đổi schema/tracker/kế hoạch. QD29 proposed, chưa human approve.
+- Targeted49 PASS thật với PostgreSQL sau baseline connection refused/Docker-off; bổ sung boundary/reorg guard sẽ chạy full gate. [Evidence](../evidence/overnight-20261015/phase-01/verification.md).
+
+## 15/10/2026 — B overnight phase02 (C review pending)
+
+Harness E1 window/sampler/CLI/analyzer có; targeted22 PASS sau một lượt normal child INCOMPLETE retained/cause chưa chứng minh; Python3/dry/smoke/checksum mutation PASS. SMOKE không E1 final; FULL default. [Evidence](../evidence/overnight-20261015/phase-02/verification.md).
+
+## 15/10/2026 — B overnight phase03
+
+Sourcef31ba3d: clean/package839 PASS, ExamFlow41/0GAP, GUI8group và C1/C2 retest PASS. CompilelambdaFAIL và C1runnerclasspathFAIL giữlog; rawE1đầu bị clean xóa đã đính chính và chuyển output bền. AT11/LT/ITwhole PARTIAL, human/LANNOTRUN. [Evidence](../evidence/overnight-20261015/phase-03/verification.md).
+
+## 15/10/2026 — B overnight phase04
+
+Thêm UI điều khiển ca/progress qua API thực, immutable start/reorg intents, stale/401/close guards và contrast roster. Full package846 PASS trước follow-up; targeted35client+33PG PASS sau follow-up. GUI cuối11groups PASS với controls trong viewport và DB assertions. SelectorFAIL cũ giữlog; human/LAN/manual còn NOT RUN. [Evidence](../evidence/overnight-20261015/phase-04/verification.md).
+
+## 15/10/2026 — B overnight phase05
+
+PipelineWindows/parser3/negative5 có kiểm. Sửa relative.NETpath của package-t3b1; rawASCIIimage và bundledMedia8checks PASS (API/WS MOCK, hearingSIMULATED). SDKmt/WiX thiếu nên Unicode/installer BLOCKED, IT01/human/máy2 NOT RUN. Không cài tool hoặc đổi hệ thống. [Evidence](../evidence/overnight-20261015/phase-05/verification.md).
+
+## 15/10/2026 — B overnight phase06 và bàn giao
+
+- Java freezec1601b55b7b40cd84238921e87355108cfaea5fd; clean/package848 PASS,0skip; Flow41/0GAP,GUI11,C1/C2 có GUI PASS mới. PG18.6 thật trong schemaowned; unitMOCK/faultSIMULATED phân biệt.
+- E1 đủ12REALrun,15s+120s/run,360GTtrials, quality={'eligible': 360, 'detected': 287, 'missed': 62, 'inconclusive': 11, 'censored': 0}; cleanup/checksums/reanalysis byte-identical PASS. Python4 PASS với analyzerSHA riêng, không thay JAR đang đo; upper-bound latency/parentheap/carryover/background limits đã ghi. E1 acceptance/human C review pending, E2/load/LAN/manual NOT RUN; FULL default.
+- PackageASCII8 subset nguồn0057d81; Unicode/installer SDK/WiX BLOCKED. Không cài/gỡ/resetDB/đổi tracker/kế hoạch; checkpoint local giữ, public snapshot sạch sẽ công bố riêng để không gửi ảnh process trong9bbe106. [Bàn giao](../evidence/overnight-20261015/00-summary.md).
+
+### Ref cuối trong phiên overnight
+
+Fetch thấy main8f5ac40→0b9c5fa (PR36 B4), integration11c5da9 không đổi; target merge-base11c5da9 vẫn đúng. Không hợp/đổi nhánh owner. B4 có overlap cần reviewer chọn một controller; [kế hoạch](../evidence/overnight-20261015/UPSTREAM_DIVERGENCE.md). Java source đã kiểm vẫnc1601b5, chưa gọi kết quả đó là test của main mới.
+
+## 15/10/2026 — công bố Draft PR overnight
+
+- Draft PR: [https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/38](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/38), nhánh `agent/b-overnight-followups-20261015-public`, base integration `11c5da9`. Snapshot đầu `4350c9d87da529796d73de98d4a169c93c3a41db` từ checkpoint `a393eb541bb8cdcbc1af3037a3c7811f7d9126d4`; public tree khớp checkpoint, Java khớp source đã test `c1601b5`. Đã kiểm ảnh process/PID cũ không reachable; checkpoint local giữ nguyên và không push. Commit công bố sau chỉ đổi hồ sơ, không chạy lại/nhận lại kết quả Java.
+- Main tiếp tục lên `c0fd903` qua PR #37 B5; integration và target merge-base vẫn không đổi. B4/PR #36 và B5/PR #37 cần owner hòa trước merge; chưa kiểm trên main mới. Evidence MSI upstream dùng môi trường/tooling khác, không kế thừa cho overnight. [Chi tiết](../evidence/overnight-20261015/UPSTREAM_DIVERGENCE.md).
+- Không merge/approve/mark ready, không đổi tracker/kế hoạch/.env/migrations hoặc worktree khác. E1 PARTIAL (11 inconclusive); Unicode/installer overnight BLOCKED tại môi trường này; human A/B/C, LAN, nghe thật và máy thứ hai còn chờ.
+
+Kiểm tra archive của commit bàn giao phát hiện manifest checksum liệt kê thêm `phase-01/targeted-test-summary.log` vốn chỉ ở local và bị Git ignore. Đã giới hạn manifest vào file evidence tracked, không xóa/sửa log gốc; kiểm tra lại byte của archive trước push cuối. Đây là lỗi phạm vi manifest, không đổi Java/JAR hoặc số test.
+
+Kiểm tra byte tiếp theo phát hiện CSV phase 02 đã bị Git chuẩn hóa CRLF thành LF trước khi thêm quy tắc evidence -text. Giữ file local nguyên byte, áp dụng lại quy tắc -text cho index và kiểm tra archive khớp manifest. Các failure kiểm tra công bố được giữ trong checkpoint; không sửa raw phép đo hoặc Java/JAR.

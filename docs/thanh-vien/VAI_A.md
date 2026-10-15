@@ -369,3 +369,7 @@ Backend P1 đã PASS local trên code/test `00b1df1` + main `2e784fa`: validator
 Nhánh `integration/reading-listening-20261015`, base8f5ac40, history2ca4121 và Reading65f5123. Guide `docs/INTEGRATION_READING_LISTENING.md`; evidence `evidence/integration/2026-10-15-verification.md`. Phạm vi review: A: history/query-status/scope/ownership. Clean test833 PASS (protocol43/client569/server220/spike1), PostgreSQL18.6 thật và 0skip; package833 PASS. GUI smoke8nhóm PASS mới; chưa nâng toàn case human/LAN. FULL default, tracker không đổi.
 
 **Ghi chú làm dở:** human A/B/C/LAN hai máy/installer/E1/E2 NOT RUN; ID ACTIVE đặc biệt còn contract QD29. Không dùng alias đọc status làm quyền monitoring; không merge main khi chưa được người dùng chấp thuận. Kết quả cuối/SHA/log trong evidence, không kế thừa PASS nhánh nguồn.
+
+### Handoff B overnight15/10 — cần A/C review, không phải A approve
+
+Checkpoint5072bc9 đề xuất QD29 safeissuance/collision/405 và API progress scoped-read/no-store, không migration/answers/epoch. FinalJava c1601b5 clean/package848 và PG/runtime mới có evidence. A review boundary/legacy/reorg/auth/finalized/count/lastSavedAt và chọn policyQD29 với nhóm. Không tự đổi tracker. [Summary](../../evidence/overnight-20261015/00-summary.md).

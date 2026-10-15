@@ -1,5 +1,7 @@
 # TOEIC Monitoring Realtime
 
+B overnight15/10 bổ sung safe ACTIVE issuance/API progress đề xuất, UI giám thị điều khiển ca và progress đãcommit, AT11exact40/42, pipelineWindows và E1harness/data. [Bàn giao6phase](evidence/overnight-20261015/00-summary.md), [giám thị](docs/PROCTOR_SESSION_PROGRESS.md), [đónggói](docs/WINDOWS_PACKAGING.md), [LAN/manual](docs/LAN_TWO_MACHINE_RUNBOOK.md). Local tests không thay human review/LAN/installer; FULL default, không thêm thư viện ngoài.
+
 Nhánh tích hợp đã ghép Reading/autosave/submit/reconnect/history và Listening B1–B3 trong cùng Application, dùng một writer của phiên thi. [Luồng và cách chạy](docs/INTEGRATION_READING_LISTENING.md), [evidence mới](evidence/integration/2026-10-15-verification.md). FULL vẫn mặc định; human/LAN/installer/gate delta/E1/E2 chưa được nghiệm thu. Các mục cũ bên dưới giữ phạm vi lịch sử.
 
 Spring Boot server, JavaFX client hai role, PostgreSQL và collector `ProcessHandle`. Event/queue/retry, heartbeat/presence/history và dashboard chặng 1 đã có. Server có backend thi chặng 2; T2-C1 thêm full snapshot và tab **Process hiện tại**. Delta, GUI thi toàn luồng và đóng gói trên máy thứ hai chưa được nghiệm thu. Các mục chặng 1 bên dưới mô tả phạm vi lịch sử của từng task; phần full hiện tại ở cuối.

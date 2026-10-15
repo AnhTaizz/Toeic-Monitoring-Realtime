@@ -101,6 +101,11 @@ public final class ReadingListeningPostgresGuiSmoke {
         check(status(reading).writerEpoch() == readingWriter, "History never takes over final attempt");
         pass("Production history discovers submitted result without changing writer"); screenshot(candidateStage, "03-history.png");
         fx(() -> { ((TabPane) candidateStage.getScene().lookup("#candidate-exam-tabs")).getSelectionModel().select(0); return null; });
+        proctorApp = fx(ToeicClientApplication::new); proctorStage = fx(Stage::new);
+        fx(() -> { proctorApp.start(proctorStage); return null; }); login(proctorStage, "proctor1");
+        selectProctorTab("Tiến độ đã lưu");
+        until(()->fx(()->((TableView<?>)proctorStage.getScene().lookup("#proctor-progress")).getItems().stream().anyMatch(row->row instanceof ProctorProgressRow p&&reading.equals(p.attemptId())&&"SUBMITTED".equals(p.state())&&p.answeredCount()==1)),"Committed final progress rendered");
+        pass("REAL proctor progress shows committed finalized row without answers or writer acquisition");screenshot(proctorStage,"07-progress.png");
         enter(listening); clickId(candidateStage, "option-L1-A");
         until(() -> "A".equals(status(listening).answers().get("L1")), "Listening answer save");
         long sharedWriter = status(listening).writerEpoch();
@@ -111,8 +116,16 @@ public final class ReadingListeningPostgresGuiSmoke {
         clickText(candidateStage, "Tôi nghe được"); clickText(candidateStage, "Xác nhận sẵn sàng");
         until(() -> response("/api/v1/sessions/" + listeningSession + "/audio/readiness", proctorToken, null).toString().contains("\"allReady\":true"), "READY ACK");
         String manifest = response("/api/v1/attempts/" + listening + "/audio/manifest", candidateToken, null).get("manifestId").getAsString();
-        JsonObject start = response("/api/v1/sessions/" + listeningSession + "/listening/start", proctorToken,
-                Map.of("requestId", "GUI-START-" + run, "manifestId", manifest));
+        selectProctorTab("Điều khiển ca thi");
+        fx(()->{((TextField)proctorStage.getScene().lookup("#proctor-session-id")).setText(listeningSession);return null;});
+        clickId(proctorStage,"proctor-readiness-refresh");
+        until(()->enabled(proctorStage,"proctor-listening-start"),"Server READY enables UI start");
+        ensureVisible(proctorStage,"proctor-listening-start");
+        Platform.runLater(()->((Button)proctorStage.getScene().lookup("#proctor-listening-start")).fire());
+        until(ReadingListeningPostgresGuiSmoke::confirmOk,"Explicit proctor start confirmation");
+        until(()->fx(()->((Label)proctorStage.getScene().lookup("#proctor-session-status")).getText().contains("Server đã xác nhận start")),"UI waits server start ACK");
+        ensureVisible(proctorStage,"proctor-session-status");
+        pass("REAL proctor session UI READY/start confirmation and committed ACK");screenshot(proctorStage,"08-session-start.png");
         until(() -> "PLAYING".equals(response("/api/v1/attempts/" + listening + "/listening/status", candidateToken, null).get("phase").getAsString()), "Real Media/STARTED");
         check(status(listening).writerEpoch() == sharedWriter, "Start uses exact shared writer");
         until(() -> !enabledText(candidateStage, "Tải / chuẩn bị lại audio"), "Preparation disabled while Media plays");
@@ -132,26 +145,65 @@ public final class ReadingListeningPostgresGuiSmoke {
         check("INTERRUPTED".equals(response("/api/v1/attempts/" + listening + "/listening/status", candidateToken, null).get("phase").getAsString()), "Listening never resumes");
         check(status(listening).writerEpoch() == sharedWriter, "Listening reconnect does not takeover");
         pass("REAL server restart stops/locks Listening without replay; Reading continues with frozen Listening answers"); screenshot(candidateStage, "05-interrupted.png");
-        proctorApp = fx(ToeicClientApplication::new); proctorStage = fx(Stage::new);
-        fx(() -> { proctorApp.start(proctorStage); return null; }); login(proctorStage, "proctor1");
+
+        selectProctorTab("Process hiện tại");
         until(() -> "SYNCED".equals(response("/api/v1/monitoring/attempts/" + listening + "/state", proctorToken, null).get("status").getAsString()), "FULL state after restart");
         check(!response("/api/v1/monitoring/attempts", proctorToken, null).toString().contains(reading), "Final attempt stays outside monitoring scope");
-        until(() -> fx(() -> proctorStage.getScene().getRoot().lookupAll(".table-view").stream()
-                .filter(TableView.class::isInstance).map(TableView.class::cast)
-                .anyMatch(table -> table.getItems().toString().contains(listening))), "Proctor roster rendered");
-        fx(() -> { proctorStage.getScene().getRoot().lookupAll(".table-view").stream()
-                .filter(TableView.class::isInstance).map(TableView.class::cast)
-                .filter(table -> table.getItems().toString().contains(listening)).findFirst().orElseThrow()
-                .getSelectionModel().select(0); return null; });
+        until(() -> fx(() -> ((TableView<?>)proctorStage.getScene().lookup("#dashboard-roster")).getItems().toString().contains(listening)),"Proctor roster rendered");
+        fx(() -> {((TableView<?>)proctorStage.getScene().lookup("#dashboard-roster")).getSelectionModel().select(0);return null;});
         until(() -> fx(() -> proctorStage.getScene().lookup("#dashboard-current-status") instanceof Label label
                 && label.getText().contains("Quan sát gần nhất") && label.getText().contains("Đã đồng bộ")),
                 "Proctor full observation rendered without stale/loading flags");
         pass("REAL proctor Application/HTTP roster + candidate FULL state; final attempt excluded"); screenshot(proctorStage, "06-proctor.png");
+        var oldStatus=status(listening);
+        selectProctorTab("Điều khiển ca thi");
+        fx(()->{((TextField)proctorStage.getScene().lookup("#proctor-attempt-id")).setText(listening);return null;});
+        clickId(proctorStage,"proctor-listening-status");
+        until(()->enabled(proctorStage,"proctor-reorganize"),"Interrupted status enables explicit reorg");
+        String replacement="GUI-REORG-"+run;
+        fx(()->{((TextField)proctorStage.getScene().lookup("#proctor-replacement-session")).setText(replacement);((TextField)proctorStage.getScene().lookup("#proctor-session-title")).setText("TEST controlled reorganization");return null;});
+        ensureVisible(proctorStage,"proctor-reorganize");
+        Platform.runLater(()->((Button)proctorStage.getScene().lookup("#proctor-reorganize")).fire());
+        until(ReadingListeningPostgresGuiSmoke::confirmOk,"Explicit reorg confirmation");
+        until(()->fx(()->((Label)proctorStage.getScene().lookup("#proctor-session-status")).getText().contains("Server tạo lượt mới")),"Reorg server ACK");
+        var afterReorg=status(listening);
+        check(oldStatus.answers().equals(afterReorg.answers())&&oldStatus.deadlineAt().equals(afterReorg.deadlineAt())&&oldStatus.savedRevision()==afterReorg.savedRevision(),"Reorg preserves old answers/deadline/revision");
+        check(status(replacement+"-candidate1").savedRevision()==0,"Replacement starts fresh");
+        ensureVisible(proctorStage,"proctor-session-status");
+        pass("REAL explicit UI reorganization creates new attempt, old authoritative data immutable");screenshot(proctorStage,"09-reorganization.png");
         JsonObject result = new JsonObject(); result.addProperty("passed", passed); result.addProperty("schema", schema);
         result.addProperty("readingWriter", readingWriter); result.addProperty("sharedWriter", sharedWriter);
         result.addProperty("labels", "REAL Application/Media/JAR/PG/HTTP/WS/restart; TEST exam/WAV; SIMULATED speaker confirmation; LAN/human NOT RUN");
         Files.writeString(output.resolve("result.json"), json.toJson(result));
     }
+
+    private static void ensureVisible(Stage stage,String id)throws Exception {
+        fx(()->{
+            var node=stage.getScene().lookup("#"+id);if(node==null)throw new IllegalStateException("Missing control "+id);
+            javafx.scene.Node ancestor=node;
+            while(ancestor!=null&&!(ancestor instanceof ScrollPane))ancestor=ancestor.getParent();
+            if(ancestor instanceof ScrollPane scroll){
+                var bounds=scroll.getContent().sceneToLocal(node.localToScene(node.getBoundsInLocal()));
+                double maximum=scroll.getContent().getLayoutBounds().getHeight()-scroll.getViewportBounds().getHeight();
+                scroll.setVvalue(maximum<=0?0:Math.max(0,Math.min(1,(bounds.getMinY()-scroll.getViewportBounds().getHeight()*.25)/maximum)));
+                scroll.applyCss();scroll.layout();
+            }
+            return null;
+        });
+        fx(()->{
+            var node=stage.getScene().lookup("#"+id);if(!node.isVisible()||node.localToScreen(node.getBoundsInLocal())==null)throw new IllegalStateException("Control not visible "+id);
+            javafx.scene.Node ancestor=node.getParent();
+            while(ancestor!=null){if(ancestor instanceof ScrollPane scroll){
+                var bounds=node.localToScene(node.getBoundsInLocal());var viewport=scroll.lookup(".viewport");
+                if(viewport==null||!viewport.localToScene(viewport.getBoundsInLocal()).intersects(bounds))throw new IllegalStateException("Control clipped "+id);
+                break;
+            }ancestor=ancestor.getParent();}
+            return null;
+        });
+    }
+
+    private void selectProctorTab(String title)throws Exception {fx(()->{var tabs=(TabPane)proctorStage.getScene().lookup("#proctor-main-tabs");tabs.getSelectionModel().select(tabs.getTabs().stream().filter(tab->title.equals(tab.getText())).findFirst().orElseThrow());return null;});}
+    private static boolean confirmOk()throws Exception{return fx(()->{for(Window window:List.copyOf(Window.getWindows()))if(window.getScene()!=null&&window.getScene().getRoot() instanceof DialogPane pane&&pane.getButtonTypes().contains(ButtonType.OK)){((Button)pane.lookupButton(ButtonType.OK)).fire();return true;}return false;});}
 
     private void enter(String attempt) throws Exception {
         until(() -> fx(() -> candidateStage.getScene().lookup("#candidate-enter-exam") != null), "Exam portal");
