@@ -60,3 +60,5 @@ Mục lục chỉ tổ chức bằng chứng đã có, không xác nhận task h
 - **T3-C4 ·13/10/2026:** [candidate thật/live preparation và final evidence](t3-c4/2026-10-13-verification.md):579Java/42localassertions/7regression commands latestPASS; failures/raw/checksums retained; FULLdefault, LAN/humanB/gate20/10 NOT DECIDED, noE1/E2.
 
 - Backend A, PR #23: [đồng bộ main T3-C3 và review lại P0](t2-a-p0-sync-20261013/2026-10-13-verification.md) — `c64503f` (sau hai lần đồng bộ main), Maven 596, smoke C1/C2, Python 10 PASS; human review, GUI, LAN chưa chạy.
+
+- T3-B5: [MSI Windows/per-user/runtime đi kèm và local verification](t3-b5/2026-10-15-verification.md) — source `acac38d`, clean687 PASS, MSI install/launch/B4/FULL/audio/close/uninstall PASS; IT01 PARTIAL, máy hai/LAN/nghe thật/A review NOT RUN. MSI/hash/metadata chỉ ở ignored target, không commit binary.

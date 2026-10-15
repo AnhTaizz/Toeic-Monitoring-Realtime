@@ -350,4 +350,10 @@ Sau READY, candidate chỉ phát từ `LISTENING_START` hợp lệ trên WebSock
 
 Trong dashboard PROCTOR, mở tab **Điều khiển ca / kết quả**: import đề JSON, tạo ca/phân công bằng tài khoản đã có, xem READY từng lượt, start Listening, đọc kết quả cả lượt đã chốt và tổ chức lại lượt gián đoạn. [Hướng dẫn demo, JSON mẫu, retry và giới hạn](docs/PROCTOR_SESSION_CONTROLS.md), [bằng chứng B4](evidence/t3-b4/2026-10-15-verification.md). Audio phải được cấp riêng trên server; không có upload/editor hoặc danh mục mọi ca/user. Server quyết định quyền và READY/start/replacement. Lượt mới cần chuẩn bị lại; dữ liệu lượt cũ giữ nguyên. Pending chưa xác nhận giữ requestId/nội dung qua thử lại trong vòng đời view.
 
-Kiểm tra tự động trên PostgreSQL TEST và GUI thật: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-t3b4.ps1 -JavaHome '<JDK21>' -Gui`. Output local trong target/, không reset DB dev. Human A review/nghe thủ công/LAN còn riêng; không nghiệm thu PR35 Reading+Listening, B5/E1/E2 hoặc bật delta mặc định.
+Kiểm tra tự động trên PostgreSQL TEST và GUI thật: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-t3b4.ps1 -JavaHome '<JDK21>' -Gui`. Output local trong target/, không reset DB dev. Human A review/nghe thủ công/LAN còn riêng; không nghiệm thu PR35 Reading+Listening hoặc E1/E2 hoặc bật delta mặc định.
+
+## Bộ cài Windows (T3-B5)
+
+[Hướng dẫn build MSI, cài/chạy/gỡ và checklist máy thứ hai](docs/WINDOWS_INSTALLER.md). `scripts/package-windows.ps1` đóng gói client hiện có và Java/JavaFX đi kèm; server/PostgreSQL/audio được cấp riêng. Địa chỉ LAN nhập tại login hoặc qua `TOEIC_SERVER_URL`. FULL vẫn mặc định; chưa ghép PR35 Reading–Listening.
+
+Công cụ build ngoài Maven: `jpackage` trong JDK21, WiX3 (`candle/light`, tạo MSI) và Microsoft Windows SDK `mt.exe` (manifest UTF-8 cho launcher). Có thể dùng portable trong ignored target; không thêm dependency Maven. Máy dùng chỉ cần MSI, không cần các công cụ build/IDE. [Evidence B5](evidence/t3-b5/2026-10-15-verification.md) ghi kiểm local và phần IT01/máy thứ hai còn thiếu; không coi merge là nghiệm thu IT01.
