@@ -1,21 +1,16 @@
 {
   "algorithm": "SHA-256",
-  "scope": "exact curated evidence bytes; excludes this manifest",
+  "scope": "exact tracked curated evidence bytes; excludes this manifest and ignored local raw logs",
   "files": [
     {
       "path": "00-summary.md",
-      "sha256": "28672db083937d62e8dfc87fb58b56ffd5474d547128ddaadbd337fceddb7c85",
-      "bytes": 9954
+      "sha256": "fedf0802a9da29b1fbea6126cbd6f4974fe59139ae68adde6b004b2b0e9bc6fc",
+      "bytes": 10757
     },
     {
       "path": "UPSTREAM_DIVERGENCE.md",
-      "sha256": "855e6a5ea74b96c3c9df828efe43421b1c555bee63ff4b3eaeb4a7b50f42033f",
-      "bytes": 1982
-    },
-    {
-      "path": "phase-01/targeted-test-summary.log",
-      "sha256": "97f9c888673118f8831aec2e74018dbc87dd5ffe6163e2d700110c99b74c3896",
-      "bytes": 1113
+      "sha256": "109cf9b04f9a4927207fe90cf95355b1b630aff61ebc8f2a284d176d38c32354",
+      "bytes": 3187
     },
     {
       "path": "phase-01/verification.md",
@@ -141,6 +136,11 @@
       "path": "phase-05/verification.md",
       "sha256": "1b48bb50f201763be68f3ce293fffd3a35fe4ff722182b50b176adeb46a4644c",
       "bytes": 2942
+    },
+    {
+      "path": "phase-06/e1-quality.json",
+      "sha256": "8578b9e0743eb3dbec7e3147713d809a791f4ff7d2c20b012d17e88c2280a3c7",
+      "bytes": 894
     },
     {
       "path": "phase-06/e1/analysis.md",
@@ -283,14 +283,9 @@
       "bytes": 4244
     },
     {
-      "path": "phase-06/e1-quality.json",
-      "sha256": "8578b9e0743eb3dbec7e3147713d809a791f4ff7d2c20b012d17e88c2280a3c7",
-      "bytes": 894
-    },
-    {
       "path": "phase-06/publication-audit.json",
-      "sha256": "fe9c6f42e8fc1539fb36c3de8057c7138a0341e0520a624696156ae69768bbea",
-      "bytes": 501
+      "sha256": "1fbd72ab66cbeafb2ece65d0de9279d37269174265855e5cb39f9541c0597def",
+      "bytes": 546
     },
     {
       "path": "phase-06/screenshots/07-progress.png",

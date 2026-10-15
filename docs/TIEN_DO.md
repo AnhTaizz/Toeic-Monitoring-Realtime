@@ -137,3 +137,7 @@ Overnight phase03 localgate PASS (839/flow41/GUI8/C1-C2); phase04 bắt đầu p
 Overnight phase04: proctor session/progress local gate PASS, cần A/C review API và B review UI; đang sang package Windows. [Guide](PROCTOR_SESSION_PROGRESS.md).
 
 Overnight phase05 PARTIAL: ASCII app-imageMedia8 PASS, wrapperUnicode/installer BLOCKED thiếu mt.exe/WiX; không cài/gỡ. Phase06 E1/manual chuẩn bị tiếp. [Guide](WINDOWS_PACKAGING.md).
+
+### Công bố overnight 15/10
+
+[Draft PR overnight](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/38) dùng nhánh public riêng, base integration `11c5da9`. Main mới `c0fd903` có PR #36 B4 và PR #37 B5: owner cần đối chiếu cả UI/controller lẫn pipeline Windows trước merge; chưa kiểm code ghép. Java đã kiểm `c1601b5` không đổi; E1 có 11 inconclusive nên PARTIAL. Evidence MSI upstream không được dùng thay kết quả package overnight. [Bàn giao](../evidence/overnight-20261015/00-summary.md).

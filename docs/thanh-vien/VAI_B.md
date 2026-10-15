@@ -366,3 +366,5 @@ T3-B5 overnight: scripts/config/negative tests có; rawASCIIimageMedia8 PASS, c�
 ### Handoff overnight15/10 — local gate xong, nghiệm thu còn PARTIAL
 
 SourceJava c1601b5 clean/package848,Flow41/GUI11/C1-C2 PASS; E1 đủ12REALruns, cần C review. B cần nghe/rút mạng/kill thật,2máyLAN và installer được phép;SDKmt/WiX đang thiếu. Import FileChooser/manual còn cần người thử. Sau tạo ca/tổ chức lại bấm “Làm mới quyền và dữ liệu” của dashboard để nạp scope monitoring; progress API độc lập vẫn đọc assignedfinal. Không xóa marker/autoReplay, không thay tracker khi chưa xác nhận. [Summary](../../evidence/overnight-20261015/00-summary.md).
+
+Lưu ý ref trước công bố: main `c0fd903` đã có B4/PR #36 và Windows MSI/PR #37. Code overnight chưa hòa với hai phần này; owner cần chọn một controller và một pipeline, không ghi đè script cùng tên. Xem [đối chiếu upstream](../../evidence/overnight-20261015/UPSTREAM_DIVERGENCE.md). Không kế thừa test/artifact của upstream cho source overnight.

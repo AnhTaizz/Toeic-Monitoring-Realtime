@@ -568,3 +568,13 @@ PipelineWindows/parser3/negative5 có kiểm. Sửa relative.NETpath của packa
 ### Ref cuối trong phiên overnight
 
 Fetch thấy main8f5ac40→0b9c5fa (PR36 B4), integration11c5da9 không đổi; target merge-base11c5da9 vẫn đúng. Không hợp/đổi nhánh owner. B4 có overlap cần reviewer chọn một controller; [kế hoạch](../evidence/overnight-20261015/UPSTREAM_DIVERGENCE.md). Java source đã kiểm vẫnc1601b5, chưa gọi kết quả đó là test của main mới.
+
+## 15/10/2026 — công bố Draft PR overnight
+
+- Draft PR: [https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/38](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/38), nhánh `agent/b-overnight-followups-20261015-public`, base integration `11c5da9`. Snapshot đầu `4350c9d87da529796d73de98d4a169c93c3a41db` từ checkpoint `a393eb541bb8cdcbc1af3037a3c7811f7d9126d4`; public tree khớp checkpoint, Java khớp source đã test `c1601b5`. Đã kiểm ảnh process/PID cũ không reachable; checkpoint local giữ nguyên và không push. Commit công bố sau chỉ đổi hồ sơ, không chạy lại/nhận lại kết quả Java.
+- Main tiếp tục lên `c0fd903` qua PR #37 B5; integration và target merge-base vẫn không đổi. B4/PR #36 và B5/PR #37 cần owner hòa trước merge; chưa kiểm trên main mới. Evidence MSI upstream dùng môi trường/tooling khác, không kế thừa cho overnight. [Chi tiết](../evidence/overnight-20261015/UPSTREAM_DIVERGENCE.md).
+- Không merge/approve/mark ready, không đổi tracker/kế hoạch/.env/migrations hoặc worktree khác. E1 PARTIAL (11 inconclusive); Unicode/installer overnight BLOCKED tại môi trường này; human A/B/C, LAN, nghe thật và máy thứ hai còn chờ.
+
+Kiểm tra archive của commit bàn giao phát hiện manifest checksum liệt kê thêm `phase-01/targeted-test-summary.log` vốn chỉ ở local và bị Git ignore. Đã giới hạn manifest vào file evidence tracked, không xóa/sửa log gốc; kiểm tra lại byte của archive trước push cuối. Đây là lỗi phạm vi manifest, không đổi Java/JAR hoặc số test.
+
+Kiểm tra byte tiếp theo phát hiện CSV phase 02 đã bị Git chuẩn hóa CRLF thành LF trước khi thêm quy tắc evidence -text. Giữ file local nguyên byte, áp dụng lại quy tắc -text cho index và kiểm tra archive khớp manifest. Các failure kiểm tra công bố được giữ trong checkpoint; không sửa raw phép đo hoặc Java/JAR.

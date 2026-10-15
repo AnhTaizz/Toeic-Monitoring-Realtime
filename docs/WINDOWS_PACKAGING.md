@@ -18,3 +18,5 @@ Bên cạnh app-image có `Start-ToeicMonitor.ps1`. Chạy với `-ServerUrl htt
 Cache/audio/playback markers mặc định ở LOCALAPPDATA/TOEIC Monitor/audio-cache, ngoài install. Upgrade/uninstall không được tự xóa marker để nghe lại. Dữ liệu nghe thử/checksum cần kiểm trong runtime đóng gói với path có dấu/space; `file.toURI()` dùng trong client. Sample WAV của smoke do test tạo, không tài nguyên bản quyền.
 
 Máy15/10 hiện thiếu mt.exe/WiX: production package gate BLOCKED. Raw ASCII app-image đã build và Media8checks PASS với bundledruntime, API/WS MOCK; không phải installer/Unicodeparent/humanhearing/IT01 toàncase. [Evidence](../evidence/overnight-20261015/phase-05/verification.md). Cài/gỡ/máy sạch/máy2 chỉ thử trên máy được cấp phép; ghi OS/source/JAR/installerhash và operator thật.
+
+Lưu ý ref trước công bố: main `c0fd903` đã có B4/PR #36 và Windows MSI/PR #37. Code overnight chưa hòa với hai phần này; owner cần chọn một controller và một pipeline, không ghi đè script cùng tên. Xem [đối chiếu upstream](../evidence/overnight-20261015/UPSTREAM_DIVERGENCE.md). Không kế thừa test/artifact của upstream cho source overnight.

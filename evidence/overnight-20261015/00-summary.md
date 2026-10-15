@@ -43,15 +43,15 @@ E2/full-vs-delta, load 1/5/10 của A, gate 20/10 và LAN **NOT RUN**. FULL vẫ
 
 ## Git và công bố
 
-Base ban đầu: integration/PR #35 `11c5da9`, origin/main `8f5ac40`. Ref cuối: main lên `0b9c5fa` do PR #36 B4; integration vẫn `11c5da9` và merge-base target không đổi. **B4 overnight cần đối chiếu với B4 mới upstream trước merge**; [chi tiết và kế hoạch](UPSTREAM_DIVERGENCE.md). Source đã kiểm chưa tích hợp với main mới.
+Base ban đầu: integration/PR #35 `11c5da9`, origin/main `8f5ac40`. Ref trước công bố: main lên `0b9c5fa` qua PR #36 B4, rồi `c0fd903` qua PR #37 B5; integration vẫn `11c5da9` và merge-base target không đổi. **B4 và pipeline Windows B5 overnight cần đối chiếu với upstream trước merge**; [chi tiết và kế hoạch](UPSTREAM_DIVERGENCE.md). Source đã kiểm chưa tích hợp với main mới.
 
 Nhánh checkpoint `agent/b-overnight-followups-20261015` giữ nguyên các commit local. Commit `9bbe106` từng chứa ảnh process/PID nên **không push nhánh checkpoint này**; cây cuối đã bỏ ảnh đó. Nhánh công bố `agent/b-overnight-followups-20261015-public` được tạo mới từ tree đã audit, với parent integration `11c5da9`; không rewrite/reset/force-push checkpoint. Java runtime code khớp source `c1601b5`; analyzer có SHA riêng. File chưa commit và worktree khác được giữ nguyên.
 
-Draft PR: **chưa tạo tại lúc ghi evidence; sẽ cập nhật sau khi remote xác nhận**. Không sửa PR #35/main/PR #36, không mark ready hoặc merge. Nhánh public phục vụ review các đề xuất, chưa đồng nghĩa merge-ready.
+Draft PR: **[https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/38](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/38)**, base `integration/reading-listening-20261015`. Snapshot công bố đầu tiên `4350c9d87da529796d73de98d4a169c93c3a41db`, parent integration `11c5da9`; commit bàn giao sau chỉ cập nhật hồ sơ công bố. Đã kiểm tree public khớp checkpoint `a393eb541bb8cdcbc1af3037a3c7811f7d9126d4`, Java không đổi so với source `c1601b5` và ảnh process cũ không reachable từ public history. Không sửa PR #35/main/PR #36/#37, không mark ready hoặc merge. Nhánh public phục vụ review, chưa đồng nghĩa merge-ready.
 
 ## Việc cần người thật trước nghiệm thu
 
-1. A/C review ID issuance/collision/405/progress scope/finalized/metrics và quyết định QD-29; C review E1 plan/window/ground truth/CPU/heap/latency/carryover. B review UI/Media/lifecycle và hòa B4 với PR #36. Agent không xác nhận hộ A/B/C.
-2. Có mt.exe/WiX 3 hợp lệ, build Unicode launcher/installer từ source mới rồi thử cài/chạy/gỡ trên máy được phép, không IDE; ghi source/binary/OS. Không tự xóa audio marker khi upgrade/uninstall.
+1. A/C review ID issuance/collision/405/progress scope/finalized/metrics và quyết định QD-29; C review E1 plan/window/ground truth/CPU/heap/latency/carryover. B review UI/Media/lifecycle, hòa B4 với PR #36 và chọn một pipeline Windows với PR #37. Agent không xác nhận hộ A/B/C.
+2. PR #37 có evidence MSI riêng trên môi trường khác; không kế thừa kết quả đó cho overnight. Tool portable được mô tả ở PR #37 và SDK mặc định không tồn tại tại các path đã kiểm trên máy này. Cần cung cấp mt.exe/WiX 3 hợp lệ, build Unicode launcher/installer từ source overnight mới rồi thử cài/chạy/gỡ trên máy được phép, không IDE; ghi source/binary/OS. Không tự xóa audio marker khi upgrade/uninstall.
 3. Nghe loa thật, rút mạng/kill đúng app test, chạy 2 candidate + proctor trên LAN 2 máy; thực hiện AT11/LT01–LT04/IT01–IT04/MT01/07/08 theo [manual matrix](../../docs/ACCEPTANCE_B_MANUAL_MATRIX.md) và [LAN runbook](../../docs/LAN_TWO_MACHINE_RUNBOOK.md).
 4. Có evidence/review thật rồi mới quyết định merge và trạng thái tracker; hạn 31/10/2026, gate delta 20/10 vẫn riêng.
