@@ -1,0 +1,36 @@
+{
+  "runtimeSourceCommit": "0057d81",
+  "scriptState": "phase05 dirty scripts; checkpoint in final summary",
+  "os": "Windows11 10.0.26200.9711",
+  "jdk": "Oracle21.0.8",
+  "maven": "3.9.11",
+  "javafx": "21.0.12",
+  "artifactStatus": "RAW ASCII app-image only; UTF8 launcher gate BLOCKED missing mt.exe; installer BLOCKED missing WiX",
+  "nativeSmoke": "8 PASS; real bundled Media/WAV; network API/WS MOCK; simulated hearing; JAVA_HOME removed and PATH excludes JDK",
+  "files": {
+    "client/target/client-0.1.0-SNAPSHOT-all.jar": {
+      "sha256": "9312c012f207a56889243d3645d46a08f601c13c01ec5c642a1ed1967442d93c",
+      "bytes": 11427436
+    },
+    "jpackage-out/t3b1-050e8780ffc5480386bba3456f78ec16/build/ToeicMonitor/ToeicMonitor.exe": {
+      "sha256": "a3d75767b010c54563d712c799a20a6978dfae0bd732b772b630d6f45c2f41dc",
+      "bytes": 475136
+    },
+    "jpackage-out/t3b1-050e8780ffc5480386bba3456f78ec16/build/ToeicMonitor/AudioSmoke.exe": {
+      "sha256": "e4da653338d4bea91518ddcd4d09e7938e7396599d9fbb52a5aeaab82d2986db",
+      "bytes": 475136
+    },
+    "jpackage-out/t3b1-050e8780ffc5480386bba3456f78ec16/build/ToeicMonitor/runtime/bin/server/jvm.dll": {
+      "sha256": "9f75936127d4349d2c752e2f5c97cdc1e26a2afdab83f29ba760a7f41cda0b3d",
+      "bytes": 13374568
+    },
+    "jpackage-out/t3b1-050e8780ffc5480386bba3456f78ec16/build/ToeicMonitor/app/client-0.1.0-SNAPSHOT-all.jar": {
+      "sha256": "9312c012f207a56889243d3645d46a08f601c13c01ec5c642a1ed1967442d93c",
+      "bytes": 11427436
+    },
+    "jpackage-out/t3b1-050e8780ffc5480386bba3456f78ec16/build/ToeicMonitor/runtime/release": {
+      "sha256": "e4c785f7e09f1d313be272f935ac8011c21ea995d70776c2358dc1efb12fee3e",
+      "bytes": 152
+    }
+  }
+}

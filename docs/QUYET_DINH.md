@@ -240,3 +240,11 @@ ExamEntry cấp writer cho lần vào ACTIVE; CandidateExamView sở hữu ExamS
 Ngày15/10/2026 · ĐANG CHỜ, không coi là đã duyệt.
 
 History/DB nhận raw Unicode/space/slash tối đa128 code point; monitoring v0 đang dùng ASCII cho attempt envelope/heartbeat. Phiên tích hợp sửa scope HTTP để không làm login/history thất bại, thêm query đọc status và giữ giới hạn WS hiện có. UI không mở một bài ACTIVE không giám sát. Cần A/B/C chọn: giới hạn/chuẩn hóa ID khi cấp lượt bằng quy tắc mới có kiểm thử, hoặc mở rộng riêng typed attemptId qua toàn bộ monitoring/audio endpoints. Không tự mở rộng messageId/collectorId, không nới container toàn server. Rủi ro sessionId+username vượt128 và sai HTTP method trả500 giữ ở backlog A, ngoài tích hợp P0.
+
+### QD-29 — Overnight safe issuance policy (PROPOSED, NOT HUMAN APPROVED)
+
+Nhánh overnight từ PR35 kiểm toàn bộ ID `sessionId + '-' + original username` theo monitoring-v0 trước cấp ACTIVE; từ chối nguyên request thay vì transliterate/trim. Reorganize cùng boundary, collision không làm sống lại attempt cũ. Raw Unicode/slash legacy vẫn đọc history/query-status; không mở rộng WS/container. Đổi lại username/session Unicode có thể bị từ chối cấp mới. API progress read-only là đề xuất để A/C review, không tự đồng thuận A/B/C.
+
+### Overnight E1 — phương án kỹ thuật nối QD15, HUMAN C REVIEW PENDING
+
+E1 dùng same-seed/test-owned policy và cùng launchplan cho4poll, xoay thứ tự qua3repeats; window15s+120s chỉ gồm lifecycle nằm trọn window. Parent launchAPI→scan-end là cận trên, không kernel timestamp; targethold khác actual lifetime. CPU collector/parent JVM mộtcore riêng, memory=heap parent (không RSS). Suite dùng cùng parent JVM nên GC/JIT/heap carryover và background workstation là giới hạn; chưa human approve phương pháp hoặc gate. Raw bất biến ở jpackage-out, public chỉ derived/noPID + provenance. Không đổi FULL default/QD19 hay bật delta. [Evidence](../evidence/overnight-20261015/phase-06/verification.md).

@@ -109,6 +109,11 @@ public final class ExamFlowPostgresSmoke {
                 proctor.createSession(session("SMOKE-LATE-" + suffix, examId, 3)).get(15, TimeUnit.SECONDS);
                 pass("PROCTOR import đề thử và tạo 3 ca (600 s, 4 s, 3 s) trên schema tạm " + schema);
 
+                for (boolean lostAck : new boolean[]{false,true}) {
+                    String session="SMOKE-AT11-"+(lostAck?"ACK-":"SEND-")+suffix;
+                    proctor.createSession(session(session,examId,600)).get(15,TimeUnit.SECONDS);
+                    exactAt11Flow(deviceA,deviceB,session+"-candidate1",lostAck);
+                }
                 mainFlow(origin, candidateToken, deviceA, deviceB, mainAttempt);
                 timeoutFlow(deviceA, shortAttempt);
                 lateSubmitFlow(deviceA, lateAttempt);
@@ -117,6 +122,36 @@ public final class ExamFlowPostgresSmoke {
         System.out.println("T2-B exam flow REAL PostgreSQL/Spring/HTTP smoke: " + passed + " checks PASS, " + gaps
                 + " GAP phía server" + (gaps == 0 ? "" : " (PARTIAL, xem các dòng GAP)")
                 + "; GUI JavaFX và WebSocket NOT RUN trong smoke này");
+    }
+
+    /** REAL PG/HTTP, SIMULATED response/request loss fenced after server COMMIT; one host only. */
+    private void exactAt11Flow(ExamApiClient deviceA,ExamApiClient deviceB,String attempt,boolean lostAck)throws Exception {
+        deviceA.autosaveAnswers(attempt,new AutosaveAnswersRequest(UUID.randomUUID().toString(),attempt,1,40,Map.of("R1","A"))).get(10,TimeUnit.SECONDS);
+        var entry=(ExamEntry.Ready)ExamEntry.open(deviceA,attempt).get(15,TimeUnit.SECONDS);
+        var lossy=new Lossy(deviceA);var probe=new Probe();var session=open(entry,lossy,probe);
+        lossy.blockSaves.set(!lostAck);lossy.holdSaveResponses.set(lostAck);
+        try {
+            on(()->{session.selectAnswer("R2","B");return session.selectAnswer("R3","C");});
+            if(lostAck)lossy.responseCommitted.get(15,TimeUnit.SECONDS);
+            else probe.await(v->v.saveState()==SaveState.ERROR,15,"AT11 server40/client42 pending");
+            check(probe.latest.revision()==42,"AT11 exact local revision42; no false saved");
+            var before=deviceA.getAttemptStatus(attempt).get(10,TimeUnit.SECONDS);
+            check(before.savedRevision()==(lostAck?42:40),"AT11 authoritative server revision "+(lostAck?42:40));
+            var frozen=lossy.saves.getFirst();
+            lossy.blockSaves.set(false);lossy.holdSaveResponses.set(false);
+            on(()->{session.setConnectionOnline(false);session.setConnectionOnline(true);return null;});
+            probe.await(v->v.confirmedRevision()==42&&v.saveState()==SaveState.SAVED,15,"AT11 reconciled42");
+            check(probe.latest.writerEpoch()==entry.start().writerEpoch()&&probe.latest.revision()==42,"AT11 reconnect retains writer and revision42");
+            if(!lostAck)check(lossy.saves.getLast()==frozen,"AT11 retry same immutable requestId/epoch/revision/full-map");
+            var next=(ExamEntry.Ready)ExamEntry.open(deviceB,attempt).get(15,TimeUnit.SECONDS);
+            check(next.start().writerEpoch()==entry.start().writerEpoch()+1&&next.start().savedRevision()==42,
+                    "AT11 new application receives authoritative epoch/revision42");
+            check("STALE".equals(rejectionCode(()->deviceA.autosaveAnswers(attempt,new AutosaveAnswersRequest(
+                    UUID.randomUUID().toString(),attempt,entry.start().writerEpoch(),43,Map.of("R1","B"))))),"AT11 old writer denied after takeover");
+            on(()->{session.close();return null;});
+            if(lostAck)lossy.heldSaveResponse.complete(lossy.committedSave);
+            check(deviceB.getAttemptStatus(attempt).get(10,TimeUnit.SECONDS).answers().equals(next.start().answers()),"AT11 late old ACK after close cannot change new writer answers");
+        } finally {on(()->{session.close();return null;});lossy.heldSaveResponse.completeExceptionally(new IOException("TEST closed"));}
     }
 
     // ------------------------------------------------------------ luồng chính: vào thi, lưu, takeover, AT11, nộp
@@ -488,6 +523,10 @@ public final class ExamFlowPostgresSmoke {
     private static final class Lossy implements ExamGateway {
         final ExamApiClient real;
         final AtomicBoolean blockSaves = new AtomicBoolean();
+        final AtomicBoolean holdSaveResponses = new AtomicBoolean();
+        volatile AutosaveAnswersResponse committedSave;
+        final CompletableFuture<Void> responseCommitted = new CompletableFuture<>();
+        final CompletableFuture<AutosaveAnswersResponse> heldSaveResponse = new CompletableFuture<>();
         final AtomicInteger dropSaveResponses = new AtomicInteger();
         final AtomicInteger dropSubmitResponses = new AtomicInteger();
         final List<AutosaveAnswersRequest> saves = new CopyOnWriteArrayList<>();
@@ -512,6 +551,7 @@ public final class ExamFlowPostgresSmoke {
             saves.add(request);
             if (blockSaves.get()) return CompletableFuture.failedFuture(new IOException("SMOKE: request không tới server"));
             CompletableFuture<AutosaveAnswersResponse> sent = real.autosaveAnswers(attemptId, request);
+            if(holdSaveResponses.get())return sent.thenCompose(response->{committedSave=response;responseCommitted.complete(null);return heldSaveResponse;});
             return takeOne(dropSaveResponses) ? sent.thenApply(Lossy::lost) : sent;
         }
 

@@ -379,3 +379,9 @@ Bạn cũng phải vẽ lại được luồng của A (khóa, deadline, commit 
 Nhánh `integration/reading-listening-20261015`, base8f5ac40, history2ca4121 và Reading65f5123. Guide `docs/INTEGRATION_READING_LISTENING.md`; evidence `evidence/integration/2026-10-15-verification.md`. Phạm vi review: C: collector/full/presence/transport hooks và giới hạn ID v0. Clean test833 PASS (protocol43/client569/server220/spike1), PostgreSQL18.6 thật và 0skip; package833 PASS. GUI smoke8nhóm PASS mới; chưa nâng toàn case human/LAN. FULL default, tracker không đổi.
 
 **Ghi chú làm dở:** human A/B/C/LAN hai máy/installer/E1/E2 NOT RUN; ID ACTIVE đặc biệt còn contract QD29. Không dùng alias đọc status làm quyền monitoring; không merge main khi chưa được người dùng chấp thuận. Kết quả cuối/SHA/log trong evidence, không kế thừa PASS nhánh nguồn.
+
+### Handoff B overnight15/10 — HUMAN C REVIEW PENDING
+
+E1 mở rộng ControlledProcessHarness với window/sampler/CLI;12REALWindowsruns có raw immutable/checksums/analyzer, candidate gateSIMULATED, policyTESTowned không nới production8tên. C review actual lifetime vs targethold, parent-latency cận trên, CPUonecore/parentheap, cùng parentJVM/carryover, eligibility/censoring và reused plan. C1/C2 cóGUI regression PASS mới; không gate delta/E2/LAN/approval thật. [Summary](../../evidence/overnight-20261015/00-summary.md).
+
+E1 quality thực tế:360eligible,287detected,62missed,11INCONCLUSIVE (observation thiếu start; GTstart của11 đọc được). Không đổi oracle để épPASS. Một số bucket không có đủ3miss-rate xác định; review bounds/unknown và heapcarryover trước khi dùng kết luận.

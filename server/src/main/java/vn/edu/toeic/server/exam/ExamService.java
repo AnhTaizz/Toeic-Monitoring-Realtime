@@ -499,6 +499,19 @@ public class ExamService {
             throw new InvalidExamException("Danh sách thí sinh không được để trống");
         }
 
+        // PROPOSED QD-29: reject the whole issuance before any mutation; never normalize raw IDs.
+        java.util.Set<String> issuedIds = new java.util.HashSet<>();
+        for (String username : request.candidateUsernames()) {
+            String generated = request.sessionId() + "-" + username;
+            if (username == null || !vn.edu.toeic.protocol.exam.AttemptIdentifier.monitoringV0(generated)
+                    || !issuedIds.add(generated)) {
+                throw ExamApiException.invalidInput("ID lượt ACTIVE phải tương thích monitoring v0, tối đa 128 ký tự; danh sách không được trùng");
+            }
+        }
+        if (request.proctorUsernames() == null) {
+            throw ExamApiException.invalidInput("Danh sách giám thị không được null");
+        }
+
         boolean sessionExists = jdbc.sql("SELECT count(*) FROM exam_sessions WHERE session_id = :sessionId")
                 .param("sessionId", request.sessionId())
                 .query(Long.class)
@@ -562,17 +575,18 @@ public class ExamService {
 
             String attemptId = request.sessionId() + "-" + cUsername;
 
-            jdbc.sql("""
+            int inserted = jdbc.sql("""
                     INSERT INTO monitoring_attempts (attempt_id, candidate_user_id, session_id, exam_id, state, writer_epoch, saved_revision)
                     VALUES (:attemptId, :candidateId, :sessionId, :examId, 'ACTIVE', 1, 0)
-                    ON CONFLICT (attempt_id) DO UPDATE
-                    SET session_id = EXCLUDED.session_id, exam_id = EXCLUDED.exam_id, state = 'ACTIVE'
+                    ON CONFLICT (attempt_id) DO NOTHING
                     """)
                     .param("attemptId", attemptId)
                     .param("candidateId", cId)
                     .param("sessionId", request.sessionId())
                     .param("examId", request.examId())
                     .update();
+
+            if (inserted != 1) throw ExamApiException.invalidInput("ID lượt thi đã được sử dụng; không thể cấp lại");
 
             for (Long pId : proctorUserIds) {
                 jdbc.sql("""
