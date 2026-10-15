@@ -36,6 +36,7 @@ class ListeningRuntimePostgresTest {
     private JdbcClient jdbc;
     private Path resources;
     private String base, dbUrl, dbUser, dbPassword, candidate1, candidate2, proctor, foreignProctor;
+    private boolean proctorGuiScheduler;
     private record Fixture(String session, String exam, String first, String second, String manifest, Map<String, String> checksums, Path audio) {}
 
     @BeforeAll void startRuntime() throws Exception {
@@ -61,7 +62,7 @@ class ListeningRuntimePostgresTest {
         props.put("spring.flyway.default-schema", schema); props.put("spring.flyway.schemas", schema);
         props.put("toeic.listening.maintenance-enabled", maintenance); props.put("toeic.audio.root", resources.toAbsolutePath().toString());
         props.put("toeic.seed.password", required("TOEIC_SEED_PASSWORD"));
-        props.put("logging.level.root", "WARN"); props.put("debug", "false"); props.put("exam.timeout.scheduler.enabled", "false");
+        props.put("logging.level.root", "WARN"); props.put("debug", "false"); props.put("exam.timeout.scheduler.enabled", proctorGuiScheduler);
         SpringApplication app = new SpringApplication(ToeicServerApplication.class); app.setBannerMode(Banner.Mode.OFF);
         app.addInitializers(ctx -> ctx.getEnvironment().getPropertySources().addFirst(new MapPropertySource("owned-audio-test", props)));
         context = app.run(); jdbc = context.getBean(JdbcClient.class);
@@ -97,6 +98,40 @@ class ListeningRuntimePostgresTest {
         assertThat(manifest.files().getFirst().sha256()).isEqualTo(AudioCatalog.sha256(Files.readAllBytes(audio)));
         assertThat(manifest.manifestId()).isEqualTo(JSON.fromJson(expect(get(audioPath(second, "manifest"), candidate2), 200).body(), AudioManifestResponse.class).manifestId());
         return new Fixture(session, exam, first, second, manifest.manifestId(), Map.of("sample.wav", manifest.files().getFirst().sha256()), audio);
+    }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named="TOEIC_PROCTOR_GUI",matches="true")
+    void proctorControlsLt04RealGuiBeforeAndAfterAutomaticTimeout() throws Exception {
+        context.close();proctorGuiScheduler=true;boot(false);
+        try { ProctorControlsGuiScenario.run(base,jdbc,resources,required("TOEIC_SEED_PASSWORD")); }
+        finally { context.close();proctorGuiScheduler=false;boot(false); }
+    }
+
+    @Test void proctorB4ApiUsesRealPermissionReadinessAndIdempotentReplacement() throws Exception {
+        var f=fixture();
+        try(var api=new vn.edu.toeic.client.proctor.ProctorSessionApiClient(base,proctor);
+            var denied=new vn.edu.toeic.client.proctor.ProctorSessionApiClient(base,candidate1);
+            var other=new vn.edu.toeic.client.proctor.ProctorSessionApiClient(base,foreignProctor)) {
+            assertThatThrownBy(()->denied.createSession(new CreateSessionRequest("B4-denied",f.exam(),"TEST",60,List.of(),List.of("candidate1"))))
+                    .isInstanceOf(vn.edu.toeic.client.proctor.ProctorSessionApiClient.Rejected.class).hasMessageContaining("quyền");
+            assertThatThrownBy(()->other.readiness(f.session())).hasMessageContaining("quyền");
+            assertThat(api.readiness(f.session()).attempts()).hasSize(2).allMatch(a->!a.ready());
+            assertThatThrownBy(()->api.start(f.session(),new ListeningStartRequest(id(),f.manifest()))).hasMessageContaining("READY");
+            readyBoth(f);
+            var request=new ListeningStartRequest(id(),f.manifest());
+            var start=api.start(f.session(),request);assertThat(api.start(f.session(),request)).isEqualTo(start);
+            save(f,1,Map.of("L1","A","R1","A"),200);event(f,"INTERRUPTED","MEDIA_ERROR",candidate1,1,200);
+            var old=snapshot(f);var replacement=new ListeningReorganizeRequest(id(),"B4-R-"+id().substring(0,12),"TEST B4 replacement");
+            var result=api.reorganize(f.first(),replacement);assertThat(api.reorganize(f.first(),replacement)).isEqualTo(result);
+            assertThat(result.newAttemptId()).isNotEqualTo(f.first());assertThat(snapshot(f)).isEqualTo(old);
+            assertThat(api.result(result.newAttemptId()).answers()).isEmpty();assertThat(api.readiness(result.newSessionId()).allReady()).isFalse();
+            assertThat(api.listening(result.newAttemptId()).phase()).isEqualTo("NOT_STARTED");
+            expect(post("/api/v1/attempts/"+f.second()+"/submit",new SubmitExamRequest(id(),f.second(),1,1,Map.of()),candidate2),200);
+            assertThat(api.result(f.second()).state()).isEqualTo("SUBMITTED");assertThat(api.result(f.first()).state()).isEqualTo("ACTIVE");
+            assertThatThrownBy(()->other.result(f.first())).hasMessageContaining("quyền");
+        }
+        System.out.println("B4 API PASS REAL new client/HTTP/PG permissions, READY gate, repeated start/reorganize, ACTIVE/SUBMITTED results and replacement isolation");
     }
 
     @Test void startPushIsCommittedScopedAndRetryKeepsIdAndDeadline() throws Exception {

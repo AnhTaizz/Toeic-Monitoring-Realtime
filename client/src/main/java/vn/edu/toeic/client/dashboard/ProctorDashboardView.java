@@ -27,6 +27,7 @@ import vn.edu.toeic.client.dashboard.MonitoringData.Gap;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.RealtimeClient;
 import vn.edu.toeic.protocol.Role;
+import vn.edu.toeic.client.proctor.ProctorSessionView;
 import vn.edu.toeic.protocol.auth.LoginResponse;
 import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
 
@@ -45,6 +46,7 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
     private final AtomicBoolean queued=new AtomicBoolean(), closed=new AtomicBoolean();
     private final DateTimeFormatter times;
     private final DashboardController controller;
+    private final ProctorSessionView sessionControls;
     private boolean rendering;
     public ProctorDashboardView(String serverUrl, LoginResponse login, RealtimeClient transport, Runnable onLogout, Runnable onExpired) {
         if (!"PROCTOR".equals(login.user().role())) throw new IllegalArgumentException("Dashboard chỉ dành cho giám thị");
@@ -91,7 +93,9 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
         column(gaps,"Server nhận",220,value -> time(value.receivedAt(),"—"));
         Tab gapTab=new Tab("Khoảng trống dữ liệu",new BorderPane(gaps,gapStatus,null,null,null));gapTab.setClosable(false);
         VBox list=new VBox(8,rosterStatus,roster,details); VBox.setMargin(list,new Insets(14,0,12,0));
-        BorderPane body=new BorderPane(new TabPane(current,timeline,interruptions,gapTab)); body.setTop(list); setCenter(body);
+        sessionControls=new ProctorSessionView(serverUrl,login.token(),onExpired,()->controllerRefresh());
+        Tab controls=new Tab("Điều khiển ca / kết quả",sessionControls);controls.setClosable(false);
+        BorderPane body=new BorderPane(new TabPane(current,timeline,interruptions,gapTab,controls)); body.setTop(list); setCenter(body);
         setBottom(new Label("UNKNOWN: server không còn xác nhận được liên lạc. Đây không phải kết luận gian lận."));
         Set<String> scope=login.attemptScope()==null?Set.of():Set.copyOf(login.attemptScope());
         controller=new DashboardController(Role.PROCTOR,new MonitoringApiClient(serverUrl,login.token()),transport,
@@ -166,5 +170,6 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
             currentStatus.setText(section(value.stateLoading(),value.stateStale(),value.stateError(),stateText));
         } finally { rendering=false; }
     }
-    @Override public void close() { if (closed.compareAndSet(false,true)) { controller.close(); pending.set(null); roster.getItems().clear(); events.getItems().clear(); history.getItems().clear(); gaps.getItems().clear(); currentProcesses.getItems().clear(); } }
+    private void controllerRefresh(){if(!closed.get())controller.refresh();}
+    @Override public void close() { if (closed.compareAndSet(false,true)) { sessionControls.close();controller.close(); pending.set(null); roster.getItems().clear(); events.getItems().clear(); history.getItems().clear(); gaps.getItems().clear(); currentProcesses.getItems().clear(); } }
 }
