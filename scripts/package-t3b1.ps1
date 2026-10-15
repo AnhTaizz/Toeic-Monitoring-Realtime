@@ -1,5 +1,6 @@
 ﻿# Build a fresh app-image. The optional TEST launcher exercises B1 inside the bundled runtime.
-param([string]$JavaHome = $env:JAVA_HOME, [switch]$WithAudioSmoke, [string]$ManifestTool)
+param([string]$JavaHome = $env:JAVA_HOME, [switch]$WithAudioSmoke, [string]$ManifestTool,
+    [string]$AppVersion = '0.1.0', [switch]$PlainImage)
 $ErrorActionPreference = 'Stop'
 Push-Location (Split-Path -Parent $PSScriptRoot)
 try {
@@ -13,8 +14,8 @@ try {
     $jarName = 'client-0.1.0-SNAPSHOT-all.jar'
     Copy-Item -LiteralPath "client/target/$jarName" -Destination $staging
     $arguments = @('--type','app-image','--dest',$destination,'--name','ToeicMonitor','--input',$staging,
-        '--main-jar',$jarName,'--main-class','vn.edu.toeic.client.Launcher','--app-version','0.1.0',
-        '--add-modules','java.net.http,java.desktop,java.logging,jdk.unsupported,jdk.crypto.ec')
+        '--main-jar',$jarName,'--main-class','vn.edu.toeic.client.Launcher','--app-version',$AppVersion,
+        '--add-modules','java.net.http,java.desktop,java.logging,jdk.unsupported,jdk.crypto.ec,java.instrument')
     if ($WithAudioSmoke) {
         $classes = Join-Path (Split-Path -Parent $staging) 'test-classes'
         $testPackage = Join-Path $classes 'vn/edu/toeic/client/audio'
@@ -67,6 +68,7 @@ try {
             if ($LASTEXITCODE -ne 0) { throw 'Could not embed UTF-8 launcher manifest.' }
         } finally { $launcherFile.IsReadOnly = $wasReadOnly }
     }
+    if ($PlainImage) { Write-Output (Join-Path (Get-Location) "$destination/ToeicMonitor"); return }
     $unicodeDestination = Join-Path (Get-Location) "jpackage-out/$run/Đóng gói audio có dấu và khoảng trắng"
     New-Item -ItemType Directory -Force $unicodeDestination | Out-Null
     Copy-Item -LiteralPath (Join-Path $destination 'ToeicMonitor') -Destination $unicodeDestination -Recurse

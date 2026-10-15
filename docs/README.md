@@ -13,6 +13,7 @@ Thư mục này là nơi ghi lại việc đang làm, để bất kỳ ai (hoặ
 | [AUDIO_CLIENT_PREPARATION.md](AUDIO_CLIENT_PREPARATION.md) | Tải/checksum/thử loa/READY trên candidate và cách kiểm package T3-B1 | B | Khi đổi luồng chuẩn bị audio |
 | [LISTENING_CLIENT_PLAYBACK.md](LISTENING_CLIENT_PLAYBACK.md) | T3-B2: nhận start, chống phát lặp, playlist/câu hỏi và lifecycle client | B | Khi đổi phát Listening phía candidate |
 | [PROCTOR_SESSION_CONTROLS.md](PROCTOR_SESSION_CONTROLS.md) | T3-B4: import/tạo ca, READY/start, kết quả và tổ chức lại LT04 | B | Khi đổi điều khiển ca |
+| [WINDOWS_INSTALLER.md](WINDOWS_INSTALLER.md) | T3-B5: tạo MSI, cài/chạy/gỡ, cấu hình LAN và checklist IT01 máy thứ hai | B | Khi đổi đóng gói hoặc thêm kiểm chứng máy hai |
 | [LISTENING_INTERRUPTION_RECOVERY.md](LISTENING_INTERRUPTION_RECOVERY.md) | T3-B3: dừng/ghi gián đoạn, status khi reconnect và khóa không replay | B | Khi đổi lỗi media hoặc reconnect Listening |
 | [AUDIO_RESOURCES.md](AUDIO_RESOURCES.md) | T3-A1: cấp tài nguyên, manifest/checksum, READY và gate start; contract cho B/A2 | A | Khi đổi contract audio |
 | [LISTENING_LIFECYCLE.md](LISTENING_LIFECYCLE.md) | T3-A2: lệnh start WS, heartbeat/gián đoạn, khóa đáp án và tổ chức lại | A | Khi đổi contract Listening |

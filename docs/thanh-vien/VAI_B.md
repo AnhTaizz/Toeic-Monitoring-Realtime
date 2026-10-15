@@ -266,7 +266,7 @@ Các thao tác: import đề và tạo ca, xem READY của từng thí sinh, sta
 
 **Xong khi:** IT01 qua trên máy thứ hai với bộ cài.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở:** 15/10/2026: phần đóng gói/local kiểm xong trên `feat/t3-b5-windows-installer`, source `acac38d`, MSI0.3.5 kèm runtime21.0.10/JavaFX. Clean full687 PASS, 0skip; cài/launch không agent và UI B4/FULL/audio/READY/start/WS gián đoạn/đóng/gỡ PASS trên install Unicode bị chặn ghi bằng tài khoản thường. [Lệnh/checklist](../WINDOWS_INSTALLER.md), [report/hash/artifact](../../evidence/t3-b5/2026-10-15-verification.md). Còn máy Windows thứ hai không IDE, LAN, nghe bằng người thật và human A review; IT01 PARTIAL, không tự chốt nghiệm thu/tracker hoặc ghép PR35/T4/E1/E2.
 
 ---
 

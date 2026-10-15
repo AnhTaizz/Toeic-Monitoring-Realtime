@@ -213,3 +213,9 @@ Ghi chú đánh số 13/10/2026: khi đồng bộ nhánh P0 với main `ee714fc`
 - Dedupe key là attemptId + writerEpoch + startId. Worker reserve marker bằng CREATE_NEW trước Media; marker tồn tại chặn replay cả sau restart. Crash sau reserve nhưng trước loa là fail-closed và cần lượt tổ chức lại, không xóa marker để nghe lại.
 - JavaFX chỉ render/MediaPlayer. Worker ghi timestamp local, gửi STARTED, heartbeat 2 giây và COMPLETED qua HTTP để nhận status sau COMMIT. Thời điểm local không thay server clock và không cam kết đồng bộ sample giữa máy.
 - Câu hỏi được nhóm đúng tên file manifest và sắp theo orderIndex; thiếu mapping chặn phát. Media/network failure khóa ngay, còn event INTERRUPTED/status/reconnect thuộc T3-B3. [Hướng dẫn](LISTENING_CLIENT_PLAYBACK.md), [bằng chứng](../evidence/t3-b2/2026-10-14-verification.md).
+
+## QD-28 · MSI Windows per-user từ app-image đã sửa manifest Unicode
+
+- Ngày 15/10/2026 · T3-B5 · Human A review NOT RUN. Dùng jpackage JDK21 + WiX3.14.1 để tạo MSI thực, không gọi app-image là installer; tái sử dụng manifest UTF-8 B1 bằng Microsoft SDK mt.exe. Tool portable được đặt trong ignored target, không đổi JDK/dependency/locale toàn hệ thống.
+- MSI cài client/runtime/JavaFX cho tài khoản hiện tại; server/PostgreSQL/audio và credential tách riêng. URL server cấu hình ở login hoặc environment. Cache/journal mặc định LOCALAPPDATA, app đọc thư mục cài; gỡ MSI giữ journal chống replay. FULL mặc định, không đổi contract/backend hoặc ghép PR35.
+- Build từ Git sạch, metadata commit/version/dirty/tool/JAR hash và sidecar MSI SHA-256. JAR/staging chỉ chứa runtime production; external TEST agent nằm ngoài installer. Kiểm local bằng tài khoản không elevated với ACL deny write, Unicode install, DLL runtime thực, UI/audio và gỡ. [Hướng dẫn](WINDOWS_INSTALLER.md), [evidence](../evidence/t3-b5/2026-10-15-verification.md). Máy hai/nghe thật/LAN/review còn riêng, IT01 PARTIAL.

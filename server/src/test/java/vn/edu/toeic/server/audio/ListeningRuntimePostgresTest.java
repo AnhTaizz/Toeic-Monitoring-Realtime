@@ -80,13 +80,14 @@ class ListeningRuntimePostgresTest {
         }
         System.out.println("T3-A2 removed only owned schema/audio; production context closed");
     }
-    private Fixture fixture() throws Exception {
+    private Fixture fixture() throws Exception { return fixture(wave()); }
+    private Fixture fixture(byte[] media) throws Exception {
         String exam = "AUDIO-E-" + id(), session = "AUDIO-S-" + id();
         expect(post("/api/v1/exams/import", new ExamImportRequest(exam, "TEST audio", "Owned fixture",
                 List.of(question("L1", "LISTENING", "sample.wav", 1), question("L2", "LISTENING", "sample.wav", 2),
                         question("R1", "READING", null, 3))), proctor), 200);
         Path directory = Files.createDirectories(resources.resolve(exam));
-        Path audio = directory.resolve("sample.wav"); Files.write(audio, wave());
+        Path audio = directory.resolve("sample.wav"); Files.write(audio, media);
         Files.writeString(directory.resolve("answer-key.json"), "TEST correctOption private answer");
         expect(post("/api/v1/sessions", new CreateSessionRequest(session, exam, "TEST session", 600, List.of(),
                 List.of("candidate1", "candidate2")), proctor), 200);
@@ -98,6 +99,18 @@ class ListeningRuntimePostgresTest {
         assertThat(manifest.files().getFirst().sha256()).isEqualTo(AudioCatalog.sha256(Files.readAllBytes(audio)));
         assertThat(manifest.manifestId()).isEqualTo(JSON.fromJson(expect(get(audioPath(second, "manifest"), candidate2), 200).body(), AudioManifestResponse.class).manifestId());
         return new Fixture(session, exam, first, second, manifest.manifestId(), Map.of("sample.wav", manifest.files().getFirst().sha256()), audio);
+    }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named="TOEIC_INSTALLED_CLIENT",matches=".+")
+    void installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle() throws Exception {
+        var f=fixture(InstalledClientScenario.wave());
+        // Second candidate readiness is MOCK input via the real API; candidate1 uses installed UI.
+        expect(post(audioPath(f.second(),"ready"),ready(f,f.second(),1,true),candidate2),200);
+        InstalledClientScenario.run(base,required("TOEIC_SEED_PASSWORD"),f.session(),f.first(),context,
+            ()->expect(post(startPath(f),new ListeningStartRequest(id(),f.manifest()),proctor),200),
+            ()->jdbc.sql("SELECT listening_interrupted FROM monitoring_attempts WHERE attempt_id=:a").param("a",f.first()).query(Boolean.class).single());
+        assertThat(jdbc.sql("SELECT COUNT(*) FROM monitoring_events WHERE attempt_id=:a").param("a",f.first()).query(Integer.class).single()).isPositive();
     }
 
     @Test
