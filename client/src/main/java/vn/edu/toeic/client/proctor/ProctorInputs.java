@@ -41,6 +41,15 @@ public final class ProctorInputs {
     private static void fields(JsonObject object, String... allowed) {
         if(!Set.of(allowed).containsAll(object.keySet())) throw new IllegalArgumentException();
     }
+    private static void string(JsonObject object,String field,boolean optional) {
+        JsonElement value=object.get(field);
+        if(optional&&(value==null||value.isJsonNull()))return;
+        if(value==null||!value.isJsonPrimitive()||!value.getAsJsonPrimitive().isString())throw new IllegalArgumentException();
+    }
+    private static void integer(JsonObject object,String field,boolean optional) {
+        JsonElement value=object.get(field);if(optional&&value==null)return;
+        vn.edu.toeic.client.audio.ListeningMessages.integer(object,field);
+    }
     public static ExamImportRequest readExam(Path file) throws Exception {
         if(Files.size(file)>MAX_JSON) throw new IllegalArgumentException("File đề vượt giới hạn 1 MiB.");
         try(var input=Files.newInputStream(file)) {
@@ -54,6 +63,7 @@ public final class ProctorInputs {
             var gson=new GsonBuilder().setStrictness(Strictness.STRICT).create();
             JsonObject body=gson.fromJson(text,JsonObject.class);
             fields(body,"examId","title","description","questions");
+            string(body,"examId",false);string(body,"title",false);string(body,"description",true);
             var request=gson.fromJson(body,ExamImportRequest.class);
             id(request.examId()); title(request.title());
             if(request.questions().size()>500)throw new IllegalArgumentException();
@@ -61,7 +71,13 @@ public final class ProctorInputs {
             for(var element:body.getAsJsonArray("questions")) {
                 JsonObject q=element.getAsJsonObject();
                 fields(q,"questionId","section","part","groupId","passageText","audioFile","prompt","correctOption","orderIndex","options");
-                for(var option:q.getAsJsonArray("options")) fields(option.getAsJsonObject(),"optionId","optionText","orderIndex");
+                for(String field:List.of("questionId","section","prompt","correctOption"))string(q,field,false);
+                for(String field:List.of("groupId","passageText","audioFile"))string(q,field,true);
+                integer(q,"part",false);integer(q,"orderIndex",true);
+                for(var option:q.getAsJsonArray("options")) {
+                    var o=option.getAsJsonObject();fields(o,"optionId","optionText","orderIndex");
+                    string(o,"optionId",false);string(o,"optionText",false);integer(o,"orderIndex",true);
+                }
             }
             for(var q:request.questions()) {
                 if(!seen.add(q.questionId()) || !Set.of("LISTENING","READING").contains(q.section()) || q.part()<1 || q.part()>7

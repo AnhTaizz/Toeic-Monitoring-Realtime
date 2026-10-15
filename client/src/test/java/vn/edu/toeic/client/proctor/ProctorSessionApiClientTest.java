@@ -59,5 +59,7 @@ class ProctorSessionApiClientTest {
         assertThat(ProctorInputs.parseExam(valid).questions()).hasSize(1);
         assertThatThrownBy(()->ProctorInputs.parseExam(valid.replace("\"A\",\"options\"","\"C\",\"options\""))).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(()->ProctorInputs.parseExam(valid.replace("\"title\"","\"unknown\""))).hasMessageContaining("schema");
+        assertThatThrownBy(()->ProctorInputs.parseExam(valid.replace("\"part\":1","\"part\":1.5"))).hasMessageContaining("schema");
+        assertThatThrownBy(()->ProctorInputs.parseExam(valid.replace("\"examId\":\"E\"","\"examId\":1"))).hasMessageContaining("schema");
     }
 }
