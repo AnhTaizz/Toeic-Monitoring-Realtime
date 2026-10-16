@@ -32,7 +32,10 @@ final class ClientSettings {
         try(var input=Files.newInputStream(file)){
             byte[] bytes=input.readNBytes(4097);
             if(bytes.length>4096)throw new IllegalArgumentException();
-            String value=new String(bytes,StandardCharsets.UTF_8).trim();URI uri=URI.create(value);
+            String value=new String(bytes,StandardCharsets.UTF_8);
+            // Windows PowerShell 5 writes a UTF-8 BOM; match the launcher wrapper's reader.
+            if(value.startsWith("\uFEFF"))value=value.substring(1);
+            value=value.trim();URI uri=URI.create(value);
             if(!Set.of("http","https").contains(uri.getScheme().toLowerCase(Locale.ROOT))||uri.getHost()==null
                     ||uri.getUserInfo()!=null||uri.getQuery()!=null||uri.getFragment()!=null||uri.getPort()==0
                     ||uri.getPort()>65535||!(uri.getPath().isEmpty()||uri.getPath().equals("/")))throw new IllegalArgumentException();
