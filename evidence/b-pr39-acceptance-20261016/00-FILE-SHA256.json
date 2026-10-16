@@ -20,8 +20,8 @@
     },
     {
       "path": "PUBLICATION.md",
-      "sha256": "d2b5c1cd35ef23e808c19044854b1455ebd5b60beae17136edca87084c6d34f3",
-      "bytes": 502
+      "sha256": "84f23bcbccff86f4116f8cbcc26b0945e9be2b76bc83b95c36a2332f9bfd79e3",
+      "bytes": 1674
     },
     {
       "path": "RAW_LOG_INDEX.json",
@@ -60,8 +60,8 @@
     },
     {
       "path": "lan/PREFLIGHT.md",
-      "sha256": "2f929756ac58ab587f51e38d75ba86a12bc06059cca6e5cc553a3b15c59c1e0c",
-      "bytes": 1193
+      "sha256": "20d053c92292b701df74f2779d57f567248917300fb23ea9ca064ce3ff1ad0d6",
+      "bytes": 1227
     },
     {
       "path": "lan/TEST_RESULTS.md",

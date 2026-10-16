@@ -2,7 +2,7 @@
 
 | Hạng mục | Phiên này | Cần owner xác nhận |
 |---|---|---|
-| Host A Windows/JDK21/PostgreSQL18.6 | AVAILABLE; local automation dùng DB TEST riêng | Host A dành riêng, IP/interface/port18080 được phép |
+| Host A Windows/JDK21/PostgreSQL18.6 | AVAILABLE đầu phiên; shared DB hiện exited; cần DB TEST riêng sẵn sàng | Host A dành riêng, IP/interface/port18080 được phép |
 | MSI0.3.7/hash/runtime | Xem report release mới | Hash máy A và B giống nhau |
 | Windows host B / quyền thao tác | MISSING | Cung cấp máy B/operator, không coi WSL là máy B |
 | HTTP/WS qua IP LAN | NOT RUN | Test-NetConnection và preflight HTTP401 trên từng host |
