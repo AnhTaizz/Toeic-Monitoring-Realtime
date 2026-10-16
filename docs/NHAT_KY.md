@@ -616,3 +616,12 @@ Nhánh QA riêng từ093429a; main/merge-base c0fd903. Source cuối9bfc75e sử
 
 
 Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Draft PR #40](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/40) nhắm nhánh PR39, base093429a, commit công bố đầu b5626168. Source đã test/build9bfc75e giữ nguyên; chỉ thêm URL/hồ sơ/checksum sau đó, không nhận thêm test PASS. Git commit evidence mới và manifest lịch sử đã đối chiếu byte; root HEAD6a410316 cùng5untracked giữ nguyên. Không merge/markReady/close/approve PR nguồn. [Bàn giao](../evidence/b-pr39-acceptance-20261016/PUBLICATION.md).
+
+
+## 16/10/2026 — C · review E1 và chuẩn bị T4-C1
+
+- Main sạch c0fd903; fetch/API xác nhận PR38–40 OPEN/DRAFT, latest PR40 3fc5bb4. Tạo nhánh riêng review/c-e1-methodology-t4c1, target qa/b-pr39-acceptance-20261016. Không thay nhánh nguồn/tracker/kế hoạch/hợp đồng/.env/DB; FULL default.
+- Sửa CPU mean-of-percentages bằng tổng delta/time, E1 rejoin dùng window checksummed thay C4 plan, analyzer coverage/invalid-run/identity binding/latency/duplicate guards. Source/test c2cc312, byte serialize MOCK243byte kiểm production counters. [Guide](E1_T4C1_MEASUREMENT.md), [review/evidence mới](../evidence/t4-c1/2026-10-16-review.md).
+- Tái hiện CPU50% sai so expected10%; baseline smokeCOMPLETE nhưng rejoinexit2. Sau sửa87Java/11Python PASS, final smoke REAL3child/gateSIMULATED COMPLETE, rejoin byte-identical/reanalysis deterministic. Giữ lỗi cache/PowerShell và1ERROR hồi quy trong ignored target/t4-c1, sửa implementation để C4 test gốc PASS. Không full12/E2/load/LAN hoặc benchmark overhead.
+- 12metadata lịch sử/3trace MOCK hash khớp; derived CSV count287/62/11. Raw84file c1601b5 chưa có tại provenance, đã hỏi vị trí; không nhận reanalysis cũ PASS. Toàn12run cần phân tích lại resource; chưa có lý do tự chạy lại ngay toàn campaign.
+- Chuẩn bị T4-C1 có thể review, nghiệm thu PARTIAL: human B/raw cũ/T3-C4 LAN-gate/trace120s E2 còn mở. Không thay human review bằng agent; ChatGPT planning/review NOT RUN theo opt-out. User ủy quyền commit/push/PR riêng, không merge; Git cuối trong PR/phản hồi. Dừng review E1/T4-C1.
