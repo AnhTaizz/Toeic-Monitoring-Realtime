@@ -1,0 +1,16 @@
+{
+    "ordinaryLaunchNoAgent":  true,
+    "version":  "0.3.8",
+    "labels":  "REAL local MSI/runtime/GUI/HTTP/PG; TEST fixtures; hearing/socket faults SIMULATED; second machine NOT RUN",
+    "normalUser":  true,
+    "unicodeInstall":  true,
+    "rawOrdinaryLaunchSha256":  "7c16d38de9965d3b87a7016f791d93b96e15afad8cea558bb90c3f2bc0e2b625",
+    "installedTests":  "PASS",
+    "source":  "d19c63902725662aeb6f43c6f04ca80ea6caff42",
+    "rawResultSha256":  "175b6d4369f0c01423faf3e8fb73ec48732387181b8d0446a5343aeafc3c70c0",
+    "pathWindowsOnly":  true,
+    "readOnlyInstall":  true,
+    "bundledJvm":  true,
+    "uninstall":  "PASS",
+    "javaHomeRemoved":  true
+}
