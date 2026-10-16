@@ -63,17 +63,18 @@ public final class ExamSession implements AutoCloseable {
 
     /** Kết quả do server chấm; client không tự tính. */
     public record Result(String state, int totalQuestions, int correctCount, int listeningCorrect,
-                         int readingCorrect, int score, Instant decidedAt, long savedRevision) {
+                         int readingCorrect, int score, Instant decidedAt, long savedRevision,
+                         boolean listeningInterrupted) {
         static Result of(SubmitExamResponse response) {
             return new Result(response.state(), response.totalQuestions(), response.correctCount(),
                     response.listeningCorrect(), response.readingCorrect(), response.score(),
-                    response.submittedAt(), response.savedRevision());
+                    response.submittedAt(), response.savedRevision(), response.listeningInterrupted());
         }
 
         static Result of(CandidateAttemptStatusResponse status) {
             return new Result(status.state(), status.totalQuestions(), status.correctCount(),
                     status.listeningCorrect(), status.readingCorrect(), status.score(),
-                    status.submittedAt(), status.savedRevision());
+                    status.submittedAt(), status.savedRevision(), status.listeningInterrupted());
         }
     }
 
