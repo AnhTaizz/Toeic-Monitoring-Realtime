@@ -498,4 +498,9 @@ Overnight phase05: parser3/negative5 PASS, ASCII nativeMedia8 PASS subset; runti
 
 Java sourcec1601b5: clean/package848 PASS mỗi lượt,0skip, PG18.6 thật; Flow41/0GAP, GUI11, C1/C2 có GUI PASS. Analyzer Python4 PASS. E1 collection12run/360trials COMPLETE và checksum/repro/cleanup PASS; nghiệm thu toàncase PARTIAL/human C review pending. [Báo cáo tổng](../evidence/overnight-20261015/00-summary.md). E2/load/LAN/installer/manual hearing NOT RUN, FULL default.
 
-Phiên hòa PR #35/#38 trên main B4/B5 đang triển khai: kết quả bản thống nhất NOT RUN. LT04/IT01 và E1 ở bảng trên là evidence của source ghi kèm; không kế thừa cho bản ghép.
+Phiên hòa PR #35/#38 trên main B4/B5 đã có kiểm mới16/10: xem bảng dưới. LT04/IT01 và E1 lịch sử vẫn thuộc source ghi kèm, không kế thừa.
+
+
+## Bản thống nhất16/10/2026 — checkpoint b755646
+
+Clean test/package mỗi lượt872PASS/1skip/0failure/error (protocol44/client600/server227+1skip/spike1), PG18.6 thật, GUI B4 LT04 và production app-image bật. Flow41/0GAP gồm AT11 exact40/42; concurrency AT01/07/09/10; GUI toàn Application11nhóm/progress/shared writer/FULL; native Audio8 và EXE/PG PASS subset. C2+GUI PASS với readings MOCK/fault SIMULATED. C1 cuối không JFR PASS; các lượt FAIL cleanup vẫn giữ, nguyên nhân ban đầu chưa chứng minh; MSI/Unicode parent BLOCKED thiếu SDK/WiX, installed test skip. E1 short mới COMPLETE/3trial, không E1 final;84raw lịch sử/14CSV repro không đổi. Python4 PASS. [SHA/log/count/limitations](../evidence/unified-20261016/verification.md), [manual](ACCEPTANCE_B_MANUAL_MATRIX.md). Không thay trạng thái nghiệm thu27case/tracker hoặc kế thừa848/687/MSI nguồn.

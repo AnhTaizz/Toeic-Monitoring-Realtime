@@ -373,3 +373,8 @@ Nhánh `integration/reading-listening-20261015`, base8f5ac40, history2ca4121 và
 ### Handoff B overnight15/10 — cần A/C review, không phải A approve
 
 Checkpoint5072bc9 đề xuất QD29 safeissuance/collision/405 và API progress scoped-read/no-store, không migration/answers/epoch. FinalJava c1601b5 clean/package848 và PG/runtime mới có evidence. A review boundary/legacy/reorg/auth/finalized/count/lastSavedAt và chọn policyQD29 với nhóm. Không tự đổi tracker. [Summary](../../evidence/overnight-20261015/00-summary.md).
+
+
+## Handoff bản thống nhất16/10/2026 — HUMAN REVIEW PENDING
+
+Backend validation/QD29, collision/final/raw-ID, committed progress whitelist/MVCC và writerEpoch/khóa/transaction. Không migration; QD29 chưa human approve. Checkpointb755646: clean/package mỗi lượt872PASS/1skip, Flow41/GUI11/nativeAudio8/production EXE+PG PASS subset; không nghiệm thu toàncase. [Báo cáo/SHA/count/failure/manual](../../evidence/unified-20261016/verification.md). Không đổi tracker/kế hoạch hoặc tự duyệt A/C.

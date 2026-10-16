@@ -22,3 +22,6 @@ Direct EXE: ô login do người dùng chỉnh → giá trị được dùng; m�
 MSI có `Start-ToeicMonitor.ps1` cạnh EXE; wrapper nhận `-ServerUrl`, `-ConfigFile`, `-ClientDirectory` và `-ValidateOnly`. Thứ tự wrapper: argument > process environment > user file > GUI/default. Script không sửa config hay lưu credential. Config ngoài install nên không bị đóng gói/ghi đè khi upgrade. Shortcut native vẫn dùng ClientSettings cùng quy tắc direct EXE.
 
 Cache/journal ở user profile ngoài install; marker chống replay không được tự xóa khi upgrade/uninstall. TEST audio launcher/agent không nằm trong MSI production; app-image QA và external TEST agent luôn ghi nhãn riêng. Nghe thật, cài/gỡ trên máy được phép và máy thứ hai/LAN vẫn cần [checklist](ACCEPTANCE_B_MANUAL_MATRIX.md). [Kết quả bản thống nhất](../evidence/unified-20261016/verification.md) ghi tool thật và BLOCKED/NOT RUN nếu thiếu, không kế thừa MSI PASS của #37.
+
+
+File native `server-url.txt` dùng UTF-8 không BOM; có thể tạo bằng `[IO.File]::WriteAllText($path,$url,[Text.UTF8Encoding]::new($false))`. File sai/encoding không hợp lệ có thể hiện thông báo cấu hình và cho nhập URL lại; không sửa binary hoặc lưu credential. Kết quả build source thống nhất và giới hạn SDK/WiX ở report hiện tại, không nhận MSI PASS lịch sử.

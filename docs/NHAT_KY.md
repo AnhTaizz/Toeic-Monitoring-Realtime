@@ -600,3 +600,8 @@ Kiểm tra byte tiếp theo phát hiện CSV phase 02 đã bị Git chuẩn hóa
 ## 16/10/2026 — tích hợp ứng dụng thống nhất, đang kiểm
 
 Tạo branch/worktree mới từ main c0fd903, hòa #35 tại456583b và #38 theo từng conflict. Giữ B4 #36/MSI #37, loại controller/demo trùng, thêm committed progress và guard/cấu hình runtime có test. QD-28 giữ MSI, shared writer đổi số QD-30 do trùng; QD-29 vẫn đề xuất. Targeted đầu52 có1FAIL test queue, sửa và lượt mới56PASS; parser/negative có nhãn. PostgreSQL/GUI/clean/package đang chạy, chưa kế thừa848/687/MSI. [Conflict/evidence](../evidence/unified-20261016/conflict-resolution.md); raw E1 cũ đã hash trước và không sửa. Không reset/clean/rebase/force-push nhánh cũ, không sửa tracker/kế hoạch/nguon/migrations/.env hoặc duyệt thay A/C.
+
+
+## 16/10/2026 — kiểm chứng và bàn giao ứng dụng thống nhất
+
+Production merge24f70bd từmain c0fd903 +PR35/38, checkpoint testb755646 chỉ thêm hardening TEST C1/C2. Giữ nền B4#36 và MSI#37; một Application/shared writer, committed progress/validationQD29/AT11/E1. Clean/package mới mỗi lượt872PASS/1skip; Flow41/0GAP, GUI11, Audio8/production EXE vớiPG, C2+GUI PASS subset. C1 cuối PASS sau các FAIL cleanup được giữ; MSI/Unicode SDK/WiX BLOCKED. Lượt FAIL runner/GUI/native/C1 giữ log, không kế thừa số nguồn. Raw84E1 và14CSV repro không đổi; smoke mới runId riêng, full12 bản ghépNOTRUN. [Báo cáo](../evidence/unified-20261016/verification.md). Không resetDB/nhánh cũ, không sửa tracker/kế hoạch/nguon/migration/.env. Draft base main và HEAD cuối xem publication; không merge/đóngPR cũ/approve thayA-C.

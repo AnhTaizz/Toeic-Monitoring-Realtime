@@ -1,10 +1,10 @@
 # Ma trận nghiệm thu B — cần người thật
 
-Mặc định toàn case **NOT RUN** tại thời điểm tạo. Automation local chỉ là subset; xem evidence overnight cho số đo/SHA thực. Không xác nhận hộ người nghe/reviewer. Credentials cấp ngoài Git. Mỗi run ghi UTC+7, source SHA/JAR SHA256, OS/JDK/JavaFX/PG, cấu hình, người thao tác và reviewer.
+Mặc định toàn case **NOT RUN** tại thời điểm tạo. Automation local chỉ là subset; xem [evidence bản thống nhất](../evidence/unified-20261016/verification.md) cho số đo/SHA thực. Không xác nhận hộ người nghe/reviewer. Credentials cấp ngoài Git. Mỗi run ghi UTC+7, source SHA/JAR SHA256, OS/JDK/JavaFX/PG, cấu hình, người thao tác và reviewer.
 
 | ID | Điều kiện / thiết bị | Thao tác chính xác | Expected server/DB authoritative | Observed / evidence | Người / ngày | Trạng thái |
 |---|---|---|---|---|---|---|
-| AT11-a | Hai client cùng candidate, hai máy khi nghiệm thu LAN; Reading ACTIVE, server40/local42 | Ngăn gửi request42 bằng fault seam có nhãn; reconnect cùng app, rồi cho request tới | Epoch không đổi; server40 không làm local lùi; retry nguyên requestId/epoch/revision/map, cuối server42 | Chờ bằng chứng DB/UI; automation exact40/42 xem phase03 | Chưa có | NOT RUN toàn case |
+| AT11-a | Hai client cùng candidate, hai máy khi nghiệm thu LAN; Reading ACTIVE, server40/local42 | Ngăn gửi request42 bằng fault seam có nhãn; reconnect cùng app, rồi cho request tới | Epoch không đổi; server40 không làm local lùi; retry nguyên requestId/epoch/revision/map, cuối server42 | Chờ bằng chứng DB/UI; automation mới exact40/42 xem report thống nhất | Chưa có | NOT RUN toàn case |
 | AT11-b | Như trên; proxy/test fence sau COMMIT, có DB chứng minh42 | Giữ response42 sau COMMIT; reconnect; sau đó release ACK cũ | Server42 đối chiếu SAVED; không submit/takeover lại; không payload cũ ghi writer mới | Chờ bằng chứng; fault seam chỉ SIMULATED loss | Chưa có | NOT RUN toàn case |
 | AT11-c | AppA đang ghi, AppB trên máy khác | Mở AppB qua entry rõ ràng; AppA gửi save cũ; mở history/result | WriterEpoch tăng đúng1 khi cấp writer; AppA409STALE; history/result không takeover/autoplay | Chờ HTTP/DB/2máy | Chưa có | NOT RUN |
 | LT01 | Package Windows, sample WAV hợp lệ, audio cache user-writable | Nghe loa thật, xác nhận; xóa file/sửa1byte trước READY rồi thử tải lại | Checksum sai/thiếu không READY; server ghi READY chỉ cùngwriter/manifest | Chờ người nghe/log/hash | Chưa có | NOT RUN |
@@ -18,3 +18,6 @@ Mặc định toàn case **NOT RUN** tại thời điểm tạo. Automation loca
 | MT01/07/08 | Candidate/proctor trên LAN, ProcessHandle thật, benign testprocess thuộc mình | Mở/đóng process TEST; kill candidate đúng PID đã xác minh; đợi timeout, mở lại | “Quan sát thấy”; proctor không collector; UNKNOWN không kết luận gian lận; event/gap/history không mất khi full mới | Chờ nguồn độc lập/process lifecycle/DB/history/UI | Chưa có | NOT RUN toàn case |
 
 Sau từng run điền observed thực và evidence (không sửa raw), operator thật, reviewer, ngày, PASS/FAIL/PARTIAL/BLOCKED. Không dùng localhost2JVM thay proof hai máy, auto-click “Tôi nghe được” thay nghe thật, hoặc API fixture thay integration thật.
+
+
+Progress/B4: người review thử page đầu/sau/raw cursor; mất server khi đang đọc trang sau phải giữ trang/readAt cũ+stale,401 về login, không lộ answers/writer/correct options. Kiểm UI start READY quá5s, doubleclick/lost response retry nguyên intent, unknown intent không đổi ca; old result giữ nguyên sau reorg. Các thao tác thủ công này NOT RUN; automated subset không thay chữ ký. C1 có các lượt FAIL cleanup Edge và lượt cuối không JFR PASS; C cần review độ ổn định, không lấy FULL GUI11 hoặc retry để xóa kết quả FAIL lịch sử.

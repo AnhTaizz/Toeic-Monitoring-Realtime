@@ -70,3 +70,6 @@ Mục lục chỉ tổ chức bằng chứng đã có, không xác nhận task h
 ## Tích hợp Reading/Listening/history —15/10/2026
 
 [Verification mới](integration/2026-10-15-verification.md):833tests/0skip; actual GUI8nhóm; ExamFlow28; concurrency/monitoring regression; source/JAR/log hashes và6ảnh. Human/LAN/E1/E2 NOT RUN; FULL default; không nâng tracker/gate từ số unit tests.
+
+
+- [Ứng dụng thống nhất Reading/Listening/B4/progress/MSI —16/10/2026](unified-20261016/verification.md): sourceb755646, test mới, C1 FAIL ban đầu giữ lại/installer BLOCKED/manual pending; không kế thừa848/687/MSI.

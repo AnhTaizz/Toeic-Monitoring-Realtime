@@ -1,0 +1,16 @@
+{
+  "integrationMerge": "24f70bd49e63ed6e768fcc6d70206cd13799330d",
+  "productionSourceEqualsIntegrationMerge": true,
+  "sourceCommit": "b755646c6e540bc82808e67e3080ffc0cfb2d53b",
+  "parents": [
+    "24f70bd49e63ed6e768fcc6d70206cd13799330d"
+  ],
+  "baseMain": "c0fd9036ba340b0b0a686fb2ce637050b9a3b7b4",
+  "historicalE1FilesUnchanged": 84,
+  "measurementSourceEqualsPr38": true,
+  "sourcePlanMigrationEnvUnchanged": true,
+  "duplicateB4Removed": true,
+  "privateScreenshotUnreachable": true,
+  "changedFiles": 208,
+  "sourceFiles": 381
+}

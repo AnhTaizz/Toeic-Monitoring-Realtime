@@ -256,3 +256,8 @@ Nhánh overnight từ PR35 kiểm toàn bộ ID `sessionId + '-' + original user
 ### Overnight E1 — phương án kỹ thuật nối QD15, HUMAN C REVIEW PENDING
 
 E1 dùng same-seed/test-owned policy và cùng launchplan cho4poll, xoay thứ tự qua3repeats; window15s+120s chỉ gồm lifecycle nằm trọn window. Parent launchAPI→scan-end là cận trên, không kernel timestamp; targethold khác actual lifetime. CPU collector/parent JVM mộtcore riêng, memory=heap parent (không RSS). Suite dùng cùng parent JVM nên GC/JIT/heap carryover và background workstation là giới hạn; chưa human approve phương pháp hoặc gate. Raw bất biến ở jpackage-out, public chỉ derived/noPID + provenance. Không đổi FULL default/QD19 hay bật delta. [Evidence](../evidence/overnight-20261015/phase-06/verification.md).
+
+
+## Tích hợp16/10/2026 — chọn nền B4/MSI
+
+Giữ controller/API/view B4#36 tại client.proctor và pipeline MSI#37, chỉ chuyển guard/progress/config/preflight cần thiết từ38; bỏ workflow/controller38 và demo seeder trùng. Một ExamSession sở hữu writer; progress/history không cấp writer. QD28 MSI/QD30 writer, QD29 và E1-method human review pending. TEST C1/C2 chỉ harden null-safe cleanup và FX20s; C1 cuối PASS, các FAIL profile cleanup ban đầu giữ log và còn cần C review độ ổn định. [Quyết định conflict và giới hạn](../evidence/unified-20261016/conflict-resolution.md). Không tự đồng thuận owner hoặc đổi default FULL.

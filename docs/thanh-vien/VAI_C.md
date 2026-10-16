@@ -385,3 +385,8 @@ Nhánh `integration/reading-listening-20261015`, base8f5ac40, history2ca4121 và
 E1 mở rộng ControlledProcessHarness với window/sampler/CLI;12REALWindowsruns có raw immutable/checksums/analyzer, candidate gateSIMULATED, policyTESTowned không nới production8tên. C review actual lifetime vs targethold, parent-latency cận trên, CPUonecore/parentheap, cùng parentJVM/carryover, eligibility/censoring và reused plan. C1/C2 cóGUI regression PASS mới; không gate delta/E2/LAN/approval thật. [Summary](../../evidence/overnight-20261015/00-summary.md).
 
 E1 quality thực tế:360eligible,287detected,62missed,11INCONCLUSIVE (observation thiếu start; GTstart của11 đọc được). Không đổi oracle để épPASS. Một số bucket không có đủ3miss-rate xác định; review bounds/unknown và heapcarryover trước khi dùng kết luận.
+
+
+## Handoff bản thống nhất16/10/2026 — HUMAN REVIEW PENDING
+
+Collector/policy/E1 source bằng38; raw84/checksums/14CSV repro giữ nguyên, shortSMOKE mới không E1final. C1 cuối không JFR PASS; review TEST FX20s/null cleanup và các FAIL cleanup ban đầu được giữ; C2+GUI PASS với readings MOCK/fault SIMULATED. FULL default, không bật delta. Checkpointb755646: clean/package mỗi lượt872PASS/1skip, Flow41/GUI11/nativeAudio8/production EXE+PG PASS subset; không nghiệm thu toàncase. [Báo cáo/SHA/count/failure/manual](../../evidence/unified-20261016/verification.md). Không đổi tracker/kế hoạch hoặc tự duyệt A/C.

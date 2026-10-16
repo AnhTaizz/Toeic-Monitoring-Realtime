@@ -1,0 +1,45 @@
+{
+  "suiteId": "E1-a90b5fa3-9b35-470b-8c38-431fbca2d429",
+  "runId": "a2a5ae78-23e3-466d-b38a-f3b8f08b155a",
+  "sourceSha": "b755646c6e540bc82808e67e3080ffc0cfb2d53b",
+  "label": "SMOKE; NOT E1 FINAL; E2 NOT RUN",
+  "warmupMillis": 1000,
+  "measureMillis": 15000,
+  "pollMillis": 500,
+  "trials": 3,
+  "resourcesCleaned": true,
+  "rawFiles": [
+    {
+      "path": "run-01-poll-500/e1-manifest.json",
+      "sha256": "3537f7cc8b5b709cd24f83af1f07688e25045340a4f5ecac70cdc26084682ccf"
+    },
+    {
+      "path": "run-01-poll-500/ground-truth.jsonl",
+      "sha256": "ab16f554a21332faf67a1f67c3eb31f96cd54485db847c8c07659a0fb0152ae4"
+    },
+    {
+      "path": "run-01-poll-500/join.json",
+      "sha256": "bd1edb455c821ffd6e6ea93687353a2f56a5483a52f64882fe4d1698741fbf6e"
+    },
+    {
+      "path": "run-01-poll-500/manifest.json",
+      "sha256": "2f12328d41a402dddf9955c3762c1213453ba7a23fc7085288f848865883d2b5"
+    },
+    {
+      "path": "run-01-poll-500/metadata.json",
+      "sha256": "5638ec8014985f8d6732b70c8c0090b179df3ffd73093b69d96778e980d8dd25"
+    },
+    {
+      "path": "run-01-poll-500/observations.jsonl",
+      "sha256": "3b2177af8329c556a6224ee464c014bc85b2758c00351d8831fab6f9e65af75c"
+    },
+    {
+      "path": "run-01-poll-500/resources.csv",
+      "sha256": "b3ed7253f84185c71669749b4a5730e091c71ad2ccb8b42bb4f86c37f6aa1bbc"
+    }
+  ],
+  "historicalReanalysisCsvFiles": 14,
+  "historicalReanalysisByteIdentical": true,
+  "pythonAnalyzerUnitTests": 4,
+  "pythonAnalyzerSha256": "7a24c08a4a61705634751346d6deb14b8842ff63d54048b20409cc6bbc7d10a7"
+}

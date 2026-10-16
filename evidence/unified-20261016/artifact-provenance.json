@@ -1,0 +1,51 @@
+{
+  "finalSourceSha": "b755646c6e540bc82808e67e3080ffc0cfb2d53b",
+  "productionRuntimeMergeSha": "24f70bd49e63ed6e768fcc6d70206cd13799330d",
+  "appImageBuildSourceSha": "24f70bd49e63ed6e768fcc6d70206cd13799330d",
+  "productionImageFinalClassBytecodesEqual": true,
+  "classEntriesCompared": 5439,
+  "java": "Oracle 21.0.8",
+  "javafx": "21.0.12",
+  "maven": "3.9.11",
+  "postgresql": "18.6",
+  "os": "Windows 11 x64 build 26200",
+  "installer": "BLOCKED missing Windows SDK mt.exe and WiX3",
+  "unicodeLauncher": "BLOCKED; ASCII QA only; Unicode audio/cache file APIs exercised",
+  "artifacts": [
+    {
+      "file": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+      "sha256": "6d10ee2662247accc7cda124f12a1c69da778cfa8071c7e229e1fa417d386e11",
+      "size": 11449921
+    },
+    {
+      "file": "server/target/server-0.1.0-SNAPSHOT.jar",
+      "sha256": "1f9a0827981477ff846d31840209e800b8e79e458901fa70362aeaaf723ab2dc",
+      "size": 25262230
+    },
+    {
+      "file": "jpackage-out/t3b1-dd90315a7258461890b76e01be48a95c/build/ToeicMonitor/app/client-0.1.0-SNAPSHOT-all.jar",
+      "sha256": "e05775f1aaa9e6735b8ea10c189c379292ab9f08dd2b169a7d293a78f94983f4",
+      "size": 11449921
+    },
+    {
+      "file": "jpackage-out/t3b1-dd90315a7258461890b76e01be48a95c/build/ToeicMonitor/ToeicMonitor.exe",
+      "sha256": "a3d75767b010c54563d712c799a20a6978dfae0bd732b772b630d6f45c2f41dc",
+      "size": 475136
+    },
+    {
+      "file": "jpackage-out/t3b1-dd90315a7258461890b76e01be48a95c/build/ToeicMonitor/AudioSmoke.exe",
+      "sha256": "e4da653338d4bea91518ddcd4d09e7938e7396599d9fbb52a5aeaab82d2986db",
+      "size": 475136
+    },
+    {
+      "file": "jpackage-out/t3b1-dd90315a7258461890b76e01be48a95c/build/ToeicMonitor/runtime/bin/server/jvm.dll",
+      "sha256": "9f75936127d4349d2c752e2f5c97cdc1e26a2afdab83f29ba760a7f41cda0b3d",
+      "size": 13374568
+    },
+    {
+      "file": "jpackage-out/t3b1-dd90315a7258461890b76e01be48a95c/build/ToeicMonitor/runtime/release",
+      "sha256": "5a1e67079e319957f325942b3edbc44c070de4acd36b900fc72b71846f19e879",
+      "size": 168
+    }
+  ]
+}
