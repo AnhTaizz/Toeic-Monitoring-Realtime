@@ -21,41 +21,99 @@ def eligible(start, end, low, high):
 
 def digest(path): return hashlib.sha256(path.read_bytes()).hexdigest()
 
+def resource_metrics(samples, low, high, period):
+    """Time-weighted CPU over readable, wholly contained intervals; no interpolation."""
+    if high <= low or period <= 0:
+        raise ValueError('RESOURCE_WINDOW')
+    totals = {key: [0, 0, 0] for key in ('collectorThreadCpuNanos', 'parentProcessCpuNanos')}
+    ticks = [int(row['elapsedNanos']) for row in samples]
+    if any(b <= a for a, b in zip(ticks, ticks[1:])):
+        raise ValueError('RESOURCE_TIME_ORDER')
+    in_window = [row for row in samples if low <= int(row['elapsedNanos']) <= high]
+    heap = [int(row['parentHeapUsedBytes']) for row in in_window if int(row['parentHeapUsedBytes']) >= 0]
+    covered = 0
+    max_gap = 0
+    invalid_intervals = 0
+    for previous, current in zip(samples, samples[1:]):
+        a, b = int(previous['elapsedNanos']), int(current['elapsedNanos'])
+        if not eligible(a, b, low, high):
+            continue
+        covered += b-a
+        max_gap = max(max_gap, b-a)
+        for field, total in totals.items():
+            before, after = int(previous[field]), int(current[field])
+            if before < 0 or after < before:
+                invalid_intervals += 1
+                continue
+            total[0] += after-before
+            total[1] += b-a
+            total[2] += 1
+    collector, parent = totals.values()
+    good = (covered >= .95*(high-low) and max_gap <= 2*period and
+            invalid_intervals == 0 and len(heap) == len(in_window) and len(heap) >= 2)
+    return dict(collectorCpuOneCoreMean=cpu_percent(collector[0], collector[1]),
+                parentCpuOneCoreMean=cpu_percent(parent[0], parent[1]),
+                parentHeapMeanBytes=statistics.mean(heap) if heap else None,
+                parentHeapPeakBytes=max(heap) if heap else None,
+                resourceSamples=len(heap), collectorCpuReadableSamples=collector[2],
+                parentCpuReadableSamples=parent[2], resourceCoveredNanos=covered,
+                collectorCpuCoveredNanos=collector[1], parentCpuCoveredNanos=parent[1],
+                resourceMaxGapNanos=max_gap, resourceInvalidIntervals=invalid_intervals,
+                resourceStatus='OK' if good else 'PARTIAL')
+
+
 def analyze(directory):
     directory=pathlib.Path(directory)
-    manifest=json.loads((directory/'manifest.json').read_text())
+    manifest=json.loads((directory/'manifest.json').read_text(encoding='utf-8'))
     if manifest['status']!='COMPLETE': raise ValueError('INCOMPLETE run retained')
+    if set(manifest['files']) != {'ground-truth.jsonl','observations.jsonl','metadata.json','join.json'}:
+        raise ValueError('MANIFEST_FILE_SET')
     for name, expected in manifest['files'].items():
         if digest(directory/name)!=expected: raise ValueError('RAW_CHECKSUM')
-    extra=json.loads((directory/'e1-manifest.json').read_text())
+    extra=json.loads((directory/'e1-manifest.json').read_text(encoding='utf-8'))
     if digest(directory/'resources.csv')!=extra['resourcesSha256'] or digest(directory/'manifest.json')!=extra['runManifestSha256']: raise ValueError('RESOURCE_CHECKSUM')
-    metadata=json.loads((directory/'metadata.json').read_text())
+    metadata=json.loads((directory/'metadata.json').read_text(encoding='utf-8'))
     low,high=metadata['measurementStartElapsedNanos'],metadata['measurementEndElapsedNanos']
-    truth=[json.loads(x) for x in (directory/'ground-truth.jsonl').read_text().splitlines()]
-    rows={row['trialId']:row for row in json.loads((directory/'join.json').read_text())['rows']}
+    truth=[json.loads(x) for x in (directory/'ground-truth.jsonl').read_text(encoding='utf-8').splitlines()]
+    joined=json.loads((directory/'join.json').read_text(encoding='utf-8'))
+    if metadata['status'] != 'COMPLETE' or joined['status'] != 'COMPLETE':
+        raise ValueError('INCOMPLETE_METADATA_OR_JOIN')
+    for key in ('runId','clockDomain'):
+        if metadata[key] != truth[0][key] or metadata[key] != joined[key]:
+            raise ValueError('RUN_CLOCK_BINDING')
+    for key in ('collectorSessionId','traceStartElapsedNanos'):
+        if metadata[key] != truth[0][key]:
+            raise ValueError('COLLECTOR_CLOCK_BINDING')
+    if truth[0]['kind'] != 'HEADER' or truth[-1]['kind'] != 'FINAL' or truth[-1]['status'] != 'COMPLETE':
+        raise ValueError('GROUND_TRUTH_BOUNDARY')
+    ids=[trial['planned']['trialId'] for trial in truth[1:-1]]
+    rows={row['trialId']:row for row in joined['rows']}
+    if len(ids)!=len(set(ids)) or set(ids)!=set(rows) or len(rows)!=len(joined['rows']) or truth[-1]['count']!=len(ids):
+        raise ValueError('TRIAL_IDS_OR_COUNT')
+    if low < 0 or high <= low:
+        raise ValueError('MEASUREMENT_WINDOW')
     events=[]
     for trial in truth[1:-1]:
         row=rows[trial['planned']['trialId']]
+        if row['targetMillis'] != trial['planned']['targetMillis'] or row['targetMillis'] not in (200,800,3000):
+            raise ValueError('TARGET_MISMATCH')
+        if row['conclusion'] not in ('OBSERVED','NOT_OBSERVED_IN_TRACE','INCONCLUSIVE'):
+            raise ValueError('UNKNOWN_CONCLUSION')
         included=eligible(trial['launchBeginElapsedNanos'],trial['exitObservedElapsedNanos'],low,high)
         outcome=row['conclusion'] if included else 'CENSORED'
         latency=(row['firstScanEndElapsedNanos']-trial['launchBeginElapsedNanos'])/1e6 if included and outcome=='OBSERVED' else None
+        if latency is not None and latency < 0:
+            raise ValueError('NEGATIVE_LATENCY')
         events.append(dict(trialId=row['trialId'],targetMillis=row['targetMillis'],launchNanos=trial['launchBeginElapsedNanos'],exitNanos=trial['exitObservedElapsedNanos'],actualLifetimeNanos=trial['observedLifetimeNanos'],actualHoldNanos=trial['observedHoldNanos'],eligible=included,outcome=outcome,reason=row['reason'] if included else 'OUTSIDE_MEASUREMENT_WINDOW',parentLaunchToScanEndMs=latency,metadataQuality=row['metadataQuality']))
-    samples=list(csv.DictReader((directory/'resources.csv').open()))
-    cpu=[];process=[];heap=[]
-    for previous,current in zip(samples,samples[1:]):
-        a,b=int(previous['elapsedNanos']),int(current['elapsedNanos'])
-        if not eligible(a,b,low,high):continue
-        for field,out in [('collectorThreadCpuNanos',cpu),('parentProcessCpuNanos',process)]:
-            before,after=int(previous[field]),int(current[field])
-            value=cpu_percent(after-before,b-a) if min(before,after)>=0 else None
-            if value is not None:out.append(value)
-        heap.append(int(current['parentHeapUsedBytes']))
+    with (directory/'resources.csv').open(encoding='utf-8',newline='') as source:
+        samples=list(csv.DictReader(source))
+    resources=resource_metrics(samples,low,high,metadata['resourceSamplePeriodMillis']*1_000_000)
     summary=[]
     for duration in (200,800,3000):
         group=[e for e in events if e['targetMillis']==duration and e['eligible']]
         detected=sum(e['outcome']=='OBSERVED' for e in group);missed=sum(e['outcome']=='NOT_OBSERVED_IN_TRACE' for e in group)
         unreadable=len(group)-detected-missed;latencies=[e['parentLaunchToScanEndMs'] for e in group if e['parentLaunchToScanEndMs'] is not None]
-        summary.append(dict(runId=metadata['runId'],label=metadata['e1e2'],pollMs=metadata['config']['pollMillis'],targetMillis=duration,eligible=len(group),detected=detected,missed=missed,inconclusive=unreadable,censored=sum(e['targetMillis']==duration and not e['eligible'] for e in events),missRate=missed/len(group) if group and not unreadable else None,missRateLowerBound=missed/len(group) if group else None,missRateUpperBound=(missed+unreadable)/len(group) if group else None,p50ParentLatencyMs=percentile(latencies,.5),p95ParentLatencyMs=percentile(latencies,.95),collectorCpuOneCoreMean=statistics.mean(cpu) if cpu else None,parentCpuOneCoreMean=statistics.mean(process) if process else None,parentHeapMeanBytes=statistics.mean(heap) if heap else None,parentHeapPeakBytes=max(heap) if heap else None,resourceSamples=len(heap),collectorCpuReadableSamples=len(cpu)))
+        summary.append(dict(runId=metadata['runId'],label=metadata['e1e2'],pollMs=metadata['config']['pollMillis'],targetMillis=duration,eligible=len(group),detected=detected,missed=missed,inconclusive=unreadable,censored=sum(e['targetMillis']==duration and not e['eligible'] for e in events),missRate=missed/len(group) if group and not unreadable else None,missRateLowerBound=missed/len(group) if group else None,missRateUpperBound=(missed+unreadable)/len(group) if group else None,p50ParentLatencyMs=percentile(latencies,.5),p95ParentLatencyMs=percentile(latencies,.95),**resources))
     return events,summary
 
 def write_csv(path,rows):
@@ -64,20 +122,42 @@ def write_csv(path,rows):
 
 def main():
     root=pathlib.Path(sys.argv[1]);out=pathlib.Path(sys.argv[2]);out.mkdir(parents=True,exist_ok=False)
-    summary=[];all_events=[]
+    summary=[];all_events=[];inventory=[];seen_ids=set();metadata_list=[]
     for run in sorted(root.glob('run-*')):
-        events,rows=analyze(run);write_csv(out/(run.name+'-events.csv'),events);summary.extend(rows);all_events.extend(events)
+        try:
+            events,rows=analyze(run)
+            if rows[0]["runId"] in seen_ids: raise ValueError("DUPLICATE_RUN_ID")
+            seen_ids.add(rows[0]["runId"])
+        except (ValueError,KeyError,TypeError,IndexError,OSError) as error:
+            inventory.append(dict(run=run.name,status='INVALID',reason=type(error).__name__+': '+str(error)))
+            continue
+        metadata_list.append(json.loads((run/"metadata.json").read_text(encoding="utf-8")))
+        inventory.append(dict(run=run.name,status='VALID',reason=rows[0]['resourceStatus']))
+        write_csv(out/(run.name+'-events.csv'),events);summary.extend(rows);all_events.extend(events)
+    (out/'run-status.json').write_text(json.dumps(inventory,indent=2),encoding='utf-8')
+    if any(row['status']=='INVALID' for row in inventory):
+        raise ValueError('INVALID_RUNS: see run-status.json; no campaign summary emitted')
     if not summary: raise ValueError('NO_RUNS; no synthetic data emitted')
+    reasons=[]
+    counts=collections.Counter(m['config']['pollMillis'] for m in metadata_list)
+    if counts != {250:3,500:3,1000:3,2000:3}: reasons.append('REQUIRES_4_PERIODS_X_3_UNIQUE_RUNS')
+    if any(m['measurementStartElapsedNanos']!=15_000_000_000 or m['measurementEndElapsedNanos']!=135_000_000_000
+           or m['config']['perDuration']!=10 for m in metadata_list): reasons.append('NOT_FULL_WINDOW_OR_WORKLOAD')
+    signatures={json.dumps({k:m.get(k) for k in ('sourceSha','binarySha256','planSha256','policyVersion','javaVersion','javaVendor','machine','os','osVersion','architecture')},sort_keys=True)
+                +json.dumps({k:v for k,v in m['config'].items() if k!='pollMillis'},sort_keys=True) for m in metadata_list}
+    if len(signatures)!=1: reasons.append('MIXED_SOURCE_PLAN_CONFIG_OR_ENVIRONMENT')
+    (out/'campaign-status.json').write_text(json.dumps(dict(status='PARTIAL' if reasons else 'CANDIDATE_REVIEW_REQUIRED',
+            reasons=reasons,countsByPoll=dict(counts),humanReview='NOT_ASSERTED'),indent=2),encoding='utf-8')
     write_csv(out/'summary-by-duration.csv',summary)
     runs=[]
     for run_id in dict.fromkeys(row['runId'] for row in summary):
         group=[row for row in summary if row['runId']==run_id];first=group[0]
-        item={key:first[key] for key in ('runId','label','pollMs','collectorCpuOneCoreMean','parentCpuOneCoreMean','parentHeapMeanBytes','parentHeapPeakBytes','resourceSamples','collectorCpuReadableSamples')}
+        item={key:first[key] for key in ('runId','label','pollMs','collectorCpuOneCoreMean','parentCpuOneCoreMean','parentHeapMeanBytes','parentHeapPeakBytes','resourceSamples','collectorCpuReadableSamples','parentCpuReadableSamples','resourceCoveredNanos','collectorCpuCoveredNanos','parentCpuCoveredNanos','resourceMaxGapNanos','resourceInvalidIntervals','resourceStatus')}
         for row in group:
             for key in ('eligible','detected','missed','inconclusive','censored','missRate','missRateLowerBound','missRateUpperBound','p50ParentLatencyMs','p95ParentLatencyMs'):item[f"{key}_{row['targetMillis']}ms"]=row[key]
         runs.append(item)
     write_csv(out/'summary.csv',runs)
-    text=['# Phân tích E1','', 'Sinh từ raw/checksum; latency chỉ detected, parent launch API → scan-end (cận trên), không clock kernel. Memory=heap JVM parent; CPU một core, scope collector thread và parent process riêng.',
+    text=['# Phân tích E1','', 'Thiết kế chiến dịch: xem campaign-status.json; PARTIAL không phải chiến dịch E1 đầy đủ. Không tự suy human review từ số run.', '', 'Sinh từ raw/checksum; latency chỉ detected, parent launch API → scan-end (cận trên), không clock kernel. Memory=heap JVM parent; CPU một core, scope collector thread và parent process riêng.',
           '', 'Analyzer SHA256: `'+digest(pathlib.Path(__file__))+'`. Các bảng dùng trung bình và phương sai mẫu giữa các run; không dùng ba dòng duration của một run như ba lần lặp độc lập.',
           '', f"Dữ liệu: {len(runs)} run; {len(all_events)} trials; eligible={sum(e['eligible'] for e in all_events)}; censored={sum(not e['eligible'] for e in all_events)}; inconclusive={sum(e['outcome']=='INCONCLUSIVE' for e in all_events)}.",
           '', '| Poll ms | Collector CPU % một core: mean / variance | Parent CPU %: mean / variance | Heap mean MiB: mean / variance |',
@@ -85,7 +165,7 @@ def main():
     for poll in sorted(set(row['pollMs'] for row in runs)):
         group=[row for row in runs if row['pollMs']==poll]
         text.append(f"| {poll} | {stats_text([row['collectorCpuOneCoreMean'] for row in group])} | {stats_text([row['parentCpuOneCoreMean'] for row in group])} | {stats_text([row['parentHeapMeanBytes']/1048576 if row['parentHeapMeanBytes'] is not None else None for row in group])} |")
-    text+=['', 'Variance CPU có đơn vị %², heap có đơn vị MiB²; n là số run đọc được metric, None nghĩa thiếu dữ liệu/không đủ2run để tính variance. Peak heap và latency từng run ở summary.csv. Không dùng missed latency=0.', '', '| Target hold ms | Parent-observed lifetime ms: min / mean / max |', '|---|---|']
+    text+=['', 'CPU trong run = tổng delta CPU / tổng delta wall của khoảng đọc được, không trung bình các phần trăm. resourceStatus PARTIAL nếu coverage <95%, gap >2 chu kỳ lấy mẫu, counter thiếu/giảm hoặc heap thiếu. Boundary không nội suy. Heap mean là trung bình mẫu, peak là cực đại được lấy mẫu, không peak liên tục. Các giá trị PARTIAL giữ để chẩn đoán, không nghiệm thu CPU toàn cửa sổ.', '', 'Variance CPU có đơn vị %², heap có đơn vị MiB²; n là số run đọc được metric, None nghĩa thiếu dữ liệu/không đủ2run để tính variance. Peak heap và latency từng run ở summary.csv. Không dùng missed latency=0.', '', '| Target hold ms | Parent-observed lifetime ms: min / mean / max |', '|---|---|']
     for duration in (200,800,3000):
         values=[e['actualLifetimeNanos']/1e6 for e in all_events if e['targetMillis']==duration and e['eligible'] and e['actualLifetimeNanos'] is not None]
         text.append(f"| {duration} | {min(values) if values else None} / {statistics.mean(values) if values else None} / {max(values) if values else None} |")
@@ -102,14 +182,6 @@ def main():
             n=sum(row['eligible'] for row in group);detected=sum(row['detected'] for row in group);missed=sum(row['missed'] for row in group);inconclusive=sum(row['inconclusive'] for row in group)
             text.append(f"| {poll} | {duration} | {n} / {detected} / {missed} / {inconclusive} | {missed/n if n else None} .. {(missed+inconclusive)/n if n else None} |")
     text+=['', 'Miss range là bounds trên chính tập mẫu thu được: known missed/eligible đến (known missed+unknown)/eligible; không gán một kết quả cho unknown, không phải confidence interval thống kê hoặc phép suy thời điểm process mở. PID-only thiếu start vẫn INCONCLUSIVE theo oracle gốc, không nới identity để làm kết quả đẹp.']
-    if {row['pollMs'] for row in runs} == {250,500,1000,2000}:
-        fast=[row for row in runs if row['pollMs']==250];slow=[row for row in runs if row['pollMs']==2000]
-        _,fast_cpu,_=mean_variance([row['collectorCpuOneCoreMean'] for row in fast]);_,slow_cpu,_=mean_variance([row['collectorCpuOneCoreMean'] for row in slow])
-        _,fast_miss,_=mean_variance([row['missRate_200ms'] for row in fast]);_,slow_miss,_=mean_variance([row['missRate_200ms'] for row in slow])
-        text+=['', f"Đối chiếu hai đầu dải đo: collector CPU trung bình250ms={fast_cpu}% một core,2000ms={slow_cpu}%; miss rate targethold200ms tương ứng={fast_miss} và {slow_miss} (tỷ lệ0..1)."]
-        if None not in (fast_cpu,slow_cpu,fast_miss,slow_miss):
-            if fast_cpu>slow_cpu and fast_miss<slow_miss:text.append('Trong bộ dữ liệu này, polling nhanh giảm bỏ lỡ nhóm targethold200ms nhưng tăng chi phí CPU. Đây là đánh đổi đo được, không chứng minh mọi process/máy đều được lợi hoặc latency kernel chính xác.')
-            else:text.append('Bộ dữ liệu không cho quan hệ giảm-miss/tăng-CPU đồng thời rõ ở hai đầu dải; giữ nguyên kết quả, không kết luận polling nhanh luôn tốt hơn.')
     text+=['','SMOKE không là E1 final. E1 final cần đủ12run/3repeats, C review; chỉ đại diện máy/fixture/policy TEST này. Suite chạy tuần tự trong một parent JVM với collector/window mới mỗi run: heap/GC/JIT có thể carryover, các run không chứng minh độc lập hoàn toàn. Ứng dụng nền của workstation không bị đóng băng; rotated order giảm nhưng không loại mọi nhiễu. Không suy hành vi người dùng; không E2/delta/load.']
     (out/'analysis.md').write_text('\n'.join(text),encoding='utf-8')
 
