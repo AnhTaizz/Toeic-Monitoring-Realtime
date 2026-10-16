@@ -509,3 +509,19 @@ Clean test/package mỗi lượt872PASS/1skip/0failure/error (protocol44/client6
 ## QA PR39 — 16/10/2026, source9bfc75e
 
 Clean test875PASS/1SKIP và package875PASS/1SKIP; installed FullSuite876PASS/0SKIP,0failure/error. Skip trước install là installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle do thiếu flag; đã chạy trong FullSuite. Flow/AT11 exact40/42 41checks/0GAP, PG concurrency, GUI11/LT04/progress/shared writer, C1/C2 và native MSI037 + History/reorg extra PASS local subset. Unit/MOCK, faults/hearing/dialogs SIMULATED phân biệt rõ; ma trận AT11/LT01–04/IT01–04/MT01/07/08 vẫn PARTIAL toàncase, physicalLAN/manual/human review NOTRUN. Cache race BEFORE FAIL có fix+regression; counts loại XML cũ khi reactor dừng. [Counts/source/failures/matrix/artifacts](../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md). Không đổi trạng thái27case/tracker hoặc kế thừa PASS nguồn.
+
+## F01 — kết quả Listening gián đoạn, 16/10/2026
+
+**F01 FIXED local**, code `d19c63902725662aeb6f43c6f04ca80ea6caff42`, base PR40 `3fc5bb4`. Before6ERROR do Result thiếu cờ → mapping6PASS; targeted104PASS gồm submit/status/history và GUI4. Test PG mới4 tổ hợp SUBMITTED/TIMED_OUT × true/false qua HTTP thật, điểm/revision/thời điểm giữ nguyên, history không đổi row/writerEpoch. GUI4 dùng **MOCK result** trong Stage thật, không gọi là tích hợp server hoặc nghe thật.
+
+| Lượt mới | Kết quả thật |
+|---|---|
+| Maven clean test | 898 ca:896PASS,2SKIP,0failure/error |
+| Maven package | 898 ca:896PASS,2SKIP,0failure/error |
+| MSI0.3.8 installed FullSuite | 898PASS,0SKIP,0failure/error; hai opt-in app-image/installed đã chạy bằng artifact mới |
+| ExamFlow/AT11, Application GUI | 41PASS/0GAP và11nhóm PASS; REAL HTTP/PG/JavaFX, loss/hearing seam SIMULATED |
+| PG concurrency, B4/progress | AT01/07/09/10 và LT04/progress/shared writer PASS local trong suites/harness |
+| C1/C2 monitoring + GUI | C1 đầu FAIL cleanup Edge, giữ log; đổi temp TEST Windows, không sửa source, C1 cuối PASS; C2 PASS. Process fixtures MOCK/faults SIMULATED theo harness |
+| MSI0.3.8 lifecycle local | PASS quyền thường/Unicode/bundled JVM/no JAVA_HOME/deny-write/close/uninstall;5439class packaged/final giống byte |
+
+PostgreSQL native18.1 TEST riêng,0schema còn lại và cluster đã dừng; không thay service dùng chung.84rawE1 nguyên checksum, không E1/E2 rerun. Counts từ XML mới đã archive riêng, không kế thừa876 PASS nguồn cũ. [Report và raw index/counts/ảnh](../evidence/f01-20261016/REPORT.md). Nguyên nhân chính xác C1 FAIL đầu chưa chứng minh; C review pending. Không nâng trạng thái toàn bộ27case hoặc tracker: human A/C/LAN/máy thứ2/nghe thật vẫn NOT RUN.

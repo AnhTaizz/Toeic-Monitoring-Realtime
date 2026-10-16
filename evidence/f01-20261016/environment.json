@@ -1,0 +1,12 @@
+{
+    "maven":  "3.9.11",
+    "architecture":  "64-bit",
+    "version":  "10.0.26200",
+    "postgresql":  "18.1",
+    "java":  "21.0.8",
+    "os":  "Microsoft Windows 11 Home Single Language",
+    "javafx":  "21.0.12",
+    "timeZone":  "SE Asia Standard Time",
+    "physicalLan":  "NOT RUN",
+    "database":  "Owned native TEST cluster; loopback only; no shared service restart"
+}
