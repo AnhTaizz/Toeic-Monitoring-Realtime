@@ -608,3 +608,8 @@ Production merge24f70bd từmain c0fd903 +PR35/38, checkpoint testb755646 chỉ 
 
 
 Công bố16/10: đã push duy nhất branch thống nhất và tạo [Draft PR #39](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/39) base main, head công bố đầu6ff7656. Source testb755646 giữ nguyên; commit sau chỉ bổ sung URL/hồ sơ và manifest, không nhận thêm test PASS. Đã kiểm88file evidence mới+overnight từ byte Git commit, private blob không reachable và source/test không đổi. Không merge/đóngPR cũ/duyệt thayA-C.
+
+
+## 16/10/2026 — QA/stabilization PR39, MSI mới và runbook LAN
+
+Nhánh QA riêng từ093429a; main/merge-base c0fd903. Source cuối9bfc75e sửaBOM0a00d0f/title dcbdf85/cache lifecycle9bfc75e; giữ mọi FAIL, cache stress BEFORE10FAIL+1ERROR/65 → AFTER65PASS rồi targeted26PASS. Full clean/package875PASS+1SKIP mỗi lượt, installed FullSuite876PASS/0SKIP trên PG18.6 thật; Flow41/0GAP, concurrency, ApplicationGUI11/C1-C2 PASS subset. MSI037 source sạch quyền thường/Unicode/noJavaHome/bundledJVM/denyWrite/close/uninstall PASS; private external agent thêm History/reorg old immutable/new fresh PASS, compiled test agent phục hồi. Không source/backend/contract A-C changes hoặc human hearing/physical LAN claim. Sau khoảng nghỉ sharedDB đã dừng, dùng TEST PG tmpfs riêng rồi remove; QA database đầu phiên chờ owner cleanup khi shared service được phép chạy. User xác nhận chỉ một máy: LAN runbook/testdata/bundle sẵn, physicalNOTRUN.84rawE1 giữ checksum, không E1/E2 rerun, tracker/nguon không sửa. [Evidence](../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md); Draft QA targetPR39 được ghi ở PUBLICATION.md, không merge/markReady/close PR nguồn hoặc duyệt thay A/C.

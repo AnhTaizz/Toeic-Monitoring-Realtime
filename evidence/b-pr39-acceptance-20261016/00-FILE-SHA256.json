@@ -1,0 +1,202 @@
+{
+  "algorithm": "SHA-256",
+  "applicationSourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+  "scope": "exact staged curated QA evidence bytes; excludes this manifest; private raw/binaries remain local",
+  "files": [
+    {
+      "path": "ENVIRONMENT_READINESS.md",
+      "sha256": "5123f7fd9644cd3ce2f216586735adf4bcd38f652c217823d2f2c5970b40d280",
+      "bytes": 2443
+    },
+    {
+      "path": "FINAL_REPORT.md",
+      "sha256": "84abed8b891db515dd7af5728e4e380439a963fe55cb17c1b9437e1235a25203",
+      "bytes": 10809
+    },
+    {
+      "path": "HISTORICAL_E1_INTEGRITY.json",
+      "sha256": "33b08a0222bc961586dfa2e87892ed27d079c41085732c49cc194336c14df135",
+      "bytes": 19917
+    },
+    {
+      "path": "PUBLICATION.md",
+      "sha256": "d2b5c1cd35ef23e808c19044854b1455ebd5b60beae17136edca87084c6d34f3",
+      "bytes": 502
+    },
+    {
+      "path": "RAW_LOG_INDEX.json",
+      "sha256": "d844dc181428ee2bb6471d0fdf735dd10b75cedaaf4b6ca0074362bad3ed165f",
+      "bytes": 21090
+    },
+    {
+      "path": "final-clean-test-02-counts.json",
+      "sha256": "97f3de6163cdc6c131e3de24dbfdd543b30af502f19b10697275842fc52a112a",
+      "bytes": 15379
+    },
+    {
+      "path": "final-msi-install-02-counts.json",
+      "sha256": "f196bd1f1c2cfbcbbc4d6cf9a3d591fbf009cdd152d74d64e1f716e5e5470d76",
+      "bytes": 15130
+    },
+    {
+      "path": "final-package-02-counts.json",
+      "sha256": "235fba1e562db916d3a7fd30886b55668954a19a72ae7d12c7250a61aefbd40b",
+      "bytes": 15379
+    },
+    {
+      "path": "lan/EXECUTION_CHECKLIST.md",
+      "sha256": "cba8688fbcc06311db2122270ae38e82a5696f47cb279cd21387dca3a2bd4f58",
+      "bytes": 1970
+    },
+    {
+      "path": "lan/MANUAL_STEPS_FOR_OWNER.md",
+      "sha256": "9af15022b413ce85377d86e8b97292edb6a4be6cae1fa59ef7b65dc9718ff034",
+      "bytes": 5969
+    },
+    {
+      "path": "lan/New-LanTestData.ps1",
+      "sha256": "c24b9d8c840b2d05b2890bba3e81f55df98f8246ca98f02d9209b0307aabc08e",
+      "bytes": 2497
+    },
+    {
+      "path": "lan/PREFLIGHT.md",
+      "sha256": "2f929756ac58ab587f51e38d75ba86a12bc06059cca6e5cc553a3b15c59c1e0c",
+      "bytes": 1193
+    },
+    {
+      "path": "lan/TEST_RESULTS.md",
+      "sha256": "6aa203c31673d4fe8015dff18940450866c2bec0065e61a576b791c66cd7600a",
+      "bytes": 810
+    },
+    {
+      "path": "lan/TOPOLOGY.md",
+      "sha256": "4cbd7c781f4d66e3947553b167a78ef8ee3aa243e529603501ae2309f7092e3c",
+      "bytes": 852
+    },
+    {
+      "path": "release/ARTIFACT_MANIFEST.json",
+      "sha256": "8019502f75611a7733b6f1643ab1843adc30ebce6e6646dc0480840e7a1bbce8",
+      "bytes": 3833
+    },
+    {
+      "path": "release/BLOCKERS.md",
+      "sha256": "7cc0df3eb297ef84db61a1017c3e3031dac219ee7aa28dca89ec242c63d6cf7a",
+      "bytes": 2297
+    },
+    {
+      "path": "release/CLASS_EQUIVALENCE.json",
+      "sha256": "81c12950fe0fa6d6d1b3c1bec3ff45e526405fc0852636de545b3f623b7cf0e5",
+      "bytes": 423
+    },
+    {
+      "path": "release/CLEANUP_SUMMARY.json",
+      "sha256": "e3052f7a3305353ee624d9a8c422ffdbd28190cf06264f200ea4ec1bd06b36e2",
+      "bytes": 456
+    },
+    {
+      "path": "release/HARNESS_PROVENANCE.json",
+      "sha256": "7a5bae7ab22c775f7da462bb01677b895df243a9fa2bb630e4ea378acca4817d",
+      "bytes": 1053
+    },
+    {
+      "path": "release/INSTALLATION_TEST_REPORT.md",
+      "sha256": "a2da085416b377fa2191b01c8448a625d077d5d076a1a5ab6477c10673b7c4e3",
+      "bytes": 4081
+    },
+    {
+      "path": "release/WINDOWS_BUILD_REPORT.md",
+      "sha256": "3f3d71f33c671718c904a5452ed69338fda74cc3394a79b2d079de88ada7dfb6",
+      "bytes": 2985
+    },
+    {
+      "path": "review/ISSUES.md",
+      "sha256": "4464c0d9364de408647359445d22b99702c27bfd4daf48588dc2ffbef0436a07",
+      "bytes": 3077
+    },
+    {
+      "path": "review/PR39_CODE_REVIEW.md",
+      "sha256": "664e6e8fab852f8451719cba4251fe419e25ade9545d9b036292af1805adb030",
+      "bytes": 7497
+    },
+    {
+      "path": "review/VISUAL_QA.md",
+      "sha256": "8039b3c0916a49c1269cacd425a561d77da2f85f8d33e29c09b951e4e55806b1",
+      "bytes": 3292
+    },
+    {
+      "path": "review/harness/ExtendedInstalledDriver.java",
+      "sha256": "57af1906d8f259a75fbf122eca208d59f766a2310832461e20361d2c7774ae33",
+      "bytes": 812
+    },
+    {
+      "path": "review/harness/InstalledClientAgent.java",
+      "sha256": "bf550edb38edf23698332120b8ead1626779ca97a08a12e96b213743f719ba35",
+      "bytes": 16981
+    },
+    {
+      "path": "review/images/01-reading-saved.png",
+      "sha256": "634c8fe497f53203b59200568e32a29e4a02b25a78ed245d2dbff8c886b723f2",
+      "bytes": 54517
+    },
+    {
+      "path": "review/images/02-reading-submitted.png",
+      "sha256": "cee416da69c51e54fdc5299ed721b2995f41bd4839acbb2dfab68dbc32745330",
+      "bytes": 48458
+    },
+    {
+      "path": "review/images/03-history.png",
+      "sha256": "bd1f7f6f5e700f1a9b4adba520ddb5a7ddee195612fa17c93052148f3250302b",
+      "bytes": 27829
+    },
+    {
+      "path": "review/images/04-reading-listening.png",
+      "sha256": "f0bf9a5e3d064bd3b15ac443f881744a6c8cdcf44dcc79018a9c2c12c2352858",
+      "bytes": 69471
+    },
+    {
+      "path": "review/images/05-interrupted.png",
+      "sha256": "cafc2592d00a9d97096cdfc78d534406a0d639e84da7933c40b3a65aa5ece173",
+      "bytes": 72706
+    },
+    {
+      "path": "review/images/07-progress.png",
+      "sha256": "a18b64bdedd875ade91362ba250034a5b81f14f208ac5791f07c6563fdf181b6",
+      "bytes": 52625
+    },
+    {
+      "path": "review/images/08-session-start.png",
+      "sha256": "7df68060395cb52764356ff21a5d9e57684948217121ce195e9b7a39a1a5373d",
+      "bytes": 45526
+    },
+    {
+      "path": "review/images/09-reorganization.png",
+      "sha256": "b92d348b8f7576c5f135c843541b8b43191735618ac41aba674320bc66831d8c",
+      "bytes": 47926
+    },
+    {
+      "path": "review/images/10-login.png",
+      "sha256": "d85252abf907ef79d01fefb258fb90c7b58cf6e1fb5011ce6d629e4f3d67ac0f",
+      "bytes": 54937
+    },
+    {
+      "path": "review/images/11-progress-confirmed-MOCK.png",
+      "sha256": "85fb246cd040801c4347795fe192da6c3b498784d000c7f729226dbfd6ff14de",
+      "bytes": 21087
+    },
+    {
+      "path": "review/images/12-progress-stale-MOCK.png",
+      "sha256": "87bf71a3b5aeac6094cd2625b6f358ce31fa3260e226e02ced81e770bd4a29da",
+      "bytes": 23048
+    },
+    {
+      "path": "review/images/13-installed-history.png",
+      "sha256": "917df70c1535481bcbbbfa0301ecc8e53b91197e8ebae460ba76892677a76ecd",
+      "bytes": 27741
+    },
+    {
+      "path": "review/images/14-installed-reorganization.png",
+      "sha256": "4006603e30c187fd247ac1ec414607c2eb39c7cf414240d6b60f60189bf076cd",
+      "bytes": 48146
+    }
+  ]
+}

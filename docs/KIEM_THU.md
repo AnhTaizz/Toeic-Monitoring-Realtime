@@ -504,3 +504,8 @@ Phiên hòa PR #35/#38 trên main B4/B5 đã có kiểm mới16/10: xem bảng d
 ## Bản thống nhất16/10/2026 — checkpoint b755646
 
 Clean test/package mỗi lượt872PASS/1skip/0failure/error (protocol44/client600/server227+1skip/spike1), PG18.6 thật, GUI B4 LT04 và production app-image bật. Flow41/0GAP gồm AT11 exact40/42; concurrency AT01/07/09/10; GUI toàn Application11nhóm/progress/shared writer/FULL; native Audio8 và EXE/PG PASS subset. C2+GUI PASS với readings MOCK/fault SIMULATED. C1 cuối không JFR PASS; các lượt FAIL cleanup vẫn giữ, nguyên nhân ban đầu chưa chứng minh; MSI/Unicode parent BLOCKED thiếu SDK/WiX, installed test skip. E1 short mới COMPLETE/3trial, không E1 final;84raw lịch sử/14CSV repro không đổi. Python4 PASS. [SHA/log/count/limitations](../evidence/unified-20261016/verification.md), [manual](ACCEPTANCE_B_MANUAL_MATRIX.md). Không thay trạng thái nghiệm thu27case/tracker hoặc kế thừa848/687/MSI nguồn.
+
+
+## QA PR39 — 16/10/2026, source9bfc75e
+
+Clean test875PASS/1SKIP và package875PASS/1SKIP; installed FullSuite876PASS/0SKIP,0failure/error. Skip trước install là installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle do thiếu flag; đã chạy trong FullSuite. Flow/AT11 exact40/42 41checks/0GAP, PG concurrency, GUI11/LT04/progress/shared writer, C1/C2 và native MSI037 + History/reorg extra PASS local subset. Unit/MOCK, faults/hearing/dialogs SIMULATED phân biệt rõ; ma trận AT11/LT01–04/IT01–04/MT01/07/08 vẫn PARTIAL toàncase, physicalLAN/manual/human review NOTRUN. Cache race BEFORE FAIL có fix+regression; counts loại XML cũ khi reactor dừng. [Counts/source/failures/matrix/artifacts](../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md). Không đổi trạng thái27case/tracker hoặc kế thừa PASS nguồn.

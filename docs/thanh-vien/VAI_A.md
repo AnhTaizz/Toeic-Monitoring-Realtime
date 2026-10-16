@@ -378,3 +378,8 @@ Checkpoint5072bc9 đề xuất QD29 safeissuance/collision/405 và API progress 
 ## Handoff bản thống nhất16/10/2026 — HUMAN REVIEW PENDING
 
 Backend validation/QD29, collision/final/raw-ID, committed progress whitelist/MVCC và writerEpoch/khóa/transaction. Không migration; QD29 chưa human approve. Checkpointb755646: clean/package mỗi lượt872PASS/1skip, Flow41/GUI11/nativeAudio8/production EXE+PG PASS subset; không nghiệm thu toàncase. [Báo cáo/SHA/count/failure/manual](../../evidence/unified-20261016/verification.md). Không đổi tracker/kế hoạch hoặc tự duyệt A/C.
+
+
+### Ghi chú làm dở — QA PR39 ngày16/10/2026 (B bàn giao, chưa owner ký)
+
+B gửi review kỹ thuật PR39/QA source9bfc75e: không sửa server/protocol/schema. A cần review B fixes và QD29/progress/authorization/transaction của PR39; QD29 vẫn PROPOSED. Các local PG/GUI/MSI tests mới không là chữ ký A. QA database đầu phiên được giữ trong shared container đang dừng; owner có thể cleanup đúng DB private sau khi được phép resume, không reset volume. [Báo cáo](../../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md).

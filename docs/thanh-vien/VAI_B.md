@@ -375,3 +375,8 @@ Lưu ý ref trước công bố: main `c0fd903` đã có B4/PR #36 và Windows M
 ## Handoff bản thống nhất16/10/2026 — HUMAN REVIEW PENDING
 
 Một Application Reading/Listening/history/shared writer; B4#36 duy nhất +progress38; MSI#37 duy nhất, config/preflight port có giới hạn. MSI và parent Unicode BLOCKED, còn nghe thật/FileChooser/LAN/máy2. Checkpointb755646: clean/package mỗi lượt872PASS/1skip, Flow41/GUI11/nativeAudio8/production EXE+PG PASS subset; không nghiệm thu toàncase. [Báo cáo/SHA/count/failure/manual](../../evidence/unified-20261016/verification.md). Không đổi tracker/kế hoạch hoặc tự duyệt A/C.
+
+
+### Ghi chú làm dở — QA PR39 ngày16/10/2026 (B bàn giao, chưa owner ký)
+
+Bàn giao QA PR39: source9bfc75e sửa3lỗi B (BOM/title/cache race), Maven875+1skip và installer876+0skip mới; MSI037/native History/reorg PASS local, artifact/hash trong report. Nghe thật/DPI/codec ngoàiWAV/máy hai/LAN chưa nghiệm thu; user chỉ có một máy, runbook/testdata/bundle đã chuẩn bị. Shared QA DB còn cleanup do container đang dừng, không tự restart. Đề nghị A review B fixes, không tự ký A/C hoặc cập nhật tracker. [Báo cáo](../../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md).
