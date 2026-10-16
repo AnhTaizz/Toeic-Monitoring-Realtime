@@ -16,7 +16,15 @@ final class InstalledClientScenario {
     interface Action {void run()throws Exception;}
     static void run(String base,String password,String session,String attempt,ConfigurableApplicationContext context,
                     Action start,BooleanSupplier interrupted)throws Exception {
-        Path install=Path.of(System.getenv("TOEIC_INSTALLED_CLIENT")).toAbsolutePath();
+        runAt(Path.of(System.getenv("TOEIC_INSTALLED_CLIENT")),true,base,password,session,attempt,context,start,interrupted);
+    }
+    static void runImage(String base,String password,String session,String attempt,ConfigurableApplicationContext context,
+                    Action start,BooleanSupplier interrupted)throws Exception {
+        runAt(Path.of(System.getenv("TOEIC_PACKAGED_CLIENT")),false,base,password,session,attempt,context,start,interrupted);
+    }
+    private static void runAt(Path location,boolean installed,String base,String password,String session,String attempt,ConfigurableApplicationContext context,
+                    Action start,BooleanSupplier interrupted)throws Exception {
+        Path install=location.toAbsolutePath();
         Path output=Files.createDirectories(Path.of("target","t3-b5-installed",UUID.randomUUID().toString()));
         Path agent=output.resolve("TEST-ui-agent.jar").toAbsolutePath();
         var manifest=new Manifest();manifest.getMainAttributes().putValue("Manifest-Version","1.0");
@@ -31,6 +39,7 @@ final class InstalledClientScenario {
         var env=builder.environment();env.remove("JDK_JAVA_OPTIONS");env.remove("_JAVA_OPTIONS");env.remove("JAVA_HOME");
         env.put("PATH",System.getenv("SystemRoot")+"\\System32;"+System.getenv("SystemRoot"));
         env.put("JAVA_TOOL_OPTIONS","-javaagent:\""+agent+"\" -Duser.timezone=UTC");
+        env.put("TOEIC_PACKAGE_TEST_KIND",installed?"INSTALLED":"APP_IMAGE");
         env.put("TOEIC_SERVER_URL",base);env.put("TOEIC_PACKAGE_TEST_INSTALL",install.toString());
         env.put("TOEIC_PACKAGE_TEST_OUTPUT",output.toAbsolutePath().toString());
         env.put("TOEIC_PACKAGE_TEST_PASSWORD",password);env.put("TOEIC_PACKAGE_TEST_SESSION",session);env.put("TOEIC_PACKAGE_TEST_ATTEMPT",attempt);
@@ -57,7 +66,7 @@ final class InstalledClientScenario {
             Path cache=local.resolve("TOEIC Monitor/audio-cache");
             try(var files=Files.walk(cache.resolve("playback-started"))){assertThat(files.filter(Files::isRegularFile).count()).isPositive();}
             try(var files=Files.walk(cache)){assertThat(files.anyMatch(p->p.getFileName().toString().endsWith(".part"))).isFalse();}
-            System.out.println("B5 INSTALLED PASS real production EXE/runtime, write denied, login/B4/FULL/audio/READY/WS interruption/reconnect/normal close; hearing+socket fault SIMULATED. Output: "+output);
+            System.out.println("B5 "+(installed?"INSTALLED_WRITE_DENIED":"APP_IMAGE_INSTALL_NOT_RUN")+" PASS production EXE/runtime/B4/FULL/shared writer/Reading+Listening/READY/interruption/reconnect/normal close; hearing+socket fault SIMULATED. Output: "+output);
         } finally {
             ownedChildren.addAll(process.descendants().toList());
             for(var child:ownedChildren)if(child.isAlive())child.destroy();

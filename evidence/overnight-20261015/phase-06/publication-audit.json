@@ -1,0 +1,15 @@
+{
+  "changedPaths": 113,
+  "forbiddenPaths": [],
+  "javaRuntimeChangesAfterFreeze": [],
+  "realEnvSecretMatches": 0,
+  "credentialPatternMatches": 0,
+  "missingMarkdownLinks": [],
+  "publicEventPidColumns": 0,
+  "privateProctorScreenshotInFinalTree": false,
+  "sourceJava": "c1601b55b7b40cd84238921e87355108cfaea5fd",
+  "baseIntegration": "11c5da9",
+  "mainObserved": "c0fd9036ba340b0b0a686fb2ce637050b9a3b7b4",
+  "upstreamOverlap": "PR36 B4 and PR37 B5, review required; target integration/merge-base unchanged",
+  "jpackageVersion": "21.0.8"
+}

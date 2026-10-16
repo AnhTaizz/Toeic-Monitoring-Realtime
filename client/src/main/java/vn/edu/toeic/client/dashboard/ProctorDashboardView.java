@@ -28,6 +28,7 @@ import vn.edu.toeic.client.dashboard.MonitoringData.Gap;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.RealtimeClient;
 import vn.edu.toeic.protocol.Role;
+import vn.edu.toeic.client.exam.ExamApiClient;
 import vn.edu.toeic.client.proctor.ProctorSessionView;
 import vn.edu.toeic.protocol.auth.LoginResponse;
 import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
@@ -49,6 +50,8 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
     private final DashboardController controller;
     private final ProctorSessionView sessionControls;
     private boolean rendering;
+    private final ProctorProgressView progressView;
+    private final ExamApiClient examApi;
     public ProctorDashboardView(String serverUrl, LoginResponse login, RealtimeClient transport, Runnable onLogout, Runnable onExpired) {
         if (!"PROCTOR".equals(login.user().role())) throw new IllegalArgumentException("Dashboard chỉ dành cho giám thị");
         ZoneId zone=ZoneId.of(System.getProperty("toeic.dashboard.timezone",ZoneId.systemDefault().getId()));
@@ -63,6 +66,8 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
         controller=new DashboardController(Role.PROCTOR,new MonitoringApiClient(serverUrl,login.token()),transport,
                 transport::updateScope,scope,this::accept,() -> Platform.runLater(() -> { if (!closed.get()) onExpired.run(); }));
 
+        examApi=new ExamApiClient(serverUrl,login.token());
+        progressView=new ProctorProgressView(examApi,onExpired);
         HBox actions = new HBox(12, refresh, logout);
         actions.setAlignment(Pos.CENTER_LEFT);
 
@@ -71,7 +76,7 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
 
         setTop(new VBox(10, title, subHeader, banner, actions,
                 new Label("Giờ hiển thị: " + zone + ". Thời điểm quan sát do máy thí sinh báo; thời điểm nhận do server ghi.")));
-        roster.setId("dashboard-roster"); roster.setPrefHeight(230); roster.setPlaceholder(new Label("Chưa có lượt ACTIVE được phân công."));
+        roster.setId("dashboard-roster");roster.getStyleClass().add("proctor-data-table"); roster.setPrefHeight(230); roster.setPlaceholder(new Label("Chưa có lượt ACTIVE được phân công."));
         column(roster,"Thí sinh",170,Presence::candidateDisplayName);
         column(roster,"Lượt thi",160,Presence::attemptId);
         column(roster,"Trạng thái",220,value -> value.status()+ (staleRoster()?" · Dữ liệu cũ":""));
@@ -108,7 +113,9 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
         VBox list=new VBox(8,rosterStatus,roster,details); VBox.setMargin(list,new Insets(14,0,12,0));
         sessionControls=new ProctorSessionView(serverUrl,login.token(),onExpired,()->controllerRefresh());
         Tab controls=new Tab("Điều khiển ca / kết quả",sessionControls);controls.setClosable(false);
-        BorderPane body=new BorderPane(new TabPane(current,timeline,interruptions,gapTab,controls)); body.setTop(list); setCenter(body);
+        Tab progressTab=new Tab("Tiến độ đã lưu",progressView);progressTab.setClosable(false);
+        var tabs=new TabPane(current,timeline,interruptions,gapTab,progressTab,controls);tabs.setId("proctor-main-tabs");
+        BorderPane body=new BorderPane(tabs); body.setTop(list); setCenter(body);
         setBottom(new Label("UNKNOWN: server không còn xác nhận được liên lạc. Đây không phải kết luận gian lận."));
         refresh.setOnAction(event -> controller.refresh());
         roster.getSelectionModel().selectedItemProperty().addListener((observable,old,value) -> {
@@ -181,5 +188,5 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
         } finally { rendering=false; }
     }
     private void controllerRefresh(){if(!closed.get())controller.refresh();}
-    @Override public void close() { if (closed.compareAndSet(false,true)) { sessionControls.close();controller.close(); pending.set(null); roster.getItems().clear(); events.getItems().clear(); history.getItems().clear(); gaps.getItems().clear(); currentProcesses.getItems().clear(); } }
+    @Override public void close() { if (closed.compareAndSet(false,true)) { sessionControls.close();progressView.close();examApi.close();controller.close(); pending.set(null); roster.getItems().clear(); events.getItems().clear(); history.getItems().clear(); gaps.getItems().clear(); currentProcesses.getItems().clear(); } }
 }

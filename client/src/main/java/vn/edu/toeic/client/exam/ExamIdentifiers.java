@@ -4,10 +4,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 /** Raw database IDs are data, not URLs. Never trim, normalize or decode them. */
-final class ExamIdentifiers {
+public final class ExamIdentifiers {
     private ExamIdentifiers() { }
 
-    static boolean valid(String value) {
+    public static boolean valid(String value) {
         return vn.edu.toeic.protocol.exam.AttemptIdentifier.valid(value);
     }
 
@@ -17,7 +17,7 @@ final class ExamIdentifiers {
     }
 
     /** Percent-encode one query value or one path segment, once, from its raw UTF-8 bytes. */
-    static String encode(String raw) {
+    public static String encode(String raw) {
         if (!valid(raw)) throw new IllegalArgumentException("Mã lượt thi không hợp lệ");
         StringBuilder encoded = new StringBuilder();
         String hex = "0123456789ABCDEF";

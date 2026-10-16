@@ -20,7 +20,7 @@ Mỗi lần chạy ghi đủ: commit SHA, OS/JDK/PostgreSQL, cấu hình, lệnh
 | AT08 | Submit lặp, timeout, save đến gần nhau: một kết quả, chấm một lần | A / C | T2-A3, T4-A1 | **PASS** | `f28099b` | `evidence/t2-a3/2026-10-05-verification.md` |
 | AT09 | Request của writer cũ không ghi được sau takeover | A / C | T2-A4 | **PASS** | `60e1ced` | `evidence/t2-a4/2026-10-05-verification.md` |
 | AT10 | Không nhận đáp án sau khi chốt hoặc sau deadline | A / C | T2-A4 | **PASS** | `60e1ced` | `evidence/t2-a4/2026-10-05-verification.md` |
-| AT11 | Server 40 / client 42, mất ACK, reconnect, mở app mới | B / A | T2-B4, T4-B1 | NOT RUN | | |
+| AT11 | Server40/client42, mất ACK, reconnect, app mới | B / A | T2-B4,T4-B1 | PARTIAL — REAL PG/HTTP exact40/42, Flow41/GUI11 PASS subset; physical/LAN/human NOT RUN | c1601b5 | [Overnight](../evidence/overnight-20261015/phase-06/verification.md) |
 
 ## Monitoring
 
@@ -54,7 +54,7 @@ Full-only retry/epoch/order/reconnect đã kiểm trong acceptance T2-C1 bên d�
 
 | Mã | Nội dung | Ai chạy | Task | Trạng thái | Nơi lưu raw |
 |---|---|---|---|---|---|
-| E1 | Polling 250/500/1.000/2.000 ms, 3 lần lặp (12 run) | B chạy, C cấp harness và phân tích | T4-B2, T4-C3 | NOT RUN | |
+| E1 | Poll250/500/1000/2000ms ×3repeats | B chạy,C review | T4-B2,T4-C3 | PARTIAL — 12 REAL full-config runs COMPLETE/checksums/repro PASS; human C method review pending, giới hạn parent lifetime/heap | [Data](../evidence/overnight-20261015/phase-06/e1/analysis.md) |
 | E2 | Full snapshot vs delta, 3 trace × 3 lần × 2 chế độ (18 run) | C | T4-C2 | NOT RUN | |
 | Tải | 1/5/10 client giả lập, 3 lần mỗi mức (9 run) | A | T4-A2 | NOT RUN | |
 
@@ -481,3 +481,21 @@ Runtime387ed99: package833 PASS,0skip sau sửa playback→preparation lock. Har
 
 
 Chốt thêm d809a00/final JAR: ExamConcurrencyPostgresSmoke AT01/07/09/10 PASS; ExamFlowPostgresSmoke28PASS/0GAP (mất response/network wrapper SIMULATED; deviceA/B là2model cùngJVM). Evidence/log/source hashes ở evidence/integration; không đổi bảng27case.
+
+### B overnight phase 01 — 15/10/2026
+
+Targeted controller/PG exam/listening49 PASS, 0skip; baseline trước DB FAIL connection refused. Đây là technical subset, không nâng case AT/LT/IT toàn hệ thống. Boundary protocol/reorg guard thêm sau targeted chờ full gate. [Evidence](../evidence/overnight-20261015/phase-01/verification.md).
+
+B overnight phase02: targeted22/Python3/dry/SMOKE/negative checksum PASS; một failure INCOMPLETE cũ retained. Chưa E1 final/C1-C2 mới/gate/LAN. [Evidence](../evidence/overnight-20261015/phase-02/verification.md).
+
+B overnight phase03: clean/package839,flow41/0GAP,GUI8groups,C1/C2 stagingretest PASS thật. Không nâng AT11/LT/MT/IT toàncase. [Evidence/matrix](../evidence/overnight-20261015/phase-03/verification.md).
+
+Overnight phase04: GUI production11groups PASS (controls visible, PG assertions); targeted35client+33PG PASS, full846 trước test bổ sung. AT11/LT/IT/MT toàncase vẫn PARTIAL/NOT RUN theo matrix. [Evidence](../evidence/overnight-20261015/phase-04/verification.md).
+
+Overnight phase05: parser3/negative5 PASS, ASCII nativeMedia8 PASS subset; runtime21.0.8, API/WS MOCK. Unicodeparent SDKgate/installer BLOCKED; IT01 whole NOT RUN. [Evidence](../evidence/overnight-20261015/phase-05/verification.md).
+
+## B overnight — gate cuối 15/10/2026
+
+Java sourcec1601b5: clean/package848 PASS mỗi lượt,0skip, PG18.6 thật; Flow41/0GAP, GUI11, C1/C2 có GUI PASS. Analyzer Python4 PASS. E1 collection12run/360trials COMPLETE và checksum/repro/cleanup PASS; nghiệm thu toàncase PARTIAL/human C review pending. [Báo cáo tổng](../evidence/overnight-20261015/00-summary.md). E2/load/LAN/installer/manual hearing NOT RUN, FULL default.
+
+Phiên hòa PR #35/#38 trên main B4/B5 đang triển khai: kết quả bản thống nhất NOT RUN. LT04/IT01 và E1 ở bảng trên là evidence của source ghi kèm; không kế thừa cho bản ghép.

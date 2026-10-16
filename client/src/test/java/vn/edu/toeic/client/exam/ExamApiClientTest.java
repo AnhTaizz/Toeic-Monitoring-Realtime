@@ -223,6 +223,18 @@ class ExamApiClientTest {
         }
     }
 
+    @Test void proctorProgressEncodesCursorOnceAndRejectsActiveResultLeak() throws Exception {
+        try(Fixture f=new Fixture()) {
+            f.body.set("{\"readAt\":\"2026-10-15T00:00:00Z\",\"attempts\":[],\"nextAfterAttemptId\":null}");
+            f.api.getProctorProgress("a/đề% +").get(3,TimeUnit.SECONDS);
+            assertThat(java.net.URLDecoder.decode(f.path.get().split("afterAttemptId=",2)[1],StandardCharsets.UTF_8)).isEqualTo("a/đề% +");
+            assertThat(f.path.get()).startsWith("/api/v1/proctor/attempts/progress?limit=50&");
+            f.body.set("{\"readAt\":\"2026-10-15T00:00:00Z\",\"attempts\":[{\"attemptId\":\"A\",\"sessionId\":\"S\",\"state\":\"ACTIVE\",\"savedRevision\":42,\"answeredCount\":1,\"totalQuestions\":2,\"correctCount\":1}],\"nextAfterAttemptId\":null}");
+            assertThatThrownBy(()->f.api.getProctorProgress(null).join()).hasCauseInstanceOf(InvalidServerResponseException.class);
+        }
+    }
+
+
     private static final class Fixture implements AutoCloseable {
         final HttpServer server;
         final ExecutorService executor = Executors.newSingleThreadExecutor();

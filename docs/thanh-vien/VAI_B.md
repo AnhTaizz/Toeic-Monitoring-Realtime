@@ -354,3 +354,19 @@ Bạn cũng phải vẽ lại được luồng của A (khóa, deadline, commit 
 Nhánh `integration/reading-listening-20261015`, base8f5ac40, history2ca4121 và Reading65f5123. Guide `docs/INTEGRATION_READING_LISTENING.md`; evidence `evidence/integration/2026-10-15-verification.md`. Phạm vi review: B: Reading/Listening/shared writer/Media/callback/reconnect. Clean test833 PASS (protocol43/client569/server220/spike1), PostgreSQL18.6 thật và 0skip; package833 PASS. GUI smoke8nhóm PASS mới; chưa nâng toàn case human/LAN. FULL default, tracker không đổi.
 
 **Ghi chú làm dở:** human A/B/C/LAN hai máy/installer/E1/E2 NOT RUN; ID ACTIVE đặc biệt còn contract QD29. Không dùng alias đọc status làm quyền monitoring; không merge main khi chưa được người dùng chấp thuận. Kết quả cuối/SHA/log trong evidence, không kế thừa PASS nhánh nguồn.
+
+### Ghi chú làm dở overnight 15/10/2026
+
+Phase01 backend checkpoint đề xuất (A/C review pending), targeted49 PASS; xem [evidence](../../evidence/overnight-20261015/phase-01/verification.md). Tiếp tục phase02–06, không coi code là human/LAN acceptance.
+
+Overnight phase03 T2-B4 AT11: exact40/42/ACKfence mới đã kiểmREAL HTTP/PG, no2writer; GUI8group samewriterReadingListening PASSsubset. AT11wholePARTIAL. [Matrix](../../evidence/overnight-20261015/phase-03/AT11_matrix.md).
+
+T3-B4/T2-B5 overnight: UI import/create/READY/start/status/reorg và progress committed đã nối API production; GUI11groups PASS subset. Còn FileChooser/manual/LAN/2candidateGUI và review thật. [Guide](../PROCTOR_SESSION_PROGRESS.md).
+
+T3-B5 overnight: scripts/config/negative tests có; rawASCIIimageMedia8 PASS, cần mt.exe/WiX để nghiệm thu Unicode/installer. Máy2/nghe/cài/gỡ NOT RUN. [Guide](../WINDOWS_PACKAGING.md).
+
+### Handoff overnight15/10 — local gate xong, nghiệm thu còn PARTIAL
+
+SourceJava c1601b5 clean/package848,Flow41/GUI11/C1-C2 PASS; E1 đủ12REALruns, cần C review. B cần nghe/rút mạng/kill thật,2máyLAN và installer được phép;SDKmt/WiX đang thiếu. Import FileChooser/manual còn cần người thử. Sau tạo ca/tổ chức lại bấm “Làm mới quyền và dữ liệu” của dashboard để nạp scope monitoring; progress API độc lập vẫn đọc assignedfinal. Không xóa marker/autoReplay, không thay tracker khi chưa xác nhận. [Summary](../../evidence/overnight-20261015/00-summary.md).
+
+Lưu ý ref trước công bố: main `c0fd903` đã có B4/PR #36 và Windows MSI/PR #37. Code overnight chưa hòa với hai phần này; owner cần chọn một controller và một pipeline, không ghi đè script cùng tên. Xem [đối chiếu upstream](../../evidence/overnight-20261015/UPSTREAM_DIVERGENCE.md). Không kế thừa test/artifact của upstream cho source overnight.

@@ -39,7 +39,11 @@ public final class ControlledProcessHarness {
     private volatile Thread owner;
     private volatile ThreadPoolExecutor workers;
     private long origin;
+    private E1Window measurementWindow;
     public ControlledProcessHarness(HarnessPlan.Config config){this(config,new ProcessHandleSnapshotSource(),ControlledProcessHarness::launchChild);}
+    public ControlledProcessHarness(HarnessPlan.Config config,E1Window window) {
+        this(config);window.plan(config);this.measurementWindow=window;
+    }
     ControlledProcessHarness(HarnessPlan.Config config,ProcessSnapshotSource source,ChildLauncher launcher) {
         this.config=config;this.source=source;this.launcher=launcher;HarnessPlan.create(config);
     }
@@ -61,8 +65,9 @@ public final class ControlledProcessHarness {
         if(!used.compareAndSet(false,true))throw new IllegalStateException("ONE_RUN_ONLY");
         Path directory=output.toAbsolutePath().normalize();Path parent=directory.getParent();if(parent!=null)Files.createDirectories(parent);
         Files.createDirectory(directory); // Reserve once; never overwrite a user's previous run.
-        String runId=java.util.UUID.randomUUID().toString();List<HarnessPlan.Trial> plan=HarnessPlan.create(config);
-        owner=Thread.currentThread();origin=System.nanoTime();String wall=Instant.now().toString();String label=source instanceof ProcessHandleSnapshotSource?"REAL":"MOCK";
+        String runId=java.util.UUID.randomUUID().toString();List<HarnessPlan.Trial> plan=measurementWindow==null?HarnessPlan.create(config):measurementWindow.plan(config);
+        owner=Thread.currentThread();origin=System.nanoTime();
+        E1Resources resources=measurementWindow==null?null:new E1Resources(origin);String wall=Instant.now().toString();String label=source instanceof ProcessHandleSnapshotSource?"REAL":"MOCK";
         var traceHeader=new TraceData.Header(TraceData.TEST_SCHEMA,label,config.pollMillis(),TraceData.TEST_POLICY,wall);
         var recorder=new TraceRecorder(directory.resolve("observations.jsonl"),traceHeader,256);
         var aligned=new AlignedTrace(recorder);var firstScan=new CountDownLatch(1);var scans=new AtomicInteger();
@@ -81,6 +86,7 @@ public final class ControlledProcessHarness {
                 long queued=now();futures.add(workers.submit(() -> results.put(trial.trialId(),runChild(runId,trial,queued))));
             }
             for(var future:futures)future.get(remainingMillis(),TimeUnit.MILLISECONDS);
+            if(measurementWindow!=null)waitUntil(measurementWindow.endNanos());
             waitUntil(now()+2L*config.pollMillis()*1_000_000L);
         } catch(InterruptedException stopped){interrupted=true;error.compareAndSet(null,"CANCELLED");cancelled.set(true);}
         catch(Exception failed){error.compareAndSet(null,"RUN_OR_CHILD_FAILURE");cancelled.set(true);}
@@ -92,6 +98,7 @@ public final class ControlledProcessHarness {
             for(var entry:owned.entrySet())try {terminateOwned(entry.getValue(),ownedDescendants.getOrDefault(entry.getKey(),List.of()));}catch(Exception failure){clean=false;error.compareAndSet(null,"CHILD_CLEANUP_FAILED");}
             try {collector.stop().get(3,TimeUnit.SECONDS);}catch(Exception failure){clean=false;error.compareAndSet(null,"COLLECTOR_CLEANUP_FAILED");}
             collector.close();recorder.close();policy.clear();
+            if(resources!=null)resources.close();
             if(!owned.isEmpty()||policy.size()!=0||ownedDescendants.values().stream().flatMap(List::stream).anyMatch(ProcessHandle::isAlive)){
                 clean=false;error.compareAndSet(null,"OWNERSHIP_NOT_RELEASED");
             }
@@ -113,7 +120,27 @@ public final class ControlledProcessHarness {
         metadata.addProperty("sourceLabel",label);metadata.addProperty("candidateGate","SIMULATED; no login/server/network/GUI");metadata.addProperty("javaVersion",System.getProperty("java.version"));
         metadata.addProperty("javaVendor",System.getProperty("java.vendor"));metadata.addProperty("os",System.getProperty("os.name"));metadata.addProperty("osVersion",System.getProperty("os.version"));metadata.addProperty("architecture",System.getProperty("os.arch"));
         metadata.addProperty("machine","LOCAL-HARNESS-01");metadata.addProperty("scans",scans.get());metadata.addProperty("resourcesCleaned",clean);metadata.addProperty("error",error.get());metadata.addProperty("e1e2","NOT_RUN; no latency/miss-rate/CPU claim");metadata.addProperty("humanBReview","NOT_RUN");
+        metadata.addProperty("calendarEnd",Instant.now().toString());
+        metadata.addProperty("availableProcessors",Runtime.getRuntime().availableProcessors());
+        if(java.lang.management.ManagementFactory.getOperatingSystemMXBean() instanceof com.sun.management.OperatingSystemMXBean os) {
+            metadata.addProperty("totalPhysicalMemoryBytes",os.getTotalMemorySize());
+            metadata.addProperty("freePhysicalMemoryAtEndBytes",os.getFreeMemorySize());
+        }
+        var binary=Path.of(ControlledProcessHarness.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        metadata.addProperty("binarySha256",Files.isRegularFile(binary)?HarnessArtifacts.fileChecksum(binary):"CLASSES_DIRECTORY_NOT_A_JAR");
+        metadata.addProperty("resourceSamplePeriodMillis",500);
+        if(measurementWindow!=null) {
+            metadata.addProperty("measurementStartElapsedNanos",measurementWindow.warmupMillis()*1_000_000L);
+            metadata.addProperty("measurementEndElapsedNanos",measurementWindow.endNanos());
+            metadata.addProperty("memoryType","parent JVM heap used; NOT RSS");
+            metadata.addProperty("cpuMethod","delta CPU nanos / delta same-host wall nanos * 100; one core; collector thread vs parent process separate");
+            metadata.addProperty("e1e2",config.perDuration()==10&&measurementWindow.warmupMillis()==15000&&measurementWindow.measureMillis()==120000?"E1_CANDIDATE_RUN; human C review pending; E2 NOT RUN":"SMOKE; NOT E1 FINAL; E2 NOT RUN");
+            Files.writeString(directory.resolve("resources.csv"),resources.csv(),StandardCharsets.UTF_8);
+        }
         HarnessArtifacts.writeJson(directory.resolve("metadata.json"),metadata);HarnessArtifacts.manifest(directory,status);
+        if(measurementWindow!=null)HarnessArtifacts.writeJson(directory.resolve("e1-manifest.json"),java.util.Map.of(
+            "schemaVersion","e1-resources-v1","resourcesSha256",HarnessArtifacts.fileChecksum(directory.resolve("resources.csv")),
+            "runManifestSha256",HarnessArtifacts.fileChecksum(directory.resolve("manifest.json"))));
         var result=new Result(status,runId,report,error.get(),clean);finished.complete(result);if(interrupted)Thread.currentThread().interrupt();return result;
     }
     private long remainingMillis() {long left=config.maxRunMillis()-TimeUnit.NANOSECONDS.toMillis(now());if(left<=0)throw new IllegalStateException("RUN_TIMEOUT");return left;}

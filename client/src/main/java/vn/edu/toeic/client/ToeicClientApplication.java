@@ -106,7 +106,7 @@ public final class ToeicClientApplication extends Application {
         loginButton.getStyleClass().add("btn-primary");
         loginButton.setMaxWidth(Double.MAX_VALUE);
 
-        Label status = new Label(notice);
+        Label status = new Label(notice.isBlank()?ClientSettings.notice():notice);
         status.setStyle("-fx-text-fill: #fb7185; -fx-font-weight: 600; -fx-font-size: 13px;");
         status.setWrapText(true);
 
@@ -347,7 +347,7 @@ public final class ToeicClientApplication extends Application {
                 startExamBtn.setDisable(!outcome.canEnter());
                 switch (outcome.next()) {
                     case RETRY -> status.setText(userMessage(failure));
-                    case NO_ATTEMPT -> status.setText("Chưa được cấp lượt thi nào. Hãy yêu cầu giám thị bấm 'Khởi tạo Đề & Ca Thi Mẫu'.");
+                    case NO_ATTEMPT -> status.setText("Chưa được cấp lượt thi nào. Hãy yêu cầu giám thị tạo ca và phân công lượt thi.");
                     case CHOOSE -> status.setText("Đã cập nhật ca thi! Chọn một lượt rồi bấm 'Vào Phòng Thi'.");
                     case SELECTION_REVOKED -> status.setText("Lượt đã chọn không còn quyền. Hãy chọn lại.");
                     case START_MONITORING -> { }

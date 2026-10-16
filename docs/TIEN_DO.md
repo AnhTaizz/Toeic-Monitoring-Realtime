@@ -6,6 +6,8 @@ Cập nhật T3-B5: 15/10/2026 — nhánh `feat/t3-b5-windows-installer` từ ma
 
 Cập nhật T3-B4: 15/10/2026 — nhánh `feat/t3-b4-proctor-session-controls`, base main `8f5ac40`. [Tab điều khiển ca/kết quả](PROCTOR_SESSION_CONTROLS.md) dùng backend A1/A2, không đổi server production. Clean package source `06fd215`: **686 PASS, 0 skip**, GUI LT04 local, media rerun 8 checks và FULL dashboard smoke PASS. Lượt media đầu file lock giữ FAIL, nguyên nhân chưa chứng minh; xem [evidence](../evidence/t3-b4/2026-10-15-verification.md); human A review/nghe thủ công/LAN NOT RUN, PR35 draft giữ riêng. FULL mặc định, không B5/E1/E2.
 
+Lịch sử nhánh nguồn #38: Cập nhật B overnight15/10 (main mới0b9c5fa có PR36 B4; cần đối chiếu B4 trước merge): code đề xuất trên nhánh riêng; finalJava848/Flow41/GUI11/C1-C2 local PASS, E1 đủ12run REAL (human C review pending). Unicode/installer thiếuSDK/WiX, physical/LAN/human review chưa nghiệm thu; tracker không đổi. [Bàn giao](../evidence/overnight-20261015/00-summary.md).
+
 15/10/2026 — tích hợp Reading/Listening/history trên `integration/reading-listening-20261015`, base main8f5ac40, history2ca4121 và Reading65f5123. Code9115776: một ExamSession/writer cho hai phần; query status an toàn cho raw ID; scope HTTP không nới monitoring v0. Clean test833 và package833 PASS với PostgreSQL18.6 thật, 0skip. GUI production smoke8nhóm PASS mới trên d809a00, proctor roster/quan sát đã render; C1/C2 hồi quy PASS; [guide](INTEGRATION_READING_LISTENING.md), [evidence mới](../evidence/integration/2026-10-15-verification.md). Nhánh tích hợp đã push qua Git Windows; [Draft PR #35](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/35) đã tạo, chưa merge; human A/B/C/LAN/installer/E1/E2 NOT RUN, ID ACTIVE đặc biệt chờ contract QD29. Những cập nhật cũ bên dưới giữ ngày/SHA lịch sử.
 
 Cập nhật T3-B3: 14/10/2026 — branch `feat/t3-b3-listening-interruption-recovery` kế thừa T3-B2; Media/mạng lỗi dừng player, ghi marker và gửi INTERRUPTED, reconnect/mở lại GET status rồi giữ khóa, không replay/resume. Java669/669 PASS với PostgreSQL thật; app-image Unicode PASS8, có MediaPlayer thật dừng giữa audio và reconnect không phát lại. [Hướng dẫn](LISTENING_INTERRUPTION_RECOVERY.md), [evidence](../evidence/t3-b3/2026-10-14-verification.md). Code complete; review A, rút mạng/kill app thủ công, LAN/máy thứ hai và nghe thủ công chưa chạy. T2-B4 chưa có trên nhánh nên policy Listening tách riêng và gate ghép Reading còn chờ; tracker IN_PROGRESS, giờ null.
@@ -129,3 +131,19 @@ Dùng lại AuthorizationService/SessionAuthenticationService/MonitoringStateSer
 ## Bàn giao T3-C4 ngày13/10/2026
 
 Baseee714fc (C3PR26). Opt-in/current capability/fixed mode, reconnect fresh OPEN/full, scope heartbeat callback, actual candidate/proctor Application LOCAL GUI; code2d867c2 + fix stdoutd9475eb. [Guide](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-13-verification.md), QD19 liên kết QD10 presence. Source/JAR/raw/failed attempts giữ riêng, không sửa `.env`/tracker/kế hoạch/migrations/exam/PR A-B. Gate preparation/PARTIAL, cần LAN hai máy và B review; không giả approve hoặc gate20/10 đã diễn ra. Git cuối trong PR/final; giữ nhánh và sync main khi an toàn. Dừng sau C4, không C5/E1/E2.
+
+## B overnight 15/10/2026 — đang thực hiện
+
+Branch riêng `agent/b-overnight-followups-20261015`, base PR35 11c5da9. Phase01 backend ID/progress đề xuất có targeted49 PASS PostgreSQL; human A/C review và QD29 approval pending. [Evidence](../evidence/overnight-20261015/phase-01/verification.md). Phases02–06 chưa xong, tracker không đổi.
+
+Overnight phase02: E1 harness có dry/SMOKE + analyzer thực, C human review pending; chưa E1 final. Phase03 tiếp theo exact AT11/GUI regression.
+
+Overnight phase03 localgate PASS (839/flow41/GUI8/C1-C2); phase04 bắt đầu proctorcontrols/progress. Humanreview/LAN/E1final pending.
+
+Overnight phase04: proctor session/progress local gate PASS, cần A/C review API và B review UI; đang sang package Windows. [Guide](PROCTOR_SESSION_PROGRESS.md).
+
+Overnight phase05 PARTIAL: ASCII app-imageMedia8 PASS, wrapperUnicode/installer BLOCKED thiếu mt.exe/WiX; không cài/gỡ. Phase06 E1/manual chuẩn bị tiếp. [Guide](WINDOWS_PACKAGING.md).
+
+### Công bố overnight 15/10
+
+[Draft PR overnight](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/38) dùng nhánh public riêng, base integration `11c5da9`. Main mới `c0fd903` có PR #36 B4 và PR #37 B5: owner cần đối chiếu cả UI/controller lẫn pipeline Windows trước merge; chưa kiểm code ghép. Java đã kiểm `c1601b5` không đổi; E1 có 11 inconclusive nên PARTIAL. Evidence MSI upstream không được dùng thay kết quả package overnight. [Bàn giao](../evidence/overnight-20261015/00-summary.md).

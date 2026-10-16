@@ -1,5 +1,7 @@
 # TOEIC Monitoring Realtime
 
+B overnight15/10 bổ sung safe ACTIVE issuance/API progress đề xuất, UI giám thị điều khiển ca và progress đãcommit, AT11exact40/42, pipelineWindows và E1harness/data. [Bàn giao6phase](evidence/overnight-20261015/00-summary.md), [giám thị](docs/PROCTOR_SESSION_PROGRESS.md), [đónggói](docs/WINDOWS_PACKAGING.md), [LAN/manual](docs/LAN_TWO_MACHINE_RUNBOOK.md). Local tests không thay human review/LAN/installer; FULL default, không thêm thư viện ngoài.
+
 Nhánh tích hợp đã ghép Reading/autosave/submit/reconnect/history và Listening B1–B3 trong cùng Application, dùng một writer của phiên thi. [Luồng và cách chạy](docs/INTEGRATION_READING_LISTENING.md), [evidence mới](evidence/integration/2026-10-15-verification.md). FULL vẫn mặc định; human/LAN/installer/gate delta/E1/E2 chưa được nghiệm thu. Các mục cũ bên dưới giữ phạm vi lịch sử.
 
 Spring Boot server, JavaFX client hai role, PostgreSQL và collector `ProcessHandle`. Event/queue/retry, heartbeat/presence/history và dashboard chặng 1 đã có. Server có backend thi chặng 2; T2-C1 thêm full snapshot và tab **Process hiện tại**. Delta, GUI thi toàn luồng và đóng gói trên máy thứ hai chưa được nghiệm thu. Các mục chặng 1 bên dưới mô tả phạm vi lịch sử của từng task; phần full hiện tại ở cuối.
@@ -359,3 +361,5 @@ Kiểm tra tự động trên PostgreSQL TEST và GUI thật: `powershell -NoPro
 [Hướng dẫn build MSI, cài/chạy/gỡ và checklist máy thứ hai](docs/WINDOWS_INSTALLER.md). `scripts/package-windows.ps1` đóng gói client hiện có và Java/JavaFX đi kèm; server/PostgreSQL/audio được cấp riêng. Địa chỉ LAN nhập tại login hoặc qua `TOEIC_SERVER_URL`. FULL vẫn mặc định; chưa ghép PR35 Reading–Listening.
 
 Công cụ build ngoài Maven: `jpackage` trong JDK21, WiX3 (`candle/light`, tạo MSI) và Microsoft Windows SDK `mt.exe` (manifest UTF-8 cho launcher). Có thể dùng portable trong ignored target; không thêm dependency Maven. Máy dùng chỉ cần MSI, không cần các công cụ build/IDE. [Evidence B5](evidence/t3-b5/2026-10-15-verification.md) ghi kiểm local và phần IT01/máy thứ hai còn thiếu; không coi merge là nghiệm thu IT01.
+
+Bản tích hợp review PR #35/#38 trên nền main B4/B5: [ứng dụng thống nhất](docs/UNIFIED_APPLICATION.md), [evidence mới](evidence/unified-20261016/verification.md). Trạng thái kiểm chỉ theo source ghi trong evidence; không kế thừa kết quả nhánh nguồn.

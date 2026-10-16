@@ -23,9 +23,18 @@ import vn.edu.toeic.protocol.exam.*;
 /** REAL production JavaFX dashboard + candidate audio, HTTP/WS/Spring/PG; hearing click SIMULATED. */
 final class ProctorControlsGuiScenario {
     private static <T>T fx(Callable<T> task)throws Exception{var result=new CompletableFuture<T>();Platform.runLater(()->{try{result.complete(task.call());}catch(Throwable t){result.completeExceptionally(t);}});return result.get(8,TimeUnit.SECONDS);}
-    private static void await(BooleanSupplier condition)throws Exception{long end=System.nanoTime()+TimeUnit.SECONDS.toNanos(35);while(!condition.getAsBoolean()&&System.nanoTime()<end)Thread.sleep(50);assertThat(condition.getAsBoolean()).isTrue();}
+    private static void await(BooleanSupplier condition)throws Exception{
+        long end=System.nanoTime()+TimeUnit.SECONDS.toNanos(35);
+        while(System.nanoTime()<end){if(condition.getAsBoolean())return;Thread.sleep(50);}
+        throw new AssertionError("GUI condition did not complete within 35 seconds");
+    }
     private static void text(ProctorDashboardView view,String id,String value)throws Exception{fx(()->{((TextField)view.lookup("#"+id)).setText(value);return null;});}
-    private static void button(ProctorDashboardView view,String id)throws Exception{fx(()->{Button b=(Button)view.lookup("#"+id);assertThat(b.isDisabled()).as(id).isFalse();b.fire();return null;});}
+    private static void button(ProctorDashboardView view,String id)throws Exception{
+        if(id.equals("proctor-start")||id.equals("proctor-reorganize")){
+            fx(()->{Button b=(Button)view.lookup("#"+id);assertThat(b.isDisabled()).as(id).isFalse();Platform.runLater(b::fire);return null;});
+            await(()->{try{return fx(()->{for(var window:List.copyOf(javafx.stage.Window.getWindows()))if(window.getScene()!=null&&window.getScene().getRoot() instanceof DialogPane pane&&pane.getButtonTypes().contains(ButtonType.OK)){((Button)pane.lookupButton(ButtonType.OK)).fire();return true;}return false;});}catch(Exception failure){throw new RuntimeException(failure);}});
+        }else fx(()->{Button b=(Button)view.lookup("#"+id);assertThat(b.isDisabled()).as(id).isFalse();b.fire();return null;});
+    }
     private static void attempt(ProctorDashboardView view,String value)throws Exception{fx(()->{((ComboBox<?>)view.lookup("#proctor-attempt-id")).getEditor().setText(value);return null;});button(view,"proctor-read-attempt");}
     private static void candidateButton(AudioPreparationView view,String name)throws Exception{
         await(()->{try{return fx(()->view.lookupAll(".button").stream().filter(n->n instanceof Button b&&b.getText().equals(name)).anyMatch(n->!n.isDisabled()));}catch(Exception e){throw new RuntimeException(e);}});

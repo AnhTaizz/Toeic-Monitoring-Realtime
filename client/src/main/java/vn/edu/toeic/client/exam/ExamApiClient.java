@@ -142,6 +142,24 @@ public final class ExamApiClient implements ExamGateway, ExamHistoryGateway, Aut
         return post("sessions", request, CreateSessionResponse.class);
     }
 
+    public CompletableFuture<vn.edu.toeic.protocol.exam.ProctorProgressPage> getProctorProgress(String cursor) {
+        if(cursor!=null&&!validAttempt(cursor))return invalidAttempt();
+        return get("proctor/attempts/progress?limit=50"+(cursor==null?"":"&afterAttemptId="+ExamIdentifiers.encode(cursor)),
+                vn.edu.toeic.protocol.exam.ProctorProgressPage.class).thenApply(page->{
+            if(page.readAt()==null||page.attempts().size()>50)throw new InvalidServerResponseException();
+            String previous=cursor;
+            for(var row:page.attempts()) {
+                if(!validAttempt(row.attemptId())||previous!=null&&ExamIdentifiers.compare(previous,row.attemptId())>=0
+                        ||!java.util.Set.of("ACTIVE","SUBMITTED","TIMED_OUT").contains(row.state())
+                        ||row.savedRevision()<0||row.answeredCount()<0||row.answeredCount()>row.totalQuestions()
+                        ||row.totalQuestions()<1||"ACTIVE".equals(row.state())&&row.correctCount()!=null)
+                    throw new InvalidServerResponseException();
+                previous=row.attemptId();
+            }
+            if(page.nextAfterAttemptId()!=null&&(page.attempts().size()!=50||!page.nextAfterAttemptId().equals(previous)))throw new InvalidServerResponseException();
+            return page;
+        });
+    }
     /** Validate raw database text; component encoding keeps it inside one URL segment. */
     private static boolean validAttempt(String attemptId) {
         return ExamIdentifiers.valid(attemptId);
@@ -213,6 +231,11 @@ public final class ExamApiClient implements ExamGateway, ExamHistoryGateway, Aut
     }
 
     /** Câu báo lỗi an toàn cho giao diện: không lặp lại body của server hay chi tiết exception. */
+    public static boolean sessionExpired(Throwable failure) {
+        while((failure instanceof CompletionException||failure instanceof java.util.concurrent.ExecutionException)&&failure.getCause()!=null)failure=failure.getCause();
+        return failure instanceof ExamApiException api&&api.statusCode()==401;
+    }
+
     public static String describe(Throwable failure) {
         Throwable cause = failure instanceof CompletionException && failure.getCause() != null
                 ? failure.getCause() : failure;

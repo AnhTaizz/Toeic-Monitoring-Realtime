@@ -290,11 +290,11 @@ class ExamRuntimePostgresTest {
         // Separate existing createSession risk: a legal 128-character sessionId plus username exceeds attempt VARCHAR(128).
         String oversizedSession = "OVERFLOW-" + "x".repeat(128 - "OVERFLOW-".length());
         expect(post("/api/v1/sessions", new CreateSessionRequest(oversizedSession, examId, "TEST length risk", 60,
-                List.of("proctor1"), List.of(owner)), proctorToken), 500);
+                List.of("proctor1"), List.of(owner)), proctorToken), 400);
         assertThat(jdbc.sql("SELECT count(*) FROM exam_sessions WHERE session_id = :s")
                 .param("s", oversizedSession).query(Long.class).single()).isZero();
         System.out.println("PASS cursor boundary: 128 PostgreSQL characters accepted including supplementary Unicode; 129 rejected");
-        System.out.println("KNOWN OUT-OF-SCOPE createSession risk: 128-character sessionId plus username -> HTTP 500; transaction rolls back; API/schema unchanged");
+        System.out.println("PASS safe issuance: oversized generated ID -> HTTP 400; no partial session");
     }
 
     @Test void candidateAttemptHistoryRejectsEmptyAndNulButBindsOtherCursorTextLiterally() throws Exception {
@@ -578,8 +578,13 @@ class ExamRuntimePostgresTest {
         return login(username);
     }
     private String historyAttempt(String session, String username) throws Exception {
-        expect(post("/api/v1/sessions", new CreateSessionRequest(session, examId, "TEST history cursor", 60,
-                List.of("proctor1"), List.of(username)), proctorToken), 200);
+        // Legacy raw IDs remain readable; creating new unsafe ACTIVE IDs is now rejected.
+        jdbc.sql("INSERT INTO exam_sessions(session_id,exam_id,title,duration_seconds,created_by) SELECT :s,:e,'TEST legacy',60,id FROM user_accounts WHERE username='proctor1'")
+                .param("s",session).param("e",examId).update();
+        jdbc.sql("INSERT INTO monitoring_attempts(attempt_id,candidate_user_id,session_id,exam_id,state) SELECT :a,id,:s,:e,'ACTIVE' FROM user_accounts WHERE username=:u")
+                .param("a",session+"-"+username).param("s",session).param("e",examId).param("u",username).update();
+        jdbc.sql("INSERT INTO monitoring_proctor_assignments(attempt_id,proctor_user_id) SELECT :a,id FROM user_accounts WHERE username='proctor1'")
+                .param("a",session+"-"+username).update();
         return session + "-" + username;
     }
     private void assertHistoryPages(String token, List<String> expected, int limit) throws Exception {
@@ -651,6 +656,91 @@ class ExamRuntimePostgresTest {
         expectCode(get(route + "&attemptId=foreign", candidateToken), 400, "INVALID_INPUT");
         expectCode(get(route + "&extra=1", candidateToken), 400, "INVALID_INPUT");
         if (session.contains("/")) expect(get("/api/v1/attempts/" + java.net.URLEncoder.encode(rawAttempt, java.nio.charset.StandardCharsets.UTF_8) + "/status", candidateToken), 400);
+    }
+
+    @Test void activeIssuanceRejectsEntireBatchAndPreservesCollidingFinalAttempt() throws Exception {
+        historyCandidate("unsafe/owner");
+        String badSession = "SAFE-"+id();
+        expectCode(post("/api/v1/sessions", new CreateSessionRequest(badSession,examId,"TEST",60,
+                List.of("proctor1"),List.of("candidate1","unsafe/owner")),proctorToken),400,"INVALID_INPUT");
+        assertThat(jdbc.sql("SELECT count(*) FROM exam_sessions WHERE session_id=:s").param("s",badSession).query(Long.class).single()).isZero();
+        assertThat(jdbc.sql("SELECT count(*) FROM monitoring_attempts WHERE session_id=:s").param("s",badSession).query(Long.class).single()).isZero();
+        for (String invalid : List.of("bad/slash","bad space","bad%percent","bad-é","a".repeat(128)))
+            expectCode(post("/api/v1/sessions",new CreateSessionRequest(invalid,examId,"TEST",60,List.of("proctor1"),List.of("candidate1")),proctorToken),400,"INVALID_INPUT");
+        String safe="SAFE-"+id();
+        expectCode(post("/api/v1/sessions",new CreateSessionRequest(safe,examId,"TEST",60,List.of("proctor1"),List.of("candidate1","candidate1")),proctorToken),400,"INVALID_INPUT");
+        String existing=attempt(60);
+        String collidingSession=existing.substring(0,existing.length()-"-candidate1".length());
+        jdbc.sql("UPDATE monitoring_attempts SET session_id=NULL,state='SUBMITTED',answers_json='{\"R1\":\"A\"}',saved_revision=42 WHERE attempt_id=:a").param("a",existing).update();
+        jdbc.sql("DELETE FROM exam_session_proctors WHERE session_id=:s").param("s",collidingSession).update();
+        jdbc.sql("DELETE FROM exam_sessions WHERE session_id=:s").param("s",collidingSession).update();
+        expectCode(post("/api/v1/sessions",new CreateSessionRequest(collidingSession,examId,"TEST",60,List.of("proctor1"),List.of("candidate1")),proctorToken),400,"INVALID_INPUT");
+        assertThat(status(existing).get("state").getAsString()).isEqualTo("SUBMITTED");
+        assertThat(status(existing).get("savedRevision").getAsLong()).isEqualTo(42);
+    }
+
+    @Test void wrongMethodIsStructured405WithAllowAndMalformedJsonRemains400() throws Exception {
+        HttpResponse<String> response=post("/api/v1/candidate/attempts",Map.of(),candidateToken);
+        expectCode(response,405,"INVALID_INPUT");
+        assertThat(response.headers().firstValue("Allow").orElse("")).contains("GET");
+        expectCode(http.send(HttpRequest.newBuilder(URI.create(base+"/api/v1/sessions")).header("Authorization","Bearer "+proctorToken)
+                .header("Content-Type","application/json").POST(HttpRequest.BodyPublishers.ofString("{")).build(),HttpResponse.BodyHandlers.ofString()),400,"INVALID_INPUT");
+    }
+
+    @Test void proctorProgressReadsOnlyCommittedAssignedDataAndKeepsFinals() throws Exception {
+        String a=attempt(60);
+        String route="/api/v1/proctor/attempts/progress?limit=100";
+        expectCode(get(route,candidateToken),403,"FORBIDDEN");
+        expectCode(get(route,null),401,"UNAUTHORIZED");
+        assertThat(json(expect(get(route,foreignProctorToken),200)).getAsJsonArray("attempts")).isEmpty();
+        JsonObject before=summary(json(expect(get(route,proctorToken),200)).getAsJsonArray("attempts"),a);
+        assertThat(before.get("answeredCount").getAsInt()).isZero();
+        assertThat(before.get("lastSavedAt").isJsonNull()).isTrue();
+        assertThat(before.get("correctCount").isJsonNull()).isTrue();
+        var save=new AutosaveAnswersRequest(id(),a,1,42,Map.of("R1","A"));
+        expect(post(path(a,"answers"),save,candidateToken),200);
+        HttpResponse<String> response=expect(get(route,proctorToken),200);
+        assertThat(response.headers().firstValue("Cache-Control").orElse("")).contains("no-store");
+        assertThat(response.body()).doesNotContain("answers", "writerEpoch", "correctOption");
+        JsonObject after=summary(json(response).getAsJsonArray("attempts"),a);
+        assertThat(after.get("answeredCount").getAsInt()).isEqualTo(1);
+        assertThat(after.get("savedRevision").getAsLong()).isEqualTo(42);
+        assertThat(after.get("lastSavedAt").isJsonNull()).isFalse();
+        expect(post(path(a,"submit"),new SubmitExamRequest(id(),a,1,43,Map.of("R1","A","R2","B")),candidateToken),200);
+        JsonObject finalRow=summary(json(expect(get(route,proctorToken),200)).getAsJsonArray("attempts"),a);
+        assertThat(finalRow.get("state").getAsString()).isEqualTo("SUBMITTED");
+        assertThat(finalRow.get("correctCount").getAsInt()).isEqualTo(2);
+        assertThat(finalRow.get("answeredCount").getAsInt()).isEqualTo(2);
+        assertThat(finalRow.get("lastSavedAt")).isEqualTo(after.get("lastSavedAt"));
+        for(String invalid:List.of("limit=0","limit=101","limit=x","limit=1&limit=2","extra=1","afterAttemptId=","afterAttemptId=%00"))
+            expectCode(get("/api/v1/proctor/attempts/progress?"+invalid,proctorToken),400,"INVALID_INPUT");
+        List<String> actual=new ArrayList<>();String cursor=null;
+        do {
+            var page=json(expect(get("/api/v1/proctor/attempts/progress?limit=1"+(cursor==null?"":"&afterAttemptId="+URLEncoder.encode(cursor,StandardCharsets.UTF_8)),proctorToken),200));
+            actual.addAll(summaryIds(page.getAsJsonArray("attempts")));
+            cursor=page.get("nextAfterAttemptId").isJsonNull()?null:page.get("nextAfterAttemptId").getAsString();
+        } while(cursor!=null);
+        assertThat(actual).doesNotHaveDuplicates();
+        assertThat(actual).containsExactlyElementsOf(actual.stream().sorted(ExamRuntimePostgresTest::compareUtf8).toList());
+    }
+
+    @Test void progressIgnoresUncommittedWriterAndDoesNotInventAutosaveTimeForSubmitOnly() throws Exception {
+        String a=attempt(60);String route="/api/v1/proctor/attempts/progress?limit=100";
+        try(Connection writer=DriverManager.getConnection(admin.getMetaData().getURL(),required("DB_USER"),required("DB_PASSWORD"))) {
+            writer.setAutoCommit(false);
+            writer.createStatement().execute("SET search_path TO "+schema);
+            try(var update=writer.prepareStatement("UPDATE monitoring_attempts SET saved_revision=42,answers_json='{\"R1\":\"A\"}' WHERE attempt_id=?")){
+                update.setString(1,a);assertThat(update.executeUpdate()).isEqualTo(1);
+            }
+            // The writer row lock is held here; progress MVCC read must neither block nor expose its data.
+            var old=summary(json(expect(get(route,proctorToken),200)).getAsJsonArray("attempts"),a);
+            assertThat(old.get("savedRevision").getAsLong()).isZero();assertThat(old.get("answeredCount").getAsInt()).isZero();
+            writer.rollback();
+        }
+        expect(post(path(a,"submit"),new SubmitExamRequest(id(),a,1,1,Map.of("R1","A")),candidateToken),200);
+        var finalRow=summary(json(expect(get(route,proctorToken),200)).getAsJsonArray("attempts"),a);
+        assertThat(finalRow.get("answeredCount").getAsInt()).isEqualTo(1);assertThat(finalRow.get("lastSavedAt").isJsonNull()).isTrue();
+        assertThat(finalRow.get("correctCount").getAsInt()).isEqualTo(1);
     }
 
     @Test void queryStatusRejectsMissingEmptyAndOversizedIds() throws Exception {

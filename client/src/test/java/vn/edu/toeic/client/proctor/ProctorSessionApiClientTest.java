@@ -11,10 +11,10 @@ import org.junit.jupiter.api.*;
 /** REAL loopback HTTP, MOCK server responses. No production authorization claims. */
 class ProctorSessionApiClientTest {
     private HttpServer server;private ExecutorService worker;private ProctorSessionApiClient api;
-    private volatile int code=200;private volatile String body="{}",authorization;
+    private volatile int code=200;private volatile String body="{}",authorization,requestTarget,requestBody;
     @BeforeEach void start()throws Exception{
         server=HttpServer.create(new InetSocketAddress("127.0.0.1",0),0);worker=Executors.newCachedThreadPool();server.setExecutor(worker);
-        server.createContext("/",x->{authorization=x.getRequestHeaders().getFirst("Authorization");byte[] b=body.getBytes(StandardCharsets.UTF_8);x.sendResponseHeaders(code,b.length);try(var output=x.getResponseBody()){output.write(b);}});server.start();
+        server.createContext("/",x->{authorization=x.getRequestHeaders().getFirst("Authorization");requestTarget=x.getRequestURI().toASCIIString();requestBody=new String(x.getRequestBody().readAllBytes(),StandardCharsets.UTF_8);byte[] b=body.getBytes(StandardCharsets.UTF_8);x.sendResponseHeaders(code,b.length);try(var output=x.getResponseBody()){output.write(b);}});server.start();
         api=new ProctorSessionApiClient("http://127.0.0.1:"+server.getAddress().getPort(),"TEST-only-token",Duration.ofSeconds(2));
     }
     @AfterEach void stop(){api.close();server.stop(0);worker.shutdownNow();}
@@ -22,6 +22,16 @@ class ProctorSessionApiClientTest {
         body="{\"attemptId\":\"OLD\",\"sessionId\":\"S\",\"examId\":\"E\",\"writerEpoch\":9007199254740993,\"savedRevision\":9007199254740994,\"state\":\"TIMED_OUT\",\"totalQuestions\":1,\"score\":990,\"answers\":{\"L\":\"A\"},\"listeningInterrupted\":true}";
         var r=api.result("OLD");assertThat(r.writerEpoch()).isEqualTo(9007199254740993L);assertThat(r.savedRevision()).isEqualTo(9007199254740994L);assertThat(authorization).isEqualTo("Bearer TEST-only-token");
         body=body.replace("9007199254740993","9007199254740993.0");assertThatThrownBy(()->api.result("OLD")).hasMessageContaining("không hợp lệ");
+    }
+    @Test void legacyStatusUsesRawQueryAndStartRetriesIdenticalRequest()throws Exception{
+        String raw="  cũ/đề% + ";
+        body=new com.google.gson.Gson().toJson(java.util.Map.of("attemptId",raw,"sessionId","S","examId","E","writerEpoch",1,"savedRevision",42,"state","SUBMITTED","answers",java.util.Map.of()));
+        assertThat(api.result(raw).attemptId()).isEqualTo(raw);
+        assertThat(requestTarget).startsWith("/api/v1/attempts/status?attemptId=");
+        assertThat(java.net.URLDecoder.decode(requestTarget.split("attemptId=",2)[1],StandardCharsets.UTF_8)).isEqualTo(raw);
+        var request=new vn.edu.toeic.protocol.audio.ListeningStartRequest("IDEMPOTENT","a".repeat(64));
+        body="{\"protocolVersion\":\"v0\",\"requestId\":\"IDEMPOTENT\",\"sessionId\":\"S\",\"manifestId\":\""+"a".repeat(64)+"\",\"startId\":\"START\",\"startedAt\":\"2026-10-15T00:00:00Z\"}";
+        api.start("S",request);String original=requestBody;api.start("S",request);assertThat(requestBody).isEqualTo(original);
     }
     @Test void malformedAndOversizedBodiesAreNotSuccess(){
         body="{bad";assertThatThrownBy(()->api.readiness("S")).isInstanceOf(java.io.IOException.class);

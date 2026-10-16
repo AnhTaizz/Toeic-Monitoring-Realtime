@@ -114,6 +114,24 @@ class ListeningRuntimePostgresTest {
     }
 
     @Test
+    @EnabledIfEnvironmentVariable(named="TOEIC_PACKAGED_CLIENT",matches=".+")
+    void appImageProductionClientUsesUnifiedReadingListeningWithoutInstallerClaim() throws Exception {
+        var f=fixture(InstalledClientScenario.wave());
+        expect(post(audioPath(f.second(),"ready"),ready(f,f.second(),1,true),candidate2),200); // MOCK second client attestation.
+        InstalledClientScenario.runImage(base,required("TOEIC_SEED_PASSWORD"),f.session(),f.first(),context,
+            ()->{
+                long end=System.nanoTime()+TimeUnit.SECONDS.toNanos(10);
+                while(System.nanoTime()<end&&!"SYNCED".equals(JSON.fromJson(expect(get("/api/v1/monitoring/attempts/"+f.first()+"/state",proctor),200).body(),JsonObject.class).get("status").getAsString()))Thread.sleep(25);
+                assertThat(JSON.fromJson(expect(get("/api/v1/monitoring/attempts/"+f.first()+"/state",proctor),200).body(),JsonObject.class).get("status").getAsString()).isEqualTo("SYNCED");
+                expect(post(startPath(f),new ListeningStartRequest(id(),f.manifest()),proctor),200);
+            },
+            ()->jdbc.sql("SELECT listening_interrupted FROM monitoring_attempts WHERE attempt_id=:a").param("a",f.first()).query(Boolean.class).single());
+        var state=jdbc.sql("SELECT answers_json,saved_revision,writer_epoch,listening_interrupted FROM monitoring_attempts WHERE attempt_id=:a")
+            .param("a",f.first()).query((row,n)->List.of(row.getString(1),row.getLong(2),row.getLong(3),row.getBoolean(4))).single();
+        assertThat(state.get(0).toString()).contains("L1","R1","B");assertThat((Long)state.get(1)).isGreaterThanOrEqualTo(3);assertThat(state.get(2)).isEqualTo(2L);assertThat(state.get(3)).isEqualTo(true);
+    }
+
+    @Test
     @EnabledIfEnvironmentVariable(named="TOEIC_PROCTOR_GUI",matches="true")
     void proctorControlsLt04RealGuiBeforeAndAfterAutomaticTimeout() throws Exception {
         context.close();proctorGuiScheduler=true;boot(false);

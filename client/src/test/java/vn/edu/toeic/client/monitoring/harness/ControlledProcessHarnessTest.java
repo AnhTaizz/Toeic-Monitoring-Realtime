@@ -17,7 +17,7 @@ class ControlledProcessHarnessTest {
     @TempDir Path directory;
     @Test void realChildrenCreateGroundTruthEvenWhenCollectorAlwaysReportsEmpty()throws Exception {
         var engine=new ControlledProcessHarness(HarnessFixtures.config(),List::of,ControlledProcessHarness::launchChild);
-        var result=engine.run(directory.resolve("normal"));assertThat(result.status()).isEqualTo("COMPLETE");assertThat(result.resourcesCleaned()).isTrue();
+        var result=engine.run(directory.resolve("normal"));assertThat(result.status()).as("harness status: %s; cleanup: %s",result.error(),result.resourcesCleaned()).isEqualTo("COMPLETE");assertThat(result.resourcesCleaned()).isTrue();
         var truth=HarnessArtifacts.readGroundTruth(directory.resolve("normal/ground-truth.jsonl"));
         assertThat(truth.trials()).hasSize(3).allMatch(t -> t.pid()!=null&&t.status().equals("EXITED")&&t.exitCode()==0);
         assertThat(truth.trials()).allMatch(t -> t.launchBeginElapsedNanos()>=t.planned().plannedLaunchElapsedNanos());
@@ -66,7 +66,7 @@ class ControlledProcessHarnessTest {
             String cp=Path.of(ChildFailureFixture.class.getProtectionDomain().getCodeSource().getLocation().toURI()).toString();
             return new ProcessBuilder(java,"-cp",cp,ChildFailureFixture.class.getName(),"TREE",run,trial.trialId(),Integer.toString(trial.targetMillis()),pidFile.toString()).redirectError(ProcessBuilder.Redirect.DISCARD).start();
         });
-        var result=engine.run(directory.resolve("tree"));assertThat(result.status()).isEqualTo("COMPLETE");assertThat(result.resourcesCleaned()).isTrue();
+        var result=engine.run(directory.resolve("tree"));assertThat(result.status()).as("harness status: %s; cleanup: %s",result.error(),result.resourcesCleaned()).isEqualTo("COMPLETE");assertThat(result.resourcesCleaned()).isTrue();
         assertThat(pids).hasSize(3);for(var file:pids)assertThat(ProcessHandle.of(Long.parseLong(Files.readString(file))).map(ProcessHandle::isAlive).orElse(false)).isFalse();assertWorkersGone();
     }
     static Process fixture(String mode,String run,HarnessPlan.Trial trial)throws Exception {

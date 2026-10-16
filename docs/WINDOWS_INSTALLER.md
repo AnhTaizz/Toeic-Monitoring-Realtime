@@ -100,3 +100,8 @@ Máy thứ hai phải là máy Windows khác thật; hai JVM/cửa sổ/tài kho
 ## Nguồn công cụ
 
 [JDK21 packaging overview](https://docs.oracle.com/en/java/javase/21/jpackage/packaging-overview.html), [jpackage JDK21 options](https://docs.oracle.com/en/java/javase/21/docs/specs/man/jpackage.html), [WiX3.14.1 portable](https://github.com/wixtoolset/wix3/releases/tag/wix3141rtm), [Microsoft SDK BuildTools](https://www.nuget.org/packages/Microsoft.Windows.SDK.BuildTools/10.0.26100.6584), [UTF-8 activeCodePage](https://learn.microsoft.com/en-us/windows/apps/design/globalizing/use-utf8-code-page), [msiexec options](https://learn.microsoft.com/en-us/windows/win32/msi/command-line-options). Đây là công cụ build/test; không thêm thư viện ngoài vào runtime Maven của dự án.
+
+
+## Tích hợp 16/10/2026
+
+Bản thống nhất giữ nền B4/MSI main, chuyển guard/progress/config cần thiết từ #38. Source và test mới xem [báo cáo](../evidence/unified-20261016/verification.md); không kế thừa PASS installer hoặc số test của nhánh nguồn. [Cách chạy hiện tại](UNIFIED_APPLICATION.md).

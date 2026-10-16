@@ -378,3 +378,8 @@
 .scroll-bar .thumb:hover {
     -fx-background-color: #475569;
 }
+
+/* Proctor selected rows: readable in both focused and unfocused dark tables. */
+.proctor-data-table .table-row-cell:selected { -fx-background-color: #164e63; }
+.proctor-data-table .table-row-cell:selected .table-cell { -fx-text-fill: #ffffff; }
+.proctor-data-table .table-row-cell:focused { -fx-border-color: #38bdf8; }

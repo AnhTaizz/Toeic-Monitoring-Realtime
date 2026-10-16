@@ -7,6 +7,7 @@ public final class Launcher {
     }
 
     public static void main(String[] args) {
+        ClientSettings.initialize();
         Application.launch(ToeicClientApplication.class, args);
     }
 }
