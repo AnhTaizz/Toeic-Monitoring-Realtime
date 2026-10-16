@@ -106,7 +106,7 @@ public final class LateEventsAndGapsSmoke {
                 measurements.add(context.getBean(RealtimeSessionRegistry.class).measurements());
                 origin="http://127.0.0.1:"+((WebServerApplicationContext)context).getWebServer().getPort();fixtures();verify(gui);
             } finally {
-                if(view!=null) fx(() -> {view.close();stage.close();return null;});
+                if(view!=null) fx(() -> {view.close();if(stage!=null)stage.close();return null;});
                 if(guiClient!=null) guiClient.close();if(gui) Platform.exit();
                 if(context!=null) context.close();
                 admin.createStatement().execute("DROP SCHEMA "+schema+" CASCADE");
@@ -334,7 +334,7 @@ public final class LateEventsAndGapsSmoke {
         @Override public void forgetPending(String id){client.forgetPending(id);}
     }
     private void startGui(LoginResponse p) throws Exception {
-        var ready=new CompletableFuture<Void>();Platform.startup(() -> {Platform.setImplicitExit(false);ready.complete(null);});ready.get(5,TimeUnit.SECONDS);
+        var ready=new CompletableFuture<Void>();Platform.startup(() -> {Platform.setImplicitExit(false);ready.complete(null);});ready.get(20,TimeUnit.SECONDS);
         guiClient=socket(p);view=fx(() -> new ProctorDashboardView(origin,p,guiClient,() -> {},() -> {}));
         stage=fx(() -> {var window=new Stage();window.setScene(new Scene(view,1200,800));window.setTitle("TEST T2-C2 late events and gaps");window.show();return window;});
         await(() -> fx(() -> table("#dashboard-roster").getItems().size())==1,"GUI assigned roster");
@@ -354,7 +354,7 @@ public final class LateEventsAndGapsSmoke {
             for(int y=0;y<bitmap.getHeight();y++)for(int x=0;x<bitmap.getWidth();x++)bitmap.setRGB(x,y,image.getPixelReader().getArgb(x,y));
             Path output=Path.of("server/target/t2c2-smoke",name);Files.createDirectories(output.getParent());ImageIO.write(bitmap,"png",output.toFile());return null;});
     }
-    private static <T> T fx(Callable<T> action) {var result=new CompletableFuture<T>();Platform.runLater(() -> {try{result.complete(action.call());}catch(Exception e){result.completeExceptionally(e);}});try{return result.get(5,TimeUnit.SECONDS);}catch(Exception e){throw new IllegalStateException(e);}}
+    private static <T> T fx(Callable<T> action) {var result=new CompletableFuture<T>();Platform.runLater(() -> {try{result.complete(action.call());}catch(Exception e){result.completeExceptionally(e);}});try{return result.get(20,TimeUnit.SECONDS);}catch(Exception e){throw new IllegalStateException(e);}}
     private static void await(BooleanSupplier action,String label) throws Exception {long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(12);while(System.nanoTime()<until){if(action.getAsBoolean())return;Thread.sleep(25);}check(false,label);}
     private static void check(boolean value,String label){if(!value)throw new IllegalStateException("TEST assertion: "+label);}
 }

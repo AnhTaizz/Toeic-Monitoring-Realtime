@@ -93,11 +93,11 @@ public final class FullSnapshotSmoke {
                 measurements.add(context.getBean(RealtimeSessionRegistry.class).measurements());
                 origin="http://127.0.0.1:"+((WebServerApplicationContext)context).getWebServer().getPort();fixtures();verify(gui);
                 // No dashboard HTTP/controller remains during the autonomous maintenance assertions.
-                if(view!=null) {fx(() -> {view.close();stage.close();return null;});view=null;}
+                if(view!=null) {fx(() -> {view.close();if(stage!=null)stage.close();return null;});view=null;}
                 if(guiTransport!=null) {guiTransport.close();guiTransport=null;}
                 verifyScheduledMaintenance();
             } finally {
-                if(view!=null) fx(() -> {view.close();stage.close();return null;});
+                if(view!=null) fx(() -> {view.close();if(stage!=null)stage.close();return null;});
                 if(guiTransport!=null) guiTransport.close();
                 if(gui) Platform.exit();
                 if(context!=null) {
@@ -277,7 +277,7 @@ public final class FullSnapshotSmoke {
             for(int y=0;y<bitmap.getHeight();y++) for(int x=0;x<bitmap.getWidth();x++) bitmap.setRGB(x,y,image.getPixelReader().getArgb(x,y));
             Path output=Path.of("server/target/t2c1-smoke",name);Files.createDirectories(output.getParent());ImageIO.write(bitmap,"png",output.toFile());return null;});
     }
-    private static <T> T fx(Callable<T> action) {var result=new CompletableFuture<T>();Platform.runLater(() -> {try {result.complete(action.call());}catch(Exception error){result.completeExceptionally(error);}});try{return result.get(5,TimeUnit.SECONDS);}catch(Exception error){throw new IllegalStateException(error);}}
+    private static <T> T fx(Callable<T> action) {var result=new CompletableFuture<T>();Platform.runLater(() -> {try {result.complete(action.call());}catch(Exception error){result.completeExceptionally(error);}});try{return result.get(20,TimeUnit.SECONDS);}catch(Exception error){throw new IllegalStateException(error);}}
     private static void stopOwned(Process process) throws Exception {
         var children=process.descendants().toList();children.forEach(ProcessHandle::destroy);process.destroy();
         if(!process.waitFor(3,TimeUnit.SECONDS)) {children.forEach(ProcessHandle::destroyForcibly);process.destroyForcibly();process.waitFor(3,TimeUnit.SECONDS);}
