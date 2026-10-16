@@ -48,10 +48,14 @@ public final class AudioFiles {
         Path current = directory.getRoot();
         for (Path part : directory) {
             current = current.resolve(part);
-            if (Files.exists(current, LinkOption.NOFOLLOW_LINKS)) {
-                if (!Files.isDirectory(current, LinkOption.NOFOLLOW_LINKS) || !current.toRealPath().equals(current))
-                    throw new IOException("Đường dẫn cache audio không an toàn.");
-            } else Files.createDirectory(current);
+            if (!Files.exists(current, LinkOption.NOFOLLOW_LINKS)) {
+                try { Files.createDirectory(current); }
+                catch (FileAlreadyExistsException concurrentCreator) {
+                    // Another view/process may share this cache; validate its entry below.
+                }
+            }
+            if (!Files.isDirectory(current, LinkOption.NOFOLLOW_LINKS) || !current.toRealPath().equals(current))
+                throw new IOException("Đường dẫn cache audio không an toàn.");
         }
     }
     public void download(AudioApi api, AudioManifestResponse manifest, LongConsumer progress) throws Exception {

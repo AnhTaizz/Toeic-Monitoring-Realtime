@@ -61,7 +61,9 @@ public final class AudioPreparation implements AutoCloseable {
                 }
                 withdraw(run);
                 if (!current(run)) return;
-                AudioManifestResponse received = api.manifest(selected); AudioFiles.validate(received, selected);
+                AudioManifestResponse received = api.manifest(selected);
+                if (!current(run)) return;
+                AudioFiles.validate(received, selected);
                 long total = received.files().stream().mapToLong(AudioFileDto::sizeBytes).sum();
                 files.download(api, received, bytes -> publish(run, Phase.PREPARING, (double)bytes / total, "Đang tải và kiểm SHA-256 audio…"));
                 files.verify(received);

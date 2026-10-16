@@ -39,6 +39,37 @@ class AudioFilesTest {
         Files.delete(target);
         assertThatThrownBy(() -> files.verify(manifest)).isInstanceOf(IOException.class).hasMessageContaining("thiếu");
     }
+    @Test void concurrentReadersCanCreateTheSameManifestCacheDirectory() throws Exception {
+        var manifest = manifest("shared.wav");
+        try (var workers = java.util.concurrent.Executors.newFixedThreadPool(16)) {
+            for (int round = 0; round < 8; round++) {
+                Path root = directory.resolve("shared-cache-" + round);
+                var barrier = new java.util.concurrent.CyclicBarrier(16);
+                var futures = new ArrayList<java.util.concurrent.Future<Path>>();
+                for (int reader = 0; reader < 16; reader++) {
+                    futures.add(workers.submit(() -> {
+                        barrier.await(10, java.util.concurrent.TimeUnit.SECONDS);
+                        return new AudioFiles(root).file(manifest, manifest.files().getFirst());
+                    }));
+                }
+                Path expected = null;
+                for (var future : futures) {
+                    Path actual = future.get(10, java.util.concurrent.TimeUnit.SECONDS);
+                    if (expected == null) expected = actual;
+                    assertThat(actual).isEqualTo(expected);
+                    assertThat(actual.getParent()).isDirectory();
+                }
+            }
+        }
+    }
+    @Test void existingFileCannotBeAcceptedAsCacheDirectory() throws Exception {
+        Path root = directory.resolve("not-a-directory");
+        Files.writeString(root, "TEST file must not be replaced");
+        var manifest = manifest("part.wav");
+        assertThatThrownBy(() -> new AudioFiles(root).file(manifest, manifest.files().getFirst()))
+                .isInstanceOf(IOException.class).hasMessageContaining("không an toàn");
+        assertThat(Files.readString(root)).isEqualTo("TEST file must not be replaced");
+    }
     @Test void corruptTruncatedAndOversizedDownloadsNeverReplaceValidCache() throws Exception {
         var files = new AudioFiles(directory); var manifest = manifest("part.wav");
         files.download(source(bytes), manifest, ignored -> {});
