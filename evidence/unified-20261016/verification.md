@@ -45,4 +45,4 @@ Hash đủ84file của suite lịch sử `E1-2ff52082-3ead-4bbb-9963-10e9efe07b7
 - C: default FULL/epoch/presence hooks, C1 initial FAIL/cleanup/FX harness và final PASS, E1 methodology/oracle/identity/resource metrics và historical integrity. Không bật delta production.
 - [Ma trận manual](../../docs/ACCEPTANCE_B_MANUAL_MATRIX.md): người nghe thật, rút cáp/kill app thật, hai candidate GUI/LAN hai máy, installer/quyền install/cài-gỡ máy không IDE, MP3/M4A, E2/load và review A/B/C đều **NOT RUN** hoặc PARTIAL như evidence gốc; không ký thay reviewer, không sửa tracker/task acceptance.
 
-Không merge main hoặc đóng PR cũ. Draft mới nhắm main chỉ phục vụ review A/B/C; xem publication để biết HEAD cuối. Kết quả tổng thể **PARTIAL**, không tuyên bố ứng dụng/MSI đã nghiệm thu toàn hệ thống.
+Không merge main hoặc đóng PR cũ. Draft mới nhắm main chỉ phục vụ review A/B/C; xem [publication](publication.md) để biết HEAD công bố. Kết quả tổng thể **PARTIAL**, không tuyên bố ứng dụng/MSI đã nghiệm thu toàn hệ thống.

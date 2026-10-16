@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-16/10/2026 — đã hòa PR #35/#38 trên main `c0fd903`, production merge `24f70bd`, checkpoint test `b755646`. Clean test/package mới mỗi lượt872PASS/1skip, PG thật; Flow41/0GAP, GUI11/progress/B4/shared writer/FULL và app-image Audio8 PASS subset. C1 cuối PASS (giữ FAIL ban đầu), MSI/Unicode SDK/WiX BLOCKED; manual/LAN/A-C review pending. Sẵn sàng Draft review, chưa nghiệm thu toàn hệ thống. [Báo cáo và giới hạn](../evidence/unified-20261016/verification.md). Các số lịch sử bên dưới giữ theo SHA nguồn.
+16/10/2026 — đã hòa PR #35/#38 trên main `c0fd903`, production merge `24f70bd`, checkpoint test `b755646`. Clean test/package mới mỗi lượt872PASS/1skip, PG thật; Flow41/0GAP, GUI11/progress/B4/shared writer/FULL và app-image Audio8 PASS subset. C1 cuối PASS (giữ FAIL ban đầu), MSI/Unicode SDK/WiX BLOCKED; manual/LAN/A-C review pending. [Draft PR #39](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/39) chờ review, chưa nghiệm thu toàn hệ thống. [Báo cáo và giới hạn](../evidence/unified-20261016/verification.md). Các số lịch sử bên dưới giữ theo SHA nguồn.
 
 Cập nhật T3-B5: 15/10/2026 — nhánh `feat/t3-b5-windows-installer` từ main B4 `0b9c5fa`. [MSI per-user và hướng dẫn máy hai](WINDOWS_INSTALLER.md) đã triển khai, artifact nguồn sạch `acac38d`, Java21/JavaFX đi kèm, FULL mặc định. Lượt mới **687 PASS, 0 skip** và MSI cài → login không agent → UI B4/FULL/audio/READY/start/gián đoạn → đóng/gỡ PASS bằng quyền thường, install Unicode bị chặn ghi. [Report](../evidence/t3-b5/2026-10-15-verification.md) giữ hash/artifact/raw path/giới hạn. Phần đóng gói local hoàn tất; **IT01 PARTIAL**, máy Windows thứ hai không IDE/LAN/nghe thủ công/human A review NOT RUN. Không ghép PR35 draft hoặc làm T4/E1/E2; tracker/kế hoạch/.env giữ nguyên.
 
@@ -48,7 +48,7 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
 | A | _chưa gán_ | Backend thi/Listening/history đã hòa với validation và progress; chờ review A | Clean/package872PASS+1skip, PostgreSQL thật | Review quyền, committed data và QD-29 | `integrate/unified-reading-listening-b4-b5-20261015` |
-| B | _chưa gán_ | Đã hòa PR #35/#38; chuẩn bị Draft review | Giữ B4/MSI nền; GUI11/Flow41/nativeAudio8 và EXE+PG PASS subset | Human review/manual/LAN; installer thiếu SDK/WiX BLOCKED | `integrate/unified-reading-listening-b4-b5-20261015` |
+| B | _chưa gán_ | Đã hòa PR #35/#38; Draft #39 chờ review | Giữ B4/MSI nền; GUI11/Flow41/nativeAudio8 và EXE+PG PASS subset | Human review/manual/LAN; installer thiếu SDK/WiX BLOCKED | `integrate/unified-reading-listening-b4-b5-20261015` |
 | C | _chưa gán_ | T3-C5 bản nháp tài liệu đã viết; chờ B review | Báo cáo đồng bộ/giới hạn đối chiếu main `f97c081`; kiểm tài liệu riêng | LAN hai máy, human A/B review và gate 20/10 NOT_DECIDED/PARTIAL; FULL default | `docs/t3-c5-monitoring-sync-report` |
 
 ## Đang bị chặn

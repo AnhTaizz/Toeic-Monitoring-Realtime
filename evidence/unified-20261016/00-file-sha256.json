@@ -59,8 +59,8 @@
     },
     {
       "path": "publication.md",
-      "sha256": "23055d7b5b5b1bb54fc5d93f9edd0ec44edce586224b36bfb1b8671bfd73960c",
-      "bytes": 556
+      "sha256": "e0d51e24a166bbbcfb8a440c5e10ebcae27ae1d7e764e33c43b7758927550614",
+      "bytes": 1108
     },
     {
       "path": "screenshots/01-reading-saved.png",
@@ -119,8 +119,8 @@
     },
     {
       "path": "verification.md",
-      "sha256": "62e855fc52159bd471849c10e4f673ce7b28e604c2bf70f38cde03dd7620b802",
-      "bytes": 9430
+      "sha256": "369a132cd6634ec838b4bcdf1bb7c94bbfa89517e9b57f801766470e4f7705c4",
+      "bytes": 9452
     }
   ]
 }
