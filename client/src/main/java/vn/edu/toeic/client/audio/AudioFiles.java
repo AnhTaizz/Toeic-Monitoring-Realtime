@@ -2,6 +2,7 @@ package vn.edu.toeic.client.audio;
 
 import java.io.*;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.*;
 import java.util.*;
 import java.util.function.LongConsumer;
@@ -43,16 +44,26 @@ public final class AudioFiles {
                 || !target.toRealPath().getParent().equals(directory.toRealPath()))) throw new IOException("Đường dẫn cache audio không an toàn.");
         return target;
     }
-    private static void safeDirectory(Path directory) throws IOException {
-        // Inspect existing parents before creating children, including Windows junctions.
-        Path current = directory.getRoot();
-        for (Path part : directory) {
+    private void safeDirectory(Path directory) throws IOException {
+        if (!directory.startsWith(root)) throw new IOException("Đường dẫn cache audio không an toàn.");
+
+        // Parents outside the configured cache may legitimately be Windows junctions
+        // (for example D:\a on GitHub-hosted runners). Trust that platform boundary,
+        // but reject links and reparse points at the cache root and below it.
+        Files.createDirectories(root);
+        safeExistingDirectory(root);
+        Path current = root;
+        for (Path part : root.relativize(directory)) {
             current = current.resolve(part);
-            if (Files.exists(current, LinkOption.NOFOLLOW_LINKS)) {
-                if (!Files.isDirectory(current, LinkOption.NOFOLLOW_LINKS) || !current.toRealPath().equals(current))
-                    throw new IOException("Đường dẫn cache audio không an toàn.");
-            } else Files.createDirectory(current);
+            if (Files.exists(current, LinkOption.NOFOLLOW_LINKS)) safeExistingDirectory(current);
+            else Files.createDirectory(current);
         }
+    }
+    private static void safeExistingDirectory(Path directory) throws IOException {
+        BasicFileAttributes attributes = Files.readAttributes(
+                directory, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
+        if (!attributes.isDirectory() || attributes.isSymbolicLink() || attributes.isOther())
+            throw new IOException("Đường dẫn cache audio không an toàn.");
     }
     public void download(AudioApi api, AudioManifestResponse manifest, LongConsumer progress) throws Exception {
         validate(manifest, manifest.attemptId()); long completed = 0;
