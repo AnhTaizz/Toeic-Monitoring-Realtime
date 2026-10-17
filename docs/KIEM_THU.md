@@ -1,5 +1,7 @@
 # Trạng thái kiểm thử
 
+17/10/2026 — T3-C4 gate trên source `2b6c9ce`, base PR #43 `772c6e9`: focused client 77 PASS; local live gate 42/42 PASS trên một Windows host với PostgreSQL TEST schema riêng; full Maven BUILD SUCCESS (protocol45/client610/server219/spike1, 48 PostgreSQL test skip ở lệnh full, 0 fail/error). Lượt local gate đã chạy PostgreSQL thật. MT02–MT06 giữ `PARTIAL` vì ACK/base faults là SIMULATED và chưa có LAN hai máy/human B review. Gate `PARTIAL / NOT DECIDED`; FULL mặc định. [Evidence 17/10](../evidence/t3-c4/2026-10-17-lan-gate.md), [runbook](MONITORING_DELTA_LIVE_GATE.md).
+
 16/10/2026 — Kiểm E1/T4-C1 riêng: 87Java targeted +11Python PASS; fixture CPU trước50% sai/sau10% đúng, Windows smoke và rejoin byte-identical PASS. Đây không nâng MT/IT hoặc gate thành PASS. Raw E1 lịch sử chưa có để tái xác nhận; [báo cáo](../evidence/t4-c1/2026-10-16-review.md), [lệnh](E1_T4C1_MEASUREMENT.md).
 
 Mô tả đầy đủ từng case (cách gây tình huống, kết quả bắt buộc) ở `Ke_hoach_LT_Mang_5_chang/03_KIEM_THU_VA_THUC_NGHIEM.md`. File này chỉ theo dõi đã chạy chưa và bằng chứng ở đâu.

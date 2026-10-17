@@ -625,3 +625,10 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 - Tái hiện CPU50% sai so expected10%; baseline smokeCOMPLETE nhưng rejoinexit2. Sau sửa87Java/11Python PASS, final smoke REAL3child/gateSIMULATED COMPLETE, rejoin byte-identical/reanalysis deterministic. Giữ lỗi cache/PowerShell và1ERROR hồi quy trong ignored target/t4-c1, sửa implementation để C4 test gốc PASS. Không full12/E2/load/LAN hoặc benchmark overhead.
 - 12metadata lịch sử/3trace MOCK hash khớp; derived CSV count287/62/11. Raw84file c1601b5 chưa có tại provenance, đã hỏi vị trí; không nhận reanalysis cũ PASS. Toàn12run cần phân tích lại resource; chưa có lý do tự chạy lại ngay toàn campaign.
 - Chuẩn bị T4-C1 có thể review, nghiệm thu PARTIAL: human B/raw cũ/T3-C4 LAN-gate/trace120s E2 còn mở. Không thay human review bằng agent; ChatGPT planning/review NOT RUN theo opt-out. User ủy quyền commit/push/PR riêng, không merge; Git cuối trong PR/phản hồi. Dừng review E1/T4-C1.
+
+## 17/10/2026 — C · chuẩn bị gate T3-C4 LAN/human B
+
+- Tạo `gate/t3-c4-lan-20261017` từ HEAD PR #43 `772c6e9`; không merge/đóng/mark Ready PR #39–#43. Sửa delivery/transport để stop chờ CLOSE giải phóng correlation và bỏ phản hồi muộn của correlation đã quên; commit code `2b6c9ce`.
+- Focused client 77 PASS; local live gate 42/42 PASS trên một Windows host với app/ProcessHandle/Edge/Spring/PostgreSQL/HTTP/WS thật và fault seams ghi SIMULATED. Full Maven rerun với temp trong workspace BUILD SUCCESS: protocol45/client610/server219/spike1, 48 PG test skip ở lệnh full; local gate PG thật PASS.
+- App-image/ZIP ignored từ source sạch `2b6c9ce`, FULL mặc định; ZIP SHA-256 `9e920fba5d6440f002ef51f2ba629b49ddbb7dae12177a4c6282c1e2b34c4667`, JAR SHA-256 `b3febc078d845e181bffb914c08a7ad49e78250ee693075fd35a67eead40452f`. Máy build thiếu `mt.exe`, nên runbook yêu cầu đường dẫn ASCII.
+- [Runbook](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-17-lan-gate.md). LAN hai máy và human B review `NOT RUN`; gate `PARTIAL / NOT DECIDED`; không sửa TRACKER/QD, không chạy E1/E2/load.
