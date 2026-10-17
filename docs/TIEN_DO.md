@@ -1,14 +1,32 @@
 # Tiến độ hiện tại
 
+17/10/2026 (chiều) — Nhánh ổn định hóa `stabilize/final-rc-20261017`, source `3702b6d` chứa PR39–43 + main `07c4024` + sửa QD-29/lịch sử/cache audio/C1. Clean test/package 924 PASS/4 SKIP, MSI 0.3.10 (SHA256 `d69a6f59…2355881`) installed FullSuite 926 PASS/2 SKIP, CI Windows SUCCESS. QD-31..34 IMPLEMENTED, chờ owner; PR45 đề xuất đóng (superseded). LAN/nghe thật/máy sạch/tải/E2 NOT RUN. [báo cáo](../evidence/stabilize-20261017/REPORT.md)
+
+17/10/2026 — RC TEST mới `test/unified-final-20261017`, source c224ba8/tree22858b4 chứa PR39/40/41/42/43 + main07c4024; PR45 ngoài RC do conflict/race (18/128 lỗi, RC0/128). Clean test/package mỗi lượt904PASS/2SKIP; MSI0.3.9 installed FullSuite906PASS/0SKIP; Flow41/GUI11/concurrency/C1/C2 PASS mới. E1 raw84 giữ hash, rejoin12 và analyzer17output deterministic; CPU time-weighted mới, C confirmation pending. QD29 PROPOSED_FOR_A_C_APPROVAL; không owner approval/merge thật/main, FULL default. [Bàn giao RC](../evidence/integration-final-20261017/REPORT.md). Manual/LAN/hearing/load/E2 NOT RUN; release NOT_READY.
+
+16/10/2026 — **F01 FIXED** trên nhánh local cô lập `qa/f01-listening-result-20261016` từ HEAD PR40 `3fc5bb4`. Code `d19c639` giữ `listeningInterrupted` qua submit/status/history và cảnh báo kết quả SUBMITTED/TIMED_OUT. Regression trước sửa6ERROR → mapping6PASS; clean test/package mới mỗi lượt896PASS/2SKIP; installed MSI0.3.8 FullSuite898PASS/0SKIP. AT11 41/0GAP, Application GUI11, PG concurrency, C1/C2 PASS local; giữ C1 FAIL cleanup đầu, nguyên nhân chưa chứng minh. MSI mới/5439class byte-equivalent,84rawE1 giữ checksum; TEST cluster riêng đã dừng/0schema. A review B và test trong phần A; nghe thật/LAN/máy2/human A-C NOT RUN. Không push/merge/approve/đổi tracker hoặc PR39/40. [Báo cáo F01](../evidence/f01-20261016/REPORT.md).
+
+16/10/2026 — C review E1 trên nền PR40 `3fc5bb4`, nhánh `review/c-e1-methodology-t4c1`. Sửa CPU weighted interval/rejoin E1 và kiểm chất lượng analyzer; 87Java/11Python PASS, smoke Windows/rejoin/reanalysis PASS. [Guide T4-C1](E1_T4C1_MEASUREMENT.md), [review](../evidence/t4-c1/2026-10-16-review.md). Chuẩn bị có thể review, nghiệm thu PARTIAL: raw12run lịch sử chưa tìm thấy để reanalysis, human B/LAN/gate còn mở. FULL default, không E2/merge/tracker.
+
+16/10/2026 — vòng QA PR #39 — [Draft QA #40](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/40) trên nhánh riêng `qa/b-pr39-acceptance-20261016`, source9bfc75e: sửa3lỗi (title smoke/BOM/cache race), clean test và package875PASS/1SKIP mỗi lượt; installed FullSuite876PASS/0SKIP; MSI037 + native History/reorg local PASS. Human/LAN2máy NOT RUN theo xác nhận chỉ một máy; A/C review và cleanup QA DB trong shared container đang dừng còn chờ owner. Không merge PR39/main hoặc cập nhật tracker. [Báo cáo QA mới](../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md). Các kết quả dưới đây là lịch sử theo SHA riêng.
+
+16/10/2026 — đã hòa PR #35/#38 trên main `c0fd903`, production merge `24f70bd`, checkpoint test `b755646`. Clean test/package mới mỗi lượt872PASS/1skip, PG thật; Flow41/0GAP, GUI11/progress/B4/shared writer/FULL và app-image Audio8 PASS subset. C1 cuối PASS (giữ FAIL ban đầu), MSI/Unicode SDK/WiX BLOCKED; manual/LAN/A-C review pending. [Draft PR #39](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/39) chờ review, chưa nghiệm thu toàn hệ thống. [Báo cáo và giới hạn](../evidence/unified-20261016/verification.md). Các số lịch sử bên dưới giữ theo SHA nguồn.
+
 Cập nhật T3-B5: 15/10/2026 — nhánh `feat/t3-b5-windows-installer` từ main B4 `0b9c5fa`. [MSI per-user và hướng dẫn máy hai](WINDOWS_INSTALLER.md) đã triển khai, artifact nguồn sạch `acac38d`, Java21/JavaFX đi kèm, FULL mặc định. Lượt mới **687 PASS, 0 skip** và MSI cài → login không agent → UI B4/FULL/audio/READY/start/gián đoạn → đóng/gỡ PASS bằng quyền thường, install Unicode bị chặn ghi. [Report](../evidence/t3-b5/2026-10-15-verification.md) giữ hash/artifact/raw path/giới hạn. Phần đóng gói local hoàn tất; **IT01 PARTIAL**, máy Windows thứ hai không IDE/LAN/nghe thủ công/human A review NOT RUN. Không ghép PR35 draft hoặc làm T4/E1/E2; tracker/kế hoạch/.env giữ nguyên.
 
 Cập nhật T3-B4: 15/10/2026 — nhánh `feat/t3-b4-proctor-session-controls`, base main `8f5ac40`. [Tab điều khiển ca/kết quả](PROCTOR_SESSION_CONTROLS.md) dùng backend A1/A2, không đổi server production. Clean package source `06fd215`: **686 PASS, 0 skip**, GUI LT04 local, media rerun 8 checks và FULL dashboard smoke PASS. Lượt media đầu file lock giữ FAIL, nguyên nhân chưa chứng minh; xem [evidence](../evidence/t3-b4/2026-10-15-verification.md); human A review/nghe thủ công/LAN NOT RUN, PR35 draft giữ riêng. FULL mặc định, không B5/E1/E2.
+
+Lịch sử nhánh nguồn #38: Cập nhật B overnight15/10 (main mới0b9c5fa có PR36 B4; cần đối chiếu B4 trước merge): code đề xuất trên nhánh riêng; finalJava848/Flow41/GUI11/C1-C2 local PASS, E1 đủ12run REAL (human C review pending). Unicode/installer thiếuSDK/WiX, physical/LAN/human review chưa nghiệm thu; tracker không đổi. [Bàn giao](../evidence/overnight-20261015/00-summary.md).
+
+15/10/2026 — tích hợp Reading/Listening/history trên `integration/reading-listening-20261015`, base main8f5ac40, history2ca4121 và Reading65f5123. Code9115776: một ExamSession/writer cho hai phần; query status an toàn cho raw ID; scope HTTP không nới monitoring v0. Clean test833 và package833 PASS với PostgreSQL18.6 thật, 0skip. GUI production smoke8nhóm PASS mới trên d809a00, proctor roster/quan sát đã render; C1/C2 hồi quy PASS; [guide](INTEGRATION_READING_LISTENING.md), [evidence mới](../evidence/integration/2026-10-15-verification.md). Nhánh tích hợp đã push qua Git Windows; [Draft PR #35](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/35) đã tạo, chưa merge; human A/B/C/LAN/installer/E1/E2 NOT RUN, ID ACTIVE đặc biệt chờ contract QD29. Những cập nhật cũ bên dưới giữ ngày/SHA lịch sử.
 
 Cập nhật T3-B3: 14/10/2026 — branch `feat/t3-b3-listening-interruption-recovery` kế thừa T3-B2; Media/mạng lỗi dừng player, ghi marker và gửi INTERRUPTED, reconnect/mở lại GET status rồi giữ khóa, không replay/resume. Java669/669 PASS với PostgreSQL thật; app-image Unicode PASS8, có MediaPlayer thật dừng giữa audio và reconnect không phát lại. [Hướng dẫn](LISTENING_INTERRUPTION_RECOVERY.md), [evidence](../evidence/t3-b3/2026-10-14-verification.md). Code complete; review A, rút mạng/kill app thủ công, LAN/máy thứ hai và nghe thủ công chưa chạy. T2-B4 chưa có trên nhánh nên policy Listening tách riêng và gate ghép Reading còn chờ; tracker IN_PROGRESS, giờ null.
 
 Cập nhật T3-B2: 14/10/2026 — branch `feat/t3-b2-listening-playback` kế thừa T3-B1; nhận `LISTENING_START`, kiểm writer/manifest/SHA-256, journal chống replay, playlist JavaFX và câu hỏi theo `audioFile`, báo STARTED/heartbeat/COMPLETED đã triển khai. Java666/666 PASS với PostgreSQL thật; app-image Unicode PASS7. [Hướng dẫn](LISTENING_CLIENT_PLAYBACK.md), [evidence](../evidence/t3-b2/2026-10-14-verification.md). Source `987d9b27f400c339a50914de11de6d094649a271`; code complete, review A/LAN/máy thứ hai/nghe thủ công chưa chạy. B3 còn event gián đoạn và reconnect policy; tracker IN_PROGRESS, giờ null.
 
 Cập nhật T3-B1: 14/10/2026 — branch `feat/t3-b1-audio-download-readiness` từ main `2e784fa`; tải/checksum nền, WAV thử loa riêng, xác nhận nghe và READY có ACK đã triển khai. Java 657/657 PASS (PostgreSQL thật, 0 skip); 6 kiểm tra view/media trong app-image Unicode PASS. [Hướng dẫn](AUDIO_CLIENT_PREPARATION.md), [evidence](../evidence/t3-b1/2026-10-14-verification.md). Source `89082e3d43a322c0e0e210f393cc3b4bf49bd7da`; code complete, review A/thử nghe thủ công/LAN/máy thứ hai chưa chạy; tracker IN_PROGRESS, không ghi giờ chưa đo.
+
+Fix P1 cursor PR #28 — 13/10/2026 (local): code/test `00b1df1` tích hợp main `2e784fa`; validator theo128 ký tự PostgreSQL, không trim/normalize; Maven test/package638 PASS, PG37 PASS, probe history+Listening11/11. Diff giữ21file history gốc; chưa push/retarget/bỏ Draft/merge. B còn validator ASCII/URL encoding cần sửa riêng; nguy cơ sessionId+username vượt128 (500+rollback) chưa sửa theo phạm vi được cho phép. Evidence local `target/pr28-cursor-20261013/REPORT.md`; GUI/human review NOT RUN.
 
 Cập nhật T3-C5: 13/10/2026 — [bản nháp đồng bộ và giới hạn](MONITORING_SYNC_REPORT_DRAFT.md) đối chiếu main `f97c081`. Chỉ tài liệu; [kiểm tra mới](../evidence/t3-c5/2026-10-13-verification.md) không chạy lại runtime. C4 gate NOT_DECIDED/PARTIAL, FULL mặc định; LAN hai máy và B review còn thiếu.
 
@@ -20,6 +38,8 @@ Cập nhật T3-C4:13/10/2026 — candidate Application chọn DELTA opt-in + ca
 
 Cập nhật backend A: 13/10/2026 — nhánh cục bộ `sync/pr23-main-20261013` tại `c64503f` đưa ba sửa P0 của PR #23 lên trên main `cb30f3d` (đã gồm T3-C4). Maven package 596 PASS, 0 skip, có PostgreSQL thật; smoke C1/C2 PASS; Python 10 PASS. Review lại ba sửa P0: đạt, có 4 ghi nhận không chặn. Agent-driven; human review NOT RUN; chưa push/merge. [Evidence](../evidence/t2-a-p0-sync-20261013/2026-10-13-verification.md).
 
+Cập nhật B-ACCEPT-01 phía A: 12/10/2026 — `GET /api/v1/candidate/attempts` (lịch sử lượt thi của thí sinh) đã cài theo đúng đề xuất của B, kèm sửa route không tồn tại trả 404 thay cho 500. Nhánh cục bộ `fix/backend-candidate-attempt-history-20261012` tại `33a2932`, base `main` `ee714fc` + 5 commit P0; **chưa push, chưa merge**. `mvn package` 592/592 với PostgreSQL thật; client B `770c896` gọi server này PASS 13/13. GUI production của B và review C→A NOT RUN. [Evidence](../evidence/t2-a-history/2026-10-12-verification.md).
+
 Cập nhật mới T3-C2: 12/10/2026 — reducer production/resync/capability/scan freshness thử nghiệm có; full vẫn default. Java554/Python10 và REAL Spring/PG/WS/restart, CLI/hồi quy PASS. Readings MOCK trong delta smoke; gate/LAN/human A/B/E1/E2 NOT RUN. [Guide](MONITORING_DELTA_REDUCER.md), [evidence](../evidence/t3-c2/2026-10-12-verification.md).
 
 Mốc C5 trước đó: 11/10/2026 — T2-C5 tài liệu phương pháp và đối chiếu protocol hoàn tất từ main82557bf. Không đổi runtime; không chạy lại Java493/smoke/E1/E2. Kiểm tra mới là source/link/schema/default/evidence integrity. B human review trước phép đo NOT RUN; marker cửa sổ E1, resource sampler/analyzer và delta/E2 còn thiếu. Giữ các kết quả C1–C4 theo evidence gốc.
@@ -30,19 +50,22 @@ File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NH
 
 ## Đang ở đâu
 
-- Chặng: **2** (09–16/10) — Bắt đầu triển khai thi và giám sát.
-- Gate kế tiếp: **12/10 thi cơ bản** — nộp bài, chấm điểm, lưu đáp án, đổi câu hỏi, timer.
+- Chặng: **2, gate tích hợp ngày15–16/10**; backend, Listening B1–B3 và monitoring chặng3 đã có source, đang nghiệm thu bản chung Reading/Listening.
+- Gate hiện tại: **15–16/10 lưu/nộp/reconnect + Reading/Listening chung writer**; LAN/human và gate delta20/10 vẫn riêng.
 
 ## Mỗi người
 
 | Vai | Tên | Đang làm | Xong gần nhất | Bước tiếp theo | Nhánh git |
 |---|---|---|---|---|---|
-| A | _chưa gán_ | Chặng 2 CODE_COMPLETE (T2-A1..T2-A5); sẵn sàng Chặng 3 | Tài liệu giao dịch `docs/GIAO_DICH_VA_QUYEN.md`, nghiệm thu AT01–AT10 PASS | Sẵn sàng Chặng 3 (T3-A1: Audio manifest & READY) | `feat/t2-a5-transaction-docs-and-auth-evidence` |
-| B | _chưa gán_ | T3-B4 điều khiển ca tối thiểu, kiểm LT04 local | Tab import/tạo ca/READY/start/kết quả/replacement; evidence riêng | A review, thành viên tự demo và LAN; phối hợp ghép tab vào PR35 | `feat/t3-b4-proctor-session-controls` |
+| A | _chưa gán_ | Backend thi/Listening/history đã hòa với validation và progress; chờ review A | Clean/package872PASS+1skip, PostgreSQL thật | Review quyền, committed data và QD-29 | `integrate/unified-reading-listening-b4-b5-20261015` |
+| B | _chưa gán_ | Đã hòa PR #35/#38; Draft #39 chờ review | Giữ B4/MSI nền; GUI11/Flow41/nativeAudio8 và EXE+PG PASS subset | Human review/manual/LAN; installer thiếu SDK/WiX BLOCKED | `integrate/unified-reading-listening-b4-b5-20261015` |
 | C | _chưa gán_ | T3-C5 bản nháp tài liệu đã viết; chờ B review | Báo cáo đồng bộ/giới hạn đối chiếu main `f97c081`; kiểm tài liệu riêng | LAN hai máy, human A/B review và gate 20/10 NOT_DECIDED/PARTIAL; FULL default | `docs/t3-c5-monitoring-sync-report` |
 
 ## Đang bị chặn
 
+- [13/10] Nhánh để mở PR cho API lịch sử là `feat/backend-candidate-attempt-history-20261013` (`19f669e`, xếp trên PR #23 đã đồng bộ, 602 test PASS); nhánh `…-20261012` bên dưới là bản cũ có lặp commit P0, không dùng để push.
+- [12/10] B-ACCEPT-01: backend đã sẵn ở nhánh cục bộ `fix/backend-candidate-attempt-history-20261012` (`33a2932`) nhưng chưa push/merge — cần người dùng quyết định đưa nhánh lên và ghép với nhánh tích hợp của B (`770c896`), rồi B chạy lại GUI production theo mục 5 của evidence — hạn gate 15/10.
+- [12/10] Gọi sai phương thức HTTP (ví dụ `POST` vào route chỉ có `GET`) vẫn trả 500 thay vì 405 — A xem có sửa cùng handler lỗi không; không chặn B-ACCEPT-01.
 - T2-C2 human A/B review: **NOT RUN**, không ngăn code/test/PR/merge đã được người dùng ủy quyền nếu GitHub không có yêu cầu bắt buộc thiếu. [Evidence C2](../evidence/t2-c2/2026-10-10-verification.md). MT01/MT07/MT08 giữ PARTIAL cấp toàn hệ thống do candidate GUI/LAN chưa chạy; các kiểm tra kỹ thuật mới PASS có nhãn REAL/MOCK/SIMULATED. Origin legacy/trước heartbeat ACK đầu UNSPECIFIED; queue RAM/full RAM một JVM, gap mới cần HTTP refresh.
 - C1 lỗi annotation Scheduled đã sửa bằng worker riêng và merge PR#18 tại683adfc. Nhánh C1 giữ local/remote. Không bật scheduling toàn app hoặc sửa ExamTimeoutService; issue scheduler bài thi chuyển A xem riêng. [Evidence sửa C1](../evidence/t2-c1/scheduling-fix/2026-10-10-verification.md). C2 đã chạy lại hồi quy tự STALE/TTL/capacity/shutdown PASS.
 
@@ -68,8 +91,8 @@ Ghi theo mẫu: `[ngày] Ai bị chặn — bởi cái gì — cần ai làm gì
 | 04/10 | B → C | Interface collector → network | MonitoringTransport B2 send=write, ACK/ERROR riêng; C3 dùng event contract A3, state chưa có |
 | 04/10 | A → B | Cách gửi credential HTTP/WS, phạm vi subscription | Bearer header; B3 đã consume warning/timeline, HTTP scope refresh và dedupe attempt/event |
 | 04/10 | A → B, C | Scoped heartbeat, roster/presence/history | A4 V4; B3 consume roster/history/push presence, revision, stale và HTTP recovery; REAL integration PASS; schema không đổi |
-| 09/10 | A → B, C | Import đề, answers/revision, requestId, writerEpoch, deadline/state, mã lỗi | Chưa có |
-| 12/10 | A → B | Trạng thái đã chốt, takeover writer, state khi reconnect | Chưa có |
+| 09/10 | A → B, C | Import đề, answers/revision, requestId, writerEpoch, deadline/state, mã lỗi | Xem contract/source mới và bằng chứng theo task; hàng lịch sử chưa được nghiệm thu toàn luồng |
+| 12/10 | A → B | Trạng thái đã chốt, takeover writer, state khi reconnect | Xem contract/source mới và bằng chứng theo task; hàng lịch sử chưa được nghiệm thu toàn luồng |
 | 16/10 | A + B → C | Audio manifest, READY/start/interrupted | A1/A2 backend đã có; B1 tải/checksum/thử loa/READY đã có trên branch riêng; B2/B3 playback/gián đoạn phía client chưa có |
 | 16/10, khóa 18/10 | C → A, B | Monitoring epoch/base/sequence, định nghĩa metric | C1 OPEN/full/CLOSE/epoch/sequence/state đã merge; C2 bổ sung EventOrigin/deliveryStatus và HTTP gap theo QD-13, server trước client mới; T3-C2 encoder/reducer/base/resync/freshness có qua capability/flag thử nghiệm; gate và metric E1-E2 chưa có; human A/B review NOT RUN |
 
@@ -118,3 +141,19 @@ Dùng lại AuthorizationService/SessionAuthenticationService/MonitoringStateSer
 ## Bàn giao T3-C4 ngày13/10/2026
 
 Baseee714fc (C3PR26). Opt-in/current capability/fixed mode, reconnect fresh OPEN/full, scope heartbeat callback, actual candidate/proctor Application LOCAL GUI; code2d867c2 + fix stdoutd9475eb. [Guide](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-13-verification.md), QD19 liên kết QD10 presence. Source/JAR/raw/failed attempts giữ riêng, không sửa `.env`/tracker/kế hoạch/migrations/exam/PR A-B. Gate preparation/PARTIAL, cần LAN hai máy và B review; không giả approve hoặc gate20/10 đã diễn ra. Git cuối trong PR/final; giữ nhánh và sync main khi an toàn. Dừng sau C4, không C5/E1/E2.
+
+## B overnight 15/10/2026 — đang thực hiện
+
+Branch riêng `agent/b-overnight-followups-20261015`, base PR35 11c5da9. Phase01 backend ID/progress đề xuất có targeted49 PASS PostgreSQL; human A/C review và QD29 approval pending. [Evidence](../evidence/overnight-20261015/phase-01/verification.md). Phases02–06 chưa xong, tracker không đổi.
+
+Overnight phase02: E1 harness có dry/SMOKE + analyzer thực, C human review pending; chưa E1 final. Phase03 tiếp theo exact AT11/GUI regression.
+
+Overnight phase03 localgate PASS (839/flow41/GUI8/C1-C2); phase04 bắt đầu proctorcontrols/progress. Humanreview/LAN/E1final pending.
+
+Overnight phase04: proctor session/progress local gate PASS, cần A/C review API và B review UI; đang sang package Windows. [Guide](PROCTOR_SESSION_PROGRESS.md).
+
+Overnight phase05 PARTIAL: ASCII app-imageMedia8 PASS, wrapperUnicode/installer BLOCKED thiếu mt.exe/WiX; không cài/gỡ. Phase06 E1/manual chuẩn bị tiếp. [Guide](WINDOWS_PACKAGING.md).
+
+### Công bố overnight 15/10
+
+[Draft PR overnight](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/38) dùng nhánh public riêng, base integration `11c5da9`. Main mới `c0fd903` có PR #36 B4 và PR #37 B5: owner cần đối chiếu cả UI/controller lẫn pipeline Windows trước merge; chưa kiểm code ghép. Java đã kiểm `c1601b5` không đổi; E1 có 11 inconclusive nên PARTIAL. Evidence MSI upstream không được dùng thay kết quả package overnight. [Bàn giao](../evidence/overnight-20261015/00-summary.md).

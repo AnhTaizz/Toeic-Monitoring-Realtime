@@ -1,0 +1,22 @@
+{
+  "applicationSourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+  "installerSha256": "0068d05946eb26cfd632b6be1b9b26ca61f0729c58a44a63646d92c554f2b698",
+  "harnesses": [
+    {
+      "file": "review/harness/InstalledClientAgent.java",
+      "sha256": "bf550edb38edf23698332120b8ead1626779ca97a08a12e96b213743f719ba35"
+    },
+    {
+      "file": "review/harness/ExtendedInstalledDriver.java",
+      "sha256": "57af1906d8f259a75fbf122eca208d59f766a2310832461e20361d2c7774ae33"
+    },
+    {
+      "privateFile": "jpackage-out/pr39-qa-20261016/extended-harness/smoke-extended-installed-03.ps1",
+      "sha256": "90dd1c5ebf16b403e1e3e5f17aef7105cf7551392134a4b2750b54e1c665d5f7",
+      "scope": "Existing source MSI lifecycle safeguards; replaces Maven call with narrow production PostgreSQL fixture driver; private raw paths stay local"
+    }
+  ],
+  "execution": "extended-msi-install-04",
+  "labels": "REAL native EXE/JavaFX/PG/HTTP/WS; TEST exam; SIMULATED dialogs/hearing/socket fault; physical LAN NOT RUN",
+  "compiledTestAgentRestored": true
+}

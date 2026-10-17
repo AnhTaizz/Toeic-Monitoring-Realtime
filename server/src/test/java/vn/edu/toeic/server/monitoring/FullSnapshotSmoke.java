@@ -72,9 +72,16 @@ public final class FullSnapshotSmoke {
     public static void main(String[] args) {
         var smoke=new FullSnapshotSmoke();
         try { smoke.run(List.of(args).contains("--gui")); }
-        catch(Exception failure) { System.err.println("T2-C1 FAIL phase="+smoke.phase+" class="+failure.getClass().getSimpleName());
-            if (failure instanceof IllegalStateException) System.err.println("Harness check: " + failure.getMessage());
-            System.exit(1); }
+        catch(Throwable failure) {
+            // Any Throwable, not only Exception: an Error (e.g. a missing harness class) must end the JVM
+            // with exit 1 instead of leaving FX/Spring threads alive and the run hanging.
+            try {
+                System.err.println("T2-C1 FAIL phase="+smoke.phase+" class="+failure.getClass().getSimpleName());
+                if (failure instanceof IllegalStateException && failure.getCause()==null) System.err.println("Harness check: " + failure.getMessage());
+                // Cleanup failures behind a primary failure are reported too, never dropped.
+                for(Throwable cleanup:failure.getSuppressed()) System.err.println("T2-C1 also cleanup FAIL "+SmokeCleanup.classes(cleanup));
+            } finally { System.exit(1); }
+        }
     }
     private static String env(String name,String fallback) { return System.getenv().getOrDefault(name,fallback); }
     private JdbcClient jdbc() { return context.getBean(JdbcClient.class); }
@@ -83,6 +90,7 @@ public final class FullSnapshotSmoke {
         String schema="full_snapshot_test_"+UUID.randomUUID().toString().replace("-","");
         try(Connection admin=DriverManager.getConnection(url,env("DB_USER","toeic"),env("DB_PASSWORD",""))) {
             check(schema.matches("full_snapshot_test_[a-f0-9]{32}"),"safe isolated schema");admin.createStatement().execute("CREATE SCHEMA "+schema);
+            Throwable primary=null;
             try {
                 Flyway.configure().dataSource(url,env("DB_USER","toeic"),env("DB_PASSWORD","")).schemas(schema).defaultSchema(schema).load().migrate();
                 var app=new SpringApplication(ToeicServerApplication.class);app.setBannerMode(Banner.Mode.OFF);
@@ -93,20 +101,27 @@ public final class FullSnapshotSmoke {
                 measurements.add(context.getBean(RealtimeSessionRegistry.class).measurements());
                 origin="http://127.0.0.1:"+((WebServerApplicationContext)context).getWebServer().getPort();fixtures();verify(gui);
                 // No dashboard HTTP/controller remains during the autonomous maintenance assertions.
-                if(view!=null) {fx(() -> {view.close();stage.close();return null;});view=null;}
+                if(view!=null) {fx(() -> {view.close();if(stage!=null)stage.close();return null;});view=null;}
                 if(guiTransport!=null) {guiTransport.close();guiTransport=null;}
                 verifyScheduledMaintenance();
+            } catch(Throwable failure) {
+                primary=failure;throw failure;
             } finally {
-                if(view!=null) fx(() -> {view.close();stage.close();return null;});
-                if(guiTransport!=null) guiTransport.close();
-                if(gui) Platform.exit();
-                if(context!=null) {
-                    var state=context.getBean(MonitoringStateService.class);context.close();context=null;
+                // Every owned resource is released even if an earlier step fails; each reports itself.
+                var cleanup=new SmokeCleanup("T2-C1");
+                if(view!=null) cleanup.step("fx-dashboard-view",() -> fx(() -> {view.close();if(stage!=null)stage.close();return null;}));
+                view=null;
+                if(guiTransport!=null) cleanup.step("gui-transport",guiTransport::close);
+                guiTransport=null;
+                if(gui) cleanup.step("fx-platform",Platform::exit);
+                if(context!=null) cleanup.step("spring-context-and-full-state-ram",() -> {
+                    var state=context.getBean(MonitoringStateService.class);
+                    try {context.close();} finally {context=null;}
                     check(state.activeAttempts()==0,"RAM cleared on Spring shutdown");
-                    System.out.println("PASS REAL Spring shutdown clears full-state RAM");
-                }
-                admin.createStatement().execute("DROP SCHEMA "+schema+" CASCADE");
-                System.out.println("PASS only owned TEST schema/server/Edge/FX resources cleaned; shared history untouched");
+                });
+                cleanup.step("owned-test-schema",() -> admin.createStatement().execute("DROP SCHEMA "+schema+" CASCADE"));
+                if(cleanup.passed()) System.out.println("PASS only owned TEST schema/server/FX resources cleaned; shared history untouched");
+                cleanup.finish(primary,"");
             }
         }
         for(MessageMeasurements m:measurements) if(m.enabled()) {
@@ -147,7 +162,7 @@ public final class FullSnapshotSmoke {
                 phase="EDGE";
                 Path edge=Path.of(env("ProgramFiles(x86)","C:/Program Files (x86)"),"Microsoft/Edge/Application/msedge.exe");
                 check(Files.isRegularFile(edge),"owned Edge available");
-                Path profile=Files.createTempDirectory("toeic-t2c1-edge-");Process owned=null;
+                Path profile=Files.createTempDirectory("toeic-t2c1-edge-");Process owned=null;Throwable edgeFailure=null;
                 try {
                     owned=new ProcessBuilder(edge.toString(),"--headless=new","--disable-gpu","--no-first-run","--no-default-browser-check",
                             "--disable-background-networking","--remote-debugging-port=0","--user-data-dir="+profile,"about:blank")
@@ -160,12 +175,18 @@ public final class FullSnapshotSmoke {
                     await(() -> current(dashboard).processes().stream().noneMatch(item -> item.pid()==pid),"REAL owned Edge removed by next full");
                     check(jdbc().sql("SELECT count(*) FROM monitoring_events WHERE attempt_id=:a AND pid=:p").param("a",ATTEMPT).param("p",pid).query(Long.class).single()>0,"history still present after disappearance");
                     if(gui) {await(() -> !guiContains(pid),"GUI Edge row removed");screenshot("t2c1-edge-closed.png");}
+                } catch(Throwable failure) {
+                    edgeFailure=failure;throw failure;
                 } finally {
-                    if(owned!=null) stopOwned(owned);
-                    phase="EDGE_PROFILE_CLEANUP";
-                    cleanupProfile(profile);
+                    var cleanup=new SmokeCleanup("T2-C1");
+                    Process remaining=owned;
+                    if(remaining!=null) cleanup.step("owned-edge-process-tree",() -> stopOwned(remaining));
+                    cleanup.step("owned-edge-profile",() -> cleanupProfile(profile));
+                    if(edgeFailure==null && !cleanup.passed()) phase="EDGE_PROFILE_CLEANUP";
+                    cleanup.finish(edgeFailure,"");
                 }
                 System.out.println("PASS REAL Edge -> production ProcessHandle/collector/full/WS/RAM/ACK/dashboard; close removes current PID and retains PostgreSQL history");
+                System.out.println("PASS owned Edge process tree and profile removed");
                 phase="RECONNECT";
                 String oldEpoch=monitoring.fullStatus().syncEpoch(),collector=current(dashboard).collectorSessionId();
                 long interruptionsBefore=jdbc().sql("SELECT count(*) FROM monitoring_interruptions WHERE attempt_id=:a").param("a",ATTEMPT).query(Long.class).single();
@@ -277,18 +298,25 @@ public final class FullSnapshotSmoke {
             for(int y=0;y<bitmap.getHeight();y++) for(int x=0;x<bitmap.getWidth();x++) bitmap.setRGB(x,y,image.getPixelReader().getArgb(x,y));
             Path output=Path.of("server/target/t2c1-smoke",name);Files.createDirectories(output.getParent());ImageIO.write(bitmap,"png",output.toFile());return null;});
     }
-    private static <T> T fx(Callable<T> action) {var result=new CompletableFuture<T>();Platform.runLater(() -> {try {result.complete(action.call());}catch(Exception error){result.completeExceptionally(error);}});try{return result.get(5,TimeUnit.SECONDS);}catch(Exception error){throw new IllegalStateException(error);}}
+    private static <T> T fx(Callable<T> action) {var result=new CompletableFuture<T>();Platform.runLater(() -> {try {result.complete(action.call());}catch(Exception error){result.completeExceptionally(error);}});try{return result.get(20,TimeUnit.SECONDS);}catch(Exception error){throw new IllegalStateException(error);}}
+    /**
+     * Stops the owned Edge browser before its children. Killing children first made the still-running
+     * browser respawn utility/GPU processes outside the snapshot; those orphans kept the profile
+     * locked past the cleanup deadline (historical EDGE_PROFILE_CLEANUP FAIL). With the browser gone
+     * first nothing can respawn, and every child in the snapshot is then stopped and awaited.
+     */
     private static void stopOwned(Process process) throws Exception {
-        var children=process.descendants().toList();children.forEach(ProcessHandle::destroy);process.destroy();
-        if(!process.waitFor(3,TimeUnit.SECONDS)) {children.forEach(ProcessHandle::destroyForcibly);process.destroyForcibly();process.waitFor(3,TimeUnit.SECONDS);}
+        var children=process.descendants().toList();
+        process.destroyForcibly();process.onExit().get(5,TimeUnit.SECONDS);
         for(var child:children) if(child.isAlive()) child.destroyForcibly();
-        process.onExit().get(5,TimeUnit.SECONDS);
         for(var child:children) if(child.isAlive()) child.onExit().get(5,TimeUnit.SECONDS);
     }
     private static void cleanupProfile(Path profile) throws Exception {
         Path base=profile.toAbsolutePath().normalize();
         if(!base.getFileName().toString().startsWith("toeic-t2c1-edge-") || !base.getParent().equals(Path.of(System.getProperty("java.io.tmpdir")).toAbsolutePath().normalize())) throw new IllegalStateException("Unsafe owned profile");
-        long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(8);
+        // 45 s: on this build machine a non-user-mode handle (no Edge process, nothing in Restart Manager)
+        // kept SQLite journals locked up to ~22 s after Edge exited; 8 s failed cleanup in 9 of 23 runs on 17/10.
+        long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(45);
         while(Files.exists(base)) {
             try(var paths=Files.walk(base)) {
                 for(Path item:paths.sorted(java.util.Comparator.reverseOrder()).toList()) {
@@ -296,10 +324,76 @@ public final class FullSnapshotSmoke {
                     Files.deleteIfExists(item);
                 }
             } catch(java.io.IOException locked) {
-                if(System.nanoTime()>=until) throw locked;
+                if(System.nanoTime()>=until) {
+                    // Triage without paths: entry name inside the owned profile and which Edge process types still use it.
+                    String entry=locked instanceof java.nio.file.FileSystemException f && f.getFile()!=null
+                            ? base.relativize(Path.of(f.getFile()).toAbsolutePath().normalize()).toString() : "?";
+                    System.err.println("T2-C1 diagnostic edge-profile lockedEntry="+entry+" holders="+edgeProfileHolders(base.getFileName().toString())
+                            +" lockers="+(locked instanceof java.nio.file.FileSystemException f && f.getFile()!=null ? fileLockers(Path.of(f.getFile())) : "?")
+                            +" reason="+(locked instanceof java.nio.file.FileSystemException f && f.getReason()!=null ? f.getReason().replaceAll("[^\\p{L}\\p{N} .,'-]","") : "?")
+                            +" releasedAfterExtraMs="+releaseDelay(base));
+                    throw locked; // Still a FAIL: the measurement above only informs the deadline choice.
+                }
                 Thread.sleep(100);
             }
         }
+    }
+    /** Diagnostic only: how much longer the owned profile stays undeletable after the deadline (max 60 s). */
+    private static String releaseDelay(Path base) {
+        long start=System.nanoTime(),limit=start+TimeUnit.SECONDS.toNanos(60);
+        while(System.nanoTime()<limit) {
+            try(var paths=Files.walk(base)) {
+                for(Path item:paths.sorted(java.util.Comparator.reverseOrder()).toList()) if(item.toAbsolutePath().normalize().startsWith(base)) Files.deleteIfExists(item);
+                if(!Files.exists(base)) return String.valueOf(TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-start));
+            } catch(java.io.IOException | java.io.UncheckedIOException stillLocked) { }
+            try {Thread.sleep(200);} catch(InterruptedException stop) {Thread.currentThread().interrupt();return "INTERRUPTED";}
+        }
+        return ">60000";
+    }
+    /** Image names of processes that Windows Restart Manager reports as holding the file; no PIDs or paths. */
+    private static String fileLockers(Path file) {
+        String script="""
+                $s=@'
+                using System;using System.Runtime.InteropServices;
+                public static class Rm{
+                 [StructLayout(LayoutKind.Sequential)] public struct UP{public int Id;public System.Runtime.InteropServices.ComTypes.FILETIME T;}
+                 [StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)] public struct PI{public UP P;[MarshalAs(UnmanagedType.ByValTStr,SizeConst=256)]public string App;[MarshalAs(UnmanagedType.ByValTStr,SizeConst=64)]public string Svc;public int Type;public int Status;public int Sess;[MarshalAs(UnmanagedType.Bool)]public bool Restartable;}
+                 [DllImport("rstrtmgr.dll",CharSet=CharSet.Unicode)] public static extern int RmStartSession(out uint h,int f,string k);
+                 [DllImport("rstrtmgr.dll",CharSet=CharSet.Unicode)] public static extern int RmRegisterResources(uint h,uint n,string[] f,uint a,UP[] p,uint s,string[] v);
+                 [DllImport("rstrtmgr.dll")] public static extern int RmGetList(uint h,out uint need,ref uint n,[In,Out]PI[] i,ref uint r);
+                 [DllImport("rstrtmgr.dll")] public static extern int RmEndSession(uint h);}
+                '@
+                Add-Type -TypeDefinition $s
+                $h=0;[void][Rm]::RmStartSession([ref]$h,0,[Guid]::NewGuid().ToString())
+                [void][Rm]::RmRegisterResources($h,1,@($env:TOEIC_LOCKED_FILE),0,$null,0,$null)
+                $need=0;$n=16;$r=0;$i=New-Object Rm+PI[] 16;$rc=[Rm]::RmGetList($h,[ref]$need,[ref]$n,$i,[ref]$r);if($rc -ne 0){$n=0;"rm-error-$rc"}
+                for($k=0;$k -lt $n;$k++){ try{ (Get-Process -Id $i[$k].P.Id -ErrorAction Stop).ProcessName }catch{ 'exited' } }
+                [void][Rm]::RmEndSession($h)
+                """;
+        Path scriptFile=null;
+        try {
+            // A file keeps the C# quotes intact; -Command would strip them on the Windows command line.
+            scriptFile=Files.createTempFile("toeic-t2c1-lockers-",".ps1");
+            Files.writeString(scriptFile,script,java.nio.charset.StandardCharsets.UTF_8);
+            ProcessBuilder builder=new ProcessBuilder("powershell.exe","-NoProfile","-ExecutionPolicy","Bypass","-File",scriptFile.toString()).redirectErrorStream(true);
+            builder.environment().put("TOEIC_LOCKED_FILE",file.toAbsolutePath().toString());
+            Process query=builder.start();
+            String text=new String(query.getInputStream().readAllBytes(),java.nio.charset.StandardCharsets.UTF_8).trim();
+            query.waitFor(20,TimeUnit.SECONDS);
+            return "["+String.join(",",text.lines().map(String::trim).filter(s -> s.matches("[A-Za-z0-9_.-]{1,64}")).toList())+"]";
+        } catch(Exception unavailable) { return "UNAVAILABLE"; }
+        finally { if(scriptFile!=null) try {Files.deleteIfExists(scriptFile);} catch(java.io.IOException ignored) { } }
+    }
+    /** Process types (browser/renderer/utility/...) of msedge.exe whose command line names this owned profile. */
+    private static String edgeProfileHolders(String profileName) {
+        try {
+            Process query=new ProcessBuilder("powershell.exe","-NoProfile","-Command",
+                    "Get-CimInstance Win32_Process -Filter \"Name='msedge.exe'\" | Where-Object { $_.CommandLine -like '*"+profileName+"*' } | "
+                    +"ForEach-Object { if($_.CommandLine -match '--type=([a-z-]+)'){$matches[1]}else{'browser'} }").redirectErrorStream(true).start();
+            String text=new String(query.getInputStream().readAllBytes(),java.nio.charset.StandardCharsets.UTF_8).trim();
+            query.waitFor(10,TimeUnit.SECONDS);
+            return "["+String.join(",",text.lines().map(String::trim).filter(s -> s.matches("[a-z-]{1,40}")).toList())+"]";
+        } catch(Exception unavailable) { return "UNAVAILABLE"; }
     }
     private static void await(BooleanSupplier condition,String label) throws Exception {long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(12);while(System.nanoTime()<until){if(condition.getAsBoolean())return;Thread.sleep(25);}throw new IllegalStateException("Timeout "+label);}
     private static void check(boolean ok,String label) {if(!ok)throw new IllegalStateException(label);}

@@ -201,7 +201,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** AT01, AT07, AT09, AT10 có bằng chứng; chạy lại nhiều lần cho cùng kết quả.
 
-**Ghi chú làm dở:** 05/10/2026, T2-A4 code-complete trên `feat/t2-a4-concurrency-and-takeover`: Endpoint `POST /api/v1/attempts/{attemptId}/takeover` (tăng `writerEpoch` dưới khóa bi quan `FOR UPDATE OF a`), `GET /api/v1/attempts/{attemptId}/status` trả về state/answers/revision/epoch/score. Test tranh chấp đa luồng `ExamConcurrencyPostgresSmoke` kiểm thử AT01 (cách ly phân quyền thí sinh), AT07 (giữ khóa bi quan qua deadline), AT09 (takeover writer và chặn stale epoch đang chờ lock), AT10 (từ chối nộp bài/lưu bài sau deadline ngay lập tức bằng `clock_timestamp()` sau khóa). Script `scripts/smoke-t2a4.ps1` chạy PASS hoàn toàn trên PostgreSQL 18.6 thật và 375/375 unit tests PASS. Bằng chứng lưu tại `evidence/t2-a4/2026-10-05-verification.md`. Chuẩn bị T2-A5.
+**Ghi chú làm dở:** 05/10/2026, T2-A4 code-complete trên `feat/t2-a4-concurrency-and-takeover`: Endpoint `POST /api/v1/attempts/{attemptId}/takeover` (tăng `writerEpoch` dưới khóa bi quan `FOR UPDATE OF a`), `GET /api/v1/attempts/{attemptId}/status` trả về state/answers/revision/epoch/score. Test tranh chấp đa luồng `ExamConcurrencyPostgresSmoke` kiểm thử AT01 (cách ly phân quyền thí sinh), AT07 (giữ khóa bi quan qua deadline), AT09 (takeover writer và chặn stale epoch đang chờ lock), AT10 (từ chối nộp bài/lưu bài sau deadline ngay lập tức bằng `clock_timestamp()` sau khóa). Script `scripts/smoke-t2a4.ps1` chạy PASS hoàn toàn trên PostgreSQL 18.6 thật và 375/375 unit tests PASS. Bằng chứng lưu tại `evidence/t2-a4/2026-10-05-verification.md`. Chuẩn bị T2-A5. Bổ sung 12/10 (B-ACCEPT-01): thêm `GET /api/v1/candidate/attempts` để thí sinh tìm lượt thi của mình, tách khỏi `attemptScope` (QD-23), và route không tồn tại trả 404; nhánh cục bộ `fix/backend-candidate-attempt-history-20261012` `33a2932`, 592 test PASS với PostgreSQL thật, chưa push/merge, review C NOT RUN. Còn lại: sai phương thức HTTP vẫn 500. Evidence `evidence/t2-a-history/2026-10-12-verification.md`.
 
 ### T2-A5 · Tài liệu giao dịch và bằng chứng quyền
 `2h` · phụ thuộc: T2-A4 · review: C
@@ -358,3 +358,33 @@ Kiến trúc server, thiết kế giao tiếp mạng, phân quyền, giao dịch
 - Server xử lý nhiều client đồng thời bằng cơ chế gì?
 
 Bạn cũng phải vẽ lại được luồng của B (autosave phía client) và của C (full snapshot, epoch).
+
+### Ghi chú fix P1 cursor PR #28 — 13/10/2026
+
+Backend P1 đã PASS local trên code/test `00b1df1` + main `2e784fa`: validator không rỗng/NUL/quá128 code point, không trim/normalize; SQL/DTO/owner/Listening/schema giữ nguyên. Maven test/package638, PG37 và probe11/11 PASS. Chuẩn bị local để người dùng review trước push; không retarget/merge/bỏ Draft. B cần sửa validator ASCII/URL encoding/UTF-8 byte ordering riêng. Nguy cơ sessionId+username vượt128 đã tái hiện500+rollback, chưa sửa API tạo ca hoặc schema. Evidence local `target/pr28-cursor-20261013/REPORT.md`; GUI/human review NOT RUN.
+
+
+## Bàn giao tích hợp15/10/2026
+
+Nhánh `integration/reading-listening-20261015`, base8f5ac40, history2ca4121 và Reading65f5123. Guide `docs/INTEGRATION_READING_LISTENING.md`; evidence `evidence/integration/2026-10-15-verification.md`. Phạm vi review: A: history/query-status/scope/ownership. Clean test833 PASS (protocol43/client569/server220/spike1), PostgreSQL18.6 thật và 0skip; package833 PASS. GUI smoke8nhóm PASS mới; chưa nâng toàn case human/LAN. FULL default, tracker không đổi.
+
+**Ghi chú làm dở:** human A/B/C/LAN hai máy/installer/E1/E2 NOT RUN; ID ACTIVE đặc biệt còn contract QD29. Không dùng alias đọc status làm quyền monitoring; không merge main khi chưa được người dùng chấp thuận. Kết quả cuối/SHA/log trong evidence, không kế thừa PASS nhánh nguồn.
+
+### Handoff B overnight15/10 — cần A/C review, không phải A approve
+
+Checkpoint5072bc9 đề xuất QD29 safeissuance/collision/405 và API progress scoped-read/no-store, không migration/answers/epoch. FinalJava c1601b5 clean/package848 và PG/runtime mới có evidence. A review boundary/legacy/reorg/auth/finalized/count/lastSavedAt và chọn policyQD29 với nhóm. Không tự đổi tracker. [Summary](../../evidence/overnight-20261015/00-summary.md).
+
+
+## Handoff bản thống nhất16/10/2026 — HUMAN REVIEW PENDING
+
+Backend validation/QD29, collision/final/raw-ID, committed progress whitelist/MVCC và writerEpoch/khóa/transaction. Không migration; QD29 chưa human approve. Checkpointb755646: clean/package mỗi lượt872PASS/1skip, Flow41/GUI11/nativeAudio8/production EXE+PG PASS subset; không nghiệm thu toàncase. [Báo cáo/SHA/count/failure/manual](../../evidence/unified-20261016/verification.md). Không đổi tracker/kế hoạch hoặc tự duyệt A/C.
+
+
+### Ghi chú làm dở — QA PR39 ngày16/10/2026 (B bàn giao, chưa owner ký)
+
+B gửi review kỹ thuật PR39/QA source9bfc75e: không sửa server/protocol/schema. A cần review B fixes và QD29/progress/authorization/transaction của PR39; QD29 vẫn PROPOSED. Các local PG/GUI/MSI tests mới không là chữ ký A. QA database đầu phiên được giữ trong shared container đang dừng; owner có thể cleanup đúng DB private sau khi được phép resume, không reset volume. [Báo cáo](../../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md).
+
+
+### Ghi chú làm dở — RC17/10/2026
+
+Cần A/C chốt QD29/legacy ACTIVE; A review history5000/5001/HTTP500 và test F01 trong phần A. Chưa owner approve. Source TEST c224ba8, không merge nhánh nguồn/main hoặc ký thay owner. [Bàn giao](../../evidence/integration-final-20261017/REPORT.md).

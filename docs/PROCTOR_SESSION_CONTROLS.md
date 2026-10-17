@@ -74,3 +74,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-t3b4.ps1 -Jav
 ```
 
 Script clean output các module, dùng cache Maven offline và đọc `.env` local, không đổi file. PostgreSQL dùng schema TEST UUID riêng; UTC chỉ áp dụng tiến trình test. Output lớn nằm trong `target/t3-b4/`, ảnh GUI trong `server/target/t3-b4-gui/`; không reset DB dev. Cần JDK21/dependency đã tải và desktop Windows có media. [Báo cáo kiểm thử B4](../evidence/t3-b4/2026-10-15-verification.md) ghi SHA/kết quả thật và giới hạn. Dừng sau B4; chưa B5/E1/E2 hoặc chốt gate delta, FULL vẫn mặc định.
+
+
+## Tích hợp 16/10/2026
+
+Bản thống nhất giữ nền B4/MSI main, chuyển guard/progress/config cần thiết từ #38. Source và test mới xem [báo cáo](../evidence/unified-20261016/verification.md); không kế thừa PASS installer hoặc số test của nhánh nguồn. [Cách chạy hiện tại](UNIFIED_APPLICATION.md).

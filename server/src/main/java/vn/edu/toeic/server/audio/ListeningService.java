@@ -179,8 +179,8 @@ public class ListeningService {
                 JOIN user_accounts u ON u.id = :owner WHERE s.session_id = :s
                 """).param("owner",old.owner()).param("s",old.session())
                 .query((rs,n) -> new Source(rs.getString("exam_id"),rs.getInt("duration_seconds"),rs.getString("username"))).single();
-        if (request.newSessionId().length() + 1 + source.candidate().length() > 128)
-            throw error(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "Replacement attemptId is too long",rid);
+        if (!vn.edu.toeic.protocol.exam.AttemptIdentifier.monitoringV0(request.newSessionId() + "-" + source.candidate()))
+            throw error(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "Replacement attemptId is incompatible with monitoring v0",rid);
         List<String> proctors = jdbc.sql("""
                 SELECT u.username FROM exam_session_proctors p JOIN user_accounts u ON u.id = p.proctor_user_id
                 WHERE p.session_id = :s ORDER BY u.username

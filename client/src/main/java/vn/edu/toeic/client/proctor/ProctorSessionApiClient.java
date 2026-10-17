@@ -13,7 +13,7 @@ import vn.edu.toeic.client.audio.ListeningMessages;
 import vn.edu.toeic.protocol.audio.*;
 import vn.edu.toeic.protocol.exam.*;
 
-/** Dedicated proctor API; deliberately does not duplicate PR35's Reading ExamApiClient. */
+/** Blocking B4 control API. Reading and committed progress use the asynchronous ExamApiClient. */
 public final class ProctorSessionApiClient implements ProctorSessionApi {
     public static final class Rejected extends IOException {
         private final int status;
@@ -92,7 +92,7 @@ public final class ProctorSessionApiClient implements ProctorSessionApi {
         if(!"v0".equals(result.protocolVersion())||!session.equals(result.sessionId())||!request.requestId().equals(result.requestId())||!request.manifestId().equals(result.manifestId())||!ListeningMessages.identifier(result.startId())||result.startedAt()==null)throw new IOException("Chưa xác nhận start hợp lệ.");return result;
     }
     @Override public CandidateAttemptStatusResponse result(String attempt)throws Exception{
-        var b=call("attempts/"+ProctorInputs.attempt(attempt)+"/status",null);
+        var b=call("attempts/status?attemptId="+vn.edu.toeic.client.exam.ExamIdentifiers.encode(ProctorInputs.historyAttempt(attempt)),null);
         try{
             long writer=ListeningMessages.longInteger(b,"writerEpoch"),revision=ListeningMessages.longInteger(b,"savedRevision");
             var result=parse(b,CandidateAttemptStatusResponse.class);

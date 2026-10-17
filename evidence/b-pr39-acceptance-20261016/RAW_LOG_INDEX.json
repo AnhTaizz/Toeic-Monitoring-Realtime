@@ -1,0 +1,522 @@
+[
+  {
+    "label": "acquire-tools-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/acquire-tools-01.log",
+    "sourceSha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+    "startedUtc": "2026-10-16T04:05:42.360023+00:00",
+    "endedUtc": "2026-10-16T04:08:45.252379+00:00",
+    "exit": 1,
+    "bytes": 763,
+    "sha256": "59693f201cbc26cc1599970dfa21cbf339b47820ede9a98a35c227127ca36440"
+  },
+  {
+    "label": "acquire-tools-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/acquire-tools-02.log",
+    "sourceSha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+    "startedUtc": "2026-10-16T04:09:13.073872+00:00",
+    "endedUtc": "2026-10-16T04:09:14.034224+00:00",
+    "exit": 1,
+    "bytes": 761,
+    "sha256": "0374904b99ca31c63de498fc218dc9787253370dc42c629c5bb69196dfe32c65"
+  },
+  {
+    "label": "acquire-tools-03",
+    "privatePath": "jpackage-out/pr39-qa-20261016/acquire-tools-03.log",
+    "sourceSha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+    "startedUtc": "2026-10-16T04:09:33.360822+00:00",
+    "endedUtc": "2026-10-16T04:10:05.508017+00:00",
+    "exit": 0,
+    "bytes": 2310,
+    "sha256": "0dc8894678f937fd6859bcfbec89a18ffb8cf04341ecc68639f0af03a45f6509"
+  },
+  {
+    "label": "application-gui-final-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/application-gui-final-01.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:19:45.460475+00:00",
+    "endedUtc": "2026-10-16T04:20:54.041560+00:00",
+    "exit": 0,
+    "bytes": 1571,
+    "sha256": "3a8c8dc729ac214d1bd990341845e90be964e7b3085b7928812b233fcdebce99"
+  },
+  {
+    "label": "application-gui-final-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/application-gui-final-02.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T04:34:03.822312+00:00",
+    "endedUtc": "2026-10-16T04:35:07.148087+00:00",
+    "exit": 0,
+    "bytes": 1571,
+    "sha256": "e0bddaabb15c8b1d150e8b3edc0d9838a3db18fe863110eeae3d9bfedf9ae05f"
+  },
+  {
+    "label": "baseline-clean-test-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/baseline-clean-test-01.log",
+    "sourceSha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+    "startedUtc": "2026-10-16T04:05:40.111831+00:00",
+    "endedUtc": "2026-10-16T04:09:31.353449+00:00",
+    "exit": 0,
+    "bytes": 3487358,
+    "sha256": "3ee184fd2bb308855931400a9846a55ff65c5fa40f6d117ed55428a1099972dd"
+  },
+  {
+    "label": "baseline-msi-build-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/baseline-msi-build-01.log",
+    "sourceSha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+    "startedUtc": "2026-10-16T04:10:24.357315+00:00",
+    "endedUtc": "2026-10-16T04:12:31.732567+00:00",
+    "exit": 0,
+    "bytes": 773,
+    "sha256": "cff7a0409314c62c913e9e89e392d8924c44c2846431aa62a3a7dab6bbcd3d31"
+  },
+  {
+    "label": "baseline-msi-install-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/baseline-msi-install-01.log",
+    "sourceSha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+    "startedUtc": "2026-10-16T04:13:00.687591+00:00",
+    "endedUtc": "2026-10-16T04:16:32.779237+00:00",
+    "exit": 1,
+    "bytes": 978,
+    "sha256": "619567e5e37c503e78dcb25819434b01d01cf441586657a9fa8e64a22e73bca6"
+  },
+  {
+    "label": "baseline-package-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/baseline-package-01.log",
+    "sourceSha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+    "startedUtc": "2026-10-16T04:10:55.415954+00:00",
+    "endedUtc": "2026-10-16T04:11:02.811332+00:00",
+    "exit": 1,
+    "bytes": 2470,
+    "sha256": "9cd261e556e3b02edab1ce322cd070ccb6be681c3cc3fa10bba2cab98d68e77b"
+  },
+  {
+    "label": "c1-final-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/c1-final-01.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:21:05.292387+00:00",
+    "endedUtc": "2026-10-16T04:21:59.508982+00:00",
+    "exit": 0,
+    "bytes": 4419,
+    "sha256": "58c8c5164c08c5f8cdc11b1368959684e5e43da8ed99860f29d7388a1ce19cb1"
+  },
+  {
+    "label": "c1-final-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/c1-final-02.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T04:35:07.503396+00:00",
+    "endedUtc": "2026-10-16T04:36:00.323301+00:00",
+    "exit": 0,
+    "bytes": 4417,
+    "sha256": "f1a1c539c8d0df5151ee2f930f610dfdd82e0e4e3e4962cbd67f0de7b1c2b0d4"
+  },
+  {
+    "label": "c2-final-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/c2-final-01.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:21:59.771982+00:00",
+    "endedUtc": "2026-10-16T04:22:39.725287+00:00",
+    "exit": 0,
+    "bytes": 4122,
+    "sha256": "b704fb19cc0bf6957f3f22d8c10e58ee3abd7bad87546a8f2245ab09094e0edd"
+  },
+  {
+    "label": "c2-final-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/c2-final-02.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T04:36:00.589905+00:00",
+    "endedUtc": "2026-10-16T04:36:33.665006+00:00",
+    "exit": 0,
+    "bytes": 4124,
+    "sha256": "50faaff11d6c46a7751d6db4a3ab72ccc44fee89865f6471188a2c1830291901"
+  },
+  {
+    "label": "cache-race-after-final-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/cache-race-after-final-01.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:29:53.382863+00:00",
+    "endedUtc": "2026-10-16T04:30:20.113162+00:00",
+    "exit": 0,
+    "bytes": 4543,
+    "sha256": "b1e568b589424af21555c4aeb1cdac84c67242edfe8ada3744ed218ceb9daa82"
+  },
+  {
+    "label": "cache-race-after-stress-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/cache-race-after-stress-01.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:28:40.924930+00:00",
+    "endedUtc": "2026-10-16T04:29:22.547498+00:00",
+    "exit": 0,
+    "bytes": 4641,
+    "sha256": "300232da0096525a2b9c5bd569122510123581705780a30ac664443fb491051c"
+  },
+  {
+    "label": "cache-race-before-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/cache-race-before-01.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:25:48.717736+00:00",
+    "endedUtc": "2026-10-16T04:26:18.440626+00:00",
+    "exit": 0,
+    "bytes": 4543,
+    "sha256": "3f23ac0c6cbf3c065bdae9b2c53faa4f19d6096719d83ac1f9e9af92a2e4b9f8"
+  },
+  {
+    "label": "cache-race-before-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/cache-race-before-02.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:27:41.538157+00:00",
+    "endedUtc": "2026-10-16T04:28:13.842662+00:00",
+    "exit": 1,
+    "bytes": 13395,
+    "sha256": "535fa2006e115b1dd00db9470b3abd360dc0bf62b688e3d66ab1f15e08163e01"
+  },
+  {
+    "label": "cleanup-owned-test-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/cleanup-owned-test-01.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T07:19:39.782725+00:00",
+    "endedUtc": "2026-10-16T07:19:43.837966+00:00",
+    "exit": 0,
+    "bytes": 658,
+    "sha256": "33c5ba0f9e85520106a9bcd432787b4d3040820eb48bc20f22122f64590faf43"
+  },
+  {
+    "label": "concurrency-final-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/concurrency-final-01.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:19:20.295984+00:00",
+    "endedUtc": "2026-10-16T04:19:45.177413+00:00",
+    "exit": 0,
+    "bytes": 5581,
+    "sha256": "1a794afd935e966ea6efd2909dce4f6f33494ecfeed32ef791c4c711f0030ce1"
+  },
+  {
+    "label": "concurrency-final-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/concurrency-final-02.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T04:33:38.153609+00:00",
+    "endedUtc": "2026-10-16T04:34:03.364536+00:00",
+    "exit": 0,
+    "bytes": 5581,
+    "sha256": "e7c755d8755810ebb388c24956eb7d78bb3a8220e328dcccf2efa3d77080a196"
+  },
+  {
+    "label": "config-bom-after-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/config-bom-after-01.log",
+    "sourceSha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+    "startedUtc": "2026-10-16T04:14:43.628070+00:00",
+    "endedUtc": "2026-10-16T04:15:18.041700+00:00",
+    "exit": 0,
+    "bytes": 4421,
+    "sha256": "40bc63f46c6bd47d57f413cb1167bb193f7f28f1c7df06fbb15f30cb8b025dc6"
+  },
+  {
+    "label": "config-bom-before-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/config-bom-before-01.log",
+    "sourceSha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+    "startedUtc": "2026-10-16T04:13:06.762053+00:00",
+    "endedUtc": "2026-10-16T04:13:49.160153+00:00",
+    "exit": 1,
+    "bytes": 5800,
+    "sha256": "cd0a16d3a6807f185fc5fbd9c5944726e2fc483b24f9a4796c991ab4f8e96216"
+  },
+  {
+    "label": "config-package-preflight-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/config-package-preflight-01.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:17:52.517914+00:00",
+    "endedUtc": "2026-10-16T04:17:53.857340+00:00",
+    "exit": 0,
+    "bytes": 1007,
+    "sha256": "34b3230e93b41959ffa9e7c9b0701fab5ecd4313f3036fe6b00273e1b4857673"
+  },
+  {
+    "label": "create-qa-database-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/create-qa-database-01.log",
+    "sourceSha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+    "startedUtc": "2026-10-16T04:05:38.483705+00:00",
+    "endedUtc": "2026-10-16T04:05:39.878478+00:00",
+    "exit": 0,
+    "bytes": 287,
+    "sha256": "fe9112e1e83e962bc5f89ba32ec7d152355f666ac5d2b6ef96e5a0d38f48469c"
+  },
+  {
+    "label": "environment-probe-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/environment-probe-01.log",
+    "sourceSha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+    "startedUtc": "2026-10-16T04:04:05.736019+00:00",
+    "endedUtc": "2026-10-16T04:04:13.233196+00:00",
+    "exit": 0,
+    "bytes": 621,
+    "sha256": "23731f120dcfda66733f7fd3288677be0b9c273e8b1b373feb9353a28d7acfb3"
+  },
+  {
+    "label": "environment-versions-final-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/environment-versions-final-01.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T04:44:13.172986+00:00",
+    "endedUtc": "2026-10-16T04:44:15.315999+00:00",
+    "exit": 0,
+    "bytes": 650,
+    "sha256": "ef0eb88e44e45e80d0fb7757e538f566d4603c4aba28e63012c9d19c5e574b63"
+  },
+  {
+    "label": "exam-flow-final-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/exam-flow-final-01.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:18:49.697206+00:00",
+    "endedUtc": "2026-10-16T04:19:19.729825+00:00",
+    "exit": 0,
+    "bytes": 3460,
+    "sha256": "659ed6d5c1f5235155c9b91029c4c30c617d87d977e6daf8d67fc1d25bc5a022"
+  },
+  {
+    "label": "exam-flow-final-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/exam-flow-final-02.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T04:33:07.509094+00:00",
+    "endedUtc": "2026-10-16T04:33:37.526884+00:00",
+    "exit": 0,
+    "bytes": 3460,
+    "sha256": "bec0577db9a2a411f67c3a8f52f3896aad5fcbd763b99c3fec444265d952366d"
+  },
+  {
+    "label": "extended-harness-compile-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/extended-harness-compile-01.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T04:42:52.275179+00:00",
+    "endedUtc": "2026-10-16T04:42:55.326465+00:00",
+    "exit": 0,
+    "bytes": 515,
+    "sha256": "17851a1b9a8ebda9682838b4d91a86b35e33b80d563d53f5e7ab4135a5ce029f"
+  },
+  {
+    "label": "extended-msi-install-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/extended-msi-install-01.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T07:05:11.819254+00:00",
+    "endedUtc": "2026-10-16T07:05:45.218836+00:00",
+    "exit": 1,
+    "bytes": 1328,
+    "sha256": "b4c58e4a1d0b2078193a32750d0c7ac088b096f3f71916912778519c72e788bc"
+  },
+  {
+    "label": "extended-msi-install-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/extended-msi-install-02.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T07:07:17.941226+00:00",
+    "endedUtc": "2026-10-16T07:07:47.371896+00:00",
+    "exit": 1,
+    "bytes": 1817,
+    "sha256": "3d7a3b4f6678b99f6a49c01bb6012cefb9f33d2039b90ffcea8e32e08688e608"
+  },
+  {
+    "label": "extended-msi-install-03",
+    "privatePath": "jpackage-out/pr39-qa-20261016/extended-msi-install-03.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T07:09:11.486681+00:00",
+    "endedUtc": "2026-10-16T07:09:38.852166+00:00",
+    "exit": 1,
+    "bytes": 1919,
+    "sha256": "45abe36118c559c0525bb107bfd5006d1fed076549d91c1129694365cc155510"
+  },
+  {
+    "label": "extended-msi-install-04",
+    "privatePath": "jpackage-out/pr39-qa-20261016/extended-msi-install-04.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T07:16:42.256675+00:00",
+    "endedUtc": "2026-10-16T07:17:34.042584+00:00",
+    "exit": 0,
+    "bytes": 2331,
+    "sha256": "06d36b476dde3bcf8a792a6a9ee615698c5d1d8f423f5b1f32ab30da3fb4b0d6"
+  },
+  {
+    "label": "final-clean-test-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/final-clean-test-01.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:22:40.004047+00:00",
+    "endedUtc": "2026-10-16T04:24:08.311966+00:00",
+    "exit": 1,
+    "bytes": 20378,
+    "sha256": "d72327092780ed65c76cfda640e60462898eb91e3c57940419f00139953bd14a"
+  },
+  {
+    "label": "final-clean-test-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/final-clean-test-02.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T04:36:33.979603+00:00",
+    "endedUtc": "2026-10-16T04:40:42.798340+00:00",
+    "exit": 0,
+    "bytes": 3757537,
+    "sha256": "bee0484f2e84749ff0d129397952735eb1196a9cda507d830ff645a45db7a117"
+  },
+  {
+    "label": "final-msi-build-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/final-msi-build-01.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:17:21.059238+00:00",
+    "endedUtc": "2026-10-16T04:18:53.092532+00:00",
+    "exit": 0,
+    "bytes": 791,
+    "sha256": "f0d8c9b951108ab7d30e059a2e88e2402e7b194bf2364e46604ad5541866cc5a"
+  },
+  {
+    "label": "final-msi-build-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/final-msi-build-02.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T04:30:43.247746+00:00",
+    "endedUtc": "2026-10-16T04:32:20.413315+00:00",
+    "exit": 0,
+    "bytes": 791,
+    "sha256": "bcfb321ac4ceb4fc44966d695373571de1b8c69e99d528cb9425f17db5e5ba34"
+  },
+  {
+    "label": "final-msi-install-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/final-msi-install-02.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T04:45:21.985393+00:00",
+    "endedUtc": "2026-10-16T04:49:52.892242+00:00",
+    "exit": 0,
+    "bytes": 1888,
+    "sha256": "4bb515c029eafa3b78014a5976d1f467aeec03d6c98e7fd93520dc7408c236d3"
+  },
+  {
+    "label": "final-package-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/final-package-02.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T04:41:04.340392+00:00",
+    "endedUtc": "2026-10-16T04:45:08.972609+00:00",
+    "exit": 0,
+    "bytes": 3910181,
+    "sha256": "4e1b16f6b3bdb6a1d7aa0eaad8a7ae4a15eabfa06aa91eb6ab4f09efbd6cea08"
+  },
+  {
+    "label": "inspect-extended-driver-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/inspect-extended-driver-01.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T07:06:53.893561+00:00",
+    "endedUtc": "2026-10-16T07:06:55.042845+00:00",
+    "exit": 0,
+    "bytes": 241,
+    "sha256": "e036133d48247beb0eff33ee022686ca8f650b973684f856db0672ff30aa47fc"
+  },
+  {
+    "label": "inspect-owned-msi-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/inspect-owned-msi-01.log",
+    "sourceSha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+    "startedUtc": "2026-10-16T04:15:47.199903+00:00",
+    "endedUtc": "2026-10-16T04:15:48.597604+00:00",
+    "exit": 0,
+    "bytes": 392,
+    "sha256": "43bbccc3cce541db2320bc952c248b4b484f0da4bd10f0d7e6a4de7b998b9e6d"
+  },
+  {
+    "label": "inspect-owned-msi-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/inspect-owned-msi-02.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T07:04:54.335991+00:00",
+    "endedUtc": "2026-10-16T07:04:56.883342+00:00",
+    "exit": 0,
+    "bytes": 392,
+    "sha256": "cef6050d702588ebea1f8cce8f6803652815aa557da4c09ac31ec1b96c3fbc5c"
+  },
+  {
+    "label": "lan-test-data-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/lan-test-data-01.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:23:08.162358+00:00",
+    "endedUtc": "2026-10-16T04:23:15.560610+00:00",
+    "exit": 0,
+    "bytes": 647,
+    "sha256": "2de43e1b6b94cb4f43b90f8fbeee20907d96e60b16cbd20ccf6d6282c2f9145e"
+  },
+  {
+    "label": "owned-postgres-ready-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/owned-postgres-ready-02.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T07:14:48.754656+00:00",
+    "endedUtc": "2026-10-16T07:14:49.721276+00:00",
+    "exit": 1,
+    "bytes": 717,
+    "sha256": "174a7bf46a0ae71359f5dcb9eef418230129ff1bf9ce0f67506c771ad184f4bc"
+  },
+  {
+    "label": "owned-postgres-ready-03",
+    "privatePath": "jpackage-out/pr39-qa-20261016/owned-postgres-ready-03.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T07:15:54.010709+00:00",
+    "endedUtc": "2026-10-16T07:15:55.617318+00:00",
+    "exit": 0,
+    "bytes": 412,
+    "sha256": "9f74daab8723e4364b593a543555d9ef2f81a5e97b865aa311ac3e747da4f530"
+  },
+  {
+    "label": "owned-postgres-start-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/owned-postgres-start-01.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T07:13:40.499622+00:00",
+    "endedUtc": "2026-10-16T07:13:44.349587+00:00",
+    "exit": 1,
+    "bytes": 879,
+    "sha256": "07156e12b5f3c0e75c3a70e1ee11103859a9b3ac2544982538216228ed6df52b"
+  },
+  {
+    "label": "packaging-preflight-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/packaging-preflight-01.log",
+    "sourceSha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+    "startedUtc": "2026-10-16T04:11:51.706475+00:00",
+    "endedUtc": "2026-10-16T04:11:52.624794+00:00",
+    "exit": 0,
+    "bytes": 489,
+    "sha256": "476bcae911275cc170c44fe847fa8cb0b6ecbe506470f442518829b6f63e47ed"
+  },
+  {
+    "label": "postgres-readiness-resume-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/postgres-readiness-resume-01.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T07:12:15.055675+00:00",
+    "endedUtc": "2026-10-16T07:12:16.646654+00:00",
+    "exit": 0,
+    "bytes": 265,
+    "sha256": "a4cc3f2f29507a4b18eaf542944b017a8cd762ebd9a3586523857365026f2409"
+  },
+  {
+    "label": "qa-package-skip-tests-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/qa-package-skip-tests-01.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:16:43.427178+00:00",
+    "endedUtc": "2026-10-16T04:17:10.277506+00:00",
+    "exit": 0,
+    "bytes": 8899,
+    "sha256": "ff779fe3344416be867808f0746812af5b116dd766e0d1ff2e376f980e032c03"
+  },
+  {
+    "label": "qa-package-skip-tests-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/qa-package-skip-tests-02.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T04:32:52.372389+00:00",
+    "endedUtc": "2026-10-16T04:33:06.942816+00:00",
+    "exit": 0,
+    "bytes": 8488,
+    "sha256": "1ba7993600f360754a246a0fe9359cec4508e2bd0df755a274f3ce375d09e600"
+  },
+  {
+    "label": "visual-states-01",
+    "privatePath": "jpackage-out/pr39-qa-20261016/visual-states-01.log",
+    "sourceSha": "dcbdf853f37544d810fa88044232d83f73feda5f",
+    "startedUtc": "2026-10-16T04:24:19.843074+00:00",
+    "endedUtc": "2026-10-16T04:24:28.007855+00:00",
+    "exit": 0,
+    "bytes": 494,
+    "sha256": "f1f5dfb88d67ad02c46dfdfbb3ec7c91b2f347e286175b581a40a65a17780fec"
+  },
+  {
+    "label": "visual-states-02",
+    "privatePath": "jpackage-out/pr39-qa-20261016/visual-states-02.log",
+    "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+    "startedUtc": "2026-10-16T04:39:48.852753+00:00",
+    "endedUtc": "2026-10-16T04:39:55.648131+00:00",
+    "exit": 0,
+    "bytes": 497,
+    "sha256": "fcf99ddd21ffee4c7eaba4940d3afe4fa2d2831b328adec1b31ba52f0c9c5844"
+  }
+]

@@ -1,0 +1,3 @@
+FAIL ExecutionException: vn.edu.toeic.client.LoginFailedException: T�n ??ng nh?p ho?c m?t kh?u kh�ng ?�ng
+CLEANUP owned server/schema integration_gui_8cbbf7399ac0
+GUI_INTEGRATION passed=0 exit=1

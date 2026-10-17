@@ -72,3 +72,15 @@ evidence/t3-b1/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
 
 # T3-B2 package transcripts, playback journal and screenshots retain verified bytes.
 evidence/t3-b2/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
+# Integration evidence publishes verified exact UTF-8/LF bytes; preserve hashes on Windows checkout.
+evidence/integration/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
+# Overnight curated evidence retains exact bytes for SHA256 across Windows/WSL checkout.
+evidence/overnight-20261015/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
+# Unified verification retains exact curated evidence bytes.
+evidence/unified-20261016/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
+# PR39 QA evidence preserves exact bytes for artifact checksums.
+evidence/b-pr39-acceptance-20261016/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol

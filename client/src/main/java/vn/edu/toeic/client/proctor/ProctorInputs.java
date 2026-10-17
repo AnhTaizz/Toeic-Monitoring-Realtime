@@ -20,6 +20,10 @@ public final class ProctorInputs {
             throw new IllegalArgumentException("Mã lượt không hợp lệ (tối đa 128 ký tự).");
         return value;
     }
+    public static String historyAttempt(String value) {
+        if(!vn.edu.toeic.client.exam.ExamIdentifiers.valid(value))throw new IllegalArgumentException("Mã lượt lịch sử không hợp lệ.");
+        return value;
+    }
     public static String title(String value) {
         if(value == null || value.isBlank() || value.length() > 255)
             throw new IllegalArgumentException("Tiêu đề cần 1–255 ký tự.");

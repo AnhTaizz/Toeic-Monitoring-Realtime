@@ -1,0 +1,8 @@
+{
+    "reason":  "Result lacks listeningInterrupted property",
+    "errors":  6,
+    "tests":  6,
+    "sourceBase":  "3fc5bb4e8ef93b60bf479fc52fe725e4b8f072af plus regression test only",
+    "failures":  0,
+    "skipped":  0
+}

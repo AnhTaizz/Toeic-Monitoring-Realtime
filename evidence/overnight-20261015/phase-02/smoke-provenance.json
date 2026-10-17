@@ -1,0 +1,20 @@
+{
+  "sourceBase": "5072bc9",
+  "sourceState": "DIRTY phase02 files; checkpoint commit follows",
+  "rawSuite": "target/e1/E1-9cd5a2ad-3357-4da3-8881-7c47030384c6",
+  "rawNotPublished": "local raw contains owned test PID/name, not public",
+  "files": {
+    "client/src/main/java/vn/edu/toeic/client/monitoring/harness/ControlledProcessChild.java": "61370ca3c1eafb1d6ca732922361ab556d11df54345f5b964b0cc0abc2287aef",
+    "client/src/main/java/vn/edu/toeic/client/monitoring/harness/ControlledProcessHarness.java": "cbfb96e7bf62ea20fa75b6522f8303a512f7dea9af416f1383a95821f49d43d7",
+    "client/src/main/java/vn/edu/toeic/client/monitoring/harness/E1Cli.java": "9783d92f5a7a0f139d35cb9e497a404419308f148bbf761771663886cf2229ce",
+    "client/src/main/java/vn/edu/toeic/client/monitoring/harness/E1Resources.java": "10647fdca6b9f8b896856dc85070e5ec9b92c45970a625e5d6e4c6a414197a55",
+    "client/src/main/java/vn/edu/toeic/client/monitoring/harness/E1Window.java": "3ceac050b70a928afc0386444eb9c1a5e0a9b0426bdd3230f04eb10ed7b04d01",
+    "client/src/main/java/vn/edu/toeic/client/monitoring/harness/GroundTruth.java": "13c402429f2f3febf9f78677ac1ae676d6091be4f29d30cd4e21c3c4c5aec6b9",
+    "client/src/main/java/vn/edu/toeic/client/monitoring/harness/HarnessArtifacts.java": "d76afcc7336cf63e1750816311cd4a01fbc585fb87f88e7a9feeef185e54d08f",
+    "client/src/main/java/vn/edu/toeic/client/monitoring/harness/HarnessCli.java": "386c622cf64a9de3f0516de0cfcf0517e8fdf422f173ed2d0c5c957ba4ebf44c",
+    "client/src/main/java/vn/edu/toeic/client/monitoring/harness/HarnessPlan.java": "7bd48f3436d4ee347befd4b95eeace235f6397bb6a88b6f4e2e14680f6b971a3",
+    "client/src/main/java/vn/edu/toeic/client/monitoring/harness/ObservationJoiner.java": "f402aee764f2964833dae907d17a8375db32d202724277df3eec73be45a9aa47",
+    "client/src/main/java/vn/edu/toeic/client/monitoring/harness/OwnedProcessPolicy.java": "33cacf737f614192a27e76c026ded486a27e856e912f092bda35be1effa42631",
+    "client/target/client-0.1.0-SNAPSHOT-all.jar": "9a5522d9dd134f6343444dfdc3237bf00f843e310e77f40749eb1add4cc5ac28"
+  }
+}

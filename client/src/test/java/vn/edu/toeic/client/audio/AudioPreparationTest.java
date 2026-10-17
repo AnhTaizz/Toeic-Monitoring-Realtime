@@ -111,4 +111,34 @@ class AudioPreparationTest {
         assertThat(preparation.snapshot().phase()).isEqualTo(AudioPreparation.Phase.CLOSED);
         assertThat(api.reports).allMatch(r -> !r.ready());
     }
+    @Test void sharedExamWriterNeverAcquiresAnotherEpoch() throws Exception {
+        preparation.prepare("ATTEMPT", 42);
+        await(() -> preparation.snapshot().phase() == AudioPreparation.Phase.FILES_READY);
+        speakerConfirmed(); preparation.reportReady();
+        await(() -> preparation.snapshot().phase() == AudioPreparation.Phase.READY);
+        assertThat(api.acquisitions).isZero();
+        assertThat(api.reports).allMatch(r -> r.writerEpoch() == 42);
+        preparation.prepare("ATTEMPT", 42);
+        await(() -> preparation.snapshot().phase() == AudioPreparation.Phase.FILES_READY);
+        assertThat(api.acquisitions).isZero();
+    }
+
+    @Test void sharedWriterCloseRejectsLatePreparationBeforeAnotherViewOpens() throws Exception {
+        api.manifestGate = new CountDownLatch(1);
+        preparation.prepare("ATTEMPT", 42);
+        await(() -> !api.reports.isEmpty());
+        preparation.close();
+        Fixture nextApi = new Fixture();
+        try (AudioPreparation next = new AudioPreparation(nextApi, files, directory.resolve("next-speaker"), ignored -> {})) {
+            next.prepare("ATTEMPT", 43);
+            await(() -> Set.of(AudioPreparation.Phase.FILES_READY, AudioPreparation.Phase.ERROR).contains(next.snapshot().phase()));
+            assertThat(next.snapshot().phase()).withFailMessage("New audio view failed: %s", next.snapshot().message())
+                    .isEqualTo(AudioPreparation.Phase.FILES_READY);
+            assertThat(preparation.snapshot().phase()).isEqualTo(AudioPreparation.Phase.CLOSED);
+            assertThat(api.reports).allMatch(r -> !r.ready() && r.writerEpoch() == 42);
+            assertThat(nextApi.reports).allMatch(r -> r.writerEpoch() == 43);
+            assertThat(nextApi.acquisitions).isZero();
+        }
+    }
+
 }

@@ -38,7 +38,31 @@ public final class HarnessArtifacts {
     private static void append(java.io.ByteArrayOutputStream bytes,JsonObject value)throws IOException {
         byte[] line=(JSON.toJson(value)+"\n").getBytes(StandardCharsets.UTF_8);if(line.length>8192||bytes.size()+line.length>LIMIT)throw new IOException("GROUND_TRUTH_LIMIT");bytes.write(line);
     }
+    /** Rejoin an E1 run using its checksummed window, while preserving the legacy C4 schedule. */
+    public static GroundTruth.Run readRunGroundTruth(Path directory)throws IOException {
+        if(!Files.exists(directory.resolve("metadata.json")))return readGroundTruth(directory.resolve("ground-truth.jsonl"));
+        var metadata=readJson(directory.resolve("metadata.json"));
+        E1Window window=null;
+        if(metadata.has("measurementStartElapsedNanos")||metadata.has("measurementEndElapsedNanos")) {
+            if(!verifyManifest(directory))throw new IOException("RUN_ARTIFACT_CHECKSUM_OR_STATUS");
+            long start=FullSnapshotPayload.number(metadata,"measurementStartElapsedNanos");
+            long end=FullSnapshotPayload.number(metadata,"measurementEndElapsedNanos");
+            if(start%1_000_000L!=0||end%1_000_000L!=0||end<=start)throw new IOException("WINDOW_INVALID");
+            window=new E1Window(Math.toIntExact(start/1_000_000L),Math.toIntExact((end-start)/1_000_000L));
+        }
+        var truth=readGroundTruth(directory.resolve("ground-truth.jsonl"),window);
+        var header=truth.header();
+        if(!header.runId().equals(FullSnapshotPayload.text(metadata,"runId"))
+                ||!header.clockDomain().equals(FullSnapshotPayload.text(metadata,"clockDomain"))
+                ||!header.collectorSessionId().equals(FullSnapshotPayload.text(metadata,"collectorSessionId"))
+                ||header.traceStartElapsedNanos()!=FullSnapshotPayload.number(metadata,"traceStartElapsedNanos")
+                ||!JSON.toJsonTree(header.config()).equals(metadata.get("config")))throw new IOException("RUN_BINDING");
+        return truth;
+    }
     public static GroundTruth.Run readGroundTruth(Path path)throws IOException {
+        return readGroundTruth(path,null);
+    }
+    static GroundTruth.Run readGroundTruth(Path path,E1Window window)throws IOException {
         int lineNumber=0;
         try {
             byte[] data=bounded(path);String text=StandardCharsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(data)).toString();
@@ -67,7 +91,7 @@ public final class HarnessArtifacts {
                 }
                 hash.update((lines[index]+"\n").getBytes(StandardCharsets.UTF_8));
             }
-            var expected=HarnessPlan.create(header.config());if(!trials.stream().map(GroundTruth.Trial::planned).toList().equals(expected))throw new IOException("PLAN_MISMATCH");
+            var expected=window==null?HarnessPlan.create(header.config()):window.plan(header.config());if(!trials.stream().map(GroundTruth.Trial::planned).toList().equals(expected))throw new IOException("PLAN_MISMATCH");
             if("COMPLETE".equals(status)&&trials.stream().anyMatch(t -> !t.status().equals("EXITED")))throw new IOException("FALSE_COMPLETE");
             return new GroundTruth.Run(header,trials,status,checksum);
         } catch(Exception invalid){throw new IOException("GROUND_TRUTH line "+Math.max(1,lineNumber)+": INVALID_OR_INCOMPLETE");}

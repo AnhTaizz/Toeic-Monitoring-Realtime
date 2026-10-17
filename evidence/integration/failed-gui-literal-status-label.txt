@@ -1,0 +1,14 @@
+thg 10 15, 2026 12:35:21 SA com.sun.javafx.application.PlatformImpl startup
+WARNING: Unsupported JavaFX configuration: classes were loaded from 'unnamed module @5fb759d6'
+PASS REAL Reading GUI/autosave/timer; authoritative writer=2
+PASS REAL server restart/Reading reconnect keeps writer and authoritative answers
+PASS GUI submit/server final result
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+PASS Production history discovers submitted result without changing writer
+PASS Reading + Listening same Application; REAL WAV/READY/STARTED with one writer; speaker confirmation SIMULATED
+PASS Reading autosave during real Listening; duplicate server start remains idempotent
+PASS REAL server restart stops/locks Listening without replay; Reading continues with frozen Listening answers
+FAIL IllegalStateException: Timed out: Proctor FULL SYNCED rendered
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+CLEANUP owned server/schema integration_gui_443538bfaff2
+GUI_INTEGRATION passed=7 exit=1

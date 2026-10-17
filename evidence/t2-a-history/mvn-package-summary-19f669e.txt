@@ -1,0 +1,29 @@
+Tests run: 43, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 386, Failures: 0, Errors: 0, Skipped: 0
+PASS unknown API route: structured 404, not generic 500
+PASS candidate history deterministic keyset pagination/limits/cursor validation/foreign cursor isolation
+PASS candidate history ownership/role/states/field whitelist/no-store; auth scope and writer epoch unchanged
+PASS concurrent entry/reconnect/reopen/takeover: one persisted deadline, old writer STALE
+PASS PostgreSQL row contention: HTTP submit AND autonomous scheduler wait across deadline; submit rejected; scheduler finalizes acknowledged answers once
+PASS submit retry/IDOR/idempotency/late save and autonomous scans: one SUBMITTED result
+PASS CLOSED remains forbidden for exam reads
+PASS INTERRUPTED remains forbidden for exam reads
+PASS autonomous runtime timeout with zero answers: TIMED_OUT, score 0/2, terminal result readable
+PASS candidate history ASCII/C order under en_US database collation; exact-fit, past-end and unknown cursor boundaries
+PASS read gates ACTIVE: owner/assigned allowed; foreign/unauth/revoked denied; ACTIVE scope preserved
+PASS read gates SUBMITTED: owner/assigned allowed; foreign/unauth/revoked denied; ACTIVE scope preserved
+PASS read gates TIMED_OUT: owner/assigned allowed; foreign/unauth/revoked denied; ACTIVE scope preserved
+PASS legacy first-save compatibility and takeover preserve existing deadline
+PASS timeout uses acknowledged revision only; rejected/unsubmitted answers excluded, repeated scans immutable
+PASS candidate history hides legacy monitoring-only and untimestamped final rows; TIMED_OUT listed; revoked/unknown token 401; POST not served (HTTP 500)
+PASS runtime shutdown: exam scheduler and monitoring workers stopped
+PASS removed only owned test schema t2a_p0_c10ce8939be84a95bf27578262911639
+Tests run: 172, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+Reactor Summary for TOEIC Monitoring Realtime 0.1.0-SNAPSHOT:
+TOEIC Monitoring Realtime .......................... SUCCESS [  0.004 s]
+TOEIC Protocol ..................................... SUCCESS [ 20.727 s]
+TOEIC JavaFX Client ................................ SUCCESS [ 49.668 s]
+TOEIC Server ....................................... SUCCESS [ 57.844 s]
+TOEIC ProcessHandle Spike .......................... SUCCESS [  1.326 s]
+BUILD SUCCESS

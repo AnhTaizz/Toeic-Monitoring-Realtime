@@ -1,0 +1,126 @@
+{
+  "algorithm": "SHA-256",
+  "scope": "exact tracked curated unified evidence bytes; excludes this manifest; raw logs/JFR/binaries remain local",
+  "files": [
+    {
+      "path": "artifact-provenance.json",
+      "sha256": "4a9bdb270dd70f39fdb84e51c6d17738edb6a048a9103dca8fc2286253e16799",
+      "bytes": 2094
+    },
+    {
+      "path": "audio-package-results.txt",
+      "sha256": "15773e7130eb53afbd9ff71b17579862d0656c5aeac729838ab7d45ae5a6b229",
+      "bytes": 599
+    },
+    {
+      "path": "c1-final-summary.csv",
+      "sha256": "6ec3b0efee4b5ceed1fc7b928f7ef34cde6981857d233dfb5c279b91cd1bf0f9",
+      "bytes": 9307
+    },
+    {
+      "path": "c2-summary.csv",
+      "sha256": "c476199f82f9cb413b1a672f44252eb603e76d120b34f9b9b97a16542b9676b4",
+      "bytes": 9335
+    },
+    {
+      "path": "conflict-resolution.md",
+      "sha256": "33c15be680b2b617378da6ee878954eee737178941feb5a24dcc86b223ec1f63",
+      "bytes": 5516
+    },
+    {
+      "path": "e1-smoke-by-duration.csv",
+      "sha256": "a7926bfe87d281be5b104fb02c29d156ab49b76187bbe10ca5c027125b61fb7b",
+      "bytes": 865
+    },
+    {
+      "path": "e1-smoke-provenance.json",
+      "sha256": "05575c196dcdcbaf8ffd5ea98cecb0978ddb2c4e76a48a4f3c590a8029cbced5",
+      "bytes": 1568
+    },
+    {
+      "path": "e1-smoke-summary.csv",
+      "sha256": "7d788a8f24124d17845ce8201aa11e690b0a695a180978ee5162f161fd263edc",
+      "bytes": 1001
+    },
+    {
+      "path": "gui-result.json",
+      "sha256": "4ef4fddfbb17955a44bc7c05ef07280c6e6a969da9fcaf3b0d381646e46c69a4",
+      "bytes": 211
+    },
+    {
+      "path": "historical-e1-integrity.json",
+      "sha256": "7c62044407d110080a37d275ab8374d774e9b74cad72eb1f07999967bc07b390",
+      "bytes": 12357
+    },
+    {
+      "path": "local-log-provenance.json",
+      "sha256": "d04125fddcfc801af8b460ea948e3505097c1d6cce61da819905587200eb02ab",
+      "bytes": 18523
+    },
+    {
+      "path": "publication.md",
+      "sha256": "e0d51e24a166bbbcfb8a440c5e10ebcae27ae1d7e764e33c43b7758927550614",
+      "bytes": 1108
+    },
+    {
+      "path": "screenshots/01-reading-saved.png",
+      "sha256": "684763c0c18d30d3f2d79d6f87ac00a5ab3080afeaf4f9301220b392def162e3",
+      "bytes": 54483
+    },
+    {
+      "path": "screenshots/02-reading-submitted.png",
+      "sha256": "4f70cb6831dbbfb92cc5d52f2bfbccd14f87be9a333638c3d389f85588be614d",
+      "bytes": 48441
+    },
+    {
+      "path": "screenshots/03-history.png",
+      "sha256": "15cd333430f3cb87efdd72361a2d3bf31f655d9862ceb2a14e367b72b96131ca",
+      "bytes": 27766
+    },
+    {
+      "path": "screenshots/04-reading-listening.png",
+      "sha256": "eb28365f4edb7758fff7a578a0839b277c05340900506f465a663b4f7404badb",
+      "bytes": 69674
+    },
+    {
+      "path": "screenshots/05-interrupted.png",
+      "sha256": "1adb0945a4ca0387bf8d4f8dea0a3c0c495e38feefca47bd166d20acdddcacd2",
+      "bytes": 72898
+    },
+    {
+      "path": "screenshots/07-progress.png",
+      "sha256": "b4d88adea167272ac00b66274c45bd7c4c7ca1c08f0602aabe8194e2735846c7",
+      "bytes": 52566
+    },
+    {
+      "path": "screenshots/08-session-start.png",
+      "sha256": "6e56864f2c0dea16d26e4ba840cb64050881c19d1ef8472d6c9afaba54be60a6",
+      "bytes": 45428
+    },
+    {
+      "path": "screenshots/09-reorganization.png",
+      "sha256": "6506eb1703f4ea780a32381bc6eaae1ebc87f3106f21b3a04ca6fec214a65206",
+      "bytes": 47657
+    },
+    {
+      "path": "source-audit.json",
+      "sha256": "456447a7d6e076bd0fe60198e792ecf13b68cb3dae87ede917b251455c19ff0f",
+      "bytes": 539
+    },
+    {
+      "path": "source-manifest.json",
+      "sha256": "f72a8258f20b47a71e0fdf1e92269f0e7218b164a5ba865ca9b8c9ffad6f6720",
+      "bytes": 69255
+    },
+    {
+      "path": "test-counts.json",
+      "sha256": "ddba6cff4e2971d9897d12fbe4f897be932df227ab2084e618f41f0a645a3c2d",
+      "bytes": 41952
+    },
+    {
+      "path": "verification.md",
+      "sha256": "369a132cd6634ec838b4bcdf1bb7c94bbfa89517e9b57f801766470e4f7705c4",
+      "bytes": 9452
+    }
+  ]
+}

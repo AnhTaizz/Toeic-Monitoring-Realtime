@@ -58,8 +58,34 @@ class ProctorSessionControllerTest {
         controller.reorganize("NEW","Thi lại");assertThat(api.reorganizations).isEmpty();api.interrupted=false;
         controller.loadAttempt("OLD");await(s->!s.resultStale());controller.reorganize("NEW","Thi lại");assertThat(api.reorganizations).isEmpty();
     }
+    @Test void readyAgeUsesMonotonicTimeAndSuccessfulSessionCannotStartAgain()throws Exception{
+        var clock=new AtomicLong(100);var q=new LinkedBlockingQueue<ProctorSessionController.Snapshot>();
+        try(var c=new ProctorSessionController(api,q::add,()->{},()->{},clock::get)){
+            c.loadSession("S");poll(q,x->!x.readyStale());assertThat(c.snapshot().canStart()).isTrue();
+            clock.addAndGet(TimeUnit.SECONDS.toNanos(5));assertThat(c.snapshot().canStart()).isFalse();c.start();assertThat(api.starts).isEmpty();
+            q.clear();c.loadSession("S");poll(q,x->!x.readyLoading()&&!x.readyStale());c.start();poll(q,x->!x.busy()&&x.notice().startsWith("Server xác nhận"));
+            q.clear();c.loadSession("S");poll(q,x->!x.readyLoading()&&!x.readyStale());assertThat(c.snapshot().canStart()).isFalse();assertThat(api.starts).hasSize(1);
+        }
+    }
+    @Test void uncertainStartCannotChangeSessionAndServerStatusSettlesCommittedStart()throws Exception{
+        controller.loadSession("S");await(x->!x.readyStale());api.blockStart=true;api.proveStarted=true;
+        controller.start();assertThat(api.entered.await(3,TimeUnit.SECONDS)).isTrue();controller.loadSession("OTHER");
+        assertThat(controller.snapshot().session()).isEqualTo("S");api.release.countDown();
+        var known=await(x->x.notice().startsWith("Server ghi nhận ca đã start"));
+        assertThat(known.pendingStart()).isNull();assertThat(known.canStart()).isFalse();assertThat(api.starts).hasSize(1);
+        controller.loadSession("OTHER");await(x->"OTHER".equals(x.session())&&!x.readyStale());
+    }
+    @Test void legacyRawAttemptReadNeverCallsMonitoringOnlyListeningRoute()throws Exception{
+        String raw="  cũ/đề% + ";controller.loadAttempt(raw);var s=await(x->!x.resultStale());
+        assertThat(s.result().attemptId()).isEqualTo(raw);assertThat(s.listening()).isNull();assertThat(api.listeningReads).hasValue(0);
+    }
+    private static ProctorSessionController.Snapshot poll(BlockingQueue<ProctorSessionController.Snapshot> q,java.util.function.Predicate<ProctorSessionController.Snapshot> accept)throws Exception{
+        long end=System.nanoTime()+TimeUnit.SECONDS.toNanos(4);
+        while(System.nanoTime()<end){var s=q.poll(100,TimeUnit.MILLISECONDS);if(s!=null&&accept.test(s))return s;}
+        throw new AssertionError("Missing expected state");
+    }
     private static final class Fake implements ProctorSessionApi {
-        volatile boolean failRead,blockStart,loseReorganize,blockRead,blockResult,closed,interrupted=true;volatile int reject;
+        volatile boolean failRead,blockStart,loseReorganize,blockRead,blockResult,closed,interrupted=true;volatile int reject;volatile boolean proveStarted;final AtomicInteger listeningReads=new AtomicInteger();
         final CountDownLatch entered=new CountDownLatch(1),release=new CountDownLatch(1),finished=new CountDownLatch(1);
         final List<ListeningStartRequest> starts=new CopyOnWriteArrayList<>();final List<ListeningReorganizeRequest> reorganizations=new CopyOnWriteArrayList<>();
         @Override public SessionAudioReadinessResponse readiness(String s)throws Exception{
@@ -72,7 +98,7 @@ class ProctorSessionControllerTest {
             if(blockResult&&a.equals("A")){entered.countDown();try{release.await();}catch(InterruptedException ignored){}finished.countDown();}
             return new CandidateAttemptStatusResponse(a,"S","E",9007199254740993L,9007199254740994L,"TIMED_OUT",Instant.now(),null,1,1,1,0,990,Map.of("L","A"),interrupted);
         }
-        @Override public ListeningStatusResponse listening(String a){return new ListeningStatusResponse("v0",null,a,"S","START","a".repeat(64),1,interrupted?"INTERRUPTED":"PLAYING",null,null,null,interrupted,null,interrupted?"MEDIA_ERROR":null);}
+        @Override public ListeningStatusResponse listening(String a){listeningReads.incrementAndGet();return new ListeningStatusResponse("v0",null,a,"S",a.equals("S-candidate1")&&!proveStarted?null:"START","a".repeat(64),1,interrupted?"INTERRUPTED":"PLAYING",null,null,null,interrupted,null,interrupted?"MEDIA_ERROR":null);}
         @Override public ListeningReorganizeResponse reorganize(String a,ListeningReorganizeRequest r)throws Exception{reorganizations.add(r);if(loseReorganize)throw new IOException();return new ListeningReorganizeResponse("v0",r.requestId(),a,r.newSessionId()+"-candidate1",r.newSessionId());}
         @Override public ExamImportResponse importExam(ExamImportRequest r){throw new UnsupportedOperationException();}
         @Override public CreateSessionResponse createSession(CreateSessionRequest r){throw new UnsupportedOperationException();}

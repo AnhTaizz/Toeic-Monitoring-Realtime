@@ -1,0 +1,13 @@
+# Phase 05 — packaging Windows PARTIAL
+
+**Pipeline code có / ASCII app-image runtime TEST PASS / Unicode production package và installer BLOCKED toolchain**. Không cài/gỡ bất kỳ phần mềm, không thay firewall/registry/JDK/DLL hệ thống.
+
+- `package-windows.ps1`: OutputDir/Mode AppImage|Installer/ServerUrl/JavaHome/ManifestTool/SourceSha/DryRun, kiểm JDK21x64 và JavaFX Media/controls/Win natives, output mới không overwrite, checksum manifest. Dùng pipeline QD26 hiện có; chỉ EXE launcher mới sinh được mt.exe chỉnh UTF8 khi có SDK. Installer cần WiX3/candle/light, per-user; không tự chạy installer. Cấm đưa TEST launcher vào installer.
+- Runtime launch script nhận ServerUrl qua argument > processenv > file user ngoài install > GUI/default. `-ServerUrl` build chỉ tạo example file; không nhúng token/DBcredential vào binary. Cache/markers theo client ngoài thư mục cài; không xóa user cache. Script smoke kiểm checksum/bundled runtime/Unicode path/AudioSmoke nếu toolchain đầy đủ.
+- Máy thật Windows11 **10.0.26200.9711**, Oracle21.0.8/Maven3.9.11/JavaFX21.0.12. Không có SDK mt.exe ở default/PATH; WiX candle/light cũng không có. Default prerequisite dry-run **BLOCKED**; không claim wrapper/Unicode/installer đã PASS.
+- Thử pipeline cũ lần đầu FAIL `.NET WriteAllLines` dùng relativepath theo native cwd thay vì PS Set-Location. Sửa config thành absolute; chuẩn hóa output/config wrappers tương tự. Retest tạo app-image ASCII xong, rồi FAIL đúng bước SDK manifest; raw giữ ngoài target. Không gọi toàn pipeline thành công.
+- Chạy **AudioSmoke.exe native từ ASCII image** với JAVA_HOME bỏ và PATH không có JDK/IDE: **8 PASS**, bundledruntime21.0.8, Media/WAV/filecorrupt/missing/noReplay/workerclose thật; API/WS MOCK, hearingconfirmation SIMULATED. Chưa xác minh launcher ở parent Unicode vì thiếu SDK; Unicode audio paths trong JVM không thay bằng chứng launcher Unicode.
+- Parser3 scripts PASS; negative5 PASS: invalidURL và nonexistentjpackage REAL filesystem/config, missingWiX REAL, wrongarch/missingruntime là **MOCK artifact fixtures**, không execute fakeexe. Sau sửa relativepath chạy lại cùng checks PASS, prerequisite vẫn BLOCKED. Các logFAIL và rawimage giữ local.
+- Artifact/source hashes trong artifact-provenance.json; image gồm TEST launcher, không phát hành như production installer. Full app login/proctor/native packaged end-to-end, humanhearing, MSI/EXE install/uninstall/máy2 và IT01 whole **NOT RUN**. Chỉ source/scripts/docs được commit, không binary.
+
+Cần người có toolchain cung cấp mt.exe (`-ManifestTool`) và WiX3 trong PATH, rồi chạy [guide](../../../docs/WINDOWS_PACKAGING.md) và LAN runbook. Không tự cài công cụ khi chưa có quyền; phase06 E1/manual preparation độc lập vẫn tiếp tục.

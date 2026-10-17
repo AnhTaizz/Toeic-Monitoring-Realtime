@@ -1,0 +1,29 @@
+{
+  "collection": "12 REAL Windows runs, full configuration; HUMAN C REVIEW PENDING",
+  "wholeAcceptance": "PARTIAL",
+  "quality": {
+    "eligible": 360,
+    "detected": 287,
+    "missed": 62,
+    "inconclusive": 11,
+    "censored": 0
+  },
+  "resourceSampleMin": 239,
+  "cpuReadableSampleMin": 239,
+  "planHashes": [
+    "1a47456957b412dc21a9f51c642c30839bf7fc6fa697f9c08a1eeb29df87dd9f"
+  ],
+  "measurementJarSha256": "c694da35aed4abb32947545a954a43579e18181c8af127813e3c909058f3144a",
+  "analysisScriptSha256": "e19c001b7fa5f1c9db2372407d7c183d6cd245dd5cd0295f2a241f8d2e4c379c",
+  "pythonVersion": "3.14.4",
+  "repeatDerivedFiles": "byte-identical",
+  "corruptResourceNegative": "rejected RESOURCE_CHECKSUM",
+  "unknownReasons": {
+    "PID_ONLY_MISSING_START_INCONCLUSIVE": 11
+  },
+  "unknownByTargetHoldMillis": {
+    "200": 8,
+    "800": 3
+  },
+  "groundTruthStartReadableForUnknown": 11
+}

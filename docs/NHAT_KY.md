@@ -499,3 +499,155 @@ Một Windows host/hai candidate JVM + proctor Application thật, PG TEST schem
 - Final MSI 37,860,724 bytes, SHA256 `7c145740789a934079d402bc6f72bd3f1b0bde152ba3711e61836a84bfa169f0`. Normal user, install có dấu/khoảng trắng ACL deny Write, ordinary launch không agent/JAVA_HOME và DLL JVM đi kèm, đóng cả wrapper/JVM exit0; sau đó real production EXE UI login hai vai/B4 READY/FULL ACK/event/download+SHA256/MediaPlayer/READY/start/WS close+reconnect locked/journal/cleanup và uninstall PASS. Hearing click/second candidate READY/network fault ghi nhãn SIMULATED/MOCK.
 - Full suite mới687 PASS,0skip:43protocol+439client+204server+1spike, PG thật và cả B4 GUI/installed integration. FULL/dashboard smoke mới PASS, automatic STALE/TTL/capacity/shutdown/history,6endpoints/63categories COMPLETE không phải E1/E2. SQL TEST schema/audio và owned process dọn; raw/cache TEST giữ dưới ignored target.
 - Phần đóng gói/local hoàn tất; IT01 PARTIAL. Chưa có máy thứ hai không IDE/Java, LAN, human hearing/review A/rút mạng thật/MP3/M4A; không nghiệm thu Reading–Listening PR35 hoặc T4/E1/E2. Không dùng ChatGPT planning/review theo opt-out. User ủy quyền push/PR/merge commit nếu không blocker GitHub, giữ branch local/remote và sync main an toàn; Git cuối xem PR/final.
+
+## 2026-10-12 · A · B-ACCEPT-01: API lịch sử lượt thi
+- Thời lượng: hai phiên Agent (Codex rồi Claude); giờ của thành viên chưa ghi.
+- Đã làm: Codex cài `GET /api/v1/candidate/attempts`, hai DTO `CandidateAttemptPageResponse`/`CandidateAttemptSummaryDto`, handler 404 cho `NoResourceFoundException` và ba test PostgreSQL (`e81961e`). Phiên Claude nhận lại: chạy toàn bộ test, thêm hai test (thứ tự byte dưới DB `en_US`, biên phân trang, lượt cũ và lượt chốt thiếu `submitted_at` bị ẩn, phiên thu hồi), kiểm chéo bằng client của B, viết contract chính thức và bằng chứng.
+- Commit: `e81961e` (Codex), `33a2932` và commit tài liệu kế tiếp, nhánh `fix/backend-candidate-attempt-history-20261012`. Không push, không merge.
+- Đã kiểm: `mvn test` 590/590 trên `e81961e`; `mvn package` 592/592 trên `33a2932`, đều với `TOEIC_PG_INTEGRATION=true` trên PostgreSQL 18.6; client B `770c896` gọi server jar của nhánh này PASS 13/13 (HTTP + PostgreSQL thật, có lượt `SUBMITTED` và `TIMED_OUT` thật).
+- Còn dở: GUI production của B chưa chạy nên B-ACCEPT-01 chưa đóng; sai phương thức HTTP vẫn trả 500 (ngoài phạm vi giao việc, chỉ ghi nhận); chưa đo truy vấn với số lượt lớn.
+- Tiếp theo: người dùng quyết định push/merge; B ghép với `770c896` và chạy lại GUI.
+- Cần người khác: B chạy GUI production theo mục 5 của evidence; C review phần auth/handler lỗi của A. Bằng chứng `evidence/t2-a-history/2026-10-12-verification.md`.
+
+## 2026-10-13 · A · API lịch sử: xếp lại trên PR #23 đã đồng bộ
+- Thời lượng: một phiên Agent; giờ của thành viên chưa ghi.
+- Đã làm: tạo nhánh `feat/backend-candidate-attempt-history-20261013` từ `sync/pr23-main-20261013` và cherry-pick đúng ba commit lịch sử (`e81961e`, `33a2932`, `7bdac52`), bỏ năm bản sao P0 của nhánh cũ để P0 chỉ vào main qua PR #23. Conflict chỉ ở tài liệu, giữ cả hai phía; quyết định lịch sử đổi số QD-19 → QD-23.
+- Commit: `ae05e48`, `ba8dac7`, `19f669e` và commit tài liệu kế tiếp. Không push.
+- Đã kiểm: `git diff 7bdac52 19f669e -- server/src/main protocol` rỗng; `mvn package` 602 PASS, 0 skip với PostgreSQL thật (lượt đầu treo do máy ngủ, đã hủy và chạy lại).
+- Còn dở: sai phương thức HTTP vẫn trả 500 (đã ghi nhận từ 12/10, chưa sửa).
+- Tiếp theo: mở PR sau khi PR #23 vào main; nhánh client của B xếp trên nhánh này.
+- Cần người khác: C review; A quyết định có sửa 405 hay không. Bằng chứng `evidence/t2-a-history/2026-10-13-restack.md`.
+
+## 2026-10-13 · A/Integration · Fix P1 cursor PR #28 theo ủy quyền
+- Thời lượng: phiên Agent, chưa ghi giờ thành viên.
+- Đã làm: sửa riêng validator history theo VARCHAR128/code point, không trim/normalize; thêm3PostgreSQL regression; giữSQL/owner/DTO/monitoring/Listening/schema. Code/test commit `00b1df1`, tích hợp main2e784fa trên merge4362d89.
+- Đã kiểm: Maven test/package638 PASS mỗi lượt, PG37, probe nguyên bản11/11. Mixed limit1/2/3, Unicode/space/URL-encoding/biên128-129 và foreign owner PASS.
+- Còn dở: code chỉ local, chưa push/retarget/bỏDraft/merge; B cần validator/encode/byte order riêng. API tạo ca oversizedID vẫn500+rollback, nằm ngoài scope. GUI/LAN/human review NOT RUN.
+- Tiếp theo: người dùng review bản local và cho phép riêng trước push; sau push kiểm diff/checks/mergeability rồi mới retarget/merge theo phép riêng.
+- Evidence: local `target/pr28-cursor-20261013/REPORT.md`; bảo toàn evidence gốc, B4, worktree khác và file chưa commit; không prune hoặc bật production delta.
+
+
+## 15/10/2026 — Integration: Reading, Listening và history
+
+- Nhận task.txt, audit/fetch/PR17-28-34/SHA/worktree; giữ main6a41031, mọi nhánh/worktree cũ và4file untracked. Worktree mới `target/integration-reading-listening-20261015/worktree` từ origin/main8f5ac40; nhánh `integration/reading-listening-20261015`.
+- Merge history2ca4121 tại81ae662; conflict chỉ3doc, hợp nhất cả history và Listening. Lấy từng file Reading từ65f5123/d425182, không merge mù PR17; compose Application/view tại9115776, giữ pipeline audio B1–B3 của main và FULL default.
+- ExamSession sở hữu writer/answers; audio nhận epoch, không takeover. Status/heartbeat/Media/callback có guard; server-interrupted đóng băng Listening theo bản server và giữ Reading local. Query status alias giữ owner/scope và Tomcat encoded-slash policy. HTTP scope raw không nới WS v0; QD28/29 ghi owner review và quyết định ID còn chờ.
+- Targeted142 PASS sau5FAILassertion path cũ; PG49 PASS mới. Clean test9115776 và package3f4d5d6 đều833 PASS,0skip trên JDK21.0.8/Maven3.9.11/Windows11/PostgreSQL18.6. GUI harness actual Application/JAR/Media/PG/WS/restart đang kiểm; firstFAIL do port readiness trước seed commit, sửa precondition count3users, giữ log gốc. Không ghi PASS GUI khi chưa chạy xong.
+- PS native runner bị treo và native cmd quoting lần đầu FAIL; chuyển runner môi trường/nativecmd, credentials chỉ qua env. Docker service db bật bằng fileCompose/EnvFile cụ thể sau rejection của auto-review khi target chưa rõ; giữ volume và hai container khác. Test dùng schema owned, không reset public.
+- Tài liệu/guide/protocol/owner handoff cập nhật; tracker/kế hoạch gốc/.env/migrations/raw cũ giữ nguyên. Evidence cuối `evidence/integration/2026-10-15-verification.md`; human A/B/C/LAN/installer/E1/E2 NOT RUN. Chưa merge main; push/Draft PR sau khi đủ evidence hoặc bàn giao PARTIAL có blocker cụ thể.
+
+
+### Chốt kiểm tra runtime và GUI trong phiên tích hợp
+
+- Visual QA phát hiện prepare button không nhận thay đổi playback; sửa387ed99, package833 PASS mới. GUI proctor ban đầu chỉ check HTTP nên ảnh loading; siết roster+state đã render. Assertion literal SYNCED-label FAIL vì UI dùng nhãn quan sát; d809a00 kiểm đúng nhãn và exact HTTP SYNCED, GUI final8nhóm PASS với6ảnh.
+- C1 lần đầu driver thiếu heartbeat200ms trong script chuẩn (default2s lớn hơn timeout800ms của smoke) FAIL; dùng đúng flag rồi FULL/epoch/reconnect/autoSTALE/TTL/cleanup PASS. C2 late/gap/UNKNOWN/retry/conflict/permissions PASS mới. Không đổi monitoring runtime hoặc gọi faults MOCK/SIMULATED là dữ liệu production.
+- Raw/log/ảnh/version/hash và các lượt lỗi giữ riêng; audit credential match0. B review thêm contrast của roster selected row (P2), A review rawID ACTIVE/oversized generatedID/wrong-method500 (P1/P2); human/LAN/installer/E1/E2 vẫn NOT RUN.
+
+
+### Công bố nhánh tích hợp
+
+Git WSL không có credential HTTPS nên push bị chặn ở auth, không phải review hay code. Git Windows dùng credential đã lưu đã push f853e13 tới riêng integration/reading-listening-20261015, không main/force-push. Git blob/provenance hashes khớp; thêm attribute giữ exact public UTF8/LF để checksum không đổi khi checkout Windows. Source/runtime/test results không đổi. Draft PR đang tạo; cập nhật URL sau khi server xác nhận.
+
+
+### Draft PR và bàn giao cuối
+
+- Git Windows push872d12b thành công; GitHub tạo [Draft PR#35](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/35), base main8f5ac40, head integration/reading-listening-20261015. Không merge, không request human approval thay A/B/C.
+- Chốt local gate: clean833/package833 (runtime387ed99), GUI8nhóm/proctor đã render (harnessd809a00), ExamFlow28/0GAP và concurrency AT01/07/09/10 + C1/C2 PASS trên final JARs. Tất cả logs/source/JAR/derived hashes/6ảnh có evidence; transcript exact-byte attributes bảo toàn checksum khi checkout Windows.
+- Whole acceptance PARTIAL: QD29 ID ACTIVE đặc biệt, human/LAN/installer/gate delta/E1/E2/load chưa nghiệm thu. Main local6a41031 và refs/worktrees/file chưa commit của người khác giữ nguyên; branch integration sạch, chỉ docs-link cập nhật sau PR.
+
+## 15/10/2026 — B overnight phase 01 (backend A/C cần review)
+
+- Worktree anh em/branch `agent/b-overnight-followups-20261015` từ remote11c5da9, main8f5ac40 đã fetch/ls-remote. Không sửa worktree/file dirty cũ.
+- ID issuance fail-closed, collision không reopen final, 405 và API progress có phân quyền. Không đổi schema/tracker/kế hoạch. QD29 proposed, chưa human approve.
+- Targeted49 PASS thật với PostgreSQL sau baseline connection refused/Docker-off; bổ sung boundary/reorg guard sẽ chạy full gate. [Evidence](../evidence/overnight-20261015/phase-01/verification.md).
+
+## 15/10/2026 — B overnight phase02 (C review pending)
+
+Harness E1 window/sampler/CLI/analyzer có; targeted22 PASS sau một lượt normal child INCOMPLETE retained/cause chưa chứng minh; Python3/dry/smoke/checksum mutation PASS. SMOKE không E1 final; FULL default. [Evidence](../evidence/overnight-20261015/phase-02/verification.md).
+
+## 15/10/2026 — B overnight phase03
+
+Sourcef31ba3d: clean/package839 PASS, ExamFlow41/0GAP, GUI8group và C1/C2 retest PASS. CompilelambdaFAIL và C1runnerclasspathFAIL giữlog; rawE1đầu bị clean xóa đã đính chính và chuyển output bền. AT11/LT/ITwhole PARTIAL, human/LANNOTRUN. [Evidence](../evidence/overnight-20261015/phase-03/verification.md).
+
+## 15/10/2026 — B overnight phase04
+
+Thêm UI điều khiển ca/progress qua API thực, immutable start/reorg intents, stale/401/close guards và contrast roster. Full package846 PASS trước follow-up; targeted35client+33PG PASS sau follow-up. GUI cuối11groups PASS với controls trong viewport và DB assertions. SelectorFAIL cũ giữlog; human/LAN/manual còn NOT RUN. [Evidence](../evidence/overnight-20261015/phase-04/verification.md).
+
+## 15/10/2026 — B overnight phase05
+
+PipelineWindows/parser3/negative5 có kiểm. Sửa relative.NETpath của package-t3b1; rawASCIIimage và bundledMedia8checks PASS (API/WS MOCK, hearingSIMULATED). SDKmt/WiX thiếu nên Unicode/installer BLOCKED, IT01/human/máy2 NOT RUN. Không cài tool hoặc đổi hệ thống. [Evidence](../evidence/overnight-20261015/phase-05/verification.md).
+
+## 15/10/2026 — B overnight phase06 và bàn giao
+
+- Java freezec1601b55b7b40cd84238921e87355108cfaea5fd; clean/package848 PASS,0skip; Flow41/0GAP,GUI11,C1/C2 có GUI PASS mới. PG18.6 thật trong schemaowned; unitMOCK/faultSIMULATED phân biệt.
+- E1 đủ12REALrun,15s+120s/run,360GTtrials, quality={'eligible': 360, 'detected': 287, 'missed': 62, 'inconclusive': 11, 'censored': 0}; cleanup/checksums/reanalysis byte-identical PASS. Python4 PASS với analyzerSHA riêng, không thay JAR đang đo; upper-bound latency/parentheap/carryover/background limits đã ghi. E1 acceptance/human C review pending, E2/load/LAN/manual NOT RUN; FULL default.
+- PackageASCII8 subset nguồn0057d81; Unicode/installer SDK/WiX BLOCKED. Không cài/gỡ/resetDB/đổi tracker/kế hoạch; checkpoint local giữ, public snapshot sạch sẽ công bố riêng để không gửi ảnh process trong9bbe106. [Bàn giao](../evidence/overnight-20261015/00-summary.md).
+
+### Ref cuối trong phiên overnight
+
+Fetch thấy main8f5ac40→0b9c5fa (PR36 B4), integration11c5da9 không đổi; target merge-base11c5da9 vẫn đúng. Không hợp/đổi nhánh owner. B4 có overlap cần reviewer chọn một controller; [kế hoạch](../evidence/overnight-20261015/UPSTREAM_DIVERGENCE.md). Java source đã kiểm vẫnc1601b5, chưa gọi kết quả đó là test của main mới.
+
+## 15/10/2026 — công bố Draft PR overnight
+
+- Draft PR: [https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/38](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/38), nhánh `agent/b-overnight-followups-20261015-public`, base integration `11c5da9`. Snapshot đầu `4350c9d87da529796d73de98d4a169c93c3a41db` từ checkpoint `a393eb541bb8cdcbc1af3037a3c7811f7d9126d4`; public tree khớp checkpoint, Java khớp source đã test `c1601b5`. Đã kiểm ảnh process/PID cũ không reachable; checkpoint local giữ nguyên và không push. Commit công bố sau chỉ đổi hồ sơ, không chạy lại/nhận lại kết quả Java.
+- Main tiếp tục lên `c0fd903` qua PR #37 B5; integration và target merge-base vẫn không đổi. B4/PR #36 và B5/PR #37 cần owner hòa trước merge; chưa kiểm trên main mới. Evidence MSI upstream dùng môi trường/tooling khác, không kế thừa cho overnight. [Chi tiết](../evidence/overnight-20261015/UPSTREAM_DIVERGENCE.md).
+- Không merge/approve/mark ready, không đổi tracker/kế hoạch/.env/migrations hoặc worktree khác. E1 PARTIAL (11 inconclusive); Unicode/installer overnight BLOCKED tại môi trường này; human A/B/C, LAN, nghe thật và máy thứ hai còn chờ.
+
+Kiểm tra archive của commit bàn giao phát hiện manifest checksum liệt kê thêm `phase-01/targeted-test-summary.log` vốn chỉ ở local và bị Git ignore. Đã giới hạn manifest vào file evidence tracked, không xóa/sửa log gốc; kiểm tra lại byte của archive trước push cuối. Đây là lỗi phạm vi manifest, không đổi Java/JAR hoặc số test.
+
+Kiểm tra byte tiếp theo phát hiện CSV phase 02 đã bị Git chuẩn hóa CRLF thành LF trước khi thêm quy tắc evidence -text. Giữ file local nguyên byte, áp dụng lại quy tắc -text cho index và kiểm tra archive khớp manifest. Các failure kiểm tra công bố được giữ trong checkpoint; không sửa raw phép đo hoặc Java/JAR.
+
+## 16/10/2026 — tích hợp ứng dụng thống nhất, đang kiểm
+
+Tạo branch/worktree mới từ main c0fd903, hòa #35 tại456583b và #38 theo từng conflict. Giữ B4 #36/MSI #37, loại controller/demo trùng, thêm committed progress và guard/cấu hình runtime có test. QD-28 giữ MSI, shared writer đổi số QD-30 do trùng; QD-29 vẫn đề xuất. Targeted đầu52 có1FAIL test queue, sửa và lượt mới56PASS; parser/negative có nhãn. PostgreSQL/GUI/clean/package đang chạy, chưa kế thừa848/687/MSI. [Conflict/evidence](../evidence/unified-20261016/conflict-resolution.md); raw E1 cũ đã hash trước và không sửa. Không reset/clean/rebase/force-push nhánh cũ, không sửa tracker/kế hoạch/nguon/migrations/.env hoặc duyệt thay A/C.
+
+
+## 16/10/2026 — kiểm chứng và bàn giao ứng dụng thống nhất
+
+Production merge24f70bd từmain c0fd903 +PR35/38, checkpoint testb755646 chỉ thêm hardening TEST C1/C2. Giữ nền B4#36 và MSI#37; một Application/shared writer, committed progress/validationQD29/AT11/E1. Clean/package mới mỗi lượt872PASS/1skip; Flow41/0GAP, GUI11, Audio8/production EXE vớiPG, C2+GUI PASS subset. C1 cuối PASS sau các FAIL cleanup được giữ; MSI/Unicode SDK/WiX BLOCKED. Lượt FAIL runner/GUI/native/C1 giữ log, không kế thừa số nguồn. Raw84E1 và14CSV repro không đổi; smoke mới runId riêng, full12 bản ghépNOTRUN. [Báo cáo](../evidence/unified-20261016/verification.md). Không resetDB/nhánh cũ, không sửa tracker/kế hoạch/nguon/migration/.env. Draft base main và HEAD cuối xem publication; không merge/đóngPR cũ/approve thayA-C.
+
+
+Công bố16/10: đã push duy nhất branch thống nhất và tạo [Draft PR #39](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/39) base main, head công bố đầu6ff7656. Source testb755646 giữ nguyên; commit sau chỉ bổ sung URL/hồ sơ và manifest, không nhận thêm test PASS. Đã kiểm88file evidence mới+overnight từ byte Git commit, private blob không reachable và source/test không đổi. Không merge/đóngPR cũ/duyệt thayA-C.
+
+
+## 16/10/2026 — QA/stabilization PR39, MSI mới và runbook LAN
+
+Nhánh QA riêng từ093429a; main/merge-base c0fd903. Source cuối9bfc75e sửaBOM0a00d0f/title dcbdf85/cache lifecycle9bfc75e; giữ mọi FAIL, cache stress BEFORE10FAIL+1ERROR/65 → AFTER65PASS rồi targeted26PASS. Full clean/package875PASS+1SKIP mỗi lượt, installed FullSuite876PASS/0SKIP trên PG18.6 thật; Flow41/0GAP, concurrency, ApplicationGUI11/C1-C2 PASS subset. MSI037 source sạch quyền thường/Unicode/noJavaHome/bundledJVM/denyWrite/close/uninstall PASS; private external agent thêm History/reorg old immutable/new fresh PASS, compiled test agent phục hồi. Không source/backend/contract A-C changes hoặc human hearing/physical LAN claim. Sau khoảng nghỉ sharedDB đã dừng, dùng TEST PG tmpfs riêng rồi remove; QA database đầu phiên chờ owner cleanup khi shared service được phép chạy. User xác nhận chỉ một máy: LAN runbook/testdata/bundle sẵn, physicalNOTRUN.84rawE1 giữ checksum, không E1/E2 rerun, tracker/nguon không sửa. [Evidence](../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md); Draft QA targetPR39 được ghi ở PUBLICATION.md, không merge/markReady/close PR nguồn hoặc duyệt thay A/C.
+
+
+Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Draft PR #40](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/40) nhắm nhánh PR39, base093429a, commit công bố đầu b5626168. Source đã test/build9bfc75e giữ nguyên; chỉ thêm URL/hồ sơ/checksum sau đó, không nhận thêm test PASS. Git commit evidence mới và manifest lịch sử đã đối chiếu byte; root HEAD6a410316 cùng5untracked giữ nguyên. Không merge/markReady/close/approve PR nguồn. [Bàn giao](../evidence/b-pr39-acceptance-20261016/PUBLICATION.md).
+
+## 16/10/2026 — F01: giữ cờ Listening gián đoạn trong kết quả
+
+- Base: fetch PR39 `093429a`, PR40 `3fc5bb4`, GitHub xác nhận cả hai OPEN/Draft; tạo worktree `target/f01-worktree`, nhánh `qa/f01-listening-result-20261016`. Root main và file/worktree cũ giữ nguyên. PR40 HEAD kiểm lại cuối phiên vẫn3fc5bb4.
+- Code/test `d19c63902725662aeb6f43c6f04ca80ea6caff42`: Result thiếu trường làm mất cờ ở cả hai mapper; bổ sung cờ server trực tiếp và cảnh báo tiếng Việt trên ScoreResultDialog cho SUBMITTED/TIMED_OUT. History dùng mapping chung nên không cần sửa view/ExamResults; không takeover, không suy từ score/state, không sửa điểm/backend/wire/QD29/monitoring/E1.
+- Đã kiểm mới: trước sửa mapping6ERROR đúng thiếu thuộc tính; sau sửa targeted104PASS. Maven clean test/package mỗi lượt896PASS/2SKIP; MSI0.3.8 installed FullSuite898PASS/0SKIP (XML archive từng lượt),0failure/error. AT11/ExamFlow41PASS/0GAP, ApplicationGUI11, PG concurrency AT01/07/09/10, C2+GUI PASS. C1 đầu FAIL EDGE_PROFILE_CLEANUP/FileSystemException, log giữ nguyên; đổi thư mục tạm TEST sang Windows Temp, không sửa source, lượt mới C1 FULL+GUI PASS; nguyên nhân đầu chưa chứng minh.
+- Môi trường Windows11/JDK21.0.8/Maven3.9.11/JavaFX21.0.12; Docker đang tắt nên dùng cluster PostgreSQL18.1 native TEST riêng, không restart shared service. Hậu kiểm0schema, dừng cluster, dọn profile TEST và xóa seed settings local. Hai probe Surefire đầu và wrapper exit-code cleanup đầu có lỗi môi trường; không tính là test F01 PASS.
+- MSI0.3.8 từ source sạch d19c639, pipeline hiện hữu, SHA256 `df17a3fa168579ccd222cfc1429599277b4e05ec7e8f71b017ef6bd91faefc49`. Quyền thường/Unicode/no agent/no JAVA_HOME/bundled JVM/deny-write/close/uninstall PASS local;5439class entries packaged/final bằng byte.84rawE1 hash lại trước/sau giữ nguyên, không chạy E1/E2.
+- Bàn giao: [báo cáo/counts/ảnh/metadata/index log](../evidence/f01-20261016/REPORT.md). Thay đổi production thuộc B; bổ sung test trong file A cần A review. MOCK/SIMULATED phân biệt với REAL trong report; human review/nghe thật/DPI rộng/LAN/máy2 NOT RUN. Không đổi tracker, không push/tạo PR/merge/approve/đóng PR nguồn. Ưu tiên cherry-pick commit sửa vào PR40 rồi đưa PR40 vào PR39 một lần; commit hồ sơ sau không đổi code đã test.
+
+## 16/10/2026 — C · review E1 và chuẩn bị T4-C1
+
+- Main sạch c0fd903; fetch/API xác nhận PR38–40 OPEN/DRAFT, latest PR40 3fc5bb4. Tạo nhánh riêng review/c-e1-methodology-t4c1, target qa/b-pr39-acceptance-20261016. Không thay nhánh nguồn/tracker/kế hoạch/hợp đồng/.env/DB; FULL default.
+- Sửa CPU mean-of-percentages bằng tổng delta/time, E1 rejoin dùng window checksummed thay C4 plan, analyzer coverage/invalid-run/identity binding/latency/duplicate guards. Source/test c2cc312, byte serialize MOCK243byte kiểm production counters. [Guide](E1_T4C1_MEASUREMENT.md), [review/evidence mới](../evidence/t4-c1/2026-10-16-review.md).
+- Tái hiện CPU50% sai so expected10%; baseline smokeCOMPLETE nhưng rejoinexit2. Sau sửa87Java/11Python PASS, final smoke REAL3child/gateSIMULATED COMPLETE, rejoin byte-identical/reanalysis deterministic. Giữ lỗi cache/PowerShell và1ERROR hồi quy trong ignored target/t4-c1, sửa implementation để C4 test gốc PASS. Không full12/E2/load/LAN hoặc benchmark overhead.
+- 12metadata lịch sử/3trace MOCK hash khớp; derived CSV count287/62/11. Raw84file c1601b5 chưa có tại provenance, đã hỏi vị trí; không nhận reanalysis cũ PASS. Toàn12run cần phân tích lại resource; chưa có lý do tự chạy lại ngay toàn campaign.
+- Chuẩn bị T4-C1 có thể review, nghiệm thu PARTIAL: human B/raw cũ/T3-C4 LAN-gate/trace120s E2 còn mở. Không thay human review bằng agent; ChatGPT planning/review NOT RUN theo opt-out. User ủy quyền commit/push/PR riêng, không merge; Git cuối trong PR/phản hồi. Dừng review E1/T4-C1.
+
+
+## 17/10/2026 — Integration release candidate sau review A/C
+
+- Fetch/API inventory39/40/41/42/43/45; latest main07c4024. Giữ root6a410316/năm untracked/worktrees cũ. Không có review/comment/inline approval của owner; không merge/push/approve PR nguồn hoặc main.
+- Worktree/branch TEST riêng: ghép F01 và C41/43, conflict thuần NHAT_KY/TIEN_DO giữ cả hai phía; source c224ba8/tree22858b4. PR45 conflict AudioFiles và probe REAL filesystem/MOCK manifest tái hiện18/128 FileAlreadyExistsException, RC0/128; chưa tự hòa semantics/policy.
+- Mới trên đúng source: clean test/package mỗi lượt904PASS/2SKIP/0failure/error; installed MSI0.3.9 FullSuite906PASS/0SKIP; Flow41,GUI11,PGconcurrency AT01/07/09/10,C1FULL/C2+GUI PASS. REAL/MOCK/SIMULATED ghi theo harness; không cộng standalone/repeated suite vào JUnit. Installed ordinary launch không agent/JAVA_HOME/bundledJVM/Unicode/denywrite/close/uninstall PASS local.
+- MSI0.3.9 source sạch c224ba8, SHA256 bef7528f77b35695904812b2959ea389b6ac790ba6fc8f9f91fc665632af604e;5439class packaged/final bằng byte;8class khác MSI0.3.8. Giữ artifact cũ.0schema/Edge/product TEST, dừng cluster riêng, không shared DB/Docker/firewall/registry app người dùng.
+- E1 raw84 truy cập được và hash trước/sau khớp; Java mới rejoin12byte-identical; analyzer Python12PASS,17output deterministic.287/62/11 không đổi; CPU mới time-weighted khác nhẹ, resource coverage OK. Raw/sourcec1601b5 giữ nguyên, không campaign mới/E2/LAN/load/hearing hoặc owner signoff.
+- QD29 PROPOSED_FOR_A_C_APPROVAL; A/C chốt fail-closed/legacy, A review history5001/HTTP500/UX, C xác nhận E1 mới, B xử lý45 và manual gates. C1 FAIL lịch sử giữ UNRESOLVED. [Báo cáo/counts/provenance/next actions](../evidence/integration-final-20261017/REPORT.md). Tracker/kế hoạch/nguon/migration giữ nguyên; hồ sơ commit riêng sau test, không đổi source/test/build/resources.
+
+## 2026-10-17 · agent · ổn định hóa bản tích hợp cuối
+- Đã làm: nhánh `stabilize/final-rc-20261017` từ RC `a447bfb`. QD-29 server chặn legacy ACTIVE (409) và va chạm tạo ca đồng thời (400 thay 500); lịch sử >5000 trả 409 không retry, dashboard báo đúng, trần body 8 MiB; cache audio hợp nhất fix race PR40 với policy junction, thay PR45; CI Windows của PR45 cherry-pick riêng; test takeover replay; cleanup C1/C2 báo từng thành phần, dừng Edge đúng thứ tự, hạn 45 s theo số đo.
+- Commit: `991ad0e`…`3702b6d` (16 commit), source test/MSI `3702b6d`.
+- Đã kiểm: clean test/package 924 PASS/4 SKIP; MSI 0.3.10 installed FullSuite 926 PASS/2 SKIP; Flow/concurrency/GUI/C1/C2 PASS; CI Windows SUCCESS; E1 84 hash + 12 Python PASS. Lượt FAIL trung gian ghi trong [báo cáo](../evidence/stabilize-20261017/REPORT.md).
+- Còn dở: owner duyệt QD-31..34, C xác nhận C1/E1; LAN/nghe thật/máy sạch/tải/E2 NOT RUN; nguyên nhân khóa profile Edge (không phải tiến trình user-mode) chưa xác nhận.
+- Tiếp theo: owner review Draft PR vào nhánh PR39, merge theo mục H của báo cáo.
+- Cần người khác: A/C (QD-31, QD-32), A/B (QD-34), B (QD-33, đóng PR45), C (C1, E1).

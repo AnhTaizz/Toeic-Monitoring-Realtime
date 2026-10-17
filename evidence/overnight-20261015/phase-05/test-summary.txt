@@ -1,0 +1,38 @@
+RUN phase05-checks rawSha256=9df1c043034987a5652f2a3b411d82075ac71e2926b69460c2332cea8cb7fe28
+PARSE PASS scripts/package-windows.ps1
+PARSE PASS scripts/start-packaged-client.ps1
+PARSE PASS scripts/smoke-package-windows.ps1
+NEGATIVE PASS invalid URL with credentials : ServerUrl ph?i l� HTTP/HTTPS origin, kh�ng credential/path/query/fragment.
+NEGATIVE PASS missing jpackage : Cannot find drive. A drive with the name 'Z' does not exist.
+RUN phase05-negative rawSha256=8f6493cf749484f37afe345ab493c236b23e6e61f98fe7d75e6695c7f4920261
+PASS parser package-windows.ps1
+PASS parser start-packaged-client.ps1
+PASS parser smoke-package-windows.ps1
+PASS rejection REAL invalid ServerUrl credential/query
+PASS rejection REAL nonexistent jpackage path
+PASS rejection MOCK wrong JDK architecture, fake exe never executed
+PASS rejection MOCK package missing bundled runtime
+PASS rejection REAL WiX unavailable
+BLOCKED package prerequisites: Thi?u Windows SDK mt.exe cho QD26 UTF8 manifest; truy?n -ManifestTool.
+RUN phase05-rawimage rawSha256=a4f7e29afa704e6014dabc3fe3139a593e5fe6cca112af1bb0078a2f628b4fc9
+RUN phase05-rawimage-retest rawSha256=be654009f9f2932cfafcb0e06919d3b403b102c7352edcc4342f0a882aa201a9
+RUN phase05-negative-retest rawSha256=8f6493cf749484f37afe345ab493c236b23e6e61f98fe7d75e6695c7f4920261
+PASS parser package-windows.ps1
+PASS parser start-packaged-client.ps1
+PASS parser smoke-package-windows.ps1
+PASS rejection REAL invalid ServerUrl credential/query
+PASS rejection REAL nonexistent jpackage path
+PASS rejection MOCK wrong JDK architecture, fake exe never executed
+PASS rejection MOCK package missing bundled runtime
+PASS rejection REAL WiX unavailable
+BLOCKED package prerequisites: Thi?u Windows SDK mt.exe cho QD26 UTF8 manifest; truy?n -ManifestTool.
+RUN phase05-ascii-smoke rawSha256=55576722aeecc7d0f841930abce79a584c3779b798bd92092b5867aeb7166d4a
+PASS REAL FX responsive while MOCK takeover waits 700ms
+PASS one-byte-corrupt REAL local file blocks READY in production view
+PASS REAL JavaFX PCM WAV completed; automated hearing confirmation; MOCK correlated READY ACK
+PASS REAL exam WAV playback maps candidate question and duplicate startId does not replay
+PASS deleted REAL local file blocks READY in production view
+PASS missing speaker sample raises REAL media error; READY stays locked
+PASS LT03 REAL MediaPlayer stops on disconnect; reconnect queries status and never replays
+PASS view/player/worker shutdown; bundled runtime=21.0.8
+Native launcher only ASCII path. Unicode launcher gate BLOCKED SDK. API/WS MOCK; Media REAL; human hearing NOT RUN.

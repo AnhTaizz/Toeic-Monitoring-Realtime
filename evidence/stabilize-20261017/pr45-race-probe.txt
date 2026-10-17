@@ -1,0 +1,10 @@
+﻿new run1 exit=0 REAL filesystem, MOCK manifest; readers=128 failures=0 first=NONE
+pr45 run1 exit=2 REAL filesystem, MOCK manifest; readers=128 failures=32 first=FileAlreadyExistsException
+new run2 exit=0 REAL filesystem, MOCK manifest; readers=128 failures=0 first=NONE
+pr45 run2 exit=2 REAL filesystem, MOCK manifest; readers=128 failures=11 first=FileAlreadyExistsException
+new run3 exit=0 REAL filesystem, MOCK manifest; readers=128 failures=0 first=NONE
+pr45 run3 exit=2 REAL filesystem, MOCK manifest; readers=128 failures=20 first=FileAlreadyExistsException
+new run4 exit=0 REAL filesystem, MOCK manifest; readers=128 failures=0 first=NONE
+pr45 run4 exit=2 REAL filesystem, MOCK manifest; readers=128 failures=19 first=FileAlreadyExistsException
+new run5 exit=0 REAL filesystem, MOCK manifest; readers=128 failures=0 first=NONE
+pr45 run5 exit=2 REAL filesystem, MOCK manifest; readers=128 failures=30 first=FileAlreadyExistsException

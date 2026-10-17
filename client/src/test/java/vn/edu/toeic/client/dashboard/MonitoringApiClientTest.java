@@ -56,14 +56,46 @@ class MonitoringApiClientTest {
         }
     }
     @Test void oversizedBodyRejectedBeforeRender() throws Exception {
-        try(Fixture f=new Fixture()) { f.body.set(" ".repeat(4*1024*1024+1)); assertThatThrownBy(() -> f.api.roster().join()).hasCauseInstanceOf(InvalidServerResponseException.class); }
+        try(Fixture f=new Fixture()) { f.body.set(" ".repeat(MonitoringApiClient.MAX_BODY_BYTES+1)); assertThatThrownBy(() -> f.api.roster().join()).hasCauseInstanceOf(InvalidServerResponseException.class); }
+    }
+    @Test void historyOverflow409IsNonRetryableLimitOnlyForHistoryEndpoints() throws Exception {
+        try(Fixture f=new Fixture()) {
+            f.status=409; f.body.set("MOCK untrusted body");
+            assertThatThrownBy(() -> f.api.events("MOCK-A").join()).hasCauseInstanceOf(MonitoringApiClient.HistoryLimitException.class)
+                    .cause().hasMessage(MonitoringApiClient.HISTORY_LIMIT_MESSAGE);
+            assertThatThrownBy(() -> f.api.interruptions("MOCK-A").join()).hasCauseInstanceOf(MonitoringApiClient.HistoryLimitException.class);
+            assertThatThrownBy(() -> f.api.gaps("MOCK-A").join()).hasCauseInstanceOf(MonitoringApiClient.HistoryLimitException.class);
+            assertThatThrownBy(() -> f.api.roster().join()).hasCauseInstanceOf(LoginFailedException.class);
+            f.status=403;
+            assertThatThrownBy(() -> f.api.events("MOCK-A").join()).hasCauseInstanceOf(LoginFailedException.class)
+                    .satisfies(failure -> assertThat(((LoginFailedException)failure.getCause()).statusCode()).isEqualTo(403));
+        }
+    }
+    @Test void fullHistoryOf5000EventsAtMaximumFieldLengthsIsAcceptedInOrder() throws Exception {
+        String attempt="A".repeat(128);
+        JsonObject body=response(); body.addProperty("attemptId",attempt); JsonArray events=new JsonArray();
+        for (int i=0;i<5000;i++) {
+            JsonObject event=eventJson(attempt,String.format("%05d",i)+"e".repeat(123));
+            event.addProperty("processName","p".repeat(255)); event.addProperty("policyVersion","v".repeat(128));
+            event.addProperty("deliveryStatus","PREVIOUS_CONNECTION"); events.add(event);
+        }
+        body.add("events",events);
+        String text=body.toString();
+        assertThat(text.getBytes(StandardCharsets.UTF_8).length).as("worst case exceeds old 4 MiB cap").isGreaterThan(4*1024*1024);
+        try(Fixture f=new Fixture(Duration.ofSeconds(10),5000)) {
+            f.body.set(text);
+            var result=f.api.events(attempt).get(10,TimeUnit.SECONDS);
+            assertThat(result).hasSize(5000);
+            assertThat(result.getFirst().eventId()).startsWith("00000"); assertThat(result.getLast().eventId()).startsWith("04999");
+        }
     }
     private static final class Fixture implements AutoCloseable {
         final HttpServer server; final ExecutorService executor=Executors.newSingleThreadExecutor(); final MonitoringApiClient api;
         final AtomicReference<String> body=new AtomicReference<>("{}"); final AtomicReference<String> path=new AtomicReference<>(),authorization=new AtomicReference<>();
         volatile int status=200; volatile CountDownLatch gate;
         Fixture() throws Exception { this(Duration.ofSeconds(3)); }
-        Fixture(Duration timeout) throws Exception {
+        Fixture(Duration timeout) throws Exception { this(timeout,10); }
+        Fixture(Duration timeout,int maximum) throws Exception {
             server=HttpServer.create(new InetSocketAddress("127.0.0.1",0),0); server.setExecutor(executor);
             server.createContext("/",exchange -> {
                 path.set(exchange.getRequestURI().toString()); authorization.set(exchange.getRequestHeaders().getFirst("Authorization"));
@@ -72,7 +104,7 @@ class MonitoringApiClientTest {
                     byte[] bytes=body.get().getBytes(StandardCharsets.UTF_8); exchange.sendResponseHeaders(status,bytes.length); exchange.getResponseBody().write(bytes);
                 } catch (Exception ignored) { } finally { exchange.close(); }
             });
-            server.start(); api=new MonitoringApiClient("http://127.0.0.1:"+server.getAddress().getPort(),"MOCK-token-only",timeout,10);
+            server.start(); api=new MonitoringApiClient("http://127.0.0.1:"+server.getAddress().getPort(),"MOCK-token-only",timeout,maximum);
         }
         @Override public void close(){if(gate!=null)gate.countDown();api.close();server.stop(0);executor.shutdownNow();}
     }

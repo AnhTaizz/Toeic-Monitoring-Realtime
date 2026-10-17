@@ -347,3 +347,47 @@ Implementation phía client, luồng làm bài Reading và Listening, chính sá
 - Đóng ứng dụng thì các luồng nền được dọn ra sao?
 
 Bạn cũng phải vẽ lại được luồng của A (khóa, deadline, commit rồi ACK) và của C (snapshot, epoch).
+
+
+## Bàn giao tích hợp15/10/2026
+
+Nhánh `integration/reading-listening-20261015`, base8f5ac40, history2ca4121 và Reading65f5123. Guide `docs/INTEGRATION_READING_LISTENING.md`; evidence `evidence/integration/2026-10-15-verification.md`. Phạm vi review: B: Reading/Listening/shared writer/Media/callback/reconnect. Clean test833 PASS (protocol43/client569/server220/spike1), PostgreSQL18.6 thật và 0skip; package833 PASS. GUI smoke8nhóm PASS mới; chưa nâng toàn case human/LAN. FULL default, tracker không đổi.
+
+**Ghi chú làm dở:** human A/B/C/LAN hai máy/installer/E1/E2 NOT RUN; ID ACTIVE đặc biệt còn contract QD29. Không dùng alias đọc status làm quyền monitoring; không merge main khi chưa được người dùng chấp thuận. Kết quả cuối/SHA/log trong evidence, không kế thừa PASS nhánh nguồn.
+
+### Ghi chú làm dở overnight 15/10/2026
+
+Phase01 backend checkpoint đề xuất (A/C review pending), targeted49 PASS; xem [evidence](../../evidence/overnight-20261015/phase-01/verification.md). Tiếp tục phase02–06, không coi code là human/LAN acceptance.
+
+Overnight phase03 T2-B4 AT11: exact40/42/ACKfence mới đã kiểmREAL HTTP/PG, no2writer; GUI8group samewriterReadingListening PASSsubset. AT11wholePARTIAL. [Matrix](../../evidence/overnight-20261015/phase-03/AT11_matrix.md).
+
+T3-B4/T2-B5 overnight: UI import/create/READY/start/status/reorg và progress committed đã nối API production; GUI11groups PASS subset. Còn FileChooser/manual/LAN/2candidateGUI và review thật. [Guide](../PROCTOR_SESSION_PROGRESS.md).
+
+T3-B5 overnight: scripts/config/negative tests có; rawASCIIimageMedia8 PASS, cần mt.exe/WiX để nghiệm thu Unicode/installer. Máy2/nghe/cài/gỡ NOT RUN. [Guide](../WINDOWS_PACKAGING.md).
+
+### Handoff overnight15/10 — local gate xong, nghiệm thu còn PARTIAL
+
+SourceJava c1601b5 clean/package848,Flow41/GUI11/C1-C2 PASS; E1 đủ12REALruns, cần C review. B cần nghe/rút mạng/kill thật,2máyLAN và installer được phép;SDKmt/WiX đang thiếu. Import FileChooser/manual còn cần người thử. Sau tạo ca/tổ chức lại bấm “Làm mới quyền và dữ liệu” của dashboard để nạp scope monitoring; progress API độc lập vẫn đọc assignedfinal. Không xóa marker/autoReplay, không thay tracker khi chưa xác nhận. [Summary](../../evidence/overnight-20261015/00-summary.md).
+
+Lưu ý ref trước công bố: main `c0fd903` đã có B4/PR #36 và Windows MSI/PR #37. Code overnight chưa hòa với hai phần này; owner cần chọn một controller và một pipeline, không ghi đè script cùng tên. Xem [đối chiếu upstream](../../evidence/overnight-20261015/UPSTREAM_DIVERGENCE.md). Không kế thừa test/artifact của upstream cho source overnight.
+
+
+## Handoff bản thống nhất16/10/2026 — HUMAN REVIEW PENDING
+
+Một Application Reading/Listening/history/shared writer; B4#36 duy nhất +progress38; MSI#37 duy nhất, config/preflight port có giới hạn. MSI và parent Unicode BLOCKED, còn nghe thật/FileChooser/LAN/máy2. Checkpointb755646: clean/package mỗi lượt872PASS/1skip, Flow41/GUI11/nativeAudio8/production EXE+PG PASS subset; không nghiệm thu toàncase. [Báo cáo/SHA/count/failure/manual](../../evidence/unified-20261016/verification.md). Không đổi tracker/kế hoạch hoặc tự duyệt A/C.
+
+
+### Ghi chú làm dở — QA PR39 ngày16/10/2026 (B bàn giao, chưa owner ký)
+
+Bàn giao QA PR39: source9bfc75e sửa3lỗi B (BOM/title/cache race), Maven875+1skip và installer876+0skip mới; MSI037/native History/reorg PASS local, artifact/hash trong report. Nghe thật/DPI/codec ngoàiWAV/máy hai/LAN chưa nghiệm thu; user chỉ có một máy, runbook/testdata/bundle đã chuẩn bị. Shared QA DB còn cleanup do container đang dừng, không tự restart. Đề nghị A review B fixes, không tự ký A/C hoặc cập nhật tracker. [Báo cáo](../../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md).
+
+### Bàn giao F01 — 16/10/2026
+
+Code `d19c639` trên nhánh local `qa/f01-listening-result-20261016` từ PR40HEAD3fc5bb4: Result giữ nguyên `listeningInterrupted` từ hai DTO; ScoreResultDialog cảnh báo gián đoạn cho SUBMITTED/TIMED_OUT, không tự hủy điểm. History không takeover; thêm regression mapping/session/history/GUI và test HTTP/PG trong file A, cần A review. [Báo cáo](../../evidence/f01-20261016/REPORT.md).
+
+**Ghi chú làm dở:** F01 FIXED và MSI0.3.8 local PASS, chưa human A/C review/LAN/máy2/nghe thật. Clean test/package896PASS+2SKIP; installed FullSuite898PASS+0SKIP; AT11 41/0GAP,GUI11,C1/C2 PASS sau giữ C1 FAIL cleanup đầu (nguyên nhân chưa chứng minh). Không sửa monitoring để né FAIL; đổi temp TEST Windows cho lượt C1 cuối. Cluster TEST riêng đã dừng/0schema;84rawE1 giữ checksum. Không đổi tracker/push/merge/approve PR39/40; đưa patch qua PR40 rồi PR39 một lần để tránh nhân đôi.
+
+
+### Ghi chú làm dở — RC17/10/2026
+
+MSI0.3.9 installed906PASS local; cần B review F01, hòa PR45 với fix race40 và policy junction; manual hearing/máy2/LAN chưa nghiệm thu. Source TEST c224ba8, không merge nhánh nguồn/main hoặc ký thay owner. [Bàn giao](../../evidence/integration-final-20261017/REPORT.md).

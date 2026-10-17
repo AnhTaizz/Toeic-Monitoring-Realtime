@@ -1,0 +1,11 @@
+{
+    "ownedConnections":  0,
+    "ownedSchemas":  0,
+    "ownedJavaDrivers":  0,
+    "ownedInstalledClients":  0,
+    "temporaryContainerRemoved":  true,
+    "sharedContainerStateBefore":  "exited",
+    "sharedContainerStateAfter":  "exited",
+    "originalDedicatedQaDatabaseCleanup":  "BLOCKED shared container stopped externally; owner may drop only recorded qa_b39_ database after allowed resume",
+    "utc":  "2026-10-16T07:19:43.6803216Z"
+}

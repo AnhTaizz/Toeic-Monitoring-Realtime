@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import vn.edu.toeic.client.audio.*;
 import vn.edu.toeic.client.proctor.ProctorSessionView;
+import vn.edu.toeic.client.exam.CandidateExamView;
+import vn.edu.toeic.client.exam.ExamSession;
 import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -33,10 +35,13 @@ public final class InstalledClientAgent {
         Path install=Path.of(env("TOEIC_PACKAGE_TEST_INSTALL"));
         if(!Path.of(System.getProperty("java.home")).toRealPath().equals(install.resolve("runtime").toRealPath()))
             throw new AssertionError("Launcher did not use installed runtime");
-        Path forbidden=install.resolve("TEST-must-not-write.tmp");
-        try {Files.writeString(forbidden,"TEST");Files.delete(forbidden);throw new AssertionError("Install directory was writable");}
-        catch(AccessDeniedException expected) {}
-        Files.writeString(output.resolve("runtime.txt"),"java.home="+System.getProperty("java.home")+"\njava.version="+System.getProperty("java.version")+"\ninstall-write=DENIED\n");
+        boolean installed="INSTALLED".equals(System.getenv().getOrDefault("TOEIC_PACKAGE_TEST_KIND","INSTALLED"));
+        if(installed){
+            Path forbidden=install.resolve("TEST-must-not-write.tmp");
+            try {Files.writeString(forbidden,"TEST");Files.delete(forbidden);throw new AssertionError("Install directory was writable");}
+            catch(AccessDeniedException expected) {}
+        }
+        Files.writeString(output.resolve("runtime.txt"),"java.home="+System.getProperty("java.home")+"\njava.version="+System.getProperty("java.version")+"\nkind="+(installed?"INSTALLED_WRITE_DENIED":"APP_IMAGE_INSTALL_NOT_RUN")+"\n");
         await("production login window",()->{
             try {stage=fx(()->Window.getWindows().stream().filter(w->w instanceof Stage&&w.isShowing()).map(w->(Stage)w).findFirst().orElse(null));return stage!=null;}
             catch(Exception toolkitStarting){return false;}
@@ -51,11 +56,16 @@ public final class InstalledClientAgent {
         signal("dashboard");click("Đăng xuất");
         await("logout",()->unchecked(()->find(PasswordField.class)!=null));
         login("candidate1");
-        await("candidate audio view",()->unchecked(()->find(AudioPreparationView.class)!=null));
+        await("candidate portal",()->unchecked(()->nodes().stream().anyMatch(n->"candidate-attempts".equals(n.getId()))));
+        fx(()->{((ComboBox<String>)stage.getScene().lookup("#candidate-attempts")).setValue(env("TOEIC_PACKAGE_TEST_ATTEMPT"));return null;});
+        await("enter exam enabled",()->unchecked(()->!buttonId("candidate-enter-exam").isDisabled()));
+        fx(()->{buttonId("candidate-enter-exam").fire();return null;});
+        await("unified Reading Listening view",()->unchecked(()->find(CandidateExamView.class)!=null&&find(AudioPreparationView.class)!=null));
+        CandidateExamView exam=fx(()->find(CandidateExamView.class));
+        ExamSession writer=(ExamSession)field(exam,"session");long sharedWriter=fx(()->writer.view().writerEpoch());
+        clickControl("option-L1-A");
+        await("Listening answer committed before audio",()->unchecked(()->"A".equals(writer.view().answers().get("L1"))&&writer.view().confirmedRevision()==writer.view().revision()));
         AudioPreparationView audio=fx(()->find(AudioPreparationView.class));
-        fx(()->{for(Node n:nodes())if(n instanceof ComboBox box&&box.getItems().contains(env("TOEIC_PACKAGE_TEST_ATTEMPT")))box.setValue(env("TOEIC_PACKAGE_TEST_ATTEMPT"));return null;});
-        click("Bắt đầu giám sát");
-        await("FULL monitoring acknowledged",()->unchecked(()->nodes().stream().anyMatch(n->n instanceof Label l&&l.getText().contains("Chế độ FULL")&&l.getText().matches("(?s).*Đã xác nhận: [1-9][0-9]*.*"))));
         signal("full");click("Tải / chuẩn bị lại audio");
         AudioPreparation preparation=(AudioPreparation)field(audio,"preparation");
         await("download and checksum",()->preparation.snapshot().phase()==AudioPreparation.Phase.FILES_READY);
@@ -68,17 +78,24 @@ public final class InstalledClientAgent {
         Object pane=field(audio,"playback");
         ListeningPlayback playback=(ListeningPlayback)field(pane,"playback");
         await("actual listening MediaPlayer playing",()->playback.snapshot().phase()==ListeningPlayback.Phase.PLAYING);
+        if(fx(()->writer.view().writerEpoch())!=sharedWriter)throw new AssertionError("Audio acquired a second writer");
+        clickControl("palette-R1");clickControl("option-R1-A");
+        await("Reading committed during Listening",()->unchecked(()->"A".equals(writer.view().answers().get("R1"))&&writer.view().confirmedRevision()==writer.view().revision()));
         signal("playing");
         await("server socket close blocks playback",()->playback.snapshot().phase()==ListeningPlayback.Phase.BLOCKED);
         await("native player disposed",()->unchecked(()->field(pane,"player")==null));
         // Parent verifies INTERRUPTED persisted after real WS reconnect before allowing close.
         await("parent verified reconnect/no replay",()->Files.exists(output.resolve("close.signal")));
         if(playback.snapshot().phase()!=ListeningPlayback.Phase.BLOCKED)throw new AssertionError("Unexpected replay");
+        await("Reading editable after reconnect",()->unchecked(()->!((ButtonBase)nodes().stream().filter(n->"option-R1-B".equals(n.getId())).findFirst().orElseThrow()).isDisabled()));
+        clickControl("option-R1-B");
+        await("Reading recovery committed while Listening remains frozen",()->unchecked(()->"B".equals(writer.view().answers().get("R1"))&&"A".equals(writer.view().answers().get("L1"))&&writer.view().confirmedRevision()==writer.view().revision()));
+        if(fx(()->writer.view().writerEpoch())!=sharedWriter)throw new AssertionError("Reconnect changed shared writer");
         // Ordinary last-window close invokes production Application.stop(), not System.exit().
         fx(()->{stage.close();return null;});
         await("owned client workers closed",()->Thread.getAllStackTraces().keySet().stream().noneMatch(t->t.isAlive()&&
-                (t.getName().equals("toeic-proctor-controls")||t.getName().startsWith("toeic-audio")||t.getName().startsWith("toeic-listening"))));
-        Files.writeString(output.resolve("passed.txt"),"PASS installed production login/B4/FULL/download+SHA256/MediaPlayer/simulated hearing/READY/start/WS close+reconnect locked/player disposal/normal window close\n");
+                (t.getName().equals("toeic-proctor-controls")||t.getName().startsWith("toeic-progress")||t.getName().startsWith("toeic-exam")||t.getName().startsWith("toeic-audio")||t.getName().startsWith("toeic-listening"))));
+        Files.writeString(output.resolve("passed.txt"),"PASS "+(installed?"INSTALLED":"APP_IMAGE_INSTALL_NOT_RUN")+" production login/B4/shared writer/Reading+Listening/download+SHA256/MediaPlayer/simulated hearing/READY/start/WS close+reconnect Reading save/frozen Listening/player disposal/normal window close\n");
     }
     private static void login(String username)throws Exception{
         fx(()->{
@@ -91,6 +108,10 @@ public final class InstalledClientAgent {
     private static Object field(Object target,String name)throws Exception{var f=target.getClass().getDeclaredField(name);f.setAccessible(true);return f.get(target);}
     private static Button button(String text){return nodes().stream().filter(n->n instanceof Button b&&b.getText().equals(text)).map(n->(Button)n).findFirst().orElseThrow();}
     private static Button buttonId(String id){return nodes().stream().filter(n->n instanceof Button&&id.equals(n.getId())).map(n->(Button)n).findFirst().orElseThrow();}
+    private static void clickControl(String id)throws Exception{
+        await("enabled "+id,()->unchecked(()->nodes().stream().anyMatch(n->id.equals(n.getId())&&n instanceof ButtonBase b&&!b.isDisabled())));
+        fx(()->{((ButtonBase)nodes().stream().filter(n->id.equals(n.getId())).findFirst().orElseThrow()).fire();return null;});
+    }
     private static void click(String name)throws Exception{
         await("enabled "+name,()->unchecked(()->!button(name).isDisabled()));fx(()->{button(name).fire();return null;});
     }

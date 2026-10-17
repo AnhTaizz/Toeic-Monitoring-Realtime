@@ -292,7 +292,7 @@ Viết: state và event tách biệt ra sao, khoảng trống không phục hồ
 4. Chuẩn bị mẫu `run-metadata.json` và các file đầu ra theo `03_KIEM_THU_VA_THUC_NGHIEM.md` mục 6.
 5. **Giao harness polling cho B trước 24/10**, kèm hướng dẫn chạy.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở 16/10/2026:** Review E1 có sẵn PR40, sửa CPU/rejoin/analyzer tại `c2cc312`; 87Java/11Python và Windows smoke/rejoin PASS. [Guide T4-C1](../E1_T4C1_MEASUREMENT.md), [report](../../evidence/t4-c1/2026-10-16-review.md). Chuẩn bị bàn giao, nghiệm thu PARTIAL: raw12run c1601b5 chưa có để phân tích lại resource; B human review/LAN/gate T3-C4 và trace120s E2 còn mở. Không E2/T4-C2/C3, không tracker hoặc merge PR nguồn.
 
 ### T4-C2 · Chạy full-vs-delta (E2)
 `4h` · phụ thuộc: T4-C1 · review: B
@@ -372,3 +372,31 @@ Thiết kế monitoring và đồng bộ, protocol, Related Work về phương p
 - Process bị phát hiện có chứng minh thí sinh gian lận không?
 
 Bạn cũng phải vẽ lại được luồng của A (khóa, deadline, commit rồi ACK) và của B (autosave, reconnect phía client).
+
+
+## Bàn giao tích hợp15/10/2026
+
+Nhánh `integration/reading-listening-20261015`, base8f5ac40, history2ca4121 và Reading65f5123. Guide `docs/INTEGRATION_READING_LISTENING.md`; evidence `evidence/integration/2026-10-15-verification.md`. Phạm vi review: C: collector/full/presence/transport hooks và giới hạn ID v0. Clean test833 PASS (protocol43/client569/server220/spike1), PostgreSQL18.6 thật và 0skip; package833 PASS. GUI smoke8nhóm PASS mới; chưa nâng toàn case human/LAN. FULL default, tracker không đổi.
+
+**Ghi chú làm dở:** human A/B/C/LAN hai máy/installer/E1/E2 NOT RUN; ID ACTIVE đặc biệt còn contract QD29. Không dùng alias đọc status làm quyền monitoring; không merge main khi chưa được người dùng chấp thuận. Kết quả cuối/SHA/log trong evidence, không kế thừa PASS nhánh nguồn.
+
+### Handoff B overnight15/10 — HUMAN C REVIEW PENDING
+
+E1 mở rộng ControlledProcessHarness với window/sampler/CLI;12REALWindowsruns có raw immutable/checksums/analyzer, candidate gateSIMULATED, policyTESTowned không nới production8tên. C review actual lifetime vs targethold, parent-latency cận trên, CPUonecore/parentheap, cùng parentJVM/carryover, eligibility/censoring và reused plan. C1/C2 cóGUI regression PASS mới; không gate delta/E2/LAN/approval thật. [Summary](../../evidence/overnight-20261015/00-summary.md).
+
+E1 quality thực tế:360eligible,287detected,62missed,11INCONCLUSIVE (observation thiếu start; GTstart của11 đọc được). Không đổi oracle để épPASS. Một số bucket không có đủ3miss-rate xác định; review bounds/unknown và heapcarryover trước khi dùng kết luận.
+
+
+## Handoff bản thống nhất16/10/2026 — HUMAN REVIEW PENDING
+
+Collector/policy/E1 source bằng38; raw84/checksums/14CSV repro giữ nguyên, shortSMOKE mới không E1final. C1 cuối không JFR PASS; review TEST FX20s/null cleanup và các FAIL cleanup ban đầu được giữ; C2+GUI PASS với readings MOCK/fault SIMULATED. FULL default, không bật delta. Checkpointb755646: clean/package mỗi lượt872PASS/1skip, Flow41/GUI11/nativeAudio8/production EXE+PG PASS subset; không nghiệm thu toàncase. [Báo cáo/SHA/count/failure/manual](../../evidence/unified-20261016/verification.md). Không đổi tracker/kế hoạch hoặc tự duyệt A/C.
+
+
+### Ghi chú làm dở — QA PR39 ngày16/10/2026 (B bàn giao, chưa owner ký)
+
+B gửi QA PR39 source9bfc75e: không sửa collector/reducer/E1 harness/policy, FULL giữ default. C1/C2 cuối PASS local có nhãn MOCK/SIMULATED;84rawE1 hash không đổi, không rerun12/E2 hoặc approve gate. C cần review epoch/gap/UNKNOWN, E1-method và contractQD29/progress; không coi QA của B là human C review. [Báo cáo](../../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md).
+
+
+### Ghi chú làm dở — RC17/10/2026
+
+Raw84 đã được tìm thấy/kiểm hash; rejoin12 byte-identical/analyzer17output deterministic, CPU time-weighted mới. C xác nhận kết luận E1 và patch41/43; C1 FAIL lịch sử UNRESOLVED; E2/gate chưa approve. Source TEST c224ba8, không merge nhánh nguồn/main hoặc ký thay owner. [Bàn giao](../../evidence/integration-final-20261017/REPORT.md).

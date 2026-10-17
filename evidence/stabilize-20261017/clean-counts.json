@@ -1,0 +1,65 @@
+{
+  "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+  "label": "clean",
+  "totals": {
+    "tests": 928,
+    "passed": 924,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 4,
+    "suites": 82
+  },
+  "modules": {
+    "protocol": {
+      "tests": 45,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 7,
+      "passed": 45
+    },
+    "client": {
+      "tests": 638,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2,
+      "suites": 50,
+      "passed": 636
+    },
+    "server": {
+      "tests": 244,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2,
+      "suites": 24,
+      "passed": 242
+    },
+    "monitoring-spike": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 1,
+      "passed": 1
+    }
+  },
+  "skippedTests": [
+    {
+      "test": "vn.edu.toeic.client.audio.AudioFilesTest#symlinkInsideCacheRootIsRejectedWhereLinksCanBeCreated",
+      "reason": "org.opentest4j.TestAbortedException: symlink creation needs privilege here: FileSystemException"
+    },
+    {
+      "test": "vn.edu.toeic.client.audio.AudioFilesTest#cacheRootUnderAncestorShortNameIsAllowed",
+      "reason": "org.opentest4j.TestAbortedException: Assumption failed: 8.3 names disabled on this volume"
+    },
+    {
+      "test": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest#installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle",
+      "reason": "Environment variable [TOEIC_INSTALLED_CLIENT] does not exist"
+    },
+    {
+      "test": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest#appImageProductionClientUsesUnifiedReadingListeningWithoutInstallerClaim",
+      "reason": "Environment variable [TOEIC_PACKAGED_CLIENT] does not exist"
+    }
+  ],
+  "failedTests": []
+}

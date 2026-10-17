@@ -1,0 +1,30 @@
+PASS Spring Boot jar th?t ch?y tr�n PostgreSQL th?t, Flyway t?o schema t?m
+PASS PROCTOR import ?? th? v� t?o 3 ca (600 s, 4 s, 3 s) tr�n schema t?m t2b_smoke_f4c197e3298f
+PASS JSON ?? g?i cho th� sinh kh�ng c� tr??ng ?�p �n ?�ng
+PASS V�o ph�ng thi: server c?p writerEpoch m?i (1 -> 2), revision 0, ch?a c� ?�p �n
+PASS Server t�nh gi? ngay khi v�o ph�ng thi, tr??c khi c� ?�p �n; takeover v� status c�ng deadline
+PASS ?? 4 c�u ???c gom th�nh 3 nh�m (2 c�u chung ?o?n v?n)
+PASS Autosave ??u: server l?u revision 1 ?�ng to�n b? map; client ch? b�o ?� l?u sau ACK
+PASS Client gi? deadline t? takeover sau l?n l?u ??u, kh�ng t? ??t/reset
+PASS S?a li�n ti?p + b? ch?n: server gi? ?�ng b?n cu?i ? revision 5, kh�ng m?t thay ??i
+PASS M�y th? hai v�o thi: writerEpoch 3, nh?n ?�ng answers/revision server ?ang gi?
+PASS Writer c? (epoch 2) b? server t? ch?i STALE: kh�ng ghi ???c, client kh�a v� b�o b? thay writer
+PASS Writer m?i (epoch 3) l?u ti?p ???c ? revision 6
+PASS L?y l?i quy?n ghi: epoch 4, n?p b?n server, b? thay ??i ch?a l?u c?a phi�n c?, revision kh�ng l�i
+PASS M?t ACK: client g?i l?i ?�ng request c? (c�ng requestId, revision 7) v� server tr? ALREADY_SAVED
+PASS M?t m?ng: server ? revision 7, client ? revision 9 v� b�o CH?A L?U ???C (kh�ng b�o ?� l?u)
+PASS Reconnect c�ng writer (server 7 / client 9): gi? b?n tr�n m�y, g?i l?i ?�ng request revision 9, kh�ng d�ng l?i s? c?
+PASS B?m n?p hai l?n ch? sinh m?t b�i n?p; m?i l?n g?i l?i (1 l?n g?i) d�ng ?�ng payload ?� ?�ng b?ng
+PASS M?t response n?p b�i: client ch? b�o ?� n?p sau khi server x�c nh?n; k?t qu? hi?n th? l� c?a server (2/4)
+PASS G?i l?i ?�ng request n?p ?� ?�ng b?ng: server tr? l?i k?t qu? c?, kh�ng ch?m l?n hai
+PASS B�i ?� ch?t: request n?p kh�c b? t? ch?i INVALID_STATE
+PASS B�i ?� ch?t: autosave mu?n b? t? ch?i INVALID_STATE
+PASS Sau c�c l?n g?i mu?n, b�i ?� ch?t kh�ng ??i ?�p �n v� ?i?m
+PASS M? l?i l??t ?� ch?t: ch? tr? k?t qu?, kh�ng xin quy?n ghi
+PASS H?t gi? theo ??ng h? m�y: client kh�a s?a v� kh�a n?p
+PASS Sau khi h?t gi?: client kh�ng t? n?p, kh�ng m? l?i s?a
+PASS Server ch?t TIMED_OUT, ch?m tr�n b?n ?� l?u (1 c�u ?�ng); client n�i r� thay ??i ch?a x�c nh?n kh�ng ???c t�nh
+PASS N?p sau h?n b? server t? ch?i (INVALID_STATE)
+PASS N?p sau deadline: server kh�ng nh?n, client kh�ng b�o n?p th�nh c�ng (phase FINAL)
+T2-B exam flow REAL PostgreSQL/Spring/HTTP smoke: 28 checks PASS, 0 GAP ph�a server; GUI JavaFX v� WebSocket NOT RUN trong smoke n�y
+CLEANUP stopped owned server and removed owned schema t2b_smoke_f4c197e3298f

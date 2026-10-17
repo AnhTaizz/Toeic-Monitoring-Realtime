@@ -41,11 +41,15 @@ public final class AudioPreparation implements AutoCloseable {
         if (!current(run)) return;
         snapshot = new Snapshot(run, phase, progress, message, sample); listener.accept(snapshot);
     }
-    public synchronized void prepare(String selected) {
+    public synchronized void prepare(String selected) { prepare(selected, 0); }
+    /** Shared exam writer: a positive epoch is supplied by ExamSession, never acquired here. */
+    public synchronized void prepare(String selected, long sharedWriter) {
         if (snapshot.phase() == Phase.CLOSED || busy()) return;
         if (selected == null || !selected.matches("[A-Za-z0-9_.:-]{1,128}")) return;
         long run = ++generation;
-        if (!selected.equals(attempt)) writer = 0;
+        if (sharedWriter < 0) throw new IllegalArgumentException("Phiên ghi không hợp lệ.");
+        if (sharedWriter > 0) writer = sharedWriter;
+        else if (!selected.equals(attempt)) writer = 0;
         attempt = selected; manifest = null;
         publish(run, Phase.PREPARING, 0, "Đang lấy phiên ghi và xóa READY cũ…");
         worker.execute(() -> {
@@ -57,7 +61,9 @@ public final class AudioPreparation implements AutoCloseable {
                 }
                 withdraw(run);
                 if (!current(run)) return;
-                AudioManifestResponse received = api.manifest(selected); AudioFiles.validate(received, selected);
+                AudioManifestResponse received = api.manifest(selected);
+                if (!current(run)) return;
+                AudioFiles.validate(received, selected);
                 long total = received.files().stream().mapToLong(AudioFileDto::sizeBytes).sum();
                 files.download(api, received, bytes -> publish(run, Phase.PREPARING, (double)bytes / total, "Đang tải và kiểm SHA-256 audio…"));
                 files.verify(received);

@@ -1,0 +1,83 @@
+{
+    "codeSource":  "d19c63902725662aeb6f43c6f04ca80ea6caff42",
+    "note":  "before uses PR40+regression only; targeted/clean use exact uncommitted patch later committed as codeSource",
+    "runs":  [
+                 {
+                     "mode":  "before",
+                     "startUtc":  "2026-10-16T15:31:27.5072500Z",
+                     "endUtc":  "2026-10-16T15:32:11.9415608Z",
+                     "exitCode":  1,
+                     "command":  "-pl protocol,client -Dtest=ExamResultMappingTest -Dsurefire.failIfNoSpecifiedTests=false test"
+                 },
+                 {
+                     "mode":  "before",
+                     "startUtc":  "2026-10-16T15:33:08.3278711Z",
+                     "endUtc":  "2026-10-16T15:33:15.4845687Z",
+                     "exitCode":  1,
+                     "command":  "-pl protocol,client -Dtest=ExamResultMappingTest -Dsurefire.failIfNoSpecifiedTests=false test"
+                 },
+                 {
+                     "mode":  "clean",
+                     "startUtc":  "2026-10-16T15:36:04.1578744Z",
+                     "endUtc":  "2026-10-16T15:41:34.8614199Z",
+                     "exitCode":  0,
+                     "command":  "clean test"
+                 },
+                 {
+                     "endUtc":  "2026-10-16T15:50:44.3480632Z",
+                     "startUtc":  "2026-10-16T15:50:24.1169167Z",
+                     "exitCode":  0,
+                     "mode":  "concurrency"
+                 },
+                 {
+                     "endUtc":  "2026-10-16T15:52:17.9411390Z",
+                     "startUtc":  "2026-10-16T15:51:48.3932026Z",
+                     "exitCode":  0,
+                     "mode":  "events"
+                 },
+                 {
+                     "endUtc":  "2026-10-16T15:48:45.6819825Z",
+                     "startUtc":  "2026-10-16T15:48:13.3450074Z",
+                     "exitCode":  0,
+                     "mode":  "flow"
+                 },
+                 {
+                     "endUtc":  "2026-10-16T15:51:35.7835540Z",
+                     "startUtc":  "2026-10-16T15:50:52.2141249Z",
+                     "exitCode":  1,
+                     "mode":  "full"
+                 },
+                 {
+                     "endUtc":  "2026-10-16T15:55:36.9922394Z",
+                     "startUtc":  "2026-10-16T15:54:51.2481022Z",
+                     "exitCode":  0,
+                     "mode":  "full"
+                 },
+                 {
+                     "endUtc":  "2026-10-16T15:50:06.2604302Z",
+                     "startUtc":  "2026-10-16T15:49:00.6108628Z",
+                     "exitCode":  0,
+                     "mode":  "gui"
+                 },
+                 {
+                     "endUtc":  "2026-10-16T16:00:54.9860328Z",
+                     "startUtc":  "2026-10-16T15:56:05.1968397Z",
+                     "exitCode":  0,
+                     "mode":  "installed-full-suite"
+                 },
+                 {
+                     "mode":  "package",
+                     "startUtc":  "2026-10-16T15:42:34.8547273Z",
+                     "endUtc":  "2026-10-16T15:47:57.5645215Z",
+                     "exitCode":  0,
+                     "command":  "package"
+                 },
+                 {
+                     "mode":  "targeted",
+                     "startUtc":  "2026-10-16T15:34:46.8258909Z",
+                     "endUtc":  "2026-10-16T15:35:38.4734669Z",
+                     "exitCode":  0,
+                     "command":  "-pl protocol,client -Dtest=ExamResultMappingTest,ExamHistoryReadTest,ExamSessionTest,ScoreResultDialogTest -Dsurefire.failIfNoSpecifiedTests=false test"
+                 }
+             ]
+}

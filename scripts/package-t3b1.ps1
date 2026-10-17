@@ -24,7 +24,7 @@ try {
             Copy-Item -Destination $testPackage
         & (Join-Path $jdkBin 'jar.exe') --create --file (Join-Path $staging 'audio-smoke-TEST.jar') -C $classes .
         if ($LASTEXITCODE -ne 0) { throw 'TEST harness packaging failed.' }
-        $config = Join-Path (Split-Path -Parent $staging) 'AudioSmoke.properties'
+        $config = Join-Path (Get-Location) (Join-Path (Split-Path -Parent $staging) 'AudioSmoke.properties')
         [IO.File]::WriteAllLines($config, @('main-jar=audio-smoke-TEST.jar', 'main-class=vn.edu.toeic.client.audio.AudioPackageSmoke'), [Text.Encoding]::ASCII)
         $arguments += @('--add-launcher',"AudioSmoke=$config",'--win-console')
     }

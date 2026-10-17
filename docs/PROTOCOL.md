@@ -111,19 +111,19 @@ ACK thành công chỉ được phát sau khi thao tác tương ứng đã đư�
 |---|---|---|---|---|---|---|
 | `POST /api/v1/auth/login` | Thí sinh, giám thị | `requestId`, `username`, `password` | `protocolVersion`, `requestId`, `traceId`, `token`, `tokenType`, `expiresAt`, `user`, `attemptScope` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 500 `RETRYABLE_SERVER_ERROR` | T1-A1 | Đã cài |
 | `GET /api/v1/auth/me` | Người đã login | Header Bearer | `protocolVersion`, `traceId`, `user: {userId, username, role}`, `attemptScope`: các attempt ACTIVE có quyền | 401 `UNAUTHORIZED`; 503 khi lookup session lỗi; 500 khi lookup scope lỗi, `RETRYABLE_SERVER_ERROR` | T1-A2/A3 | Đã cài |
-| `GET /api/v1/monitoring/attempts/{attemptId}/events` | Giám thị được phân công | Header Bearer | `protocolVersion`, `traceId`, `attemptId`, `events` | 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 `RETRYABLE_SERVER_ERROR` | T1-A3 | Đã cài |
+| `GET /api/v1/monitoring/attempts/{attemptId}/events` | Giám thị được phân công | Header Bearer | `protocolVersion`, `traceId`, `attemptId`, `events` (đủ ≤5000) | 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 409 `INVALID_STATE` `retryable:false` khi >5000; 500/503 `RETRYABLE_SERVER_ERROR` | T1-A3 | Đã cài |
 | `GET /api/v1/monitoring/attempts` | Giám thị | Header Bearer | `protocolVersion`, `traceId`, `serverTime`, `attempts`: identity + presence của ACTIVE được phân công | 401; 403 sai role; 500/503 lỗi DB | T1-A4 | Đã cài |
-| `GET /api/v1/monitoring/attempts/{attemptId}/interruptions` | Giám thị được phân công | Header Bearer | `protocolVersion`, `traceId`, `attemptId`, `interruptions` | 401; 403 sai role/foreign/CLOSED/unknown; 500/503 lỗi DB | T1-A4 | Đã cài |
+| `GET /api/v1/monitoring/attempts/{attemptId}/interruptions` | Giám thị được phân công | Header Bearer | `protocolVersion`, `traceId`, `attemptId`, `interruptions` (đủ ≤5000) | 401; 403 sai role/foreign/CLOSED/unknown; 409 `INVALID_STATE` `retryable:false` khi >5000; 500/503 lỗi DB | T1-A4 | Đã cài |
 | `POST /api/v1/exams/import` | Giám thị | `examId`, `title`, `description`, `questions: [{questionId, section, part, groupId, passageText, audioFile, prompt, correctOption, orderIndex, options: [{optionId, optionText, orderIndex}]}]` | `examId`, `title`, `totalQuestions`, `status` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 | T2-A1 | Đã cài |
 | `POST /api/v1/sessions` | Giám thị | `sessionId`, `examId`, `title`, `durationSeconds`, `proctorUsernames`, `candidateUsernames` | `sessionId`, `examId`, `title`, `durationSeconds`, `state`, `createdAttempts: [{attemptId, candidateUsername, state}]` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 | T2-A1 | Đã cài |
 | `GET /api/v1/attempts/{attemptId}/exam` | Thí sinh / Giám thị phân công | Header Bearer | `examId`, `title`, `description`, `totalQuestions`, `questions` (**TUYỆT ĐỐI KHÔNG CÓ `correctOption`**) | 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 500/503 | T2-A1 | Đã cài |
-| `POST /api/v1/attempts/{attemptId}/answers` | Thí sinh sở hữu | `requestId`, `attemptId`, `writerEpoch`, `answerRevision`, `answers: {qId: optId}` | `requestId`, `attemptId`, `status`, `savedRevision`, `writerEpoch`, `decisionAt` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 409 `STALE`/`CONFLICT`/`INVALID_STATE`/`EXPIRED` | T2-A2 | Đã cài |
-| `POST /api/v1/attempts/{attemptId}/submit` | Thí sinh sở hữu | requestId, attemptId, writerEpoch, answerRevision, answers | trạng thái chốt và điểm | 401/403; 409 STALE/CONFLICT/INVALID_STATE/EXPIRED | T2-A3 | Đã cài |
+| `POST /api/v1/attempts/{attemptId}/answers` | Thí sinh sở hữu | `requestId`, `attemptId`, `writerEpoch`, `answerRevision`, `answers: {qId: optId}` | `requestId`, `attemptId`, `status`, `savedRevision`, `writerEpoch`, `decisionAt` | 400 `INVALID_INPUT`; 401 `UNAUTHORIZED`; 403 `FORBIDDEN`; 409 `STALE`/`CONFLICT`/`INVALID_STATE`/`EXPIRED`; 409 `INVALID_STATE` cho legacy ID ngoài monitoring v0 (QD-29) | T2-A2 | Đã cài |
+| `POST /api/v1/attempts/{attemptId}/submit` | Thí sinh sở hữu | requestId, attemptId, writerEpoch, answerRevision, answers | trạng thái chốt và điểm | 401/403; 409 STALE/CONFLICT/INVALID_STATE/EXPIRED; legacy ID ngoài monitoring v0 → 409 INVALID_STATE (QD-29) | T2-A3 | Đã cài |
 | `GET /api/v1/attempts/{attemptId}/status` | Chủ lượt / giám thị phân công | Bearer | CandidateAttemptStatusResponse, xem T2-A4 | 401/403; 500/503 | T2-A4 | Đã cài |
-| `POST /api/v1/attempts/{attemptId}/takeover` | Thí sinh sở hữu | requestId, attemptId, clientSessionId tùy chọn | writerEpoch, savedRevision, state, deadlineAt, answers | 401/403; 409 INVALID_STATE/EXPIRED | T2-A4 | Đã cài |
+| `POST /api/v1/attempts/{attemptId}/takeover` | Thí sinh sở hữu | requestId, attemptId, clientSessionId tùy chọn | writerEpoch, savedRevision, state, deadlineAt, answers | 401/403; 409 INVALID_STATE/EXPIRED; legacy ID ngoài monitoring v0 → 409 INVALID_STATE (QD-29); không idempotent theo requestId | T2-A4 | Đã cài |
 | `GET /api/v1/attempts/{attemptId}/audio/manifest` | Thí sinh sở hữu lượt ACTIVE | Bearer | `protocolVersion`, `attemptId`, `sessionId`, `manifestId`, `files: [{fileName,sizeBytes,sha256}]` | 401/403; 409 `INVALID_STATE`/`EXPIRED`/`CONFLICT` | T3-A1 | Đã cài |
 | `GET /api/v1/attempts/{attemptId}/audio/files/{fileName}?manifestId=...` | Thí sinh sở hữu | Bearer; tên file từ manifest; manifestId không chứa credential | Binary; `Content-Length`, `X-Audio-SHA256`, `Cache-Control: no-store` | 401/403; 409 khi manifest/file không hợp lệ | T3-A1 | Đã cài |
-| `POST /api/v1/attempts/{attemptId}/audio/ready` | Thí sinh sở hữu | `requestId`, `attemptId`, `writerEpoch`, `ready`, `manifestId`, `checksums: {fileName:sha256}`, `speakerTestPassed` | `protocolVersion`, `requestId`, `attemptId`, `writerEpoch`, `ready`, `manifestId`, `readyAt` | 400; 401/403; 409 `STALE`/`EXPIRED`/`CONFLICT`/`INVALID_STATE`; lỗi COMMIT không ACK | T3-A1 | Đã cài |
+| `POST /api/v1/attempts/{attemptId}/audio/ready` | Thí sinh sở hữu | `requestId`, `attemptId`, `writerEpoch`, `ready`, `manifestId`, `checksums: {fileName:sha256}`, `speakerTestPassed` | `protocolVersion`, `requestId`, `attemptId`, `writerEpoch`, `ready`, `manifestId`, `readyAt` | 400; 401/403; 409 `STALE`/`EXPIRED`/`CONFLICT`/`INVALID_STATE` (gồm legacy ID ngoài monitoring v0, QD-29); lỗi COMMIT không ACK | T3-A1 | Đã cài |
 | `GET /api/v1/sessions/{sessionId}/audio/readiness` | Giám thị phân công vào ca | Bearer | `protocolVersion`, `sessionId`, `manifestId`, `allReady`, `attempts: [{attemptId,ready}]` | 401/403; 409 thiếu tài nguyên | T3-A1 | Đã cài |
 | `POST /api/v1/sessions/{sessionId}/listening/start` | Giám thị phân công vào ca | `requestId`, `manifestId` | `protocolVersion`, `requestId`, `sessionId`, `manifestId`, `startId`, `startedAt` | 401/403; 409 chưa đủ READY/ca không hợp lệ; lỗi COMMIT không success | T3-A1/A2 | Đã cài; WS start sau COMMIT |
 | `GET /api/v1/attempts/{attemptId}/listening/status` | Chủ lượt / giám thị phân công | Bearer | ListeningStatusResponse | 401/403 | T3-A2 | Đã cài; chỉ đọc, không autoplay |
@@ -234,6 +234,7 @@ Giá trị thử nghiệm theo hợp đồng, phải ghi lại giá trị thật
 |---|---|---|---|
 | 03/10/2026 | Chốt login REST, envelope/message MOCK v0 và mã lỗi v0 cho T1-A1/T1-C1 | A + C | Client T1-B1 |
 | 04/10/2026 | QD-03 Bearer header; endpoint WS thật, heartbeat transport/ACK/ERROR, auth/role/scope guard | A (T1-A2) | B2 cần tích hợp ở phiên riêng; chưa sửa nhánh B2 |
+| 12/10/2026 | Thêm `GET /api/v1/candidate/attempts` và hai DTO lịch sử; route API không tồn tại trả 404 thay cho 500. Nhánh cục bộ `fix/backend-candidate-attempt-history-20261012`, chưa merge | A | B: client `770c896` chạy nguyên trạng, còn chạy lại GUI production |
 
 ## Contract T1-A2 và handoff cho B2
 
@@ -337,7 +338,7 @@ Ví dụ minh họa schema (ID/thời gian TEST, không credential):
 
 Push chỉ tới session proctor còn hợp lệ và có assignment tại thời điểm kiểm quyền; candidate/proctor khác không nhận. Mọi ACK/ERROR/warning đi qua cùng ConcurrentWebSocketSessionDecorator. Giao nhận push best effort: offline/socket lỗi không làm mất event đã commit, không biến ACK thành lỗi. Không đảm bảo thứ tự warning giữa các connection gửi đồng thời; REST là nguồn lịch sử ổn định.
 
-`GET /api/v1/monitoring/attempts/{attemptId}/events` với Bearer header, chỉ PROCTOR có scope ACTIVE. Chưa có phân trang. Response200:
+`GET /api/v1/monitoring/attempts/{attemptId}/events` với Bearer header, chỉ PROCTOR có scope ACTIVE. Không phân trang: trả đủ tối đa5000 dòng, hoặc 409 `INVALID_STATE` `retryable:false` cho cả response khi vượt (xem mục ổn định hóa17/10). Response200:
 
 ```json
 {"protocolVersion":"v0","traceId":"server-generated-id","attemptId":"TEST-attempt-A","events":[{"eventId":"TEST-event-1","attemptId":"TEST-attempt-A","processName":"notepad.exe","metadataQuality":"COMPLETE","policyVersion":"process-policy-v1","observedAt":"2026-10-04T00:00:01Z","receivedAt":"2026-10-04T00:00:02Z"}]}
@@ -779,7 +780,7 @@ HTTP events và MONITOR_WARNING thêm deliveryStatus vào TimelineItem. Duplicat
 
 ### Gap HTTP và dashboard
 
-`GET /api/v1/monitoring/attempts/{attemptId}/gaps`: Bearer, PROCTOR được phân công vào ACTIVE. Response `{protocolVersion,traceId,attemptId,gaps:[{gapId,attemptId,collectorSessionId,reason,droppedCount,firstDroppedAt,lastDroppedAt,receivedAt}]}`. reason chỉ QUEUE_OVERFLOW, count số nguyên dương, timestamp đầu/cuối do client báo; receivedAt do DB ghi. 401 thiếu/revoked; 403 sai role/scope hoặc lượt đã kết thúc; lỗi DB/COMMIT/giới hạn trả lỗi, không trả dữ liệu một phần giả đầy đủ. Reader tối đa5000 dòng, lấy5001 để phát hiện vượt giới hạn, không tải toàn lịch sử vào RAM; HTTP client còn giữ giới hạn body/rows có sẵn.
+`GET /api/v1/monitoring/attempts/{attemptId}/gaps`: Bearer, PROCTOR được phân công vào ACTIVE. Response `{protocolVersion,traceId,attemptId,gaps:[{gapId,attemptId,collectorSessionId,reason,droppedCount,firstDroppedAt,lastDroppedAt,receivedAt}]}`. reason chỉ QUEUE_OVERFLOW, count số nguyên dương, timestamp đầu/cuối do client báo; receivedAt do DB ghi. 401 thiếu/revoked; 403 sai role/scope hoặc lượt đã kết thúc; lỗi DB/COMMIT trả 500/503 retryable; vượt giới hạn trả 409 `INVALID_STATE` `retryable:false`; không trả dữ liệu một phần giả đầy đủ. Reader tối đa5000 dòng, lấy5001 để phát hiện vượt giới hạn, không tải toàn lịch sử vào RAM; HTTP client còn giữ giới hạn body/rows có sẵn.
 
 Dashboard có cột "Cách nhận" và tab "Khoảng trống dữ liệu" riêng với lịch sử gián đoạn heartbeat. Gap đọc khi chọn lượt, refresh, reconnect hoặc presence đổi ONLINE/UNKNOWN. Không có push gap riêng: báo cáo overflow vừa nhận cần bấm "Làm mới quyền và dữ liệu". Lỗi đọc gap giữ last-known với nhãn cũ; không giả thành tập rỗng đã đồng bộ. Selection/refresh/connection/request generation chặn response cũ; revoke/logout/close xóa dữ liệu và dọn future/listener/worker. Parser kiểm exact long, reason/timestamps/scope/dedup/limits. Không quét/mạng/file trên FX thread. TX/RX/BUSINESS_ACK dùng hooks C4 hiện có đúng một lần.
 
@@ -846,3 +847,94 @@ CandidateMonitoringSession.start chọn DELTA khi local opt-in và RealtimeClien
 Callback nội bộ onMonitoringAccessRejected chỉ phát FORBIDDEN/UNAUTHORIZED khi khớp heartbeat pending/attempt/trace, mang collectorSessionId/socket generation. Coordinator chỉ dừng đúng collector/lượt/socket hiện tại, tháo heartbeat/capability/rejection listeners. Lỗi DB retryable không coi mất quyền; global UNAUTHORIZED giữ semantics đăng nhập lại. Stop/logout dọn worker/queue RAM hiện có. Full/delta ACK vẫn RAM, event/gap ACK vẫn sau COMMIT; proctor không collector. Nhãn UI mode an toàn không chứa token/password.
 
 Gate20/10 chưa diễn ra; local13/10 là preparation, LAN hai máy và B review NOT RUN. QD10 presence giữ nguyên, không đổi STALE6s/TTL5min bằng heartbeat hoặc nâng E1/E2.
+
+## Contract B-ACCEPT-01 — Lịch sử lượt thi của thí sinh (12/10/2026)
+
+Trạng thái: **đã cài và kiểm trên nhánh `fix/backend-candidate-attempt-history-20261012` (`33a2932`), chưa push, chưa merge**. A nhận nguyên đề xuất của B trong `docs/CONTRACT_B_ACCEPT_01_PROPOSAL.md` (commit `770c896`), không đổi URL, tham số hay tên trường. Hai điểm A làm rõ thêm nằm ở cuối mục.
+
+### 1. Endpoint `GET /api/v1/candidate/attempts` (chỉ CANDIDATE)
+
+- Header: `Authorization: Bearer <token>`. Server lấy người dùng từ phiên; không nhận `userId`, `candidateId`, `username`.
+- Query: `limit` (tùy chọn, số nguyên 1..100, mặc định 50) và `afterAttemptId` (tùy chọn, không rỗng, tối đa 128 Unicode code point theo `VARCHAR(128)`, không chứa NUL). Khoảng trắng, Unicode và ký tự đặc biệt được giữ nguyên; không trim hoặc chuẩn hóa. Client phải URL-encode giá trị cursor theo UTF-8. Tham số khác, tham số lặp lại, cursor rỗng/quá giới hạn/NUL hoặc limit sai → 400 `INVALID_INPUT`.
+- Trả các lượt thi của chính thí sinh có ca thi và đề hợp lệ, ở trạng thái `ACTIVE`, `SUBMITTED` hoặc `TIMED_OUT`. Không trả `CLOSED`, `INTERRUPTED`, lượt monitoring cũ không gắn ca thi.
+- Thứ tự: `attemptId` tăng dần theo byte UTF-8 (`COLLATE "C"`). Đây không phải thứ tự thời gian. `String.compareTo` dùng UTF-16 và có thể khác thứ tự này khi trộn ký tự ngoài BMP với một số ký tự BMP; client cần đối chiếu theo thứ tự byte UTF-8.
+- Phân trang keyset: server đọc `limit + 1` dòng. Còn trang thì `nextAfterAttemptId` là `attemptId` cuối của trang, hết thì `null`. Cursor chỉ là vị trí; nó không cấp quyền và không cần tồn tại.
+- Response có header `Cache-Control: no-store`.
+
+```json
+{
+  "attempts": [
+    {
+      "attemptId": "SESSION-TEST-candidate1",
+      "sessionId": "SESSION-TEST",
+      "examId": "EXAM-READING-TEST",
+      "examTitle": "Reading sample",
+      "sessionTitle": "Ca TEST",
+      "state": "SUBMITTED",
+      "submittedAt": "2026-10-12T08:43:32.535928Z"
+    }
+  ],
+  "nextAfterAttemptId": null
+}
+```
+
+DTO trong `protocol`: `CandidateAttemptPageResponse(attempts, nextAfterAttemptId)` và `CandidateAttemptSummaryDto(attemptId, sessionId, examId, examTitle, sessionTitle, state, submittedAt)`. `submittedAt` là `null` khi `ACTIVE`, là thời điểm server chốt khi `SUBMITTED`/`TIMED_OUT`. Không có đáp án, `correctOption`, `writerEpoch`, `savedRevision`, điểm, mã người dùng hay dữ liệu monitoring; điểm vẫn đọc qua `GET /api/v1/attempts/{attemptId}/status`.
+
+### 2. Lỗi
+
+| Tình huống | HTTP | `error.code` |
+|---|---|---|
+| Không token, token lạ, phiên hết hạn hoặc bị thu hồi | 401 | `UNAUTHORIZED` |
+| Role không phải CANDIDATE | 403 | `FORBIDDEN` |
+| `limit`/`afterAttemptId` sai, tham số lạ hoặc lặp | 400 | `INVALID_INPUT` |
+| Route API không tồn tại (mọi đường dẫn) | 404 | `INVALID_INPUT`, `retryable = false` |
+
+Trước thay đổi này route không tồn tại trả 500 `RETRYABLE_SERVER_ERROR`.
+
+### 3. Những gì không đổi
+
+`GET /api/v1/auth/me` và `attemptScope` vẫn chỉ gồm lượt `ACTIVE`; quyền monitoring, WebSocket, autosave, submit, takeover vẫn ACTIVE-only. Gọi endpoint này không đổi `writerEpoch` hay bất kỳ dòng nào.
+
+### 4. Hai điểm A làm rõ so với đề xuất
+
+1. Lượt đã chốt có `submitted_at` rỗng không được liệt kê (đề xuất yêu cầu `submittedAt` không null cho lượt đã chốt nhưng không nói xử lý dòng vi phạm). Chỉ gặp ở DB đã chạy bản server trước fix P0.
+2. Điều kiện nối bảng chặt hơn SQL phác thảo: đề của lượt thi phải trùng đề của ca thi.
+
+Bằng chứng: `evidence/t2-a-history/2026-10-12-verification.md`.
+
+### Làm rõ cursor theo dữ liệu đã lưu — 13/10/2026
+
+Fix P1 theo cho phép của người dùng: mọi ID không rỗng lưu hợp lệ trong `VARCHAR(128)` đều được dùng nguyên dạng làm cursor. SQL vẫn bind parameter và keyset `COLLATE "C"`; dấu nháy không phải SQL khi là giá trị bind. Không nới owner/monitoring hoặc đổi DTO. Backend code/test `00b1df18d89f3b01a5864dc4aa689c22186943fa`: Maven test/package638, PostgreSQL37 và probe history+Listening11/11 PASS trên main `2e784fa`. Client B `d425182` còn validator ASCII và ghép query không encode; cần B đồng bộ riêng, không kết luận GUI đã PASS. Nguy cơ tạo ca có sessionId+username vượt128 ký tự vẫn nằm ngoài fix này. Evidence local: `target/pr28-cursor-20261013/REPORT.md`; chưa push/retarget/merge.
+
+
+## Tích hợp Reading/Listening/history — 15/10/2026
+
+- `GET /api/v1/attempts/status?attemptId=<raw UTF-8 encoded once>`: alias chỉ đọc của GET status cũ, cho ID chứa slash/dot-segment. Bearer và kiểm owner/assigned proctor như cũ; trả cùng `CandidateAttemptStatusResponse`, gồm cờ `listeningInterrupted`, `Cache-Control: no-store`. Chỉ đúng một query `attemptId`, không thêm field; thiếu/rỗng/NUL/unpaired-surrogate/quá128 code point/lặp/field lạ →400 INVALID_INPUT. Không nới encoded-slash policy của Tomcat. Foreign owner →403; không đăng nhập →401. Client dùng alias cho slash/dot; path thường giữ tương thích.
+- Scope HTTP là tập ID DB raw được server cấp. Realtime Session giữ được tập này để login/history không sập vì ID đặc biệt; đây không phải quyền gửi WS mới. Heartbeat/envelope/process v0 vẫn giữ ASCII `[A-Za-z0-9_.:-]{1,128}`. Candidate UI từ chối start/entry với ID không tương thích monitoring, không mở bài không giám sát. A/B/C cần chốt contract ID ACTIVE; các đường ghi/audio slash chưa đổi.
+- Trong màn thi, `ExamSession` là owner duy nhất của writer/answers/revision. Audio nhận writer hiện tại và không takeover lần nữa. `LISTENING_STATUS` đúng attempt làm client đọc trạng thái authoritative; Listening bị gián đoạn thì player dừng và đáp án Listening theo bản server, Reading có thể tiếp tục trong deadline. Reconnect/status không phát lại. Không đổi DTO wire, migration, auth hay monitoring default FULL.
+- Chi tiết vòng đời: [guide tích hợp](INTEGRATION_READING_LISTENING.md). Evidence mới tách khỏi số test của các nhánh nguồn.
+
+## Overnight phase 01 — API progress PROPOSED (15/10/2026)
+
+`GET /api/v1/proctor/attempts/progress?limit=1..100&afterAttemptId=<raw UTF-8>`; default50, COLLATE C keyset, no-store, unknown/repeated query400. DTO `ProctorProgressPage(readAt,attempts,nextAfterAttemptId)` / `ProctorProgressRow(attemptId,sessionId,candidateUsername,candidateDisplayName,state,savedRevision,answeredCount,totalQuestions,lastSavedAt,deadlineAt,submittedAt,correctCount)`. Chỉ assigned PROCTOR, cả ACTIVE/SUBMITTED/TIMED_OUT. Không answers/epoch; correctCount null ACTIVE; lastSavedAt nullable từ autosave decision_at đã commit (không phải thời điểm vật lý COMMIT). Monitoring scope vẫn ACTIVE-only. Chính sách cấp ACTIVE mới chỉ monitoring-v0 ASCII ≤128, không sửa raw legacy. HTTP method sai405 với Allow. **PROPOSED, A/C human review pending**; [evidence](../evidence/overnight-20261015/phase-01/verification.md).
+
+Chi tiết response progress overnight: authenticated PROCTOR chưa có assignment nhận200page rỗng (không trả dòng foreign), candidate403, token thiếu/thu hồi401; cursor chỉ là raw vị trí COLLATE C, không cấp quyền. Điều này khác việc đọc một attempt cụ thể, vốn require owner/assignment. Canonical answers_json từ đường ghi hợp lệ; dữ liệu legacy hỏng JSON không được bịa count thành công, cần A review/repair riêng nếu gặp.
+
+
+## Hòa contract16/10/2026 — A/C review pending
+
+Bản thống nhất giữ history/query raw status và shared writer Reading/Listening của35, B4/main gọi các endpoint đã có. Progress endpoint38 chỉ committed/scoped read, không answers/epoch/correct options, không khóa row/takeover; cursor/page UI chỉ tiến khi response thành công, lỗi giữ confirmed readAt và stale. lastSavedAt là autosave decision_at đãcommit, không timestampCOMMIT vật lý; submit-only nullable. QD29 safe issuance/collision/405 vẫn PROPOSED. FULL/WS v0 và Listening no-replay giữ contract. [Source/test/evidence](../evidence/unified-20261016/verification.md).
+
+
+## Ổn định hóa17/10/2026 — đã cài, chờ A/C xác nhận
+
+Nhánh `stabilize/final-rc-20261017`. Không thêm endpoint, field hay giá trị `ErrorCode`; chỉ đổi status/code trả về ở các trường hợp dưới. Chi tiết quyết định: QD-31/QD-32/QD-33 trong `QUYET_DINH.md`.
+
+| Trường hợp | Trước | Sau |
+|---|---|---|
+| Tạo ca: `sessionId + '-' + username` ngoài `[A-Za-z0-9_.:-]{1,128}`, trùng trong batch | 400 `INVALID_INPUT`, không mutation | Giữ nguyên |
+| Tạo ca đồng thời cùng `sessionId` | Request thua: 500 `RETRYABLE_SERVER_ERROR` (unique violation) | 400 `INVALID_INPUT` "Ca thi … đã tồn tại", không mutation |
+| takeover / answers / submit / audio READY trên lượt ACTIVE có ID ngoài monitoring v0 (legacy) | Server cho vào/ghi; chỉ client chặn | 409 `INVALID_STATE` `retryable:false`, message cố định "Mã lượt thi không tương thích giám sát. Vui lòng liên hệ giám thị để cấp lượt mới."; kiểm sau ownership/state, không đổi row |
+| status (path hoặc `?attemptId=`) và history của legacy | 200 theo quyền | Giữ nguyên |
+| `events` / `interruptions` / `gaps` > 5000 dòng | 500 `RETRYABLE_SERVER_ERROR` `retryable:true` | 409 `INVALID_STATE` `retryable:false`, message cố định; không trả danh sách cắt bớt |
+| Dashboard nhận 409 từ ba endpoint lịch sử | "Không tải được dữ liệu hợp lệ…" | Thông báo giới hạn5000, giữ danh sách đầy đủ gần nhất, đánh dấu stale; trần body8 MiB (trước 4 MiB) |

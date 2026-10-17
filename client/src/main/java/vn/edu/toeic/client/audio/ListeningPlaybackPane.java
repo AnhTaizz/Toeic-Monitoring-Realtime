@@ -20,13 +20,21 @@ final class ListeningPlaybackPane extends VBox implements AutoCloseable {
     private MediaPlayer player;
     private ConnectionState connectionState;
     private boolean closed;
+    private Runnable onStateChanged = () -> {};
+    void onStateChanged(Runnable listener) { onStateChanged = Objects.requireNonNull(listener); }
 
     ListeningPlaybackPane(ListeningApi api,AudioFiles files,ListeningPlaybackJournal journal,
                           AudioPreparation preparation,Collection<String> attemptScope,MonitoringTransport realtime){
         setSpacing(8);status.setWrapText(true);
         getChildren().addAll(new Label("Bài thi Listening"),status,questions);
         playback=new ListeningPlayback(api,files,journal,preparation::playbackContext,ignored->queueRender());
-        messages=realtime.onMessage(message->{if("LISTENING_START".equals(message.type()))playback.accept(message);});
+        messages=realtime.onMessage(message -> {
+            if ("LISTENING_START".equals(message.type())) playback.accept(message);
+            else if ("LISTENING_STATUS".equals(message.type())) {
+                try { playback.authoritativeStatus(ListeningMessages.status(message.payload())); }
+                catch (RuntimeException invalid) { /* Invalid data never starts or changes media. */ }
+            }
+        });
         List<String> scope=List.copyOf(attemptScope);
         connectionState=realtime.connectionState();
         connections=realtime.onConnectionState(state->Platform.runLater(()->{
@@ -44,6 +52,7 @@ final class ListeningPlaybackPane extends VBox implements AutoCloseable {
     private void queueRender(){if(queued.compareAndSet(false,true))Platform.runLater(()->{queued.set(false);if(!closed)render();});}
     private void render(){
         var state=playback.snapshot();status.setText(state.message());
+        onStateChanged.run();
         if(state.phase()==ListeningPlayback.Phase.READY_TO_PLAY&&player==null)playCurrent();
         if(state.phase()==ListeningPlayback.Phase.BLOCKED||state.phase()==ListeningPlayback.Phase.COMPLETED)disposePlayer();
         var segment=state.current();questions.getChildren().clear();
@@ -64,7 +73,11 @@ final class ListeningPlaybackPane extends VBox implements AutoCloseable {
             playing.setOnError(failure);playing.getMedia().setOnError(failure);
             playing.setOnPlaying(()->{if(player==playing&&!closed)playback.mediaPlaying(run,index);});
             playing.setOnEndOfMedia(()->{if(player!=playing||closed)return;disposePlayer();playback.mediaCompleted(run,index);});
-            playing.setOnReady(()->{if(player==playing&&!closed)playing.play();});
+            playing.setOnReady(() -> {
+                var current = playback.snapshot();
+                if (player == playing && !closed && current.generation() == run
+                        && current.phase() == ListeningPlayback.Phase.READY_TO_PLAY) playing.play();
+            });
             if(playing.getError()!=null||playing.getMedia().getError()!=null)failure.run();
         }catch(RuntimeException failure){disposePlayer();playback.mediaFailed(run);}
     }
