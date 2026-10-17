@@ -157,6 +157,18 @@ class MonitoringDeliveryTest {
             assertThat(f.delivery.status().active()).isEqualTo(!Set.of("FORBIDDEN", "UNAUTHORIZED").contains(code));
         }
     }
+    @Test void permissionErrorStopsWorkerAndSubscriptionsButRetainsDiscardAccounting() throws Exception {
+        Fixture f = new Fixture(5, 2, 3);
+        try {
+            f.delivery.observe(snapshot(process(1, 0))); f.delivery.tick();
+            f.transport.error(0, "FORBIDDEN", false);
+            f.delivery.stopped().get(2, TimeUnit.SECONDS);
+            assertThat(f.transport.listeners).isEmpty();
+            assertThat(f.transport.stateListeners).isEmpty();
+            assertThat(f.delivery.discardSummary().unconfirmedEvents()).isEqualTo(1);
+            assertThat(f.delivery.stop().unconfirmedEvents()).isEqualTo(1);
+        } finally { f.delivery.close(); }
+    }
     @Test void failedEventDoesNotBlockAnotherQueuedEvent() {
         try (Fixture f = new Fixture(5, 1, 3)) {
             f.delivery.observe(snapshot(process(1, 0), process(2, 0))); f.delivery.tick(); f.transport.error(0, "CONFLICT", false);

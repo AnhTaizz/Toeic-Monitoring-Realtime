@@ -15,6 +15,7 @@ E1Cli chỉ nối collector → trace và ground truth. Nó **không mở server
 ## Cấu hình khóa và lịch
 
 - Windows, JDK21; Python3.11+ stdlib; cùng máy/runtime/source/policy cho cả chiến dịch.
+- Trước `--full`, đặt alias máy không nhạy cảm và giữ nguyên cho cả 12 run, ví dụ `-Dtoeic.e1.machineAlias=LAB-A`. Runner từ chối full nếu thiếu alias; analyzer báo `MACHINE_ALIAS_REQUIRED` hoặc môi trường bị trộn thay vì coi hằng số giả là bằng chứng cùng máy.
 - 250/500/1000/2000 ms, ba lượt mỗi chu kỳ. Thứ tự: 250→500→1000→2000; 500→1000→2000→250; 1000→2000→250→500.
 - Seed1234; mỗi run 10 child cho từng target hold200/800/3000ms (30 child). TEST `test-owned-process-v1`, maxConcurrent2, READY timeout3000ms, exit slack1500ms, maxRun180000ms. Production vẫn policy8 tên; không thêm java.exe.
 - Warmup15s, cửa sổ đo [15s,135s] tính từ origin JVM cha của run. Warmup hiện chỉ quét, chưa tạo child: startup/JIT của child chưa được warmup. Đây là giới hạn cần công bố, không tự coi 15s là steady state toàn workload.
@@ -136,19 +137,51 @@ java -cp $jar $cli --smoke-short target/e1 $sha
 # Sau checklist/B review, dành riêng thời gian ~28 phút, KHÔNG chạy tự động trong review:
 # java -cp $jar $cli --full target/e1 $sha
 $suite = 'target/e1/E1-THAY-BANG-ID-THAT'
-$analysis = 'target/e1-analysis-' + [guid]::NewGuid().ToString('N')
+$derived = 'target/e1-reanalysis-' + [guid]::NewGuid().ToString('N')
+New-Item -ItemType Directory -Path $derived | Out-Null
+$joinChanged = $false
 foreach ($run in Get-ChildItem $suite -Directory -Filter 'run-*') {
-    $out = 'target/rejoin-' + [guid]::NewGuid().ToString('N') + '.json'
+    $out = Join-Path $derived ($run.Name + '-join.json')
     java -cp $jar vn.edu.toeic.client.monitoring.harness.HarnessCli join --input-dir $run.FullName --output $out
     if ($LASTEXITCODE -ne 0) { throw "Rejoin không hợp lệ: $($run.Name)" }
-    if ((Get-FileHash $out).Hash -ne (Get-FileHash (Join-Path $run.FullName 'join.json')).Hash) { throw 'Join khác raw gốc; giữ cả hai để kiểm' }
+    $old = Join-Path $run.FullName 'join.json'
+    $oldRows = (Get-Content $old -Raw | ConvertFrom-Json).rows | Select-Object trialId,conclusion,reason
+    $newRows = (Get-Content $out -Raw | ConvertFrom-Json).rows | Select-Object trialId,conclusion,reason
+    $oldHash = (Get-FileHash $old).Hash.ToLowerInvariant()
+    $newHash = (Get-FileHash $out).Hash.ToLowerInvariant()
+    $diff = @(Compare-Object $oldRows $newRows -Property trialId,conclusion,reason)
+    [pscustomobject]@{
+        toolSha = $sha; run = $run.Name
+        originalManifestSha256 = (Get-FileHash (Join-Path $run.FullName 'manifest.json')).Hash.ToLowerInvariant()
+        oldJoinSha256 = $oldHash; newJoinSha256 = $newHash; differences = $diff
+    } | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $derived ($run.Name + '-provenance.json')) -Encoding UTF8
+    if ($newHash -ne $oldHash) { $joinChanged = $true }
 }
-python scripts/benchmarks/e1/analyze.py $suite $analysis
-if ($LASTEXITCODE -ne 0) { throw 'Xem run-status.json; không dùng summary cũ' }
+if ($joinChanged) { throw 'BLOCKED: join mới khác manifest gốc; giữ derived output, chưa chạy analyzer trên join mới' }
+python scripts/benchmarks/e1/analyze.py $suite (Join-Path $derived 'analysis')
+if ($LASTEXITCODE -ne 0) { throw 'Xem run-status.json; không dùng summary lịch sử' }
+Get-ChildItem (Join-Path $derived 'analysis') -File -Recurse | ForEach-Object {
+    [pscustomobject]@{ path = $_.FullName; sha256 = (Get-FileHash $_.FullName).Hash.ToLowerInvariant() }
+} | ConvertTo-Json -Depth 3 | Set-Content (Join-Path $derived 'analysis-output-hashes.json') -Encoding UTF8
 ```
+
+### Tái phân tích raw E1 lịch sử
+
+Raw, `join.json` và summary lịch sử là evidence bất biến. Khi tìm lại được bộ raw, quy trình đúng là:
+
+1. Giữ nguyên toàn bộ raw, join và summary lịch sử; không sửa tại chỗ.
+2. Kiểm từng checksum bằng `manifest.json` và `e1-manifest.json` gốc trước khi tạo output mới.
+3. Dùng `ObservationJoiner` đã sửa để xuất join vào một thư mục dẫn xuất mới.
+4. So sánh join cũ/mới theo `trialId`, `conclusion` và `reason`. Lỗi nguồn cũ đã được một lần scan khỏe thay thế có thể làm một trial đổi từ `INCONCLUSIVE` sang `NOT_OBSERVED_IN_TRACE`; vì vậy phải đối chiếu kết quả quan sát, không chỉ số CPU.
+5. Phân tích lại bằng analyzer đã sửa CPU theo trọng số thời gian và kiểm coverage, nhưng chỉ khi cơ chế checksum cho phép dùng đúng join cần phân tích.
+6. Ghi riêng SHA của `ObservationJoiner`/analyzer, hash của mọi input/output và bảng khác biệt kết quả.
+
+Analyzer hiện tại đọc `join.json` trong từng run và yêu cầu hash của file này khớp `manifest.json`. Nếu join mới giống byte join cũ, manifest gốc vẫn hợp lệ và có thể chạy analyzer hiện tại trên bộ lịch sử. Nếu join mới khác, **không** ghi đè `join.json`, không sửa hoặc seal lại manifest gốc để làm checksum khớp. Trường hợp này đang **BLOCKED**: cần owner bổ sung cách để analyzer nhận một join dẫn xuất bên ngoài kèm provenance, hash input và hash output. Việc đó nằm ngoài phạm vi audit này; chưa được phép bỏ qua checksum hay tự xây thêm pipeline.
+
+Raw E1 lịch sử hiện vẫn **NOT AVAILABLE** trong workspace, nên chưa chạy các bước trên và chưa có số thay thế. Không tự chạy lại chiến dịch 12 lượt hoặc E2 để lấp chỗ trống.
 
 Checklist trước đo: source sạch/JAR đúng hash; máy đủ RAM/disk; ghi CPU/power/background; không suite hoặc tải khác do nhóm khởi chạy; giữ cấu hình/trace/sampler giống nhau; kiểm dry-run, tests, smoke, rejoin/hash; ghi reviewer thật. Trong12run không chỉnh seed/threshold vì kết quả không đẹp. Không đóng ứng dụng của người dùng tự động.
 
 Loại **khỏi kết luận** (giữ raw và lý do): hash/binding sai, thiếu FINAL, child/source/cleanup lỗi, time đảo, schedule/window sai, runId trùng, raw không tìm thấy. Unknown không là lý do xóa trial/run: giữ bounds. Censored giữ số đếm ngoài mẫu số. Resource PARTIAL chỉ hạn chế claim resource; không tự xóa detection hợp lệ. Nếu máy ngủ/tải nền bất thường ghi run và hoàn cảnh, không âm thầm bỏ. Thiếu lượt thì suite PARTIAL; chạy bổ sung phải runId mới, ghi vị trí/thời gian khác để đánh giá carryover.
 
-Bước B tiếp theo: tìm raw12run nguồn c1601b5, kiểm84hash theo inventory, rejoin bằng bản sửa và phân tích ra thư mục mới. Chỉ nếu raw mất hoặc resource coverage không đạt mới cần đo lại các lượt bị ảnh hưởng; muốn kết luận trên bản tích hợp/JDK khác thì phải chiến dịch mới cùng môi trường. Không thay số cũ, không dùng smoke thay12run, không chuyển E2/gate bằng kết quả review này.
+Bước B tiếp theo: tìm raw12run nguồn c1601b5, kiểm84hash theo inventory, rejoin bằng bản sửa vào thư mục dẫn xuất và áp dụng quy tắc checksum ở trên. Chỉ nếu raw mất hoặc resource coverage không đạt mới cần owner quyết định đo lại các lượt bị ảnh hưởng; muốn kết luận trên bản tích hợp/JDK khác thì phải có chiến dịch mới cùng môi trường. Không thay số cũ, không dùng smoke thay12run, không chuyển E2/gate bằng kết quả review này.

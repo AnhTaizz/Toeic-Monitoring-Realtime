@@ -54,8 +54,10 @@ public class MonitoringEventService {
     public List<TimelineItem> timeline(AuthenticatedUser user, String attemptId) {
         authorization.requireRole(user, Role.PROCTOR);
         lockAndAuthorize(user, attemptId);
-        return jdbc.sql("SELECT * FROM monitoring_events WHERE attempt_id=:attempt ORDER BY received_at ASC,id ASC")
+        List<TimelineItem> result = jdbc.sql("SELECT * FROM monitoring_events WHERE attempt_id=:attempt ORDER BY received_at ASC,id ASC LIMIT 5001")
                 .param("attempt", attemptId).query((row, index) -> read(row, index).item()).list();
+        if (result.size() > 5000) throw new IllegalStateException("Event history exceeds bounded response; no truncation");
+        return result;
     }
 
     private void lockAndAuthorize(AuthenticatedUser user, String attempt) {

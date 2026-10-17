@@ -84,7 +84,7 @@ public final class MonitoringDelivery implements AutoCloseable {
     private Pending gap;
     private long bufferedDrops, totalDropped, acknowledged;
     private Instant firstDrop, lastDrop;
-    private boolean connected, closed, authorized = true;
+    private boolean connected, closed, quiesced, authorized = true;
     private volatile long generation;
     private volatile boolean sendingAllowed = true;
     private String problem = "NONE";
@@ -150,7 +150,17 @@ public final class MonitoringDelivery implements AutoCloseable {
         publish();
     }
     public void sourceFailed() { synchronized (lock) { if (!closed) problem = "SOURCE_FAILURE"; } publish(); }
-    public void accessRejected(String code) { synchronized (lock) { if (!closed) { authorized=false; sendingAllowed=false; generation++; problem=code; } } publish(); }
+    public void accessRejected(String code) {
+        List<String> pending=List.of();
+        synchronized (lock) {
+            if (!closed) {
+                authorized=false; sendingAllowed=false; generation++; problem=code;
+                pending=pendingIds();
+            }
+        }
+        publish();
+        quiesce(pending);
+    }
     /** One task, bounded plans; exposed to package tests using a fake monotonic clock. */
     void tick() {
         long socketGeneration=transport.connectionGeneration();
@@ -216,11 +226,14 @@ public final class MonitoringDelivery implements AutoCloseable {
     private Pending lookup(String id) { return gap != null && gap.message.requestId().equals(id) ? gap : events.get(id); }
     private void receive(MessageEnvelope<JsonObject> message) {
         String release = null;
+        List<String> terminal = null;
         synchronized (lock) {
             if (closed || message == null || !"v0".equals(message.protocolVersion()) || message.payload() == null) return;
             JsonObject payload = message.payload();
             String code = text(payload, "code");
-            if ("ERROR".equals(message.type()) && "UNAUTHORIZED".equals(code)) { authorized = false; sendingAllowed=false; generation++; problem = code; }
+            if ("ERROR".equals(message.type()) && "UNAUTHORIZED".equals(code)) {
+                authorized = false; sendingAllowed=false; generation++; problem = code; terminal=pendingIds();
+            }
             else {
                 Pending pending = lookup(message.requestId());
                 if (pending == null || pending.attempts == 0 || !attemptId.equals(message.attemptId())
@@ -230,7 +243,9 @@ public final class MonitoringDelivery implements AutoCloseable {
                     if (pending == gap) gap = null; else events.remove(message.requestId());
                     acknowledged++; release = message.requestId();
                 } else if ("ERROR".equals(message.type()) && code != null) {
-                    if ("FORBIDDEN".equals(code)) { authorized = false; sendingAllowed=false; generation++; problem = code; }
+                    if ("FORBIDDEN".equals(code) || "UNAUTHORIZED".equals(code)) {
+                        authorized = false; sendingAllowed=false; generation++; problem = code; terminal=pendingIds();
+                    }
                     else if ("RETRYABLE_SERVER_ERROR".equals(code) && bool(payload, "retryable")) retry(pending, nanoTime.getAsLong());
                     else { pending.state = State.FAILED; problem = code; }
                     release = message.requestId();
@@ -239,6 +254,7 @@ public final class MonitoringDelivery implements AutoCloseable {
         }
         if (release != null) transport.forgetPending(release);
         publish();
+        if (terminal != null) quiesce(terminal);
     }
     private static String text(JsonObject payload, String field) {
         JsonElement value = payload.get(field);
@@ -283,10 +299,20 @@ public final class MonitoringDelivery implements AutoCloseable {
             closed = true; sendingAllowed=false; generation++; ids = new ArrayList<>(events.keySet()); if (gap != null) ids.add(gap.message.requestId());
             events.clear(); gap = null; baseline = Set.of(); bufferedDrops = 0;
         }
+        quiesce(ids);
+        return discarded;
+    }
+    private List<String> pendingIds() {
+        var ids=new ArrayList<>(events.keySet());
+        if(gap!=null)ids.add(gap.message.requestId());
+        return ids;
+    }
+    private void quiesce(List<String> ids) {
+        synchronized(lock) { if(quiesced)return;quiesced=true; }
         if (timer != null) timer.cancel(false);
         try { messages.close(); } catch (Exception ignored) { }
         try { states.close(); } catch (Exception ignored) { }
-        ids.forEach(transport::forgetPending); worker.shutdownNow();
-        return discarded;
+        ids.forEach(transport::forgetPending);
+        worker.shutdownNow();
     }
 }

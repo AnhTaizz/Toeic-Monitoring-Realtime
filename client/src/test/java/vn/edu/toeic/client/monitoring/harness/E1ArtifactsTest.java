@@ -28,4 +28,18 @@ class E1ArtifactsTest {
         HarnessArtifacts.writeGroundTruth(path,truth.header(),truth.trials(),"COMPLETE");
         assertThat(HarnessArtifacts.readGroundTruth(path).trials()).isEqualTo(truth.trials());
     }
+    @Test void machineAliasIsExplicitAndValidated() {
+        String previous=System.getProperty("toeic.e1.machineAlias");
+        try {
+            System.clearProperty("toeic.e1.machineAlias");
+            assertThat(ControlledProcessHarness.machineAlias()).isEqualTo("UNSPECIFIED");
+            System.setProperty("toeic.e1.machineAlias","LAB-A");
+            assertThat(ControlledProcessHarness.machineAlias()).isEqualTo("LAB-A");
+            System.setProperty("toeic.e1.machineAlias","private machine/path");
+            assertThatThrownBy(ControlledProcessHarness::machineAlias).isInstanceOf(IllegalArgumentException.class);
+        } finally {
+            if(previous==null)System.clearProperty("toeic.e1.machineAlias");
+            else System.setProperty("toeic.e1.machineAlias",previous);
+        }
+    }
 }

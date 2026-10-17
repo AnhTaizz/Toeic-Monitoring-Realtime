@@ -71,9 +71,11 @@ public class JdbcPresenceStore implements PresenceStore {
     }
     @Override @Transactional public List<Interruption> interruptions(AuthenticatedUser user, String attempt) {
         authorization.requireRole(user, Role.PROCTOR); lock(attempt); authorization.requireAttempt(user, attempt);
-        return jdbc.sql("SELECT * FROM monitoring_interruptions WHERE attempt_id=:a ORDER BY presence_revision")
+        List<Interruption> result = jdbc.sql("SELECT * FROM monitoring_interruptions WHERE attempt_id=:a ORDER BY presence_revision LIMIT 5001")
                 .param("a", attempt).query((r, i) -> new Interruption(r.getString("gap_id"), attempt, r.getString("collector_session_id"),
                         r.getString("reason"), time(r, "last_seen_at"), time(r, "timeout_detected_at"), time(r, "recovered_at"))).list();
+        if (result.size() > 5000) throw new IllegalStateException("Interruption history exceeds bounded response; no truncation");
+        return result;
     }
     private static Instant time(ResultSet r, String field) throws SQLException { Timestamp t = r.getTimestamp(field); return t == null ? null : t.toInstant(); }
     private static PresenceSnapshot read(ResultSet r, int index) throws SQLException {
