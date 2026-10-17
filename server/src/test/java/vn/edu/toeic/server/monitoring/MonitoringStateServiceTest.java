@@ -80,4 +80,24 @@ class MonitoringStateServiceTest {
         FullSnapshotReducerTest.rejected(() -> s.read(p,"MOCK-A"),ErrorCode.RETRYABLE_SERVER_ERROR);
         verify(registry,never()).stateAssignedProctors(any(),anyString());
     }
+    @Test void serverRestartChangesInstanceAndEpochAndRequiresFreshOpen() {
+        String oldInstance;
+        String oldEpoch;
+        try (var before=store(1)) {
+            var opened=before.open(c,"MOCK-A","MOCK-c","MOCK-old-socket",1,"MOCK-old-open").state();
+            oldInstance=opened.serverInstanceId();oldEpoch=opened.syncEpoch();
+            before.full(c,"MOCK-A","MOCK-old-socket","MOCK-old-full",full(oldEpoch,1,1));
+        }
+        try (var after=store(1)) {
+            assertThat(after.read(p,"MOCK-A").serverInstanceId()).isNotEqualTo(oldInstance);
+            FullSnapshotReducerTest.rejected(
+                    () -> after.full(c,"MOCK-A","MOCK-old-socket","MOCK-replayed-full",full(oldEpoch,2,2)),
+                    ErrorCode.STALE);
+            var reopened=after.open(c,"MOCK-A","MOCK-c","MOCK-new-socket",2,"MOCK-new-open").state();
+            assertThat(reopened.serverInstanceId()).isNotEqualTo(oldInstance);
+            assertThat(reopened.syncEpoch()).isNotEqualTo(oldEpoch);
+            after.full(c,"MOCK-A","MOCK-new-socket","MOCK-new-full",full(reopened.syncEpoch(),1,2));
+            assertThat(after.read(p,"MOCK-A").processes()).extracting(FullSnapshotPayload.Process::pid).containsExactly(2L);
+        }
+    }
 }
