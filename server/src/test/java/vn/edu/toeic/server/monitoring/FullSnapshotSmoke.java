@@ -309,7 +309,9 @@ public final class FullSnapshotSmoke {
     private static void cleanupProfile(Path profile) throws Exception {
         Path base=profile.toAbsolutePath().normalize();
         if(!base.getFileName().toString().startsWith("toeic-t2c1-edge-") || !base.getParent().equals(Path.of(System.getProperty("java.io.tmpdir")).toAbsolutePath().normalize())) throw new IllegalStateException("Unsafe owned profile");
-        long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(8);
+        // 45 s: on this build machine a non-user-mode handle (no Edge process, nothing in Restart Manager)
+        // kept SQLite journals locked up to ~22 s after Edge exited; 8 s failed cleanup in 9 of 23 runs on 17/10.
+        long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(45);
         while(Files.exists(base)) {
             try(var paths=Files.walk(base)) {
                 for(Path item:paths.sorted(java.util.Comparator.reverseOrder()).toList()) {
