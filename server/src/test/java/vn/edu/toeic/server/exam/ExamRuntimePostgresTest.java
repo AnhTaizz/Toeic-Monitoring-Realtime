@@ -427,6 +427,33 @@ class ExamRuntimePostgresTest {
         System.out.println("PASS concurrent entry/reconnect/reopen/takeover: one persisted deadline, old writer STALE");
     }
 
+    /**
+     * Documents the accepted takeover semantics (not idempotent by requestId): a replay after a
+     * lost ACK issues a newer epoch, which is exactly what a fresh takeover from the same device
+     * does. Saved answers, revision, the persisted deadline and FINAL results never change.
+     */
+    @Test void takeoverReplayAfterLostAckAdvancesEpochButNeverLosesAnswersDeadlineOrFinal() throws Exception {
+        String attempt = attempt(60);
+        TakeoverWriterRequest first = takeover(attempt);
+        JsonObject granted = json(expect(post(path(attempt, "takeover"), first, candidateToken), 200));
+        long epoch = granted.get("writerEpoch").getAsLong();
+        String deadline = granted.get("deadlineAt").getAsString();
+        expect(post(path(attempt, "answers"), new AutosaveAnswersRequest(id(), attempt, epoch, 1, Map.of("R1", "A")), candidateToken), 200);
+        // SIMULATED lost ACK: the same request is sent again after the server committed it.
+        JsonObject replay = json(expect(post(path(attempt, "takeover"), first, candidateToken), 200));
+        assertThat(replay.get("writerEpoch").getAsLong()).isEqualTo(epoch + 1);
+        assertThat(replay.get("deadlineAt").getAsString()).isEqualTo(deadline);
+        assertThat(replay.get("savedRevision").getAsLong()).isEqualTo(1);
+        assertThat(replay.getAsJsonObject("answers").get("R1").getAsString()).isEqualTo("A");
+        expectCode(post(path(attempt, "answers"), new AutosaveAnswersRequest(id(), attempt, epoch, 2, Map.of("R1", "B")), candidateToken), 409, "STALE");
+        expect(post(path(attempt, "answers"), new AutosaveAnswersRequest(id(), attempt, epoch + 1, 2, Map.of("R1", "B")), candidateToken), 200);
+        expect(post(path(attempt, "submit"), new SubmitExamRequest(id(), attempt, epoch + 1, 2, Map.of("R1", "B")), candidateToken), 200);
+        JsonObject finalStatus = status(attempt);
+        expectCode(post(path(attempt, "takeover"), first, candidateToken), 409, "INVALID_STATE");
+        assertThat(status(attempt).toString()).isEqualTo(finalStatus.toString());
+        System.out.println("PASS takeover replay: newer epoch, old writer STALE, answers/deadline kept, FINAL unchanged");
+    }
+
     @Test void unansweredAttemptTimesOutByAutonomousRuntimeScheduler() throws Exception {
         String attempt = attempt(1);
         JsonObject entry = json(expect(post(path(attempt, "takeover"), takeover(attempt), candidateToken), 200));
