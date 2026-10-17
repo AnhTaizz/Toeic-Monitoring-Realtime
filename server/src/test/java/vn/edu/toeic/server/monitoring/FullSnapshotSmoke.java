@@ -321,12 +321,47 @@ public final class FullSnapshotSmoke {
                     // Triage without paths: entry name inside the owned profile and which Edge process types still use it.
                     String entry=locked instanceof java.nio.file.FileSystemException f && f.getFile()!=null
                             ? base.relativize(Path.of(f.getFile()).toAbsolutePath().normalize()).toString() : "?";
-                    System.err.println("T2-C1 diagnostic edge-profile lockedEntry="+entry+" holders="+edgeProfileHolders(base.getFileName().toString()));
+                    System.err.println("T2-C1 diagnostic edge-profile lockedEntry="+entry+" holders="+edgeProfileHolders(base.getFileName().toString())
+                            +" lockers="+(locked instanceof java.nio.file.FileSystemException f && f.getFile()!=null ? fileLockers(Path.of(f.getFile())) : "?"));
                     throw locked;
                 }
                 Thread.sleep(100);
             }
         }
+    }
+    /** Image names of processes that Windows Restart Manager reports as holding the file; no PIDs or paths. */
+    private static String fileLockers(Path file) {
+        String script="""
+                $s=@'
+                using System;using System.Runtime.InteropServices;
+                public static class Rm{
+                 [StructLayout(LayoutKind.Sequential)] public struct UP{public int Id;public System.Runtime.InteropServices.ComTypes.FILETIME T;}
+                 [StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)] public struct PI{public UP P;[MarshalAs(UnmanagedType.ByValTStr,SizeConst=256)]public string App;[MarshalAs(UnmanagedType.ByValTStr,SizeConst=64)]public string Svc;public int Type;public int Status;public int Sess;[MarshalAs(UnmanagedType.Bool)]public bool Restartable;}
+                 [DllImport("rstrtmgr.dll",CharSet=CharSet.Unicode)] public static extern int RmStartSession(out uint h,int f,string k);
+                 [DllImport("rstrtmgr.dll",CharSet=CharSet.Unicode)] public static extern int RmRegisterResources(uint h,uint n,string[] f,uint a,UP[] p,uint s,string[] v);
+                 [DllImport("rstrtmgr.dll")] public static extern int RmGetList(uint h,out uint need,ref uint n,[In,Out]PI[] i,ref uint r);
+                 [DllImport("rstrtmgr.dll")] public static extern int RmEndSession(uint h);}
+                '@
+                Add-Type -TypeDefinition $s
+                $h=0;[void][Rm]::RmStartSession([ref]$h,0,[Guid]::NewGuid().ToString())
+                [void][Rm]::RmRegisterResources($h,1,@($env:TOEIC_LOCKED_FILE),0,$null,0,$null)
+                $need=0;$n=16;$r=0;$i=New-Object Rm+PI[] 16;$rc=[Rm]::RmGetList($h,[ref]$need,[ref]$n,$i,[ref]$r);if($rc -ne 0){$n=0;"rm-error-$rc"}
+                for($k=0;$k -lt $n;$k++){ try{ (Get-Process -Id $i[$k].P.Id -ErrorAction Stop).ProcessName }catch{ 'exited' } }
+                [void][Rm]::RmEndSession($h)
+                """;
+        Path scriptFile=null;
+        try {
+            // A file keeps the C# quotes intact; -Command would strip them on the Windows command line.
+            scriptFile=Files.createTempFile("toeic-t2c1-lockers-",".ps1");
+            Files.writeString(scriptFile,script,java.nio.charset.StandardCharsets.UTF_8);
+            ProcessBuilder builder=new ProcessBuilder("powershell.exe","-NoProfile","-ExecutionPolicy","Bypass","-File",scriptFile.toString()).redirectErrorStream(true);
+            builder.environment().put("TOEIC_LOCKED_FILE",file.toAbsolutePath().toString());
+            Process query=builder.start();
+            String text=new String(query.getInputStream().readAllBytes(),java.nio.charset.StandardCharsets.UTF_8).trim();
+            query.waitFor(20,TimeUnit.SECONDS);
+            return "["+String.join(",",text.lines().map(String::trim).filter(s -> s.matches("[A-Za-z0-9_.-]{1,64}")).toList())+"]";
+        } catch(Exception unavailable) { return "UNAVAILABLE"; }
+        finally { if(scriptFile!=null) try {Files.deleteIfExists(scriptFile);} catch(java.io.IOException ignored) { } }
     }
     /** Process types (browser/renderer/utility/...) of msedge.exe whose command line names this owned profile. */
     private static String edgeProfileHolders(String profileName) {
