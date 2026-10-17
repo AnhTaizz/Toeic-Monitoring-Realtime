@@ -292,7 +292,7 @@ Viết: state và event tách biệt ra sao, khoảng trống không phục hồ
 4. Chuẩn bị mẫu `run-metadata.json` và các file đầu ra theo `03_KIEM_THU_VA_THUC_NGHIEM.md` mục 6.
 5. **Giao harness polling cho B trước 24/10**, kèm hướng dẫn chạy.
 
-**Ghi chú làm dở:** —
+**Ghi chú làm dở 16/10/2026:** Review E1 có sẵn PR40, sửa CPU/rejoin/analyzer tại `c2cc312`; 87Java/11Python và Windows smoke/rejoin PASS. [Guide T4-C1](../E1_T4C1_MEASUREMENT.md), [report](../../evidence/t4-c1/2026-10-16-review.md). Chuẩn bị bàn giao, nghiệm thu PARTIAL: raw12run c1601b5 chưa có để phân tích lại resource; B human review/LAN/gate T3-C4 và trace120s E2 còn mở. Không E2/T4-C2/C3, không tracker hoặc merge PR nguồn.
 
 ### T4-C2 · Chạy full-vs-delta (E2)
 `4h` · phụ thuộc: T4-C1 · review: B

@@ -38,6 +38,20 @@ class ObservationJoinerTest {
         var report=ObservationJoiner.join(HarnessFixtures.truth(),HarnessFixtures.trace(List.of(),true,true),null);
         assertThat(report.notObserved()).isZero();assertThat(report.rows()).allMatch(r -> r.reason().equals("SOURCE_FAILURE_CANNOT_ASSERT_MISSING"));
     }
+    @Test void sourceFailureSupersededByHealthyPreTrialScanDoesNotInvalidateTrial() {
+        var original=HarnessFixtures.trace(List.of(),false,true);
+        var samples=new java.util.ArrayList<TraceData.Sample>();
+        samples.add(HarnessFixtures.sample(1,"START",0,List.of()));
+        samples.add(HarnessFixtures.sample(2,"SOURCE_FAILURE",100_000_000L,List.of()));
+        long index=3;
+        for(var sample:original.samples().subList(1,original.samples().size()))
+            samples.add(new TraceData.Sample(index++,sample.type(),sample.elapsedNanos(),sample.collectorSessionId(),
+                    sample.policyVersion(),sample.scanDurationNanos(),sample.processes()));
+        var trace=new TraceData.Trace(original.header(),samples,"MOCK");
+        var report=ObservationJoiner.join(HarnessFixtures.truth(),trace,null);
+        assertThat(report.notObserved()).isEqualTo(3);
+        assertThat(report.inconclusive()).isZero();
+    }
     @Test void corruptOrIncompleteTraceMakesEveryRowInconclusive() {
         var report=ObservationJoiner.join(HarnessFixtures.truth(),null,"TRACE_INVALID_OR_INCOMPLETE");
         assertThat(report.status()).isEqualTo("INCOMPLETE");assertThat(report.notObserved()).isZero();assertThat(report.inconclusive()).isEqualTo(3);

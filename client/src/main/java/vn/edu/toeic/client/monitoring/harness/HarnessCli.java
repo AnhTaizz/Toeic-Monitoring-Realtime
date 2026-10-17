@@ -17,7 +17,7 @@ public final class HarnessCli {
             Map<String,String> options=options(args);
             if(args[0].equals("join")) {
                 known(options,Set.of("--input-dir","--output"));Path directory=Path.of(required(options,"--input-dir"));
-                var truth=HarnessArtifacts.readGroundTruth(directory.resolve("ground-truth.jsonl"));TraceData.Trace trace=null;String issue=null;
+                var truth=HarnessArtifacts.readRunGroundTruth(directory);TraceData.Trace trace=null;String issue=null;
                 try{trace=TraceReader.read(directory.resolve("observations.jsonl"));}catch(Exception invalid){issue="TRACE_INVALID_OR_INCOMPLETE";}
                 if(issue==null&&!HarnessArtifacts.verifyManifest(directory))issue="RUN_ARTIFACT_CHECKSUM_OR_STATUS";
                 var report=ObservationJoiner.join(truth,trace,issue);HarnessArtifacts.writeJson(Path.of(required(options,"--output")),report);print(output,report);

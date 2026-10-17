@@ -30,12 +30,15 @@ public final class ObservationJoiner {
         String reason=issue;String conclusion="INCONCLUSIVE";TraceData.Sample first=null;TraceData.Process firstProcess=null;boolean pidObserved=false,ambiguous=false;
         if(reason==null&&!trial.status().equals("EXITED"))reason="TRIAL_NOT_NORMAL_EXIT";
         if(reason==null) {
-            boolean before=false,after=false,failure=false;
+            boolean before=false,after=false;
+            long beforeEnd=Long.MIN_VALUE,afterBegin=Long.MAX_VALUE;
+            var failures=new ArrayList<Long>();
             for(var sample:trace.samples()) {
                 long end=Math.addExact(header.traceStartElapsedNanos(),sample.elapsedNanos()),begin=end-sample.scanDurationNanos();
-                if(sample.type().equals("SOURCE_FAILURE")){failure=true;continue;}
+                if(sample.type().equals("SOURCE_FAILURE")){failures.add(end);continue;}
                 if(!sample.type().equals("OBSERVATION"))continue;
-                if(end<=trial.registeredElapsedNanos())before=true;if(begin>=trial.exitObservedElapsedNanos())after=true;
+                if(end<=trial.registeredElapsedNanos()){before=true;beforeEnd=Math.max(beforeEnd,end);}
+                if(begin>=trial.exitObservedElapsedNanos()){after=true;afterBegin=Math.min(afterBegin,begin);}
                 if(begin>trial.exitObservedElapsedNanos()||end<trial.registeredElapsedNanos())continue;
                 for(var process:sample.processes())if(process.pid()==trial.pid()) {
                     pidObserved=true;
@@ -43,6 +46,8 @@ public final class ObservationJoiner {
                     if(Objects.equals(trial.startInstant(),process.startInstant())&&first==null){first=sample;firstProcess=process;}
                 }
             }
+            boolean failure=false;
+            for(long tick:failures)if(tick>=beforeEnd&&tick<=afterBegin){failure=true;break;}
             if(first!=null){conclusion="OBSERVED";reason="PID_START_COLLECTOR_AND_SCAN_WINDOW_MATCH";}
             else if(ambiguous){reason="PID_ONLY_MISSING_START_INCONCLUSIVE";}
             else if(pidObserved){reason="PID_START_CONFLICT_INCONCLUSIVE";}
