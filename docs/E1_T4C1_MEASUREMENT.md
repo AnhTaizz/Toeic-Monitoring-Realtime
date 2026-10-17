@@ -178,10 +178,13 @@ Raw, `join.json` và summary lịch sử là evidence bất biến. Khi tìm l�
 
 Analyzer hiện tại đọc `join.json` trong từng run và yêu cầu hash của file này khớp `manifest.json`. Nếu join mới giống byte join cũ, manifest gốc vẫn hợp lệ và có thể chạy analyzer hiện tại trên bộ lịch sử. Nếu join mới khác, **không** ghi đè `join.json`, không sửa hoặc seal lại manifest gốc để làm checksum khớp. Trường hợp này đang **BLOCKED**: cần owner bổ sung cách để analyzer nhận một join dẫn xuất bên ngoài kèm provenance, hash input và hash output. Việc đó nằm ngoài phạm vi audit này; chưa được phép bỏ qua checksum hay tự xây thêm pipeline.
 
-Raw E1 lịch sử hiện vẫn **NOT AVAILABLE** trong workspace, nên chưa chạy các bước trên và chưa có số thay thế. Không tự chạy lại chiến dịch 12 lượt hoặc E2 để lấp chỗ trống.
+Tại audit PR43, raw lịch sử chưa có. Phiên tích hợp17/10 đã truy cập đủ84raw, kiểm hash trước/sau, rejoin12 bằng Java mới giống byte gốc và tái phân tích CPU bằng analyzer mới vào thư mục riêng. [Bằng chứng/kết luận mới](../evidence/integration-final-20261017/REPORT.md) chờ C xác nhận; không sửa raw/join/summary lịch sử hoặc gán source RC vào metadata cũ. Không chạy lại campaign12 hoặc E2.
 
 Checklist trước đo: source sạch/JAR đúng hash; máy đủ RAM/disk; ghi CPU/power/background; không suite hoặc tải khác do nhóm khởi chạy; giữ cấu hình/trace/sampler giống nhau; kiểm dry-run, tests, smoke, rejoin/hash; ghi reviewer thật. Trong12run không chỉnh seed/threshold vì kết quả không đẹp. Không đóng ứng dụng của người dùng tự động.
 
 Loại **khỏi kết luận** (giữ raw và lý do): hash/binding sai, thiếu FINAL, child/source/cleanup lỗi, time đảo, schedule/window sai, runId trùng, raw không tìm thấy. Unknown không là lý do xóa trial/run: giữ bounds. Censored giữ số đếm ngoài mẫu số. Resource PARTIAL chỉ hạn chế claim resource; không tự xóa detection hợp lệ. Nếu máy ngủ/tải nền bất thường ghi run và hoàn cảnh, không âm thầm bỏ. Thiếu lượt thì suite PARTIAL; chạy bổ sung phải runId mới, ghi vị trí/thời gian khác để đánh giá carryover.
 
 Bước B tiếp theo: tìm raw12run nguồn c1601b5, kiểm84hash theo inventory, rejoin bằng bản sửa vào thư mục dẫn xuất và áp dụng quy tắc checksum ở trên. Chỉ nếu raw mất hoặc resource coverage không đạt mới cần owner quyết định đo lại các lượt bị ảnh hưởng; muốn kết luận trên bản tích hợp/JDK khác thì phải có chiến dịch mới cùng môi trường. Không thay số cũ, không dùng smoke thay12run, không chuyển E2/gate bằng kết quả review này.
+
+
+Cập nhật RC17/10: không cần tìm lại raw cho phiên này; dùng provenance/hash dẫn xuất trong evidence RC để C review. Claim machine binding lịch sử vẫn giới hạn vì metadata cũ dùng alias hằng. Các checklist trước đo và điều kiện cho chiến dịch source mới vẫn áp dụng; chưa owner nghiệm thu E1/E2.

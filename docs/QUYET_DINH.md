@@ -261,3 +261,8 @@ E1 dùng same-seed/test-owned policy và cùng launchplan cho4poll, xoay thứ t
 ## Tích hợp16/10/2026 — chọn nền B4/MSI
 
 Giữ controller/API/view B4#36 tại client.proctor và pipeline MSI#37, chỉ chuyển guard/progress/config/preflight cần thiết từ38; bỏ workflow/controller38 và demo seeder trùng. Một ExamSession sở hữu writer; progress/history không cấp writer. QD28 MSI/QD30 writer, QD29 và E1-method human review pending. TEST C1/C2 chỉ harden null-safe cleanup và FX20s; C1 cuối PASS, các FAIL profile cleanup ban đầu giữ log và còn cần C review độ ổn định. [Quyết định conflict và giới hạn](../evidence/unified-20261016/conflict-resolution.md). Không tự đồng thuận owner hoặc đổi default FULL.
+
+
+### QD-29 — đề xuất trước RC17/10 (PROPOSED_FOR_A_C_APPROVAL)
+
+Chưa APPROVED và chưa owner ký. [Decision matrix](../evidence/integration-final-20261017/DECISION_MATRIX.md) đề xuất fail-closed issuance, legacy ACTIVE bị chặn trước vào/resume thi và hướng dẫn cấp lượt mới, thông báo client/regression/dataset cần A/C quyết định. Không tự migrate/cancel legacy hoặc mở rộng protocol; takeoverWriter vẫn không idempotent theo requestId. A cần review riêng history5001/HTTP500 retryable của PR43; B quyết định policy root/junction của PR45. FULL mặc định, không chốt DELTA production.

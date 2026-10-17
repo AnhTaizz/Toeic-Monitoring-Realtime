@@ -383,3 +383,8 @@ Backend validation/QD29, collision/final/raw-ID, committed progress whitelist/MV
 ### Ghi chú làm dở — QA PR39 ngày16/10/2026 (B bàn giao, chưa owner ký)
 
 B gửi review kỹ thuật PR39/QA source9bfc75e: không sửa server/protocol/schema. A cần review B fixes và QD29/progress/authorization/transaction của PR39; QD29 vẫn PROPOSED. Các local PG/GUI/MSI tests mới không là chữ ký A. QA database đầu phiên được giữ trong shared container đang dừng; owner có thể cleanup đúng DB private sau khi được phép resume, không reset volume. [Báo cáo](../../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md).
+
+
+### Ghi chú làm dở — RC17/10/2026
+
+Cần A/C chốt QD29/legacy ACTIVE; A review history5000/5001/HTTP500 và test F01 trong phần A. Chưa owner approve. Source TEST c224ba8, không merge nhánh nguồn/main hoặc ký thay owner. [Bàn giao](../../evidence/integration-final-20261017/REPORT.md).

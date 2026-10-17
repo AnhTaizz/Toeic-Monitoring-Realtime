@@ -395,3 +395,8 @@ Collector/policy/E1 source bằng38; raw84/checksums/14CSV repro giữ nguyên, 
 ### Ghi chú làm dở — QA PR39 ngày16/10/2026 (B bàn giao, chưa owner ký)
 
 B gửi QA PR39 source9bfc75e: không sửa collector/reducer/E1 harness/policy, FULL giữ default. C1/C2 cuối PASS local có nhãn MOCK/SIMULATED;84rawE1 hash không đổi, không rerun12/E2 hoặc approve gate. C cần review epoch/gap/UNKNOWN, E1-method và contractQD29/progress; không coi QA của B là human C review. [Báo cáo](../../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md).
+
+
+### Ghi chú làm dở — RC17/10/2026
+
+Raw84 đã được tìm thấy/kiểm hash; rejoin12 byte-identical/analyzer17output deterministic, CPU time-weighted mới. C xác nhận kết luận E1 và patch41/43; C1 FAIL lịch sử UNRESOLVED; E2/gate chưa approve. Source TEST c224ba8, không merge nhánh nguồn/main hoặc ký thay owner. [Bàn giao](../../evidence/integration-final-20261017/REPORT.md).

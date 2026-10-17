@@ -386,3 +386,8 @@ Bàn giao QA PR39: source9bfc75e sửa3lỗi B (BOM/title/cache race), Maven875+
 Code `d19c639` trên nhánh local `qa/f01-listening-result-20261016` từ PR40HEAD3fc5bb4: Result giữ nguyên `listeningInterrupted` từ hai DTO; ScoreResultDialog cảnh báo gián đoạn cho SUBMITTED/TIMED_OUT, không tự hủy điểm. History không takeover; thêm regression mapping/session/history/GUI và test HTTP/PG trong file A, cần A review. [Báo cáo](../../evidence/f01-20261016/REPORT.md).
 
 **Ghi chú làm dở:** F01 FIXED và MSI0.3.8 local PASS, chưa human A/C review/LAN/máy2/nghe thật. Clean test/package896PASS+2SKIP; installed FullSuite898PASS+0SKIP; AT11 41/0GAP,GUI11,C1/C2 PASS sau giữ C1 FAIL cleanup đầu (nguyên nhân chưa chứng minh). Không sửa monitoring để né FAIL; đổi temp TEST Windows cho lượt C1 cuối. Cluster TEST riêng đã dừng/0schema;84rawE1 giữ checksum. Không đổi tracker/push/merge/approve PR39/40; đưa patch qua PR40 rồi PR39 một lần để tránh nhân đôi.
+
+
+### Ghi chú làm dở — RC17/10/2026
+
+MSI0.3.9 installed906PASS local; cần B review F01, hòa PR45 với fix race40 và policy junction; manual hearing/máy2/LAN chưa nghiệm thu. Source TEST c224ba8, không merge nhánh nguồn/main hoặc ký thay owner. [Bàn giao](../../evidence/integration-final-20261017/REPORT.md).

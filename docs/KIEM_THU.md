@@ -527,3 +527,8 @@ Clean test875PASS/1SKIP và package875PASS/1SKIP; installed FullSuite876PASS/0SK
 | MSI0.3.8 lifecycle local | PASS quyền thường/Unicode/bundled JVM/no JAVA_HOME/deny-write/close/uninstall;5439class packaged/final giống byte |
 
 PostgreSQL native18.1 TEST riêng,0schema còn lại và cluster đã dừng; không thay service dùng chung.84rawE1 nguyên checksum, không E1/E2 rerun. Counts từ XML mới đã archive riêng, không kế thừa876 PASS nguồn cũ. [Report và raw index/counts/ảnh](../evidence/f01-20261016/REPORT.md). Nguyên nhân chính xác C1 FAIL đầu chưa chứng minh; C review pending. Không nâng trạng thái toàn bộ27case hoặc tracker: human A/C/LAN/máy thứ2/nghe thật vẫn NOT RUN.
+
+
+## Kiểm chứng RC tích hợp — 17/10/2026
+
+Source c224ba8, test/build tree trong evidence: [báo cáo và XML counts](../evidence/integration-final-20261017/REPORT.md). Clean test/package904PASS/2SKIP mỗi lượt, installed FullSuite906PASS/0SKIP. Flow41/0GAP,GUI11,PGconcurrency AT01/07/09/10,C1FULL/C2 PASS mới; Python12PASS. REAL PG/HTTP/WS/GUI/installed và MOCK/SIMULATED theo bảng evidence. PR43 history bounds2 test là subset của tổng. E1 chỉ rejoin/reanalysis raw lịch sử; physical LAN/hearing/soak/load/E2 NOT RUN. Không tự nâng AT/MT/LT/IT toàn case hoặc tracker thành hoàn tất; cần owner nghiệm thu.
