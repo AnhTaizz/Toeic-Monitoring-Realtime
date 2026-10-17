@@ -375,3 +375,19 @@ Lưu ý ref trước công bố: main `c0fd903` đã có B4/PR #36 và Windows M
 ## Handoff bản thống nhất16/10/2026 — HUMAN REVIEW PENDING
 
 Một Application Reading/Listening/history/shared writer; B4#36 duy nhất +progress38; MSI#37 duy nhất, config/preflight port có giới hạn. MSI và parent Unicode BLOCKED, còn nghe thật/FileChooser/LAN/máy2. Checkpointb755646: clean/package mỗi lượt872PASS/1skip, Flow41/GUI11/nativeAudio8/production EXE+PG PASS subset; không nghiệm thu toàncase. [Báo cáo/SHA/count/failure/manual](../../evidence/unified-20261016/verification.md). Không đổi tracker/kế hoạch hoặc tự duyệt A/C.
+
+
+### Ghi chú làm dở — QA PR39 ngày16/10/2026 (B bàn giao, chưa owner ký)
+
+Bàn giao QA PR39: source9bfc75e sửa3lỗi B (BOM/title/cache race), Maven875+1skip và installer876+0skip mới; MSI037/native History/reorg PASS local, artifact/hash trong report. Nghe thật/DPI/codec ngoàiWAV/máy hai/LAN chưa nghiệm thu; user chỉ có một máy, runbook/testdata/bundle đã chuẩn bị. Shared QA DB còn cleanup do container đang dừng, không tự restart. Đề nghị A review B fixes, không tự ký A/C hoặc cập nhật tracker. [Báo cáo](../../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md).
+
+### Bàn giao F01 — 16/10/2026
+
+Code `d19c639` trên nhánh local `qa/f01-listening-result-20261016` từ PR40HEAD3fc5bb4: Result giữ nguyên `listeningInterrupted` từ hai DTO; ScoreResultDialog cảnh báo gián đoạn cho SUBMITTED/TIMED_OUT, không tự hủy điểm. History không takeover; thêm regression mapping/session/history/GUI và test HTTP/PG trong file A, cần A review. [Báo cáo](../../evidence/f01-20261016/REPORT.md).
+
+**Ghi chú làm dở:** F01 FIXED và MSI0.3.8 local PASS, chưa human A/C review/LAN/máy2/nghe thật. Clean test/package896PASS+2SKIP; installed FullSuite898PASS+0SKIP; AT11 41/0GAP,GUI11,C1/C2 PASS sau giữ C1 FAIL cleanup đầu (nguyên nhân chưa chứng minh). Không sửa monitoring để né FAIL; đổi temp TEST Windows cho lượt C1 cuối. Cluster TEST riêng đã dừng/0schema;84rawE1 giữ checksum. Không đổi tracker/push/merge/approve PR39/40; đưa patch qua PR40 rồi PR39 một lần để tránh nhân đôi.
+
+
+### Ghi chú làm dở — RC17/10/2026
+
+MSI0.3.9 installed906PASS local; cần B review F01, hòa PR45 với fix race40 và policy junction; manual hearing/máy2/LAN chưa nghiệm thu. Source TEST c224ba8, không merge nhánh nguồn/main hoặc ký thay owner. [Bàn giao](../../evidence/integration-final-20261017/REPORT.md).

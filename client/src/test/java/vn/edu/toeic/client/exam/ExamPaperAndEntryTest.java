@@ -124,6 +124,39 @@ class ExamPaperAndEntryTest {
     }
 
     @Test
+    void lostTakeoverAckIsNeverRetriedAutomaticallyAndReopenUsesAFreshRequestId() {
+        FakeExamGateway gateway = new FakeExamGateway(ATTEMPT);
+        CompletableFuture<ExamEntry.Outcome> opening = ExamEntry.open(gateway, ATTEMPT);
+        gateway.replyStatus(0, gateway.active(1, 3, Map.of(), DEADLINE));
+        gateway.exams.get(0).complete(exam(question("r1", null, null, "A", "B")));
+        // SIMULATED: server may have committed epoch+1, the response is lost on the way back.
+        gateway.takeovers.get(0).reply().completeExceptionally(new java.io.IOException("MOCK lost ACK"));
+        assertThatThrownBy(opening::join).hasCauseInstanceOf(java.io.IOException.class);
+        assertThat(gateway.takeovers).as("no automatic replay of a takeover").hasSize(1);
+
+        CompletableFuture<ExamEntry.Outcome> reopening = ExamEntry.open(gateway, ATTEMPT);
+        gateway.replyStatus(1, gateway.active(2, 3, Map.of(), DEADLINE));
+        gateway.exams.get(1).complete(exam(question("r1", null, null, "A", "B")));
+        assertThat(gateway.takeovers).hasSize(2);
+        assertThat(gateway.takeovers.get(1).request().requestId()).isNotEqualTo(gateway.takeovers.get(0).request().requestId());
+        assertThat(reopening).isNotDone();
+    }
+
+    @Test
+    void legacyActiveRejectedByServerEndsEntryWithoutLooping() {
+        FakeExamGateway gateway = new FakeExamGateway(ATTEMPT);
+        CompletableFuture<ExamEntry.Outcome> opening = ExamEntry.open(gateway, ATTEMPT);
+        gateway.replyStatus(0, gateway.active(1, 0, Map.of(), null));
+        gateway.exams.get(0).complete(exam(question("r1", null, null, "A", "B")));
+        gateway.takeovers.get(0).reply().completeExceptionally(FakeExamGateway.rejected("INVALID_STATE"));
+        gateway.replyStatus(1, gateway.active(1, 0, Map.of(), null)); // QD-29 legacy: still ACTIVE, not enterable
+
+        assertThatThrownBy(opening::join).hasCauseInstanceOf(ExamApiException.class);
+        assertThat(gateway.takeovers).hasSize(1);
+        assertThat(gateway.statuses).hasSize(2);
+    }
+
+    @Test
     void failedTakeoverFailsEntryWithTheServerRejection() {
         FakeExamGateway gateway = new FakeExamGateway(ATTEMPT);
         CompletableFuture<ExamEntry.Outcome> opening = ExamEntry.open(gateway, ATTEMPT);

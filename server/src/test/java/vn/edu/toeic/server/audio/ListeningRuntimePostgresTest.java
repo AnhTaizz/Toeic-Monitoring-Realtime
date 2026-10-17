@@ -14,6 +14,8 @@ import java.util.*;
 import java.util.concurrent.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.web.server.context.WebServerApplicationContext;
@@ -23,6 +25,10 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import vn.edu.toeic.protocol.audio.*;
 import vn.edu.toeic.protocol.exam.*;
 import vn.edu.toeic.server.ToeicServerApplication;
+import vn.edu.toeic.client.exam.ExamApiClient;
+import vn.edu.toeic.client.exam.ExamResults;
+import vn.edu.toeic.client.exam.ExamSession;
+import vn.edu.toeic.client.exam.ExamSettings;
 
 /** REAL PostgreSQL/Flyway, authenticated production HTTP, owned schema and temporary audio only. */
 @EnabledIfEnvironmentVariable(named = "TOEIC_PG_INTEGRATION", matches = "true")
@@ -325,6 +331,56 @@ class ListeningRuntimePostgresTest {
         assertThat(jdbc.sql("SELECT answers_json FROM monitoring_attempts WHERE attempt_id = :a").param("a",f.first()).query(String.class).single()).isEqualTo(old.get(0));
         expect(post(path,request,proctor),200); // History-scope authorization after timeout.
         System.out.println("PASS LT04 assigned-proctor-only concurrent reorganization: fresh attempt, old answers/deadline intact, old timeout score+marker retained");
+    }
+
+    @ParameterizedTest
+    @CsvSource({"SUBMITTED,true", "SUBMITTED,false", "TIMED_OUT,true", "TIMED_OUT,false"})
+    void f01ClientSubmitStatusAndHistoryPreserveServerResultWithoutTakeover(String state, boolean interrupted) throws Exception {
+        var f = fixture(); start(f);
+        Map<String, String> answers = Map.of("L1", "A", "R1", "A");
+        save(f, 1, answers, 200);
+        event(f, "STARTED", null, candidate1, 1, 200);
+        event(f, interrupted ? "INTERRUPTED" : "COMPLETED", interrupted ? "MEDIA_ERROR" : null, candidate1, 1, 200);
+        try (var api = new ExamApiClient(base, candidate1)) {
+            if ("SUBMITTED".equals(state)) {
+                var initial = api.getAttemptStatus(f.first()).get(5, TimeUnit.SECONDS);
+                var finalView = new CompletableFuture<ExamSession.View>();
+                try (var session = new ExamSession(new ExamSession.Start(f.first(), initial.writerEpoch(),
+                        initial.savedRevision(), initial.answers(), initial.deadlineAt()),
+                        Map.of("L1", Set.of("A", "B"), "L2", Set.of("A", "B"), "R1", Set.of("A", "B")),
+                        api, ExamSettings.defaults(), true, Runnable::run,
+                        view -> { if (view.phase() == ExamSession.Phase.FINAL) finalView.complete(view); })) {
+                    assertThat(session.submit()).isTrue();
+                    var submitted = finalView.get(10, TimeUnit.SECONDS).result();
+                    assertThat(submitted.listeningInterrupted()).isEqualTo(interrupted);
+                    assertThat(submitted.state()).isEqualTo(state);
+                    assertThat(submitted.correctCount()).isEqualTo(2);
+                    assertThat(submitted.listeningCorrect()).isEqualTo(1);
+                    assertThat(submitted.readingCorrect()).isEqualTo(1);
+                    assertThat(submitted.score()).isEqualTo(2);
+                }
+            } else {
+                jdbc.sql("UPDATE monitoring_attempts SET deadline_at=clock_timestamp()-INTERVAL '1 second' WHERE attempt_id=:a")
+                        .param("a", f.first()).update();
+                assertThat(context.getBean(vn.edu.toeic.server.exam.ExamService.class).timeoutAttempt(f.first())).isTrue();
+            }
+            var status = api.getAttemptStatus(f.first()).get(5, TimeUnit.SECONDS);
+            String before = jdbc.sql("SELECT row_to_json(a)::text FROM monitoring_attempts a WHERE attempt_id=:a")
+                    .param("a", f.first()).query(String.class).single();
+            var history = ExamResults.open(api, f.first()).get(5, TimeUnit.SECONDS);
+            assertThat(history.listeningInterrupted()).isEqualTo(interrupted).isEqualTo(status.listeningInterrupted());
+            assertThat(history.state()).isEqualTo(state).isEqualTo(status.state());
+            assertThat(history.totalQuestions()).isEqualTo(status.totalQuestions());
+            assertThat(history.correctCount()).isEqualTo(2).isEqualTo(status.correctCount());
+            assertThat(history.listeningCorrect()).isEqualTo(status.listeningCorrect());
+            assertThat(history.readingCorrect()).isEqualTo(status.readingCorrect());
+            assertThat(history.score()).isEqualTo(status.score());
+            assertThat(history.savedRevision()).isEqualTo(status.savedRevision());
+            assertThat(history.decidedAt()).isEqualTo(status.submittedAt());
+            assertThat(status.writerEpoch()).isEqualTo(1);
+            assertThat(jdbc.sql("SELECT row_to_json(a)::text FROM monitoring_attempts a WHERE attempt_id=:a")
+                    .param("a", f.first()).query(String.class).single()).as("history must not mutate attempt or writer").isEqualTo(before);
+        }
     }
 
     @Test void eventsEnforceOwnershipWriterStartIdAndValidPayload() throws Exception {

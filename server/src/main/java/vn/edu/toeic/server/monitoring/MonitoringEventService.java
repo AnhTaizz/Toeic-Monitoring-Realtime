@@ -54,8 +54,9 @@ public class MonitoringEventService {
     public List<TimelineItem> timeline(AuthenticatedUser user, String attemptId) {
         authorization.requireRole(user, Role.PROCTOR);
         lockAndAuthorize(user, attemptId);
-        return jdbc.sql("SELECT * FROM monitoring_events WHERE attempt_id=:attempt ORDER BY received_at ASC,id ASC")
+        List<TimelineItem> result = jdbc.sql("SELECT * FROM monitoring_events WHERE attempt_id=:attempt ORDER BY received_at ASC,id ASC LIMIT " + MonitoringHistoryLimit.QUERY_LIMIT)
                 .param("attempt", attemptId).query((row, index) -> read(row, index).item()).list();
+        return MonitoringHistoryLimit.requireComplete(result);
     }
 
     private void lockAndAuthorize(AuthenticatedUser user, String attempt) {

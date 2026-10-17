@@ -1,0 +1,9 @@
+{
+  "sourceSha": "9bfc75ec7c2d91af6f714602727389547c3b3288",
+  "packagedClasses": 5439,
+  "finalJarClasses": 5439,
+  "allClassBytesEqual": true,
+  "packagedJarSha256": "e6efeaeb42990a73794ad42ba55b272bebc749fceae2967b51f283928091dfed",
+  "finalReactorJarSha256": "a0047686936470d0f845dd1310a0b8d2d25ff587893706113dbf76b13b1406eb",
+  "note": "ZIP metadata/build timestamps may differ; every class entry compared as bytes"
+}

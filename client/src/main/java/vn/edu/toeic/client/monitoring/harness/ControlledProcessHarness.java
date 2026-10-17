@@ -41,6 +41,11 @@ public final class ControlledProcessHarness {
     private long origin;
     private E1Window measurementWindow;
     public ControlledProcessHarness(HarnessPlan.Config config){this(config,new ProcessHandleSnapshotSource(),ControlledProcessHarness::launchChild);}
+    static String machineAlias() {
+        String value=System.getProperty("toeic.e1.machineAlias","UNSPECIFIED");
+        if(!value.matches("[A-Za-z0-9_.-]{1,80}"))throw new IllegalArgumentException("MACHINE_ALIAS");
+        return value;
+    }
     public ControlledProcessHarness(HarnessPlan.Config config,E1Window window) {
         this(config);window.plan(config);this.measurementWindow=window;
     }
@@ -119,7 +124,7 @@ public final class ControlledProcessHarness {
         metadata.addProperty("calendarOrigin",wall);metadata.addProperty("policyVersion",TraceData.TEST_POLICY);metadata.addProperty("policyScope","TEST enrolled owned root identities until collector stops; start checked when both readable; missing metadata retained; no executable allowlist change");
         metadata.addProperty("sourceLabel",label);metadata.addProperty("candidateGate","SIMULATED; no login/server/network/GUI");metadata.addProperty("javaVersion",System.getProperty("java.version"));
         metadata.addProperty("javaVendor",System.getProperty("java.vendor"));metadata.addProperty("os",System.getProperty("os.name"));metadata.addProperty("osVersion",System.getProperty("os.version"));metadata.addProperty("architecture",System.getProperty("os.arch"));
-        metadata.addProperty("machine","LOCAL-HARNESS-01");metadata.addProperty("scans",scans.get());metadata.addProperty("resourcesCleaned",clean);metadata.addProperty("error",error.get());metadata.addProperty("e1e2","NOT_RUN; no latency/miss-rate/CPU claim");metadata.addProperty("humanBReview","NOT_RUN");
+        metadata.addProperty("machine",machineAlias());metadata.addProperty("scans",scans.get());metadata.addProperty("resourcesCleaned",clean);metadata.addProperty("error",error.get());metadata.addProperty("e1e2","NOT_RUN; no latency/miss-rate/CPU claim");metadata.addProperty("humanBReview","NOT_RUN");
         metadata.addProperty("calendarEnd",Instant.now().toString());
         metadata.addProperty("availableProcessors",Runtime.getRuntime().availableProcessors());
         if(java.lang.management.ManagementFactory.getOperatingSystemMXBean() instanceof com.sun.management.OperatingSystemMXBean os) {

@@ -479,7 +479,8 @@ public final class ToeicClientApplication extends Application {
             throw new IllegalStateException("Lượt thi không còn trong quyền được server cấp. Làm mới danh sách.");
         }
         if (!vn.edu.toeic.protocol.exam.AttemptIdentifier.monitoringV0(selectedAttempt)) {
-            throw new IllegalStateException("Mã lượt thi chưa tương thích monitoring v0. A/B/C cần chốt contract; vẫn có thể xem kết quả qua lịch sử.");
+            throw new IllegalStateException(vn.edu.toeic.protocol.exam.AttemptIdentifier.MONITORING_INCOMPATIBLE_MESSAGE
+                    + " Vẫn có thể xem kết quả qua lịch sử.");
         }
         if (session.isActive()) {
             if (!selectedAttempt.equals(activeAttempt)) {

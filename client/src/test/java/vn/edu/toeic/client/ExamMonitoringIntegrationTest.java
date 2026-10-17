@@ -131,7 +131,8 @@ class ExamMonitoringIntegrationTest {
             var special = new LoginApiClient.ScopeView(Role.CANDIDATE, Set.of("A/slash"));
             assertThatThrownBy(() -> ToeicClientApplication.startOrReuseMonitoring(f.session, null,
                     "A/slash", special, ignored -> { throw new AssertionError("must not replace scope"); }))
-                    .isInstanceOf(IllegalStateException.class).hasMessageContaining("contract");
+                    .isInstanceOf(IllegalStateException.class)
+                    .hasMessageContaining(vn.edu.toeic.protocol.exam.AttemptIdentifier.MONITORING_INCOMPATIBLE_MESSAGE);
             assertThat(f.session.isActive()).isFalse();
         }
     }

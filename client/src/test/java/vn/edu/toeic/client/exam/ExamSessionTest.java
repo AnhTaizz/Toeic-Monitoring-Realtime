@@ -14,6 +14,9 @@ import java.util.Set;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvSource;
 import vn.edu.toeic.client.InvalidServerResponseException;
 import vn.edu.toeic.client.exam.ExamSession.Phase;
 import vn.edu.toeic.client.exam.ExamSession.SaveState;
@@ -22,6 +25,8 @@ import vn.edu.toeic.protocol.exam.AutosaveAnswersRequest;
 import vn.edu.toeic.protocol.exam.AutosaveAnswersResponse;
 import vn.edu.toeic.protocol.exam.SubmitExamRequest;
 import vn.edu.toeic.protocol.exam.TakeoverWriterResponse;
+import vn.edu.toeic.protocol.exam.SubmitExamResponse;
+import vn.edu.toeic.protocol.exam.CandidateAttemptStatusResponse;
 
 /**
  * MOCK: gateway giả và đồng hồ ảo, chạy một luồng. Kiểm logic client của T2-B1..B4; không phải
@@ -54,6 +59,41 @@ class ExamSessionTest {
 
     private SubmitExamRequest submitted(int index) {
         return gateway.submits.get(index).request();
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void submitPublishesServerInterruptionWithUnchangedScore(boolean interrupted) {
+        try (var session = session(3, Map.of("q1", "A"), DEADLINE)) {
+            session.submit();
+            var request = submitted(0);
+            gateway.submits.getFirst().reply().complete(new SubmitExamResponse(request.requestId(), ATTEMPT,
+                    "SUBMITTED", 10, 7, 3, 4, 735, FakeExamGateway.DECIDED_AT,
+                    FakeExamGateway.DECIDED_AT, request.answerRevision(), interrupted));
+            assertThat(session.view().phase()).isEqualTo(Phase.FINAL);
+            assertThat(session.view().result().listeningInterrupted()).isEqualTo(interrupted);
+            assertThat(session.view().result().score()).isEqualTo(735);
+            assertThat(session.view().result().correctCount()).isEqualTo(7);
+            assertThat(session.view().editable()).isFalse();
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource({"SUBMITTED,true", "SUBMITTED,false", "TIMED_OUT,true", "TIMED_OUT,false"})
+    void lostSubmitAckPublishesFinalStatusInterruption(String state, boolean interrupted) {
+        try (var session = session(3, Map.of("q1", "A"), DEADLINE)) {
+            session.submit();
+            gateway.failSubmit(0, new HttpTimeoutException("MOCK lost submit ACK"));
+            gateway.replyStatus(0, new CandidateAttemptStatusResponse(ATTEMPT, "MOCK-S", "MOCK-E", 1, 3,
+                    state, DEADLINE, FakeExamGateway.DECIDED_AT, 10, 7, 3, 4, 735, Map.of("q1", "A"), interrupted));
+            assertThat(session.view().phase()).isEqualTo(Phase.FINAL);
+            assertThat(session.view().result().state()).isEqualTo(state);
+            assertThat(session.view().result().listeningInterrupted()).isEqualTo(interrupted);
+            assertThat(session.view().result().score()).isEqualTo(735);
+            assertThat(session.view().result().correctCount()).isEqualTo(7);
+            assertThat(gateway.takeovers).isEmpty();
+            assertThat(gateway.submits).hasSize(1);
+        }
     }
 
     // ------------------------------------------------------------ T2-B1: model đáp án

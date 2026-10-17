@@ -131,7 +131,9 @@ class AudioPreparationTest {
         Fixture nextApi = new Fixture();
         try (AudioPreparation next = new AudioPreparation(nextApi, files, directory.resolve("next-speaker"), ignored -> {})) {
             next.prepare("ATTEMPT", 43);
-            await(() -> next.snapshot().phase() == AudioPreparation.Phase.FILES_READY);
+            await(() -> Set.of(AudioPreparation.Phase.FILES_READY, AudioPreparation.Phase.ERROR).contains(next.snapshot().phase()));
+            assertThat(next.snapshot().phase()).withFailMessage("New audio view failed: %s", next.snapshot().message())
+                    .isEqualTo(AudioPreparation.Phase.FILES_READY);
             assertThat(preparation.snapshot().phase()).isEqualTo(AudioPreparation.Phase.CLOSED);
             assertThat(api.reports).allMatch(r -> !r.ready() && r.writerEpoch() == 42);
             assertThat(nextApi.reports).allMatch(r -> r.writerEpoch() == 43);

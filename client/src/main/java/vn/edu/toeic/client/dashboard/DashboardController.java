@@ -252,7 +252,9 @@ public final class DashboardController implements AutoCloseable {
             model.rosterFailed("Lượt đang xem không còn quyền. Đang kiểm tra lại danh sách.");
             publish(); resync(); return;
         }
-        String text="Không tải được dữ liệu hợp lệ. Dữ liệu đang hiển thị là dữ liệu cũ; hãy làm mới.";
+        String text=cause instanceof MonitoringApiClient.HistoryLimitException
+                ? MonitoringApiClient.HISTORY_LIMIT_MESSAGE
+                : "Không tải được dữ liệu hợp lệ. Dữ liệu đang hiển thị là dữ liệu cũ; hãy làm mới.";
         if (part.equals("roster")) model.rosterFailed(text);
         else if (part.equals("events")) model.eventsFailed(text);
         else if (part.equals("state")) model.stateFailed(text);

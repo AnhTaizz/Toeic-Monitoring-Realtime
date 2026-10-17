@@ -1,5 +1,7 @@
 # Trạng thái kiểm thử
 
+16/10/2026 — Kiểm E1/T4-C1 riêng: 87Java targeted +11Python PASS; fixture CPU trước50% sai/sau10% đúng, Windows smoke và rejoin byte-identical PASS. Đây không nâng MT/IT hoặc gate thành PASS. Raw E1 lịch sử chưa có để tái xác nhận; [báo cáo](../evidence/t4-c1/2026-10-16-review.md), [lệnh](E1_T4C1_MEASUREMENT.md).
+
 Mô tả đầy đủ từng case (cách gây tình huống, kết quả bắt buộc) ở `Ke_hoach_LT_Mang_5_chang/03_KIEM_THU_VA_THUC_NGHIEM.md`. File này chỉ theo dõi đã chạy chưa và bằng chứng ở đâu.
 
 Trạng thái dùng: `NOT RUN`, `PASS`, `FAIL`, `BLOCKED`; `PARTIAL` khi chỉ một phần case được kiểm (MT01 local C2). Chỉ ghi `PASS` khi đã chạy thật và có bằng chứng.
@@ -504,3 +506,44 @@ Phiên hòa PR #35/#38 trên main B4/B5 đã có kiểm mới16/10: xem bảng d
 ## Bản thống nhất16/10/2026 — checkpoint b755646
 
 Clean test/package mỗi lượt872PASS/1skip/0failure/error (protocol44/client600/server227+1skip/spike1), PG18.6 thật, GUI B4 LT04 và production app-image bật. Flow41/0GAP gồm AT11 exact40/42; concurrency AT01/07/09/10; GUI toàn Application11nhóm/progress/shared writer/FULL; native Audio8 và EXE/PG PASS subset. C2+GUI PASS với readings MOCK/fault SIMULATED. C1 cuối không JFR PASS; các lượt FAIL cleanup vẫn giữ, nguyên nhân ban đầu chưa chứng minh; MSI/Unicode parent BLOCKED thiếu SDK/WiX, installed test skip. E1 short mới COMPLETE/3trial, không E1 final;84raw lịch sử/14CSV repro không đổi. Python4 PASS. [SHA/log/count/limitations](../evidence/unified-20261016/verification.md), [manual](ACCEPTANCE_B_MANUAL_MATRIX.md). Không thay trạng thái nghiệm thu27case/tracker hoặc kế thừa848/687/MSI nguồn.
+
+
+## QA PR39 — 16/10/2026, source9bfc75e
+
+Clean test875PASS/1SKIP và package875PASS/1SKIP; installed FullSuite876PASS/0SKIP,0failure/error. Skip trước install là installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle do thiếu flag; đã chạy trong FullSuite. Flow/AT11 exact40/42 41checks/0GAP, PG concurrency, GUI11/LT04/progress/shared writer, C1/C2 và native MSI037 + History/reorg extra PASS local subset. Unit/MOCK, faults/hearing/dialogs SIMULATED phân biệt rõ; ma trận AT11/LT01–04/IT01–04/MT01/07/08 vẫn PARTIAL toàncase, physicalLAN/manual/human review NOTRUN. Cache race BEFORE FAIL có fix+regression; counts loại XML cũ khi reactor dừng. [Counts/source/failures/matrix/artifacts](../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md). Không đổi trạng thái27case/tracker hoặc kế thừa PASS nguồn.
+
+## F01 — kết quả Listening gián đoạn, 16/10/2026
+
+**F01 FIXED local**, code `d19c63902725662aeb6f43c6f04ca80ea6caff42`, base PR40 `3fc5bb4`. Before6ERROR do Result thiếu cờ → mapping6PASS; targeted104PASS gồm submit/status/history và GUI4. Test PG mới4 tổ hợp SUBMITTED/TIMED_OUT × true/false qua HTTP thật, điểm/revision/thời điểm giữ nguyên, history không đổi row/writerEpoch. GUI4 dùng **MOCK result** trong Stage thật, không gọi là tích hợp server hoặc nghe thật.
+
+| Lượt mới | Kết quả thật |
+|---|---|
+| Maven clean test | 898 ca:896PASS,2SKIP,0failure/error |
+| Maven package | 898 ca:896PASS,2SKIP,0failure/error |
+| MSI0.3.8 installed FullSuite | 898PASS,0SKIP,0failure/error; hai opt-in app-image/installed đã chạy bằng artifact mới |
+| ExamFlow/AT11, Application GUI | 41PASS/0GAP và11nhóm PASS; REAL HTTP/PG/JavaFX, loss/hearing seam SIMULATED |
+| PG concurrency, B4/progress | AT01/07/09/10 và LT04/progress/shared writer PASS local trong suites/harness |
+| C1/C2 monitoring + GUI | C1 đầu FAIL cleanup Edge, giữ log; đổi temp TEST Windows, không sửa source, C1 cuối PASS; C2 PASS. Process fixtures MOCK/faults SIMULATED theo harness |
+| MSI0.3.8 lifecycle local | PASS quyền thường/Unicode/bundled JVM/no JAVA_HOME/deny-write/close/uninstall;5439class packaged/final giống byte |
+
+PostgreSQL native18.1 TEST riêng,0schema còn lại và cluster đã dừng; không thay service dùng chung.84rawE1 nguyên checksum, không E1/E2 rerun. Counts từ XML mới đã archive riêng, không kế thừa876 PASS nguồn cũ. [Report và raw index/counts/ảnh](../evidence/f01-20261016/REPORT.md). Nguyên nhân chính xác C1 FAIL đầu chưa chứng minh; C review pending. Không nâng trạng thái toàn bộ27case hoặc tracker: human A/C/LAN/máy thứ2/nghe thật vẫn NOT RUN.
+
+
+## Kiểm chứng RC tích hợp — 17/10/2026
+
+Source c224ba8, test/build tree trong evidence: [báo cáo và XML counts](../evidence/integration-final-20261017/REPORT.md). Clean test/package904PASS/2SKIP mỗi lượt, installed FullSuite906PASS/0SKIP. Flow41/0GAP,GUI11,PGconcurrency AT01/07/09/10,C1FULL/C2 PASS mới; Python12PASS. REAL PG/HTTP/WS/GUI/installed và MOCK/SIMULATED theo bảng evidence. PR43 history bounds2 test là subset của tổng. E1 chỉ rejoin/reanalysis raw lịch sử; physical LAN/hearing/soak/load/E2 NOT RUN. Không tự nâng AT/MT/LT/IT toàn case hoặc tracker thành hoàn tất; cần owner nghiệm thu.
+
+## Ổn định hóa 17/10/2026 — source `3702b6d`
+
+Lượt cuối `final-3702b6d-r3` trên cluster PostgreSQL 18 riêng, loopback; đếm từ XML. Không cộng test tập trung vào tổng (đã nằm trong tổng).
+
+| Suite | Kết quả | Ghi chú |
+|---|---|---|
+| Maven clean test / package | mỗi lượt 924 PASS, 0 FAIL, 4 SKIP (82 suite) | skip: symlink thiếu quyền, 8.3 tắt trên E:, 2 test cần app-image/installed |
+| MSI 0.3.10 installed FullSuite | 926 PASS, 0 FAIL, 2 SKIP | cài/gỡ TEST trên máy build, không phải máy thứ hai |
+| ExamFlow AT11 / concurrency AT01·07·09·10 / GUI 11 nhóm / C1 / C2 | PASS | C1/C2 cleanup PASS từng thành phần |
+| QD-29, lịch sử 0/1/5000/5001 cả 3 endpoint, cache audio, takeover replay | PASS | nằm trong tổng trên |
+| GitHub Actions windows-2025 | SUCCESS run 39017363076 | Maven mặc định, PG/GUI opt-in skip |
+| E1 analyzer + 84 raw | 12/12 PASS, 84/84 hash | kết quả 287/62/11 không đổi |
+
+FAIL trung gian giữ lại: CI 39012744164 (assert thông báo cũ, sửa `7c0491e`); `final-4fbc538` (classpath smoke, lỗi pipeline agent); `final-3702b6d`, `-r2` (môi trường); C1 với hạn 8 s: 11/24 FAIL (10 khóa profile Edge, 1 Edge không lên dashboard), hạn 45 s: 5/5 PASS. Vẫn NOT RUN: LAN hai máy, nghe thật, máy sạch, tải 1/5/10, E2. Chi tiết: [báo cáo](../evidence/stabilize-20261017/REPORT.md).

@@ -21,6 +21,15 @@ class ClientSettingsTest {
         var invalid=ClientSettings.readConfiguration(null,null,file);assertThat(invalid.notice()).isNotEmpty().doesNotContain("TEST-secret","token=");assertThat(invalid.serverUrl()).isEqualTo("http://127.0.0.1:8080");
         Files.writeString(file,"x".repeat(4097));assertThat(ClientSettings.readConfiguration(null,null,file).notice()).isNotEmpty();
     }
+    @Test void windowsPowerShellUtf8BomConfigMatchesDirectExeAndWrapper()throws Exception{
+        Path file=folder.resolve("server-url.txt");
+        String original="\uFEFFhttp://192.0.2.10:8080\r\n";
+        Files.writeString(file,original,java.nio.charset.StandardCharsets.UTF_8);
+        var cfg=ClientSettings.readConfiguration(null,null,file);
+        assertThat(cfg.serverUrl()).isEqualTo("http://192.0.2.10:8080");
+        assertThat(cfg.notice()).isEmpty();
+        assertThat(Files.readString(file)).isEqualTo(original);
+    }
     @Test void missingFileRetainsDefaultWithoutCreatingUserState(){
         Path file=folder.resolve("missing.txt");var cfg=ClientSettings.readConfiguration(null,null,file);
         assertThat(cfg.serverUrl()).isEqualTo("http://127.0.0.1:8080");assertThat(cfg.notice()).isEmpty();assertThat(file).doesNotExist();

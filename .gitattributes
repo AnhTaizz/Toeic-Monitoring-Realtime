@@ -81,3 +81,6 @@ evidence/overnight-20261015/** -text whitespace=-blank-at-eol,-blank-at-eof,-spa
 
 # Unified verification retains exact curated evidence bytes.
 evidence/unified-20261016/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
+# PR39 QA evidence preserves exact bytes for artifact checksums.
+evidence/b-pr39-acceptance-20261016/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol

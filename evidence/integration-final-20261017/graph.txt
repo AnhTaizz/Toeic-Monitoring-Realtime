@@ -1,0 +1,27 @@
+﻿*   c224ba8 TEST rehearsal: latest main CI into unified RC
+|\  
+| *   07c4024 Merge pull request #44 from AnhTaizz/feat/t3-b3-listening-interruption-recovery
+| |\  
+| | * a1dd066 ci: run Maven tests on pull requests
+* | |   44f1172 TEST rehearsal: integrate F01 and C41/C43; preserve both documentation records
+|\ \ \  
+| * | | 772c6e9 docs(e1): clarify immutable historical reanalysis
+| * | | 7a2f155 test(monitoring): verify history response thresholds
+| * | | 7e11c92 docs(monitoring): record role C audit evidence
+| * | | 83e88fc fix(e1): scope source failures and bind machine identity
+| * | | bc23784 fix(monitoring): stop terminal delivery and bound history
+| * | | 304bc50 docs(e1): hand off T4-C1 methodology and verified review findings
+| * | | c2cc312 fix(e1): weight CPU intervals and restore reproducible E1 joins
+* | | |   50b477e TEST rehearsal: F01 into PR40
+|\ \ \ \  
+| |/ / /  
+|/| | |   
+| * | | 7af7046 docs(qa): b├án giao F01, hß╗ôi quy v├á MSI 0.3.8
+| * | | d19c639 fix(client): giß╗» cß╗¥ gi├ín ─æoß║ín Listening trong kß║┐t quß║ú thi
+|/ / /  
+* | | 3fc5bb4 docs(qa): ghi Draft PR 40 v├á chß╗æt b├án giao
+* | | b562616 docs(qa): ghi evidence PR39, MSI 0.3.7 v├á runbook LAN
+* | | 9bfc75e fix(audio): tr├ính race tß║ío cache khi ─æ├│ng v├á mß╗ƒ view
+* | | dcbdf85 fix(packaging): chß╗¥ ─æ├║ng ti├¬u ─æß╗ü cß╗¡a sß╗ò ß╗⌐ng dß╗Ñng thß╗æng nhß║Ñt
+* | | 0a00d0f fix(client): ─æß╗ìc cß║Ñu h├¼nh URL UTF-8 c├│ BOM tr├¬n Windows
+* | | 093429a Bß╗ò sung Draft PR 39 v├á SHA c├┤ng bß╗æ bß║ún thß╗æng nhß║Ñt

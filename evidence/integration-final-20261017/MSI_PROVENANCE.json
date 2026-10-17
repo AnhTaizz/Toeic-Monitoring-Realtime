@@ -1,0 +1,23 @@
+{
+  "source": "c224ba8572ae453ad97e0be4f85914e112041805",
+  "tree": "22858b425acfd182ea794626b4aa6d319bd1baae",
+  "version": "0.3.9",
+  "dirty": false,
+  "msiSha256": "bef7528f77b35695904812b2959ea389b6ac790ba6fc8f9f91fc665632af604e",
+  "imageJarSha256": "27976c77f914b64cb575cbbafda3212af7a802f682cc6b3ba4589148f32db1bd",
+  "rebuiltClientJarSha256": "9ca01f06e5de0e4590f334e2607f589cbfcfafee8b55b18dde9b94a49fe1b4e9",
+  "serverJarSha256": "0867dcb445e63e96b919da96bf9985178620fd6e9761d078078e7f29b4489f57",
+  "classCount": 5439,
+  "mismatches": [],
+  "sameClassSet": true,
+  "windowsNatives": true,
+  "forbiddenEntries": [],
+  "fullDefault": "FULL",
+  "jdk": "21.0.8",
+  "runtimeRelease": "JAVA_VERSION=\"21.0.8\"\nMODULES=\"java.base java.datatransfer java.xml java.prefs java.desktop java.instrument java.logging java.net.http jdk.crypto.ec jdk.unsupported\"\n",
+  "installedRun": {
+    "endUtc": "2026-10-17T06:25:41.0707604Z",
+    "status": "PASS",
+    "source": "c224ba8572ae453ad97e0be4f85914e112041805"
+  }
+}

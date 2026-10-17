@@ -62,7 +62,7 @@ try {
             if($runtimeProcess){$runtimeProcess.Refresh()}
             if([DateTime]::UtcNow -gt $limit){throw 'Login window did not open in owned JVM child.'}
             Start-Sleep -Milliseconds 100
-        } while(-not $runtimeProcess -or $runtimeProcess.MainWindowTitle -ne 'TOEIC Monitor')
+        } while(-not $runtimeProcess -or $runtimeProcess.MainWindowTitle -ne 'TOEIC Realtime Monitoring Platform')
         $jvm=@($runtimeProcess.Modules | Where-Object {$_.ModuleName -eq 'jvm.dll'})
         if($jvm.Count -ne 1 -or $jvm[0].FileName -ne (Join-Path $installRoot 'runtime/bin/server/jvm.dll')){throw 'Ordinary launcher did not load bundled JVM.'}
         if(-not $runtimeProcess.CloseMainWindow() -or -not $runtimeProcess.WaitForExit(15000) -or -not $plainProcess.WaitForExit(5000) -or $runtimeProcess.ExitCode -ne 0 -or $plainProcess.ExitCode -ne 0){throw 'Ordinary app did not close cleanly.'}

@@ -40,20 +40,41 @@ public final class AudioFiles {
         safeDirectory(directory);
         Path target = directory.resolve(file.fileName());
         if (Files.exists(target, LinkOption.NOFOLLOW_LINKS) && (!Files.isRegularFile(target, LinkOption.NOFOLLOW_LINKS)
-                || !target.toRealPath().getParent().equals(directory.toRealPath()))) throw new IOException("Đường dẫn cache audio không an toàn.");
+                || !target.toRealPath().getParent().equals(directory.toRealPath()))) throw unsafe();
         return target;
     }
-    private static void safeDirectory(Path directory) throws IOException {
-        // Inspect existing parents before creating children, including Windows junctions.
-        Path current = directory.getRoot();
-        for (Path part : directory) {
-            current = current.resolve(part);
-            if (Files.exists(current, LinkOption.NOFOLLOW_LINKS)) {
-                if (!Files.isDirectory(current, LinkOption.NOFOLLOW_LINKS) || !current.toRealPath().equals(current))
-                    throw new IOException("Đường dẫn cache audio không an toàn.");
-            } else Files.createDirectory(current);
+    /**
+     * Parents above the configured root belong to the platform and may be junctions or 8.3 names
+     * (for example D:\a or C:\Users\RUNNER~1 on hosted runners), so they are not inspected. The
+     * root and every directory below it must be a plain directory - no symlink, junction or other
+     * reparse point - and must resolve to the real root plus the same child names, so nothing
+     * inside the cache can redirect a write outside it.
+     */
+    private void safeDirectory(Path directory) throws IOException {
+        if (!directory.startsWith(root) || directory.equals(root)) throw unsafe();
+        try { Files.createDirectories(root); } // tolerates concurrent creators of the same root
+        catch (FileAlreadyExistsException notADirectory) { throw unsafe(); }
+        plainDirectory(root);
+        Path current = root, expected = root.toRealPath();
+        for (Path part : root.relativize(directory)) {
+            current = current.resolve(part); expected = expected.resolve(part);
+            if (!Files.exists(current, LinkOption.NOFOLLOW_LINKS)) {
+                try { Files.createDirectory(current); }
+                catch (FileAlreadyExistsException concurrentCreator) {
+                    // Another view/process may share this cache; validate its entry below.
+                }
+            }
+            plainDirectory(current);
+            if (!current.toRealPath().equals(expected)) throw unsafe();
         }
     }
+    private static void plainDirectory(Path directory) throws IOException {
+        java.nio.file.attribute.BasicFileAttributes attributes = Files.readAttributes(directory,
+                java.nio.file.attribute.BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
+        // On Windows a junction is a directory that is also "other" (a reparse point).
+        if (!attributes.isDirectory() || attributes.isSymbolicLink() || attributes.isOther()) throw unsafe();
+    }
+    private static IOException unsafe() { return new IOException("Đường dẫn cache audio không an toàn."); }
     public void download(AudioApi api, AudioManifestResponse manifest, LongConsumer progress) throws Exception {
         validate(manifest, manifest.attemptId()); long completed = 0;
         for (var descriptor : manifest.files()) {
