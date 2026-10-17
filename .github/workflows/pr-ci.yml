@@ -2,12 +2,15 @@ name: PR CI
 
 on:
   pull_request:
+  # Stabilization branches are verified on push too, before a PR exists for them.
+  push:
+    branches: ['stabilize/**']
 
 permissions:
   contents: read
 
 concurrency:
-  group: pr-ci-${{ github.event.pull_request.number }}
+  group: pr-ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
