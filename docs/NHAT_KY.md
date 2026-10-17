@@ -651,3 +651,8 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 - Còn dở: owner duyệt QD-31..34, C xác nhận C1/E1; LAN/nghe thật/máy sạch/tải/E2 NOT RUN; nguyên nhân khóa profile Edge (không phải tiến trình user-mode) chưa xác nhận.
 - Tiếp theo: owner review Draft PR vào nhánh PR39, merge theo mục H của báo cáo.
 - Cần người khác: A/C (QD-31, QD-32), A/B (QD-34), B (QD-33, đóng PR45), C (C1, E1).
+
+## 2026-10-18 · A · T3-A3 hook delta và lỗi server
+- Tạo nhánh `feat/t3-a3-delta-server-hooks` từ main `6ac8835`; review code đã tích hợp từ C2/C4 theo scope A: auth trước dedup, active socket/collector/epoch, RAM freshness/TTL, ACK/push assignment và persistence event/gap/presence. Không viết lại collector/reducer, không thêm migration.
+- Thêm regression hai `MonitoringStateService` trước/sau restart: server instance và sync epoch đổi, replay full epoch cũ bị `STALE`, OPEN/full mới phục hồi. Thêm contract [MONITORING_SERVER_HOOKS](MONITORING_SERVER_HOOKS.md).
+- Targeted31 PASS; full package912 PASS,58 opt-in skip. `smoke-a3.ps1` REAL PostgreSQL18.6/HTTP/WS PASS deferred COMMIT rollback + retryable ERROR/no success ACK/warning. `smoke-t3c2.ps1` REAL Spring restart cùng port/PG/HTTP/WS/client PASS persisted auth/history, new instance/epoch, reconnect/full; schema TEST tự xóa. LAN hai máy/human C review NOT RUN, tracker gốc giữ nguyên. [Evidence](../evidence/t3-a3/2026-10-18-verification.md).
