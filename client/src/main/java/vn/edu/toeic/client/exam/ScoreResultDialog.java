@@ -48,7 +48,7 @@ public final class ScoreResultDialog {
 
         VBox listeningBox = new VBox(4);
         listeningBox.setAlignment(Pos.CENTER);
-        Label lTitle = new Label("🎧 LISTENING");
+        Label lTitle = new Label(result.listeningInterrupted() ? "🎧 LISTENING — GIÁN ĐOẠN" : "🎧 LISTENING");
         lTitle.setStyle("-fx-text-fill: #c084fc; -fx-font-weight: 700; -fx-font-size: 12px;");
         Label lVal = new Label(result.listeningCorrect() + " câu đúng");
         lVal.setStyle("-fx-text-fill: #f1f5f9; -fx-font-size: 16px; -fx-font-weight: 700;");
@@ -77,11 +77,20 @@ public final class ScoreResultDialog {
         });
 
         VBox root = new VBox(20, header, subHeader, scoreCard, timeInfo, closeBtn);
+        if (result.listeningInterrupted()) {
+            Label warning = new Label("Phần Listening đã bị gián đoạn. Điểm và trạng thái dưới đây do server xác nhận. "
+                    + "Hãy liên hệ giám thị để xem xét tổ chức lại lượt thi.");
+            warning.setId("listening-interruption-warning");
+            warning.setWrapText(true);
+            warning.setMaxWidth(Double.MAX_VALUE);
+            warning.setStyle("-fx-text-fill: #fde68a; -fx-background-color: #422006; -fx-padding: 12px; -fx-font-size: 13px;");
+            root.getChildren().add(2, warning);
+        }
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(30));
         root.setStyle("-fx-background-color: #0b0f19;");
 
-        Scene scene = new Scene(root, 480, 460);
+        Scene scene = new Scene(root, 480, result.listeningInterrupted() ? 580 : 460);
         if (ScoreResultDialog.class.getResource("/styles.css") != null) {
             scene.getStylesheets().add(ScoreResultDialog.class.getResource("/styles.css").toExternalForm());
         }

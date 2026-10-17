@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import vn.edu.toeic.client.InvalidServerResponseException;
 
@@ -165,14 +166,15 @@ class ExamHistoryReadTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"SUBMITTED", "TIMED_OUT"})
-    void finalResultsReadStatusOnlyWithoutPaperWriterOrMonitoring(String state) throws Exception {
+    @CsvSource({"SUBMITTED,true", "SUBMITTED,false", "TIMED_OUT,true", "TIMED_OUT,false"})
+    void finalResultsReadStatusOnlyWithoutPaperWriterOrMonitoring(String state, boolean interrupted) throws Exception {
         try (Fixture f = new Fixture()) {
-            f.body.set(status(state));
+            f.body.set(status(state).replace("\"savedRevision\":6", "\"savedRevision\":6,\"listeningInterrupted\":" + interrupted));
             ExamSession.Result result = ExamResults.open(f.api, "A001").join();
             assertThat(result.state()).isEqualTo(state);
             assertThat(result.correctCount()).isEqualTo(1);
             assertThat(result.score()).isEqualTo(1);
+            assertThat(result.listeningInterrupted()).isEqualTo(interrupted);
             assertThat(f.calls).containsExactly("GET /api/v1/attempts/A001/status");
         }
     }

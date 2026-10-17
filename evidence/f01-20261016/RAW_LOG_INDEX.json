@@ -1,0 +1,241 @@
+{
+    "files":  [
+                  {
+                      "path":  "jpackage-out/f01/before-launch-failed.out.log",
+                      "sha256":  "8edd72927a37d8124faf9555da9855dc9686a2948676f2befe258cf59d39dcce",
+                      "bytes":  9314
+                  },
+                  {
+                      "path":  "jpackage-out/f01/before-temp-failed.err.log",
+                      "sha256":  "5949786483e1c6bda71275b1e2641f218514b6563889cec358b533bcc194d95d",
+                      "bytes":  262
+                  },
+                  {
+                      "path":  "jpackage-out/f01/before-temp-failed.out.log",
+                      "sha256":  "c98f059d4fc06f7945ea476aed4f0a2f576b7db01c9a97da04bf61d826437ec6",
+                      "bytes":  8716
+                  },
+                  {
+                      "path":  "jpackage-out/f01/before.err.log",
+                      "sha256":  "4946cf11533799b276b5b312453e9450d17be62bcc07fd37de399814a271b820",
+                      "bytes":  289
+                  },
+                  {
+                      "path":  "jpackage-out/f01/before.out.log",
+                      "sha256":  "e5e4732ecee203bd9ba5cc1d42523440b821169cc2be4a9574b070ac63c93ed2",
+                      "bytes":  22976
+                  },
+                  {
+                      "path":  "jpackage-out/f01/clean.err.log",
+                      "sha256":  "9dcfa28552a89d0ea0ac89526728759feff898ae2ce34e4959f7f99a7a2e71b7",
+                      "bytes":  2128
+                  },
+                  {
+                      "path":  "jpackage-out/f01/clean.out.log",
+                      "sha256":  "abc72dce6e2f23da6ab004b01905155fd2152ae26f6ed2505ed7f51d8438ec07",
+                      "bytes":  3811575
+                  },
+                  {
+                      "path":  "jpackage-out/f01/concurrency.err.log",
+                      "sha256":  "7bb72655bc0e90fe43c52fea728bd405f2971f4764ee5f7a2c4f0208d7d7e096",
+                      "bytes":  144
+                  },
+                  {
+                      "path":  "jpackage-out/f01/concurrency.out.log",
+                      "sha256":  "9faef5f02e18be3b3e049a882901cae307b51af44329399123e884d16587b03f",
+                      "bytes":  5356
+                  },
+                  {
+                      "path":  "jpackage-out/f01/events.err.log",
+                      "sha256":  "7bb72655bc0e90fe43c52fea728bd405f2971f4764ee5f7a2c4f0208d7d7e096",
+                      "bytes":  144
+                  },
+                  {
+                      "path":  "jpackage-out/f01/events.out.log",
+                      "sha256":  "814edafd938bda5b88dfa7a71107dfe67b551da8d468c8c81c197de92c82a4a4",
+                      "bytes":  3910
+                  },
+                  {
+                      "path":  "jpackage-out/f01/flow.err.log",
+                      "sha256":  "7bb72655bc0e90fe43c52fea728bd405f2971f4764ee5f7a2c4f0208d7d7e096",
+                      "bytes":  144
+                  },
+                  {
+                      "path":  "jpackage-out/f01/flow.out.log",
+                      "sha256":  "01ee2a6c514727d99bf9392a8607eda80aff494b8369dc82dbecb45c1b4f7ca7",
+                      "bytes":  3258
+                  },
+                  {
+                      "path":  "jpackage-out/f01/full-first.err.log",
+                      "sha256":  "b752de7a51a6e94be369786b6b827f2b88f1d8a98a4e1818239366c0c39b08e8",
+                      "bytes":  209
+                  },
+                  {
+                      "path":  "jpackage-out/f01/full-first.out.log",
+                      "sha256":  "fea43d2b5f91924c80d3d8479114945bec75954ba0d592ba97f7b31c9ea56009",
+                      "bytes":  3424
+                  },
+                  {
+                      "path":  "jpackage-out/f01/full.err.log",
+                      "sha256":  "902f350b7d5dd24cf86510585c5ea2c5accf2d88b1cfc111a3cf11087a6ac784",
+                      "bytes":  142
+                  },
+                  {
+                      "path":  "jpackage-out/f01/full.out.log",
+                      "sha256":  "3430889159b285007d6ac2e9362ed492b2224faf834a0a9a38d8782254cfa1f4",
+                      "bytes":  4205
+                  },
+                  {
+                      "path":  "jpackage-out/f01/gui.err.log",
+                      "sha256":  "dc5228c34bfd45ee6159b8602f0981dda2f496214d0ef9c421be9fbbe3ffb3b6",
+                      "bytes":  316
+                  },
+                  {
+                      "path":  "jpackage-out/f01/gui.out.log",
+                      "sha256":  "72b6fc1a00cdafc93a9398f7f3cb719386b2ff4ba222f674d7d17929d1bef00d",
+                      "bytes":  1198
+                  },
+                  {
+                      "path":  "jpackage-out/f01/initdb.err.log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "bytes":  0
+                  },
+                  {
+                      "path":  "jpackage-out/f01/initdb.out.log",
+                      "sha256":  "8e0c7f4d8b79d802acf5da29da4dc60bc47b4711807e77edea7f50ced488b70e",
+                      "bytes":  991
+                  },
+                  {
+                      "path":  "jpackage-out/f01/installed.err.log",
+                      "sha256":  "ba70b6f658a7cd6bfa3d3fbdac1e672693547a9e5a82110eeaf87fc46a723682",
+                      "bytes":  169
+                  },
+                  {
+                      "path":  "jpackage-out/f01/installed.out.log",
+                      "sha256":  "af27f7eaf41f5c81018c5855b6c707a184f38b751aeca85e1a1ada9418126d3e",
+                      "bytes":  1433
+                  },
+                  {
+                      "path":  "jpackage-out/f01/msi-build.err.log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "bytes":  0
+                  },
+                  {
+                      "path":  "jpackage-out/f01/msi-build.out.log",
+                      "sha256":  "1d446498c5f2397fc573a3d2542b5c68f4b8fc9545aca6a454b82f86318cdb14",
+                      "bytes":  276
+                  },
+                  {
+                      "path":  "jpackage-out/f01/package.err.log",
+                      "sha256":  "40b6ebadb0d08a91a09672358aa94dd3b30df5d567b6d380778e73715c3834bf",
+                      "bytes":  2128
+                  },
+                  {
+                      "path":  "jpackage-out/f01/package.out.log",
+                      "sha256":  "1e08d3bfca3d4e62163f8eef4dda1f415e152652f1049f50bf6b6ecd7fcef7df",
+                      "bytes":  3809276
+                  },
+                  {
+                      "path":  "jpackage-out/f01/pg-start.err.log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "bytes":  0
+                  },
+                  {
+                      "path":  "jpackage-out/f01/pg-start.out.log",
+                      "sha256":  "46038efb813fbca18a92272496901190638dea3f97b51f7af0daa1ca2eb13818",
+                      "bytes":  54
+                  },
+                  {
+                      "path":  "jpackage-out/f01/pg-stop.err.log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "bytes":  0
+                  },
+                  {
+                      "path":  "jpackage-out/f01/pg-stop.out.log",
+                      "sha256":  "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb",
+                      "bytes":  58
+                  },
+                  {
+                      "path":  "jpackage-out/f01/postgres-version.err.log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "bytes":  0
+                  },
+                  {
+                      "path":  "jpackage-out/f01/postgres-version.out.log",
+                      "sha256":  "21e8dd0f2768e0765d069e2a498551a5dce82fe071e157acd98f8f495ad6cce7",
+                      "bytes":  28
+                  },
+                  {
+                      "path":  "jpackage-out/f01/postgres.log",
+                      "sha256":  "6365e6184e55218578c54a365863f67043f4a0e22c47550e421f2e8ad6aad142",
+                      "bytes":  12433
+                  },
+                  {
+                      "path":  "jpackage-out/f01/schema-count-first.err.log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "bytes":  0
+                  },
+                  {
+                      "path":  "jpackage-out/f01/schema-count-first.out.log",
+                      "sha256":  "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+                      "bytes":  3
+                  },
+                  {
+                      "path":  "jpackage-out/f01/schema-count.err.log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "bytes":  0
+                  },
+                  {
+                      "path":  "jpackage-out/f01/schema-count.out.log",
+                      "sha256":  "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+                      "bytes":  3
+                  },
+                  {
+                      "path":  "jpackage-out/f01/targeted.err.log",
+                      "sha256":  "c55f323bf45a454381a7c756a1153df501f72af41fa9801740072e028c182e1c",
+                      "bytes":  461
+                  },
+                  {
+                      "path":  "jpackage-out/f01/targeted.out.log",
+                      "sha256":  "b55f6bf7f83b373dd69b4079cd44f0d301ee00505bfc07e8c5f48dcf6fbf6541",
+                      "bytes":  4904
+                  },
+                  {
+                      "path":  "jpackage-out/f01/versions.err.log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "bytes":  0
+                  },
+                  {
+                      "path":  "jpackage-out/f01/versions.out.log",
+                      "sha256":  "5ce5f3311ff895e4a21ed058902f3ad86ce7f63c63314bfe5dc705b1aec04cde",
+                      "bytes":  311
+                  },
+                  {
+                      "path":  "target/t3-b5/install-765a39ad46754b7e803be9c9e2d45efe/install.log",
+                      "sha256":  "c24b328eb38172726ffcf81924f09b239a4e0695b6d42d72f93c48c90e517d3f",
+                      "bytes":  610802
+                  },
+                  {
+                      "path":  "target/t3-b5/install-765a39ad46754b7e803be9c9e2d45efe/tests.log",
+                      "sha256":  "0fc718edd7055d6c1278877c40167b9fcdf57b3e9f49cd480e787d4acecea3f7",
+                      "bytes":  8594472
+                  },
+                  {
+                      "path":  "target/t3-b5/install-765a39ad46754b7e803be9c9e2d45efe/uninstall.log",
+                      "sha256":  "004a7dc81fb3bd53ea82449ca0a9f8f86002ceaff392544a6774d53238656f81",
+                      "bytes":  626054
+                  },
+                  {
+                      "path":  "target/t3-b5/package-353594bade6e4df7be35b22bbc0b7196/build.log",
+                      "sha256":  "ae2c3d6616a8e3a6d3c9a8a398438bf242dfa4a50c451ae2e5edabafe60f7a54",
+                      "bytes":  12380
+                  },
+                  {
+                      "path":  "target/t3-b5/package-353594bade6e4df7be35b22bbc0b7196/jpackage.log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "bytes":  0
+                  }
+              ],
+    "codeSource":  "d19c63902725662aeb6f43c6f04ca80ea6caff42",
+    "storage":  "ignored local; immutable after cluster shutdown and installer uninstall"
+}
