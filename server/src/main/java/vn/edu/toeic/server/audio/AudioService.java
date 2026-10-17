@@ -110,6 +110,8 @@ public class AudioService {
         Attempt attempt = ownedAttempt(user, attemptId, true);
         if (!session.id().equals(attempt.sessionId())) throw error(ErrorCode.CONFLICT, "Lượt thi đã chuyển ca.", request.requestId());
         requireActive(attempt, request.requestId());
+        // QD-29: a legacy ID outside monitoring v0 never becomes READY, so start cannot include it.
+        vn.edu.toeic.server.exam.ExamService.requireMonitorable(attemptId, request.requestId());
         if (attempt.writerEpoch() != request.writerEpoch()) throw error(ErrorCode.STALE, "Phiên ghi cũ không được báo READY.", request.requestId());
         if (!"SCHEDULED".equals(session.state()) || session.startId() != null)
             throw error(ErrorCode.INVALID_STATE, "READY chỉ được thay đổi trong bước chuẩn bị.", request.requestId());

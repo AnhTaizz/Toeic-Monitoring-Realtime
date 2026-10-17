@@ -207,6 +207,7 @@ public class ExamService {
         if (!"ACTIVE".equalsIgnoreCase(attempt.state())) {
             throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.INVALID_STATE, "Lượt thi không ở trạng thái làm bài (state=" + attempt.state() + ")", request.requestId());
         }
+        requireMonitorable(attempt.attemptId(), request.requestId());
 
         Instant decisionAt = jdbc.sql("SELECT clock_timestamp()").query(Instant.class).single();
 
@@ -530,9 +531,12 @@ public class ExamService {
             throw new InvalidExamException("Không tìm thấy đề thi với mã: " + request.examId());
         }
 
-        jdbc.sql("""
+        // A concurrent request with the same sessionId passes the count check above too; the loser
+        // waits on the winner's key here and then gets 0 rows instead of a unique-violation 500.
+        int sessionInserted = jdbc.sql("""
                 INSERT INTO exam_sessions (session_id, exam_id, title, duration_seconds, state, created_by)
                 VALUES (:sessionId, :examId, :title, :duration, 'SCHEDULED', :createdBy)
+                ON CONFLICT (session_id) DO NOTHING
                 """)
                 .param("sessionId", request.sessionId())
                 .param("examId", request.examId())
@@ -540,6 +544,9 @@ public class ExamService {
                 .param("duration", request.durationSeconds())
                 .param("createdBy", proctor.userId())
                 .update();
+        if (sessionInserted != 1) {
+            throw new InvalidExamException("Ca thi với mã '" + request.sessionId() + "' đã tồn tại");
+        }
 
         List<String> proctorList = new ArrayList<>(request.proctorUsernames());
         if (!proctorList.contains(proctor.username())) {
@@ -771,6 +778,7 @@ public class ExamService {
         if (!"ACTIVE".equalsIgnoreCase(attempt.state())) {
             throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.INVALID_STATE, "Lượt thi đã kết thúc hoặc đã nộp (state=" + attempt.state() + ")", request.requestId());
         }
+        requireMonitorable(attempt.attemptId(), request.requestId());
 
         if (request.writerEpoch() != attempt.writerEpoch()) {
             throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.STALE, "Phiên ghi không còn hợp lệ (stale writerEpoch)", request.requestId());
@@ -1058,6 +1066,7 @@ public class ExamService {
         if (!"ACTIVE".equalsIgnoreCase(attempt.state())) {
             throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.INVALID_STATE, "Lượt thi không ở trạng thái làm bài (state=" + attempt.state() + ")", request.requestId());
         }
+        requireMonitorable(attempt.attemptId(), request.requestId());
 
         if (attempt.examId() == null || attempt.examId().isBlank()) {
             throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT,
@@ -1200,6 +1209,19 @@ public class ExamService {
                 answers,
                 row.listeningInterrupted()
         );
+    }
+
+    /**
+     * QD-29 legacy ACTIVE: an attempt whose stored ID is outside monitoring v0 stays readable
+     * (status/history) but cannot be entered, resumed, saved or submitted. Called after the row
+     * lock and the ownership/state checks, so it never reveals another candidate's attempt and
+     * never changes answers, deadline or writerEpoch.
+     */
+    public static void requireMonitorable(String attemptId, String requestId) {
+        if (!vn.edu.toeic.protocol.exam.AttemptIdentifier.monitoringV0(attemptId)) {
+            throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.INVALID_STATE,
+                    vn.edu.toeic.protocol.exam.AttemptIdentifier.MONITORING_INCOMPATIBLE_MESSAGE, requestId);
+        }
     }
 
     private boolean listeningInterrupted(String attemptId) {
