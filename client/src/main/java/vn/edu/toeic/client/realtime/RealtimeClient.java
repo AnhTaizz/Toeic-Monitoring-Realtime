@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -107,6 +108,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     private final CopyOnWriteArrayList<Consumer<MessageEnvelope<JsonObject>>> messageListeners = new CopyOnWriteArrayList<>();
     private final CopyOnWriteArrayList<Consumer<String>> problemListeners = new CopyOnWriteArrayList<>();
     private final Map<String, MessageEnvelope<JsonObject>> pendingAcks = new HashMap<>();
+    private final Set<String> forgottenAcks = new LinkedHashSet<>();
     private final Map<String, Long> heartbeatDeadlines = new HashMap<>();
     private final Set<CompletableFuture<Void>> writes = new HashSet<>();
     private volatile ConnectionState state = ConnectionState.DISCONNECTED;
@@ -296,6 +298,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
             if (previous == null && !"HEARTBEAT".equals(copy.type()) && settings.maxPendingAcks() > 1
                     && pendingAcks.values().stream().filter(p -> !"HEARTBEAT".equals(p.type())).count() >= settings.maxPendingAcks() - 1)
                 return failed("Dành một ACK slot cho heartbeat");
+            forgottenAcks.remove(copy.requestId());
             pendingAcks.put(copy.requestId(), copy);
             if ("HEARTBEAT".equals(copy.type()) || "MONITORING_SYNC_CLOSE".equals(copy.type())) heartbeatDeadlines.put(copy.requestId(), System.nanoTime() + settings.heartbeat().multipliedBy(3).toNanos());
         }
@@ -399,6 +402,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         if (opening != null) opening.cancel(true);
         opening = null;
         pendingAcks.clear();
+        forgottenAcks.clear();
         observationConnectionId=null;
         heartbeatDeadlines.clear();
         for (CompletableFuture<Void> write : Set.copyOf(writes)) {
@@ -425,7 +429,11 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         return () -> monitoringBinding.compareAndSet(binding, null);
     }
     @Override public synchronized void forgetPending(String requestId) {
-        pendingAcks.remove(requestId); heartbeatDeadlines.remove(requestId);
+        if (pendingAcks.remove(requestId) != null) {
+            forgottenAcks.add(requestId);
+            while (forgottenAcks.size() > settings.maxPendingAcks()) forgottenAcks.remove(forgottenAcks.iterator().next());
+        }
+        heartbeatDeadlines.remove(requestId);
     }
     /** Fresh /auth/me result only; caller must stop old delivery before changing scope. */
     public synchronized void updateScope(Set<String> freshScope) {
@@ -472,6 +480,9 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                     requiredString(body, "type"), requiredString(body, "messageId"), optionalIdentifier(body, "requestId"),
                     optionalIdentifier(body, "attemptId"), requiredString(body, "traceId"), body.getAsJsonObject("payload"));
             validateHeader(message);
+            if (("ACK".equals(message.type()) || "ERROR".equals(message.type()) || "MONITORING_RESYNC".equals(message.type()))
+                    && message.requestId()!=null && !pendingAcks.containsKey(message.requestId())
+                    && forgottenAcks.remove(message.requestId())) return;
             if ("ACK".equals(message.type())) {
                 validateScope(message.attemptId());
                 MessageEnvelope<JsonObject> request = pendingAcks.get(message.requestId());

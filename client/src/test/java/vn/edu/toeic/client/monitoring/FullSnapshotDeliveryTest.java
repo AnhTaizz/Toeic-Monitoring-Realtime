@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static vn.edu.toeic.client.monitoring.MonitoringDeliveryTest.*;
 import com.google.gson.JsonObject;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.Test;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
@@ -83,5 +84,15 @@ class FullSnapshotDeliveryTest {
             assertThat(f.transport.sendForGeneration(new MessageEnvelope<>("v0","MONITORING_SYNC_OPEN","MOCK-id","MOCK-id","MOCK-A","MOCK-t",new JsonObject()),1))
                     .isCompletedExceptionally();assertThat(f.transport.sent).isEmpty();
         }
+    }
+    @Test void stoppedWaitsUntilCloseWriteReleasesAdapterCorrelation() throws Exception {
+        Fixture f=new Fixture();
+        try {
+            f.open();f.transport.write=new CompletableFuture<>();f.close();
+            var close=f.transport.sent.getLast();assertThat(close.type()).isEqualTo("MONITORING_SYNC_CLOSE");
+            assertThat(f.full.stopped()).isNotDone();assertThat(f.transport.forgotten).doesNotContain(close.requestId());
+            f.transport.write.complete(null);f.full.stopped().get(2,TimeUnit.SECONDS);
+            assertThat(f.transport.forgotten).contains(close.requestId());
+        } finally { f.close(); }
     }
 }

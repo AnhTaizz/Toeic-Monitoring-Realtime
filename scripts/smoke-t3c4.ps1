@@ -29,11 +29,11 @@ try {
         topology='One Windows host; existing PG + own TEST Spring + two candidate child JVMs + actual proctor Application; LOOPBACK not LAN';
         source='REAL ProcessHandle/owned headless Edge; default factory normal; TEST instrumented factory for explicit faults only';fault='SIMULATED ACK observer suppression/base-seq/source wait-exception/TEST DB triggers';
         candidateModes='DELTA explicit opt-in with correlated capability; other candidate FULL opt-in off; disabled server fallback FULL';
-        pollMillis=1000;refreshMillis=2000;fullMillis=30000;stateStaleMillis=6000;testTtlMillis=12000;productionTtlMillis=300000;heartbeatMillis=250;ackMillis=250;maxAttempts=5;
+        pollMillis=1000;refreshMillis=2000;fullMillis=30000;stateStaleMillis=6000;testTtlMillis=12000;productionTtlMillis=300000;heartbeatMillis=250;ackMillis=1500;maxAttempts=5;
         seed='NOT_USED; deterministic owned fault toggles';humanBReview='NOT RUN';lanSecondMachine='NOT RUN / environment not provided';gate='PREPARATION ONLY;20Oct decision not made';e1e2='NOT RUN';
         clientJarSha256=(Get-FileHash 'client/target/client-0.1.0-SNAPSHOT-all.jar').Hash.ToLowerInvariant();serverJarSha256=(Get-FileHash 'server/target/server-0.1.0-SNAPSHOT.jar').Hash.ToLowerInvariant();sourceManifest=$manifest}
     [IO.File]::WriteAllText((Join-Path $output 'metadata.json'),($metadata | ConvertTo-Json -Depth 15),[Text.UTF8Encoding]::new($false))
-    $gateJavaArgs=@('-Dstdout.encoding=UTF-8','-Dstderr.encoding=UTF-8','-Duser.timezone=UTC','-Dprism.order=sw','-Dtoeic.realtime.delta-experimental=true','-Dtoeic.realtime.heartbeatMillis=250',
+    $gateJavaArgs=@('-Dstdout.encoding=UTF-8','-Dstderr.encoding=UTF-8','-Duser.timezone=UTC',"-Duser.home=$output",'-Dprism.order=sw','-Dtoeic.realtime.delta-experimental=true','-Dtoeic.realtime.heartbeatMillis=250',
         '-Dtoeic.measurement.enabled=true',"-Dtoeic.measurement.runId=$runId","-Dtoeic.measurement.sourceSha=$sourceSha","-Dtoeic.measurement.directory=$raw",
         '-Dtoeic.measurement.workloadLabel=REAL','-Dtoeic.measurement.faultLabel=SIMULATED',"-Dtoeic.test.gate.output=$output",
         "-Dtoeic.test.gate.clientJar=$((Resolve-Path 'client/target/client-0.1.0-SNAPSHOT-all.jar').Path)","-Dtoeic.test.gate.classes=$((Resolve-Path $classes).Path)",
