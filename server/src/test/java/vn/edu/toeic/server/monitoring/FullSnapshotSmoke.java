@@ -322,12 +322,26 @@ public final class FullSnapshotSmoke {
                     String entry=locked instanceof java.nio.file.FileSystemException f && f.getFile()!=null
                             ? base.relativize(Path.of(f.getFile()).toAbsolutePath().normalize()).toString() : "?";
                     System.err.println("T2-C1 diagnostic edge-profile lockedEntry="+entry+" holders="+edgeProfileHolders(base.getFileName().toString())
-                            +" lockers="+(locked instanceof java.nio.file.FileSystemException f && f.getFile()!=null ? fileLockers(Path.of(f.getFile())) : "?"));
-                    throw locked;
+                            +" lockers="+(locked instanceof java.nio.file.FileSystemException f && f.getFile()!=null ? fileLockers(Path.of(f.getFile())) : "?")
+                            +" reason="+(locked instanceof java.nio.file.FileSystemException f && f.getReason()!=null ? f.getReason().replaceAll("[^\\p{L}\\p{N} .,'-]","") : "?")
+                            +" releasedAfterExtraMs="+releaseDelay(base));
+                    throw locked; // Still a FAIL: the measurement above only informs the deadline choice.
                 }
                 Thread.sleep(100);
             }
         }
+    }
+    /** Diagnostic only: how much longer the owned profile stays undeletable after the deadline (max 60 s). */
+    private static String releaseDelay(Path base) {
+        long start=System.nanoTime(),limit=start+TimeUnit.SECONDS.toNanos(60);
+        while(System.nanoTime()<limit) {
+            try(var paths=Files.walk(base)) {
+                for(Path item:paths.sorted(java.util.Comparator.reverseOrder()).toList()) if(item.toAbsolutePath().normalize().startsWith(base)) Files.deleteIfExists(item);
+                if(!Files.exists(base)) return String.valueOf(TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-start));
+            } catch(java.io.IOException | java.io.UncheckedIOException stillLocked) { }
+            try {Thread.sleep(200);} catch(InterruptedException stop) {Thread.currentThread().interrupt();return "INTERRUPTED";}
+        }
+        return ">60000";
     }
     /** Image names of processes that Windows Restart Manager reports as holding the file; no PIDs or paths. */
     private static String fileLockers(Path file) {
