@@ -1,0 +1,208 @@
+{
+  "final-4fbc538": {
+    "clean": {
+      "startUtc": "2026-10-17T07:52:30.6847993Z",
+      "endUtc": "2026-10-17T07:56:21.2893105Z",
+      "source": "4fbc5383af9e2a1377d8281f159178ff23666012",
+      "exitCode": 0
+    },
+    "concurrency": {
+      "startUtc": "2026-10-17T08:01:00.4092386Z",
+      "endUtc": "2026-10-17T08:01:18.8014222Z",
+      "source": "4fbc5383af9e2a1377d8281f159178ff23666012",
+      "exitCode": 0
+    },
+    "events": {
+      "startUtc": "2026-10-17T08:24:39.0110171Z",
+      "endUtc": "2026-10-17T08:27:01.3015783Z",
+      "source": "4fbc5383af9e2a1377d8281f159178ff23666012",
+      "exitCode": -1
+    },
+    "flow": {
+      "startUtc": "2026-10-17T08:00:36.8792578Z",
+      "endUtc": "2026-10-17T08:01:00.3760480Z",
+      "source": "4fbc5383af9e2a1377d8281f159178ff23666012",
+      "exitCode": 0
+    },
+    "full": {
+      "startUtc": "2026-10-17T08:02:19.3790584Z",
+      "endUtc": "2026-10-17T08:24:38.9447191Z",
+      "source": "4fbc5383af9e2a1377d8281f159178ff23666012",
+      "exitCode": -1
+    },
+    "gui": {
+      "startUtc": "2026-10-17T08:01:18.8151460Z",
+      "endUtc": "2026-10-17T08:02:19.3513321Z",
+      "source": "4fbc5383af9e2a1377d8281f159178ff23666012",
+      "exitCode": 0
+    },
+    "initdb": {
+      "startUtc": "2026-10-17T07:52:24.1244132Z",
+      "endUtc": "2026-10-17T07:52:29.7470144Z",
+      "source": "4fbc5383af9e2a1377d8281f159178ff23666012",
+      "exitCode": 0
+    },
+    "package": {
+      "startUtc": "2026-10-17T07:56:21.6436050Z",
+      "endUtc": "2026-10-17T08:00:36.2857074Z",
+      "source": "4fbc5383af9e2a1377d8281f159178ff23666012",
+      "exitCode": 0
+    },
+    "pg-start": {
+      "startUtc": "2026-10-17T07:52:29.8349096Z",
+      "endUtc": "2026-10-17T07:52:30.6179965Z",
+      "source": "4fbc5383af9e2a1377d8281f159178ff23666012",
+      "exitCode": 0
+    },
+    "_note": "FAIL (pipeline defect): smoke classpath lacked SmokeCleanup -> NoClassDefFoundError; main caught only Exception so JVM hung 22 min, killed (exitCode -1). Run stopped; its orphan MSI build installed a TEST product that was later removed by product code."
+  },
+  "final-3702b6d": {
+    "clean": {
+      "startUtc": "2026-10-17T08:27:19.2838654Z",
+      "endUtc": "2026-10-17T08:27:24.9667148Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 1
+    },
+    "initdb": {
+      "startUtc": "2026-10-17T08:27:11.8310262Z",
+      "endUtc": "2026-10-17T08:27:18.2109050Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "pg-start": {
+      "startUtc": "2026-10-17T08:27:18.3100286Z",
+      "endUtc": "2026-10-17T08:27:18.9871799Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "pg-stop": {
+      "startUtc": "2026-10-17T08:27:26.0726163Z",
+      "endUtc": "2026-10-17T08:27:26.3811958Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "schema-count": {
+      "startUtc": "2026-10-17T08:27:25.6909857Z",
+      "endUtc": "2026-10-17T08:27:26.0432990Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "_note": "FAIL (environment): mvn clean could not delete target/t3-b5 build.log still held by the orphan jpackage/light.exe of final-4fbc538."
+  },
+  "final-3702b6d-r2": {
+    "clean": {
+      "startUtc": "2026-10-17T08:28:18.2389873Z",
+      "endUtc": "2026-10-17T08:28:23.1448182Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 1
+    },
+    "initdb": {
+      "startUtc": "2026-10-17T08:28:12.3078624Z",
+      "endUtc": "2026-10-17T08:28:17.5328133Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "pg-start": {
+      "startUtc": "2026-10-17T08:28:17.6123596Z",
+      "endUtc": "2026-10-17T08:28:18.1484027Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "pg-stop": {
+      "startUtc": "2026-10-17T08:28:23.5539393Z",
+      "endUtc": "2026-10-17T08:28:23.7519670Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "schema-count": {
+      "startUtc": "2026-10-17T08:28:23.3505175Z",
+      "endUtc": "2026-10-17T08:28:23.5323797Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "_note": "FAIL (environment): started while the same orphan still held jpackage.log; stopped immediately."
+  },
+  "final-3702b6d-r3": {
+    "clean": {
+      "startUtc": "2026-10-17T08:30:30.3992715Z",
+      "endUtc": "2026-10-17T08:34:16.0717329Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "concurrency": {
+      "startUtc": "2026-10-17T08:38:22.8184436Z",
+      "endUtc": "2026-10-17T08:38:41.7506453Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "events": {
+      "startUtc": "2026-10-17T08:39:48.3989456Z",
+      "endUtc": "2026-10-17T08:40:14.2481963Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "flow": {
+      "startUtc": "2026-10-17T08:37:59.7635594Z",
+      "endUtc": "2026-10-17T08:38:22.7729764Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "full": {
+      "startUtc": "2026-10-17T08:39:17.6119462Z",
+      "endUtc": "2026-10-17T08:39:48.3722357Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "gui": {
+      "startUtc": "2026-10-17T08:38:41.7710855Z",
+      "endUtc": "2026-10-17T08:39:17.5872061Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "initdb": {
+      "startUtc": "2026-10-17T08:30:22.4370077Z",
+      "endUtc": "2026-10-17T08:30:29.6239985Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "installed": {
+      "note": "install stage re-run; first attempt refused because a stale TEST install from run final-4fbc538 existed (removed by product code before this run)",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "endUtc": "2026-10-17T08:47:58.3292454Z",
+      "error": null,
+      "startUtc": "2026-10-17T08:43:15.7774083Z",
+      "status": "PASS"
+    },
+    "package": {
+      "startUtc": "2026-10-17T08:34:16.4383336Z",
+      "endUtc": "2026-10-17T08:37:59.4150360Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "pg-start": {
+      "startUtc": "2026-10-17T08:30:29.7579652Z",
+      "endUtc": "2026-10-17T08:30:30.3165722Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "pg-stop": {
+      "startUtc": "2026-10-17T08:41:29.1738086Z",
+      "endUtc": "2026-10-17T08:41:29.4587915Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "schema-count": {
+      "startUtc": "2026-10-17T08:41:29.0642794Z",
+      "endUtc": "2026-10-17T08:41:29.1644338Z",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+      "exitCode": 0
+    },
+    "msi-error": {
+      "endUtc": "2026-10-17T08:41:29.0586168Z",
+      "status": "FAIL_OR_BLOCKED",
+      "error": "ToeicMonitor already installed. Keep it; use another test user/machine.",
+      "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c"
+    },
+    "_note": "Final run. All Maven and smoke stages exit 0. Install stage first refused (stale TEST product from final-4fbc538 still registered); after uninstalling that TEST product by product code the install stage was re-run with control/installed-stage.ps1: PASS."
+  }
+}

@@ -532,3 +532,18 @@ PostgreSQL native18.1 TEST riêng,0schema còn lại và cluster đã dừng; kh
 ## Kiểm chứng RC tích hợp — 17/10/2026
 
 Source c224ba8, test/build tree trong evidence: [báo cáo và XML counts](../evidence/integration-final-20261017/REPORT.md). Clean test/package904PASS/2SKIP mỗi lượt, installed FullSuite906PASS/0SKIP. Flow41/0GAP,GUI11,PGconcurrency AT01/07/09/10,C1FULL/C2 PASS mới; Python12PASS. REAL PG/HTTP/WS/GUI/installed và MOCK/SIMULATED theo bảng evidence. PR43 history bounds2 test là subset của tổng. E1 chỉ rejoin/reanalysis raw lịch sử; physical LAN/hearing/soak/load/E2 NOT RUN. Không tự nâng AT/MT/LT/IT toàn case hoặc tracker thành hoàn tất; cần owner nghiệm thu.
+
+## Ổn định hóa 17/10/2026 — source `3702b6d`
+
+Lượt cuối `final-3702b6d-r3` trên cluster PostgreSQL 18 riêng, loopback; đếm từ XML. Không cộng test tập trung vào tổng (đã nằm trong tổng).
+
+| Suite | Kết quả | Ghi chú |
+|---|---|---|
+| Maven clean test / package | mỗi lượt 924 PASS, 0 FAIL, 4 SKIP (82 suite) | skip: symlink thiếu quyền, 8.3 tắt trên E:, 2 test cần app-image/installed |
+| MSI 0.3.10 installed FullSuite | 926 PASS, 0 FAIL, 2 SKIP | cài/gỡ TEST trên máy build, không phải máy thứ hai |
+| ExamFlow AT11 / concurrency AT01·07·09·10 / GUI 11 nhóm / C1 / C2 | PASS | C1/C2 cleanup PASS từng thành phần |
+| QD-29, lịch sử 0/1/5000/5001 cả 3 endpoint, cache audio, takeover replay | PASS | nằm trong tổng trên |
+| GitHub Actions windows-2025 | SUCCESS run 39017363076 | Maven mặc định, PG/GUI opt-in skip |
+| E1 analyzer + 84 raw | 12/12 PASS, 84/84 hash | kết quả 287/62/11 không đổi |
+
+FAIL trung gian giữ lại: CI 39012744164 (assert thông báo cũ, sửa `7c0491e`); `final-4fbc538` (classpath smoke, lỗi pipeline agent); `final-3702b6d`, `-r2` (môi trường); C1 với hạn 8 s: 11/24 FAIL (10 khóa profile Edge, 1 Edge không lên dashboard), hạn 45 s: 5/5 PASS. Vẫn NOT RUN: LAN hai máy, nghe thật, máy sạch, tải 1/5/10, E2. Chi tiết: [báo cáo](../evidence/stabilize-20261017/REPORT.md).

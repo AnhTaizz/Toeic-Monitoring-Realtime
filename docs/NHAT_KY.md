@@ -643,3 +643,11 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 - MSI0.3.9 source sạch c224ba8, SHA256 bef7528f77b35695904812b2959ea389b6ac790ba6fc8f9f91fc665632af604e;5439class packaged/final bằng byte;8class khác MSI0.3.8. Giữ artifact cũ.0schema/Edge/product TEST, dừng cluster riêng, không shared DB/Docker/firewall/registry app người dùng.
 - E1 raw84 truy cập được và hash trước/sau khớp; Java mới rejoin12byte-identical; analyzer Python12PASS,17output deterministic.287/62/11 không đổi; CPU mới time-weighted khác nhẹ, resource coverage OK. Raw/sourcec1601b5 giữ nguyên, không campaign mới/E2/LAN/load/hearing hoặc owner signoff.
 - QD29 PROPOSED_FOR_A_C_APPROVAL; A/C chốt fail-closed/legacy, A review history5001/HTTP500/UX, C xác nhận E1 mới, B xử lý45 và manual gates. C1 FAIL lịch sử giữ UNRESOLVED. [Báo cáo/counts/provenance/next actions](../evidence/integration-final-20261017/REPORT.md). Tracker/kế hoạch/nguon/migration giữ nguyên; hồ sơ commit riêng sau test, không đổi source/test/build/resources.
+
+## 2026-10-17 · agent · ổn định hóa bản tích hợp cuối
+- Đã làm: nhánh `stabilize/final-rc-20261017` từ RC `a447bfb`. QD-29 server chặn legacy ACTIVE (409) và va chạm tạo ca đồng thời (400 thay 500); lịch sử >5000 trả 409 không retry, dashboard báo đúng, trần body 8 MiB; cache audio hợp nhất fix race PR40 với policy junction, thay PR45; CI Windows của PR45 cherry-pick riêng; test takeover replay; cleanup C1/C2 báo từng thành phần, dừng Edge đúng thứ tự, hạn 45 s theo số đo.
+- Commit: `991ad0e`…`3702b6d` (16 commit), source test/MSI `3702b6d`.
+- Đã kiểm: clean test/package 924 PASS/4 SKIP; MSI 0.3.10 installed FullSuite 926 PASS/2 SKIP; Flow/concurrency/GUI/C1/C2 PASS; CI Windows SUCCESS; E1 84 hash + 12 Python PASS. Lượt FAIL trung gian ghi trong [báo cáo](../evidence/stabilize-20261017/REPORT.md).
+- Còn dở: owner duyệt QD-31..34, C xác nhận C1/E1; LAN/nghe thật/máy sạch/tải/E2 NOT RUN; nguyên nhân khóa profile Edge (không phải tiến trình user-mode) chưa xác nhận.
+- Tiếp theo: owner review Draft PR vào nhánh PR39, merge theo mục H của báo cáo.
+- Cần người khác: A/C (QD-31, QD-32), A/B (QD-34), B (QD-33, đóng PR45), C (C1, E1).

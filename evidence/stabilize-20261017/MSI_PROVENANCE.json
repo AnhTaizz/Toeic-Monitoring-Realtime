@@ -1,0 +1,25 @@
+{
+  "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+  "version": "0.3.10",
+  "dirty": false,
+  "msiSha256": "d69a6f5944471bcb2ae2323e953cbb759d1a5e4752f27ed07917aa2df2355881",
+  "imageJarSha256": "e67940ef3ae9be9d7e6339cd11c53bc615901f8399ff361278fc72f0f1e11a42",
+  "rebuiltClientJarSha256": "33ab63e2822b5595576078846e10299bc203efd6097f0bee78800386cb4438a7",
+  "serverJarSha256": "ff517d816d2adc1366245baf1f68321041ab8014f58b9043a2a0792b6145e602",
+  "classCount": 5440,
+  "mismatches": [],
+  "sameClassSet": true,
+  "windowsNatives": true,
+  "forbiddenEntries": [],
+  "fullDefault": "FULL",
+  "jdk": "21.0.8",
+  "runtimeRelease": "JAVA_VERSION=\"21.0.8\"\nMODULES=\"java.base java.datatransfer java.xml java.prefs java.desktop java.instrument java.logging java.net.http jdk.crypto.ec jdk.unsupported\"\n",
+  "installedRun": {
+    "note": "install stage re-run; first attempt refused because a stale TEST install from run final-4fbc538 existed (removed by product code before this run)",
+    "source": "3702b6d009e4ade0ac151bad6a408c1e24b8539c",
+    "endUtc": "2026-10-17T08:47:58.3292454Z",
+    "error": null,
+    "startUtc": "2026-10-17T08:43:15.7774083Z",
+    "status": "PASS"
+  }
+}
