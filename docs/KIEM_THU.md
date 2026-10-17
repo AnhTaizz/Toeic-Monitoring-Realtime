@@ -547,3 +547,12 @@ Lượt cuối `final-3702b6d-r3` trên cluster PostgreSQL 18 riêng, loopback; 
 | E1 analyzer + 84 raw | 12/12 PASS, 84/84 hash | kết quả 287/62/11 không đổi |
 
 FAIL trung gian giữ lại: CI 39012744164 (assert thông báo cũ, sửa `7c0491e`); `final-4fbc538` (classpath smoke, lỗi pipeline agent); `final-3702b6d`, `-r2` (môi trường); C1 với hạn 8 s: 11/24 FAIL (10 khóa profile Edge, 1 Edge không lên dashboard), hạn 45 s: 5/5 PASS. Vẫn NOT RUN: LAN hai máy, nghe thật, máy sạch, tải 1/5/10, E2. Chi tiết: [báo cáo](../evidence/stabilize-20261017/REPORT.md).
+
+## 18/10/2026 — main `f864034` + PR #47 ghép cục bộ (`eca6ad3`)
+
+| Suite | Kết quả | Ghi chú |
+|---|---|---|
+| `mvn clean test`, PG 18.1 riêng + proctor GUI | 931 test: 927 PASS, 0 FAIL, 4 SKIP | đếm từ XML; skip đã biết (symlink, 8.3, app-image, installed) |
+| `scripts/smoke-t3c4.ps1` | 42/42 PASS, run `T3C4-37bd5294…` | một máy, loopback; fault SIMULATED; LAN/B review NOT RUN |
+
+Không phải PASS của main một mình: bản ghép chứa sửa `2b6c9ce` chưa merge. [kiểm tra 18/10](../evidence/t3-c5/2026-10-18-update.md)
