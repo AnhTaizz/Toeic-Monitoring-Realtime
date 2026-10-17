@@ -1,0 +1,77 @@
+{
+  "rawSource": "c1601b55b7b40cd84238921e87355108cfaea5fd",
+  "analyzerSource": "c224ba8572ae453ad97e0be4f85914e112041805",
+  "analyzerSha256": "ae6a522070f7770cbc8f2eeb6a95e7b0606d2fd5ae66d375960f2dfb9ecffb52",
+  "rawFiles": 84,
+  "reanalysisExitCode": 0,
+  "outputs": [
+    {
+      "path": "e1-analysis-new/analysis.md",
+      "sha256": "a55265790d7fe74f625766422c916f166236ca3e596e8d75310711193597c971"
+    },
+    {
+      "path": "e1-analysis-new/campaign-status.json",
+      "sha256": "1f7f9206e5e1456397f17ed01a78cfa425d73fb6f625a5172377ae3984aa885c"
+    },
+    {
+      "path": "e1-analysis-new/run-01-poll-250-events.csv",
+      "sha256": "1139bef318de44e173de2f221547d74a5bad81ef3f3033b176191784ba1898ae"
+    },
+    {
+      "path": "e1-analysis-new/run-02-poll-500-events.csv",
+      "sha256": "095c550489578821165ea72b51c99652039e7daf4fb7b0a41689bbe3bd28fc46"
+    },
+    {
+      "path": "e1-analysis-new/run-03-poll-1000-events.csv",
+      "sha256": "b82122e8f24876ca7c026c4928a9728895e2616117a5511968512c572e114dcf"
+    },
+    {
+      "path": "e1-analysis-new/run-04-poll-2000-events.csv",
+      "sha256": "e0b9459aac2f4c580989660448643dc67be3d2e03845361f70c42f8151a98cfd"
+    },
+    {
+      "path": "e1-analysis-new/run-05-poll-500-events.csv",
+      "sha256": "1587437826e94a4ec14f90c5d07b2643f14065e4b1df4b3c60bd3233beef1af1"
+    },
+    {
+      "path": "e1-analysis-new/run-06-poll-1000-events.csv",
+      "sha256": "50e981c829bbd32c7d181240636e1a2041cd4433561a4316a8888b5ebb0d0ce6"
+    },
+    {
+      "path": "e1-analysis-new/run-07-poll-2000-events.csv",
+      "sha256": "2d9d1136f1f410e5e669e435d1910c9c1bc5e3ac80d79e68867092b6938dc34f"
+    },
+    {
+      "path": "e1-analysis-new/run-08-poll-250-events.csv",
+      "sha256": "aa1b04aa0325691c5cd03b57a1f44fc4d47815bc3a9abe66ea24ba92d0110234"
+    },
+    {
+      "path": "e1-analysis-new/run-09-poll-1000-events.csv",
+      "sha256": "d32494bbc904de4115803bbd8bb9b9ccba95b64e0f1adc19de7a6bfd95156934"
+    },
+    {
+      "path": "e1-analysis-new/run-10-poll-2000-events.csv",
+      "sha256": "007487046a3785e11b76555cb33ec00378b86411dfad926b99c5fe6e5faee117"
+    },
+    {
+      "path": "e1-analysis-new/run-11-poll-250-events.csv",
+      "sha256": "70246ab81365a09d63c7bdced85fa22190e1571ab1f4b10f2fc4da6c43ac87ba"
+    },
+    {
+      "path": "e1-analysis-new/run-12-poll-500-events.csv",
+      "sha256": "c804ecd670b7c4dcd7962933b4f6bbf8ef4a3cce7fa8dd4dcc8510fa32a86732"
+    },
+    {
+      "path": "e1-analysis-new/run-status.json",
+      "sha256": "ed59969f16448f4ce96aaedc146dd8d6092ee256ac9cf7f1a966f37e59fceaa7"
+    },
+    {
+      "path": "e1-analysis-new/summary-by-duration.csv",
+      "sha256": "c15bebf4583b08c1d2423147a1609ee484d96f299383dc548fb384635a91d664"
+    },
+    {
+      "path": "e1-analysis-new/summary.csv",
+      "sha256": "7a7ce8937e4b3d9bfc30b96282d636939b5fdeaa4eb29364733ce2c09b8a902e"
+    }
+  ]
+}

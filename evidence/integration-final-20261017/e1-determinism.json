@@ -1,0 +1,74 @@
+{
+  "source": "c224ba8572ae453ad97e0be4f85914e112041805",
+  "outputs": [
+    {
+      "path": "analysis.md",
+      "identical": true
+    },
+    {
+      "path": "campaign-status.json",
+      "identical": true
+    },
+    {
+      "path": "run-01-poll-250-events.csv",
+      "identical": true
+    },
+    {
+      "path": "run-02-poll-500-events.csv",
+      "identical": true
+    },
+    {
+      "path": "run-03-poll-1000-events.csv",
+      "identical": true
+    },
+    {
+      "path": "run-04-poll-2000-events.csv",
+      "identical": true
+    },
+    {
+      "path": "run-05-poll-500-events.csv",
+      "identical": true
+    },
+    {
+      "path": "run-06-poll-1000-events.csv",
+      "identical": true
+    },
+    {
+      "path": "run-07-poll-2000-events.csv",
+      "identical": true
+    },
+    {
+      "path": "run-08-poll-250-events.csv",
+      "identical": true
+    },
+    {
+      "path": "run-09-poll-1000-events.csv",
+      "identical": true
+    },
+    {
+      "path": "run-10-poll-2000-events.csv",
+      "identical": true
+    },
+    {
+      "path": "run-11-poll-250-events.csv",
+      "identical": true
+    },
+    {
+      "path": "run-12-poll-500-events.csv",
+      "identical": true
+    },
+    {
+      "path": "run-status.json",
+      "identical": true
+    },
+    {
+      "path": "summary-by-duration.csv",
+      "identical": true
+    },
+    {
+      "path": "summary.csv",
+      "identical": true
+    }
+  ],
+  "status": "PASS"
+}

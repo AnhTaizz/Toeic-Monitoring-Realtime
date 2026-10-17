@@ -1,0 +1,8 @@
+{
+  "source": "c224ba8572ae453ad97e0be4f85914e112041805",
+  "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/benchmarks/e1 -p test_*.py -v",
+  "passed": 12,
+  "failures": 0,
+  "errors": 0,
+  "kind": "MOCK method fixtures; executed in integration turn"
+}

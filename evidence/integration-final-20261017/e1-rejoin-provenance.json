@@ -1,0 +1,91 @@
+﻿{
+    "rawSource":  "c1601b55b7b40cd84238921e87355108cfaea5fd",
+    "runs":  [
+                 {
+                     "newJoinSha256":  "0d706b85af442b1e35fe33854433f78da6ec869c39c54362fa9e9cb524cd36a3",
+                     "run":  "run-01-poll-250",
+                     "identical":  true,
+                     "exitCode":  0,
+                     "oldJoinSha256":  "0d706b85af442b1e35fe33854433f78da6ec869c39c54362fa9e9cb524cd36a3"
+                 },
+                 {
+                     "newJoinSha256":  "9c9b10a1b85df9189f3c74253a18431dcb3084fe8ab5a5b66015558404347ab4",
+                     "run":  "run-02-poll-500",
+                     "identical":  true,
+                     "exitCode":  0,
+                     "oldJoinSha256":  "9c9b10a1b85df9189f3c74253a18431dcb3084fe8ab5a5b66015558404347ab4"
+                 },
+                 {
+                     "newJoinSha256":  "3aea46a9ea5eda994614920988a5457375ca72a0bfdc0bad1f0801d11cbfa50a",
+                     "run":  "run-03-poll-1000",
+                     "identical":  true,
+                     "exitCode":  0,
+                     "oldJoinSha256":  "3aea46a9ea5eda994614920988a5457375ca72a0bfdc0bad1f0801d11cbfa50a"
+                 },
+                 {
+                     "newJoinSha256":  "8758635254f07d34a9948584d408e13f24b457c7a62301883f3b157b02034bde",
+                     "run":  "run-04-poll-2000",
+                     "identical":  true,
+                     "exitCode":  0,
+                     "oldJoinSha256":  "8758635254f07d34a9948584d408e13f24b457c7a62301883f3b157b02034bde"
+                 },
+                 {
+                     "newJoinSha256":  "2f9f43fe6f2b61cf1b8f5ed2f8b67824170bb3280dc9b60dbb38dc5fd39f7589",
+                     "run":  "run-05-poll-500",
+                     "identical":  true,
+                     "exitCode":  0,
+                     "oldJoinSha256":  "2f9f43fe6f2b61cf1b8f5ed2f8b67824170bb3280dc9b60dbb38dc5fd39f7589"
+                 },
+                 {
+                     "newJoinSha256":  "e03aa9d2f710d475d8fa1e40a83903c6e842f6f4529a76b8f27ae4d75e3d5af2",
+                     "run":  "run-06-poll-1000",
+                     "identical":  true,
+                     "exitCode":  0,
+                     "oldJoinSha256":  "e03aa9d2f710d475d8fa1e40a83903c6e842f6f4529a76b8f27ae4d75e3d5af2"
+                 },
+                 {
+                     "newJoinSha256":  "372d034059f6b4e092c430977a711906c348041d88cd539c96d6fe1b81b0afd7",
+                     "run":  "run-07-poll-2000",
+                     "identical":  true,
+                     "exitCode":  0,
+                     "oldJoinSha256":  "372d034059f6b4e092c430977a711906c348041d88cd539c96d6fe1b81b0afd7"
+                 },
+                 {
+                     "newJoinSha256":  "f22d3782c7a8b375c683911e9e4bb68f3baa0a2346ab226c8c2a3d580cd931ad",
+                     "run":  "run-08-poll-250",
+                     "identical":  true,
+                     "exitCode":  0,
+                     "oldJoinSha256":  "f22d3782c7a8b375c683911e9e4bb68f3baa0a2346ab226c8c2a3d580cd931ad"
+                 },
+                 {
+                     "newJoinSha256":  "258163c7f03ff70981c9490e66c156594795fcd508626c8b4f80a53d587b2719",
+                     "run":  "run-09-poll-1000",
+                     "identical":  true,
+                     "exitCode":  0,
+                     "oldJoinSha256":  "258163c7f03ff70981c9490e66c156594795fcd508626c8b4f80a53d587b2719"
+                 },
+                 {
+                     "newJoinSha256":  "c6284221e5d8eabdc92851b80c40921cb6e7664f31f5fb67a796560845d4b3e5",
+                     "run":  "run-10-poll-2000",
+                     "identical":  true,
+                     "exitCode":  0,
+                     "oldJoinSha256":  "c6284221e5d8eabdc92851b80c40921cb6e7664f31f5fb67a796560845d4b3e5"
+                 },
+                 {
+                     "newJoinSha256":  "2e3554af5135d419a34f92b4563fd543b099339eab714ac008692b9b134d098f",
+                     "run":  "run-11-poll-250",
+                     "identical":  true,
+                     "exitCode":  0,
+                     "oldJoinSha256":  "2e3554af5135d419a34f92b4563fd543b099339eab714ac008692b9b134d098f"
+                 },
+                 {
+                     "newJoinSha256":  "e2bae89125301d4ae781ebe8545ec61e0c0caf1af8b9974c747a72055ebcc3bc",
+                     "run":  "run-12-poll-500",
+                     "identical":  true,
+                     "exitCode":  0,
+                     "oldJoinSha256":  "e2bae89125301d4ae781ebe8545ec61e0c0caf1af8b9974c747a72055ebcc3bc"
+                 }
+             ],
+    "clientJarSha256":  "6a83213b9e3bf9e33ef065c81a712e62e12aa586a4435800833fb21b331d37a5",
+    "toolSource":  "c224ba8572ae453ad97e0be4f85914e112041805"
+}
