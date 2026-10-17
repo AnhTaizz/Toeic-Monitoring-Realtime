@@ -102,7 +102,7 @@ public final class LiveCandidateApp {
                         default -> throw new IllegalArgumentException("Unknown test action");
                     }
                     reply.addProperty("ok",true);reply.add("status",status());
-                }catch(Exception error){reply.addProperty("ok",false);reply.addProperty("errorClass",error.getClass().getSimpleName());}
+                }catch(Exception error){reply.addProperty("ok",false);reply.addProperty("errorClass",error.getClass().getSimpleName());reply.addProperty("errorMessage",String.valueOf(error.getMessage()));}
                 System.out.println(REPLY+reply);
             }
         }

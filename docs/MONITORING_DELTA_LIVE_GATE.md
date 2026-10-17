@@ -79,3 +79,85 @@ A cần review heartbeat scope notification, auth/binding trước duplicate và
 ## Ví dụ dễ giải thích
 
 Thí sinh mở Edge. `ProcessHandleSnapshotSource.scan()` đọc process thật. `ProcessCollector` tạo snapshot — ảnh chụp danh sách tại một lần quét. Hai delivery nhận cùng snapshot: event ghi lịch sử mở Edge; delta cập nhật danh sách đang chạy. ACK là thông điệp xác nhận. Nếu server đã nhận delta nhưng ACK bị ẩn trong test, delivery gửi lại chính message ấy; server nhận ra trùng và ACK lại, không áp hai lần. Khi server báo RESYNC — yêu cầu đồng bộ lại — client bỏ base/pending cũ, chờ scan mới và gửi FULL. Callback là hàm được gọi khi phản hồi mạng đến; generation/epoch phân biệt phiên cũ và phiên hiện tại để phản hồi trễ không làm sai state. Lock là cơ chế chỉ cho một luồng sửa dữ liệu dùng chung tại một thời điểm; không giữ khóa state khi ghi socket/publish. RAM mất khi JVM dừng; DB giữ lịch sử đã commit.
+
+## Runbook LAN hai máy cho gate 20/10/2026
+
+Source chuẩn bị: `2b6c9cec1a8e4114c3f9d30117ece2a3f5e404f0`, base PR #43 `772c6e9864cd6ce0ad45aad0433f5bfce53fee54`. FULL vẫn là mặc định. Các lệnh dưới đây chưa phải bằng chứng LAN cho đến khi chạy trên hai máy Windows vật lý và điền báo cáo.
+
+### Máy A — server và proctor
+
+```powershell
+cd D:\Toeic-Monitoring-Realtime
+git rev-parse HEAD
+git status --short
+docker compose up -d --wait
+
+$jdk = 'C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot'
+mvn -B -DskipTests package
+
+Get-NetIPAddress -AddressFamily IPv4 |
+  Where-Object { $_.IPAddress -notlike '127.*' -and $_.AddressState -eq 'Preferred' } |
+  Select-Object InterfaceAlias,IPAddress
+Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue
+Get-NetFirewallRule -Enabled True -Direction Inbound |
+  Where-Object DisplayName -Match 'TOEIC|8080' |
+  Select-Object DisplayName,Action,Profile
+
+# Lượt FULL/fallback: không thêm -DeltaExperimental.
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-monitoring-server.ps1 `
+  -JavaHome $jdk -BindAddress 0.0.0.0 -Port 8080
+
+# Lượt DELTA riêng:
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-monitoring-server.ps1 `
+  -JavaHome $jdk -BindAddress 0.0.0.0 -Port 8080 -DeltaExperimental
+```
+
+Mở client proctor trên máy A bằng `scripts/start-monitoring-client.ps1 -ServerUrl http://<IP-LAN-A>:8080`. Proctor chỉ đọc dashboard và không được tạo collector. Chỉ owner máy A thay firewall nếu kiểm tra read-only cho thấy cần mở port.
+
+### Máy B — candidate từ app-image đã đóng gói
+
+Artifact local do C chuẩn bị, không commit vào Git:
+
+- `target/t3c4-lan-prep/2b6c9ce/ToeicMonitor-T3C4-2b6c9ce.zip`
+- SHA-256 ZIP: `9e920fba5d6440f002ef51f2ba629b49ddbb7dae12177a4c6282c1e2b34c4667`
+- SHA-256 JAR: `b3febc078d845e181bffb914c08a7ad49e78250ee693075fd35a67eead40452f`
+
+Máy build thiếu Windows SDK `mt.exe`, nên launcher chuẩn bị chưa được vá manifest UTF-8. Giải nén vào đường dẫn ASCII ngắn như `C:\ToeicGate`; không dùng artifact này để tuyên bố IT01 đường dẫn Unicode.
+
+```powershell
+$zip = 'C:\ToeicGate\ToeicMonitor-T3C4-2b6c9ce.zip'
+Get-FileHash -Algorithm SHA256 $zip
+Expand-Archive -LiteralPath $zip -DestinationPath C:\ToeicGate\run
+cd C:\ToeicGate\run\ToeicMonitor
+$serverUrl = 'http://<IP-LAN-A>:8080'
+
+powershell -NoProfile -ExecutionPolicy Bypass -File .\smoke-lan-preflight.ps1 `
+  -ServerUrl $serverUrl -ClientJar .\app\client-0.1.0-SNAPSHOT-all.jar `
+  -DeviceLabel MACHINE-B
+
+# FULL mặc định bằng runtime đi kèm app-image.
+powershell -NoProfile -ExecutionPolicy Bypass -File .\start-packaged-client.ps1 `
+  -ServerUrl $serverUrl -ClientDirectory .
+
+# DELTA thử nghiệm dùng chính JAR đã đóng gói; máy B cần JDK 21 cho lượt này.
+$jdk = 'C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot'
+& "$jdk\bin\java.exe" "-Dtoeic.server.url=$serverUrl" `
+  '-Dtoeic.realtime.delta-experimental=true' `
+  -jar .\app\client-0.1.0-SNAPSHOT-all.jar
+```
+
+Không hard-code URL vào artifact. Không ghi username Windows, token, mật khẩu hay IP LAN vào Git. Tài khoản/attempt TEST phải do owner cấp và tách khỏi DB dev.
+
+### Trình tự nghiệm thu và evidence cần điền
+
+1. Chạy A1–A4, rồi B với một process đúng production policy trên máy B; ghi PID/start/name từ nguồn đọc độc lập.
+2. Chạy C và D bằng seam hiện có, ghi rõ `SIMULATED`; không gọi là mất gói LAN vật lý.
+3. Chạy E bằng restart candidate rồi restart server. Candidate còn lại phải tiếp tục hoạt động.
+4. Chạy F bằng thao tác ngắt LAN có kiểm soát trên máy B; không kill process thay cho ngắt LAN. Chờ UNKNOWN/STALE, nối lại và xác nhận FULL phục hồi cùng HTTP recovery.
+5. Chạy G bằng API/fixture TEST, không sửa DB dev. Ghi số event/gap chưa ACK và kiểm worker/listener/correlation đã dọn.
+6. Chạy H với proctor chưa assignment, candidate khác, JSON/ID ngoài scope; socket khác phải tiếp tục hoạt động.
+7. Mỗi case ghi alias máy, Windows/runtime, source SHA, mode, REAL/MOCK/SIMULATED, expected, actual, timestamp UTC và đường dẫn raw local. Không dùng timestamp giữa hai máy để suy latency nếu đồng hồ chưa được chứng minh đồng bộ.
+
+Checklist human B: mode/capability và fallback FULL; callback/generation sau reconnect; không gọi mạng trên JavaFX thread; dashboard dedupe và HTTP recovery; dọn listener/worker khi logout/close; hiển thị SYNCED/UNSYNCED/STALE/UNKNOWN; cách chạy hai máy và evidence LAN. Chỉ đổi review sang PASS khi thành viên B thực sự đọc/chạy và để lại ghi nhận.
+
+Trạng thái chuẩn bị ngày 17/10/2026: local smoke 42/42 PASS trên một máy; LAN hai máy `NOT RUN`; human B review `NOT RUN`; gate `PARTIAL / NOT DECIDED`. Không tạo quyết định mới trong `QUYET_DINH.md` trước khi đủ ba điều kiện MT02–MT06, LAN thật và review B.

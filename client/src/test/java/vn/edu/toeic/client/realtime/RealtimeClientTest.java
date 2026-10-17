@@ -440,6 +440,15 @@ class RealtimeClientTest {
             client.forgetPending(first.requestId()); client.send(second).join(); assertThat(socket.sent).hasSize(3);
         }
     }
+    @Test void forgottenCorrelationIgnoresLateAckAndSameIdCanBeRetried() {
+        try (Fixture f = new Fixture()) {
+            f.connect();var request=event();f.client.send(request).join();
+            f.client.forgetPending(request.requestId());f.socket().text(ack(),true);
+            assertThat(f.messages).isEmpty();assertThat(f.problems).isEmpty();
+            f.client.send(request).join();f.socket().text(ack(),true);
+            assertThat(f.messages).hasSize(1);assertThat(f.problems).isEmpty();
+        }
+    }
 
     @Test void settingsRejectZeroIntervalsAndOutOfScopeSession() {
         assertThatThrownBy(() -> new RealtimeClient.Settings(Duration.ZERO, Duration.ofSeconds(1),
