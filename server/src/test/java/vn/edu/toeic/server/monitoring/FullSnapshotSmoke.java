@@ -72,11 +72,16 @@ public final class FullSnapshotSmoke {
     public static void main(String[] args) {
         var smoke=new FullSnapshotSmoke();
         try { smoke.run(List.of(args).contains("--gui")); }
-        catch(Exception failure) { System.err.println("T2-C1 FAIL phase="+smoke.phase+" "+SmokeCleanup.classes(failure));
-            if (failure instanceof IllegalStateException && failure.getCause()==null) System.err.println("Harness check: " + failure.getMessage());
-            // Cleanup failures behind a primary failure are reported too, never dropped.
-            for(Throwable cleanup:failure.getSuppressed()) System.err.println("T2-C1 also cleanup FAIL "+SmokeCleanup.classes(cleanup));
-            System.exit(1); }
+        catch(Throwable failure) {
+            // Any Throwable, not only Exception: an Error (e.g. a missing harness class) must end the JVM
+            // with exit 1 instead of leaving FX/Spring threads alive and the run hanging.
+            try {
+                System.err.println("T2-C1 FAIL phase="+smoke.phase+" class="+failure.getClass().getSimpleName());
+                if (failure instanceof IllegalStateException && failure.getCause()==null) System.err.println("Harness check: " + failure.getMessage());
+                // Cleanup failures behind a primary failure are reported too, never dropped.
+                for(Throwable cleanup:failure.getSuppressed()) System.err.println("T2-C1 also cleanup FAIL "+SmokeCleanup.classes(cleanup));
+            } finally { System.exit(1); }
+        }
     }
     private static String env(String name,String fallback) { return System.getenv().getOrDefault(name,fallback); }
     private JdbcClient jdbc() { return context.getBean(JdbcClient.class); }

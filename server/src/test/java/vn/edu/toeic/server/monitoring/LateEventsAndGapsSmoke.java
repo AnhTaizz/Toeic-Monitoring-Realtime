@@ -82,11 +82,16 @@ public final class LateEventsAndGapsSmoke {
     public static void main(String[] args) {
         var smoke=new LateEventsAndGapsSmoke();
         try {smoke.run(List.of(args).contains("--gui"));}
-        catch(Exception error) {System.err.println("T2-C2 FAIL phase="+smoke.phase+" "+SmokeCleanup.classes(error));
-            if(error.getMessage()!=null&&error.getMessage().startsWith("TEST assertion: ")) System.err.println(error.getMessage());
-            // Cleanup failures behind a primary failure are reported too, never dropped.
-            for(Throwable cleanup:error.getSuppressed()) System.err.println("T2-C2 also cleanup FAIL "+SmokeCleanup.classes(cleanup));
-            System.exit(1);}
+        catch(Throwable error) {
+            // Any Throwable, not only Exception: an Error (e.g. a missing harness class) must end the JVM
+            // with exit 1 instead of leaving FX/Spring threads alive and the run hanging.
+            try {
+                System.err.println("T2-C2 FAIL phase="+smoke.phase+" class="+error.getClass().getSimpleName());
+                if(error.getMessage()!=null&&error.getMessage().startsWith("TEST assertion: ")) System.err.println(error.getMessage());
+                // Cleanup failures behind a primary failure are reported too, never dropped.
+                for(Throwable cleanup:error.getSuppressed()) System.err.println("T2-C2 also cleanup FAIL "+SmokeCleanup.classes(cleanup));
+            } finally {System.exit(1);}
+        }
     }
     private static String env(String name,String fallback) {return System.getenv().getOrDefault(name,fallback);}
     private void run(boolean gui) throws Exception {
