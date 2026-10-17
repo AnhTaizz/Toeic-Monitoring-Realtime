@@ -510,30 +510,34 @@ class ExamRuntimePostgresTest {
         System.out.println("PASS submit retry/IDOR/idempotency/late save and autonomous scans: one SUBMITTED result");
     }
 
-    @Test void submitAndTimeoutContendOnPostgresRowAcrossDeadline() throws Exception {
+    @Test void saveSubmitAndTimeoutContendOnPostgresRowAcrossDeadline() throws Exception {
         String attempt = attempt(1);
         long epoch = json(expect(post(path(attempt, "takeover"), takeover(attempt), candidateToken), 200)).get("writerEpoch").getAsLong();
         expect(post(path(attempt, "answers"), new AutosaveAnswersRequest(id(), attempt, epoch, 1, Map.of("R1", "A")), candidateToken), 200);
-        // Hold the row across the real deadline; BOTH the HTTP submit and autonomous timeout wait.
+        // Hold the row across the real deadline; save, submit and autonomous timeout all wait.
         try (Connection blocker = connection()) {
             blocker.setAutoCommit(false);
             try (var lock = blocker.prepareStatement("SELECT attempt_id FROM " + schema + ".monitoring_attempts WHERE attempt_id = ? FOR UPDATE")) {
                 lock.setString(1, attempt); lock.executeQuery().close();
             }
+            CompletableFuture<HttpResponse<String>> save = http.sendAsync(httpRequest(path(attempt, "answers"),
+                    new AutosaveAnswersRequest(id(), attempt, epoch, 2, Map.of("R1", "B")), candidateToken), HttpResponse.BodyHandlers.ofString());
             CompletableFuture<HttpResponse<String>> submit = http.sendAsync(httpRequest(path(attempt, "submit"),
                     new SubmitExamRequest(id(), attempt, epoch, 2, Map.of("R1", "A", "R2", "B")), candidateToken), HttpResponse.BodyHandlers.ofString());
-            awaitBlockedQueries(2);
+            awaitBlockedQueries(3);
             blocker.commit();
-            HttpResponse<String> rejected = submit.get(10, TimeUnit.SECONDS);
-            assertThat(rejected.statusCode()).isEqualTo(409);
-            assertThat(json(rejected).getAsJsonObject("error").get("code").getAsString()).isIn("EXPIRED", "INVALID_STATE");
+            for (HttpResponse<String> rejected : List.of(save.get(10, TimeUnit.SECONDS), submit.get(10, TimeUnit.SECONDS))) {
+                assertThat(rejected.statusCode()).isEqualTo(409);
+                assertThat(json(rejected).getAsJsonObject("error").get("code").getAsString()).isIn("EXPIRED", "INVALID_STATE");
+            }
         }
         JsonObject result = awaitFinal(attempt);
         assertThat(result.get("state").getAsString()).isEqualTo("TIMED_OUT");
         assertThat(result.get("score").getAsInt()).isEqualTo(1);
         assertThat(result.get("savedRevision").getAsLong()).isEqualTo(1);
+        assertThat(result.getAsJsonObject("answers")).isEqualTo(JSON.toJsonTree(Map.of("R1", "A")));
         assertThat(jdbc.sql("SELECT count(*) FROM exam_submit_requests WHERE attempt_id = :a").param("a", attempt).query(Long.class).single()).isZero();
-        System.out.println("PASS PostgreSQL row contention: HTTP submit AND autonomous scheduler wait across deadline; submit rejected; scheduler finalizes acknowledged answers once");
+        System.out.println("PASS PostgreSQL row contention: save, submit and autonomous timeout wait across deadline; writes rejected; scheduler finalizes acknowledged answers once");
     }
 
     @Test void legacyAutosaveWithoutTakeoverStartsDeadlineWithoutReset() throws Exception {
@@ -554,7 +558,7 @@ class ExamRuntimePostgresTest {
                     .query(Long.class).single() >= count) return;
             Thread.sleep(20);
         }
-        throw new AssertionError("HTTP submit and autonomous timeout did not both demonstrably wait on PostgreSQL row lock");
+        throw new AssertionError("Expected save, submit and autonomous timeout to demonstrably wait on PostgreSQL row lock");
     }
     private Connection connection() throws Exception {
         return DriverManager.getConnection("jdbc:postgresql://" + required("DB_HOST") + ":" + required("DB_PORT") + "/" + required("DB_NAME"), required("DB_USER"), required("DB_PASSWORD"));

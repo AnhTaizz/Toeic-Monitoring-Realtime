@@ -270,7 +270,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** AT01 và IT02 có bằng chứng; client hỏng không ảnh hưởng client khác.
 
-**Ghi chú làm dở:** —
+**Bàn giao A ngày 18/10/2026:** thêm regression khóa PostgreSQL chứng minh save, submit và scheduler timeout cùng chờ một row qua deadline; hai write bị từ chối, chỉ timeout chốt answers/revision đã ACK và tính điểm một lần. Runner tái lập chạy AT01 trực tiếp, 74 test transaction/network, cùng smoke hai candidate + assigned proctor, malformed JSON và four-client isolation trên REAL PostgreSQL/HTTP/WS. Full package 912 PASS, 58 opt-in skip. [Evidence](../../evidence/t3-a4/2026-10-18-verification.md). LAN hai máy/GUI/human C review chưa chạy; tracker gốc giữ nguyên.
 
 ### T3-A5 · Bản nháp báo cáo network/concurrency
 `2h` · phụ thuộc: T3-A4 · review: C
