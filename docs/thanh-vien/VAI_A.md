@@ -277,7 +277,7 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Đầu ra:** bản nháp các mục kiến trúc, giao tiếp, phân quyền, giao dịch. Nêu rõ framework lo phần nào (ví dụ quản lý kết nối, thread pool) và nhóm tự thiết kế phần nào (khóa theo attempt, revision, epoch, thứ tự commit rồi ACK). Mỗi khẳng định kèm bằng chứng thật.
 
-**Ghi chú làm dở:** —
+**Bàn giao A ngày 18/10/2026:** hoàn thành [bản nháp network/concurrency](../T3_A5_NETWORK_CONCURRENCY_REPORT_DRAFT.md) gồm kiến trúc server, REST/raw WS, auth/scope, transaction/row lock, revision/epoch/idempotency, commit-before-ACK, lỗi/retry/restart và ma trận 8 claim gắn source + evidence thật. Tách rõ Spring/Tomcat/Hikari/PostgreSQL/Flyway/Gson cung cấp cơ chế nào và state machine/khóa/thứ tự quyết định nào do nhóm thiết kế. 36 link nội bộ và audit 6 source owner PASS. Không chạy lại runtime vì docs-only; reuse evidence T3-A3/T3-A4. [Evidence](../../evidence/t3-a5/2026-10-18-verification.md). Load/LAN/GUI/human C review chưa chạy; giữ trạng thái DRAFT.
 
 ---
 
