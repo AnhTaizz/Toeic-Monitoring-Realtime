@@ -317,10 +317,27 @@ public final class FullSnapshotSmoke {
                     Files.deleteIfExists(item);
                 }
             } catch(java.io.IOException locked) {
-                if(System.nanoTime()>=until) throw locked;
+                if(System.nanoTime()>=until) {
+                    // Triage without paths: entry name inside the owned profile and which Edge process types still use it.
+                    String entry=locked instanceof java.nio.file.FileSystemException f && f.getFile()!=null
+                            ? base.relativize(Path.of(f.getFile()).toAbsolutePath().normalize()).toString() : "?";
+                    System.err.println("T2-C1 diagnostic edge-profile lockedEntry="+entry+" holders="+edgeProfileHolders(base.getFileName().toString()));
+                    throw locked;
+                }
                 Thread.sleep(100);
             }
         }
+    }
+    /** Process types (browser/renderer/utility/...) of msedge.exe whose command line names this owned profile. */
+    private static String edgeProfileHolders(String profileName) {
+        try {
+            Process query=new ProcessBuilder("powershell.exe","-NoProfile","-Command",
+                    "Get-CimInstance Win32_Process -Filter \"Name='msedge.exe'\" | Where-Object { $_.CommandLine -like '*"+profileName+"*' } | "
+                    +"ForEach-Object { if($_.CommandLine -match '--type=([a-z-]+)'){$matches[1]}else{'browser'} }").redirectErrorStream(true).start();
+            String text=new String(query.getInputStream().readAllBytes(),java.nio.charset.StandardCharsets.UTF_8).trim();
+            query.waitFor(10,TimeUnit.SECONDS);
+            return "["+String.join(",",text.lines().map(String::trim).filter(s -> s.matches("[a-z-]{1,40}")).toList())+"]";
+        } catch(Exception unavailable) { return "UNAVAILABLE"; }
     }
     private static void await(BooleanSupplier condition,String label) throws Exception {long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(12);while(System.nanoTime()<until){if(condition.getAsBoolean())return;Thread.sleep(25);}throw new IllegalStateException("Timeout "+label);}
     private static void check(boolean ok,String label) {if(!ok)throw new IllegalStateException(label);}
