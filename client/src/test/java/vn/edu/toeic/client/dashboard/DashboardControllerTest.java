@@ -117,6 +117,21 @@ class DashboardControllerTest {
             assertThat(f.controller.snapshot().attempts().getFirst().status()).isEqualTo("ONLINE");
         }
     }
+    @Test void historyOverLimitShowsNonRetryableMessageAndKeepsLastCompleteList() {
+        try(Fixture f=new Fixture()) {
+            f.loadRoster(); f.choose("MOCK-A"); f.api.events.getLast().complete(List.of(event("MOCK-A","MOCK-e"))); f.api.history.getLast().complete(List.of()); f.worker.runAll();
+            f.controller.refresh(); f.worker.runAll(); f.finishRoster();
+            f.api.events.getLast().completeExceptionally(new MonitoringApiClient.HistoryLimitException());
+            f.api.history.getLast().completeExceptionally(new MonitoringApiClient.HistoryLimitException()); f.worker.runAll();
+            var view=f.controller.snapshot();
+            assertThat(view.eventsError()).isEqualTo(MonitoringApiClient.HISTORY_LIMIT_MESSAGE);
+            assertThat(view.historyError()).isEqualTo(MonitoringApiClient.HISTORY_LIMIT_MESSAGE);
+            assertThat(view.events()).as("no truncated replacement, last complete list stays, marked stale").hasSize(1);
+            assertThat(view.eventsStale()).isTrue();
+            assertThat(f.expired).isZero();
+            assertThat(view.attempts().getFirst().status()).isEqualTo("ONLINE");
+        }
+    }
     @Test void disconnectThenReconnectRefreshesWithoutCandidateUnknownOrDuplicateListeners() {
         try(Fixture f=new Fixture()) {
             f.loadRoster(); f.choose("MOCK-A"); f.completeDetails(); f.transport.state(ConnectionState.RECONNECTING); f.worker.runAll();

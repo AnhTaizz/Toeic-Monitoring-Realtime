@@ -23,13 +23,12 @@ public class MonitoringGapService {
         if (jdbc.sql("SELECT attempt_id FROM monitoring_attempts WHERE attempt_id=:a FOR SHARE").param("a",attempt)
                 .query(String.class).optional().isEmpty()) throw AccessDeniedException.forbidden();
         authorization.requireAttempt(user,attempt);
-        List<GapItem> result=jdbc.sql("SELECT * FROM monitoring_gaps WHERE attempt_id=:a ORDER BY received_at,id LIMIT 5001")
+        List<GapItem> result=jdbc.sql("SELECT * FROM monitoring_gaps WHERE attempt_id=:a ORDER BY received_at,id LIMIT "+MonitoringHistoryLimit.QUERY_LIMIT)
                 .param("a",attempt).query((row,index) -> new GapItem(row.getString("gap_id"),attempt,
                         row.getString("collector_session_id"),row.getString("reason"),row.getLong("dropped_count"),
                         row.getTimestamp("first_dropped_at").toInstant(),row.getTimestamp("last_dropped_at").toInstant(),
                         row.getTimestamp("received_at").toInstant())).list();
-        if(result.size()>5000) throw new IllegalStateException("Gap history exceeds bounded response; no truncation");
-        return result;
+        return MonitoringHistoryLimit.requireComplete(result);
     }
     public record GapItem(String gapId,String attemptId,String collectorSessionId,String reason,long droppedCount,
             Instant firstDroppedAt,Instant lastDroppedAt,Instant receivedAt) { }
