@@ -59,7 +59,7 @@ Heap mean là trung bình các mẫu hợp lệ trong cửa sổ (không phải 
 
 ## Inventory/checksum và raw bất biến
 
-- E1 lịch sử: [raw-provenance.json](../evidence/overnight-20261015/phase-06/e1/raw-provenance.json),12run/84file, source `c1601b55b7b40cd84238921e87355108cfaea5fd`. Metadata công khai kiểm hash12/12. Raw local theo manifest chưa có trong workspace review; chưa xác nhận lại84file hoặc CPU cũ.
+- E1 lịch sử: [raw-provenance.json](../evidence/overnight-20261015/phase-06/e1/raw-provenance.json),12run/84file, source `c1601b55b7b40cd84238921e87355108cfaea5fd`. Metadata công khai kiểm hash12/12. Cập nhật17/10: raw local đã được kiểm84/84 hash (RC và lại ở nhánh ổn định hóa); xem mục cuối.
 - Mỗi run mới: `ground-truth.jsonl`, `observations.jsonl`, `metadata.json`, `join.json`, `manifest.json`, `resources.csv`, `e1-manifest.json`. Manifest khóa4file; e1-manifest khóa resources và manifest. Header/record JSONL có checksum nội bộ riêng không gồm FINAL. Không nhầm checksum nội bộ với SHA256 toàn file.
 - [Manifest trace T3-C3](../client/src/test/resources/monitoring-traces/t3-c3/manifest.json): ba trace **MOCK viết tay** đã kiểm hash toàn file dưới đây. Chúng dùng kiểm oracle, chưa phải ba trace120s cho E2. Không kéo dài/chỉnh timestamp các file cũ để giả dữ liệu mới.
 
@@ -184,7 +184,13 @@ Checklist trước đo: source sạch/JAR đúng hash; máy đủ RAM/disk; ghi 
 
 Loại **khỏi kết luận** (giữ raw và lý do): hash/binding sai, thiếu FINAL, child/source/cleanup lỗi, time đảo, schedule/window sai, runId trùng, raw không tìm thấy. Unknown không là lý do xóa trial/run: giữ bounds. Censored giữ số đếm ngoài mẫu số. Resource PARTIAL chỉ hạn chế claim resource; không tự xóa detection hợp lệ. Nếu máy ngủ/tải nền bất thường ghi run và hoàn cảnh, không âm thầm bỏ. Thiếu lượt thì suite PARTIAL; chạy bổ sung phải runId mới, ghi vị trí/thời gian khác để đánh giá carryover.
 
-Bước B tiếp theo: tìm raw12run nguồn c1601b5, kiểm84hash theo inventory, rejoin bằng bản sửa vào thư mục dẫn xuất và áp dụng quy tắc checksum ở trên. Chỉ nếu raw mất hoặc resource coverage không đạt mới cần owner quyết định đo lại các lượt bị ảnh hưởng; muốn kết luận trên bản tích hợp/JDK khác thì phải có chiến dịch mới cùng môi trường. Không thay số cũ, không dùng smoke thay12run, không chuyển E2/gate bằng kết quả review này.
+Các bước tìm raw, kiểm84hash, rejoin và phân tích lại đã làm ngày17/10 (mục dưới). Chỉ nếu raw mất hoặc resource coverage không đạt mới cần owner quyết định đo lại các lượt bị ảnh hưởng; muốn kết luận trên bản tích hợp/JDK khác thì phải có chiến dịch mới cùng môi trường. Không thay số cũ, không dùng smoke thay12run, không chuyển E2/gate bằng kết quả review này.
 
 
 Cập nhật RC17/10: không cần tìm lại raw cho phiên này; dùng provenance/hash dẫn xuất trong evidence RC để C review. Claim machine binding lịch sử vẫn giới hạn vì metadata cũ dùng alias hằng. Các checklist trước đo và điều kiện cho chiến dịch source mới vẫn áp dụng; chưa owner nghiệm thu E1/E2.
+
+## Kiểm lại độc lập trên nhánh ổn định hóa — 17/10/2026
+
+Analyzer không đổi so với RC (`scripts/benchmarks/e1/analyze.py`, SHA256 `ae6a522070f7770cbc8f2eeb6a95e7b0606d2fd5ae66d375960f2dfb9ecffb52`). Trên raw local `E1-2ff52082` (nguồn đo `c1601b5`): 84/84 hash khớp manifest, không có file ngoài manifest; hai lần phân tích vào hai thư mục mới cho 17 file giống byte nhau và giống nội dung output RC (chỉ khác kết thúc dòng). Kết quả: 12 run, 360 trial eligible, 287 OBSERVED, 62 NOT_OBSERVED_IN_TRACE, 11 INCONCLUSIVE (`PID_ONLY_MISSING_START_INCONCLUSIVE`), 0 censored; 12/12 test Python PASS.
+
+Collector CPU một core theo trọng số thời gian (mean 3 run): poll 250 ms 29,88 %; 500 ms 18,85 %; 1000 ms 10,32 %; 2000 ms 5,54 %. Lệch so với số theo cách tính cũ ghi trong báo cáo RC (29,886 / 18,855 / 10,319 / 5,556) tối đa 0,012 điểm phần trăm, nên nhận định trade-off không đổi. Đây là CPU của thread collector trên một core trong harness E1, không phải chi phí toàn ứng dụng; chia cho số core nếu cần tỉ lệ toàn máy. Heap là heap JVM cha, không phải RSS. Latency là cận trên launch→scan-end ở parent. Target hold khác lifetime thật (target 200 ms ↔ quan sát 431–767 ms). Fixed delay giữa các lần quét khác khoảng cách scan-start. Ba lần lặp mỗi poll, chạy tuần tự trong một JVM cha nên có carryover GC/JIT. Chưa có xác nhận của C; không chạy campaign mới, không chạy E2.
