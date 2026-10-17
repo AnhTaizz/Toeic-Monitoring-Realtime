@@ -278,6 +278,8 @@ Viết: state và event tách biệt ra sao, khoảng trống không phục hồ
 
 **Ghi chú làm dở:** B review bản nháp NOT RUN; C4 gate NOT_DECIDED/PARTIAL, còn LAN hai máy và review A/B. Merge tài liệu không chốt gate; dừng sau C5, chưa E1/E2/chặng 4.
 
+**Cập nhật 18/10 (agent):** thêm mục 9 vào bản nháp (thay đổi sau 13/10). PR #47 của C chưa vào main; ghép thử lên main `f864034`: 927 PASS/0 FAIL/4 SKIP, live gate 42/42. Việc của C: đổi base PR #47 về main, quyết gate sau LAN + B review. [kiểm tra 18/10](../evidence/t3-c5/2026-10-18-update.md)
+
 ---
 
 ## Chặng 4 (23–27/10) — 14 giờ
