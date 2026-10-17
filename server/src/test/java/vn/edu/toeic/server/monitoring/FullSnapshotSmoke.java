@@ -294,11 +294,16 @@ public final class FullSnapshotSmoke {
             Path output=Path.of("server/target/t2c1-smoke",name);Files.createDirectories(output.getParent());ImageIO.write(bitmap,"png",output.toFile());return null;});
     }
     private static <T> T fx(Callable<T> action) {var result=new CompletableFuture<T>();Platform.runLater(() -> {try {result.complete(action.call());}catch(Exception error){result.completeExceptionally(error);}});try{return result.get(20,TimeUnit.SECONDS);}catch(Exception error){throw new IllegalStateException(error);}}
+    /**
+     * Stops the owned Edge browser before its children. Killing children first made the still-running
+     * browser respawn utility/GPU processes outside the snapshot; those orphans kept the profile
+     * locked past the cleanup deadline (historical EDGE_PROFILE_CLEANUP FAIL). With the browser gone
+     * first nothing can respawn, and every child in the snapshot is then stopped and awaited.
+     */
     private static void stopOwned(Process process) throws Exception {
-        var children=process.descendants().toList();children.forEach(ProcessHandle::destroy);process.destroy();
-        if(!process.waitFor(3,TimeUnit.SECONDS)) {children.forEach(ProcessHandle::destroyForcibly);process.destroyForcibly();process.waitFor(3,TimeUnit.SECONDS);}
+        var children=process.descendants().toList();
+        process.destroyForcibly();process.onExit().get(5,TimeUnit.SECONDS);
         for(var child:children) if(child.isAlive()) child.destroyForcibly();
-        process.onExit().get(5,TimeUnit.SECONDS);
         for(var child:children) if(child.isAlive()) child.onExit().get(5,TimeUnit.SECONDS);
     }
     private static void cleanupProfile(Path profile) throws Exception {
