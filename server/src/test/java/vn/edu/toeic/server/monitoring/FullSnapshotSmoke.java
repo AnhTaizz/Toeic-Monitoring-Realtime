@@ -72,8 +72,10 @@ public final class FullSnapshotSmoke {
     public static void main(String[] args) {
         var smoke=new FullSnapshotSmoke();
         try { smoke.run(List.of(args).contains("--gui")); }
-        catch(Exception failure) { System.err.println("T2-C1 FAIL phase="+smoke.phase+" class="+failure.getClass().getSimpleName());
-            if (failure instanceof IllegalStateException) System.err.println("Harness check: " + failure.getMessage());
+        catch(Exception failure) { System.err.println("T2-C1 FAIL phase="+smoke.phase+" "+SmokeCleanup.classes(failure));
+            if (failure instanceof IllegalStateException && failure.getCause()==null) System.err.println("Harness check: " + failure.getMessage());
+            // Cleanup failures behind a primary failure are reported too, never dropped.
+            for(Throwable cleanup:failure.getSuppressed()) System.err.println("T2-C1 also cleanup FAIL "+SmokeCleanup.classes(cleanup));
             System.exit(1); }
     }
     private static String env(String name,String fallback) { return System.getenv().getOrDefault(name,fallback); }
@@ -83,6 +85,7 @@ public final class FullSnapshotSmoke {
         String schema="full_snapshot_test_"+UUID.randomUUID().toString().replace("-","");
         try(Connection admin=DriverManager.getConnection(url,env("DB_USER","toeic"),env("DB_PASSWORD",""))) {
             check(schema.matches("full_snapshot_test_[a-f0-9]{32}"),"safe isolated schema");admin.createStatement().execute("CREATE SCHEMA "+schema);
+            Throwable primary=null;
             try {
                 Flyway.configure().dataSource(url,env("DB_USER","toeic"),env("DB_PASSWORD","")).schemas(schema).defaultSchema(schema).load().migrate();
                 var app=new SpringApplication(ToeicServerApplication.class);app.setBannerMode(Banner.Mode.OFF);
@@ -96,17 +99,24 @@ public final class FullSnapshotSmoke {
                 if(view!=null) {fx(() -> {view.close();if(stage!=null)stage.close();return null;});view=null;}
                 if(guiTransport!=null) {guiTransport.close();guiTransport=null;}
                 verifyScheduledMaintenance();
+            } catch(Throwable failure) {
+                primary=failure;throw failure;
             } finally {
-                if(view!=null) fx(() -> {view.close();if(stage!=null)stage.close();return null;});
-                if(guiTransport!=null) guiTransport.close();
-                if(gui) Platform.exit();
-                if(context!=null) {
-                    var state=context.getBean(MonitoringStateService.class);context.close();context=null;
+                // Every owned resource is released even if an earlier step fails; each reports itself.
+                var cleanup=new SmokeCleanup("T2-C1");
+                if(view!=null) cleanup.step("fx-dashboard-view",() -> fx(() -> {view.close();if(stage!=null)stage.close();return null;}));
+                view=null;
+                if(guiTransport!=null) cleanup.step("gui-transport",guiTransport::close);
+                guiTransport=null;
+                if(gui) cleanup.step("fx-platform",Platform::exit);
+                if(context!=null) cleanup.step("spring-context-and-full-state-ram",() -> {
+                    var state=context.getBean(MonitoringStateService.class);
+                    try {context.close();} finally {context=null;}
                     check(state.activeAttempts()==0,"RAM cleared on Spring shutdown");
-                    System.out.println("PASS REAL Spring shutdown clears full-state RAM");
-                }
-                admin.createStatement().execute("DROP SCHEMA "+schema+" CASCADE");
-                System.out.println("PASS only owned TEST schema/server/Edge/FX resources cleaned; shared history untouched");
+                });
+                cleanup.step("owned-test-schema",() -> admin.createStatement().execute("DROP SCHEMA "+schema+" CASCADE"));
+                if(cleanup.passed()) System.out.println("PASS only owned TEST schema/server/FX resources cleaned; shared history untouched");
+                cleanup.finish(primary,"");
             }
         }
         for(MessageMeasurements m:measurements) if(m.enabled()) {
@@ -147,7 +157,7 @@ public final class FullSnapshotSmoke {
                 phase="EDGE";
                 Path edge=Path.of(env("ProgramFiles(x86)","C:/Program Files (x86)"),"Microsoft/Edge/Application/msedge.exe");
                 check(Files.isRegularFile(edge),"owned Edge available");
-                Path profile=Files.createTempDirectory("toeic-t2c1-edge-");Process owned=null;
+                Path profile=Files.createTempDirectory("toeic-t2c1-edge-");Process owned=null;Throwable edgeFailure=null;
                 try {
                     owned=new ProcessBuilder(edge.toString(),"--headless=new","--disable-gpu","--no-first-run","--no-default-browser-check",
                             "--disable-background-networking","--remote-debugging-port=0","--user-data-dir="+profile,"about:blank")
@@ -160,12 +170,18 @@ public final class FullSnapshotSmoke {
                     await(() -> current(dashboard).processes().stream().noneMatch(item -> item.pid()==pid),"REAL owned Edge removed by next full");
                     check(jdbc().sql("SELECT count(*) FROM monitoring_events WHERE attempt_id=:a AND pid=:p").param("a",ATTEMPT).param("p",pid).query(Long.class).single()>0,"history still present after disappearance");
                     if(gui) {await(() -> !guiContains(pid),"GUI Edge row removed");screenshot("t2c1-edge-closed.png");}
+                } catch(Throwable failure) {
+                    edgeFailure=failure;throw failure;
                 } finally {
-                    if(owned!=null) stopOwned(owned);
-                    phase="EDGE_PROFILE_CLEANUP";
-                    cleanupProfile(profile);
+                    var cleanup=new SmokeCleanup("T2-C1");
+                    Process remaining=owned;
+                    if(remaining!=null) cleanup.step("owned-edge-process-tree",() -> stopOwned(remaining));
+                    cleanup.step("owned-edge-profile",() -> cleanupProfile(profile));
+                    if(edgeFailure==null && !cleanup.passed()) phase="EDGE_PROFILE_CLEANUP";
+                    cleanup.finish(edgeFailure,"");
                 }
                 System.out.println("PASS REAL Edge -> production ProcessHandle/collector/full/WS/RAM/ACK/dashboard; close removes current PID and retains PostgreSQL history");
+                System.out.println("PASS owned Edge process tree and profile removed");
                 phase="RECONNECT";
                 String oldEpoch=monitoring.fullStatus().syncEpoch(),collector=current(dashboard).collectorSessionId();
                 long interruptionsBefore=jdbc().sql("SELECT count(*) FROM monitoring_interruptions WHERE attempt_id=:a").param("a",ATTEMPT).query(Long.class).single();

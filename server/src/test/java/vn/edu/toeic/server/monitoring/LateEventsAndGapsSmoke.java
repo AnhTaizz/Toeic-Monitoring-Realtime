@@ -82,8 +82,11 @@ public final class LateEventsAndGapsSmoke {
     public static void main(String[] args) {
         var smoke=new LateEventsAndGapsSmoke();
         try {smoke.run(List.of(args).contains("--gui"));}
-        catch(Exception error) {System.err.println("T2-C2 FAIL phase="+smoke.phase+" class="+error.getClass().getSimpleName());
-            if(error.getMessage()!=null&&error.getMessage().startsWith("TEST assertion: ")) System.err.println(error.getMessage());System.exit(1);}
+        catch(Exception error) {System.err.println("T2-C2 FAIL phase="+smoke.phase+" "+SmokeCleanup.classes(error));
+            if(error.getMessage()!=null&&error.getMessage().startsWith("TEST assertion: ")) System.err.println(error.getMessage());
+            // Cleanup failures behind a primary failure are reported too, never dropped.
+            for(Throwable cleanup:error.getSuppressed()) System.err.println("T2-C2 also cleanup FAIL "+SmokeCleanup.classes(cleanup));
+            System.exit(1);}
     }
     private static String env(String name,String fallback) {return System.getenv().getOrDefault(name,fallback);}
     private void run(boolean gui) throws Exception {
@@ -92,6 +95,7 @@ public final class LateEventsAndGapsSmoke {
         check(schema.matches("late_events_test_[a-f0-9]{32}"),"owned schema");
         try(Connection admin=DriverManager.getConnection(url,env("DB_USER","toeic"),env("DB_PASSWORD",""))) {
             admin.createStatement().execute("CREATE SCHEMA "+schema);
+            Throwable primary=null;
             try {
                 Flyway.configure().dataSource(url,env("DB_USER","toeic"),env("DB_PASSWORD","")).schemas(schema).defaultSchema(schema).target("7").load().migrate();
                 admin.createStatement().execute("SET search_path TO "+schema);
@@ -105,12 +109,20 @@ public final class LateEventsAndGapsSmoke {
                         "--toeic.state.stale-ms=2000","--toeic.state.scan-ms=25","--toeic.state.ttl-ms=5000");
                 measurements.add(context.getBean(RealtimeSessionRegistry.class).measurements());
                 origin="http://127.0.0.1:"+((WebServerApplicationContext)context).getWebServer().getPort();fixtures();verify(gui);
+            } catch(Throwable failure) {
+                primary=failure;throw failure;
             } finally {
-                if(view!=null) fx(() -> {view.close();if(stage!=null)stage.close();return null;});
-                if(guiClient!=null) guiClient.close();if(gui) Platform.exit();
-                if(context!=null) context.close();
-                admin.createStatement().execute("DROP SCHEMA "+schema+" CASCADE");
-                System.out.println("PASS owned C2 schema/context/client resources cleaned; public/dev untouched");
+                // Every owned resource is released even if an earlier step fails; each reports itself.
+                var cleanup=new SmokeCleanup("T2-C2");
+                if(view!=null) cleanup.step("fx-dashboard-view",() -> fx(() -> {view.close();if(stage!=null)stage.close();return null;}));
+                view=null;
+                if(guiClient!=null) cleanup.step("gui-transport",guiClient::close);
+                guiClient=null;
+                if(gui) cleanup.step("fx-platform",Platform::exit);
+                if(context!=null) cleanup.step("spring-context",() -> {try {context.close();} finally {context=null;}});
+                cleanup.step("owned-test-schema",() -> admin.createStatement().execute("DROP SCHEMA "+schema+" CASCADE"));
+                if(cleanup.passed()) System.out.println("PASS owned C2 schema/context/client resources cleaned; public/dev untouched");
+                cleanup.finish(primary,"TEST assertion: ");
             }
         }
         for(var measurement:measurements) if(measurement.enabled()) {
