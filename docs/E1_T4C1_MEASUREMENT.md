@@ -15,6 +15,7 @@ E1Cli chỉ nối collector → trace và ground truth. Nó **không mở server
 ## Cấu hình khóa và lịch
 
 - Windows, JDK21; Python3.11+ stdlib; cùng máy/runtime/source/policy cho cả chiến dịch.
+- Trước `--full`, đặt alias máy không nhạy cảm và giữ nguyên cho cả 12 run, ví dụ `-Dtoeic.e1.machineAlias=LAB-A`. Runner từ chối full nếu thiếu alias; analyzer báo `MACHINE_ALIAS_REQUIRED` hoặc môi trường bị trộn thay vì coi hằng số giả là bằng chứng cùng máy.
 - 250/500/1000/2000 ms, ba lượt mỗi chu kỳ. Thứ tự: 250→500→1000→2000; 500→1000→2000→250; 1000→2000→250→500.
 - Seed1234; mỗi run 10 child cho từng target hold200/800/3000ms (30 child). TEST `test-owned-process-v1`, maxConcurrent2, READY timeout3000ms, exit slack1500ms, maxRun180000ms. Production vẫn policy8 tên; không thêm java.exe.
 - Warmup15s, cửa sổ đo [15s,135s] tính từ origin JVM cha của run. Warmup hiện chỉ quét, chưa tạo child: startup/JIT của child chưa được warmup. Đây là giới hạn cần công bố, không tự coi 15s là steady state toàn workload.

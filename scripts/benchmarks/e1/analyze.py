@@ -1,5 +1,5 @@
 """Phân tích raw E1 bất biến, stdlib Python. Latency parent launch -> scan-end là cận trên, không kernel time."""
-import csv, hashlib, json, math, pathlib, statistics, sys, collections
+import csv, hashlib, json, math, pathlib, statistics, sys, collections, re
 
 def percentile(values, percent):
     return sorted(values)[max(0, math.ceil(len(values)*percent)-1)] if values else None
@@ -120,6 +120,20 @@ def write_csv(path,rows):
     with path.open('x',newline='',encoding='utf-8') as output:
         writer=csv.DictWriter(output,fieldnames=list(rows[0]));writer.writeheader();writer.writerows(rows)
 
+def campaign_quality(metadata_list):
+    reasons=[]
+    counts=collections.Counter(m['config']['pollMillis'] for m in metadata_list)
+    if counts != {250:3,500:3,1000:3,2000:3}: reasons.append('REQUIRES_4_PERIODS_X_3_UNIQUE_RUNS')
+    if any(m['measurementStartElapsedNanos']!=15_000_000_000 or m['measurementEndElapsedNanos']!=135_000_000_000
+           or m['config']['perDuration']!=10 for m in metadata_list): reasons.append('NOT_FULL_WINDOW_OR_WORKLOAD')
+    aliases=[m.get('machine') for m in metadata_list]
+    if any(not isinstance(alias,str) or not re.fullmatch(r'[A-Za-z0-9_.-]{1,80}',alias) or alias=='UNSPECIFIED' for alias in aliases):
+        reasons.append('MACHINE_ALIAS_REQUIRED')
+    signatures={json.dumps({k:m.get(k) for k in ('sourceSha','binarySha256','planSha256','policyVersion','javaVersion','javaVendor','machine','os','osVersion','architecture')},sort_keys=True)
+                +json.dumps({k:v for k,v in m['config'].items() if k!='pollMillis'},sort_keys=True) for m in metadata_list}
+    if len(signatures)!=1: reasons.append('MIXED_SOURCE_PLAN_CONFIG_OR_ENVIRONMENT')
+    return reasons,counts
+
 def main():
     root=pathlib.Path(sys.argv[1]);out=pathlib.Path(sys.argv[2]);out.mkdir(parents=True,exist_ok=False)
     summary=[];all_events=[];inventory=[];seen_ids=set();metadata_list=[]
@@ -138,14 +152,7 @@ def main():
     if any(row['status']=='INVALID' for row in inventory):
         raise ValueError('INVALID_RUNS: see run-status.json; no campaign summary emitted')
     if not summary: raise ValueError('NO_RUNS; no synthetic data emitted')
-    reasons=[]
-    counts=collections.Counter(m['config']['pollMillis'] for m in metadata_list)
-    if counts != {250:3,500:3,1000:3,2000:3}: reasons.append('REQUIRES_4_PERIODS_X_3_UNIQUE_RUNS')
-    if any(m['measurementStartElapsedNanos']!=15_000_000_000 or m['measurementEndElapsedNanos']!=135_000_000_000
-           or m['config']['perDuration']!=10 for m in metadata_list): reasons.append('NOT_FULL_WINDOW_OR_WORKLOAD')
-    signatures={json.dumps({k:m.get(k) for k in ('sourceSha','binarySha256','planSha256','policyVersion','javaVersion','javaVendor','machine','os','osVersion','architecture')},sort_keys=True)
-                +json.dumps({k:v for k,v in m['config'].items() if k!='pollMillis'},sort_keys=True) for m in metadata_list}
-    if len(signatures)!=1: reasons.append('MIXED_SOURCE_PLAN_CONFIG_OR_ENVIRONMENT')
+    reasons,counts=campaign_quality(metadata_list)
     (out/'campaign-status.json').write_text(json.dumps(dict(status='PARTIAL' if reasons else 'CANDIDATE_REVIEW_REQUIRED',
             reasons=reasons,countsByPoll=dict(counts),humanReview='NOT_ASSERTED'),indent=2),encoding='utf-8')
     write_csv(out/'summary-by-duration.csv',summary)

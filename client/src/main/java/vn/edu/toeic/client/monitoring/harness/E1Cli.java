@@ -18,7 +18,9 @@ public final class E1Cli {
         if(args[0].equals("--dry-run")){System.out.println("DRY_RUN VALID: 12 runs, warmup15s + measure120s, 10 x 200/800/3000ms; rotated order; FULL monitoring default unchanged; no spawn");return;}
         Path root=Path.of(args[1]);Files.createDirectories(root);
         if(args[0].equals("--full")) {
-            if(!System.getProperty("os.name").startsWith("Windows")||sha.equals("UNRECORDED"))throw new IllegalStateException("FULL requires Windows/source SHA; use labelled smoke elsewhere");
+            if(!System.getProperty("os.name").startsWith("Windows")||sha.equals("UNRECORDED")
+                    ||ControlledProcessHarness.machineAlias().equals("UNSPECIFIED"))
+                throw new IllegalStateException("FULL requires Windows/source SHA/machine alias; use labelled smoke elsewhere");
             var os=java.lang.management.ManagementFactory.getOperatingSystemMXBean();
             if(os instanceof com.sun.management.OperatingSystemMXBean details&&details.getFreeMemorySize()<512L*1024*1024)throw new IllegalStateException("INSUFFICIENT_FREE_MEMORY");
             if(Files.getFileStore(root).getUsableSpace()<512L*1024*1024)throw new IllegalStateException("INSUFFICIENT_DISK");
