@@ -391,3 +391,8 @@ Code `d19c639` trên nhánh local `qa/f01-listening-result-20261016` từ PR40HE
 ### Ghi chú làm dở — RC17/10/2026
 
 MSI0.3.9 installed906PASS local; cần B review F01, hòa PR45 với fix race40 và policy junction; manual hearing/máy2/LAN chưa nghiệm thu. Source TEST c224ba8, không merge nhánh nguồn/main hoặc ký thay owner. [Bàn giao](../../evidence/integration-final-20261017/REPORT.md).
+
+
+### Ghi chú làm dở — PR47 retarget main, 18/10/2026
+
+Source `3d93820` sửa RealtimeClient thuộc B: giữ dấu correlation đã hủy có giới hạn kể cả ACK đã lấy pending, bỏ phản hồi muộn lặp, retry/reconnect xóa đúng dấu; UNAUTHORIZED toàn phiên vẫn dừng kết nối. Phối hợp C review FullSnapshotDelivery deadline CLOSE/guard/worker. Focused148 PASS, riêng adapter63; clean/package mỗi lượt928 PASS/5SKIP với PG TEST thật; T3-C2 PASS, T3-C4 lượt mới 42/42 PASS LOCAL. C approval còn thiếu, không tự merge/approve hoặc sửa QD/tracker/MSI. [Hồ sơ C review](../../evidence/pr47-stabilize-20261018/REPORT.md).

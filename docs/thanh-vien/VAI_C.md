@@ -269,6 +269,8 @@ Chạy thật trên hai desktop: epoch cũ, mất ACK, khởi động lại clie
 
 **Bàn giao13/10/2026:** Sourced9475eb,579Java PASS, candidate factory production DELTA opt-in/capability socket, FULL default. [Guide](../MONITORING_DELTA_LIVE_GATE.md), [evidence](../../evidence/t3-c4/2026-10-13-verification.md). LOCAL preparation trên một Windows host/hai candidate JVM/proctor Application, REAL ProcessHandle/Edge/network/PG; fault seams SIMULATED. Gate20/10 chưa diễn ra, LAN hai máy/human B review NOT RUN; QD19 liên kết QD10 presence đang có. A xem auth/binding/scoped heartbeat rejection/maintenance; B xem factory/callback-generation/mode/UX và LAN. Không tự đánh dấu A3 DONE hoặc C4 nghiệm thu toàn phần; không C5/E1/E2. Git cuối trong PR/final, giữ nhánh.
 
+**Ghi chú làm dở PR47, 18/10/2026:** đã retarget main/fix source `3d93820`, focused148 và clean/package928 PASS/5SKIP; T3-C2 restart/resync PASS. C cần review FullSnapshotDelivery (deadline CLOSE, guard, worker/correlation cleanup) và phối hợp B xem RealtimeClient (cache hủy/ACK-ERROR-RESYNC muộn). T3-C4 lượt mới 42/42 PASS LOCAL; không merge khi thiếu C approval, không thay nghiệm thu LAN hoặc quyết định gate. [Hồ sơ](../../evidence/pr47-stabilize-20261018/REPORT.md).
+
 ### T3-C5 · Bản nháp báo cáo đồng bộ và giới hạn
 `2h` · phụ thuộc: T3-C4 · review: B
 
