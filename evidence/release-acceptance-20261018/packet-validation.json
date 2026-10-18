@@ -1,0 +1,17 @@
+{
+  "observedUtc": "2026-10-18T15:39:36.696514+00:00",
+  "label": "STATIC",
+  "device": "LOCAL_BUILD_HOST",
+  "operator": "Codex agent",
+  "sourceMain": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "testFix": "9bd052a34d17d05a8dd7d7310ffb9667e91eebb0",
+  "localLinksChecked": 12,
+  "sourceBindingsVerified": 39,
+  "rawLogHashesVerified": 3,
+  "powershellBlocksParsed": 6,
+  "c5PatchApplyCheck": "PASS",
+  "privacyScan": "PASS automated scan + manual source review; no runtime raw logs published",
+  "productionDiff": "NONE",
+  "result": "PASS",
+  "limits": "Static handoff validation is not runtime build/install/LAN/human signoff."
+}

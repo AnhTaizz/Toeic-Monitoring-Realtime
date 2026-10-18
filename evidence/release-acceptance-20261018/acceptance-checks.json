@@ -1,0 +1,84 @@
+{
+  "observedUtc": "2026-10-18T15:32:41.464376+00:00",
+  "sourceMain": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "testFixSource": "9bd052a34d17d05a8dd7d7310ffb9667e91eebb0",
+  "actor": "Codex agent",
+  "device": "LOCAL_BUILD_HOST",
+  "tests": {
+    "modeBefore": {
+      "label": "REAL_WORKERS_MOCK_READINGS_TRANSPORT",
+      "source": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "pass": 8,
+      "fail": 0,
+      "skip": 0,
+      "note": "Diagnostic only; CI55 failure retained"
+    },
+    "modeAfter": {
+      "label": "REAL_WORKERS_MOCK_READINGS_TRANSPORT",
+      "source": "9bd052a34d17d05a8dd7d7310ffb9667e91eebb0",
+      "pass": 8,
+      "fail": 0,
+      "skip": 0,
+      "note": "8 unique cases, not16 distinct cases"
+    }
+  },
+  "installerPreflight": {
+    "status": "BLOCKED",
+    "expected": "WiX3 candle/light and SDK mt.exe",
+    "actual": "BLOCKED: missing target/t3-b5/tools/wix",
+    "label": "REAL"
+  },
+  "kit": {
+    "label": "STATIC_SOURCE_NOT_LAN",
+    "expected": "9 scripts/4 templates/41 unique NOT RUN rows; PR47 ancestor",
+    "actual": "PASS 9/4/41;32 handoff diff files; no production",
+    "source": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+    "runtime": "3d938209ff3a4aa0d92dba7fca0e606fbc0b5245",
+    "handoff": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "expectedZipSha256": "5b04dcb10d46ba760749af29b2abdeee126a9748512abe4d18b78e0d4881685a",
+    "artifact": "NOT AVAILABLE in known outputs/recovery; old app-image ZIPs do not match",
+    "sha256VerifiedThisSession": false,
+    "physicalPass": 0,
+    "physicalFail": 0,
+    "notRun": 41,
+    "regenerated": false,
+    "validation29Rerun": false
+  },
+  "rawLogs": [
+    {
+      "file": "candidate-mode-diagnostic.log",
+      "sha256": "8731e896be33343d74cd6813dfb8dcce5f2367296fcbc96908c126a2d5508760"
+    },
+    {
+      "file": "candidate-mode-after.log",
+      "sha256": "c67e362e1d366488699a6761450ac6b9411df2b5f2964628dc09db9cc025079f"
+    },
+    {
+      "file": "installer-preflight.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "notRun": [
+    "full Maven suite",
+    "MSI build/install/runtime",
+    "human hearing",
+    "physical LAN",
+    "PostgreSQL runtime in Task2",
+    "kit validation29",
+    "E1/E2 campaign",
+    "load"
+  ],
+  "cleanup": "No TEST cluster/schema/install/worker started by Task2. No .env/DB/firewall/registry/adapter modified.",
+  "toolingNote": "PS inventory attempts interrupted because extended-string serialization expanded metadata; own temporary oversized log removed, compact inventory recollected. Not product failures.",
+  "humanSignoff": {
+    "B": "PENDING",
+    "C": "PENDING"
+  },
+  "c5Patch": {
+    "label": "STATIC",
+    "base": "b057b0fa5c4f99f00dfaa29d49c2030f1e8a5f16",
+    "expected": "Applies to PR51 exact HEAD; original checkout/branch unchanged",
+    "actual": "git apply --check PASS; one existing report only; not applied or pushed to PR51",
+    "status": "PASS"
+  }
+}
