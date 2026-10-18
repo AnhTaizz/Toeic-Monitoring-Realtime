@@ -410,3 +410,5 @@ B/C nhận [runbook](../T3_C4_PHYSICAL_LAN_ACCEPTANCE.md),41case và ZIP từ so
 ### Bàn giao công bố Task2.1 — 18/10/2026
 
 C/người giữ máy build cung cấp riêng ZIP `target/T3C4-3044e5b.zip`, đối chiếu hash công bố với B trên A/B; không đẩy binary/raw/credential lên Git. Nhánh bàn giao có PR47HEAD3044e5b làm ancestor, Draft PR nhắm nhánh PR47; source/runtime artifact3044/3d93820 giữ nguyên. Review script TEST/evidence và thực hiện F với B; LAN0/41 NOT RUN, human B/C PENDING, FULL default/gate chưa chốt. [Hồ sơ công bố](../../evidence/t3-c4-physical-prep-20261018/PUBLISH.md).
+
+Bộ bàn giao đã ở [Draft PR52](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/52) vào nhánh PR47; không push source branch PR47 hoặc merge. C/B review và physical LAN còn chờ người thật.

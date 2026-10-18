@@ -404,3 +404,5 @@ Chưa có máy thứ hai; human B **PENDING**, LAN **NOT RUN/0case**. [Runbook](
 ### Bàn giao công bố Task2.1 — 18/10/2026
 
 Người dùng đã cho phép push nhánh chuẩn bị và mở Draft PR vào `gate/t3-c4-lan-20261017`, không merge. B dùng [runbook GitHub/nhận ZIP](../T3_C4_PHYSICAL_LAN_ACCEPTANCE.md), liên hệ người giữ máy build qua kênh riêng, kiểm SHA256 trên hai máy rồi chạy41case. LAN0/41 NOT RUN, human B PENDING; không dùng kit29PASS thay review/nghe/LAN thật. [Hồ sơ công bố](../../evidence/t3-c4-physical-prep-20261018/PUBLISH.md).
+
+Bộ bàn giao đã ở [Draft PR52](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/52) vào nhánh PR47; chưa merge. B review PENDING và LAN0/41 NOT RUN giữ nguyên.

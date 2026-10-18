@@ -10,6 +10,12 @@ Phạm vi: đưa tài liệu/template/script TEST và báo cáo đã lọc lên 
 
 [Runbook nhận ZIP và kiểm SHA256 trên cả hai máy](../../docs/T3_C4_PHYSICAL_LAN_ACCEPTANCE.md#1-tạo-và-chuyển-bộ-bàn-giao) quy định kiểm ZIP trước khi giải nén/chạy, đối chiếu manifest độc lập và từng JAR, không dùng hash mới thay hash sai. Không đóng gói lại ZIP cũ để thêm hướng dẫn mới. Việc chuyển ZIP tới B/C chưa được thực hiện trong task này.
 
-Kiểm công bố gồm toàn bộ diff, allowlist text, không binary/raw/credential/IP nội bộ, ancestry, hash ZIP/22file,41case duy nhất còn NOT RUN/Actual trống/reviewer PENDING và cú pháp các khối lệnh PowerShell trong runbook. Kết quả có máy kiểm trong `publish-audit.json`. Kit29/29 PASS là kết quả Task2 đã lưu, không nhận là lượt runtime mới. Maven/PG/JavaFX/fault probe/physical LAN không chạy trong Task2.1.
+Kiểm công bố gồm toàn bộ diff, allowlist text, không binary/raw/credential/IP nội bộ, ancestry, hash ZIP/22file,41case duy nhất còn NOT RUN/Actual trống/reviewer PENDING và cú pháp các khối lệnh PowerShell trong runbook. Kết quả kiểm tra tự động trong `publish-audit.json`. Kit29/29 PASS là kết quả Task2 đã lưu, không nhận là lượt runtime mới. Maven/PG/JavaFX/fault probe/physical LAN không chạy local trong Task2.1.
 
 B/C cần nhận/kiểm artifact, có hai Windows vật lý cùng LAN, cấp TEST DB/tài khoản/assignment/đề/audio, chạy preflight A/B rồi A1–A4/B–H/MT02–MT06. Nhóm F phải rút mạng B thật, chứng minh A tiếp tục và B phục hồi re-auth/OPEN/epoch/FULL; thu UI/HTTP/SQL/correlation, kiểm Reading/Listening và cleanup. Case MOCK/SIMULATED được tách riêng; chữ ký B/C phải do người thật điền. FULL vẫn mặc định, DELTA gate NOT DECIDED, tracker/QD owner approval giữ nguyên.
+
+## Kết quả công bố
+
+Đã push thường nhánh bàn giao và mở [Draft PR #52](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/52), base `gate/t3-c4-lan-20261017`, base SHA `3044e5bc963f7ac9d8cdc4d8410696c301080534`. Commit công bố đầu `6e58a1b621ea268787d381edeeb2d945b5b14833`; commit hồ sơ sau chỉ ghi nhận URL này. GitHub xác nhận diff32file,2commit tại lúc mở PR; không lặp phần production PR47. Không merge PR52/47. Source branch PR47 được kiểm trước/sau push và vẫn3044; kết quả cuối xem refs/PR GitHub.
+
+Maven/PG/GUI/LAN không chạy local trong bước công bố. CI có thể tự chạy theo workflow pull_request; không dùng CI thay physical LAN hoặc human B review. [Danh sách file đã công bố](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/52/files). ZIP vẫn nằm trên máy build, chưa gửi tới B/C; xem mục nhận ZIP trong runbook. **41/41 case NOT RUN,0physicalcase; B PENDING**.
