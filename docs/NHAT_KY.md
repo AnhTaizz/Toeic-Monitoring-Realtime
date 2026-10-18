@@ -722,3 +722,8 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 - C4 localFAIL tại event rollback: FULL peer2event đều5SEND/5ERROR/noACK, cleanup báo2unconfirmed; A retry/commit được. Test backoff100/400 khiến FULL hết budget trước lúc peer khác scan/gỡtrigger. Harness1072f77 giữ productionbackoff cho normalpeer, instrumentedpeer vẫnTEST100/400; maxAttempts5/await12s/assertions giữ. Không sửa production. Giữ failure raw/report; Python cũ không hỗ trợ Path.write_text newline nên runner đổi sangPython3.13 sẵn có, không sửa analyzer để tạoPASS.
 - Reuse PR52 (retargetmain) rồi PR51 bằng merge vào nhánh riêng, conflict docs giữ cả hai phía; áp patchC5 từPR56 rồi refresh trạng thái47/57/ZIP/E1. Sửa đúng nhãn envelopev1→v0 trong reportA5, không đổi protocol. Chạm tài liệu A/C và harnessC theo nhiệm vụ tích hợp; reviewer kỹ thuật là agent được người dùng giao, không owner giả.
 - Còn dở: CI workflow exact-main/harness mới cần nhập nhánh tích hợp; rerunC4, finalmain clean/PG/CI/MSI. PhysicalLAN0/41, máy2/hearing NOT RUN. Tracker/hours không đổi, FULL baseline.
+
+
+## 19/10/2026 · Codex · sửa race cleanup test trên main
+
+19/10/2026 — CI exact-main0363995 run39150213101 FAIL: AudioPreparationTest JUnit TempDir xóa next-speaker WAV đồng thời với cleanup async của production close(). Sửa TEST chờ Files.notExists(sample) bằng await5s hiện có, cho cả AfterEach và view kế tiếp; giữ mọi assertion READY/epoch, không đổi production close/FX. Focused10case×5lượt PASS trên Windows (fixture API/media MOCK), không gọi50case duy nhất. Clean main0363995 test/package mỗi lượt942PASS/4SKIP nhưng CI này vẫn FAIL; không gán CI củaPR58 cho main. Full/PG/CI sau corrective sẽ ghi tiếp; LAN0/41, hearing/máy2 NOT RUN.

@@ -413,3 +413,6 @@ T3-B1/QD33: source56a27e9 local giữ cache hợp lệ, khóa JVM+process phối
 
 ## Ghi chú tích hợp19/10/2026
 Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG68PASS/2SKIPsubset, GUI11/Flow41/MODE8×5PASSlocal. Codex review kỹ thuật theo người dùng giao, không ghi human signatures. PR52/51 đã reuse vào nhánh tích hợp; A5 nhãn envelopev0 được sửa. HarnessC4 localFAIL do TEST backoffnormalpeer được giữ bằng chứng;1072f77 giữ lại productionbackoff, chờ rerun. Còn finalmain/CI/MSI và physicalLAN0/41/hearing/máy2; tracker không đổiDONE, FULL baseline.
+
+
+19/10/2026 — CI exact-main0363995 run39150213101 FAIL: AudioPreparationTest JUnit TempDir xóa next-speaker WAV đồng thời với cleanup async của production close(). Sửa TEST chờ Files.notExists(sample) bằng await5s hiện có, cho cả AfterEach và view kế tiếp; giữ mọi assertion READY/epoch, không đổi production close/FX. Focused10case×5lượt PASS trên Windows (fixture API/media MOCK), không gọi50case duy nhất. Clean main0363995 test/package mỗi lượt942PASS/4SKIP nhưng CI này vẫn FAIL; không gán CI củaPR58 cho main. Full/PG/CI sau corrective sẽ ghi tiếp; LAN0/41, hearing/máy2 NOT RUN.

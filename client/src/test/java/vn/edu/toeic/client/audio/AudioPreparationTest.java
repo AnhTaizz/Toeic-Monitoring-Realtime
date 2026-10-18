@@ -41,7 +41,13 @@ class AudioPreparationTest {
         files = new AudioFiles(directory.resolve("audio cache"));
         preparation = new AudioPreparation(api, files, directory.resolve("speaker"), ignored -> callbackThreads.add(Thread.currentThread().getName()));
     }
-    @AfterEach void cleanup() { preparation.close(); }
+    @AfterEach void cleanup() throws Exception { closeAndAwaitSampleRemoval(preparation); }
+    private static void closeAndAwaitSampleRemoval(AudioPreparation value) throws Exception {
+        Path sample = value.snapshot().sample();
+        value.close();
+        // Production close is non-blocking for FX; TempDir must wait for its async deletion.
+        if (sample != null) await(() -> Files.notExists(sample));
+    }
     private void prepared() throws Exception {
         preparation.prepare("ATTEMPT"); await(() -> preparation.snapshot().phase() == AudioPreparation.Phase.FILES_READY);
     }
@@ -129,7 +135,8 @@ class AudioPreparationTest {
         await(() -> !api.reports.isEmpty());
         preparation.close();
         Fixture nextApi = new Fixture();
-        try (AudioPreparation next = new AudioPreparation(nextApi, files, directory.resolve("next-speaker"), ignored -> {})) {
+        AudioPreparation next = new AudioPreparation(nextApi, files, directory.resolve("next-speaker"), ignored -> {});
+        try {
             next.prepare("ATTEMPT", 43);
             await(() -> Set.of(AudioPreparation.Phase.FILES_READY, AudioPreparation.Phase.ERROR).contains(next.snapshot().phase()));
             assertThat(next.snapshot().phase()).withFailMessage("New audio view failed: %s", next.snapshot().message())
@@ -138,6 +145,8 @@ class AudioPreparationTest {
             assertThat(api.reports).allMatch(r -> !r.ready() && r.writerEpoch() == 42);
             assertThat(nextApi.reports).allMatch(r -> r.writerEpoch() == 43);
             assertThat(nextApi.acquisitions).isZero();
+        } finally {
+            closeAndAwaitSampleRemoval(next);
         }
     }
 
