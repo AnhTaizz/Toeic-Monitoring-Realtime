@@ -84,3 +84,6 @@ evidence/unified-20261016/** -text whitespace=-blank-at-eol,-blank-at-eof,-space
 
 # PR39 QA evidence preserves exact bytes for artifact checksums.
 evidence/b-pr39-acceptance-20261016/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
+# T3-C4 physical preparation metadata retains exact checksummed bytes across Windows/WSL.
+evidence/t3-c4-physical-prep-20261018/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol

@@ -1,0 +1,16 @@
+{
+    "sourceSha":  "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+    "runtimeSourceSha":  "3d938209ff3a4aa0d92dba7fca0e606fbc0b5245",
+    "artifactFilesVerified":  22,
+    "zipExtraction":  "PASS",
+    "manifestAndJarHashes":  "PASS",
+    "tamperRejected":  "PASS",
+    "initializedCases":  41,
+    "allCasesInitiallyNotRun":  true,
+    "humanBReview":  "PENDING",
+    "physicalCasesExecuted":  0,
+    "lan":  "NOT RUN",
+    "networkInvoked":  false,
+    "zipSha256":  "5b04dcb10d46ba760749af29b2abdeee126a9748512abe4d18b78e0d4881685a",
+    "manifestSha256":  "613b72d4987d08da18c272ddeaab12c1afa3f01c3d1dd6f05a644ff8a5aa1730"
+}

@@ -1,5 +1,9 @@
 # Trạng thái kiểm thử
 
+18/10/2026 — Task2.1 publication chỉ kiểm ancestry/diff/text-privacy/hash artifact/41caseNOT RUN/link/cú pháp lệnh runbook; [audit công bố](../evidence/t3-c4-physical-prep-20261018/PUBLISH.md). Không chạy lại Maven/PG/fault runtime hoặc LAN local; [Draft PR52](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/52) có CI tự chạy theo workflow. Kit29/29PASS giữ provenance Task2, không nâng kết quả nghiệm thu. LAN0/41 NOT RUN, B review PENDING.
+
+18/10/2026 — T3-C4 physical preparation:29/29kiểm tra kit PowerShell PASS, lặp29/29trên ZIP giải nén;22file hash, trạng thái41caseNOT RUN và tamper rejection PASS. Fixture MOCK origin/map/file, không gọi mạng. LAN **NOT RUN,0case**; protocol probe/fault runtime/SQL/nghe thật/cleanup vật lý NOT RUN, human B PENDING. Không chạy Maven/CI mới vì chỉ script TEST/docs, không nâng MT/LT/IT hoặc dùng local42/42thay LAN. [Báo cáo](../evidence/t3-c4-physical-prep-20261018/REPORT.md).
+
 18/10/2026 — PR47 retarget main: focused client148 PASS (RealtimeClient63), server monitoring/network118 PASS/4SKIP; clean test và package mỗi lượt928 PASS/5SKIP,0failure/error với PostgreSQL TEST thật. T3-C2 restart/resync PASS; T3-C4 lượt mới 42/42 PASS LOCAL. Có regression FAIL trước sửa và hai lượt cấu hình DB FAIL được giữ riêng; không dùng 42/42 lịch sử làm PASS mới. Xem [bàn giao PR47](../evidence/pr47-stabilize-20261018/REPORT.md). Các trạng thái 27 case/LAN/owner review không được nâng bởi lượt local này.
 
 17/10/2026 — T3-C4 gate trên source `2b6c9ce`, base PR #43 `772c6e9`: focused client 77 PASS; local live gate 42/42 PASS trên một Windows host với PostgreSQL TEST schema riêng; full Maven BUILD SUCCESS (protocol45/client610/server219/spike1, 48 PostgreSQL test skip ở lệnh full, 0 fail/error). Lượt local gate đã chạy PostgreSQL thật. MT02–MT06 giữ `PARTIAL` vì ACK/base faults là SIMULATED và chưa có LAN hai máy/human B review. Gate `PARTIAL / NOT DECIDED`; FULL mặc định. [Evidence 17/10](../evidence/t3-c4/2026-10-17-lan-gate.md), [runbook](MONITORING_DELTA_LIVE_GATE.md).
@@ -552,6 +556,19 @@ Lượt cuối `final-3702b6d-r3` trên cluster PostgreSQL 18 riêng, loopback; 
 
 FAIL trung gian giữ lại: CI 39012744164 (assert thông báo cũ, sửa `7c0491e`); `final-4fbc538` (classpath smoke, lỗi pipeline agent); `final-3702b6d`, `-r2` (môi trường); C1 với hạn 8 s: 11/24 FAIL (10 khóa profile Edge, 1 Edge không lên dashboard), hạn 45 s: 5/5 PASS. Vẫn NOT RUN: LAN hai máy, nghe thật, máy sạch, tải 1/5/10, E2. Chi tiết: [báo cáo](../evidence/stabilize-20261017/REPORT.md).
 
+## 18/10/2026 — main `f864034` + PR #47 ghép cục bộ (`eca6ad3`)
+
+| Suite | Kết quả | Ghi chú |
+|---|---|---|
+| `mvn clean test`, PG 18.1 riêng + proctor GUI | 931 test: 927 PASS, 0 FAIL, 4 SKIP | đếm từ XML; skip đã biết (symlink, 8.3, app-image, installed) |
+| `scripts/smoke-t3c4.ps1` | 42/42 PASS, run `T3C4-37bd5294…` | một máy, loopback; fault SIMULATED; LAN/B review NOT RUN |
+
+Không phải PASS của main một mình: bản ghép chứa sửa `2b6c9ce` chưa merge. [kiểm tra 18/10](../evidence/t3-c5/2026-10-18-update.md)
+
 
 ## Corrective S3-P1-01 · 18/10/2026
 Source audio56a27e9, [báo cáo mới](../evidence/audio-cache-p1-20261018/REPORT.md): exact-main stress4batch FAIL747/1280; source sửa4batch PASS1280/1280,20/20hash,0partial. Targeted AudioFiles/Sharing/Preparation/ApiClient/Playback:54PASS/2SKIP/0FAIL/ERROR. REAL Windows filesystem/multi-JVM/reader/cancellation; payload và API audio MOCK. LT01 phần kiểm file/READY có regression; không đổi LT01–LT04 hoặc IT01 thành nghiệm thu đầy đủ, nghe thủ công/LAN/máy2 NOT RUN. Diagnostic wrapper full-run không tính PASS. CI mới NOT RUN tại snapshot; sau lần push bị automatic approval review từ chối, ngày19/10 người dùng đã cho phép push hai nhánh và mở PR/CI.
+
+
+## Tích hợp19/10/2026
+PR47 vàPR57 đã vào main8a43a56. Sourcece38a5f clean test/package mỗi lượt946total=942PASS/4SKIP,0FAIL/ERROR; PG68PASS/2SKIPsubset. MODE8case lặp5lượtPASS; GUI11/11, ExamFlow41/41PASSlocal. C4 supplementaryFAIL ở fixture retrybudget (raw giữ); harness1072f77 sửa configurationnormalpeer, chưa nhận lượt rerunPASS trước khi chạy. LAN0/41 và hearing/MSI-máy2 NOT RUN; không nâng MT/LT/IT toàn hệ thống thànhPASS.

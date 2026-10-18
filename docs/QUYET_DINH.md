@@ -315,3 +315,7 @@ Trạng thái: IMPLEMENTED_LOCAL tại56a27e9, review kỹ thuật Codex theo ch
 Giữ nguyên cache đã đúng size/SHA; chỉ repair missing/known corrupt dưới khóa directory manifest. `file()`, verify và publication chia64striped JVM locks + sidecar FileLock liên process, không giữ khóa trong HTTP. Sidecar NOFOLLOW/plain file, giữ lâu dài để không split lock khi process khác chờ; cancellation interruptible. Không dùng ATOMIC_MOVE đơn lẻ; không replace valid file đang phát. Native FileLock là cooperative, chỉ xác minh local Windows với cùng phiên bản mới; network share/client cũ và malicious same-user TOCTOU không được nhận bảo đảm. Partial được dọn sau failure/cancel; hard kill giữa download ngoài bảo đảm cleanup.
 
 [Trước/sau, giới hạn, lệnh tái lập](../evidence/audio-cache-p1-20261018/REPORT.md). B còn dispositionPR45; không tự đóng45. Tracker không đổi.
+
+
+### 19/10/2026 · review kỹ thuật do người dùng giao và release FULL
+Người dùng chỉ định Codex reviewer và cho phép push hai nhánh mới/PR/CI. PR47 mergecd9a89d, PR57 merge8a43a56 sau kiểm source/test/CI đúngHEAD. Agent technical review QD31/32/34 theo giới hạn đã công bố, QD33 theo corrective57; không gán chữ ký A/B/C hoặc actualhours. FULL giữ baseline theo hợp đồng; DELTA chưa được promote, C/B gatephysical còn pending. Lượt localC4FAIL được giữ và sửa harness backoff1072f77, không thay production retry. MSI0.3.10/ZIP3044 là lịch sử, cần artifact mới ràng buộc source cuối.

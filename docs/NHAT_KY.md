@@ -674,6 +674,14 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 - Mỗi claim chính gắn source và evidence T3-A3/T3-A4; thêm ma trận NC01–NC08 và checklist reviewer C. Ghi rõ current state RAM một JVM, loopback không phải LAN/load, chưa có throughput/latency/resource.
 - 36 Markdown local links PASS, `git diff --check` PASS, audit 6 source owner PASS. Không chạy lại runtime vì docs-only; không tạo PASS mới. Load/LAN/GUI/human C review NOT RUN, báo cáo giữ DRAFT và tracker gốc giữ nguyên. [Report](T3_A5_NETWORK_CONCURRENCY_REPORT_DRAFT.md), [evidence](../evidence/t3-a5/2026-10-18-verification.md).
 
+## 2026-10-18 · agent · T3-C5 cập nhật và kiểm PR #47 trên main
+- Đã làm: thêm mục 9 vào bản nháp T3-C5 (dừng hẳn khi bị từ chối quyền, lịch sử giới hạn 5000/409, restart đổi epoch theo T3-A3, cách ly nhiều client T3-A4, sửa ACK CLOSE muộn còn ở PR #47). Ghép cục bộ PR #47 (`5d81aa0`) lên main `f864034` thành `eca6ad3` để kiểm, không push bản ghép.
+- Commit: nhánh `docs/t3-c5-update-20261018` (chỉ docs/evidence).
+- Đã kiểm trên `eca6ad3`: `mvn clean test` có PG/GUI 927 PASS/0 FAIL/4 SKIP; `smoke-t3c4.ps1` 42/42 PASS, measurement INCOMPLETE đúng dự kiến (hard-kill). [kiểm tra 18/10](../evidence/t3-c5/2026-10-18-update.md)
+- Còn dở: gate T3-C4 NOT_DECIDED/PARTIAL; LAN hai máy và B review NOT RUN; PR #47 chưa vào main.
+- Tiếp theo: C đổi base PR #47 về main; B review T3-C5 và checklist gate; chạy LAN hai máy.
+- Cần người khác: C (PR #47, quyết gate), B (review, máy thứ hai).
+
 
 ## 18/10/2026 — ổn định và retarget PR #47
 
@@ -685,9 +693,32 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 
 - Hậu kiểm cuối: T3-C4 mới42/42 PASS, source/JAR hash khớp C2/C4; measurement C4 INCOMPLETE do hard-kill chủ đích, không kết luận E2. 0 schema TEST, dừng cluster sở hữu và phục hồi env checkout. READY_FOR_C_REVIEW, chưa merge; CI HEAD hồ sơ và Git SHA cuối được xác minh trong PR/phản hồi.
 
+## 18/10/2026 — chuẩn bị T3-C4 physical LAN cho B/C
+
+- Người dùng xác nhận chưa có máy thứ hai; chuẩn bị bàn giao, không chạy/chấm hộ LAN. Nhánh local riêng `prepare/t3-c4-physical-lan-20261018` từ kết quả Task1 `3044e5b`, runtime `3d93820`; không thay PR47 hoặc workspace gốc.
+- Thêm runbook A1–A4/B–H/MT02–MT06, F01–F12 Reading/Listening,9script PowerShell TEST, checklist41case/topology/review/SQL. ZIP có thật22file, SHA256 `5b04dcb10d46ba760749af29b2abdeee126a9748512abe4d18b78e0d4881685a`; hash JAR giữ đúng Task1. Hướng dẫn vận hành cũ trỏ sang artifact3044, evidence cũ giữ nguyên.
+- Kiểm thật Windows PowerShell5.1/JDK21:29/29kit checks PASS, lặp29/29trên ZIP giải nén;22file/hash/init41NOT RUN/tamper reject PASS. Fixture origin/map/file MOCK, không gọi mạng. Protocol/fault runtime, PG/SQL, JavaFX, Maven/CI mới và physical acceptance NOT RUN; không dùng42/42local trước làm LAN.
+- LAN NOT RUN /0case thật; B/C human review PENDING. Cần máyB, DB TEST/assignment/audio/attempt mới và evidence physical F/ACK/DB/UI/cleanup. FULL default, không QD/tracker/gate quyết định; production source không đổi. [Báo cáo và artifact](../evidence/t3-c4-physical-prep-20261018/REPORT.md), [runbook](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md). Chưa push nhánh Task2.
+
+## 18/10/2026 — Task2.1 công bố bàn giao T3-C4
+
+- Người dùng ủy quyền push nhánh chuẩn bị và mở Draft PR vào nhánh PR47, không vào main. Fetch/GitHub xác nhận PR47 HEAD3044e5b; commit local e4c86aa có3044 làm ancestor,30file diff ban đầu được review; workspace/worktree gốc giữ nguyên.
+- Bổ sung hướng dẫn B/C nhận ZIP từ người giữ máy build qua USB/kênh chia sẻ riêng được phép, kiểm SHA256 độc lập trên A/B trước giải nén/chạy; ZIP hiện có giữ hash5b04dcb1…1685a và ngoài Git. Chỉ công bố text/script TEST/template/evidence đã lọc; production runtime giữ nguyên.
+- Checklist41case vẫn NOT RUN, LAN0/41, B review PENDING. Kiểm publication là ancestry/diff/hash/privacy/link/cú pháp lệnh, không chạy Maven/PG/physical LAN hoặc tạo kết quả runtime mới. [Hồ sơ công bố](../evidence/t3-c4-physical-prep-20261018/PUBLISH.md); PR/remote cuối xác minh sau push.
+
+- Kết quả Task2.1: push thường commit6e58a1b và mở [Draft PR52](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/52) vào `gate/t3-c4-lan-20261017`, GitHub32file/2commit lúc mở. Hash sourcePR47 trước/sau push vẫn3044e5b. Ghi nhận URL bằng commit hồ sơ tiếp theo; không merge/approve hoặc gửi ZIP thay người giữ máy build. Checksum8file evidence PASS; physical LAN0/41 NOT RUN, B PENDING.
+
 ## 18/10/2026 · Codex · corrective S3-P1-01 và tích hợp Phase3
 - Task: task.txt; bảo toàn checkout main6a41031 đang có uncommitted files, fetch xác nhận origin/main f864034 và PR45/47/51–56 chưa merge. Worktree riêng, không đổi branch thành viên.
 - Source56a27e9: cache hợp lệ không replace; static bounded JVM locks + persistent FileLock sidecar phối hợp publication/file/verify đa instance/process. HTTP không giữ khóa, partial đủ byte/SHA mới xét publish; lỗi I/O khác không bị coi là corrupt. Giữ QD33 root/junction/8.3/Unicode, v0/FULL và worker ngoài FX.
 - Windows/JDK21: exact main trước sửa747 lỗi/1280operations; sau sửa0/1280,20/20final hash,0partial. Targeted54PASS/2SKIP (symlink privilege); có bốn JVM, reader NOSHARE_DELETE, cancellation/retry/peer death/READY. Diagnostic encoding và wrapper failure giữ riêng, không gọi PASS.
 - [Evidence](../evidence/audio-cache-p1-20261018/REPORT.md). Người dùng chỉ định Codex reviewer kỹ thuật; không gán chữ ký A/B/C hoặc tự đánh tracker DONE. PR47/test56 ghép ở nhánh TEST riêng; full-run/source và packaging ghi hồ sơ tích hợp. MSI preflight PASS với WiX/SDK sẵn có; ZIP3044 tìm lại/hash đúng nhưng là source cũ.
 - Còn dở tại snapshot: lần push đầu bị automatic approval review từ chối vì yêu cầu ủy quyền trực tiếp; ngày19/10 người dùng đã cấp quyền push hai nhánh, mở PR và chạy CI. Chưa PR/CI/merge main ở lượt hồ sơ này. LAN0/41, nghe thật/máy2 NOT RUN. Tiếp tục kiểm local; xin quyền push cụ thể khi đầu ra reviewable hoàn tất.
+
+
+## 19/10/2026 · Codex · tích hợp main và sửa harness gate
+- Theo task.txt và người dùng chỉ định Codex reviewer: PR47 review kỹ thuật/CI đúng HEAD rồi mergecd9a89d; corrective audio PR57 CI39148710282 SUCCESS tạif92ea7b rồi merge8a43a56. Không gán human signatures, không force-push hoặc đổi nhánh thành viên.
+- Main chứa hai fix production và original test wait56 (giữ tác giả). Source tích hợpce38a5f clean test/package mỗi lượt942PASS/4SKIP; PG68PASS/2SKIPsubset. MODE8case×5lượt targetedPASS, không gọi40case duy nhất. GUI Reading/Listening11/11 và ExamFlow41/41PASSlocal, không hearing/LAN.
+- C4 localFAIL tại event rollback: FULL peer2event đều5SEND/5ERROR/noACK, cleanup báo2unconfirmed; A retry/commit được. Test backoff100/400 khiến FULL hết budget trước lúc peer khác scan/gỡtrigger. Harness1072f77 giữ productionbackoff cho normalpeer, instrumentedpeer vẫnTEST100/400; maxAttempts5/await12s/assertions giữ. Không sửa production. Giữ failure raw/report; Python cũ không hỗ trợ Path.write_text newline nên runner đổi sangPython3.13 sẵn có, không sửa analyzer để tạoPASS.
+- Reuse PR52 (retargetmain) rồi PR51 bằng merge vào nhánh riêng, conflict docs giữ cả hai phía; áp patchC5 từPR56 rồi refresh trạng thái47/57/ZIP/E1. Sửa đúng nhãn envelopev1→v0 trong reportA5, không đổi protocol. Chạm tài liệu A/C và harnessC theo nhiệm vụ tích hợp; reviewer kỹ thuật là agent được người dùng giao, không owner giả.
+- Còn dở: CI workflow exact-main/harness mới cần nhập nhánh tích hợp; rerunC4, finalmain clean/PG/CI/MSI. PhysicalLAN0/41, máy2/hearing NOT RUN. Tracker/hours không đổi, FULL baseline.

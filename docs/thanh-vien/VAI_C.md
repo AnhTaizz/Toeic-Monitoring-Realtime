@@ -280,6 +280,8 @@ Viết: state và event tách biệt ra sao, khoảng trống không phục hồ
 
 **Ghi chú làm dở:** B review bản nháp NOT RUN; C4 gate NOT_DECIDED/PARTIAL, còn LAN hai máy và review A/B. Merge tài liệu không chốt gate; dừng sau C5, chưa E1/E2/chặng 4.
 
+**Cập nhật 18/10 (agent):** thêm mục 9 vào bản nháp (thay đổi sau 13/10). PR #47 của C chưa vào main; ghép thử lên main `f864034`: 927 PASS/0 FAIL/4 SKIP, live gate 42/42. Việc của C: đổi base PR #47 về main, quyết gate sau LAN + B review. [kiểm tra 18/10](../evidence/t3-c5/2026-10-18-update.md)
+
 ---
 
 ## Chặng 4 (23–27/10) — 14 giờ
@@ -402,3 +404,17 @@ B gửi QA PR39 source9bfc75e: không sửa collector/reducer/E1 harness/policy,
 ### Ghi chú làm dở — RC17/10/2026
 
 Raw84 đã được tìm thấy/kiểm hash; rejoin12 byte-identical/analyzer17output deterministic, CPU time-weighted mới. C xác nhận kết luận E1 và patch41/43; C1 FAIL lịch sử UNRESOLVED; E2/gate chưa approve. Source TEST c224ba8, không merge nhánh nguồn/main hoặc ký thay owner. [Bàn giao](../../evidence/integration-final-20261017/REPORT.md).
+
+### Ghi chú làm dở — T3-C4 physical LAN, 18/10/2026
+
+B/C nhận [runbook](../T3_C4_PHYSICAL_LAN_ACCEPTANCE.md),41case và ZIP từ sourceTask1 `3044e5b`/runtime `3d93820`. LAN **NOT RUN/0case**, thiếu máyB, human B/C **PENDING**. KitPowerShell29checks PASS (MOCK fixture, không mạng), ZIP/hash/init/tamper PASS; probe/fault/SQL/runtime physical chưa chạy. C cần review script TEST, epoch/late callbacks/CLOSE cleanup của PR47, đối chiếu F no false ACK với state RAM vs history COMMIT, event/gap uniqueness và Reading/Listening giữ contract; giữ case thiếu evidence NOT RUN. Nếu tái hiện bug, corrective PR riêng với regression, không sửa thuật toán tại nhánh chuẩn bị; FULL default, gate NOT DECIDED, tracker/QD approval giữ nguyên. [Hồ sơ](../../evidence/t3-c4-physical-prep-20261018/REPORT.md).
+
+### Bàn giao công bố Task2.1 — 18/10/2026
+
+C/người giữ máy build cung cấp riêng ZIP `target/T3C4-3044e5b.zip`, đối chiếu hash công bố với B trên A/B; không đẩy binary/raw/credential lên Git. Nhánh bàn giao có PR47HEAD3044e5b làm ancestor, Draft PR nhắm nhánh PR47; source/runtime artifact3044/3d93820 giữ nguyên. Review script TEST/evidence và thực hiện F với B; LAN0/41 NOT RUN, human B/C PENDING, FULL default/gate chưa chốt. [Hồ sơ công bố](../../evidence/t3-c4-physical-prep-20261018/PUBLISH.md).
+
+Bộ bàn giao đã ở [Draft PR52](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/52) vào nhánh PR47; không push source branch PR47 hoặc merge. C/B review và physical LAN còn chờ người thật.
+
+
+## Ghi chú tích hợp19/10/2026
+Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG68PASS/2SKIPsubset, GUI11/Flow41/MODE8×5PASSlocal. Codex review kỹ thuật theo người dùng giao, không ghi human signatures. PR52/51 đã reuse vào nhánh tích hợp; A5 nhãn envelopev0 được sửa. HarnessC4 localFAIL do TEST backoffnormalpeer được giữ bằng chứng;1072f77 giữ lại productionbackoff, chờ rerun. Còn finalmain/CI/MSI và physicalLAN0/41/hearing/máy2; tracker không đổiDONE, FULL baseline.

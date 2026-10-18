@@ -1,0 +1,42 @@
+Case,Expected,Actual,PASS/FAIL,Machine,Source SHA,Evidence,Reviewer
+P01,Hai Windows vat ly khac nhau va topology duoc B/C ky,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+P02,Cung manifest va SHA256 hai JAR; JDK21,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+P03,A bind IP LAN; B truy cap IP that; HTTP va WS; firewall chi doc,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+P04,DB TEST rieng va de/audio/session/assignment hop le; login duoc,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+A1,Candidate start/stop; proctor khong tao collector,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+A2,Khong opt-in thi FULL ca khi server co delta capability,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+A3,Opt-in nhung server khong capability thi FULL; reconnect server moi danh gia lai,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+A4,Opt-in va capability hien tai thi DELTA_EXPERIMENTAL; FULL dau epoch; mode co dinh trong session,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+B01,ProcessHandle khop PID/start doc doc lap cua process TEST that,,NOT RUN,B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+B02,Mo/dong process; dashboard va event quan sat thay dung; khong duplicate moi poll,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+C01,SIMULATED ACK_DROP_ONCE retry nguyen envelope/ID; state khong apply hai lan,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+C02,SIMULATED ACK_DROP_ALL exhaustion ro; khong false ACK,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+C03,SIMULATED late ACK/ERROR/RESYNC khong sua generation da stop,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+C04,Event/gap ACK sau COMMIT; rollback khong success ACK; SQL durable,,NOT RUN,A,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+D01,SIMULATED future base tao RESYNC; UNSYNCED giu last known,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+D02,Client bo pending/base cu; scan moi FULL phuc hoi; history giu,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+E01,Restart dung candidate TEST; OPEN/epoch/FULL moi; candidate kia tiep tuc,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+E02,Restart server TEST; instance/epoch moi; history DB giu; ca hai reconnect,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+F01,Hai candidate va mot proctor active; checkpoints baseline du endpoint200,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+F02,Rut cap LAN B that; operator ghi topology va link; khong seam/kill/server stop,,NOT RUN,B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+F03,Presence B UNKNOWN va state STALE theo timeout; dashboard khong ket luan gian lan,,NOT RUN,A,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+F04,Candidate A van ONLINE va state tiep tuc cap nhat; save A khong bi anh huong,,NOT RUN,A,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+F05,Noi lai B; chung minh IP server that truy cap lai duoc,,NOT RUN,B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+F06,Reconnect hoac nut ket noi lai neu retry exhausted; re-auth; OPEN/epoch/FULL moi,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+F07,Khong false ACK/SAVED luc B offline; phan biet state RAM va history COMMIT,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+F08,EventId/gapId unique; interruption recovered; khong xoa history; gap chi khi thuc su overflow,,NOT RUN,A,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+F09,Reading answers/writer/deadline khong reset; committed vs local pending doi chieu rieng,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+F10,Listening dang phat dung/khoa khi gian doan; no autoplay/resume; co interruption,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+F11,Lap F tren attempt Listening moi va outage dai vuot retry budget; profile giu nguyen,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+F12,Stop/logout sau reconnect; CLOSE bounded; worker/subscription/pending duoc don,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+G01,Stop/start khong overlap worker; epoch/collector moi; old callback khong sua state,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+G02,Logout/close app TEST; worker/process dung; profile/audio marker khong bi xoa de replay,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+H01,No token/expired token bi tu choi; khong lo data,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+H02,Candidate khac/PROCTOR khong duoc ghi state ngoai quyen,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+H03,Proctor chua assignment khong doc state/events/gaps/interruptions,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+H04,Malformed JSON/type/ID bi tu choi; candidate A van hoat dong,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+MT02,State/event replay unique va same ID different payload CONFLICT; can SQL COMMIT proof,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+MT03,Missing/reordered delta UNSYNCED + RESYNC; khong doan state,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+MT04,FULL epoch moi roi delta epoch cu bi STALE; state khong doi,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+MT05,Restart collector/client/server; sequence/collector cu khong duoc sua state,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING
+MT06,FULL seq cao; seq thap; same seq conflict; ba trace full/delta canonical state/event oracle bang nhau,,NOT RUN,A+B,3044e5bc963f7ac9d8cdc4d8410696c301080534,,PENDING

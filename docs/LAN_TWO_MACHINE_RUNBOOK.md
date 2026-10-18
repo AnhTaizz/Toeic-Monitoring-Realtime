@@ -18,3 +18,7 @@ Giám thị: proctor → cùng Server (ghi rõ host nào)
 7. Lưu command/config không secrets, screenshots đã lọc PII, HTTP/DB expected/actual, PID owned chỉ local, logs/checksums/source và binary. Ghi topology2máy thật, người thao tác/nghe/review thật. Thu raw giữ nguyên, summary script sinh. Không đánh PASS phần chưa chạy.
 
 Human A/C review/QD29 approval và quyết định merge vẫn pending; runbook là chuẩn bị, không phải evidence LAN đã PASS.
+
+## Bàn giao T3-C4 ngày 18/10/2026
+
+Dùng [runbook và bộ PowerShell B/C](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md) trên source Task 1 `3044e5b` / runtime `3d93820`; bỏ artifact PR47 cũ cho lượt mới. Có manifest SHA256 hai JAR, checklist A1–A4/B–H/MT02–MT06 và checkpoint F Reading/Listening. Machine A chạy PG TEST/server/proctor/candidate A; Machine B chạy candidate B qua IP LAN thật. Hiện **NOT RUN / 0 case LAN / B PENDING** vì chưa có máy thứ hai. Fault seam/protocol probe là SIMULATED/MOCK và tách khỏi F; không đổi firewall/adapter hoặc default FULL.
