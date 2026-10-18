@@ -1,0 +1,30 @@
+03:21:38.754 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:55447/pr47_test (PostgreSQL 18.1)
+03:21:39.057 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "delta_state_test_326a88eab0204f0c8277451a487aa45c"."flyway_schema_history" does not exist yet
+03:21:39.073 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 10 migrations (execution time 00:00.116s)
+03:21:39.116 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "delta_state_test_326a88eab0204f0c8277451a487aa45c"."flyway_schema_history" ...
+03:21:39.374 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "delta_state_test_326a88eab0204f0c8277451a487aa45c": << Empty Schema >>
+03:21:39.414 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_326a88eab0204f0c8277451a487aa45c" to version "1 - auth schema"
+03:21:39.500 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_326a88eab0204f0c8277451a487aa45c" to version "2 - monitoring events"
+03:21:39.556 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_326a88eab0204f0c8277451a487aa45c" to version "3 - monitoring gaps"
+03:21:39.628 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_326a88eab0204f0c8277451a487aa45c" to version "4 - monitoring presence"
+03:21:39.683 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_326a88eab0204f0c8277451a487aa45c" to version "5 - exams and sessions"
+03:21:39.740 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_326a88eab0204f0c8277451a487aa45c" to version "6 - exam autosave requests"
+03:21:39.775 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_326a88eab0204f0c8277451a487aa45c" to version "7 - exam submits"
+03:21:39.799 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_326a88eab0204f0c8277451a487aa45c" to version "8 - monitoring event delivery"
+03:21:39.823 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_326a88eab0204f0c8277451a487aa45c" to version "9 - audio readiness"
+03:21:39.867 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_state_test_326a88eab0204f0c8277451a487aa45c" to version "10 - listening lifecycle"
+03:21:39.928 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 10 migrations to schema "delta_state_test_326a88eab0204f0c8277451a487aa45c", now at version v10 (execution time 00:00.253s)
+2026-10-18T03:21:54.538Z  INFO 27412 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-18T03:21:54.549Z  INFO 27412 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+PASS REAL full1/delta2/duplicate/conflict/invalid-remove/UNSYNCED/resync/full5/role scope; handwritten process set; event+gap committed separately
+PASS REAL no-op deltas from successful MOCK scans keep SYNCED across stale1200ms with full reconciliation30000ms
+PASS REAL hung collector auto STALE while heartbeat ONLINE; SIMULATED future-base injection -> real correlated resync/parser/encoder fresh full recovery in same epoch
+PASS REAL SOURCE_FAILURE/heartbeat ONLINE -> autonomous STALE/TTL; fresh scan -> old epoch rejected -> OPEN/new epoch/full1; event/gap retained
+2026-10-18T03:22:07.934Z  INFO 27412 --- [toeic-server] [.1-61454-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-18T03:22:07.937Z  INFO 27412 --- [toeic-server] [.1-61454-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+PASS REAL Spring restart / same port / persisted auth -> B2 reconnect / new serverInstanceId / new epoch / full; history retained
+PASS REAL token revocation before handling -> UNAUTHORIZED -> encoder/collector callback cleanup; no fake ACK
+T3-C2 REAL Spring/PG/HTTP/WS/client resync/freshness/restart PASS; readings MOCK, bad-order injection SIMULATED; TEST schema removed; gate/GUI/LAN/E1/E2/human review NOT RUN
+Summary COMPLETE: endpoints=4, categories=56; WS JSON application bytes only
+PASS measurement DELTA/RESYNC classified; no added delivery counters or double-counted ACK bytes.
+T3-C2 artifacts: server/target/t3c2-runtime/T3C2-fcc7759e-b7ce-431c-b14f-a4462afb632e

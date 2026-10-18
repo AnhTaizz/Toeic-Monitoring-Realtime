@@ -673,3 +673,14 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 - Tạo nhánh `docs/t3-a5-network-concurrency-report` từ T3-A4 `44b426d`; report commit `411be40`. Viết bản nháp kiến trúc server, REST/raw WS, auth/scope, transaction và đồng thời; tách trách nhiệm framework/library khỏi state machine, row lock, revision, epoch và commit-before-ACK do nhóm thiết kế.
 - Mỗi claim chính gắn source và evidence T3-A3/T3-A4; thêm ma trận NC01–NC08 và checklist reviewer C. Ghi rõ current state RAM một JVM, loopback không phải LAN/load, chưa có throughput/latency/resource.
 - 36 Markdown local links PASS, `git diff --check` PASS, audit 6 source owner PASS. Không chạy lại runtime vì docs-only; không tạo PASS mới. Load/LAN/GUI/human C review NOT RUN, báo cáo giữ DRAFT và tracker gốc giữ nguyên. [Report](T3_A5_NETWORK_CONCURRENCY_REPORT_DRAFT.md), [evidence](../evidence/t3-a5/2026-10-18-verification.md).
+
+
+## 18/10/2026 — ổn định và retarget PR #47
+
+- Giữ nguyên workspace gốc main và file/worktree chưa commit; checkout Git độc lập `target/pr47-stabilize-20261018`. Fetch xác minh PR47 `5d81aa0`, main `f864034`; merge commit `167caf3`, conflict NHAT_KY/TIEN_DO giữ evidence cả hai phía. Push thường, base PR47 đã là main.
+- Source `3d93820`: regression trước sửa tái hiện CLOSE future treo, phản hồi muộn lặp làm FAILED và ACK lấy pending trước cleanup. Giới hạn chờ CLOSE bằng ackTimeout/guard hủy, cache correlation giữ dấu có giới hạn kể cả pending đã được ACK. Chạm FullSnapshotDelivery của C và RealtimeClient của B; cần owner xem. Không đổi server hooks T3-A3 hoặc wire.
+- Focused cuối148 PASS/0SKIP, RealtimeClient63; server-focused118 PASS/4SKIP. Clean test/package mới mỗi lượt928 PASS/5SKIP,0failure/error; trong đó PG67 PASS/3SKIP. T3-C2 REAL Spring/PG/HTTP/WS/restart/resync PASS, process readings MOCK/fault SIMULATED. T3-C4 lượt mới 42/42 PASS LOCAL.
+- Giữ regression FAIL trước sửa, một FAIL fixture delta sau thêm guard (đã sửa fixture), hai lượt clean FAIL cấu hình thiếu DB_HOST/cổng5433. Cluster PostgreSQL18.1 TEST riêng loopback55447 thay môi trường cũ không hoạt động; không restart DB chung hoặc sửa .env gốc. Log công bố là bản dẫn xuất có hash, raw/XML giữ nguyên ignored.
+- [Bàn giao và checklist C](../evidence/pr47-stabilize-20261018/REPORT.md). CI source3d93820 SUCCESS; CI HEAD hồ sơ xem PR/checks và phản hồi cuối. C approval NOT RUN; không merge/approve thay C, không sửa tracker/QD owner approval hoặc quyết định FULL/DELTA; không LAN/MSI/E1/E2/load/đóng PR41/42/43/45.
+
+- Hậu kiểm cuối: T3-C4 mới42/42 PASS, source/JAR hash khớp C2/C4; measurement C4 INCOMPLETE do hard-kill chủ đích, không kết luận E2. 0 schema TEST, dừng cluster sở hữu và phục hồi env checkout. READY_FOR_C_REVIEW, chưa merge; CI HEAD hồ sơ và Git SHA cuối được xác minh trong PR/phản hồi.

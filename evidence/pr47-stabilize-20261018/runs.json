@@ -1,0 +1,371 @@
+{
+  "sourceSha": "3d938209ff3a4aa0d92dba7fca0e606fbc0b5245",
+  "mainSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "beforeSha": "5d81aa04925387fe90c3b7ac53aef14f6824b417",
+  "mergeSha": "167caf312767566417ad55840a008833844e1f15",
+  "runtimeChangedAfterSourceCommit": false,
+  "environment": "Windows / Oracle JDK 21.0.8 / Maven 3.9.11 / JavaFX 21.0.12 / owned PostgreSQL 18.1 loopback TEST",
+  "runs": [
+    {
+      "run": "regression-before",
+      "rawEncoding": "windows-1252",
+      "rawLog": "target/pr47-runs-20261018/regression-before.log",
+      "rawSha256": "66a2c47cc512244a0fedfd9a3645401a4100228feb05f25d9eda1929247b5fa0",
+      "publishedLog": "logs/regression-before.log",
+      "publishedSha256": "867d9552580a3a88e7d6610ce43ebc8da5a705ca5bb2e0b713c932c322fd30f1",
+      "transformation": "decode native log, normalize LF/trim trailing whitespace, replace workspace/home/user prefixes; original retained unchanged.",
+      "exit": 1,
+      "modules": {
+        "client": {
+          "tests": 72,
+          "failures": 1,
+          "errors": 1,
+          "skipped": 0,
+          "passed": 70
+        }
+      }
+    },
+    {
+      "run": "ack-retired-before",
+      "rawEncoding": "utf-8",
+      "rawLog": "target/pr47-runs-20261018/ack-retired-before.log",
+      "rawSha256": "9a6b42eb59dda0c445a1dd5e9390246a064e89c14b76694cfef2ff93b58f09a8",
+      "publishedLog": "logs/ack-retired-before.log",
+      "publishedSha256": "94817e80de2e53d6e4892c16c65463566cfc20a39ea6453a57fab3538f559b6c",
+      "transformation": "decode native log, normalize LF/trim trailing whitespace, replace workspace/home/user prefixes; original retained unchanged.",
+      "exit": 1,
+      "modules": {
+        "client": {
+          "tests": 1,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 0
+        }
+      }
+    },
+    {
+      "run": "focused-after",
+      "rawEncoding": "windows-1252",
+      "rawLog": "target/pr47-runs-20261018/focused-after.log",
+      "rawSha256": "44ddfb6f6f02df9a87a226b5687fb184d34e3e631a2589d8c7cdc06d8611839a",
+      "publishedLog": "logs/focused-after.log",
+      "publishedSha256": "87fd4a17d1167456f98ecd8a0fe59e4500e2b7b6f70c021cc4d0092ef7b9b546",
+      "transformation": "decode native log, normalize LF/trim trailing whitespace, replace workspace/home/user prefixes; original retained unchanged.",
+      "exit": 1,
+      "modules": {
+        "client": {
+          "tests": 139,
+          "failures": 0,
+          "errors": 1,
+          "skipped": 0,
+          "passed": 138
+        }
+      }
+    },
+    {
+      "run": "server-focused",
+      "rawEncoding": "utf-8",
+      "rawLog": "target/pr47-runs-20261018/server-focused.log",
+      "rawSha256": "3adb1478b6b1e73802cdf208358e0fc551247abe21ad1b95cf9f36842c878b97",
+      "publishedLog": "logs/server-focused.log",
+      "publishedSha256": "c64cca8ae4f26d4e1cd6db94815de60abde94a9225a331f1712a61483263eebc",
+      "transformation": "Extract Maven suite/build summaries; decode native log, normalize LF/trim trailing whitespace, replace workspace/home/user prefixes; original retained unchanged.",
+      "exit": 0,
+      "modules": {
+        "server": {
+          "tests": 122,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 4,
+          "passed": 118
+        }
+      },
+      "skippedTests": [
+        {
+          "class": "vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest",
+          "test": "eventTimelineReturnsExactly5000InOrderAndRejects5001",
+          "reason": "Environment variable [TOEIC_PG_INTEGRATION] does not exist"
+        },
+        {
+          "class": "vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest",
+          "test": "emptyAndSingleRecordHistoriesAreCompleteForAllThreeEndpoints",
+          "reason": "Environment variable [TOEIC_PG_INTEGRATION] does not exist"
+        },
+        {
+          "class": "vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest",
+          "test": "interruptionHistoryReturnsExactly5000InOrderAndRejects5001",
+          "reason": "Environment variable [TOEIC_PG_INTEGRATION] does not exist"
+        },
+        {
+          "class": "vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest",
+          "test": "gapHistoryReturnsExactly5000InOrderAndRejects5001",
+          "reason": "Environment variable [TOEIC_PG_INTEGRATION] does not exist"
+        }
+      ]
+    },
+    {
+      "run": "clean-test-pg",
+      "rawEncoding": "utf-8",
+      "rawLog": "target/pr47-runs-20261018/clean-test-pg.log",
+      "rawSha256": "2c45b87f62e04abf7badb04f517c53d41e6dfc1eee1a9f9195d2c88cc2f91f0b",
+      "publishedLog": "logs/clean-test-pg.log",
+      "publishedSha256": "77c09da2623aa7fd66dca668fab6d97076a0a674028e1d0776c51f1ebb695d06",
+      "transformation": "Extract Maven suite/build summaries; decode native log, normalize LF/trim trailing whitespace, replace workspace/home/user prefixes; original retained unchanged.",
+      "exit": 1,
+      "modules": {
+        "protocol": {
+          "tests": 45,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 45
+        },
+        "client": {
+          "tests": 642,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 2,
+          "passed": 640
+        },
+        "server": {
+          "tests": 179,
+          "failures": 0,
+          "errors": 4,
+          "skipped": 0,
+          "passed": 175
+        }
+      },
+      "skippedTests": [
+        {
+          "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+          "test": "symlinkInsideCacheRootIsRejectedWhereLinksCanBeCreated",
+          "reason": ""
+        },
+        {
+          "class": "vn.edu.toeic.client.exam.ScoreResultDialogTest",
+          "test": "warningFollowsOnlyServerFlagAndKeepsConfirmedResult(String, boolean)",
+          "reason": "Environment variable [TOEIC_PROCTOR_GUI] does not exist"
+        }
+      ]
+    },
+    {
+      "run": "clean-test-final",
+      "rawEncoding": "windows-1252",
+      "rawLog": "target/pr47-runs-20261018/clean-test-final.log",
+      "rawSha256": "162b3b82acb8421d3d1ddf650a17b0d0fd9d95c15d6bf9a5c99775824d7ef69a",
+      "publishedLog": "logs/clean-test-final.log",
+      "publishedSha256": "2753d850600fbc20450ccb1653aaa328a5e82709257df6c920a4b36285fa1319",
+      "transformation": "Extract Maven suite/build summaries; decode native log, normalize LF/trim trailing whitespace, replace workspace/home/user prefixes; original retained unchanged.",
+      "exit": 1,
+      "modules": {
+        "protocol": {
+          "tests": 45,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 45
+        },
+        "client": {
+          "tests": 642,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 2,
+          "passed": 640
+        },
+        "server": {
+          "tests": 179,
+          "failures": 0,
+          "errors": 4,
+          "skipped": 0,
+          "passed": 175
+        }
+      },
+      "skippedTests": [
+        {
+          "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+          "test": "symlinkInsideCacheRootIsRejectedWhereLinksCanBeCreated",
+          "reason": ""
+        },
+        {
+          "class": "vn.edu.toeic.client.exam.ScoreResultDialogTest",
+          "test": "warningFollowsOnlyServerFlagAndKeepsConfirmedResult(String, boolean)",
+          "reason": "Environment variable [TOEIC_PROCTOR_GUI] does not exist"
+        }
+      ]
+    },
+    {
+      "run": "clean-test-owned-pg",
+      "rawEncoding": "windows-1252",
+      "rawLog": "target/pr47-runs-20261018/clean-test-owned-pg.log",
+      "rawSha256": "2a253b328a4ed1c500bdb571a92f00548bc67332bb43e51ab7d101a8759e20ce",
+      "publishedLog": "logs/clean-test-owned-pg.log",
+      "publishedSha256": "9577b5d7145cf670562f9f228fa47e1370461dd05c224b7428e9e7ec88d2b639",
+      "transformation": "Extract Maven suite/build summaries; decode native log, normalize LF/trim trailing whitespace, replace workspace/home/user prefixes; original retained unchanged.",
+      "exit": 0,
+      "modules": {
+        "protocol": {
+          "tests": 45,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 45
+        },
+        "client": {
+          "tests": 642,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 2,
+          "passed": 640
+        },
+        "server": {
+          "tests": 245,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3,
+          "passed": 242
+        },
+        "monitoring-spike": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 1
+        }
+      },
+      "skippedTests": [
+        {
+          "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+          "test": "symlinkInsideCacheRootIsRejectedWhereLinksCanBeCreated",
+          "reason": ""
+        },
+        {
+          "class": "vn.edu.toeic.client.exam.ScoreResultDialogTest",
+          "test": "warningFollowsOnlyServerFlagAndKeepsConfirmedResult(String, boolean)",
+          "reason": "Environment variable [TOEIC_PROCTOR_GUI] does not exist"
+        },
+        {
+          "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+          "test": "installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle",
+          "reason": "Environment variable [TOEIC_INSTALLED_CLIENT] does not exist"
+        },
+        {
+          "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+          "test": "proctorControlsLt04RealGuiBeforeAndAfterAutomaticTimeout",
+          "reason": "Environment variable [TOEIC_PROCTOR_GUI] does not exist"
+        },
+        {
+          "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+          "test": "appImageProductionClientUsesUnifiedReadingListeningWithoutInstallerClaim",
+          "reason": "Environment variable [TOEIC_PACKAGED_CLIENT] does not exist"
+        }
+      ]
+    },
+    {
+      "run": "focused-source-final",
+      "rawEncoding": "utf-8",
+      "rawLog": "target/pr47-runs-20261018/focused-source-final.log",
+      "rawSha256": "755226f0f5bdf64b90094834a8fe462b32c9ef86eefb54dae20b54110edf53da",
+      "publishedLog": "logs/focused-source-final.log",
+      "publishedSha256": "1a1497fea1d23ea03ff53384c720648ff72027072ced158a4b60cc81f56e3f0b",
+      "transformation": "decode native log, normalize LF/trim trailing whitespace, replace workspace/home/user prefixes; original retained unchanged.",
+      "exit": 0,
+      "modules": {
+        "client": {
+          "tests": 148,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 148
+        }
+      }
+    },
+    {
+      "run": "package-owned-pg",
+      "rawEncoding": "windows-1252",
+      "rawLog": "target/pr47-runs-20261018/package-owned-pg.log",
+      "rawSha256": "1f8b8908b06c1f14f91bed3a85e818c63ed0cbedfeca85ec2e67e4797b10e706",
+      "publishedLog": "logs/package-owned-pg.log",
+      "publishedSha256": "09f490e0116466740ed1e9097ce7ced8a4913ff8a9b7cf3f5bd9fb5b59d23557",
+      "transformation": "Extract Maven suite/build summaries; decode native log, normalize LF/trim trailing whitespace, replace workspace/home/user prefixes; original retained unchanged.",
+      "exit": 0,
+      "modules": {
+        "protocol": {
+          "tests": 45,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 45
+        },
+        "client": {
+          "tests": 642,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 2,
+          "passed": 640
+        },
+        "server": {
+          "tests": 245,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3,
+          "passed": 242
+        },
+        "monitoring-spike": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 1
+        }
+      },
+      "skippedTests": [
+        {
+          "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+          "test": "symlinkInsideCacheRootIsRejectedWhereLinksCanBeCreated",
+          "reason": ""
+        },
+        {
+          "class": "vn.edu.toeic.client.exam.ScoreResultDialogTest",
+          "test": "warningFollowsOnlyServerFlagAndKeepsConfirmedResult(String, boolean)",
+          "reason": "Environment variable [TOEIC_PROCTOR_GUI] does not exist"
+        },
+        {
+          "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+          "test": "installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle",
+          "reason": "Environment variable [TOEIC_INSTALLED_CLIENT] does not exist"
+        },
+        {
+          "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+          "test": "proctorControlsLt04RealGuiBeforeAndAfterAutomaticTimeout",
+          "reason": "Environment variable [TOEIC_PROCTOR_GUI] does not exist"
+        },
+        {
+          "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+          "test": "appImageProductionClientUsesUnifiedReadingListeningWithoutInstallerClaim",
+          "reason": "Environment variable [TOEIC_PACKAGED_CLIENT] does not exist"
+        }
+      ]
+    },
+    {
+      "run": "smoke-t3c2",
+      "rawEncoding": "utf-8",
+      "rawLog": "target/pr47-runs-20261018/smoke-t3c2.log",
+      "rawSha256": "c44fe18f5da44def2ccb1190dfe44b79fe197f71e1ddf3d2f524dc08c1073071",
+      "publishedLog": "logs/smoke-t3c2.log",
+      "publishedSha256": "1ff4357c748867b38c87e113a7b2f31e1227934481b6b46637bfe3874e8bb6ac",
+      "transformation": "decode native log, normalize LF/trim trailing whitespace, replace workspace/home/user prefixes; original retained unchanged.",
+      "exit": 0
+    },
+    {
+      "run": "smoke-t3c4",
+      "rawEncoding": "utf-8",
+      "rawLog": "target/pr47-runs-20261018/smoke-t3c4.log",
+      "rawSha256": "3b14ac15f0102181ad29d13f33d7efd771855e80f13dd0787370fccd47240952",
+      "publishedLog": "logs/smoke-t3c4.log",
+      "publishedSha256": "fb9d9b2e7701239b9f543011f4df4fc9bbf18377978664dfaf35b5cab7cee230",
+      "transformation": "decode native log, normalize LF/trim trailing whitespace, replace workspace/home/user prefixes; original retained unchanged.",
+      "exit": 0
+    }
+  ]
+}

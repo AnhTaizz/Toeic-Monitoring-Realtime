@@ -1,0 +1,27 @@
+[
+  {
+    "smoke": "t3c2",
+    "runId": "T3C2-fcc7759e-b7ce-431c-b14f-a4462afb632e",
+    "sourceSha": "3d938209ff3a4aa0d92dba7fca0e606fbc0b5245",
+    "artifacts": "server/target/t3c2-runtime/T3C2-fcc7759e-b7ce-431c-b14f-a4462afb632e",
+    "metadataSha256": "b9e6e23a34863c63ad15255580181f2bd7459721e1d1baf316dc789266935e69",
+    "clientJarSha256": "a561c79fa4d3c00bb7f075207e31f49f3bc85bd6f79eed5cb145b7be79b28df3",
+    "serverJarSha256": "0152113ac2ba7652660098d0a17a0a83a3687c34d8d79dcde593ce20fd101ecc",
+    "status": "PASS",
+    "measurement": "COMPLETE 4 endpoints / 56 categories; process readings MOCK; faults SIMULATED"
+  },
+  {
+    "smoke": "t3c4",
+    "runId": "T3C4-230e2b78-8b0c-4166-a5b4-8e39ca62453e",
+    "sourceSha": "3d938209ff3a4aa0d92dba7fca0e606fbc0b5245",
+    "artifacts": "server/target/t3c4-live/T3C4-230e2b78-8b0c-4166-a5b4-8e39ca62453e",
+    "metadataSha256": "133b00cef0da3f1bc4aa0a908cf95179e15b5dff270d239f446da91da84df815",
+    "clientJarSha256": "a561c79fa4d3c00bb7f075207e31f49f3bc85bd6f79eed5cb145b7be79b28df3",
+    "serverJarSha256": "0152113ac2ba7652660098d0a17a0a83a3687c34d8d79dcde593ce20fd101ecc",
+    "cases": 42,
+    "status": "PASS",
+    "reportSha256": "a906b4e20703532fc065a0f4874cc7091502c79ddc3c092cd610b516ef56c058",
+    "publishedReport": "smoke-t3c4-report.json",
+    "measurement": "INCOMPLETE expected after owned hard-kill; raw retained; no E2 claim"
+  }
+]

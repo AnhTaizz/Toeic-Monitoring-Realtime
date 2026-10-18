@@ -21,6 +21,8 @@ Ngày chạy thực tế: 12–13/10/2026. Mốc gate kế hoạch: **20/10**, c
 
 Stop/logout đợi worker kết thúc, tháo listener/heartbeat lease và bỏ queue RAM với số lượng chưa xác nhận hiển thị. Kill JVM mất queue RAM; restart không giả phục hồi queue. Full/delta ACK chỉ xác nhận RAM server; PROCESS_OBSERVED/gap ACK xác nhận transaction DB đã commit. DB giữ lịch sử, không giữ current state qua server restart.
 
+Bổ sung ổn định hóa PR #47 ngày 18/10: `FullSnapshotDelivery.stopped()` đợi worker và bước giải phóng correlation CLOSE. Thời gian chờ write CLOSE tối đa bằng `MonitoringDelivery.Settings.ackTimeout` (mặc định 5 giây); write lỗi hoặc không hoàn thành vẫn giải phóng correlation. CLOSE đã hết hạn còn nằm trong hàng đợi bị guard từ chối trước khi ghi. Đây là đóng best-effort, không phải chờ ACK server. Adapter giữ dấu correlation đã hủy trong cache tối đa `maxPendingAcks`, bỏ qua phản hồi ACK/ERROR/RESYNC lặp trong cửa sổ đó; retry cùng request ID và reconnect xóa dấu tương ứng. ERROR xác thực toàn phiên không có request ID vẫn chấm dứt kết nối. [Regression và bàn giao C](../evidence/pr47-stabilize-20261018/REPORT.md).
+
 ## Chạy demo bằng PowerShell
 
 Từ thư mục dự án, JDK21, PostgreSQL đã sẵn sàng và `.env` local hợp lệ:
