@@ -5,7 +5,10 @@ import static vn.edu.toeic.client.monitoring.MonitoringDeliveryTest.*;
 import com.google.gson.JsonObject;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.CompletableFuture;
+import java.time.Duration;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
@@ -18,7 +21,11 @@ class FullSnapshotDeliveryTest {
     }
     static class Fixture implements AutoCloseable {
         final FakeTime time=new FakeTime();final MockTransport transport=new MockTransport();
-        final FullSnapshotDelivery full=new FullSnapshotDelivery("MOCK-A",transport,MonitoringDelivery.Settings.defaults(),ignored->{},()->time.nanos,false);
+        final FullSnapshotDelivery full;
+        Fixture() { this(MonitoringDelivery.Settings.defaults()); }
+        Fixture(MonitoringDelivery.Settings settings) {
+            full=new FullSnapshotDelivery("MOCK-A",transport,settings,ignored->{},()->time.nanos,false);
+        }
         void open() { full.bind("MOCK-collector");full.tick();transport.deliver(stateAck(transport.sent.getLast(),"MOCK-epoch")); }
         void acknowledge() { transport.deliver(stateAck(transport.sent.getLast(),full.status().syncEpoch())); }
         @Override public void close() { full.close(); }
@@ -94,5 +101,36 @@ class FullSnapshotDeliveryTest {
             f.transport.write.complete(null);f.full.stopped().get(2,TimeUnit.SECONDS);
             assertThat(f.transport.forgotten).contains(close.requestId());
         } finally { f.close(); }
+    }
+    @ParameterizedTest @ValueSource(booleans={false,true})
+    void stuckCloseWriteIsBoundedAndCannotWriteAfterNextDeliveryStarts(boolean deferred) throws Exception {
+        var defaults=MonitoringDelivery.Settings.defaults();
+        var settings=new MonitoringDelivery.Settings(defaults.capacity(),defaults.inFlight(),
+                Duration.ofMillis(50),defaults.maxAttempts(),defaults.initialBackoff(),defaults.maxBackoff(),
+                defaults.pumpInterval(),defaults.maxObservedProcesses());
+        try(Fixture f=new Fixture(settings)) {
+            f.open();f.transport.write=new CompletableFuture<>();f.transport.defer=deferred;f.full.close();
+            f.full.stopped().get(2,TimeUnit.SECONDS);
+            assertThat(f.transport.guard.getAsBoolean()).isFalse();
+            assertThat(f.transport.forgotten).hasSize(1);
+            assertThat(f.transport.listeners).isEmpty();assertThat(f.transport.stateListeners).isEmpty();
+            assertThat(f.transport.write).isNotDone();
+            f.transport.write.completeExceptionally(new IllegalStateException("MOCK late failure"));
+            assertThat(f.transport.forgotten).hasSize(1);
+            // The same adapter can be reused only after old CLOSE has been retired.
+            f.transport.defer=false;
+            try(var next=new FullSnapshotDelivery("MOCK-A",f.transport,settings,ignored->{},()->f.time.nanos,false)) {
+                next.bind("MOCK-next");next.tick();
+                assertThat(f.transport.sent.getLast().type()).isEqualTo("MONITORING_SYNC_OPEN");
+                assertThat(f.transport.sent.getLast().payload().get("collectorSessionId").getAsString()).isEqualTo("MOCK-next");
+            }
+        }
+    }
+    @Test void failedCloseWriteStillReleasesCorrelationAndStopsWorker() throws Exception {
+        try(Fixture f=new Fixture()) {
+            f.open();f.transport.failWrites=true;f.full.close();f.full.stopped().get(2,TimeUnit.SECONDS);
+            assertThat(f.transport.forgotten).contains(f.transport.sent.getLast().requestId());
+            assertThat(f.transport.listeners).isEmpty();assertThat(f.transport.stateListeners).isEmpty();
+        }
     }
 }

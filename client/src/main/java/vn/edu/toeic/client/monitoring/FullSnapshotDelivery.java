@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.LongSupplier;
 import java.util.function.Function;
@@ -297,8 +298,12 @@ public final class FullSnapshotDelivery implements AutoCloseable {
         if (forget!=null) transport.forgetPending(forget);
         CompletableFuture<Void> closeReleased=CompletableFuture.completedFuture(null);
         if (end!=null) try {
-            closeReleased=transport.sendForGeneration(end,socketGeneration)
-                    .handle((unused,error) -> { transport.forgetPending(end.requestId());return null; });
+            AtomicBoolean closeCurrent=new AtomicBoolean(true);
+            // CLOSE is best-effort. A stuck write must not block stop/start forever,
+            // and an expired CLOSE queued in the adapter must never run afterwards.
+            closeReleased=transport.sendForGeneration(end,socketGeneration,closeCurrent::get).copy()
+                    .orTimeout(settings.ackTimeout().toNanos(),TimeUnit.NANOSECONDS)
+                    .handle((unused,error) -> { closeCurrent.set(false);transport.forgetPending(end.requestId());return null; });
         } catch (RuntimeException ignored) { transport.forgetPending(end.requestId()); }
         worker.shutdownNow();
         CompletableFuture.allOf(workerStopped,closeReleased).whenComplete((unused,error)->stopped.complete(null));

@@ -429,10 +429,10 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         return () -> monitoringBinding.compareAndSet(binding, null);
     }
     @Override public synchronized void forgetPending(String requestId) {
-        if (pendingAcks.remove(requestId) != null) {
-            forgottenAcks.add(requestId);
-            while (forgottenAcks.size() > settings.maxPendingAcks()) forgottenAcks.remove(forgottenAcks.iterator().next());
-        }
+        pendingAcks.remove(requestId);
+        // ACK or deadline cleanup may already have consumed the pending entry.
+        forgottenAcks.add(requestId);
+        while (forgottenAcks.size() > settings.maxPendingAcks()) forgottenAcks.remove(forgottenAcks.iterator().next());
         heartbeatDeadlines.remove(requestId);
     }
     /** Fresh /auth/me result only; caller must stop old delivery before changing scope. */
@@ -482,7 +482,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
             validateHeader(message);
             if (("ACK".equals(message.type()) || "ERROR".equals(message.type()) || "MONITORING_RESYNC".equals(message.type()))
                     && message.requestId()!=null && !pendingAcks.containsKey(message.requestId())
-                    && forgottenAcks.remove(message.requestId())) return;
+                    && forgottenAcks.contains(message.requestId())) return;
             if ("ACK".equals(message.type())) {
                 validateScope(message.attemptId());
                 MessageEnvelope<JsonObject> request = pendingAcks.get(message.requestId());
