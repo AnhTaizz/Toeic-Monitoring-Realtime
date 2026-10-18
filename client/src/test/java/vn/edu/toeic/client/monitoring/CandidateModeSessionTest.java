@@ -66,6 +66,9 @@ class CandidateModeSessionTest {
             delta.source.set(List.of(new ProcessReading(2,"zalo.exe",null,true)));
             await(()->delta.transport.sent.stream().anyMatch(s->s.message().type().equals("MONITORING_DELTA")));
             assertThat(full.transport.stateMessages()).allMatch(s->s.message().type().equals("MONITORING_FULL"));
+            // State and event delivery have independent workers; a state write does not await the event write.
+            await(()->delta.transport.sent.stream().anyMatch(s->s.message().type().equals("PROCESS_OBSERVED")
+                    &&s.message().payload().get("pid").getAsLong()==2L));
             assertThat(delta.transport.sent.stream().filter(s->s.message().type().equals("PROCESS_OBSERVED")).map(s->s.message().payload().get("pid").getAsLong()).toList()).contains(1L,2L);
         }
     }
