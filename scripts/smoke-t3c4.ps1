@@ -1,4 +1,4 @@
-# One Windows host, REAL production Application UIs/ProcessHandle/Edge/Spring/PG/HTTP/WS.
+﻿# One Windows host, REAL production Application UIs/ProcessHandle/Edge/Spring/PG/HTTP/WS.
 # TEST ACK observer/base/source/DB faults SIMULATED; no second-machine LAN/human gate/E1/E2 claim.
 param([string]$JavaHome=$env:JAVA_HOME,[string]$Python='python')
 $ErrorActionPreference='Stop';$previous=@{}
@@ -30,6 +30,7 @@ try {
         source='REAL ProcessHandle/owned headless Edge; default factory normal; TEST instrumented factory for explicit faults only';fault='SIMULATED ACK observer suppression/base-seq/source wait-exception/TEST DB triggers';
         candidateModes='DELTA explicit opt-in with correlated capability; other candidate FULL opt-in off; disabled server fallback FULL';
         pollMillis=1000;refreshMillis=2000;fullMillis=30000;stateStaleMillis=6000;testTtlMillis=12000;productionTtlMillis=300000;heartbeatMillis=250;ackMillis=1500;maxAttempts=5;
+        eventBackoff='normal peer production defaults; instrumented peer TEST100/400ms to exercise exhaustion';
         seed='NOT_USED; deterministic owned fault toggles';humanBReview='NOT RUN';lanSecondMachine='NOT RUN / environment not provided';gate='PREPARATION ONLY;20Oct decision not made';e1e2='NOT RUN';
         clientJarSha256=(Get-FileHash 'client/target/client-0.1.0-SNAPSHOT-all.jar').Hash.ToLowerInvariant();serverJarSha256=(Get-FileHash 'server/target/server-0.1.0-SNAPSHOT.jar').Hash.ToLowerInvariant();sourceManifest=$manifest}
     [IO.File]::WriteAllText((Join-Path $output 'metadata.json'),($metadata | ConvertTo-Json -Depth 15),[Text.UTF8Encoding]::new($false))
