@@ -1,0 +1,12 @@
+{
+  "humanBReview": "PENDING",
+  "humanCReview": "PENDING",
+  "reviewedSourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+  "reviewerB": "PENDING",
+  "reviewerC": "PENDING",
+  "reviewedUtc": null,
+  "evidenceReferences": [],
+  "productionBlockers": "NOT EVALUATED ON PHYSICAL LAN",
+  "deltaGate": "NOT DECIDED",
+  "notes": "Only human B/C may confirm their review. Preparation is not acceptance."
+}

@@ -684,3 +684,10 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 - [Bàn giao và checklist C](../evidence/pr47-stabilize-20261018/REPORT.md). CI source3d93820 SUCCESS; CI HEAD hồ sơ xem PR/checks và phản hồi cuối. C approval NOT RUN; không merge/approve thay C, không sửa tracker/QD owner approval hoặc quyết định FULL/DELTA; không LAN/MSI/E1/E2/load/đóng PR41/42/43/45.
 
 - Hậu kiểm cuối: T3-C4 mới42/42 PASS, source/JAR hash khớp C2/C4; measurement C4 INCOMPLETE do hard-kill chủ đích, không kết luận E2. 0 schema TEST, dừng cluster sở hữu và phục hồi env checkout. READY_FOR_C_REVIEW, chưa merge; CI HEAD hồ sơ và Git SHA cuối được xác minh trong PR/phản hồi.
+
+## 18/10/2026 — chuẩn bị T3-C4 physical LAN cho B/C
+
+- Người dùng xác nhận chưa có máy thứ hai; chuẩn bị bàn giao, không chạy/chấm hộ LAN. Nhánh local riêng `prepare/t3-c4-physical-lan-20261018` từ kết quả Task1 `3044e5b`, runtime `3d93820`; không thay PR47 hoặc workspace gốc.
+- Thêm runbook A1–A4/B–H/MT02–MT06, F01–F12 Reading/Listening,9script PowerShell TEST, checklist41case/topology/review/SQL. ZIP có thật22file, SHA256 `5b04dcb10d46ba760749af29b2abdeee126a9748512abe4d18b78e0d4881685a`; hash JAR giữ đúng Task1. Hướng dẫn vận hành cũ trỏ sang artifact3044, evidence cũ giữ nguyên.
+- Kiểm thật Windows PowerShell5.1/JDK21:29/29kit checks PASS, lặp29/29trên ZIP giải nén;22file/hash/init41NOT RUN/tamper reject PASS. Fixture origin/map/file MOCK, không gọi mạng. Protocol/fault runtime, PG/SQL, JavaFX, Maven/CI mới và physical acceptance NOT RUN; không dùng42/42local trước làm LAN.
+- LAN NOT RUN /0case thật; B/C human review PENDING. Cần máyB, DB TEST/assignment/audio/attempt mới và evidence physical F/ACK/DB/UI/cleanup. FULL default, không QD/tracker/gate quyết định; production source không đổi. [Báo cáo và artifact](../evidence/t3-c4-physical-prep-20261018/REPORT.md), [runbook](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md). Chưa push nhánh Task2.

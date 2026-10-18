@@ -1,0 +1,18 @@
+{
+  "sourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+  "twoPhysicalWindowsMachinesConfirmed": false,
+  "reviewer": "PENDING",
+  "machineA": {"alias": "MACHINE_A", "roles": ["PostgreSQL TEST", "Spring server", "PROCTOR", "CANDIDATE_A"], "windowsVersion": "PENDING", "jdkVersion": "PENDING", "postgresVersion": "PENDING"},
+  "machineB": {"alias": "MACHINE_B", "roles": ["CANDIDATE_B"], "windowsVersion": "PENDING", "jdkVersion": "PENDING"},
+  "serverAddress": "PRIVATE LOCAL CONFIG ONLY; do not publish IP or hostname",
+  "artifactManifestHashesMatch": false,
+  "firewallOrAdapterChangedByKit": false,
+  "physicalLinkLossWitnessed": false,
+  "alternateRoutesExcludedByAuthorizedOperator": false,
+  "databaseTestIsolationConfirmed": false,
+  "physicalLinkEvidence": "PENDING",
+  "operatorB": "PENDING",
+  "operatorC": "PENDING",
+  "deadline": "2026-10-20",
+  "lan": "NOT RUN"
+}

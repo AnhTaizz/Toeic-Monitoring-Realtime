@@ -396,3 +396,7 @@ MSI0.3.9 installed906PASS local; cần B review F01, hòa PR45 với fix race40 
 ### Ghi chú làm dở — PR47 retarget main, 18/10/2026
 
 Source `3d93820` sửa RealtimeClient thuộc B: giữ dấu correlation đã hủy có giới hạn kể cả ACK đã lấy pending, bỏ phản hồi muộn lặp, retry/reconnect xóa đúng dấu; UNAUTHORIZED toàn phiên vẫn dừng kết nối. Phối hợp C review FullSnapshotDelivery deadline CLOSE/guard/worker. Focused148 PASS, riêng adapter63; clean/package mỗi lượt928 PASS/5SKIP với PG TEST thật; T3-C2 PASS, T3-C4 lượt mới 42/42 PASS LOCAL. C approval còn thiếu, không tự merge/approve hoặc sửa QD/tracker/MSI. [Hồ sơ C review](../../evidence/pr47-stabilize-20261018/REPORT.md).
+
+### Ghi chú làm dở — T3-C4 physical LAN, 18/10/2026
+
+Chưa có máy thứ hai; human B **PENDING**, LAN **NOT RUN/0case**. [Runbook](../T3_C4_PHYSICAL_LAN_ACCEPTANCE.md) +41case/ZIP sourceTask1 `3044e5b`, runtime `3d93820` đã chuẩn bị; kit29checks PASS trên Windows và bản ZIP, không thay human review. B cần cấp máyB, kiểm hash/GUI/process/Reading/Listening thật, rút LAN vật lý F01–F12, chứng minh A không ảnh hưởng, B recovery không reset/autoplay và cleanup. Cùng C đối chiếu ACK/event/gap/epoch/SQL; fault probe SIMULATED/MOCK riêng, runtime chưa thử. Không dùng ZIP2b6c9ce, không đổi default FULL/MSI/QD/tracker hoặc ký hộ C. [Hồ sơ](../../evidence/t3-c4-physical-prep-20261018/REPORT.md).
