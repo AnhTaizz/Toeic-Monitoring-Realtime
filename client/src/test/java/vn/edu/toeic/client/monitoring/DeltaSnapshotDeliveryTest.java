@@ -164,6 +164,7 @@ class DeltaSnapshotDeliveryTest {
     }
     @Test void stopInvalidatesPlannedWriteAndOldCallbacksAndReleasesAllRam() throws Exception {
         var f=new Fixture();f.baseline(process(1,0));f.mock.defer=true;f.observe(process(2,0));var guard=f.mock.guard;
+        f.mock.defer=false; // Only the old state write is deferred; CLOSE may finish normally.
         f.close();f.delta.stopped().get(2,TimeUnit.SECONDS);assertThat(guard.getAsBoolean()).isFalse();
         assertThat(f.mock.listeners).isEmpty();assertThat(f.mock.stateListeners).isEmpty();assertThat(f.delta.status().queued()).isZero();
         assertThat(f.delta.status().syncEpoch()).isNull();assertThat(f.delta.status().acknowledgedSequence()).isZero();

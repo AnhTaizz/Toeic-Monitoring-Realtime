@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.LongSupplier;
 import java.util.function.Function;
@@ -43,6 +44,7 @@ public final class FullSnapshotDelivery implements AutoCloseable {
     private final Consumer<String> denied;
     private final ArrayDeque<ProcessSnapshot> observations = new ArrayDeque<>();
     private final ScheduledThreadPoolExecutor worker;
+    private final CompletableFuture<Void> workerStopped = new CompletableFuture<>();
     private final CompletableFuture<Void> stopped = new CompletableFuture<>();
     private final AutoCloseable messages, states;
     private String collector, epoch, problem="NONE";
@@ -82,7 +84,7 @@ public final class FullSnapshotDelivery implements AutoCloseable {
         this.ids=ids;
         connected=transport.connectionState()==ConnectionState.CONNECTED;
         worker=new ScheduledThreadPoolExecutor(1,task -> { Thread thread=new Thread(task,"toeic-full-snapshot"); thread.setDaemon(true); return thread; }) {
-            @Override protected void terminated() { stopped.complete(null); }
+            @Override protected void terminated() { workerStopped.complete(null); }
         };
         worker.setRemoveOnCancelPolicy(true); worker.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
         messages=transport.onMessage(this::receive); states=transport.onConnectionState(this::connectionChanged);
@@ -294,7 +296,16 @@ public final class FullSnapshotDelivery implements AutoCloseable {
         try { messages.close(); } catch (Exception ignored) { }
         try { states.close(); } catch (Exception ignored) { }
         if (forget!=null) transport.forgetPending(forget);
-        if (end!=null) try { transport.sendForGeneration(end,socketGeneration).whenComplete((unused,error) -> { if(error!=null) transport.forgetPending(end.requestId()); }); } catch (RuntimeException ignored) { }
+        CompletableFuture<Void> closeReleased=CompletableFuture.completedFuture(null);
+        if (end!=null) try {
+            AtomicBoolean closeCurrent=new AtomicBoolean(true);
+            // CLOSE is best-effort. A stuck write must not block stop/start forever,
+            // and an expired CLOSE queued in the adapter must never run afterwards.
+            closeReleased=transport.sendForGeneration(end,socketGeneration,closeCurrent::get).copy()
+                    .orTimeout(settings.ackTimeout().toNanos(),TimeUnit.NANOSECONDS)
+                    .handle((unused,error) -> { closeCurrent.set(false);transport.forgetPending(end.requestId());return null; });
+        } catch (RuntimeException ignored) { transport.forgetPending(end.requestId()); }
         worker.shutdownNow();
+        CompletableFuture.allOf(workerStopped,closeReleased).whenComplete((unused,error)->stopped.complete(null));
     }
 }

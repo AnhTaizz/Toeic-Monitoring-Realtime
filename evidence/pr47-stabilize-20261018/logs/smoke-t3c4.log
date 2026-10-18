@@ -1,0 +1,73 @@
+03:23:00.980 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://127.0.0.1:55447/pr47_test (PostgreSQL 18.1)
+03:23:01.112 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "delta_live_gate_test_e39b114ee4dc47028d0632ca50ef7be5"."flyway_schema_history" does not exist yet
+03:23:01.123 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 10 migrations (execution time 00:00.047s)
+03:23:01.151 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "delta_live_gate_test_e39b114ee4dc47028d0632ca50ef7be5"."flyway_schema_history" ...
+03:23:01.323 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "delta_live_gate_test_e39b114ee4dc47028d0632ca50ef7be5": << Empty Schema >>
+03:23:01.354 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_e39b114ee4dc47028d0632ca50ef7be5" to version "1 - auth schema"
+03:23:01.434 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_e39b114ee4dc47028d0632ca50ef7be5" to version "2 - monitoring events"
+03:23:01.476 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_e39b114ee4dc47028d0632ca50ef7be5" to version "3 - monitoring gaps"
+03:23:01.505 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_e39b114ee4dc47028d0632ca50ef7be5" to version "4 - monitoring presence"
+03:23:01.546 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_e39b114ee4dc47028d0632ca50ef7be5" to version "5 - exams and sessions"
+03:23:01.600 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_e39b114ee4dc47028d0632ca50ef7be5" to version "6 - exam autosave requests"
+03:23:01.623 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_e39b114ee4dc47028d0632ca50ef7be5" to version "7 - exam submits"
+03:23:01.642 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_e39b114ee4dc47028d0632ca50ef7be5" to version "8 - monitoring event delivery"
+03:23:01.660 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_e39b114ee4dc47028d0632ca50ef7be5" to version "9 - audio readiness"
+03:23:01.691 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "delta_live_gate_test_e39b114ee4dc47028d0632ca50ef7be5" to version "10 - listening lifecycle"
+03:23:01.732 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 10 migrations to schema "delta_live_gate_test_e39b114ee4dc47028d0632ca50ef7be5", now at version v10 (execution time 00:00.208s)
+2026-10-18T03:23:15.855Z  INFO 21432 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-18T03:23:15.862Z  INFO 21432 --- [toeic-server] [1-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+PASS START_candidate-delta-default · REAL Application buttons/HTTP/WS/source
+PASS START_candidate-full-default · REAL Application buttons/HTTP/WS/source
+PASS PROCTOR_NO_COLLECTOR · REAL GUI role/HTTP/WS
+PASS REAL_EDGE_IDENTITY_METADATA · REAL OS/collector/encoder/server/HTTP/push
+PASS UNCHANGED_FRESH_30S · REAL time/ProcessHandle
+PASS DEFAULT_APP_FACTORY_DELTA · REAL default factory/client/WS
+PASS EVENT_HISTORY_SEPARATE · REAL PostgreSQL
+PASS CANDIDATE_ISOLATION · REAL hard-kill, one host
+PASS START_candidate-delta-instrumented · REAL Application buttons/HTTP/WS/source
+PASS CANDIDATE_RESTART_EPOCH · REAL child restart/DB/WS
+PASS OLD_SOCKET_EPOCH · REAL WS/binding, SIMULATED old payload
+PASS CROSS_CANDIDATE_SCOPE · REAL server auth/scope; forged request SIMULATED
+PASS PROCTOR_CANNOT_WRITE · REAL server/production proctor socket
+PASS GAP_DB_COMMIT · REAL network/PG, sentinel payload SIMULATED
+PASS ACK_LOSS_RETRY_NO_REAPPLY · REAL server/network; SIMULATED delivery-observer ACK drop
+PASS HTTP_PUSH_STATE_EQUAL · REAL HTTP/WS; paused source SIMULATED
+PASS FROZEN_RETRY · REAL encoder/adapter; fault SIMULATED
+PASS OLD_ACK_NOT_OTHER_MESSAGE · REAL callback; SIMULATED delayed observer
+PASS RESYNC_LAST_KNOWN · REAL HTTP/WS/parser/callback; SIMULATED one wire base/seq change
+PASS RESYNC_FRESH_FULL_UI_HISTORY · REAL Application/encoder/WS/RAM/DB
+PASS RETRY_EXHAUSTION_FRESH_EPOCH · REAL production delivery; SIMULATED ACK observer suppression
+PASS HUNG_COLLECTOR_HB_ONLINE · REAL scheduler/HB/push; SIMULATED source wait
+PASS SOURCE_FAILURE_TTL · REAL maintenance/HB; SIMULATED scan exception; production TTL5min unchanged
+PRESENCE_SCAN retryable failure; no success push
+PRESENCE_SCAN retryable failure; no success push
+PASS DB_SCOPE_BEFORE_DUPLICATE · REAL JDBC/WS; own TEST schema fault SIMULATED, shared DB not stopped
+PASS DB_EVENT_ROLLBACK_NO_ACK · REAL Edge/PG/transaction/WS; trigger SIMULATED
+PASS EVENT_ID_CONTENT_RETRY_DB · REAL wire payload/PG, independent SQL rows; no reducer as expected
+PASS ATTEMPT_REVOKE_DUPLICATE · REAL DB auth/WS/GUI; duplicate trigger SIMULATED
+PASS START_candidate-delta-instrumented · REAL Application buttons/HTTP/WS/source
+PASS ASSIGNMENT_REVOKED_HTTP · REAL HTTP/auth/own TEST DB revoke
+PASS ASSIGNMENT_REVOKED_PUSH · REAL push/assignment; no UI refresh during wait
+2026-10-18T03:25:04.359Z  INFO 21432 --- [toeic-server] [.1-61500-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-18T03:25:04.361Z  INFO 21432 --- [toeic-server] [.1-61500-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+PASS SERVER_RESTART_RAM_DB · REAL Spring restart same TEST port/PG/HTTP/WS/Applications
+2026-10-18T03:25:07.463Z  INFO 21432 --- [toeic-server] [.1-61500-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-18T03:25:07.467Z  INFO 21432 --- [toeic-server] [.1-61500-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+PASS CAPABILITY_LOST_STOPS_RUN · REAL server restart/capability/adapter/coordinator
+PASS START_candidate-delta-instrumented · REAL Application buttons/HTTP/WS/source
+2026-10-18T03:25:09.504Z  INFO 21432 --- [toeic-server] [.1-61500-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-18T03:25:09.506Z  INFO 21432 --- [toeic-server] [.1-61500-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+PASS FULL_PINNED_UNTIL_START · REAL Application/reconnect
+PASS START_candidate-delta-instrumented · REAL Application buttons/HTTP/WS/source
+PASS TOKEN_REVOKE_ACTIVE_APP · REAL TEST token revocation
+PASS CLEANUP_candidate-delta-instrumented · REAL Application.stop/owned child
+2026-10-18T03:25:12.702Z  INFO 21432 --- [toeic-server] [.1-61500-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-18T03:25:12.704Z  INFO 21432 --- [toeic-server] [.1-61500-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+PASS START_candidate-opt-in-unsupported · REAL Application buttons/HTTP/WS/source
+PASS OLD_OR_DISABLED_SERVER_FULL · REAL disabled server/current socket/default Application
+PASS LOCAL_GATE_PREPARATION · one Windows host, two child JVMs + proctor Application
+PASS CLEANUP_candidate-full-default · REAL Application.stop/owned child
+PASS CLEANUP_candidate-opt-in-unsupported · REAL Application.stop/owned child
+T3-C4 LOCAL artifacts: <WORKTREE>\server\target\t3c4-live\T3C4-230e2b78-8b0c-4166-a5b4-8e39ca62453e exit=0; human gate/LAN not confirmed.
+Summary INCOMPLETE: endpoints=12, categories=141; WS JSON application bytes only
+Measurement summary exit=2; hard-killed endpoint is expected INCOMPLETE, retained raw.
