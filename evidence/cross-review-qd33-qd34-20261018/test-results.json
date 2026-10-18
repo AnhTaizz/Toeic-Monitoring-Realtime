@@ -1,0 +1,837 @@
+{
+  "source_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "run_start_utc": "2026-10-18T11:50:52.2171007Z",
+  "run_end_utc": "2026-10-18T11:53:21.8269979Z",
+  "junit": {
+    "total": 145,
+    "passed": 144,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "postgres_pass": 10,
+  "full_suite_run": false,
+  "suites": [
+    {
+      "module": "client",
+      "suite": "vn.edu.toeic.client.audio.AudioApiClientTest",
+      "counts": {
+        "total": 5,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 5
+      },
+      "label": "Unit/controller or HTTP fixture MOCK; filesystem/worker real where applicable",
+      "cases": [
+        {
+          "name": "readinessRequiresCorrelatedAckAndServerTimestamp",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsFractionalWriterMalformedJsonWrongAttemptAndDuplicateNames",
+          "status": "PASS"
+        },
+        {
+          "name": "refusesRedirectAuthenticationFailureAndCallsAfterClose",
+          "status": "PASS"
+        },
+        {
+          "name": "invalidUrlCannotIncludeCredentialsQueryOrFragment",
+          "status": "PASS"
+        },
+        {
+          "name": "exactWriterAndUnicodeFileDownloadWithBearerOnly",
+          "status": "PASS"
+        }
+      ],
+      "xml_sha256": "0a0a63956c03629b45e4ed1ad528154d3198143579216b641f27798a59da2677"
+    },
+    {
+      "module": "client",
+      "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "counts": {
+        "total": 23,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 1,
+        "passed": 22
+      },
+      "label": "REAL Windows filesystem; MOCK audio/manifest",
+      "cases": [
+        {
+          "name": "unicodePathDownloadProgressAndLocalRevalidation",
+          "status": "PASS"
+        },
+        {
+          "name": "rootReplacedByJunctionAfterUseIsRejected",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeWindowsNames(String)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeWindowsNames(String)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeWindowsNames(String)[3]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeWindowsNames(String)[4]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeWindowsNames(String)[5]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeWindowsNames(String)[6]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeWindowsNames(String)[7]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeWindowsNames(String)[8]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeWindowsNames(String)[9]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeWindowsNames(String)[10]",
+          "status": "PASS"
+        },
+        {
+          "name": "corruptTruncatedAndOversizedDownloadsNeverReplaceValidCache",
+          "status": "PASS"
+        },
+        {
+          "name": "existingFileCannotBeAcceptedAsCacheDirectory",
+          "status": "PASS"
+        },
+        {
+          "name": "junctionAtOrBelowCacheRootIsRejectedAndNothingIsWrittenOutside",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsWrongScopeDuplicatesAndResourceLimits",
+          "status": "PASS"
+        },
+        {
+          "name": "repeatedStressWithMixedFileAndVerifyCallsNeverRacesDirectoryCreation",
+          "status": "PASS"
+        },
+        {
+          "name": "symlinkInsideCacheRootIsRejectedWhereLinksCanBeCreated",
+          "status": "SKIP",
+          "reason": "org.opentest4j.TestAbortedException: symlink creation needs privilege here: FileSystemException"
+        },
+        {
+          "name": "concurrentReadersCanCreateTheSameManifestCacheDirectory",
+          "status": "PASS"
+        },
+        {
+          "name": "pcmSpeakerSampleIsSeparateAndHasValidHeader",
+          "status": "PASS"
+        },
+        {
+          "name": "cacheRootUnderAncestorShortNameIsAllowed",
+          "status": "PASS"
+        },
+        {
+          "name": "cacheRootUnderAncestorJunctionIsAllowed",
+          "status": "PASS"
+        },
+        {
+          "name": "cancelledDownloadLeavesNoPartialOrReadyFile",
+          "status": "PASS"
+        }
+      ],
+      "xml_sha256": "883370f1b38ae1aef7e0c1936ee0631a5459baf4569c9f10da102a23161ebf2d"
+    },
+    {
+      "module": "client",
+      "suite": "vn.edu.toeic.client.audio.AudioPreparationTest",
+      "counts": {
+        "total": 10,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 10
+      },
+      "label": "Unit/controller or HTTP fixture MOCK; filesystem/worker real where applicable",
+      "cases": [
+        {
+          "name": "closeDuringSlowManifestDiscardsLateCompletion",
+          "status": "PASS"
+        },
+        {
+          "name": "sharedWriterCloseRejectsLatePreparationBeforeAnotherViewOpens",
+          "status": "PASS"
+        },
+        {
+          "name": "corruptionOnDownloadAndWithdrawalFailureBlockPreparation",
+          "status": "PASS"
+        },
+        {
+          "name": "missingFileImmediatelyBeforeReadyNeverSendsTrue",
+          "status": "PASS"
+        },
+        {
+          "name": "malformedAckCannotDisplayReady",
+          "status": "PASS"
+        },
+        {
+          "name": "oneByteCorruptionImmediatelyBeforeReadyNeverSendsTrue",
+          "status": "PASS"
+        },
+        {
+          "name": "mediaErrorInvalidatesConfirmationAndWithdraws",
+          "status": "PASS"
+        },
+        {
+          "name": "sharedExamWriterNeverAcquiresAnotherEpoch",
+          "status": "PASS"
+        },
+        {
+          "name": "requiresHumanConfirmationAndServerAckAndReusesWriterOnRetry",
+          "status": "PASS"
+        },
+        {
+          "name": "disconnectRejectsOldMediaCompletionAndRequiresExplicitPreparation",
+          "status": "PASS"
+        }
+      ],
+      "xml_sha256": "103f0bc5d4c9832a3b52c0200ba1f62dab9b4ac96b528ba01b8c81487689f72f"
+    },
+    {
+      "module": "client",
+      "suite": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+      "counts": {
+        "total": 8,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 8
+      },
+      "label": "Unit/controller or HTTP fixture MOCK; filesystem/worker real where applicable",
+      "cases": [
+        {
+          "name": "questionAudioMismatchAndDurableReservationBlockPlayback",
+          "status": "PASS"
+        },
+        {
+          "name": "mediaErrorStopsLocksPersistsAndReportsInterruption",
+          "status": "PASS"
+        },
+        {
+          "name": "corruptCacheAndMismatchedCommandNeverReachMediaOrStartedEvent",
+          "status": "PASS"
+        },
+        {
+          "name": "duplicateStartPlaysOneOrderedPlaylistAndReportsLifecycle",
+          "status": "PASS"
+        },
+        {
+          "name": "reopenQueriesServerAndNeverReplaysActiveOrInterruptedListening",
+          "status": "PASS"
+        },
+        {
+          "name": "serverInterruptionAfterStartedLocksPlayback",
+          "status": "PASS"
+        },
+        {
+          "name": "matchingServerInterruptionStopsPlaylistAndRejectsOldMediaCallbacks",
+          "status": "PASS"
+        },
+        {
+          "name": "networkLossDuringPlaybackReportsAndNeverResumes",
+          "status": "PASS"
+        }
+      ],
+      "xml_sha256": "a7c83f08fe0801d21c85a2db1c7168e78aa5c7ff6b4aeaa24f2cc8b55f34e8e7"
+    },
+    {
+      "module": "client",
+      "suite": "vn.edu.toeic.client.exam.ExamApiClientTest",
+      "counts": {
+        "total": 28,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 28
+      },
+      "label": "Unit/controller or HTTP fixture MOCK; filesystem/worker real where applicable",
+      "cases": [
+        {
+          "name": "proctorProgressEncodesCursorOnceAndRejectsActiveResultLeak",
+          "status": "PASS"
+        },
+        {
+          "name": "slowServerEndsInATimeoutThatIsNotAServerRejection",
+          "status": "PASS"
+        },
+        {
+          "name": "responsesWithTimestampsAreParsed",
+          "status": "PASS"
+        },
+        {
+          "name": "closedClientRejectsCallsAndStopsItsWorkerThreads",
+          "status": "PASS"
+        },
+        {
+          "name": "allAttemptActionsEncodeRawIdOnceAndKeepJsonRaw",
+          "status": "PASS"
+        },
+        {
+          "name": "serverRejectionKeepsItsCodeButNeverReflectsTheServerText(String)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "serverRejectionKeepsItsCodeButNeverReflectsTheServerText(String)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "serverRejectionKeepsItsCodeButNeverReflectsTheServerText(String)[3]",
+          "status": "PASS"
+        },
+        {
+          "name": "serverRejectionKeepsItsCodeButNeverReflectsTheServerText(String)[4]",
+          "status": "PASS"
+        },
+        {
+          "name": "errorStatusWithUnreadableBodyStillReportsTheHttpStatus",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[3]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[4]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[5]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[6]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[7]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[8]",
+          "status": "PASS"
+        },
+        {
+          "name": "autosaveSendsTheFullContractPayload",
+          "status": "PASS"
+        },
+        {
+          "name": "pathLikeIdsRemainDataInsideTheFixedOrigin(String)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "pathLikeIdsRemainDataInsideTheFixedOrigin(String)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "pathLikeIdsRemainDataInsideTheFixedOrigin(String)[3]",
+          "status": "PASS"
+        },
+        {
+          "name": "pathLikeIdsRemainDataInsideTheFixedOrigin(String)[4]",
+          "status": "PASS"
+        },
+        {
+          "name": "invalidAttemptIdFailsWithoutCallingTheServer",
+          "status": "PASS"
+        },
+        {
+          "name": "successStatusWithInvalidBodyIsNotAccepted(String)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "successStatusWithInvalidBodyIsNotAccepted(String)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "successStatusWithInvalidBodyIsNotAccepted(String)[3]",
+          "status": "PASS"
+        },
+        {
+          "name": "successStatusWithInvalidBodyIsNotAccepted(String)[4]",
+          "status": "PASS"
+        }
+      ],
+      "xml_sha256": "757bddb788ca7c992e6ad0ee63239fbaeb1fd826dc93cd034f595ff8efdcc403"
+    },
+    {
+      "module": "client",
+      "suite": "vn.edu.toeic.client.exam.ExamPaperAndEntryTest",
+      "counts": {
+        "total": 10,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 10
+      },
+      "label": "Unit/controller or HTTP fixture MOCK; filesystem/worker real where applicable",
+      "cases": [
+        {
+          "name": "malformedExamFailsEntryBeforeAnyWriterEpochIsClaimed",
+          "status": "PASS"
+        },
+        {
+          "name": "questionsSharingAGroupAreShownTogetherWithOnePassage",
+          "status": "PASS"
+        },
+        {
+          "name": "enteringADecidedAttemptReturnsTheServerResultWithoutTakeover",
+          "status": "PASS"
+        },
+        {
+          "name": "failedTakeoverFailsEntryWithTheServerRejection",
+          "status": "PASS"
+        },
+        {
+          "name": "malformedExamIsRejectedWithAMessageInsteadOfCrashingTheScreen",
+          "status": "PASS"
+        },
+        {
+          "name": "attemptDecidedBetweenStatusAndTakeoverStillEndsWithTheServerResult",
+          "status": "PASS"
+        },
+        {
+          "name": "candidateDtoHasNoFieldForTheCorrectAnswer",
+          "status": "PASS"
+        },
+        {
+          "name": "enteringAnActiveAttemptClaimsANewWriterEpochAndStartsFromTheServerState",
+          "status": "PASS"
+        },
+        {
+          "name": "legacyActiveRejectedByServerEndsEntryWithoutLooping",
+          "status": "PASS"
+        },
+        {
+          "name": "lostTakeoverAckIsNeverRetriedAutomaticallyAndReopenUsesAFreshRequestId",
+          "status": "PASS"
+        }
+      ],
+      "xml_sha256": "70cdfb9c7c1ce6922c5cf51c9030e669e136934c7c285c918e23524c450aa654"
+    },
+    {
+      "module": "client",
+      "suite": "vn.edu.toeic.client.exam.ExamSessionTest",
+      "counts": {
+        "total": 51,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 51
+      },
+      "label": "Unit/controller or HTTP fixture MOCK; filesystem/worker real where applicable",
+      "cases": [
+        {
+          "name": "submitFromAReplacedWriterIsNotReportedAsSubmitted",
+          "status": "PASS"
+        },
+        {
+          "name": "unconfirmedSubmitIsResentUnchangedWhenServerIsStillActive",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectedSaveIsNotRetriedAutomaticallyButANewChangeIsSent",
+          "status": "PASS"
+        },
+        {
+          "name": "forbiddenStatusWhileWaitingForTheServerDecisionEndsWithoutInventingAResult",
+          "status": "PASS"
+        },
+        {
+          "name": "unsavedChangeIsSentExactlyOnceWhenTheLocalClockExpires",
+          "status": "PASS"
+        },
+        {
+          "name": "staleWriterEpochBlocksThisSessionUntilItIsGrantedANewEpoch",
+          "status": "PASS"
+        },
+        {
+          "name": "lostSubmitAckPublishesFinalStatusInterruption(String, boolean)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "lostSubmitAckPublishesFinalStatusInterruption(String, boolean)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "lostSubmitAckPublishesFinalStatusInterruption(String, boolean)[3]",
+          "status": "PASS"
+        },
+        {
+          "name": "lostSubmitAckPublishesFinalStatusInterruption(String, boolean)[4]",
+          "status": "PASS"
+        },
+        {
+          "name": "submitWhileAutosaveIsInFlightFreezesTheFinalAnswersAndIgnoresTheLateSave",
+          "status": "PASS"
+        },
+        {
+          "name": "lateListeningAuthorityAfterCloseCannotMutateAnotherSessionOrAcquireWriter",
+          "status": "PASS"
+        },
+        {
+          "name": "forbiddenStatusAfterALostSubmitResponseFallsBackToResendingTheSameSubmit",
+          "status": "PASS"
+        },
+        {
+          "name": "listeningInterruptionKeepsReadingChangesAndReplacesOnlyFrozenListeningFromServer",
+          "status": "PASS"
+        },
+        {
+          "name": "snapshotSentToServerIsImmutable",
+          "status": "PASS"
+        },
+        {
+          "name": "saveAcceptedJustBeforeTheDeadlineStillCountsAfterTheLocalClockExpired",
+          "status": "PASS"
+        },
+        {
+          "name": "idsOutsideTheExamAreRejectedWithoutChangingTheModel",
+          "status": "PASS"
+        },
+        {
+          "name": "localClockExpiredButServerStillActiveKeepsEditingLockedAndStopsPolling",
+          "status": "PASS"
+        },
+        {
+          "name": "at11ServerAt40ClientAt42KeepsLocalAnswersAndResendsTheSameRequest",
+          "status": "PASS"
+        },
+        {
+          "name": "serverSayingExpiredOrDecidedOnSaveLocksEditingAndShowsTheServerState",
+          "status": "PASS"
+        },
+        {
+          "name": "submitThatNeverGetsConfirmedStopsAndIsNotReportedAsSubmitted",
+          "status": "PASS"
+        },
+        {
+          "name": "retryKeepsItsPayloadWhenAnswersChangeMeanwhile",
+          "status": "PASS"
+        },
+        {
+          "name": "sameRevisionWithDifferentContentStopsAutosaveUntilTheUserReloads",
+          "status": "PASS"
+        },
+        {
+          "name": "untouchedAttemptIsSubmittedWithRevisionOne",
+          "status": "PASS"
+        },
+        {
+          "name": "staleSubmitUnderTheSameWriterReturnsToEditingOnTheServerState",
+          "status": "PASS"
+        },
+        {
+          "name": "failedReconciliationKeepsEditingLockedAndRetriesWithABound",
+          "status": "PASS"
+        },
+        {
+          "name": "deadlineIsLearnedFromServerAfterTheFirstAcknowledgedSave",
+          "status": "PASS"
+        },
+        {
+          "name": "unauthorizedEndsTheSessionAndForbiddenEndsItWithoutAskingForLogin",
+          "status": "PASS"
+        },
+        {
+          "name": "timeoutRetriesTheSameRequestThenStopsAndWaitsForTheUser",
+          "status": "PASS"
+        },
+        {
+          "name": "submitPublishesServerInterruptionWithUnchangedScore(boolean)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "submitPublishesServerInterruptionWithUnchangedScore(boolean)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "deadlinePassingWhileASaveIsInFlightLocksEditingAndAsksTheServer",
+          "status": "PASS"
+        },
+        {
+          "name": "closingIgnoresLateResultsAndFurtherCalls",
+          "status": "PASS"
+        },
+        {
+          "name": "attemptDecidedByOtherMeansWithUnreadableStatusIsNotReportedAsSubmitted",
+          "status": "PASS"
+        },
+        {
+          "name": "probingAfterTheRealtimeChannelFailedTellsAnExpiredSessionFromALostNetwork",
+          "status": "PASS"
+        },
+        {
+          "name": "staleRevisionUnderTheSameWriterLoadsTheNewerServerState",
+          "status": "PASS"
+        },
+        {
+          "name": "responseForAnotherRevisionIsNotTreatedAsAnAck",
+          "status": "PASS"
+        },
+        {
+          "name": "selectingAndChangingAnAnswerRaisesRevisionAndSendsTheWholeMapOnce",
+          "status": "PASS"
+        },
+        {
+          "name": "secondSubmitDoesNotSendASecondRequest",
+          "status": "PASS"
+        },
+        {
+          "name": "lostSubmitResponseIsResolvedFromServerStatusWithoutResending",
+          "status": "PASS"
+        },
+        {
+          "name": "newerServerStateIsLoadedBeforeEditingContinues",
+          "status": "PASS"
+        },
+        {
+          "name": "attemptInAnotherServerStateEndsTheSession",
+          "status": "PASS"
+        },
+        {
+          "name": "closingCancelsThePendingDebounce",
+          "status": "PASS"
+        },
+        {
+          "name": "deadlinePassingWhileSubmitIsInFlightWaitsForTheSubmitOutcome",
+          "status": "PASS"
+        },
+        {
+          "name": "losingTheWebSocketLocksEditingButDoesNotChangeWhatTheServerConfirmed",
+          "status": "PASS"
+        },
+        {
+          "name": "closingStopsTheTimerThreadTheSessionOwns",
+          "status": "PASS"
+        },
+        {
+          "name": "at11LostAckIsMarkedSavedWhenServerAlreadyHoldsThePendingRevision",
+          "status": "PASS"
+        },
+        {
+          "name": "reclaimingAWriterOnADecidedAttemptShowsTheServerResult",
+          "status": "PASS"
+        },
+        {
+          "name": "changesMadeWhileASaveIsInFlightAreSentAsSoonAsItCompletes",
+          "status": "PASS"
+        },
+        {
+          "name": "submitRejectedBecauseAttemptAlreadyDecidedShowsTheServerResult",
+          "status": "PASS"
+        },
+        {
+          "name": "clearingAnAnswerRemovesItFromTheFullMap",
+          "status": "PASS"
+        }
+      ],
+      "xml_sha256": "cdbac422eb87b5d9742407740cfe35ba2177f958b13dd5c55fd8439f5f770431"
+    },
+    {
+      "module": "server",
+      "suite": "vn.edu.toeic.server.audio.AudioRuntimePostgresTest",
+      "counts": {
+        "total": 4,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 4
+      },
+      "label": "REAL PostgreSQL/Spring/HTTP; lost ACK and hearing SIMULATED",
+      "cases": [
+        {
+          "name": "withdrawalAndWriterTakeoverInvalidateReadiness",
+          "status": "PASS"
+        },
+        {
+          "name": "clientPreparationChecksRealLocalBytesBeforeReadyOnProductionHttpAndPostgres",
+          "status": "PASS"
+        },
+        {
+          "name": "databaseCommitFailureDoesNotAckReadyOrStart",
+          "status": "PASS"
+        },
+        {
+          "name": "changedOrMissingAudioRejectsExistingReadyAndCannotLeakNewFiles",
+          "status": "PASS"
+        }
+      ],
+      "xml_sha256": "64c564f64016440d2ea6b07cdf8c156973894d89b97a567f60233b3b4e89f46d"
+    },
+    {
+      "module": "server",
+      "suite": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "counts": {
+        "total": 6,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 6
+      },
+      "label": "REAL PostgreSQL/Spring/HTTP; lost ACK and hearing SIMULATED",
+      "cases": [
+        {
+          "name": "concurrentFirstEntriesReconnectAndTakeoverKeepOneDeadline",
+          "status": "PASS"
+        },
+        {
+          "name": "unansweredAttemptTimesOutByAutonomousRuntimeScheduler",
+          "status": "PASS"
+        },
+        {
+          "name": "readsRequireOwnershipOrAssignmentForEveryState(String)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "readsRequireOwnershipOrAssignmentForEveryState(String)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "readsRequireOwnershipOrAssignmentForEveryState(String)[3]",
+          "status": "PASS"
+        },
+        {
+          "name": "takeoverReplayAfterLostAckAdvancesEpochButNeverLosesAnswersDeadlineOrFinal",
+          "status": "PASS"
+        }
+      ],
+      "xml_sha256": "67061c64c70ed867a3a303a283128f224bcad544fa06efa439b1e7f99784cb7e"
+    }
+  ],
+  "additional_fs_probe": [
+    {
+      "mode": "concurrent-download",
+      "rounds": 5,
+      "threads": 8,
+      "operationsPerThread": 8,
+      "attempts": 320,
+      "ok": 145,
+      "errors": {
+        "AccessDeniedException": 12,
+        "FileAlreadyExistsException": 100,
+        "IOException": 3,
+        "NoSuchFileException": 60
+      },
+      "finalValidCaches": 5,
+      "partialFiles": 0,
+      "run": "initial",
+      "status": "FAIL",
+      "sites": [],
+      "label": "REAL Windows filesystem, MOCK 128KiB audio bytes; no injected filesystem failure"
+    },
+    {
+      "mode": "mixed-read-download",
+      "rounds": 5,
+      "threads": 8,
+      "operationsPerThread": 8,
+      "attempts": 320,
+      "ok": 170,
+      "errors": {
+        "AccessDeniedException": 8,
+        "FileAlreadyExistsException": 39,
+        "IOException": 54,
+        "NoSuchFileException": 49
+      },
+      "finalValidCaches": 5,
+      "partialFiles": 0,
+      "run": "initial",
+      "status": "FAIL",
+      "sites": [],
+      "label": "REAL Windows filesystem, MOCK 128KiB audio bytes; no injected filesystem failure"
+    },
+    {
+      "mode": "concurrent-download",
+      "rounds": 5,
+      "threads": 8,
+      "operationsPerThread": 8,
+      "attempts": 320,
+      "ok": 105,
+      "errors": {
+        "AccessDeniedException": 10,
+        "FileAlreadyExistsException": 135,
+        "IOException": 8,
+        "NoSuchFileException": 62
+      },
+      "finalValidCaches": 5,
+      "partialFiles": 0,
+      "run": "confirmation",
+      "status": "FAIL",
+      "sites": [
+        "AccessDeniedException-download download:97",
+        "FileAlreadyExistsException-download download:97",
+        "IOException-download unsafe:77",
+        "NoSuchFileException-download download:97"
+      ],
+      "label": "REAL Windows filesystem, MOCK 128KiB audio bytes; no injected filesystem failure"
+    },
+    {
+      "mode": "mixed-read-download",
+      "rounds": 5,
+      "threads": 8,
+      "operationsPerThread": 8,
+      "attempts": 320,
+      "ok": 175,
+      "errors": {
+        "AccessDeniedException": 9,
+        "FileAlreadyExistsException": 52,
+        "IOException": 47,
+        "NoSuchFileException": 37
+      },
+      "finalValidCaches": 5,
+      "partialFiles": 0,
+      "run": "confirmation",
+      "status": "FAIL",
+      "sites": [
+        "AccessDeniedException-download download:97",
+        "FileAlreadyExistsException-download download:97",
+        "IOException-verify verify:108",
+        "IOException-download unsafe:77",
+        "NoSuchFileException-verify file:43",
+        "NoSuchFileException-download file:43"
+      ],
+      "label": "REAL Windows filesystem, MOCK 128KiB audio bytes; no injected filesystem failure"
+    }
+  ],
+  "additional_http_probe": {
+    "test": "productionHttpClientDoesNotReplayAmbiguousTakeoverPost",
+    "status": "PASS",
+    "automaticRequestsAfterLostResponse": 1,
+    "requestsAfterExplicitNewCall": 2,
+    "jdkEnableAllMethodRetry": "default:false",
+    "transport": "REAL loopback HTTP",
+    "serverCommit": "MOCK",
+    "fault": "SIMULATED close after reading request without response"
+  },
+  "probe_note": "JUnit counts separate from standalone probes. FS collector processes exit0 to collect failures; semantic probe outcome FAIL because errors>0. Each mode has 320 counted operations; per-round seed download/final verify excluded. Historical112/640 not counted as new."
+}

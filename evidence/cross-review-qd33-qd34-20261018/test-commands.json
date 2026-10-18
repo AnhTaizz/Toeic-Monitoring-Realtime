@@ -1,0 +1,30 @@
+{
+  "source_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "targeted_command": "mvn --batch-mode --no-transfer-progress -pl server,client -am test \"-Dtest=AudioFilesTest,AudioPreparationTest,AudioApiClientTest,ListeningPlaybackTest,ExamPaperAndEntryTest,ExamApiClientTest,ExamSessionTest,AudioRuntimePostgresTest#clientPreparationChecksRealLocalBytesBeforeReadyOnProductionHttpAndPostgres+withdrawalAndWriterTakeoverInvalidateReadiness+changedOrMissingAudioRejectsExistingReadyAndCannotLeakNewFiles+databaseCommitFailureDoesNotAckReadyOrStart,ExamRuntimePostgresTest#takeoverReplayAfterLostAckAdvancesEpochButNeverLosesAnswersDeadlineOrFinal+concurrentFirstEntriesReconnectAndTakeoverKeepOneDeadline+unansweredAttemptTimesOutByAutonomousRuntimeScheduler+readsRequireOwnershipOrAssignmentForEveryState\" -Dsurefire.failIfNoSpecifiedTests=false",
+  "required_environment_names": [
+    "JAVA_HOME",
+    "TEMP",
+    "TMP",
+    "DB_HOST",
+    "DB_PORT",
+    "DB_NAME",
+    "DB_USER",
+    "DB_PASSWORD",
+    "TOEIC_SEED_PASSWORD",
+    "TOEIC_PG_INTEGRATION=true"
+  ],
+  "secret_values": "Generated for owned TEST only; omitted. Do not reuse a shared DB or reset volumes.",
+  "filesystem_probe": "See REPRODUCERS.md; production classes from the targeted build; fresh TEST root per run.",
+  "http_probe": "See REPRODUCERS.md; real loopback transport with MOCK commit and SIMULATED lost response.",
+  "cleanup": "Query 0 non-system schemas on owned DB, pg_ctl stop/status for owned data directory; Java NIO long-path cleanup after ownership/reparse guard.",
+  "setup_interruption": "Initial pg_ctl wrapper waited on inherited process handles; interrupted own wrapper, verified cluster and resumed; no tests ran in initial wrapper",
+  "cleanup_retry": "Initial Windows PowerShell Remove-Item hit long-path error; Java NIO removed only guarded TEST tree; PG was already stopped",
+  "not_run": [
+    "Full Maven suite",
+    "MSI build/install",
+    "Physical LAN",
+    "Human hearing/GUI",
+    "Privileged symlink",
+    "Corrective production patch"
+  ]
+}

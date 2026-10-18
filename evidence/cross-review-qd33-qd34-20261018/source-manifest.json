@@ -1,0 +1,153 @@
+{
+  "source_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "files": [
+    {
+      "path": "docs/QUYET_DINH.md",
+      "git_blob": "4d8cb5debbef33de661a09341cbe3ea48fcd52cb",
+      "sha256": "3077bfabab13b4d3805b76be149be8c6e4feda23386ec3dbcdd89ae930ffb8ef"
+    },
+    {
+      "path": "docs/PROTOCOL.md",
+      "git_blob": "ab9cee8e504361f5b1894b6ed2262bf82436b47e",
+      "sha256": "415b05aea802f08572a527eb9a10ea7341712612c7b59ab0162761ed65fadfee"
+    },
+    {
+      "path": "evidence/stabilize-20261017/REPORT.md",
+      "git_blob": "42aaa60fc55de5c45e923ffdb3bb6be64c8bf378",
+      "sha256": "f013197ad2a6ec94468034f2564067f692b904429c1ca2527b2db1de6810c5d9"
+    },
+    {
+      "path": ".github/workflows/pr-ci.yml",
+      "git_blob": "d86ed6a7b6300a7c6cbd17851bc7ed5a8870fe65",
+      "sha256": "9213593cd8084a51f5675f34a43dd6aeda8ba7ffa69e0d3e59347268043c3a2a"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/audio/AudioFiles.java",
+      "git_blob": "d794b05b5b6a3f1b7afa2d70fd5084a3bdac768e",
+      "sha256": "a9e9de2d8d9eb8467bc4f99b851eae1ae6d084798512b561da275d1e82beb6bc"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/audio/AudioPreparation.java",
+      "git_blob": "d661ce1ef48581701f373433170ffbfdf155774a",
+      "sha256": "0e028da365f5494f13010affb1f3d41b6bc7b4c75b0052301e1d70f55d7455ab"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/audio/AudioPreparationView.java",
+      "git_blob": "058d2c3bf65859f2af905ac80437f4581fef1c34",
+      "sha256": "b4747571fcabc1fe5380364c0d9258712a3a6950fe2aae5f340ff907325e2574"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/audio/AudioApiClient.java",
+      "git_blob": "53a97c498ddf53e7b833975505fd5edc12e97749",
+      "sha256": "53ed3bb242dcdb7bc312a8626c26fb1baf5cf5fb60662906406057ec946473cc"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/audio/ListeningPlayback.java",
+      "git_blob": "b2aed2329c303936f9dbb5d77ce185611e369d06",
+      "sha256": "0a169aad9eb85f83b74073548e9d4a4107afdb6b66ca6d218e12641de8cf5167"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/exam/ExamEntry.java",
+      "git_blob": "cae6cad245bfe7fbaac2a78031aee5bf39e014fb",
+      "sha256": "85a04aa0f0e61c5517ea5054220f335ff78c18cde46738a30277454f3ade5ddc"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/exam/ExamApiClient.java",
+      "git_blob": "fcfec7a6419f9195a79faa93e8b9250fa7a49be0",
+      "sha256": "3c188fc32a85eb0db2bd373dbf188410568918211438070685b72bff851f8b20"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/exam/ExamSession.java",
+      "git_blob": "8c24cd24177e818ec825de8d971de46d970b6f85",
+      "sha256": "4bcb95865b2f7e431219903f45791189578d74c5e4e5f5b8bb4f66b9b884747d"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/exam/CandidateExamView.java",
+      "git_blob": "21fa0936e9b8ad432d55929bc41fc634ecf835fc",
+      "sha256": "56d9732d2532ee9b36d8517b6b79d4d66475dc98c61cac0cc22477007533bd56"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/exam/ExamService.java",
+      "git_blob": "99be246821589b3ef71f488ae82806dd0f180f9d",
+      "sha256": "7be16d19bfcab6f34ae6669526234ada14dd4b85881cf7239f527174948e4106"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/exam/ExamController.java",
+      "git_blob": "0f3fe2315d04a722c411a0c23ed9fab09f35538f",
+      "sha256": "15d00895252e7a40c1dad5430ec04e5486a60218c29bd536cf1929c21e1b778d"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/audio/AudioService.java",
+      "git_blob": "4480e94ab7079366b53050c888bc4209142bbea6",
+      "sha256": "a9853ca1ff3b04cf4eeafe16b0fd5b24c85c069e1a14812404b87ab486d5b1af"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/audio/AudioFilesTest.java",
+      "git_blob": "017f542b28f963e09ab1bc322433d760fa0c2fd8",
+      "sha256": "910cf39aaf8758a742d2b127c0d1efaa349d2889b1469fe3eff964eb325ec469"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/audio/AudioPreparationTest.java",
+      "git_blob": "767b58fa3d3bb3e7ec7c3736e55a6c4bd8cde2e4",
+      "sha256": "f18a4c276eed2590fc15c90b0219250da6dca98359542aceb8493668dab5400c"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/audio/AudioApiClientTest.java",
+      "git_blob": "21048cd214b4d5cbb612dd99b4beaca6ff1a934a",
+      "sha256": "52f282fabdd446d9b82b7d8e812d16e9295700a1186c8bd9e2cf777e3de3661a"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/audio/ListeningPlaybackTest.java",
+      "git_blob": "c3279f38847c8b56c7ae36ab26b19a8b75290733",
+      "sha256": "35927d7e971e9aceae305f27f96103a42347754aa429f7758559f2c0db2126a0"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/exam/ExamPaperAndEntryTest.java",
+      "git_blob": "ea9d5f3a86b7e8e3dd1886f78969c0d9a659bacf",
+      "sha256": "034edd6c068f06d6c4f41e1bc49415b9492e3e344be4b6e211676509659a3783"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/exam/ExamApiClientTest.java",
+      "git_blob": "9be76038b672495e0574c966dfaa1eb174c1a028",
+      "sha256": "ff5c04cfe45b15aa5b2db15d8aec7dec786ad7eaf7b079f024cfb36f3f3893f8"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/exam/ExamSessionTest.java",
+      "git_blob": "d342f1092b4d0e4e9e80b779ed59c221afc45ba7",
+      "sha256": "7111c18a945d37accba212ad545f6d0133c8bfde12d20ae4217e76f7b60169f7"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/exam/ExamRuntimePostgresTest.java",
+      "git_blob": "2a5da4aca19dbe2d3e9c9ad594c13b091e797f3b",
+      "sha256": "3f78492bfb8271b64e416abab5dffd9e1cad5e5eb3abd0e4ca548af1cff57278"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/audio/AudioRuntimePostgresTest.java",
+      "git_blob": "724f34070afbcc1550b7c90cf0c3d3014b8e0ea8",
+      "sha256": "a9f0a05cbc6b033a29eb061b966c92b706c7b207b2414f8664c42849564e6995"
+    }
+  ],
+  "pr45_head": "a6524823c6a8d97cc7652fe4b776279db17d7d55",
+  "pr47_head": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+  "pr45_status": "OPEN, unmerged; not changed by Task5B",
+  "pr47_status": "OPEN, unmerged, target main; not changed by Task5B",
+  "pr45_files": [
+    ".github/workflows/pr-ci.yml",
+    "client/src/main/java/vn/edu/toeic/client/audio/AudioFiles.java"
+  ],
+  "integrated_ci": "d562581c03c5513e97c5a087d568a87332c3f383",
+  "original_ci": "c1e3405678740e292747dd67951e29840e716a53",
+  "ci_patch_id": "475510ffc80bb21224678f590831197431cef613",
+  "integrated_audio": "d53122135485f5a27015d4d03d196ea2c9bd03a5",
+  "jdk_local_src": "src.zip / java.base/sun/nio/fs/WindowsFileCopy.java:284-414; normal REPLACE_EXISTING deletes target then MoveFileEx(...,0)",
+  "jdk_src_sha256": "684d4b277f83fdd97255c22c864f3ecf8bbb8ea9196c38d8b2a7d6a86ba6aac0",
+  "provenance_checks": {
+    "main_contains_audio_and_ci_commits": true,
+    "ci_patch_ids_checked_this_task": [
+      "475510ffc80bb21224678f590831197431cef613",
+      "475510ffc80bb21224678f590831197431cef613"
+    ],
+    "audio_source_and_test_identical_to_stabilization": true,
+    "pr45_new_patch_needed_on_main": false
+  }
+}
