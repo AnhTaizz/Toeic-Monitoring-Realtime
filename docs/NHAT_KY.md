@@ -666,3 +666,11 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 - Tạo nhánh `docs/t3-a5-network-concurrency-report` từ T3-A4 `44b426d`; report commit `411be40`. Viết bản nháp kiến trúc server, REST/raw WS, auth/scope, transaction và đồng thời; tách trách nhiệm framework/library khỏi state machine, row lock, revision, epoch và commit-before-ACK do nhóm thiết kế.
 - Mỗi claim chính gắn source và evidence T3-A3/T3-A4; thêm ma trận NC01–NC08 và checklist reviewer C. Ghi rõ current state RAM một JVM, loopback không phải LAN/load, chưa có throughput/latency/resource.
 - 36 Markdown local links PASS, `git diff --check` PASS, audit 6 source owner PASS. Không chạy lại runtime vì docs-only; không tạo PASS mới. Load/LAN/GUI/human C review NOT RUN, báo cáo giữ DRAFT và tracker gốc giữ nguyên. [Report](T3_A5_NETWORK_CONCURRENCY_REPORT_DRAFT.md), [evidence](../evidence/t3-a5/2026-10-18-verification.md).
+
+
+## 18/10/2026 · Codex · corrective S3-P1-01 và tích hợp Phase3
+- Task: task.txt; bảo toàn checkout main6a41031 đang có uncommitted files, fetch xác nhận origin/main f864034 và PR45/47/51–56 chưa merge. Worktree riêng, không đổi branch thành viên.
+- Source56a27e9: cache hợp lệ không replace; static bounded JVM locks + persistent FileLock sidecar phối hợp publication/file/verify đa instance/process. HTTP không giữ khóa, partial đủ byte/SHA mới xét publish; lỗi I/O khác không bị coi là corrupt. Giữ QD33 root/junction/8.3/Unicode, v0/FULL và worker ngoài FX.
+- Windows/JDK21: exact main trước sửa747 lỗi/1280operations; sau sửa0/1280,20/20final hash,0partial. Targeted54PASS/2SKIP (symlink privilege); có bốn JVM, reader NOSHARE_DELETE, cancellation/retry/peer death/READY. Diagnostic encoding và wrapper failure giữ riêng, không gọi PASS.
+- [Evidence](../evidence/audio-cache-p1-20261018/REPORT.md). Người dùng chỉ định Codex reviewer kỹ thuật; không gán chữ ký A/B/C hoặc tự đánh tracker DONE. PR47/test56 ghép ở nhánh TEST riêng; full-run/source và packaging ghi hồ sơ tích hợp. MSI preflight PASS với WiX/SDK sẵn có; ZIP3044 tìm lại/hash đúng nhưng là source cũ.
+- Còn dở: automatic approval review từ chối push nhánh audio vì yêu cầu ủy quyền trực tiếp; chưa PR/CI/merge main. LAN0/41, nghe thật/máy2 NOT RUN. Tiếp tục kiểm local; xin quyền push cụ thể khi đầu ra reviewable hoàn tất.

@@ -547,3 +547,7 @@ Lượt cuối `final-3702b6d-r3` trên cluster PostgreSQL 18 riêng, loopback; 
 | E1 analyzer + 84 raw | 12/12 PASS, 84/84 hash | kết quả 287/62/11 không đổi |
 
 FAIL trung gian giữ lại: CI 39012744164 (assert thông báo cũ, sửa `7c0491e`); `final-4fbc538` (classpath smoke, lỗi pipeline agent); `final-3702b6d`, `-r2` (môi trường); C1 với hạn 8 s: 11/24 FAIL (10 khóa profile Edge, 1 Edge không lên dashboard), hạn 45 s: 5/5 PASS. Vẫn NOT RUN: LAN hai máy, nghe thật, máy sạch, tải 1/5/10, E2. Chi tiết: [báo cáo](../evidence/stabilize-20261017/REPORT.md).
+
+
+## Corrective S3-P1-01 · 18/10/2026
+Source audio56a27e9, [báo cáo mới](../evidence/audio-cache-p1-20261018/REPORT.md): exact-main stress4batch FAIL747/1280; source sửa4batch PASS1280/1280,20/20hash,0partial. Targeted AudioFiles/Sharing/Preparation/ApiClient/Playback:54PASS/2SKIP/0FAIL/ERROR. REAL Windows filesystem/multi-JVM/reader/cancellation; payload và API audio MOCK. LT01 phần kiểm file/READY có regression; không đổi LT01–LT04 hoặc IT01 thành nghiệm thu đầy đủ, nghe thủ công/LAN/máy2 NOT RUN. Diagnostic wrapper full-run không tính PASS. CI mới NOT RUN vì push bị automatic approval review từ chối.

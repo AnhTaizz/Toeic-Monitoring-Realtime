@@ -391,3 +391,7 @@ Code `d19c639` trên nhánh local `qa/f01-listening-result-20261016` từ PR40HE
 ### Ghi chú làm dở — RC17/10/2026
 
 MSI0.3.9 installed906PASS local; cần B review F01, hòa PR45 với fix race40 và policy junction; manual hearing/máy2/LAN chưa nghiệm thu. Source TEST c224ba8, không merge nhánh nguồn/main hoặc ký thay owner. [Bàn giao](../../evidence/integration-final-20261017/REPORT.md).
+
+
+## Bàn giao corrective audio P1 · 18/10/2026
+T3-B1/QD33: source56a27e9 local giữ cache hợp lệ, khóa JVM+process phối hợp publication/verify, không giữ khóa HTTP. [Báo cáo và lệnh](../../evidence/audio-cache-p1-20261018/REPORT.md). Exact-main747/1280FAIL → bản sửa0/1280, hash đúng/partial0; targeted54PASS/2SKIP. Codex review kỹ thuật theo người dùng chỉ định; human chữ ký không tự tạo. Ghi chú làm dở: push bị automatic approval review từ chối, cần quyền push rõ ràng để mở corrective PR/CI; main vẫn thiếu fix. B chạy nghe/máy2/LAN, xác nhận dispositionPR45; final MSI chỉ nghiệm thu sau source main đã tích hợp.
