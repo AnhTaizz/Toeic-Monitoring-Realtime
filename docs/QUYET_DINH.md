@@ -319,3 +319,6 @@ Giữ nguyên cache đã đúng size/SHA; chỉ repair missing/known corrupt dư
 
 ### 19/10/2026 · review kỹ thuật do người dùng giao và release FULL
 Người dùng chỉ định Codex reviewer và cho phép push hai nhánh mới/PR/CI. PR47 mergecd9a89d, PR57 merge8a43a56 sau kiểm source/test/CI đúngHEAD. Agent technical review QD31/32/34 theo giới hạn đã công bố, QD33 theo corrective57; không gán chữ ký A/B/C hoặc actualhours. FULL giữ baseline theo hợp đồng; DELTA chưa được promote, C/B gatephysical còn pending. Lượt localC4FAIL được giữ và sửa harness backoff1072f77, không thay production retry. MSI0.3.10/ZIP3044 là lịch sử, cần artifact mới ràng buộc source cuối.
+
+
+19/10/2026 — Giữ close() production không chặn FX; lifecycle test phải chờ cleanup sample trước khi JUnit TempDir thu hồi thư mục. Không dùng retry cả CI để che failure. Review kỹ thuật Codex theo ủy quyền; không cấp chữ ký A/B/C hay nghiệm thu vật lý.

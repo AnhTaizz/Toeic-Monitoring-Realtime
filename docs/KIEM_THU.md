@@ -572,3 +572,6 @@ Source audio56a27e9, [báo cáo mới](../evidence/audio-cache-p1-20261018/REPOR
 
 ## Tích hợp19/10/2026
 PR47 vàPR57 đã vào main8a43a56. Sourcece38a5f clean test/package mỗi lượt946total=942PASS/4SKIP,0FAIL/ERROR; PG68PASS/2SKIPsubset. MODE8case lặp5lượtPASS; GUI11/11, ExamFlow41/41PASSlocal. C4 supplementaryFAIL ở fixture retrybudget (raw giữ); harness1072f77 sửa configurationnormalpeer, chưa nhận lượt rerunPASS trước khi chạy. LAN0/41 và hearing/MSI-máy2 NOT RUN; không nâng MT/LT/IT toàn hệ thống thànhPASS.
+
+
+19/10/2026 — CI exact-main0363995 run39150213101 FAIL: AudioPreparationTest JUnit TempDir xóa next-speaker WAV đồng thời với cleanup async của production close(). Sửa TEST chờ Files.notExists(sample) bằng await5s hiện có, cho cả AfterEach và view kế tiếp; giữ mọi assertion READY/epoch, không đổi production close/FX. Focused10case×5lượt PASS trên Windows (fixture API/media MOCK), không gọi50case duy nhất. Clean main0363995 test/package mỗi lượt942PASS/4SKIP nhưng CI này vẫn FAIL; không gán CI củaPR58 cho main. Full/PG/CI sau corrective sẽ ghi tiếp; LAN0/41, hearing/máy2 NOT RUN.
