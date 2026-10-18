@@ -261,6 +261,8 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Bàn giao từ C ngày12/10/2026:** C2 tận dụng AuthorizationService/SessionAuthenticationService/active binding/store RAM C1/registry/maintenance; bổ sung delta/resync và experimental heartbeat capability, không thay auth implementation/DB migrations/exam. REAL server restart/resync harness PASS nhưng IT04 toàn hệ thống/human A review chưa làm; không đánh dấu T3-A3 DONE thay A. A cần review scope trước duplicate, socket/epoch/RAM freshness/TTL/ACK và push assignment, coarse store lock. [Guide C2](../MONITORING_DELTA_REDUCER.md), [evidence](../../evidence/t3-c2/2026-10-12-verification.md).
 
+**Bàn giao A ngày18/10/2026:** đã review hook auth/scope, socket/collector/epoch, RAM freshness/TTL, ACK và push assignment; không sửa collector/reducer của C. Bổ sung regression hai server instance chứng minh instance/epoch mới, epoch cũ `STALE`, phải OPEN/full mới. Targeted31 PASS; full package912 PASS,58 opt-in skip; REAL PostgreSQL/HTTP/WS smoke event COMMIT failure rollback + retryable ERROR không success ACK/warning và REAL Spring restart cùng port + persisted login/history + reconnect/new epoch/full PASS. [Contract hook](../MONITORING_SERVER_HOOKS.md), [evidence](../../evidence/t3-a3/2026-10-18-verification.md). Human C review và LAN hai máy chưa chạy; tracker gốc giữ nguyên.
+
 ### T3-A4 · Regression giao dịch và nhiều client
 `4h` · phụ thuộc: T3-A2, T3-A3, T3-C4 · review: C
 
@@ -268,14 +270,14 @@ Lịch gợi ý: 03/10 A1 · 04/10 A2 · 05/10 A3 (3h) · 06/10 A3 (1h) + A4 (1h
 
 **Xong khi:** AT01 và IT02 có bằng chứng; client hỏng không ảnh hưởng client khác.
 
-**Ghi chú làm dở:** —
+**Bàn giao A ngày 18/10/2026:** thêm regression khóa PostgreSQL chứng minh save, submit và scheduler timeout cùng chờ một row qua deadline; hai write bị từ chối, chỉ timeout chốt answers/revision đã ACK và tính điểm một lần. Runner tái lập chạy AT01 trực tiếp, 74 test transaction/network, cùng smoke hai candidate + assigned proctor, malformed JSON và four-client isolation trên REAL PostgreSQL/HTTP/WS. Full package 912 PASS, 58 opt-in skip. [Evidence](../../evidence/t3-a4/2026-10-18-verification.md). LAN hai máy/GUI/human C review chưa chạy; tracker gốc giữ nguyên.
 
 ### T3-A5 · Bản nháp báo cáo network/concurrency
 `2h` · phụ thuộc: T3-A4 · review: C
 
 **Đầu ra:** bản nháp các mục kiến trúc, giao tiếp, phân quyền, giao dịch. Nêu rõ framework lo phần nào (ví dụ quản lý kết nối, thread pool) và nhóm tự thiết kế phần nào (khóa theo attempt, revision, epoch, thứ tự commit rồi ACK). Mỗi khẳng định kèm bằng chứng thật.
 
-**Ghi chú làm dở:** —
+**Bàn giao A ngày 18/10/2026:** hoàn thành [bản nháp network/concurrency](../T3_A5_NETWORK_CONCURRENCY_REPORT_DRAFT.md) gồm kiến trúc server, REST/raw WS, auth/scope, transaction/row lock, revision/epoch/idempotency, commit-before-ACK, lỗi/retry/restart và ma trận 8 claim gắn source + evidence thật. Tách rõ Spring/Tomcat/Hikari/PostgreSQL/Flyway/Gson cung cấp cơ chế nào và state machine/khóa/thứ tự quyết định nào do nhóm thiết kế. 36 link nội bộ và audit 6 source owner PASS. Không chạy lại runtime vì docs-only; reuse evidence T3-A3/T3-A4. [Evidence](../../evidence/t3-a5/2026-10-18-verification.md). Load/LAN/GUI/human C review chưa chạy; giữ trạng thái DRAFT.
 
 ---
 
@@ -383,3 +385,8 @@ Backend validation/QD29, collision/final/raw-ID, committed progress whitelist/MV
 ### Ghi chú làm dở — QA PR39 ngày16/10/2026 (B bàn giao, chưa owner ký)
 
 B gửi review kỹ thuật PR39/QA source9bfc75e: không sửa server/protocol/schema. A cần review B fixes và QD29/progress/authorization/transaction của PR39; QD29 vẫn PROPOSED. Các local PG/GUI/MSI tests mới không là chữ ký A. QA database đầu phiên được giữ trong shared container đang dừng; owner có thể cleanup đúng DB private sau khi được phép resume, không reset volume. [Báo cáo](../../evidence/b-pr39-acceptance-20261016/FINAL_REPORT.md).
+
+
+### Ghi chú làm dở — RC17/10/2026
+
+Cần A/C chốt QD29/legacy ACTIVE; A review history5000/5001/HTTP500 và test F01 trong phần A. Chưa owner approve. Source TEST c224ba8, không merge nhánh nguồn/main hoặc ký thay owner. [Bàn giao](../../evidence/integration-final-20261017/REPORT.md).

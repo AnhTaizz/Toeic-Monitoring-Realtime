@@ -1,0 +1,104 @@
+{
+  "source": "c224ba8572ae453ad97e0be4f85914e112041805",
+  "label": "package",
+  "totals": {
+    "tests": 906,
+    "passed": 904,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 2,
+    "suites": 81
+  },
+  "modules": {
+    "protocol": {
+      "tests": 45,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 7,
+      "passed": 45
+    },
+    "client": {
+      "tests": 626,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 50,
+      "passed": 626
+    },
+    "server": {
+      "tests": 234,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2,
+      "suites": 23,
+      "passed": 232
+    },
+    "monitoring-spike": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 1,
+      "passed": 1
+    }
+  },
+  "skippedTests": [
+    "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest#installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle",
+    "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest#appImageProductionClientUsesUnifiedReadingListeningWithoutInstallerClaim"
+  ],
+  "focusedSubsetIncluded": [
+    {
+      "name": "vn.edu.toeic.client.exam.ExamResultMappingTest#finalStatusPreservesInterruptionWithoutInferringItFromTimeoutOrScore(String, boolean)[1]",
+      "result": "PASS"
+    },
+    {
+      "name": "vn.edu.toeic.client.exam.ExamResultMappingTest#finalStatusPreservesInterruptionWithoutInferringItFromTimeoutOrScore(String, boolean)[2]",
+      "result": "PASS"
+    },
+    {
+      "name": "vn.edu.toeic.client.exam.ExamResultMappingTest#finalStatusPreservesInterruptionWithoutInferringItFromTimeoutOrScore(String, boolean)[3]",
+      "result": "PASS"
+    },
+    {
+      "name": "vn.edu.toeic.client.exam.ExamResultMappingTest#finalStatusPreservesInterruptionWithoutInferringItFromTimeoutOrScore(String, boolean)[4]",
+      "result": "PASS"
+    },
+    {
+      "name": "vn.edu.toeic.client.exam.ExamResultMappingTest#submitPreservesInterruptionAndEveryServerResultField(boolean)[1]",
+      "result": "PASS"
+    },
+    {
+      "name": "vn.edu.toeic.client.exam.ExamResultMappingTest#submitPreservesInterruptionAndEveryServerResultField(boolean)[2]",
+      "result": "PASS"
+    },
+    {
+      "name": "vn.edu.toeic.client.exam.ScoreResultDialogTest#warningFollowsOnlyServerFlagAndKeepsConfirmedResult(String, boolean)[1]",
+      "result": "PASS"
+    },
+    {
+      "name": "vn.edu.toeic.client.exam.ScoreResultDialogTest#warningFollowsOnlyServerFlagAndKeepsConfirmedResult(String, boolean)[2]",
+      "result": "PASS"
+    },
+    {
+      "name": "vn.edu.toeic.client.exam.ScoreResultDialogTest#warningFollowsOnlyServerFlagAndKeepsConfirmedResult(String, boolean)[3]",
+      "result": "PASS"
+    },
+    {
+      "name": "vn.edu.toeic.client.exam.ScoreResultDialogTest#warningFollowsOnlyServerFlagAndKeepsConfirmedResult(String, boolean)[4]",
+      "result": "PASS"
+    },
+    {
+      "name": "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest#permissionErrorStopsWorkerAndSubscriptionsButRetainsDiscardAccounting",
+      "result": "PASS"
+    },
+    {
+      "name": "vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest#eventTimelineReturnsExactly5000InOrderAndRejects5001",
+      "result": "PASS"
+    },
+    {
+      "name": "vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest#interruptionHistoryReturnsExactly5000InOrderAndRejects5001",
+      "result": "PASS"
+    }
+  ]
+}

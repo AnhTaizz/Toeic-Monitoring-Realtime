@@ -39,6 +39,9 @@ class MonitoringHistoryBoundsPostgresTest {
     private static final String EVENT_OTHER = "TEST-C-HISTORY-EVENT-OTHER";
     private static final String INTERRUPTION = "TEST-C-HISTORY-INTERRUPTION";
     private static final String INTERRUPTION_OTHER = "TEST-C-HISTORY-INTERRUPTION-OTHER";
+    private static final String GAP = "TEST-C-HISTORY-GAP";
+    private static final String GAP_OTHER = "TEST-C-HISTORY-GAP-OTHER";
+    private static final String EMPTY = "TEST-C-HISTORY-EMPTY";
     private final String schema = "c_history_" + UUID.randomUUID().toString().replace("-", "");
     private Connection admin;
     private ConfigurableApplicationContext context;
@@ -132,18 +135,63 @@ class MonitoringHistoryBoundsPostgresTest {
         assertBoundedFailure(get(path(INTERRUPTION, "interruptions"), proctorToken), "interruptions", "monitoring_interruptions");
     }
 
+    @Test void gapHistoryReturnsExactly5000InOrderAndRejects5001() throws Exception {
+        insertGaps(GAP, "A", 1, 5000);
+        insertGaps(GAP_OTHER, "O", 1, 1);
+
+        JsonObject body = json(expect(get(path(GAP, "gaps"), proctorToken), 200));
+        JsonArray items = body.getAsJsonArray("gaps");
+        assertThat(body.get("attemptId").getAsString()).isEqualTo(GAP);
+        assertThat(items).hasSize(5000);
+        assertThat(items.get(0).getAsJsonObject().get("gapId").getAsString()).isEqualTo("TEST-qgap-A-00001");
+        assertThat(items.get(4999).getAsJsonObject().get("gapId").getAsString()).isEqualTo("TEST-qgap-A-05000");
+
+        insertGaps(GAP, "A", 5001, 5001);
+        verifyAuthorizationBeforeHistory(path(GAP, "gaps"));
+        assertBoundedFailure(get(path(GAP, "gaps"), proctorToken), "gaps", "monitoring_gaps");
+    }
+
+    @Test void emptyAndSingleRecordHistoriesAreCompleteForAllThreeEndpoints() throws Exception {
+        for (String kind : new String[]{"events", "interruptions", "gaps"}) {
+            JsonObject empty = json(expect(get(path(EMPTY, kind), proctorToken), 200));
+            assertThat(empty.getAsJsonArray(kind)).as(kind + " with 0 rows").isEmpty();
+            verifyAuthorizationBeforeHistory(path(EMPTY, kind));
+        }
+        insertEvents(EMPTY, "S", 1, 1);
+        insertInterruptions(EMPTY, "S", 1, 1);
+        insertGaps(EMPTY, "S", 1, 1);
+        assertThat(json(expect(get(path(EMPTY, "events"), proctorToken), 200)).getAsJsonArray("events")).hasSize(1);
+        assertThat(json(expect(get(path(EMPTY, "interruptions"), proctorToken), 200)).getAsJsonArray("interruptions")).hasSize(1);
+        assertThat(json(expect(get(path(EMPTY, "gaps"), proctorToken), 200)).getAsJsonArray("gaps")).hasSize(1);
+    }
+
+    private void insertGaps(String attempt, String label, int first, int last) {
+        jdbc.sql("""
+                INSERT INTO monitoring_gaps(attempt_id,gap_id,collector_session_id,reason,dropped_count,
+                    first_dropped_at,last_dropped_at,received_at)
+                SELECT :attempt,'TEST-qgap-' || :label || '-' || lpad(n::text,5,'0'),'TEST-collector','QUEUE_OVERFLOW',1,
+                    TIMESTAMPTZ '2026-10-17 00:00:00Z' + n * INTERVAL '1 microsecond',
+                    TIMESTAMPTZ '2026-10-17 00:00:01Z' + n * INTERVAL '1 microsecond',
+                    TIMESTAMPTZ '2026-10-17 00:00:02Z' + n * INTERVAL '1 microsecond'
+                FROM generate_series(:first,:last) AS n
+                """).param("attempt", attempt).param("label", label).param("first", first).param("last", last).update();
+    }
+
     private void fixtures(PasswordEncoder encoder) {
         for (String name : new String[]{"TEST-c-history-candidate", "TEST-c-history-proctor", "TEST-c-history-foreign"}) {
             jdbc.sql("INSERT INTO user_accounts(username,display_name,role,password_hash) VALUES(:u,'TEST history',:r,:p)")
                     .param("u", name).param("r", name.contains("candidate") ? "CANDIDATE" : "PROCTOR")
                     .param("p", encoder.encode(PASSWORD)).update();
         }
-        for (String attempt : new String[]{EVENT, EVENT_OTHER, INTERRUPTION, INTERRUPTION_OTHER}) {
+        for (String attempt : new String[]{EVENT, EVENT_OTHER, INTERRUPTION, INTERRUPTION_OTHER, GAP, GAP_OTHER, EMPTY}) {
             jdbc.sql("INSERT INTO monitoring_attempts(attempt_id,candidate_user_id,state) SELECT :a,id,'ACTIVE' FROM user_accounts WHERE username='TEST-c-history-candidate'")
                     .param("a", attempt).update();
         }
         assign(EVENT, "TEST-c-history-proctor");
         assign(INTERRUPTION, "TEST-c-history-proctor");
+        assign(GAP, "TEST-c-history-proctor");
+        assign(EMPTY, "TEST-c-history-proctor");
+        assign(GAP_OTHER, "TEST-c-history-foreign");
         assign(EVENT_OTHER, "TEST-c-history-foreign");
         assign(INTERRUPTION_OTHER, "TEST-c-history-foreign");
     }
@@ -184,7 +232,8 @@ class MonitoringHistoryBoundsPostgresTest {
     }
 
     private static void assertBoundedFailure(HttpResponse<String> response, String historyField, String internalTable) {
-        expect(response, 500);
+        // Overflow is a fixed property of stored history: retrying cannot help, so not a retryable 500.
+        expect(response, 409);
         assertThat(response.headers().firstValue("Content-Type").orElse("")).contains("application/json");
         JsonObject body = json(response);
         assertThat(body.get("protocolVersion").getAsString()).isEqualTo("v0");
@@ -192,9 +241,9 @@ class MonitoringHistoryBoundsPostgresTest {
         assertThat(body.get("traceId").getAsString()).isNotBlank();
         assertThat(body.has(historyField)).isFalse();
         JsonObject error = body.getAsJsonObject("error");
-        assertThat(error.get("code").getAsString()).isEqualTo("RETRYABLE_SERVER_ERROR");
-        assertThat(error.get("retryable").getAsBoolean()).isTrue();
-        assertThat(error.get("message").getAsString()).isEqualTo("Server tạm thời không xử lý được yêu cầu");
+        assertThat(error.get("code").getAsString()).isEqualTo("INVALID_STATE");
+        assertThat(error.get("retryable").getAsBoolean()).isFalse();
+        assertThat(error.get("message").getAsString()).isEqualTo(MonitoringHistoryLimit.MESSAGE);
         assertThat(response.body()).doesNotContain("IllegalStateException", "bounded response", internalTable,
                 "vn.edu.toeic", "SELECT");
     }

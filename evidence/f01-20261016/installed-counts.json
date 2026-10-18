@@ -1,0 +1,714 @@
+{
+    "run":  "installed",
+    "totals":  {
+                   "failures":  0,
+                   "passed":  898,
+                   "errors":  0,
+                   "tests":  898,
+                   "skipped":  0
+               },
+    "suites":  [
+                   {
+                       "module":  "protocol",
+                       "name":  "vn.edu.toeic.protocol.exam.AttemptIdentifierBoundaryTest",
+                       "tests":  1,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  1
+                   },
+                   {
+                       "module":  "protocol",
+                       "name":  "vn.edu.toeic.protocol.measurement.MessageMeasurementsTest",
+                       "tests":  25,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  25
+                   },
+                   {
+                       "module":  "protocol",
+                       "name":  "vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest",
+                       "tests":  3,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  3
+                   },
+                   {
+                       "module":  "protocol",
+                       "name":  "vn.edu.toeic.protocol.monitoring.EventOriginTest",
+                       "tests":  3,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  3
+                   },
+                   {
+                       "module":  "protocol",
+                       "name":  "vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest",
+                       "tests":  6,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  6
+                   },
+                   {
+                       "module":  "protocol",
+                       "name":  "vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest",
+                       "tests":  6,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  6
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.AttemptRefreshTest",
+                       "tests":  12,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  12
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.audio.AudioApiClientTest",
+                       "tests":  5,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  5
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.audio.AudioFilesTest",
+                       "tests":  16,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  16
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.audio.AudioPreparationTest",
+                       "tests":  10,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  10
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.audio.ListeningApiClientTest",
+                       "tests":  3,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  3
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+                       "tests":  8,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  8
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.ClientSettingsTest",
+                       "tests":  5,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  5
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.dashboard.DashboardControllerTest",
+                       "tests":  15,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  15
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.dashboard.DashboardModelTest",
+                       "tests":  9,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  9
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.dashboard.FullStateDashboardTest",
+                       "tests":  4,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  4
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.dashboard.LateEventsAndGapsTest",
+                       "tests":  3,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  3
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest",
+                       "tests":  11,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  11
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest",
+                       "tests":  20,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  20
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.dashboard.ProctorProgressControllerTest",
+                       "tests":  5,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  5
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.exam.ExamApiClientTest",
+                       "tests":  28,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  28
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.exam.ExamHistoryReadTest",
+                       "tests":  43,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  43
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.exam.ExamPaperAndEntryTest",
+                       "tests":  8,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  8
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.exam.ExamResultMappingTest",
+                       "tests":  6,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  6
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.exam.ExamSessionTest",
+                       "tests":  51,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  51
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.exam.ExamSessionThreadingTest",
+                       "tests":  1,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  1
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.exam.ScoreResultDialogTest",
+                       "tests":  4,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  4
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.ExamMonitoringIntegrationTest",
+                       "tests":  7,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  7
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.LoginApiClientTest",
+                       "tests":  39,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  39
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.CandidateModeSessionTest",
+                       "tests":  8,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  8
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+                       "tests":  32,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  32
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest",
+                       "tests":  7,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  7
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.harness.ControlledProcessHarnessTest",
+                       "tests":  8,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  8
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.harness.E1WindowTest",
+                       "tests":  2,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  2
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.harness.HarnessArtifactsTest",
+                       "tests":  4,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  4
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.harness.HarnessCliTest",
+                       "tests":  2,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  2
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.harness.HarnessPlanTest",
+                       "tests":  4,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  4
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.harness.ObservationJoinerTest",
+                       "tests":  11,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  11
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.harness.TestTracePolicyTest",
+                       "tests":  3,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  3
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest",
+                       "tests":  33,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  33
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest",
+                       "tests":  14,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  14
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.ProcessCollectorTraceTest",
+                       "tests":  2,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  2
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest",
+                       "tests":  19,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  19
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.trace.DeltaReplayTest",
+                       "tests":  9,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  9
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.trace.HandwrittenTraceTest",
+                       "tests":  1,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  1
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest",
+                       "tests":  15,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  15
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.trace.ReplayEngineTest",
+                       "tests":  11,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  11
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.trace.TraceCliTest",
+                       "tests":  3,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  3
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.trace.TraceReaderTest",
+                       "tests":  13,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  13
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.monitoring.trace.TraceRecorderTest",
+                       "tests":  6,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  6
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.proctor.ProctorSessionApiClientTest",
+                       "tests":  9,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  9
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.proctor.ProctorSessionControllerTest",
+                       "tests":  10,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  10
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpenerTest",
+                       "tests":  15,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  15
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.realtime.RealtimeClientTest",
+                       "tests":  60,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  60
+                   },
+                   {
+                       "module":  "client",
+                       "name":  "vn.edu.toeic.client.ScopeLookupTest",
+                       "tests":  7,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  7
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.audio.AudioAuthorizationTest",
+                       "tests":  2,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  2
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.audio.AudioCatalogTest",
+                       "tests":  11,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  11
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.audio.AudioReadinessPolicyTest",
+                       "tests":  2,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  2
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.audio.AudioRuntimePostgresTest",
+                       "tests":  10,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  10
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+                       "tests":  18,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  18
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.auth.AuthenticatedNetworkTest",
+                       "tests":  36,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  36
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.auth.AuthServiceTest",
+                       "tests":  2,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  2
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.auth.ConcurrentRealtimeSendTest",
+                       "tests":  3,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  3
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.auth.RealtimeMeasurementTest",
+                       "tests":  5,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  5
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.auth.SessionAuthenticationTest",
+                       "tests":  18,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  18
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.exam.ExamControllerTest",
+                       "tests":  7,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  7
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.exam.ExamReadAuthorizationTest",
+                       "tests":  4,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  4
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+                       "tests":  33,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  33
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.exam.ExamTimeoutSchedulingTest",
+                       "tests":  2,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  2
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.exam.ExamValidationTest",
+                       "tests":  4,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  4
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.monitoring.FullSnapshotReducerTest",
+                       "tests":  5,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  5
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest",
+                       "tests":  7,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  7
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.monitoring.MonitoringGapTest",
+                       "tests":  15,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  15
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest",
+                       "tests":  12,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  12
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest",
+                       "tests":  4,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  4
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest",
+                       "tests":  7,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  7
+                   },
+                   {
+                       "module":  "server",
+                       "name":  "vn.edu.toeic.server.monitoring.ProcessEventTest",
+                       "tests":  25,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  25
+                   },
+                   {
+                       "module":  "monitoring-spike",
+                       "name":  "vn.edu.toeic.monitoring.ProcessObservationTest",
+                       "tests":  1,
+                       "failures":  0,
+                       "errors":  0,
+                       "skipped":  0,
+                       "passed":  1
+                   }
+               ]
+}

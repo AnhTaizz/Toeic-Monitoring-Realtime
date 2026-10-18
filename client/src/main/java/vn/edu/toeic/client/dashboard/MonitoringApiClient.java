@@ -49,6 +49,23 @@ public final class MonitoringApiClient implements DashboardApi {
         worker = Executors.newFixedThreadPool(2, task -> { Thread thread = new Thread(task,"toeic-dashboard-http"); thread.setDaemon(true); return thread; });
         http = HttpClient.newBuilder().executor(worker).connectTimeout(timeout).followRedirects(HttpClient.Redirect.NEVER).build();
     }
+    /** Server refuses a history above 5000 rows with 409 instead of truncating; retrying cannot help. */
+    public static final String HISTORY_LIMIT_MESSAGE = "Lịch sử vượt 5000 bản ghi cho một lần tải; "
+            + "dashboard không hiển thị bản bị cắt bớt và làm mới sẽ không thay đổi kết quả.";
+    public static final class HistoryLimitException extends RuntimeException {
+        HistoryLimitException() { super(HISTORY_LIMIT_MESSAGE); }
+    }
+    private <T> CompletableFuture<T> history(String path, Function<JsonObject,T> parser) {
+        CompletableFuture<T> source = get(path, parser);
+        CompletableFuture<T> mapped = source.exceptionally(failure -> {
+            Throwable cause = failure instanceof java.util.concurrent.CompletionException && failure.getCause() != null ? failure.getCause() : failure;
+            if (cause instanceof LoginFailedException denied && denied.statusCode() == 409) throw new HistoryLimitException();
+            throw failure instanceof RuntimeException runtime ? runtime : new java.util.concurrent.CompletionException(failure);
+        });
+        // Dashboard cancels the future it holds; pass that on so the HTTP request stops too.
+        mapped.whenComplete((value, failure) -> { if (mapped.isCancelled()) source.cancel(true); });
+        return mapped;
+    }
     private <T> CompletableFuture<T> get(String path, Function<JsonObject,T> parser) {
         String credential = token;
         if (credential == null) return CompletableFuture.failedFuture(new IllegalStateException("Dashboard đã đóng"));
@@ -70,9 +87,9 @@ public final class MonitoringApiClient implements DashboardApi {
         if (attempt == null || !attempt.matches("[A-Za-z0-9_.:-]{1,128}")) throw new IllegalArgumentException();
         return "monitoring/attempts/" + attempt;
     }
-    @Override public CompletableFuture<List<Event>> events(String attempt) { return get(attemptPath(attempt)+"/events",body -> MonitoringJson.events(body,attempt,maximum)); }
-    @Override public CompletableFuture<List<Interruption>> interruptions(String attempt) { return get(attemptPath(attempt)+"/interruptions",body -> MonitoringJson.interruptions(body,attempt,maximum)); }
-    @Override public CompletableFuture<List<Gap>> gaps(String attempt) { return get(attemptPath(attempt)+"/gaps",body -> MonitoringJson.gaps(body,attempt,maximum)); }
+    @Override public CompletableFuture<List<Event>> events(String attempt) { return history(attemptPath(attempt)+"/events",body -> MonitoringJson.events(body,attempt,maximum)); }
+    @Override public CompletableFuture<List<Interruption>> interruptions(String attempt) { return history(attemptPath(attempt)+"/interruptions",body -> MonitoringJson.interruptions(body,attempt,maximum)); }
+    @Override public CompletableFuture<List<Gap>> gaps(String attempt) { return history(attemptPath(attempt)+"/gaps",body -> MonitoringJson.gaps(body,attempt,maximum)); }
     @Override public CompletableFuture<MonitoringStateView> state(String attempt) {
         return get(attemptPath(attempt)+"/state",body -> {
             MonitoringStateView value=MonitoringStateView.parse(body);
@@ -81,7 +98,11 @@ public final class MonitoringApiClient implements DashboardApi {
         });
     }
     @Override public void close() { token = null; http.shutdownNow(); worker.shutdownNow(); }
-    /** Bounds body allocation before JSON parse, not just after receiving an oversized response. */
+    /**
+     * Bounds body allocation before JSON parse, not just after receiving an oversized response.
+     * 8 MiB holds 5000 events with every field at its server-side maximum length (~5 MB).
+     */
+    static final int MAX_BODY_BYTES = 8 * 1024 * 1024;
     private static final class LimitedBody implements HttpResponse.BodySubscriber<String> {
         private final HttpResponse.BodySubscriber<String> delegate = HttpResponse.BodySubscribers.ofString(StandardCharsets.UTF_8);
         private Flow.Subscription subscription;
@@ -90,7 +111,7 @@ public final class MonitoringApiClient implements DashboardApi {
         @Override public void onSubscribe(Flow.Subscription value) { subscription = value; delegate.onSubscribe(value); }
         @Override public void onNext(List<ByteBuffer> buffers) {
             for (ByteBuffer buffer : buffers) size += buffer.remaining();
-            if (size > 4 * 1024 * 1024) { subscription.cancel(); delegate.onError(new InvalidServerResponseException()); }
+            if (size > MAX_BODY_BYTES) { subscription.cancel(); delegate.onError(new InvalidServerResponseException()); }
             else delegate.onNext(buffers);
         }
         @Override public void onError(Throwable failure) { delegate.onError(failure); }

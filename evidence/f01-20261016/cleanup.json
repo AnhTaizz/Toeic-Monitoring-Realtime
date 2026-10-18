@@ -1,0 +1,8 @@
+{
+    "ownedPostgresStopped":  true,
+    "sharedServiceTouched":  false,
+    "ownedEdgeProfilesRemoved":  1,
+    "nativeRetryTempCleaned":  true,
+    "note":  "Only owned TEST cluster stopped; its local ignored data retained. Seed settings removed after initial setup waiter exits.",
+    "ownedSchemasRemaining":  0
+}

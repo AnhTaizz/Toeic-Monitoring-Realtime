@@ -1,0 +1,19 @@
+{
+  "oldSource": "d19c63902725662aeb6f43c6f04ca80ea6caff42",
+  "newSource": "c224ba8572ae453ad97e0be4f85914e112041805",
+  "oldCount": 5439,
+  "newCount": 5439,
+  "changed": [
+    "vn/edu/toeic/client/monitoring/MonitoringDelivery.class",
+    "vn/edu/toeic/client/monitoring/harness/ControlledProcessHarness$AlignedTrace.class",
+    "vn/edu/toeic/client/monitoring/harness/ControlledProcessHarness$MutableTrial.class",
+    "vn/edu/toeic/client/monitoring/harness/ControlledProcessHarness.class",
+    "vn/edu/toeic/client/monitoring/harness/E1Cli.class",
+    "vn/edu/toeic/client/monitoring/harness/HarnessArtifacts.class",
+    "vn/edu/toeic/client/monitoring/harness/HarnessCli.class",
+    "vn/edu/toeic/client/monitoring/harness/ObservationJoiner.class"
+  ],
+  "added": [],
+  "removed": [],
+  "oldArtifactReusable": false
+}

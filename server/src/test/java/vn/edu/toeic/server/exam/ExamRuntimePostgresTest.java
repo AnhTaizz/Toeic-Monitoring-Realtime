@@ -427,6 +427,33 @@ class ExamRuntimePostgresTest {
         System.out.println("PASS concurrent entry/reconnect/reopen/takeover: one persisted deadline, old writer STALE");
     }
 
+    /**
+     * Documents the accepted takeover semantics (not idempotent by requestId): a replay after a
+     * lost ACK issues a newer epoch, which is exactly what a fresh takeover from the same device
+     * does. Saved answers, revision, the persisted deadline and FINAL results never change.
+     */
+    @Test void takeoverReplayAfterLostAckAdvancesEpochButNeverLosesAnswersDeadlineOrFinal() throws Exception {
+        String attempt = attempt(60);
+        TakeoverWriterRequest first = takeover(attempt);
+        JsonObject granted = json(expect(post(path(attempt, "takeover"), first, candidateToken), 200));
+        long epoch = granted.get("writerEpoch").getAsLong();
+        String deadline = granted.get("deadlineAt").getAsString();
+        expect(post(path(attempt, "answers"), new AutosaveAnswersRequest(id(), attempt, epoch, 1, Map.of("R1", "A")), candidateToken), 200);
+        // SIMULATED lost ACK: the same request is sent again after the server committed it.
+        JsonObject replay = json(expect(post(path(attempt, "takeover"), first, candidateToken), 200));
+        assertThat(replay.get("writerEpoch").getAsLong()).isEqualTo(epoch + 1);
+        assertThat(replay.get("deadlineAt").getAsString()).isEqualTo(deadline);
+        assertThat(replay.get("savedRevision").getAsLong()).isEqualTo(1);
+        assertThat(replay.getAsJsonObject("answers").get("R1").getAsString()).isEqualTo("A");
+        expectCode(post(path(attempt, "answers"), new AutosaveAnswersRequest(id(), attempt, epoch, 2, Map.of("R1", "B")), candidateToken), 409, "STALE");
+        expect(post(path(attempt, "answers"), new AutosaveAnswersRequest(id(), attempt, epoch + 1, 2, Map.of("R1", "B")), candidateToken), 200);
+        expect(post(path(attempt, "submit"), new SubmitExamRequest(id(), attempt, epoch + 1, 2, Map.of("R1", "B")), candidateToken), 200);
+        JsonObject finalStatus = status(attempt);
+        expectCode(post(path(attempt, "takeover"), first, candidateToken), 409, "INVALID_STATE");
+        assertThat(status(attempt).toString()).isEqualTo(finalStatus.toString());
+        System.out.println("PASS takeover replay: newer epoch, old writer STALE, answers/deadline kept, FINAL unchanged");
+    }
+
     @Test void unansweredAttemptTimesOutByAutonomousRuntimeScheduler() throws Exception {
         String attempt = attempt(1);
         JsonObject entry = json(expect(post(path(attempt, "takeover"), takeover(attempt), candidateToken), 200));
@@ -483,30 +510,34 @@ class ExamRuntimePostgresTest {
         System.out.println("PASS submit retry/IDOR/idempotency/late save and autonomous scans: one SUBMITTED result");
     }
 
-    @Test void submitAndTimeoutContendOnPostgresRowAcrossDeadline() throws Exception {
+    @Test void saveSubmitAndTimeoutContendOnPostgresRowAcrossDeadline() throws Exception {
         String attempt = attempt(1);
         long epoch = json(expect(post(path(attempt, "takeover"), takeover(attempt), candidateToken), 200)).get("writerEpoch").getAsLong();
         expect(post(path(attempt, "answers"), new AutosaveAnswersRequest(id(), attempt, epoch, 1, Map.of("R1", "A")), candidateToken), 200);
-        // Hold the row across the real deadline; BOTH the HTTP submit and autonomous timeout wait.
+        // Hold the row across the real deadline; save, submit and autonomous timeout all wait.
         try (Connection blocker = connection()) {
             blocker.setAutoCommit(false);
             try (var lock = blocker.prepareStatement("SELECT attempt_id FROM " + schema + ".monitoring_attempts WHERE attempt_id = ? FOR UPDATE")) {
                 lock.setString(1, attempt); lock.executeQuery().close();
             }
+            CompletableFuture<HttpResponse<String>> save = http.sendAsync(httpRequest(path(attempt, "answers"),
+                    new AutosaveAnswersRequest(id(), attempt, epoch, 2, Map.of("R1", "B")), candidateToken), HttpResponse.BodyHandlers.ofString());
             CompletableFuture<HttpResponse<String>> submit = http.sendAsync(httpRequest(path(attempt, "submit"),
                     new SubmitExamRequest(id(), attempt, epoch, 2, Map.of("R1", "A", "R2", "B")), candidateToken), HttpResponse.BodyHandlers.ofString());
-            awaitBlockedQueries(2);
+            awaitBlockedQueries(3);
             blocker.commit();
-            HttpResponse<String> rejected = submit.get(10, TimeUnit.SECONDS);
-            assertThat(rejected.statusCode()).isEqualTo(409);
-            assertThat(json(rejected).getAsJsonObject("error").get("code").getAsString()).isIn("EXPIRED", "INVALID_STATE");
+            for (HttpResponse<String> rejected : List.of(save.get(10, TimeUnit.SECONDS), submit.get(10, TimeUnit.SECONDS))) {
+                assertThat(rejected.statusCode()).isEqualTo(409);
+                assertThat(json(rejected).getAsJsonObject("error").get("code").getAsString()).isIn("EXPIRED", "INVALID_STATE");
+            }
         }
         JsonObject result = awaitFinal(attempt);
         assertThat(result.get("state").getAsString()).isEqualTo("TIMED_OUT");
         assertThat(result.get("score").getAsInt()).isEqualTo(1);
         assertThat(result.get("savedRevision").getAsLong()).isEqualTo(1);
+        assertThat(result.getAsJsonObject("answers")).isEqualTo(JSON.toJsonTree(Map.of("R1", "A")));
         assertThat(jdbc.sql("SELECT count(*) FROM exam_submit_requests WHERE attempt_id = :a").param("a", attempt).query(Long.class).single()).isZero();
-        System.out.println("PASS PostgreSQL row contention: HTTP submit AND autonomous scheduler wait across deadline; submit rejected; scheduler finalizes acknowledged answers once");
+        System.out.println("PASS PostgreSQL row contention: save, submit and autonomous timeout wait across deadline; writes rejected; scheduler finalizes acknowledged answers once");
     }
 
     @Test void legacyAutosaveWithoutTakeoverStartsDeadlineWithoutReset() throws Exception {
@@ -527,7 +558,7 @@ class ExamRuntimePostgresTest {
                     .query(Long.class).single() >= count) return;
             Thread.sleep(20);
         }
-        throw new AssertionError("HTTP submit and autonomous timeout did not both demonstrably wait on PostgreSQL row lock");
+        throw new AssertionError("Expected save, submit and autonomous timeout to demonstrably wait on PostgreSQL row lock");
     }
     private Connection connection() throws Exception {
         return DriverManager.getConnection("jdbc:postgresql://" + required("DB_HOST") + ":" + required("DB_PORT") + "/" + required("DB_NAME"), required("DB_USER"), required("DB_PASSWORD"));
@@ -677,6 +708,127 @@ class ExamRuntimePostgresTest {
         expectCode(post("/api/v1/sessions",new CreateSessionRequest(collidingSession,examId,"TEST",60,List.of("proctor1"),List.of("candidate1")),proctorToken),400,"INVALID_INPUT");
         assertThat(status(existing).get("state").getAsString()).isEqualTo("SUBMITTED");
         assertThat(status(existing).get("savedRevision").getAsLong()).isEqualTo(42);
+    }
+
+    @Test void qd29GeneratedIdBoundaryUnicodeAndRoleAreCheckedBeforeAnyMutation() throws Exception {
+        String suffix = "-candidate1"; // generated attemptId = sessionId + '-' + username
+        String fits = ("Q29" + id().replace("-", "") + "x".repeat(128)).substring(0, 128 - suffix.length());
+        String over = fits + "y";
+        expect(post("/api/v1/sessions", new CreateSessionRequest(fits, examId, "TEST", 60,
+                List.of("proctor1"), List.of("candidate1")), proctorToken), 200);
+        assertThat(status(fits + suffix).get("attemptId").getAsString()).hasSize(128);
+        expectCode(post("/api/v1/sessions", new CreateSessionRequest(over, examId, "TEST", 60,
+                List.of("proctor1"), List.of("candidate1")), proctorToken), 400, "INVALID_INPUT");
+        for (String unsafe : List.of("thí_sinh", "two words")) jdbc.sql("""
+                INSERT INTO user_accounts (username, display_name, role, password_hash)
+                SELECT :u, 'TEST QD-29 unsafe', 'CANDIDATE', password_hash FROM user_accounts WHERE username = 'candidate1'
+                """).param("u", unsafe).update();
+        for (String unsafe : List.of("thí_sinh", "two words")) {
+            String session = "Q29U-" + id();
+            HttpResponse<String> rejected = post("/api/v1/sessions", new CreateSessionRequest(session, examId, "TEST", 60,
+                    List.of("proctor1"), List.of("candidate1", unsafe)), proctorToken);
+            expectCode(rejected, 400, "INVALID_INPUT");
+            assertThat(json(rejected).getAsJsonObject("error").get("retryable").getAsBoolean()).isFalse();
+            assertThat(rejected.body()).doesNotContain(unsafe); // stable message, no echo of other users
+            assertThat(jdbc.sql("SELECT count(*) FROM exam_sessions WHERE session_id=:s").param("s", session).query(Long.class).single()).isZero();
+            assertThat(jdbc.sql("SELECT count(*) FROM monitoring_attempts WHERE session_id=:s").param("s", session).query(Long.class).single()).isZero();
+        }
+        String roleSession = "Q29R-" + id();
+        expectCode(post("/api/v1/sessions", new CreateSessionRequest(roleSession, examId, "TEST", 60,
+                List.of("proctor1"), List.of("candidate1")), candidateToken), 403, "FORBIDDEN");
+        expectCode(post("/api/v1/sessions", new CreateSessionRequest(roleSession, examId, "TEST", 60,
+                List.of("proctor1"), List.of("candidate1")), null), 401, "UNAUTHORIZED");
+        assertThat(jdbc.sql("SELECT count(*) FROM exam_sessions WHERE session_id=:s").param("s", roleSession).query(Long.class).single()).isZero();
+        System.out.println("PASS QD-29 issuance: generated 128 accepted, 129 rejected; Unicode/space batch atomic; role checked");
+    }
+
+    @Test void qd29ConcurrentSameSessionCreatesOneSessionAndLoserGetsStable400() throws Exception {
+        String session = "Q29C-" + id();
+        long proctorId = jdbc.sql("SELECT id FROM user_accounts WHERE username='proctor1'").query(Long.class).single();
+        // Latch: an uncommitted row with the same key makes both HTTP requests pass the count check
+        // and wait on the key; rollback releases them so they race each other on PostgreSQL only.
+        try (Connection holder = connection()) {
+            holder.setAutoCommit(false);
+            try (var insert = holder.prepareStatement("INSERT INTO " + schema + ".exam_sessions(session_id,exam_id,title,duration_seconds,created_by) VALUES (?,?,?,?,?)")) {
+                insert.setString(1, session); insert.setString(2, examId); insert.setString(3, "TEST holder");
+                insert.setInt(4, 60); insert.setLong(5, proctorId); insert.executeUpdate();
+            }
+            ExecutorService pool = Executors.newFixedThreadPool(2);
+            try {
+                List<Future<HttpResponse<String>>> responses = new ArrayList<>();
+                for (String user : List.of("candidate1", "candidate2"))
+                    responses.add(pool.submit(() -> post("/api/v1/sessions", new CreateSessionRequest(session, examId, "TEST", 60,
+                            List.of("proctor1"), List.of(user)), proctorToken)));
+                long end = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
+                while (jdbc.sql("SELECT count(*) FROM pg_stat_activity WHERE application_name = 'toeic_p0_server' AND wait_event_type = 'Lock' AND query LIKE '%INSERT INTO exam_sessions%'")
+                        .query(Long.class).single() < 2) {
+                    if (System.nanoTime() > end) throw new AssertionError("Both creates did not wait on the same session key");
+                    Thread.sleep(20);
+                }
+                holder.rollback();
+                List<Integer> codes = new ArrayList<>();
+                for (var response : responses) {
+                    HttpResponse<String> r = response.get(10, TimeUnit.SECONDS);
+                    codes.add(r.statusCode());
+                    if (r.statusCode() != 200) expectCode(r, 400, "INVALID_INPUT");
+                }
+                assertThat(codes).containsExactlyInAnyOrder(200, 400);
+            } finally { pool.shutdownNow(); }
+        }
+        assertThat(jdbc.sql("SELECT count(*) FROM monitoring_attempts WHERE session_id=:s").param("s", session).query(Long.class).single()).isEqualTo(1);
+        System.out.println("PASS QD-29 concurrent create: one session/attempt committed, loser 400 INVALID_INPUT, no 500");
+    }
+
+    @Test void qd29LegacyActiveIsReadableButCannotBeEnteredSavedSubmittedOrMarkedReady() throws Exception {
+        for (String session : List.of("LEG-đề-" + id(), "LEG space-" + id())) {
+            String legacy = historyAttempt(session, "candidate1");
+            String encoded = URLEncoder.encode(legacy, StandardCharsets.UTF_8).replace("+", "%20");
+            String query = "/api/v1/attempts/status?attemptId=" + encoded;
+            assertThat(json(expect(get(query, candidateToken), 200)).get("state").getAsString()).isEqualTo("ACTIVE");
+            expect(get(query, proctorToken), 200);
+            expectCode(get(query, otherCandidateToken), 403, "FORBIDDEN");
+            String before = legacyRow(legacy);
+            // Foreign candidate learns nothing about compatibility: ownership is checked first.
+            expectCode(post("/api/v1/attempts/" + encoded + "/takeover", takeover(legacy), otherCandidateToken), 403, "FORBIDDEN");
+            List<HttpResponse<String>> denied = List.of(
+                    post("/api/v1/attempts/" + encoded + "/takeover", takeover(legacy), candidateToken),
+                    post("/api/v1/attempts/" + encoded + "/answers", new AutosaveAnswersRequest(id(), legacy, 1, 1, Map.of("R1", "A")), candidateToken),
+                    post("/api/v1/attempts/" + encoded + "/submit", new SubmitExamRequest(id(), legacy, 1, 1, Map.of("R1", "A")), candidateToken),
+                    post("/api/v1/attempts/" + encoded + "/audio/ready", new vn.edu.toeic.protocol.audio.AudioReadyRequest(
+                            id(), legacy, 1, true, "manifest", Map.of(), true), candidateToken));
+            for (HttpResponse<String> response : denied) {
+                expectCode(response, 409, "INVALID_STATE");
+                JsonObject error = json(response).getAsJsonObject("error");
+                assertThat(error.get("message").getAsString()).isEqualTo(AttemptIdentifier.MONITORING_INCOMPATIBLE_MESSAGE);
+                assertThat(error.get("retryable").getAsBoolean()).isFalse();
+            }
+            assertThat(legacyRow(legacy)).as("no writer/deadline/answer/state mutation").isEqualTo(before);
+            assertThat(jdbc.sql("SELECT count(*) FROM attempt_audio_readiness WHERE attempt_id=:a").param("a", legacy).query(Long.class).single()).isZero();
+            assertThat(jdbc.sql("SELECT count(*) FROM exam_submit_requests WHERE attempt_id=:a").param("a", legacy).query(Long.class).single()).isZero();
+        }
+        System.out.println("PASS QD-29 legacy ACTIVE: status/history readable; takeover/save/submit/READY 409 INVALID_STATE; row unchanged");
+    }
+
+    @Test void qd29LegacyFinalKeepsReadsAndReplacementUsesSafeNewAttempt() throws Exception {
+        String legacy = historyAttempt("LEG-final-é-" + id(), "candidate1");
+        setFinalState(legacy, "SUBMITTED");
+        String encoded = URLEncoder.encode(legacy, StandardCharsets.UTF_8);
+        String before = legacyRow(legacy);
+        JsonObject status = json(expect(get("/api/v1/attempts/status?attemptId=" + encoded, candidateToken), 200));
+        assertThat(status.get("score").getAsInt()).isEqualTo(1);
+        // Replacement workflow = a new ASCII session for the same account; the old row stays for audit.
+        String replacement = attempt(60);
+        expect(post(path(replacement, "takeover"), takeover(replacement), candidateToken), 200);
+        assertThat(legacyRow(legacy)).isEqualTo(before);
+        System.out.println("PASS QD-29 legacy FINAL readable and unchanged; replacement attempt is a separate safe ID");
+    }
+
+    private String legacyRow(String attemptId) {
+        return jdbc.sql("""
+                SELECT concat_ws('|', state, writer_epoch, saved_revision, coalesce(answers_json::text,'-'),
+                       coalesce(deadline_at::text,'-'), coalesce(submitted_at::text,'-'), coalesce(score::text,'-'))
+                FROM monitoring_attempts WHERE attempt_id = :a
+                """).param("a", attemptId).query(String.class).single();
     }
 
     @Test void wrongMethodIsStructured405WithAllowAndMalformedJsonRemains400() throws Exception {

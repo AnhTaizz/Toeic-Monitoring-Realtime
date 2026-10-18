@@ -1,0 +1,340 @@
+[
+  {
+    "run": "c1-diag-win-1",
+    "source": "7db3da8",
+    "temp": "windows",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:27:50.0471753Z",
+    "evidence": []
+  },
+  {
+    "run": "c1-diag-win-2",
+    "source": "7db3da8",
+    "temp": "windows",
+    "mode": "full",
+    "exit": 1,
+    "start": "2026-10-17T07:29:40.9879422Z",
+    "evidence": [
+      "T2-C1 diagnostic edge-profile lockedEntry=Nurturing\\campaign_history-journal holders=[]",
+      "T2-C1 FAIL phase=EDGE_PROFILE_CLEANUP class=IllegalStateException",
+      "Harness check: cleanup FAIL components=[owned-edge-profile]"
+    ]
+  },
+  {
+    "run": "c1-diag-win-3",
+    "source": "7c0491e",
+    "temp": "windows",
+    "mode": "full",
+    "exit": 1,
+    "start": "2026-10-17T07:31:41.3634253Z",
+    "evidence": [
+      "T2-C1 diagnostic edge-profile lockedEntry=Nurturing\\campaign_history-journal holders=[]",
+      "T2-C1 FAIL phase=EDGE_PROFILE_CLEANUP class=IllegalStateException",
+      "Harness check: cleanup FAIL components=[owned-edge-profile]"
+    ]
+  },
+  {
+    "run": "c1-diag-ws-1",
+    "source": "7db3da8",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:25:56.2024999Z",
+    "evidence": []
+  },
+  {
+    "run": "c1-diag-ws-2",
+    "source": "7db3da8",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:26:28.8359658Z",
+    "evidence": []
+  },
+  {
+    "run": "c1-diag-ws-3",
+    "source": "7db3da8",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:27:00.4902624Z",
+    "evidence": []
+  },
+  {
+    "run": "c1-diag-ws-b1",
+    "source": "7db3da8",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 1,
+    "start": "2026-10-17T07:28:29.8718047Z",
+    "evidence": [
+      "T2-C1 diagnostic edge-profile lockedEntry=Nurturing\\campaign_history-journal holders=[]",
+      "T2-C1 FAIL phase=EDGE class=IllegalStateException",
+      "Harness check: Timeout REAL owned Edge appears on dashboard model"
+    ]
+  },
+  {
+    "run": "c1-diag-ws-b2",
+    "source": "7c0491e",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 1,
+    "start": "2026-10-17T07:30:49.0476118Z",
+    "evidence": [
+      "T2-C1 diagnostic edge-profile lockedEntry=Nurturing\\campaign_history-journal holders=[]",
+      "T2-C1 FAIL phase=EDGE_PROFILE_CLEANUP class=IllegalStateException",
+      "Harness check: cleanup FAIL components=[owned-edge-profile]"
+    ]
+  },
+  {
+    "run": "c1-diag-ws-b3",
+    "source": "7c0491e",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 1,
+    "start": "2026-10-17T07:32:36.0809710Z",
+    "evidence": [
+      "T2-C1 diagnostic edge-profile lockedEntry=Default\\WebStorage\\QuotaManager-journal holders=[]",
+      "T2-C1 FAIL phase=EDGE_PROFILE_CLEANUP class=IllegalStateException",
+      "Harness check: cleanup FAIL components=[owned-edge-profile]"
+    ]
+  },
+  {
+    "run": "c1-rel-win-1",
+    "source": "e4f8f41",
+    "temp": "windows",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:41:53.1607418Z",
+    "evidence": []
+  },
+  {
+    "run": "c1-rel-win-2",
+    "source": "e4f8f41",
+    "temp": "windows",
+    "mode": "full",
+    "exit": 1,
+    "start": "2026-10-17T07:43:34.2367243Z",
+    "evidence": [
+      "T2-C1 diagnostic edge-profile lockedEntry=Nurturing\\campaign_history-journal holders=[] lockers=[] reason=The process cannot access the file because it is being used by another process releasedAfterExtraMs=13777",
+      "T2-C1 FAIL phase=EDGE_PROFILE_CLEANUP class=IllegalStateException",
+      "Harness check: cleanup FAIL components=[owned-edge-profile]"
+    ]
+  },
+  {
+    "run": "c1-rel-win-3",
+    "source": "81d4981",
+    "temp": "windows",
+    "mode": "full",
+    "exit": 1,
+    "start": "2026-10-17T07:45:23.1403393Z",
+    "evidence": [
+      "T2-C1 diagnostic edge-profile lockedEntry=Nurturing\\campaign_history-journal holders=[] lockers=[] reason=The process cannot access the file because it is being used by another process releasedAfterExtraMs=736",
+      "T2-C1 FAIL phase=EDGE_PROFILE_CLEANUP class=IllegalStateException",
+      "Harness check: cleanup FAIL components=[owned-edge-profile]"
+    ]
+  },
+  {
+    "run": "c1-rel-ws-1",
+    "source": "e4f8f41",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:41:01.5558934Z",
+    "evidence": []
+  },
+  {
+    "run": "c1-rel-ws-2",
+    "source": "e4f8f41",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:42:43.1516519Z",
+    "evidence": []
+  },
+  {
+    "run": "c1-rel-ws-3",
+    "source": "81d4981",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:44:41.3926744Z",
+    "evidence": []
+  },
+  {
+    "run": "c1-rm-win-1",
+    "source": "5823e18",
+    "temp": "windows",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:37:31.9688431Z",
+    "evidence": []
+  },
+  {
+    "run": "c1-rm-win-2",
+    "source": "5823e18",
+    "temp": "windows",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:38:56.0896307Z",
+    "evidence": []
+  },
+  {
+    "run": "c1-rm-ws-1",
+    "source": "5823e18",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:36:41.7288019Z",
+    "evidence": []
+  },
+  {
+    "run": "c1-rm-ws-2",
+    "source": "5823e18",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 1,
+    "start": "2026-10-17T07:38:11.9335177Z",
+    "evidence": [
+      "T2-C1 diagnostic edge-profile lockedEntry=Nurturing\\campaign_history-journal holders=[] lockers=[]",
+      "T2-C1 FAIL phase=EDGE_PROFILE_CLEANUP class=IllegalStateException",
+      "Harness check: cleanup FAIL components=[owned-edge-profile]"
+    ]
+  },
+  {
+    "run": "c1-windows-fix-1",
+    "source": "6fc5246",
+    "temp": "windows",
+    "mode": "full",
+    "exit": 1,
+    "start": "2026-10-17T07:21:54.0699854Z",
+    "evidence": [
+      "T2-C1 FAIL phase=EDGE_PROFILE_CLEANUP class=IllegalStateException",
+      "Harness check: cleanup FAIL components=[owned-edge-profile]"
+    ]
+  },
+  {
+    "run": "c1-windows-fix-2",
+    "source": "6fc5246",
+    "temp": "windows",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:23:22.2859087Z",
+    "evidence": []
+  },
+  {
+    "run": "c1-workspace-fix-1",
+    "source": "6fc5246",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 1,
+    "start": "2026-10-17T07:21:16.1060275Z",
+    "evidence": [
+      "T2-C1 FAIL phase=EDGE_PROFILE_CLEANUP class=IllegalStateException",
+      "Harness check: cleanup FAIL components=[owned-edge-profile]"
+    ]
+  },
+  {
+    "run": "c1-workspace-fix-2",
+    "source": "6fc5246",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:22:34.5288757Z",
+    "evidence": []
+  },
+  {
+    "run": "c1c2-workspace-1",
+    "source": "c5c3699",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 1,
+    "start": "2026-10-17T07:18:06.6970489Z",
+    "evidence": [
+      "T2-C1 FAIL phase=EDGE_PROFILE_CLEANUP class=IllegalStateException",
+      "Harness check: cleanup FAIL components=[owned-edge-profile]"
+    ]
+  },
+  {
+    "run": "c1c2-workspace-1",
+    "source": "c5c3699",
+    "temp": "workspace",
+    "mode": "events",
+    "exit": 0,
+    "start": "2026-10-17T07:18:47.4188542Z",
+    "evidence": []
+  },
+  {
+    "run": "c45-win-1",
+    "source": "4fbc538",
+    "temp": "windows",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:48:04.2320150Z",
+    "evidence": []
+  },
+  {
+    "run": "c45-win-1",
+    "source": "4fbc538",
+    "temp": "windows",
+    "mode": "events",
+    "exit": 0,
+    "start": "2026-10-17T07:49:02.0547967Z",
+    "evidence": []
+  },
+  {
+    "run": "c45-win-2",
+    "source": "4fbc538",
+    "temp": "windows",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:50:55.8616944Z",
+    "evidence": []
+  },
+  {
+    "run": "c45-win-2",
+    "source": "4fbc538",
+    "temp": "windows",
+    "mode": "events",
+    "exit": 0,
+    "start": "2026-10-17T07:51:27.2549293Z",
+    "evidence": []
+  },
+  {
+    "run": "c45-ws-1",
+    "source": "4fbc538",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:47:17.2602344Z",
+    "evidence": []
+  },
+  {
+    "run": "c45-ws-1",
+    "source": "4fbc538",
+    "temp": "workspace",
+    "mode": "events",
+    "exit": 0,
+    "start": "2026-10-17T07:47:42.6061610Z",
+    "evidence": []
+  },
+  {
+    "run": "c45-ws-2",
+    "source": "4fbc538",
+    "temp": "workspace",
+    "mode": "full",
+    "exit": 0,
+    "start": "2026-10-17T07:49:33.6174078Z",
+    "evidence": []
+  },
+  {
+    "run": "c45-ws-2",
+    "source": "4fbc538",
+    "temp": "workspace",
+    "mode": "events",
+    "exit": 0,
+    "start": "2026-10-17T07:50:25.2997073Z",
+    "evidence": []
+  }
+]

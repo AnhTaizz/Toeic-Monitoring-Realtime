@@ -22,6 +22,10 @@ Ghi lại lựa chọn đã chốt để sau này không phải tranh luận l�
 | QD-07 | Định dạng audio và cách đóng gói tài nguyên | B | 08/10 | T1-B4 |
 | QD-09 | Quy tắc chấm điểm nội bộ (câu sai, câu trống) | A | 12/10 | T2-A3 |
 | QD-10 | Giữ hay cắt delta khỏi bản chính | C, B duyệt | 20/10 | T3-C4 |
+| QD-31 | Chấp nhận policy QD-29 đã cài: cấp mới fail-closed, legacy ACTIVE chỉ đọc | A, C; B xem thông báo | trước merge PR39 | QD-29 |
+| QD-32 | Chấp nhận 409 `INVALID_STATE` không retry cho lịch sử >5000 | A, C | trước merge PR43 | PR43 |
+| QD-33 | Chấp nhận policy cache audio thay PR45 và đóng PR45 | B; A xem | trước merge PR39 | PR40/PR45 |
+| QD-34 | Chấp nhận takeover không idempotent theo requestId là giới hạn có chủ đích | A, B | trước 27/10 | T2-A4 |
 
 Khi chốt, chuyển dòng tương ứng xuống mục dưới theo mẫu.
 
@@ -261,3 +265,45 @@ E1 dùng same-seed/test-owned policy và cùng launchplan cho4poll, xoay thứ t
 ## Tích hợp16/10/2026 — chọn nền B4/MSI
 
 Giữ controller/API/view B4#36 tại client.proctor và pipeline MSI#37, chỉ chuyển guard/progress/config/preflight cần thiết từ38; bỏ workflow/controller38 và demo seeder trùng. Một ExamSession sở hữu writer; progress/history không cấp writer. QD28 MSI/QD30 writer, QD29 và E1-method human review pending. TEST C1/C2 chỉ harden null-safe cleanup và FX20s; C1 cuối PASS, các FAIL profile cleanup ban đầu giữ log và còn cần C review độ ổn định. [Quyết định conflict và giới hạn](../evidence/unified-20261016/conflict-resolution.md). Không tự đồng thuận owner hoặc đổi default FULL.
+
+
+### QD-29 — đề xuất trước RC17/10 (PROPOSED_FOR_A_C_APPROVAL)
+
+Chưa APPROVED và chưa owner ký. [Decision matrix](../evidence/integration-final-20261017/DECISION_MATRIX.md) đề xuất fail-closed issuance, legacy ACTIVE bị chặn trước vào/resume thi và hướng dẫn cấp lượt mới, thông báo client/regression/dataset cần A/C quyết định. Không tự migrate/cancel legacy hoặc mở rộng protocol; takeoverWriter vẫn không idempotent theo requestId. A cần review riêng history5001/HTTP500 retryable của PR43; B quyết định policy root/junction của PR45. FULL mặc định, không chốt DELTA production.
+
+
+## Ổn định hóa 17/10/2026 — ĐÃ CÀI, CHỜ OWNER DUYỆT
+
+Bốn mục dưới là khuyến nghị kỹ thuật đã cài và test trên nhánh `stabilize/final-rc-20261017`. Không có review/comment nào của A/B/C trên PR39–45 khi kiểm (GitHub API, 17/10). Trạng thái từng mục là IMPLEMENTED; chỉ đổi thành OWNER_APPROVED khi owner xác nhận thật. Bằng chứng: `evidence/stabilize-20261017/REPORT.md`.
+
+### QD-31 · Thực thi QD-29: cấp ACTIVE fail-closed, legacy ACTIVE chỉ đọc
+- Trạng thái: IMPLEMENTED · Cần: A và C duyệt, B xem thông báo.
+- Policy cấp mới (giữ như đề xuất QD-29): attemptId sinh ra `sessionId + '-' + username` phải thuộc `[A-Za-z0-9_.:-]{1,128}`; kiểm cả batch trước mọi mutation; không trim/transliterate; create và reorganize dùng cùng `createSession`; va chạm với ID đã có (kể cả FINAL) → 400, không mở lại bài cũ.
+- Mới: tạo ca đồng thời cùng `sessionId` trước đây làm request thua nhận 500 unique violation; nay `ON CONFLICT DO NOTHING` → 400 `INVALID_INPUT`, không mutation (test latch PostgreSQL: bỏ fix thì 500).
+- Legacy ACTIVE (ID đã lưu ngoài monitoring v0): status theo path/query và history vẫn 200 theo quyền. takeover, autosave, submit, audio READY → 409 `INVALID_STATE` `retryable:false`, message cố định `AttemptIdentifier.MONITORING_INCOMPATIBLE_MESSAGE`. Kiểm sau row lock và sau ownership/state, nên thí sinh khác vẫn nhận 403 và không biết lượt có tương thích hay không; không đổi writerEpoch, deadline, đáp án, state.
+- Hệ quả: lượt legacy không cấp được writer và không READY, nên ca có lượt legacy không start Listening được (fail-closed). Lượt legacy đã có deadline sẽ TIMED_OUT theo timeout thường với đáp án đã lưu; lượt chưa vào (deadline null) giữ ACTIVE cho audit. Thay thế: giám thị tạo ca mới với `sessionId` ASCII. Nếu chính username ngoài ASCII thì không cấp được lượt mới nào cho tài khoản đó — giới hạn đã biết; đổi tên tài khoản nằm ngoài phạm vi, không tự migrate/cancel dữ liệu.
+- Client: thông báo trước khi vào thi dùng cùng hằng; ExamEntry gặp 409 INVALID_STATE đọc lại status một lần rồi dừng, không lặp.
+- Test: `ExamRuntimePostgresTest.qd29*` (biên 128/129, Unicode/space batch không mutation, role 401/403, va chạm đồng thời, legacy ACTIVE/FINAL, thay thế), `ExamPaperAndEntryTest.legacyActiveRejectedByServerEndsEntryWithoutLooping`, `ExamMonitoringIntegrationTest`.
+
+### QD-32 · Lịch sử giám sát vượt 5000 dòng: 409 không retry, không cắt bớt
+- Trạng thái: IMPLEMENTED · Cần: A (HTTP/contract) và C (monitoring) duyệt.
+- Bối cảnh: PR43 giới hạn `events`/`interruptions` 5000 dòng nhưng trả 500 `RETRYABLE_SERVER_ERROR` `retryable:true`; retry không bao giờ làm lịch sử ngắn lại. `gaps` có cùng giới hạn mà chưa có test.
+- Lựa chọn: một helper `MonitoringHistoryLimit` cho cả ba endpoint: `LIMIT 5001`; ≤5000 trả đủ; >5000 → 409 `INVALID_STATE` `retryable:false`, message cố định, không danh sách một phần. Dùng mã enum có sẵn để client cũ không gặp giá trị lạ. Quyền và scope kiểm trước query như PR43.
+- Đã cân nhắc: phân trang cursor (đúng hơn về lâu dài nhưng thêm protocol sát hạn đóng băng 27/10, và không có ca thi 2 giờ nào gần 5000 event trong dữ liệu đo); 413/422 (không khớp quy ước 409 cho state đang có của repo).
+- Client: 409 từ ba endpoint → `HistoryLimitException`; dashboard hiện thông báo riêng, giữ danh sách đủ gần nhất, đánh dấu stale. Trần body dashboard 4 → 8 MiB vì 5000 event ở độ dài trường tối đa ≈4,3 MB từng bị coi là response không hợp lệ.
+- Test: `MonitoringHistoryBoundsPostgresTest` (0/1/5000/5001 cả ba endpoint, 401/403/assignment khác, thứ tự), `MonitoringApiClientTest`, `DashboardControllerTest`.
+
+### QD-33 · Cache audio: hợp nhất fix race PR40 với policy junction, thay PR45
+- Trạng thái: IMPLEMENTED · Cần: B duyệt và đóng PR45 là superseded; A xem CI.
+- Root cause PR45: commit `a652482` dựa trên main nên mất `catch FileAlreadyExistsException` của PR40 → probe 16 reader × 8 vòng × 5 lần: 112/640 lỗi; bản mới 0/640. Root cause lỗi CI mà PR45 nhắm tới: RC kiểm `toRealPath()==path` cho mọi ancestor từ gốc ổ đĩa nên từ chối root nằm dưới junction hoặc tên 8.3 (test mới tái hiện trên RC cũ).
+- Lựa chọn: không kiểm ancestor phía trên root cấu hình; root và mọi thư mục con phải là thư mục thường (không symlink, không junction — Java báo junction là `isDirectory && isOther` — không reparse point) và `toRealPath` phải bằng `realRoot` + cùng tên con; tạo song song được bắt và kiểm lại. File partial chỉ move thành file thật sau khi đủ byte và đúng SHA-256.
+- CI: cherry-pick riêng commit workflow Windows của PR45 (`c1e3405`, giữ tác giả) + trigger push cho `stabilize/**`. Windows Maven test không thay MSI installed FullSuite.
+- Giới hạn: kiểm rồi mới ghi nên vẫn có cửa sổ TOCTOU nếu một tiến trình cùng user thay thư mục giữa hai bước; mô hình đe dọa của đồ án không gồm tiến trình độc hại cùng user.
+- Test: `AudioFilesTest` (stress, ancestor junction, ancestor 8.3, junction ở/ dưới root, root bị thay, symlink — skip khi thiếu quyền tạo symlink, hủy tải).
+
+### QD-34 · Takeover không idempotent theo requestId — giới hạn có chủ đích
+- Trạng thái: PHÂN TÍCH + TEST, không đổi code · Cần: A và B xác nhận.
+- Hành vi thực (test PostgreSQL): gửi lại cùng request sau khi server đã commit cấp epoch mới (epoch+1); writer cũ STALE; answers, savedRevision, deadline giữ nguyên; bài đã nộp trả 409 và không đổi.
+- Client: không tự gửi lại takeover. Mở lại phòng thi hoặc bấm "lấy lại quyền ghi" tạo requestId mới; Java HttpClient không tự retry POST. Mất ACK thì người dùng thấy lỗi và thao tác lại, kết quả giống hệt một takeover mới.
+- Kết luận: không có lỗi correctness (không mất đáp án đã ACK, không reset deadline, không mở lại bài chốt). Thêm idempotency theo requestId cần bảng/cột mới — không làm sát hạn đóng băng. Rủi ro còn lại: một writer hợp lệ bị thay thêm một lần khi chính người dùng mở lại, đúng ngữ nghĩa takeover.
+- Test: `ExamRuntimePostgresTest.takeoverReplayAfterLostAckAdvancesEpochButNeverLosesAnswersDeadlineOrFinal`, `ExamPaperAndEntryTest.lostTakeoverAckIsNeverRetriedAutomaticallyAndReopenUsesAFreshRequestId`.

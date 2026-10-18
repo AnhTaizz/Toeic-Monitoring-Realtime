@@ -1,0 +1,7 @@
+﻿{
+    "pr45Exit":  2,
+    "rcExit":  0,
+    "pr45Source":  "a6524823c6a8d97cc7652fe4b776279db17d7d55",
+    "scope":  "REAL TEST filesystem; MOCK manifest; not audio playback",
+    "rcSource":  "c224ba8572ae453ad97e0be4f85914e112041805"
+}
