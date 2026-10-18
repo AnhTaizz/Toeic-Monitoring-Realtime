@@ -1,0 +1,26 @@
+{
+  "scope": "Ignored runtime artifacts; source paths/credentials/XML remain private",
+  "files": {
+    "audio-client-unit.log": "77b771e2b1e8a84a60b305c60373154fc8135fb7d3edd03394f539bf4deeb3b7",
+    "backend-monitoring-targeted.log": "4b0223a6d0e37dfb147b320ff9d9d457eefc03ee4700f5e206de07fce34e578d",
+    "ConcurrentDownloadProbe.java": "7f663e56cd7c026c501f5c35e0bc302082cfafa2fdf203cc02903cc287d280fa",
+    "e1-methodology-python.log": "a3ba2319fa938d4a4d6b91b79e0975608bc49c63911cdbf9b62a8ca21f0e6164",
+    "environment-private.json": "b4dd61a1105de1f6a17934d293e681963b2c7852a17b2252cd8d8764fef4580a",
+    "HttpTakeoverResponseProbe.java": "072749053a288c4f39ac2a8f557e0091bf509ae79d7432b681716968234551ed",
+    "network-fallback-targeted.log": "d8e3b748eb5a2cd0aadaa7b6b72656fadc236a8e76ce2648ca0025c56d78eb65",
+    "postgres-cleanup.json": "d2bc30ee1545a10bc37ea2454394449a9205d693aff213d81a0fe6403d8366e3",
+    "pr47-before-on-main.log": "65901805b59d1ab5ec8d4c3009516df6d1ff2eecaec0f113e11871d1728c0ec8",
+    "pr47-new-regressions.log": "d911c744db402e85f4808e3ca81b8b6c1b0df136add60ca6c3231f10510db5a2",
+    "pr47-snapshot.json": "8735e223acc41cff8c5534f51e0f66904396238f7f11b0cd33adceec71c8afaa",
+    "publication-1.log": "7f8d3e29631ed90d58d8fbb58d16ad9459774b9380eab7b6233ad68e4e0f24ca",
+    "publication-2.log": "de9d7b4761d655aa534f67f0caedf7e6e3ceb9334c402270d2e27adc3ad494f8",
+    "publication-results.json": "02dd5dc1d3733ac7966cbd03ae13849378a673dd4ca395a719063a800b7cf524",
+    "takeover-http-result.json": "d34c6a18deda1780b0af7771045a80f404c91349c52bc86967dc1fa4673bed6e",
+    "takeover-lost-http-response.log": "d34c6a18deda1780b0af7771045a80f404c91349c52bc86967dc1fa4673bed6e",
+    "test-command-audio.json": "a928e5259e7d5a6575dde375a38143b0f74dfe67c085322752a606467f7b369b",
+    "test-command-backend.json": "b3029bea1769f5cc1f35df79999ab1df694aa2f30f9faac2745409c3438d7544",
+    "test-command-network.json": "1a60c7a5b83a27330dd4c14b22dbc513bf094c5b5d1ecba2d7b2583e64a6c2b3",
+    "test-command-pr47-before.json": "75fbacf7a0927c1b24b9a7bfc72e06cdba5834fad516473866573bd4dd1eee33",
+    "test-command-pr47.json": "88af13dd056b6b108dbbb3bb37d3d79e6467d4d7ba3d126c2345719d6fa4f5fd"
+  }
+}

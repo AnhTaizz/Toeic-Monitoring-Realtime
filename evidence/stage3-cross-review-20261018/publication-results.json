@@ -1,0 +1,97 @@
+{
+  "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "filesystem": "REAL Windows",
+  "audio": "MOCK 128KiB deterministic Random(33)",
+  "faultInjection": false,
+  "collectorExitDoesNotMeanPass": true,
+  "totalCountedOperations": 1280,
+  "totalErrors": 467,
+  "batches": [
+    {
+      "mode": "concurrent-download",
+      "rounds": 5,
+      "threads": 8,
+      "operationsPerThread": 8,
+      "attempts": 320,
+      "ok": 156,
+      "errors": {
+        "AccessDeniedException": 28,
+        "FileAlreadyExistsException": 73,
+        "IOException": 5,
+        "NoSuchFileException": 58
+      },
+      "finalValidCaches": 5,
+      "partialFiles": 0,
+      "trial": 1,
+      "collectorExit": 0,
+      "verdict": "FAIL"
+    },
+    {
+      "mode": "mixed-read-download",
+      "rounds": 5,
+      "threads": 8,
+      "operationsPerThread": 8,
+      "attempts": 320,
+      "ok": 247,
+      "errors": {
+        "AccessDeniedException": 9,
+        "FileAlreadyExistsException": 37,
+        "IOException": 6,
+        "NoSuchFileException": 21
+      },
+      "finalValidCaches": 5,
+      "partialFiles": 0,
+      "trial": 1,
+      "collectorExit": 0,
+      "verdict": "FAIL"
+    },
+    {
+      "mode": "concurrent-download",
+      "rounds": 5,
+      "threads": 8,
+      "operationsPerThread": 8,
+      "attempts": 320,
+      "ok": 155,
+      "errors": {
+        "AccessDeniedException": 21,
+        "FileAlreadyExistsException": 91,
+        "IOException": 3,
+        "NoSuchFileException": 50
+      },
+      "finalValidCaches": 5,
+      "partialFiles": 0,
+      "trial": 2,
+      "collectorExit": 0,
+      "verdict": "FAIL"
+    },
+    {
+      "mode": "mixed-read-download",
+      "rounds": 5,
+      "threads": 8,
+      "operationsPerThread": 8,
+      "attempts": 320,
+      "ok": 255,
+      "errors": {
+        "AccessDeniedException": 10,
+        "FileAlreadyExistsException": 39,
+        "IOException": 2,
+        "NoSuchFileException": 14
+      },
+      "finalValidCaches": 5,
+      "partialFiles": 0,
+      "trial": 2,
+      "collectorExit": 0,
+      "verdict": "FAIL"
+    }
+  ],
+  "sites": [
+    "SITE AccessDeniedException-download download:97",
+    "SITE AccessDeniedException-verify verify:110",
+    "SITE FileAlreadyExistsException-download download:97",
+    "SITE IOException-download unsafe:77",
+    "SITE IOException-verify verify:108",
+    "SITE NoSuchFileException-download download:97",
+    "SITE NoSuchFileException-download file:43",
+    "SITE NoSuchFileException-verify file:43"
+  ]
+}

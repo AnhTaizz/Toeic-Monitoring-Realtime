@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-18",
+  "os": "Windows-11-10.0.26200-SP0",
+  "javaVersion": "21.0.10",
+  "javaVendor": "Eclipse Adoptium",
+  "mavenVersion": "3.9.15",
+  "postgres": {
+    "postgresVersion": "pg_ctl (PostgreSQL) 18.3",
+    "isolatedCluster": true,
+    "remainingTestSchemas": 0,
+    "clusterStopped": true,
+    "pgCtlStatusExit": 3,
+    "privatePasswordFileRemoved": true,
+    "sharedDbOrDockerTouched": false
+  },
+  "ownedWindowsTempRemoved": true,
+  "globalSettingsChanged": false,
+  "dotEnvChanged": false,
+  "mainCheckoutModified": false,
+  "otherWorktreesModified": false,
+  "rawLogsAndPrivateTestTrees": "ignored target/stage3-review-runtime/ only; no credentials/XML/private paths published",
+  "remainingCaveats": [
+    "Deleted historical raw/MSI from prior cleanup are not recovered by this review",
+    "No symbolic-link privilege change or 8.3 global setting change"
+  ]
+}
