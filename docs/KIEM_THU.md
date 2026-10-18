@@ -1,5 +1,7 @@
 # Trạng thái kiểm thử
 
+18/10/2026 — Task2.1 publication chỉ kiểm ancestry/diff/text-privacy/hash artifact/41caseNOT RUN/link/cú pháp lệnh runbook; [audit công bố](../evidence/t3-c4-physical-prep-20261018/PUBLISH.md). Không chạy lại Maven/PG/fault runtime hoặc LAN; kit29/29PASS giữ provenance Task2, không nâng kết quả nghiệm thu. LAN0/41 NOT RUN, B review PENDING.
+
 18/10/2026 — T3-C4 physical preparation:29/29kiểm tra kit PowerShell PASS, lặp29/29trên ZIP giải nén;22file hash, trạng thái41caseNOT RUN và tamper rejection PASS. Fixture MOCK origin/map/file, không gọi mạng. LAN **NOT RUN,0case**; protocol probe/fault runtime/SQL/nghe thật/cleanup vật lý NOT RUN, human B PENDING. Không chạy Maven/CI mới vì chỉ script TEST/docs, không nâng MT/LT/IT hoặc dùng local42/42thay LAN. [Báo cáo](../evidence/t3-c4-physical-prep-20261018/REPORT.md).
 
 18/10/2026 — PR47 retarget main: focused client148 PASS (RealtimeClient63), server monitoring/network118 PASS/4SKIP; clean test và package mỗi lượt928 PASS/5SKIP,0failure/error với PostgreSQL TEST thật. T3-C2 restart/resync PASS; T3-C4 lượt mới 42/42 PASS LOCAL. Có regression FAIL trước sửa và hai lượt cấu hình DB FAIL được giữ riêng; không dùng 42/42 lịch sử làm PASS mới. Xem [bàn giao PR47](../evidence/pr47-stabilize-20261018/REPORT.md). Các trạng thái 27 case/LAN/owner review không được nâng bởi lượt local này.

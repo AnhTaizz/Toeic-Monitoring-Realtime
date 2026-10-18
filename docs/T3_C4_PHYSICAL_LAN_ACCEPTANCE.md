@@ -13,6 +13,37 @@ Source Task 1: `3044e5bc963f7ac9d8cdc4d8410696c301080534`, đã merge main `f864
 
 ## 1. Tạo và chuyển bộ bàn giao
 
+### B/C nhận ZIP đã kiểm tra từ máy build
+
+GitHub chỉ chứa tài liệu, template, script và báo cáo đã lọc. **ZIP không nằm trong Git, không có URL tải ZIP trên PR.** B/C liên hệ C hoặc người giữ máy build để nhận đúng `target/T3C4-3044e5b.zip` cùng file `.zip.sha256.json`. Chuyển trực tiếp bằng USB được phép hoặc kênh chia sẻ file riêng đã được nhóm cho phép, chỉ cấp cho B/C; thông tin share/path truy cập gửi ngoài Git. Không gửi kèm `.env`, tài khoản/token, profile hoặc raw log của máy build. Chưa có bằng chứng đã chuyển file sang máy B.
+
+Đọc runbook mới nhất trên [nhánh bàn giao GitHub](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/tree/prepare/t3-c4-physical-lan-20261018). Lấy hash độc lập từ [checksum đã công bố](../evidence/t3-c4-physical-prep-20261018/bundle-checksums.json), không chỉ tin file checksum đi kèm ZIP. Trên **cả máy A và máy B**, kiểm trước khi giải nén/chạy:
+
+```powershell
+$zip=Read-Host 'Duong dan ZIP vua nhan tu may build'
+$expectedZip='5b04dcb10d46ba760749af29b2abdeee126a9748512abe4d18b78e0d4881685a'
+if((Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant() -cne $expectedZip){
+  throw 'ZIP_HASH_MISMATCH_STOP; lien he C, khong su dung artifact nay'
+}
+$bundle='C:\ToeicGate\T3C4-3044e5b'
+if(Test-Path -LiteralPath $bundle){throw 'BUNDLE_EXISTS; chon thu muc moi, khong ghi de'}
+Expand-Archive -LiteralPath $zip -DestinationPath C:\ToeicGate
+$manifest=Join-Path $bundle 'artifact-manifest.json'
+$expectedManifest='613b72d4987d08da18c272ddeaab12c1afa3f01c3d1dd6f05a644ff8a5aa1730'
+if((Get-FileHash -LiteralPath $manifest -Algorithm SHA256).Hash.ToLowerInvariant() -cne $expectedManifest){
+  throw 'MANIFEST_HASH_MISMATCH_STOP'
+}
+. "$bundle\scripts\lan-t3c4\Common.ps1"
+$verified=Get-LanBundle $bundle # Kiem tung file va hai JAR theo manifest/source Task1
+if($verified.files.Count -ne 22){throw 'UNEXPECTED_BUNDLE_FILE_COUNT'}
+```
+
+Nếu hash sai, giữ file nhận được riêng để C kiểm tra; không sửa checksum cho khớp, không chạy tiếp. B/C ghi biên nhận local gồm alias A/B, thời điểm, source/runtime SHA, ZIP/manifest/client/server SHA256 và người kiểm; không đưa IP/tên máy/tài khoản vào bản công bố. Việc nhận/hash đúng chỉ hoàn tất kiểm artifact, **không đổi 41 case sang PASS hoặc xác nhận human review**. Sau đó thực hiện preflight và nhóm F trong các mục dưới.
+
+ZIP hiện có là snapshot của kit trước bước công bố Task2.1; hướng dẫn nhận file mới nằm trên GitHub. Không chép runbook mới vào ZIP hoặc đóng gói lại rồi giữ hash trên. Binaries và script TEST giữ nguyên từ Task2. Nếu cần tạo ZIP mới, C phải công bố manifest/hash riêng và đối chiếu lại; ZIP tạo mới có thể khác hash dù JAR không đổi.
+
+### Máy build tạo bundle mới khi cần
+
 Chạy trong checkout chuẩn bị có hai JAR và bốn class `LiveCandidateApp*.class` đã build từ Task 1. Các script từ chối ghi đè thư mục/run/JSON cũ.
 
 ```powershell

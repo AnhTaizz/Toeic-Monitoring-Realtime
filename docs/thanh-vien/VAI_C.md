@@ -406,3 +406,7 @@ Raw84 đã được tìm thấy/kiểm hash; rejoin12 byte-identical/analyzer17o
 ### Ghi chú làm dở — T3-C4 physical LAN, 18/10/2026
 
 B/C nhận [runbook](../T3_C4_PHYSICAL_LAN_ACCEPTANCE.md),41case và ZIP từ sourceTask1 `3044e5b`/runtime `3d93820`. LAN **NOT RUN/0case**, thiếu máyB, human B/C **PENDING**. KitPowerShell29checks PASS (MOCK fixture, không mạng), ZIP/hash/init/tamper PASS; probe/fault/SQL/runtime physical chưa chạy. C cần review script TEST, epoch/late callbacks/CLOSE cleanup của PR47, đối chiếu F no false ACK với state RAM vs history COMMIT, event/gap uniqueness và Reading/Listening giữ contract; giữ case thiếu evidence NOT RUN. Nếu tái hiện bug, corrective PR riêng với regression, không sửa thuật toán tại nhánh chuẩn bị; FULL default, gate NOT DECIDED, tracker/QD approval giữ nguyên. [Hồ sơ](../../evidence/t3-c4-physical-prep-20261018/REPORT.md).
+
+### Bàn giao công bố Task2.1 — 18/10/2026
+
+C/người giữ máy build cung cấp riêng ZIP `target/T3C4-3044e5b.zip`, đối chiếu hash công bố với B trên A/B; không đẩy binary/raw/credential lên Git. Nhánh bàn giao có PR47HEAD3044e5b làm ancestor, Draft PR nhắm nhánh PR47; source/runtime artifact3044/3d93820 giữ nguyên. Review script TEST/evidence và thực hiện F với B; LAN0/41 NOT RUN, human B/C PENDING, FULL default/gate chưa chốt. [Hồ sơ công bố](../../evidence/t3-c4-physical-prep-20261018/PUBLISH.md).

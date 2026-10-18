@@ -691,3 +691,9 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 - Thêm runbook A1–A4/B–H/MT02–MT06, F01–F12 Reading/Listening,9script PowerShell TEST, checklist41case/topology/review/SQL. ZIP có thật22file, SHA256 `5b04dcb10d46ba760749af29b2abdeee126a9748512abe4d18b78e0d4881685a`; hash JAR giữ đúng Task1. Hướng dẫn vận hành cũ trỏ sang artifact3044, evidence cũ giữ nguyên.
 - Kiểm thật Windows PowerShell5.1/JDK21:29/29kit checks PASS, lặp29/29trên ZIP giải nén;22file/hash/init41NOT RUN/tamper reject PASS. Fixture origin/map/file MOCK, không gọi mạng. Protocol/fault runtime, PG/SQL, JavaFX, Maven/CI mới và physical acceptance NOT RUN; không dùng42/42local trước làm LAN.
 - LAN NOT RUN /0case thật; B/C human review PENDING. Cần máyB, DB TEST/assignment/audio/attempt mới và evidence physical F/ACK/DB/UI/cleanup. FULL default, không QD/tracker/gate quyết định; production source không đổi. [Báo cáo và artifact](../evidence/t3-c4-physical-prep-20261018/REPORT.md), [runbook](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md). Chưa push nhánh Task2.
+
+## 18/10/2026 — Task2.1 công bố bàn giao T3-C4
+
+- Người dùng ủy quyền push nhánh chuẩn bị và mở Draft PR vào nhánh PR47, không vào main. Fetch/GitHub xác nhận PR47 HEAD3044e5b; commit local e4c86aa có3044 làm ancestor,30file diff ban đầu được review; workspace/worktree gốc giữ nguyên.
+- Bổ sung hướng dẫn B/C nhận ZIP từ người giữ máy build qua USB/kênh chia sẻ riêng được phép, kiểm SHA256 độc lập trên A/B trước giải nén/chạy; ZIP hiện có giữ hash5b04dcb1…1685a và ngoài Git. Chỉ công bố text/script TEST/template/evidence đã lọc; production runtime giữ nguyên.
+- Checklist41case vẫn NOT RUN, LAN0/41, B review PENDING. Kiểm publication là ancestry/diff/hash/privacy/link/cú pháp lệnh, không chạy Maven/PG/physical LAN hoặc tạo kết quả runtime mới. [Hồ sơ công bố](../evidence/t3-c4-physical-prep-20261018/PUBLISH.md); PR/remote cuối xác minh sau push.

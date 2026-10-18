@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+18/10/2026 — Task2.1 công bố bộ bàn giao: đã xác minh ancestry PR47HEAD `3044e5b` → local `e4c86aa`; bổ sung nhận ZIP riêng và kiểm SHA256 trên A/B. Người dùng ủy quyền push nhánh chuẩn bị/Draft PR vào nhánh PR47; không sửa production hoặc merge. LAN **0/41 NOT RUN**, human B **PENDING**. [Hồ sơ công bố](../evidence/t3-c4-physical-prep-20261018/PUBLISH.md).
+
 18/10/2026 — T3-C4 physical LAN: người dùng chưa có máy thứ hai, đã chuẩn bị [bộ bàn giao B/C](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md) trên sourceTask1 `3044e5b`/runtime `3d93820`,41case và ZIP có hash. Kit29checks PASS trên Windows và bản ZIP; không truy cập mạng. LAN **NOT RUN/0case**, B/C review **PENDING**; cần máyB và lượt F vật lý. FULL default, không quyết định gate hoặc cập nhật tracker. [Evidence chuẩn bị](../evidence/t3-c4-physical-prep-20261018/REPORT.md).
 
 18/10/2026 — Đã merge `origin/main f864034` vào nhánh PR #47 bằng merge commit `167caf3`, source sửa `3d93820`, base GitHub là `main`. CLOSE write treo đã có deadline/guard; phản hồi muộn lặp và race ACK trước cleanup có regression. Focused148 PASS, server-focused118 PASS/4SKIP; clean test và package mỗi lượt928 PASS/5SKIP trên PostgreSQL18.1 TEST riêng; T3-C2 restart/resync PASS. T3-C4 lượt mới 42/42 PASS LOCAL; READY_FOR_C_REVIEW; C approval còn thiếu, không merge. FULL default; tracker/QD owner approval giữ nguyên. [bàn giao PR47](../evidence/pr47-stabilize-20261018/REPORT.md).
