@@ -21,3 +21,7 @@ Sau từng run điền observed thực và evidence (không sửa raw), operator
 
 
 Progress/B4: người review thử page đầu/sau/raw cursor; mất server khi đang đọc trang sau phải giữ trang/readAt cũ+stale,401 về login, không lộ answers/writer/correct options. Kiểm UI start READY quá5s, doubleclick/lost response retry nguyên intent, unknown intent không đổi ca; old result giữ nguyên sau reorg. Các thao tác thủ công này NOT RUN; automated subset không thay chữ ký. C1 có các lượt FAIL cleanup Edge và lượt cuối không JFR PASS; C cần review độ ổn định, không lấy FULL GUI11 hoặc retry để xóa kết quả FAIL lịch sử.
+
+## T3-C4 physical LAN — checklist B/C mới
+
+[Runbook 18/10](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md) và [mẫu CSV](templates/t3c4-lan/cases.csv) dùng source Task 1 `3044e5b`, không dùng branch/artifact PR47 trước tích hợp. 41 case chuẩn bị gồm preflight, A1–A4/B–H/MT02–MT06; F01–F12 tách physical disconnect, isolation A, reconnect/epoch/FULL, no false ACK, event/gap, Reading/Listening và cleanup. Mọi row giữ NOT RUN, reviewer PENDING; chưa có máy B. Bộ chuẩn bị không nâng các trạng thái AT/LT/IT/MT lịch sử phía trên. B cần nghe/GUI/LAN thật và ký review; C kiểm source/protocol/evidence trước kết luận.

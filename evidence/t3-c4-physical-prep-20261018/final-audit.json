@@ -1,0 +1,11 @@
+{
+    "sourceSha":  "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+    "localLinksVerified":  17,
+    "runtimeDiff":  "NONE",
+    "diffWhitespace":  "PASS",
+    "sourceBundleIntegrity":  "PASS",
+    "lan":  "NOT RUN",
+    "physicalCases":  0,
+    "humanBReview":  "PENDING",
+    "checks":  "STATIC AND FILE INTEGRITY ONLY"
+}

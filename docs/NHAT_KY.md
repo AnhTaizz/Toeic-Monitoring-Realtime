@@ -685,6 +685,21 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 
 - Hậu kiểm cuối: T3-C4 mới42/42 PASS, source/JAR hash khớp C2/C4; measurement C4 INCOMPLETE do hard-kill chủ đích, không kết luận E2. 0 schema TEST, dừng cluster sở hữu và phục hồi env checkout. READY_FOR_C_REVIEW, chưa merge; CI HEAD hồ sơ và Git SHA cuối được xác minh trong PR/phản hồi.
 
+## 18/10/2026 — chuẩn bị T3-C4 physical LAN cho B/C
+
+- Người dùng xác nhận chưa có máy thứ hai; chuẩn bị bàn giao, không chạy/chấm hộ LAN. Nhánh local riêng `prepare/t3-c4-physical-lan-20261018` từ kết quả Task1 `3044e5b`, runtime `3d93820`; không thay PR47 hoặc workspace gốc.
+- Thêm runbook A1–A4/B–H/MT02–MT06, F01–F12 Reading/Listening,9script PowerShell TEST, checklist41case/topology/review/SQL. ZIP có thật22file, SHA256 `5b04dcb10d46ba760749af29b2abdeee126a9748512abe4d18b78e0d4881685a`; hash JAR giữ đúng Task1. Hướng dẫn vận hành cũ trỏ sang artifact3044, evidence cũ giữ nguyên.
+- Kiểm thật Windows PowerShell5.1/JDK21:29/29kit checks PASS, lặp29/29trên ZIP giải nén;22file/hash/init41NOT RUN/tamper reject PASS. Fixture origin/map/file MOCK, không gọi mạng. Protocol/fault runtime, PG/SQL, JavaFX, Maven/CI mới và physical acceptance NOT RUN; không dùng42/42local trước làm LAN.
+- LAN NOT RUN /0case thật; B/C human review PENDING. Cần máyB, DB TEST/assignment/audio/attempt mới và evidence physical F/ACK/DB/UI/cleanup. FULL default, không QD/tracker/gate quyết định; production source không đổi. [Báo cáo và artifact](../evidence/t3-c4-physical-prep-20261018/REPORT.md), [runbook](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md). Chưa push nhánh Task2.
+
+## 18/10/2026 — Task2.1 công bố bàn giao T3-C4
+
+- Người dùng ủy quyền push nhánh chuẩn bị và mở Draft PR vào nhánh PR47, không vào main. Fetch/GitHub xác nhận PR47 HEAD3044e5b; commit local e4c86aa có3044 làm ancestor,30file diff ban đầu được review; workspace/worktree gốc giữ nguyên.
+- Bổ sung hướng dẫn B/C nhận ZIP từ người giữ máy build qua USB/kênh chia sẻ riêng được phép, kiểm SHA256 độc lập trên A/B trước giải nén/chạy; ZIP hiện có giữ hash5b04dcb1…1685a và ngoài Git. Chỉ công bố text/script TEST/template/evidence đã lọc; production runtime giữ nguyên.
+- Checklist41case vẫn NOT RUN, LAN0/41, B review PENDING. Kiểm publication là ancestry/diff/hash/privacy/link/cú pháp lệnh, không chạy Maven/PG/physical LAN hoặc tạo kết quả runtime mới. [Hồ sơ công bố](../evidence/t3-c4-physical-prep-20261018/PUBLISH.md); PR/remote cuối xác minh sau push.
+
+- Kết quả Task2.1: push thường commit6e58a1b và mở [Draft PR52](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/52) vào `gate/t3-c4-lan-20261017`, GitHub32file/2commit lúc mở. Hash sourcePR47 trước/sau push vẫn3044e5b. Ghi nhận URL bằng commit hồ sơ tiếp theo; không merge/approve hoặc gửi ZIP thay người giữ máy build. Checksum8file evidence PASS; physical LAN0/41 NOT RUN, B PENDING.
+
 ## 18/10/2026 · Codex · corrective S3-P1-01 và tích hợp Phase3
 - Task: task.txt; bảo toàn checkout main6a41031 đang có uncommitted files, fetch xác nhận origin/main f864034 và PR45/47/51–56 chưa merge. Worktree riêng, không đổi branch thành viên.
 - Source56a27e9: cache hợp lệ không replace; static bounded JVM locks + persistent FileLock sidecar phối hợp publication/file/verify đa instance/process. HTTP không giữ khóa, partial đủ byte/SHA mới xét publish; lỗi I/O khác không bị coi là corrupt. Giữ QD33 root/junction/8.3/Unicode, v0/FULL và worker ngoài FX.

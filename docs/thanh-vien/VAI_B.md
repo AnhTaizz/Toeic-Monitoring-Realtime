@@ -397,5 +397,15 @@ MSI0.3.9 installed906PASS local; cần B review F01, hòa PR45 với fix race40 
 
 Source `3d93820` sửa RealtimeClient thuộc B: giữ dấu correlation đã hủy có giới hạn kể cả ACK đã lấy pending, bỏ phản hồi muộn lặp, retry/reconnect xóa đúng dấu; UNAUTHORIZED toàn phiên vẫn dừng kết nối. Phối hợp C review FullSnapshotDelivery deadline CLOSE/guard/worker. Focused148 PASS, riêng adapter63; clean/package mỗi lượt928 PASS/5SKIP với PG TEST thật; T3-C2 PASS, T3-C4 lượt mới 42/42 PASS LOCAL. C approval còn thiếu, không tự merge/approve hoặc sửa QD/tracker/MSI. [Hồ sơ C review](../../evidence/pr47-stabilize-20261018/REPORT.md).
 
+### Ghi chú làm dở — T3-C4 physical LAN, 18/10/2026
+
+Chưa có máy thứ hai; human B **PENDING**, LAN **NOT RUN/0case**. [Runbook](../T3_C4_PHYSICAL_LAN_ACCEPTANCE.md) +41case/ZIP sourceTask1 `3044e5b`, runtime `3d93820` đã chuẩn bị; kit29checks PASS trên Windows và bản ZIP, không thay human review. B cần cấp máyB, kiểm hash/GUI/process/Reading/Listening thật, rút LAN vật lý F01–F12, chứng minh A không ảnh hưởng, B recovery không reset/autoplay và cleanup. Cùng C đối chiếu ACK/event/gap/epoch/SQL; fault probe SIMULATED/MOCK riêng, runtime chưa thử. Không dùng ZIP2b6c9ce, không đổi default FULL/MSI/QD/tracker hoặc ký hộ C. [Hồ sơ](../../evidence/t3-c4-physical-prep-20261018/REPORT.md).
+
+### Bàn giao công bố Task2.1 — 18/10/2026
+
+Người dùng đã cho phép push nhánh chuẩn bị và mở Draft PR vào `gate/t3-c4-lan-20261017`, không merge. B dùng [runbook GitHub/nhận ZIP](../T3_C4_PHYSICAL_LAN_ACCEPTANCE.md), liên hệ người giữ máy build qua kênh riêng, kiểm SHA256 trên hai máy rồi chạy41case. LAN0/41 NOT RUN, human B PENDING; không dùng kit29PASS thay review/nghe/LAN thật. [Hồ sơ công bố](../../evidence/t3-c4-physical-prep-20261018/PUBLISH.md).
+
+Bộ bàn giao đã ở [Draft PR52](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/52) vào nhánh PR47; chưa merge. B review PENDING và LAN0/41 NOT RUN giữ nguyên.
+
 ## Bàn giao corrective audio P1 · 18/10/2026
 T3-B1/QD33: source56a27e9 local giữ cache hợp lệ, khóa JVM+process phối hợp publication/verify, không giữ khóa HTTP. [Báo cáo và lệnh](../../evidence/audio-cache-p1-20261018/REPORT.md). Exact-main747/1280FAIL → bản sửa0/1280, hash đúng/partial0; targeted54PASS/2SKIP. Codex review kỹ thuật theo người dùng chỉ định; human chữ ký không tự tạo. Ghi chú làm dở: lần push đầu bị automatic approval review từ chối; ngày19/10 người dùng đã cho phép push và mở corrective PR/CI; main vẫn thiếu fix. B chạy nghe/máy2/LAN, xác nhận dispositionPR45; final MSI chỉ nghiệm thu sau source main đã tích hợp.
