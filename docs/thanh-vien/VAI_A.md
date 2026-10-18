@@ -390,3 +390,7 @@ B gửi review kỹ thuật PR39/QA source9bfc75e: không sửa server/protocol/
 ### Ghi chú làm dở — RC17/10/2026
 
 Cần A/C chốt QD29/legacy ACTIVE; A review history5000/5001/HTTP500 và test F01 trong phần A. Chưa owner approve. Source TEST c224ba8, không merge nhánh nguồn/main hoặc ký thay owner. [Bàn giao](../../evidence/integration-final-20261017/REPORT.md).
+
+
+## Ghi chú tích hợp19/10/2026
+Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG68PASS/2SKIPsubset, GUI11/Flow41/MODE8×5PASSlocal. Codex review kỹ thuật theo người dùng giao, không ghi human signatures. PR52/51 đã reuse vào nhánh tích hợp; A5 nhãn envelopev0 được sửa. HarnessC4 localFAIL do TEST backoffnormalpeer được giữ bằng chứng;1072f77 giữ lại productionbackoff, chờ rerun. Còn finalmain/CI/MSI và physicalLAN0/41/hearing/máy2; tracker không đổiDONE, FULL baseline.

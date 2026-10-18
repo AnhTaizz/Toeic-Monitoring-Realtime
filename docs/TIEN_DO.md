@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+19/10/2026 — Main `8a43a56` chứa PR47+PR57 (hai P1 và test56). Review kỹ thuật Codex theo ủy quyền người dùng, CI đúng HEAD từng PR SUCCESS; chưa nhận CI main khi workflow chưa vào main. Source tích hợpce38a5f clean/package942PASS/4SKIP mỗi lượt (PG68PASS/2SKIPsubset), GUI11/ExamFlow41PASSlocal, MODE8case×5PASS. C4 supplementaryFAIL ở fixture backoff, corrective harness1072f77 chờ rerun. Đang ghép workflow exact-main/PR52+51 và chuẩn bị finalMSI; physicalLAN0/41/hearing/máy2 NOT RUN. FULL baseline, tracker không tự DONE.
+
 18/10/2026 — S3-P1-01 có bản sửa production local `56a27e9` trên `fix/stage3-audio-publication-20261018`: stress exact-main747/1280FAIL → corrected1280/1280PASS, hash20/20 và partial0; targeted54PASS/2SKIP. [Báo cáo](../evidence/audio-cache-p1-20261018/REPORT.md). Main vẫn `f864034`, chưa chứa fix; lần push đầu bị automatic approval review chặn; ngày19/10 người dùng đã cho phép push hai nhánh, mở PR/CI. Nhánh TEST riêng ghép PR47+test56 để kiểm tích hợp. Người dùng ủy quyền Codex review kỹ thuật, không ghi chữ ký A/B/C; LAN0/41 và nghe thật NOT RUN, FULL mặc định. Tracker không đổi DONE.
 
 18/10/2026 — Task2.1 công bố bộ bàn giao: đã xác minh ancestry PR47HEAD `3044e5b` → local `e4c86aa`; bổ sung nhận ZIP riêng và kiểm SHA256 trên A/B. Đã push nhánh chuẩn bị và mở [Draft PR52](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/52) vào nhánh PR47; không sửa production hoặc merge. LAN **0/41 NOT RUN**, human B **PENDING**. [Hồ sơ công bố](../evidence/t3-c4-physical-prep-20261018/PUBLISH.md).

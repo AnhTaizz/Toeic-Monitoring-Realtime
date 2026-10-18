@@ -414,3 +414,7 @@ B/C nhận [runbook](../T3_C4_PHYSICAL_LAN_ACCEPTANCE.md),41case và ZIP từ so
 C/người giữ máy build cung cấp riêng ZIP `target/T3C4-3044e5b.zip`, đối chiếu hash công bố với B trên A/B; không đẩy binary/raw/credential lên Git. Nhánh bàn giao có PR47HEAD3044e5b làm ancestor, Draft PR nhắm nhánh PR47; source/runtime artifact3044/3d93820 giữ nguyên. Review script TEST/evidence và thực hiện F với B; LAN0/41 NOT RUN, human B/C PENDING, FULL default/gate chưa chốt. [Hồ sơ công bố](../../evidence/t3-c4-physical-prep-20261018/PUBLISH.md).
 
 Bộ bàn giao đã ở [Draft PR52](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/52) vào nhánh PR47; không push source branch PR47 hoặc merge. C/B review và physical LAN còn chờ người thật.
+
+
+## Ghi chú tích hợp19/10/2026
+Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG68PASS/2SKIPsubset, GUI11/Flow41/MODE8×5PASSlocal. Codex review kỹ thuật theo người dùng giao, không ghi human signatures. PR52/51 đã reuse vào nhánh tích hợp; A5 nhãn envelopev0 được sửa. HarnessC4 localFAIL do TEST backoffnormalpeer được giữ bằng chứng;1072f77 giữ lại productionbackoff, chờ rerun. Còn finalmain/CI/MSI và physicalLAN0/41/hearing/máy2; tracker không đổiDONE, FULL baseline.

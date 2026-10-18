@@ -568,3 +568,7 @@ Không phải PASS của main một mình: bản ghép chứa sửa `2b6c9ce` ch
 
 ## Corrective S3-P1-01 · 18/10/2026
 Source audio56a27e9, [báo cáo mới](../evidence/audio-cache-p1-20261018/REPORT.md): exact-main stress4batch FAIL747/1280; source sửa4batch PASS1280/1280,20/20hash,0partial. Targeted AudioFiles/Sharing/Preparation/ApiClient/Playback:54PASS/2SKIP/0FAIL/ERROR. REAL Windows filesystem/multi-JVM/reader/cancellation; payload và API audio MOCK. LT01 phần kiểm file/READY có regression; không đổi LT01–LT04 hoặc IT01 thành nghiệm thu đầy đủ, nghe thủ công/LAN/máy2 NOT RUN. Diagnostic wrapper full-run không tính PASS. CI mới NOT RUN tại snapshot; sau lần push bị automatic approval review từ chối, ngày19/10 người dùng đã cho phép push hai nhánh và mở PR/CI.
+
+
+## Tích hợp19/10/2026
+PR47 vàPR57 đã vào main8a43a56. Sourcece38a5f clean test/package mỗi lượt946total=942PASS/4SKIP,0FAIL/ERROR; PG68PASS/2SKIPsubset. MODE8case lặp5lượtPASS; GUI11/11, ExamFlow41/41PASSlocal. C4 supplementaryFAIL ở fixture retrybudget (raw giữ); harness1072f77 sửa configurationnormalpeer, chưa nhận lượt rerunPASS trước khi chạy. LAN0/41 và hearing/MSI-máy2 NOT RUN; không nâng MT/LT/IT toàn hệ thống thànhPASS.

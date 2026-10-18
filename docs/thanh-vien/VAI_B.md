@@ -409,3 +409,7 @@ Bộ bàn giao đã ở [Draft PR52](https://github.com/AnhTaizz/Toeic-Monitorin
 
 ## Bàn giao corrective audio P1 · 18/10/2026
 T3-B1/QD33: source56a27e9 local giữ cache hợp lệ, khóa JVM+process phối hợp publication/verify, không giữ khóa HTTP. [Báo cáo và lệnh](../../evidence/audio-cache-p1-20261018/REPORT.md). Exact-main747/1280FAIL → bản sửa0/1280, hash đúng/partial0; targeted54PASS/2SKIP. Codex review kỹ thuật theo người dùng chỉ định; human chữ ký không tự tạo. Ghi chú làm dở: lần push đầu bị automatic approval review từ chối; ngày19/10 người dùng đã cho phép push và mở corrective PR/CI; main vẫn thiếu fix. B chạy nghe/máy2/LAN, xác nhận dispositionPR45; final MSI chỉ nghiệm thu sau source main đã tích hợp.
+
+
+## Ghi chú tích hợp19/10/2026
+Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG68PASS/2SKIPsubset, GUI11/Flow41/MODE8×5PASSlocal. Codex review kỹ thuật theo người dùng giao, không ghi human signatures. PR52/51 đã reuse vào nhánh tích hợp; A5 nhãn envelopev0 được sửa. HarnessC4 localFAIL do TEST backoffnormalpeer được giữ bằng chứng;1072f77 giữ lại productionbackoff, chờ rerun. Còn finalmain/CI/MSI và physicalLAN0/41/hearing/máy2; tracker không đổiDONE, FULL baseline.
