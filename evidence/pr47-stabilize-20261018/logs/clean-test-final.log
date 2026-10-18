@@ -1,0 +1,101 @@
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.169 s -- in vn.edu.toeic.protocol.exam.AttemptIdentifierBoundaryTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.169 s -- in vn.edu.toeic.protocol.measurement.E1ByteAccountingTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.447 s -- in vn.edu.toeic.protocol.measurement.MessageMeasurementsTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.059 s -- in vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in vn.edu.toeic.protocol.monitoring.EventOriginTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.054 s -- in vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.110 s -- in vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest
+[INFO] Tests run: 45, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.772 s -- in vn.edu.toeic.client.AttemptRefreshTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.277 s -- in vn.edu.toeic.client.audio.AudioApiClientTest
+[WARNING] Tests run: 23, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 2.892 s -- in vn.edu.toeic.client.audio.AudioFilesTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.014 s -- in vn.edu.toeic.client.audio.AudioPreparationTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.109 s -- in vn.edu.toeic.client.audio.ListeningApiClientTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.165 s -- in vn.edu.toeic.client.audio.ListeningPlaybackTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.089 s -- in vn.edu.toeic.client.ClientSettingsTest
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.147 s -- in vn.edu.toeic.client.dashboard.DashboardControllerTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.046 s -- in vn.edu.toeic.client.dashboard.DashboardModelTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s -- in vn.edu.toeic.client.dashboard.FullStateDashboardTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in vn.edu.toeic.client.dashboard.LateEventsAndGapsTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.550 s -- in vn.edu.toeic.client.dashboard.MonitoringApiClientTest
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.119 s -- in vn.edu.toeic.client.dashboard.MonitoringJsonTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s -- in vn.edu.toeic.client.dashboard.ProctorProgressControllerTest
+[INFO] Tests run: 28, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.121 s -- in vn.edu.toeic.client.exam.ExamApiClientTest
+[INFO] Tests run: 43, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.102 s -- in vn.edu.toeic.client.exam.ExamHistoryReadTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s -- in vn.edu.toeic.client.exam.ExamPaperAndEntryTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 s -- in vn.edu.toeic.client.exam.ExamResultMappingTest
+[INFO] Tests run: 51, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.147 s -- in vn.edu.toeic.client.exam.ExamSessionTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s -- in vn.edu.toeic.client.exam.ExamSessionThreadingTest
+[WARNING] Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.001 s -- in vn.edu.toeic.client.exam.ScoreResultDialogTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.117 s -- in vn.edu.toeic.client.ExamMonitoringIntegrationTest
+[INFO] Tests run: 39, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.777 s -- in vn.edu.toeic.client.LoginApiClientTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.601 s -- in vn.edu.toeic.client.monitoring.CandidateModeSessionTest
+[INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.412 s -- in vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.320 s -- in vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.81 s -- in vn.edu.toeic.client.monitoring.harness.ControlledProcessHarnessTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.054 s -- in vn.edu.toeic.client.monitoring.harness.E1ArtifactsTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in vn.edu.toeic.client.monitoring.harness.E1WindowTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.134 s -- in vn.edu.toeic.client.monitoring.harness.HarnessArtifactsTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s -- in vn.edu.toeic.client.monitoring.harness.HarnessCliTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 s -- in vn.edu.toeic.client.monitoring.harness.HarnessPlanTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in vn.edu.toeic.client.monitoring.harness.ObservationJoinerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in vn.edu.toeic.client.monitoring.harness.TestTracePolicyTest
+[INFO] Tests run: 34, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 s -- in vn.edu.toeic.client.monitoring.MonitoringDeliveryTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.479 s -- in vn.edu.toeic.client.monitoring.ProcessCollectorTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.117 s -- in vn.edu.toeic.client.monitoring.ProcessCollectorTraceTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.074 s -- in vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.565 s -- in vn.edu.toeic.client.monitoring.trace.DeltaReplayTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s -- in vn.edu.toeic.client.monitoring.trace.HandwrittenTraceTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.65 s -- in vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.074 s -- in vn.edu.toeic.client.monitoring.trace.ReplayEngineTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 s -- in vn.edu.toeic.client.monitoring.trace.TraceCliTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.294 s -- in vn.edu.toeic.client.monitoring.trace.TraceReaderTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.131 s -- in vn.edu.toeic.client.monitoring.trace.TraceRecorderTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.451 s -- in vn.edu.toeic.client.proctor.ProctorSessionApiClientTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.060 s -- in vn.edu.toeic.client.proctor.ProctorSessionControllerTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 s -- in vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpenerTest
+[INFO] Tests run: 63, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.226 s -- in vn.edu.toeic.client.realtime.RealtimeClientTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 s -- in vn.edu.toeic.client.ScopeLookupTest
+[INFO] Tests run: 642, Failures: 0, Errors: 0, Skipped: 2
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.384 s -- in vn.edu.toeic.server.audio.AudioAuthorizationTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.787 s -- in vn.edu.toeic.server.audio.AudioCatalogTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s -- in vn.edu.toeic.server.audio.AudioReadinessPolicyTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.393 s <<< FAILURE! -- in vn.edu.toeic.server.audio.AudioRuntimePostgresTest
+org.postgresql.util.PSQLException: Connection to 127.0.0.1:5433 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.017 s <<< FAILURE! -- in vn.edu.toeic.server.audio.ListeningRuntimePostgresTest
+org.postgresql.util.PSQLException: Connection to 127.0.0.1:5433 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+[INFO] Tests run: 36, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.40 s -- in vn.edu.toeic.server.auth.AuthenticatedNetworkTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s -- in vn.edu.toeic.server.auth.AuthServiceTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.401 s -- in vn.edu.toeic.server.auth.ConcurrentRealtimeSendTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.314 s -- in vn.edu.toeic.server.auth.RealtimeMeasurementTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.080 s -- in vn.edu.toeic.server.auth.SessionAuthenticationTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.661 s -- in vn.edu.toeic.server.exam.ExamControllerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.197 s -- in vn.edu.toeic.server.exam.ExamReadAuthorizationTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.016 s <<< FAILURE! -- in vn.edu.toeic.server.exam.ExamRuntimePostgresTest
+org.postgresql.util.PSQLException: Connection to 127.0.0.1:5433 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.309 s -- in vn.edu.toeic.server.exam.ExamTimeoutSchedulingTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in vn.edu.toeic.server.exam.ExamValidationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.160 s -- in vn.edu.toeic.server.monitoring.FullSnapshotReducerTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.214 s -- in vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.104 s -- in vn.edu.toeic.server.monitoring.MonitoringGapTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.026 s <<< FAILURE! -- in vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest
+org.postgresql.util.PSQLException: Connection to 127.0.0.1:5433 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.231 s -- in vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.107 s -- in vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.140 s -- in vn.edu.toeic.server.monitoring.MonitoringStateServiceTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.192 s -- in vn.edu.toeic.server.monitoring.ProcessEventTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.100 s -- in vn.edu.toeic.server.monitoring.SmokeCleanupTest
+[ERROR]   AudioRuntimePostgresTest.startRuntime:45 » PSQL Connection to 127.0.0.1:5433 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+[ERROR]   ListeningRuntimePostgresTest.startRuntime:51 » PSQL Connection to 127.0.0.1:5433 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+[ERROR]   ExamRuntimePostgresTest.startProductionRuntime:52 » PSQL Connection to 127.0.0.1:5433 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+[ERROR]   MonitoringHistoryBoundsPostgresTest.startProductionRuntime:59 » PSQL Connection to 127.0.0.1:5433 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+[ERROR] Tests run: 179, Failures: 0, Errors: 4, Skipped: 0
+[INFO] Reactor Summary for TOEIC Monitoring Realtime 0.1.0-SNAPSHOT:
+[INFO] TOEIC Monitoring Realtime .......................... SUCCESS [  0.158 s]
+[INFO] TOEIC Protocol ..................................... SUCCESS [ 10.101 s]
+[INFO] TOEIC JavaFX Client ................................ SUCCESS [01:04 min]
+[INFO] TOEIC Server ....................................... FAILURE [ 37.055 s]
+[INFO] TOEIC ProcessHandle Spike .......................... SKIPPED
+[INFO] BUILD FAILURE
+[INFO] Total time:  01:52 min
+[INFO] Finished at: 2026-10-18T10:12:47+07:00

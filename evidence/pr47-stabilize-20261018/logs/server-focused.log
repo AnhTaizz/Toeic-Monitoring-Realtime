@@ -1,0 +1,20 @@
+[INFO] Tests run: 36, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 20.28 s -- in vn.edu.toeic.server.auth.AuthenticatedNetworkTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.569 s -- in vn.edu.toeic.server.auth.ConcurrentRealtimeSendTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.322 s -- in vn.edu.toeic.server.monitoring.FullSnapshotReducerTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.236 s -- in vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.111 s -- in vn.edu.toeic.server.monitoring.MonitoringGapTest
+[WARNING] Tests run: 4, Failures: 0, Errors: 0, Skipped: 4, Time elapsed: 0.004 s -- in vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.092 s -- in vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s -- in vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.067 s -- in vn.edu.toeic.server.monitoring.MonitoringStateServiceTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.099 s -- in vn.edu.toeic.server.monitoring.ProcessEventTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s -- in vn.edu.toeic.server.monitoring.SmokeCleanupTest
+[INFO] Tests run: 122, Failures: 0, Errors: 0, Skipped: 4
+[INFO] Reactor Summary for TOEIC Monitoring Realtime 0.1.0-SNAPSHOT:
+[INFO] TOEIC Monitoring Realtime .......................... SUCCESS [  0.004 s]
+[INFO] TOEIC Protocol ..................................... SUCCESS [  1.380 s]
+[INFO] TOEIC JavaFX Client ................................ SUCCESS [  0.459 s]
+[INFO] TOEIC Server ....................................... SUCCESS [ 43.471 s]
+[INFO] BUILD SUCCESS
+[INFO] Total time:  45.821 s
+[INFO] Finished at: 2026-10-18T10:07:59+07:00

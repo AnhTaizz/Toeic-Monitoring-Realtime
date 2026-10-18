@@ -1,0 +1,113 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO]
+[INFO] TOEIC Monitoring Realtime                                          [pom]
+[INFO] TOEIC Protocol                                                     [jar]
+[INFO] TOEIC JavaFX Client                                                [jar]
+[INFO]
+[INFO] ---------------< vn.edu.toeic:toeic-monitoring-realtime >---------------
+[INFO] Building TOEIC Monitoring Realtime 0.1.0-SNAPSHOT                  [1/3]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] -----------------------< vn.edu.toeic:protocol >------------------------
+[INFO] Building TOEIC Protocol 0.1.0-SNAPSHOT                             [2/3]
+[INFO]   from protocol\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.5.0:resources (default-resources) @ protocol ---
+[INFO] skip non existing resourceDirectory <WORKTREE>\protocol\src\main\resources
+[INFO] skip non existing resourceDirectory <WORKTREE>\protocol\src\main\resources
+[INFO]
+[INFO] --- compiler:3.15.0:compile (default-compile) @ protocol ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ protocol ---
+[INFO] skip non existing resourceDirectory <WORKTREE>\protocol\src\test\resources
+[INFO]
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ protocol ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ protocol ---
+[INFO]
+[INFO] ------------------------< vn.edu.toeic:client >-------------------------
+[INFO] Building TOEIC JavaFX Client 0.1.0-SNAPSHOT                        [3/3]
+[INFO]   from client\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.5.0:resources (default-resources) @ client ---
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.15.0:compile (default-compile) @ client ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 94 source files with javac [debug parameters release 21] to target\classes
+[INFO]
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ client ---
+[INFO] Copying 9 resources from src\test\resources to target\test-classes
+[INFO]
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ client ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 65 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] /<WORKTREE>/client/src/test/java/vn/edu/toeic/client/InstalledClientAgent.java: Some input files use unchecked or unsafe operations.
+[INFO] /<WORKTREE>/client/src/test/java/vn/edu/toeic/client/InstalledClientAgent.java: Recompile with -Xlint:unchecked for details.
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ client ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest
+[ERROR] Tests run: 32, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 3.148 s <<< FAILURE! -- in vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest
+[ERROR] vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest.stopInvalidatesPlannedWriteAndOldCallbacksAndReleasesAllRam -- Time elapsed: 2.024 s <<< ERROR!
+java.util.concurrent.TimeoutException
+	at java.base/java.util.concurrent.CompletableFuture.timedGet(CompletableFuture.java:1960)
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2095)
+	at vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest.stopInvalidatesPlannedWriteAndOldCallbacksAndReleasesAllRam(DeltaSnapshotDeliveryTest.java:167)
+
+[INFO] Running vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.244 s -- in vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest
+[INFO] Running vn.edu.toeic.client.monitoring.MonitoringDeliveryTest
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+MONITORING_STOP RAM discarded: unconfirmedEvents=0 unconfirmedGap=false unreportedDrops=0
+[INFO] Tests run: 34, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.245 s -- in vn.edu.toeic.client.monitoring.MonitoringDeliveryTest
+[INFO] Running vn.edu.toeic.client.realtime.RealtimeClientTest
+MEASUREMENT_WRITER_FAILED raw log incomplete; monitoring unchanged
+[INFO] Tests run: 63, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.550 s -- in vn.edu.toeic.client.realtime.RealtimeClientTest
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Errors:
+[ERROR]   DeltaSnapshotDeliveryTest.stopInvalidatesPlannedWriteAndOldCallbacksAndReleasesAllRam:167 » Timeout
+[INFO]
+[ERROR] Tests run: 139, Failures: 0, Errors: 1, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for TOEIC Monitoring Realtime 0.1.0-SNAPSHOT:
+[INFO]
+[INFO] TOEIC Monitoring Realtime .......................... SUCCESS [  0.011 s]
+[INFO] TOEIC Protocol ..................................... SUCCESS [  2.855 s]
+[INFO] TOEIC JavaFX Client ................................ FAILURE [ 30.023 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  34.106 s
+[INFO] Finished at: 2026-10-18T10:06:00+07:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project client:
+[ERROR]
+[ERROR] See <WORKTREE>\client\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[ERROR]
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <args> -rf :client

@@ -440,6 +440,41 @@ class RealtimeClientTest {
             client.forgetPending(first.requestId()); client.send(second).join(); assertThat(socket.sent).hasSize(3);
         }
     }
+    @Test void forgottenCorrelationIgnoresLateAckAndSameIdCanBeRetried() {
+        try (Fixture f = new Fixture()) {
+            f.connect();var request=event();f.client.send(request).join();
+            f.client.forgetPending(request.requestId());f.socket().text(ack(),true);
+            assertThat(f.messages).isEmpty();assertThat(f.problems).isEmpty();
+            f.client.send(request).join();f.socket().text(ack(),true);
+            assertThat(f.messages).hasSize(1);assertThat(f.problems).isEmpty();
+        }
+    }
+    @Test void forgottenCorrelationIgnoresRepeatedAckErrorAndResyncUntilRetried() {
+        try(Fixture f=new Fixture()) {
+            f.connect();var request=event();f.client.send(request).join();f.client.forgetPending(request.requestId());
+            var error=new JsonObject();error.addProperty("code","UNAUTHORIZED");error.addProperty("message","MOCK");error.addProperty("retryable",false);
+            for(int i=0;i<2;i++) {
+                f.socket().text(ack(),true);
+                f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ERROR","late-error",request.requestId(),request.attemptId(),request.traceId(),error)),true);
+                f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","MONITORING_RESYNC","late-resync",request.requestId(),request.attemptId(),request.traceId(),new JsonObject())),true);
+            }
+            assertThat(f.client.connectionState()).isEqualTo(ConnectionState.CONNECTED);
+            assertThat(f.messages).isEmpty();assertThat(f.problems).isEmpty();
+            f.client.send(request).join();f.socket().text(ack(),true);
+            assertThat(f.messages).hasSize(1);assertThat(f.problems).isEmpty();
+            // A real session-wide authentication rejection must still terminate this connection.
+            f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ERROR","auth-expired",null,null,"auth",error)),true);
+            assertThat(f.client.connectionState()).isEqualTo(ConnectionState.FAILED);
+        }
+    }
+    @Test void forgetAfterAckStillRetiresLateReplies() {
+        try(Fixture f=new Fixture()) {
+            f.connect();f.client.send(event()).join();f.socket().text(ack(),true);
+            assertThat(f.messages).hasSize(1);f.client.forgetPending(event().requestId());
+            f.socket().text(ack(),true);f.socket().text(ack(),true);
+            assertThat(f.messages).hasSize(1);assertThat(f.problems).isEmpty();
+        }
+    }
 
     @Test void settingsRejectZeroIntervalsAndOutOfScopeSession() {
         assertThatThrownBy(() -> new RealtimeClient.Settings(Duration.ZERO, Duration.ofSeconds(1),

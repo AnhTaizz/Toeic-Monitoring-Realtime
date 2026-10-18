@@ -634,6 +634,13 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 - 12metadata lịch sử/3trace MOCK hash khớp; derived CSV count287/62/11. Raw84file c1601b5 chưa có tại provenance, đã hỏi vị trí; không nhận reanalysis cũ PASS. Toàn12run cần phân tích lại resource; chưa có lý do tự chạy lại ngay toàn campaign.
 - Chuẩn bị T4-C1 có thể review, nghiệm thu PARTIAL: human B/raw cũ/T3-C4 LAN-gate/trace120s E2 còn mở. Không thay human review bằng agent; ChatGPT planning/review NOT RUN theo opt-out. User ủy quyền commit/push/PR riêng, không merge; Git cuối trong PR/phản hồi. Dừng review E1/T4-C1.
 
+## 17/10/2026 — C · chuẩn bị gate T3-C4 LAN/human B
+
+- Tạo `gate/t3-c4-lan-20261017` từ HEAD PR #43 `772c6e9`; không merge/đóng/mark Ready PR #39–#43. Sửa delivery/transport để stop chờ CLOSE giải phóng correlation và bỏ phản hồi muộn của correlation đã quên; commit code `2b6c9ce`.
+- Focused client 77 PASS; local live gate 42/42 PASS trên một Windows host với app/ProcessHandle/Edge/Spring/PostgreSQL/HTTP/WS thật và fault seams ghi SIMULATED. Full Maven rerun với temp trong workspace BUILD SUCCESS: protocol45/client610/server219/spike1, 48 PG test skip ở lệnh full; local gate PG thật PASS.
+- App-image/ZIP ignored từ source sạch `2b6c9ce`, FULL mặc định; ZIP SHA-256 `9e920fba5d6440f002ef51f2ba629b49ddbb7dae12177a4c6282c1e2b34c4667`, JAR SHA-256 `b3febc078d845e181bffb914c08a7ad49e78250ee693075fd35a67eead40452f`. Máy build thiếu `mt.exe`, nên runbook yêu cầu đường dẫn ASCII.
+- [Runbook](MONITORING_DELTA_LIVE_GATE.md), [evidence](../evidence/t3-c4/2026-10-17-lan-gate.md). LAN hai máy và human B review `NOT RUN`; gate `PARTIAL / NOT DECIDED`; không sửa TRACKER/QD, không chạy E1/E2/load.
+
 
 ## 17/10/2026 — Integration release candidate sau review A/C
 
@@ -667,6 +674,16 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 - Mỗi claim chính gắn source và evidence T3-A3/T3-A4; thêm ma trận NC01–NC08 và checklist reviewer C. Ghi rõ current state RAM một JVM, loopback không phải LAN/load, chưa có throughput/latency/resource.
 - 36 Markdown local links PASS, `git diff --check` PASS, audit 6 source owner PASS. Không chạy lại runtime vì docs-only; không tạo PASS mới. Load/LAN/GUI/human C review NOT RUN, báo cáo giữ DRAFT và tracker gốc giữ nguyên. [Report](T3_A5_NETWORK_CONCURRENCY_REPORT_DRAFT.md), [evidence](../evidence/t3-a5/2026-10-18-verification.md).
 
+
+## 18/10/2026 — ổn định và retarget PR #47
+
+- Giữ nguyên workspace gốc main và file/worktree chưa commit; checkout Git độc lập `target/pr47-stabilize-20261018`. Fetch xác minh PR47 `5d81aa0`, main `f864034`; merge commit `167caf3`, conflict NHAT_KY/TIEN_DO giữ evidence cả hai phía. Push thường, base PR47 đã là main.
+- Source `3d93820`: regression trước sửa tái hiện CLOSE future treo, phản hồi muộn lặp làm FAILED và ACK lấy pending trước cleanup. Giới hạn chờ CLOSE bằng ackTimeout/guard hủy, cache correlation giữ dấu có giới hạn kể cả pending đã được ACK. Chạm FullSnapshotDelivery của C và RealtimeClient của B; cần owner xem. Không đổi server hooks T3-A3 hoặc wire.
+- Focused cuối148 PASS/0SKIP, RealtimeClient63; server-focused118 PASS/4SKIP. Clean test/package mới mỗi lượt928 PASS/5SKIP,0failure/error; trong đó PG67 PASS/3SKIP. T3-C2 REAL Spring/PG/HTTP/WS/restart/resync PASS, process readings MOCK/fault SIMULATED. T3-C4 lượt mới 42/42 PASS LOCAL.
+- Giữ regression FAIL trước sửa, một FAIL fixture delta sau thêm guard (đã sửa fixture), hai lượt clean FAIL cấu hình thiếu DB_HOST/cổng5433. Cluster PostgreSQL18.1 TEST riêng loopback55447 thay môi trường cũ không hoạt động; không restart DB chung hoặc sửa .env gốc. Log công bố là bản dẫn xuất có hash, raw/XML giữ nguyên ignored.
+- [Bàn giao và checklist C](../evidence/pr47-stabilize-20261018/REPORT.md). CI source3d93820 SUCCESS; CI HEAD hồ sơ xem PR/checks và phản hồi cuối. C approval NOT RUN; không merge/approve thay C, không sửa tracker/QD owner approval hoặc quyết định FULL/DELTA; không LAN/MSI/E1/E2/load/đóng PR41/42/43/45.
+
+- Hậu kiểm cuối: T3-C4 mới42/42 PASS, source/JAR hash khớp C2/C4; measurement C4 INCOMPLETE do hard-kill chủ đích, không kết luận E2. 0 schema TEST, dừng cluster sở hữu và phục hồi env checkout. READY_FOR_C_REVIEW, chưa merge; CI HEAD hồ sơ và Git SHA cuối được xác minh trong PR/phản hồi.
 
 ## 18/10/2026 · Codex · corrective S3-P1-01 và tích hợp Phase3
 - Task: task.txt; bảo toàn checkout main6a41031 đang có uncommitted files, fetch xác nhận origin/main f864034 và PR45/47/51–56 chưa merge. Worktree riêng, không đổi branch thành viên.
