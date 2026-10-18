@@ -1,0 +1,16 @@
+{
+    "sourceSha":  "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "ownedTestCluster":  true,
+    "bind":  "loopback only",
+    "ownedNonDefaultSchemasAfterTests":  0,
+    "ownedPostgresStopped":  true,
+    "sharedDatabaseReset":  false,
+    "dockerVolumeReset":  false,
+    "sharedServicesRestarted":  false,
+    "originalWorkspaceEdited":  false,
+    "envFileEdited":  false,
+    "pr47Edited":  false,
+    "pr51Edited":  false,
+    "pr52Edited":  false,
+    "result":  "PASS"
+}

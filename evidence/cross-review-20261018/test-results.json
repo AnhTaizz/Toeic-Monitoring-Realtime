@@ -1,0 +1,840 @@
+{
+    "sourceSha":  "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "dateLocal":  "2026-10-18",
+    "timezone":  "Asia/Bangkok",
+    "jdk":  "21.0.8",
+    "maven":  "3.9.11",
+    "postgres":  "18.1",
+    "os":  "Windows",
+    "pass":  166,
+    "fail":  0,
+    "errors":  0,
+    "skip":  0,
+    "uniqueCases":  166,
+    "postgresCases":  25,
+    "unitAndMockCases":  141,
+    "fullSuiteRun":  false,
+    "newTestExecutions":  true,
+    "fixtures":  "Synthetic TEST DB rows; REAL PostgreSQL/Spring/HTTP. Client tests use MOCK HTTP/scope/transport and controlled workers.",
+    "rows":  [
+                 {
+                     "phase":  "targeted-1",
+                     "suite":  "vn.edu.toeic.client.dashboard.DashboardControllerTest",
+                     "tests":  16,
+                     "errors":  0,
+                     "failures":  0,
+                     "skipped":  0,
+                     "postgres":  false,
+                     "cases":  [
+                                   {
+                                       "name":  "http403RemovesAttemptAndRefreshesScopeWithoutReaddingFromLateHistory",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "connectedSocketIsNotFreshUntilHttpRecoveryAndSelectionLoadsFinish",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "logoutDiscardsUncancellableResponsesAndUnsubscribesOldSession",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "olderRosterGenerationCannotResurrectRevokedAttempt",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "boundedInboxOverloadSchedulesOneControlledRefreshAndLeavesStale",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "historyOverLimitShowsNonRetryableMessageAndKeepsLastCompleteList",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "independentHttpFailuresKeepOldDataAndDoNotInventUnknown",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "lateSelectionResponseCannotPopulateAnotherAttempt",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "oldGapCallbackCannotRepopulateAfterAttemptSwitchOrClose",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "disconnectThenReconnectRefreshesWithoutCandidateUnknownOrDuplicateListeners",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "http401ClearsEveryPanelAndRequiresNewLogin",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "fullHttpFromBeforeReconnectCannotOverwriteNewGeneration",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "fullPushBeatsLateHttpAndOldSelectionAndLogoutResponsesAreDiscarded",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "websocketNewPresenceWinsOverLateRosterAndWarningDedupUsesHttp",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "historyNullRecoveredBecomesRecoveredAndPendingOldHistoryNeedsFollowup",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "gapHttpFailureKeepsLastKnownWithStaleLabelAndScopeRevocationClearsIt",
+                                       "result":  "PASS"
+                                   }
+                               ]
+                 },
+                 {
+                     "phase":  "targeted-1",
+                     "suite":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest",
+                     "tests":  13,
+                     "errors":  0,
+                     "failures":  0,
+                     "skipped":  0,
+                     "postgres":  false,
+                     "cases":  [
+                                   {
+                                       "name":  "timeoutAndCancellationUseConfiguredBoundAndCloseRejectsLateCall",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "historyOverflow409IsNonRetryableLimitOnlyForHistoryEndpoints",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "fullHistoryOf5000EventsAtMaximumFieldLengthsIsAcceptedInOrder",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "endpointsHeadersAndUtcValuesFollowServerContract",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "oversizedBodyRejectedBeforeRender",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "errorsKeepStatusButNeverReflectRawBody(int)[1]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "errorsKeepStatusButNeverReflectRawBody(int)[2]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "errorsKeepStatusButNeverReflectRawBody(int)[3]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "errorsKeepStatusButNeverReflectRawBody(int)[4]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "successfulStatusWithInvalidJsonIsNotAccepted(String)[1]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "successfulStatusWithInvalidJsonIsNotAccepted(String)[2]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "successfulStatusWithInvalidJsonIsNotAccepted(String)[3]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "successfulStatusWithInvalidJsonIsNotAccepted(String)[4]",
+                                       "result":  "PASS"
+                                   }
+                               ]
+                 },
+                 {
+                     "phase":  "targeted-1",
+                     "suite":  "vn.edu.toeic.client.exam.ExamApiClientTest",
+                     "tests":  28,
+                     "errors":  0,
+                     "failures":  0,
+                     "skipped":  0,
+                     "postgres":  false,
+                     "cases":  [
+                                   {
+                                       "name":  "proctorProgressEncodesCursorOnceAndRejectsActiveResultLeak",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "slowServerEndsInATimeoutThatIsNotAServerRejection",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "responsesWithTimestampsAreParsed",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "closedClientRejectsCallsAndStopsItsWorkerThreads",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "allAttemptActionsEncodeRawIdOnceAndKeepJsonRaw",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "serverRejectionKeepsItsCodeButNeverReflectsTheServerText(String)[1]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "serverRejectionKeepsItsCodeButNeverReflectsTheServerText(String)[2]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "serverRejectionKeepsItsCodeButNeverReflectsTheServerText(String)[3]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "serverRejectionKeepsItsCodeButNeverReflectsTheServerText(String)[4]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "errorStatusWithUnreadableBodyStillReportsTheHttpStatus",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[1]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[2]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[3]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[4]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[5]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[6]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[7]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "rejectsUnsafeServerOriginBeforeCreatingNetworkWorkers(String)[8]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "autosaveSendsTheFullContractPayload",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "pathLikeIdsRemainDataInsideTheFixedOrigin(String)[1]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "pathLikeIdsRemainDataInsideTheFixedOrigin(String)[2]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "pathLikeIdsRemainDataInsideTheFixedOrigin(String)[3]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "pathLikeIdsRemainDataInsideTheFixedOrigin(String)[4]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "invalidAttemptIdFailsWithoutCallingTheServer",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "successStatusWithInvalidBodyIsNotAccepted(String)[1]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "successStatusWithInvalidBodyIsNotAccepted(String)[2]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "successStatusWithInvalidBodyIsNotAccepted(String)[3]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "successStatusWithInvalidBodyIsNotAccepted(String)[4]",
+                                       "result":  "PASS"
+                                   }
+                               ]
+                 },
+                 {
+                     "phase":  "targeted-1",
+                     "suite":  "vn.edu.toeic.client.exam.ExamHistoryReadTest",
+                     "tests":  43,
+                     "errors":  0,
+                     "failures":  0,
+                     "skipped":  0,
+                     "postgres":  false,
+                     "cases":  [
+                                   {
+                                       "name":  "finalResultsReadStatusOnlyWithoutPaperWriterOrMonitoring(String, boolean)[1]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "finalResultsReadStatusOnlyWithoutPaperWriterOrMonitoring(String, boolean)[2]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "finalResultsReadStatusOnlyWithoutPaperWriterOrMonitoring(String, boolean)[3]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "finalResultsReadStatusOnlyWithoutPaperWriterOrMonitoring(String, boolean)[4]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "discoveryPropagatesHttpErrorsWithoutInventingAnEmptySuccessfulHistory(int)[1]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "discoveryPropagatesHttpErrorsWithoutInventingAnEmptySuccessfulHistory(int)[2]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "discoveryPropagatesHttpErrorsWithoutInventingAnEmptySuccessfulHistory(int)[3]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "discoveryPropagatesHttpErrorsWithoutInventingAnEmptySuccessfulHistory(int)[4]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "invalidDatabaseCursorIsRejectedBeforeHttp(String)[1]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "invalidDatabaseCursorIsRejectedBeforeHttp(String)[2]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "invalidDatabaseCursorIsRejectedBeforeHttp(String)[3]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "invalidDatabaseCursorIsRejectedBeforeHttp(String)[4]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[1]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[2]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[3]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[4]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[5]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[6]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[7]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[8]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[9]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[10]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "deniedFreshStatusDoesNotReuseAnEarlierSuccessfulResult",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "codePointLimitAndUnicodeIntegrityRemainValidated",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "activeResultNeverFallsThroughIntoExamEntry",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[1]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[2]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[3]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[4]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[5]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[6]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[7]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[8]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "nextPageCannotRewindBeforeRequestedCursor",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "paginationUsesPostgresOrderWithinAndAcrossPages",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "discoveryUsesBearerAndOnlyBoundedOwnerlessQueryOnEveryNewClient",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "invalidStatusCannotBeDisplayedAsConfirmedResult(String)[1]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "invalidStatusCannotBeDisplayedAsConfirmedResult(String)[2]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "invalidStatusCannotBeDisplayedAsConfirmedResult(String)[3]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "invalidStatusCannotBeDisplayedAsConfirmedResult(String)[4]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "invalidStatusCannotBeDisplayedAsConfirmedResult(String)[5]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "invalidStatusCannotBeDisplayedAsConfirmedResult(String)[6]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "paginationUsesValidatedServerCursorAndDoesNotPromoteItToScope",
+                                       "result":  "PASS"
+                                   }
+                               ]
+                 },
+                 {
+                     "phase":  "targeted-1",
+                     "suite":  "vn.edu.toeic.client.exam.ExamPaperAndEntryTest",
+                     "tests":  10,
+                     "errors":  0,
+                     "failures":  0,
+                     "skipped":  0,
+                     "postgres":  false,
+                     "cases":  [
+                                   {
+                                       "name":  "malformedExamFailsEntryBeforeAnyWriterEpochIsClaimed",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "questionsSharingAGroupAreShownTogetherWithOnePassage",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "enteringADecidedAttemptReturnsTheServerResultWithoutTakeover",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "failedTakeoverFailsEntryWithTheServerRejection",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "malformedExamIsRejectedWithAMessageInsteadOfCrashingTheScreen",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "attemptDecidedBetweenStatusAndTakeoverStillEndsWithTheServerResult",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "candidateDtoHasNoFieldForTheCorrectAnswer",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "enteringAnActiveAttemptClaimsANewWriterEpochAndStartsFromTheServerState",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "legacyActiveRejectedByServerEndsEntryWithoutLooping",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "lostTakeoverAckIsNeverRetriedAutomaticallyAndReopenUsesAFreshRequestId",
+                                       "result":  "PASS"
+                                   }
+                               ]
+                 },
+                 {
+                     "phase":  "targeted-1",
+                     "suite":  "vn.edu.toeic.client.ExamMonitoringIntegrationTest",
+                     "tests":  7,
+                     "errors":  0,
+                     "failures":  0,
+                     "skipped":  0,
+                     "postgres":  false,
+                     "cases":  [
+                                   {
+                                       "name":  "aProctorCannotStartTheCandidateCollector",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "startupUsesTheWholeFreshServerScopeAndBindsTheSelectedAttempt",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "sameExamKeepsC1FullDeliveryAndCollectorWithoutReplacingTheirScope",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "revokedFreshScopeCannotBeBypassedByTheAlreadyRunningCollector",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "failureToStartMonitoringPropagatesInsteadOfAllowingUnmonitoredExamEntry",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "aDifferentExamCannotReuseAnActiveCollector",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "unsupportedActiveIdNeverStartsAnUnmonitoredExamOrChangesCollectorScope",
+                                       "result":  "PASS"
+                                   }
+                               ]
+                 },
+                 {
+                     "phase":  "targeted-1",
+                     "suite":  "vn.edu.toeic.client.proctor.ProctorSessionApiClientTest",
+                     "tests":  9,
+                     "errors":  0,
+                     "failures":  0,
+                     "skipped":  0,
+                     "postgres":  false,
+                     "cases":  [
+                                   {
+                                       "name":  "existingLongSessionIsReadableWithoutRelaxingNewIdRules",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "legacyStatusUsesRawQueryAndStartRetriesIdenticalRequest",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "permissionAndManifestErrorsHaveSafeMessages",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "exactLongsAndFinalResultArePreserved",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "importSchemaRejectsUnknownFieldsAndIncorrectAnswer",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "malformedAndOversizedBodiesAreNotSuccess",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "wrongSessionOrContradictoryAllReadyIsRejected",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "completeResponseDeadlineAlsoBoundsSlowBody",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "newIdentifiersCannotSmugglePathOrProduceOversizedAttempt",
+                                       "result":  "PASS"
+                                   }
+                               ]
+                 },
+                 {
+                     "phase":  "targeted-1",
+                     "suite":  "vn.edu.toeic.client.proctor.ProctorSessionControllerTest",
+                     "tests":  10,
+                     "errors":  0,
+                     "failures":  0,
+                     "skipped":  0,
+                     "postgres":  false,
+                     "cases":  [
+                                   {
+                                       "name":  "uncertainStartCannotChangeSessionAndServerStatusSettlesCommittedStart",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "lateSessionResponseCannotOverwriteNewSelection",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "legacyRawAttemptReadNeverCallsMonitoringOnlyListeningRoute",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "unauthorizedExpiresSessionForbiddenDoesNot",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "startResponseLostRetriesWholeRequestAndDoubleClickDoesNotSendTwice",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "changedAttemptRejectsOldResultAndCloseSuppressesCallback",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "reorganizationUncertaintyKeepsRequestPayloadEvenWhenFormChanges",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "readyAgeUsesMonotonicTimeAndSuccessfulSessionCannotStartAgain",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "noInterruptionCannotReorganize",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "missingReadinessAndStaleRefreshCannotStart",
+                                       "result":  "PASS"
+                                   }
+                               ]
+                 },
+                 {
+                     "phase":  "targeted-1",
+                     "suite":  "vn.edu.toeic.protocol.exam.AttemptIdentifierBoundaryTest",
+                     "tests":  1,
+                     "errors":  0,
+                     "failures":  0,
+                     "skipped":  0,
+                     "postgres":  false,
+                     "cases":  [
+                                   {
+                                       "name":  "rawLegacyAndActiveIssuanceHaveDifferentBoundaries",
+                                       "result":  "PASS"
+                                   }
+                               ]
+                 },
+                 {
+                     "phase":  "targeted-1",
+                     "suite":  "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+                     "tests":  2,
+                     "errors":  0,
+                     "failures":  0,
+                     "skipped":  0,
+                     "postgres":  true,
+                     "cases":  [
+                                   {
+                                       "name":  "onlyAssignedProctorCreatesOneFreshAttemptAndOldOneTimesOutWithMarker",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "proctorB4ApiUsesRealPermissionReadinessAndIdempotentReplacement",
+                                       "result":  "PASS"
+                                   }
+                               ]
+                 },
+                 {
+                     "phase":  "targeted-1",
+                     "suite":  "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+                     "tests":  14,
+                     "errors":  0,
+                     "failures":  0,
+                     "skipped":  0,
+                     "postgres":  true,
+                     "cases":  [
+                                   {
+                                       "name":  "qd29GeneratedIdBoundaryUnicodeAndRoleAreCheckedBeforeAnyMutation",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "qd29LegacyFinalKeepsReadsAndReplacementUsesSafeNewAttempt",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "qd29LegacyActiveIsReadableButCannotBeEnteredSavedSubmittedOrMarkedReady",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "activeIssuanceRejectsEntireBatchAndPreservesCollidingFinalAttempt",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[1]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[2]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[3]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[4]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[5]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[6]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[7]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[8]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[9]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "qd29ConcurrentSameSessionCreatesOneSessionAndLoserGetsStable400",
+                                       "result":  "PASS"
+                                   }
+                               ]
+                 },
+                 {
+                     "phase":  "targeted-1",
+                     "suite":  "vn.edu.toeic.server.exam.ExamValidationTest",
+                     "tests":  4,
+                     "errors":  0,
+                     "failures":  0,
+                     "skipped":  0,
+                     "postgres":  false,
+                     "cases":  [
+                                   {
+                                       "name":  "inconsistentPassageInSameGroupThrowsInvalidExamException",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "correctOptionNotInOptionsThrowsInvalidExamException",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "duplicateQuestionIdThrowsInvalidExamException",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "validExamPassesValidation",
+                                       "result":  "PASS"
+                                   }
+                               ]
+                 },
+                 {
+                     "phase":  "targeted-1",
+                     "suite":  "vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest",
+                     "tests":  4,
+                     "errors":  0,
+                     "failures":  0,
+                     "skipped":  0,
+                     "postgres":  true,
+                     "cases":  [
+                                   {
+                                       "name":  "eventTimelineReturnsExactly5000InOrderAndRejects5001",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "emptyAndSingleRecordHistoriesAreCompleteForAllThreeEndpoints",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "interruptionHistoryReturnsExactly5000InOrderAndRejects5001",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "gapHistoryReturnsExactly5000InOrderAndRejects5001",
+                                       "result":  "PASS"
+                                   }
+                               ]
+                 },
+                 {
+                     "phase":  "targeted-history-extra",
+                     "suite":  "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+                     "tests":  5,
+                     "errors":  0,
+                     "failures":  0,
+                     "skipped":  0,
+                     "postgres":  true,
+                     "cases":  [
+                                   {
+                                       "name":  "candidateAttemptHistoryRoundTripsMixedServerCursorsWithoutChangingIds",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "readsRequireOwnershipOrAssignmentForEveryState(String)[1]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "readsRequireOwnershipOrAssignmentForEveryState(String)[2]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "readsRequireOwnershipOrAssignmentForEveryState(String)[3]",
+                                       "result":  "PASS"
+                                   },
+                                   {
+                                       "name":  "candidateAttemptHistoryHidesNonExamRowsAndRejectsRevokedSessions",
+                                       "result":  "PASS"
+                                   }
+                               ]
+                 }
+             ],
+    "rawLogs":  "Not published; no XML system properties, credentials, tokens, paths or raw response bodies copied"
+}
