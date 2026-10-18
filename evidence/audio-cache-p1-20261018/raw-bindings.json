@@ -1,0 +1,32 @@
+[
+  {
+    "name": "exact-baseline-1.log",
+    "sha256": "74d9a6d155d095e81aec193e72cce6b9f243132ec86440d99a93c7a76f84a68a",
+    "bytes": 2000
+  },
+  {
+    "name": "exact-baseline-2.log",
+    "sha256": "60dd1507b6354a74b5d5bc1311af1c6165758475ce13ff0cf276d71626147ca0",
+    "bytes": 1920
+  },
+  {
+    "name": "after-final-1.log",
+    "sha256": "eceabb8539a63808185ba18c5efe1212ee5b5998a47f64a5d1ed680477f1e8a4",
+    "bytes": 309
+  },
+  {
+    "name": "after-final-2.log",
+    "sha256": "eceabb8539a63808185ba18c5efe1212ee5b5998a47f64a5d1ed680477f1e8a4",
+    "bytes": 309
+  },
+  {
+    "name": "targeted-final.log",
+    "sha256": "622c8e89fc6f701eb5d216bc3a2ec24b29085a065e8207e2777cbe9e920b2f8e",
+    "bytes": 5581
+  },
+  {
+    "name": "targeted-evidence.log",
+    "sha256": "2ceae8d2b8a93603656b2619db06aee4fa4c82bb2f400ab506b47f7a9eb7b4f2",
+    "bytes": 4986
+  }
+]

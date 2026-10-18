@@ -396,3 +396,6 @@ MSI0.3.9 installed906PASS local; cần B review F01, hòa PR45 với fix race40 
 ### Ghi chú làm dở — PR47 retarget main, 18/10/2026
 
 Source `3d93820` sửa RealtimeClient thuộc B: giữ dấu correlation đã hủy có giới hạn kể cả ACK đã lấy pending, bỏ phản hồi muộn lặp, retry/reconnect xóa đúng dấu; UNAUTHORIZED toàn phiên vẫn dừng kết nối. Phối hợp C review FullSnapshotDelivery deadline CLOSE/guard/worker. Focused148 PASS, riêng adapter63; clean/package mỗi lượt928 PASS/5SKIP với PG TEST thật; T3-C2 PASS, T3-C4 lượt mới 42/42 PASS LOCAL. C approval còn thiếu, không tự merge/approve hoặc sửa QD/tracker/MSI. [Hồ sơ C review](../../evidence/pr47-stabilize-20261018/REPORT.md).
+
+## Bàn giao corrective audio P1 · 18/10/2026
+T3-B1/QD33: source56a27e9 local giữ cache hợp lệ, khóa JVM+process phối hợp publication/verify, không giữ khóa HTTP. [Báo cáo và lệnh](../../evidence/audio-cache-p1-20261018/REPORT.md). Exact-main747/1280FAIL → bản sửa0/1280, hash đúng/partial0; targeted54PASS/2SKIP. Codex review kỹ thuật theo người dùng chỉ định; human chữ ký không tự tạo. Ghi chú làm dở: lần push đầu bị automatic approval review từ chối; ngày19/10 người dùng đã cho phép push và mở corrective PR/CI; main vẫn thiếu fix. B chạy nghe/máy2/LAN, xác nhận dispositionPR45; final MSI chỉ nghiệm thu sau source main đã tích hợp.

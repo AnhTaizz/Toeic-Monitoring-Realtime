@@ -307,3 +307,11 @@ Bốn mục dưới là khuyến nghị kỹ thuật đã cài và test trên nh
 - Client: không tự gửi lại takeover. Mở lại phòng thi hoặc bấm "lấy lại quyền ghi" tạo requestId mới; Java HttpClient không tự retry POST. Mất ACK thì người dùng thấy lỗi và thao tác lại, kết quả giống hệt một takeover mới.
 - Kết luận: không có lỗi correctness (không mất đáp án đã ACK, không reset deadline, không mở lại bài chốt). Thêm idempotency theo requestId cần bảng/cột mới — không làm sát hạn đóng băng. Rủi ro còn lại: một writer hợp lệ bị thay thêm một lần khi chính người dùng mở lại, đúng ngữ nghĩa takeover.
 - Test: `ExamRuntimePostgresTest.takeoverReplayAfterLostAckAdvancesEpochButNeverLosesAnswersDeadlineOrFinal`, `ExamPaperAndEntryTest.lostTakeoverAckIsNeverRetriedAutomaticallyAndReopenUsesAFreshRequestId`.
+
+
+### QD-33 · Corrective publication S3-P1-01, 18/10/2026
+Trạng thái: IMPLEMENTED_LOCAL tại56a27e9, review kỹ thuật Codex theo chỉ định người dùng trong phiên; không OWNER_APPROVED A/B/C và chưa merge main. QD33 ban đầu chỉ sửa directory race, không đủ để đóng P1 publication phát hiện ởPR55.
+
+Giữ nguyên cache đã đúng size/SHA; chỉ repair missing/known corrupt dưới khóa directory manifest. `file()`, verify và publication chia64striped JVM locks + sidecar FileLock liên process, không giữ khóa trong HTTP. Sidecar NOFOLLOW/plain file, giữ lâu dài để không split lock khi process khác chờ; cancellation interruptible. Không dùng ATOMIC_MOVE đơn lẻ; không replace valid file đang phát. Native FileLock là cooperative, chỉ xác minh local Windows với cùng phiên bản mới; network share/client cũ và malicious same-user TOCTOU không được nhận bảo đảm. Partial được dọn sau failure/cancel; hard kill giữa download ngoài bảo đảm cleanup.
+
+[Trước/sau, giới hạn, lệnh tái lập](../evidence/audio-cache-p1-20261018/REPORT.md). B còn dispositionPR45; không tự đóng45. Tracker không đổi.

@@ -684,3 +684,10 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 - [Bàn giao và checklist C](../evidence/pr47-stabilize-20261018/REPORT.md). CI source3d93820 SUCCESS; CI HEAD hồ sơ xem PR/checks và phản hồi cuối. C approval NOT RUN; không merge/approve thay C, không sửa tracker/QD owner approval hoặc quyết định FULL/DELTA; không LAN/MSI/E1/E2/load/đóng PR41/42/43/45.
 
 - Hậu kiểm cuối: T3-C4 mới42/42 PASS, source/JAR hash khớp C2/C4; measurement C4 INCOMPLETE do hard-kill chủ đích, không kết luận E2. 0 schema TEST, dừng cluster sở hữu và phục hồi env checkout. READY_FOR_C_REVIEW, chưa merge; CI HEAD hồ sơ và Git SHA cuối được xác minh trong PR/phản hồi.
+
+## 18/10/2026 · Codex · corrective S3-P1-01 và tích hợp Phase3
+- Task: task.txt; bảo toàn checkout main6a41031 đang có uncommitted files, fetch xác nhận origin/main f864034 và PR45/47/51–56 chưa merge. Worktree riêng, không đổi branch thành viên.
+- Source56a27e9: cache hợp lệ không replace; static bounded JVM locks + persistent FileLock sidecar phối hợp publication/file/verify đa instance/process. HTTP không giữ khóa, partial đủ byte/SHA mới xét publish; lỗi I/O khác không bị coi là corrupt. Giữ QD33 root/junction/8.3/Unicode, v0/FULL và worker ngoài FX.
+- Windows/JDK21: exact main trước sửa747 lỗi/1280operations; sau sửa0/1280,20/20final hash,0partial. Targeted54PASS/2SKIP (symlink privilege); có bốn JVM, reader NOSHARE_DELETE, cancellation/retry/peer death/READY. Diagnostic encoding và wrapper failure giữ riêng, không gọi PASS.
+- [Evidence](../evidence/audio-cache-p1-20261018/REPORT.md). Người dùng chỉ định Codex reviewer kỹ thuật; không gán chữ ký A/B/C hoặc tự đánh tracker DONE. PR47/test56 ghép ở nhánh TEST riêng; full-run/source và packaging ghi hồ sơ tích hợp. MSI preflight PASS với WiX/SDK sẵn có; ZIP3044 tìm lại/hash đúng nhưng là source cũ.
+- Còn dở tại snapshot: lần push đầu bị automatic approval review từ chối vì yêu cầu ủy quyền trực tiếp; ngày19/10 người dùng đã cấp quyền push hai nhánh, mở PR và chạy CI. Chưa PR/CI/merge main ở lượt hồ sơ này. LAN0/41, nghe thật/máy2 NOT RUN. Tiếp tục kiểm local; xin quyền push cụ thể khi đầu ra reviewable hoàn tất.
