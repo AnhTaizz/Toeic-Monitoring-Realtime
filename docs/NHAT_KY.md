@@ -674,6 +674,14 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 - Mỗi claim chính gắn source và evidence T3-A3/T3-A4; thêm ma trận NC01–NC08 và checklist reviewer C. Ghi rõ current state RAM một JVM, loopback không phải LAN/load, chưa có throughput/latency/resource.
 - 36 Markdown local links PASS, `git diff --check` PASS, audit 6 source owner PASS. Không chạy lại runtime vì docs-only; không tạo PASS mới. Load/LAN/GUI/human C review NOT RUN, báo cáo giữ DRAFT và tracker gốc giữ nguyên. [Report](T3_A5_NETWORK_CONCURRENCY_REPORT_DRAFT.md), [evidence](../evidence/t3-a5/2026-10-18-verification.md).
 
+## 2026-10-18 · agent · T3-C5 cập nhật và kiểm PR #47 trên main
+- Đã làm: thêm mục 9 vào bản nháp T3-C5 (dừng hẳn khi bị từ chối quyền, lịch sử giới hạn 5000/409, restart đổi epoch theo T3-A3, cách ly nhiều client T3-A4, sửa ACK CLOSE muộn còn ở PR #47). Ghép cục bộ PR #47 (`5d81aa0`) lên main `f864034` thành `eca6ad3` để kiểm, không push bản ghép.
+- Commit: nhánh `docs/t3-c5-update-20261018` (chỉ docs/evidence).
+- Đã kiểm trên `eca6ad3`: `mvn clean test` có PG/GUI 927 PASS/0 FAIL/4 SKIP; `smoke-t3c4.ps1` 42/42 PASS, measurement INCOMPLETE đúng dự kiến (hard-kill). [kiểm tra 18/10](../evidence/t3-c5/2026-10-18-update.md)
+- Còn dở: gate T3-C4 NOT_DECIDED/PARTIAL; LAN hai máy và B review NOT RUN; PR #47 chưa vào main.
+- Tiếp theo: C đổi base PR #47 về main; B review T3-C5 và checklist gate; chạy LAN hai máy.
+- Cần người khác: C (PR #47, quyết gate), B (review, máy thứ hai).
+
 
 ## 18/10/2026 — ổn định và retarget PR #47
 
