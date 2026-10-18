@@ -1,0 +1,309 @@
+{
+  "productionSourceSha": "56a27e98991052c25b294eeb61bb212ed7cd19b6",
+  "run": "targeted-evidence",
+  "scope": "focused audio; see integrated final run for exact committed test source",
+  "cases": [
+    {
+      "class": "vn.edu.toeic.client.audio.AudioApiClientTest",
+      "name": "readinessRequiresCorrelatedAckAndServerTimestamp",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioApiClientTest",
+      "name": "rejectsFractionalWriterMalformedJsonWrongAttemptAndDuplicateNames",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioApiClientTest",
+      "name": "refusesRedirectAuthenticationFailureAndCallsAfterClose",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioApiClientTest",
+      "name": "invalidUrlCannotIncludeCredentialsQueryOrFragment",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioApiClientTest",
+      "name": "exactWriterAndUnicodeFileDownloadWithBearerOnly",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+      "name": "lockSidecarCannotRedirectOutsideCache",
+      "status": "SKIP"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+      "name": "multipleProcessesShareMissingCache",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+      "name": "windowsReaderThatDeniesDeleteDoesNotBreakValidCacheReuse",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+      "name": "concurrentInstancesRepairCorruptCacheWithoutPublishingIncompleteBytes",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+      "name": "cancelledPublicationCleansPartialAndRetryRepairsMissingFile",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+      "name": "cancellationWhileAnotherProcessHoldsLockCleansPartialAndAllowsRetryAfterPeerDeath",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+      "name": "validCacheIsNeverReplacedEvenWhileAnExternalReaderKeepsItOpen",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+      "name": "concurrentInstancesPublishMissingCacheAndThenReuseIt",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+      "name": "directoryAtLockSidecarIsRejected",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+      "name": "multipleProcessesDownloadAndVerifyExistingCache",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "unicodePathDownloadProgressAndLocalRevalidation",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "rootReplacedByJunctionAfterUseIsRejected",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "rejectsUnsafeWindowsNames(String)[1]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "rejectsUnsafeWindowsNames(String)[2]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "rejectsUnsafeWindowsNames(String)[3]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "rejectsUnsafeWindowsNames(String)[4]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "rejectsUnsafeWindowsNames(String)[5]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "rejectsUnsafeWindowsNames(String)[6]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "rejectsUnsafeWindowsNames(String)[7]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "rejectsUnsafeWindowsNames(String)[8]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "rejectsUnsafeWindowsNames(String)[9]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "rejectsUnsafeWindowsNames(String)[10]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "corruptTruncatedAndOversizedDownloadsNeverReplaceValidCache",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "existingFileCannotBeAcceptedAsCacheDirectory",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "junctionAtOrBelowCacheRootIsRejectedAndNothingIsWrittenOutside",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "rejectsWrongScopeDuplicatesAndResourceLimits",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "repeatedStressWithMixedFileAndVerifyCallsNeverRacesDirectoryCreation",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "symlinkInsideCacheRootIsRejectedWhereLinksCanBeCreated",
+      "status": "SKIP"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "concurrentReadersCanCreateTheSameManifestCacheDirectory",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "pcmSpeakerSampleIsSeparateAndHasValidHeader",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "cacheRootUnderAncestorShortNameIsAllowed",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "cacheRootUnderAncestorJunctionIsAllowed",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "cancelledDownloadLeavesNoPartialOrReadyFile",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioPreparationTest",
+      "name": "closeDuringSlowManifestDiscardsLateCompletion",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioPreparationTest",
+      "name": "sharedWriterCloseRejectsLatePreparationBeforeAnotherViewOpens",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioPreparationTest",
+      "name": "corruptionOnDownloadAndWithdrawalFailureBlockPreparation",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioPreparationTest",
+      "name": "missingFileImmediatelyBeforeReadyNeverSendsTrue",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioPreparationTest",
+      "name": "malformedAckCannotDisplayReady",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioPreparationTest",
+      "name": "oneByteCorruptionImmediatelyBeforeReadyNeverSendsTrue",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioPreparationTest",
+      "name": "mediaErrorInvalidatesConfirmationAndWithdraws",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioPreparationTest",
+      "name": "sharedExamWriterNeverAcquiresAnotherEpoch",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioPreparationTest",
+      "name": "requiresHumanConfirmationAndServerAckAndReusesWriterOnRetry",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioPreparationTest",
+      "name": "disconnectRejectsOldMediaCompletionAndRequiresExplicitPreparation",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+      "name": "questionAudioMismatchAndDurableReservationBlockPlayback",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+      "name": "mediaErrorStopsLocksPersistsAndReportsInterruption",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+      "name": "corruptCacheAndMismatchedCommandNeverReachMediaOrStartedEvent",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+      "name": "duplicateStartPlaysOneOrderedPlaylistAndReportsLifecycle",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+      "name": "reopenQueriesServerAndNeverReplaysActiveOrInterruptedListening",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+      "name": "serverInterruptionAfterStartedLocksPlayback",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+      "name": "matchingServerInterruptionStopsPlaylistAndRejectsOldMediaCallbacks",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+      "name": "networkLossDuringPlaybackReportsAndNeverResumes",
+      "status": "PASS"
+    }
+  ],
+  "rawXmlBindings": [
+    {
+      "name": "TEST-vn.edu.toeic.client.audio.AudioApiClientTest.xml",
+      "sha256": "c28270754620899db7345721da80c0485b1820d19eac6a570a68eab9b0e4ce17"
+    },
+    {
+      "name": "TEST-vn.edu.toeic.client.audio.AudioFilesSharingTest.xml",
+      "sha256": "3bc0e7100da38273b5c13cc3959b4d3b52c32fe0c7140b2f5009f2b5d2c257b1"
+    },
+    {
+      "name": "TEST-vn.edu.toeic.client.audio.AudioFilesTest.xml",
+      "sha256": "f25ecc20439e5263a04a72c0018edbe2327a53980b44a5b024cbb233cae97a52"
+    },
+    {
+      "name": "TEST-vn.edu.toeic.client.audio.AudioPreparationTest.xml",
+      "sha256": "1fa1b28d37d8b129f9b24108d1024278d64f35196478027796b1e43fcc474ff8"
+    },
+    {
+      "name": "TEST-vn.edu.toeic.client.audio.ListeningPlaybackTest.xml",
+      "sha256": "0426235019bbbc8644f1716d841c57a4d3afd8fdcf3be0e9b0e378bb8a856999"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "source": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "harnessSource": "e3fdfea82a1b69d12b0270008b64db92243050bc",
+  "fixture": "MOCK 128KiB Random(33)",
+  "filesystem": "REAL Windows",
+  "batches": [
+    {
+      "mode": "concurrent-download",
+      "rounds": 5,
+      "threads": 8,
+      "operationsPerThread": 8,
+      "attempts": 320,
+      "ok": 100,
+      "errors": {
+        "AccessDeniedException": 22,
+        "FileAlreadyExistsException": 133,
+        "IOException": 12,
+        "NoSuchFileException": 53
+      },
+      "finalValidCaches": 5,
+      "partialFiles": 0,
+      "run": 1
+    },
+    {
+      "mode": "mixed-read-download",
+      "rounds": 5,
+      "threads": 8,
+      "operationsPerThread": 8,
+      "attempts": 320,
+      "ok": 162,
+      "errors": {
+        "AccessDeniedException": 4,
+        "FileAlreadyExistsException": 53,
+        "IOException": 52,
+        "NoSuchFileException": 49
+      },
+      "finalValidCaches": 5,
+      "partialFiles": 0,
+      "run": 1
+    },
+    {
+      "mode": "concurrent-download",
+      "rounds": 5,
+      "threads": 8,
+      "operationsPerThread": 8,
+      "attempts": 320,
+      "ok": 90,
+      "errors": {
+        "AccessDeniedException": 12,
+        "FileAlreadyExistsException": 159,
+        "IOException": 5,
+        "NoSuchFileException": 54
+      },
+      "finalValidCaches": 5,
+      "partialFiles": 0,
+      "run": 2
+    },
+    {
+      "mode": "mixed-read-download",
+      "rounds": 5,
+      "threads": 8,
+      "operationsPerThread": 8,
+      "attempts": 320,
+      "ok": 181,
+      "errors": {
+        "AccessDeniedException": 9,
+        "FileAlreadyExistsException": 52,
+        "IOException": 39,
+        "NoSuchFileException": 39
+      },
+      "finalValidCaches": 5,
+      "partialFiles": 0,
+      "run": 2
+    }
+  ]
+}

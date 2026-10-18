@@ -1,0 +1,2 @@
+{"mode":"concurrent-download","rounds":5,"threads":8,"operationsPerThread":8,"attempts":320,"ok":320,"errors":{},"finalValidCaches":5,"partialFiles":0}
+{"mode":"mixed-read-download","rounds":5,"threads":8,"operationsPerThread":8,"attempts":320,"ok":320,"errors":{},"finalValidCaches":5,"partialFiles":0}

@@ -1,0 +1,14 @@
+[INFO] Running vn.edu.toeic.client.audio.AudioApiClientTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.972 s -- in vn.edu.toeic.client.audio.AudioApiClientTest
+[INFO] Running vn.edu.toeic.client.audio.AudioFilesSharingTest
+[WARNING] Tests run: 10, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 9.481 s -- in vn.edu.toeic.client.audio.AudioFilesSharingTest
+[INFO] Running vn.edu.toeic.client.audio.AudioFilesTest
+[WARNING] Tests run: 23, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 13.27 s -- in vn.edu.toeic.client.audio.AudioFilesTest
+[INFO] Running vn.edu.toeic.client.audio.AudioPreparationTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.223 s -- in vn.edu.toeic.client.audio.AudioPreparationTest
+[INFO] Running vn.edu.toeic.client.audio.ListeningPlaybackTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.961 s -- in vn.edu.toeic.client.audio.ListeningPlaybackTest
+[INFO] Tests run: 56, Failures: 0, Errors: 0, Skipped: 2
+[INFO] BUILD SUCCESS
+[INFO] Total time:  01:01 min
+[INFO] Finished at: 2026-10-18T23:52:38+07:00
