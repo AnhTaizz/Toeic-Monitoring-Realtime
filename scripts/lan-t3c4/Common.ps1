@@ -1,8 +1,8 @@
 Set-StrictMode -Version Latest
-$script:LanSourceSha='3044e5bc963f7ac9d8cdc4d8410696c301080534'
-$script:LanRuntimeSourceSha='3d938209ff3a4aa0d92dba7fca0e606fbc0b5245'
-$script:LanClientHash='a561c79fa4d3c00bb7f075207e31f49f3bc85bd6f79eed5cb145b7be79b28df3'
-$script:LanServerHash='0152113ac2ba7652660098d0a17a0a83a3687c34d8d79dcde593ce20fd101ecc'
+$script:LanSourceSha='cfbba580886ede7b1b5a4f56875197b10f284514'
+$script:LanRuntimeSourceSha='cfbba580886ede7b1b5a4f56875197b10f284514'
+$script:LanClientHash='17bc89963dbd8439749dbb3a00436cba5f807e6044999d2050d586a78a5f95bd'
+$script:LanServerHash='f90a4dea2bd00a5a9d8d6e992492659e6867dbb87ec1e9593c7a5317ce2baf42'
 function Get-LanOrigin([string]$Value) {
     $uri=$null; $address=$null
     if(-not [Uri]::TryCreate($Value,[UriKind]::Absolute,[ref]$uri) -or

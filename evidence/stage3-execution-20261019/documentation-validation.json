@@ -1,0 +1,14 @@
+﻿[
+    {
+        "parse":  "PASS",
+        "file":  "docs/STAGE3_FINAL_HANDOFF.md",
+        "execution":  "NOT RUN; manual physical steps",
+        "powerShellBlocks":  2
+    },
+    {
+        "parse":  "PASS",
+        "file":  "docs/T3_C4_PHYSICAL_LAN_ACCEPTANCE.md",
+        "execution":  "NOT RUN; manual physical steps",
+        "powerShellBlocks":  9
+    }
+]

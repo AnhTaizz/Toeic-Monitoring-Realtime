@@ -1,0 +1,13 @@
+{
+  "sourceSha": "cfbba580886ede7b1b5a4f56875197b10f284514",
+  "installerSha256": "edd0ceb55d2512d046c972aff2966382d0ad64051e29cc6a14035c643b67a214",
+  "normalUser": true,
+  "unicodeInstall": true,
+  "writeDeniedInstall": true,
+  "ordinaryLaunchWithoutAgentOrJdkPath": "PASS",
+  "bundledJvmCheckedBySmoke": true,
+  "installedTests": "PASS",
+  "uninstall": "PASS",
+  "resultRawSha256": "aedaf951c90b9709f0a0ffa7e532a5be09270348b527e62e1e12d3b6106949fd",
+  "ordinaryLaunchRawSha256": "552fb7790458bf012ea91c9d1f7d674025e6ae5b889f0988ba419de73e22e0a2"
+}

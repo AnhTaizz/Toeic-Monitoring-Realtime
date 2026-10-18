@@ -1,0 +1,15 @@
+{
+    "runtimeServerConfig":  "GUI override; JVM property \u003e process TOEIC_SERVER_URL \u003e bounded user server-url.txt \u003e default; no credentials",
+    "application":  "ToeicMonitor",
+    "version":  "0.3.11",
+    "sourceCommit":  "cfbba580886ede7b1b5a4f56875197b10f284514",
+    "dirty":  false,
+    "builtUtc":  "2026-10-18T17:53:10.3053988Z",
+    "monitoringDefault":  "FULL",
+    "java":  "21.0.8",
+    "clientJarSha256":  "17bc89963dbd8439749dbb3a00436cba5f807e6044999d2050d586a78a5f95bd",
+    "wixVersion":  "3.14.1.8722",
+    "manifestToolVersion":  "10.0.26100.6584 (WinBuild.160101.0800)",
+    "installer":  "ToeicMonitor-0.3.11.msi",
+    "installerSha256":  "edd0ceb55d2512d046c972aff2966382d0ad64051e29cc6a14035c643b67a214"
+}

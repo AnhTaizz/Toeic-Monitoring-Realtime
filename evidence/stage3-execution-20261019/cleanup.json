@@ -1,0 +1,26 @@
+[
+  {
+    "label": "final-main",
+    "sourceSha": "03639952226e0fa933a962f0891baefdaa6a82e8",
+    "schemaCount": 0,
+    "postgresStopExitCode": 0,
+    "stopUtc": "2026-10-18T17:41:13.2528593Z",
+    "privatePasswordFileRemoved": true
+  },
+  {
+    "label": "codefreeze-main",
+    "sourceSha": "cfbba580886ede7b1b5a4f56875197b10f284514",
+    "schemaCount": 0,
+    "postgresStopExitCode": 0,
+    "stopUtc": "2026-10-18T17:52:42.5054972Z",
+    "privatePasswordFileRemoved": true
+  },
+  {
+    "label": "installed-final",
+    "sourceSha": "cfbba580886ede7b1b5a4f56875197b10f284514",
+    "schemaCount": 0,
+    "postgresStopExitCode": 0,
+    "stopUtc": "2026-10-18T17:58:25.5500888Z",
+    "privatePasswordFileRemoved": true
+  }
+]

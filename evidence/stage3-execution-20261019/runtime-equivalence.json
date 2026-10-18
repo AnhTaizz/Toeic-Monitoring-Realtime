@@ -1,0 +1,17 @@
+{
+  "buildSourceSha": "cfbba580886ede7b1b5a4f56875197b10f284514",
+  "comparedHeadAtPreparation": "cfbba580886ede7b1b5a4f56875197b10f284514",
+  "paths": [
+    "client/src/main",
+    "protocol/src/main",
+    "server/src/main",
+    "monitoring-spike/src/main",
+    "pom.xml",
+    "client/pom.xml",
+    "protocol/pom.xml",
+    "server/pom.xml",
+    "monitoring-spike/pom.xml"
+  ],
+  "gitDiffExitCode": 0,
+  "releaseScope": "Only Common.ps1 four strict pins, source columns in templates, runbook and evidence/docs; no Java/POM/protocol production changes. Verify again at final main."
+}

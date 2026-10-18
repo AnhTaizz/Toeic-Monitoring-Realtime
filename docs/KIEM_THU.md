@@ -575,3 +575,10 @@ PR47 vàPR57 đã vào main8a43a56. Sourcece38a5f clean test/package mỗi lư�
 
 
 19/10/2026 — CI exact-main0363995 run39150213101 FAIL: AudioPreparationTest JUnit TempDir xóa next-speaker WAV đồng thời với cleanup async của production close(). Sửa TEST chờ Files.notExists(sample) bằng await5s hiện có, cho cả AfterEach và view kế tiếp; giữ mọi assertion READY/epoch, không đổi production close/FX. Focused10case×5lượt PASS trên Windows (fixture API/media MOCK), không gọi50case duy nhất. Clean main0363995 test/package mỗi lượt942PASS/4SKIP nhưng CI này vẫn FAIL; không gán CI củaPR58 cho main. Full/PG/CI sau corrective sẽ ghi tiếp; LAN0/41, hearing/máy2 NOT RUN.
+
+
+## 19/10/2026 · Codex · main ổn định và artifact cuối
+
+19/10/2026 — CODE_READY_STAGE3_ACCEPTANCE_PENDING: main buildsourcecfbba58 có47/57/58/59, CI39151021995SUCCESS; clean test/package mỗi lượt942PASS/4SKIP, installed MSI0.3.11 FullSuite943PASS/3SKIP trên Windows/PG thật. HaiP1 FIXED/MERGED; C4 local42/42, kit source/portable29checks mỗi bộ, physicalLAN0/41, hearing/máy2 NOT RUN. [Kết quả và hash](../evidence/stage3-execution-20261019/REPORT.md), [bàn giao](STAGE3_FINAL_HANDOFF.md). FULL baseline/DELTA experimental; technical reviewer Codex được người dùng giao, không ký A/B/C; tracker/hours giữ nguyên.
+
+Raw local được giữ private/ignored, XML chỉ công bố case+SHA không environment. PG TEST ba lượt đều0schema và dừng; MSI đã gỡ, kit không chạy network. Đã giữ failure CI0363995/C4 trước corrective, không đổi kết quả lịch sử. Release followup chỉ pin kit/source/template/runbook và hồ sơ, không Java/POM/protocol; buildsource giữ SHA trên, kiểm equivalence lại khi merge.

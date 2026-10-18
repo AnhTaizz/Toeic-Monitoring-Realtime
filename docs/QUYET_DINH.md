@@ -322,3 +322,8 @@ Người dùng chỉ định Codex reviewer và cho phép push hai nhánh mới/
 
 
 19/10/2026 — Giữ close() production không chặn FX; lifecycle test phải chờ cleanup sample trước khi JUnit TempDir thu hồi thư mục. Không dùng retry cả CI để che failure. Review kỹ thuật Codex theo ủy quyền; không cấp chữ ký A/B/C hay nghiệm thu vật lý.
+
+
+### 19/10/2026 · Kết luận kỹ thuật Phase3 sau corrective
+
+QD31/32/34 giữ policy và giới hạn hiện hành; QD33 corrective57 đã main, stress1280/1280/0partial và sharing thật. Technical review Codex theo ủy quyền người dùng; không owner signatures A/B/C hoặc tự đóngPR45. Buildsourcecfbba58 CI+PG+MSIlocal PASS; FULL là baseline theo hợp đồng, DELTA experimental. Gate C quyết định/B review sau physical41; hearing/máy2 vẫn NOT RUN. Không sửa tracker/hours hoặc cấp STAGE3_DONE. [Evidence](../evidence/stage3-execution-20261019/REPORT.md).

@@ -1,74 +1,40 @@
-# T3-C4 — bàn giao nghiệm thu LAN vật lý cho B/C
+# T3-C4 — nghiệm thu LAN vật lý cho B/C
 
-19/10/2026: runbook/kit3044 dưới đây là snapshot lịch sử trước corrective audio PR57. PR47 đã mergecd9a89d, PR57 merge8a43a56. Không dùng ZIP3044 hoặc MSI0.3.10 nghiệm thu source cuối. Checklist41case và các template được reuse; bộ artifact mới phải có source/hash/provenance riêng sau final main build. Xem [bàn giao cuối](STAGE3_FINAL_HANDOFF.md). Các guard/hash của kit cũ không được sửa tay để nhận artifact khác.
-
-18/10/2026: **LAN NOT RUN, 0 case LAN đã chạy; human B review PENDING**. Người dùng xác nhận chưa có máy thứ hai và yêu cầu chuẩn bị bàn giao. Owners B + C, hạn 20/10/2026. Bộ này không chốt DELTA gate, không sửa production default FULL, MSI, thuật toán hoặc QD owner approval.
-
-Source Task 1: `3044e5bc963f7ac9d8cdc4d8410696c301080534`, đã merge main `f86403489bdd01887b926f2f9e4b72ddf05d1423`. Runtime/test build: `3d938209ff3a4aa0d92dba7fca0e606fbc0b5245`; phần chênh tới `3044e5b` chỉ hồ sơ. Bộ chuẩn bị nằm trên nhánh riêng; không dùng ZIP `2b6c9ce` lịch sử và không tự thay source sau khi B/C bắt đầu run.
+19/10/2026: **LAN NOT RUN, 0/41; người thao tác/review máy thật PENDING**. FULL baseline, DELTA experimental. Bộ mới từ clean main `cfbba580886ede7b1b5a4f56875197b10f284514` sau PR47/57/58/59; không dùng kit3044/MSI0.3.10 lịch sử. MSI0.3.11 cùng source, runtime Java21 đi kèm; kit JAR phục vụ gate có JDK21 chỉ định tường minh. Không đổi protocol v0 hoặc quyết định DELTA gate.
 
 | Artifact | SHA256 |
 |---|---|
-| client-0.1.0-SNAPSHOT-all.jar | `a561c79fa4d3c00bb7f075207e31f49f3bc85bd6f79eed5cb145b7be79b28df3` |
-| server-0.1.0-SNAPSHOT.jar | `0152113ac2ba7652660098d0a17a0a83a3687c34d8d79dcde593ce20fd101ecc` |
+| client-0.1.0-SNAPSHOT-all.jar (cùng byte MSI) | `17bc89963dbd8439749dbb3a00436cba5f807e6044999d2050d586a78a5f95bd` |
+| server-0.1.0-SNAPSHOT.jar | `f90a4dea2bd00a5a9d8d6e992492659e6867dbb87ec1e9593c7a5317ce2baf42` |
 
-Đây là bundle JAR + script + test-support, cần JDK21 trên cả hai máy; không phải installer/app-image hoặc bằng chứng IT01. Không rebuild rồi giữ manifest cũ. Nếu rebuild khác byte, C cần ghi source/build và hash mới, kiểm lại regression trước khi chuẩn bị manifest mới. Tham chiếu [hợp đồng](../Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md), [MT02–MT06](../Ke_hoach_LT_Mang_5_chang/03_KIEM_THU_VA_THUC_NGHIEM.md), [T3-A3 hooks](MONITORING_SERVER_HOOKS.md), [evidence Task 1](../evidence/pr47-stabilize-20261018/REPORT.md). Kết quả local 42/42 không thay lượt LAN.
+Hai JAR và test-support build từ source trên, đã chạy clean test/package với PG thật. Faults do TEST instrumented child/probe vẫn SIMULATED; không dùng chúng thay lượt F rút LAN thật. Guard strict source/hash trong Common.ps1 được cập nhật bằng source và hash build đã kiểm, không nới điều kiện. Kit cũ và evidence giữ nguyên trong lịch sử/target.
 
-## 1. Tạo và chuyển bộ bàn giao
+## 1. Nhận và kiểm bộ cuối
 
-### B/C nhận ZIP đã kiểm tra từ máy build
+Nhận `T3C4-cfbba58.zip`, `.zip.sha256.json` và MSI0.3.11 từ `target/stage3-release-20261019/` trên máy build, qua USB/kênh riêng được nhóm cho phép. ZIP/MSI ngoài Git; chưa có bằng chứng đã chuyển sang B. Lấy ZIP/manifest/MSI hash độc lập từ `evidence/stage3-execution-20261019/artifacts.json` trên main GitHub hoặc bàn giao cuối, không chỉ tin checksum đi cùng file. Không gửi `.env`, token, profile hoặc raw máy build.
 
-GitHub chỉ chứa tài liệu, template, script và báo cáo đã lọc. **ZIP không nằm trong Git, không có URL tải ZIP trên PR.** B/C liên hệ C hoặc người giữ máy build để nhận đúng `target/T3C4-3044e5b.zip` cùng file `.zip.sha256.json`. Chuyển trực tiếp bằng USB được phép hoặc kênh chia sẻ file riêng đã được nhóm cho phép, chỉ cấp cho B/C; thông tin share/path truy cập gửi ngoài Git. Không gửi kèm `.env`, tài khoản/token, profile hoặc raw log của máy build. Chưa có bằng chứng đã chuyển file sang máy B.
-
-Đọc runbook mới nhất trên [nhánh bàn giao GitHub](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/tree/prepare/t3-c4-physical-lan-20261018). Lấy hash độc lập từ [checksum đã công bố](../evidence/t3-c4-physical-prep-20261018/bundle-checksums.json), không chỉ tin file checksum đi kèm ZIP. Trên **cả máy A và máy B**, kiểm trước khi giải nén/chạy:
+Trên cả A/B, PowerShell thường:
 
 ```powershell
-$zip=Read-Host 'Duong dan ZIP vua nhan tu may build'
-$expectedZip='5b04dcb10d46ba760749af29b2abdeee126a9748512abe4d18b78e0d4881685a'
-if((Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant() -cne $expectedZip){
-  throw 'ZIP_HASH_MISMATCH_STOP; lien he C, khong su dung artifact nay'
-}
-$bundle='C:\ToeicGate\T3C4-3044e5b'
-if(Test-Path -LiteralPath $bundle){throw 'BUNDLE_EXISTS; chon thu muc moi, khong ghi de'}
+$zip=Read-Host 'Duong dan ZIP nhan tu may build'
+$expectedZip=Read-Host 'ZIP SHA256 doc doc lap tu artifacts.json tren main'
+if($expectedZip -notmatch '^[0-9a-f]{64}$' -or (Get-FileHash -LiteralPath $zip).Hash.ToLowerInvariant() -cne $expectedZip){throw 'ZIP_HASH_MISMATCH_STOP'}
+$bundle='C:\ToeicGate\T3C4-cfbba58'
+if(Test-Path $bundle){throw 'BUNDLE_EXISTS_NO_OVERWRITE'}
 Expand-Archive -LiteralPath $zip -DestinationPath C:\ToeicGate
-$manifest=Join-Path $bundle 'artifact-manifest.json'
-$expectedManifest='613b72d4987d08da18c272ddeaab12c1afa3f01c3d1dd6f05a644ff8a5aa1730'
-if((Get-FileHash -LiteralPath $manifest -Algorithm SHA256).Hash.ToLowerInvariant() -cne $expectedManifest){
-  throw 'MANIFEST_HASH_MISMATCH_STOP'
-}
+$expectedManifest=Read-Host 'Manifest SHA256 doc doc lap tu artifacts.json'
+if($expectedManifest -notmatch '^[0-9a-f]{64}$' -or (Get-FileHash "$bundle\artifact-manifest.json").Hash.ToLowerInvariant() -cne $expectedManifest){throw 'MANIFEST_HASH_MISMATCH_STOP'}
 . "$bundle\scripts\lan-t3c4\Common.ps1"
-$verified=Get-LanBundle $bundle # Kiem tung file va hai JAR theo manifest/source Task1
+$verified=Get-LanBundle $bundle
 if($verified.files.Count -ne 22){throw 'UNEXPECTED_BUNDLE_FILE_COUNT'}
-```
-
-Nếu hash sai, giữ file nhận được riêng để C kiểm tra; không sửa checksum cho khớp, không chạy tiếp. B/C ghi biên nhận local gồm alias A/B, thời điểm, source/runtime SHA, ZIP/manifest/client/server SHA256 và người kiểm; không đưa IP/tên máy/tài khoản vào bản công bố. Việc nhận/hash đúng chỉ hoàn tất kiểm artifact, **không đổi 41 case sang PASS hoặc xác nhận human review**. Sau đó thực hiện preflight và nhóm F trong các mục dưới.
-
-ZIP hiện có là snapshot của kit trước bước công bố Task2.1; hướng dẫn nhận file mới nằm trên GitHub. Không chép runbook mới vào ZIP hoặc đóng gói lại rồi giữ hash trên. Binaries và script TEST giữ nguyên từ Task2. Nếu cần tạo ZIP mới, C phải công bố manifest/hash riêng và đối chiếu lại; ZIP tạo mới có thể khác hash dù JAR không đổi.
-
-### Máy build tạo bundle mới khi cần
-
-Chạy trong checkout chuẩn bị có hai JAR và bốn class `LiveCandidateApp*.class` đã build từ Task 1. Các script từ chối ghi đè thư mục/run/JSON cũ.
-
-```powershell
-$env:PATHEXT='.COM;.EXE;.BAT;.CMD'
-.\scripts\lan-t3c4\New-T3C4LanBundle.ps1 -OutputDirectory C:\ToeicGate\T3C4-3044e5b
-Get-Content C:\ToeicGate\T3C4-3044e5b.zip.sha256.json
-Get-FileHash C:\ToeicGate\T3C4-3044e5b.zip -Algorithm SHA256
-```
-
-Chuyển ZIP và checksum qua kênh riêng, đối chiếu checksum từ C trên cả hai máy rồi giải nén cùng bundle. Không copy `.env`, token, profile audio hay raw của máy build. Manifest kiểm từng file và hai JAR; checksum phải được B/C đối chiếu ngoài ZIP, không xem một manifest tự sửa là nguồn tin độc lập. Bản ZIP có thật và hash ở [báo cáo chuẩn bị](../evidence/t3-c4-physical-prep-20261018/REPORT.md).
-
-Trên mỗi máy, mở PowerShell thường; dùng thư mục ngoài Git, đường dẫn ASCII ngắn:
-
-```powershell
-$bundle='C:\ToeicGate\T3C4-3044e5b'
-$run='C:\ToeicGate\runs\physical-01'
-$jdk=Read-Host 'Duong dan JDK21 cua may nay'
-$serverUrl=Read-Host 'HTTP/HTTPS origin bang IPv4 LAN that cua MACHINE_A va port'
 $kit=Join-Path $bundle 'scripts\lan-t3c4'
+$run='C:\ToeicGate\runs\physical-01'
+$jdk=Read-Host 'Duong dan JDK21 chi dinh rieng cho gate JAR'
+$serverUrl=Read-Host 'Origin IPv4 LAN that cua A va port'
 & "$kit\Initialize-T3C4LanRun.ps1" -BundleDirectory $bundle -OutputDirectory $run
 ```
 
-`run.json` trên A/B có run ID riêng; B/C ghi liên kết hai ID trong topology. Ghi Windows/JDK/PG thực, alias máy và người thao tác trong `topology.json`; IP/hostname/tài khoản chỉ giữ cấu hình riêng, không đưa vào Git. `cases.csv` có đúng cột `Case | Expected | Actual | PASS/FAIL | Machine | Source SHA | Evidence | Reviewer`, tất cả ban đầu NOT RUN. Chỉ điền Actual và PASS/FAIL sau khi thực hiện; case chưa chạy giữ nguyên, thiếu điều kiện ghi BLOCKED kèm lý do. Chữ ký người thật trong `review.json` không được script tự cấp.
+Ghi biên nhận hash/source trên cả máy; 41case và reviewer vẫn NOT RUN/PENDING. Không sửa checksum nếu không khớp. Kit có JAR/script/test-support, không phải bằng chứng MSI máy hai. Lượt MSI riêng phải chạy launcher không IDE/JDK trên PATH, Unicode path và cài/chạy/gỡ; B ghi Actual, A xem evidence. Nội dung checklist/tiêu chí dưới đây giữ theo PR52; Source SHA trong template đã đổi sang bản cuối mà không điền kết quả.
 
 ## 2. Environment preflight
 
