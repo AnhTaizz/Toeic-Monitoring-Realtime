@@ -1,0 +1,12 @@
+SITE AccessDeniedException-download download:97
+SITE FileAlreadyExistsException-download download:97
+SITE IOException-download unsafe:77
+SITE NoSuchFileException-download file:43
+{"mode":"concurrent-download","rounds":5,"threads":8,"operationsPerThread":8,"attempts":320,"ok":90,"errors":{"AccessDeniedException":12,"FileAlreadyExistsException":159,"IOException":5,"NoSuchFileException":54},"finalValidCaches":5,"partialFiles":0}
+SITE AccessDeniedException-verify verify:107
+SITE AccessDeniedException-download download:97
+SITE FileAlreadyExistsException-download download:97
+SITE IOException-verify unsafe:77
+SITE NoSuchFileException-verify file:43
+SITE NoSuchFileException-download download:97
+{"mode":"mixed-read-download","rounds":5,"threads":8,"operationsPerThread":8,"attempts":320,"ok":181,"errors":{"AccessDeniedException":9,"FileAlreadyExistsException":52,"IOException":39,"NoSuchFileException":39},"finalValidCaches":5,"partialFiles":0}
