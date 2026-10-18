@@ -1,5 +1,7 @@
 # T3-C4 — bàn giao nghiệm thu LAN vật lý cho B/C
 
+19/10/2026: runbook/kit3044 dưới đây là snapshot lịch sử trước corrective audio PR57. PR47 đã mergecd9a89d, PR57 merge8a43a56. Không dùng ZIP3044 hoặc MSI0.3.10 nghiệm thu source cuối. Checklist41case và các template được reuse; bộ artifact mới phải có source/hash/provenance riêng sau final main build. Xem [bàn giao cuối](STAGE3_FINAL_HANDOFF.md). Các guard/hash của kit cũ không được sửa tay để nhận artifact khác.
+
 18/10/2026: **LAN NOT RUN, 0 case LAN đã chạy; human B review PENDING**. Người dùng xác nhận chưa có máy thứ hai và yêu cầu chuẩn bị bàn giao. Owners B + C, hạn 20/10/2026. Bộ này không chốt DELTA gate, không sửa production default FULL, MSI, thuật toán hoặc QD owner approval.
 
 Source Task 1: `3044e5bc963f7ac9d8cdc4d8410696c301080534`, đã merge main `f86403489bdd01887b926f2f9e4b72ddf05d1423`. Runtime/test build: `3d938209ff3a4aa0d92dba7fca0e606fbc0b5245`; phần chênh tới `3044e5b` chỉ hồ sơ. Bộ chuẩn bị nằm trên nhánh riêng; không dùng ZIP `2b6c9ce` lịch sử và không tự thay source sau khi B/C bắt đầu run.
