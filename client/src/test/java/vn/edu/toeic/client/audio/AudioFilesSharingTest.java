@@ -155,7 +155,8 @@ class AudioFilesSharingTest {
         return new ProcessBuilder(Path.of(System.getProperty("java.home"), "bin",
                 System.getProperty("os.name").startsWith("Windows") ? "java.exe" : "java").toString(),
                 "-cp", System.getProperty("surefire.test.class.path", System.getProperty("java.class.path")),
-                Peer.class.getName(), path.toString(), mode).redirectErrorStream(true).start();
+                // JVM diagnostics (e.g. JAVA_TOOL_OPTIONS) use stderr, not the stdout barrier.
+                Peer.class.getName(), path.toString(), mode).redirectErrorStream(false).start();
     }
     private void processes(boolean mixed) throws Exception {
         if (mixed) new AudioFiles(directory).download(API, MANIFEST, n -> {});
@@ -170,7 +171,8 @@ class AudioFilesSharingTest {
             for (var child : children) { child.getOutputStream().write('\n'); child.getOutputStream().flush(); }
             for (var child : children) {
                 assertThat(child.waitFor(30, TimeUnit.SECONDS)).as("peer must stop").isTrue();
-                assertThat(child.exitValue()).as("peer output: " + new String(child.getInputStream().readAllBytes())).isZero();
+                assertThat(child.exitValue()).as("peer output: " + new String(child.getInputStream().readAllBytes())
+                        + new String(child.getErrorStream().readAllBytes())).isZero();
             }
         } finally {
             for (var child : children) if (child.isAlive()) { child.destroyForcibly(); child.waitFor(10, TimeUnit.SECONDS); }
