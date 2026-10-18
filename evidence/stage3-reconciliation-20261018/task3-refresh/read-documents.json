@@ -1,0 +1,357 @@
+[
+  {
+    "source": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "docs/TIEN_DO.md",
+    "sha256WorkingCopy": "d4fcce8e6e7fc097e98998329d90e4eb47d134c8a04926166d79527c18053ed0",
+    "gitBlob": "15ac59514a038bb40cd3911478f8a8b4c2d82b80",
+    "lines": 165,
+    "stage3Headings": [
+      {
+        "line": 68,
+        "text": "| C | _chưa gán_ | T3-C5 bản nháp tài liệu đã viết; chờ B review | Báo cáo đồng bộ/giới hạn đối chiếu main `f97c081`; kiểm tài liệu riêng | LAN hai máy, human A/B review và gate 20/10 NOT_DECIDED/PARTIAL; FULL default | `docs/t3-c5-monitoring-sync-report` |"
+      },
+      {
+        "line": 103,
+        "text": "| 16/10, khóa 18/10 | C → A, B | Monitoring epoch/base/sequence, định nghĩa metric | C1 OPEN/full/CLOSE/epoch/sequence/state đã merge; C2 bổ sung EventOrigin/deliveryStatus và HTTP gap theo QD-13, server trước client mới; T3-C2 encoder/reducer/base/resync/freshness có qua capability/flag thử nghiệm; gate và metric E1-E2 chưa có; human A/B review NOT RUN |"
+      },
+      {
+        "line": 119,
+        "text": "| C | — | — | T3-C1 candidate encoder/test/replay có; B review/live delta/gate và E1/E2 NOT RUN. Không điền giờ chưa đo. |"
+      },
+      {
+        "line": 133,
+        "text": "## Bàn giao T3-C1 ngày11/10/2026"
+      },
+      {
+        "line": 137,
+        "text": "## Bàn giao T3-C2 ngày12/10/2026"
+      },
+      {
+        "line": 141,
+        "text": "## Bàn giao T3-C3 ngày12/10/2026"
+      },
+      {
+        "line": 147,
+        "text": "## Bàn giao T3-C4 ngày13/10/2026"
+      }
+    ]
+  },
+  {
+    "source": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "docs/NHAT_KY.md",
+    "sha256WorkingCopy": "c62a1cd60e2be501bbbb11c861754a968ffb47aac4a39a4b646623b5f94748be",
+    "gitBlob": "79d0fec0f7d14da38f7b8234a8c937f14d1cb471",
+    "lines": 668,
+    "stage3Headings": [
+      {
+        "line": 370,
+        "text": "## 11/10/2026 — C: T3-C1 encoder delta candidate"
+      },
+      {
+        "line": 381,
+        "text": "### Đính chính evidence T3-C1 cùng phiên"
+      },
+      {
+        "line": 385,
+        "text": "## 12/10/2026 — C: T3-C2 reducer delta phía server"
+      },
+      {
+        "line": 395,
+        "text": "## 12/10/2026 — C: T3-C3 acceptance fault replay"
+      },
+      {
+        "line": 405,
+        "text": "### T3-C3 · Kiểm cuối exact fixture bytes cùng phiên"
+      },
+      {
+        "line": 411,
+        "text": "## 13/10/2026 — C — T3-C4 candidate delta integration/live preparation"
+      },
+      {
+        "line": 417,
+        "text": "## 2026-10-13 · A · PR #23: đồng bộ main T3-C3, review lại ba sửa P0"
+      },
+      {
+        "line": 426,
+        "text": "## 2026-10-13 · A · PR #23: đồng bộ lần hai với main T3-C4"
+      },
+      {
+        "line": 435,
+        "text": "## 2026-10-13 · A · T3-A1 audio/READY"
+      },
+      {
+        "line": 442,
+        "text": "## 2026-10-13 · A · Chia commit và bàn giao nhánh T3-A1"
+      },
+      {
+        "line": 448,
+        "text": "## 2026-10-13 · A · T3-A2 Listening lifecycle"
+      },
+      {
+        "line": 455,
+        "text": "## 13/10/2026 — C · T3-C5 bản nháp đồng bộ và giới hạn"
+      },
+      {
+        "line": 463,
+        "text": "## 14/10/2026 — B · T3-B1 tải audio, checksum và thử loa"
+      },
+      {
+        "line": 471,
+        "text": "## 14/10/2026 — B · T3-B2 phát Listening theo lệnh server"
+      },
+      {
+        "line": 478,
+        "text": "## 14/10/2026 — B · T3-B3 gián đoạn và mở lại Listening"
+      },
+      {
+        "line": 485,
+        "text": "## 15/10/2026 — B · T3-B4 điều khiển ca tối thiểu"
+      },
+      {
+        "line": 494,
+        "text": "## 15/10/2026 — B · T3-B5 MSI Windows và bàn giao máy hai"
+      },
+      {
+        "line": 655,
+        "text": "## 2026-10-18 · A · T3-A3 hook delta và lỗi server"
+      },
+      {
+        "line": 660,
+        "text": "## 2026-10-18 · A · T3-A4 regression giao dịch và nhiều client"
+      },
+      {
+        "line": 665,
+        "text": "## 2026-10-18 · A · T3-A5 bản nháp network/concurrency"
+      }
+    ]
+  },
+  {
+    "source": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "docs/KIEM_THU.md",
+    "sha256WorkingCopy": "ce03a2db25f4df0b0203e322710f50cdd21a46ad2f4c1bdc1491adad5e31978c",
+    "gitBlob": "68012afe65fb474ff1a217d0161eb58638bc8645",
+    "lines": 549,
+    "stage3Headings": [
+      {
+        "line": 15,
+        "text": "| AT01 | Thí sinh B không đọc/sửa được bài của A, trước và sau khi nộp | A / C | T2-A4, T3-A4 | **PASS** | `60e1ced` | `evidence/t2-a4/2026-10-05-verification.md` |"
+      },
+      {
+        "line": 32,
+        "text": "| MT02 | Replay cùng message sau mất ACK | C / B | T3-C3/C4 | PARTIAL — LOCAL production ACK observer-loss/frozen retry/no duplicate touch/oldACK PASS; fault SIMULATED, LAN/B review NOT RUN | `d9475eb` + C3 `d813cb1` | [C4 evidence](../evidence/t3-c4/2026-10-13-verification.md) |"
+      },
+      {
+        "line": 33,
+        "text": "| MT03 | Thiếu một delta → UNSYNCED, yêu cầu full | C / B | T3-C3/C4 | PARTIAL — LOCAL REAL RESYNC parser/callback/fresh FULL/last-known/GUI recovery PASS; future-base SIMULATED, LAN/B review NOT RUN | `d9475eb` + C3 `d813cb1` | [C4 evidence](../evidence/t3-c4/2026-10-13-verification.md) |"
+      },
+      {
+        "line": 34,
+        "text": "| MT04 | Delta epoch cũ không sửa state epoch mới | C / B | T3-C3/C4 | PARTIAL — LOCAL restart/oldsocket oldepoch rejected PASS + C3 delta oldepoch replay; LAN/B review NOT RUN | `d9475eb` + C3 `d813cb1` | [C4 evidence](../evidence/t3-c4/2026-10-13-verification.md) |"
+      },
+      {
+        "line": 35,
+        "text": "| MT05 | Restart collector hoặc server → cần epoch và full mới | C / B | T3-C3/C4 | PARTIAL — REAL owned candidate kill/server restart/new epoch/full + revoke/capability loss PASS; one host, LAN/B review NOT RUN | `d9475eb` + C3 `d813cb1` | [C4 evidence](../evidence/t3-c4/2026-10-13-verification.md) |"
+      },
+      {
+        "line": 36,
+        "text": "| MT06 | Không lùi state; full và delta cho cùng state và event set | C / B | T3-C3/C4 | PARTIAL — independent root metadata/stateHTTP-push/eventID-content SQL + C3 full/delta oracle PASS; backgroundOS not frozen, LAN/B review NOT RUN | `d9475eb` + C3 `d813cb1` | [C4 evidence](../evidence/t3-c4/2026-10-13-verification.md) |"
+      },
+      {
+        "line": 46,
+        "text": "| LT01 | Thiếu audio hoặc sai checksum → không READY | B / A | T3-B1 | PARTIAL — local bytes + production HTTP/PG + view/Media/app-image Unicode PASS; xác nhận nghe thủ công/review A/máy thứ hai NOT RUN | `89082e3d43a322c0e0e210f393cc3b4bf49bd7da` | [T3-B1](../evidence/t3-b1/2026-10-14-verification.md), [backend A1](../evidence/t3-a1/2026-10-13-verification.md) |"
+      },
+      {
+        "line": 47,
+        "text": "| LT02 | Start lặp không phát lại; lỗi media khóa và ghi gián đoạn | B / A | T3-B2/B3 | PARTIAL — start lặp, Media/câu hỏi/lifecycle và MEDIA_ERROR lock+journal+event PASS tự động; review A/lỗi codec thủ công chưa chạy | Branch T3-B3 | [T3-B3](../evidence/t3-b3/2026-10-14-verification.md), [backend A2](../evidence/t3-a2/2026-10-13-verification.md) |"
+      },
+      {
+        "line": 48,
+        "text": "| LT03 | Mất mạng giữa audio; mở lại không tự phát hay resume | B / A | T3-B3 | PARTIAL — JavaFX MediaPlayer thật dừng khi disconnect, reconnect/status không replay PASS; backend timeout/takeover/restart PASS; rút mạng/kill app thủ công, LAN và review A chưa chạy | Branch T3-B3 | [T3-B3](../evidence/t3-b3/2026-10-14-verification.md), [backend A2](../evidence/t3-a2/2026-10-13-verification.md) |"
+      },
+      {
+        "line": 49,
+        "text": "| LT04 | Tổ chức lại: attempt mới, dữ liệu và deadline cũ giữ nguyên | B / A | T3-B4, T3-A2 | PARTIAL — server và GUI integration B4 local PASS; human/LAN chưa chạy | `06fd215` | [B4](../evidence/t3-b4/2026-10-15-verification.md), [A2](../evidence/t3-a2/2026-10-13-verification.md) |"
+      },
+      {
+        "line": 50,
+        "text": "| IT01 | Chạy từ package trên máy không có IDE, đường dẫn có dấu | B / A | T1-B4, T3-B5, T5-B1 | PARTIAL — MSI local Unicode/quyền thường/runtime đi kèm/UI/audio/đóng/gỡ PASS; máy hai không IDE/LAN/nghe thật/review A NOT RUN | `acac38d` | [B5](../evidence/t3-b5/2026-10-15-verification.md) |"
+      },
+      {
+        "line": 51,
+        "text": "| IT02 | 2 thí sinh + 1 giám thị; một client gửi JSON sai hoặc rớt | A / C | T3-A4, T4-B1 | NOT RUN | | |"
+      },
+      {
+        "line": 53,
+        "text": "| IT04 | DB hoặc server tắt giữa lúc xử lý; khởi động lại | A / C | T3-A3, T4-A1, T4-B1 | NOT RUN | | |"
+      },
+      {
+        "line": 359,
+        "text": "## T3-C1 — encoder delta candidate (11/10/2026)"
+      },
+      {
+        "line": 378,
+        "text": "## Backend A sync main T3-C1 — 12/10/2026 (local, chờ push)"
+      },
+      {
+        "line": 384,
+        "text": "## T3-C2 — reducer/resync/freshness (12/10/2026)"
+      },
+      {
+        "line": 403,
+        "text": "## T3-C3 · Kiểm tra mới12/10/2026"
+      },
+      {
+        "line": 414,
+        "text": "## T3-C4 local preparation13/10/2026"
+      },
+      {
+        "line": 420,
+        "text": "## Backend A — PR #23 đồng bộ main T3-C3 và review lại P0, 13/10/2026 (local, chờ push)"
+      },
+      {
+        "line": 434,
+        "text": "### Backend A — PR #23 đồng bộ lần hai với main T3-C4, 13/10/2026 (local, chờ push)"
+      },
+      {
+        "line": 438,
+        "text": "## T3-C5 · Kiểm tra bản nháp tài liệu · 13/10/2026"
+      },
+      {
+        "line": 442,
+        "text": "## T3-B4 · Điều khiển ca và LT04 · 15/10/2026"
+      },
+      {
+        "line": 464,
+        "text": "## PR #28 — fix P1 cursor sau tích hợp main T3-A1/T3-A2, 13/10/2026"
+      }
+    ]
+  },
+  {
+    "source": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "docs/QUYET_DINH.md",
+    "sha256WorkingCopy": "e70085e5382119d04fa1f3480f8f8ed2a68bfbd66e224e240ad509c88c86c76c",
+    "gitBlob": "4d8cb5debbef33de661a09341cbe3ea48fcd52cb",
+    "lines": 309,
+    "stage3Headings": [
+      {
+        "line": 24,
+        "text": "| QD-10 | Giữ hay cắt delta khỏi bản chính | C, B duyệt | 20/10 | T3-C4 |"
+      },
+      {
+        "line": 279,
+        "text": "### QD-31 · Thực thi QD-29: cấp ACTIVE fail-closed, legacy ACTIVE chỉ đọc"
+      },
+      {
+        "line": 288,
+        "text": "### QD-32 · Lịch sử giám sát vượt 5000 dòng: 409 không retry, không cắt bớt"
+      },
+      {
+        "line": 296,
+        "text": "### QD-33 · Cache audio: hợp nhất fix race PR40 với policy junction, thay PR45"
+      },
+      {
+        "line": 304,
+        "text": "### QD-34 · Takeover không idempotent theo requestId — giới hạn có chủ đích"
+      }
+    ]
+  },
+  {
+    "source": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "docs/thanh-vien/VAI_A.md",
+    "sha256WorkingCopy": "88f1c37c339be890342c77328abe9c81ae67711ee67fa5f9b1ecaaf25fea84d3",
+    "gitBlob": "fde8d9204a127836ffb6e2167e40b46895bdabc7",
+    "lines": 392,
+    "stage3Headings": [
+      {
+        "line": 219,
+        "text": "### T3-A1 · API tài nguyên audio và READY"
+      },
+      {
+        "line": 234,
+        "text": "### T3-A2 · Start, gián đoạn Listening và lượt thi mới"
+      },
+      {
+        "line": 249,
+        "text": "### T3-A3 · Hook cho delta và xử lý lỗi server"
+      },
+      {
+        "line": 266,
+        "text": "### T3-A4 · Regression giao dịch và nhiều client"
+      },
+      {
+        "line": 275,
+        "text": "### T3-A5 · Bản nháp báo cáo network/concurrency"
+      }
+    ]
+  },
+  {
+    "source": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "docs/thanh-vien/VAI_B.md",
+    "sha256WorkingCopy": "bbd56e23e71e3493cb4a8604689bb38c549c1e6fb152c71e643c2ca39b3f46d5",
+    "gitBlob": "cd0c98e4de65e34c38ebbd986df0ffa69a9b9adf",
+    "lines": 393,
+    "stage3Headings": [
+      {
+        "line": 208,
+        "text": "### T3-B1 · Tải audio, checksum và thử loa"
+      },
+      {
+        "line": 221,
+        "text": "### T3-B2 · Phát Listening theo lệnh server"
+      },
+      {
+        "line": 235,
+        "text": "### T3-B3 · Gián đoạn và mở lại đúng chính sách"
+      },
+      {
+        "line": 249,
+        "text": "### T3-B4 · Giao diện giám thị điều khiển ca"
+      },
+      {
+        "line": 260,
+        "text": "### T3-B5 · Bộ cài và audio trên máy thứ hai"
+      }
+    ]
+  },
+  {
+    "source": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "docs/thanh-vien/VAI_C.md",
+    "sha256WorkingCopy": "47414458a94b57bd953bf7639afb131b45acb96e711f895c6f4009d93bce0a7e",
+    "gitBlob": "5030c5523a72307e326222d797bc81afec38b006",
+    "lines": 402,
+    "stage3Headings": [
+      {
+        "line": 43,
+        "text": "| Trước T3-C2 | Hook lưu trữ epoch và kiểm quyền | A |"
+      },
+      {
+        "line": 217,
+        "text": "### T3-C1 · Bộ mã hóa delta phía collector"
+      },
+      {
+        "line": 234,
+        "text": "### T3-C2 · Reducer delta phía server"
+      },
+      {
+        "line": 253,
+        "text": "### T3-C3 · Phát lại kiểm tra tính đúng và lỗi"
+      },
+      {
+        "line": 262,
+        "text": "### T3-C4 · Tích hợp delta thật rồi quyết định giữ hay cắt"
+      },
+      {
+        "line": 272,
+        "text": "### T3-C5 · Bản nháp báo cáo đồng bộ và giới hạn"
+      }
+    ]
+  },
+  {
+    "source": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "Ke_hoach_LT_Mang_5_chang/TRACKER.json",
+    "sha256WorkingCopy": "9c33d44306b01bb957e90297369483a0d26bcf2adf2392c7fd6442ae4fa6177a",
+    "gitBlob": "c0d605ecdb97984666078a25ea6f4d4008308901",
+    "lines": 988,
+    "stage3Headings": []
+  }
+]

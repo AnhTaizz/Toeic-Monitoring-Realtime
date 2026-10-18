@@ -1,0 +1,32 @@
+[
+  {
+    "source": "2170f4f30d8cfa6c891b9c6e79bbf3603fb270fc",
+    "path": "docs/STAGE3_RECONCILIATION.md",
+    "sha256": "33b9d70aaab5a9a30c2dd9524a275c48441a03cb43730a463f3e493df48096af",
+    "verification": "PASS on original Git blob"
+  },
+  {
+    "source": "2170f4f30d8cfa6c891b9c6e79bbf3603fb270fc",
+    "path": "evidence/stage3-reconciliation-20261018/.gitattributes",
+    "sha256": "ef5c230f4d8b87142cf574d3b391a2b4ac5ccaf1776980fac2bd8cb3305cdc06",
+    "verification": "PASS on original Git blob"
+  },
+  {
+    "source": "2170f4f30d8cfa6c891b9c6e79bbf3603fb270fc",
+    "path": "evidence/stage3-reconciliation-20261018/git-audit.json",
+    "sha256": "bcdffac17c3a481b6f83f7f552f0903021ca6d99343fe9bc7bf3b8bd46d5e846",
+    "verification": "PASS on original Git blob"
+  },
+  {
+    "source": "2170f4f30d8cfa6c891b9c6e79bbf3603fb270fc",
+    "path": "evidence/stage3-reconciliation-20261018/github-snapshot.json",
+    "sha256": "132e045b1295f83286f624dc20307f903c1d0115c162115996c9ff019bfea83e",
+    "verification": "PASS on original Git blob"
+  },
+  {
+    "source": "2170f4f30d8cfa6c891b9c6e79bbf3603fb270fc",
+    "path": "evidence/stage3-reconciliation-20261018/validation.json",
+    "sha256": "28a2edd225afce90630a39fc201e3578e220b26236cc89ae5949190724f2f166",
+    "verification": "PASS on original Git blob"
+  }
+]

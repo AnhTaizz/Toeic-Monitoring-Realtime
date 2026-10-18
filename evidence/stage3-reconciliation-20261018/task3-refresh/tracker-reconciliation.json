@@ -1,0 +1,367 @@
+{
+  "main": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "sourceTracker": "Ke_hoach_LT_Mang_5_chang/TRACKER.json",
+  "note": "Observed statuses are reconciliation, not DONE or owner approval; source tracker/hours unchanged.",
+  "tasks": [
+    {
+      "id": "T3-A1",
+      "owner": "A",
+      "reviewer": "C",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "IMPLEMENTED_ON_MAIN",
+      "acceptance": "Human C review and physical audio/LAN acceptance pending",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-A2",
+      "owner": "A",
+      "reviewer": "C",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "IMPLEMENTED_ON_MAIN",
+      "acceptance": "Human C review and full Listening physical acceptance pending",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-A3",
+      "owner": "A",
+      "reviewer": "C",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "IMPLEMENTED_ON_MAIN",
+      "acceptance": "Human C review; restart/commit hooks historical evidence; LAN pending",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-A4",
+      "owner": "A",
+      "reviewer": "C",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "IMPLEMENTED_ON_MAIN",
+      "acceptance": "Human C review; loopback transaction/multiclient evidence; LAN pending",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-A5",
+      "owner": "A",
+      "reviewer": "C",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "DRAFT_ON_MAIN",
+      "acceptance": "Human C review pending; protocol v1 label differs from v0 code",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-AR",
+      "owner": "A",
+      "reviewer": "C",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "REQUEST_CHANGES",
+      "acceptance": "A review B / C confirms; cache publication P1; human signoff pending",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-B1",
+      "owner": "B",
+      "reviewer": "A",
+      "sourceTrackerStatus": "IN_PROGRESS",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "IMPLEMENTED_ON_MAIN_WITH_OPEN_CACHE_P1",
+      "acceptance": "Human A review/hearing/second-machine pending; cache corrective PR required",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-B2",
+      "owner": "B",
+      "reviewer": "A",
+      "sourceTrackerStatus": "IN_PROGRESS",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "IMPLEMENTED_ON_MAIN",
+      "acceptance": "Human A review/hearing/second-machine pending",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-B3",
+      "owner": "B",
+      "reviewer": "A",
+      "sourceTrackerStatus": "IN_PROGRESS",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "IMPLEMENTED_ON_MAIN",
+      "acceptance": "Human A review/physical cable loss/second-machine pending",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-B4",
+      "owner": "B",
+      "reviewer": "A",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "IMPLEMENTED_ON_MAIN",
+      "acceptance": "Human A review/manual chooser/LAN pending",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-B5",
+      "owner": "B",
+      "reviewer": "A",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "LOCAL_MSI_HISTORICAL_SECOND_MACHINE_NOT_RUN",
+      "acceptance": "MSI0.3.10 old source; new final MSI blocked; user machine2/audio/A review pending",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-BR",
+      "owner": "B",
+      "reviewer": "A",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "REQUEST_CHANGES_ON_MAIN",
+      "acceptance": "B review C / A confirms; CLOSE fix in PR47 pending C+B review and integration",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-C1",
+      "owner": "C",
+      "reviewer": "B",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "IMPLEMENTED_ON_MAIN_EXPERIMENTAL",
+      "acceptance": "Human B review pending; FULL default; not DELTA gate approval",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-C2",
+      "owner": "C",
+      "reviewer": "B",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "IMPLEMENTED_ON_MAIN_EXPERIMENTAL",
+      "acceptance": "Human B review pending; local hooks/reducer evidence not LAN",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-C3",
+      "owner": "C",
+      "reviewer": "B",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "REPLAY_IMPLEMENTED_MT02_MT06_PARTIAL",
+      "acceptance": "Human B review pending; MOCK replay/fault evidence not physical gate",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-C4",
+      "owner": "C",
+      "reviewer": "B",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "GATE_PENDING_FULL_BASELINE",
+      "acceptance": "Physical LAN0/41; B review and C decision pending; PR47 pending",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-C5",
+      "owner": "C",
+      "reviewer": "B",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "DRAFT_REVIEW_PENDING",
+      "acceptance": "PR51 stale source text; patch in PR56 checked; B review pending",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    },
+    {
+      "id": "T3-CR",
+      "owner": "C",
+      "reviewer": "B",
+      "sourceTrackerStatus": "TODO",
+      "sourceActualHours": null,
+      "observedTechnicalStatus": "ACCEPT_WITH_LIMITATIONS_TECHNICAL_ONLY",
+      "acceptance": "C review A / B confirms; QD34 tradeoff and human signoffs pending",
+      "ownerApproved": false,
+      "statusWrittenToTracker": false,
+      "evidenceReferences": [
+        "PR55@e3fdfea",
+        "PR56@7d98514",
+        "main@f864034",
+        "PR47@3044e5b",
+        "PR51@b057b0f",
+        "PR52@c58931e",
+        "PR53@b4177a7"
+      ]
+    }
+  ]
+}
