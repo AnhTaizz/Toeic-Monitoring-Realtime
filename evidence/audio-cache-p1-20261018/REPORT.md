@@ -1,6 +1,6 @@
 # S3-P1-01 — sửa publication cache audio
 
-Source production sửa: `56a27e98991052c25b294eeb61bb212ed7cd19b6`; test barrier stderr bổ sung tại `fdc2a3bb9022b86e7647a2a2989116752ac72488`, base main `f86403489bdd01887b926f2f9e4b72ddf05d1423`. Owner code B; A xem hồi quy/CI. Review kỹ thuật do Codex theo ủy quyền người dùng trong phiên; không gán chữ ký A/B/C. Chưa công bố PR vì automatic approval review từ chối push; không có CI mới và chưa merge main.
+Source production sửa: `56a27e98991052c25b294eeb61bb212ed7cd19b6`; test barrier stderr bổ sung tại `fdc2a3bb9022b86e7647a2a2989116752ac72488`, base main `f86403489bdd01887b926f2f9e4b72ddf05d1423`. Owner code B; A xem hồi quy/CI. Review kỹ thuật do Codex theo ủy quyền người dùng trong phiên; không gán chữ ký A/B/C. Lần push đầu bị automatic approval review từ chối; ngày19/10 người dùng đã cho phép push hai nhánh, mở PR và chạy CI. Chưa có CI mới hoặc merge main tại snapshot hồ sơ này.
 
 ## Thực thi
 
