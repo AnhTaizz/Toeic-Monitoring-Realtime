@@ -1,0 +1,33 @@
+{
+  "sourceSha": "cfbba580886ede7b1b5a4f56875197b10f284514",
+  "installer": {
+    "runtimeServerConfig": "GUI override; JVM property > process TOEIC_SERVER_URL > bounded user server-url.txt > default; no credentials",
+    "application": "ToeicMonitor",
+    "version": "0.3.11",
+    "sourceCommit": "cfbba580886ede7b1b5a4f56875197b10f284514",
+    "dirty": false,
+    "builtUtc": "2026-10-18T17:53:10.3053988Z",
+    "monitoringDefault": "FULL",
+    "java": "21.0.8",
+    "clientJarSha256": "17bc89963dbd8439749dbb3a00436cba5f807e6044999d2050d586a78a5f95bd",
+    "wixVersion": "3.14.1.8722",
+    "manifestToolVersion": "10.0.26100.6584 (WinBuild.160101.0800)",
+    "installer": "ToeicMonitor-0.3.11.msi",
+    "installerSha256": "edd0ceb55d2512d046c972aff2966382d0ad64051e29cc6a14035c643b67a214",
+    "relativePath": "target/stage3-release-20261019/ToeicMonitor-0.3.11.msi"
+  },
+  "clientJarSha256": "17bc89963dbd8439749dbb3a00436cba5f807e6044999d2050d586a78a5f95bd",
+  "serverJarSha256": "f90a4dea2bd00a5a9d8d6e992492659e6867dbb87ec1e9593c7a5317ce2baf42",
+  "lan": "NOT RUN",
+  "physicalCasesExecuted": 0,
+  "manualHearing": "NOT RUN",
+  "secondMachineInstaller": "NOT RUN",
+  "lanBundle": {
+    "relativePath": "target/stage3-release-20261019/T3C4-cfbba58.zip",
+    "zipSha256": "2122b8b3dce57d5befb622603e9c674d9a0786d630b5ed93e75d8c668abf6ab1",
+    "manifestSha256": "fe2a8425305450e7e155b8ce2903246cc07943f06f88865688e1798f802744bb",
+    "files": 22,
+    "sourceSha": "cfbba580886ede7b1b5a4f56875197b10f284514"
+  },
+  "note": "Binaries outside Git; exact clean-main build source pinned. Later release changes only kit pins/templates/docs/evidence; runtime equivalence must be checked before merge."
+}

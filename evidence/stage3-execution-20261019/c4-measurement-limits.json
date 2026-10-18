@@ -1,0 +1,146 @@
+{
+  "sourceSha": "a96eb2467efae669e389da80a7e922774cb627c1",
+  "runId": "T3C4-429d40d1-b67b-44a9-bc27-126c07f9a61b",
+  "rawSha256": "57e27b32eed76b3d7dc24b885f7fce62f57fd721a5c786f544ed745138ceaae3",
+  "status": "INCOMPLETE",
+  "endpointCount": 12,
+  "categoryRowCount": 140,
+  "issues": [],
+  "endpoints": [
+    {
+      "clockDomain": "783cd392-5247-481e-98b2-c246124590b1",
+      "endpoint": "CLIENT",
+      "inputSha256": "e608adc74675cd66affee2c86a62a43c10ffd75aebbc924d7a3e7aeea5fdde22",
+      "issues": [],
+      "logDroppedCount": 0,
+      "logUnwrittenCount": 0,
+      "pendingWrites": 0,
+      "runId": "T3C4-429d40d1-b67b-44a9-bc27-126c07f9a61b",
+      "status": "COMPLETE"
+    },
+    {
+      "clockDomain": "e83a911f-bf93-4965-a557-36f45caa786d",
+      "endpoint": "CLIENT",
+      "inputSha256": "ff6a85f8e0559c1b452de7c1c4ea02d55c93ccb92e04c5573f07c00fa8a934aa",
+      "issues": [],
+      "logDroppedCount": 0,
+      "logUnwrittenCount": 0,
+      "pendingWrites": 0,
+      "runId": "T3C4-429d40d1-b67b-44a9-bc27-126c07f9a61b",
+      "status": "COMPLETE"
+    },
+    {
+      "clockDomain": "68113098-54dd-48d4-aca5-85098cb37a5f",
+      "endpoint": "CLIENT",
+      "inputSha256": "f8aec08f7656dd8ba90f37cc7de60e23026d5b8f2181d44ee660ee798fe934d8",
+      "issues": [],
+      "logDroppedCount": 0,
+      "logUnwrittenCount": 0,
+      "pendingWrites": 0,
+      "runId": "T3C4-429d40d1-b67b-44a9-bc27-126c07f9a61b",
+      "status": "COMPLETE"
+    },
+    {
+      "clockDomain": "a0cc617a-c706-4bf9-8860-d36f4fa8f418",
+      "endpoint": "CLIENT",
+      "inputSha256": "73ecb571fff94d9637b9283c15b5b2154a74b8afe9114806d94e20d04311c81f",
+      "issues": [
+        "MISSING_FINAL"
+      ],
+      "logDroppedCount": null,
+      "logUnwrittenCount": null,
+      "pendingWrites": null,
+      "runId": "T3C4-429d40d1-b67b-44a9-bc27-126c07f9a61b",
+      "status": "INCOMPLETE"
+    },
+    {
+      "clockDomain": "db875251-f428-4251-96dc-da679c299310",
+      "endpoint": "CLIENT",
+      "inputSha256": "40c6d6f3bd5d32d096f902242ce62a8b5e1178a796d8fb861b996efed4a8a475",
+      "issues": [],
+      "logDroppedCount": 0,
+      "logUnwrittenCount": 0,
+      "pendingWrites": 0,
+      "runId": "T3C4-429d40d1-b67b-44a9-bc27-126c07f9a61b",
+      "status": "COMPLETE"
+    },
+    {
+      "clockDomain": "3e43a96e-51b4-46f3-9c6f-3f035cd6711e",
+      "endpoint": "CLIENT",
+      "inputSha256": "60e1e9785e8e8e42a470b815265ae1bd9162d74e1f3d83239642bf05fea1662b",
+      "issues": [],
+      "logDroppedCount": 0,
+      "logUnwrittenCount": 0,
+      "pendingWrites": 0,
+      "runId": "T3C4-429d40d1-b67b-44a9-bc27-126c07f9a61b",
+      "status": "COMPLETE"
+    },
+    {
+      "clockDomain": "cdee6a1e-3872-4c9e-826c-3d1de57581f7",
+      "endpoint": "CLIENT",
+      "inputSha256": "54351c686ad8a19a4abe1660b59a259ce3c509d429aea1f8dc2f0952a0ca4f7c",
+      "issues": [],
+      "logDroppedCount": 0,
+      "logUnwrittenCount": 0,
+      "pendingWrites": 0,
+      "runId": "T3C4-429d40d1-b67b-44a9-bc27-126c07f9a61b",
+      "status": "COMPLETE"
+    },
+    {
+      "clockDomain": "8a9083ce-af8b-4702-8b02-ac2d30db7357",
+      "endpoint": "SERVER",
+      "inputSha256": "1616e1c5e807870cbdc6e2328f43accd25c51b0db18ab39e6d4bdac205a06028",
+      "issues": [],
+      "logDroppedCount": 0,
+      "logUnwrittenCount": 0,
+      "pendingWrites": 0,
+      "runId": "T3C4-429d40d1-b67b-44a9-bc27-126c07f9a61b",
+      "status": "COMPLETE"
+    },
+    {
+      "clockDomain": "cbb93bcd-8e8c-4c73-89fb-04a16ed55820",
+      "endpoint": "SERVER",
+      "inputSha256": "3e95f7055abaae44d30029b68755f1af6840c3b21b3eded81cbaa48018cb4a48",
+      "issues": [],
+      "logDroppedCount": 0,
+      "logUnwrittenCount": 0,
+      "pendingWrites": 0,
+      "runId": "T3C4-429d40d1-b67b-44a9-bc27-126c07f9a61b",
+      "status": "COMPLETE"
+    },
+    {
+      "clockDomain": "5771b041-464a-4bf6-a625-5dabaedd7524",
+      "endpoint": "SERVER",
+      "inputSha256": "1eb6f5930728bf2dd08a299bc1b039f6d1cde51f440de618594644f1544a546c",
+      "issues": [],
+      "logDroppedCount": 0,
+      "logUnwrittenCount": 0,
+      "pendingWrites": 0,
+      "runId": "T3C4-429d40d1-b67b-44a9-bc27-126c07f9a61b",
+      "status": "COMPLETE"
+    },
+    {
+      "clockDomain": "eb7be5c8-44eb-468d-8175-c35324c5b184",
+      "endpoint": "SERVER",
+      "inputSha256": "aaf43eb2c2923ba8551aa12e93db5abfd15b6720d7272653d28f466b8576caaf",
+      "issues": [],
+      "logDroppedCount": 0,
+      "logUnwrittenCount": 0,
+      "pendingWrites": 0,
+      "runId": "T3C4-429d40d1-b67b-44a9-bc27-126c07f9a61b",
+      "status": "COMPLETE"
+    },
+    {
+      "clockDomain": "773c2e3f-8c6d-469b-8728-67042c48ddda",
+      "endpoint": "SERVER",
+      "inputSha256": "4d8ff648dfa8ade7d47385ae7b1b75e838594d3493b855356d24ddd7b5ed111d",
+      "issues": [],
+      "logDroppedCount": 0,
+      "logUnwrittenCount": 0,
+      "pendingWrites": 0,
+      "runId": "T3C4-429d40d1-b67b-44a9-bc27-126c07f9a61b",
+      "status": "COMPLETE"
+    }
+  ],
+  "scope": "Local correctness only; killed endpoint lacks final measurement; no E1/E2/performance acceptance"
+}

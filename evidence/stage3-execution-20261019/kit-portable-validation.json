@@ -1,0 +1,127 @@
+{
+    "sourceSha":  "cfbba580886ede7b1b5a4f56875197b10f284514",
+    "type":  "KIT VALIDATION ONLY",
+    "fixture":  "MOCK origins/maps/files; no network",
+    "checks":  [
+                   {
+                       "name":  "parse-Capture-T3C4LanCheckpoint.ps1",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "parse-Common.ps1",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "parse-Initialize-T3C4LanRun.ps1",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "parse-Invoke-T3C4LanProtocolProbe.ps1",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "parse-New-T3C4LanBundle.ps1",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "parse-Start-T3C4LanClient.ps1",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "parse-Start-T3C4LanFaultConsole.ps1",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "parse-Test-T3C4LanKit.ps1",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "parse-Test-T3C4LanPreflight.ps1",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "reject-unsafe-origin",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "reject-unsafe-origin",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "reject-unsafe-origin",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "reject-unsafe-origin",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "reject-unsafe-origin",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "reject-unsafe-origin",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "reject-unsafe-origin",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "reject-unsafe-origin",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "accept-MOCK-documentation-origin-no-network",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "canonical-map-order",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "canonical-distinct-answers",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "canonical-null-vs-empty",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "empty-array-property-preserved",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "missing-property-null",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "refuse-overwrite-preserve-evidence",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "reject-path-traversal",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "reject-hash-tamper",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "native-JDK21-check-no-stderr-failure",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "checklist-initially-NOT-RUN",
+                       "result":  "PASS"
+                   },
+                   {
+                       "name":  "all-F-cases-present",
+                       "result":  "PASS"
+                   }
+               ],
+    "lan":  "NOT RUN",
+    "physicalCasesExecuted":  0,
+    "humanBReview":  "PENDING",
+    "protocolProbeRuntime":  "NOT RUN"
+}

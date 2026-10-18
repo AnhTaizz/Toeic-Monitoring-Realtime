@@ -1,5 +1,7 @@
 # T3-C5 — Bản nháp báo cáo đồng bộ monitoring và giới hạn
 
+19/10/2026 — Kết quả sau tích hợp: buildsourcecfbba58 main/CI39151021995SUCCESS; haiP1 merged47/57, test cleanup59. C4 corrected42/42local sourcea96eb24, measurement INCOMPLETE vì kill endpoint, không E1/E2. MSI0.3.11local PASS; physical0/41/hearing/máy2 NOT RUN, FULL baseline/DELTA experimental. [Evidence mới](../evidence/stage3-execution-20261019/REPORT.md); các nhãn pending ở snapshot trước giữ theo ngày/SHA. Các snapshot phía dưới là lịch sử theo ngày/SHA.
+
 Đối chiếu source tại main `f97c081ed87184ff80e0778e2d4f9a9133f9c6b0`, ngày 13/10/2026. Đây là bản nháp để B review (đọc và góp ý), chưa được B xác nhận. FULL vẫn mặc định; gate (mốc quyết định nghiệm thu delta) ngày 20/10 là **NOT_DECIDED**, mức nghiệm thu **PARTIAL**. Các con số kiểm thử bên dưới thuộc phiên cũ có ghi SHA (mã phiên bản Git), không phải kết quả chạy lại trên main này.
 
 ## 1. Mục tiêu và phạm vi

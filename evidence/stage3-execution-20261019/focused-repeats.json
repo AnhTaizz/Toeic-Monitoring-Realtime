@@ -1,0 +1,126 @@
+{
+  "scope": "Windows JDK21; API/media fixtures MOCK; repeats are not unique cases",
+  "preparationPatchSha256": "8440dbdb86329d6834f9fee2dfb71fb73216e8bf424207f8b1016dac14896d32",
+  "runs": [
+    {
+      "suite": "preparation-close",
+      "repeat": 1,
+      "uniqueCases": 10,
+      "exitCode": 0,
+      "counts": {
+        "PASS": 10,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "rawLogSha256": "cc97da08d5ad639f92caddec2d6443840dbf23f81af0c54a3a7c0d727b622681"
+    },
+    {
+      "suite": "preparation-close",
+      "repeat": 2,
+      "uniqueCases": 10,
+      "exitCode": 0,
+      "counts": {
+        "PASS": 10,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "rawLogSha256": "3514cce54dc766a7f0d141cd810e860d86a507dac13ce04fd8d9d2fc85b0dd10"
+    },
+    {
+      "suite": "preparation-close",
+      "repeat": 3,
+      "uniqueCases": 10,
+      "exitCode": 0,
+      "counts": {
+        "PASS": 10,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "rawLogSha256": "4d33f68cbabb6347a7a947a279137e3d373432384c6d70143f9bfc396af913c9"
+    },
+    {
+      "suite": "preparation-close",
+      "repeat": 4,
+      "uniqueCases": 10,
+      "exitCode": 0,
+      "counts": {
+        "PASS": 10,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "rawLogSha256": "29511b6ffe5766af20ceafe2630c6c0c1a8574f244a08a30ce80aca6c477f19f"
+    },
+    {
+      "suite": "preparation-close",
+      "repeat": 5,
+      "uniqueCases": 10,
+      "exitCode": 0,
+      "counts": {
+        "PASS": 10,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "rawLogSha256": "b53fb769c7af8896417d14e2a493d2a1ae74f01442eb98d5cf0b5d90add15b40"
+    },
+    {
+      "suite": "mode",
+      "repeat": 1,
+      "uniqueCases": 8,
+      "exitCode": 0,
+      "counts": {
+        "PASS": 8,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "rawLogSha256": "565a60108cab698cb4f1e64574e2af959d9cfb27032bd92bc9730274acd00fb6"
+    },
+    {
+      "suite": "mode",
+      "repeat": 2,
+      "uniqueCases": 8,
+      "exitCode": 0,
+      "counts": {
+        "PASS": 8,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "rawLogSha256": "9744bd1917618a001b4f34dfd8dcb7af23caec6f6c29d084e947a40df502ac64"
+    },
+    {
+      "suite": "mode",
+      "repeat": 3,
+      "uniqueCases": 8,
+      "exitCode": 0,
+      "counts": {
+        "PASS": 8,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "rawLogSha256": "56ccfe8434a41cba02a56924d7cad1cde9e1055a3c5e724a338c6ed28964cc95"
+    },
+    {
+      "suite": "mode",
+      "repeat": 4,
+      "uniqueCases": 8,
+      "exitCode": 0,
+      "counts": {
+        "PASS": 8,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "rawLogSha256": "318ba5eedc4a261fc2a42df50d062d5c8b1d217bc258e9ec929c08e2c97f4a7a"
+    },
+    {
+      "suite": "mode",
+      "repeat": 5,
+      "uniqueCases": 8,
+      "exitCode": 0,
+      "counts": {
+        "PASS": 8,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "rawLogSha256": "5070c60f98492d76968321a7f711129f339e13a3dfd276c62abc0646fa8488cf"
+    }
+  ]
+}
