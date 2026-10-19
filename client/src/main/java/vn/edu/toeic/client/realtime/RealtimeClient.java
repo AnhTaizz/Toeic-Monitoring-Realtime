@@ -527,7 +527,11 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                     if (!request.type().equals("MONITORING_SYNC_OPEN") && !requiredString(request.payload(),"syncEpoch").equals(requiredString(message.payload(),"syncEpoch"))) throw new IllegalArgumentException();
                     if ((request.type().equals("MONITORING_FULL") || request.type().equals("MONITORING_DELTA")) && FullSnapshotPayload.number(request.payload(),"sequence") != FullSnapshotPayload.number(message.payload(),"sequence")) throw new IllegalArgumentException();
                 }
-                if(request.type().equals("MONITORING_SIGNAL"))vn.edu.toeic.protocol.monitoring.signal.SignalMessage.validateAck(message.payload(),vn.edu.toeic.protocol.monitoring.signal.DisplaySignal.parse(request.payload()));
+                if(request.type().equals("MONITORING_SIGNAL")) {
+                    var strict=vn.edu.toeic.protocol.monitoring.signal.SignalJson.parse(text);
+                    vn.edu.toeic.protocol.monitoring.signal.SignalJson.fields(strict,Set.of("protocolVersion","type","messageId","requestId","attemptId","traceId","payload"),Set.of());
+                    vn.edu.toeic.protocol.monitoring.signal.SignalMessage.validateAck(strict.getAsJsonObject("payload"),vn.edu.toeic.protocol.monitoring.signal.DisplaySignal.parse(request.payload()));
+                }
                 if(message.payload().has("resync"))validateResync(request,MonitoringResyncPayload.parse(message.payload().getAsJsonObject("resync")));
                 pendingAcks.remove(message.requestId());
                 heartbeatDeadlines.remove(message.requestId());
@@ -564,6 +568,12 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                 message.payload().addProperty("message", "UNAUTHORIZED".equals(code)
                         ? "Phiên hết hiệu lực. Hãy đăng nhập lại." : "Server từ chối message realtime");
                 var rejected=pendingAcks.get(message.requestId());
+                if(rejected!=null&&rejected.type().equals("MONITORING_SIGNAL")) {
+                    if(!Objects.equals(rejected.attemptId(),message.attemptId())||!rejected.traceId().equals(message.traceId()))throw new IllegalArgumentException();
+                    var strict=vn.edu.toeic.protocol.monitoring.signal.SignalJson.parse(text);
+                    vn.edu.toeic.protocol.monitoring.signal.SignalJson.fields(strict,Set.of("protocolVersion","type","messageId","requestId","attemptId","traceId","payload"),Set.of());
+                    vn.edu.toeic.protocol.monitoring.signal.SignalJson.fields(strict.getAsJsonObject("payload"),Set.of("code","message","retryable"),Set.of());
+                }
                 if((code.equals("FORBIDDEN")||code.equals("UNAUTHORIZED"))&&rejected!=null&&rejected.type().equals("HEARTBEAT")
                         &&rejected.attemptId()!=null&&rejected.payload().has("collectorSessionId")
                         &&Objects.equals(rejected.attemptId(),message.attemptId())&&rejected.traceId().equals(message.traceId())) {

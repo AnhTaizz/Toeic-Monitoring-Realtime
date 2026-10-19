@@ -94,9 +94,9 @@ foreach($module in @('protocol','client','server','monitoring-spike')){
     $dest=Join-Path $out ('reports.private\'+$module)
     New-Item -ItemType Directory -Force -Path $dest|Out-Null
     foreach($file in Get-ChildItem -LiteralPath $folder -Filter 'TEST-*.xml'){
-        # Targeted run chỉ đếm các suite vừa chọn, không lấy XML cũ từ lượt khác.
-        if($Mode -ne 'Full' -and $file.Name -notmatch 'TEST-.*\.(RichExamMigrationPostgresTest|ExamValidationTest|ExamControllerTest)\.xml$'){continue}
-        if($Mode -eq 'Reproducer' -and $file.Name -notmatch 'RichExamMigrationPostgresTest'){continue}
+        # Count only suites executed by THIS invocation, never stale XML from a previous run.
+        if($file.LastWriteTimeUtc -lt ([DateTime]::Parse($start).ToUniversalTime())){continue}
+        if($Mode -eq 'Focused' -and ($selected.Split(',') -notcontains (($file.BaseName -split '\.')[ -1]))){continue}
         Copy-Item -LiteralPath $file.FullName -Destination $dest
         [xml]$xml=[IO.File]::ReadAllText($file.FullName)
         $suite=$xml.testsuite

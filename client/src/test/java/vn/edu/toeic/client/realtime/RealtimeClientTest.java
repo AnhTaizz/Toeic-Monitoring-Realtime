@@ -767,6 +767,8 @@ class RealtimeClientTest {
                 f.socket().writeGate.complete(f.socket());assertThat(first).isCompleted();assertThat(second).isCompleted();
                 JsonObject ack=new JsonObject();ack.addProperty("status","ACCEPTED");ack.addProperty("acknowledgedType","MONITORING_SIGNAL");ack.addProperty("eventId","MOCK-signal-event-1");ack.addProperty("schemaVersion",2);ack.addProperty("timelineSequence",1);ack.addProperty("receivedAt","2026-10-19T10:00:01Z");ack.addProperty("deliveryStatus","LIVE");ack.addProperty("duplicate",false);
                 f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ACK","MOCK-ack","MOCK-signal-request-1","mock-attempt-A","MOCK-signal-trace",ack)),true);assertThat(f.messages).isEmpty();
+                JsonObject denial=new JsonObject();denial.addProperty("code","UNAUTHORIZED");denial.addProperty("message","MOCK");denial.addProperty("retryable",false);
+                f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ERROR","MOCK-wrong-error","MOCK-signal-request-2","mock-attempt-A","wrong-trace",denial)),true);assertThat(f.client.connectionState()).isEqualTo(ConnectionState.CONNECTED);assertThat(f.messages).isEmpty();
                 ack.addProperty("schemaVersion",1);f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ACK","MOCK-ack2","MOCK-signal-request-1","mock-attempt-A","MOCK-signal-trace",ack)),true);assertThat(f.messages).hasSize(1);
             }
         }
