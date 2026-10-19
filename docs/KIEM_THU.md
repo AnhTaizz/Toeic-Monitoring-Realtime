@@ -1,5 +1,7 @@
 # Trạng thái kiểm thử
 
+19/10/2026 — MON07 user-authorized slice MOCK source0f9d8e7: [report/case/hash](../evidence/v2-c-mon07-signal-pipeline/REPORT.md). Focused216PASS/0SKIP; fullverify1031total=1025PASS/6SKIP/0FAIL/ERROR, gồm12REAL PG/HTTP/WS cases (sensorsMOCK, ACK loss/deferred failureSIMULATED), actual reconnect/cursor/auth/dedup/commit rollback; 0schema/clusterstop0. 41test mới làsubset full; không cộng lượt. Hai regression integer-wrap/old-run capability đãFAIL trước fix, giữraw. Không toànmatrix22PASS/GUI/physical/LAN/E1/E2; FULLdefault/gateNOT_DECIDED, chưa owner signatures/MON07DONE. CI exact-HEAD ghi tại Draft PR, không gán CI cũ.
+
 19/10/2026 — MON-07 PR72 review: kiểm tài liệu/fixture Node.js (UTF-8/JSON/schema/correlation/capability/page, links/source, diff/privacy), kết quả tại [biên bản](mon07-proposal/VALIDATION.md). 7 exchange slice MOCK chỉ một type (có 1 unsupported-type negative), 19 catalog cases giữ riêng; chưa gửi qua mạng/DB. Ma trận22 implementation cases vẫn NOT_RUN; CI của HEAD mới theo GitHub, không thay owner/physical acceptance.
 
 19/10/2026 — MON-07 chỉ kiểm [tài liệu/fixture đề xuất](mon07-proposal/VALIDATION.md): JSON MOCK/required fields/ACK/errors/correlation và link/source/diff/privacy; kết quả chi tiết ở biên bản. [Ma trận implementation](MONITORING_MULTISIGNAL_CONTRACT_PROPOSAL.md) 22 hàng đều **NOT_RUN**; không nâng AT/MT/LT/IT, physical, gate hoặc trạng thái task. Không Maven/PG/WS/GUI runtime/E1/E2 trong lượt docs-only.

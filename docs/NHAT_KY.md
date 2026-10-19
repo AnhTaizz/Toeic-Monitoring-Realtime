@@ -802,3 +802,11 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - User cho phép D07-01–04/mục11.1 PR72c9a5829 trong TEST cách ly, không thay approval A/B/C. Fetch/main1d35b537, proposal chưa merge; tạo feat/v2-c-mon07-signal-pipeline từ đúngc9a5829, sẽ Draft stacked vào nhánh proposal.
 - Thêm typed strict parser/immutable encoder, queue RAM riêng, opt-in capability/ACK hook cùng RealtimeClient, conditional server service/counter/history và V13append-only. Không tự bật observer/capture/push/dashboard hoặc D07-05 offline/retention.
 - Baseline/focused unit ban đầu qua; integration compile có PG testsSKIP khi chưa bật fixture, không gọi PG PASS. Runtime/CI/source evidence sẽ ghi [report](../evidence/v2-c-mon07-signal-pipeline/REPORT.md); logs ngoài reactor target để giữ nguyên lịch sử. Chưa DONE/gate/owner review/merge, giữ FULLdefault.
+
+
+### MON07 — kiểm chứng cuối source0f9d8e7
+
+- Focused216PASS/0SKIP; fullverify1031total=1025PASS/6SKIP/0FAIL/ERROR,12PG/WS cases,41case mới làsubset. Runtime thật Spring/HTTP/WS/PG loopback, inputMOCK, ACK-loss/deferred failureSIMULATED; actual reconnect/counter ordering/token/terminal/unassign locks và teardown0schema/clusterstop0. [Report/receipt/provenance](../evidence/v2-c-mon07-signal-pipeline/REPORT.md).
+- Hai regression mới đã tái hiện FAIL: integerwrap getAsLong và same-socket new-run capability. Sửa exact parse/clock và bindexpectedCollector/currentgen; localFAIL/XML nguyên bản giữignored. Runner entrypoint trướccluster và summaryfilter EX04 sai cũng giữbiên bản, không sửaraw hoặc nhậnsummarysai.
+- Sinh verification/case/XMLhash/raw inventory/JARreceipt từ source0f9d8e7. Chỉ docs/evidence sau đó, kiểm runtime diff rỗng. Main mới3bdefe6 chỉdocs/fixturesEX02, Java/SQL/POM không đổi, V12latest; không merge/rebase hoặc suy approval EX02 thànhMON07. Draft implementation vẫnstackedPR72c9a5829; CI đúngHEAD theoPR saupush.
+- FULLdefault, BASE03NOT_DECIDED, MON01physical/B/BASE02pending, MON02physical0/12NOT_RUN; khôngcapture/push/dashboard/D07-05, khônghuman approval/MON07DONE/merge.

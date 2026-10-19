@@ -1,0 +1,21 @@
+{
+  "encoding": "UTF8_LF",
+  "files": [
+    {
+      "file": "build-receipt.json",
+      "sha256": "c5490b40005e9f5f7a9f7076cc3a55598b577c5693d506e6dc7e1b0d33eed200"
+    },
+    {
+      "file": "raw-manifest.json",
+      "sha256": "e9ce5999990d1368c29005d155a592b3a5cc937de0b5e0fae72b5f370bfbc6e4"
+    },
+    {
+      "file": "REPORT.md",
+      "sha256": "9f71610c2767a9f3d9cf99f27b9d274d34178abb4e2f03cfe5313b4e2158ed21"
+    },
+    {
+      "file": "verification.json",
+      "sha256": "24e4f398f9f0ae7b555866dc3a2e5725acd724d6a3273fff7e485654aef92498"
+    }
+  ]
+}

@@ -17,10 +17,39 @@ Base chính xác `c9a5829a022b6810d1d6db2da240d57b95d3ed81` của [PR72](https:/
 
 ## Kiểm chứng
 
-Baseline Maven trên proposal c9a5829 đã chạy SUCCESS; focused protocol/delivery/RealtimeClient ban đầu SUCCESS. Compilation-only với PostgreSQL chưa bật có testSKIP, **không là PG PASS**. Kết quả có source/runID/hash sẽ cập nhật sau runtime đầy đủ; chưa gán PASS cho ca chưa chạy.
+Code/test source cuối **`0f9d8e78275f168cde25f2649ac008301a99b2fb`**. [Summary/case/status](verification.json), [build receipt/hash](build-receipt.json), [raw inventory/hash only](raw-manifest.json).
+
+| Lượt | Source / run | Kết quả thực tế |
+|---|---|---|
+| Baseline, chưa opt-in PG | c9a5829 / baseline.log | 944total =874PASS/70SKIP,0FAIL/ERROR; BUILD SUCCESS |
+| Focused cuối | 0f9d8e7 / mon07-20261019T150944Z-8d6a37ff | **216PASS/0FAIL/ERROR/SKIP**, gồm12REAL WS/PG cases |
+| Full verify/build cuối | 0f9d8e7 / mon07-20261019T151101Z-4f839916 | **1031total =1025PASS/6SKIP/0FAIL/ERROR**, package/JAR SUCCESS |
+
+Focused là subset full, không cộng hai tổng. Baseline không PG và disabled parameterized methods có số case khác khi enable; không lấy chênh tổng làm số test mới. 41case mới: protocol17/delivery8/RealtimeClient3/default-disabled1/PG12. Full6skip được liệt kê nguyên tên trong verification.json: symlink/sidecar, FX dialog, installed/app-image/proctor GUI opt-ins; không nhận GUI/physical PASS.
+
+Windows build26200, Java21.0.10, Maven3.9.15, PostgreSQL18.3 (đọc từ runner thực tế). Hai lượt cuối đều **0owned schema còn lại, clusterStopExit0**, password file xóa/process env restored. Không reset DB dev hoặc volume. Server JAR có SignalService/SignalController/V13; receipt pin source và SHA256 ba JAR local, không claim đã launch riêng java -jar.
+
+12PG/WS cases kiểm fixture → delivery → commit/ACK → history; ACK loss SIMULATED tại adapter/harness sau adapter nhận ACK thật, duplicate giữ1row/1sequence; actual disconnect/reconnect cần capability/scoped heartbeat mới và giữ origin cũ; strict duplicate-key/unknown/Unicode escape/byte cap; wrong-role/foreign/terminal/assignment/expired/revoked, kể cả duplicate; deferred COMMIT failure rollback cả row/counter, không success ACK; fixed-through pagination, concurrent initial counter/rollback, revoke trong counter wait và row-lock serialization với revoke/terminal/unassign. Không có push mới trong source; proctor socket kiểm không nhận MONITOR_SIGNAL.
+
+**Failures/giới hạn giữ nguyên:**
+
+- Runner lần đầu FAIL trước tạo cluster do ScriptBlock không có PSScriptRoot; thêm fallback repo root, không đổi ExecutionPolicy.
+- Focused cb37ea5 runtime212PASS nhưng original result.json lọc nhầm XML EX04 cũ; **summary đó INVALID**, giữ nguyên raw/log/result và note. Runner sửa filter theo selected suite + modification time; 5887b58 focused212PASS và hai lượt cuối có summary đúng source.
+- Review tìm integer getAsLong wrap (18446744073709551617→1) và capability run cũ được dùng lại sau đổi heartbeat lease cùng socket. Hai regression thêm trên5887b58 đã FAIL trước sửa, XML/log retained. 0f9d8e7 dùng Long.parseLong, giới hạn clock00..23 và expectedCollector + confirmed collector/generation; regression cuối PASS. Không lấy rerun PASS làm root cause.
+- Compilation-only khi chưa bật PG có9caseSKIP ở source cũ, không PG PASS. Parser malformed UTF-8 được UNIT kiểm; wire test có lone-surrogate escape/oversized JSON, chưa test RFC6455 malformed UTF-8 frames.
+- Typed history paging/concurrency dùng fixture nhỏ; >5000typed rows chưa chạy (legacy process/gap/interruption5000/5001 có regression riêng). Không nâng toàn22hàng proposal thành PASS; push/gap/status/observer/GUI/physical vẫn ngoài slice.
+
+CI HEAD publish sẽ ghi đúng SHA/run trong description Draft PR; CI không thay12PG cases local hoặc owner acceptance.
 
 Runner `scripts/verify-mon07-postgres.ps1` nhận PostgresBin/JavaHome/MavenRepository/OutputRoot, tạo cluster SCRAM/port loopback/database riêng, set process environment tạm, chạy tests, copy XML/hash, đếm schema còn lại, stop cluster và xóa password file. Không đọc .env/devDB, reset/xóa volume hay root clean. OutputRoot phải ngoài target của reactor để bảo toàn logs; logs/raw/XML private ignored, không GitHub downloads.
 
 ## Review và giới hạn
 
 A/C cần review schema/lock order/auth/transaction/cursor; B review RealtimeClient admission/generation/cleanup. Chưa tạo chữ ký hoặc tự approve. Fixture MOCK và WS/PG loopback không là sensor, LAN, USB hotplug, E1/E2 hay hardware acceptance. Giữ FULL default, BASE03 NOT_DECIDED, MON01 technical verified/physical-B-BASE02pending, MON02 physical0/12NOT_RUN. MON07 chưa DONE; không merge.
+
+
+## Remote audit cuối / bàn giao
+
+Trong lúc chạy test, main tiến tới `3bdefe6ccc346a316a91f1e280fe4f5c74600cfd` (PR67 docs/fixture EX02); diff protocol/client/server/scripts/pom so với1d35b537 rỗng, Flyway main vẫnV12, không có collisionV13 tại lúc kiểm. Không lấy approval EX02 làm approval MON07. Proposal PR72 vẫnc9a5829/chưa merge; implementation giữ đúng base c9a5829 và Draft stacked, không merge/rebase để kéo thay đổi mới. Trước integration, owner cần reconcile docs/main/proposal và kiểm migration version lại.
+
+Đã hoàn thành slice thử nghiệm kỹ thuật trong phạm vi user giao; MON07 tổng thể vẫn NOT_DONE/owner-physical review pending. Không sửa PR70–73 khác, dashboard, observer production hoặc D07-05.

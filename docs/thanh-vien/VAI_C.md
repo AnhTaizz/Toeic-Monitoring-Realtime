@@ -436,3 +436,5 @@ Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG
 ### MON07 slice MOCK — ủy quyền thử nghiệm19/10/2026
 
 User cho phép D07-01–04 PR72c9a5829 cho MOCK/REAL WS/PG TEST/commit ACK/history, nhánh riêng feat/v2-c-mon07-signal-pipeline stacked. [Report](../../evidence/v2-c-mon07-signal-pipeline/REPORT.md); A/C review transaction/locks/schema, B review transport/generation/admission. Chưa human approval/D07-05/observer/push/dashboard/DONE hoặc merge. FULLdefault/gate/physicalpending giữ nguyên.
+
+Kết quả slice source0f9d8e7: focused216PASS/fullverify1025PASS+6SKIP,12REAL PG/WS cases,41case mới subset; teardown0schema/stop0, JARreceipt cóhash. Reviewer A/C xem auth/locks/V13/cursor, B xem capability current run/ACK/admission/writecleanup; broader22matrix/hardware chưa PASS. CI exactHEAD trong Draft PR; không tự merge/DONE.

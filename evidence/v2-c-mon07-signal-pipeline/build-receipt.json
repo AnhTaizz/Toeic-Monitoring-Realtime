@@ -1,0 +1,84 @@
+{
+  "sourceSha": "0f9d8e78275f168cde25f2649ac008301a99b2fb",
+  "buildRunId": "mon07-20261019T151101Z-4f839916",
+  "command": "mvn verify (isolated PG TEST)",
+  "status": "SUCCESS",
+  "defaultExperimentEnabled": false,
+  "productionObserverWired": false,
+  "artifacts": [
+    {
+      "module": "protocol",
+      "file": "protocol-0.1.0-SNAPSHOT.jar",
+      "bytes": 106795,
+      "sha256": "96fadf0699107183c70700ecc428121d9dc186d0c8a70b355746eb25632b4dab",
+      "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+    },
+    {
+      "module": "client",
+      "file": "client-0.1.0-SNAPSHOT-all.jar",
+      "bytes": 11483060,
+      "sha256": "e1d5c34f4a49d8a4f706e163f4e330f4e8cd6a5693ecb2c4013100baf7e0888c",
+      "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+    },
+    {
+      "module": "server",
+      "file": "server-0.1.0-SNAPSHOT.jar",
+      "bytes": 25292004,
+      "sha256": "603f637c6b073b5f5c32ae3236c5ae240133ad87deab78566d2f68c8986d3d1c",
+      "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+    }
+  ],
+  "runtimeSourceHashes": [
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/signal/SignalJson.java",
+      "encoding": "UTF8_LF",
+      "sha256": "6fa63f1248dd4318a8e63750de8a3dbe900a03eec7befff79541bd2d73eb7965"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/signal/DisplaySignal.java",
+      "encoding": "UTF8_LF",
+      "sha256": "d1329b359bdd1954d6bef2271e36e3eece17e279348c47999e016f8a5d4aca43"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/signal/SignalMessage.java",
+      "encoding": "UTF8_LF",
+      "sha256": "7f7494aca4219af4d7d6eda5cf676cf2efccefbac973149b98eeecca3318058b"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/signal/SignalDelivery.java",
+      "encoding": "UTF8_LF",
+      "sha256": "efc71ca27ca665ae1b931566faa8e4c464eb0c05c9f500e2b643aa803f55b09f"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/realtime/MonitoringTransport.java",
+      "encoding": "UTF8_LF",
+      "sha256": "9064219c8fa511a3a14243e6dc12db05e60460a102473a90b82e7c1e829ad447"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/realtime/RealtimeClient.java",
+      "encoding": "UTF8_LF",
+      "sha256": "e2dfb756872046e641876cdd090e2207bee2eb710e636cfb1cabec0926d0f0cb"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/signal/SignalService.java",
+      "encoding": "UTF8_LF",
+      "sha256": "9d8de44cd438f07ea6bb394a3c62f38b986e0e78b725e5ab9971f69cdbff2394"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/signal/SignalController.java",
+      "encoding": "UTF8_LF",
+      "sha256": "a03f6446ce505c1501a85de8f03248be0c30d6634a3998f9cd04e01449e23991"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeWebSocketHandler.java",
+      "encoding": "UTF8_LF",
+      "sha256": "50e1ce06c64c7a52d7c7789ed0222872ec9249333541dbf9bf2000fae7309f7b"
+    },
+    {
+      "path": "server/src/main/resources/db/migration/V13__experimental_monitoring_signals.sql",
+      "encoding": "UTF8_LF",
+      "sha256": "3f795a495c8dbb3a4b994e9bfeec15b118a6708945f929331fb0c58b04a45d63"
+    }
+  ],
+  "jarVerification": "Server JAR includes SignalService/SignalController and V13 resource; no claim of separate java -jar launch"
+}
