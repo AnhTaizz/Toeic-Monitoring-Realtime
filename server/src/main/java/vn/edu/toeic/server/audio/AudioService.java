@@ -182,7 +182,6 @@ public class AudioService {
         validateRequest(request == null ? null : request.requestId());
         Session session = session(sessionId, true);
         boolean rich=v2!=null && v2.isV2Session(sessionId);
-        if(rich)requireSessionProctor(user,sessionId);
         if (!List.of("SCHEDULED", "IN_PROGRESS").contains(session.state()))
             throw error(ErrorCode.INVALID_STATE, "Ca thi không thể start Listening.", request.requestId());
         var manifest = manifest(session);

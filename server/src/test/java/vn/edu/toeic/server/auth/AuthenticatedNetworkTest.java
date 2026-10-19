@@ -319,6 +319,9 @@ class AuthenticatedNetworkTest {
         @Bean vn.edu.toeic.server.monitoring.MonitoringStateService mockStateService() { return mock(vn.edu.toeic.server.monitoring.MonitoringStateService.class); }
         @Bean MonitoringGapService mockGapService() { return mock(MonitoringGapService.class); }
         @Bean vn.edu.toeic.server.audio.ListeningService mockListeningService() { return mock(vn.edu.toeic.server.audio.ListeningService.class); }
+        // The mocked ListeningService still receives its required V2 setter injection.
+        @Bean vn.edu.toeic.server.exam.rich.V2SessionPolicy mockV2Policy() { return mock(vn.edu.toeic.server.exam.rich.V2SessionPolicy.class); }
+        @Bean vn.edu.toeic.server.exam.rich.RichSessionService mockRichSessions() { return mock(vn.edu.toeic.server.exam.rich.RichSessionService.class); }
         @Bean MonitoringPresenceService mockPresenceService() { return mock(MonitoringPresenceService.class); }
         @Bean JdbcClient mockJdbc() { return mock(JdbcClient.class); }
         @Bean MonitoringEventService mockEventService() { return mock(MonitoringEventService.class); }

@@ -86,6 +86,26 @@ public class RichSessionService {
         media.recheck(graph,before);
         return new CreateRichSessionResponse(session,request.examId(),"PROCTORED_V2","SCHEDULED",attempts);
     }
+    /**
+     * Tổ chức lại một lượt V2 bị gián đoạn: ca mới SCHEDULED cùng PROCTORED_V2, attempt mới writer=1/deadline null.
+     * Caller (ListeningService.reorganize) đã giữ khóa old session -> old attempt; dữ liệu ca cũ không bị sửa.
+     */
+    public void createReplacement(AuthenticatedUser proctor,String sessionId,String examId,String title,int durationSeconds,
+            List<Long> proctorIds,long candidateId,String attemptId) {
+        auth.requireRole(proctor,Role.PROCTOR);
+        var graph=verifiedResources(examId);var before=media.verify(graph);
+        int inserted=jdbc.sql("""
+                INSERT INTO exam_sessions(session_id,exam_id,title,duration_seconds,created_by,contract_version)
+                VALUES(:s,:e,:title,:d,:u,'PROCTORED_V2') ON CONFLICT(session_id) DO NOTHING
+                """).param("s",sessionId).param("e",examId).param("title",title).param("d",durationSeconds).param("u",proctor.userId()).update();
+        if(inserted!=1)throw ExamApiException.invalidInput("Ca thi mới đã tồn tại");
+        for(long id:proctorIds)jdbc.sql("INSERT INTO exam_session_proctors(session_id,proctor_user_id) VALUES(:s,:u)").param("s",sessionId).param("u",id).update();
+        if(jdbc.sql("INSERT INTO monitoring_attempts(attempt_id,candidate_user_id,state,session_id,exam_id) VALUES(:a,:u,'ACTIVE',:s,:e) ON CONFLICT(attempt_id) DO NOTHING")
+                .param("a",attemptId).param("u",candidateId).param("s",sessionId).param("e",examId).update()!=1)
+            throw ExamApiException.invalidInput("Lượt thi mới đã tồn tại");
+        for(long p:proctorIds)jdbc.sql("INSERT INTO monitoring_proctor_assignments(attempt_id,proctor_user_id) VALUES(:a,:p)").param("a",attemptId).param("p",p).update();
+        media.recheck(graph,before);
+    }
     private static boolean unique(List<Long> ids,int min,int max) {
         return ids!=null && ids.size()>=min && ids.size()<=max && ids.stream().allMatch(id->id!=null&&id>0) && new HashSet<>(ids).size()==ids.size();
     }

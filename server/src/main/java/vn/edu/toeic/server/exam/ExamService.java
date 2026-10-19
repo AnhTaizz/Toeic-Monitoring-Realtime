@@ -964,7 +964,8 @@ public class ExamService {
     @Transactional
     public boolean timeoutAttempt(String attemptId) {
         var v2State=v2==null?null:v2.lockForSystem(attemptId);
-        if(v2State!=null && !"IN_PROGRESS".equals(v2State.sessionState()))return false;
+        // V2 has no deadline before START; after START a CLOSED session still finalizes once like legacy.
+        if(v2State!=null && "SCHEDULED".equals(v2State.sessionState()))return false;
         record TimeoutAttemptLock(
                 String attemptId,
                 String examId,
