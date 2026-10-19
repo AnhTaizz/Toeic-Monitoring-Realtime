@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -54,6 +55,10 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
     private LongFunction<AudioPreparationView> audioFactory;
     private AudioPreparationView listeningView;
     private long audioWriter;
+    private ScrollPane sharedAudioNode;
+    private VBox defaultQuestionArea;
+    private VBox defaultPaletteArea;
+    private ListeningPart3View part3View;
 
     /** Listening shares this session's writer; navigation never owns a second attempt session. */
     public void enableListening(LongFunction<AudioPreparationView> factory) {
@@ -73,15 +78,48 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
             closeAudio();
             audioWriter = state.writerEpoch();
             listeningView = audioFactory.apply(audioWriter);
-            ScrollPane audio = new ScrollPane(listeningView);
-            audio.setFitToWidth(true); audio.setPrefWidth(380); audio.setMaxWidth(380);
-            setLeft(audio);
+            sharedAudioNode = new ScrollPane(listeningView);
+            sharedAudioNode.setFitToWidth(true);
+            listeningView.onSegmentQuestions(ids -> Platform.runLater(() -> {
+                if (closed || ids.isEmpty()) return;
+                int target = paper.groupIndexOf(ids.getFirst());
+                if (target >= 0 && part3Group(target) && target != groupIndex) showGroup(target);
+            }));
+            placeAudio();
         }
     }
 
     private void closeAudio() {
         if (listeningView != null) { listeningView.close(); listeningView = null; }
+        if (part3View != null) part3View.setAudioNode(null);
+        sharedAudioNode = null;
         setLeft(null);
+    }
+
+    private boolean part3Group(int index) {
+        if (index < 0 || index >= paper.groups().size()) return false;
+        CandidateQuestionDto first = paper.groups().get(index).questions().getFirst();
+        return "LISTENING".equalsIgnoreCase(first.section()) && first.part() == 3;
+    }
+
+    private void placeAudio() {
+        if (sharedAudioNode == null || listeningView == null) return;
+        if (part3Group(groupIndex)) {
+            setLeft(null);
+            listeningView.setPart3Compact(true);
+            sharedAudioNode.setMaxWidth(Double.MAX_VALUE);
+            sharedAudioNode.setPrefWidth(Region.USE_COMPUTED_SIZE);
+            sharedAudioNode.setPrefHeight(96);
+            sharedAudioNode.setMaxHeight(106);
+            part3View.setAudioNode(sharedAudioNode);
+        } else {
+            part3View.setAudioNode(null);
+            listeningView.setPart3Compact(false);
+            sharedAudioNode.setPrefWidth(380);
+            sharedAudioNode.setMaxWidth(380);
+            sharedAudioNode.setMaxHeight(Double.MAX_VALUE);
+            setLeft(sharedAudioNode);
+        }
     }
 
     private final Label timerLabel = new Label("--:--:--");
@@ -126,8 +164,14 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
         setPadding(new Insets(16));
         setStyle("-fx-background-color: #0b0f19;");
         setTop(new VBox(createTopBar(attemptId, username), createNoticeBar()));
-        setCenter(createQuestionArea());
-        setRight(createPaletteArea());
+        defaultQuestionArea = createQuestionArea();
+        defaultPaletteArea = createPaletteArea();
+        part3View = new ListeningPart3View(questionNumbers, paper.groups(),
+                session::selectAnswer, session::clearAnswer, this::showGroup);
+        part3View.getStylesheets().add(Objects.requireNonNull(
+                getClass().getResource("/listening-part3.css")).toExternalForm());
+        setCenter(defaultQuestionArea);
+        setRight(defaultPaletteArea);
         setBottom(createBottomBar());
 
         // Đồng hồ chỉ cập nhật nhãn và báo cho session; không mở hộp thoại trong KeyFrame.
@@ -378,6 +422,23 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
         int from = questionNumbers.get(first.questionId());
         int to = questionNumbers.get(questions.getLast().questionId());
         groupTitleLabel.setText((from == to ? "Câu " + from : "Câu " + from + "–" + to) + " / " + paper.questions().size());
+
+        if (part3Group(index)) {
+            if (getCenter() != part3View) {
+                setRight(null);
+                setCenter(part3View);
+                placeAudio();
+            }
+            part3View.render(group, current == null ? Map.of() : current.answers(),
+                    id -> current != null && current.editable() && session.canEditQuestion(id));
+            updatePaletteHighlights(group);
+            return;
+        }
+        if (getCenter() != defaultQuestionArea) {
+            setCenter(defaultQuestionArea);
+            setRight(defaultPaletteArea);
+            placeAudio();
+        }
 
         boolean hasPassage = group.passageText() != null;
         passageContainer.setVisible(hasPassage);
