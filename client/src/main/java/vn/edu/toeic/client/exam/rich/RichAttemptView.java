@@ -77,6 +77,7 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
         getStyleClass().add("toeic-room");
         getStylesheets().add(Objects.requireNonNull(RichAttemptView.class.getResource("/toeic-room.css")).toExternalForm());
         header = new RoomHeader(displayName, username);
+        header.deadline(null, java.time.Instant.now()); // trước START không có đồng hồ
         images = new RichImageStore<>(api, RichAttemptView::decode);
         source = new RichExamSource(api, attemptId);
         setTop(header);

@@ -52,6 +52,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
     private final StackPane content = new StackPane();
     private final Label saveLabel = new Label();
     private final Label positionLabel = new Label();
+    private final Label progressLabel = new Label();
     private final Label noticeLabel = new Label();
     private final Button retryButton = new Button("Thử lưu lại");
     private final Button reclaimButton = new Button("Lấy lại quyền ghi trên máy này");
@@ -177,7 +178,9 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         submitButton.setOnAction(event -> confirmSubmit());
         Region left = new Region(), right = new Region();
         HBox.setHgrow(left, Priority.ALWAYS); HBox.setHgrow(right, Priority.ALWAYS);
-        HBox footer = new HBox(14, saveLabel, left, positionLabel, right, previousButton, nextButton, submitButton);
+        progressLabel.setId("room-progress-count");
+        progressLabel.getStyleClass().add("room-strong");
+        HBox footer = new HBox(14, saveLabel, left, positionLabel, progressLabel, right, previousButton, nextButton, submitButton);
         footer.setAlignment(Pos.CENTER_LEFT);
         footer.getStyleClass().add("room-footer");
         return footer;
@@ -567,6 +570,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         boolean conflict = view.phase() == ExamSession.Phase.CONFLICT;
         reloadButton.setVisible(conflict); reloadButton.setManaged(conflict);
         submitButton.setDisable(!view.canSubmit());
+        progressLabel.setText("Đã chọn " + view.answers().size() + "/" + model.totalQuestions());
         header.deadline(view.deadlineAt(), Instant.now());
         if (unit != null) buildStepper(model.part(unit.part()));
         showOutcomeOnce(view);

@@ -1,0 +1,9 @@
+session 1b0bb36b-d5c9-4eb1-9154-a19b6cfa1b8d attempt adc4d5b4-b168-472c-93bb-8c628b375abd
+clicked Tải / chuẩn bị lại audio
+clicked Thử loa
+clicked Tôi nghe được
+clicked Xác nhận sẵn sàng
+proctor START ok
+listening ended: Server đã xác nhận phát xong Listening.
+server answers {"q101":"B","q147":"D"} revision 2
+listening status: Server đã xác nhận phát xong Listening.

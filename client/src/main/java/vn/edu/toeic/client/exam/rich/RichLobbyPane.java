@@ -48,6 +48,9 @@ final class RichLobbyPane extends VBox {
         StackPane stage = new StackPane(slots, cover, coverText);
         stage.setId("room-visual-stage");
         stage.setMinSize(380, 72); stage.setMaxSize(380, 72);
+        // Cắt mọi thứ ngoài khung để không pixel ảnh nào lọt ra ngoài màn che (kể cả ở góc).
+        javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle(380, 72);
+        stage.setClip(clip);
         // Màn che phủ toàn bộ ảnh; ảnh vẫn visible/opacity 1 trong scene để đo hiển thị thật.
         cover.setMouseTransparent(true);
 

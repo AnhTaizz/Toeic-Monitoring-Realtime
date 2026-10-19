@@ -136,5 +136,5 @@
 .toeic-room .room-check-ok { -fx-text-fill: #16a34a; -fx-font-weight: 700; }
 .toeic-room .room-check-wait { -fx-text-fill: #d97706; -fx-font-weight: 700; }
 .toeic-room .room-check-bad { -fx-text-fill: #dc2626; -fx-font-weight: 700; }
-.toeic-room .room-visual-cover { -fx-background-color: #f6f7f9; -fx-background-radius: 10; }
+.toeic-room .room-visual-cover { -fx-background-color: #f6f7f9; -fx-background-radius: 0; }
 .toeic-room .room-audio-panel { -fx-background-color: #ffffff; -fx-padding: 12; }
