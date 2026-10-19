@@ -26,6 +26,18 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
     private final PauseTransition mediaTimeout = new PauseTransition(Duration.seconds(15));
     private boolean connected, closed;
     private long sharedWriter;
+    /** Presentation-only; playback coordinator and all audio controls retain ownership. */
+    public void setPart3Compact(boolean compact) {
+        playback.setCompact(compact);
+        for (var node : getChildren()) {
+            boolean visible = !compact || node == playback || node == status || node == connection;
+            node.setVisible(visible);
+            node.setManaged(visible);
+        }
+    }
+    public void onPlaybackSegmentChanged(java.util.function.Consumer<java.util.List<String>> listener) {
+        playback.onSegmentChanged(listener);
+    }
 
     public AudioPreparationView(String serverUrl, String token, Collection<String> scope, RealtimeClient realtime) {
         this(new AudioApiClient(serverUrl, token), new ListeningApiClient(serverUrl,token), cacheRoot(), scope, realtime);
