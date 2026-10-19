@@ -1,0 +1,27 @@
+{
+  "runId": "MON01-20261019T103217Z-25e62fdd",
+  "sourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+  "serverTestConfiguration": {
+    "heartbeatMillis": 100,
+    "pollMillis": 100,
+    "maxProcesses": 128,
+    "fullQueueCapacity": 16,
+    "maxPendingFull": 1,
+    "maxDedupIds": 64,
+    "stateStaleMillis": 2000,
+    "stateScanMillis": 25,
+    "stateTtlMillis": 5000,
+    "presenceTimeoutMillis": 1200,
+    "presenceScanMillis": 25,
+    "seed": "deterministic PIDs770001/770002/880001; TEST schema UUID",
+    "stateStore": "RAM, one server JVM",
+    "workload": "REAL collector worker; MOCK readings; SIMULATED disconnect/write/ACK loss",
+    "network": "REAL localhost HTTP/WS/PostgreSQL"
+  },
+  "clientDeltaExperimental": false,
+  "fullDefaultPreserved": true,
+  "sourceReadings": "MOCK; independent REAL ProcessHandle evidence is reused from BASE03",
+  "faults": "SIMULATED disconnect/withheld write/ACK loss/deferred commit trigger/DB end-state updates",
+  "localGui": "REAL proctor component; full candidate GUI/manual submit/timeout NOT_RUN",
+  "physicalLan": "NOT_RUN"
+}

@@ -426,3 +426,8 @@ Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG
 ## Ghi chú làm dở BASE-03 — 19/10/2026
 
 [Thực thi mới A–J](../../evidence/v2-c-base03/REPORT.md): FULL-first/314focused/983regressionPASS+7SKIP/Python22/oracle72/local42 và probe epoch/sequence WS PASS trên PG TEST riêng; production giữ nguyên. Nhánh test/v2-c-base03-delta-gate có commit local, chưa push/PR. Bộ ZIP BASE03/hash/runbook và41case đã chuẩn bị, kit29+29PASS nhưng physicalLAN0/41 NOT RUN, B review PENDING. Việc tiếp: nhận hai máy và B thao tác F Reading/Listening/cable-loss/rejoin/cleanup, C đối chiếu SQL/epoch/history, A xem auth/COMMIT/isolation; giữ raw target cho reviewer. GateNOT_DECIDED, FULL mặc định, E2NO; không tự DONE hoặc chuyển MON-07/MON-02.
+
+
+## Ghi chú làm dở MON-01 — 19/10/2026
+
+[Report MON-01](../../evidence/v2-c-mon01/REPORT.md): pipeline14chặng/15criteria đã đối chiếu,65focused+C2WS/PG/GUI PASS mới sourcef78b407; REAL ProcessHandle/FULL bằng evidence BASE-03 kế thừa (không lượt mới). BASE-03 đã sao lưu ngoài repo có hash/Gitbundle; giữ source9a97cab sạch. BASE-02 approval PENDING, physical0 và B chưa ký nên TECHNICALLY_VERIFIED_PENDING_PHYSICAL_REVIEW. Cùng B làm [checklist16dòng](../V2_C_MON01_PHYSICAL_HANDOFF.md), actual app end/submit/timeout và cable-loss/rejoin/unique history/workers; A xác nhận BASE-02 và contract decisions trước MON-07. Không triển khai MON-07/USB, không DONE/tracker, FULL default/DELTA gate NOT_DECIDED/E2NO.

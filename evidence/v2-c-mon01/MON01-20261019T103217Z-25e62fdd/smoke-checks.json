@@ -1,0 +1,29 @@
+{
+  "runId": "MON01-20261019T103217Z-25e62fdd",
+  "harnessRunId": "T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618",
+  "sourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+  "rawPath": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/mon01-late-presence-gui.private.stdout.txt",
+  "rawSha256": "3b0b17eaf9b90b96c431c161ac511fa8ef970e01441070ef1636628197412b4e",
+  "classification": "REAL Spring/WS/HTTP/PostgreSQL/proctor JavaFX and collector workers; process readings MOCK; disconnect/write/ACK loss and TEST ended-state transitions SIMULATED; PHYSICAL NOT_RUN",
+  "assertions": [
+    "PASS REAL V7 preexisting event -> V8 preserves identity/timestamp; old provenance remains UNSPECIFIED",
+    "PASS legacy event accepted with UNSPECIFIED delivery; no unsynchronized-clock lateness inference",
+    "PASS REAL automatic UNKNOWN/reconnect ONLINE/late event history; reads MOCK, outage and withheld write SIMULATED; B unaffected; interruption retained, droppedCount0/gaps0",
+    "PASS REAL late dedup/conflict/frozen metadata/full isolation and deferred COMMIT rollback/retry; skewed client date2099 does not infer network latency",
+    "PASS MOCK queue capacity1 drop2; REAL gap HTTP/store/retry/conflict/full-history preservation; gap ACK loss SIMULATED",
+    "PASS MON01 REAL proctor GUI metadata UNREADABLE/observation-only empty labels/separate observedAt-receivedAt/no-cheating UNKNOWN; event payload MOCK",
+    "PASS REAL proctor JavaFX component late labels/gap tab/HTTP refresh/screenshots; full candidate GUI NOT RUN",
+    "PASS MON01 REAL WS scope rejection -> automatic collector/event/state worker cleanup for SUBMITTED; TEST DB state transition SIMULATED, not HTTP submit/timeout acceptance",
+    "PASS MON01 REAL WS scope rejection -> automatic collector/event/state worker cleanup for TIMED_OUT; TEST DB state transition SIMULATED, not HTTP submit/timeout acceptance",
+    "PASS MON01 REAL WS scope rejection -> automatic collector/event/state worker cleanup for CLOSED; TEST DB state transition SIMULATED, not HTTP submit/timeout acceptance",
+    "PASS REAL role/foreign/CLOSED/assignment/token revoke checks including duplicate paths; no permission widening",
+    "T2-C2 CLEANUP PASS fx-dashboard-view",
+    "T2-C2 CLEANUP PASS gui-transport",
+    "T2-C2 CLEANUP PASS fx-platform",
+    "T2-C2 CLEANUP PASS spring-context",
+    "T2-C2 CLEANUP PASS owned-test-schema",
+    "PASS owned C2 schema/context/client resources cleaned; public/dev untouched",
+    "T2-C2 REAL Spring/PG/HTTP/WS/collector-worker PASS; process readings MOCK; disconnect/write/ACK loss SIMULATED; full candidate GUI/LAN/human A/B review NOT RUN",
+    "Summary COMPLETE: endpoints=9, categories=96; WS JSON application bytes only"
+  ]
+}

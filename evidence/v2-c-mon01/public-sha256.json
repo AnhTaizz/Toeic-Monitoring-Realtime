@@ -1,0 +1,77 @@
+{
+  "schema": "mon01-public-sha256-v1",
+  "createdUtc": "2026-10-19T10:44:22.460Z",
+  "scope": "MON01 published files; excludes this manifest; Git preserves exact bytes",
+  "files": [
+    {
+      "path": "evidence/v2-c-mon01/acceptance-matrix.json",
+      "bytes": 20497,
+      "sha256": "cee477f42cf9ba3c09d7c0e729a598e7f76cdfbebcdd1f3309db6afaad38101c"
+    },
+    {
+      "path": "evidence/v2-c-mon01/base03-backup-receipt.json",
+      "bytes": 767,
+      "sha256": "003ecb13a3cad8191c920de8c4cb58a876aaeaf0afc45deaf1a13ea4c9e89328"
+    },
+    {
+      "path": "evidence/v2-c-mon01/configuration.json",
+      "bytes": 1086,
+      "sha256": "ac38eafd46c860c5a4a880844b8b479a0fc3a5ab7a6a642ceb91cfbd19b364b1"
+    },
+    {
+      "path": "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.json",
+      "bytes": 24932,
+      "sha256": "836c3712556df699e2deb8a9576e8fc2d85882a93d8facc2442b4fefc306dbe7"
+    },
+    {
+      "path": "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/run.json",
+      "bytes": 11179,
+      "sha256": "7922c105e526eb11eabff8482acbf86c8289e904ba76007bd2037d9ab23cc479"
+    },
+    {
+      "path": "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json",
+      "bytes": 2722,
+      "sha256": "fbacfecec5e9cea5a9ef74142648fd78f0335957b3060cfe765156025eb531e0"
+    },
+    {
+      "path": "evidence/v2-c-mon01/physical-pending/cases.csv",
+      "bytes": 3704,
+      "sha256": "91814b0abcc07b76b6be1d5907046609295ae37dfd8f4babdd191c7714ff91ee"
+    },
+    {
+      "path": "evidence/v2-c-mon01/physical-pending/review.json",
+      "bytes": 656,
+      "sha256": "45854a8bbfcd70ace9d90862482e95193b1868cf20eca67cccacefad6aeb41b8"
+    },
+    {
+      "path": "evidence/v2-c-mon01/pipeline-audit.json",
+      "bytes": 14437,
+      "sha256": "ce520fc31ba45a5dd6229a5571a844ce481b30419354da13e5cef29065973b6b"
+    },
+    {
+      "path": "evidence/v2-c-mon01/raw-manifest.json",
+      "bytes": 17150,
+      "sha256": "4fab9a2b796bd1db99acb43595b330f059a7771ca094a1fd26de95ba605f7a55"
+    },
+    {
+      "path": "evidence/v2-c-mon01/README.md",
+      "bytes": 5275,
+      "sha256": "ae804bdb5cdcd4e21aaa08552945802811d41f23f5a93bd2c5e37ae47b6408f2"
+    },
+    {
+      "path": "evidence/v2-c-mon01/REPORT.md",
+      "bytes": 19074,
+      "sha256": "2cd9853e9af4632e9cc77f24180b3886a5cf28303f10da9e6fdff4dd95e5df1c"
+    },
+    {
+      "path": "evidence/v2-c-mon01/reuse-assessment.json",
+      "bytes": 1793,
+      "sha256": "bd4cdf801bf8350e039add51490c8611fcab05dabd5faff3fa6233372791b22c"
+    },
+    {
+      "path": "evidence/v2-c-mon01/summary.json",
+      "bytes": 1816,
+      "sha256": "57a41038ae5d5d54db6cf9a7391d291191a08862795a0fda88beed3e79cff10b"
+    }
+  ]
+}
