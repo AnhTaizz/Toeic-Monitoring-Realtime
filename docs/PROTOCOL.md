@@ -938,3 +938,7 @@ Nhánh `stabilize/final-rc-20261017`. Không thêm endpoint, field hay giá tr�
 | status (path hoặc `?attemptId=`) và history của legacy | 200 theo quyền | Giữ nguyên |
 | `events` / `interruptions` / `gaps` > 5000 dòng | 500 `RETRYABLE_SERVER_ERROR` `retryable:true` | 409 `INVALID_STATE` `retryable:false`, message cố định; không trả danh sách cắt bớt |
 | Dashboard nhận 409 từ ba endpoint lịch sử | "Không tải được dữ liệu hợp lệ…" | Thông báo giới hạn5000, giữ danh sách đầy đủ gần nhất, đánh dấu stale; trần body8 MiB (trước 4 MiB) |
+
+## Hợp đồng đề xuất EX-02 — chưa phải endpoint hiện hành
+
+19/10/2026: [Rich HTTP contract](EX02_RICH_EXAM_CONTRACT_V1.md) và [ADR-V2-03](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) là TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn xác nhận](plan-v2/EX02_TEAM_APPROVAL_20261019.md), không phải wire runtime mới. Preparation nhúng Part1 visual manifest; image route SCHEDULED chỉ allowlist Part1/current manifest; visual/ready và combined readiness dùng HTTPv2. Full exam/options/answers vẫn chặn trước START; cả Audio+Visual READY là precondition, LISTENING_START hiện có là authority duy nhất. EX06 phải bridge rich DTO sau START và image-visible gate trước MediaPlayer.play, không GETv1 hoặc player thứ hai. Giữ ErrorCode/ApiErrorResponse/WSv0, legacy QD21/FULL/no-replay. Chưa controller/DTO production, không GENERAL_START hoặc runtime/GUI PASS.
