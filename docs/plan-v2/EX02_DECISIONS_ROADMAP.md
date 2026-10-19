@@ -1,0 +1,29 @@
+# EX-02 — Decision register và kế hoạch PR
+
+19/10/2026, **PROPOSED_FOR_OWNER_REVIEW**. [Contract](../EX02_RICH_EXAM_CONTRACT_V1.md), [ADR](ADR-V2-03_SESSION_START_DEADLINE.md). Chỉ thiết kế/fixtures, không owner signature, không sửa task status/giờ công. “Chọn” dưới đây là lựa chọn để đề xuất, chưa cấp quyền runtime.
+
+| Decision | Recommended choice | Source evidence | Impact | Owner | Approval status | Blocker |
+|---|---|---|---|---|---|---|
+| D01 DTO/version | v2 strict HTTP DTO riêng, legacy short import giữ | ExamImportRequest/CandidateExamDto phẳng, V11 additive | A importer, B mapper | A, B review | PROPOSED_FOR_OWNER_REVIEW | EX03/06 cần chốt field/nullable/limits |
+| D02 Part7 | document metadata trên blocks, group-order xuyên documents | V11 thiếu document identity; fixture g147 ba documents | Append-only migration, B document panes | A/B, C review DDL | PROPOSED_FOR_OWNER_REVIEW | EX03/06 chờ approval, không sửa V11 |
+| D03 Provenance/options | sourceRef→RETURNING id, thêm option_content_status; fail closed unverified | V11 source FK/key/group/media status; seed importable:false | Không fake key/options/license | A/B | PROPOSED_FOR_OWNER_REVIEW | EX01 evidence vẫn thiếu, không runtime production seed |
+| D04 Audio | Group→asset→ordinal filename→audio_file→existing manifest/player | AudioCatalog distinct.sorted; AudioService.names/start | 54-file playlist cùng authority | A/B | PROPOSED_FOR_OWNER_REVIEW | EX03 bridge, B hearing/codec review |
+| D05 Image | scoped endpoint, external root, PNG/JPEG8MiB/16Mpx, no-store/no304 | Chưa image controller/root; AudioCatalog realpath làm tham chiếu | A secure bytes, B async worker | A/B, C auth review | PROPOSED_FOR_OWNER_REVIEW | EX05 path/junction tests, limits dataset |
+| D06 Catalog | Imported/content/media-at-import flags riêng; recheck tạo ca; no client READY claim | ExamController chưa catalog, ProctorSessionView manual examId | Metadata-only, false nếu legacy/unverified | A/B | PROPOSED_FOR_OWNER_REVIEW | EX07 + EX03 persistence |
+| D07 START/deadline | PROCTORED_V2 explicit, reuse Listening START, clock tại START; LEGACY_V1 giữ QD21 | ExamService prestart reproducer; AudioService tx; ADR S01–16 | Chạm A/B contract, C scheduler | A/B approve, C review | PROPOSED_FOR_OWNER_REVIEW | P0 EX07, QD21 amendment sau duyệt |
+| D08 Lock/retry | session→attempt sorted; V2 current-writer trước cached submit; cache không bỏ auth | AudioService session→attempt; submit cache trước current-writer ở source legacy | Race/deadlock và terminal receipts | A, C reviewer; B UX | PROPOSED_FOR_OWNER_REVIEW | EX07 PG/WS barrier tests |
+| D09 Candidate secrecy | explicit allowlist, no source/scoring/localFile, PROCTOR không candidate route | Existing safe v1 DTO, V11 provenance mới | GET rich + image/auth gate | A/B, C review | PROPOSED_FOR_OWNER_REVIEW | EX03/05/06 serializer/RBAC tests |
+
+## Thứ tự PR có thể triển khai sau review
+
+| PR / owner / reviewer | Objective và modules/files dự kiến | Dependency | Acceptance trước merge | Rủi ro |
+|---|---|---|---|---|
+| EX03 — A / C; B review DTO | protocol rich records; server ExamValidationService/ExamService, append-only content/document/option-version migration; Java offline adapter | A/B duyệt D01–04,D09; EX04 V12 đã main; EX01 cần để import dữ liệu thật | Strict parse/negative cases; PG fresh+upgrade+rollback giữa options/blocks/deferred FK; sourceRef scoped; duplicate race; legacy short HTTP; candidate projection không keys | Dataset chưa verify; không đổi seed flag; không dành V13 trùng EX07 |
+| EX05 — A / C; B review media | server image root/resolver/controller; protocol CandidateMedia; config docs | D05/D09 approval, rich metadata từ EX03; có thể dựng resolver độc lập sau approval | Real PNG/JPEG, corrupt/hash/type/size/pixel; traversal/foreign/reparse/junction; auth-before-conditional; no304; FX background download contract | Windows junction test SKIP không bằng PASS; TOCTOU/operator root |
+| EX07 — A / C; B duyệt START/UX | versioned session creation/catalog/preparation; ExamService gates cả v1, AudioService START branch, timeout/reorg audit; session-version migration | D06–08 + ADR A/B approve; EX03 stored content; EX05 đủ media validation | ADR S01–S16 real PG/HTTP/WS; auth-before-cache; legacy QD21; no deadline reset; no dual START; catalog/import/ready phân biệt | P0 clock/gate migration; lock order, cached submit compatibility; không merge chỉ vì UI hoạt động |
+| EX06 — B / A | client ExamGateway/ExamSession/CandidateExamView, lobby, 7Part panes, async image loader, ProctorSessionView selector | D01/02/04/05/09 approval; integration cần EX03+05+07 | Fixture g147 render3document; Part3 shared3câu; Part6 passage4câu; FX responsiveness/cancel; duplicateSTART/no replay; legacy client paths | Old client cần thông báo upgrade; ảnh/network không trên FX thread |
+| EX08 — A / B (C kiểm evidence) | E2E suite và evidence/docs trên source tích hợp | EX03+05+07+06; BASE02; EX01 data/media/keys/options/license VERIFIED thật | 200Q7Part đúng counts, save/takeover/submit/timeout/retry, PG/HTTP/WS, JavaFX+hearing+LAN/máy2 thực; hash source/artifact | MOCK hoặc CI không thay integrated/physical acceptance |
+
+Ngay bây giờ: A/B/C review D01–09, bổ sung EX01 license/options/key/media evidence và chuẩn bị test cases; B có thể làm **fixture view độc lập** không nối runtime sau review phạm vi UI, vẫn MOCK. Không bắt đầu production DTO/importer/image/START khi chưa có owner approval tương ứng. Sau duyệt, EX03/EX05 resolver và B fixture renderer có thể chạy song song; EX07 schema/lock plan chuẩn bị song song, merge sau content prerequisite; EX06 integration sau APIs; EX08 cuối chuỗi. Reviewer kỹ thuật Codex theo ủy quyền người dùng không thay chữ ký owner cho contract P0.
+
+Không sửa BACKLOG/TRACKER thành DONE, không sửa QD21 hiện hành, không tự ghi A/B/C đã duyệt. Bản PR này là đầu ra reviewable để owner quyết định từng dòng; chưa đủ điều kiện gọi FINAL/APPROVED.

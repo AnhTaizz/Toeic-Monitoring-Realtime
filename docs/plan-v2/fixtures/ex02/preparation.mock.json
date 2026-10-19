@@ -1,0 +1,15 @@
+{
+    "schemaVersion":  2,
+    "attemptId":  "mock-attempt",
+    "sessionId":  "mock-session",
+    "examId":  "mock-ex02-200",
+    "title":  "MOCK EX02 200 questions",
+    "contractVersion":  "PROCTORED_V2",
+    "sessionState":  "SCHEDULED",
+    "attemptState":  "ACTIVE",
+    "durationMinutes":  120,
+    "startedAt":  null,
+    "deadlineAt":  null,
+    "listeningRequired":  true,
+    "audioManifestPath":  "/api/v1/attempts/mock-attempt/audio/manifest"
+}

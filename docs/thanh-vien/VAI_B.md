@@ -419,3 +419,7 @@ Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG
 
 
 19/10/2026 — [Kết quả thực thi cuối](../../evidence/stage3-execution-20261019/REPORT.md), [artifact và thao tác máy thật](../STAGE3_FINAL_HANDOFF.md). Buildsourcecfbba58, haiP1/main/CI/PG/regression/MSIlocal đã kiểm. Reviewer kỹ thuật Codex theo user, không chữ ký vai. Việc dở: nhận MSI/ZIP mới, nghe LT01–04, install máy2 và cùng C chạy41case; không lấy localPASS thay nghe thật. PR45 chỉ đóng sau disposition B.
+
+## Ghi chú làm dở — EX-02 candidate / ADR-V2-03, 19/10/2026
+
+B cần review [rich DTO/render rules](../EX02_RICH_EXAM_CONTRACT_V1.md), document panes Part7, image worker/limits, group audio bridge và [lobby/START](../plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md). Source ExamEntry hiện status→exam→takeover; ca V2 đề xuất preparation→takeover→READY→START→rich exam, cần EX06 mới. [Fixtures MOCK](../plan-v2/fixtures/ex02/README.md) đủ200 câu và expected layout, có thể chuẩn bị view độc lập; chưa JavaFX render/hearing/integrated PASS. EX06 runtime chờ contract A/B và EX03/05/07; không player thứ hai/replay hoặc UI-only authorization. Chưa ký owner.

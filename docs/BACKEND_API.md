@@ -785,3 +785,7 @@ Client chỉ phát đúng manifest/writer/start ID, không autoplay lại khi re
 - Chưa có API monitoring đa tín hiệu V2 (USB/focus/display); chỉ process monitoring v0 hiện hữu.
 
 [Review EX02](EX02_RICH_EXAM_CONTRACT_PROPOSAL.md) đề xuất records/HTTPv2/media vàSTARTgate, **chưa phê duyệt hoặc triển khai**. [Kiểm chứngPGV11](EX04_V11_VERIFICATION.md) xác nhận APIv1 vẫn hoạt động trên schema nâng cấp, duplicateimport trả400 không overwrite vàSCHEDULED còn có thể đọc/lưu/nộp theoQD21. Không suy APIrich/image/STARTgate đãcó từ việc mergeSQL.
+
+## API V2 — contract candidate, chưa triển khai
+
+[EX-02 bản ứng viên](EX02_RICH_EXAM_CONTRACT_V1.md) định nghĩa exact records/payload/validation/RBAC cho import, candidate exam, image, catalog và preparation/session. [ADR-V2-03](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) đề xuất START gate cả v1 theo explicit session version, chưa đổi QD21/runtime. Chỉ là PROPOSED_FOR_OWNER_REVIEW; những route v2 này chưa callable trên baseline1d35b53.

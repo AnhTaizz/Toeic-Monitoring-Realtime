@@ -421,3 +421,7 @@ Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG
 
 
 19/10/2026 — [Kết quả thực thi cuối](../../evidence/stage3-execution-20261019/REPORT.md), [artifact và thao tác máy thật](../STAGE3_FINAL_HANDOFF.md). Buildsourcecfbba58, haiP1/main/CI/PG/regression/MSIlocal đã kiểm. Reviewer kỹ thuật Codex theo user, không chữ ký vai. Việc dở: cùng B chạy physical41case, chốt FULL/DELTA gate; giữ FULL khi chưa đủ bằng chứng, không nhận measurement INCOMPLETE là E1/E2PASS.
+
+## Ghi chú làm dở — review EX-02 / ADR-V2-03, 19/10/2026
+
+C review [contract/migration mapping](../EX02_RICH_EXAM_CONTRACT_V1.md) và [ADR khóa/START/retry/timeout](../plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) phần A: session→attempt stable, auth-before-cache, V2 current-writer check, rollback/AFTER_COMMIT/no-replay, maintenance/reorg không đảo khóa. Đây PROPOSED_FOR_OWNER_REVIEW; không thay monitoring wire/FULL mặc định hoặc collector.29 scenario trong fixture là thiết kế MOCK; PG barrier/race/HTTP/WS S01–S16 cần chạy ở EX07 sau A/B duyệt. Không human signature hoặc tracker DONE.

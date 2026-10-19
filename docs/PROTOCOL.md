@@ -938,3 +938,7 @@ Nhánh `stabilize/final-rc-20261017`. Không thêm endpoint, field hay giá tr�
 | status (path hoặc `?attemptId=`) và history của legacy | 200 theo quyền | Giữ nguyên |
 | `events` / `interruptions` / `gaps` > 5000 dòng | 500 `RETRYABLE_SERVER_ERROR` `retryable:true` | 409 `INVALID_STATE` `retryable:false`, message cố định; không trả danh sách cắt bớt |
 | Dashboard nhận 409 từ ba endpoint lịch sử | "Không tải được dữ liệu hợp lệ…" | Thông báo giới hạn5000, giữ danh sách đầy đủ gần nhất, đánh dấu stale; trần body8 MiB (trước 4 MiB) |
+
+## Hợp đồng đề xuất EX-02 — chưa phải endpoint hiện hành
+
+19/10/2026: [Rich HTTP contract candidate](EX02_RICH_EXAM_CONTRACT_V1.md) và [ADR-V2-03](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) là PROPOSED_FOR_OWNER_REVIEW, không cập nhật wire đang chạy ở các mục trên. Đề xuất import/exam/image/catalog/preparation/session v2 riêng; giữ ErrorCode/ApiErrorResponse và WSv0, LISTENING_START authority duy nhất. Legacy QD21 giữ, V2 gate cả v1 theo session contract version sau khi được duyệt. Không có API rich mới hoặc GENERAL_START trong source của PR thiết kế.

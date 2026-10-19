@@ -1,0 +1,12 @@
+{
+    "scope":  "PROPOSED_CONTRACT_ONLY",
+    "dtoRecords":  21,
+    "exampleRoots":  7,
+    "jsonFiles":  12,
+    "localLinks":  85,
+    "fieldConsistency":  "PASS",
+    "java21Signatures":  "PASS",
+    "contractSha256":  "3459bd8d1aa09e563b64d77db63eacc993344e510da1da5a095068ce3ba60680",
+    "runtime":  "NOT RUN",
+    "note":  "Compilation and design consistency do not implement or validate server behavior."
+}

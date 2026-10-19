@@ -1,0 +1,36 @@
+{
+  "label": "MOCK_DESIGN_ONLY",
+  "cases": [
+    {"id":"duplicate-question","expectedReason":"DUPLICATE_QUESTION"},
+    {"id":"duplicate-group","expectedReason":"DUPLICATE_GROUP"},
+    {"id":"duplicate-block","expectedReason":"DUPLICATE_BLOCK"},
+    {"id":"duplicate-media","expectedReason":"DUPLICATE_MEDIA"},
+    {"id":"bad-order","expectedReason":"QUESTION_ORDER"},
+    {"id":"bad-part-section","expectedReason":"SECTION_PART"},
+    {"id":"foreign-group","expectedReason":"QUESTION_GROUP"},
+    {"id":"missing-media","expectedReason":"MEDIA_REFERENCE"},
+    {"id":"foreign-media","expectedReason":"MEDIA_REFERENCE"},
+    {"id":"bad-option-key","expectedReason":"OPTION_KEY"},
+    {"id":"null-discriminator","expectedReason":"NULL_DISCRIMINATOR"},
+    {"id":"missing-file","expectedReason":"MISSING_FILE"},
+    {"id":"corrupt-file","expectedReason":"CORRUPT_FILE"},
+    {"id":"unverified-source","expectedReason":"SOURCE_UNVERIFIED"},
+    {"id":"unverified-options","expectedReason":"OPTIONS_UNVERIFIED"},
+    {"id":"bad-document-boundary","expectedReason":"DOCUMENT_BOUNDARY"},
+    {"id":"bad-document-order","expectedReason":"DOCUMENT_BOUNDARY"},
+    {"id":"candidate-key-leak","expectedReason":"CANDIDATE_LEAK"},
+    {"id":"unsafe-path","expectedReason":"UNSAFE_PATH"}
+  ],
+  "accessCases": [
+    {"id":"foreign-owner","role":"CANDIDATE","owner":false,"assigned":false,"revoked":false,"operation":"EXAM","sessionState":"IN_PROGRESS","expectedStatus":403},
+    {"id":"unassigned-proctor","role":"PROCTOR","owner":false,"assigned":false,"revoked":false,"operation":"START","sessionState":"SCHEDULED","expectedStatus":403},
+    {"id":"revoked-retry","role":"PROCTOR","owner":false,"assigned":true,"revoked":true,"operation":"START","sessionState":"IN_PROGRESS","expectedStatus":401},
+    {"id":"get-before-start","role":"CANDIDATE","owner":true,"assigned":false,"revoked":false,"operation":"EXAM","sessionState":"SCHEDULED","expectedStatus":409},
+    {"id":"save-before-start","role":"CANDIDATE","owner":true,"assigned":false,"revoked":false,"operation":"SAVE","sessionState":"SCHEDULED","expectedStatus":409},
+    {"id":"submit-before-start","role":"CANDIDATE","owner":true,"assigned":false,"revoked":false,"operation":"SUBMIT","sessionState":"SCHEDULED","expectedStatus":409},
+    {"id":"image-before-start","role":"CANDIDATE","owner":true,"assigned":false,"revoked":false,"operation":"IMAGE","sessionState":"SCHEDULED","expectedStatus":409},
+    {"id":"takeover-lobby","role":"CANDIDATE","owner":true,"assigned":false,"revoked":false,"operation":"TAKEOVER","sessionState":"SCHEDULED","expectedStatus":200},
+    {"id":"closed-start","role":"PROCTOR","owner":false,"assigned":true,"revoked":false,"operation":"START","sessionState":"CLOSED","expectedStatus":409},
+    {"id":"proctor-candidate-image","role":"PROCTOR","owner":false,"assigned":true,"revoked":false,"operation":"IMAGE","sessionState":"IN_PROGRESS","expectedStatus":403}
+  ]
+}

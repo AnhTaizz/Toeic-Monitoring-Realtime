@@ -340,3 +340,7 @@ Ngày 19/10/2026 · Trạng thái: IMPLEMENTED, chờ A/B review importer và re
 - Không đổi wire protocol, endpoint hoặc default FULL/DELTA. Xem [schema](DATABASE_SCHEMA.md) và [API backend](BACKEND_API.md).
 
 Ghi chú kiểm chứng19/10/2026, nhánhreviewEX04 chưamerge: [reportPG](EX04_V11_VERIFICATION.md) tái hiệnV11NULL-type2FAIL; V12append-only thêmCHECK để thực thi đúng typed-media invariant trên. Fresh/upgrade/rollback/legacyHTTP vàcleanverify đãchạy; không sửaV1–V11 hoặc đổiQD21. [EX02/START/media proposal](EX02_RICH_EXAM_CONTRACT_PROPOSAL.md) vẫnCHƯA DUYỆT; không xem đây là quyết định schema/API/deadline mới hoặc chữ kýA/B/C.
+
+## Đang chờ — EX-02 / ADR-V2-03, 19/10/2026
+
+**PROPOSED_FOR_OWNER_REVIEW**, không là quyết định đã duyệt hoặc sửa QD21: [contract candidate](EX02_RICH_EXAM_CONTRACT_V1.md), [ADR-V2-03 START/deadline](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md), [D01–D09](plan-v2/EX02_DECISIONS_ROADMAP.md). Khuyến nghị document metadata Part7, v2 allowlist DTO/import, image scoped/no304, ordinal audio bridge và explicit PROCTORED_V2 tính giờ tại Listening START hiện có. Ca legacy giữ QD21; không infer version bằng deadlineNULL. A/B phải duyệt contract/ADR, C review khóa/auth/timeout/migration trước implementation; chưa tạo migration hoặc thay wire/runtime.

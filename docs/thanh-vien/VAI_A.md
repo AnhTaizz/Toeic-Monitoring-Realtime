@@ -409,3 +409,7 @@ Người dùng yêu cầu đưa5 HTML lên main, xác nhận quyền công khai 
 Basef98a37f; nhánhreview riêng. [ReportV11](../EX04_V11_VERIFICATION.md) và [proposalEX02](../EX02_RICH_EXAM_CONTRACT_PROPOSAL.md). Thêm RichExamMigrationPostgresTest +runnerDB riêng;2FAIL baseline chứng minhNULL media_type bypasstypedFK. V12append-only sửa discriminator theoinvariantQD35, không sửaV1–V11. Targeted58PASS; cleanverify984PASS/6SKIP, realPG18.1/Flyway/SpringHTTP, fixtureMOCK tựtạo; cleanup0schema/clusterstop0.
 
 **Ghi chú làm dở:** C reviewV12/test; A/B chốt richDTO/provenance/ordered document/media contract vàADR START/QD21 trướcEX03/05/07. Chưa richAPI/ảnhrenderer/production200Q, seedimportable:false giữnguyên. Không mergePR hoặc tựđánhEX01/02/04/08DONE, không human signatures. GUI/hearing/LAN chưa chạytrongtask.
+
+## Ghi chú làm dở — EX-02 candidate / ADR-V2-03, 19/10/2026
+
+[Contract](../EX02_RICH_EXAM_CONTRACT_V1.md), [D01–D09/roadmap](../plan-v2/EX02_DECISIONS_ROADMAP.md), [ADR](../plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) đều PROPOSED_FOR_OWNER_REVIEW. A cần duyệt strict DTO/transaction/sourceRef/options verification, minimal document/version metadata, image/root/limits, catalog và START gate/lock/cache semantics; C review phần A, B review display/lobby. Không runtime/migration trong PR này; EX03/05/07 chờ approval tương ứng. Fixture MOCK200+29 scenario design PASS không thay PG/HTTP/WS. Phải giữ legacy QD21, gate cả v1 cho ca V2 sau duyệt; không reset deadline hoặc đánh DONE khi chưa xác nhận/evidence.

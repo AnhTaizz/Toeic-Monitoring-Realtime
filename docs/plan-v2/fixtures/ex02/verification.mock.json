@@ -1,0 +1,194 @@
+{
+    "label":  "MOCK",
+    "scope":  "Design fixtures only; NOT production validation, HTTP, PostgreSQL, GUI, hearing or START runtime",
+    "baseline":  "1d35b53729abade7b460d35ab07d042b6f9f3571",
+    "positive":  "PASS",
+    "questions":  200,
+    "groups":  76,
+    "media":  55,
+    "audioFiles":  54,
+    "negativeAndAccessCases":  29,
+    "results":  [
+                    {
+                        "id":  "duplicate-question",
+                        "status":  "PASS",
+                        "reason":  "DUPLICATE_QUESTION",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "duplicate-group",
+                        "status":  "PASS",
+                        "reason":  "DUPLICATE_GROUP",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "duplicate-block",
+                        "status":  "PASS",
+                        "reason":  "DUPLICATE_BLOCK",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "duplicate-media",
+                        "status":  "PASS",
+                        "reason":  "DUPLICATE_MEDIA",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "bad-order",
+                        "status":  "PASS",
+                        "reason":  "QUESTION_ORDER",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "bad-part-section",
+                        "status":  "PASS",
+                        "reason":  "SECTION_PART",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "foreign-group",
+                        "status":  "PASS",
+                        "reason":  "QUESTION_GROUP",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "missing-media",
+                        "status":  "PASS",
+                        "reason":  "MEDIA_REFERENCE",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "foreign-media",
+                        "status":  "PASS",
+                        "reason":  "MEDIA_REFERENCE",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "bad-option-key",
+                        "status":  "PASS",
+                        "reason":  "OPTION_KEY",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "null-discriminator",
+                        "status":  "PASS",
+                        "reason":  "NULL_DISCRIMINATOR",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "missing-file",
+                        "status":  "PASS",
+                        "reason":  "MISSING_FILE",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "corrupt-file",
+                        "status":  "PASS",
+                        "reason":  "CORRUPT_FILE",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "unverified-source",
+                        "status":  "PASS",
+                        "reason":  "SOURCE_UNVERIFIED",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "unverified-options",
+                        "status":  "PASS",
+                        "reason":  "OPTIONS_UNVERIFIED",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "bad-document-boundary",
+                        "status":  "PASS",
+                        "reason":  "DOCUMENT_BOUNDARY",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "bad-document-order",
+                        "status":  "PASS",
+                        "reason":  "DOCUMENT_BOUNDARY",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "candidate-key-leak",
+                        "status":  "PASS",
+                        "reason":  "CANDIDATE_LEAK",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "unsafe-path",
+                        "status":  "PASS",
+                        "reason":  "UNSAFE_PATH",
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "foreign-owner",
+                        "status":  "PASS",
+                        "httpDesign":  403,
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "unassigned-proctor",
+                        "status":  "PASS",
+                        "httpDesign":  403,
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "revoked-retry",
+                        "status":  "PASS",
+                        "httpDesign":  401,
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "get-before-start",
+                        "status":  "PASS",
+                        "httpDesign":  409,
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "save-before-start",
+                        "status":  "PASS",
+                        "httpDesign":  409,
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "submit-before-start",
+                        "status":  "PASS",
+                        "httpDesign":  409,
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "image-before-start",
+                        "status":  "PASS",
+                        "httpDesign":  409,
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "takeover-lobby",
+                        "status":  "PASS",
+                        "httpDesign":  200,
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "closed-start",
+                        "status":  "PASS",
+                        "httpDesign":  409,
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    },
+                    {
+                        "id":  "proctor-candidate-image",
+                        "status":  "PASS",
+                        "httpDesign":  403,
+                        "scope":  "MOCK_DESIGN_ONLY"
+                    }
+                ],
+    "importSha256":  "6deafcff77c443f1a940e4bf6b23040c8b2e46db00b77e138846e934f3cb13c8",
+    "candidateSha256":  "cb4586eb28a13d30de0e67a172f280393b3e1402ac4650a1e39fb0020878b50b",
+    "runtime":  "NOT RUN",
+    "postgres":  "NOT RUN",
+    "javafx":  "NOT RUN",
+    "hearing":  "NOT RUN",
+    "ownerApproval":  "PENDING"
+}
