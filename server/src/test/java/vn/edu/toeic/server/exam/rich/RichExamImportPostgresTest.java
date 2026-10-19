@@ -61,7 +61,7 @@ class RichExamImportPostgresTest {
     @AfterAll void close() throws Exception {if(admin!=null)admin.close();}
 
     @Test void freshV1ToV14HasValidatedHistoryAndOnlyEx03Markers() throws Exception {
-        var f=flyway(null);assertThat(f.migrate().migrationsExecuted).isEqualTo(13);f.validate();
+        var f=flyway("14");assertThat(f.migrate().migrationsExecuted).isEqualTo(13);f.validate();
         assertThat(number("SELECT count(*) FROM flyway_schema_history WHERE success")).isEqualTo(13);
         assertThat(strings("SELECT version FROM flyway_schema_history ORDER BY installed_rank"))
                 .containsExactly("1","2","3","4","5","6","7","8","9","10","11","12","14");
@@ -79,7 +79,7 @@ class RichExamImportPostgresTest {
         execute("INSERT INTO exam_sessions(session_id,exam_id,title,duration_seconds,created_by) VALUES('S','LEGACY','MOCK',3600,100)");
         execute("INSERT INTO monitoring_attempts(attempt_id,candidate_user_id,state,session_id,exam_id,answers_json,writer_epoch,saved_revision,score) VALUES('A',100,'SUBMITTED','S','LEGACY','{\"Q1\":\"A\"}',7,3,1)");
         var before=snapshot();
-        assertThat(flyway(null).migrate().migrationsExecuted).isEqualTo(1);flyway(null).validate();
+        assertThat(flyway("14").migrate().migrationsExecuted).isEqualTo(1);flyway("14").validate();
         assertThat(snapshot()).isEqualTo(before);
         assertThat(number("SELECT content_version FROM exams")).isEqualTo(1);
         assertThat(strings("SELECT option_content_status FROM exam_sources")).containsExactly("UNVERIFIED");
@@ -174,7 +174,7 @@ class RichExamImportPostgresTest {
         expect(post("/api/v2/exams/import",RichExamFixtures.tree().toString(),candidate),403,"FORBIDDEN");
         expect(get("/api/v2/attempts/MOCK/images/img-grid",candidate),403,"FORBIDDEN");
         for(String route:List.of("/api/v2/attempts/MOCK/exam","/api/v2/attempts/MOCK/preparation"))
-            expect(get(route,candidate),404,null);
+            expect(get(route,candidate),403,"FORBIDDEN");
         emptyImport();
     }
 

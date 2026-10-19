@@ -19,6 +19,12 @@ import vn.edu.toeic.server.exam.ExamApiException;
 
 @Service
 public class AudioService {
+    private vn.edu.toeic.server.exam.rich.V2SessionPolicy v2;
+    private vn.edu.toeic.server.exam.rich.VisualReadinessService visual;
+    @org.springframework.beans.factory.annotation.Autowired
+    public void setV2Policy(vn.edu.toeic.server.exam.rich.V2SessionPolicy policy,vn.edu.toeic.server.exam.rich.VisualReadinessService visual) {
+        this.v2=policy;this.visual=visual;
+    }
     private final JdbcClient jdbc;
     private final AuthorizationService authorization;
     private final AudioCatalog catalog;
@@ -115,7 +121,10 @@ public class AudioService {
         if (attempt.writerEpoch() != request.writerEpoch()) throw error(ErrorCode.STALE, "Phiên ghi cũ không được báo READY.", request.requestId());
         if (!"SCHEDULED".equals(session.state()) || session.startId() != null)
             throw error(ErrorCode.INVALID_STATE, "READY chỉ được thay đổi trong bước chuẩn bị.", request.requestId());
+        var v2State=v2==null?null:v2.lockForMutation(user,attemptId);
+        if(v2State!=null)v2.requireActiveContent(v2State);
         if (!request.ready()) {
+            if(v2State!=null)v2.invalidate(v2State);
             jdbc.sql("DELETE FROM attempt_audio_readiness WHERE attempt_id = :a").param("a", attemptId).update();
             return new AudioReadyResponse(Protocol.VERSION, request.requestId(), attemptId, attempt.writerEpoch(), false, null, null);
         }
@@ -123,14 +132,16 @@ public class AudioService {
         AudioReadinessPolicy.validate(request, manifest);
         requireActive(attempt, request.requestId()); // Resource hashing may take time; recheck deadline before write.
         Instant at = jdbc.sql("""
-                INSERT INTO attempt_audio_readiness (attempt_id, writer_epoch, manifest_id) VALUES (:a, :w, :m)
+                INSERT INTO attempt_audio_readiness (attempt_id, writer_epoch, manifest_id, preparation_epoch) VALUES (:a, :w, :m, :epoch)
                 ON CONFLICT (attempt_id) DO UPDATE SET writer_epoch = EXCLUDED.writer_epoch, manifest_id = EXCLUDED.manifest_id,
                     ready_at = CASE WHEN attempt_audio_readiness.writer_epoch = EXCLUDED.writer_epoch
-                        AND attempt_audio_readiness.manifest_id = EXCLUDED.manifest_id THEN attempt_audio_readiness.ready_at
-                        ELSE clock_timestamp() END
+                        AND attempt_audio_readiness.manifest_id = EXCLUDED.manifest_id
+                        AND attempt_audio_readiness.preparation_epoch IS NOT DISTINCT FROM EXCLUDED.preparation_epoch THEN attempt_audio_readiness.ready_at
+                        ELSE clock_timestamp() END,
+                    preparation_epoch=EXCLUDED.preparation_epoch
                 RETURNING ready_at
                 """).param("a", attemptId).param("w", attempt.writerEpoch()).param("m", manifest.manifestId())
-                .query(Instant.class).single();
+                .param("epoch",v2State==null?null:v2State.epoch()).query(Instant.class).single();
         return new AudioReadyResponse(Protocol.VERSION, request.requestId(), attemptId, attempt.writerEpoch(), true, manifest.manifestId(), at);
     }
 
@@ -170,20 +181,24 @@ public class AudioService {
         requireSessionProctor(user, sessionId);
         validateRequest(request == null ? null : request.requestId());
         Session session = session(sessionId, true);
+        boolean rich=v2!=null && v2.isV2Session(sessionId);
+        if(rich)requireSessionProctor(user,sessionId);
         if (!List.of("SCHEDULED", "IN_PROGRESS").contains(session.state()))
             throw error(ErrorCode.INVALID_STATE, "Ca thi không thể start Listening.", request.requestId());
         var manifest = manifest(session);
         if (!manifest.manifestId().equals(request.manifestId())) throw error(ErrorCode.CONFLICT, "Manifest start không khớp.", request.requestId());
         // Same start authorization is returned on retry; no second start, no deadline reset.
         if (session.startId() != null) {
+            if(rich)visual.revalidateToken(vn.edu.toeic.server.exam.rich.V2SessionPolicy.currentTokenHash(),user.userId());
             publisher.publishEvent(new StartAuthorized(sessionId, session.startId()));
             return new ListeningStartResponse(Protocol.VERSION, request.requestId(), sessionId,
                     session.manifestId(), session.startId(), session.startedAt());
         }
         if (!"SCHEDULED".equals(session.state())) throw error(ErrorCode.INVALID_STATE, "Ca thi không ở bước chuẩn bị.", request.requestId());
-        var rows = roster(session, true);
-        Instant decisionAt = now(); // After session and all attempt locks, including lock waits and file verification.
-        if (rows.isEmpty() || rows.stream().anyMatch(row -> !isReady(row, manifest.manifestId(), decisionAt)))
+        var rows = rich?List.<ReadinessRow>of():roster(session, true);
+        var verified=rich?visual.verifyStart(user,vn.edu.toeic.server.exam.rich.V2SessionPolicy.currentTokenHash(),sessionId,manifest.manifestId()):null;
+        Instant decisionAt = rich?verified.decisionAt():now();
+        if (!rich && (rows.isEmpty() || rows.stream().anyMatch(row -> !isReady(row, manifest.manifestId(), decisionAt))))
             throw error(ErrorCode.INVALID_STATE, "Ca thi chưa đủ READY hợp lệ; không thể start Listening.", request.requestId());
         String startId = UUID.randomUUID().toString();
         jdbc.sql("""
@@ -191,10 +206,14 @@ public class AudioService {
                     listening_manifest_id = :manifest, started_at = :at WHERE session_id = :session
                 """).param("start", startId).param("manifest", manifest.manifestId())
                 .param("at", java.sql.Timestamp.from(decisionAt)).param("session", sessionId).update();
+        if(rich)for(var entry:verified.committedManifests().entrySet()) {
+            jdbc.sql("UPDATE monitoring_attempts SET committed_visual_manifest_id=:m WHERE attempt_id=:a")
+                    .param("m",entry.getValue()).param("a",entry.getKey()).update();
+        }
         jdbc.sql("""
                 UPDATE monitoring_attempts a SET listening_start_id = :start, listening_manifest_id = :manifest,
                     listening_writer_epoch = a.writer_epoch, listening_authorized_at = :at, listening_last_seen_at = :at,
-                    deadline_at = COALESCE(a.deadline_at, CAST(:at AS TIMESTAMPTZ) + s.duration_seconds * INTERVAL '1 second')
+                    deadline_at = """+(rich?"CAST(:at AS TIMESTAMPTZ) + s.duration_seconds * INTERVAL '1 second'":"COALESCE(a.deadline_at, CAST(:at AS TIMESTAMPTZ) + s.duration_seconds * INTERVAL '1 second')")+"""
                 FROM exam_sessions s WHERE a.session_id = s.session_id AND s.session_id = :session
                 """).param("start", startId).param("manifest", manifest.manifestId())
                 .param("at", java.sql.Timestamp.from(decisionAt)).param("session", sessionId).update();

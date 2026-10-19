@@ -23,6 +23,10 @@ public final class RichExamJson {
             (JsonDeserializer<LocalDate>) (value, type, context) -> LocalDate.parse(value.getAsString())).create();
 
     public RichExamImportRequest read(InputStream input) throws IOException {
+        return read(input, RichExamImportRequest.class);
+    }
+
+    public <T> T read(InputStream input, Class<T> type) throws IOException {
         byte[] bytes = input.readNBytes(MAX_BYTES + 1);
         if (bytes.length > MAX_BYTES) throw new ExamApiException(HttpStatus.PAYLOAD_TOO_LARGE,
                 ErrorCode.INVALID_INPUT, "Payload rich vượt 2 MiB", null);
@@ -31,9 +35,9 @@ public final class RichExamJson {
                     .onUnmappableCharacter(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(bytes)).toString();
             try (var reader = new JsonReader(new StringReader(text))) {
                 reader.setStrictness(Strictness.STRICT);
-                JsonElement tree = value(reader, RichExamImportRequest.class, 0);
+                JsonElement tree = value(reader, type, 0);
                 if (reader.peek() != JsonToken.END_DOCUMENT) throw invalid();
-                return JSON.fromJson(tree, RichExamImportRequest.class);
+                return JSON.fromJson(tree, type);
             }
         } catch (ExamApiException known) { throw known; }
         catch (IOException | RuntimeException malformed) { throw invalid(); }

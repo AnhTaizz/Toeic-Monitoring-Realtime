@@ -44,6 +44,8 @@ public class ExamService {
     private static final int MAX_HISTORY_LIMIT = 100;
     private static final int MAX_HISTORY_CURSOR_CHARACTERS = 128;
 
+    @org.springframework.beans.factory.annotation.Autowired
+    private vn.edu.toeic.server.exam.rich.V2SessionPolicy v2;
     private final JdbcClient jdbc;
     private final ExamValidationService validationService;
     private final AuthorizationService authorizationService;
@@ -157,6 +159,12 @@ public class ExamService {
         }
         if (request.answerRevision() <= 0) {
             throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "answerRevision phải lớn hơn 0", request.requestId());
+        }
+
+        var v2State=v2==null?null:v2.lockForMutation(candidate,request.attemptId());
+        if(v2State!=null) {
+            v2.requireWriter(v2State,request.writerEpoch());
+            v2.requireStarted(v2State);
         }
 
         record AttemptLockRow(
@@ -447,6 +455,7 @@ public class ExamService {
     @Transactional(readOnly = true)
     public CandidateExamDto getCandidateExam(AuthenticatedUser user, String attemptId) {
         authorizationService.requireExamRead(user, attemptId);
+        if(v2!=null)v2.denyLegacyExam(attemptId);
 
         String examId = jdbc.sql("""
                 SELECT COALESCE(a.exam_id, s.exam_id) FROM monitoring_attempts a
@@ -706,6 +715,12 @@ public class ExamService {
             throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "answerRevision phải lớn hơn 0", request.requestId());
         }
 
+        var v2State=v2==null?null:v2.lockForMutation(candidate,request.attemptId());
+        if(v2State!=null) {
+            v2.requireWriter(v2State,request.writerEpoch());
+            if("SCHEDULED".equals(v2State.sessionState()))throw vn.edu.toeic.server.exam.rich.V2SessionPolicy.invalid();
+        }
+
         record AttemptLockRow(
                 String attemptId,
                 long candidateUserId,
@@ -809,6 +824,8 @@ public class ExamService {
                 throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.CONFLICT, "RequestId đã được sử dụng với payload khác", request.requestId());
             }
         }
+
+        if(v2State!=null)v2.requireStarted(v2State);
 
         if (!"ACTIVE".equalsIgnoreCase(attempt.state())) {
             throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.INVALID_STATE, "Lượt thi đã kết thúc hoặc đã nộp (state=" + attempt.state() + ")", request.requestId());
@@ -946,6 +963,8 @@ public class ExamService {
 
     @Transactional
     public boolean timeoutAttempt(String attemptId) {
+        var v2State=v2==null?null:v2.lockForSystem(attemptId);
+        if(v2State!=null && !"IN_PROGRESS".equals(v2State.sessionState()))return false;
         record TimeoutAttemptLock(
                 String attemptId,
                 String examId,
@@ -1057,6 +1076,9 @@ public class ExamService {
             throw new ExamApiException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_INPUT, "attemptId không được để trống", request.requestId());
         }
 
+        var v2State=v2==null?null:v2.lockForMutation(user,request.attemptId());
+        if(v2State!=null)v2.requireActiveContent(v2State);
+
         record AttemptLockRow(
                 String attemptId,
                 long candidateUserId,
@@ -1110,9 +1132,9 @@ public class ExamService {
         // Entry time is decided by the DB after obtaining the same row lock as save/submit/timeout.
         Instant decisionAt = jdbc.sql("SELECT clock_timestamp()").query(Instant.class).single();
         Instant deadlineAt = attempt.deadlineAt();
-        if (deadlineAt == null) {
+        if (deadlineAt == null && v2State==null) {
             deadlineAt = initializeDeadline(request.attemptId(), decisionAt, attempt.durationSeconds());
-        } else if (!decisionAt.isBefore(deadlineAt)) {
+        } else if (deadlineAt!=null && !decisionAt.isBefore(deadlineAt)) {
             throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.EXPIRED,
                     "Đã quá thời gian làm bài (deadline exceeded)", request.requestId());
         }
@@ -1131,8 +1153,10 @@ public class ExamService {
                 .param("attemptId", request.attemptId())
                 .update();
 
+        if(v2State!=null && "SCHEDULED".equals(v2State.sessionState()))v2.invalidate(v2State);
+
         Map<String, String> answers = Map.of();
-        if (attempt.answersJson() != null && !attempt.answersJson().isBlank()) {
+        if ((v2State==null || !"SCHEDULED".equals(v2State.sessionState())) && attempt.answersJson() != null && !attempt.answersJson().isBlank()) {
             try {
                 @SuppressWarnings("unchecked")
                 Map<String, String> parsed = GSON.fromJson(attempt.answersJson(), Map.class);
@@ -1157,6 +1181,7 @@ public class ExamService {
     @Transactional(readOnly = true)
     public CandidateAttemptStatusResponse getAttemptStatus(AuthenticatedUser user, String attemptId) {
         authorizationService.requireExamRead(user, attemptId);
+        if(v2!=null)v2.gateStatus(attemptId);
 
         record StatusRow(
                 String attemptId,
