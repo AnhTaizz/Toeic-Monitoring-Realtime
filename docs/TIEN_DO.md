@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+20/10/2026 — EX-06 trên `feat/ex06-javafx-rich-renderer-20261020` (stack EX-07): màn TOEIC Room JavaFX cho 7 Part, lobby, Visual READY (hai pulse thật), START, bridge Listening dùng player duy nhất, chọn luồng V2/legacy bằng preparation. [Bàn giao](EX06_JAVAFX_RICH_RENDERER.md). E2E thật (server + PG16 + WS + fixture MOCK) PASS 3/3; `mvn clean verify` server 443/0 fail, client chỉ còn 3 fail sẵn có của harness Linux. Chưa review/merge; nghe thật/MSI/LAN NOT RUN; dữ liệu đề thật EX-01 còn chặn EX-08; không EX-06 DONE.
+
 20/10/2026 — EX-07 trên `feat/ex07-rich-session-lifecycle-20261019` (stack EX-05 ← EX-03): catalog/create PROCTORED_V2, preparation Part1, Visual ATTEST/INVALIDATE + lease, readiness, START authority duy nhất qua Listening v1 với deadline tại DB clock, gate v1, reorganize/restart/timeout theo session version. [Bàn giao + luồng API cho FE](EX07_SESSION_LIFECYCLE.md). PG16 container: lifecycle 8/8 PASS, server 443/0 fail/4 skip. Chưa review/merge; Flyway V13/V14/V15 cần A/C chốt thứ tự; GUI/LAN/hearing NOT RUN; không EX-07 DONE.
 
 19/10/2026 — EX05 đang triển khai trên stack EX03: resolver verified bytes, Part1 canonical manifest và image route fail-closed khi thiếu EX07 authority. [Checkpoint](EX05_AUTHENTICATED_IMAGES.md). Main/PR75 chưa merge; V13/V14 MERGE BLOCKED. Targeted PG/HTTP đang chạy; không EX05/FE DONE, không sửa tracker/hours.
