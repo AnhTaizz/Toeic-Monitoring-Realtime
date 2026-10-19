@@ -327,3 +327,14 @@ Người dùng chỉ định Codex reviewer và cho phép push hai nhánh mới/
 ### 19/10/2026 · Kết luận kỹ thuật Phase3 sau corrective
 
 QD31/32/34 giữ policy và giới hạn hiện hành; QD33 corrective57 đã main, stress1280/1280/0partial và sharing thật. Technical review Codex theo ủy quyền người dùng; không owner signatures A/B/C hoặc tự đóngPR45. Buildsourcecfbba58 CI+PG+MSIlocal PASS; FULL là baseline theo hợp đồng, DELTA experimental. Gate C quyết định/B review sau physical41; hearing/máy2 vẫn NOT RUN. Không sửa tracker/hours hoặc cấp STAGE3_DONE. [Evidence](../evidence/stage3-execution-20261019/REPORT.md).
+
+## QD-35 · Schema rich content cộng thêm, giữ tương thích API V5
+
+Ngày 19/10/2026 · Trạng thái: IMPLEMENTED, chờ A/B review importer và renderer.
+
+- Dữ liệu `seedingTest` có 200 câu, 42 group dùng chung, audio/ảnh và passage nhiều block; schema V5 lặp `passage_text`/`audio_file` trên từng câu và không lưu provenance/media verification.
+- Thêm Flyway V11 thay vì sửa V1–V10: `exam_sources`, `exam_question_groups`, `exam_media_assets`, `exam_content_blocks`; backfill group cũ và thêm FK/unique/check cho thứ tự, section/part và correct option.
+- Seed Test 01 sinh từ HTML chứng minh `order_index` không đủ thay cho provenance. Vì vậy câu có `source_id` + `source_question_number`; source/group/question lưu riêng trạng thái xác minh answer key, mapping và media. Có `correct_option` không được hiểu là đã `VERIFIED`.
+- Binary media tiếp tục ở filesystem. `REMOTE_REFERENCE` chỉ là inventory; `LOCAL_VERIFIED` bắt buộc local file/MIME/bytes/SHA-256. PostgreSQL chỉ giữ metadata.
+- Giữ cột V5 và API v0 hiện tại để không phá client. Service import tạo group normalized tối thiểu từ DTO cũ; provenance/content blocks/media và renderer rich content là lượt riêng. JSON hiện là **seed candidate** có thể tái tạo, nhưng `importable:false` và không phải dataset READY cho tới khi các blocker được xác minh.
+- Không đổi wire protocol, endpoint hoặc default FULL/DELTA. Xem [schema](DATABASE_SCHEMA.md) và [API backend](BACKEND_API.md).

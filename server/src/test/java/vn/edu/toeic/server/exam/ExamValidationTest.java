@@ -139,4 +139,57 @@ class ExamValidationTest {
                 .isInstanceOf(InvalidExamException.class)
                 .hasMessageContaining("không nhất quán");
     }
+
+    @Test
+    void sectionAndPartMustMatchToeicStructure() {
+        ExamImportRequest request = oneQuestion(new ExamQuestionImportDto(
+                "q1", "LISTENING", 5, null, null, null, "Prompt", "A", 1,
+                List.of(new ExamOptionImportDto("A", "A", 1), new ExamOptionImportDto("B", "B", 2))));
+
+        assertThatThrownBy(() -> validationService.validate(request))
+                .isInstanceOf(InvalidExamException.class)
+                .hasMessageContaining("section và part không nhất quán");
+    }
+
+    @Test
+    void duplicateQuestionOrderIsRejectedBeforeDatabaseConstraint() {
+        ExamImportRequest request = new ExamImportRequest("exam", "title", null, List.of(
+                question("q1", null, 1), question("q2", null, 1)));
+
+        assertThatThrownBy(() -> validationService.validate(request))
+                .isInstanceOf(InvalidExamException.class)
+                .hasMessageContaining("Trùng lặp thứ tự câu hỏi");
+    }
+
+    @Test
+    void duplicateOptionOrderIsRejectedBeforeDatabaseConstraint() {
+        ExamImportRequest request = oneQuestion(new ExamQuestionImportDto(
+                "q1", "READING", 5, null, null, null, "Prompt", "A", 1,
+                List.of(new ExamOptionImportDto("A", "A", 1), new ExamOptionImportDto("B", "B", 1))));
+
+        assertThatThrownBy(() -> validationService.validate(request))
+                .isInstanceOf(InvalidExamException.class)
+                .hasMessageContaining("thứ tự lựa chọn trùng lặp");
+    }
+
+    @Test
+    void oneGroupCannotCrossParts() {
+        ExamImportRequest request = new ExamImportRequest("exam", "title", null, List.of(
+                question("q1", "group-1", 1),
+                new ExamQuestionImportDto("q2", "READING", 7, "group-1", null, null, "Prompt", "A", 2,
+                        List.of(new ExamOptionImportDto("A", "A", 1), new ExamOptionImportDto("B", "B", 2)))));
+
+        assertThatThrownBy(() -> validationService.validate(request))
+                .isInstanceOf(InvalidExamException.class)
+                .hasMessageContaining("section hoặc part không nhất quán");
+    }
+
+    private static ExamImportRequest oneQuestion(ExamQuestionImportDto question) {
+        return new ExamImportRequest("exam", "title", null, List.of(question));
+    }
+
+    private static ExamQuestionImportDto question(String id, String groupId, int order) {
+        return new ExamQuestionImportDto(id, "READING", 5, groupId, null, null, "Prompt", "A", order,
+                List.of(new ExamOptionImportDto("A", "A", 1), new ExamOptionImportDto("B", "B", 2)));
+    }
 }

@@ -3,6 +3,7 @@ package vn.edu.toeic.server.exam;
 import com.google.gson.Gson;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -372,6 +373,29 @@ public class ExamService {
                 .param("createdBy", proctor.userId())
                 .update();
 
+        // V11 normalizes shared Part 3/4/6/7 content.  Insert each group before
+        // its questions so the new foreign key remains compatible with the v1 DTO.
+        Map<String, Integer> groupFirstQuestion = new LinkedHashMap<>();
+        for (int i = 0; i < request.questions().size(); i++) {
+            ExamQuestionImportDto question = request.questions().get(i);
+            String groupId = normalizedGroupId(question.groupId());
+            if (groupId != null) groupFirstQuestion.putIfAbsent(groupId, i);
+        }
+        for (Map.Entry<String, Integer> group : groupFirstQuestion.entrySet()) {
+            ExamQuestionImportDto first = request.questions().get(group.getValue());
+            int order = first.orderIndex() > 0 ? first.orderIndex() : group.getValue() + 1;
+            jdbc.sql("""
+                    INSERT INTO exam_question_groups (exam_id, group_id, section, part, order_index)
+                    VALUES (:examId, :groupId, :section, :part, :orderIndex)
+                    """)
+                    .param("examId", request.examId())
+                    .param("groupId", group.getKey())
+                    .param("section", first.section().toUpperCase())
+                    .param("part", first.part())
+                    .param("orderIndex", order)
+                    .update();
+        }
+
         for (int i = 0; i < request.questions().size(); i++) {
             ExamQuestionImportDto q = request.questions().get(i);
             int questionOrder = q.orderIndex() > 0 ? q.orderIndex() : (i + 1);
@@ -384,7 +408,7 @@ public class ExamService {
                     .param("questionId", q.questionId())
                     .param("section", q.section().toUpperCase())
                     .param("part", q.part())
-                    .param("groupId", q.groupId())
+                    .param("groupId", normalizedGroupId(q.groupId()))
                     .param("passageText", q.passageText())
                     .param("audioFile", q.audioFile())
                     .param("prompt", q.prompt())
@@ -414,6 +438,10 @@ public class ExamService {
                 request.title(),
                 request.questions().size(),
                 "IMPORTED");
+    }
+
+    private static String normalizedGroupId(String groupId) {
+        return groupId == null || groupId.isBlank() ? null : groupId;
     }
 
     @Transactional(readOnly = true)
