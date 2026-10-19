@@ -1,5 +1,7 @@
 # Trạng thái kiểm thử
 
+19/10/2026 — EX-01 input publication: kiểm5/5 SHA256, mỗi file200 article giữ nội dung, số audio/image elements giữ nguyên, không còn script/form/hidden inputs/nonce/inline handlers; PASS trên Windows PowerShell5.1/.NET với input thật người dùng cung cấp. [Phạm vi và manifest](../data/seedingTest/README.md). Phát hiện test04=test05; không phải5 đề riêng. Chỉ data/docs, Maven/PG/GUI/media download/hearing/import NOT RUN; không nâng AT/MT/LT/IT, EX-01/EX-08 hoặc physical acceptance.
+
 18/10/2026 — Task2.1 publication chỉ kiểm ancestry/diff/text-privacy/hash artifact/41caseNOT RUN/link/cú pháp lệnh runbook; [audit công bố](../evidence/t3-c4-physical-prep-20261018/PUBLISH.md). Không chạy lại Maven/PG/fault runtime hoặc LAN local; [Draft PR52](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/52) có CI tự chạy theo workflow. Kit29/29PASS giữ provenance Task2, không nâng kết quả nghiệm thu. LAN0/41 NOT RUN, B review PENDING.
 
 18/10/2026 — T3-C4 physical preparation:29/29kiểm tra kit PowerShell PASS, lặp29/29trên ZIP giải nén;22file hash, trạng thái41caseNOT RUN và tamper rejection PASS. Fixture MOCK origin/map/file, không gọi mạng. LAN **NOT RUN,0case**; protocol probe/fault runtime/SQL/nghe thật/cleanup vật lý NOT RUN, human B PENDING. Không chạy Maven/CI mới vì chỉ script TEST/docs, không nâng MT/LT/IT hoặc dùng local42/42thay LAN. [Báo cáo](../evidence/t3-c4-physical-prep-20261018/REPORT.md).

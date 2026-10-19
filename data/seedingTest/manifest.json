@@ -1,0 +1,146 @@
+{
+    "schemaVersion":  1,
+    "date":  "2026-10-19",
+    "baseSha":  "50f9678b5c874156233649776fa96d80b1a03973",
+    "task":  "EX-01 input publication only",
+    "source":  "Zenlish TOEIC / zenlishtoeic.vn; HTML provided by user",
+    "sourceCopyright":  "Copyright 2026 c Zenlish",
+    "distributionPermission":  {
+                                   "status":  "USER_CONFIRMED",
+                                   "date":  "2026-10-19",
+                                   "statement":  "User confirmed permission to publish these HTML files in this public repository",
+                                   "licenseDocument":  "NOT PROVIDED",
+                                   "thirdPartyContentRelicensed":  false
+                               },
+    "publishedEncoding":  "UTF-8 without BOM / LF / Git -text",
+    "sanitization":  [
+                         "remove scripts",
+                         "remove forms",
+                         "remove hidden inputs",
+                         "remove HTML comments",
+                         "remove inline event handlers",
+                         "remove javascript URLs"
+                     ],
+    "uniqueContentFiles":  4,
+    "duplicateFiles":  [
+                           "ets2026_test04.html",
+                           "ets2026_test05.html"
+                       ],
+    "localMediaFilesIncluded":  false,
+    "answerKeys":  "NOT VERIFIED",
+    "groupPassageMapping":  "NOT VERIFIED",
+    "mediaDownloadPlayback":  "NOT RUN",
+    "runtimeTests":  "NOT RUN: data/docs only",
+    "files":  [
+                  {
+                      "path":  "data/seedingTest/ets2026_test01.html",
+                      "sha256":  "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+                      "bytes":  646203,
+                      "originalSha256":  "2ae59fd99f7839fb096a61c0eaacac493e4d9c672e47674c103818de32c4fa7d",
+                      "questions":  200,
+                      "uniqueNumbers":  200,
+                      "partCounts":  [
+                                         6,
+                                         25,
+                                         39,
+                                         30,
+                                         30,
+                                         16,
+                                         54
+                                     ],
+                      "audioElements":  54,
+                      "imageElements":  48,
+                      "questionContentPreserved":  true,
+                      "mediaElementCountsPreserved":  true,
+                      "activeContentAndNonceScan":  "PASS"
+                  },
+                  {
+                      "path":  "data/seedingTest/ets2026_test02.html",
+                      "sha256":  "c5a0eb91bd7fb6895134bf2366be8911db0496317a97ef74941abe9edf61dc60",
+                      "bytes":  650855,
+                      "originalSha256":  "b2736e919bba6d8d44e0ea34a050c82426afb606ed51e33c833edcc5bc18b084",
+                      "questions":  200,
+                      "uniqueNumbers":  200,
+                      "partCounts":  [
+                                         6,
+                                         25,
+                                         39,
+                                         30,
+                                         30,
+                                         16,
+                                         54
+                                     ],
+                      "audioElements":  54,
+                      "imageElements":  43,
+                      "questionContentPreserved":  true,
+                      "mediaElementCountsPreserved":  true,
+                      "activeContentAndNonceScan":  "PASS"
+                  },
+                  {
+                      "path":  "data/seedingTest/ets2026_test03.html",
+                      "sha256":  "0ccd9bede9baceed977a85afac9f109e1abdc70d11adda18eece6305f3e67e0f",
+                      "bytes":  648771,
+                      "originalSha256":  "0dfe24139cbdc3e258e456e232fb55ef1956d812a67b958a4adcf075e613abc7",
+                      "questions":  200,
+                      "uniqueNumbers":  200,
+                      "partCounts":  [
+                                         6,
+                                         25,
+                                         39,
+                                         30,
+                                         30,
+                                         16,
+                                         54
+                                     ],
+                      "audioElements":  54,
+                      "imageElements":  48,
+                      "questionContentPreserved":  true,
+                      "mediaElementCountsPreserved":  true,
+                      "activeContentAndNonceScan":  "PASS"
+                  },
+                  {
+                      "path":  "data/seedingTest/ets2026_test04.html",
+                      "sha256":  "63140e4061bb12e47bc9adb50e7427dd11f60beedc9e33598ed06352b2b07f8d",
+                      "bytes":  646519,
+                      "originalSha256":  "a85d74b7b04b528fd0ac7f5e02f69ee6cc28bdd4ff04a0f70c4eb757ae9ad6b6",
+                      "questions":  200,
+                      "uniqueNumbers":  200,
+                      "partCounts":  [
+                                         6,
+                                         25,
+                                         39,
+                                         30,
+                                         30,
+                                         16,
+                                         54
+                                     ],
+                      "audioElements":  54,
+                      "imageElements":  43,
+                      "questionContentPreserved":  true,
+                      "mediaElementCountsPreserved":  true,
+                      "activeContentAndNonceScan":  "PASS"
+                  },
+                  {
+                      "path":  "data/seedingTest/ets2026_test05.html",
+                      "sha256":  "63140e4061bb12e47bc9adb50e7427dd11f60beedc9e33598ed06352b2b07f8d",
+                      "bytes":  646519,
+                      "originalSha256":  "a85d74b7b04b528fd0ac7f5e02f69ee6cc28bdd4ff04a0f70c4eb757ae9ad6b6",
+                      "questions":  200,
+                      "uniqueNumbers":  200,
+                      "partCounts":  [
+                                         6,
+                                         25,
+                                         39,
+                                         30,
+                                         30,
+                                         16,
+                                         54
+                                     ],
+                      "audioElements":  54,
+                      "imageElements":  43,
+                      "questionContentPreserved":  true,
+                      "mediaElementCountsPreserved":  true,
+                      "activeContentAndNonceScan":  "PASS"
+                  }
+              ]
+}

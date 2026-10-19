@@ -743,3 +743,11 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - **Đã kiểm:** đối chiếu kế hoạch 36 task và phân định DONE code vs NOT RUN physical; CI trên commit cập nhật phải xác minh riêng.
 - **Còn dở:** BASE-01 đối soát source/task, BASE-04 owner duyệt DTO/START/deadline, EX-01 dataset/license, USB/LAN/Listening/MSI physical.
 - **Tiếp theo:** A/B/C nhận các task trong [kickoff](plan-v2/V2_EXECUTION_KICKOFF_20261019.md). Không cập nhật `STAGE3_DONE` trước physical acceptance.
+
+## 19/10/2026 · Codex · công bố input seedingTest theo yêu cầu
+
+- Người dùng yêu cầu đưa data/seedingTest lên main và xác nhận có quyền công khai dữ liệu Zenlish; chưa cung cấp văn bản cấp phép. Ghi đúng nguồn và lời xác nhận, không tự gán license.
+- Base main50f9678; nhánh riêng data/seeding-test-html-20261019. Thêm5 HTML đã loại script/form/nonce/inline handlers, README và manifest SHA256; giữ bản gốc riêng có hash, không commit dữ liệu form hoặc script trang nguồn.
+- Kiểm thực tế:5 file×200 article bảo toàn, audio/image element counts giữ nguyên, checksum bản công bố và scan active-content/nonce PASS. test04 và test05 trùng nên chỉ4 nội dung riêng. Kiểm token chỉ ghi loại/số dòng, không ghi giá trị bí mật vào log/tài liệu.
+- Chỉ thay dữ liệu/tài liệu và thuộc tính Git bảo toàn checksum; Java/POM/SQL/protocol không đổi. Runtime Maven/PG/GUI/import/media download/hearing NOT RUN trong lượt local. CI PR/main sẽ xác minh riêng trên GitHub trước/sau merge.
+- Owner EX-01 A, reviewer nội dung B; Codex review kỹ thuật theo người dùng giao, không ký vai. Chưa đánh dấu EX-01/EX-08 DONE hoặc sửa tracker/giờ; còn kiểm đáp án, groups/passages, media local và lưu căn cứ quyền.
