@@ -95,6 +95,10 @@ class RichExamImportPostgresTest {
         assertThat(number("SELECT count(*) FROM exam_options")).isEqualTo(775);
         assertThat(number("SELECT count(*) FROM exam_question_groups")).isEqualTo(76);
         assertThat(number("SELECT count(*) FROM exam_media_assets")).isEqualTo(57);
+        for(var m:fixture.media()) {
+            assertThat(strings("SELECT media_type||'/'||local_file||'/'||mime_type||'/'||size_bytes||'/'||sha256||'/'||COALESCE(width_px::text,'NULL')||'/'||COALESCE(height_px::text,'NULL')||'/'||COALESCE(duration_ms::text,'NULL') FROM exam_media_assets WHERE media_id='"+m.mediaId()+"'"))
+                    .containsExactly(m.mediaType()+"/"+m.localFile()+"/"+m.mimeType()+"/"+m.sizeBytes()+"/"+m.sha256()+"/"+nullable(m.widthPx())+"/"+nullable(m.heightPx())+"/"+nullable(m.durationMs()));
+        }
         assertThat(strings("SELECT part||'/'||count(*) FROM exam_questions GROUP BY part ORDER BY part"))
                 .containsExactly("1/6","2/25","3/39","4/30","5/30","6/16","7/54");
         for(var q:fixture.questions()) {
@@ -134,6 +138,22 @@ class RichExamImportPostgresTest {
         }
         expect(post("/api/v2/exams/import"," ".repeat(RichExamJson.MAX_BYTES+1),token),413,"INVALID_INPUT");
         for(String body:RichExamImportTest.invalidJson().toList()) expect(post("/api/v2/exams/import",body,token),400,"INVALID_INPUT");
+    }
+
+    @Test void multipleSourceRefsMapToReturnedDatabaseIdsWithinExamScope() throws Exception {
+        start(true);var tree=RichExamFixtures.tree();
+        var other=RichExamFixtures.at(tree,"sources",0).deepCopy();
+        other.addProperty("sourceRef","second");other.addProperty("sourceName","MOCK second source");
+        other.addProperty("sourceSha256","b".repeat(64));tree.getAsJsonArray("sources").add(other);
+        RichExamFixtures.question(tree,0).addProperty("sourceRef","second");
+        RichExamFixtures.media(tree,0).addProperty("sourceRef","second");
+        expect(post("/api/v2/exams/import",tree.toString(),token),201,null);
+        assertThat(number("SELECT count(*) FROM exam_sources")).isEqualTo(2);
+        assertThat(strings("SELECT s.source_name FROM exam_questions q JOIN exam_sources s ON s.exam_id=q.exam_id AND s.id=q.source_id WHERE q.question_id='q001'"))
+                .containsExactly("MOCK second source");
+        assertThat(strings("SELECT s.source_name FROM exam_media_assets m JOIN exam_sources s ON s.exam_id=m.exam_id AND s.id=m.source_id WHERE m.media_id='img-grid'"))
+                .containsExactly("MOCK second source");
+        assertThat(number("SELECT count(*) FROM exam_questions q JOIN exam_sources s ON s.exam_id=q.exam_id AND s.id=q.source_id WHERE s.source_sha256='"+fixture.sources().getFirst().sourceSha256()+"'")).isEqualTo(199);
     }
 
     @Test void authAndRolePrecedeMalformedBodyAndMissingMediaAndNoRichGetRoutes() throws Exception {
@@ -300,4 +320,5 @@ class RichExamImportPostgresTest {
     private long number(String sql) throws SQLException {try(var s=db.createStatement();var r=s.executeQuery(sql)){r.next();return r.getLong(1);}}
     private List<String> strings(String sql) throws SQLException {var rows=new ArrayList<String>();try(var s=db.createStatement();var r=s.executeQuery(sql)){while(r.next())rows.add(r.getString(1));}return rows;}
     private static String env(String name){String value=System.getenv(name);if(value==null||value.isBlank())throw new IllegalStateException("Missing test setting "+name);return value;}
+    private static String nullable(Object value){return value==null?"NULL":value.toString();}
 }

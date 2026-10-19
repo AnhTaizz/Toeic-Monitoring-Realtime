@@ -376,7 +376,13 @@ class ExamRuntimePostgresTest {
         assertThat(timedOutSummary.keySet()).containsExactlyInAnyOrder(
                 "attemptId", "sessionId", "examId", "examTitle", "sessionTitle", "state", "submittedAt");
         assertThat(timedOutSummary.get("state").getAsString()).isEqualTo("TIMED_OUT");
-        assertThat(Instant.parse(timedOutSummary.get("submittedAt").getAsString())).isBeforeOrEqualTo(Instant.now());
+        Instant submitted = Instant.parse(timedOutSummary.get("submittedAt").getAsString());
+        Instant persisted = jdbc.sql("SELECT submitted_at FROM monitoring_attempts WHERE attempt_id = :a")
+                .param("a", timedOut).query((rs, row) -> rs.getTimestamp(1).toInstant()).single();
+        Instant databaseNow = jdbc.sql("SELECT clock_timestamp()")
+                .query((rs, row) -> rs.getTimestamp(1).toInstant()).single();
+        // Timestamp do PostgreSQL cấp: kiểm cùng clock authority, không so JVM/DB khác nguồn.
+        assertThat(submitted).isEqualTo(persisted).isBeforeOrEqualTo(databaseNow);
         // History only discovers IDs: results are still read through GET status under exam-read; ACTIVE scope is unchanged.
         expect(get(path(timedOut, "status"), candidateToken), 200);
         expect(get(path(timedOut, "status"), otherCandidateToken), 403);
