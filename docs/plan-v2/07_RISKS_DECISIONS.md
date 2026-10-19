@@ -1,5 +1,7 @@
 # 07 - Decisions to approve and fallback policy
 
+> **Status (19-Oct-2026):** The team has approved the **overall V2 scope**, as reported by the user. ADR-V2-01/02 and the remaining entries below are **technical decision checkpoints**, not a claim that A/B/C have each approved exact wire fields, QD-21 clock semantics, OS API choice or data rights. See [adoption record](ADOPTION_STATUS_20261019.md).
+
 ## Explicit V2 change requests
 
 | Decision | Existing reality / conflict | Proposed resolution | Owner |

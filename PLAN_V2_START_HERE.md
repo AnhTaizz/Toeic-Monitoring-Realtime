@@ -1,6 +1,6 @@
 # TOEIC Monitoring Realtime - Plan V2 (Agent entrypoint)
 
-> **Import note (2026-10-19): PROPOSED, not approved for implementation.** Before selecting tasks, read [Adoption status](docs/plan-v2/ADOPTION_STATUS_20261019.md). Do not treat Phase 3 as accepted or silently override `CLAUDE.md`.
+> **Activation 2026-10-19: V2 SCOPE APPROVED BY TEAM (user-reported).** Follow [adoption record](docs/plan-v2/ADOPTION_STATUS_20261019.md) and [A/B/C kickoff](docs/plan-v2/V2_EXECUTION_KICKOFF_20261019.md). Technical ADRs and Phase 3 physical acceptance remain pending; do not claim either completed.
 
 > Additive, **task-based** project plan. This package contains planning materials only: no source code, binaries, exam content, audio, images, credentials or database migrations. It does not automatically change existing implementation contracts.
 
@@ -24,6 +24,6 @@
 
 ## First Agent instruction
 
-**READ-ONLY RECONCILIATION FIRST.** Read existing `CLAUDE.md`, current `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`, `docs/TIEN_DO.md`, `docs/KIEM_THU.md`, `docs/PROTOCOL.md`, `docs/QUYET_DINH.md`, and the task cards in this package. Inspect current git HEAD, branches, PR state, code and evidence. Do not assume the status fields in the new backlog reflect actual progress. Report existing, missing and conflicting work before making changes. Do not edit contracts, tracker or source until the user selects an individual task.
+**TEAM-SCOPE APPROVAL RECEIVED; READ-ONLY RECONCILIATION FIRST.** Read existing `CLAUDE.md`, current `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`, `docs/TIEN_DO.md`, `docs/KIEM_THU.md`, `docs/PROTOCOL.md`, `docs/QUYET_DINH.md`, and the task cards in this package. Inspect current git HEAD, branches, PR state, code and evidence. Do not assume the status fields in the new backlog reflect actual progress. Report existing, missing and conflicting work before making changes. Scope appendices in `CLAUDE.md` and `02_HOP_DONG.md` authorize the V2 scope, not an unreviewed wire/schema/deadline change. Execute BASE-01 and contract decisions via BASE-04 before interface-changing code; reconcile actual task status before editing tracker.
 
 **Task-oriented, not day-by-day:** dependency gates drive execution. The final week is reserved for testing/report/release, not feature growth. The old planning dates are constraints, not daily assignments.
