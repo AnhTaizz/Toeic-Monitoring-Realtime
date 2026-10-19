@@ -1,40 +1,40 @@
-# T3-C4 — nghiệm thu LAN vật lý cho B/C
+# T3-C4 / BASE-03 — nghiệm thu LAN vật lý cho B/C
 
-19/10/2026: **LAN NOT RUN, 0/41; người thao tác/review máy thật PENDING**. FULL baseline, DELTA experimental. Bộ mới từ clean main `cfbba580886ede7b1b5a4f56875197b10f284514` sau PR47/57/58/59; không dùng kit3044/MSI0.3.10 lịch sử. MSI0.3.11 cùng source, runtime Java21 đi kèm; kit JAR phục vụ gate có JDK21 chỉ định tường minh. Không đổi protocol v0 hoặc quyết định DELTA gate.
+19/10/2026: **LAN NOT RUN, 0/41; human B review PENDING; gate NOT_DECIDED**.
+Bộ BASE-03 mới: source test `463cbadc50465c6ca2f2d4c0a0701dcb9c38e034`, runtime artifact đã kiểm trên `834f683e50b22e214ab63bbf7d046a7d418b8242` (production không đổi giữa hai SHA). Base main `1d35b53729abade7b460d35ab07d042b6f9f3571`. 983 Java PASS/7 SKIP, FULL thật, C2 thật, oracle72 và local C4 42/42 là kết quả **một máy**, không thay F vật lý. [Hồ sơ BASE-03](../evidence/v2-c-base03/REPORT.md).
 
 | Artifact | SHA256 |
 |---|---|
-| client-0.1.0-SNAPSHOT-all.jar (cùng byte MSI) | `17bc89963dbd8439749dbb3a00436cba5f807e6044999d2050d586a78a5f95bd` |
-| server-0.1.0-SNAPSHOT.jar | `f90a4dea2bd00a5a9d8d6e992492659e6867dbb87ec1e9593c7a5317ce2baf42` |
+| client-0.1.0-SNAPSHOT-all.jar | `b406cdc82a71f3cc9c8d3ad62a8cfbf66d46e698682382b5adbf6addf317fde2` |
+| server-0.1.0-SNAPSHOT.jar | `8a83ab5929951def4bb66af827573ae033b08a590b7a124dd78cb4a5d7b50189` |
 
-Hai JAR và test-support build từ source trên, đã chạy clean test/package với PG thật. Faults do TEST instrumented child/probe vẫn SIMULATED; không dùng chúng thay lượt F rút LAN thật. Guard strict source/hash trong Common.ps1 được cập nhật bằng source và hash build đã kiểm, không nới điều kiện. Kit cũ và evidence giữ nguyên trong lịch sử/target.
+Hai JAR giữ nguyên byte qua lượt package/regression/supplement. Test-support LiveCandidateApp giữ nguyên source. Common.ps1 pin đúng hai hash này và source mới, vẫn từ chối sai hash/source. Không dùng bundle cfbba58 hoặc gán kết quả MSI0.3.11 lịch sử cho bộ này. BASE-03 không tạo/cài MSI; JAR kit cần JDK21 trên A/B. Fault console là SIMULATED; F dùng app production không instrumented.
 
-## 1. Nhận và kiểm bộ cuối
+## 1. Nhận và kiểm bộ BASE-03
 
-Nhận `T3C4-cfbba58.zip`, `.zip.sha256.json` và MSI0.3.11 từ `target/stage3-release-20261019/` trên máy build, qua USB/kênh riêng được nhóm cho phép. ZIP/MSI ngoài Git; chưa có bằng chứng đã chuyển sang B. Lấy ZIP/manifest/MSI hash độc lập từ `evidence/stage3-execution-20261019/artifacts.json` trên main GitHub hoặc bàn giao cuối, không chỉ tin checksum đi cùng file. Không gửi `.env`, token, profile hoặc raw máy build.
+Máy build giữ `target/base03-handoff/T3C4-BASE03-463cbad.zip` và sidecar checksum, chưa chuyển sang B. Nhận ZIP qua kênh riêng được nhóm cho phép. Lấy ZIP/manifest hash **độc lập** từ [artifacts.json](../evidence/v2-c-base03/artifacts.json) trong commit evidence local do C bàn giao; hiện chưa push/PR. Không gửi .env/token/profile/raw log. Source và checksum cũ không dùng thay bộ này.
 
 Trên cả A/B, PowerShell thường:
 
 ```powershell
-$zip=Read-Host 'Duong dan ZIP nhan tu may build'
-$expectedZip=Read-Host 'ZIP SHA256 doc doc lap tu artifacts.json tren main'
+$zip=Read-Host 'Duong dan ZIP BASE03 nhan tu C'
+$expectedZip=Read-Host 'ZIP SHA256 doc doc lap tu artifacts.json'
 if($expectedZip -notmatch '^[0-9a-f]{64}$' -or (Get-FileHash -LiteralPath $zip).Hash.ToLowerInvariant() -cne $expectedZip){throw 'ZIP_HASH_MISMATCH_STOP'}
-$bundle='C:\ToeicGate\T3C4-cfbba58'
-if(Test-Path $bundle){throw 'BUNDLE_EXISTS_NO_OVERWRITE'}
+$bundle='C:\ToeicGate\T3C4-BASE03-463cbad'
+if(Test-Path -LiteralPath $bundle){throw 'BUNDLE_EXISTS_NO_OVERWRITE'}
 Expand-Archive -LiteralPath $zip -DestinationPath C:\ToeicGate
 $expectedManifest=Read-Host 'Manifest SHA256 doc doc lap tu artifacts.json'
 if($expectedManifest -notmatch '^[0-9a-f]{64}$' -or (Get-FileHash "$bundle\artifact-manifest.json").Hash.ToLowerInvariant() -cne $expectedManifest){throw 'MANIFEST_HASH_MISMATCH_STOP'}
 . "$bundle\scripts\lan-t3c4\Common.ps1"
 $verified=Get-LanBundle $bundle
-if($verified.files.Count -ne 22){throw 'UNEXPECTED_BUNDLE_FILE_COUNT'}
 $kit=Join-Path $bundle 'scripts\lan-t3c4'
-$run='C:\ToeicGate\runs\physical-01'
-$jdk=Read-Host 'Duong dan JDK21 chi dinh rieng cho gate JAR'
-$serverUrl=Read-Host 'Origin IPv4 LAN that cua A va port'
+$run=Read-Host 'Thu muc run moi khong ton tai tren may nay'
+$jdk=Read-Host 'Duong dan JDK21 cho gate JAR'
+$serverUrl=Read-Host 'HTTP origin IPv4 LAN that cua A va port'
 & "$kit\Initialize-T3C4LanRun.ps1" -BundleDirectory $bundle -OutputDirectory $run
 ```
 
-Ghi biên nhận hash/source trên cả máy; 41case và reviewer vẫn NOT RUN/PENDING. Không sửa checksum nếu không khớp. Kit có JAR/script/test-support, không phải bằng chứng MSI máy hai. Lượt MSI riêng phải chạy launcher không IDE/JDK trên PATH, Unicode path và cài/chạy/gỡ; B ghi Actual, A xem evidence. Nội dung checklist/tiêu chí dưới đây giữ theo PR52; Source SHA trong template đã đổi sang bản cuối mà không điền kết quả.
+Ghi biên nhận hash/source riêng trên **cả A và B**. cases.csv vẫn 41 dòng NOT RUN, review.json PENDING; không sửa checksum để bỏ qua mismatch. ZIP validation local chỉ kiểm kit, không chứng minh vận chuyển/máy hai/LAN. Các trường Windows/JDK/PG trong topology.json là môi trường vật lý sắp chạy, phải do người thao tác ghi sau preflight, không sao chép môi trường máy build.
 
 ## 2. Environment preflight
 
@@ -140,7 +140,7 @@ SQL chỉ đọc, rollback cuối; cần đủ hai row và duplicate IDs=0. Coun
 
 ## 5. Fault TEST và MT02–MT06
 
-Các lệnh dưới đây **chưa chạy trong Task 2**. Dùng attempt TEST riêng, không có collector khác, server delta flag true cho lượt này. Chạy console trên B với origin IP thật thì transport tới A là thật; payload/fault vẫn MOCK/SIMULATED, không thay F.
+Các lệnh dưới đây **chưa chạy trên LAN hai máy trong BASE-03**. Dùng attempt TEST riêng, không có collector khác, server delta flag true cho lượt này. Chạy console trên B với origin IP thật thì transport tới A là thật; payload/fault vẫn MOCK/SIMULATED, không thay F.
 
 ```powershell
 & "$kit\Start-T3C4LanFaultConsole.ps1" -ServerUrl $serverUrl -BundleDirectory $bundle `
@@ -201,6 +201,6 @@ Get-Help .\scripts\smoke-t3c2.ps1 -Full
 
 ## 6. Handoff và kết luận do B/C điền
 
-B điền cases.csv, topology và nghe/GUI thật; C đối chiếu protocol/epoch/ACK/event/gap/SQL/worker và review file production PR47 (FullSnapshotDelivery.java, RealtimeClient.java cùng regression). A cần xem nếu phát hiện auth/transaction/contract server. Không yêu cầu owner approve thay người khác; PR47 vẫn chờ C, CI PASS không thay chữ ký.
+B điền cases.csv, topology và nghe/GUI thật; C đối chiếu protocol/epoch/ACK/event/gap/SQL/worker và review source FULL/DELTA trên base main1d35b53 (FullSnapshotDelivery.java, RealtimeClient.java cùng regression). A cần xem nếu phát hiện auth/transaction/contract server. Không yêu cầu owner approve thay người khác; PR47 đã ở baseline; kết quả tự động mới không thay chữ ký B.
 
 Trước công bố, giữ raw riêng bất biến, tạo bản dẫn xuất có checksum, che token/tài khoản/IP/hostname/SSID/answers; review cả ảnh và log, không chỉ grep. Báo cáo cần LAN PASS/FAIL/PARTIAL/NOT RUN, số physical case thực chạy, case MOCK/SIMULATED, source/runtime/JAR/ZIP hashes hai máy, blocker và human B CONFIRMED/PENDING. Không tự cập nhật TRACKER, QD owner approval hoặc quyết định FULL/DELTA gate. Nếu chưa có máy B: giữ **NOT RUN / 0 / B PENDING**.
