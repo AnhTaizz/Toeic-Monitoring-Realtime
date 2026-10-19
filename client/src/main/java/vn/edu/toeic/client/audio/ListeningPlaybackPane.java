@@ -20,6 +20,20 @@ final class ListeningPlaybackPane extends VBox implements AutoCloseable {
     private MediaPlayer player;
     private ConnectionState connectionState;
     private boolean closed;
+    private boolean compact;
+    private java.util.function.Consumer<List<String>> onSegmentQuestions = ids -> {};
+    private List<String> lastSegment = List.of();
+    void setPart3Compact(boolean compact) {
+        this.compact = compact;
+        questions.setManaged(!compact);
+        questions.setVisible(!compact);
+    }
+    void onSegmentQuestions(java.util.function.Consumer<List<String>> listener) {
+        onSegmentQuestions = Objects.requireNonNull(listener);
+        var current = playback.snapshot().current();
+        if (current != null) onSegmentQuestions.accept(
+                current.questions().stream().map(ListeningPlayback.Question::id).toList());
+    }
     private Runnable onStateChanged = () -> {};
     void onStateChanged(Runnable listener) { onStateChanged = Objects.requireNonNull(listener); }
 
@@ -55,7 +69,14 @@ final class ListeningPlaybackPane extends VBox implements AutoCloseable {
         onStateChanged.run();
         if(state.phase()==ListeningPlayback.Phase.READY_TO_PLAY&&player==null)playCurrent();
         if(state.phase()==ListeningPlayback.Phase.BLOCKED||state.phase()==ListeningPlayback.Phase.COMPLETED)disposePlayer();
-        var segment=state.current();questions.getChildren().clear();
+        var segment=state.current();
+        List<String> ids = segment == null ? List.of()
+                : segment.questions().stream().map(ListeningPlayback.Question::id).toList();
+        if (!ids.equals(lastSegment)) {
+            lastSegment = ids;
+            onSegmentQuestions.accept(ids);
+        }
+        questions.getChildren().clear();
         if(segment!=null){
             questions.getChildren().add(new Label("Câu hỏi cho: "+segment.audioFile()));
             for(var question:segment.questions()){
