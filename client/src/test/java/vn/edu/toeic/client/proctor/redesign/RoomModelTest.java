@@ -141,4 +141,39 @@ class RoomModelTest {
         assertThat(progress.answered()).isEqualTo(155);
         assertThat(progress.total()).isEqualTo(1200);
     }
+
+    @Test void alertsUseOnlyBackendStatesAndTimelineSeparatesClientAndServerTime() {
+        RedesignFixtures.FakeApi api = RedesignFixtures.FakeApi.room();
+        api.interruptions.put(attempt(1), List.of(RedesignFixtures.interruption(1, "MOCK-GAP-001", RedesignFixtures.NOW.minusSeconds(30))));
+        List<RoomModel.Alert> alerts = RoomModel.alerts(feed(api), RoomModel.names(rows()));
+        assertThat(alerts).extracting(RoomModel.Alert::id)
+                .containsExactlyInAnyOrder("MOCK-EVT-002", "MOCK-EVT-006", "MOCK-GAP-004", "MOCK-GAP-001", "MOCK-OVF-005");
+        for (RoomModel.Alert alert : alerts) {
+            assertThat(alert.status()).doesNotContain("xử lý");
+            assertThat(alert.description()).doesNotContainIgnoringCase("gian lận");
+        }
+        RoomModel.Alert late = alerts.stream().filter(alert -> alert.id().equals("MOCK-EVT-002")).findFirst().orElseThrow();
+        assertThat(late.late()).isTrue();
+        assertThat(late.status()).startsWith("Đến muộn");
+        assertThat(late.clientTime()).isNotEqualTo(late.serverTime());
+        RoomModel.Alert open = alerts.stream().filter(alert -> alert.id().equals("MOCK-GAP-004")).findFirst().orElseThrow();
+        assertThat(open.open()).isTrue();
+        assertThat(open.status()).isEqualTo("Đang gián đoạn");
+        assertThat(open.clientTime()).isNull();
+        // A recovered interruption appears twice in the timeline (lost, then recovered), never merged away.
+        List<RoomModel.HistoryEntry> timeline = RoomModel.timeline(alerts);
+        assertThat(timeline).extracting(RoomModel.HistoryEntry::key).contains("MOCK-GAP-001", "MOCK-GAP-001#recovered");
+        assertThat(timeline).hasSize(6);
+        assertThat(timeline.getFirst().serverTime()).isAfterOrEqualTo(timeline.getLast().serverTime());
+        // Filters: kind, attempt and a window measured back from a server timestamp.
+        assertThat(RoomModel.filterTimeline(timeline, attempt(1), null, "", null, null)).hasSize(2);
+        assertThat(RoomModel.filterAlerts(alerts, "", RoomModel.Kind.GAP, RoomModel.AlertStatusFilter.ALL, null, null))
+                .extracting(RoomModel.Alert::id).containsExactly("MOCK-OVF-005");
+        assertThat(RoomModel.filterAlerts(alerts, "", null, RoomModel.AlertStatusFilter.OPEN, null, null))
+                .extracting(RoomModel.Alert::id).containsExactly("MOCK-GAP-004");
+        assertThat(RoomModel.filterAlerts(alerts, "", null, RoomModel.AlertStatusFilter.ALL, Duration.ofMinutes(3), RedesignFixtures.NOW))
+                .extracting(RoomModel.Alert::id).containsExactlyInAnyOrder("MOCK-GAP-004", "MOCK-GAP-001");
+        assertThat(RoomModel.filterAlerts(alerts, "obs64", null, RoomModel.AlertStatusFilter.ALL, null, null)).isEmpty();
+        assertThat(RoomModel.filterAlerts(alerts, "mock-evt-006", null, RoomModel.AlertStatusFilter.ALL, null, null)).hasSize(1);
+    }
 }

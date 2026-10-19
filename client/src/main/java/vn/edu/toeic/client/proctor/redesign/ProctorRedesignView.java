@@ -256,6 +256,8 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
     private void buildPages() {
         register(Section.OVERVIEW, new OverviewPane(actions));
         register(Section.CANDIDATES, new CandidatesPane(actions));
+        register(Section.ALERTS, new AlertsPane(actions));
+        register(Section.HISTORY, new HistoryPane(actions));
         for (Section value : Section.values()) {
             if (value == Section.SESSION_CONTROLS || pages.containsKey(value)) continue;
             VBox placeholder = new VBox(Ui.pageHeader(title(value), "Đang xây dựng."));
@@ -344,7 +346,12 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
 
     void openAlert(RoomModel.Alert alert) { }
 
-    void showHistory(String attemptId) { show(Section.HISTORY); }
+    void showHistory(String attemptId) {
+        closeDrawer();
+        HistoryPane history = pane(HistoryPane.class);
+        if (history != null) history.focus(attemptId);
+        show(Section.HISTORY);
+    }
 
     /** Shows {@code drawer} sliding in from the right over a dimmed page. Closing keeps all loaded data. */
     void openDrawer(Region drawer, double width) {

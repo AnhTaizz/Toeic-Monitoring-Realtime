@@ -105,7 +105,7 @@ final class RedesignFixtures {
     }
 
     /** MOCK DashboardApi with per-attempt data and call counters. Completes futures synchronously. */
-    static final class FakeApi implements DashboardApi {
+    static class FakeApi implements DashboardApi {
         Role role = Role.PROCTOR;
         List<Presence> roster = new ArrayList<>(RedesignFixtures.roster());
         Set<String> scope;

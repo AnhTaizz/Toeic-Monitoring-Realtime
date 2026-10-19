@@ -70,8 +70,8 @@
     -fx-border-color: transparent #e3e8ef transparent transparent;
     -fx-padding: 16 10 16 0;
     -fx-spacing: 6;
-    -fx-pref-width: 220;
-    -fx-min-width: 200;
+    -fx-pref-width: 236;
+    -fx-min-width: 212;
 }
 .proctor-redesign .nav-item {
     -fx-background-color: transparent;
