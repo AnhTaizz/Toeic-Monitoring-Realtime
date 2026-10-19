@@ -158,6 +158,18 @@ class SignalPipelinePostgresTest {
             assertCode(ws.exchange(JSON.toJson(m.envelope())),"UNAUTHORIZED");assertThat(rows(a)).isEqualTo(1);assertThat(counter(a)).isEqualTo(1);
         }getJson(a,"signal-capabilities",token,401);
     }
+    @Test void expiryIsJudgedAfterSessionRowLockWaitNotBeforeIt()throws Exception{
+        String a=attempt(),token=login("candidate");String hash=TokenHash.sha256(token);
+        jdbc.sql("UPDATE login_sessions SET expires_at=clock_timestamp()+INTERVAL '5 seconds' WHERE token_hash=:h").param("h",hash).update();
+        var pool=Executors.newSingleThreadExecutor();try(Connection lock=connection()){
+            lock.setAutoCommit(false);lock.createStatement().execute("SELECT * FROM login_sessions WHERE token_hash='"+hash+"' FOR UPDATE");
+            var waiting=pool.submit(()->service.store(user(token),hash,message(a,1),"MOCK"));awaitBlockedUpdate("login_sessions");
+            long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(7);boolean expired=false;
+            while(System.nanoTime()<deadline){expired=jdbc.sql("SELECT expires_at<=clock_timestamp() FROM login_sessions WHERE token_hash=:h").param("h",hash).query(Boolean.class).single();if(expired)break;Thread.onSpinWait();}
+            assertThat(expired).as("Observed DB expiry boundary under held lock").isTrue();lock.commit();
+            assertThatThrownBy(()->waiting.get(10,TimeUnit.SECONDS)).hasCauseInstanceOf(AccessDeniedException.class);assertThat(rows(a)).isZero();assertThat(counter(a)).isZero();
+        }finally{pool.shutdownNow();assertThat(pool.awaitTermination(5,TimeUnit.SECONDS)).isTrue();}
+    }
     private void awaitBlockedCounter()throws Exception{awaitBlockedUpdate("monitoring_signal_counters");}
     private void awaitBlockedUpdate(String table)throws Exception{
         long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);boolean blocked=false;while(System.nanoTime()<until){blocked=jdbc.sql("SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND wait_event_type='Lock' AND query LIKE :q").param("q","%"+table+"%").query(Long.class).single()>0;if(blocked)break;Thread.onSpinWait();}assertThat(blocked).as("Controlled DB lock wait "+table).isTrue();

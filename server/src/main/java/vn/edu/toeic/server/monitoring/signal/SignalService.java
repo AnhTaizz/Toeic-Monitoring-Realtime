@@ -72,13 +72,17 @@ public class SignalService {
     private void lockAttempt(String a){SignalJson.id(a);if(jdbc.sql("SELECT attempt_id FROM monitoring_attempts WHERE attempt_id=:a FOR SHARE").param("a",a).query(String.class).optional().isEmpty())throw AccessDeniedException.forbidden();}
     private void authorize(AuthenticatedUser user,String hash,String attempt,Role required){
         var identities=jdbc.sql("""
-            SELECT u.id,u.username,u.role,u.enabled,s.revoked_at,s.expires_at,clock_timestamp() AS checked_at
+            SELECT u.id,u.username,u.role,u.enabled,s.revoked_at,s.expires_at
             FROM login_sessions s JOIN user_accounts u ON u.id=s.user_id WHERE s.token_hash=:hash FOR SHARE OF s,u
             """).param("hash",hash).query((r,n)->{
-                if(!r.getBoolean("enabled")||r.getTimestamp("revoked_at")!=null||!r.getTimestamp("expires_at").toInstant().isAfter(r.getTimestamp("checked_at").toInstant()))throw AccessDeniedException.unauthorized();
-                return new AuthenticatedUser(r.getLong("id"),r.getString("username"),Role.valueOf(r.getString("role")));
+                return new LockedSession(new AuthenticatedUser(r.getLong("id"),r.getString("username"),Role.valueOf(r.getString("role"))),
+                    r.getBoolean("enabled"),r.getTimestamp("revoked_at")!=null,r.getTimestamp("expires_at").toInstant());
             }).list();
-        if(identities.size()!=1||!identities.getFirst().equals(user))throw AccessDeniedException.unauthorized();
+        // SELECT target-list expressions can be evaluated BEFORE LockRows waits. Read the clock only AFTER the locks are held.
+        Instant checkedAt=jdbc.sql("SELECT clock_timestamp()").query((r,n)->r.getTimestamp(1).toInstant()).single();
+        if(identities.size()!=1)throw AccessDeniedException.unauthorized();
+        LockedSession locked=identities.getFirst();
+        if(!locked.user().equals(user)||!locked.enabled()||locked.revoked()||!locked.expiresAt().isAfter(checkedAt))throw AccessDeniedException.unauthorized();
         if(required!=null&&user.role()!=required)throw AccessDeniedException.forbidden();
         Long owner=jdbc.sql("SELECT candidate_user_id FROM monitoring_attempts WHERE attempt_id=:a AND state='ACTIVE'").param("a",attempt).query(Long.class).optional().orElse(null);
         if(owner==null)throw AccessDeniedException.forbidden();
@@ -87,6 +91,7 @@ public class SignalService {
             .param("a",attempt).param("u",user.userId()).query(Long.class).optional().isEmpty())throw AccessDeniedException.forbidden();}
         else throw AccessDeniedException.forbidden();
     }
+    private record LockedSession(AuthenticatedUser user,boolean enabled,boolean revoked,Instant expiresAt) { }
     private static Stored read(ResultSet r,int n)throws SQLException{
         JsonObject d=JsonParser.parseString(r.getString("details")).getAsJsonObject();
         DisplaySignal s=new DisplaySignal(r.getString("event_id"),r.getString("observer_session_id"),r.getLong("observation_sequence"),r.getTimestamp("observed_at").toInstant(),
