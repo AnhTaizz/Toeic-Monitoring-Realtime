@@ -3,7 +3,7 @@
 ## Before any code
 
 1. Read `PLAN_V2_START_HERE.md` and this package index.
-2. Read existing root `CLAUDE.md`, `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`, `docs/PROTOCOL.md`, `docs/QUYET_DINH.md`, `docs/TIEN_DO.md`, `docs/KIEM_THU.md`, and selected task spec.
+2. Read existing root `CLAUDE.md`, `docs/plan-v1/02_HOP_DONG.md`, `docs/PROTOCOL.md`, `docs/QUYET_DINH.md`, `docs/TIEN_DO.md`, `docs/KIEM_THU.md`, and selected task spec.
 3. Inspect current git state, correct base/branch, outstanding PRs and file ownership. Identify already-implemented functionality and tests; do not infer missing work from the stale original tracker.
 4. State conflicts between plan and approved contract explicitly. USB and media changes are requested V2 scope but old `CLAUDE.md` still excludes USB; owner approval and documentation change are required before implementation.
 5. Complete a READ-ONLY gap report before coding, with affected files, exact tests and uncertainty.

@@ -100,7 +100,7 @@
 - **Verification/evidence:**
   - A and C approve the delta; B reviews the affected client contract.
   - New message types, API DTO and migrations are versioned and regression-tested.
-- **Likely files/components:** CLAUDE.md, Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md, docs/PROTOCOL.md, docs/QUYET_DINH.md
+- **Likely files/components:** CLAUDE.md, docs/plan-v1/02_HOP_DONG.md, docs/PROTOCOL.md, docs/QUYET_DINH.md
 - **Watch-out:** This ZIP is a proposal, not an automatic override of the current contract.
 
 

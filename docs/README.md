@@ -1,6 +1,13 @@
 # Tài liệu làm việc của nhóm
 
-Thư mục này là nơi ghi lại việc đang làm, để bất kỳ ai (hoặc Claude) mở project lên đều biết đang ở đâu và làm tiếp cái gì. Bộ kế hoạch gốc nằm ở `Ke_hoach_LT_Mang_5_chang/` và không thay đổi hằng ngày; các file ở đây thì có.
+Thư mục này là nơi ghi lại việc đang làm, để bất kỳ ai (hoặc Claude) mở project lên đều biết đang ở đâu và làm tiếp cái gì. Bộ Plan V1 nằm ở `docs/plan-v1/` và không thay đổi hằng ngày; các file ở đây thì có.
+
+## Kế hoạch dự án
+
+- [**Plan V1** — 5 chặng, hợp đồng và nguồn môn học](plan-v1/README.md)
+- [**Plan V2** — 36 task đã duyệt phạm vi](plan-v2/README.md)
+
+**Ghi chú:** Plan V1 được chuyển nguyên file (không sửa bản nguồn); đường dẫn trong hồ sơ lịch sử có thể vẫn dùng tên cũ. 
 
 ## File nào dùng để làm gì
 
@@ -27,7 +34,7 @@ Thư mục này là nơi ghi lại việc đang làm, để bất kỳ ai (hoặ
 | [thanh-vien/VAI_B.md](thanh-vien/VAI_B.md) | Task và hướng dẫn cho vai B (JavaFX, audio, đóng gói) | B | Ghi chú làm dở |
 | [thanh-vien/VAI_C.md](thanh-vien/VAI_C.md) | Task và hướng dẫn cho vai C (monitoring, thực nghiệm) | C | Ghi chú làm dở |
 
-Trạng thái chính thức của từng task (TODO/đang làm/xong, giờ thực tế, bằng chứng) vẫn nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`. Các file ở đây không lặp lại trạng thái đó.
+Trạng thái chính thức của từng task (TODO/đang làm/xong, giờ thực tế, bằng chứng) vẫn nằm ở `docs/plan-v1/TRACKER.json`. Các file ở đây không lặp lại trạng thái đó.
 
 Bàn giao B3 ngày04/10: [evidence dashboard](../evidence/t1-b3/2026-10-04-verification.md) ghi 331 tests, REAL integration và Stage proctor; [README chạy dashboard](../README.md#dashboard-giám-thị-t1-b3). TRACKER giữ nguyên theo yêu cầu task; trạng thái code/component và nghiệm thu toàn prototype được ghi riêng.
 

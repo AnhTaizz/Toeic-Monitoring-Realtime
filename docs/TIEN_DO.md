@@ -71,7 +71,7 @@ Cập nhật mới T3-C2: 12/10/2026 — reducer production/resync/capability/sc
 
 Mốc C5 trước đó: 11/10/2026 — T2-C5 tài liệu phương pháp và đối chiếu protocol hoàn tất từ main82557bf. Không đổi runtime; không chạy lại Java493/smoke/E1/E2. Kiểm tra mới là source/link/schema/default/evidence integrity. B human review trước phép đo NOT RUN; marker cửa sổ E1, resource sampler/analyzer và delta/E2 còn thiếu. Giữ các kết quả C1–C4 theo evidence gốc.
 
-File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `Ke_hoach_LT_Mang_5_chang/TRACKER.json`.
+File này chỉ mô tả **hiện tại**. Lịch sử nằm ở [NHAT_KY.md](NHAT_KY.md); trạng thái từng task nằm ở `docs/plan-v1/TRACKER.json`.
 
 10/10/2026: thêm [mục lục log và bằng chứng](../evidence/README.md) theo task để đọc trên GitHub và chuẩn bị prompt cho chat web. Kết quả kiểm thử và trạng thái nghiệm thu giữ theo báo cáo của từng lượt chạy.
 

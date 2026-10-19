@@ -140,13 +140,13 @@ Muốn đo latency mong muốn cần B chốt anchor/workload, nguồn timestamp
 
 ### Đầu vào E1 đề xuất và phần harness chưa hỗ trợ
 
-Theo [kế hoạch E1](../Ke_hoach_LT_Mang_5_chang/03_KIEM_THU_VA_THUC_NGHIEM.md#e1-trade-off-chu-kỳ-polling): poll250/500/1000/2000ms, mỗi poll3run, warmup15s/đo120s, tối thiểu10trial mỗi target/run. Đề xuất khóa seed1234/1235/1236 và dùng cùng bộ seed ở mọi poll, đảo thứ tự poll giữa lần lặp, giữ máy/JDK/policy/concurrency/recorder/background giống nhau. Cùng seed cho lịch dự kiến tái lập, không buộc timestamp thật giống byte.
+Theo [kế hoạch E1](plan-v1/03_KIEM_THU_VA_THUC_NGHIEM.md#e1-trade-off-chu-kỳ-polling): poll250/500/1000/2000ms, mỗi poll3run, warmup15s/đo120s, tối thiểu10trial mỗi target/run. Đề xuất khóa seed1234/1235/1236 và dùng cùng bộ seed ở mọi poll, đảo thứ tự poll giữa lần lặp, giữ máy/JDK/policy/concurrency/recorder/background giống nhau. Cùng seed cho lịch dự kiến tái lập, không buộc timestamp thật giống byte.
 
 **Không chạy nghiệm thu bằng cách lặp nguyên smoke C4.** Harness hiện không có option warmup15s/cửa sổ120s, marker window, schedule nằm trọn window hoặc resource sampler/analyzer E1. Plan phụ thuộc poll và slot `readyTimeout+3000+exitSlack+poll`, nên cùng seed ở poll khác có lịch launch khác. B phải chốt cách so workload, actual phase và timestamp window; thiếu các đầu vào này thì chỉ gọi functional smoke, không E1 PASS. Output-dir mới mỗi run; giữ raw/manifest/metadata và cả run lỗi/corrupt copy tách nhãn, không sửa raw/checksum để khớp phương pháp.
 
 ## 5. E2: chuẩn bị so full và delta về sau
 
-E2 so cách truyền state, không so hai tập process khác nhau. Delta (chỉ gửi phần thay đổi) **chưa triển khai**; không có benchmark full-vs-delta. [Kế hoạch E2](../Ke_hoach_LT_Mang_5_chang/03_KIEM_THU_VA_THUC_NGHIEM.md#e2-full-snapshot-so-với-snapshot--delta) là đầu vào đề xuất, không bằng chứng implementation.
+E2 so cách truyền state, không so hai tập process khác nhau. Delta (chỉ gửi phần thay đổi) **chưa triển khai**; không có benchmark full-vs-delta. [Kế hoạch E2](plan-v1/03_KIEM_THU_VA_THUC_NGHIEM.md#e2-full-snapshot-so-với-snapshot--delta) là đầu vào đề xuất, không bằng chứng implementation.
 
 Trước phép so: cùng trace production schema/checksum, policy, identity, observation workload, event rule, poll, ACK/retry/heartbeat/auth/compression/topology/window. Source phải liệt kê/lọc cùng cách; không so full quét mọi process với delta chỉ lọc8tên. Trace TEST harness C4 hiện bị production replay từ chối: không đổi schema bằng tay để ép chạy, không tuyên bố nó là production benchmark input.
 

@@ -4,17 +4,17 @@ Hệ thống thi TOEIC rút gọn theo mô hình Client–Server, có giám sát
 
 Trả lời và viết tài liệu bằng tiếng Việt; tên định danh trong code bằng tiếng Anh.
 
-> **Phạm vi V2 được nhóm thông qua** (người đại diện xác nhận ngày 19/10/2026 về buổi tối 18/10): mục tiêu 1 đề TOEIC **200 câu/7 Part** với media được phép sử dụng và monitoring đa tín hiệu **process + USB mass-storage presence/connect/disconnect + focus/minimize/fullscreen + display changes**. Không xem đây là tính năng đã làm xong. Xem [V2 kickoff](docs/plan-v2/V2_EXECUTION_KICKOFF_20261019.md), [36 task](docs/plan-v2/03_TASK_CARDS.md) và [phụ lục V2 của hợp đồng](Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md). Giữ những bất biến đã chốt; API/wire schema, QD-21 START/deadline, và OS-observer approach phải review riêng trước khi thay đổi code tương ứng.
+> **Phạm vi V2 được nhóm thông qua** (người đại diện xác nhận ngày 19/10/2026 về buổi tối 18/10): mục tiêu 1 đề TOEIC **200 câu/7 Part** với media được phép sử dụng và monitoring đa tín hiệu **process + USB mass-storage presence/connect/disconnect + focus/minimize/fullscreen + display changes**. Không xem đây là tính năng đã làm xong. Xem [V2 kickoff](docs/plan-v2/V2_EXECUTION_KICKOFF_20261019.md), [36 task](docs/plan-v2/03_TASK_CARDS.md) và [phụ lục V2 của hợp đồng](docs/plan-v1/02_HOP_DONG.md). Giữ những bất biến đã chốt; API/wire schema, QD-21 START/deadline, và OS-observer approach phải review riêng trước khi thay đổi code tương ứng.
 
 
 ## Tài liệu nguồn — đọc trước khi làm task
 
 | Cần gì | Đọc ở đâu |
 |---|---|
-| Task, owner, phụ thuộc, tiêu chí nghiệm thu | **V2:** `docs/plan-v2/03_TASK_CARDS.md`, `docs/plan-v2/BACKLOG.json`, [kickoff](docs/plan-v2/V2_EXECUTION_KICKOFF_20261019.md); **legacy:** `Ke_hoach_LT_Mang_5_chang/01_KE_HOACH.md` hoặc `TRACKER.json` (lịch sử/đối chiếu) |
-| Quy tắc lưu/nộp/hết giờ, monitoring, Listening | `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md` |
-| Test case (AT/MT/LT/IT) và hai thực nghiệm E1, E2 | `Ke_hoach_LT_Mang_5_chang/03_KIEM_THU_VA_THUC_NGHIEM.md` |
-| Yêu cầu môn học, cấu trúc báo cáo, rubric | `Ke_hoach_LT_Mang_5_chang/nguon/Instruction.md` |
+| Task, owner, phụ thuộc, tiêu chí nghiệm thu | **V2:** `docs/plan-v2/03_TASK_CARDS.md`, `docs/plan-v2/BACKLOG.json`, [kickoff](docs/plan-v2/V2_EXECUTION_KICKOFF_20261019.md); **legacy:** `docs/plan-v1/01_KE_HOACH.md` hoặc `TRACKER.json` (lịch sử/đối chiếu) |
+| Quy tắc lưu/nộp/hết giờ, monitoring, Listening | `docs/plan-v1/02_HOP_DONG.md` |
+| Test case (AT/MT/LT/IT) và hai thực nghiệm E1, E2 | `docs/plan-v1/03_KIEM_THU_VA_THUC_NGHIEM.md` |
+| Yêu cầu môn học, cấu trúc báo cáo, rubric | `docs/plan-v1/nguon/Instruction.md` |
 
 Khi người dùng nêu mã task (ví dụ `T2-A2` hoặc `EX-01`), mở task trong tracker legacy hoặc V2 task cards tương ứng, đọc tiêu chí nghiệm thu và phần hợp đồng liên quan rồi mới viết code. Nếu yêu cầu mâu thuẫn với hợp đồng, nói rõ chỗ mâu thuẫn và hỏi, không tự chọn.
 
@@ -109,7 +109,7 @@ Chi tiết ở `02_HOP_DONG.md`; đây là danh sách để tự kiểm mỗi l�
 
 ## Tracker
 
-`Ke_hoach_LT_Mang_5_chang/TRACKER.json` là nguồn theo dõi tiến độ. Chỉ cập nhật `status`, `actual_hours`, `evidence` khi người dùng xác nhận, và `evidence` phải trỏ tới thứ có thật (commit SHA, tên test đã chạy, file log). V2 `BACKLOG.json` đang mang placeholder `TO_AUDIT`; duyệt kế hoạch **không đồng nghĩa** đánh dấu 36 task DONE hoặc xác nhận giờ công. Không tự đánh dấu hoàn thành một task chỉ vì code đã viết xong.
+`docs/plan-v1/TRACKER.json` là nguồn theo dõi tiến độ. Chỉ cập nhật `status`, `actual_hours`, `evidence` khi người dùng xác nhận, và `evidence` phải trỏ tới thứ có thật (commit SHA, tên test đã chạy, file log). V2 `BACKLOG.json` đang mang placeholder `TO_AUDIT`; duyệt kế hoạch **không đồng nghĩa** đánh dấu 36 task DONE hoặc xác nhận giờ công. Không tự đánh dấu hoàn thành một task chỉ vì code đã viết xong.
 
 ## Mốc cần nhớ
 
