@@ -246,7 +246,7 @@
 .proctor-redesign .table-row-cell:selected { -fx-background-color: #fff6ef; }
 .proctor-redesign .table-row-cell.row-offline { -fx-background-color: #fffaf4; -fx-border-color: transparent transparent #edf1f5 #dc2626; -fx-border-width: 0 0 1 3; }
 .proctor-redesign .table-row-cell.row-attention { -fx-background-color: #fffdf8; }
-.proctor-redesign .table-cell { -fx-text-fill: #13254a; -fx-padding: 0 8 0 14; -fx-alignment: center-left; }
+.proctor-redesign .table-cell { -fx-text-fill: #13254a; -fx-padding: 0 6 0 12; -fx-alignment: center-left; -fx-font-size: 0.96em; }
 .proctor-redesign .table-row-cell:selected .table-cell { -fx-text-fill: #13254a; }
 .proctor-redesign .table-view .placeholder .label { -fx-text-fill: #6b7a90; }
 .proctor-redesign .table-view .scroll-bar:vertical, .proctor-redesign .table-view .scroll-bar:horizontal { -fx-background-color: transparent; }

@@ -211,8 +211,8 @@ final class RoomModel {
         boolean late = event.deliveryStatus().equals("BUFFERED_OFFLINE") || event.deliveryStatus().equals("PREVIOUS_CONNECTION");
         String status = switch (event.deliveryStatus()) {
             case "LIVE" -> "Nhận trực tiếp";
-            case "BUFFERED_OFFLINE" -> "Đến muộn · lúc mất kết nối";
-            case "PREVIOUS_CONNECTION" -> "Đến muộn · kết nối trước";
+            case "BUFFERED_OFFLINE" -> "Đến muộn · offline";
+            case "PREVIOUS_CONNECTION" -> "Đến muộn · kết nối cũ";
             default -> "Chưa rõ kênh nhận";
         };
         String detail = event.metadataQuality().equals("COMPLETE") ? "" : " Metadata không đọc được đầy đủ (UNREADABLE).";

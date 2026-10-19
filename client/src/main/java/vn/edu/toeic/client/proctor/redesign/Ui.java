@@ -150,14 +150,19 @@ final class Ui {
     }
 
     static <T> void plainTable(TableView<T> table, String placeholder) {
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         table.setPlaceholder(label(placeholder, "muted"));
         table.setFocusTraversable(true);
     }
 
+    /** Candidate: initial of the given name (last word). Proctor ({@code large=false}): first + last word, e.g. "G1". */
     static StackPane avatar(String name, boolean large) {
-        String trimmed = name == null ? "" : name.trim();
-        String initial = trimmed.isEmpty() ? "?" : trimmed.substring(trimmed.lastIndexOf(' ') + 1).substring(0, 1).toUpperCase();
+        String[] words = name == null || name.isBlank() ? new String[0] : name.trim().split("\\s+");
+        String initial;
+        if (words.length == 0) initial = "?";
+        else if (large || words.length == 1) initial = words[words.length - 1].substring(0, 1);
+        else initial = words[0].substring(0, 1) + words[words.length - 1].substring(0, 1);
+        initial = initial.toUpperCase();
         StackPane avatar = new StackPane(label(initial));
         avatar.getStyleClass().add("avatar");
         if (large) avatar.getStyleClass().add("avatar-large");

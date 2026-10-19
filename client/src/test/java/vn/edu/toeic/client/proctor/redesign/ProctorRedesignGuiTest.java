@@ -50,4 +50,31 @@ class ProctorRedesignGuiTest {
         assertThat(fx(() -> ((ToggleButton) view.lookup("#nav-overview")).isSelected())).isTrue();
         await("roster rendered", () -> view.room() != null && view.room().rows().size() == 6);
     }
+
+    @Test void overviewAndCandidateTablesRenderSnapshotDataAndSearchKeepsTheRightRow() throws Exception {
+        open(RedesignFixtures.FakeApi.room(), new RedesignFixtures.FakeTransport());
+        await("feed + progress loaded", () -> view.room() != null && view.room().feed().complete()
+                && view.room().progress().readAt() != null && view.room().rows().size() == 6);
+        assertThat(fx(() -> ((javafx.scene.control.Label) view.lookup("#stat-total")).getText())).isEqualTo("6");
+        assertThat(fx(() -> ((javafx.scene.control.Label) view.lookup("#stat-online")).getText())).isEqualTo("5");
+        assertThat(fx(() -> ((javafx.scene.control.Label) view.lookup("#stat-offline")).getText())).isEqualTo("1");
+        assertThat(fx(() -> ((javafx.scene.control.Label) view.lookup("#stat-alerts")).getText())).isEqualTo("4");
+        assertThat(fx(() -> ((javafx.scene.control.TableView<?>) view.lookup("#overview-table")).getItems().size())).isEqualTo(6);
+
+        fxRun(() -> view.show(Section.CANDIDATES));
+        CandidatesPane pane = fx(() -> view.pane(CandidatesPane.class));
+        assertThat(fx(pane::visibleRows)).extracting(RoomModel.CandidateRow::attemptId)
+                .containsExactly(RedesignFixtures.attempt(1), RedesignFixtures.attempt(2), RedesignFixtures.attempt(3),
+                        RedesignFixtures.attempt(4), RedesignFixtures.attempt(5), RedesignFixtures.attempt(6));
+        fxRun(() -> pane.search("Vũ Thị"));
+        var found = fx(pane::visibleRows);
+        assertThat(found).hasSize(1);
+        assertThat(found.getFirst().attemptId()).isEqualTo(RedesignFixtures.attempt(6));
+        assertThat(found.getFirst().progress().answered()).isEqualTo(25);
+        fxRun(() -> { pane.search(""); pane.connectionFilter(RoomModel.ConnectionFilter.OFFLINE); });
+        assertThat(fx(pane::visibleRows)).extracting(RoomModel.CandidateRow::displayName).containsExactly("MOCK Phạm Thị D");
+        // The offline row shows its last recorded progress, explicitly not as realtime.
+        assertThat(fx(() -> view.lookupAll(".label").stream().anyMatch(node -> node instanceof javafx.scene.control.Label label
+                && "Dữ liệu cuối đã ghi nhận".equals(label.getText())))).isTrue();
+    }
 }

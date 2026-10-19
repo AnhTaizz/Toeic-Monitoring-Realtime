@@ -125,12 +125,12 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
     private final StackPane drawerHost = new StackPane();
     private final VBox toasts = new VBox(8);
     private final Label alertBadge = Ui.label("", "nav-badge");
-    private final Label sidebarScope = Ui.label("", "muted", "small");
+    private final Label sidebarScope = Ui.wrapping("", "muted", "small");
     private final TopBar topBar;
     private Node sessionControls;
 
     /** Implemented by every screen; called on the FX thread with the latest derived room. */
-    interface RoomPane { void update(RoomModel.Room room); }
+    interface RoomPane { void update(RoomModel.Room room, ProctorSettings settings); }
 
     /** Navigation and drawer actions panes may trigger. */
     interface Actions {
@@ -139,6 +139,8 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         void openCandidate(String attemptId);
         void openAlert(RoomModel.Alert alert);
         void showHistory(String attemptId);
+        /** Committed progress is paged by the server (50 rows); true = next page, false = first page. */
+        void progressPage(boolean next);
     }
 
     ProctorRedesignView(Wiring wiring, Runnable onLogout, Runnable onExpired) {
@@ -252,12 +254,24 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
     }
 
     private void buildPages() {
+        register(Section.OVERVIEW, new OverviewPane(actions));
+        register(Section.CANDIDATES, new CandidatesPane(actions));
         for (Section value : Section.values()) {
-            if (value == Section.SESSION_CONTROLS) continue;
+            if (value == Section.SESSION_CONTROLS || pages.containsKey(value)) continue;
             VBox placeholder = new VBox(Ui.pageHeader(title(value), "Đang xây dựng."));
             placeholder.getStyleClass().add("page");
             pages.put(value, scroll(placeholder));
         }
+    }
+
+    private void register(Section target, Region pane) {
+        panes.add((RoomPane) pane);
+        pages.put(target, scroll(pane));
+    }
+
+    @SuppressWarnings("unchecked")
+    <T> T pane(Class<T> type) {
+        return (T) panes.stream().filter(type::isInstance).findFirst().orElse(null);
     }
 
     static ScrollPane scroll(Node content) {
@@ -311,6 +325,10 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         @Override public void openCandidate(String attemptId) { ProctorRedesignView.this.openCandidate(attemptId); }
         @Override public void openAlert(RoomModel.Alert alert) { ProctorRedesignView.this.openAlert(alert); }
         @Override public void showHistory(String attemptId) { ProctorRedesignView.this.showHistory(attemptId); }
+        @Override public void progressPage(boolean next) {
+            if (closed.get()) return;
+            if (next) progress.nextPage(); else progress.firstPage();
+        }
     };
 
     Actions actions() { return actions; }
@@ -400,7 +418,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         boolean badge = settings.navBadge() && !room.alerts().isEmpty();
         alertBadge.setVisible(badge);
         alertBadge.setManaged(badge);
-        for (RoomPane pane : panes) pane.update(room);
+        for (RoomPane pane : panes) pane.update(room, settings);
         notifyNewAlerts(room);
         tick();
     }
