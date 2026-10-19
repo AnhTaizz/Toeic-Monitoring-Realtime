@@ -1,6 +1,10 @@
 package vn.edu.toeic.monitoring.usb;
 
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -13,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /** Standalone CLI only. No production session, network, DB, JavaFX or native subscription. */
 public final class UsbStorageProbe {
     record Options(CimSnapshotSource.Method method, int durationSeconds, int intervalMillis,
-                   int queryTimeoutMillis, int maxLines, String machineAlias, String sourceSha) {
+                   int queryTimeoutMillis, int maxLines, String machineAlias, String sourceSha, Path outputFile) {
         static Options parse(String[] args) {
             Map<String, String> values = new LinkedHashMap<>();
             for (int i = 0; i < args.length; i += 2) {
@@ -21,7 +25,7 @@ public final class UsbStorageProbe {
                     throw new IllegalArgumentException();
             }
             if (!java.util.Set.of("--method", "--duration-seconds", "--interval-millis", "--query-timeout-millis",
-                    "--max-lines", "--machine-alias", "--source-sha").containsAll(values.keySet())) throw new IllegalArgumentException();
+                    "--max-lines", "--machine-alias", "--source-sha", "--output-file").containsAll(values.keySet())) throw new IllegalArgumentException();
             String alias = values.getOrDefault("--machine-alias", "WIN-PROBE");
             String sha = values.getOrDefault("--source-sha", "UNVERSIONED");
             if (!alias.matches("[A-Za-z0-9_.-]{1,32}") || !sha.matches("(?:[a-f0-9]{40}|UNVERSIONED)")) throw new IllegalArgumentException();
@@ -33,7 +37,8 @@ public final class UsbStorageProbe {
             return new Options(method, number(values, "--duration-seconds", 0, 0, 600),
                     number(values, "--interval-millis", 1000, 250, 60000),
                     number(values, "--query-timeout-millis", 5000, 100, 10000),
-                    number(values, "--max-lines", 1000, 4, 2000), alias, sha);
+                    number(values, "--max-lines", 1000, 4, 2000), alias, sha,
+                    values.containsKey("--output-file") ? Path.of(values.get("--output-file")) : null);
         }
         private static int number(Map<String,String> values, String key, int fallback, int min, int max) {
             String raw = values.getOrDefault(key, Integer.toString(fallback));
@@ -88,7 +93,7 @@ public final class UsbStorageProbe {
             System.out.println("Standalone MON-02 probe, NOT MON-07 wire. Java21 + Windows PowerShell/CIM.\n"
                     + "--method msft-disk|win32-diskdrive --duration-seconds 0..600 (0=snapshot)\n"
                     + "--interval-millis 250..60000 --query-timeout-millis 100..10000 --max-lines 4..2000\n"
-                    + "--machine-alias WIN-A --source-sha <40 lowercase hex or UNVERSIONED>\n"
+                    + "--machine-alias WIN-A --source-sha <40 lowercase hex or UNVERSIONED> --output-file <NEW JSONL path>\n"
                     + "Exit: 0 complete; 2 unsupported; 3 error/cleanup; 4 unknown; 5 output limit; 64 arguments; Ctrl+C stop.");
             return;
         }
@@ -101,8 +106,13 @@ public final class UsbStorageProbe {
         System.exit(result);
     }
     static int run(Options options) throws java.io.IOException {
-        var output = new Output(System.out, options.maxLines, UUID.randomUUID().toString());
-        var source = new CimSnapshotSource(options.method, Duration.ofMillis(options.queryTimeoutMillis));
+        // Direct output avoids losing the final record when PowerShell cancels a Tee pipeline.
+        PrintStream stream = options.outputFile == null ? System.out : new PrintStream(
+                Files.newOutputStream(options.outputFile, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE), true, StandardCharsets.UTF_8);
+        var output = new Output(stream, options.maxLines, UUID.randomUUID().toString());
+        CimSnapshotSource source;
+        try { source = new CimSnapshotSource(options.method, Duration.ofMillis(options.queryTimeoutMillis)); }
+        catch (java.io.IOException | RuntimeException failure) { if (stream != System.out) stream.close(); throw failure; }
         var tracker = new UsbObservationTracker();
         long run = tracker.start();
         var cleaned = new AtomicBoolean();
@@ -115,6 +125,8 @@ public final class UsbStorageProbe {
             output.finish("exitCode", exit.get(), "queryChildrenStarted", source.childrenStarted(),
                     "queryChildrenAlive", source.aliveChildren(), "pipeReadersTerminated", source.readersTerminated(),
                     "nativeRegistration", "NOT_USED", "outputLimited", output.limited());
+            if (stream.checkError()) exit.set(3);
+            if (stream != System.out) stream.close();
         };
         Thread hook = new Thread(cleanup, "usb-probe-stop");
         Runtime.getRuntime().addShutdownHook(hook);

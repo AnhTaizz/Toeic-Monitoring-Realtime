@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 
 class UsbStorageProbeTest {
@@ -32,5 +33,9 @@ class UsbStorageProbeTest {
         assertThat(text.lines()).hasSize(4);
         assertThat(text).contains("\\\"", "\\\\", "\\u000a").doesNotContain("AFTER_STOP");
         assertThat(text.lines().filter(line -> line.contains("\"kind\":\"FINISH\""))).hasSize(1);
+    }
+    @Test void fileSinkPathIsExplicitAndNeverAddedToPublicMetadata() {
+        var options = UsbStorageProbe.Options.parse(new String[]{"--output-file", "MOCK-local.jsonl"});
+        assertThat(options.outputFile()).isEqualTo(Path.of("MOCK-local.jsonl"));
     }
 }

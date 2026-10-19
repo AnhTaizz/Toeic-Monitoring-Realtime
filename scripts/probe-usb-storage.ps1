@@ -5,7 +5,8 @@ param(
     [ValidateRange(250,60000)][int]$IntervalMillis = 1000,
     [ValidateRange(100,10000)][int]$QueryTimeoutMillis = 5000,
     [ValidateRange(4,2000)][int]$MaxLines = 1000,
-    [ValidatePattern('^[A-Za-z0-9_.-]{1,32}$')][string]$MachineAlias = 'WIN-PROBE'
+    [ValidatePattern('^[A-Za-z0-9_.-]{1,32}$')][string]$MachineAlias = 'WIN-PROBE',
+    [string]$OutputFile
 )
 $ErrorActionPreference = 'Stop'
 $repo = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -35,7 +36,9 @@ foreach ($entry in @($receipt.sourceFiles + $receipt.runtimeFiles)) {
     if (-not $path.StartsWith($repo + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw 'Invalid build receipt path' }
     if ((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.sha256) { throw 'Build/source hash mismatch; rebuild.' }
 }
-& java -cp $classes vn.edu.toeic.monitoring.usb.UsbStorageProbe --method $Method `
-    --duration-seconds $DurationSeconds --interval-millis $IntervalMillis --query-timeout-millis $QueryTimeoutMillis `
-    --max-lines $MaxLines --machine-alias $MachineAlias --source-sha $sourceSha
+$probeArgs = @('-cp',$classes,'vn.edu.toeic.monitoring.usb.UsbStorageProbe','--method',$Method,
+    '--duration-seconds',"$DurationSeconds",'--interval-millis',"$IntervalMillis",'--query-timeout-millis',"$QueryTimeoutMillis",
+    '--max-lines',"$MaxLines",'--machine-alias',$MachineAlias,'--source-sha',$sourceSha)
+if ($OutputFile) { $probeArgs += @('--output-file',$OutputFile) }
+& java @probeArgs
 exit $LASTEXITCODE

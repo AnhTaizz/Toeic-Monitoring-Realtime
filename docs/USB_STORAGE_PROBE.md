@@ -23,6 +23,10 @@ Mở PowerShell **thường**, Java21/Maven đã có trên PATH, đứng tại r
 # Provider phụ để đối chiếu, không tự gộp count giữa hai provider.
 .\scripts\probe-usb-storage.ps1 -Method win32-diskdrive -DurationSeconds 30 -MachineAlias WIN-A
 
+# Ghi trực tiếp vào file MỚI, không qua Tee/pipeline (tránh mất FINISH khi Ctrl+C).
+.\scripts\probe-usb-storage.ps1 -DurationSeconds 120 -OutputFile target/usb-physical-NEW.jsonl -MachineAlias WIN-A
+# Terminal khác: Get-Content target/usb-physical-NEW.jsonl -Wait
+
 # Dừng sớm: Ctrl+C trong terminal. Kiểm FINISH/cleanup và không còn process do probe sở hữu.
 ```
 
