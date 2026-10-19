@@ -1,0 +1,399 @@
+{
+    "sourceSha":  "975284d28a37159bdeb5bd8cba6b13732ba80ad1",
+    "runId":  "ex04-20261019T055018Z-e92cc480",
+    "mode":  "Targeted",
+    "os":  "Microsoft Windows NT 10.0.26200.0",
+    "java":  "java version \"21.0.8\" 2025-07-15 LTS",
+    "maven":  "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)",
+    "postgres":  "PostgreSQL 18.1 on x86_64-windows, compiled by msvc-19.44.35221, 64-bit",
+    "database":  "toeic_ex04_test",
+    "host":  "127.0.0.1",
+    "port":  59229,
+    "fixture":  "MOCK self-authored exam content; real PostgreSQL/Flyway/HTTP",
+    "command":  "mvn --batch-mode --no-transfer-progress -pl server -am -Dtest=RichExamMigrationPostgresTest,ExamValidationTest,ExamControllerTest -Dsurefire.failIfNoSpecifiedTests=false test",
+    "startUtc":  "2026-10-19T05:50:26.4886833Z",
+    "endUtc":  "2026-10-19T05:52:04.6565700Z",
+    "exitCode":  0,
+    "runnerErrorType":  null,
+    "totals":  {
+                   "failures":  0,
+                   "passed":  58,
+                   "errors":  0,
+                   "tests":  58,
+                   "skipped":  0
+               },
+    "cases":  [
+                  {
+                      "status":  "PASS",
+                      "seconds":  "2.374",
+                      "name":  "takeoverEndpointRoleAndMismatchValidation",
+                      "class":  "vn.edu.toeic.server.exam.ExamControllerTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.385",
+                      "name":  "unauthenticatedOrCandidateImportIsRejected",
+                      "class":  "vn.edu.toeic.server.exam.ExamControllerTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.291",
+                      "name":  "unknownAuthenticatedApiRouteReturnsStructured404",
+                      "class":  "vn.edu.toeic.server.exam.ExamControllerTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.488",
+                      "name":  "submitEndpointRoleAndMismatchValidation",
+                      "class":  "vn.edu.toeic.server.exam.ExamControllerTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.457",
+                      "name":  "autosaveEndpointRoleAndMismatchValidation",
+                      "class":  "vn.edu.toeic.server.exam.ExamControllerTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.145",
+                      "name":  "statusEndpointUnauthenticatedValidation",
+                      "class":  "vn.edu.toeic.server.exam.ExamControllerTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.119",
+                      "name":  "candidateExamResponseNeverContainsCorrectOption",
+                      "class":  "vn.edu.toeic.server.exam.ExamControllerTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.019",
+                      "name":  "duplicateOptionOrderIsRejectedBeforeDatabaseConstraint",
+                      "class":  "vn.edu.toeic.server.exam.ExamValidationTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "inconsistentPassageInSameGroupThrowsInvalidExamException",
+                      "class":  "vn.edu.toeic.server.exam.ExamValidationTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "correctOptionNotInOptionsThrowsInvalidExamException",
+                      "class":  "vn.edu.toeic.server.exam.ExamValidationTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "duplicateQuestionOrderIsRejectedBeforeDatabaseConstraint",
+                      "class":  "vn.edu.toeic.server.exam.ExamValidationTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.008",
+                      "name":  "duplicateQuestionIdThrowsInvalidExamException",
+                      "class":  "vn.edu.toeic.server.exam.ExamValidationTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.012",
+                      "name":  "validExamPassesValidation",
+                      "class":  "vn.edu.toeic.server.exam.ExamValidationTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.017",
+                      "name":  "sectionAndPartMustMatchToeicStructure",
+                      "class":  "vn.edu.toeic.server.exam.ExamValidationTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.009",
+                      "name":  "oneGroupCannotCrossParts",
+                      "class":  "vn.edu.toeic.server.exam.ExamValidationTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "2.886",
+                      "name":  "freshV1ThroughV11HasValidatedHistoryAndExpectedConstraints",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "7.29",
+                      "name":  "upgradedV11BootsAndLegacyHttpImportReadRemainCompatible",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.598",
+                      "name":  "invalidV10DataRollsBackWholeV11WithoutSuccessHistory(String)[1]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "2.148",
+                      "name":  "invalidV10DataRollsBackWholeV11WithoutSuccessHistory(String)[2]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.505",
+                      "name":  "invalidV10DataRollsBackWholeV11WithoutSuccessHistory(String)[3]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.385",
+                      "name":  "invalidV10DataRollsBackWholeV11WithoutSuccessHistory(String)[4]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.288",
+                      "name":  "invalidV10DataRollsBackWholeV11WithoutSuccessHistory(String)[5]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.413",
+                      "name":  "v11NullableTypeReproducerMakesV12FailClosedWithoutEditingBadData",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.152",
+                      "name":  "sevenPartsAndSharedOrderedBlocksRoundTripOnV11",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.866",
+                      "name":  "upgradeV10BackfillsGroupsWithoutLosingLegacyDataOrOrder",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.133",
+                      "name":  "v11MetadataDoesNotClaimFilesystemValidationOrGroupPartMatching",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.212",
+                      "name":  "latestSchemaRejectsNullMediaTypeInsteadOfSkippingTypedForeignKey(String)[1]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.879",
+                      "name":  "latestSchemaRejectsNullMediaTypeInsteadOfSkippingTypedForeignKey(String)[2]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.156",
+                      "name":  "v12KeepsValidTextImageAudioBlocksAndValidatedV11Checksums",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.879",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[1]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.87",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[2]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.858",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[3]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.921",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[4]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.191",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[5]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.872",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[6]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.026",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[7]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.002",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[8]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.879",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[9]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.686",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[10]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.871",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[11]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.849",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[12]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.928",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[13]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.782",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[14]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.809",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[15]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.707",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[16]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.861",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[17]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.02",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[18]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.797",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[19]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.324",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[20]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.928",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[21]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.925",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[22]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.82",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[23]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.953",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[24]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.839",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[25]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.704",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[26]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.801",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[27]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.807",
+                      "name":  "v11RejectsInvalidRowsIncludingDeferredCommit(Rejection)[28]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "3.974",
+                      "name":  "scheduledSessionCurrentlyAllowsExamTakeoverSaveSubmitUnderQd21",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  }
+              ],
+    "xmlHashes":  [
+                      {
+                          "module":  "server",
+                          "sha256":  "080d2f88733c1e07aea246408c7108e94a0d7c4d386fcbf7b792f55965ba30ec",
+                          "file":  "TEST-vn.edu.toeic.server.exam.ExamControllerTest.xml"
+                      },
+                      {
+                          "module":  "server",
+                          "sha256":  "de5bfc3bc84fd9b2faff7538dc466aee5bee8dcefd819ec7dc6382d93d898b69",
+                          "file":  "TEST-vn.edu.toeic.server.exam.ExamValidationTest.xml"
+                      },
+                      {
+                          "module":  "server",
+                          "sha256":  "9a7c4b3bd3dab14989da9794b500b6ddc80805371e5b8a4a97f88a719c6bbad5",
+                          "file":  "TEST-vn.edu.toeic.server.exam.RichExamMigrationPostgresTest.xml"
+                      }
+                  ],
+    "cleanup":  {
+                    "clusterStopExit":  0,
+                    "ownedSchemasRemaining":  0
+                },
+    "manualGuiLanHearing":  "NOT RUN",
+    "rawResultSha256":  "074d204dd5ee9686df6550911c18b797f677ad3f0af26d197f656e45a8579bef",
+    "metadataNote":  "Java version selected from recorded stderr, ignoring JAVA_TOOL_OPTIONS banner; raw results/XML unchanged and private"
+}

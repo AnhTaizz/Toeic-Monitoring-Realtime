@@ -1,0 +1,52 @@
+{
+    "sourceSha":  "3077f409906d0e1d9e363f3a18f95f5106cd63c7",
+    "runId":  "ex04-20261019T054752Z-59fdd318",
+    "mode":  "Reproducer",
+    "os":  "Microsoft Windows NT 10.0.26200.0",
+    "java":  "java version \"21.0.8\" 2025-07-15 LTS",
+    "postgres":  "PostgreSQL 18.1 on x86_64-windows, compiled by msvc-19.44.35221, 64-bit",
+    "database":  "toeic_ex04_test",
+    "host":  "127.0.0.1",
+    "port":  62175,
+    "fixture":  "MOCK self-authored exam content; real PostgreSQL/Flyway/HTTP",
+    "command":  "mvn --batch-mode --no-transfer-progress -pl server -am -Dtest=RichExamMigrationPostgresTest#latestSchemaRejectsNullMediaTypeInsteadOfSkippingTypedForeignKey -Dsurefire.failIfNoSpecifiedTests=false test",
+    "startUtc":  "2026-10-19T05:48:01.0767892Z",
+    "endUtc":  "2026-10-19T05:48:55.7220257Z",
+    "exitCode":  1,
+    "runnerErrorType":  null,
+    "totals":  {
+                   "failures":  2,
+                   "passed":  0,
+                   "errors":  0,
+                   "tests":  2,
+                   "skipped":  0
+               },
+    "cases":  [
+                  {
+                      "status":  "FAIL",
+                      "seconds":  "3.122",
+                      "name":  "latestSchemaRejectsNullMediaTypeInsteadOfSkippingTypedForeignKey(String)[1]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  },
+                  {
+                      "status":  "FAIL",
+                      "seconds":  "1.1",
+                      "name":  "latestSchemaRejectsNullMediaTypeInsteadOfSkippingTypedForeignKey(String)[2]",
+                      "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest"
+                  }
+              ],
+    "xmlHashes":  [
+                      {
+                          "module":  "server",
+                          "sha256":  "1c54eb375fcd6a624ba5bbc54f68d3bcf2909810198a964c66ea6e802c634327",
+                          "file":  "TEST-vn.edu.toeic.server.exam.RichExamMigrationPostgresTest.xml"
+                      }
+                  ],
+    "cleanup":  {
+                    "clusterStopExit":  0,
+                    "ownedSchemasRemaining":  0
+                },
+    "manualGuiLanHearing":  "NOT RUN",
+    "rawResultSha256":  "cf57605c4157797598426f229ee33599a7179e94a6d341730d6e70e8689163ad",
+    "metadataNote":  "Java version selected from recorded stderr, ignoring JAVA_TOOL_OPTIONS banner; raw results/XML unchanged and private"
+}

@@ -338,3 +338,5 @@ Ngày 19/10/2026 · Trạng thái: IMPLEMENTED, chờ A/B review importer và re
 - Binary media tiếp tục ở filesystem. `REMOTE_REFERENCE` chỉ là inventory; `LOCAL_VERIFIED` bắt buộc local file/MIME/bytes/SHA-256. PostgreSQL chỉ giữ metadata.
 - Giữ cột V5 và API v0 hiện tại để không phá client. Service import tạo group normalized tối thiểu từ DTO cũ; provenance/content blocks/media và renderer rich content là lượt riêng. JSON hiện là **seed candidate** có thể tái tạo, nhưng `importable:false` và không phải dataset READY cho tới khi các blocker được xác minh.
 - Không đổi wire protocol, endpoint hoặc default FULL/DELTA. Xem [schema](DATABASE_SCHEMA.md) và [API backend](BACKEND_API.md).
+
+Ghi chú kiểm chứng19/10/2026, nhánhreviewEX04 chưamerge: [reportPG](EX04_V11_VERIFICATION.md) tái hiệnV11NULL-type2FAIL; V12append-only thêmCHECK để thực thi đúng typed-media invariant trên. Fresh/upgrade/rollback/legacyHTTP vàcleanverify đãchạy; không sửaV1–V11 hoặc đổiQD21. [EX02/START/media proposal](EX02_RICH_EXAM_CONTRACT_PROPOSAL.md) vẫnCHƯA DUYỆT; không xem đây là quyết định schema/API/deadline mới hoặc chữ kýA/B/C.

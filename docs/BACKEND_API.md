@@ -783,3 +783,5 @@ Client chỉ phát đúng manifest/writer/start ID, không autoplay lại khi re
 - Chưa có endpoint import/đọc rich content V11, ảnh hoặc provenance.
 - Chưa có OpenAPI/Swagger runtime.
 - Chưa có API monitoring đa tín hiệu V2 (USB/focus/display); chỉ process monitoring v0 hiện hữu.
+
+[Review EX02](EX02_RICH_EXAM_CONTRACT_PROPOSAL.md) đề xuất records/HTTPv2/media vàSTARTgate, **chưa phê duyệt hoặc triển khai**. [Kiểm chứngPGV11](EX04_V11_VERIFICATION.md) xác nhận APIv1 vẫn hoạt động trên schema nâng cấp, duplicateimport trả400 không overwrite vàSCHEDULED còn có thể đọc/lưu/nộp theoQD21. Không suy APIrich/image/STARTgate đãcó từ việc mergeSQL.
