@@ -170,6 +170,15 @@ class SignalPipelinePostgresTest {
             assertThatThrownBy(()->waiting.get(10,TimeUnit.SECONDS)).hasCauseInstanceOf(AccessDeniedException.class);assertThat(rows(a)).isZero();assertThat(counter(a)).isZero();
         }finally{pool.shutdownNow();assertThat(pool.awaitTermination(5,TimeUnit.SECONDS)).isTrue();}
     }
+    @Test void realUncorrelatedTokenDenialStopsDeliveryAndItsWorker()throws Exception{
+        String a=attempt(),token=login("candidate");try(Client client=new Client(a,false,token)){
+            client.transport.allow=false;var queued=new SignalMessage(a,"MOCK-unconfirmed","MOCK-unconfirmed-trace",new DisplaySignal("MOCK-unconfirmed-event","mock-observer-1",1,Instant.parse("2026-10-19T10:00:00Z"),EventOrigin.OFFLINE,1,"INITIAL"));client.delivery.enqueue(queued);
+            CountDownLatch failed=new CountDownLatch(1);try(var listener=client.realtime.onConnectionState(state->{if(state==ConnectionState.FAILED)failed.countDown();})){
+                jdbc.sql("UPDATE login_sessions SET revoked_at=clock_timestamp() WHERE token_hash=:h").param("h",TokenHash.sha256(token)).update();assertThat(failed.await(8,TimeUnit.SECONDS)).isTrue();
+                assertThat(client.delivery.status().active()).isFalse();assertThat(client.delivery.status().discarded()).isEqualTo(1);assertThat(client.delivery.awaitStopped(Duration.ofSeconds(2))).isTrue();assertThat(rows(a)).isZero();
+            }
+        }
+    }
     private void awaitBlockedCounter()throws Exception{awaitBlockedUpdate("monitoring_signal_counters");}
     private void awaitBlockedUpdate(String table)throws Exception{
         long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);boolean blocked=false;while(System.nanoTime()<until){blocked=jdbc.sql("SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND wait_event_type='Lock' AND query LIKE :q").param("q","%"+table+"%").query(Long.class).single()>0;if(blocked)break;Thread.onSpinWait();}assertThat(blocked).as("Controlled DB lock wait "+table).isTrue();
@@ -198,13 +207,14 @@ class SignalPipelinePostgresTest {
     }
     private final class Client implements AutoCloseable{
         final RealtimeClient realtime;final Lossy transport;final SignalDelivery delivery;final AutoCloseable lease;
-        Client(String a,boolean lose)throws Exception{
-            var opener=new AuthenticatedWebSocketOpener(base,candidate);realtime=new RealtimeClient(opener,new RealtimeClient.Settings(Duration.ofMillis(100),Duration.ofMillis(100),Duration.ofSeconds(1),1,65536,500));
+        Client(String a,boolean lose)throws Exception{this(a,lose,candidate);}
+        Client(String a,boolean lose,String token)throws Exception{
+            var opener=new AuthenticatedWebSocketOpener(base,token);realtime=new RealtimeClient(opener,new RealtimeClient.Settings(Duration.ofMillis(100),Duration.ofMillis(100),Duration.ofSeconds(1),1,65536,500));
             lease=realtime.monitoringHeartbeat(a,"mock-observer-1");resources.add(realtime);resources.add(lease);CountDownLatch hb=new CountDownLatch(1);AutoCloseable listener=realtime.onMessage(m->{if(m.type().equals("ACK")&&m.payload().get("acknowledgedType").getAsString().equals("HEARTBEAT")&&a.equals(m.attemptId()))hb.countDown();});
             realtime.connect(new RealtimeClient.Session(Set.of(a),null,null)).get(8,TimeUnit.SECONDS);assertThat(hb.await(8,TimeUnit.SECONDS)).isTrue();listener.close();
             // Fresh server scope (not a locally invented candidate assignment).
-            var me=http.send(HttpRequest.newBuilder(URI.create(base+"/api/v1/auth/me")).header("Authorization","Bearer "+candidate).GET().build(),HttpResponse.BodyHandlers.ofString());assertThat(me.statusCode()).isEqualTo(200);assertThat(me.body()).contains(a);
-            realtime.confirmSignalExperiment(getJson(a,"signal-capabilities",candidate,200),realtime.connectionGeneration(),"mock-observer-1");transport=new Lossy(realtime,lose);delivery=new SignalDelivery(a,"mock-observer-1",transport,new SignalDelivery.Settings(256,1048576,2,Duration.ofSeconds(1),5,Duration.ofMillis(100),Duration.ofMillis(800),Duration.ofMillis(25)),System::nanoTime,true);
+            var me=http.send(HttpRequest.newBuilder(URI.create(base+"/api/v1/auth/me")).header("Authorization","Bearer "+token).GET().build(),HttpResponse.BodyHandlers.ofString());assertThat(me.statusCode()).isEqualTo(200);assertThat(me.body()).contains(a);
+            realtime.confirmSignalExperiment(getJson(a,"signal-capabilities",token,200),realtime.connectionGeneration(),"mock-observer-1");transport=new Lossy(realtime,lose);delivery=new SignalDelivery(a,"mock-observer-1",transport,new SignalDelivery.Settings(256,1048576,2,Duration.ofSeconds(1),5,Duration.ofMillis(100),Duration.ofMillis(800),Duration.ofMillis(25)),System::nanoTime,true);
         }
         public void close()throws Exception{delivery.close();lease.close();realtime.close();assertThat(delivery.awaitStopped(Duration.ofSeconds(3))).isTrue();}
     }

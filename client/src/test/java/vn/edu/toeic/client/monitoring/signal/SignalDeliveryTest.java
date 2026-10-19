@@ -50,6 +50,13 @@ class SignalDeliveryTest {
         var m=message(1);f.delivery.enqueue(m);f.delivery.tick();f.transport.reply(new MessageEnvelope<>("v0","ERROR","s",m.requestId(),"foreign",m.traceId(),error("FORBIDDEN",false)));assertThat(f.delivery.status().active()).isTrue();
         f.error(m,"FORBIDDEN",false);assertThat(f.delivery.status().active()).isFalse();assertThat(f.delivery.status().discarded()).isEqualTo(1);assertThat(f.transport.messages).isEmpty();assertThat(f.transport.states).isEmpty();
     }}
+    @Test void terminalTransportFailureStopsEvenWhenUnauthorizedHasNoRequestCorrelation()throws Exception{
+        try(Fixture f=new Fixture()){
+            f.transport.credit=false;f.delivery.enqueue(message(1));
+            f.transport.reply(new MessageEnvelope<>("v0","ERROR","s",null,null,"server-trace",error("UNAUTHORIZED",false)));
+            f.transport.state(ConnectionState.FAILED);assertThat(f.delivery.status().active()).isFalse();assertThat(f.delivery.status().discarded()).isEqualTo(1);assertThat(f.delivery.awaitStopped(Duration.ofSeconds(2))).isTrue();assertThat(f.transport.messages).isEmpty();
+        }
+    }
     @Test void failedWriteBacksOffAndRetainsSameIdentity(){try(Fixture f=new Fixture()){
         f.transport.fail=true;f.delivery.enqueue(message(1));f.delivery.tick();f.delivery.tick();assertThat(f.transport.sent).hasSize(1);f.advance(1000);f.transport.fail=false;f.delivery.tick();assertThat(f.transport.sent).hasSize(2);assertThat(f.transport.sent.getFirst()).isEqualTo(f.transport.sent.getLast());
     }}

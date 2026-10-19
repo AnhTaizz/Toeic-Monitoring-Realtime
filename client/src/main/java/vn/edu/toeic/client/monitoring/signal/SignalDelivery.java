@@ -26,15 +26,17 @@ public final class SignalDelivery implements AutoCloseable {
     private final Object lock=new Object();private final String attempt,runId;private final MonitoringTransport transport;private final Settings settings;private final LongSupplier ticker;
     private final LinkedHashMap<String,Pending> queue=new LinkedHashMap<>();private final Set<Plan> writes=new HashSet<>();
     private final ScheduledThreadPoolExecutor worker;private final AutoCloseable messages,states,rejections;
+    private volatile boolean initialized;private final AtomicBoolean terminalSeen=new AtomicBoolean();
     private volatile boolean closed;private volatile long generation;private int bytes,discarded;private long acknowledged,dropped;private Instant firstDrop,lastDrop;private String problem="NONE";
     public SignalDelivery(String attempt,String runId,MonitoringTransport transport){this(attempt,runId,transport,Settings.defaults(),System::nanoTime,true);}
     /** Deterministic clock/manual pump seam for tests; production construction does not occur. */
     public SignalDelivery(String attempt,String runId,MonitoringTransport transport,Settings settings,LongSupplier ticker,boolean automatic){
         this.attempt=SignalJson.id(attempt);this.runId=SignalJson.id(runId);this.transport=Objects.requireNonNull(transport);this.settings=settings;this.ticker=ticker;
-        messages=transport.onMessage(this::receive);states=transport.onConnectionState(s->{if(s!=ConnectionState.CONNECTED)disconnected();});
-        rejections=transport.onMonitoringAccessRejected(r->{if(attempt.equals(r.attemptId())&&runId.equals(r.collectorSessionId())&&r.connectionGeneration()==transport.connectionGeneration())close();});
+        messages=transport.onMessage(this::receive);states=transport.onConnectionState(s->{if(s==ConnectionState.FAILED)terminal();else if(s!=ConnectionState.CONNECTED)disconnected();});
+        rejections=transport.onMonitoringAccessRejected(r->{if(attempt.equals(r.attemptId())&&runId.equals(r.collectorSessionId())&&r.connectionGeneration()==transport.connectionGeneration())terminal();});
         worker=new ScheduledThreadPoolExecutor(1,r->{Thread t=new Thread(r,"toeic-signal-mock-delivery");t.setDaemon(true);return t;});worker.setRemoveOnCancelPolicy(true);
         if(automatic)worker.scheduleWithFixedDelay(this::tick,settings.pump().toMillis(),settings.pump().toMillis(),TimeUnit.MILLISECONDS);
+        initialized=true;if(terminalSeen.get()||transport.connectionState()==ConnectionState.FAILED)close();
     }
     public boolean enqueue(SignalMessage message){
         if(!attempt.equals(message.attemptId())||!runId.equals(message.signal().observerSessionId()))throw new IllegalArgumentException();Pending p=new Pending(message);
@@ -85,6 +87,7 @@ public final class SignalDelivery implements AutoCloseable {
         }
         if(forget)transport.forgetPending(m.requestId());if(stop)close();
     }
+    private void terminal(){terminalSeen.set(true);if(initialized)close();}
     private void disconnected(){List<String> ids=new ArrayList<>();synchronized(lock){for(Pending p:queue.values()){if(p.plan!=null)p.plan.valid().set(false);if(p.waiting){p.waiting=false;p.deadline=ticker.getAsLong()+settings.delay(p.attempts);ids.add(p.message.requestId());}}}ids.forEach(transport::forgetPending);}
     public boolean manualRetry(String id){synchronized(lock){Pending p=queue.get(id);if(closed||p==null||p.writing||!p.exhausted)return false;p.exhausted=false;p.attempts=0;p.deadline=0;return true;}}
     public Status status(){synchronized(lock){return new Status(!closed,queue.size(),bytes,(int)queue.values().stream().filter(p->p.waiting).count(),writes.size(),(int)queue.values().stream().filter(p->p.failed).count(),(int)queue.values().stream().filter(p->p.exhausted).count(),discarded,acknowledged,dropped,firstDrop,lastDrop,problem);}}
