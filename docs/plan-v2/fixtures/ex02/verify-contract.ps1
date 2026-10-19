@@ -29,7 +29,9 @@ function CheckRecord($type,$value,$path) {
 $roots=[ordered]@{'import.mock.json'='RichExamImportRequest';'candidate.mock.json'='RichCandidateExam';
     'preparation.mock.json'='AttemptPreparation';'catalog.mock.json'='ExamCatalogPage';
     'import-response.mock.json'='RichExamImportResponse';'create-session-request.mock.json'='CreateRichSessionRequest';
-    'create-session-response.mock.json'='CreateRichSessionResponse'}
+    'create-session-response.mock.json'='CreateRichSessionResponse';
+    'visual-manifest.mock.json'='VisualManifest';'visual-ready-request.mock.json'='VisualReadyRequest';
+    'visual-ready-response.mock.json'='VisualReadyResponse';'visual-readiness.mock.json'='SessionReadiness'}
 foreach ($name in $roots.Keys) {
     $json=Get-Content -LiteralPath (Join-Path $PSScriptRoot $name) -Raw -Encoding UTF8 | ConvertFrom-Json
     CheckRecord $roots[$name] $json $name
@@ -38,7 +40,7 @@ $jsonFiles=@(Get-ChildItem -LiteralPath $PSScriptRoot -Filter '*.json' | Where-O
 foreach ($file in $jsonFiles) { $null=Get-Content -LiteralPath $file.FullName -Raw -Encoding UTF8 | ConvertFrom-Json }
 # Verify local links in task deliverables/handoff files. HTTP/anchors are not fetched.
 $docs=@('README.md','docs/EX02_RICH_EXAM_CONTRACT_V1.md','docs/plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md',
-    'docs/plan-v2/EX02_DECISIONS_ROADMAP.md','docs/plan-v2/fixtures/ex02/README.md',
+    'docs/plan-v2/EX02_DECISIONS_ROADMAP.md','docs/plan-v2/EX02_TEAM_APPROVAL_20261019.md','docs/plan-v2/fixtures/ex02/README.md',
     'evidence/ex02-contract-20261019/REPORT.md')
 $links=0
 foreach ($relative in $docs) {
@@ -65,9 +67,36 @@ $env:PATHEXT='.COM;.EXE;.BAT;.CMD'
 $env:PATH=$javacBin+';'+[Environment]::GetFolderPath('System')+';'+$env:PATH
 & $JavacPath --release 21 -encoding UTF-8 -d $compileDir $sourcePath
 if ($LASTEXITCODE -ne 0) {throw "Java record signatures did not compile; exit=$LASTEXITCODE"}
-$result=[ordered]@{scope='PROPOSED_CONTRACT_ONLY';dtoRecords=$records.Count;exampleRoots=$roots.Count;
-    jsonFiles=$jsonFiles.Count;localLinks=$links;fieldConsistency='PASS';java21Signatures='PASS';
+# Independent Java DataOutputStream probe for the proposed manifest hash, without JSON/dependency libraries.
+$manifest=Get-Content -LiteralPath (Join-Path $PSScriptRoot 'visual-manifest.mock.json') -Raw -Encoding UTF8|ConvertFrom-Json
+function JavaLiteral($value){ConvertTo-Json -InputObject ([string]$value) -Compress}
+$slots=@($manifest.slots|ForEach-Object {
+    'new VisualImageSlot('+((@((JavaLiteral $_.slotId),$_.position,(JavaLiteral $_.mediaId),(JavaLiteral $_.downloadPath),
+        (JavaLiteral $_.sha256),([string]$_.sizeBytes+'L'),(JavaLiteral $_.mimeType),$_.widthPx,$_.heightPx)) -join ',')+')'
+})
+$constructor='new VisualManifest(2,'+((@((JavaLiteral $manifest.manifestId),(JavaLiteral $manifest.attemptId),(JavaLiteral $manifest.sessionId),
+    (JavaLiteral $manifest.examId),2,([string]$manifest.writerEpoch+'L'),(JavaLiteral $manifest.preparationEpoch))) -join ',')+',java.util.List.of('+($slots -join ',')+'))'
+$probe='class VisualManifestHashProbe { public static void main(String[] args) throws Exception { var m='+$constructor+';'+@'
+var buffer=new java.io.ByteArrayOutputStream();
+try(var out=new java.io.DataOutputStream(buffer)) {
+out.writeUTF("EX02-P1-V1");out.writeUTF(m.examId());out.writeUTF(m.sessionId());out.writeUTF(m.attemptId());
+out.writeInt(m.contentVersion());out.writeLong(m.writerEpoch());out.writeUTF(m.preparationEpoch());out.writeInt(m.slots().size());
+for(var slot:m.slots()) {out.writeUTF(slot.slotId());out.writeInt(slot.position());out.writeUTF(slot.mediaId());out.writeLong(slot.sizeBytes());
+out.writeUTF(slot.sha256());out.writeUTF(slot.mimeType());out.writeInt(slot.widthPx());out.writeInt(slot.heightPx());}}
+var hash=java.util.HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(buffer.toByteArray()));
+if(!hash.equals(m.manifestId()))throw new AssertionError("Canonical visual manifest mismatch");
+System.out.println("Java canonical manifest hash: PASS");}}
+'@
+$probePath=Join-Path $compileDir 'VisualManifestHashProbe.java'
+[IO.File]::WriteAllText($probePath,$probe,(New-Object Text.UTF8Encoding($false)))
+& $JavacPath --release 21 -encoding UTF-8 -cp $compileDir -d $compileDir $probePath
+if($LASTEXITCODE -ne 0){throw 'Manifest Java probe compile failed'}
+& (Join-Path $javacBin 'java.exe') -cp $compileDir VisualManifestHashProbe
+if($LASTEXITCODE -ne 0){throw 'Manifest Java probe failed'}
+$result=[ordered]@{scope='DESIGN_ONLY_TEAM_APPROVED_AS_REPORTED';dtoRecords=$records.Count;exampleRoots=$roots.Count;
+    jsonFiles=$jsonFiles.Count;localLinks=$links;fieldConsistency='PASS';java21Signatures='PASS';canonicalManifestJava21='PASS';
     contractSha256=(Get-FileHash -LiteralPath $contractPath -Algorithm SHA256).Hash.ToLowerInvariant();
-    runtime='NOT RUN';note='Compilation and design consistency do not implement or validate server behavior.'}
+    designApproval='TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE';approvalSource='User-provided confirmation from the project team representative, 2026-10-19.';
+    githubApproval='NOT CLAIMED';runtime='NOT RUN';note='Compilation and design consistency do not implement or validate server behavior.'}
 [IO.File]::WriteAllText((Join-Path $PSScriptRoot 'contract-verification.mock.json'),(($result|ConvertTo-Json)+"`n"),(New-Object Text.UTF8Encoding($false)))
 Write-Output ($result|ConvertTo-Json)

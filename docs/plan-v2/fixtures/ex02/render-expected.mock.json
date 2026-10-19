@@ -81,5 +81,23 @@
                      "092-g092.wav",
                      "095-g095.wav",
                      "098-g098.wav"
-                 ]
+                 ],
+    "prefetchSlotIds":  [
+                            "p1-1",
+                            "p1-2",
+                            "p1-3",
+                            "p1-4",
+                            "p1-5",
+                            "p1-6"
+                        ],
+    "uniquePart1Images":  1,
+    "visualPlaybackOrder":  [
+                                "IMAGE_ATTACHED",
+                                "LAYOUT_DONE",
+                                "VISIBLE_PULSE_1",
+                                "VISIBLE_PULSE_2",
+                                "PLAY_CALLED"
+                            ],
+    "postStartBudgetMillis":  3000,
+    "heartbeatTimeoutMillis":  6000
 }

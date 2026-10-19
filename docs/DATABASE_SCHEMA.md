@@ -136,4 +136,4 @@ Không đưa phần giải thích/đáp án đúng vào DTO candidate. `correct_
 
 ## Thiết kế tiếp theo — chưa có migration sau V12 trong task EX-02
 
-[Contract candidate mục9](EX02_RICH_EXAM_CONTRACT_V1.md#9-mapping-postgresql-và-migration-đề-xuất) đề xuất reuse V11/V12, bổ sung content_version, option_content_status, document metadata trên blocks và session contract_version bằng migration append-only **sau owner review**. Không có DDL mới hoặc sửa V1–V12 ở PR thiết kế; không tự coi proposal này là schema hiện hành.
+[Contract mục9](EX02_RICH_EXAM_CONTRACT_V1.md#9-mapping-postgresql-và-migration-đề-xuất) reuse V11/V12, thiết kế content_version, option_content_status, document metadata và session contract_version. D10 bổ sung preparation epoch/visual readiness/lease/receipt storage trong task EX07 sau này. Thiết kế TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn19/10](plan-v2/EX02_TEAM_APPROVAL_20261019.md); không DDL/migration mới hoặc sửa V1–V12 trong PR67, không coi các cột/rows được mô tả là đã có trong DB.

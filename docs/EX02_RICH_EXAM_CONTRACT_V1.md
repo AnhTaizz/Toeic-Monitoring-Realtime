@@ -1,8 +1,8 @@
-# EX-02 — Rich Exam Contract v1, bản ứng viên
+# EX-02 — Rich Exam Contract v1, thiết kế được nhóm thông qua
 
-Ngày 19/10/2026. **CANDIDATE / PROPOSED_FOR_OWNER_REVIEW**, chưa triển khai, chưa được A/B/C ký duyệt. `schemaVersion=2` là phiên bản HTTP rich exam; “v1” trong tên tài liệu là lần phát hành bản thiết kế. WebSocket giữ protocol `v0`.
+Ngày19/10/2026. **TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE**: D01–D09, ADR-V2-03 và D10 Option A được nhóm thông qua theo [nguồn xác nhận](plan-v2/EX02_TEAM_APPROVAL_20261019.md): “User-provided confirmation from the project team representative, 2026-10-19.” Đây không chữ ký từng thành viên hoặc GitHub Approving Review; runtime/integration/physical chưa được nghiệm thu. `schemaVersion=2` là phiên bản HTTP rich exam; “v1” trong tên tài liệu là lần phát hành thiết kế. WebSocket giữ protocol `v0`.
 
-Baseline đã fetch: main `1d35b53729abade7b460d35ab07d042b6f9f3571`, đã có PR65/V11 và PR66/V12; [CI baseline](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39214612088) SUCCESS. Đọc cùng [proposal đầu vào](EX02_RICH_EXAM_CONTRACT_PROPOSAL.md), [bằng chứng EX04](EX04_V11_VERIFICATION.md), [ADR START](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md), [quyết định và roadmap](plan-v2/EX02_DECISIONS_ROADMAP.md). Đây là khuyến nghị cụ thể để owner duyệt, không thay QD-21 hiện hành.
+Baseline đã fetch lại: main `1d35b53729abade7b460d35ab07d042b6f9f3571`, đã có PR65/V11 và PR66/V12; PR67 đầu lượt ở `91786ba3fa54f94bc18bc28db5700e5454da69fc`, chưa merge. [CI baseline](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39214612088) SUCCESS. Đọc cùng [proposal đầu vào/lịch sử](EX02_RICH_EXAM_CONTRACT_PROPOSAL.md), [bằng chứng EX04](EX04_V11_VERIFICATION.md), [ADR START](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md), [quyết định và roadmap](plan-v2/EX02_DECISIONS_ROADMAP.md). Các API dưới đây là thiết kế được nhóm thông qua, **chưa callable**; không thay QD-21 legacy hoặc runtime trong PR này.
 
 ## 1. Bằng chứng source và lựa chọn mô hình
 
@@ -91,14 +91,18 @@ Group không rỗng, cùng section/part, câu thành viên liên tiếp; `group.
 |---|---|---|
 | POST `/api/v2/exams/import` | PROCTOR, `RichExamImportRequest` → `RichExamImportResponse` | 201 sau commit; duplicate 409 CONFLICT |
 | GET `/api/v2/attempts/{attemptId}/exam` | Owner CANDIDATE, gate ADR → `RichCandidateExam` | 200; SCHEDULED/CLOSED/final 409 INVALID_STATE |
-| GET `/api/v2/attempts/{attemptId}/images/{mediaId}` | Owner CANDIDATE, cùng gate | 200 bytes; lỗi mục7 |
+| GET `/api/v2/attempts/{attemptId}/images/{mediaId}` | Owner CANDIDATE; SCHEDULED chỉ allowlist Part1 + visualManifestId, IN_PROGRESS theo scope rich | 200 bytes; lỗi mục7/7.1 |
 | GET `/api/v2/exams?limit=20&afterExamId=...` | Bất kỳ PROCTOR đã auth; metadata-only | 200 `ExamCatalogPage` |
 | GET `/api/v2/attempts/{attemptId}/preparation` | Owner CANDIDATE; SCHEDULED/IN_PROGRESS và ACTIVE | 200 `AttemptPreparation`; không câu hỏi |
+| POST `/api/v2/attempts/{attemptId}/visual/ready` | Owner CANDIDATE; SCHEDULED, current writer/epoch/manifest; `VisualReadyRequest` → `VisualReadyResponse` | 200 sau commit, stale409 STALE/CONFLICT |
+| GET `/api/v2/sessions/{sessionId}/readiness` | Assigned PROCTOR; metadata-only `SessionReadiness` | 200, không cấp START; unassigned403 |
 | POST `/api/v2/sessions` | PROCTOR tạo ca và tự được phân công; payload mục6 | 201; media/content chưa đủ 409 INVALID_STATE |
 
 Không thêm API preview câu hỏi cho proctor trong v2: giám thị chọn đề bằng metadata; candidate endpoint không cho PROCTOR kể cả được phân công. Không có public examId read. `limit` 1..100 mặc định20, cursor examId opaque hợp lệ, keyset `exam_id COLLATE "C" > cursor`, ascending; unknown query400. Trả cả imported legacy/unverified trong catalog để phân biệt; UI disable lựa chọn khi `selectable=false`.
 
 GET v2 exam/preparation/images chỉ phục vụ ca PROCTORED_V2 có content_version2; owned legacy attempt trả409 INVALID_STATE sau auth/scope, client dùng v1 như cũ. Không chuyển đổi legacy DTO sang rich200 tự động. Strict unknown-field/enum policy ở mục2 chỉ áp dụng v2; parsing v1 giữ nguyên baseline, không âm thầm thêm required field hoặc đổi error code.
+
+V2 SCHEDULED dùng preparation để đọc trạng thái lobby; các route v1 status chứa full answers (`/attempts/{attemptId}/status` và query alias `/attempts/status`) phải409 INVALID_STATE ở ca V2 trước START để không mở đường đọc answers. Login/history metadata vẫn được phép; IN_PROGRESS/final status theo quyền như ADR. Legacy giữ status semantics cũ. Không tạo endpoint đọc câu/options/answers từ visual manifest.
 
 Auth/session token hợp lệ kiểm trước role/scope, trước lookup cache hoặc filesystem. Unknown/foreign attempt hoặc media không thuộc exam/không referenced trả403 FORBIDDEN đồng nhất, không lộ tồn tại. 401 UNAUTHORIZED token thiếu/hết hạn/revoked. Role sai403. ID/request malformed400 INVALID_INPUT sau auth. 413 INVALID_INPUT quá body; lỗi nội dung/enum/order/ref/key400 INVALID_INPUT; missing/hash/decode file trong import409 INVALID_STATE; duplicate409 CONFLICT; transient DB/IO503 RETRYABLE_SERVER_ERROR (`retryable=true`). File path không được xuất trong error. Dùng nguyên `ApiErrorResponse` v0, `error.code` hiện có, không thêm enum wire trong task này:
 
@@ -108,7 +112,7 @@ Auth/session token hợp lệ kiểm trước role/scope, trước lookup cache 
 
 Import là **create-only**, không overwrite, không idempotent retry200; mất response201 → proctor kiểm catalog rồi quyết định, duplicate cùng payload vẫn409. Không import seed chưa xác minh vào runtime: thiếu key/options/groups/permission/media verification →400; file thiếu/corrupt →409; không tự điền A, tải remote, đổi flag hoặc tạo draft giả imported. Seed hiện hành `importable:false` giữ nguyên. Inventory remote ở EX01, không qua rich importer.
 
-Thứ tự thực hiện EX03 sau owner review:
+Thứ tự thực hiện trong task EX03 tiếp theo theo thiết kế đã được nhóm thông qua:
 
 1. Authenticate PROCTOR; giới hạn body, strict parse; validate graph, profile, required fields, uniqueness, keys, trạng thái provenance. Verify local media theo mục7/8 ngoài transaction để hạn chế khóa; server tự đo/hash, không tin `LOCAL_VERIFIED` caller. Không write/copy/download filesystem.
 2. Bắt transaction; insert `exams` (unique PK xử lý race thành409); content_version=2. Insert sources theo request, `RETURNING id`, map sourceRef→id chỉ trong transaction. Không persist sourceRef thành FK text; source checksum duplicate reject.
@@ -123,7 +127,7 @@ Java `Instant` ISO-8601 UTC; records ở mục2 `ContentBlock`, `DocumentContent
 ```java
 record RichCandidateExam(int schemaVersion, String attemptId, String sessionId,
         String examId, String title, String description, String profile,
-        String contractVersion, Instant startedAt, Instant deadlineAt,
+        String contractVersion, Instant startedAt, Instant deadlineAt, String visualManifestId,
         List<CandidateGroup> groups, List<CandidateQuestion> questions,
         List<CandidateMedia> media) {}
 record CandidateGroup(String groupId, Section section, int part, String title,
@@ -136,10 +140,10 @@ record CandidateMedia(String mediaId, MediaType mediaType, String mimeType,
 record AttemptPreparation(int schemaVersion, String attemptId, String sessionId,
         String examId, String title, String contractVersion, String sessionState,
         String attemptState, int durationMinutes, Instant startedAt, Instant deadlineAt,
-        boolean listeningRequired, String audioManifestPath) {}
+        boolean listeningRequired, String audioManifestPath, VisualManifest visualManifest) {}
 ```
 
-`CandidateMedia`: IMAGE có relative API imagePath đúng attempt+mediaId, audioFileName null; AUDIO có audioFileName là basename để join manifest hiện có, imagePath null; không phải localFile/path/URL nguồn. Image width/height bắt buộc >0, durationMs null; audio dimensions null, durationMs có thể null nếu codec chưa đo được. `startedAt/deadlineAt` trong RichCandidateExam non-null vì chỉ ACTIVE+IN_PROGRESS trước deadline mới được đọc; preparation trước START null cả hai. Không trả writerEpoch ở preparation; writer lấy takeover hiện có.
+`CandidateMedia`: IMAGE có relative API imagePath đúng attempt+mediaId, audioFileName null; AUDIO có audioFileName là basename để join manifest hiện có, imagePath null; không phải localFile/path/URL nguồn. Image width/height bắt buộc >0, durationMs null; audio dimensions null, durationMs có thể null nếu codec chưa đo được. `startedAt/deadlineAt` trong RichCandidateExam non-null vì chỉ ACTIVE+IN_PROGRESS trước deadline mới được đọc; preparation trước START null cả hai. `RichCandidateExam.visualManifestId` là ID visual đã chốt tại START, để bridge đối chiếu context prefetched; không tự tính lại theo writer takeover sau START. Visual manifest trong preparation có writerEpoch đọc từ server nhưng không cấp writer; lobby phải takeover một lần, chia sẻ writer cho audio/visual và lấy preparation mới.
 
 Renderer: sort group/question/block/document theo order, render shared group một lần trước câu; question selection giữ cùng document pane, không seek/restart audio. Part1 ảnh + nhãn; Part2 nhãn không transcript; Part3 một audio chung ba câu; Part4 ảnh trong shared pane; Part6 một passage với bốn câu; Part7 ba document panes (fixture g147), trong Notice TEXT rồi IMAGE, Reply vùng thứ ba. Image tải/decode trên bounded worker, timeout/cancel khi đóng view; update scene trên FX thread. Network/file/hash/ProcessHandle không trên FX Application Thread.
 
@@ -170,11 +174,78 @@ Create request: durationMinutes 1..240 integer, candidates 1..100 unique enabled
 
 Chọn cấu hình mới `TOEIC_IMAGE_ROOT` ngoài JAR, không dùng static resource public, không nhận root từ request. Root/examId/localFile, localFile một basename ASCII1..255 `[A-Za-z0-9][A-Za-z0-9._-]*`, không `..`, colon/slash/backslash/control/trailing dot hoặc space, không Windows reserved device names (CON/PRN/AUX/NUL/COM1..9/LPT1..9 kể cả extension), chỉ .png/.jpg/.jpeg. Áp dụng basename safety tương tự cho audio; examId an toàn mục2. Source path không quyết định disk path.
 
-1. Token→role→attempt owner/exam binding→ADR state/deadline gate→media same-exam/reference/type/status; **trước filesystem/cache/header**. Proctor không có route này. Không so sánh checksum trả về cho người không quyền.
+1. Token→role→attempt owner/exam binding→ADR state/deadline gate→media same-exam/reference/type/status; **trước filesystem/cache/header**. SCHEDULED thêm allowlist Part1/visualManifestId ở mục7.1, không blanket deny ảnh. Proctor không có route này. Không so sánh checksum trả về cho người không quyền.
 2. Cấu hình root resolve real path lúc start; reject symlink/reparse points cho exam directory/file và mọi segment dưới trusted root; `toRealPath` và check containment theo filesystem Windows, không chỉ string prefix. Reject cả link nằm trong root để policy thống nhất. EX05 phải kiểm junction và Windows reparse attributes thực, không gọi test symlink SKIP là PASS. Không follow khi mở; verify identity/real path trước/sau read; root do operator kiểm soát read-only, chống TOCTOU bằng handle/identity và reject khi thay đổi. Không giả định NOFOLLOW_LINKS một mình chặn mọi junction.
-3. Allow PNG/JPEG (image/png,image/jpeg), extension+magic bytes+decoder phải khớp; không SVG/GIF/HTML, không URL redirect/fetch. 1..8 MiB/file, tối đa100 image/đề, tổng64 MiB ảnh/đề; dimension mỗi chiều1..8192 và tổng ≤16,000,000 pixels. Đọc dimensions trước full decode; reject decode error/truncated file/oversized pixel bomb; hash bytes thực bằng SHA256 so metadata, size phải khớp; không chỉ tin MIME từ importer. Limits là lựa chọn thiết kế chờ B review với dataset thật, chưa có đo performance.
+3. Allow PNG/JPEG (image/png,image/jpeg), extension+magic bytes+decoder phải khớp; không SVG/GIF/HTML, không URL redirect/fetch. 1..8 MiB/file, tối đa100 image/đề, tổng64 MiB ảnh/đề; dimension mỗi chiều1..8192 và tổng ≤16,000,000 pixels. Đọc dimensions trước full decode; reject decode error/truncated file/oversized pixel bomb; hash bytes thực bằng SHA256 so metadata, size phải khớp; không chỉ tin MIME từ importer. Limits đã được duyệt thiết kế theo nguồn trên, chưa có đo performance với dataset thật.
 4. Success200 bytes, exact Content-Type/Length, `Cache-Control: no-store`, `X-Content-Type-Options: nosniff`, `X-Image-SHA256`. **Chưa ETag, chưa304/Range/HEAD optimization**. If-None-Match/If-Modified-Since vẫn auth/state rồi200 hoặc lỗi, không304; Range được bỏ qua và trả full200 sau auth. Cache ảnh client chỉ RAM theo attempt+mediaId+hash, xóa khi logout/đóng bài, không public disk cache.
-5. Authorized reference nhưng file missing/corrupt/hash mismatch/unsafe configured path →409 INVALID_STATE, không bytes; IO transient503 RETRYABLE_SERVER_ERROR; malformed mediaId400; foreign/unknown media403; auth401. Không fallback remote/placeholders để tuyên bố đủ media. Client khóa thao tác cần ảnh, hiển thị lỗi retry rõ, không làm FX thread treo. Pre-START image409 như đề đầy đủ; audio chuẩn bị được phép theo ADR.
+5. Authorized reference nhưng file missing/corrupt/hash mismatch/unsafe configured path →409 INVALID_STATE, không bytes; IO transient503 RETRYABLE_SERVER_ERROR; malformed mediaId400; foreign/unknown/wrong-Part/non-LOCAL_VERIFIED media403; auth401. Không fallback remote/placeholders để tuyên bố đủ media. Client khóa thao tác cần ảnh, hiển thị lỗi retry rõ, không làm FX thread treo. SCHEDULED ảnh Part1 hợp lệ được prefetch theo mục7.1; full exam/prompts/options/keys/passages vẫn bị chặn. Sau START ảnh lỗi phải theo interruption/no-replay, không reset deadline.
+
+## 7.1. D10 — Part1 Visual Readiness Option A
+
+**Ngoại lệ bảo mật được nhóm chấp nhận có chủ đích:** owner candidate của ca PROCTORED_V2 SCHEDULED được tải bytes ảnh Part1 trước START. Chủ máy có thể trích xuất bytes; RAM-only/no-store/ẩn ảnh dưới UI không bảo mật tuyệt đối trước chính người đó. Không gửi prompts/options/keys/passages, ảnh chỉ thuộc Part4/6/7, altText có thể tiết lộ nội dung, raw source URL hoặc filesystem path trong preparation. Không public static endpoint. Auth token/scope phải kiểm cả conditional/cache/retry; RAM cache theo attempt+writer+preparationEpoch+manifest+mediaId/hash, dọn logout/đóng lượt. Không tuyên bố RAM ngăn trích xuất.
+
+Chọn **một contract**: preparation nhúng `visualManifest`; không thêm endpoint manifest riêng. Image download reuse route mục7, SCHEDULED bắt buộc một query `visualManifestId=<current ID>`. Query không là credential; không nhận local path/Part filter từ caller. Unknown/repeated query400. Quyền gồm owner, ACTIVE, session SCHEDULED, contentVersion2, verified IMAGE và **EXISTS question Part1 → IMAGE block → cùng mediaId trong cùng exam**. Không allowlist theo client hoặc số sáu assets. Sáu vị trí có thể reuse một media; asset được Part1 tham chiếu vẫn được phép dù cũng được Part khác dùng, nhưng không trả quan hệ/nội dung các Part kia. Fixture có một ảnh reuse cho sáu slots và hai mediaId chỉ thuộc Part4/7 để chứng minh deny.
+
+Auth401/foreign attempt403 trước mọi data/cache/file; SCHEDULED unknown/wrong-exam/wrong-Part/unverified media403; đúng Part1 nhưng thiếu manifest query400 INVALID_INPUT, ID cũ409 CONFLICT, file hỏng/thiếu409 INVALID_STATE. IN_PROGRESS owner còn ACTIVE/trước deadline được đọc image referenced của đề; query nếu gửi vẫn phải đúng ID visual đã chốt, không bypass quyền. CLOSED/final409 INVALID_STATE, expired409 EXPIRED. `If-None-Match`/`If-Modified-Since` không đổi policy; **không304**, không ETag, no-store/nosniff như mục7. Full exam v1/v2 trước START409; không gửi answers trong preparation.
+
+### Records và manifest identity
+
+```java
+enum VisualReadyAction { ATTEST, INVALIDATE }
+record VisualManifest(int schemaVersion, String manifestId, String attemptId,
+        String sessionId, String examId, int contentVersion, long writerEpoch,
+        String preparationEpoch, List<VisualImageSlot> slots) {}
+record VisualImageSlot(String slotId, int position, String mediaId, String downloadPath,
+        String sha256, long sizeBytes, String mimeType, int widthPx, int heightPx) {}
+record VisualAssetVerification(String mediaId, String sha256, long sizeBytes,
+        int widthPx, int heightPx) {}
+record VisualReadyRequest(String requestId, String attemptId, long writerEpoch,
+        String preparationEpoch, String manifestId, VisualReadyAction action,
+        String firstSlotId, List<VisualAssetVerification> verifiedAssets) {}
+record VisualReadyResponse(int schemaVersion, String requestId, String attemptId,
+        long writerEpoch, String preparationEpoch, String manifestId, String state,
+        Instant readyAt, Instant leaseExpiresAt) {}
+record SessionReadiness(int schemaVersion, String sessionId, Instant readAt,
+        boolean allReady, List<AttemptReadiness> attempts) {}
+record AttemptReadiness(String attemptId, long writerEpoch, String preparationEpoch,
+        boolean audioReady, boolean visualReady, String visualManifestId,
+        Instant visualLeaseExpiresAt, List<String> blockedReasons) {}
+```
+
+Manifest schemaVersion2, contentVersion2; six slots `p1-1`..`p1-6`, positions1..6 theo Part1 question order1..6, không questionId/prompt. Mỗi slot là ảnh required Part1 từ graph, không tự thêm ảnh group khác. `downloadPath` relative `/api/v2/attempts/{attemptId}/images/{mediaId}?visualManifestId={manifestId}`. `preparationEpoch` UUID do server cấp, không credential, đổi khi invalidate; không suy version bằng null deadline. Manifest stable trong cùng exam/session/attempt/writer/epoch/expected metadata, không có timestamp làm cache key.
+
+Preparation SCHEDULED có visualManifest non-null, kể cả chưa READY; IN_PROGRESS trả visualManifest=null, client dùng full rich DTO và committed visualManifestId, không mint context mới để phát lại. Server xác minh ảnh bằng JDK ImageIO theo limits mục7, không thêm JavaFX/dependency decoder vào server.
+
+Chọn canonical hash **SHA256 lowercase hex của Java DataOutputStream**: writeUTF(`EX02-P1-V1`), writeUTF(examId/sessionId/attemptId lần lượt), writeInt(contentVersion), writeLong(writerEpoch), writeUTF(preparationEpoch), writeInt(slotCount); từng slot theo position: writeUTF(slotId), writeInt(position), writeUTF(mediaId), writeLong(sizeBytes), writeUTF(sha256), writeUTF(mimeType), writeInt(widthPx), writeInt(heightPx). Big-endian; dùng expected metadata đã verified, không hash URL chứa chính manifestId hoặc source path. Thay writer/epoch/slot/expected bytes → ID mới. File thực đổi trái expected hash làm NOT_READY/409, không tự ký manifest mới cho bytes chưa verified. Rich exams create-only nên content graph bất biến sau import. Fixtures/checker tái tính hash theo quy tắc này.
+
+### Handshake, retry và lifecycle
+
+Client `NOT_PREPARED → DOWNLOADING → VALIDATING → UI_PREPARED → REPORTING → READY`; lỗi thành FAILED/NOT_READY, mất context thì quay NOT_PREPARED. Chỉ READY sau server ACK còn hiệu lực. Không coi HTTP200 download hoặc `new ImageView()` là đủ.
+
+1. Một lobby coordinator takeover, giữ writer chung; lấy preparation mới. Download từng unique media vào RAM trên bounded worker, verify actual size/hash/MIME signature/dimensions và decode JavaFX Image xong (`progress=1`, `error=false`, width/height đúng) **trước** báo READY. File/network/hash không chạy FX thread. Decode lỗi/thiếu file không attestation.
+2. Trên FX thread, gắn ImageView vào pane của scene thật dưới màn che trung tính (chưa cho thí sinh xem ảnh), set decoded image, applyCss/layout, kiểm geometry và snapshot widget fixture ở test; callbacks generation-scoped. Chuẩn bị ảnh đầu và toàn six slots trong RAM. Không có pending image loading/error. Bước này xác nhận UI_PREPARED, chưa khẳng định pixel vật lý đã hiện cho người dùng.
+3. Audio pipeline hoàn tất checksum/speaker/codec và Audio READY ACK với cùng writer. Vì AudioPreparation hiện withdraw trước reportReady, coordinator phải chờ **ACK cuối**, rồi lấy lại preparation/epoch, đối chiếu RAM manifest hoặc prepare lại. Không attestation visual trước lần audio-withdraw cuối.
+4. POST ATTEST: requestId1..128, route/body attempt giống nhau, writer>0, current epoch/manifest, firstSlotId=`p1-1`; `verifiedAssets` là tập **unique mediaId** chính xác của slots, không thiếu/thừa/trùng, hash/size/dimensions khớp. Sáu slots reuse một media → một verification entry. Không có boolean `ready=true` tùy ý. Server kiểm auth→session/attempt lock→current writer/epoch/manifest→Audio READY cùng epoch→verified resources→claims; sai writer409 STALE, epoch/manifest cũ409 CONFLICT, claims sai400 INVALID_INPUT, chưa Audio READY/file lỗi409 INVALID_STATE. Server đo/hash/decode resource hợp lệ, nhưng **không thể xác nhận client đã decode/render thật**; ATTEST là khai báo có scope, còn GUI tests phải chứng minh client làm đúng.
+5. Persist và trả200 sau COMMIT: state READY, readyAt DBclock, leaseExpiresAt=readyAt+6000ms. Cấu hình mặc định visual lease6000ms/renew2000ms, renew nhỏ hơn nửa lease; client gửi ATTEST requestId mới mỗi2000ms khi audio/image/UI context vẫn hợp lệ. `readyAt` giữ mốc của context; renewal dùng một DBclock cho lastSeen/leaseExpiresAt, không deadline. Retry cùng requestId+canonical payload chỉ trả cùng receipt sau auth/current-scope và còn lease; **không gia hạn lease**. Cùng requestId payload khác409 CONFLICT. Lease hết hoặc row đã invalidated: retry không resurrect200,409 INVALID_STATE; client phải invalidate/prepare lại, không auto retry attest cũ. Request receipts keyed attempt+requestId, canonical assets sort mediaId, không so JSON text.
+6. INVALIDATE trên cùng route: firstSlotId null, verifiedAssets=[]; auth/current writer/epoch/manifest/state như trên, xoay preparationEpoch, xóa cả audio+visual readiness và trả200 NOT_READY, readyAt/leaseExpiresAt null, manifestId/epoch mới. Riêng matched INVALIDATE retry: sau auth/current writer/state, đối chiếu canonical receipt và **epoch phản hồi** còn current trước khi xét request epoch cũ; chỉ trả cùng NOT_READY nếu chưa attested context mới, không xoay lần hai. Không dùng retry này để vô hiệu epoch mới của client khác. Client GET preparation lại. Đây là invalidate/ACK chuẩn bị, **không START authority**.
+
+Invalidation áp dụng trước START: takeover (writer mới, epoch mới), đổi manifest/expected metadata hoặc file mất/hỏng, logout/revocation, rời lượt/đóng app, WS disconnect/reconnect, Audio READY withdrawn/lost/expired, visual lease hết, server restart. Reconnect trước START phải INVALIDATE và prepare/attest lại, không khôi phục READY từ cache; reconnect cùng epoch không tự gia hạn. Server dùng disconnect/revoke hooks và lease để giới hạn stale context; mất điện/mạng không báo được tức thời nên không hứa biết ngay khi candidate đóng app. START recheck login session đã attested còn valid và lease tại DBclock; readiness invalidators phải cùng lock order, không giữ auth-row lock rồi chờ session lock. Restart SCHEDULED rotate epoch/clear cả readiness **trước** nhận traffic; IN_PROGRESS giữ committed IDs/deadlines và áp Listening interruption hiện có, không reset/rearm. Sau START không gửi INVALIDATE để quay ca về lobby; lỗi đi theo interruption.
+
+Storage design EX07, **không SQL/migration trong PR này**: attempt.preparation_epoch; attempt_audio_readiness.preparation_epoch cho V2; attempt_visual_readiness keyed attempt với writer/epoch/manifest/attested-login-session/asset digest/readyAt/lastSeen/leaseExpiresAt; request receipts scoped attempt+requestId; committed visual manifest ID trên attempt lúc START. Các rows/columns này chưa tồn tại, legacy dùng policy cũ. Proctor GET v2 readiness trả per-attempt audioReady/visualReady/lease và blockedReasons subset `AUDIO_NOT_READY,VISUAL_NOT_READY,VISUAL_EXPIRED,STALE_WRITER,STALE_MANIFEST,INACTIVE_ATTEMPT,SESSION_NOT_SCHEDULED`; không ảnh/questions/keys. `allReady` derived, không tin từ request; START vẫn kiểm lại dưới khóa.
+
+### START, ảnh hiển thị và bridge Listening
+
+TOEIC200 V2 chỉ START khi **mọi roster member Audio READY AND Visual READY** cùng writer/preparationEpoch/resources còn hợp lệ. Thiếu bất kỳ điều kiện →409 INVALID_STATE, session SCHEDULED, không startedAt/deadline/startId/WS, answers/revision/writer giữ. START vẫn một endpoint Listening v1, một DBclock sau khóa/verification, một COMMIT rồi WS; prefetch/READY/renewal không bắt đầu đồng hồ. Commit lưu visualManifestId dùng cho rich response. Retry receipt không yêu cầu reattest khi đã IN_PROGRESS, không tạo authority/đặt lại deadline; re-delivery cùng ID vẫn chỉ ARMED hợp lệ theo ListeningService.
+
+Thứ tự bắt buộc: **prefetched Part1 images → Visual READY ACK → proctor START → rich candidate projection → image visible gate → MediaPlayer.play()**. Source hiện tại ListeningPlayback.prepare() gọi ListeningApi.exam() → GET v1 exam; ListeningPlaybackPane.render() gọi playCurrent trước render question pane, onReady gọi play(). Cả hai là dependency bắt buộc EX06; giữ nguyên source trong task này.
+
+Chọn bridge V2: provider GET `/api/v2/attempts/{attemptId}/exam` sau START, đối chiếu visualManifestId đã commit với RAM context, cùng attempt/writer/audio manifest/startId; **không GET v1**. Adapter in-memory chuyển Listening questions theo group AUDIO → CandidateMedia.audioFileName thành CandidateExamDto/segments hiện có; prompt=TEXT blocks, options null-text thành nhãn, passageText null; full rich renderer vẫn dùng ordered documents, không degrade Part7. Một player và journal hiện có, Part3/4 shared audio chỉ một segment/group. Legacy provider/plan giữ nguyên.
+
+V2 nhận command hợp lệ: reserve startId vào journal trước GET/scene transition; giữ dedupe cả khi prepare lỗi, báo INTERRUPTED cho authorization đã commit thay vì bỏ accepted key rồi chờ phát lại. Reuse HEARTBEAT event hiện có khi ARMED/PREPARING mỗi2000ms, không báo STARTED trước MediaPlayer.onPlaying; rich GET dùng async/bounded worker, không block scheduler heartbeat. Source server cho HEARTBEAT khi chưa playback_started_at; timeout mặc định6000ms giữ nguyên. Chọn tổng local monotonic budget **3000ms** từ accept command đến gọi play, mỗi HTTP tối đa min(2000ms, budget còn lại), không chờ vô hạn hoặc tăng timeout server. Response heartbeat stale/expired/interrupted chặn phát; command tới muộn có thể fail closed dù local budget chưa hết. Budget không hứa tránh mọi gián đoạn mạng/WS.
+
+Trên FX thread sau rich DTO: gắn first ImageView đúng scene đang hiện, mở màn che, applyCss/layout; yêu cầu image decoded/no-error, node+ancestors visible/opacity>0, Stage showing, bounds có diện tích trong viewport. Đợi **hai pulse khác nhau** với điều kiện ổn định và generation/attempt/writer/startId còn đúng rồi mở cổng play; queued runLater hoặc tạo ImageView đơn thuần không đủ. Chỉ khi `imageVisibleGate && mediaOnReady && authorityValid && budgetRemaining` mới gọi play. Probe GUI tương lai phải snapshot **widget fixture của app** và kiểm event trace `IMAGE_ATTACHED → LAYOUT_DONE → VISIBLE_PULSE_1 → VISIBLE_PULSE_2 → PLAY_CALLED → ON_PLAYING`; không đoán từ JSON. Server/client không chứng minh pixel vật lý đã tới màn hình người dùng, đây là bảo đảm thứ tự trong scene graph cần GUI test.
+
+Mọi segment Part1 tiếp theo dùng cùng gate với ảnh slot tương ứng; nếu đổi ảnh/render lỗi thì không play tiếp. Timeout, scene mất, image error, authority/network mất sau START: dừng/dispose player, journal interruption và gửi existing INTERRUPTED (MEDIA_ERROR cho image/render; NETWORK_LOST cho mạng), khóa Listening, không tự replay/resume hoặc reset/gia hạn deadline. Deadline đã commit tiếp tục chạy; giám thị dùng reorganize cấp attempt mới nếu cần. PRE-START READY không hứa không bao giờ có lỗi sau START. Chưa có GUI/HTTP/PG/WS runtime evidence cho flow này.
 
 ## 8. Audio bridge giữ player hiện hành
 
@@ -203,20 +274,20 @@ Candidate nhận manifest qua GET `/api/v1/attempts/{attemptId}/audio/manifest`,
 - `exam_content_blocks.document_id VARCHAR(128) NULL`, `document_order INT NULL`, `document_title VARCHAR(255) NULL`. All-null cho owner question/Listening group. Với document: group_id nonnull, document_id/order nonnull, order>0; title nullable. DocumentId/order/title nhất quán trên mọi block cùng document; kiểm map hai chiều ID↔order trong importer/read validator. Không unique(document_id) trên blocks vì nhiều block/document; unique block owner order hiện có giữ nguyên. DB CHECK pair/all-null và importer kiểm cross-row consistency; không hứa DB CHECK đơn lẻ chứng minh toàn graph.
 - `exam_sessions.contract_version VARCHAR(24) NOT NULL DEFAULT 'LEGACY_V1'`, CHECK LEGACY_V1/PROCTORED_V2; policy ADR. Không auto-upgrade ca tồn tại; không inference deadlineNULL. Reorganization phải copy version và cấp attempts mới.
 
-EX03 sở hữu content/document/options marker; EX07 sở hữu session marker; A/C phối hợp cấp số migration theo thứ tự merge, không hai PR cùng dùng V13. Migration/version là blocker owner review, không đã được chấp thuận bởi việc duyệt phạm vi V2.
+EX03 sở hữu content/document/options marker; EX07 sở hữu session marker và visual readiness storage mục7.1; A/C phối hợp cấp số migration theo thứ tự merge, không hai PR cùng dùng V13. Thiết kế đã được nhóm thông qua theo nguồn19/10; implementation/migration vẫn thuộc task sau, không có SQL mới trong PR67.
 
 Không mở route GET rich exam/image khi chưa có gate EX07: EX03 có thể merge importer và mapper/service test riêng sau duyệt, nhưng registration endpoint candidate phải đi cùng gate để không xuất bản nội dung SCHEDULED. EX05 resolver có thể kiểm độc lập; không publish controller bỏ gate để chờ PR sau.
 
 ## 10. Backward compatibility và verification
 
-| Thành phần | Legacy version1 | PROCTORED_V2 mới / điều cần duyệt |
+| Thành phần | Legacy version1 | PROCTORED_V2 — thiết kế đã duyệt, chưa triển khai |
 |---|---|---|
 | Import v1 | Payload/status200/duplicate400 INVALID_INPUT/đề ngắn giữ | Không nhận rich fields; không gán contentVersion2 |
 | Candidate exam v1 | DTO phẳng hiện có giữ | Từ chối409 INVALID_STATE “Cần client V2”; không đường bypass |
 | Autosave/submit v1 | QD21 và response giữ | Wire giữ; thêm session gate/lock theo ADR; cached retry semantics ghi riêng |
-| Manifest/READY | API/manifest giữ | Download chuẩn bị SCHEDULED; null deadline cho READY; no replay |
+| Manifest/READY | API/manifest audio giữ | Audio+Visual READY cùng epoch trước START; Part1-only prefetch, no304/no replay |
 | Listening START v1 | COALESCE deadline hiện có giữ | Chính endpoint này là authority toàn bài, chỉ branch policy theo session version |
-| JavaFX hiện tại | Chạy legacy bình thường | Không hỗ trợ ca mới cho đến EX06 lobby/renderer; version error rõ |
+| JavaFX hiện tại | Chạy legacy bình thường | EX06 bắt buộc rich provider/segment bridge + visible-image gate trước play; không gọi GETv1 hoặc player thứ hai |
 | WS v0 | Message/reducer/FULL default giữ | Giữ LISTENING_START; không thêm GENERAL_START hay đổi DELTA |
 
-[Fixture README](plan-v2/fixtures/ex02/README.md) mô tả render expectations và checker thiết kế. Negative cases phải kiểm đúng reason, không coi “JSON parse được” là validate runtime. EX03/05/07 phải thêm PG/HTTP/RBAC/rollback/race/path tests theo roadmap; EX06 cần JavaFX render/worker/no-replay; EX08 cần dataset200 hợp lệ + media/quyền sử dụng thật + physical. Trong task này **runtime mới NOT RUN / NOT IMPLEMENTED**; fixture MOCK không phải tích hợp production PASS. Owner actions cụ thể ở decision register.
+[Fixture README](plan-v2/fixtures/ex02/README.md) mô tả render expectations và checker thiết kế, gồm P01–P09/N01–N20 Option A. Negative cases phải kiểm đúng reason, không coi “JSON parse được” là validate runtime. EX03/05/07 phải thêm PG/HTTP/RBAC/rollback/race/path tests theo roadmap; EX06 cần JavaFX render/worker/visible-before-play/no-replay; EX08 cần dataset200 hợp lệ + media/quyền sử dụng thật + physical. Trong task này **runtime mới NOT RUN / NOT IMPLEMENTED**; fixture MOCK không phải tích hợp production PASS. Phê duyệt thiết kế đã ghi nguồn, không tự đánh implementation DONE.

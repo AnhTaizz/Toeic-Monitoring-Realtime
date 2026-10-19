@@ -28,7 +28,7 @@
     {"id":"get-before-start","role":"CANDIDATE","owner":true,"assigned":false,"revoked":false,"operation":"EXAM","sessionState":"SCHEDULED","expectedStatus":409},
     {"id":"save-before-start","role":"CANDIDATE","owner":true,"assigned":false,"revoked":false,"operation":"SAVE","sessionState":"SCHEDULED","expectedStatus":409},
     {"id":"submit-before-start","role":"CANDIDATE","owner":true,"assigned":false,"revoked":false,"operation":"SUBMIT","sessionState":"SCHEDULED","expectedStatus":409},
-    {"id":"image-before-start","role":"CANDIDATE","owner":true,"assigned":false,"revoked":false,"operation":"IMAGE","sessionState":"SCHEDULED","expectedStatus":409},
+    {"id":"image-before-start","mediaId":"img-p7-only","role":"CANDIDATE","owner":true,"assigned":false,"revoked":false,"operation":"IMAGE","sessionState":"SCHEDULED","expectedStatus":403},
     {"id":"takeover-lobby","role":"CANDIDATE","owner":true,"assigned":false,"revoked":false,"operation":"TAKEOVER","sessionState":"SCHEDULED","expectedStatus":200},
     {"id":"closed-start","role":"PROCTOR","owner":false,"assigned":true,"revoked":false,"operation":"START","sessionState":"CLOSED","expectedStatus":409},
     {"id":"proctor-candidate-image","role":"PROCTOR","owner":false,"assigned":true,"revoked":false,"operation":"IMAGE","sessionState":"IN_PROGRESS","expectedStatus":403}

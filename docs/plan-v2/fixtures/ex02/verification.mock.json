@@ -5,7 +5,7 @@
     "positive":  "PASS",
     "questions":  200,
     "groups":  76,
-    "media":  55,
+    "media":  57,
     "audioFiles":  54,
     "negativeAndAccessCases":  29,
     "results":  [
@@ -162,7 +162,7 @@
                     {
                         "id":  "image-before-start",
                         "status":  "PASS",
-                        "httpDesign":  409,
+                        "httpDesign":  403,
                         "scope":  "MOCK_DESIGN_ONLY"
                     },
                     {
@@ -184,11 +184,17 @@
                         "scope":  "MOCK_DESIGN_ONLY"
                     }
                 ],
-    "importSha256":  "6deafcff77c443f1a940e4bf6b23040c8b2e46db00b77e138846e934f3cb13c8",
-    "candidateSha256":  "cb4586eb28a13d30de0e67a172f280393b3e1402ac4650a1e39fb0020878b50b",
+    "visualPositiveCases":  9,
+    "visualNegativeCases":  20,
+    "totalDesignCases":  58,
+    "visualManifestId":  "0c349b8a923bf37b0e7676d466f5eaeb200c10d507246e7b261c8b9128dbb4c1",
+    "importSha256":  "4d7d171412764d7ddde24bfb18cd482f3f50e3f89b789ea69f792ea004c96ee7",
+    "candidateSha256":  "76218ad56e09348f90ef23ec45b0b1c61372ac8ef63c0b80ce2d8c8981161f4c",
     "runtime":  "NOT RUN",
     "postgres":  "NOT RUN",
     "javafx":  "NOT RUN",
     "hearing":  "NOT RUN",
-    "ownerApproval":  "PENDING"
+    "designApproval":  "TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE",
+    "approvalSource":  "User-provided confirmation from the project team representative, 2026-10-19.",
+    "githubApproval":  "NOT CLAIMED"
 }

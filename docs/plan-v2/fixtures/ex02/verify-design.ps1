@@ -3,6 +3,7 @@ param([switch]$Generate)
 $ErrorActionPreference = 'Stop'
 $fixtureRoot = $PSScriptRoot
 $utf8 = New-Object Text.UTF8Encoding($false)
+. (Join-Path $fixtureRoot 'visual-design.ps1')
 function WriteJson($name, $value) {
     if ($name -in @('import.mock.json','candidate.mock.json')) {
         # One array element per line keeps the full 200Q examples reviewable.
@@ -64,6 +65,12 @@ if ($Generate) {
     $media = @([ordered]@{mediaId='img-grid';mediaType='IMAGE';sourceRef='self';sourceUrl=$null;
         storageStatus='LOCAL_VERIFIED';localFile='mock-grid.png';mimeType='image/png';sizeBytes=(Get-Item $imagePath).Length;
         sha256=(HashFile $imagePath);widthPx=8;heightPx=8;durationMs=$null;altText='MOCK blue and white grid'})
+    foreach($partImage in @(4,7)) {
+        $file="mock-part$partImage.png";[IO.File]::Copy($imagePath,(Join-Path $imageDir $file),$true)
+        $media += [ordered]@{mediaId="img-p$partImage-only";mediaType='IMAGE';sourceRef='self';sourceUrl=$null;
+            storageStatus='LOCAL_VERIFIED';localFile=$file;mimeType='image/png';sizeBytes=(Get-Item $imagePath).Length;
+            sha256=(HashFile $imagePath);widthPx=8;heightPx=8;durationMs=$null;altText="MOCK Part $partImage only image"}
+    }
     $groups = @(); $questions = @()
     $counts = @(6,25,39,30,30,16,54)
     $number = 1
@@ -81,7 +88,7 @@ if ($Generate) {
                     storageStatus='LOCAL_VERIFIED';localFile=$file;mimeType='audio/wav';sizeBytes=$wav.Length;
                     sha256=(HashFile $audioPath);widthPx=$null;heightPx=$null;durationMs=10;altText=$null}
                 $groupBlocks += MediaBlock "$groupId-audio" 1 'AUDIO' $mediaId
-                if ($part -eq 4 -and $offset -eq 0) { $groupBlocks += MediaBlock "$groupId-image" 2 'IMAGE' 'img-grid' }
+                if ($part -eq 4 -and $offset -eq 0) { $groupBlocks += MediaBlock "$groupId-image" 2 'IMAGE' 'img-p4-only' }
             }
             if ($part -eq 6) {
                 $documents += [ordered]@{documentId='passage';orderIndex=1;title='MOCK passage';
@@ -93,7 +100,7 @@ if ($Generate) {
                 if ($offset -eq 0) {
                     $documents += [ordered]@{documentId='notice';orderIndex=2;title='MOCK Notice';
                         blocks=@((TextBlock "$groupId-notice" 2 'MOCK Notice: Use the blue entrance.'),
-                                 (MediaBlock "$groupId-notice-image" 3 'IMAGE' 'img-grid'))}
+                                 (MediaBlock "$groupId-notice-image" 3 'IMAGE' 'img-p7-only'))}
                     $documents += [ordered]@{documentId='reply';orderIndex=3;title='MOCK Reply';
                         blocks=@((TextBlock "$groupId-reply" 4 'MOCK Reply: I will arrive before nine.'))}
                 }
@@ -124,6 +131,7 @@ if ($Generate) {
             answerKeyStatus='VERIFIED';groupMappingStatus='VERIFIED';optionContentStatus='VERIFIED';mediaValidationStatus='VERIFIED'});
         groups=$groups;media=$media;questions=$questions}
     WriteJson 'import.mock.json' $request
+    $visual=WriteVisualFixtures $request
     # Explicit allowlist projection, never clone the import object into candidate data.
     $candidateGroups = @($groups | ForEach-Object { [ordered]@{groupId=$_.groupId;section=$_.section;part=$_.part;title=$_.title;orderIndex=$_.orderIndex;documents=$_.documents;blocks=$_.blocks} })
     $candidateQuestions = @($questions | ForEach-Object { [ordered]@{questionId=$_.questionId;section=$_.section;part=$_.part;orderIndex=$_.orderIndex;groupId=$_.groupId;blocks=$_.blocks;options=$_.options} })
@@ -135,10 +143,10 @@ if ($Generate) {
     })
     WriteJson 'candidate.mock.json' ([ordered]@{schemaVersion=2;attemptId='mock-attempt';sessionId='mock-session';examId=$examId;
         title=$request.exam.title;description=$request.exam.description;profile='TOEIC_200';contractVersion='PROCTORED_V2';
-        startedAt='2026-10-19T01:00:00Z';deadlineAt='2026-10-19T03:00:00Z';groups=$candidateGroups;questions=$candidateQuestions;media=$candidateMedia})
+        startedAt='2026-10-19T01:00:00Z';deadlineAt='2026-10-19T03:00:00Z';visualManifestId=$visual.manifestId;groups=$candidateGroups;questions=$candidateQuestions;media=$candidateMedia})
     WriteJson 'preparation.mock.json' ([ordered]@{schemaVersion=2;attemptId='mock-attempt';sessionId='mock-session';examId=$examId;title=$request.exam.title;
         contractVersion='PROCTORED_V2';sessionState='SCHEDULED';attemptState='ACTIVE';durationMinutes=120;startedAt=$null;deadlineAt=$null;
-        listeningRequired=$true;audioManifestPath='/api/v1/attempts/mock-attempt/audio/manifest'})
+        listeningRequired=$true;audioManifestPath='/api/v1/attempts/mock-attempt/audio/manifest';visualManifest=$visual})
     WriteJson 'catalog.mock.json' ([ordered]@{schemaVersion=2;items=@(
         [ordered]@{examId=$examId;title=$request.exam.title;contentVersion=2;profile='TOEIC_200';totalQuestions=200;importStatus='IMPORTED';contentValidation='VERIFIED';mediaVerification='VERIFIED_AT_IMPORT';selectable=$true;requiresMediaRecheck=$true;blockedReasons=@()},
         [ordered]@{examId='mock-legacy';title='MOCK unverified legacy';contentVersion=1;profile=$null;totalQuestions=200;importStatus='IMPORTED';contentValidation='UNVERIFIED';mediaVerification='UNVERIFIED';selectable=$false;requiresMediaRecheck=$true;blockedReasons=@('LEGACY_CONTENT','CONTENT_UNVERIFIED','MEDIA_UNVERIFIED')}
@@ -147,7 +155,9 @@ if ($Generate) {
     WriteJson 'render-expected.mock.json' ([ordered]@{label='MOCK';part3Group='g032';part3Questions=@('q032','q033','q034');part3Audio='aud-032';
         part6Group='g131';part6Questions=@('q131','q132','q133','q134');part7Group='g147';
         documentIds=@('email','notice','reply');documentBlockIds=@('g147-email','g147-notice','g147-notice-image','g147-reply');
-        playlist=@($media | Where-Object mediaType -eq 'AUDIO' | Sort-Object { $_.localFile } | ForEach-Object localFile)})
+        playlist=@($media | Where-Object mediaType -eq 'AUDIO' | Sort-Object { $_.localFile } | ForEach-Object localFile);
+        prefetchSlotIds=@('p1-1','p1-2','p1-3','p1-4','p1-5','p1-6');uniquePart1Images=1;
+        visualPlaybackOrder=@('IMAGE_ATTACHED','LAYOUT_DONE','VISIBLE_PULSE_1','VISIBLE_PULSE_2','PLAY_CALLED');postStartBudgetMillis=3000;heartbeatTimeoutMillis=6000})
 }
 function Require($condition,$reason) { if (-not $condition) { throw $reason } }
 function Unique($values,$reason) { Require (@($values | Sort-Object -Unique).Count -eq @($values).Count) $reason }
@@ -247,6 +257,7 @@ function DesignAccess($role,$owner,$assigned,$revoked,$operation,$state) {
     }
     if ($role -ne 'CANDIDATE' -or -not $owner) { return 403 }
     if ($operation -eq 'TAKEOVER' -and $state -eq 'SCHEDULED') { return 200 }
+    if ($operation -eq 'IMAGE' -and $state -eq 'SCHEDULED') {return 403} # Existing access case now targets Part7-only, not prefetch Part1.
     if ($operation -in @('EXAM','SAVE','SUBMIT','IMAGE') -and $state -ne 'IN_PROGRESS') { return 409 }
     return 200
 }
@@ -302,10 +313,12 @@ foreach ($case in $cases.accessCases) {
 }
 $prep=ReadJson 'preparation.mock.json'; Require ($null -eq $prep.deadlineAt -and $prep.sessionState -eq 'SCHEDULED') 'PREPARATION'
 $catalog=ReadJson 'catalog.mock.json'; Require ($catalog.items[0].selectable -and -not $catalog.items[1].selectable -and $catalog.items[1].totalQuestions -eq 200) 'CATALOG'
+$visualResults=@(InvokeVisualChecks $exam $candidate $render)
 $summary=[ordered]@{label='MOCK';scope='Design fixtures only; NOT production validation, HTTP, PostgreSQL, GUI, hearing or START runtime';
     baseline='1d35b53729abade7b460d35ab07d042b6f9f3571';positive='PASS';questions=$exam.questions.Count;groups=$exam.groups.Count;
     media=$exam.media.Count;audioFiles=$audio.Count;negativeAndAccessCases=$results.Count;results=$results;
+    visualPositiveCases=9;visualNegativeCases=20;totalDesignCases=($results.Count+$visualResults.Count);visualManifestId=(ReadJson 'visual-manifest.mock.json').manifestId;
     importSha256=(HashFile (Join-Path $fixtureRoot 'import.mock.json'));candidateSha256=(HashFile (Join-Path $fixtureRoot 'candidate.mock.json'));
-    runtime='NOT RUN';postgres='NOT RUN';javafx='NOT RUN';hearing='NOT RUN';ownerApproval='PENDING'}
+    runtime='NOT RUN';postgres='NOT RUN';javafx='NOT RUN';hearing='NOT RUN';designApproval='TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE';approvalSource='User-provided confirmation from the project team representative, 2026-10-19.';githubApproval='NOT CLAIMED'}
 WriteJson 'verification.mock.json' $summary
-Write-Output ([pscustomobject]$summary | Select-Object label,positive,questions,groups,media,audioFiles,negativeAndAccessCases,runtime,ownerApproval | ConvertTo-Json)
+Write-Output ([pscustomobject]$summary | Select-Object label,positive,questions,groups,media,audioFiles,negativeAndAccessCases,visualPositiveCases,visualNegativeCases,totalDesignCases,runtime,designApproval | ConvertTo-Json)

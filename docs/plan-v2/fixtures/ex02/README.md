@@ -1,44 +1,46 @@
-# EX-02 — fixtures MOCK của contract candidate
+# EX-02 — fixtures MOCK và Visual Readiness Option A
 
-**MOCK / PROPOSED_FOR_OWNER_REVIEW**, tự soạn ngày19/10/2026, không phải dữ liệu TOEIC thật. Prompts/options/keys, bitmap bàn cờ8×8 và WAV PCM mono8kHz im lặng10ms được tạo bằng `verify-design.ps1` ở đây, không lấy từ HTML Zenlish. Tác giả bản fixture cung cấp phần nội dung tự tạo theo **CC0-1.0**; không suy license này áp dụng dataset/source khác của repo. Không dùng âm im lặng làm bằng chứng hearing/playback/READY production.
+**MOCK — design approval TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE.** [Nguồn phê duyệt19/10](../../EX02_TEAM_APPROVAL_20261019.md): “User-provided confirmation from the project team representative, 2026-10-19.” Đây không phải dữ liệu thi thật, GitHub Approving Review hoặc GUI/runtime PASS. [Contract](../../../EX02_RICH_EXAM_CONTRACT_V1.md), [ADR](../../ADR-V2-03_SESSION_START_DEADLINE.md).
 
-[Contract](../../../EX02_RICH_EXAM_CONTRACT_V1.md), [ADR START](../../ADR-V2-03_SESSION_START_DEADLINE.md), [negative cases](negative.mock.json), [kết quả thiết kế](verification.mock.json).
+Prompts/options/keys, bitmap bàn cờ8×8 và WAV PCM mono8kHz im lặng10ms được tự tạo bằng script ở đây, không lấy từ Zenlish. Nội dung fixture tự tạo theo **CC0-1.0**; không áp license này cho dataset khác. Hai PNG Part4/7-only là bản sao cùng PNG MOCK với mediaId/basename riêng để kiểm graph-derived allowlist, không khẳng định pixels khác nhau. Không dùng WAV im lặng để nghiệm thu hearing/READY production.
 
 | File | Dùng làm gì |
 |---|---|
-| import.mock.json | Exact proposed request:200 câu,6/25/39/30/30/16/54,76 group,55 assets (54audio+1ảnh reuse); scoring chỉ trong import |
-| import-response.mock.json | Proposed201 response sau commit; đây không phải HTTP capture |
-| candidate.mock.json | Projection allowlist để B dựng fixture view sau START; không key/provenance/path nguồn |
-| preparation.mock.json | Lobby SCHEDULED, deadline/startedAt null; không nội dung đề |
-| catalog.mock.json | Imported verified và imported legacy-unverified đều có200 câu; chỉ item đầu selectable, vẫn recheck media |
-| create-session-{request,response}.mock.json | Proposed create ca201, server cấp UUID/attempts; IDs trong ví dụ là MOCK |
-| start-{request,response}.mock.json | Existing Listening START shape; manifestId là placeholder MOCK, không runtime manifest |
-| render-expected.mock.json | IDs dùng assert layout/group/playlist, không screenshot thực tế |
-| negative.mock.json |19 mutation descriptors và10 access scenarios; mỗi mutation clone positive trước khi làm sai |
-| verification.mock.json | Kết quả checker thiết kế đã chạy; không test server/DB/GUI |
-| assets/source.txt | Provenance tự soạn và hash |
-| assets/audio/mock-ex02-200/ |54 WAV có ordinal filename đúng order AudioCatalog |
-| assets/images/mock-ex02-200/ |Ảnh hình học do generator tự vẽ |
+| import.mock.json |Proposed request200 câu,6/25/39/30/30/16/54,76group,57media=54audio+3image; scoring chỉ trong import |
+| candidate.mock.json |Post-START projection, committed visualManifestId, không keys/provenance/private paths |
+| preparation.mock.json |SCHEDULED metadata, clock null, embedded Part1 visual manifest, không full exam |
+| visual-manifest.mock.json |Six slots p1-1..6 theo Part1 question order, reuse đúng một unique img-grid; canonical hash binds attempt/writer/epoch/expected metadata |
+| visual-ready-request.mock.json |ATTEST exact unique verified asset set, current writer/epoch/manifest/firstSlot; không boolean ready tùy ý |
+| visual-ready-response.mock.json |ACK mẫu sau commit với readyAt/leaseExpiresAt; không HTTP capture |
+| visual-readiness.mock.json |Assigned-proctor metadata cho hai members, Audio+Visual flags; allReady derived |
+| visual-cases.mock.json |P01–P09 positive và N01–N20 negative design scenarios |
+| visual-verification.mock.json |Kết quả29 cases visual, local PNG size/hash/.NET decode; JavaFX GUI NOT RUN |
+| render-expected.mock.json |Part3/6/7 mapping và event order IMAGE→LAYOUT→PULSE1→PULSE2→PLAY, budget3000ms/heartbeat6000ms; là oracle thiết kế |
+| negative.mock.json |Giữ19 mutation +10 access cases cũ; image-before-start giờ kiểm Part7-only403 theo D10, không xóa case |
+| verification.mock.json |Tổng29 cases cũ +29 visual=58 model/design cases; không HTTP/PG/GUI/WS production proof |
+| contract-verification.mock.json |Record signatures compile Java21, exact JSON fields/links; số records tăng theo DTO thực tế |
+| catalog.mock.json, import-response.mock.json |Imported/verified flags và proposed201, không runtime response |
+| create-session-{request,response}.mock.json |Proposed ca201, IDs giả do fixture đặt |
+| start-{request,response}.mock.json |Listening START shape v0 giữ; audio manifestId placeholder cần thay bằng runtime ID |
+| assets/ |Nguồn tự soạn,54WAV,PNG grid +copies vàcorrupt.png cố ý sai để kiểm rejection |
 
-Chạy bằng Windows PowerShell5.1 tại repository root (không cần server/PostgreSQL):
+Chạy trên Windows PowerShell5.1, tại repository root:
 
 ```powershell
-# Kiểm fixture đã commit; script ghi lại verification.mock.json
-powershell -NoProfile -ExecutionPolicy Bypass -File docs/plan-v2/fixtures/ex02/verify-design.ps1
-# Chỉ dùng khi muốn tái sinh MOCK; không chạy vào thư mục media production
+# Tái sinh fixture theo contract (không ghi vào media root production)
 powershell -NoProfile -ExecutionPolicy Bypass -File docs/plan-v2/fixtures/ex02/verify-design.ps1 -Generate
-# Kiểm JSON fields khớp records trong contract, links và compile signatures bằng JDK21
+# Kiểm lại đúng fixture đã commit
+powershell -NoProfile -ExecutionPolicy Bypass -File docs/plan-v2/fixtures/ex02/verify-design.ps1
+# JDK21 phải có sẵn; compile signatures vào target ignored
 powershell -NoProfile -ExecutionPolicy Bypass -File docs/plan-v2/fixtures/ex02/verify-contract.ps1 -JavacPath javac
 ```
 
-Checker là **oracle thiết kế một phần**, không phải validator triển khai EX03. Nó kiểm counts/order/group/ref/key/null discriminator/doc boundary, hash/size file thật, candidate forbidden keys, playlist và access-policy expectations. Không chứng minh toàn bộ constraints của contract (limits/strict duplicate JSON keys/permission evidence/decoder/Windows junction/DB transaction/cache/RBAC runtime). `missing-file` đổi reference sang file thật không tồn tại; `corrupt-file` trỏ đến `corrupt.png` chứa bytes cố ý không phải PNG, so với expected hash/size ảnh hợp lệ và bị từ chối, **chưa** test decoder. File corrupt không được positive request tham chiếu. `accessCases` chỉ chạy hàm policy MOCK, không HTTP response. Runtime acceptance ở ADR S01–S16 và EX03/05/06/08 còn NOT RUN.
+`visual-design.ps1` là helper của checker, không controller/client mới. Canonical hash dùng big-endian và writeUTF cho domain/IDs/MIME ASCII của fixture, khớp Java DataOutputStream; không hash JSON pretty-print. Writer/epoch đổi phải đổi ID. Checkers kiểm actual size/SHA256 của media và decode PNG thật bằng **System.Drawing/.NET**, kể cả reject corrupt.png. Đây không JavaFX Image, Scene/Stage, pulse hoặc MediaPlayer test; kiểm PLAY order chỉ dùng state model/trace. GUI acceptance V15–V17 phải chạy với Stage/layout/two pulses/widget snapshot thật ở EX06. Không gọi download HTTP200 hoặc object ImageView giả là render PASS.
 
-Frontend phải thể hiện được các cấu trúc sau trên fixture view; checker chỉ xác nhận data shape, **GUI NOT RUN**:
+Policy trước START: chỉ owner nhận manifest và ảnh được Part1 tham chiếu; img-p4-only/img-p7-only/foreign media403; revoked401; full question/options/answers409. Same asset được Part1 reuse nhiều lần là hợp lệ, dedup verify một asset nhưng giữ six slots. Cache chỉ RAM/no-store; chủ máy vẫn có thể trích xuất bytes ảnh Part1 trước START — ngoại lệ được nhóm chấp nhận, không bảo mật tuyệt đối. Manifest/ACK không có prompt/options/keys/raw source URL/local file path.
 
-- Part1 q001: ảnh bàn cờ và A/B/C/D không transcript; Part2 q007: A/B/C và audio reference.
-- Part3 g032: q032–034 cùng aud-032, không ba nút phát; Part4 g071: shared audio + ảnh optional.
-- Part5 q101: câu độc lập; Part6 g131: một passage trên bốn câu q131–134.
-- Part7 g147: Email(doc1,block1), Notice(doc2,TEXT block2+IMAGE block3), Reply(doc3,block4). Không ghép thành passage mất ranh giới; question q147–149 theo sau shared documents.
-- Các group/câu khác chỉ lấp đầy profile MOCK200 để kiểm mapping/order, không coi chúng là đề thi đã kiểm nội dung.
+Visual state model kiểm current writer/epoch, stale rejection, lease renewal không bị retry cũ kéo dài, all-roster Audio+Visual trước START, no clock trước START và no replay/reset sau failure. Models không thực hiện locks/COMMIT/RBAC/WS/JavaFX, không chứng minh race/physical output. P09 kiểm SHA256 chuẩn hóa đoạn **QD21 hiện hành** không đổi; không chạy lại deadline service legacy. Backend HTTP/RBAC/PG/WS + actual JavaFX rendering/hearing/LAN **NOT RUN/NOT IMPLEMENTED**. Spec acceptance đầy đủ ở ADR S01–S16/V01–V20.
 
-ManifestId không nằm trong fixture vì AudioCatalog tính theo session/files lúc runtime. `audioFileName` candidate là basename đối chiếu manifest hiện có, không local filesystem path hoặc remote URL. JSON chỉ là proposal, không được nạp vào server hiện tại rồi mong v2 endpoints đã tồn tại. Seed `data/seedingTest/generated` không thay đổi và tiếp tục `importable:false`.
+Renderer data vẫn phải thể hiện: Part1 q001 grid+A/B/C/D; Part2 q007 ba nhãn không transcript; Part3 g032 chung aud-032 cho q032–034; Part4 g071 optional image riêng; Part5 q101 độc lập; Part6 g131 một passage/bốn câu; Part7 g147 Email→Notice(TEXT+image)→Reply, giữ boundaries. V2 provider sau START lấy rich DTO rồi adapter in-memory sang segments hiện có; không GETv1/player thứ hai. Ảnh đầu chỉ được mở play gate sau rich DTO/layout/two visible pulses và Media onReady, có budget/fail-closed/interruption, không reset deadline.
+
+Các checkers là **oracle thiết kế một phần**: không chứng minh strict duplicate JSON keys, toàn content limits/permission evidence, Windows junction/TOCTOU, transaction/locks, token revocation races, GUI responsiveness hoặc physical pixels. Seed ETS hiện hành vẫn importable:false, không đổi dataset/answer keys/media bên thứ ba hoặc đánh EX03–08 DONE.
