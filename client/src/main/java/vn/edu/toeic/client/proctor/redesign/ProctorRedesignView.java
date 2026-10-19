@@ -262,12 +262,10 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         register(Section.CANDIDATES, new CandidatesPane(actions));
         register(Section.ALERTS, new AlertsPane(actions));
         register(Section.HISTORY, new HistoryPane(actions));
-        for (Section value : Section.values()) {
-            if (value == Section.SESSION_CONTROLS || pages.containsKey(value)) continue;
-            VBox placeholder = new VBox(Ui.pageHeader(title(value), "Đang xây dựng."));
-            placeholder.getStyleClass().add("page");
-            pages.put(value, scroll(placeholder));
-        }
+        register(Section.SETTINGS, new SettingsPane(new SettingsPane.Host() {
+            @Override public void applySettings(ProctorSettings value) { ProctorRedesignView.this.applySettings(value); }
+            @Override public CompletableFuture<String> saveSettings(ProctorSettings value) { return ProctorRedesignView.this.saveSettings(value); }
+        }));
     }
 
     private void register(Section target, Region pane) {
@@ -288,17 +286,6 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         return scroll;
     }
 
-    private static String title(Section section) {
-        return switch (section) {
-            case OVERVIEW -> "Tổng quan";
-            case CANDIDATES -> "Quản lý thí sinh";
-            case ALERTS -> "Quản lý cảnh báo";
-            case HISTORY -> "Nhật ký giám sát";
-            case SETTINGS -> "Cài đặt";
-            case SESSION_CONTROLS -> "Điều khiển ca";
-        };
-    }
-
     // ------------------------------------------------------------------ navigation + drawers
 
     void show(Section target) {
@@ -317,6 +304,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         }
         Node page = pages.get(target);
         if (page == null) return;
+        closeDrawer();
         section = target;
         pageHost.getChildren().setAll(page);
         ToggleButton button = navButtons.get(target);
@@ -494,12 +482,32 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
 
     // ------------------------------------------------------------------ settings
 
+    /** File read off the FX thread; a missing or unreadable file means defaults, never a crash. */
     private void loadSettings() {
         ProctorSettings.Store store = wiring.settingsStore();
         if (store == null) return;
+        record Loaded(ProctorSettings value, boolean unreadable) { }
         CompletableFuture.supplyAsync(() -> {
-            try { return store.load(); } catch (Exception unreadable) { return ProctorSettings.DEFAULTS; }
-        }, poller).thenAccept(value -> Platform.runLater(() -> { if (!closed.get()) applySettings(value); }));
+            try { return new Loaded(store.load(), false); } catch (Exception unreadable) { return new Loaded(null, true); }
+        }, poller).thenAccept(loaded -> Platform.runLater(() -> {
+            if (closed.get()) return;
+            applySettings(loaded.value() == null ? ProctorSettings.DEFAULTS : loaded.value());
+            SettingsPane pane = pane(SettingsPane.class);
+            if (pane != null) pane.loaded(settings, loaded.value() != null, loaded.unreadable());
+        }));
+    }
+
+    CompletableFuture<String> saveSettings(ProctorSettings value) {
+        ProctorSettings.Store store = wiring.settingsStore();
+        if (store == null || closed.get()) return CompletableFuture.failedFuture(new IllegalStateException("Không có nơi lưu"));
+        try {
+            return CompletableFuture.supplyAsync(() -> {
+                try { store.save(value); return store.location(); }
+                catch (Exception failure) { throw new java.util.concurrent.CompletionException(failure); }
+            }, poller);
+        } catch (java.util.concurrent.RejectedExecutionException closing) {
+            return CompletableFuture.failedFuture(closing);
+        }
     }
 
     void applySettings(ProctorSettings value) {

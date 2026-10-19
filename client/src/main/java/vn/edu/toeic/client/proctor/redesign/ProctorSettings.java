@@ -21,6 +21,7 @@ record ProctorSettings(boolean compact, boolean largeFont, boolean notifications
 
     /** Persistence boundary; tests use an in-memory store. Both methods run off the FX thread. */
     interface Store {
+        /** {@code null} when nothing has been saved yet (callers then use {@link #DEFAULTS}). */
         ProctorSettings load() throws IOException;
         void save(ProctorSettings settings) throws IOException;
         /** Human-readable place where settings live, for the confirmation text. */
@@ -44,7 +45,7 @@ record ProctorSettings(boolean compact, boolean largeFont, boolean notifications
         }
 
         @Override public ProctorSettings load() throws IOException {
-            if (!Files.exists(file)) return DEFAULTS;
+            if (!Files.exists(file)) return null;
             Properties properties = new Properties();
             try (InputStream input = Files.newInputStream(file)) {
                 byte[] bytes = input.readNBytes(MAX_BYTES + 1);

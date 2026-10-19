@@ -281,4 +281,53 @@ class ProctorRedesignGuiTest {
         fxRun(() -> view.show(Section.OVERVIEW));
         assertThat(fx(() -> view.pane(OverviewPane.class).twoColumns())).isEqualTo(twoColumns);
     }
+
+    @Test void settingsApplyInSessionSaveOnlyWhenWrittenAndRestoreDefaults() throws Exception {
+        RedesignFixtures.FakeApi api = RedesignFixtures.FakeApi.room();
+        RedesignFixtures.MemoryStore store = new RedesignFixtures.MemoryStore();
+        view = fx(() -> new ProctorRedesignView(FxSupport.wiring(api, api, new RedesignFixtures.FakeTransport(),
+                cursor -> java.util.concurrent.CompletableFuture.completedFuture(RedesignFixtures.page()), store), () -> { }, () -> { }));
+        stage = fx(() -> FxSupport.show(view, 1440, 900));
+        await("loaded", () -> view.room() != null && view.room().feed().complete());
+        fxRun(() -> view.show(Section.SETTINGS));
+        SettingsPane pane = fx(() -> view.pane(SettingsPane.class));
+
+        fxRun(() -> ((ToggleButton) view.lookup("#settings-density-compact")).fire());
+        fxRun(() -> ((ToggleButton) view.lookup("#settings-font-large")).fire());
+        fxRun(() -> ((ToggleButton) view.lookup("#settings-badge")).fire());
+        assertThat(fx(() -> view.getStyleClass().contains("density-compact"))).isTrue();
+        assertThat(fx(() -> view.getStyleClass().contains("font-large"))).isTrue();
+        assertThat(fx(() -> view.settings().navBadge())).isFalse();
+        assertThat(fx(() -> view.lookup(".nav-badge").isVisible())).isFalse();
+        assertThat(fx(pane::statusText)).contains("chưa lưu").doesNotContain("Đã lưu");
+        assertThat(store.saves.get()).isZero();
+        // Sound has no reviewed playback path: the switch cannot be turned on.
+        assertThat(fx(() -> view.lookup("#settings-sound").isDisabled())).isTrue();
+
+        // A failing write never claims persistence.
+        store.failSave = true;
+        fxRun(() -> ((javafx.scene.control.Button) view.lookup("#settings-save")).fire());
+        await("save failure reported", () -> pane.statusText().startsWith("Không lưu được"));
+        assertThat(store.saved).isNull();
+
+        store.failSave = false;
+        fxRun(() -> ((javafx.scene.control.Button) view.lookup("#settings-save")).fire());
+        await("saved", () -> pane.statusText().startsWith("Đã lưu"));
+        assertThat(store.saves.get()).isEqualTo(1);
+        assertThat(store.saved).isEqualTo(new ProctorSettings(true, true, true, false));
+
+        fxRun(() -> ((javafx.scene.control.Button) view.lookup("#settings-restore")).fire());
+        assertThat(fx(view::settings)).isEqualTo(ProctorSettings.DEFAULTS);
+        assertThat(fx(() -> view.getStyleClass().contains("density-compact"))).isFalse();
+        assertThat(fx(pane::statusText)).contains("khôi phục mặc định").contains("Lưu tùy chọn");
+        assertThat(store.saved).isEqualTo(new ProctorSettings(true, true, true, false)); // not written until "Lưu"
+        assertThat(fx(() -> view.lookup(".nav-badge").isVisible())).isTrue();
+
+        // A new view loads what was saved.
+        fxRun(() -> { view.close(); stage.close(); });
+        view = fx(() -> new ProctorRedesignView(FxSupport.wiring(api, api, new RedesignFixtures.FakeTransport(),
+                cursor -> java.util.concurrent.CompletableFuture.completedFuture(RedesignFixtures.page()), store), () -> { }, () -> { }));
+        stage = fx(() -> FxSupport.show(view, 1440, 900));
+        await("saved settings applied", () -> view.settings().compact() && view.settings().largeFont());
+    }
 }

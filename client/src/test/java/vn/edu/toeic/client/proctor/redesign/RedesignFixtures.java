@@ -192,7 +192,7 @@ final class RedesignFixtures {
         volatile ProctorSettings saved;
         volatile boolean failSave;
         final AtomicInteger saves = new AtomicInteger();
-        @Override public ProctorSettings load() { return saved == null ? ProctorSettings.DEFAULTS : saved; }
+        @Override public ProctorSettings load() { return saved; }
         @Override public void save(ProctorSettings settings) throws java.io.IOException {
             if (failSave) throw new java.io.IOException("MOCK disk full");
             saves.incrementAndGet();

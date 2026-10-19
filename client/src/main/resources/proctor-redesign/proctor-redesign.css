@@ -280,7 +280,8 @@
 .proctor-redesign .drawer-header { -fx-padding: 22 26 14 28; -fx-spacing: 4; -fx-border-color: transparent transparent #e3e8ef transparent; }
 .proctor-redesign .drawer-eyebrow { -fx-text-fill: #f26b1d; -fx-font-weight: bold; -fx-font-size: 0.88em; }
 .proctor-redesign .drawer-title { -fx-font-size: 1.65em; -fx-font-weight: bold; -fx-text-fill: #13254a; }
-.proctor-redesign .drawer-body { -fx-padding: 6 26 16 28; -fx-spacing: 0; }
+.proctor-redesign .drawer-body { -fx-padding: 6 26 16 28; -fx-spacing: 0; -fx-background-color: #ffffff; }
+.proctor-redesign .drawer-scroll, .proctor-redesign .drawer-scroll > .viewport { -fx-background-color: #ffffff; -fx-background: #ffffff; -fx-padding: 0; }
 .proctor-redesign .drawer-section { -fx-padding: 16 0 16 0; -fx-spacing: 10; -fx-border-color: transparent transparent #e3e8ef transparent; }
 .proctor-redesign .drawer-footer { -fx-padding: 16 22 18 22; -fx-spacing: 10; -fx-border-color: #e3e8ef transparent transparent transparent; -fx-alignment: center-right; }
 .proctor-redesign .close-glyph { -fx-stroke: #6b7a90; -fx-stroke-width: 1.6; }

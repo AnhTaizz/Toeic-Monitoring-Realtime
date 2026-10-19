@@ -51,8 +51,7 @@ final class Drawers {
             ScrollPane scroll = new ScrollPane(body);
             scroll.setFitToWidth(true);
             scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            scroll.getStyleClass().add("scroll-page");
-            scroll.setStyle("-fx-background: #ffffff; -fx-background-color: #ffffff;");
+            scroll.getStyleClass().add("drawer-scroll");
             VBox.setVgrow(scroll, Priority.ALWAYS);
             footer.getStyleClass().add("drawer-footer");
             getChildren().addAll(header, scroll, footer);
