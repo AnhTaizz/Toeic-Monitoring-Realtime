@@ -129,3 +129,7 @@ Không đưa phần giải thích/đáp án đúng vào DTO candidate. `correct_
 - Seed candidate có thể tái tạo tại `data/seedingTest/generated/ets2026_test01.seed.json`; `importable: false` cho tới khi các blocker trong file được xử lý, bao gồm xác minh option candidate-facing độc lập với trang review.
 - Chưa có file media local trong repository và chưa kiểm playback/render trong packaged client.
 - Schema cho phép lưu inventory `REMOTE_REFERENCE`, nhưng một đề chỉ nên được đưa vào vận hành sau khi media bắt buộc đã thành `LOCAL_VERIFIED` và checklist import đạt đủ.
+
+## 7. Kiểm chứng PostgreSQL và correction trong nhánh review
+
+[Báo cáo EX04 ngày19/10](EX04_V11_VERIFICATION.md) có freshV1–V11/upgradeV10/negative/rollback/legacyHTTP trên PostgreSQL18.1 thật. V11 có lỗi CHECK UNKNOWN khi IMAGE/AUDIO thiếu media_type; nhánhreview bổ sung `V12__require_content_block_media_type.sql`, không sửaV11. V12 fail-closed với row sai có sẵn, không tự đoán/xóa dữ liệu. LOCAL_VERIFIED vẫn chỉ là ràng buộc metadata, chưa chứng minh file/path/MIME/hash thực tế; group-part matching cần validator và review contract. Không coi EX04 hoặc đề200 đã nghiệm thu đầy đủ. [Gap matrix và proposalEX02](EX02_RICH_EXAM_CONTRACT_PROPOSAL.md) chưa được triển khai thành API.

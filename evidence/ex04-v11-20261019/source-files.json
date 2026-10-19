@@ -1,0 +1,63 @@
+{
+    "baseSha":  "f98a37f73d8035e9386e930412a02e9e92933015",
+    "testedSourceSha":  "975284d28a37159bdeb5bd8cba6b13732ba80ad1",
+    "note":  "SQL/test match tested SHA; runner Java-version metadata filtering corrected after runs; report/documentation commits are separate",
+    "files":  [
+                  {
+                      "sha256":  "af9d49c4c2b7bb7a2d04cc736f1fd15feb7e08c1356e390568723b5da9e9dec5",
+                      "file":  "server/src/test/java/vn/edu/toeic/server/exam/RichExamMigrationPostgresTest.java"
+                  },
+                  {
+                      "sha256":  "89d3f4b6e70ff61f3a757e707aedb9b708efc44e459482c3c0395d151633cddb",
+                      "file":  "scripts/verify-ex04-postgres.ps1"
+                  },
+                  {
+                      "sha256":  "7e5b4f1e94540b3c8010db6b1e440c70ea36529239f9ce6e7706787f7722fbde",
+                      "file":  "server/src/main/resources/db/migration/V10__listening_lifecycle.sql"
+                  },
+                  {
+                      "sha256":  "93135eb655db2ebdcfde850bbafe4e11caffb5c1e49f398a2a7d87f77dc7acee",
+                      "file":  "server/src/main/resources/db/migration/V11__rich_exam_content.sql"
+                  },
+                  {
+                      "sha256":  "68deccd89bc36ec2afff65d9f7bf7c6f93404dc0fb569c1ad3a27ad39aa15226",
+                      "file":  "server/src/main/resources/db/migration/V12__require_content_block_media_type.sql"
+                  },
+                  {
+                      "sha256":  "f71c9eb99482ba0de73affec1f7920b261c306f3859b938cc7e016f395344811",
+                      "file":  "server/src/main/resources/db/migration/V1__auth_schema.sql"
+                  },
+                  {
+                      "sha256":  "b30627a8b393b8eceed7d35eb2f66d6c29ff66adbf0875dde66c6fb7b5753945",
+                      "file":  "server/src/main/resources/db/migration/V2__monitoring_events.sql"
+                  },
+                  {
+                      "sha256":  "c2efb5219922f5b50683ea14aa59ac176711575bfaf6122deaf3eb960e78c988",
+                      "file":  "server/src/main/resources/db/migration/V3__monitoring_gaps.sql"
+                  },
+                  {
+                      "sha256":  "7029b48413f43a9d5eaa59cd96adb5018dc533d818f84df8b8bbc455b68aaa6a",
+                      "file":  "server/src/main/resources/db/migration/V4__monitoring_presence.sql"
+                  },
+                  {
+                      "sha256":  "19ca8f86d5742a213d61e224afd0b427ecb3c8da7fa879ef0cdc0f43fe4f07ac",
+                      "file":  "server/src/main/resources/db/migration/V5__exams_and_sessions.sql"
+                  },
+                  {
+                      "sha256":  "03c40ba8892db614ed0bc90f5bab3b901ba5950a9779683b5af8a9c00ce0b334",
+                      "file":  "server/src/main/resources/db/migration/V6__exam_autosave_requests.sql"
+                  },
+                  {
+                      "sha256":  "12ec36c47bf3ee582aac818bcf082df9ebb42e9925c34434fa8df4968a88cc90",
+                      "file":  "server/src/main/resources/db/migration/V7__exam_submits.sql"
+                  },
+                  {
+                      "sha256":  "eea6b8dcb44e2d9f8c98ea51d2962b1ac259bde8d252e927c9d0949c35f7e09d",
+                      "file":  "server/src/main/resources/db/migration/V8__monitoring_event_delivery.sql"
+                  },
+                  {
+                      "sha256":  "8b645eec7320e0a5ac04e97ba9dc00fc6f29037eb8c8e2a739ed2b8b7b382e88",
+                      "file":  "server/src/main/resources/db/migration/V9__audio_readiness.sql"
+                  }
+              ]
+}

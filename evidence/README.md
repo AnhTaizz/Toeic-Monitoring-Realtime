@@ -1,5 +1,7 @@
 # Mục lục bằng chứng và log
 
+19/10/2026 — [EX04V11/EX02 review](ex04-v11-20261019/README.md): PostgreSQL thật fresh/upgrade/negative/HTTP;2FAIL baseline→V12, targeted58PASS, cleanverify984PASS/6SKIP; [report](../docs/EX04_V11_VERIFICATION.md), [contractproposal](../docs/EX02_RICH_EXAM_CONTRACT_PROPOSAL.md). Raw/XML private, không seedproduction/media/GUI/LAN hoặc human sign-off.
+
 `evidence/<task>/` là nơi tập trung bằng chứng được đưa lên GitHub để thành viên nhóm và công cụ chat web đối chiếu code, kết quả kiểm thử và giới hạn nghiệm thu. Mỗi dòng bên dưới dẫn tới báo cáo của task; báo cáo dẫn tiếp tới log, ảnh, raw, metadata và checksum tương ứng.
 
 Để hiểu dự án trước khi viết prompt, đọc [tiến độ](../docs/TIEN_DO.md), [protocol](../docs/PROTOCOL.md) và [trạng thái kiểm thử](../docs/KIEM_THU.md), rồi mở bằng chứng đúng task. Kết quả thuộc SHA và môi trường ghi trong báo cáo, không mặc nhiên áp dụng cho commit mới hơn.

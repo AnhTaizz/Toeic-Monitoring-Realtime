@@ -403,3 +403,9 @@ Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG
 Người dùng yêu cầu đưa5 HTML lên main, xác nhận quyền công khai nguồn Zenlish. [README/manifest dữ liệu](../../data/seedingTest/README.md) ghi nguồn, giới hạn và checksum gốc/bản đã loại script/form/nonce; bản gốc giữ riêng. Kiểm5×200 article và số media elements không đổi PASS; test04=test05, chỉ4 nội dung khác nhau. Phần này thuộc A, B review nội dung; không đổi API/DB/client hoặc tự tạo chữ ký.
 
 **Ghi chú làm dở:** EX-01 chưa nghiệm thu toàn bộ. Cần lưu căn cứ quyền từ người cung cấp, đối chiếu answer keys/options/passages/groups, thu thập media được phép dùng và kiểm hash/MIME/size/render/playback. Import/PG/GUI/media download/hearing NOT RUN; không tự cập nhật BACKLOG/TRACKER.
+
+## Ghi chú EX04 verification / EX02 review — 19/10/2026
+
+Basef98a37f; nhánhreview riêng. [ReportV11](../EX04_V11_VERIFICATION.md) và [proposalEX02](../EX02_RICH_EXAM_CONTRACT_PROPOSAL.md). Thêm RichExamMigrationPostgresTest +runnerDB riêng;2FAIL baseline chứng minhNULL media_type bypasstypedFK. V12append-only sửa discriminator theoinvariantQD35, không sửaV1–V11. Targeted58PASS; cleanverify984PASS/6SKIP, realPG18.1/Flyway/SpringHTTP, fixtureMOCK tựtạo; cleanup0schema/clusterstop0.
+
+**Ghi chú làm dở:** C reviewV12/test; A/B chốt richDTO/provenance/ordered document/media contract vàADR START/QD21 trướcEX03/05/07. Chưa richAPI/ảnhrenderer/production200Q, seedimportable:false giữnguyên. Không mergePR hoặc tựđánhEX01/02/04/08DONE, không human signatures. GUI/hearing/LAN chưa chạytrongtask.
