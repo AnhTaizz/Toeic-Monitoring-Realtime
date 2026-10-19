@@ -105,9 +105,11 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
             existingAudioPane.setPrefWidth(Region.USE_COMPUTED_SIZE);
             existingAudioPane.setPrefHeight(145);
             existingAudioPane.setMaxHeight(155);
+            listeningView.setPart3Compact(true);
             part3Pane.setAudioNode(existingAudioPane);
         } else {
             if (part3Pane != null) part3Pane.setAudioNode(null);
+            listeningView.setPart3Compact(false);
             existingAudioPane.setPrefWidth(380);
             existingAudioPane.setMaxWidth(380);
             existingAudioPane.setMaxHeight(Double.MAX_VALUE);
@@ -166,6 +168,8 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
         standardQuestionArea = createQuestionArea();
         standardPaletteArea = createPaletteArea();
         part3Pane = new ListeningPart3Pane(questionNumbers, session::selectAnswer, session::clearAnswer);
+        if (CandidateExamView.class.getResource("/part3-exam.css") != null)
+            part3Pane.getStylesheets().add(CandidateExamView.class.getResource("/part3-exam.css").toExternalForm());
         setCenter(standardQuestionArea);
         setRight(standardPaletteArea);
         setBottom(createBottomBar());
