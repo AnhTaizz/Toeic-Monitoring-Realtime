@@ -4,16 +4,19 @@ Hệ thống thi TOEIC rút gọn theo mô hình Client–Server, có giám sát
 
 Trả lời và viết tài liệu bằng tiếng Việt; tên định danh trong code bằng tiếng Anh.
 
+> **Phạm vi V2 được nhóm thông qua** (người đại diện xác nhận ngày 19/10/2026 về buổi tối 18/10): mục tiêu 1 đề TOEIC **200 câu/7 Part** với media được phép sử dụng và monitoring đa tín hiệu **process + USB mass-storage presence/connect/disconnect + focus/minimize/fullscreen + display changes**. Không xem đây là tính năng đã làm xong. Xem [V2 kickoff](docs/plan-v2/V2_EXECUTION_KICKOFF_20261019.md), [36 task](docs/plan-v2/03_TASK_CARDS.md) và [phụ lục V2 của hợp đồng](Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md). Giữ những bất biến đã chốt; API/wire schema, QD-21 START/deadline, và OS-observer approach phải review riêng trước khi thay đổi code tương ứng.
+
+
 ## Tài liệu nguồn — đọc trước khi làm task
 
 | Cần gì | Đọc ở đâu |
 |---|---|
-| Task, owner, phụ thuộc, tiêu chí nghiệm thu | `Ke_hoach_LT_Mang_5_chang/01_KE_HOACH.md` mục 3, hoặc `TRACKER.json` |
+| Task, owner, phụ thuộc, tiêu chí nghiệm thu | **V2:** `docs/plan-v2/03_TASK_CARDS.md`, `docs/plan-v2/BACKLOG.json`, [kickoff](docs/plan-v2/V2_EXECUTION_KICKOFF_20261019.md); **legacy:** `Ke_hoach_LT_Mang_5_chang/01_KE_HOACH.md` hoặc `TRACKER.json` (lịch sử/đối chiếu) |
 | Quy tắc lưu/nộp/hết giờ, monitoring, Listening | `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md` |
 | Test case (AT/MT/LT/IT) và hai thực nghiệm E1, E2 | `Ke_hoach_LT_Mang_5_chang/03_KIEM_THU_VA_THUC_NGHIEM.md` |
 | Yêu cầu môn học, cấu trúc báo cáo, rubric | `Ke_hoach_LT_Mang_5_chang/nguon/Instruction.md` |
 
-Khi người dùng nêu mã task (ví dụ `T2-A2`), mở task đó trong tracker, đọc tiêu chí nghiệm thu và phần hợp đồng liên quan rồi mới viết code. Nếu yêu cầu mâu thuẫn với hợp đồng, nói rõ chỗ mâu thuẫn và hỏi, không tự chọn.
+Khi người dùng nêu mã task (ví dụ `T2-A2` hoặc `EX-01`), mở task trong tracker legacy hoặc V2 task cards tương ứng, đọc tiêu chí nghiệm thu và phần hợp đồng liên quan rồi mới viết code. Nếu yêu cầu mâu thuẫn với hợp đồng, nói rõ chỗ mâu thuẫn và hỏi, không tự chọn.
 
 Không sửa thư mục `nguon/` (bản gốc của môn học). Chỉ sửa `01`–`03` khi người dùng yêu cầu đổi kế hoạch hoặc hợp đồng.
 
@@ -26,7 +29,7 @@ Không sửa thư mục `nguon/` (bản gốc của môn học). Chỉ sửa `01
 - Monitoring: `ProcessHandle` polling trên máy thí sinh.
 - Python chỉ dùng để phân tích CSV và vẽ biểu đồ.
 
-Không thêm: React, C#, Python agent, Socket.IO, message broker, microservices, Kubernetes, webcam/USB/khóa OS, streaming audio, AI chấm bài, SSO/refresh token, editor đề, hàng đợi bền vững trên đĩa. Nếu thấy stack có trở ngại kỹ thuật cụ thể, báo lại kèm bằng chứng thay vì tự đổi.
+Không thêm: React, C#, Python agent, Socket.IO, message broker, microservices, Kubernetes, webcam/microphone streaming, khóa/chặn thiết bị hoặc OS, đọc file USB, screenshot/keylogging, streaming audio, AI chấm bài, SSO/refresh token, editor đề, hàng đợi bền vững trên đĩa. **Ngoại lệ V2 đã duyệt phạm vi:** chỉ quan sát **USB mass-storage** (hiện diện/cắm/rút) trên candidate được phân quyền và được thông báo, cùng các tín hiệu focus/minimize/fullscreen/display; không chặn thiết bị hoặc đọc nội dung/serial USB. Chủ sở hữu A/C chốt schema/protocol/retention và C/B chốt API quan sát Windows theo ADR trước khi tích hợp. Nếu thấy trở ngại, báo evidence thay vì tự đổi stack.
 
 Phiên bản JDK/JavaFX/Spring Boot/PostgreSQL được khóa sau spike chặng 1; ghi vào mục "Lệnh" bên dưới khi đã chạy thật.
 
@@ -106,14 +109,14 @@ Chi tiết ở `02_HOP_DONG.md`; đây là danh sách để tự kiểm mỗi l�
 
 ## Tracker
 
-`Ke_hoach_LT_Mang_5_chang/TRACKER.json` là nguồn theo dõi tiến độ. Chỉ cập nhật `status`, `actual_hours`, `evidence` khi người dùng xác nhận, và `evidence` phải trỏ tới thứ có thật (commit SHA, tên test đã chạy, file log). Không tự đánh dấu hoàn thành một task chỉ vì code đã viết xong.
+`Ke_hoach_LT_Mang_5_chang/TRACKER.json` là nguồn theo dõi tiến độ. Chỉ cập nhật `status`, `actual_hours`, `evidence` khi người dùng xác nhận, và `evidence` phải trỏ tới thứ có thật (commit SHA, tên test đã chạy, file log). V2 `BACKLOG.json` đang mang placeholder `TO_AUDIT`; duyệt kế hoạch **không đồng nghĩa** đánh dấu 36 task DONE hoặc xác nhận giờ công. Không tự đánh dấu hoàn thành một task chỉ vì code đã viết xong.
 
 ## Mốc cần nhớ
 
 - 08/10: gate prototype (login hai role, event lưu DB rồi lên dashboard, heartbeat, package chạy máy khác).
 - 15/10: gate tính đúng của lưu/nộp (AT01–AT11).
 - 20/10: gate delta. Không qua thì tắt delta mặc định, giữ full snapshot.
-- 27/10: đóng băng chức năng; sau đó chỉ sửa lỗi và viết tài liệu.
+- **V2:** mục tiêu đóng băng tính năng **sau 23/10** để dành thời gian QA/report; đây là mốc áp dụng cho scope mới đã được nhóm duyệt. Mốc 27/10 thuộc kế hoạch 5 chặng cũ (tham chiếu lịch sử), không tự mở rộng feature qua V2 freeze.
 - 30/10: mục tiêu bàn giao; 31/10 là dự phòng.
 
 ## Cấu trúc và lệnh

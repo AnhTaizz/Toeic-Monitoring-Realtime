@@ -148,3 +148,15 @@ Khóa UI là phản hồi người dùng; server vẫn phải kiểm phase/write
 - Listening gián đoạn không được tự nghe lại; monitoring giám thị không chạy nhầm trên máy proctor.
 
 Mỗi thay đổi sau bản này phải gắn một test và reviewer. Không thay đổi stack hoặc bổ sung chức năng để né một test chưa qua.
+
+## Phụ lục V2 — phạm vi triển khai được nhóm duyệt (19/10/2026)
+
+**Nguồn quyết định:** người đại diện nhóm xác nhận qua cuộc trao đổi ngày 19/10 rằng cả nhóm đã phê duyệt Plan V2 tối 18/10/2026. Đây là ghi nhận **phê duyệt phạm vi** do người dùng cung cấp, không phải biên bản có chữ ký A/B/C hoặc nghiệm thu thực nghiệm. [Điểm vào](../../PLAN_V2_START_HERE.md) · [hồ sơ](../../docs/plan-v2/ADOPTION_STATUS_20261019.md) · [kickoff](../../docs/plan-v2/V2_EXECUTION_KICKOFF_20261019.md).
+
+**Bổ sung phạm vi**: (1) một đề 200 câu theo 7 Part, đúng số câu `6/25/39/30/30/16/54`, có âm thanh/hình/passage/nhóm câu thật hoặc dữ liệu hợp pháp được gắn nhãn đúng; (2) quan sát **USB mass-storage** hiện diện/cắm/rút, focus/minimize/fullscreen và thay đổi display trên **client thí sinh được giao ca, đã được thông báo**; (3) timeline đa tín hiệu phía giám thị, phân quyền/ACK/persistence/reconnect; (4) nghiệm thu Windows/LAN/USB/media có evidence thực tế. **Không** đọc dữ liệu USB, chặn/điều khiển thiết bị, ghi phím, chụp màn hình, thu âm webcam/microphone hoặc khẳng định gian lận tự động.
+
+**Giữ nguyên các điều kiện correctness đã chốt:** auth/scope trước trả dữ liệu/cache, commit DB trước success ACK, writerEpoch/answerRevision/deadline theo contract hiện hành, Listening không tự phát lại, FULL baseline, DELTA chỉ opt-in sau correctness gate, process state RAM tách event history DB. Phase 3 hiện `CODE_READY_STAGE3_ACCEPTANCE_PENDING`; không hợp thức hóa physical LAN, manual hearing hoặc MSI máy thứ hai chưa chạy.
+
+**Checkpoint kỹ thuật trước khi sửa interface/schema:** `ADR-V2-02` (ordered content blocks/media access/migration và quyền dữ liệu); `ADR-V2-03` (proctor START / QD-21 deadline: giữ nguyên semantics hiện tại cho đến khi A/B chọn và có regression); `ADR-V2-04` (typed event v0 compatibility, ID/ACK/dedup/size/correlation); `ADR-V2-05` (PnP so với CIM/WMI, privilege/physical coverage); `ADR-V2-06` (parser mặc định Java); `ADR-V2-08` (FULL/DELTA gate). Quyết định cấp giao diện do owner/reviewer ghi evidence, **không coi phê duyệt kế hoạch là phê duyệt DTO hay migration cụ thể**. Tài liệu `docs/PROTOCOL.md` chỉ đổi đồng thời với implementation đã review. Không tự thay đổi `protocolVersion=v0`.
+
+**Mốc V2:** gate DELTA 20/10, mục tiêu đóng băng tính năng sau 23/10, bàn giao nội bộ 30/10; hạn nộp chính thức 31/10/2026 23:59 (ICT). Kế hoạch cũ giữ nguyên để truy xuất lịch sử; phụ lục này chỉ bổ sung phạm vi V2, không sửa kết quả kiểm thử cũ.

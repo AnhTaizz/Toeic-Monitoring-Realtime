@@ -734,3 +734,12 @@ Công bố QA16/10: đã push nhánh `qa/b-pr39-acceptance-20261016`, tạo [Dra
 19/10/2026 — CODE_READY_STAGE3_ACCEPTANCE_PENDING: main buildsourcecfbba58 có47/57/58/59, CI39151021995SUCCESS; clean test/package mỗi lượt942PASS/4SKIP, installed MSI0.3.11 FullSuite943PASS/3SKIP trên Windows/PG thật. HaiP1 FIXED/MERGED; C4 local42/42, kit source/portable29checks mỗi bộ, physicalLAN0/41, hearing/máy2 NOT RUN. [Kết quả và hash](../evidence/stage3-execution-20261019/REPORT.md), [bàn giao](STAGE3_FINAL_HANDOFF.md). FULL baseline/DELTA experimental; technical reviewer Codex được người dùng giao, không ký A/B/C; tracker/hours giữ nguyên.
 
 Raw local được giữ private/ignored, XML chỉ công bố case+SHA không environment. PG TEST ba lượt đều0schema và dừng; MSI đã gỡ, kit không chạy network. Đã giữ failure CI0363995/C4 trước corrective, không đổi kết quả lịch sử. Release followup chỉ pin kit/source/template/runbook và hồ sơ, không Java/POM/protocol; buildsource giữ SHA trên, kiểm equivalence lại khi merge.
+
+## 2026-10-19 · chung · Plan V2 scope activation / BASE-04 preparation
+
+- **Nguồn xác nhận:** người đại diện nhóm cho biết cả nhóm phê duyệt V2 tối 18/10; không có biên bản chữ ký A/B/C trong lần cập nhật này.
+- **Đã làm:** chuyển nhãn V2 từ PROPOSED sang TEAM_SCOPE_APPROVED, cập nhật CLAUDE và phụ lục hợp đồng để cho phép giới hạn USB mass-storage observation/200Q/media/focus/display; thêm kickoff song song A/B/C và phân định các ADR kỹ thuật còn chờ.
+- **Baseline:** main trước thay đổi `20d119f5732022f387be8b31e8153489418c859c`, CI [39186372875](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39186372875) SUCCESS. Không sửa Java/SQL/protocol runtime trong đợt này.
+- **Đã kiểm:** đối chiếu kế hoạch 36 task và phân định DONE code vs NOT RUN physical; CI trên commit cập nhật phải xác minh riêng.
+- **Còn dở:** BASE-01 đối soát source/task, BASE-04 owner duyệt DTO/START/deadline, EX-01 dataset/license, USB/LAN/Listening/MSI physical.
+- **Tiếp theo:** A/B/C nhận các task trong [kickoff](plan-v2/V2_EXECUTION_KICKOFF_20261019.md). Không cập nhật `STAGE3_DONE` trước physical acceptance.

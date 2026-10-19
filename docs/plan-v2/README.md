@@ -1,6 +1,6 @@
 # Plan V2 index - task-first agent package
 
-> **Status: PROPOSAL / A-B-C APPROVAL PENDING.** See [ADOPTION_STATUS_20261019.md](ADOPTION_STATUS_20261019.md). This import does not change the authoritative Phase 3 gates, `CLAUDE.md`, or existing contracts.
+> **Status: TEAM SCOPE APPROVED (user-reported, 19-Oct-2026).** See [adoption record](ADOPTION_STATUS_20261019.md) and [kickoff](V2_EXECUTION_KICKOFF_20261019.md). Scope-only appendices have been made to `CLAUDE.md` and the existing contract; exact protocol, deadline, migration and hardware implementation ADRs still require A/B/C decisions. Phase 3 physical gates are unchanged.
 
 This is an additive `docs/plan-v2/` planning pack intended for the existing Java TOEIC + realtime monitoring repository. All work is defined as tasks, **not as a daily calendar**.
 
@@ -21,7 +21,7 @@ Prompt the coding Agent: `Read PLAN_V2_START_HERE.md and docs/plan-v2/06_AGENT_R
 
 1. Course requirements and `Submission.md` are authoritative for deliverables and deadline.
 2. Current approved `CLAUDE.md`, `02_HOP_DONG.md`, protocol, repository code and PR merge state govern implementation.
-3. This plan adds **proposals** for 200-question rich media, JavaFX polish and authorized USB/focus/display monitoring. A scope conflict must be resolved and approved, not ignored.
+3. **Approved V2 scope** includes lawful 200-question rich media, JavaFX work and authorized, disclosed USB-storage/focus/display observation. Exact wire, DB and deadline contracts require separate decision records; do not treat broad scope approval as technical signoff.
 4. A historical test report is evidence for its own SHA only; `PASS` must be established for the integrated build.
 5. The old `TRACKER.json` is not altered by this ZIP. Never automatically convert tasks from TODO to DONE or invent acceptance.
 
