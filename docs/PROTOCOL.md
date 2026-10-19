@@ -1,5 +1,11 @@
 # Protocol đang dùng
 
+## EX-03 — rich import trên nhánh review, 19/10/2026
+
+`POST /api/v2/exams/import` đã có code: Bearer PROCTOR, JSON strict schemaVersion2/profile TOEIC_200, đúng200 câu/7Part, source/group/options/media verified; trả201 sau DB commit với `RichExamImportResponse`. Duplicate/race409 CONFLICT; JSON/graph400 INVALID_INPUT; body>2MiB413; local media thiếu/hỏng409 INVALID_STATE; IO/DB tạm thời503 RETRYABLE_SERVER_ERROR, retryable=true. Auth/role trước body/filesystem. [DTO/transaction/errors/schema/evidence](EX03_RICH_IMPORTER_VERIFICATION.md), [chữ ký EX02](EX02_RICH_EXAM_CONTRACT_V1.md).
+
+V1 import/đề ngắn giữ; V1 create-session từ exam content_version2 trả409 INVALID_STATE trước mutation. Chưa mở candidate GET rich/image, visual READY, catalog/preparation hoặc START gates. WSv0 và Listening runtime giữ nguyên. Phần này chỉ thuộc PR EX03, chưa merge main; kết quả runtime cuối xem report, không lấy fixture MOCK thay production acceptance.
+
 Đối chiếu hiện trạng T3-C5 (13/10/2026, main `f97c081`): [bản nháp đồng bộ và giới hạn](MONITORING_SYNC_REPORT_DRAFT.md). Server delta, scan refresh và candidate opt-in đã có từ T3-C2/C4; các đoạn theo ngày cũ ghi “chưa có/chưa chạy” bên dưới mô tả phạm vi task lúc đó. FULL vẫn mặc định; local C4 có bằng chứng riêng, LAN hai máy/B review/gate vẫn chưa chốt.
 
 **Trạng thái: v0 có login/Bearer, C3 event/queue/retry, A4 heartbeat/presence/history và B3 dashboard. T2-C1 bổ sung OPEN/full/CLOSE, state RAM, HTTP/MONITOR_STATE và tab process hiện tại. T3-C2 có reducer delta/resync và capability thử nghiệm; server/client delta mặc định tắt, candidate factory vẫn full.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `docs/plan-v1/02_HOP_DONG.md`; không chép lại ở đây. Các mục chặng 1 bên dưới ghi phạm vi lịch sử tại thời điểm task đó; contract T2-C1 ở cuối là phần bổ sung hiện tại.

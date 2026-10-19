@@ -344,3 +344,9 @@ Ghi chú kiểm chứng19/10/2026, nhánhreviewEX04 chưamerge: [reportPG](EX04_
 ## EX-02 / ADR-V2-03 / D10 — nhóm thông qua theo đại diện, 19/10/2026
 
 **TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE**: [D01–D10](plan-v2/EX02_DECISIONS_ROADMAP.md), [contract](EX02_RICH_EXAM_CONTRACT_V1.md), [ADR](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md). [Nguồn19/10](plan-v2/EX02_TEAM_APPROVAL_20261019.md): “User-provided confirmation from the project team representative, 2026-10-19.” A/B/C đồng ý theo đại diện nhóm, không chữ ký riêng hoặc GitHub Approving Review. Chọn Option A: owner prefetch đúng ảnh Part1 trước START (chấp nhận chủ máy có thể trích xuất bytes), không prompts/options/keys/passages; whole roster Audio+Visual READY current epoch/lease trước Listening START duy nhất. Server clock/deadline tại START, ảnh visible gate trước play; lỗi sau commit interruption/no replay/no deadline reset. Ca legacy giữ QD21, không infer version bằng deadlineNULL. Đây phê duyệt thiết kế, không migration/Java/runtime/GUI PASS hoặc EX03–08 DONE.
+
+## EX-03 — triển khai EX02, 19/10/2026
+
+Theo task.txt triển khai hợp đồng đã duyệt, không thiết kế lại D01–D10: importer v2 create-only tách RichExamService/repository/parser/validator khỏi v1; explicit TransactionTemplate để response201 sau commit, sourceRef→RETURNING id, deferred constraints và recheck bytes trước commit. Local verification không cấp Audio/Visual READY; không mở candidate rich/image routes trước EX07. V1 create rich bị409, QD21 legacy giữ.
+
+Chọn migration **V14** vì đối chiếu PR70–74 thấy PR74 đã dùng V13; không sửa nhánh C. Cần A/C phối hợp số/thứ tự migration trước merge/deploy, không bật outOfOrder. [Report và giới hạn](EX03_RICH_IMPORTER_VERIFICATION.md). Đây là thực thi task được giao và technical review, không chữ ký owner hoặc xác nhận tracker DONE.

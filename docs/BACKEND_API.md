@@ -789,3 +789,7 @@ Client chỉ phát đúng manifest/writer/start ID, không autoplay lại khi re
 ## API V2 — thiết kế đã được nhóm thông qua, chưa triển khai
 
 [EX-02](EX02_RICH_EXAM_CONTRACT_V1.md) định nghĩa records/payload/validation/RBAC, gồm Part1-only prefetch manifest nhúng preparation, POST visual/ready ATTEST/INVALIDATE và GET combined session readiness. [ADR-V2-03](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) yêu cầu cả Audio+Visual READY trước authoritative Listening START cho PROCTORED_V2; v1 exam/full-status/answers routes không bypass SCHEDULED gate. D01–D10/ADR là TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [xác nhận19/10](plan-v2/EX02_TEAM_APPROVAL_20261019.md), không GitHub Approving Review hoặc runtime implementation. Ca legacy QD21/WSv0 giữ; các route v2 chưa callable ở baseline1d35b53.
+
+## EX-03 — bổ sung trên nhánh review, 19/10/2026
+
+Endpoint mới duy nhất: `POST /api/v2/exams/import`, PROCTOR; request `RichExamImportRequest` theo [EX02 mục2–4](EX02_RICH_EXAM_CONTRACT_V1.md), response201 sau commit. Strict validation/verification/create-only và error codes chi tiết ở [report EX03](EX03_RICH_IMPORTER_VERIFICATION.md). Không đồng nhất VERIFIED_AT_IMPORT với READY. API v1 giữ payload/status cũ; `POST /api/v1/sessions` dùng rich exam trả409 INVALID_STATE. Không có rich candidate GET/image/visual/START API mới trong PR này; các route thiết kế EX02 còn lại chờ EX05/07.
