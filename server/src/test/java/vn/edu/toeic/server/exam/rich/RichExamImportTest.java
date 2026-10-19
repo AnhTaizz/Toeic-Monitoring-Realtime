@@ -124,4 +124,25 @@ class RichExamImportTest {
         assertThatThrownBy(()->new RichExamJson().read(new ByteArrayInputStream(new byte[]{(byte)0xc0,(byte)0xaf})))
                 .isInstanceOf(ExamApiException.class);
     }
+    @ParameterizedTest @ValueSource(strings={"access_token","api_key","client_secret","X-Amz-Signature","refreshToken","%61ccess%5Ftoken"})
+    void sourceUrlCredentialAliasesAreRejected(String parameter) throws Exception {
+        var tree=RichExamFixtures.tree();
+        RichExamFixtures.at(tree,"sources",0).addProperty("sourceUrl","https://example.invalid/a?"+parameter+"=MOCK");
+        assertThatThrownBy(()->new RichExamValidator().validate(RichExamFixtures.parse(tree.toString())))
+                .isInstanceOfSatisfying(ExamApiException.class,e->assertThat(e.status().value()).isEqualTo(400));
+    }
+    static Stream<String> invalidScalarJson() {
+        return Stream.of("\\u0000","\\ud800","\\udc00")
+                .map(escape->"{\"schemaVersion\":2,\"exam\":{\"title\":\""+escape+"\"}}");
+    }
+    @ParameterizedTest @MethodSource("invalidScalarJson")
+    void escapedNulAndUnpairedSurrogatesRejectBeforePersistence(String body) {
+        assertThatThrownBy(()->RichExamFixtures.parse(body)).isInstanceOf(ExamApiException.class);
+    }
+    @Test void validUnicodeAndPublicSourceQueryRemainAllowed() throws Exception {
+        var tree=RichExamFixtures.tree();tree.getAsJsonObject("exam").addProperty("title","MOCK 中文 😀");
+        RichExamFixtures.at(tree,"sources",0).addProperty("sourceUrl","https://example.invalid/a?exam=200&author=MOCK");
+        var request=RichExamFixtures.parse(tree.toString());new RichExamValidator().validate(request);
+        assertThat(request.exam().title()).isEqualTo("MOCK 中文 😀");
+    }
 }

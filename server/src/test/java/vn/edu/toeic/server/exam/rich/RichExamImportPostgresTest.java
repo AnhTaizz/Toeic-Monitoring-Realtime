@@ -138,6 +138,16 @@ class RichExamImportPostgresTest {
         }
         expect(post("/api/v2/exams/import"," ".repeat(RichExamJson.MAX_BYTES+1),token),413,"INVALID_INPUT");
         for(String body:RichExamImportTest.invalidJson().toList()) expect(post("/api/v2/exams/import",body,token),400,"INVALID_INPUT");
+        for(String parameter:List.of("access_token","api_key","client_secret","X-Amz-Signature","refreshToken","%61ccess%5Ftoken")) {
+            var tree=RichExamFixtures.tree();
+            RichExamFixtures.at(tree,"sources",0).addProperty("sourceUrl","https://example.invalid/a?"+parameter+"=MOCK");
+            expect(post("/api/v2/exams/import",tree.toString(),token),400,"INVALID_INPUT");
+        }
+        for(String escape:List.of("\\u0000","\\ud800","\\udc00")) {
+            String body=RichExamFixtures.tree().toString().replace("\"MOCK EX02 200 questions\"","\"MOCK"+escape+"\"");
+            expect(post("/api/v2/exams/import",body,token),400,"INVALID_INPUT");
+        }
+        emptyImport();
     }
 
     @Test void multipleSourceRefsMapToReturnedDatabaseIdsWithinExamScope() throws Exception {

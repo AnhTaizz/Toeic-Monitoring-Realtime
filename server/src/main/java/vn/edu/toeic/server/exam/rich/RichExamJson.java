@@ -81,6 +81,13 @@ public final class RichExamJson {
         }
         if (reader.peek() != JsonToken.STRING) throw invalid();
         String text = reader.nextString();
+        for (int i=0;i<text.length();i++) {
+            char character=text.charAt(i);
+            if (character==0) throw invalid();
+            if (Character.isHighSurrogate(character)) {
+                if (++i>=text.length() || !Character.isLowSurrogate(text.charAt(i))) throw invalid();
+            } else if (Character.isLowSurrogate(character)) throw invalid();
+        }
         if (kind.isEnum() && Arrays.stream(kind.getEnumConstants()).noneMatch(e -> ((Enum<?>) e).name().equals(text))) throw invalid();
         if (kind == LocalDate.class) LocalDate.parse(text);
         return new JsonPrimitive(text);

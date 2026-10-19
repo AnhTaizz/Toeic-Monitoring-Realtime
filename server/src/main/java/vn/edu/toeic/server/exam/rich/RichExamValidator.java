@@ -35,7 +35,11 @@ public final class RichExamValidator {
             URI uri = URI.create(value);
             require(uri.getScheme() != null && Set.of("http","https").contains(uri.getScheme()) && uri.getHost() != null && uri.getRawUserInfo() == null && uri.getRawFragment() == null, "source URL không hợp lệ");
             String query = uri.getRawQuery();
-            if (query != null) require(!URLDecoder.decode(query, StandardCharsets.UTF_8).matches("(?is).*(^|[&;])(token|password|secret|key|authorization|credential|signature|nonce)=.*"), "source URL có secret parameter");
+            if (query != null) for (String parameter : URLDecoder.decode(query, StandardCharsets.UTF_8).split("[&;]")) {
+                String name = parameter.split("=",2)[0].toLowerCase(Locale.ROOT).replace("_","").replace("-","");
+                require(!name.matches(".*(token|password|passwd|secret|credential|signature|nonce).*|key|apikey|auth|authorization|sig|jwt|bearer"),
+                        "source URL có secret parameter");
+            }
         } catch (IllegalArgumentException invalid) { throw ExamApiException.invalidInput("Rich exam: source URL không hợp lệ"); }
     }
     public static boolean safeFile(String name) {
