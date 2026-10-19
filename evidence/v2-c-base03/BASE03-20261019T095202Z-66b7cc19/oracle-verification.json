@@ -1,0 +1,540 @@
+{
+  "runId": "BASE03-20261019T095202Z-66b7cc19",
+  "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+  "harnessRunId": "65da0b98-e732-4b0f-adb2-e7d85d6a9b50",
+  "seed": 20261012,
+  "cases": 72,
+  "negativeControls": [
+    {
+      "name": "wrong-full",
+      "report": "negative-wrong-full.json",
+      "reportSha256": "3fd68ed6927b96fa1a22d5e915e303eee4b0ec23abbc2debd8b4497030bdf777",
+      "expectedStatus": "FAIL",
+      "actualStatus": "FAIL",
+      "detected": true
+    },
+    {
+      "name": "wrong-delta",
+      "report": "negative-wrong-delta.json",
+      "reportSha256": "80c797775d5fb1b9c15f61fc9dbd79ff44c17292113a7d86bb50cd7c120c78a5",
+      "expectedStatus": "FAIL",
+      "actualStatus": "FAIL",
+      "detected": true
+    },
+    {
+      "name": "wrong-event-full",
+      "report": "negative-wrong-event-full.json",
+      "reportSha256": "f4819a3883277370257baa5265ff997baa1be5e9c13ca93d37f6e6442b96b5b4",
+      "expectedStatus": "FAIL",
+      "actualStatus": "FAIL",
+      "detected": true
+    },
+    {
+      "name": "wrong-event-delta",
+      "report": "negative-wrong-event-delta.json",
+      "reportSha256": "2fe07cf2944f49edcd2a63a014f0588c5c88e1b49f14dae8a6e08f1df51d7674",
+      "expectedStatus": "FAIL",
+      "actualStatus": "FAIL",
+      "detected": true
+    }
+  ],
+  "comparisonPairs": 36,
+  "comparablePairs": 35,
+  "noCommonCheckpoint": [
+    {
+      "workload": "reconnect",
+      "scenario": "seeded",
+      "businessEventsEqual": true,
+      "deliveredEventsEqual": true,
+      "comparableObservations": 0,
+      "expectedFaultDivergences": 69,
+      "comparisonStatus": "NO_COMMON_SYNC_CHECKPOINT",
+      "rule": "Compare raw observation identity+metadata only when both match that observation; sequence differs. Event decisions keyed by eventId; state schedules mode-specific. Each fault checkpoint independently checked."
+    }
+  ],
+  "repeat": [
+    {
+      "file": "high-change-clean-delta.json",
+      "sha256": "112f2c27fa53642cee14c099993a357e4a3feeca622de874bbd3af3038fbdcba",
+      "repeatSha256": "112f2c27fa53642cee14c099993a357e4a3feeca622de874bbd3af3038fbdcba",
+      "identical": true
+    },
+    {
+      "file": "high-change-clean-full.json",
+      "sha256": "5bc10e7b398c2ccf448f58c61d63929426a77fdd0ffb730e248f346705e9c3ec",
+      "repeatSha256": "5bc10e7b398c2ccf448f58c61d63929426a77fdd0ffb730e248f346705e9c3ec",
+      "identical": true
+    },
+    {
+      "file": "high-change-conflict-id-delta.json",
+      "sha256": "e8366d08fecced53a226929b25c088b66abdf51a88b8699da4036243acef2cb1",
+      "repeatSha256": "e8366d08fecced53a226929b25c088b66abdf51a88b8699da4036243acef2cb1",
+      "identical": true
+    },
+    {
+      "file": "high-change-conflict-id-full.json",
+      "sha256": "815539c1cd0102beb912273df222a5e6b325761249dd2bd2050d89c5f5fde7dc",
+      "repeatSha256": "815539c1cd0102beb912273df222a5e6b325761249dd2bd2050d89c5f5fde7dc",
+      "identical": true
+    },
+    {
+      "file": "high-change-conflict-sequence-delta.json",
+      "sha256": "5dd29f918576650a00416e337f0b8214a9737e1b6cd5f16c1f6b13902fd80aca",
+      "repeatSha256": "5dd29f918576650a00416e337f0b8214a9737e1b6cd5f16c1f6b13902fd80aca",
+      "identical": true
+    },
+    {
+      "file": "high-change-conflict-sequence-full.json",
+      "sha256": "3f019053fdb0a0d58a22506735f83edb134c655087b013c46603de9326242a86",
+      "repeatSha256": "3f019053fdb0a0d58a22506735f83edb134c655087b013c46603de9326242a86",
+      "identical": true
+    },
+    {
+      "file": "high-change-drop-first-delta.json",
+      "sha256": "d7df1731aa718490d382dbdfae1253a55e1839af5d13c0feecaa37d8f77f7e04",
+      "repeatSha256": "d7df1731aa718490d382dbdfae1253a55e1839af5d13c0feecaa37d8f77f7e04",
+      "identical": true
+    },
+    {
+      "file": "high-change-drop-first-full.json",
+      "sha256": "bfa315fcb88b54b8e05799508fbe8039bbc1ca486a756a3bce68cc38cb2010f1",
+      "repeatSha256": "bfa315fcb88b54b8e05799508fbe8039bbc1ca486a756a3bce68cc38cb2010f1",
+      "identical": true
+    },
+    {
+      "file": "high-change-drop-state-delta.json",
+      "sha256": "c4bcd6798d626b18afdf0ca29e5e6dcf506e6f5094a2d267cbb89c94176e9723",
+      "repeatSha256": "c4bcd6798d626b18afdf0ca29e5e6dcf506e6f5094a2d267cbb89c94176e9723",
+      "identical": true
+    },
+    {
+      "file": "high-change-drop-state-full.json",
+      "sha256": "9305e355d5901cbe898645961711a700c2cca7bf42fb02c73e7542e73c078b9f",
+      "repeatSha256": "9305e355d5901cbe898645961711a700c2cca7bf42fb02c73e7542e73c078b9f",
+      "identical": true
+    },
+    {
+      "file": "high-change-duplicate-delta.json",
+      "sha256": "ee3eace5b24b079cfccfc78c7112ac371a26df00e43719ef0dc9dcc41c1c2966",
+      "repeatSha256": "ee3eace5b24b079cfccfc78c7112ac371a26df00e43719ef0dc9dcc41c1c2966",
+      "identical": true
+    },
+    {
+      "file": "high-change-duplicate-full.json",
+      "sha256": "a574df8a11f143c460d87de15cb6df10b1bcb7087fb1c8913c368496b4e3feaa",
+      "repeatSha256": "a574df8a11f143c460d87de15cb6df10b1bcb7087fb1c8913c368496b4e3feaa",
+      "identical": true
+    },
+    {
+      "file": "high-change-event-drop-delta.json",
+      "sha256": "4613e118bece3b445b767210707bae7016a6d1150de5609a9164c6d8a3f2b088",
+      "repeatSha256": "4613e118bece3b445b767210707bae7016a6d1150de5609a9164c6d8a3f2b088",
+      "identical": true
+    },
+    {
+      "file": "high-change-event-drop-full.json",
+      "sha256": "2ab91bfa43887a20e179a845d56a23418ff0b9066cc4166d780c309157599d73",
+      "repeatSha256": "2ab91bfa43887a20e179a845d56a23418ff0b9066cc4166d780c309157599d73",
+      "identical": true
+    },
+    {
+      "file": "high-change-late-after-full-delta.json",
+      "sha256": "17d751957d505de15e15adaa7162f0061396b7ebfb875ff488f8971a2465251d",
+      "repeatSha256": "17d751957d505de15e15adaa7162f0061396b7ebfb875ff488f8971a2465251d",
+      "identical": true
+    },
+    {
+      "file": "high-change-late-after-full-full.json",
+      "sha256": "bba6394a9e4965e6b02b2c7fe6619b97d21ec5e956dc439d2ac430588caa8a7c",
+      "repeatSha256": "bba6394a9e4965e6b02b2c7fe6619b97d21ec5e956dc439d2ac430588caa8a7c",
+      "identical": true
+    },
+    {
+      "file": "high-change-reconnect-old-delta.json",
+      "sha256": "aeb012b9eb6eb14c7ff9875a2ebc0fc7018d5d0ce7af7bd0dc93be6f925f2738",
+      "repeatSha256": "aeb012b9eb6eb14c7ff9875a2ebc0fc7018d5d0ce7af7bd0dc93be6f925f2738",
+      "identical": true
+    },
+    {
+      "file": "high-change-reconnect-old-full.json",
+      "sha256": "75ccdb67dc5f13c5bb663b1924e2f881b4163dc391c562bcba4f6944bbe55a7f",
+      "repeatSha256": "75ccdb67dc5f13c5bb663b1924e2f881b4163dc391c562bcba4f6944bbe55a7f",
+      "identical": true
+    },
+    {
+      "file": "high-change-reorder-delta.json",
+      "sha256": "d8107f3b19454ac6a493ac8fa9adca8c8f60f4885feb6dbe47c763fa3da66132",
+      "repeatSha256": "d8107f3b19454ac6a493ac8fa9adca8c8f60f4885feb6dbe47c763fa3da66132",
+      "identical": true
+    },
+    {
+      "file": "high-change-reorder-full.json",
+      "sha256": "cd4870a39456c664eda07373f9d8973d26ab6f67e9b07f761a2ec71bd6b89087",
+      "repeatSha256": "cd4870a39456c664eda07373f9d8973d26ab6f67e9b07f761a2ec71bd6b89087",
+      "identical": true
+    },
+    {
+      "file": "high-change-retry-resync-delta.json",
+      "sha256": "2e5d271b60178dfe380e440682538ebac697ffa0c1850fc5ebcb5b0803a473c0",
+      "repeatSha256": "2e5d271b60178dfe380e440682538ebac697ffa0c1850fc5ebcb5b0803a473c0",
+      "identical": true
+    },
+    {
+      "file": "high-change-retry-resync-full.json",
+      "sha256": "50f63e4cb93f13dde1392c107eb2c7acfbc09411fdb518c9a04a867ab5b65ced",
+      "repeatSha256": "50f63e4cb93f13dde1392c107eb2c7acfbc09411fdb518c9a04a867ab5b65ced",
+      "identical": true
+    },
+    {
+      "file": "high-change-seeded-delta.json",
+      "sha256": "7d32082c80a36f8c0b8d723fad1aba73778a8fc81a7ab43a5b486181119c30b9",
+      "repeatSha256": "7d32082c80a36f8c0b8d723fad1aba73778a8fc81a7ab43a5b486181119c30b9",
+      "identical": true
+    },
+    {
+      "file": "high-change-seeded-full.json",
+      "sha256": "cf54b6d2fe22810fc29577dce44cc03bf3916b678624f11b9226ade7f8e1118d",
+      "repeatSha256": "cf54b6d2fe22810fc29577dce44cc03bf3916b678624f11b9226ade7f8e1118d",
+      "identical": true
+    },
+    {
+      "file": "low-change-clean-delta.json",
+      "sha256": "c1b3f800f8950e2637b1723a7221c5f17e9ef458b8e93b2c86299a7af8abb358",
+      "repeatSha256": "c1b3f800f8950e2637b1723a7221c5f17e9ef458b8e93b2c86299a7af8abb358",
+      "identical": true
+    },
+    {
+      "file": "low-change-clean-full.json",
+      "sha256": "cc9de20e7784c639916798e714b651cd3bbc10be8693785619f7c54bb9db753a",
+      "repeatSha256": "cc9de20e7784c639916798e714b651cd3bbc10be8693785619f7c54bb9db753a",
+      "identical": true
+    },
+    {
+      "file": "low-change-conflict-id-delta.json",
+      "sha256": "64f5c0c01a5a3bdc7f7292c776cada40753e552cb08c0a277183c76bba84e358",
+      "repeatSha256": "64f5c0c01a5a3bdc7f7292c776cada40753e552cb08c0a277183c76bba84e358",
+      "identical": true
+    },
+    {
+      "file": "low-change-conflict-id-full.json",
+      "sha256": "87416980f907c80944670fc549d1890b0916312096d18cd39622153d47dd4384",
+      "repeatSha256": "87416980f907c80944670fc549d1890b0916312096d18cd39622153d47dd4384",
+      "identical": true
+    },
+    {
+      "file": "low-change-conflict-sequence-delta.json",
+      "sha256": "02e984163c734902c7dae759a7b2e2b2acd40ff0c51aefce9ee833f543323a78",
+      "repeatSha256": "02e984163c734902c7dae759a7b2e2b2acd40ff0c51aefce9ee833f543323a78",
+      "identical": true
+    },
+    {
+      "file": "low-change-conflict-sequence-full.json",
+      "sha256": "e5ef99b8f7221a764d308e71d949eaf10c44d07a9e287dc5c55da52f6b6ca2a3",
+      "repeatSha256": "e5ef99b8f7221a764d308e71d949eaf10c44d07a9e287dc5c55da52f6b6ca2a3",
+      "identical": true
+    },
+    {
+      "file": "low-change-drop-first-delta.json",
+      "sha256": "fb756ce72dce8817cde8eb8ec97add8d96e27dcb7a446411d59cbbc1ec73cbdd",
+      "repeatSha256": "fb756ce72dce8817cde8eb8ec97add8d96e27dcb7a446411d59cbbc1ec73cbdd",
+      "identical": true
+    },
+    {
+      "file": "low-change-drop-first-full.json",
+      "sha256": "fbd67ff19a043af0049c259ccb003670bbb52beb41173cbe704b16bfdbec6c23",
+      "repeatSha256": "fbd67ff19a043af0049c259ccb003670bbb52beb41173cbe704b16bfdbec6c23",
+      "identical": true
+    },
+    {
+      "file": "low-change-drop-state-delta.json",
+      "sha256": "63c072f402c0886cd848922bddf7bdbb186364fa01db3bd822330c01843e6442",
+      "repeatSha256": "63c072f402c0886cd848922bddf7bdbb186364fa01db3bd822330c01843e6442",
+      "identical": true
+    },
+    {
+      "file": "low-change-drop-state-full.json",
+      "sha256": "76b1da57d15b8555e95b72d6fe667319d03b12d5e72db257bf728378cd0ee9e8",
+      "repeatSha256": "76b1da57d15b8555e95b72d6fe667319d03b12d5e72db257bf728378cd0ee9e8",
+      "identical": true
+    },
+    {
+      "file": "low-change-duplicate-delta.json",
+      "sha256": "6866ed6a50690c52c8824bdb308301dcaaca1d9d4668f4ac7d86f4eb93eed7ef",
+      "repeatSha256": "6866ed6a50690c52c8824bdb308301dcaaca1d9d4668f4ac7d86f4eb93eed7ef",
+      "identical": true
+    },
+    {
+      "file": "low-change-duplicate-full.json",
+      "sha256": "a4aef789bde99efc60cbf9d0ba5482b5e188780722d64ebaa80ca513562a86ae",
+      "repeatSha256": "a4aef789bde99efc60cbf9d0ba5482b5e188780722d64ebaa80ca513562a86ae",
+      "identical": true
+    },
+    {
+      "file": "low-change-event-drop-delta.json",
+      "sha256": "6e5666f19067afc9030ea86ee742d5fda9335a97799b85b7a73e0d3add7cbcd3",
+      "repeatSha256": "6e5666f19067afc9030ea86ee742d5fda9335a97799b85b7a73e0d3add7cbcd3",
+      "identical": true
+    },
+    {
+      "file": "low-change-event-drop-full.json",
+      "sha256": "4c3d44c7603686642aa926a736c74b3bf25093b790c03e192d5e372d0cd6341a",
+      "repeatSha256": "4c3d44c7603686642aa926a736c74b3bf25093b790c03e192d5e372d0cd6341a",
+      "identical": true
+    },
+    {
+      "file": "low-change-late-after-full-delta.json",
+      "sha256": "b4a4f893d5421f881e1115beae73a55a4409e80f715c34ebc1c70855e86bbdd4",
+      "repeatSha256": "b4a4f893d5421f881e1115beae73a55a4409e80f715c34ebc1c70855e86bbdd4",
+      "identical": true
+    },
+    {
+      "file": "low-change-late-after-full-full.json",
+      "sha256": "fe6dc8ef3562849d45eeec215e1a00d9a768eedf8f95d7be43e9c4f08e638c7b",
+      "repeatSha256": "fe6dc8ef3562849d45eeec215e1a00d9a768eedf8f95d7be43e9c4f08e638c7b",
+      "identical": true
+    },
+    {
+      "file": "low-change-reconnect-old-delta.json",
+      "sha256": "ce006dd598230965f359f218cc4e2af238901ffa162f90724caae0c589e167cf",
+      "repeatSha256": "ce006dd598230965f359f218cc4e2af238901ffa162f90724caae0c589e167cf",
+      "identical": true
+    },
+    {
+      "file": "low-change-reconnect-old-full.json",
+      "sha256": "97c064cae8ba2d2eb5bd74c71fb94b0d71a43b045200094cce3565e476bc34a3",
+      "repeatSha256": "97c064cae8ba2d2eb5bd74c71fb94b0d71a43b045200094cce3565e476bc34a3",
+      "identical": true
+    },
+    {
+      "file": "low-change-reorder-delta.json",
+      "sha256": "11175e51118d10ffe7cc17e0a64b45b2d86d3d404ffa592de06e3a9d27a26507",
+      "repeatSha256": "11175e51118d10ffe7cc17e0a64b45b2d86d3d404ffa592de06e3a9d27a26507",
+      "identical": true
+    },
+    {
+      "file": "low-change-reorder-full.json",
+      "sha256": "6db090eaae14f2e20716e432e7e07596372818de1592c5e388713ab33ab62ece",
+      "repeatSha256": "6db090eaae14f2e20716e432e7e07596372818de1592c5e388713ab33ab62ece",
+      "identical": true
+    },
+    {
+      "file": "low-change-retry-resync-delta.json",
+      "sha256": "5320d4f02c6b89a980a72b5d9cef203097cd2408357b2a3eeff041b8e4c0f860",
+      "repeatSha256": "5320d4f02c6b89a980a72b5d9cef203097cd2408357b2a3eeff041b8e4c0f860",
+      "identical": true
+    },
+    {
+      "file": "low-change-retry-resync-full.json",
+      "sha256": "0d744312567114f9937c64c0f34dc3dfe4f2e4fca603135f341a88d53ff7d2a2",
+      "repeatSha256": "0d744312567114f9937c64c0f34dc3dfe4f2e4fca603135f341a88d53ff7d2a2",
+      "identical": true
+    },
+    {
+      "file": "low-change-seeded-delta.json",
+      "sha256": "bd78c527f58b75ac80394d8917815e494bd1ca987c2e398a9d40e1a194587b59",
+      "repeatSha256": "bd78c527f58b75ac80394d8917815e494bd1ca987c2e398a9d40e1a194587b59",
+      "identical": true
+    },
+    {
+      "file": "low-change-seeded-full.json",
+      "sha256": "73198022625467f724a910a07c30c675e14ad04fad0010a380ace464301c979e",
+      "repeatSha256": "73198022625467f724a910a07c30c675e14ad04fad0010a380ace464301c979e",
+      "identical": true
+    },
+    {
+      "file": "negative-wrong-delta.json",
+      "sha256": "80c797775d5fb1b9c15f61fc9dbd79ff44c17292113a7d86bb50cd7c120c78a5",
+      "repeatSha256": "80c797775d5fb1b9c15f61fc9dbd79ff44c17292113a7d86bb50cd7c120c78a5",
+      "identical": true
+    },
+    {
+      "file": "negative-wrong-event-delta.json",
+      "sha256": "2fe07cf2944f49edcd2a63a014f0588c5c88e1b49f14dae8a6e08f1df51d7674",
+      "repeatSha256": "2fe07cf2944f49edcd2a63a014f0588c5c88e1b49f14dae8a6e08f1df51d7674",
+      "identical": true
+    },
+    {
+      "file": "negative-wrong-event-full.json",
+      "sha256": "f4819a3883277370257baa5265ff997baa1be5e9c13ca93d37f6e6442b96b5b4",
+      "repeatSha256": "f4819a3883277370257baa5265ff997baa1be5e9c13ca93d37f6e6442b96b5b4",
+      "identical": true
+    },
+    {
+      "file": "negative-wrong-full.json",
+      "sha256": "3fd68ed6927b96fa1a22d5e915e303eee4b0ec23abbc2debd8b4497030bdf777",
+      "repeatSha256": "3fd68ed6927b96fa1a22d5e915e303eee4b0ec23abbc2debd8b4497030bdf777",
+      "identical": true
+    },
+    {
+      "file": "reconnect-clean-delta.json",
+      "sha256": "c61846bc7f5775a4fbcfda7d834dc7a58e8f721cf95b4ae05bd0fc6966e86a75",
+      "repeatSha256": "c61846bc7f5775a4fbcfda7d834dc7a58e8f721cf95b4ae05bd0fc6966e86a75",
+      "identical": true
+    },
+    {
+      "file": "reconnect-clean-full.json",
+      "sha256": "0993c70e12d870084a3c87f43c087179e957e1c50ab626e6236c462059416bd2",
+      "repeatSha256": "0993c70e12d870084a3c87f43c087179e957e1c50ab626e6236c462059416bd2",
+      "identical": true
+    },
+    {
+      "file": "reconnect-conflict-id-delta.json",
+      "sha256": "f6178782ddb73aed0066d68ac77b39e223d6785730e816749c4d7780e5e2bfaf",
+      "repeatSha256": "f6178782ddb73aed0066d68ac77b39e223d6785730e816749c4d7780e5e2bfaf",
+      "identical": true
+    },
+    {
+      "file": "reconnect-conflict-id-full.json",
+      "sha256": "cf106224a76894df3a3e092bb41c2eeb9ab5a79083449ae17cae932a530c6471",
+      "repeatSha256": "cf106224a76894df3a3e092bb41c2eeb9ab5a79083449ae17cae932a530c6471",
+      "identical": true
+    },
+    {
+      "file": "reconnect-conflict-sequence-delta.json",
+      "sha256": "c1648038f9070d85abff4db4c39b63c7317315b5867c05898bf178573396d8a6",
+      "repeatSha256": "c1648038f9070d85abff4db4c39b63c7317315b5867c05898bf178573396d8a6",
+      "identical": true
+    },
+    {
+      "file": "reconnect-conflict-sequence-full.json",
+      "sha256": "1958c7037c16d14ad8e4408b1be736678e897cef8b062979a915a76d1c7a0c69",
+      "repeatSha256": "1958c7037c16d14ad8e4408b1be736678e897cef8b062979a915a76d1c7a0c69",
+      "identical": true
+    },
+    {
+      "file": "reconnect-drop-first-delta.json",
+      "sha256": "566fbdd4dbb92d51ec6cdd29a93cc58c255b2d09b068ba53dd1c2be0a6c8e14a",
+      "repeatSha256": "566fbdd4dbb92d51ec6cdd29a93cc58c255b2d09b068ba53dd1c2be0a6c8e14a",
+      "identical": true
+    },
+    {
+      "file": "reconnect-drop-first-full.json",
+      "sha256": "6ad792592bc620f44d4c2e83757ebc7aef4428b259fe62b85864acadfaf3a20c",
+      "repeatSha256": "6ad792592bc620f44d4c2e83757ebc7aef4428b259fe62b85864acadfaf3a20c",
+      "identical": true
+    },
+    {
+      "file": "reconnect-drop-state-delta.json",
+      "sha256": "405152db464c1dfa1ff261fb7f356d01567ecc2f700eea36d603e2a32b5fa021",
+      "repeatSha256": "405152db464c1dfa1ff261fb7f356d01567ecc2f700eea36d603e2a32b5fa021",
+      "identical": true
+    },
+    {
+      "file": "reconnect-drop-state-full.json",
+      "sha256": "0d08c88e67bb41d3515e5be570d7e5d973815555e75d1a49b1a64ce44cd24e7c",
+      "repeatSha256": "0d08c88e67bb41d3515e5be570d7e5d973815555e75d1a49b1a64ce44cd24e7c",
+      "identical": true
+    },
+    {
+      "file": "reconnect-duplicate-delta.json",
+      "sha256": "2f7a5baa08237be1df0a0abbae69a6d4da8494df115a4d4ebb65839c3783ce97",
+      "repeatSha256": "2f7a5baa08237be1df0a0abbae69a6d4da8494df115a4d4ebb65839c3783ce97",
+      "identical": true
+    },
+    {
+      "file": "reconnect-duplicate-full.json",
+      "sha256": "b92416af11e8f9de6f428ac91539ad13aa22ec3131ea9bce09ec4eca005df4bb",
+      "repeatSha256": "b92416af11e8f9de6f428ac91539ad13aa22ec3131ea9bce09ec4eca005df4bb",
+      "identical": true
+    },
+    {
+      "file": "reconnect-event-drop-delta.json",
+      "sha256": "bb88c8a2d0927d2f56979ba48088647c041ca3580db349f1fb6a722fe904baed",
+      "repeatSha256": "bb88c8a2d0927d2f56979ba48088647c041ca3580db349f1fb6a722fe904baed",
+      "identical": true
+    },
+    {
+      "file": "reconnect-event-drop-full.json",
+      "sha256": "ff5a8a48e4cdb9e49b5e6ab7a02fe54f625970e11dcc74af3abdf88b8afa8ea8",
+      "repeatSha256": "ff5a8a48e4cdb9e49b5e6ab7a02fe54f625970e11dcc74af3abdf88b8afa8ea8",
+      "identical": true
+    },
+    {
+      "file": "reconnect-late-after-full-delta.json",
+      "sha256": "dc0993f0b47646a2bb21c07b157d976b5806cf1f252ea37181835d890a756bd9",
+      "repeatSha256": "dc0993f0b47646a2bb21c07b157d976b5806cf1f252ea37181835d890a756bd9",
+      "identical": true
+    },
+    {
+      "file": "reconnect-late-after-full-full.json",
+      "sha256": "ba3026f2f1b7ff87347fddd9b0d9127b03270fc0011a3c7c0ca33503ed7ad4a8",
+      "repeatSha256": "ba3026f2f1b7ff87347fddd9b0d9127b03270fc0011a3c7c0ca33503ed7ad4a8",
+      "identical": true
+    },
+    {
+      "file": "reconnect-reconnect-old-delta.json",
+      "sha256": "303f1a9677717cc95bc2a3f719cb7ade63d57e17fd0795b4624527b650ceccf4",
+      "repeatSha256": "303f1a9677717cc95bc2a3f719cb7ade63d57e17fd0795b4624527b650ceccf4",
+      "identical": true
+    },
+    {
+      "file": "reconnect-reconnect-old-full.json",
+      "sha256": "a31c94c7cfaddcb707788cd242f1f6fc9ef322fc7b2a4bcce1bda2dd6fe249c3",
+      "repeatSha256": "a31c94c7cfaddcb707788cd242f1f6fc9ef322fc7b2a4bcce1bda2dd6fe249c3",
+      "identical": true
+    },
+    {
+      "file": "reconnect-reorder-delta.json",
+      "sha256": "e9104b13ec67b52b64a504fa1576753d2f8c4a3bb40c7befa5ebc4c2fd940ff3",
+      "repeatSha256": "e9104b13ec67b52b64a504fa1576753d2f8c4a3bb40c7befa5ebc4c2fd940ff3",
+      "identical": true
+    },
+    {
+      "file": "reconnect-reorder-full.json",
+      "sha256": "c6a1eef0b83ecf753c7e3091ee0c9a11888973c00fdf73ad917415ae3d2f2ef3",
+      "repeatSha256": "c6a1eef0b83ecf753c7e3091ee0c9a11888973c00fdf73ad917415ae3d2f2ef3",
+      "identical": true
+    },
+    {
+      "file": "reconnect-retry-resync-delta.json",
+      "sha256": "14447e2e2ede54152a8f50eb2978157a55a7e9a5c5cd035a3dc4fbf2c98afac5",
+      "repeatSha256": "14447e2e2ede54152a8f50eb2978157a55a7e9a5c5cd035a3dc4fbf2c98afac5",
+      "identical": true
+    },
+    {
+      "file": "reconnect-retry-resync-full.json",
+      "sha256": "7a84c6f325b8760d35b316f0e7a318d9cc5778e17b22758a117e3bede18f885f",
+      "repeatSha256": "7a84c6f325b8760d35b316f0e7a318d9cc5778e17b22758a117e3bede18f885f",
+      "identical": true
+    },
+    {
+      "file": "reconnect-seeded-delta.json",
+      "sha256": "c07b02e99ea0b5971594db17da82de1e5b08a319838343b1664e564409ddb57e",
+      "repeatSha256": "c07b02e99ea0b5971594db17da82de1e5b08a319838343b1664e564409ddb57e",
+      "identical": true
+    },
+    {
+      "file": "reconnect-seeded-full.json",
+      "sha256": "c0780534dc8a57983dd6ca1b242336630a176534c2150db335c2fb2f5c2aa1c5",
+      "repeatSha256": "c0780534dc8a57983dd6ca1b242336630a176534c2150db335c2fb2f5c2aa1c5",
+      "identical": true
+    },
+    {
+      "file": "summary.json",
+      "sha256": "e6e3b1c9fa8987cfd4e35008916bbc835d890a55cc4d26b95b7a06495b068320",
+      "repeatSha256": "e6e3b1c9fa8987cfd4e35008916bbc835d890a55cc4d26b95b7a06495b068320",
+      "identical": true
+    }
+  ],
+  "realProcessHandleTrace": {
+    "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/real-processhandle.jsonl",
+    "sha256": "61e1d53ccb8538a51457e5e3771b5a65e38650b0c83524115acc40bca05f02dc",
+    "transport": "REPLAY; six REAL local scans, no physical LAN; details retained private",
+    "replays": [
+      {
+        "mode": "full",
+        "status": "PASS",
+        "issues": [],
+        "report": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/real-full.json",
+        "sha256": "e9ca904b2408ac91ef7689c83d9bdfa7dc95e12321777ac9cc50d0f4e2cb0bbf"
+      },
+      {
+        "mode": "delta",
+        "status": "PASS",
+        "issues": [],
+        "report": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/real-delta.json",
+        "sha256": "66cf2e6fffcd3eaf3ae1e12bca2aedf858cf6ac23b853fcc2834b75121674bfc"
+      }
+    ]
+  }
+}

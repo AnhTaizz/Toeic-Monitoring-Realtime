@@ -1,0 +1,83 @@
+{
+  "createdUtc": "2026-10-19T10:04:03.582Z",
+  "fullRunId": "BASE03-20261019T095202Z-66b7cc19",
+  "supplementRunId": "BASE03-20261019T095950Z-e51076ac",
+  "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+  "supplementSourceSha": "463cbadc50465c6ca2f2d4c0a0701dcb9c38e034",
+  "environment": {
+    "os": "Microsoft Windows NT 10.0.26200.0",
+    "java": "Temurin21.0.10+7-LTS",
+    "maven": "3.9.15",
+    "postgres": "18.3 native Windows SCRAM",
+    "python": "3.15.0b3",
+    "topology": "One Windows host, owned PostgreSQL SCRAM cluster/database, loopback HTTP/WS; not physical LAN"
+  },
+  "java": {
+    "full-focused": {
+      "PASS": 163
+    },
+    "delta-focused": {
+      "PASS": 151
+    },
+    "regression-package": {
+      "PASS": 983,
+      "SKIP": 7
+    }
+  },
+  "python": {
+    "e1AnalyzerUnit": 12,
+    "monitoringSummaryUnit": 10,
+    "fail": 0
+  },
+  "oracle": {
+    "cases": 72,
+    "negativeControlsDetected": 4,
+    "commonPairs": 35,
+    "totalPairs": 36,
+    "repeatFiles": 77,
+    "repeatIdentical": true,
+    "realReplayModes": [
+      {
+        "mode": "full",
+        "status": "PASS",
+        "issues": [],
+        "report": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/real-full.json",
+        "sha256": "e9ca904b2408ac91ef7689c83d9bdfa7dc95e12321777ac9cc50d0f4e2cb0bbf"
+      },
+      {
+        "mode": "delta",
+        "status": "PASS",
+        "issues": [],
+        "report": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/real-delta.json",
+        "sha256": "66cf2e6fffcd3eaf3ae1e12bca2aedf858cf6ac23b853fcc2834b75121674bfc"
+      }
+    ]
+  },
+  "localLive": {
+    "pass": 42,
+    "fail": 0,
+    "measurement": "INCOMPLETE by owned hard-kill; no performance conclusion"
+  },
+  "fullCleanup": {
+    "ownedSchemasRemaining": 0,
+    "clusterStopExit": 0,
+    "privateEnvRemoved": true,
+    "passwordFileRemoved": true
+  },
+  "supplementCleanup": {
+    "ownedSchemasRemaining": 0,
+    "clusterStopExit": 0,
+    "privateEnvRemoved": true,
+    "passwordFileRemoved": true
+  },
+  "gate": {
+    "DELTA_CORRECTNESS_GATE": "NOT_DECIDED",
+    "FULL_DEFAULT_PRESERVED": "YES",
+    "MT02_MT06_COVERAGE": "Automated technical PASS, REAL loopback WS/PG; PHYSICAL NOT_RUN; human review pending",
+    "ORACLE_VERIFIED": "YES",
+    "PHYSICAL_LAN_VERIFIED": "NO",
+    "B_REVIEW_SIGNED": "NO",
+    "E2_ALLOWED": "NO",
+    "ORACLE_LIMITATIONS": "35/36 cross-mode pairs have a common synchronized observation; one seeded pair has none. Each scheduled frame is checked independently; no equality claimed during missing-base divergence."
+  }
+}

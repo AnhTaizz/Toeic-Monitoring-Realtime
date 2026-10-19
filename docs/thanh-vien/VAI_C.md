@@ -421,3 +421,8 @@ Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG
 
 
 19/10/2026 — [Kết quả thực thi cuối](../../evidence/stage3-execution-20261019/REPORT.md), [artifact và thao tác máy thật](../STAGE3_FINAL_HANDOFF.md). Buildsourcecfbba58, haiP1/main/CI/PG/regression/MSIlocal đã kiểm. Reviewer kỹ thuật Codex theo user, không chữ ký vai. Việc dở: cùng B chạy physical41case, chốt FULL/DELTA gate; giữ FULL khi chưa đủ bằng chứng, không nhận measurement INCOMPLETE là E1/E2PASS.
+
+
+## Ghi chú làm dở BASE-03 — 19/10/2026
+
+[Thực thi mới A–J](../../evidence/v2-c-base03/REPORT.md): FULL-first/314focused/983regressionPASS+7SKIP/Python22/oracle72/local42 và probe epoch/sequence WS PASS trên PG TEST riêng; production giữ nguyên. Nhánh test/v2-c-base03-delta-gate có commit local, chưa push/PR. Bộ ZIP BASE03/hash/runbook và41case đã chuẩn bị, kit29+29PASS nhưng physicalLAN0/41 NOT RUN, B review PENDING. Việc tiếp: nhận hai máy và B thao tác F Reading/Listening/cable-loss/rejoin/cleanup, C đối chiếu SQL/epoch/history, A xem auth/COMMIT/isolation; giữ raw target cho reviewer. GateNOT_DECIDED, FULL mặc định, E2NO; không tự DONE hoặc chuyển MON-07/MON-02.
