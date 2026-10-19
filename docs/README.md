@@ -17,6 +17,8 @@ Thư mục này là nơi ghi lại việc đang làm, để bất kỳ ai (hoặ
 | [NHAT_KY.md](NHAT_KY.md) | Nhật ký từng buổi: đã làm gì, commit nào, còn dở gì | Người vừa làm | Cuối mỗi buổi làm |
 | [QUYET_DINH.md](QUYET_DINH.md) | Các quyết định kỹ thuật đã chốt và đang chờ chốt | Người ra quyết định, reviewer duyệt | Khi chốt một lựa chọn |
 | [PROTOCOL.md](PROTOCOL.md) | Danh mục endpoint và message đang dùng thật | C (monitoring), A (auth, thi) | Khi thêm hoặc đổi message |
+| [BACKEND_API.md](BACKEND_API.md) | Tài liệu tích hợp đầy đủ cho toàn bộ REST/WebSocket backend đang có | A / người đổi backend | Khi thêm hoặc đổi endpoint/message |
+| [DATABASE_SCHEMA.md](DATABASE_SCHEMA.md) | Schema PostgreSQL, bất biến và ánh xạ dữ liệu TOEIC rich content | A | Khi đổi migration hoặc contract import |
 | [AUDIO_CLIENT_PREPARATION.md](AUDIO_CLIENT_PREPARATION.md) | Tải/checksum/thử loa/READY trên candidate và cách kiểm package T3-B1 | B | Khi đổi luồng chuẩn bị audio |
 | [LISTENING_CLIENT_PLAYBACK.md](LISTENING_CLIENT_PLAYBACK.md) | T3-B2: nhận start, chống phát lặp, playlist/câu hỏi và lifecycle client | B | Khi đổi phát Listening phía candidate |
 | [PROCTOR_SESSION_CONTROLS.md](PROCTOR_SESSION_CONTROLS.md) | T3-B4: import/tạo ca, READY/start, kết quả và tổ chức lại LT04 | B | Khi đổi điều khiển ca |
