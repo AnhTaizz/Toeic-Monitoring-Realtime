@@ -54,6 +54,10 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
     private LongFunction<AudioPreparationView> audioFactory;
     private AudioPreparationView listeningView;
     private long audioWriter;
+    private ScrollPane existingAudioPane;
+    private VBox standardQuestionArea;
+    private VBox standardPaletteArea;
+    private ListeningPart3Pane part3Pane;
 
     /** Listening shares this session's writer; navigation never owns a second attempt session. */
     public void enableListening(LongFunction<AudioPreparationView> factory) {
@@ -73,15 +77,48 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
             closeAudio();
             audioWriter = state.writerEpoch();
             listeningView = audioFactory.apply(audioWriter);
-            ScrollPane audio = new ScrollPane(listeningView);
-            audio.setFitToWidth(true); audio.setPrefWidth(380); audio.setMaxWidth(380);
-            setLeft(audio);
+            existingAudioPane = new ScrollPane(listeningView);
+            existingAudioPane.setFitToWidth(true);
+            existingAudioPane.setPrefWidth(380); existingAudioPane.setMaxWidth(380);
+            listeningView.onPlaybackSegmentChanged(ids -> {
+                if (closed || ids.isEmpty()) return;
+                int target = paper.groupIndexOf(ids.getFirst());
+                if (target >= 0 && paper.groups().get(target).questions().getFirst().part() == 3
+                        && target != groupIndex) showGroup(target);
+            });
+            placeListeningAudio();
         }
     }
 
     private void closeAudio() {
         if (listeningView != null) { listeningView.close(); listeningView = null; }
+        existingAudioPane = null;
+        if (part3Pane != null) part3Pane.setAudioNode(null);
         setLeft(null);
+    }
+
+    private void placeListeningAudio() {
+        if (existingAudioPane == null) return;
+        if (isPart3()) {
+            setLeft(null);
+            existingAudioPane.setMaxWidth(Double.MAX_VALUE);
+            existingAudioPane.setPrefWidth(Region.USE_COMPUTED_SIZE);
+            existingAudioPane.setPrefHeight(145);
+            existingAudioPane.setMaxHeight(155);
+            part3Pane.setAudioNode(existingAudioPane);
+        } else {
+            if (part3Pane != null) part3Pane.setAudioNode(null);
+            existingAudioPane.setPrefWidth(380);
+            existingAudioPane.setMaxWidth(380);
+            existingAudioPane.setMaxHeight(Double.MAX_VALUE);
+            setLeft(existingAudioPane);
+        }
+    }
+
+    private boolean isPart3() {
+        return groupIndex >= 0 && groupIndex < paper.groups().size()
+                && "LISTENING".equalsIgnoreCase(paper.groups().get(groupIndex).questions().getFirst().section())
+                && paper.groups().get(groupIndex).questions().getFirst().part() == 3;
     }
 
     private final Label timerLabel = new Label("--:--:--");
@@ -126,8 +163,11 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
         setPadding(new Insets(16));
         setStyle("-fx-background-color: #0b0f19;");
         setTop(new VBox(createTopBar(attemptId, username), createNoticeBar()));
-        setCenter(createQuestionArea());
-        setRight(createPaletteArea());
+        standardQuestionArea = createQuestionArea();
+        standardPaletteArea = createPaletteArea();
+        part3Pane = new ListeningPart3Pane(questionNumbers, session::selectAnswer, session::clearAnswer);
+        setCenter(standardQuestionArea);
+        setRight(standardPaletteArea);
         setBottom(createBottomBar());
 
         // Đồng hồ chỉ cập nhật nhãn và báo cho session; không mở hộp thoại trong KeyFrame.
@@ -378,6 +418,25 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
         int from = questionNumbers.get(first.questionId());
         int to = questionNumbers.get(questions.getLast().questionId());
         groupTitleLabel.setText((from == to ? "Câu " + from : "Câu " + from + "–" + to) + " / " + paper.questions().size());
+
+        if (isPart3()) {
+            if (getCenter() != part3Pane) {
+                setCenter(part3Pane);
+                setRight(null);
+                placeListeningAudio();
+            }
+            part3Pane.renderGroup(group, current == null ? Map.of() : current.answers(),
+                    id -> current != null && current.editable() && session.canEditQuestion(id));
+            prevBtn.setDisable(index == 0);
+            nextBtn.setDisable(index == paper.groups().size() - 1);
+            updatePaletteHighlights(group);
+            return;
+        }
+        if (getCenter() != standardQuestionArea) {
+            setCenter(standardQuestionArea);
+            setRight(standardPaletteArea);
+            placeListeningAudio();
+        }
 
         boolean hasPassage = group.passageText() != null;
         passageContainer.setVisible(hasPassage);
