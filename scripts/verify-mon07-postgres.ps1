@@ -7,7 +7,8 @@ param(
     [string]$MavenRepository
 )
 $ErrorActionPreference='Stop'
-$repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+$repo=if($PSScriptRoot){[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))}else{[IO.Path]::GetFullPath((Get-Location).Path)}
+if(-not(Test-Path -LiteralPath (Join-Path $repo 'pom.xml'))){throw 'Run the in-memory script from the repository root'}
 $resolvedMon07Output=[IO.Path]::GetFullPath($OutputRoot)
 if($resolvedMon07Output.StartsWith(($repo+'\target\'),[StringComparison]::OrdinalIgnoreCase)){throw 'OutputRoot must stay outside reactor root target to preserve evidence'}
 if(-not $MavenRepository){$MavenRepository=Join-Path ([Environment]::GetFolderPath('UserProfile')) '.m2\repository'}
@@ -65,7 +66,7 @@ try{
     [void](Native (Join-Path $JavaHome 'bin\java.exe') '-version' 'java-version')
     [void](Native $env:ComSpec ('/d /s /c ""'+$maven+'" --version"') 'maven-version')
     [void](Native (Join-Path $PostgresBin 'psql.exe') ('-h 127.0.0.1 -p '+$port+' -U mon07_test -d '+$env:DB_NAME+' -At -c "SELECT version();"') 'postgres-version')
-    $selected='SignalProtocolTest,SignalDeliveryTest,SignalPipelinePostgresTest,RealtimeClientTest,MonitoringDeliveryTest,FullSnapshotDeliveryTest,DeltaSnapshotDeliveryTest,MonitoringPresenceServiceTest,MonitoringStateServiceTest,MonitoringStateMaintenanceTest,MonitoringDeltaStateTest,MonitoringHistoryBoundsPostgresTest'
+    $selected='SignalProtocolTest,SignalDeliveryTest,SignalPipelinePostgresTest,SignalDisabledTest,RealtimeClientTest,MonitoringDeliveryTest,FullSnapshotDeliveryTest,DeltaSnapshotDeliveryTest,MonitoringPresenceServiceTest,MonitoringStateServiceTest,MonitoringStateMaintenanceTest,MonitoringDeltaStateTest,MonitoringHistoryBoundsPostgresTest'
     $goals=if($Mode -eq 'Focused'){'-pl server -am -Dtest='+$selected+' -Dsurefire.failIfNoSpecifiedTests=false test'}else{'verify'}
     $command='/d /s /c ""'+$maven+'" --batch-mode --no-transfer-progress -Dmaven.repo.local="'+$MavenRepository+'" '+$goals+'"'
     $start=[DateTime]::UtcNow.ToString('o')
