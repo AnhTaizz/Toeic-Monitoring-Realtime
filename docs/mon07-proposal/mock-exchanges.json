@@ -3,7 +3,408 @@
   "status": "PROPOSED — NOT IMPLEMENTED — OWNER REVIEW PENDING",
   "auditedSourceSha": "1d35b53729abade7b460d35ab07d042b6f9f3571",
   "implementationTests": "NOT_RUN",
-  "capabilities": {
+  "firstSlice": {
+    "scope": "MOCK ONLY — D07-01 PROPOSED; no production observer, no proctor push; independent scenarios except declared duplicate/conflict",
+    "capabilities": {
+      "protocolVersion": "v0",
+      "schemaVersion": 1,
+      "traceId": "mock-capability-trace-1",
+      "attemptId": "mock-attempt-1",
+      "supportedEventTypes": [
+        "DISPLAY_COUNT_OBSERVED"
+      ]
+    },
+    "pushEnabled": false,
+    "cases": [
+      {
+        "caseId": "display-first-accepted",
+        "context": "MOCK: authorized ACTIVE candidate; transaction COMMIT succeeds",
+        "request": {
+          "protocolVersion": "v0",
+          "type": "MONITORING_SIGNAL",
+          "messageId": "mock-request-display-1",
+          "requestId": "mock-request-display-1",
+          "attemptId": "mock-attempt-1",
+          "traceId": "mock-trace-display-1",
+          "payload": {
+            "schemaVersion": 1,
+            "eventId": "mock-display-1",
+            "observerSessionId": "mock-observer-1",
+            "observationSequence": 1,
+            "eventType": "DISPLAY_COUNT_OBSERVED",
+            "source": "JAVAFX_DISPLAY",
+            "metadataQuality": "COMPLETE",
+            "observedAt": "2026-10-19T10:00:00Z",
+            "observationContext": "CONNECTED",
+            "observationConnectionId": "mock-connection-1",
+            "details": {
+              "count": 1,
+              "reason": "INITIAL"
+            }
+          }
+        },
+        "response": {
+          "protocolVersion": "v0",
+          "type": "ACK",
+          "messageId": "mock-slice-server-ack-1",
+          "requestId": "mock-request-display-1",
+          "attemptId": "mock-attempt-1",
+          "traceId": "mock-trace-display-1",
+          "payload": {
+            "status": "ACCEPTED",
+            "acknowledgedType": "MONITORING_SIGNAL",
+            "eventId": "mock-display-1",
+            "schemaVersion": 1,
+            "timelineSequence": 1,
+            "receivedAt": "2026-10-19T10:00:01Z",
+            "deliveryStatus": "LIVE",
+            "duplicate": false
+          }
+        },
+        "expected": {
+          "outcome": "ACCEPTED",
+          "newRows": 1,
+          "newPushes": 0
+        }
+      },
+      {
+        "caseId": "display-exact-duplicate",
+        "context": "MOCK: display-first-accepted already committed; auth still valid",
+        "request": {
+          "protocolVersion": "v0",
+          "type": "MONITORING_SIGNAL",
+          "messageId": "mock-request-display-1",
+          "requestId": "mock-request-display-1",
+          "attemptId": "mock-attempt-1",
+          "traceId": "mock-trace-display-1",
+          "payload": {
+            "schemaVersion": 1,
+            "eventId": "mock-display-1",
+            "observerSessionId": "mock-observer-1",
+            "observationSequence": 1,
+            "eventType": "DISPLAY_COUNT_OBSERVED",
+            "source": "JAVAFX_DISPLAY",
+            "metadataQuality": "COMPLETE",
+            "observedAt": "2026-10-19T10:00:00Z",
+            "observationContext": "CONNECTED",
+            "observationConnectionId": "mock-connection-1",
+            "details": {
+              "count": 1,
+              "reason": "INITIAL"
+            }
+          }
+        },
+        "response": {
+          "protocolVersion": "v0",
+          "type": "ACK",
+          "messageId": "mock-slice-server-ack-2",
+          "requestId": "mock-request-display-1",
+          "attemptId": "mock-attempt-1",
+          "traceId": "mock-trace-display-1",
+          "payload": {
+            "status": "ACCEPTED",
+            "acknowledgedType": "MONITORING_SIGNAL",
+            "eventId": "mock-display-1",
+            "schemaVersion": 1,
+            "timelineSequence": 1,
+            "receivedAt": "2026-10-19T10:00:01Z",
+            "deliveryStatus": "LIVE",
+            "duplicate": true
+          }
+        },
+        "expected": {
+          "outcome": "DUPLICATE",
+          "newRows": 0,
+          "newPushes": 0
+        }
+      },
+      {
+        "caseId": "display-same-id-different-content",
+        "context": "MOCK: display-first-accepted already committed; authorized candidate",
+        "request": {
+          "protocolVersion": "v0",
+          "type": "MONITORING_SIGNAL",
+          "messageId": "mock-request-display-1",
+          "requestId": "mock-request-display-1",
+          "attemptId": "mock-attempt-1",
+          "traceId": "mock-trace-display-1",
+          "payload": {
+            "schemaVersion": 1,
+            "eventId": "mock-display-1",
+            "observerSessionId": "mock-observer-1",
+            "observationSequence": 1,
+            "eventType": "DISPLAY_COUNT_OBSERVED",
+            "source": "JAVAFX_DISPLAY",
+            "metadataQuality": "COMPLETE",
+            "observedAt": "2026-10-19T10:00:00Z",
+            "observationContext": "CONNECTED",
+            "observationConnectionId": "mock-connection-1",
+            "details": {
+              "count": 2,
+              "reason": "INITIAL"
+            }
+          }
+        },
+        "response": {
+          "protocolVersion": "v0",
+          "type": "ERROR",
+          "messageId": "mock-slice-server-conflict-1",
+          "requestId": "mock-request-display-1",
+          "attemptId": "mock-attempt-1",
+          "traceId": "mock-trace-display-1",
+          "payload": {
+            "code": "CONFLICT",
+            "message": "Nội dung sự kiện mâu thuẫn",
+            "retryable": false
+          }
+        },
+        "expected": {
+          "outcome": "CONFLICT",
+          "newRows": 0,
+          "newPushes": 0
+        }
+      },
+      {
+        "caseId": "display-validation-denied",
+        "context": "MOCK: authorized; count=33 deliberately exceeds 0..32 bound",
+        "request": {
+          "protocolVersion": "v0",
+          "type": "MONITORING_SIGNAL",
+          "messageId": "mock-request-display-1",
+          "requestId": "mock-request-display-1",
+          "attemptId": "mock-attempt-1",
+          "traceId": "mock-trace-display-1",
+          "payload": {
+            "schemaVersion": 1,
+            "eventId": "mock-display-1",
+            "observerSessionId": "mock-observer-1",
+            "observationSequence": 1,
+            "eventType": "DISPLAY_COUNT_OBSERVED",
+            "source": "JAVAFX_DISPLAY",
+            "metadataQuality": "COMPLETE",
+            "observedAt": "2026-10-19T10:00:00Z",
+            "observationContext": "CONNECTED",
+            "observationConnectionId": "mock-connection-1",
+            "details": {
+              "count": 33,
+              "reason": "INITIAL"
+            }
+          }
+        },
+        "response": {
+          "protocolVersion": "v0",
+          "type": "ERROR",
+          "messageId": "mock-slice-server-invalid-1",
+          "requestId": "mock-request-display-1",
+          "attemptId": "mock-attempt-1",
+          "traceId": "mock-trace-display-1",
+          "payload": {
+            "code": "INVALID_INPUT",
+            "message": "Sự kiện không hợp lệ",
+            "retryable": false
+          }
+        },
+        "expected": {
+          "outcome": "INVALID_INPUT",
+          "newRows": 0,
+          "newPushes": 0
+        }
+      },
+      {
+        "caseId": "display-foreign-attempt-denied",
+        "context": "MOCK: candidate does not own this attempt; auth checked before any duplicate row",
+        "request": {
+          "protocolVersion": "v0",
+          "type": "MONITORING_SIGNAL",
+          "messageId": "mock-request-display-1",
+          "requestId": "mock-request-display-1",
+          "attemptId": "mock-foreign-attempt",
+          "traceId": "mock-trace-display-1",
+          "payload": {
+            "schemaVersion": 1,
+            "eventId": "mock-display-1",
+            "observerSessionId": "mock-observer-1",
+            "observationSequence": 1,
+            "eventType": "DISPLAY_COUNT_OBSERVED",
+            "source": "JAVAFX_DISPLAY",
+            "metadataQuality": "COMPLETE",
+            "observedAt": "2026-10-19T10:00:00Z",
+            "observationContext": "CONNECTED",
+            "observationConnectionId": "mock-connection-1",
+            "details": {
+              "count": 1,
+              "reason": "INITIAL"
+            }
+          }
+        },
+        "response": {
+          "protocolVersion": "v0",
+          "type": "ERROR",
+          "messageId": "mock-slice-server-forbidden-1",
+          "requestId": "mock-request-display-1",
+          "attemptId": "mock-foreign-attempt",
+          "traceId": "mock-trace-display-1",
+          "payload": {
+            "code": "FORBIDDEN",
+            "message": "Không có quyền truy cập",
+            "retryable": false
+          }
+        },
+        "expected": {
+          "outcome": "FORBIDDEN",
+          "newRows": 0,
+          "newPushes": 0
+        }
+      },
+      {
+        "caseId": "display-commit-failure",
+        "context": "MOCK: independent empty DB scenario; deferred constraint fails at COMMIT",
+        "request": {
+          "protocolVersion": "v0",
+          "type": "MONITORING_SIGNAL",
+          "messageId": "mock-request-display-1",
+          "requestId": "mock-request-display-1",
+          "attemptId": "mock-attempt-1",
+          "traceId": "mock-trace-display-1",
+          "payload": {
+            "schemaVersion": 1,
+            "eventId": "mock-display-1",
+            "observerSessionId": "mock-observer-1",
+            "observationSequence": 1,
+            "eventType": "DISPLAY_COUNT_OBSERVED",
+            "source": "JAVAFX_DISPLAY",
+            "metadataQuality": "COMPLETE",
+            "observedAt": "2026-10-19T10:00:00Z",
+            "observationContext": "CONNECTED",
+            "observationConnectionId": "mock-connection-1",
+            "details": {
+              "count": 1,
+              "reason": "INITIAL"
+            }
+          }
+        },
+        "response": {
+          "protocolVersion": "v0",
+          "type": "ERROR",
+          "messageId": "mock-slice-server-commit-failure-1",
+          "requestId": "mock-request-display-1",
+          "attemptId": "mock-attempt-1",
+          "traceId": "mock-trace-display-1",
+          "payload": {
+            "code": "RETRYABLE_SERVER_ERROR",
+            "message": "Server tạm thời không xử lý được yêu cầu",
+            "retryable": true
+          }
+        },
+        "expected": {
+          "outcome": "RETRYABLE_SERVER_ERROR",
+          "newRows": 0,
+          "newPushes": 0
+        }
+      },
+      {
+        "caseId": "display-slice-unadvertised-usb",
+        "context": "MOCK: authorized ACTIVE candidate; USB schema valid but not in slice capabilities; rejected before storage",
+        "request": {
+          "protocolVersion": "v0",
+          "type": "MONITORING_SIGNAL",
+          "messageId": "mock-request-usb-1",
+          "requestId": "mock-request-usb-1",
+          "attemptId": "mock-attempt-1",
+          "traceId": "mock-trace-usb-1",
+          "payload": {
+            "schemaVersion": 1,
+            "eventId": "mock-usb-1",
+            "observerSessionId": "mock-observer-1",
+            "observationSequence": 1,
+            "eventType": "USB_STORAGE_PRESENT_AT_START",
+            "source": "WINDOWS_USB_STORAGE",
+            "metadataQuality": "COMPLETE",
+            "observedAt": "2026-10-19T10:00:00Z",
+            "observationContext": "CONNECTED",
+            "observationConnectionId": "mock-connection-1",
+            "details": {
+              "deviceClass": "USB_MASS_STORAGE",
+              "storageCount": 1,
+              "deviceRef": "mock-usb-ref-1"
+            }
+          }
+        },
+        "response": {
+          "protocolVersion": "v0",
+          "type": "ERROR",
+          "messageId": "mock-slice-server-invalid-1",
+          "requestId": "mock-request-usb-1",
+          "attemptId": "mock-attempt-1",
+          "traceId": "mock-trace-usb-1",
+          "payload": {
+            "code": "INVALID_INPUT",
+            "message": "Sự kiện không hợp lệ",
+            "retryable": false
+          }
+        },
+        "expected": {
+          "outcome": "INVALID_INPUT",
+          "newRows": 0,
+          "newPushes": 0
+        }
+      }
+    ],
+    "record": {
+      "schemaVersion": 1,
+      "eventId": "mock-display-1",
+      "observerSessionId": "mock-observer-1",
+      "observationSequence": 1,
+      "eventType": "DISPLAY_COUNT_OBSERVED",
+      "source": "JAVAFX_DISPLAY",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-19T10:00:00Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "mock-connection-1",
+      "details": {
+        "count": 1,
+        "reason": "INITIAL"
+      },
+      "attemptId": "mock-attempt-1",
+      "timelineSequence": 1,
+      "receivedAt": "2026-10-19T10:00:01Z",
+      "deliveryStatus": "LIVE"
+    },
+    "page": {
+      "protocolVersion": "v0",
+      "schemaVersion": 1,
+      "traceId": "mock-history-trace-1",
+      "attemptId": "mock-attempt-1",
+      "items": [
+        {
+          "schemaVersion": 1,
+          "eventId": "mock-display-1",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 1,
+          "eventType": "DISPLAY_COUNT_OBSERVED",
+          "source": "JAVAFX_DISPLAY",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:00Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "count": 1,
+            "reason": "INITIAL"
+          },
+          "attemptId": "mock-attempt-1",
+          "timelineSequence": 1,
+          "receivedAt": "2026-10-19T10:00:01Z",
+          "deliveryStatus": "LIVE"
+        }
+      ],
+      "afterSequence": 0,
+      "throughSequence": 1,
+      "nextAfterSequence": null,
+      "hasMore": false
+    }
+  },
+  "futureCatalogScope": "SCHEMA REVIEW ONLY — NOT ENABLED IN FIRST SLICE; independent sensor examples, not a continuous timeline or live capabilities",
+  "futureCatalogCapabilities": {
     "protocolVersion": "v0",
     "schemaVersion": 1,
     "traceId": "mock-capability-trace-1",
@@ -19,7 +420,7 @@
       "SIGNAL_GAP"
     ]
   },
-  "cases": [
+  "futureCatalogCases": [
     {
       "caseId": "usb-first-accepted",
       "context": "MOCK: authorized ACTIVE candidate; transaction COMMIT succeeds",
@@ -723,7 +1124,7 @@
       }
     }
   ],
-  "record": {
+  "futureCatalogRecord": {
     "schemaVersion": 1,
     "eventId": "mock-usb-1",
     "observerSessionId": "mock-observer-1",
@@ -744,7 +1145,7 @@
     "receivedAt": "2026-10-19T10:00:01Z",
     "deliveryStatus": "LIVE"
   },
-  "push": {
+  "futureCatalogPush": {
     "protocolVersion": "v0",
     "type": "MONITOR_SIGNAL",
     "messageId": "mock-server-push-1",
@@ -773,7 +1174,7 @@
       "deliveryStatus": "LIVE"
     }
   },
-  "page": {
+  "futureCatalogPage": {
     "protocolVersion": "v0",
     "schemaVersion": 1,
     "traceId": "mock-history-trace-1",

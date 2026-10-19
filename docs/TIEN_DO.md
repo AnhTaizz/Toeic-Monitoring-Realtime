@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+19/10/2026 — MON-07 PR72 review: đã kiểm lại main/PR70–73; PR72 chưa comment/review approval. Sửa scope slice MOCK chỉ DISPLAY_COUNT_OBSERVED/no push, 410/cursor, counter init/auth-after-wait và ACK/write-stall budget; thêm D07-01–05 **PROPOSED** cùng kế hoạch implementation. Chỉ cập nhật PR72 Draft; chưa tạo DTO/migration/observer hoặc nhánh implementation. 60s offline/30ngày retention vẫn chờ A/B/C/nhóm. [Năm lựa chọn cụ thể](MONITORING_MULTISIGNAL_CONTRACT_PROPOSAL.md#11-năm-quyết-định-để-owner-xác-nhận), [kiểm mới](mon07-proposal/VALIDATION.md). FULL default, gate NOT_DECIDED; MON-07 chưa DONE.
+
 19/10/2026 — MON-07 proposal: đã audit main `1d35b537`, PR70/71 còn mở/chưa merge; tạo [đề xuất typed monitoring contract](MONITORING_MULTISIGNAL_CONTRACT_PROPOSAL.md) và fixture MOCK để A/B/C review. **PROPOSED — NOT IMPLEMENTED — OWNER REVIEW PENDING**. Chỉ docs/fixture; giữ FULL default, BASE-03 NOT_DECIDED, MON-01 TECHNICALLY_VERIFIED_PENDING_PHYSICAL_REVIEW, BASE-02/LAN/B approval PENDING. Chưa đổi wire/schema/observer, chưa MON-07 DONE hoặc backlog. [Kiểm tài liệu thực tế](mon07-proposal/VALIDATION.md); không chạy lại Maven/PG/GUI/E1/E2.
 
 

@@ -1,5 +1,7 @@
 # Trạng thái kiểm thử
 
+19/10/2026 — MON-07 PR72 review: kiểm tài liệu/fixture Node.js (UTF-8/JSON/schema/correlation/capability/page, links/source, diff/privacy), kết quả tại [biên bản](mon07-proposal/VALIDATION.md). 7 exchange slice MOCK chỉ một type (có 1 unsupported-type negative), 19 catalog cases giữ riêng; chưa gửi qua mạng/DB. Ma trận22 implementation cases vẫn NOT_RUN; CI của HEAD mới theo GitHub, không thay owner/physical acceptance.
+
 19/10/2026 — MON-07 chỉ kiểm [tài liệu/fixture đề xuất](mon07-proposal/VALIDATION.md): JSON MOCK/required fields/ACK/errors/correlation và link/source/diff/privacy; kết quả chi tiết ở biên bản. [Ma trận implementation](MONITORING_MULTISIGNAL_CONTRACT_PROPOSAL.md) 22 hàng đều **NOT_RUN**; không nâng AT/MT/LT/IT, physical, gate hoặc trạng thái task. Không Maven/PG/WS/GUI runtime/E1/E2 trong lượt docs-only.
 
 

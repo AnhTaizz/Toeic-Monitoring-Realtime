@@ -38,3 +38,25 @@ Checker kiểm JSON shape/type/time/bounds, ACK/errors, duplicate/conflict, page
 Không chạy Maven, PostgreSQL, WS runtime, JavaFX/GUI, USB/display/LAN vật lý hoặc E1/E2. Toàn bộ 22 hàng implementation test matrix giữ NOT_RUN; fixture không chứng minh observer/protocol đã chạy. CI tự động của Draft PR (nếu có) được ghi riêng trên GitHub, không thay physical/owner review.
 
 Không sửa production Java/DTO/SQL/dependency/config hoặc PROTOCOL đang vận hành. Không đổi backlog/tracker, không quyết gate BASE-03, không đánh MON-01/MON-07 DONE. Chưa có human approval A/B/C, chưa merge.
+
+
+## Review PR72 bổ sung — 19/10/2026
+
+Input proposal `da89962e71c169d2ffbd0e9dfdd1ce460d00fb01`; main/base vẫn `1d35b53729abade7b460d35ab07d042b6f9f3571`. Nhánh `docs/v2-c-mon07-contract-proposal`, working tree sạch trước sửa; merge-base đúng main, không chứa commit PR70/71/73. CI input [39248150270 SUCCESS](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39248150270). PR72 OPEN/Draft, reviews/inline/conversation đều rỗng lúc kiểm; PR70/71/73 vẫn mở/chưa merge, reviews/conversation rỗng. Không có owner approval cho contract mới; vì vậy chỉ sửa docs/fixture theo nhánh A của yêu cầu, chưa tạo feature branch/DTO/SQL/wire. PR73 aa260ef/CI39265452789SUCCESS vẫn chỉ probe độc lập,12 physical casesNOT_RUN.
+
+Sửa bốn nhóm: phạm vi firstSlice/capability một type; bỏ410/tombstone không reachable theo ACTIVE-only; counter init/auth sau chờ lock/revoke serialization; aggregate ACK/write budget và guard retry/write treo. D07-01–05 là PROPOSED, không tự ghi approval vào QUYET_DINH. Queue256/1MiB/2flight/5attempts, lower-bound10credits, offline60s và retention30ngày đều chưa áp dụng production.
+
+| Kiểm mới thực sự chạy | Kết quả | Giới hạn |
+|---|---|---|
+| UTF-8 fatal decode + lexical JSON duplicate-key/integer/surrogate check | PASS | Chỉ nội dung fixture này, không runtime server parser |
+| firstSlice exact fields/ID/time/bytes/type/enum/ACK/error/correlation | 7 exchange:6request đúng schema,1count=33 cố ý sai được phát hiện; trong6schema-valid có1USB type chưa được capability cho phép và expectedINVALID_INPUT | 5request vừa đúng schema vừa đúng capability; business outcomes đều MOCK/NOT_EXECUTED |
+| Duplicate/conflict/COMMIT-failure/no-push | PASS consistency của expected objects; duplicate request giữ nguyên, conflict đổi count cùng eventId; 0push mọi firstSlice case | Không claim DB dedup/COMMIT/auth đã chạy |
+| Record/page/capability | PASS, capability đúng DISPLAY_COUNT_OBSERVED; page record đồng nhất, cursor/bounds hợp lệ | Không chứng minh paging concurrent transaction |
+| Catalog lịch sử | 19cases/capability/record/push/page giữ nguyên nội dung object so với input; đổi tên field futureCatalog* để tách scope | Không chạy lại business outcomes hoặc gọi19case runtime PASS |
+| Local links/source symbols | 42local targets,41symbols/20source files tồn tại | Thêm method heartbeat() đối chiếu source; existence không chứng minh semantics mới |
+| Matrix/decisions | 22implementation rowsNOT_RUN;5decision rowsPROPOSED | Không owner/physical acceptance |
+| Scope/privacy/whitespace | 7file docs/JSON;0secret/private-path/binary/large-file findings sau scan introduced text và review; git diff --check PASS | Không upload raw/log hoặc checker local |
+
+Checker mới dùng Node.js built-ins, ở `target/mon07-review-20261019/validate.mjs` trong worktree PR72; gọi export `validate(root)` qua Node REPL. Kết quả/hash và failure đầu ở cùng thư mục ignored; đây không phải GitHub download. Lần đầu checker FAIL vì ghi nhầm symbol heartbeatTick; source thật là heartbeat(), đã sửa checker/tên trong doc và chạy lại PASS. Không có failure runtime ứng dụng nào trong lượt docs-only; không chạy Python checker cũ. Biên bản lịch sử phía trên giữ nguyên, không cộng lần kiểm này vào số runtime tests.
+
+Không chạy local Maven/PG/WS/GUI/hardware/LAN/E1/E2 vì chưa đổi source runtime. CI của HEAD đã push theo checks/description PR72 đúng SHA, không gán CI input cho commit mới. FULLdefault/BASE03NOT_DECIDED/MON01physical-B-BASE02pending/MON02physical12NOT_RUN giữ nguyên. Chưa MON07DONE hoặc merge.
