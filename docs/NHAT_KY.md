@@ -807,3 +807,11 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 19/10/2026 — EX05 đang triển khai trên stack EX03: resolver verified bytes, Part1 canonical manifest và image route fail-closed khi thiếu EX07 authority. [Checkpoint](EX05_AUTHENTICATED_IMAGES.md). Main/PR75 chưa merge; V13/V14 MERGE BLOCKED. Targeted PG/HTTP đang chạy; không EX05/FE DONE, không sửa tracker/hours.
 
 Unit focused ghi25case RichImageTest PASS; lượt PG mới/chính xác source đang chạy, không kế thừa PASS từ EX03. GUI/LAN/hearing NOT RUN.
+
+## 2026-10-20 · A / Claude Code (cloud) · EX-07 resume
+
+- Khôi phục: WIP người dùng push `6226cce` trên `feat/ex07-rich-session-lifecycle-20261019` (từ EX-05 `05cc694`). Không reset/rebase/clean; WIP giữ nguyên trong lịch sử.
+- Đã làm (`f5df3af`): reorganize V2 chép PROCTORED_V2; restart xoay epoch/xóa READY ca SCHEDULED; timeout chỉ bỏ qua SCHEDULED; `toeic.visual.lease-ms`; fixture test đăng ký bean `V2SessionPolicy` (injection vẫn bắt buộc, fail-closed); test PG/HTTP `RichSessionLifecyclePostgresTest` 8 case.
+- Đã kiểm: PostgreSQL 16.15 container (không phải 18), JDK 21.0.12 Linux. Lifecycle 8/8 PASS, race 3 lượt PASS; `mvn clean verify` server 443/0 fail/4 skip, client 3 FAIL `ControlledProcessHarnessTest` có sẵn trên Linux. Lỗi trước sửa: WIP 38 ERROR (thiếu bean + thiếu `TOEIC_SEED_PASSWORD`). GUI/LAN/hearing NOT RUN.
+- Còn dở: thứ tự Flyway V13/V14/V15; chi phí verify toàn media mỗi ATTEST (owner quyết); WS disconnect hook; S08/S09/S10/S11/S15, V03/V04/V14–V20 NOT RUN. Không merge, không DONE/tracker/hours.
+- Tiếp theo: A/C review lock/transaction, B tích hợp EX-06 theo [EX07_SESSION_LIFECYCLE](EX07_SESSION_LIFECYCLE.md) §1.

@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+20/10/2026 — EX-07 trên `feat/ex07-rich-session-lifecycle-20261019` (stack EX-05 ← EX-03): catalog/create PROCTORED_V2, preparation Part1, Visual ATTEST/INVALIDATE + lease, readiness, START authority duy nhất qua Listening v1 với deadline tại DB clock, gate v1, reorganize/restart/timeout theo session version. [Bàn giao + luồng API cho FE](EX07_SESSION_LIFECYCLE.md). PG16 container: lifecycle 8/8 PASS, server 443/0 fail/4 skip. Chưa review/merge; Flyway V13/V14/V15 cần A/C chốt thứ tự; GUI/LAN/hearing NOT RUN; không EX-07 DONE.
+
 19/10/2026 — EX05 đang triển khai trên stack EX03: resolver verified bytes, Part1 canonical manifest và image route fail-closed khi thiếu EX07 authority. [Checkpoint](EX05_AUTHENTICATED_IMAGES.md). Main/PR75 chưa merge; V13/V14 MERGE BLOCKED. Targeted PG/HTTP đang chạy; không EX05/FE DONE, không sửa tracker/hours.
 
 19/10/2026 — EX-03 **READY_FOR_REVIEW**, nhánh `feat/ex03-rich-importer-20261019` từ main3bdefe6/PR67 đã merge, CI đúng main SUCCESS. Source cuối9244321 có POST rich import strict200Q/7Part, local bytes verification, sourceRef→DB IDs, transaction/deferred FK/create-only409 và v1 create-session rich409. V14 vì PR74 đã dùngV13; cần phối hợp A/C thứ tự migration trước merge. [Report](EX03_RICH_IMPORTER_VERIFICATION.md): clean verify1098PASS/6SKIP/0FAIL/ERROR,114case EX03 PASS, PostgreSQL18.1 thật/fixtureMOCK,0schema/clusterstop0; giữ failure trước sửa riêng. Workspace gốc bảo toàn. Chưa merge, chưa EX03 DONE hoặc physical acceptance; EX05/07/06 và dữ liệu/media thật còn riêng.

@@ -427,3 +427,5 @@ Thiết kế [EX02/D10](../EX02_RICH_EXAM_CONTRACT_V1.md) và [ADR](../plan-v2/A
 ## Ghi chú làm dở — EX05, 19/10/2026
 
 [Checkpoint](../EX05_AUTHENTICATED_IMAGES.md): A code image resolver/manifest/route, B cần tích hợp visual RAM/renderer, C review kỹ thuật auth/lock/path/commit. Agent review không human approval. EX07 authority chưa có nên ảnh fail-closed; PG mới đang chạy, GUI/LAN/hearing NOT RUN. V13/V14 MERGE BLOCKED; tracker/hours giữ. Tiếp tục EX07 trên branch stacked riêng.
+
+**EX-07 — Ghi chú làm dở (20/10/2026):** nhánh `feat/ex07-rich-session-lifecycle-20261019` HEAD có code + test PG/HTTP local PASS ([chi tiết](../EX07_SESSION_LIFECYCLE.md)). A/C review lock/transaction và thứ tự Flyway V13/V14/V15; B dùng §1 của tài liệu để làm EX-06. GUI/LAN/hearing NOT RUN; không merge/DONE.

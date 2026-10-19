@@ -952,3 +952,7 @@ Nhánh `stabilize/final-rc-20261017`. Không thêm endpoint, field hay giá tr�
 ## EX05 — image route fail-closed, 19/10/2026
 
 GET `/api/v2/attempts/{attemptId}/images/{mediaId}` đã register: token→CANDIDATE→owner trước policy/files; chưa có EX07 authority nên owned request409 INVALID_STATE, foreign/unknown403. Không bytes/checksum trước quyền. Khi EX07 cấp context hợp lệ: SCHEDULED graph Part1/current query, IN_PROGRESS committed visual ID/deadline; full200/no-store/nosniff/X-Image-SHA256, không ETag/304/Range shortcut. Chưa công bố preparation/visual READY/full rich GET. DTO VisualManifest/VisualImageSlot theo EX02 đã duyệt, WSv0 không đổi.
+
+## EX-07 — endpoint PROCTORED_V2 (nhánh chưa merge, 20/10/2026)
+
+Có trên nhánh `feat/ex07-rich-session-lifecycle-20261019`, chưa có trên `main`. Shape DTO đúng [contract EX-02 §4–7.1](EX02_RICH_EXAM_CONTRACT_V1.md); luồng gọi cho FE ở [EX07_SESSION_LIFECYCLE §1](EX07_SESSION_LIFECYCLE.md). Route: `GET /api/v2/exams`, `POST /api/v2/sessions`, `GET /api/v2/attempts/{id}/preparation`, `GET /api/v2/attempts/{id}/exam`, `POST /api/v2/attempts/{id}/visual/ready`, `GET /api/v2/sessions/{id}/readiness`; START vẫn là `POST /api/v1/sessions/{id}/listening/start`. WS v0 không đổi (vẫn `LISTENING_START` sau COMMIT).
