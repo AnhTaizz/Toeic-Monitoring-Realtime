@@ -559,6 +559,13 @@ public class ExamService {
             throw new InvalidExamException("Không tìm thấy đề thi với mã: " + request.examId());
         }
 
+        int contentVersion = jdbc.sql("SELECT content_version FROM exams WHERE exam_id = :examId")
+                .param("examId", request.examId()).query(Integer.class).single();
+        if (contentVersion != 1) {
+            throw new ExamApiException(org.springframework.http.HttpStatus.CONFLICT,
+                    vn.edu.toeic.protocol.ErrorCode.INVALID_STATE, "Đề rich cần ca thi V2", null);
+        }
+
         // A concurrent request with the same sessionId passes the count check above too; the loser
         // waits on the winner's key here and then gets 0 rows instead of a unique-violation 500.
         int sessionInserted = jdbc.sql("""
