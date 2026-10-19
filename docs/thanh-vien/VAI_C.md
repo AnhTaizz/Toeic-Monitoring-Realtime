@@ -421,3 +421,8 @@ Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG
 
 
 19/10/2026 — [Kết quả thực thi cuối](../../evidence/stage3-execution-20261019/REPORT.md), [artifact và thao tác máy thật](../STAGE3_FINAL_HANDOFF.md). Buildsourcecfbba58, haiP1/main/CI/PG/regression/MSIlocal đã kiểm. Reviewer kỹ thuật Codex theo user, không chữ ký vai. Việc dở: cùng B chạy physical41case, chốt FULL/DELTA gate; giữ FULL khi chưa đủ bằng chứng, không nhận measurement INCOMPLETE là E1/E2PASS.
+
+
+### Ghi chú làm dở — MON-07 contract proposal, 19/10/2026
+
+**PROPOSED — NOT IMPLEMENTED — OWNER REVIEW PENDING.** Nhánh mới `docs/v2-c-mon07-contract-proposal` từ main `1d35b537`, chỉ [proposal](../MONITORING_MULTISIGNAL_CONTRACT_PROPOSAL.md)/fixture MOCK và hồ sơ. C đề nghị v0 + type/schemaVersion mới, signal queue RAM riêng/cùng socket, bảng mới/dedup/COMMIT-before-ACK, history phân trang. A/C cần chốt ADR-V2-04/BASE-04 (auth/transaction/schema/retention), B cần review consumer/opt-in/lifetime và emitters; Windows API/hardware ADR-V2-05 còn riêng. MON-01 technical verified nhưng physical/B/BASE-02 approval PENDING; PR70/71 chưa merge, không kéo commit verification vào proposal. FULL default/gate NOT_DECIDED, E2 không phép. [Kiểm docs](../mon07-proposal/VALIDATION.md); toàn bộ implementation test NOT_RUN, chưa MON-07 DONE/backlog hoặc human signoff. Dừng sau push/Draft PR, không triển khai MON-02/08 hay merge.

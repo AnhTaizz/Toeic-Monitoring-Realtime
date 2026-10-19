@@ -1,0 +1,809 @@
+{
+  "fixtureKind": "MOCK",
+  "status": "PROPOSED — NOT IMPLEMENTED — OWNER REVIEW PENDING",
+  "auditedSourceSha": "1d35b53729abade7b460d35ab07d042b6f9f3571",
+  "implementationTests": "NOT_RUN",
+  "capabilities": {
+    "protocolVersion": "v0",
+    "schemaVersion": 1,
+    "traceId": "mock-capability-trace-1",
+    "attemptId": "mock-attempt-1",
+    "supportedEventTypes": [
+      "USB_STORAGE_PRESENT_AT_START",
+      "USB_STORAGE_CONNECTED",
+      "USB_STORAGE_REMOVED",
+      "EXAM_FOCUS_CHANGED",
+      "EXAM_WINDOW_STATE",
+      "DISPLAY_COUNT_OBSERVED",
+      "OBSERVER_STATUS",
+      "SIGNAL_GAP"
+    ]
+  },
+  "cases": [
+    {
+      "caseId": "usb-first-accepted",
+      "context": "MOCK: authorized ACTIVE candidate; transaction COMMIT succeeds",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-usb-1",
+        "requestId": "mock-request-usb-1",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-usb-1",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-usb-1",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 1,
+          "eventType": "USB_STORAGE_PRESENT_AT_START",
+          "source": "WINDOWS_USB_STORAGE",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:00Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "deviceClass": "USB_MASS_STORAGE",
+            "storageCount": 1,
+            "deviceRef": "mock-usb-ref-1"
+          }
+        }
+      },
+      "response": {
+        "protocolVersion": "v0",
+        "type": "ACK",
+        "messageId": "mock-server-ack-1",
+        "requestId": "mock-request-usb-1",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-usb-1",
+        "payload": {
+          "status": "ACCEPTED",
+          "acknowledgedType": "MONITORING_SIGNAL",
+          "eventId": "mock-usb-1",
+          "schemaVersion": 1,
+          "timelineSequence": 1,
+          "receivedAt": "2026-10-19T10:00:01Z",
+          "deliveryStatus": "LIVE",
+          "duplicate": false
+        }
+      },
+      "expected": {
+        "outcome": "ACCEPTED",
+        "newRows": 1,
+        "newPushes": 1
+      }
+    },
+    {
+      "caseId": "exact-duplicate",
+      "context": "MOCK: usb-first-accepted already committed; auth still valid",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-usb-1",
+        "requestId": "mock-request-usb-1",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-usb-1",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-usb-1",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 1,
+          "eventType": "USB_STORAGE_PRESENT_AT_START",
+          "source": "WINDOWS_USB_STORAGE",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:00Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "deviceClass": "USB_MASS_STORAGE",
+            "storageCount": 1,
+            "deviceRef": "mock-usb-ref-1"
+          }
+        }
+      },
+      "response": {
+        "protocolVersion": "v0",
+        "type": "ACK",
+        "messageId": "mock-server-ack-2",
+        "requestId": "mock-request-usb-1",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-usb-1",
+        "payload": {
+          "status": "ACCEPTED",
+          "acknowledgedType": "MONITORING_SIGNAL",
+          "eventId": "mock-usb-1",
+          "schemaVersion": 1,
+          "timelineSequence": 1,
+          "receivedAt": "2026-10-19T10:00:01Z",
+          "deliveryStatus": "LIVE",
+          "duplicate": true
+        }
+      },
+      "expected": {
+        "outcome": "DUPLICATE",
+        "newRows": 0,
+        "newPushes": 0
+      }
+    },
+    {
+      "caseId": "same-id-different-content",
+      "context": "MOCK: usb-first-accepted already committed; authorized candidate",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-usb-1",
+        "requestId": "mock-request-usb-1",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-usb-1",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-usb-1",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 1,
+          "eventType": "USB_STORAGE_PRESENT_AT_START",
+          "source": "WINDOWS_USB_STORAGE",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:00Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "deviceClass": "USB_MASS_STORAGE",
+            "storageCount": 2,
+            "deviceRef": "mock-usb-ref-1"
+          }
+        }
+      },
+      "response": {
+        "protocolVersion": "v0",
+        "type": "ERROR",
+        "messageId": "mock-server-conflict-1",
+        "requestId": "mock-request-usb-1",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-usb-1",
+        "payload": {
+          "code": "CONFLICT",
+          "message": "Nội dung sự kiện mâu thuẫn",
+          "retryable": false
+        }
+      },
+      "expected": {
+        "outcome": "CONFLICT",
+        "newRows": 0,
+        "newPushes": 0
+      }
+    },
+    {
+      "caseId": "validation-denied",
+      "context": "MOCK: authorized; deliberately forbidden details key, no real serial",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-invalid-1",
+        "requestId": "mock-request-invalid-1",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-usb-1",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-invalid-1",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 1,
+          "eventType": "USB_STORAGE_PRESENT_AT_START",
+          "source": "WINDOWS_USB_STORAGE",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:00Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "deviceClass": "USB_MASS_STORAGE",
+            "storageCount": 1,
+            "deviceRef": "mock-usb-ref-1",
+            "serial": "MOCK_FORBIDDEN_FIELD"
+          }
+        }
+      },
+      "response": {
+        "protocolVersion": "v0",
+        "type": "ERROR",
+        "messageId": "mock-server-invalid-1",
+        "requestId": "mock-request-invalid-1",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-usb-1",
+        "payload": {
+          "code": "INVALID_INPUT",
+          "message": "Sự kiện không hợp lệ",
+          "retryable": false
+        }
+      },
+      "expected": {
+        "outcome": "INVALID_INPUT",
+        "newRows": 0,
+        "newPushes": 0
+      }
+    },
+    {
+      "caseId": "foreign-attempt-denied",
+      "context": "MOCK: candidate does not own this attempt; auth checked before any duplicate row",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-usb-1",
+        "requestId": "mock-request-usb-1",
+        "attemptId": "mock-foreign-attempt",
+        "traceId": "mock-trace-usb-1",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-usb-1",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 1,
+          "eventType": "USB_STORAGE_PRESENT_AT_START",
+          "source": "WINDOWS_USB_STORAGE",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:00Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "deviceClass": "USB_MASS_STORAGE",
+            "storageCount": 1,
+            "deviceRef": "mock-usb-ref-1"
+          }
+        }
+      },
+      "response": {
+        "protocolVersion": "v0",
+        "type": "ERROR",
+        "messageId": "mock-server-forbidden-1",
+        "requestId": "mock-request-usb-1",
+        "attemptId": "mock-foreign-attempt",
+        "traceId": "mock-trace-usb-1",
+        "payload": {
+          "code": "FORBIDDEN",
+          "message": "Không có quyền truy cập",
+          "retryable": false
+        }
+      },
+      "expected": {
+        "outcome": "FORBIDDEN",
+        "newRows": 0,
+        "newPushes": 0
+      }
+    },
+    {
+      "caseId": "commit-failure",
+      "context": "MOCK: independent empty DB scenario; deferred constraint fails at COMMIT",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-usb-1",
+        "requestId": "mock-request-usb-1",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-usb-1",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-usb-1",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 1,
+          "eventType": "USB_STORAGE_PRESENT_AT_START",
+          "source": "WINDOWS_USB_STORAGE",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:00Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "deviceClass": "USB_MASS_STORAGE",
+            "storageCount": 1,
+            "deviceRef": "mock-usb-ref-1"
+          }
+        }
+      },
+      "response": {
+        "protocolVersion": "v0",
+        "type": "ERROR",
+        "messageId": "mock-server-commit-failure-1",
+        "requestId": "mock-request-usb-1",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-usb-1",
+        "payload": {
+          "code": "RETRYABLE_SERVER_ERROR",
+          "message": "Server tạm thời không xử lý được yêu cầu",
+          "retryable": true
+        }
+      },
+      "expected": {
+        "outcome": "RETRYABLE_SERVER_ERROR",
+        "newRows": 0,
+        "newPushes": 0
+      }
+    },
+    {
+      "caseId": "usb-connected",
+      "context": "MOCK typed schema example, not executed",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-usb-connected",
+        "requestId": "mock-request-usb-connected",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-usb-connected",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-event-usb-connected",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 2,
+          "eventType": "USB_STORAGE_CONNECTED",
+          "source": "WINDOWS_USB_STORAGE",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:02Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "deviceClass": "USB_MASS_STORAGE",
+            "storageCount": 2,
+            "deviceRef": "mock-usb-ref-2"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "SCHEMA_EXAMPLE"
+      }
+    },
+    {
+      "caseId": "usb-removed",
+      "context": "MOCK typed schema example, not executed",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-usb-removed",
+        "requestId": "mock-request-usb-removed",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-usb-removed",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-event-usb-removed",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 3,
+          "eventType": "USB_STORAGE_REMOVED",
+          "source": "WINDOWS_USB_STORAGE",
+          "metadataQuality": "PARTIAL",
+          "observedAt": "2026-10-19T10:00:03Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "deviceClass": "USB_MASS_STORAGE",
+            "storageCount": 0
+          }
+        }
+      },
+      "expected": {
+        "outcome": "SCHEMA_EXAMPLE"
+      }
+    },
+    {
+      "caseId": "focus-offline",
+      "context": "MOCK typed schema example, not executed",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-focus-offline",
+        "requestId": "mock-request-focus-offline",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-focus-offline",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-event-focus-offline",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 4,
+          "eventType": "EXAM_FOCUS_CHANGED",
+          "source": "JAVAFX_EXAM_FOCUS",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:04Z",
+          "observationContext": "OFFLINE",
+          "details": {
+            "focused": false,
+            "context": "OTHER_OR_UNKNOWN"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "SCHEMA_EXAMPLE"
+      }
+    },
+    {
+      "caseId": "focus-restored",
+      "context": "MOCK typed schema example, not executed",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-focus-restored",
+        "requestId": "mock-request-focus-restored",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-focus-restored",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-event-focus-restored",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 5,
+          "eventType": "EXAM_FOCUS_CHANGED",
+          "source": "JAVAFX_EXAM_FOCUS",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:05Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "focused": true,
+            "context": "OTHER_OR_UNKNOWN",
+            "lostDurationMillis": 5000
+          }
+        }
+      },
+      "expected": {
+        "outcome": "SCHEMA_EXAMPLE"
+      }
+    },
+    {
+      "caseId": "window-initial",
+      "context": "MOCK typed schema example, not executed",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-window-initial",
+        "requestId": "mock-request-window-initial",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-window-initial",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-event-window-initial",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 6,
+          "eventType": "EXAM_WINDOW_STATE",
+          "source": "JAVAFX_EXAM_WINDOW",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:06Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "minimized": false,
+            "fullscreen": false,
+            "reason": "INITIAL"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "SCHEMA_EXAMPLE"
+      }
+    },
+    {
+      "caseId": "display-initial",
+      "context": "MOCK typed schema example, not executed",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-display-initial",
+        "requestId": "mock-request-display-initial",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-display-initial",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-event-display-initial",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 7,
+          "eventType": "DISPLAY_COUNT_OBSERVED",
+          "source": "JAVAFX_DISPLAY",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:07Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "count": 1,
+            "reason": "INITIAL"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "SCHEMA_EXAMPLE"
+      }
+    },
+    {
+      "caseId": "display-change",
+      "context": "MOCK typed schema example, not executed",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-display-change",
+        "requestId": "mock-request-display-change",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-display-change",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-event-display-change",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 8,
+          "eventType": "DISPLAY_COUNT_OBSERVED",
+          "source": "JAVAFX_DISPLAY",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:08Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "count": 2,
+            "reason": "CHANGED"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "SCHEMA_EXAMPLE"
+      }
+    },
+    {
+      "caseId": "activity-p1-disabled",
+      "context": "MOCK schema example only: P1 activity not enabled in default capabilities; requires separate future opt-in",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-activity-p1-disabled",
+        "requestId": "mock-request-activity-p1-disabled",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-activity-p1-disabled",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-event-activity-p1-disabled",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 9,
+          "eventType": "EXAM_ACTIVITY_SUMMARY",
+          "source": "EXAM_LOCAL_ACTIVITY",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:09Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "intervalMillis": 10000,
+            "navigationCount": 2,
+            "answerActionCount": 1,
+            "idleMillis": 3000
+          }
+        }
+      },
+      "expected": {
+        "outcome": "SCHEMA_EXAMPLE"
+      }
+    },
+    {
+      "caseId": "observer-unsupported",
+      "context": "MOCK typed schema example, not executed",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-observer-unsupported",
+        "requestId": "mock-request-observer-unsupported",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-observer-unsupported",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-event-observer-unsupported",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 10,
+          "eventType": "OBSERVER_STATUS",
+          "source": "WINDOWS_USB_STORAGE",
+          "metadataQuality": "UNSUPPORTED",
+          "observedAt": "2026-10-19T10:00:10Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "status": "UNSUPPORTED",
+            "reason": "API_UNAVAILABLE"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "SCHEMA_EXAMPLE"
+      }
+    },
+    {
+      "caseId": "observer-unknown",
+      "context": "MOCK typed schema example, not executed",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-observer-unknown",
+        "requestId": "mock-request-observer-unknown",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-observer-unknown",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-event-observer-unknown",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 11,
+          "eventType": "OBSERVER_STATUS",
+          "source": "JAVAFX_DISPLAY",
+          "metadataQuality": "UNREADABLE",
+          "observedAt": "2026-10-19T10:00:11Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "status": "UNKNOWN",
+            "reason": "NO_DATA"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "SCHEMA_EXAMPLE"
+      }
+    },
+    {
+      "caseId": "observer-error",
+      "context": "MOCK typed schema example, not executed",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-observer-error",
+        "requestId": "mock-request-observer-error",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-observer-error",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-event-observer-error",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 12,
+          "eventType": "OBSERVER_STATUS",
+          "source": "WINDOWS_USB_STORAGE",
+          "metadataQuality": "UNREADABLE",
+          "observedAt": "2026-10-19T10:00:12Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "status": "ERROR",
+            "reason": "PERMISSION_DENIED"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "SCHEMA_EXAMPLE"
+      }
+    },
+    {
+      "caseId": "observer-ready",
+      "context": "MOCK typed schema example, not executed",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-observer-ready",
+        "requestId": "mock-request-observer-ready",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-observer-ready",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-event-observer-ready",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 13,
+          "eventType": "OBSERVER_STATUS",
+          "source": "JAVAFX_EXAM_FOCUS",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:13Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "status": "READY",
+            "reason": "INITIAL"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "SCHEMA_EXAMPLE"
+      }
+    },
+    {
+      "caseId": "signal-overflow-gap",
+      "context": "MOCK typed schema example, not executed",
+      "request": {
+        "protocolVersion": "v0",
+        "type": "MONITORING_SIGNAL",
+        "messageId": "mock-request-signal-overflow-gap",
+        "requestId": "mock-request-signal-overflow-gap",
+        "attemptId": "mock-attempt-1",
+        "traceId": "mock-trace-signal-overflow-gap",
+        "payload": {
+          "schemaVersion": 1,
+          "eventId": "mock-event-signal-overflow-gap",
+          "observerSessionId": "mock-observer-1",
+          "observationSequence": 14,
+          "eventType": "SIGNAL_GAP",
+          "source": "CLIENT_SIGNAL_DELIVERY",
+          "metadataQuality": "COMPLETE",
+          "observedAt": "2026-10-19T10:00:14Z",
+          "observationContext": "CONNECTED",
+          "observationConnectionId": "mock-connection-1",
+          "details": {
+            "reason": "QUEUE_OVERFLOW",
+            "droppedCount": 3,
+            "firstDroppedAt": "2026-10-19T10:00:12Z",
+            "lastDroppedAt": "2026-10-19T10:00:14Z"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "SCHEMA_EXAMPLE"
+      }
+    }
+  ],
+  "record": {
+    "schemaVersion": 1,
+    "eventId": "mock-usb-1",
+    "observerSessionId": "mock-observer-1",
+    "observationSequence": 1,
+    "eventType": "USB_STORAGE_PRESENT_AT_START",
+    "source": "WINDOWS_USB_STORAGE",
+    "metadataQuality": "COMPLETE",
+    "observedAt": "2026-10-19T10:00:00Z",
+    "observationContext": "CONNECTED",
+    "observationConnectionId": "mock-connection-1",
+    "details": {
+      "deviceClass": "USB_MASS_STORAGE",
+      "storageCount": 1,
+      "deviceRef": "mock-usb-ref-1"
+    },
+    "attemptId": "mock-attempt-1",
+    "timelineSequence": 1,
+    "receivedAt": "2026-10-19T10:00:01Z",
+    "deliveryStatus": "LIVE"
+  },
+  "push": {
+    "protocolVersion": "v0",
+    "type": "MONITOR_SIGNAL",
+    "messageId": "mock-server-push-1",
+    "requestId": null,
+    "attemptId": "mock-attempt-1",
+    "traceId": "mock-trace-usb-1",
+    "payload": {
+      "schemaVersion": 1,
+      "eventId": "mock-usb-1",
+      "observerSessionId": "mock-observer-1",
+      "observationSequence": 1,
+      "eventType": "USB_STORAGE_PRESENT_AT_START",
+      "source": "WINDOWS_USB_STORAGE",
+      "metadataQuality": "COMPLETE",
+      "observedAt": "2026-10-19T10:00:00Z",
+      "observationContext": "CONNECTED",
+      "observationConnectionId": "mock-connection-1",
+      "details": {
+        "deviceClass": "USB_MASS_STORAGE",
+        "storageCount": 1,
+        "deviceRef": "mock-usb-ref-1"
+      },
+      "attemptId": "mock-attempt-1",
+      "timelineSequence": 1,
+      "receivedAt": "2026-10-19T10:00:01Z",
+      "deliveryStatus": "LIVE"
+    }
+  },
+  "page": {
+    "protocolVersion": "v0",
+    "schemaVersion": 1,
+    "traceId": "mock-history-trace-1",
+    "attemptId": "mock-attempt-1",
+    "items": [
+      {
+        "schemaVersion": 1,
+        "eventId": "mock-usb-1",
+        "observerSessionId": "mock-observer-1",
+        "observationSequence": 1,
+        "eventType": "USB_STORAGE_PRESENT_AT_START",
+        "source": "WINDOWS_USB_STORAGE",
+        "metadataQuality": "COMPLETE",
+        "observedAt": "2026-10-19T10:00:00Z",
+        "observationContext": "CONNECTED",
+        "observationConnectionId": "mock-connection-1",
+        "details": {
+          "deviceClass": "USB_MASS_STORAGE",
+          "storageCount": 1,
+          "deviceRef": "mock-usb-ref-1"
+        },
+        "attemptId": "mock-attempt-1",
+        "timelineSequence": 1,
+        "receivedAt": "2026-10-19T10:00:01Z",
+        "deliveryStatus": "LIVE"
+      }
+    ],
+    "afterSequence": 0,
+    "throughSequence": 1,
+    "nextAfterSequence": null,
+    "hasMore": false
+  }
+}
