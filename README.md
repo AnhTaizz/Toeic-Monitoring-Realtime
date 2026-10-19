@@ -1,5 +1,7 @@
 # TOEIC Monitoring Realtime
 
+**Kế hoạch:** [Plan V1 (5 chặng)](docs/plan-v1/README.md) · [Plan V2 (36 task)](docs/plan-v2/README.md) · [Khởi động V2](docs/plan-v2/V2_EXECUTION_KICKOFF_20261019.md).
+
 > **PLAN V2 ĐÃ ĐƯỢC NHÓM DUYỆT VỀ PHẠM VI** (người đại diện nhóm xác nhận ngày 19/10 về buổi tối 18/10): [Điểm bắt đầu V2](PLAN_V2_START_HERE.md) · [Backlog 36 task](docs/plan-v2/README.md) · [Kickoff A/B/C](docs/plan-v2/V2_EXECUTION_KICKOFF_20261019.md) · [Trạng thái phê duyệt và ADR cần chốt](docs/plan-v2/ADOPTION_STATUS_20261019.md). Phụ lục V2 ở `CLAUDE.md` và `02_HOP_DONG.md` chỉ mở **phạm vi** 200 câu/media hợp pháp, USB storage observation, focus/display; schema/wire/start-deadline phải duyệt riêng. Phase 3 hiện code-ready nhưng physical LAN/nghe thật/MSI máy thứ hai **chưa nghiệm thu**.
 
 B overnight15/10 bổ sung safe ACTIVE issuance/API progress đề xuất, UI giám thị điều khiển ca và progress đãcommit, AT11exact40/42, pipelineWindows và E1harness/data. [Bàn giao6phase](evidence/overnight-20261015/00-summary.md), [giám thị](docs/PROCTOR_SESSION_PROGRESS.md), [đónggói](docs/WINDOWS_PACKAGING.md), [LAN/manual](docs/LAN_TWO_MACHINE_RUNBOOK.md). Local tests không thay human review/LAN/installer; FULL default, không thêm thư viện ngoài.

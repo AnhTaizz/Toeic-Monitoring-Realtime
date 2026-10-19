@@ -2,11 +2,11 @@
 
 ## Current course and repository sources to read
 
-- `Ke_hoach_LT_Mang_5_chang/nguon/Instruction.md`: network programming, protocol, concurrency, failures, experiments, Novelty and technical-paper report are required.
-- `Ke_hoach_LT_Mang_5_chang/nguon/Submission.md`: deadline **2026-10-31 23:59**, Compilatio and source/report physical handoff.
-- `Ke_hoach_LT_Mang_5_chang/01_KE_HOACH.md`: original Phase 3, 20-Oct DELTA gate, original 27-Oct freeze and original owner tasks. This plan proposes an earlier freeze, but does not overwrite old plan.
-- `Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md`: approved state, authorization, submit, Listening and monitoring semantics. Must be read before code.
-- `Ke_hoach_LT_Mang_5_chang/03_KIEM_THU_VA_THUC_NGHIEM.md`: AT, MT, LT, IT and E1/E2 methodology.
+- `docs/plan-v1/nguon/Instruction.md`: network programming, protocol, concurrency, failures, experiments, Novelty and technical-paper report are required.
+- `docs/plan-v1/nguon/Submission.md`: deadline **2026-10-31 23:59**, Compilatio and source/report physical handoff.
+- `docs/plan-v1/01_KE_HOACH.md`: original Phase 3, 20-Oct DELTA gate, original 27-Oct freeze and original owner tasks. This plan proposes an earlier freeze, but does not overwrite old plan.
+- `docs/plan-v1/02_HOP_DONG.md`: approved state, authorization, submit, Listening and monitoring semantics. Must be read before code.
+- `docs/plan-v1/03_KIEM_THU_VA_THUC_NGHIEM.md`: AT, MT, LT, IT and E1/E2 methodology.
 - `docs/TIEN_DO.md`: progress by SHA and branch, including the stabilization report from 17-Oct. Historical evidence only.
 - `docs/KIEM_THU.md`: detailed state of actual verified tests; NOT RUN and PARTIAL are meaningful.
 - `docs/PROTOCOL.md`, `docs/QUYET_DINH.md`: protocol and design decisions to preserve/amend.

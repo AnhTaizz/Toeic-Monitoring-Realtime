@@ -28,7 +28,7 @@
 
 ## E1: polling experiment
 
-Existing plan: poll periods 250/500/1000/2000ms, 3 repeats each, controlled process lifespan scenarios and ground-truth observations. Measurements: detected vs missed, detection latency p50/p95 for detected events, resource coverage, collector CPU and memory. Use exact methods in `Ke_hoach_LT_Mang_5_chang/03_KIEM_THU_VA_THUC_NGHIEM.md` and `docs/E1_T4C1_MEASUREMENT.md`. Do not manipulate raw data or silently drop failed runs. Device/API blind spots must be reported.
+Existing plan: poll periods 250/500/1000/2000ms, 3 repeats each, controlled process lifespan scenarios and ground-truth observations. Measurements: detected vs missed, detection latency p50/p95 for detected events, resource coverage, collector CPU and memory. Use exact methods in `docs/plan-v1/03_KIEM_THU_VA_THUC_NGHIEM.md` and `docs/E1_T4C1_MEASUREMENT.md`. Do not manipulate raw data or silently drop failed runs. Device/API blind spots must be reported.
 
 ## E2: conditional FULL vs DELTA experiment
 

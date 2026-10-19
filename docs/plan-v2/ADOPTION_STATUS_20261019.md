@@ -17,7 +17,7 @@
 3. Nghiệm thu real-device (LAN, USB, MSI, nghe thật), E1/conditional E2, report/source bàn giao trước 31/10.
 4. Giữ Java21/Spring Boot/JavaFX/PostgreSQL/WS, không thêm webcam/keylogging/read USB files/OS locks. Không thu thập serial USB hoặc thông tin riêng không cần thiết.
 
-Phụ lục giới hạn của phạm vi này đã thêm vào [`CLAUDE.md`](../../CLAUDE.md) và [hợp đồng legacy](../../Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md). Không sửa bản gốc giảng viên hoặc làm mất lịch sử 5 chặng.
+Phụ lục giới hạn của phạm vi này đã thêm vào [`CLAUDE.md`](../../CLAUDE.md) và [hợp đồng legacy](../plan-v1/02_HOP_DONG.md). Không sửa bản gốc giảng viên hoặc làm mất lịch sử 5 chặng.
 
 ## Các checkpoint kỹ thuật vẫn phải chốt bằng quyết định của owner
 

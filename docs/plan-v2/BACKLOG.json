@@ -115,7 +115,7 @@
         "New message types, API DTO and migrations are versioned and regression-tested."
       ],
       "likely_scope": [
-        "CLAUDE.md, Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md, docs/PROTOCOL.md, docs/QUYET_DINH.md"
+        "CLAUDE.md, docs/plan-v1/02_HOP_DONG.md, docs/PROTOCOL.md, docs/QUYET_DINH.md"
       ],
       "risk_or_note": "This ZIP is a proposal, not an automatic override of the current contract."
     },

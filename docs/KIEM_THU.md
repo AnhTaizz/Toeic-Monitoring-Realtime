@@ -10,7 +10,7 @@
 
 16/10/2026 — Kiểm E1/T4-C1 riêng: 87Java targeted +11Python PASS; fixture CPU trước50% sai/sau10% đúng, Windows smoke và rejoin byte-identical PASS. Đây không nâng MT/IT hoặc gate thành PASS. Raw E1 lịch sử chưa có để tái xác nhận; [báo cáo](../evidence/t4-c1/2026-10-16-review.md), [lệnh](E1_T4C1_MEASUREMENT.md).
 
-Mô tả đầy đủ từng case (cách gây tình huống, kết quả bắt buộc) ở `Ke_hoach_LT_Mang_5_chang/03_KIEM_THU_VA_THUC_NGHIEM.md`. File này chỉ theo dõi đã chạy chưa và bằng chứng ở đâu.
+Mô tả đầy đủ từng case (cách gây tình huống, kết quả bắt buộc) ở `docs/plan-v1/03_KIEM_THU_VA_THUC_NGHIEM.md`. File này chỉ theo dõi đã chạy chưa và bằng chứng ở đâu.
 
 Trạng thái dùng: `NOT RUN`, `PASS`, `FAIL`, `BLOCKED`; `PARTIAL` khi chỉ một phần case được kiểm (MT01 local C2). Chỉ ghi `PASS` khi đã chạy thật và có bằng chứng.
 
