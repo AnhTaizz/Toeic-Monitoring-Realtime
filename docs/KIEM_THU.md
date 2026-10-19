@@ -1,5 +1,8 @@
 # Trạng thái kiểm thử
 
+19/10/2026 — Sửa CI73: [evidence](../evidence/v2-c-mon02/ci73-fix-20261019.json), [report/root-cause limits](../evidence/v2-c-mon02/REPORT.md). Source1e75924: module clean verify35PASS/0FAIL/ERROR/SKIP; focused1case×3PASS, không3case độc lập. CI39264645975 clean verifySUCCESS/monitoring-spike35PASS, đối chiếu fail39258040529/1failure. Test budget10s riêng, hang150ms và runtime default5s giữ; snapshot/JAR thật,15class/resource hashes khớp bảncũ. Physical0/12NOT_RUN, không nâng hardware/ADR/gate; CI cuối docs-only xem PR73 checks.
+
+
 19/10/2026 — MON-02 [35 isolated module tests PASS](../evidence/v2-c-mon02/unit-tests.json),0FAIL/ERROR/SKIP, source30166b3; thiết bị MOCK, child/process/PowerShell resource thật. [7 runtime run có source/runID](../evidence/v2-c-mon02/runtime-summary.json): MSFT READY0, Win32 UNKNOWN, fault timeout/cap đúng exit, Ctrl+C direct-file có FINISH/children0/readers true; giữ lượt Tee cũ INCOMPLETE. Physical0/12 NOT_RUN, không nâng MT/QA-04 hoặc task DONE; không full reactor/PG/GUI/E1/E2. [Report/giới hạn](../evidence/v2-c-mon02/REPORT.md).
 
 

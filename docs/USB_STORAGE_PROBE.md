@@ -60,6 +60,8 @@ CLI trực tiếp không tự xác minh source SHA; dùng UNVERSIONED cho khám 
 - FINISH có queryChildrenStarted/queryChildrenAlive/pipeReadersTerminated, nativeRegistration NOT_USED. Chỉ gọi cleanup đạt khi owned children0/readers terminated; forced JVM kill/thiếu FINISH giữ INCOMPLETE. Thời gian total có thể vượt duration bởi query đang chạy (tối đa timeout) và teardown hữu hạn; không hứa hard realtime.
 - Build receipt local chứa SHA + hash source/runtime và wrapper reject stale/tampered file inventory. Không thêm dependency Java/native mới; deployment cần PowerShell/CimCmdlets/ACL provider trên host. Chưa kiểm runtime jpackage/installer hoặc Windows architecture khác ngoài máy đã chạy.
 
+Riêng test MOCK `CimClassificationScriptTest` có process budget10s để tách mục tiêu classification khỏi độ chậm startup PowerShell; CLI default5s/resource OperationTimeoutSec5 không đổi. Test child treo150ms vẫn kiểm timeout/cleanup. Xem [hồ sơ sửa CI73](../evidence/v2-c-mon02/REPORT.md#19102026--sửa-ci-pr73-giữ-physical-pending); log cũ thiếu problem nên không khẳng định root cause chỉ từ5.102s.
+
 ## So sánh API chính thức
 
 | Phương án | API và tình trạng | Điều cần thêm/giới hạn |

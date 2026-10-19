@@ -1,5 +1,8 @@
 # Tiến độ hiện tại
 
+19/10/2026 — CI73 follow-up: source1e75924 chỉ sửa test classification (budget10s/diagnostic sau close), CLI5s/runtime/workflow giữ nguyên. [Report](../evidence/v2-c-mon02/REPORT.md), [summary](../evidence/v2-c-mon02/ci73-fix-20261019.json). CI39258040529 FAIL cũ thiếu problem nên root cause chưa chốt; bounded MOCK delay chứng minh process-budget path, không lấy rerun PASS thay bằng chứng. Local35PASS/focused1case×3, CI39264645975 SUCCESS;15runtime hashes không đổi, receipt/JAR/provider snapshots mới đã kiểm. Physical0/12 NOT_RUN, PR73 Draft/chưa merge; CI HEAD hồ sơ theo PR checks.
+
+
 19/10/2026 — MON-02 standalone spike trên main1d35b537: [runbook](USB_STORAGE_PROBE.md), [report/evidence](../evidence/v2-c-mon02/REPORT.md). Source30166b3 có35 module tests PASS (34USB MOCK +1process), hai CIM provider đã code/chạy token STANDARD; MSFT READY/count0, Win32 UNKNOWN/SCSI. Watch/timeout/output cap/receipt/JAR và Ctrl+C direct-file cleanup đã kiểm; không xác nhận thao tác USB, physical0/12 NOT_RUN. PnP/subscription NOT_IMPLEMENTED, khuyến nghị polling chỉ tạm thời; ADR-V2-05/A-B-C review PENDING, MON-02 chưa DONE. Không nối WS/PG/dashboard/MON-07/08 hoặc đổi FULL/gate/backlog.
 
 

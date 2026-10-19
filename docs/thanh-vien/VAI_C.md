@@ -426,3 +426,8 @@ Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG
 ### Ghi chú làm dở — MON-02 standalone USB probe, 19/10/2026
 
 Source `30166b3d50218a570ca523bde452a15a58dfcf0e`, nhánh `spike/v2-c-mon02-usb-storage` từ main1d35b537. [Probe/lệnh](../USB_STORAGE_PROBE.md), [report](../../evidence/v2-c-mon02/REPORT.md). Java21+PowerShell/CIM không dependency mới;35module tests PASS với device MOCK, REAL provider MSFT READY0/Win32 UNKNOWN token STANDARD. Timeout/flood/query close/Ctrl+C direct file/receipt guard có evidence; Tee Ctrl+C cũ INCOMPLETE giữ nguyên. Chưa physical cắm/rút/twoUSB/HID/UASP/no-drive-letter,0/12NOT_RUN; PnP/event subscription NOT_IMPLEMENTED, nativeRegistration NOT_USED. C/B cần review API/identity/polling loss/cleanup/hardware và ADR-V2-05; A cần auth/disclosure/retention/lifetime trước integration cùng MON-07/BASE-04. Không approve ADR, MON-02 DONE/backlog/merge/E1/E2 hoặc đổi FULL. Dừng sau push/Draft PR probe.
+
+
+### Ghi chú CI73 follow-up — 19/10/2026
+
+Test source1e75924: budget classification10s/diagnostic scalar sau close; CLI5s/parser/resource/lifecycle không đổi, hang150ms vẫn kiểm. Local35PASS và focused1case×3; CI39264645975SUCCESS. Failure39258040529 thiếuproblem nên chưa kết luận nguyên nhân cold startup; experiment delayMOCK chỉ chứng minh budget path. [Report](../../evidence/v2-c-mon02/REPORT.md), [summary/hash](../../evidence/v2-c-mon02/ci73-fix-20261019.json).15runtime hashes giống30166b3; receipt/JAR/provider snapshots mới đã kiểm,29raw/JAR/report cũ giữ nguyên. Physical0/12NOT_RUN, ADR-V2-05 và A/B review pending; PR73 giữDraft, CI HEAD hồ sơ cần xác minh riêng, không merge/DONE/MON07/08/E1/E2.
