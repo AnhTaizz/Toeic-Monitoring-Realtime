@@ -25,8 +25,8 @@ class RichImageStoreTest {
         volatile Exception failure;
         volatile CountDownLatch hold;
         FakeApi(byte[] bytes) { this.bytes = bytes; }
-        @Override public AttemptPreparation preparation(String a) { throw new UnsupportedOperationException(); }
-        @Override public VisualReadyResponse visualReady(String a, VisualReadyRequest r) { throw new UnsupportedOperationException(); }
+        @Override public AttemptPreparation preparation(String a) throws Exception { throw new UnsupportedOperationException(); }
+        @Override public VisualReadyResponse visualReady(String a, VisualReadyRequest r) throws Exception { throw new UnsupportedOperationException(); }
         @Override public RichCandidateExam exam(String a) throws Exception { throw new UnsupportedOperationException(); }
         @Override public ImageBytes image(String attemptId, String mediaId, String manifestId) throws Exception {
             downloads.incrementAndGet();

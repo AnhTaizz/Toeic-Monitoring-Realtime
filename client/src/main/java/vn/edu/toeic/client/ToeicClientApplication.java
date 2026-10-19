@@ -61,6 +61,7 @@ public final class ToeicClientApplication extends Application {
     private long monitoringGeneration;
     private ProctorDashboardView dashboard;
     private CandidateExamView activeExamView;
+    private vn.edu.toeic.client.exam.rich.RichAttemptView activeRichView;
     private CandidateExamHistoryView historyView;
 
     @Override
@@ -423,6 +424,24 @@ public final class ToeicClientApplication extends Application {
                     status.setText("Không vào được phòng thi: " + refused.getMessage());
                     return;
                 }
+                // Ca PROCTORED_V2 do server lưu quyết định: preparation 200 → màn TOEIC Room V2, 409 → luồng legacy.
+                vn.edu.toeic.client.exam.rich.RichEntry.probe(serverUrl, login.token(), selectedAttempt).whenComplete((rich, probeErr) -> Platform.runLater(() -> {
+                if (currentView != viewGeneration || request != monitoringGeneration || monitoring != session) return;
+                if (probeErr != null) {
+                    startExamBtn.setDisable(false);
+                    manualMonitoringStop.setDisable(false);
+                    status.setText("Không vào được phòng thi: " + ExamApiClient.describe(probeErr));
+                    return;
+                }
+                if (rich) {
+                    if (historyView != null) { historyView.close(); historyView = null; }
+                    activeRichView = new vn.edu.toeic.client.exam.rich.RichAttemptView(serverUrl, login.token(),
+                            login.user().displayName(), login.user().username(), selectedAttempt, realtimeClient, examApiClient,
+                            () -> { activeRichView = null; showRoleScene(stage, serverUrl, login); },
+                            () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."));
+                    stage.setScene(applyStyles(new Scene(activeRichView, 1440, 900)));
+                    return;
+                }
                 // Đọc trạng thái, tải đề rồi xin server cấp quyền ghi cho lần mở này; tất cả chạy trên worker HTTP.
                 ExamEntry.open(examApiClient, selectedAttempt).whenComplete((outcome, err) -> Platform.runLater(() -> {
                     // Đã đăng xuất hoặc đổi màn trong lúc tải: không mở màn thi trên client đã đóng.
@@ -452,6 +471,7 @@ public final class ToeicClientApplication extends Application {
                             serverUrl, login.token(), selectedAttempt, writer, realtimeClient));
                     Scene examScene = applyStyles(new Scene(activeExamView, 1380, 850));
                     stage.setScene(examScene);
+                }));
                 }));
             }));
         });
@@ -518,6 +538,7 @@ public final class ToeicClientApplication extends Application {
         releaseConnectionView();
         try {
             if (activeExamView != null) activeExamView.close();
+            if (activeRichView != null) activeRichView.close();
             if (realtimeClient != null) realtimeClient.close();
             if (examApiClient != null) examApiClient.close();
         } finally {
@@ -531,6 +552,7 @@ public final class ToeicClientApplication extends Application {
         viewGeneration++;
         monitoringGeneration++;
         if (activeExamView != null) { activeExamView.close(); activeExamView = null; }
+        if (activeRichView != null) { activeRichView.close(); activeRichView = null; }
         if (historyView != null) { historyView.close(); historyView = null; }
         if (dashboard != null) { dashboard.close(); dashboard = null; }
         if (monitoring != null) { monitoring.close(); monitoring = null; }
