@@ -1,0 +1,106 @@
+/* Dedicated TOEIC Listening Part 3 stylesheet. No global selector overrides. */
+.part3-root {
+    -fx-background-color: #faf8f5;
+    -fx-font-family: "Calibri", "Carlito", "Segoe UI", sans-serif;
+}
+.part3-root .label { -fx-text-fill: #142342; }
+.part3-rail {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e8e5e0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 9 16;
+    -fx-min-height: 48;
+}
+.part3-rail-heading { -fx-font-size: 17; -fx-font-weight: bold; }
+.part3-rail-part { -fx-font-size: 14; -fx-text-fill: #63718a !important; }
+.part3-rail-selected { -fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #dc612d !important; }
+.part3-palette-trigger {
+    -fx-background-color: white;
+    -fx-border-color: #dd794b;
+    -fx-border-radius: 7;
+    -fx-background-radius: 7;
+    -fx-text-fill: #ba5126;
+    -fx-padding: 7 15;
+}
+.part3-palette-trigger:focused { -fx-border-width: 2; }
+.part3-audio-slot {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8;
+    -fx-border-color: #e7e1dc;
+    -fx-border-radius: 8;
+    -fx-padding: 7 16;
+}
+.part3-audio-slot .label { -fx-font-size: 14; -fx-text-fill: #50627b; }
+.part3-work { -fx-background-color: transparent; }
+.part3-sidebar, .part3-main {
+    -fx-background-color: white;
+    -fx-border-color: #e6e5e5;
+    -fx-border-radius: 9;
+    -fx-background-radius: 9;
+    -fx-padding: 17 18;
+}
+.part3-eyebrow { -fx-font-size: 11; -fx-text-fill: #d66029 !important; -fx-font-weight: bold; }
+.part3-title { -fx-font-size: 22; -fx-font-weight: bold; }
+.part3-subtitle { -fx-font-size: 15; -fx-text-fill: #66758c !important; -fx-line-spacing: 2; }
+.part3-side-label { -fx-font-size: 14; -fx-font-weight: bold; }
+.part3-group-title { -fx-font-size: 17; -fx-font-weight: bold; }
+.part3-answer-summary { -fx-text-fill: #64748b !important; -fx-font-size: 13; }
+.part3-main-heading { -fx-font-size: 17; -fx-font-weight: bold; }
+.part3-chip {
+    -fx-background-color: #fafafa;
+    -fx-border-color: #e0e3e7;
+    -fx-border-radius: 7;
+    -fx-background-radius: 7;
+    -fx-padding: 10 13;
+    -fx-font-size: 14;
+    -fx-min-height: 43;
+}
+.part3-chip-active { -fx-background-color: #fff5ed; -fx-border-color: #df7b4b; -fx-border-width: 2; }
+.part3-chip-answered { -fx-background-color: #f1faf5; -fx-border-color: #8bc8ad; }
+.part3-chip:focused { -fx-border-width: 2; -fx-border-color: #dc612d; }
+.part3-scroll { -fx-background-color: white; -fx-background: white; -fx-padding: 0; -fx-border-width: 0; }
+.part3-scroll > .viewport { -fx-background-color: white; }
+.part3-question-card {
+    -fx-border-color: #e1e4e8;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-padding: 13 15;
+}
+.part3-card-active { -fx-border-color: #e6aa88; -fx-border-width: 2; }
+.part3-card-number { -fx-text-fill: #d65f2d !important; -fx-font-weight: bold; -fx-font-size: 15; }
+.part3-prompt { -fx-font-size: 17; -fx-font-weight: bold; }
+.part3-option {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dce1e6;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 9 11;
+    -fx-min-height: 46;
+    -fx-cursor: hand;
+}
+.part3-option:hover { -fx-background-color: #fffaf6; -fx-border-color: #d9906c; }
+.part3-option:focused { -fx-border-color: #dc612d; -fx-border-width: 2; }
+.part3-option-selected { -fx-background-color: #fff4ea; -fx-border-color: #cf5f2e; -fx-border-width: 2; }
+.part3-option:disabled { -fx-opacity: .72; }
+.part3-option-letter {
+    -fx-background-color: #faf0e8;
+    -fx-background-radius: 5;
+    -fx-min-width: 32;
+    -fx-alignment: center;
+    -fx-padding: 5 9;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+}
+.part3-option-text { -fx-font-size: 15; }
+.part3-clear {
+    -fx-background-color: transparent;
+    -fx-text-fill: #66758c;
+    -fx-font-size: 12;
+    -fx-padding: 2 0;
+}
+.part3-clear:hover { -fx-text-fill: #c35a2c; }
+.part3-clear:focused { -fx-border-color: #c35a2c; -fx-border-width: 1; }
