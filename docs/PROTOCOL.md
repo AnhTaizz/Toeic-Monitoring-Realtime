@@ -948,3 +948,7 @@ Nhánh `stabilize/final-rc-20261017`. Không thêm endpoint, field hay giá tr�
 ## Hợp đồng đề xuất EX-02 — chưa phải endpoint hiện hành
 
 19/10/2026: [Rich HTTP contract](EX02_RICH_EXAM_CONTRACT_V1.md) và [ADR-V2-03](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) là TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn xác nhận](plan-v2/EX02_TEAM_APPROVAL_20261019.md), không phải wire runtime mới. Preparation nhúng Part1 visual manifest; image route SCHEDULED chỉ allowlist Part1/current manifest; visual/ready và combined readiness dùng HTTPv2. Full exam/options/answers vẫn chặn trước START; cả Audio+Visual READY là precondition, LISTENING_START hiện có là authority duy nhất. EX06 phải bridge rich DTO sau START và image-visible gate trước MediaPlayer.play, không GETv1 hoặc player thứ hai. Giữ ErrorCode/ApiErrorResponse/WSv0, legacy QD21/FULL/no-replay. Chưa controller/DTO production, không GENERAL_START hoặc runtime/GUI PASS.
+
+## EX05 — image route fail-closed, 19/10/2026
+
+GET `/api/v2/attempts/{attemptId}/images/{mediaId}` đã register: token→CANDIDATE→owner trước policy/files; chưa có EX07 authority nên owned request409 INVALID_STATE, foreign/unknown403. Không bytes/checksum trước quyền. Khi EX07 cấp context hợp lệ: SCHEDULED graph Part1/current query, IN_PROGRESS committed visual ID/deadline; full200/no-store/nosniff/X-Image-SHA256, không ETag/304/Range shortcut. Chưa công bố preparation/visual READY/full rich GET. DTO VisualManifest/VisualImageSlot theo EX02 đã duyệt, WSv0 không đổi.

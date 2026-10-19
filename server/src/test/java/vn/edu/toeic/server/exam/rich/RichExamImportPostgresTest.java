@@ -166,13 +166,14 @@ class RichExamImportPostgresTest {
         assertThat(number("SELECT count(*) FROM exam_questions q JOIN exam_sources s ON s.exam_id=q.exam_id AND s.id=q.source_id WHERE s.source_sha256='"+fixture.sources().getFirst().sourceSha256()+"'")).isEqualTo(199);
     }
 
-    @Test void authAndRolePrecedeMalformedBodyAndMissingMediaAndNoRichGetRoutes() throws Exception {
+    @Test void authAndRolePrecedeMalformedBodyAndMissingMediaAndRichReadsFailClosed() throws Exception {
         start(false);String candidate=login("candidate1");
         expect(post("/api/v2/exams/import","{",null),401,"UNAUTHORIZED");
         expect(post("/api/v2/exams/import","{",candidate),403,"FORBIDDEN");
         expect(post("/api/v2/exams/import"," ".repeat(RichExamJson.MAX_BYTES+1),candidate),403,"FORBIDDEN");
         expect(post("/api/v2/exams/import",RichExamFixtures.tree().toString(),candidate),403,"FORBIDDEN");
-        for(String route:List.of("/api/v2/attempts/MOCK/exam","/api/v2/attempts/MOCK/images/img-grid","/api/v2/attempts/MOCK/preparation"))
+        expect(get("/api/v2/attempts/MOCK/images/img-grid",candidate),403,"FORBIDDEN");
+        for(String route:List.of("/api/v2/attempts/MOCK/exam","/api/v2/attempts/MOCK/preparation"))
             expect(get(route,candidate),404,null);
         emptyImport();
     }

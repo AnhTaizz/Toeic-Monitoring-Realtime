@@ -350,3 +350,7 @@ Ghi chú kiểm chứng19/10/2026, nhánhreviewEX04 chưamerge: [reportPG](EX04_
 Theo task.txt triển khai hợp đồng đã duyệt, không thiết kế lại D01–D10: importer v2 create-only tách RichExamService/repository/parser/validator khỏi v1; explicit TransactionTemplate để response201 sau commit, sourceRef→RETURNING id, deferred constraints và recheck bytes trước commit. Local verification không cấp Audio/Visual READY; không mở candidate rich/image routes trước EX07. V1 create rich bị409, QD21 legacy giữ.
 
 Chọn migration **V14** vì đối chiếu PR70–74 thấy PR74 đã dùng V13; không sửa nhánh C. Cần A/C phối hợp số/thứ tự migration trước merge/deploy, không bật outOfOrder. [Report và giới hạn](EX03_RICH_IMPORTER_VERIFICATION.md). Đây là thực thi task được giao và technical review, không chữ ký owner hoặc xác nhận tracker DONE.
+
+## EX05 — thực thi contract và stack migration, 19/10/2026
+
+Reuse RichMediaValidator để response dùng chính bytes đã hash/decode, không mở file lần hai. Image route yêu cầu RichImageSessionAuthority; thiếu implementation EX07 thì fail-closed. Transaction giữ khóa do authority cấp tới sau file read/recheck và commit. Stack base PR75; giữ MERGE BLOCKED V13/V14 đến khi phối hợp được thứ tự13→14, không sửa MON07 hoặc dùng outOfOrder/placeholder. Không thay thiết kế EX02/ADR, legacy/FULL giữ.

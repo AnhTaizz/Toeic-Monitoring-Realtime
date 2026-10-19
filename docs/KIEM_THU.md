@@ -600,3 +600,9 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 Thiết kế D01–D10/ADR TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn đại diện](plan-v2/EX02_TEAM_APPROVAL_20261019.md); không GitHub Approving Review hoặc runtime PASS. [Checker](plan-v2/fixtures/ex02/verify-design.ps1) giữ29cases cũ (non-Part1 prestart image403 theo D10), thêm9positive+20negative visual; lượt đầu58design cases PASS, actual PNG size/hash/.NET decode và corrupt rejection. [Report kiểm cuối](../evidence/ex02-contract-20261019/REPORT.md), [results](plan-v2/fixtures/ex02/verification.mock.json). Kiểm signatures Java21, canonical manifest hash độc lập bằng Java, exact JSON fields/links/diff và CI ghi số thực trong report; không cố giữ21records.
 
 ADR giữ S01–S16, cập nhật image expectations và thêm V01–V20. Target backend HTTP/RBAC/PG/WS, JavaFX Stage/layout/two-pulse/widget snapshot-before-play, heartbeat/race/restart, hearing/LAN/máy2 đều NOT IMPLEMENTED/NOT RUN ở lượt docs. Modeled PLAY trace không chứng minh MediaPlayer/pixels thật. P09 chỉ kiểm đoạn QD21 không đổi; không rerun deadline service. Phê duyệt thiết kế không đánh EX03/05/06/07/08 DONE hoặc nghiệm thu Phase3 physical.
+
+## EX05 — checkpoint triển khai, 19/10/2026
+
+19/10/2026 — EX05 đang triển khai trên stack EX03: resolver verified bytes, Part1 canonical manifest và image route fail-closed khi thiếu EX07 authority. [Checkpoint](EX05_AUTHENTICATED_IMAGES.md). Main/PR75 chưa merge; V13/V14 MERGE BLOCKED. Targeted PG/HTTP đang chạy; không EX05/FE DONE, không sửa tracker/hours.
+
+Unit focused ghi25case RichImageTest PASS; lượt PG mới/chính xác source đang chạy, không kế thừa PASS từ EX03. GUI/LAN/hearing NOT RUN.

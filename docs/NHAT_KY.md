@@ -801,3 +801,9 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - Lịch sử âm giữ riêng:11ERROR helper thiếu examId trong asset path;1FAIL legacy test so DB/JVM lệch5ms;9FAIL mới trước sửa secret aliases/Unicode. [Report/evidence và6SKIP](EX03_RICH_IMPORTER_VERIFICATION.md) phân biệt từng source/run, không lấy PASS cũ thay source mới. GUI/hearing/LAN/máy2/dataset production NOT RUN.
 - Còn dở: READY_FOR_REVIEW, không tự merge/human signoff/DONE/hours. C/B review schema/auth/transaction/shared DTO; A/C phối hợp V13/V14 trước merge/deploy. EX05 image delivery/allowlist, EX07 session/visual/START, EX06 renderer/bridge/visible gate và EX01/08 media/quyền/keys thật còn riêng.
 - Tiếp theo: push nhánh/mở PR EX03 và đọc CI đúng HEAD theo task; giữ main ổn định, không merge trong lượt này.
+
+## EX05 — checkpoint triển khai, 19/10/2026
+
+19/10/2026 — EX05 đang triển khai trên stack EX03: resolver verified bytes, Part1 canonical manifest và image route fail-closed khi thiếu EX07 authority. [Checkpoint](EX05_AUTHENTICATED_IMAGES.md). Main/PR75 chưa merge; V13/V14 MERGE BLOCKED. Targeted PG/HTTP đang chạy; không EX05/FE DONE, không sửa tracker/hours.
+
+Unit focused ghi25case RichImageTest PASS; lượt PG mới/chính xác source đang chạy, không kế thừa PASS từ EX03. GUI/LAN/hearing NOT RUN.

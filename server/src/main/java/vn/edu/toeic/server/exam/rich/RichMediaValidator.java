@@ -43,6 +43,32 @@ public final class RichMediaValidator {
     }
 
     private Stamp verify(String examId, MediaImport media) {
+        return verified(examId, media).stamp();
+    }
+
+    /** Trả chính bytes đã hash/decode, không mở file lần hai sau verification. */
+    byte[] readImage(String examId, MediaImport media) {
+        validateImageMetadata(media);
+        return verified(examId, media).bytes();
+    }
+
+    static void validateImageMetadata(MediaImport media) {
+        if (media == null || media.mediaType() != MediaType.IMAGE
+                || media.storageStatus() != StorageStatus.LOCAL_VERIFIED
+                || !RichExamValidator.safeFile(media.localFile())
+                || media.sizeBytes() < 1 || media.sizeBytes() > 8L * 1024 * 1024
+                || media.sha256() == null || !media.sha256().matches("[a-f0-9]{64}")
+                || media.widthPx() == null || media.heightPx() == null
+                || media.widthPx() < 1 || media.heightPx() < 1
+                || media.widthPx() > 8192 || media.heightPx() > 8192
+                || (long) media.widthPx() * media.heightPx() > 16_000_000
+                || !("image/png".equals(media.mimeType()) || "image/jpeg".equals(media.mimeType()))
+                || media.durationMs() != null) throw invalid();
+    }
+
+    private record Verified(Stamp stamp, byte[] bytes) {}
+
+    private Verified verified(String examId, MediaImport media) {
         RichExamValidator.id(examId);
         if (!RichExamValidator.safeFile(media.localFile())) throw invalid();
         try {
@@ -56,7 +82,7 @@ public final class RichMediaValidator {
             if (media.mediaType() == MediaType.IMAGE) image(bytes, media);
             else audio(bytes, media);
             if (!before.equals(identity(file, false)) || !dirBefore.equals(identity(directory, true))) throw invalid();
-            return new Stamp(file, dirBefore, before);
+            return new Verified(new Stamp(file, dirBefore, before), bytes);
         } catch (NoSuchFileException | NotDirectoryException | FileSystemLoopException | javax.imageio.IIOException invalidFile) {
             throw invalid();
         } catch (IOException transientFailure) {
