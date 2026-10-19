@@ -52,7 +52,7 @@ public final class SignalJson {
     }
     public static String text(JsonObject o,String key){JsonElement v=o.get(key);if(v==null||!v.isJsonPrimitive()||!v.getAsJsonPrimitive().isString())throw new IllegalArgumentException();String s=v.getAsString();unicode(s);return s;}
     public static String id(String s){if(s==null||!s.matches("[A-Za-z0-9_.:-]{1,128}"))throw new IllegalArgumentException();return s;}
-    public static long integer(JsonObject o,String key,long min,long max){JsonElement v=o.get(key);if(v==null||!v.isJsonPrimitive()||!v.getAsJsonPrimitive().isNumber()||!v.toString().matches("0|[1-9][0-9]*"))throw new IllegalArgumentException();long n=v.getAsLong();if(n<min||n>max)throw new IllegalArgumentException();return n;}
-    public static Instant time(String s){if(!s.matches("(?!0000)[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-5][0-9](\\.[0-9]{1,6})?Z"))throw new IllegalArgumentException();return Instant.parse(s);}
+    public static long integer(JsonObject o,String key,long min,long max){JsonElement v=o.get(key);if(v==null||!v.isJsonPrimitive()||!v.getAsJsonPrimitive().isNumber()||!v.toString().matches("0|[1-9][0-9]*"))throw new IllegalArgumentException();long n=Long.parseLong(v.toString());if(n<min||n>max)throw new IllegalArgumentException();return n;}
+    public static Instant time(String s){if(!s.matches("(?!0000)[0-9]{4}-[0-9]{2}-[0-9]{2}T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,6})?Z"))throw new IllegalArgumentException();return Instant.parse(s);}
     public static void size(JsonObject o,int limit){if(o.toString().getBytes(StandardCharsets.UTF_8).length>limit)throw new IllegalArgumentException();}
 }

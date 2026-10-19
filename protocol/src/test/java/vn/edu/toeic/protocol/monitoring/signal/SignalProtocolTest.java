@@ -36,5 +36,10 @@ class SignalProtocolTest {
         assertThatThrownBy(()->SignalJson.parse("{\"x\":[[[[[[1]]]]]]}")).isInstanceOf(IllegalArgumentException.class);
         String multibyte="{\"x\":\""+"界".repeat(3000)+"\"}";assertThatThrownBy(()->SignalJson.parse(multibyte)).isInstanceOf(IllegalArgumentException.class);
     }
+    @Test void directObjectIntegerCannotWrapLongAndMidnight24IsNotAValidClockField(){
+        var p=sample().signal().json();p.add("observationSequence",new JsonPrimitive(new java.math.BigInteger("18446744073709551617")));
+        assertThatThrownBy(()->DisplaySignal.parse(p)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(()->SignalJson.time("2026-10-19T24:00:00Z")).isInstanceOf(IllegalArgumentException.class);
+    }
     @Test void absentOriginIdIsRequiredForOfflineAndObservedZeroIsNotUnknown(){var s=new DisplaySignal("e","r",1,Instant.parse("2026-10-19T10:00:00Z"),EventOrigin.OFFLINE,0,"CHANGED");assertThat(s.json().has("observationConnectionId")).isFalse();assertThat(DisplaySignal.parse(s.json())).isEqualTo(s);var bad=s.json();bad.addProperty("metadataQuality","UNREADABLE");assertThatThrownBy(()->DisplaySignal.parse(bad)).isInstanceOf(IllegalArgumentException.class);}
 }

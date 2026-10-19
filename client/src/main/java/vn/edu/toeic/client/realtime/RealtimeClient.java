@@ -125,25 +125,25 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     }
     @Override public boolean supportsMonitoringDelta(){return experimentalDelta&&deltaCapability()==DeltaCapability.SUPPORTED;}
     private String signalHeartbeatAttempt,signalHeartbeatCollector;
-    private String signalAttempt;
+    private String signalAttempt,signalCollector;
     private long signalGeneration=-1;
     private final java.util.Set<CompletableFuture<Void>> signalWrites=new java.util.HashSet<>();
     /** Harness only: scoped HTTP capability fetched after auth/heartbeat, generation prevents stale confirmation. */
-    public synchronized void confirmSignalExperiment(JsonObject capability,long expectedGeneration) {
+    public synchronized void confirmSignalExperiment(JsonObject capability,long expectedGeneration,String expectedCollector) {
         vn.edu.toeic.protocol.monitoring.signal.SignalJson.fields(capability,Set.of("protocolVersion","schemaVersion","traceId","attemptId","supportedEventTypes"),Set.of());
         if(expectedGeneration!=generation||state!=ConnectionState.CONNECTED||observationConnectionId==null||settings.maxPendingAcks()<10
             ||!"v0".equals(requiredString(capability,"protocolVersion")))throw new IllegalArgumentException();
         vn.edu.toeic.protocol.monitoring.signal.SignalJson.integer(capability,"schemaVersion",1,1);
         vn.edu.toeic.protocol.monitoring.signal.SignalJson.id(requiredString(capability,"traceId"));
-        String attempt=requiredString(capability,"attemptId");validateScope(attempt);
+        String attempt=vn.edu.toeic.protocol.monitoring.signal.SignalJson.id(requiredString(capability,"attemptId"));validateScope(attempt);
         if(!new Gson().toJsonTree(java.util.List.of("DISPLAY_COUNT_OBSERVED")).equals(capability.get("supportedEventTypes")))throw new IllegalArgumentException();
-        if(!Objects.equals(attempt,signalHeartbeatAttempt)||monitoringBinding.get()==null||!Objects.equals(signalHeartbeatCollector,monitoringBinding.get().collector))throw new IllegalArgumentException();
-        signalAttempt=attempt;signalGeneration=generation;
+        if(!Objects.equals(attempt,signalHeartbeatAttempt)||monitoringBinding.get()==null||!Objects.equals(expectedCollector,signalHeartbeatCollector)||!Objects.equals(expectedCollector,monitoringBinding.get().collector))throw new IllegalArgumentException();
+        signalAttempt=attempt;signalCollector=expectedCollector;signalGeneration=generation;
     }
     @Override public synchronized boolean signalExperimentReady(String attempt) {
         return !closed&&state==ConnectionState.CONNECTED&&signalGeneration==generation&&Objects.equals(attempt,signalAttempt)
             &&monitoringBinding.get()!=null&&Objects.equals(attempt,monitoringBinding.get().attempt)&&Objects.equals(attempt,signalHeartbeatAttempt)
-            &&Objects.equals(signalHeartbeatCollector,monitoringBinding.get().collector)&&observationConnectionId!=null;
+            &&Objects.equals(signalCollector,signalHeartbeatCollector)&&Objects.equals(signalCollector,monitoringBinding.get().collector)&&observationConnectionId!=null;
     }
     @Override public synchronized boolean signalCreditAvailable() {
         return settings.maxPendingAcks()>=10&&pendingAcks.size()<settings.maxPendingAcks()-8&&writes.size()<settings.maxPendingAcks()-8&&signalWrites.size()<2;
@@ -422,7 +422,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     }
 
     private void cleanupConnection() {
-        signalAttempt=null;signalHeartbeatAttempt=null;signalHeartbeatCollector=null;signalGeneration=-1;signalWrites.clear();
+        signalAttempt=null;signalCollector=null;signalHeartbeatAttempt=null;signalHeartbeatCollector=null;signalGeneration=-1;signalWrites.clear();
         if (heartbeatTask != null) heartbeatTask.cancel(false);
         if (retryTask != null) retryTask.cancel(false);
         heartbeatTask = null;
