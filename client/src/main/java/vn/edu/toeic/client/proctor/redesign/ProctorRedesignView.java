@@ -127,6 +127,8 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
     private final Label alertBadge = Ui.label("", "nav-badge");
     private final Label sidebarScope = Ui.wrapping("", "muted", "small");
     private final TopBar topBar;
+    private final Drawers.CandidateDrawer candidateDrawer;
+    private final Drawers.AlertDrawer alertDrawer;
     private Node sessionControls;
 
     /** Implemented by every screen; called on the FX thread with the latest derived room. */
@@ -170,6 +172,8 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         setOnKeyPressed(event -> { if (event.getCode() == KeyCode.ESCAPE) closeDrawer(); });
 
         buildPages();
+        candidateDrawer = new Drawers.CandidateDrawer(actions, this::closeDrawer);
+        alertDrawer = new Drawers.AlertDrawer(actions, this::closeDrawer);
 
         // Construct controllers last: their first callbacks may arrive immediately.
         dashboard = new DashboardController(Role.PROCTOR, wiring.dashboardApi(), wiring.transport(), wiring.applyScope(),
@@ -342,9 +346,21 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         feed.refresh();
     }
 
-    void openCandidate(String attemptId) { }
+    /** Only attempts in the current server roster/progress can be opened; anything else is ignored. */
+    void openCandidate(String attemptId) {
+        if (closed.get() || room == null || attemptId == null || room.row(attemptId) == null) return;
+        // Loads this attempt's current process state through the existing controller (one selection at a time).
+        if (room.dashboard().attempts().stream().anyMatch(presence -> presence.attemptId().equals(attemptId))) dashboard.select(attemptId);
+        candidateDrawer.show(attemptId, room);
+        alertDrawer.show(null, room);
+        openDrawer(candidateDrawer, 620);
+    }
 
-    void openAlert(RoomModel.Alert alert) { }
+    void openAlert(RoomModel.Alert alert) {
+        if (closed.get() || room == null || alert == null || room.row(alert.attemptId()) == null) return;
+        alertDrawer.show(alert, room);
+        openDrawer(alertDrawer, 660);
+    }
 
     void showHistory(String attemptId) {
         closeDrawer();
@@ -374,6 +390,9 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
     }
 
     Node openDrawer() { return drawerHost.getChildren().isEmpty() ? null : drawerHost.getChildren().getFirst(); }
+
+    Drawers.CandidateDrawer candidateDrawer() { return candidateDrawer; }
+    Drawers.AlertDrawer alertDrawer() { return alertDrawer; }
 
     // ------------------------------------------------------------------ data flow
 
@@ -426,6 +445,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         alertBadge.setVisible(badge);
         alertBadge.setManaged(badge);
         for (RoomPane pane : panes) pane.update(room, settings);
+        if (openDrawer() instanceof Drawers.Drawer drawer) drawer.update(room);
         notifyNewAlerts(room);
         tick();
     }
