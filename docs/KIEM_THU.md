@@ -606,3 +606,7 @@ ADR giữ S01–S16, cập nhật image expectations và thêm V01–V20. Target
 19/10/2026 — EX05 đang triển khai trên stack EX03: resolver verified bytes, Part1 canonical manifest và image route fail-closed khi thiếu EX07 authority. [Checkpoint](EX05_AUTHENTICATED_IMAGES.md). Main/PR75 chưa merge; V13/V14 MERGE BLOCKED. Targeted PG/HTTP đang chạy; không EX05/FE DONE, không sửa tracker/hours.
 
 Unit focused ghi25case RichImageTest PASS; lượt PG mới/chính xác source đang chạy, không kế thừa PASS từ EX03. GUI/LAN/hearing NOT RUN.
+
+## EX05 — clean verify20/10/2026
+
+Source05cc694 clean verify1127PASS/6SKIP/0FAIL/0ERROR, PG18.1/HTTP thật, đề MOCK tự soạn;0schema/clusterstop0. [Evidence](EX05_AUTHENTICATED_IMAGES.md).29caseEX05 mới PASS; V13 sau14 bịFlywaydefaultchặn thật. AuthorityEX07 còn thiếu, image route fail-closed; GUI_PHYSICAL_NOT_RUN/hearing/LAN NOT RUN; MERGE BLOCKED/PR75/V13coordination. Không tracker/hours/human signoff.

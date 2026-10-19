@@ -196,3 +196,7 @@ Overnight phase05 PARTIAL: ASCII app-imageMedia8 PASS, wrapperUnicode/installer 
 ### Công bố overnight 15/10
 
 [Draft PR overnight](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/38) dùng nhánh public riêng, base integration `11c5da9`. Main mới `c0fd903` có PR #36 B4 và PR #37 B5: owner cần đối chiếu cả UI/controller lẫn pipeline Windows trước merge; chưa kiểm code ghép. Java đã kiểm `c1601b5` không đổi; E1 có 11 inconclusive nên PARTIAL. Evidence MSI upstream không được dùng thay kết quả package overnight. [Bàn giao](../evidence/overnight-20261015/00-summary.md).
+
+## EX05 — clean verify20/10/2026
+
+Source05cc694 clean verify1127PASS/6SKIP/0FAIL/0ERROR, PG18.1/HTTP thật, đề MOCK tự soạn;0schema/clusterstop0. [Evidence](EX05_AUTHENTICATED_IMAGES.md).29caseEX05 mới PASS; V13 sau14 bịFlywaydefaultchặn thật. AuthorityEX07 còn thiếu, image route fail-closed; GUI_PHYSICAL_NOT_RUN/hearing/LAN NOT RUN; MERGE BLOCKED/PR75/V13coordination. Không tracker/hours/human signoff.
