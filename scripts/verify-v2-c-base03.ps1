@@ -3,13 +3,23 @@ param(
     [Parameter(Mandatory=$true)][string]$JavaHome,
     [string]$MavenCommand='mvn.cmd',
     [string]$PythonCommand='python',
-    [switch]$SkipLiveGui
+    [switch]$SkipLiveGui,
+    [string]$PriorSuccessfulRun
 )
 $ErrorActionPreference='Stop'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $source=(& git.exe -C $repo rev-parse HEAD).Trim()
 if($LASTEXITCODE -ne 0){throw 'Cannot pin source'}
 if(@(& git.exe -C $repo status --porcelain --untracked-files=no).Count){throw 'Tracked worktree must be clean before verification'}
+$prior=$null
+if($PriorSuccessfulRun){
+    $prior=Get-Content -LiteralPath $PriorSuccessfulRun -Raw -Encoding UTF8|ConvertFrom-Json
+    if($prior.runnerErrorType -or $prior.cleanup.clusterStopExit -ne 0 -or $prior.cleanup.ownedSchemasRemaining -ne 0 -or @($prior.steps|Where-Object {$_.name -eq 'full-baseline' -and $_.status -eq 'PASS'}).Count -ne 1){throw 'Supplement requires a successful isolated FULL baseline'}
+    & git.exe -C $repo merge-base --is-ancestor $prior.sourceSha HEAD
+    if($LASTEXITCODE -ne 0){throw 'Prior baseline is not an ancestor'}
+    & git.exe -C $repo diff --quiet $prior.sourceSha -- client/src/main server/src/main protocol/src/main client/pom.xml server/pom.xml protocol/pom.xml pom.xml
+    if($LASTEXITCODE -ne 0){throw 'Production changed; rerun the complete FULL-first suite'}
+}
 foreach($path in @($repo,$JavaHome,$PostgresBin)){
     if($path -match '["&|<>%^\r\n]'){throw 'Unsupported tool path'}
 }
@@ -124,6 +134,7 @@ try{
     Run $python '--version' 'python-version'
     [IO.File]::WriteAllText($envFile,('DB_HOST=127.0.0.1'+"`nDB_PORT="+$port+"`nDB_NAME="+$env:DB_NAME+"`nDB_USER="+$env:DB_USER+"`nDB_PASSWORD="+$env:DB_PASSWORD+"`nTOEIC_SEED_PASSWORD="+$env:TOEIC_SEED_PASSWORD+"`n"),$utf8)
     $envCreated=$true
+    if(-not $prior){
     $full='FullSnapshotPayloadTest,EventOriginTest,ProcessPolicyAndSourceTest,ProcessCollectorTest,MonitoringDeliveryTest,FullSnapshotDeliveryTest,FullSnapshotReducerTest,MonitoringStateServiceTest,MonitoringStateMaintenanceTest,MonitoringGapTest,ProcessEventTest,MonitoringPresenceServiceTest,ExamMonitoringIntegrationTest'
     $script:testStartUtc=[DateTime]::UtcNow
     try{Maven ('-pl protocol,client,server -am -Dtest='+$full+' -Dsurefire.failIfNoSpecifiedTests=false test') 'full-focused'}finally{Capture-Tests 'full-focused'}
@@ -138,13 +149,16 @@ try{
     $script:testStartUtc=[DateTime]::UtcNow
     try{Maven ('-pl protocol,client,server -am -Dtest='+$delta+' -Dsurefire.failIfNoSpecifiedTests=false test') 'delta-focused'}finally{Capture-Tests 'delta-focused'}
     Smoke 'smoke-t3c3.ps1' 'oracle-campaign' '-RealScan'
+    }else{Maven '-DskipTests package' 'package-supplement'}
     Smoke 'smoke-t3c2.ps1' 'delta-ws-pg'
+    if(-not $prior){
     if(-not $SkipLiveGui){Smoke 'smoke-t3c4.ps1' 'local-live-gate'}
     Run $python '-B -m unittest discover -s scripts/benchmarks/e1 -p test*.py -v' 'python-e1-unit'
     Run $python '-B -m unittest discover -s scripts -p test_summarize_monitoring.py -v' 'python-measurement-unit'
     $env:TOEIC_PG_INTEGRATION='true'
     $script:testStartUtc=[DateTime]::UtcNow
     try{Maven 'package' 'regression-package'}finally{Capture-Tests 'regression-package'}
+    }
 }catch{
     $primaryFailure=$_.Exception.GetType().FullName
     [IO.File]::WriteAllText((Join-Path $out 'runner-error.private.txt'),[string]$_,$utf8)
@@ -164,7 +178,7 @@ try{
     $cleanup.passwordFileRemoved=-not(Test-Path -LiteralPath $passwordFile)
     foreach($name in $saved.Keys){[Environment]::SetEnvironmentVariable($name,$saved[$name],'Process')}
 }
-$data=[ordered]@{schema='base03-verification-v1';runId=$runId;sourceSha=$source;branch=(& git.exe -C $repo branch --show-current).Trim();os=[Environment]::OSVersion.VersionString;topology='One Windows host, owned PostgreSQL SCRAM cluster/database, loopback HTTP/WS; not physical LAN';database='toeic_base03_test';port=$port;steps=@($steps);cleanup=$cleanup;runnerErrorType=$primaryFailure;skipLiveGui=[bool]$SkipLiveGui;physicalLan='NOT_RUN';bReview='PENDING';deltaCorrectnessGate='NOT_DECIDED';fullDefaultPreserved='YES';e2Allowed='NO'}
+$data=[ordered]@{schema='base03-verification-v1';runId=$runId;sourceSha=$source;branch=(& git.exe -C $repo branch --show-current).Trim();os=[Environment]::OSVersion.VersionString;topology='One Windows host, owned PostgreSQL SCRAM cluster/database, loopback HTTP/WS; not physical LAN';database='toeic_base03_test';port=$port;steps=@($steps);cleanup=$cleanup;runnerErrorType=$primaryFailure;skipLiveGui=[bool]$SkipLiveGui;verificationScope=$(if($prior){'SUPPLEMENTAL_DELTA_WS_PG'}else{'FULL_FIRST_COMPLETE'});priorFullRunId=$(if($prior){$prior.runId}else{$null});physicalLan='NOT_RUN';bReview='PENDING';deltaCorrectnessGate='NOT_DECIDED';fullDefaultPreserved='YES';e2Allowed='NO'}
 [IO.File]::WriteAllText((Join-Path $public 'run.json'),($data|ConvertTo-Json -Depth 10),$utf8)
 Write-Output ('BASE03 runId='+$runId+' source='+$source+' evidence='+$public)
 Write-Output ($cleanup|ConvertTo-Json -Compress)
