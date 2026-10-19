@@ -1,0 +1,1013 @@
+{
+  "schema_version": "1.0",
+  "plan_id": "toeic-monitoring-v2-20261018",
+  "planning_date": "2026-10-18",
+  "source_repo": "AnhTaizz/Toeic-Monitoring-Realtime",
+  "note": "Statuses are TO_AUDIT placeholders only, not actual implementation state. Respect repo owner approvals.",
+  "hard_deadline": "2026-10-31T23:59:00+07:00",
+  "feature_freeze_goal": "after 2026-10-23",
+  "epics": {
+    "BASE": "EPIC 00 - Baseline integration and contract",
+    "EX": "EPIC 01 - Complete TOEIC exam (200 questions)",
+    "UI": "EPIC 02 - JavaFX polish",
+    "MON": "EPIC 03 - Multi-signal monitoring, including USB",
+    "QA": "EPIC 04 - Verification and experiments",
+    "REL": "EPIC 05 - Report and release"
+  },
+  "tasks": [
+    {
+      "id": "BASE-01",
+      "epic": "BASE",
+      "title": "Audit actual integration baseline",
+      "owner": "A",
+      "reviewer": "C",
+      "priority": "P0",
+      "dependencies": [],
+      "status": "TO_AUDIT",
+      "objective": "Choose a source-of-truth integration SHA without assuming that main or the old tracker reflects all completed work.",
+      "acceptance_criteria": [
+        "Record current main, RC branch, candidate PRs, heads, merged/unmerged status and potential conflicts.",
+        "Compare actual code and fresh tests with docs/TIEN_DO.md and docs/KIEM_THU.md.",
+        "Publish a verified status table; never mark manual/LAN tasks PASS based on automated loopback tests."
+      ],
+      "verification": [
+        "Repository/PR audit signed off by A and C.",
+        "Clean build on the selected candidate baseline, with exact SHA and environment."
+      ],
+      "likely_scope": [
+        "Git refs, docs/TIEN_DO.md, docs/KIEM_THU.md, evidence/"
+      ],
+      "risk_or_note": "Existing 17-Oct report is historical evidence, not proof of current HEAD."
+    },
+    {
+      "id": "BASE-02",
+      "epic": "BASE",
+      "title": "Close Phase 3 review and integration gaps",
+      "owner": "A",
+      "reviewer": "B",
+      "priority": "P0",
+      "dependencies": [
+        "BASE-01"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Reconcile Listening, autosave/submit, delta hooks, server state, installer and release branch.",
+      "acceptance_criteria": [
+        "Review the Phase 3 implementation against 02_HOP_DONG.md, especially Listening no-replay, auth-before-cache and ACK-after-commit.",
+        "Write a human-reviewed integration matrix and unresolved issues.",
+        "Do not rebuild Phase 3 tasks whose code already exists."
+      ],
+      "verification": [
+        "Clean Java package tests with PostgreSQL where required.",
+        "Manual hearing, packaged JavaFX and LAN checks remain NOT RUN until performed."
+      ],
+      "likely_scope": [
+        "server/, client/, protocol/, docs/, evidence/"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "BASE-03",
+      "epic": "BASE",
+      "title": "Delta correctness go/no-go",
+      "owner": "C",
+      "reviewer": "B",
+      "priority": "P0",
+      "dependencies": [
+        "BASE-01",
+        "BASE-02"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Make an evidence-backed decision about experimental DELTA; preserve FULL as the operational fallback.",
+      "acceptance_criteria": [
+        "Use the pre-existing 20-Oct gate for MT02-MT06 and live disconnect/rejoin conditions.",
+        "If incomplete, incorrect or unreviewed: FULL remains the default; publish failure or missing evidence.",
+        "Do not claim E2 performance until correctness and measurement prerequisites are met."
+      ],
+      "verification": [
+        "Oracle replay vs FULL, epoch/reconnect/retry and human reviewer notes.",
+        "Update gate status explicitly: PASS, FAIL or NOT_DECIDED."
+      ],
+      "likely_scope": [
+        "docs/MONITORING_DELTA_LIVE_GATE.md, docs/PROTOCOL.md, evidence/"
+      ],
+      "risk_or_note": "Never silently turn DELTA on in production."
+    },
+    {
+      "id": "BASE-04",
+      "epic": "BASE",
+      "title": "Approve new scope and contract amendments",
+      "owner": "A",
+      "reviewer": "C",
+      "priority": "P0",
+      "dependencies": [
+        "BASE-01"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Document requested expanded exam media and multi-signal monitoring before interface-changing work.",
+      "acceptance_criteria": [
+        "Propose amendments to CLAUDE.md, 02_HOP_DONG.md, docs/PROTOCOL.md and testing docs; original lecturer sources stay unchanged.",
+        "Explicitly remove only the existing USB out-of-scope restriction after owner approval.",
+        "Record data minimization, consent/notice, capture lifetime, media copyright and retention assumptions.",
+        "Resolve or flag the QD-21 deadline/start-gate conflict; do not silently change deadline semantics."
+      ],
+      "verification": [
+        "A and C approve the delta; B reviews the affected client contract.",
+        "New message types, API DTO and migrations are versioned and regression-tested."
+      ],
+      "likely_scope": [
+        "CLAUDE.md, Ke_hoach_LT_Mang_5_chang/02_HOP_DONG.md, docs/PROTOCOL.md, docs/QUYET_DINH.md"
+      ],
+      "risk_or_note": "This ZIP is a proposal, not an automatic override of the current contract."
+    },
+    {
+      "id": "EX-01",
+      "epic": "EX",
+      "title": "Audit one legitimate 200-question TOEIC dataset",
+      "owner": "A",
+      "reviewer": "B",
+      "priority": "P0",
+      "dependencies": [
+        "BASE-01"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Identify one complete 7-Part exam and verify all source materials before coding large-scale imports.",
+      "acceptance_criteria": [
+        "Count 6/25/39/30/30/16/54 questions in Parts 1-7, respectively.",
+        "Inventory audio, images, passages, groups, original answer options and correct answer keys.",
+        "Report missing items honestly; separate remote media URLs from files already downloaded.",
+        "Identify the license/permission status before distributing third-party material."
+      ],
+      "verification": [
+        "Produce manifest with original source, SHA-256 where local, missing-file flags and zero invented answer data.",
+        "Content review by A/B."
+      ],
+      "likely_scope": [
+        "Offline input HTML/JSON, media manifest, dataset-audit report"
+      ],
+      "risk_or_note": "The plan package includes no copyrighted exams or media."
+    },
+    {
+      "id": "EX-02",
+      "epic": "EX",
+      "title": "Define rich exam import and render contract",
+      "owner": "A",
+      "reviewer": "B",
+      "priority": "P0",
+      "dependencies": [
+        "EX-01",
+        "BASE-04"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Extend the existing exam DTO only as needed for grouped passages, images and legitimate audio-based choices.",
+      "acceptance_criteria": [
+        "Support question order, 7 Parts, groupId, reusable audio, zero-or-more ordered content blocks and per-question options.",
+        "Allow Part 1/2 letter choices when transcripts are not available; do not fabricate dialogue/transcripts.",
+        "Correct options remain server-only; authorized candidate DTO never exposes answer key.",
+        "Keep compatibility with existing text/audio JSON if possible."
+      ],
+      "verification": [
+        "Schema/DTO fixtures including Part 1 photo, Part 3 shared audio, Part 6 passage and Part 7 multi-document.",
+        "Negative validator fixtures."
+      ],
+      "likely_scope": [
+        "protocol exam DTOs, import contracts, docs/PROTOCOL.md"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "EX-03",
+      "epic": "EX",
+      "title": "Build offline parser, validator and repeatable seed",
+      "owner": "A",
+      "reviewer": "C",
+      "priority": "P0",
+      "dependencies": [
+        "EX-02",
+        "EX-04"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Transform permitted content into validated imports; seed once and create multiple sessions from the existing exam.",
+      "acceptance_criteria": [
+        "Validator enforces 200 unique ordered questions and expected Part distribution.",
+        "Every referenced audio/image exists, has an allowed format and passes SHA-256 before release.",
+        "No duplicate group mismatch, missing correct option or broken passage links.",
+        "Importer is deterministic and refuses a conflicting duplicate examId rather than silently overwriting."
+      ],
+      "verification": [
+        "Valid fixture succeeds; incomplete/corrupt/mismatched fixtures are rejected with exact reasons.",
+        "Database import + retrieval round trip on test PostgreSQL."
+      ],
+      "likely_scope": [
+        "Offline tooling (Java by default), import/seed adapter, local dataset report"
+      ],
+      "risk_or_note": "CLAUDE.md currently limits Python to CSV/plots. Do not introduce a Python HTML parser unless the owner explicitly amends that rule."
+    },
+    {
+      "id": "EX-04",
+      "epic": "EX",
+      "title": "Add image metadata and ordered rich-content storage",
+      "owner": "A",
+      "reviewer": "C",
+      "priority": "P0",
+      "dependencies": [
+        "EX-02",
+        "BASE-04"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Add minimum Flyway migration and filesystem configuration for exam images and content blocks.",
+      "acceptance_criteria": [
+        "Check the latest existing Flyway version before naming a new migration; never edit applied V1..Vn.",
+        "Keep structured metadata in PostgreSQL; media binaries remain outside the DB/JAR.",
+        "Store relative paths, MIME, content length, SHA-256, ordering and question/group association.",
+        "Do not break the established TOEIC_AUDIO_ROOT manifest/READY semantics."
+      ],
+      "verification": [
+        "Fresh database migration test and upgrade test from the current release schema.",
+        "Reject invalid file paths and dangling asset references."
+      ],
+      "likely_scope": [
+        "server/src/main/resources/db/migration/, exam services, configuration"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "EX-05",
+      "epic": "EX",
+      "title": "Authenticated image delivery and media validation",
+      "owner": "A",
+      "reviewer": "B",
+      "priority": "P0",
+      "dependencies": [
+        "EX-04"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Allow authorized candidates/proctors to retrieve referenced image assets without expanding the audio protocol.",
+      "acceptance_criteria": [
+        "Check user role, assignment and attempt scope before returning bytes or cache metadata.",
+        "Prevent ../ traversal, escaping symlinks, unexpected MIME and oversized files.",
+        "Support predictable checksum and cache behavior; no answer key in image endpoint metadata.",
+        "Keep the existing audio manifest, READY and start semantics intact."
+      ],
+      "verification": [
+        "Real HTTP auth tests for owner vs other attempt, missing/changed asset, traversal and checksums.",
+        "Manual client downloads with filenames containing spaces/Unicode."
+      ],
+      "likely_scope": [
+        "server exam media controller/service, protocol DTOs, media config"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "EX-06",
+      "epic": "EX",
+      "title": "Render real seven-Part content in JavaFX",
+      "owner": "B",
+      "reviewer": "A",
+      "priority": "P0",
+      "dependencies": [
+        "EX-02",
+        "EX-05"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Display text, images and grouping as the TOEIC exam actually requires.",
+      "acceptance_criteria": [
+        "Correctly render Part 1 photos; Part 3/4 shared audio and optional figures; Part 6/7 passage layouts and multiple content blocks.",
+        "Part 1/2 option labels work even without transcript text.",
+        "Network/download and decoding stay off JavaFX Application Thread; failed images show an honest retry/error state.",
+        "Image navigation does not restart Listening or lose unsaved answers."
+      ],
+      "verification": [
+        "GUI fixture tests for every Part and media errors.",
+        "Packaged JavaFX smoke with actual image/audio."
+      ],
+      "likely_scope": [
+        "client exam views, styling, media client, UI tests"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "EX-07",
+      "epic": "EX",
+      "title": "Proctor exam catalog and authoritative start gate",
+      "owner": "A",
+      "reviewer": "B",
+      "priority": "P0",
+      "dependencies": [
+        "BASE-02",
+        "EX-02",
+        "BASE-04"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Let a proctor select a stored exam and start a scheduled session without granting premature answer access.",
+      "acceptance_criteria": [
+        "Provide an authenticated exam catalog with metadata only; preserve existing import/session compatibility.",
+        "An attempt may be ACTIVE for monitoring and READY while its session is SCHEDULED; GET questions, submit and save must be gated by authoritative server rules.",
+        "Preserve allowed pre-start manifest/download/checksum and READY flows.",
+        "Resolve server deadline policy explicitly against QD-21; retries/takeover cannot reset or prolong an existing deadline."
+      ],
+      "verification": [
+        "PG/HTTP tests before START and after START for questions, save and submit.",
+        "RBAC and READY/Listening start idempotency/reconnect regression."
+      ],
+      "likely_scope": [
+        "server ExamService/controllers, client proctor exam picker, contract documentation"
+      ],
+      "risk_or_note": "Backend gate is mandatory; disabling UI controls is not a security boundary."
+    },
+    {
+      "id": "EX-08",
+      "epic": "EX",
+      "title": "End-to-end real 200-question acceptance",
+      "owner": "A",
+      "reviewer": "B",
+      "priority": "P0",
+      "dependencies": [
+        "EX-03",
+        "EX-05",
+        "EX-06",
+        "EX-07",
+        "BASE-02"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Prove one complete exam works from proctor selection to final score.",
+      "acceptance_criteria": [
+        "Proctor selects approved stored exam, assigns candidates, confirms READY and starts it.",
+        "Candidate navigates all Parts with real media, autosaves, submits or times out.",
+        "Correct-answer keys never leak into candidate DTO and final score is computed by the server.",
+        "Listening interruption, stale save, deadline and writer takeover remain correct."
+      ],
+      "verification": [
+        "Real PostgreSQL end-to-end evidence for 200 questions.",
+        "Packaged Windows app smoke and checksum manifest for all media."
+      ],
+      "likely_scope": [
+        "Integration tests, evidence/exam-200/, delivery guide"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "UI-01",
+      "epic": "UI",
+      "title": "JavaFX design system",
+      "owner": "B",
+      "reviewer": "A",
+      "priority": "P1",
+      "dependencies": [
+        "BASE-01"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Create a coherent lightweight JavaFX style without changing the UI stack.",
+      "acceptance_criteria": [
+        "Define reusable CSS tokens, text hierarchy, spacing, buttons, badges, tables, hover/focus and disabled states.",
+        "Preserve accessibility and contrast; do not hide network failure or data-stale status.",
+        "No HTML/WebView replacement or framework migration."
+      ],
+      "verification": [
+        "Visual before/after screenshots and UI smoke.",
+        "No change in server or monitoring contract."
+      ],
+      "likely_scope": [
+        "client JavaFX stylesheet, shared controls"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "UI-02",
+      "epic": "UI",
+      "title": "Polish candidate exam interaction",
+      "owner": "B",
+      "reviewer": "A",
+      "priority": "P1",
+      "dependencies": [
+        "EX-06",
+        "UI-01"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Make the 200-question exam easy to complete under exam constraints.",
+      "acceptance_criteria": [
+        "Responsive panes for passage/image and answer area; clear question palette and answered counts.",
+        "Timer, save ACK, offline/stale and navigation status unambiguous.",
+        "No automatic playback or model reset on view reflow."
+      ],
+      "verification": [
+        "UI smoke at different window sizes, 200-question navigation and media stress.",
+        "Regression save/submit and Listening behavior."
+      ],
+      "likely_scope": [
+        "client exam view/CSS"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "UI-03",
+      "epic": "UI",
+      "title": "Polish Listening preparation and interruption UI",
+      "owner": "B",
+      "reviewer": "A",
+      "priority": "P1",
+      "dependencies": [
+        "BASE-02",
+        "UI-01"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Show media readiness and Listening lifecycle clearly without altering authority.",
+      "acceptance_criteria": [
+        "Download/checksum/speaker test and READY feedback have proper progress/error states.",
+        "START received only through valid server command; interrupted Listening visibly remains locked.",
+        "No duplicate start, replay or silent auto-resume."
+      ],
+      "verification": [
+        "LT01-LT04 targeted regression and packaged hearing test."
+      ],
+      "likely_scope": [
+        "client audio/listening view/CSS"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "UI-04",
+      "epic": "UI",
+      "title": "Polish proctor roster, control and exam selection",
+      "owner": "B",
+      "reviewer": "A",
+      "priority": "P1",
+      "dependencies": [
+        "UI-01",
+        "EX-07"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Improve proctor readability and safe action affordances.",
+      "acceptance_criteria": [
+        "Clear session state, candidate roster, readiness, exam catalog, starts, results and pending actions.",
+        "Distinguish loading/stale/disconnected from success, especially after lost HTTP response.",
+        "Retain server-side authorization and pending-request semantics."
+      ],
+      "verification": [
+        "GUI smoke with 2 candidate records and explicit wrong-role cases.",
+        "Compare rendered state after reconnect."
+      ],
+      "likely_scope": [
+        "client proctor/dashboard JavaFX views"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "UI-05",
+      "epic": "UI",
+      "title": "GUI responsiveness and packaging regression",
+      "owner": "B",
+      "reviewer": "C",
+      "priority": "P0",
+      "dependencies": [
+        "UI-02",
+        "UI-03",
+        "UI-04"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Protect the functioning JavaFX application from regressions due to polish.",
+      "acceptance_criteria": [
+        "No file, HTTP, process scan or USB probing on JavaFX Application Thread.",
+        "Workers stop on logout/exit; stale callbacks cannot overwrite a newly selected attempt.",
+        "Installer/app-image runs without IDE and with Unicode paths."
+      ],
+      "verification": [
+        "UI interaction and worker cleanup tests.",
+        "Packaged smoke and evidence on intended OS."
+      ],
+      "likely_scope": [
+        "client, package config, evidence/gui/"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "MON-01",
+      "epic": "MON",
+      "title": "Prove existing process monitoring end to end",
+      "owner": "C",
+      "reviewer": "B",
+      "priority": "P0",
+      "dependencies": [
+        "BASE-02"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Treat existing ProcessCollector and FULL monitoring as reusable infrastructure.",
+      "acceptance_criteria": [
+        "Candidate-only collector observes allowlisted apps and sends event/state to server.",
+        "Proctor sees correct attempt event/state; no proctor collector, no duplicate event per scan.",
+        "Missing metadata and absence of events do not become false cheating conclusions."
+      ],
+      "verification": [
+        "MT01/MT07/MT08 technical regression and a manual LAN observation.",
+        "Store observed/received times separately."
+      ],
+      "likely_scope": [
+        "client monitoring, server monitoring, proctor view"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "MON-02",
+      "epic": "MON",
+      "title": "Windows USB-storage presence and plug/unplug events",
+      "owner": "C",
+      "reviewer": "A",
+      "priority": "P0",
+      "dependencies": [
+        "BASE-04",
+        "MON-07"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Monitor actual USB mass-storage presence and changes during an authorized exam.",
+      "acceptance_criteria": [
+        "Compare Windows PnP notification with a documented, bounded WMI/CIM fallback; choose one justified by hardware evidence.",
+        "Emit PRESENT_AT_START, CONNECTED and REMOVED only for classified storage, not every USB mouse/keyboard.",
+        "Debounce duplicate OS notifications; report unknown classification rather than inventing device identity.",
+        "No reading files, serial numbers in ordinary logs, hidden monitoring or OS-level blocking."
+      ],
+      "verification": [
+        "Use a physical storage USB on Windows: baseline, plug, unplug, fast duplicate, reconnect and process restart.",
+        "Test no-admin deployment and explicit unsupported-device statuses."
+      ],
+      "likely_scope": [
+        "client monitoring/windows USB observer; integration via MON-07"
+      ],
+      "risk_or_note": "Native dependencies such as JNA need README declaration and packaging test; no hardware equals NOT RUN, not PASS."
+    },
+    {
+      "id": "MON-03",
+      "epic": "MON",
+      "title": "Candidate exam focus monitoring",
+      "owner": "B",
+      "reviewer": "C",
+      "priority": "P0",
+      "dependencies": [
+        "BASE-04",
+        "MON-07"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Observe candidate window focus changes only during an authorized attempt.",
+      "acceptance_criteria": [
+        "Emit focus lost/restored with monotonic in-client duration if measurable.",
+        "Account for legitimate JavaFX internal dialogs and startup transitions.",
+        "Avoid global window-title scraping or reading contents of other applications."
+      ],
+      "verification": [
+        "JavaFX automated event tests and manual alt-tab/outside-window demo.",
+        "No events from proctor role or after session ends."
+      ],
+      "likely_scope": [
+        "client exam view/observer, MON-07 event adapter"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "MON-04",
+      "epic": "MON",
+      "title": "Minimize and fullscreen-state monitoring",
+      "owner": "B",
+      "reviewer": "C",
+      "priority": "P0",
+      "dependencies": [
+        "BASE-04",
+        "MON-07"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Track window minimize and exit from fullscreen without requiring kiosk/OS lockdown.",
+      "acceptance_criteria": [
+        "Emit minimize/restore and fullscreen-exit only when applicable to the current window mode.",
+        "Debounce duplicate property transitions and distinguish intentional non-fullscreen initial state.",
+        "No automatic punishment or forced focus to hide the event."
+      ],
+      "verification": [
+        "JavaFX lifecycle and manual window actions, including closing/disposal."
+      ],
+      "likely_scope": [
+        "client JavaFX stage observer, MON-07 event adapter"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "MON-05",
+      "epic": "MON",
+      "title": "Connected-display count and changes",
+      "owner": "B",
+      "reviewer": "C",
+      "priority": "P0",
+      "dependencies": [
+        "BASE-04",
+        "MON-07"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Report baseline display count and changes visible to the client OS.",
+      "acceptance_criteria": [
+        "Record reported count at monitoring start and detected change during the attempt.",
+        "Use a bounded interval/event-driven refresh and clean resource lifecycle.",
+        "Unknown/unsupported changes must be labeled, not treated as proof of one-display use."
+      ],
+      "verification": [
+        "Physical connect/disconnect of second display where hardware permits.",
+        "Mock JavaFX screen data tested separately, labeled MOCK."
+      ],
+      "likely_scope": [
+        "client display observer, MON-07 event adapter"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "MON-06",
+      "epic": "MON",
+      "title": "Exam-local activity and idle metrics",
+      "owner": "B",
+      "reviewer": "C",
+      "priority": "P1",
+      "dependencies": [
+        "MON-07",
+        "EX-06"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Capture minimal actions inside the exam application only.",
+      "acceptance_criteria": [
+        "Aggregate question navigations/answer actions and elapsed no-interaction time.",
+        "Do not record keystrokes, clipboard contents, browser URL, chat messages or private files.",
+        "Configurable thresholds do not label the student guilty."
+      ],
+      "verification": [
+        "Fixture tests for idle thresholds and no-data/clock gaps.",
+        "Verify metrics stop after session ends."
+      ],
+      "likely_scope": [
+        "client exam activity observer, MON-07 events"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "MON-07",
+      "epic": "MON",
+      "title": "Typed multi-signal event protocol and persistence",
+      "owner": "C",
+      "reviewer": "A",
+      "priority": "P0",
+      "dependencies": [
+        "BASE-04",
+        "MON-01"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Add a single typed event stream for USB/window/display/activity observations while preserving existing process state semantics.",
+      "acceptance_criteria": [
+        "Document schema version, eventType, eventId, attemptId, client-observed time, server-received time, metadata limits and source.",
+        "Check authentication and attempt ownership before duplicate/cached response; no cross-attempt information leakage.",
+        "Bound the queue and retries; stable eventId across retries, dedup in DB, ACK success only after commit.",
+        "Process current FULL/DELTA state remains distinct from history; do not reuse PROCESS_OBSERVED schema for unrelated signals."
+      ],
+      "verification": [
+        "Real PostgreSQL/HTTP/WS tests: accepted, duplicate same/different, malformed, expired session, unauthorized, COMMIT failure.",
+        "Simulated ACK loss + actual reconnect and persisted history checks."
+      ],
+      "likely_scope": [
+        "protocol, server monitoring handler/persistence, client event delivery"
+      ],
+      "risk_or_note": "Do not refactor the existing reliable process pipeline until equivalence is proven."
+    },
+    {
+      "id": "MON-08",
+      "epic": "MON",
+      "title": "Rule-based alert classification",
+      "owner": "C",
+      "reviewer": "B",
+      "priority": "P1",
+      "dependencies": [
+        "MON-07",
+        "MON-02",
+        "MON-03"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Group observations into actionable, explainable proctor notices.",
+      "acceptance_criteria": [
+        "Use explicit rules with INFO/REVIEW/HIGH_ATTENTION, configured per approved policy.",
+        "Aggregate duplicate and burst events without deleting raw history.",
+        "USB or focus event alone never triggers an automatic cheating verdict or exam cancellation."
+      ],
+      "verification": [
+        "Deterministic rules tests, thresholds/burst fixtures and harmless false-positive examples."
+      ],
+      "likely_scope": [
+        "server monitoring alert summary, client proctor display"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "MON-09",
+      "epic": "MON",
+      "title": "Unified multi-signal proctor timeline",
+      "owner": "B",
+      "reviewer": "C",
+      "priority": "P0",
+      "dependencies": [
+        "UI-01",
+        "MON-01",
+        "MON-02",
+        "MON-03",
+        "MON-04",
+        "MON-05",
+        "MON-07"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Let a proctor inspect an authorized candidate exam through a single reliable event timeline.",
+      "acceptance_criteria": [
+        "Show process, USB, focus, minimize/fullscreen, display, heartbeat/session and Listening interruption from authoritative sources.",
+        "Sort/label client observed versus server received time; show stale/UNKNOWN and detection limitations.",
+        "Scoped history retrieval and reconnect refresh work; filtering must not make unobserved periods look healthy."
+      ],
+      "verification": [
+        "GUI session with two candidate attempts and wrong-role/other-attempt restrictions.",
+        "Network reconnect and stale data UX regression."
+      ],
+      "likely_scope": [
+        "client proctor dashboard/model/API"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "QA-01",
+      "epic": "QA",
+      "title": "Full functional and contract regression",
+      "owner": "A",
+      "reviewer": "B",
+      "priority": "P0",
+      "dependencies": [
+        "EX-08",
+        "UI-05",
+        "MON-09"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Validate all user-facing paths and the network invariants of the integrated release candidate.",
+      "acceptance_criteria": [
+        "AT01-AT11, LT01-LT04, MT01-MT08 and IT01-IT04 handled according to their specified coverage.",
+        "Include new image/media, USB, focus/display and start-gate cases.",
+        "Capture actual failures and skipped cases by ID, SHA, OS, environment and input."
+      ],
+      "verification": [
+        "Clean Maven test/package with real PostgreSQL where required.",
+        "Report PASS/PARTIAL/FAIL/BLOCKED/NOT RUN without promotion based on mocks."
+      ],
+      "likely_scope": [
+        "docs/KIEM_THU.md, evidence/, test modules"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "QA-02",
+      "epic": "QA",
+      "title": "Multi-client physical LAN acceptance",
+      "owner": "B",
+      "reviewer": "A",
+      "priority": "P0",
+      "dependencies": [
+        "QA-01"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Demonstrate real network behavior, not multiple windows on one host.",
+      "acceptance_criteria": [
+        "One server/database and at least two candidate apps plus a proctor across at least two physical machines.",
+        "Test correct scoped proctor view, concurrent saving, client disconnect and independent clients.",
+        "Listening disconnect preserves no-auto-replay rule; monitoring reconnect reopens fresh FULL."
+      ],
+      "verification": [
+        "Record topology, addresses excluding secrets, SHA, OS, steps, logs and screenshots.",
+        "Mark BLOCKED/NOT RUN if the second physical machine cannot be arranged."
+      ],
+      "likely_scope": [
+        "docs/LAN_TWO_MACHINE_RUNBOOK.md, evidence/lan/"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "QA-03",
+      "epic": "QA",
+      "title": "Fault injection and concurrency consistency",
+      "owner": "A",
+      "reviewer": "C",
+      "priority": "P0",
+      "dependencies": [
+        "QA-01"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Prove the server remains correct under duplicate, stale, malformed and concurrent requests.",
+      "acceptance_criteria": [
+        "Test save-vs-submit-vs-timeout and writer takeover with PostgreSQL locks and deterministic barriers.",
+        "Test loss of ACK, server restart, stale epoch and wrong-attempt data; malformed requests cannot take down other clients.",
+        "Do not return success on DB rollback or return another users private exam data."
+      ],
+      "verification": [
+        "Recorded deterministic steps, SQL state and reproducible logs.",
+        "Review end state and regression against known passing SHA."
+      ],
+      "likely_scope": [
+        "server/protocol tests, evidence/faults/"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "QA-04",
+      "epic": "QA",
+      "title": "Physical multi-signal acceptance",
+      "owner": "C",
+      "reviewer": "B",
+      "priority": "P0",
+      "dependencies": [
+        "MON-02",
+        "MON-03",
+        "MON-04",
+        "MON-05",
+        "MON-07"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Validate physical USB/display plus focus and session lifecycle through the real event path.",
+      "acceptance_criteria": [
+        "Storage USB present-before-start/plug/unplug/duplicate works with real Windows hardware.",
+        "Focus/fullscreen/minimize/display events are attributed to correct attempt and timeline.",
+        "Reconnect retains committed history, and a stopped attempt has no active observers."
+      ],
+      "verification": [
+        "Hardware inventory and permissions, SHA, Windows edition, timestamps, DB rows and proctor screenshots.",
+        "Mock tests are supplemental, not proof of physical USB behavior."
+      ],
+      "likely_scope": [
+        "evidence/multi-signal/, docs/KIEM_THU.md"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "QA-05",
+      "epic": "QA",
+      "title": "E1 controlled polling trade-off experiment",
+      "owner": "C",
+      "reviewer": "B",
+      "priority": "P0",
+      "dependencies": [
+        "BASE-02",
+        "MON-01"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Measure ProcessHandle polling trade-offs using controlled process ground truth.",
+      "acceptance_criteria": [
+        "Poll periods 250/500/1000/2000 ms, repeated campaign as prescribed in 03_KIEM_THU_VA_THUC_NGHIEM.md.",
+        "Record actual observation/miss/detection latency, CPU coverage and memory definition.",
+        "Preserve original raw files/checksums and clearly separate historical from newly rerun data."
+      ],
+      "verification": [
+        "Analyzer reproduces summary from raw and source SHA.",
+        "Invalid/partial runs remain visible and are excluded by written rules."
+      ],
+      "likely_scope": [
+        "docs/E1_T4C1_MEASUREMENT.md, evidence/e1/, analyzer"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "QA-06",
+      "epic": "QA",
+      "title": "E2 conditional delta and concurrent-client benchmarks",
+      "owner": "A",
+      "reviewer": "C",
+      "priority": "P0",
+      "dependencies": [
+        "BASE-03",
+        "MON-01"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Provide defensible network/performance evidence independent of GUI polish.",
+      "acceptance_criteria": [
+        "Run 1/5/10 headless-client load testing as supported by hardware and the existing plan, with repeats and resource metrics.",
+        "Run FULL-vs-DELTA E2 only when correctness gate and equivalent measurement inputs/coverage are achieved.",
+        "If E2 is blocked, report the reason and use FULL benchmark evidence; do not invent percentage savings.",
+        "Distinguish serialized application payload bytes from total TCP/IP wire bytes and headless clients from real JavaFX desktops."
+      ],
+      "verification": [
+        "Versioned raw metrics, test configuration, independent analyzer and peer review.",
+        "Negative or inconclusive results are documented."
+      ],
+      "likely_scope": [
+        "evidence/e2/, evidence/load/, docs/monitoring measurement notes"
+      ],
+      "risk_or_note": "E2 is conditional even though concurrency measurement remains a required release activity."
+    },
+    {
+      "id": "REL-01",
+      "epic": "REL",
+      "title": "Technical paper-style report",
+      "owner": "A",
+      "reviewer": "B",
+      "priority": "P0",
+      "dependencies": [
+        "BASE-01",
+        "EX-02",
+        "MON-07"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Write a technically defensible paper, not just user instructions.",
+      "acceptance_criteria": [
+        "Include problem, objectives, architecture, protocol, concurrent requests, persistence, failure handling and implementation.",
+        "Clearly separate Spring/JavaFX/DB framework behavior from logic authored by the group.",
+        "Explain full 200-question workflows and multi-signal observer sources with limitations."
+      ],
+      "verification": [
+        "A/B/C technical cross-review; relevant source/evidence links and references.",
+        "Report draft builds and has consistent terminology."
+      ],
+      "likely_scope": [
+        "report/ (in actual repo after approval), diagrams, references"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "REL-02",
+      "epic": "REL",
+      "title": "Results, discussion, novelty and limitations",
+      "owner": "C",
+      "reviewer": "A",
+      "priority": "P0",
+      "dependencies": [
+        "QA-05",
+        "QA-03"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Tie every performance and reliability claim to measured runs or explicit negative results.",
+      "acceptance_criteria": [
+        "Results use valid real metrics with test topology, run count, SHA, environment and confidence limits.",
+        "Novelty discusses dependable exam event delivery plus polling and delta only to the extent supported by evidence.",
+        "Explicitly document blind spots: process polling miss, client tampering, USB coverage, lack of webcam and monitoring consent.",
+        "Do not imply an E2 improvement when it was not run or was inconclusive."
+      ],
+      "verification": [
+        "All tables/plots are generated from immutable raw files.",
+        "Peer review cross-checks at least one metric by hand."
+      ],
+      "likely_scope": [
+        "report/Results, Discussion, Novelty, Limitations, evidence/"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "REL-03",
+      "epic": "REL",
+      "title": "Repeatable deployment and source packaging",
+      "owner": "B",
+      "reviewer": "A",
+      "priority": "P0",
+      "dependencies": [
+        "QA-01",
+        "EX-08",
+        "MON-09"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Deliver an installable/runnable submission containing all legally distributable dependencies and media.",
+      "acceptance_criteria": [
+        "Windows JavaFX client with documented Java runtime, Spring server, PostgreSQL migration and seed data.",
+        "TOEIC_AUDIO_ROOT/image root and URLs are configurable and do not assume localhost.",
+        "Clean machine startup, import/seed, login, exam, monitoring, exit/uninstall and no-secret packaging documented.",
+        "Do not include copyrighted content without distribution rights."
+      ],
+      "verification": [
+        "Cold build and clean Windows installation with hashes/screenshots.",
+        "README has one path to build, run and test."
+      ],
+      "likely_scope": [
+        "README.md proposed update, scripts/installer, config examples, release artifact"
+      ],
+      "risk_or_note": ""
+    },
+    {
+      "id": "REL-04",
+      "epic": "REL",
+      "title": "Final demo, paper check and submission",
+      "owner": "A",
+      "reviewer": "C",
+      "priority": "P0",
+      "dependencies": [
+        "REL-01",
+        "REL-02",
+        "REL-03",
+        "QA-02",
+        "QA-03",
+        "QA-04"
+      ],
+      "status": "TO_AUDIT",
+      "objective": "Hand in a credible runnable project before the lecturer deadline.",
+      "acceptance_criteria": [
+        "Prepare one full-exam and multi-signal LAN demonstration with visible event/reconnect/USB behavior.",
+        "Run Compilatio and meet course similarity policy; final report version matches handed-over source.",
+        "Package NhomXX_TenProject_Source and NhomXX_TenProject_Report.docx in the required Source/Report tree.",
+        "Obtain handover acknowledgment; 31-Oct 23:59 ICT is a hard stop, 30-Oct is internal target."
+      ],
+      "verification": [
+        "Final signoff checklist and source/report artifact hashes.",
+        "Document any incomplete gate honestly."
+      ],
+      "likely_scope": [
+        "final Source/, Report/, submission checklist"
+      ],
+      "risk_or_note": ""
+    }
+  ]
+}

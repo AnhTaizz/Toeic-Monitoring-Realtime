@@ -1,5 +1,7 @@
 # TOEIC Monitoring Realtime
 
+> **Kế hoạch V2 (bản đề xuất cho nhóm, 19/10/2026):** [Bắt đầu tại PLAN_V2_START_HERE.md](PLAN_V2_START_HERE.md) · [36 task và backlog](docs/plan-v2/README.md) · [Trạng thái phê duyệt V2](docs/plan-v2/ADOPTION_STATUS_20261019.md). **Chưa tự thay hợp đồng/CLAUDE.md:** các đề xuất mở rộng 200 câu, USB, focus/display phải được A/B/C chốt riêng. Phase 3 hiện code-ready nhưng LAN hai máy, nghe thật và MSI máy hai còn chờ nghiệm thu.
+
 B overnight15/10 bổ sung safe ACTIVE issuance/API progress đề xuất, UI giám thị điều khiển ca và progress đãcommit, AT11exact40/42, pipelineWindows và E1harness/data. [Bàn giao6phase](evidence/overnight-20261015/00-summary.md), [giám thị](docs/PROCTOR_SESSION_PROGRESS.md), [đónggói](docs/WINDOWS_PACKAGING.md), [LAN/manual](docs/LAN_TWO_MACHINE_RUNBOOK.md). Local tests không thay human review/LAN/installer; FULL default, không thêm thư viện ngoài.
 
 Nhánh tích hợp đã ghép Reading/autosave/submit/reconnect/history và Listening B1–B3 trong cùng Application, dùng một writer của phiên thi. [Luồng và cách chạy](docs/INTEGRATION_READING_LISTENING.md), [evidence mới](evidence/integration/2026-10-15-verification.md). FULL vẫn mặc định; human/LAN/installer/gate delta/E1/E2 chưa được nghiệm thu. Các mục cũ bên dưới giữ phạm vi lịch sử.
