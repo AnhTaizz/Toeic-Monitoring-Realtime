@@ -1,0 +1,152 @@
+{
+    "availability":  "LOCAL_IGNORED_NOT_UPLOADED",
+    "localRootRelativeToWorktree":  "target/mon02-runs",
+    "entries":  [
+                    {
+                        "relativePath":  "build-direct-output.log",
+                        "bytes":  6870,
+                        "sha256":  "5be42b175d8652652d429771c4cfd9ce68537e1ec9f8e44ee31a927df7cab7e8"
+                    },
+                    {
+                        "relativePath":  "build-receipt.json",
+                        "bytes":  8493,
+                        "sha256":  "d02112ac1bba481c5fed1c4cdeb06024981bed9ffed6f7f864551ad0b8b8c357"
+                    },
+                    {
+                        "relativePath":  "build-receipt-final.json",
+                        "bytes":  8493,
+                        "sha256":  "3a395fd2d637cd28c90dda63971abb859a9b505eac19fc2a8dbd3665cea499a4"
+                    },
+                    {
+                        "relativePath":  "build-source.log",
+                        "bytes":  6870,
+                        "sha256":  "11a0cc25195483cf88c5d414ad86e76dc891eb177f7f7606899e4f2d1326d1be"
+                    },
+                    {
+                        "relativePath":  "controls-final.json",
+                        "bytes":  356,
+                        "sha256":  "fc05688d4aae68288aaa4d232fe1d5d90a49c95ae67ebd576c9cbe93898120c5"
+                    },
+                    {
+                        "relativePath":  "ctrl-c-direct.jsonl",
+                        "bytes":  6755,
+                        "sha256":  "d5f568a91f30f6c03c28fc8a571299286fc42cd2ce65864468db69eb9b6f4d63"
+                    },
+                    {
+                        "relativePath":  "ctrl-c-raw.jsonl",
+                        "bytes":  14754,
+                        "sha256":  "bf3f1886d8e35a14169f8b82be2ece3a7c08398085aecbc679694f83c6c3f47c"
+                    },
+                    {
+                        "relativePath":  "final-jar-snapshot.jsonl",
+                        "bytes":  1013,
+                        "sha256":  "3cc608939f753ff81017b96aaba37abf6ae6a5b0c7600e2927ef1f09dbe0fdcd"
+                    },
+                    {
+                        "relativePath":  "final-msft-snapshot.jsonl",
+                        "bytes":  1013,
+                        "sha256":  "6eb510663e479f1e5be1250df9e07cd28e8309cd67b1a824b51537a51b5df437"
+                    },
+                    {
+                        "relativePath":  "final-msft-timeout.jsonl",
+                        "bytes":  1016,
+                        "sha256":  "7d74b3546c01c73b680a133a932739b7d11548d3c4824d9e57fe37656cc6c9e5"
+                    },
+                    {
+                        "relativePath":  "final-msft-watch.jsonl",
+                        "bytes":  2225,
+                        "sha256":  "0fc3b723e330fed6536c7030f06ff2099383441277ebb03d2d59b6b0c7220246"
+                    },
+                    {
+                        "relativePath":  "final-output-limit.jsonl",
+                        "bytes":  1312,
+                        "sha256":  "deeb611080e871a2fe4d3ab4edb3fd448ff059212ced9e2db1addcec43f01bae"
+                    },
+                    {
+                        "relativePath":  "final-win32-snapshot.jsonl",
+                        "bytes":  1045,
+                        "sha256":  "c921cc39724c583a33cfa8ecca85e7d2edbfdef2d4ba524d1ec5d2b0aad47592"
+                    },
+                    {
+                        "relativePath":  "jar-snapshot.jsonl",
+                        "bytes":  1013,
+                        "sha256":  "d2c3e41b6aad4623a16b1f50f69f296ce298ae856b755a877655c7140ac80d8c"
+                    },
+                    {
+                        "relativePath":  "msft-snapshot.jsonl",
+                        "bytes":  1010,
+                        "sha256":  "c900c82879301421cbcc301d39fc21dbc5e4aef43696d7d93fde83ef89840630"
+                    },
+                    {
+                        "relativePath":  "msft-timeout.jsonl",
+                        "bytes":  1013,
+                        "sha256":  "b03afc65560add2ac5e91c951d464b25a6470ba172be7e0c685bb43a8aa5ea92"
+                    },
+                    {
+                        "relativePath":  "msft-watch.jsonl",
+                        "bytes":  2225,
+                        "sha256":  "057d8d56a04b511b390bc32de9458c81d1651fb8d88e5a32a687dadf13aee62d"
+                    },
+                    {
+                        "relativePath":  "output-limit.jsonl",
+                        "bytes":  1309,
+                        "sha256":  "ea3f9b878f844948736dec1356788d7b8e88e9168fc53f059e11bca6f4739913"
+                    },
+                    {
+                        "relativePath":  "surefire/TEST-vn.edu.toeic.monitoring.ProcessObservationTest.xml",
+                        "bytes":  8854,
+                        "sha256":  "e89251d5d8a1555faae75de6ebaab92ded7a081592c90663bfb702a380d6d0b2"
+                    },
+                    {
+                        "relativePath":  "surefire/TEST-vn.edu.toeic.monitoring.usb.CimClassificationScriptTest.xml",
+                        "bytes":  9623,
+                        "sha256":  "870d04aa403eb41cfa4b0c3ce1c159fedd68b4b20b2650132158a53f684bbb94"
+                    },
+                    {
+                        "relativePath":  "surefire/TEST-vn.edu.toeic.monitoring.usb.CimSnapshotSourceTest.xml",
+                        "bytes":  10609,
+                        "sha256":  "3b6a22acce573eb0ca2c4540e9278e92dea96ca53758371ea55d22cba22c1e49"
+                    },
+                    {
+                        "relativePath":  "surefire/TEST-vn.edu.toeic.monitoring.usb.UsbObservationTrackerTest.xml",
+                        "bytes":  10219,
+                        "sha256":  "e78a20e8e45a6af7a9ccfd25e73d761d32510d9193af6d5080480280855dde85"
+                    },
+                    {
+                        "relativePath":  "surefire/TEST-vn.edu.toeic.monitoring.usb.UsbStorageProbeTest.xml",
+                        "bytes":  9123,
+                        "sha256":  "9309b2d25efd114bd944d4f74af712f7747610dd5ffb81554b03ec8c0961e0a7"
+                    },
+                    {
+                        "relativePath":  "surefire-final/TEST-vn.edu.toeic.monitoring.ProcessObservationTest.xml",
+                        "bytes":  8851,
+                        "sha256":  "51ae27d99155ff40a46a604dadec69ff77604a8f919185ae9a607d8170aa62f3"
+                    },
+                    {
+                        "relativePath":  "surefire-final/TEST-vn.edu.toeic.monitoring.usb.CimClassificationScriptTest.xml",
+                        "bytes":  9620,
+                        "sha256":  "c87deea6a620fae0c4bf11053b95fc4d097abb7e0fab68422cab1e56280ca3d5"
+                    },
+                    {
+                        "relativePath":  "surefire-final/TEST-vn.edu.toeic.monitoring.usb.CimSnapshotSourceTest.xml",
+                        "bytes":  10605,
+                        "sha256":  "f715256de0c6012d3b9761fe8b025fd6d75710c84f5094f94b9c7b9573173d94"
+                    },
+                    {
+                        "relativePath":  "surefire-final/TEST-vn.edu.toeic.monitoring.usb.UsbObservationTrackerTest.xml",
+                        "bytes":  10216,
+                        "sha256":  "91bfe1692dd096e59f44613670dd83464c4b738618ecad6b9a81942ea025460b"
+                    },
+                    {
+                        "relativePath":  "surefire-final/TEST-vn.edu.toeic.monitoring.usb.UsbStorageProbeTest.xml",
+                        "bytes":  9264,
+                        "sha256":  "ec6ad8474369a7c5c244f97c3435e7784d45b2e1ec9abe4bafae2a3b962c23be"
+                    },
+                    {
+                        "relativePath":  "win32-snapshot.jsonl",
+                        "bytes":  1045,
+                        "sha256":  "a70fb25acad77af73c114591803a5614ded226a6bb7afb645991c7565396ae78"
+                    }
+                ],
+    "note":  "Raw logs/XML remain private; file names and hashes are not GitHub download links. ctrl-c-raw.jsonl is the earlier incomplete Tee pipeline run, kept unchanged."
+}

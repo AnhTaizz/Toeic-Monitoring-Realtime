@@ -1,0 +1,10 @@
+{
+    "sourceSha":  "30166b3d50218a570ca523bde452a15a58dfcf0e",
+    "build":  "isolated monitoring-spike clean verify",
+    "unitTests":  35,
+    "jarSha256":  "dfdb7dd1b0fc5a2e87342a521c1a0c3a517399d5fb4b8d6825ce14a7261a8326",
+    "localReceiptSha256":  "3a395fd2d637cd28c90dda63971abb859a9b505eac19fc2a8dbd3665cea499a4",
+    "javaDependenciesAdded":  0,
+    "nativeDependenciesAdded":  0,
+    "productionPackaging":  "NOT_TESTED_NOT_CHANGED"
+}

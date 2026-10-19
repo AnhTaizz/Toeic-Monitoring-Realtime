@@ -1,0 +1,36 @@
+{
+  "algorithm": "SHA-256",
+  "scope": "Published derived files only; excludes this manifest",
+  "entries": [
+    {
+      "path": "REPORT.md",
+      "bytes": 11090,
+      "sha256": "8e92e75e6e67ad3cae2a9117125f43005bf64ac46706aae29faee775402b2e43"
+    },
+    {
+      "path": "build-receipt.json",
+      "bytes": 446,
+      "sha256": "5735d646123e427930551dc88107bd73f3bc8c62806a6c5e93ca42b8e971939e"
+    },
+    {
+      "path": "physical-pending.csv",
+      "bytes": 760,
+      "sha256": "e450e06614ed253f04b0d2b2f6bd2ad7f11ec3634ad004eb4a184031d68beefd"
+    },
+    {
+      "path": "raw-manifest.json",
+      "bytes": 8153,
+      "sha256": "10f2f07a1651310ffcd93d1cce51586b5cdf505fbc0578f656caed6ac78aa010"
+    },
+    {
+      "path": "runtime-summary.json",
+      "bytes": 17472,
+      "sha256": "b5b5ec3e688acb90f5ede5f11c8d348545987d5276f907c1210f3bc6909a54dc"
+    },
+    {
+      "path": "unit-tests.json",
+      "bytes": 10314,
+      "sha256": "b798ff104554ba10d2eb27b3996a00e89d482ae43bb2f43850ba6d66af2bc75f"
+    }
+  ]
+}

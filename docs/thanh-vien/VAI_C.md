@@ -421,3 +421,8 @@ Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG
 
 
 19/10/2026 — [Kết quả thực thi cuối](../../evidence/stage3-execution-20261019/REPORT.md), [artifact và thao tác máy thật](../STAGE3_FINAL_HANDOFF.md). Buildsourcecfbba58, haiP1/main/CI/PG/regression/MSIlocal đã kiểm. Reviewer kỹ thuật Codex theo user, không chữ ký vai. Việc dở: cùng B chạy physical41case, chốt FULL/DELTA gate; giữ FULL khi chưa đủ bằng chứng, không nhận measurement INCOMPLETE là E1/E2PASS.
+
+
+### Ghi chú làm dở — MON-02 standalone USB probe, 19/10/2026
+
+Source `30166b3d50218a570ca523bde452a15a58dfcf0e`, nhánh `spike/v2-c-mon02-usb-storage` từ main1d35b537. [Probe/lệnh](../USB_STORAGE_PROBE.md), [report](../../evidence/v2-c-mon02/REPORT.md). Java21+PowerShell/CIM không dependency mới;35module tests PASS với device MOCK, REAL provider MSFT READY0/Win32 UNKNOWN token STANDARD. Timeout/flood/query close/Ctrl+C direct file/receipt guard có evidence; Tee Ctrl+C cũ INCOMPLETE giữ nguyên. Chưa physical cắm/rút/twoUSB/HID/UASP/no-drive-letter,0/12NOT_RUN; PnP/event subscription NOT_IMPLEMENTED, nativeRegistration NOT_USED. C/B cần review API/identity/polling loss/cleanup/hardware và ADR-V2-05; A cần auth/disclosure/retention/lifetime trước integration cùng MON-07/BASE-04. Không approve ADR, MON-02 DONE/backlog/merge/E1/E2 hoặc đổi FULL. Dừng sau push/Draft PR probe.

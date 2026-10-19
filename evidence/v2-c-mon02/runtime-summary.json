@@ -1,0 +1,352 @@
+{
+    "schema":  "mon02-probe-evidence-v1",
+    "baseSha":  "1d35b53729abade7b460d35ab07d042b6f9f3571",
+    "sourceSha":  "30166b3d50218a570ca523bde452a15a58dfcf0e",
+    "runs":  [
+                 {
+                     "caseId":  "final-msft-snapshot",
+                     "runId":  "a43a54c7-0c76-45c2-a2ce-b4a3f46ed1ed",
+                     "sourceSha":  "30166b3d50218a570ca523bde452a15a58dfcf0e",
+                     "method":  "MSFT_DISK",
+                     "machineAlias":  "WIN-C-PROBE",
+                     "os":  "Windows 11",
+                     "osVersion":  "10.0",
+                     "architecture":  "amd64",
+                     "javaVersion":  "21.0.10",
+                     "startedAt":  "2026-10-19T13:02:32.942059800Z",
+                     "finishedAt":  "2026-10-19T13:02:33.403099900Z",
+                     "records":  3,
+                     "snapshots":  1,
+                     "statuses":  [
+                                      "READY"
+                                  ],
+                     "privileges":  [
+                                        "STANDARD"
+                                    ],
+                     "powershellVersions":  [
+                                                "5.1.26100.9711"
+                                            ],
+                     "observedStorageCounts":  [
+                                                   0
+                                               ],
+                     "problems":  [
+                                      "NONE"
+                                  ],
+                     "queryMillis":  [
+                                         429
+                                     ],
+                     "exitCode":  0,
+                     "cleanup":  {
+                                     "childrenStarted":  1,
+                                     "childrenAlive":  0,
+                                     "pipeReadersTerminated":  true,
+                                     "nativeRegistration":  "NOT_USED"
+                                 },
+                     "rawSha256":  "6eb510663e479f1e5be1250df9e07cd28e8309cd67b1a824b51537a51b5df437",
+                     "sensorEvidence":  "REAL_WINDOWS_PROVIDER_NO_PHYSICAL_ACTION_CONFIRMED"
+                 },
+                 {
+                     "caseId":  "final-msft-watch",
+                     "runId":  "c4e0563f-00b5-4255-8a05-992609f27da6",
+                     "sourceSha":  "30166b3d50218a570ca523bde452a15a58dfcf0e",
+                     "method":  "MSFT_DISK",
+                     "machineAlias":  "WIN-C-PROBE",
+                     "os":  "Windows 11",
+                     "osVersion":  "10.0",
+                     "architecture":  "amd64",
+                     "javaVersion":  "21.0.10",
+                     "startedAt":  "2026-10-19T13:02:33.643003600Z",
+                     "finishedAt":  "2026-10-19T13:02:39.650326200Z",
+                     "records":  7,
+                     "snapshots":  5,
+                     "statuses":  [
+                                      "READY"
+                                  ],
+                     "privileges":  [
+                                        "STANDARD"
+                                    ],
+                     "powershellVersions":  [
+                                                "5.1.26100.9711"
+                                            ],
+                     "observedStorageCounts":  [
+                                                   0
+                                               ],
+                     "problems":  [
+                                      "NONE"
+                                  ],
+                     "queryMillis":  [
+                                         374,
+                                         330,
+                                         339,
+                                         343,
+                                         333
+                                     ],
+                     "exitCode":  0,
+                     "cleanup":  {
+                                     "childrenStarted":  5,
+                                     "childrenAlive":  0,
+                                     "pipeReadersTerminated":  true,
+                                     "nativeRegistration":  "NOT_USED"
+                                 },
+                     "rawSha256":  "0fc3b723e330fed6536c7030f06ff2099383441277ebb03d2d59b6b0c7220246",
+                     "sensorEvidence":  "REAL_WINDOWS_PROVIDER_NO_PHYSICAL_ACTION_CONFIRMED"
+                 },
+                 {
+                     "caseId":  "final-win32-snapshot",
+                     "runId":  "5e5d3773-e87a-4481-b06b-77fe0cf90ce0",
+                     "sourceSha":  "30166b3d50218a570ca523bde452a15a58dfcf0e",
+                     "method":  "WIN32_DISKDRIVE",
+                     "machineAlias":  "WIN-C-PROBE",
+                     "os":  "Windows 11",
+                     "osVersion":  "10.0",
+                     "architecture":  "amd64",
+                     "javaVersion":  "21.0.10",
+                     "startedAt":  "2026-10-19T13:02:39.930776800Z",
+                     "finishedAt":  "2026-10-19T13:02:40.295208300Z",
+                     "records":  3,
+                     "snapshots":  1,
+                     "statuses":  [
+                                      "UNKNOWN"
+                                  ],
+                     "privileges":  [
+                                        "STANDARD"
+                                    ],
+                     "powershellVersions":  [
+                                                "5.1.26100.9711"
+                                            ],
+                     "observedStorageCounts":  [
+                                                   0
+                                               ],
+                     "problems":  [
+                                      "CLASSIFICATION_INCOMPLETE"
+                                  ],
+                     "queryMillis":  [
+                                         335
+                                     ],
+                     "exitCode":  4,
+                     "cleanup":  {
+                                     "childrenStarted":  1,
+                                     "childrenAlive":  0,
+                                     "pipeReadersTerminated":  true,
+                                     "nativeRegistration":  "NOT_USED"
+                                 },
+                     "rawSha256":  "c921cc39724c583a33cfa8ecca85e7d2edbfdef2d4ba524d1ec5d2b0aad47592",
+                     "sensorEvidence":  "REAL_WINDOWS_PROVIDER_NO_PHYSICAL_ACTION_CONFIRMED"
+                 },
+                 {
+                     "caseId":  "final-msft-timeout",
+                     "runId":  "3675ac38-0b0a-42f5-87da-51b042001f48",
+                     "sourceSha":  "30166b3d50218a570ca523bde452a15a58dfcf0e",
+                     "method":  "MSFT_DISK",
+                     "machineAlias":  "WIN-C-PROBE",
+                     "os":  "Windows 11",
+                     "osVersion":  "10.0",
+                     "architecture":  "amd64",
+                     "javaVersion":  "21.0.10",
+                     "startedAt":  "2026-10-19T13:02:40.565397700Z",
+                     "finishedAt":  "2026-10-19T13:02:40.751789700Z",
+                     "records":  3,
+                     "snapshots":  1,
+                     "statuses":  [
+                                      "ERROR"
+                                  ],
+                     "privileges":  [
+                                        "UNKNOWN"
+                                    ],
+                     "powershellVersions":  [
+                                                "UNKNOWN"
+                                            ],
+                     "observedStorageCounts":  [
+                                                   0
+                                               ],
+                     "problems":  [
+                                      "QUERY_TIMEOUT"
+                                  ],
+                     "queryMillis":  [
+                                         156
+                                     ],
+                     "exitCode":  3,
+                     "cleanup":  {
+                                     "childrenStarted":  1,
+                                     "childrenAlive":  0,
+                                     "pipeReadersTerminated":  true,
+                                     "nativeRegistration":  "NOT_USED"
+                                 },
+                     "rawSha256":  "7d74b3546c01c73b680a133a932739b7d11548d3c4824d9e57fe37656cc6c9e5",
+                     "sensorEvidence":  "REAL_WINDOWS_PROVIDER_NO_PHYSICAL_ACTION_CONFIRMED"
+                 },
+                 {
+                     "caseId":  "final-output-limit",
+                     "runId":  "fb658c90-bad9-4c03-b9b8-30590205e421",
+                     "sourceSha":  "30166b3d50218a570ca523bde452a15a58dfcf0e",
+                     "method":  "MSFT_DISK",
+                     "machineAlias":  "WIN-C-PROBE",
+                     "os":  "Windows 11",
+                     "osVersion":  "10.0",
+                     "architecture":  "amd64",
+                     "javaVersion":  "21.0.10",
+                     "startedAt":  "2026-10-19T13:02:41.013716200Z",
+                     "finishedAt":  "2026-10-19T13:02:44.149720200Z",
+                     "records":  4,
+                     "snapshots":  2,
+                     "statuses":  [
+                                      "READY"
+                                  ],
+                     "privileges":  [
+                                        "STANDARD"
+                                    ],
+                     "powershellVersions":  [
+                                                "5.1.26100.9711"
+                                            ],
+                     "observedStorageCounts":  [
+                                                   0
+                                               ],
+                     "problems":  [
+                                      "NONE"
+                                  ],
+                     "queryMillis":  [
+                                         377,
+                                         333
+                                     ],
+                     "exitCode":  5,
+                     "cleanup":  {
+                                     "childrenStarted":  3,
+                                     "childrenAlive":  0,
+                                     "pipeReadersTerminated":  true,
+                                     "nativeRegistration":  "NOT_USED"
+                                 },
+                     "rawSha256":  "deeb611080e871a2fe4d3ab4edb3fd448ff059212ced9e2db1addcec43f01bae",
+                     "sensorEvidence":  "REAL_WINDOWS_PROVIDER_NO_PHYSICAL_ACTION_CONFIRMED"
+                 },
+                 {
+                     "caseId":  "final-jar-snapshot",
+                     "runId":  "5440e36a-4e50-4e7f-a555-3561216a9726",
+                     "sourceSha":  "30166b3d50218a570ca523bde452a15a58dfcf0e",
+                     "method":  "MSFT_DISK",
+                     "machineAlias":  "WIN-C-PROBE",
+                     "os":  "Windows 11",
+                     "osVersion":  "10.0",
+                     "architecture":  "amd64",
+                     "javaVersion":  "21.0.10",
+                     "startedAt":  "2026-10-19T13:02:44.583384100Z",
+                     "finishedAt":  "2026-10-19T13:02:44.997634800Z",
+                     "records":  3,
+                     "snapshots":  1,
+                     "statuses":  [
+                                      "READY"
+                                  ],
+                     "privileges":  [
+                                        "STANDARD"
+                                    ],
+                     "powershellVersions":  [
+                                                "5.1.26100.9711"
+                                            ],
+                     "observedStorageCounts":  [
+                                                   0
+                                               ],
+                     "problems":  [
+                                      "NONE"
+                                  ],
+                     "queryMillis":  [
+                                         382
+                                     ],
+                     "exitCode":  0,
+                     "cleanup":  {
+                                     "childrenStarted":  1,
+                                     "childrenAlive":  0,
+                                     "pipeReadersTerminated":  true,
+                                     "nativeRegistration":  "NOT_USED"
+                                 },
+                     "rawSha256":  "3cc608939f753ff81017b96aaba37abf6ae6a5b0c7600e2927ef1f09dbe0fdcd",
+                     "sensorEvidence":  "REAL_WINDOWS_PROVIDER_NO_PHYSICAL_ACTION_CONFIRMED"
+                 },
+                 {
+                     "caseId":  "ctrl-c-direct",
+                     "runId":  "1c996b98-a6c5-4f63-b684-df58e44874aa",
+                     "sourceSha":  "30166b3d50218a570ca523bde452a15a58dfcf0e",
+                     "method":  "MSFT_DISK",
+                     "machineAlias":  "WIN-C-PROBE",
+                     "os":  "Windows 11",
+                     "osVersion":  "10.0",
+                     "architecture":  "amd64",
+                     "javaVersion":  "21.0.10",
+                     "startedAt":  "2026-10-19T13:01:13.838990Z",
+                     "finishedAt":  "2026-10-19T13:01:31.087124500Z",
+                     "records":  22,
+                     "snapshots":  20,
+                     "statuses":  [
+                                      "READY"
+                                  ],
+                     "privileges":  [
+                                        "STANDARD"
+                                    ],
+                     "powershellVersions":  [
+                                                "5.1.26100.9711"
+                                            ],
+                     "observedStorageCounts":  [
+                                                   0
+                                               ],
+                     "problems":  [
+                                      "NONE"
+                                  ],
+                     "queryMillis":  [
+                                         428,
+                                         321,
+                                         332,
+                                         318,
+                                         314,
+                                         328,
+                                         327,
+                                         325,
+                                         338,
+                                         327,
+                                         315,
+                                         336,
+                                         327,
+                                         335,
+                                         324,
+                                         332,
+                                         329,
+                                         326,
+                                         339,
+                                         335
+                                     ],
+                     "exitCode":  130,
+                     "cleanup":  {
+                                     "childrenStarted":  20,
+                                     "childrenAlive":  0,
+                                     "pipeReadersTerminated":  true,
+                                     "nativeRegistration":  "NOT_USED"
+                                 },
+                     "rawSha256":  "d5f568a91f30f6c03c28fc8a571299286fc42cd2ce65864468db69eb9b6f4d63",
+                     "sensorEvidence":  "REAL_WINDOWS_PROVIDER_NO_PHYSICAL_ACTION_CONFIRMED"
+                 }
+             ],
+    "additionalChecks":  [
+                             {
+                                 "value":  [
+                                               {
+                                                   "caseId":  "existing-output-rejected",
+                                                   "exitCode":  3,
+                                                   "originalHashUnchanged":  true
+                                               },
+                                               {
+                                                   "caseId":  "tampered-build-receipt",
+                                                   "rejected":  true,
+                                                   "originalReceiptRestoredByteIdentical":  true
+                                               },
+                                               {
+                                                   "caseId":  "invalid-arguments",
+                                                   "exitCode":  64
+                                               }
+                                           ],
+                                 "Count":  3
+                             }
+                         ],
+    "physicalCases":  "0/12 NOT_RUN",
+    "nativePnp":  "NOT_IMPLEMENTED",
+    "wmiEventSubscription":  "NOT_IMPLEMENTED",
+    "apiDecision":  "PROVISIONAL_MSFT_DISK_POLLING_RECOMMENDED_FOR_FURTHER_HARDWARE_TESTING",
+    "ownerApproval":  "PENDING",
+    "fullDefaultPreserved":  true
+}

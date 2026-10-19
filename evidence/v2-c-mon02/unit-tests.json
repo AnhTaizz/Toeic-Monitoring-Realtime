@@ -1,0 +1,189 @@
+{
+    "sourceSha":  "30166b3d50218a570ca523bde452a15a58dfcf0e",
+    "result":  "PASS",
+    "total":  35,
+    "newUsbTests":  34,
+    "existingProcessTest":  1,
+    "failures":  0,
+    "errors":  0,
+    "skipped":  0,
+    "deviceInputs":  "MOCK",
+    "childProcessesAndPipes":  "REAL",
+    "suites":  [
+                   {
+                       "class":  "vn.edu.toeic.monitoring.ProcessObservationTest",
+                       "tests":  1,
+                       "cases":  [
+                                     {
+                                         "name":  "readsCurrentJvmWithoutAssumingAllMetadataIsAvailable",
+                                         "status":  "PASS"
+                                     }
+                                 ],
+                       "rawXmlSha256":  "51ae27d99155ff40a46a604dadec69ff77604a8f919185ae9a607d8170aa62f3"
+                   },
+                   {
+                       "class":  "vn.edu.toeic.monitoring.usb.CimClassificationScriptTest",
+                       "tests":  6,
+                       "cases":  [
+                                     {
+                                         "name":  "msftBusTypeClassifiesStorageWithoutDriveLetterAndIgnoresUnselectedPrivateMetadata",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "scsiOrMissingBusTypeDoesNotMeanZeroStorage",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "fallbackCountsExplicitUsbButRefusesToGuessScsi",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "providerExceptionDoesNotBecomeEmptySuccessOrLeakText",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "providerRowLimitIsBounded",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "missingDiskIndexIsAnErrorNotADeviceRefGuess",
+                                         "status":  "PASS"
+                                     }
+                                 ],
+                       "rawXmlSha256":  "c87deea6a620fae0c4bf11053b95fc4d097abb7e0fab68422cab1e56280ca3d5"
+                   },
+                   {
+                       "class":  "vn.edu.toeic.monitoring.usb.CimSnapshotSourceTest",
+                       "tests":  14,
+                       "cases":  [
+                                     {
+                                         "name":  "outputFloodIsBoundedAndDoesNotLeakRawText",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "errorWithTrailingDataCannotHideMalformedResponse",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "realChildCompletesAndAllReadersTerminate",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "rowLimitAndNonzeroExitAreNotReady",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "realStuckChildIsKilledOnTimeout",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "stderrTextIsSanitized",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "missingEndIsNotSuccessfulEmptySnapshot",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "arbitraryDiagnosticTextIsRejectedAndNeverReturned",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "unsupportedProviderIsExplicit",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "parsesProjectedUsbWithoutSerialNameOrDriveLetter",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "closeDuringRealQueryPreventsOverlapAndRejectsLaterScan",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "ambiguousDiskStaysUnknownInsteadOfZeroStorage",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "missingOrOutOfRangeNumberIsRejected",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "duplicateDiskNumberIsRejected",
+                                         "status":  "PASS"
+                                     }
+                                 ],
+                       "rawXmlSha256":  "f715256de0c6012d3b9761fe8b025fd6d75710c84f5094f94b9c7b9573173d94"
+                   },
+                   {
+                       "class":  "vn.edu.toeic.monitoring.usb.UsbObservationTrackerTest",
+                       "tests":  10,
+                       "cases":  [
+                                     {
+                                         "name":  "repeatedSnapshotOrDuplicateRefreshDoesNotRepeatConnected",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "twoStoragesCanChangeIndependentlyWithoutNotificationBurstDuplicates",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "nonUsbDiskDoesNotProduceStorageObservation",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "failedFirstScanDefersBaselineUntilSuccessfulScan",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "unknownClassificationDoesNotReplaceSuccessfulBaseline",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "stopAndRestartDiscardOldCallbacksAndRotateReferences",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "initialStorageProducesPresentAtStart",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "observedRapidTransitionsAreNotTimeDebouncedAway",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "failedQueryDoesNotInventRemovalAndRecoveryDoesNotRepeat",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "connectAndRemoveKeepSameRandomReference",
+                                         "status":  "PASS"
+                                     }
+                                 ],
+                       "rawXmlSha256":  "91bfe1692dd096e59f44613670dd83464c4b738618ecad6b9a81942ea025460b"
+                   },
+                   {
+                       "class":  "vn.edu.toeic.monitoring.usb.UsbStorageProbeTest",
+                       "tests":  4,
+                       "cases":  [
+                                     {
+                                         "name":  "fileSinkPathIsExplicitAndNeverAddedToPublicMetadata",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "rejectUnboundedOrUnknownArgumentsWithoutEchoingInput",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "outputReservesFinishAndEscapesControlCharacters",
+                                         "status":  "PASS"
+                                     },
+                                     {
+                                         "name":  "boundedDefaultsAndSnapshotMode",
+                                         "status":  "PASS"
+                                     }
+                                 ],
+                       "rawXmlSha256":  "ec6ad8474369a7c5c244f97c3435e7784d45b2e1ec9abe4bafae2a3b962c23be"
+                   }
+               ]
+}
