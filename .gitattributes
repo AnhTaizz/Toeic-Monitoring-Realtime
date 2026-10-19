@@ -91,3 +91,6 @@ evidence/t3-c4-physical-prep-20261018/** -text whitespace=-blank-at-eol,-blank-a
 # Final Phase3 curated evidence checksums retain exact bytes.
 evidence/stage3-execution-20261019/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
 evidence/audio-cache-p1-20261018/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
+# Bản HTML đã loại script/form giữ byte UTF-8/LF để đối chiếu manifest trên Windows/WSL.
+data/seedingTest/*.html -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol

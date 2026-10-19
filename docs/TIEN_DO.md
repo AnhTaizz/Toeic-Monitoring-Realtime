@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+19/10/2026 — EX-01, công bố input theo yêu cầu người dùng: thêm [5 HTML đã loại script/form/nonce](../data/seedingTest/README.md), manifest hash gốc/bản công bố; người cung cấp xác nhận quyền công khai, chưa kèm văn bản. Mỗi file200 câu/đúng7Part; test04=test05 nên4 nội dung khác nhau. Kiểm bảo toàn câu hỏi/media references và privacy markers PASS; media local/answer key/group mapping/import/PG/GUI NOT RUN. Chưa nghiệm thu EX-01/EX-08, tracker giữ nguyên; không đổi runtime hoặc gate Phase3.
+
 **19/10/2026 — PLAN V2 TEAM_SCOPE_APPROVED / KICKOFF:** người đại diện thông báo nhóm đã duyệt V2 tối 18/10; [kế hoạch 36 task](plan-v2/03_TASK_CARDS.md), [kickoff A/B/C](plan-v2/V2_EXECUTION_KICKOFF_20261019.md), [phạm vi/chốt ADR](plan-v2/ADOPTION_STATUS_20261019.md). Scope 200Q/media hợp pháp + USB storage/focus/display được bổ sung vào CLAUDE/hợp đồng; schema/wire/start-deadline phải review riêng. Source tại lúc chuẩn bị: `main ${base}`, CI run39186372875 SUCCESS. **Phase3 vẫn CODE_READY_STAGE3_ACCEPTANCE_PENDING** (LAN0/41, hearing/MSI máy hai NOT RUN); không đổi actual_hours/legacy tracker, không ký human acceptance. V2 backlog 36 task còn `TO_AUDIT`.
 
 

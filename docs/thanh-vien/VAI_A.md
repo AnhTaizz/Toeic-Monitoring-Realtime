@@ -397,3 +397,9 @@ Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG
 
 
 19/10/2026 — [Kết quả thực thi cuối](../../evidence/stage3-execution-20261019/REPORT.md), [artifact và thao tác máy thật](../STAGE3_FINAL_HANDOFF.md). Buildsourcecfbba58, haiP1/main/CI/PG/regression/MSIlocal đã kiểm. Reviewer kỹ thuật Codex theo user, không chữ ký vai. Việc dở: review evidence MSI máy thứ hai sau B chạy; xác nhận tracker/giờ theo thực tế.
+
+## Ghi chú EX-01 — input seedingTest, 19/10/2026
+
+Người dùng yêu cầu đưa5 HTML lên main, xác nhận quyền công khai nguồn Zenlish. [README/manifest dữ liệu](../../data/seedingTest/README.md) ghi nguồn, giới hạn và checksum gốc/bản đã loại script/form/nonce; bản gốc giữ riêng. Kiểm5×200 article và số media elements không đổi PASS; test04=test05, chỉ4 nội dung khác nhau. Phần này thuộc A, B review nội dung; không đổi API/DB/client hoặc tự tạo chữ ký.
+
+**Ghi chú làm dở:** EX-01 chưa nghiệm thu toàn bộ. Cần lưu căn cứ quyền từ người cung cấp, đối chiếu answer keys/options/passages/groups, thu thập media được phép dùng và kiểm hash/MIME/size/render/playback. Import/PG/GUI/media download/hearing NOT RUN; không tự cập nhật BACKLOG/TRACKER.
