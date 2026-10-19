@@ -52,13 +52,14 @@ $listener=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0)
 $listener.Start();$port=$listener.LocalEndpoint.Port;$listener.Stop();$env:DB_PORT=[string]$port
 Set-Location $repo
 
-function Native([string]$exe,[string]$arguments,[string]$label,[int]$seconds=600){
+function Native([string]$exe,[string]$arguments,[string]$label,[int]$seconds=600,[switch]$NoCapture){
     $p=New-Object Diagnostics.Process
     $p.StartInfo.FileName=$exe;$p.StartInfo.Arguments=$arguments
     $p.StartInfo.WorkingDirectory=$repo;$p.StartInfo.UseShellExecute=$false;$p.StartInfo.CreateNoWindow=$true
-    $p.StartInfo.RedirectStandardOutput=$true;$p.StartInfo.RedirectStandardError=$true
+    $p.StartInfo.RedirectStandardOutput=-not $NoCapture;$p.StartInfo.RedirectStandardError=-not $NoCapture
     $begin=[DateTime]::UtcNow.ToString('o');[void]$p.Start()
-    $ownedPid=$p.Id;$stdout=$p.StandardOutput.ReadToEndAsync();$stderr=$p.StandardError.ReadToEndAsync()
+    $ownedPid=$p.Id
+    if(-not $NoCapture){$stdout=$p.StandardOutput.ReadToEndAsync();$stderr=$p.StandardError.ReadToEndAsync()}
     $timedOut=-not $p.WaitForExit($seconds*1000)
     if($timedOut){
         # Only the process tree created above belongs to this step.
@@ -66,15 +67,17 @@ function Native([string]$exe,[string]$arguments,[string]$label,[int]$seconds=600
         $p.WaitForExit()
     }
     $code=if($timedOut){124}else{$p.ExitCode}
-    [IO.File]::WriteAllText((Join-Path $out ($label+'.private.stdout.txt')),$stdout.Result,$utf8)
-    [IO.File]::WriteAllText((Join-Path $out ($label+'.private.stderr.txt')),$stderr.Result,$utf8)
+    if(-not $NoCapture){
+        [IO.File]::WriteAllText((Join-Path $out ($label+'.private.stdout.txt')),$stdout.Result,$utf8)
+        [IO.File]::WriteAllText((Join-Path $out ($label+'.private.stderr.txt')),$stderr.Result,$utf8)
+    }
     [void]$steps.Add([ordered]@{name=$label;command=([IO.Path]::GetFileName($exe)+' '+$arguments);startUtc=$begin;endUtc=[DateTime]::UtcNow.ToString('o');exitCode=$code;timedOut=$timedOut;status=$(if($code -eq 0){'PASS'}else{'FAIL'});rawStdout=('target/base03-runs/'+$runId+'/'+$label+'.private.stdout.txt');rawStderr=('target/base03-runs/'+$runId+'/'+$label+'.private.stderr.txt')})
     $p.Dispose()
     Write-Output ('STEP '+$label+' exit='+$code)
     return $code
 }
-function Run([string]$exe,[string]$arguments,[string]$label,[int]$seconds=600){
-    $result=@(Native $exe $arguments $label $seconds)
+function Run([string]$exe,[string]$arguments,[string]$label,[int]$seconds=600,[switch]$NoCapture){
+    $result=@(Native $exe $arguments $label $seconds -NoCapture:$NoCapture)
     $code=[int]$result[-1]
     $result|Select-Object -SkipLast 1|Write-Host
     if($code -ne 0){throw ('Step failed: '+$label+'; private logs retained')}
@@ -111,8 +114,8 @@ try{
     [IO.File]::WriteAllText($passwordFile,$env:DB_PASSWORD,[Text.Encoding]::ASCII)
     Run (Join-Path $PostgresBin 'initdb.exe') ('-D "'+$pgdata+'" -U base03_test --auth=scram-sha-256 --pwfile="'+$passwordFile+'" --no-locale -E UTF8') 'initdb'
     Remove-Item -LiteralPath $passwordFile
-    # pg_ctl uses its own log, so redirected handles cannot hold the parent pipe open.
-    Run (Join-Path $PostgresBin 'pg_ctl.exe') ('-D "'+$pgdata+'" -l "'+$out+'\postgres.private.txt" -o "-h 127.0.0.1 -p '+$port+'" -w start') 'pg-start'
+    # Windows postgres inherits even pg_ctl's redirected handles. Its own log is authoritative.
+    Run (Join-Path $PostgresBin 'pg_ctl.exe') ('-D "'+$pgdata+'" -l "'+$out+'\postgres.private.txt" -o "-h 127.0.0.1 -p '+$port+'" -w start') 'pg-start' -NoCapture
     $started=$true
     Run (Join-Path $PostgresBin 'createdb.exe') ('-h 127.0.0.1 -p '+$port+' -U base03_test -T template0 -E UTF8 '+$env:DB_NAME) 'createdb'
     Run (Join-Path $PostgresBin 'psql.exe') ('-h 127.0.0.1 -p '+$port+' -U base03_test -d '+$env:DB_NAME+' -At -c "SELECT version();"') 'postgres-version'
