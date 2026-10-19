@@ -748,6 +748,33 @@ class RealtimeClientTest {
             assertThat(f.client.connectionState()).isEqualTo(ConnectionState.CONNECTED);
         }
     }
+    @Test void signalExperimentIsExplicitScopedAndResetOnReconnectOrHeartbeatLeaseChange()throws Exception{
+        try(Fixture f=new Fixture()){
+            f.connect();assertThat(f.client.send(signal(1))).isCompletedExceptionally();
+            assertThatThrownBy(()->f.client.confirmSignalExperiment(signalCapability(),f.client.connectionGeneration())).isInstanceOf(IllegalArgumentException.class);
+            try(var lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){
+                confirmSignal(f);assertThat(f.client.signalExperimentReady("mock-attempt-A")).isTrue();assertThat(f.client.signalExperimentReady("foreign")).isFalse();
+                long old=f.client.connectionGeneration();f.client.disconnect();f.connect();assertThat(f.client.signalExperimentReady("mock-attempt-A")).isFalse();assertThatThrownBy(()->f.client.confirmSignalExperiment(signalCapability(),old)).isInstanceOf(IllegalArgumentException.class);
+                confirmSignal(f);assertThat(f.client.signalExperimentReady("mock-attempt-A")).isTrue();
+            }
+            assertThat(f.client.signalExperimentReady("mock-attempt-A")).isFalse();assertThat(f.client.send(signal(2))).isCompletedExceptionally();
+        }
+    }
+    @Test void signalWritesHaveTwoCreditsAndMalformedAckDoesNotConsumeCorrelation()throws Exception{
+        try(Fixture f=new Fixture()){
+            f.connect();try(var lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){
+                confirmSignal(f);f.messages.clear();f.socket().writeGate=new CompletableFuture<>();var first=f.client.send(signal(1));var second=f.client.send(signal(2));assertThat(f.client.send(signal(3))).isCompletedExceptionally();assertThat(f.client.signalCreditAvailable()).isFalse();
+                f.socket().writeGate.complete(f.socket());assertThat(first).isCompleted();assertThat(second).isCompleted();
+                JsonObject ack=new JsonObject();ack.addProperty("status","ACCEPTED");ack.addProperty("acknowledgedType","MONITORING_SIGNAL");ack.addProperty("eventId","MOCK-signal-event-1");ack.addProperty("schemaVersion",2);ack.addProperty("timelineSequence",1);ack.addProperty("receivedAt","2026-10-19T10:00:01Z");ack.addProperty("deliveryStatus","LIVE");ack.addProperty("duplicate",false);
+                f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ACK","MOCK-ack","MOCK-signal-request-1","mock-attempt-A","MOCK-signal-trace",ack)),true);assertThat(f.messages).isEmpty();
+                ack.addProperty("schemaVersion",1);f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ACK","MOCK-ack2","MOCK-signal-request-1","mock-attempt-A","MOCK-signal-trace",ack)),true);assertThat(f.messages).hasSize(1);
+            }
+        }
+    }
+    private static MessageEnvelope<JsonObject> signal(int n){return new vn.edu.toeic.protocol.monitoring.signal.SignalMessage("mock-attempt-A","MOCK-signal-request-"+n,"MOCK-signal-trace",new vn.edu.toeic.protocol.monitoring.signal.DisplaySignal("MOCK-signal-event-"+n,"MOCK-signal-run",n,java.time.Instant.parse("2026-10-19T10:00:00Z"),vn.edu.toeic.protocol.monitoring.EventOrigin.OFFLINE,1,"INITIAL")).envelope();}
+    private static JsonObject signalCapability(){JsonObject p=new JsonObject();p.addProperty("protocolVersion","v0");p.addProperty("schemaVersion",1);p.addProperty("traceId","MOCK-cap-trace");p.addProperty("attemptId","mock-attempt-A");com.google.gson.JsonArray a=new com.google.gson.JsonArray();a.add("DISPLAY_COUNT_OBSERVED");p.add("supportedEventTypes",a);return p;}
+    private static void confirmSignal(Fixture f){f.clock.advance(Duration.ofSeconds(2));var hb=GSON.fromJson(f.socket().sent.getLast(),JsonObject.class);var ack=new JsonObject();ack.addProperty("status","ACCEPTED");ack.addProperty("acknowledgedType","HEARTBEAT");ack.addProperty("connectionId","MOCK-signal-connection-"+f.client.connectionGeneration());f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ACK","MOCK-hb-ack",hb.get("requestId").getAsString(),"mock-attempt-A",hb.get("traceId").getAsString(),ack)),true);f.client.confirmSignalExperiment(signalCapability(),f.client.connectionGeneration());}
+
     private static String ack() {
         JsonObject payload = new JsonObject();
         payload.addProperty("status", "ACCEPTED");

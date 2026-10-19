@@ -431,3 +431,8 @@ Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG
 ### Ghi chú làm dở — MON-07 review PR72
 
 Đã hoàn thiện [D07-01–05 và kế hoạch slice](../MONITORING_MULTISIGNAL_CONTRACT_PROPOSAL.md#11-năm-quyết-định-để-owner-xác-nhận), **tất cả PROPOSED**; review/comment PR72 rỗng khi kiểm, không có nguồn owner approval. Khuyến nghị MOCK DISPLAY_COUNT_OBSERVED duy nhất, capability một type/no push/no observer production, RAM256/1MiB/2flight, immutable retry/COMMIT-before-ACK, counter+paged history, offline60s/retention30ngày chờ duyệt. Transport write stall và revoke khi chờ lock cần A/B review hook/test. Chỉ cập nhật nhánh proposal PR72; chưa tạo feature branch/DTO/SQL. FULLdefault/gateNOT_DECIDED, MON01physical/B/BASE02pending và MON02physical12NOT_RUN giữ nguyên. [Kiểm tài liệu](../mon07-proposal/VALIDATION.md), không runtime/hardware acceptance hoặc MON07DONE.
+
+
+### MON07 slice MOCK — ủy quyền thử nghiệm19/10/2026
+
+User cho phép D07-01–04 PR72c9a5829 cho MOCK/REAL WS/PG TEST/commit ACK/history, nhánh riêng feat/v2-c-mon07-signal-pipeline stacked. [Report](../../evidence/v2-c-mon07-signal-pipeline/REPORT.md); A/C review transaction/locks/schema, B review transport/generation/admission. Chưa human approval/D07-05/observer/push/dashboard/DONE hoặc merge. FULLdefault/gate/physicalpending giữ nguyên.

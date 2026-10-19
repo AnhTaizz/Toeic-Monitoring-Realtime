@@ -22,6 +22,9 @@ public interface MonitoringTransport {
     record MonitoringAccessRejection(String attemptId,String collectorSessionId,String code,long connectionGeneration) { }
     /** Only a validated denial of this run's scoped heartbeat; old request/collector cannot revoke a new run. */
     default AutoCloseable onMonitoringAccessRejected(Consumer<MonitoringAccessRejection> listener) { return ()->{ }; }
+    /** Explicit experiment capability on THIS socket/attempt; no production coordinator enables it. */
+    default boolean signalExperimentReady(String attemptId) { return false; }
+    default boolean signalCreditAvailable() { return false; }
     CompletableFuture<Void> send(MessageEnvelope<JsonObject> message);
     default EventOrigin observationOrigin() {
         return connectionState()==ConnectionState.CONNECTED ? EventOrigin.UNSPECIFIED : EventOrigin.OFFLINE;

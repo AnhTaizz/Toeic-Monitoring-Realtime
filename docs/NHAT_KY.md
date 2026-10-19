@@ -795,3 +795,10 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - Sửa ngay proposal/fixture hiện hữu: chọn DISPLAY_COUNT_OBSERVED MOCK/no push cho slice đầu; tách catalog tương lai, không quảng cáo type chưa hỗ trợ. Bỏ410/tombstone không reachable dưới ACTIVE-only; làm rõ counter init atomic, auth sau chờ lock/revoke serialization, ACK/write credits và guard write treo. D07-01–05 đềuPROPOSED, gồm60s offline/30ngày retention; có kế hoạch file/thứ tự/test sau approval.
 - Kiểm docs/JSON bằng Node.js, giữ kết quả lịch sử trong VALIDATION; source/runtime mới chưa code, toàn matrix22NOT_RUN. PR73 probe độc lập/physical12NOT_RUN không kéo vào production; BASE03gateNOT_DECIDED/FULLdefault, MON01physical/B/BASE02pending không đổi.
 - Chỉ commit/push/cập nhật PR72 và theo CI, không merge/approve/backlog/DONE, không tạo nhánh implementation khi thiếu approval. A/C chốt wire/storage/auth, B transport/lifetime, nhóm notice/retention/offline. Kết quả CI cuối xem PR/report bàn giao.
+
+
+## 19/10/2026 · C/agent · MON07 slice MOCK được người dùng ủy quyền
+
+- User cho phép D07-01–04/mục11.1 PR72c9a5829 trong TEST cách ly, không thay approval A/B/C. Fetch/main1d35b537, proposal chưa merge; tạo feat/v2-c-mon07-signal-pipeline từ đúngc9a5829, sẽ Draft stacked vào nhánh proposal.
+- Thêm typed strict parser/immutable encoder, queue RAM riêng, opt-in capability/ACK hook cùng RealtimeClient, conditional server service/counter/history và V13append-only. Không tự bật observer/capture/push/dashboard hoặc D07-05 offline/retention.
+- Baseline/focused unit ban đầu qua; integration compile có PG testsSKIP khi chưa bật fixture, không gọi PG PASS. Runtime/CI/source evidence sẽ ghi [report](../evidence/v2-c-mon07-signal-pipeline/REPORT.md); logs ngoài reactor target để giữ nguyên lịch sử. Chưa DONE/gate/owner review/merge, giữ FULLdefault.

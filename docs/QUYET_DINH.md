@@ -340,3 +340,8 @@ Ngày 19/10/2026 · Trạng thái: IMPLEMENTED, chờ A/B review importer và re
 - Không đổi wire protocol, endpoint hoặc default FULL/DELTA. Xem [schema](DATABASE_SCHEMA.md) và [API backend](BACKEND_API.md).
 
 Ghi chú kiểm chứng19/10/2026, nhánhreviewEX04 chưamerge: [reportPG](EX04_V11_VERIFICATION.md) tái hiệnV11NULL-type2FAIL; V12append-only thêmCHECK để thực thi đúng typed-media invariant trên. Fresh/upgrade/rollback/legacyHTTP vàcleanverify đãchạy; không sửaV1–V11 hoặc đổiQD21. [EX02/START/media proposal](EX02_RICH_EXAM_CONTRACT_PROPOSAL.md) vẫnCHƯA DUYỆT; không xem đây là quyết định schema/API/deadline mới hoặc chữ kýA/B/C.
+
+
+## MON-07 · Ủy quyền thử nghiệm người dùng, 19/10/2026 (không chữ ký owner)
+
+Nguồn: yêu cầu trong phiên cho phép mục11.1 PR72 tại c9a5829, D07-01–04 **chỉ MOCK DISPLAY_COUNT_OBSERVED → REAL WS → PostgreSQL TEST → commit/ACK → paged history**; no observer/no real capture/no push/dashboard, teardown TEST. [Phạm vi và giới hạn](../evidence/v2-c-mon07-signal-pipeline/REPORT.md). Ghi USER_AUTHORIZED_EXPERIMENT, không chuyển D07 thành human APPROVED hoặc ký A/B/C. Offline60s/retention30ngày vẫn PENDING/chưa áp dụng; FULLdefault/gate/hardware không đổi.

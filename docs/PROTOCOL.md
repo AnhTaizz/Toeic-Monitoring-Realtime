@@ -938,3 +938,17 @@ Nhánh `stabilize/final-rc-20261017`. Không thêm endpoint, field hay giá tr�
 | status (path hoặc `?attemptId=`) và history của legacy | 200 theo quyền | Giữ nguyên |
 | `events` / `interruptions` / `gaps` > 5000 dòng | 500 `RETRYABLE_SERVER_ERROR` `retryable:true` | 409 `INVALID_STATE` `retryable:false`, message cố định; không trả danh sách cắt bớt |
 | Dashboard nhận 409 từ ba endpoint lịch sử | "Không tải được dữ liệu hợp lệ…" | Thông báo giới hạn5000, giữ danh sách đầy đủ gần nhất, đánh dấu stale; trần body8 MiB (trước 4 MiB) |
+
+
+## MON-07 — Slice MOCK thử nghiệm theo ủy quyền người dùng (19/10/2026)
+
+**EXPERIMENT ONLY, mặc định tắt; chưa owner/hardware acceptance.** Người dùng cho phép D07-01–04 tại PR72 c9a5829 trong TEST cách ly; không duyệt offline60s/retention30ngày hoặc observer production. [Report/phạm vi](../evidence/v2-c-mon07-signal-pipeline/REPORT.md), [schema/bounds D07](MONITORING_MULTISIGNAL_CONTRACT_PROPOSAL.md).
+
+- `toeic.monitoring.signal-experiment-enabled=true` mới đăng ký service/capability/history; flag vắng/false không có routes mới, WS type mới bị từ chối. Flyway V13 additive tạo bảng riêng, không bật capture.
+- Envelope v0 exact7fields, type MONITORING_SIGNAL, payload schemaVersion1; chỉ DISPLAY_COUNT_OBSERVED/sourceJAVAFX_DISPLAY/qualityCOMPLETE/details count0..32/reasonINITIAL|CHANGED. Field/time/origin/ID/bounds theo proposal mục3; null origin ID bị cấm, OFFLINE/UNSPECIFIED bỏ field. Strict duplicate-key/integer lexeme/Unicode/UTF-8 bounds riêng signal, không nới parser process.
+- Capability GET `/api/v1/monitoring/attempts/{attemptId}/signal-capabilities`, candidate owner hoặc assigned proctor ACTIVE, no-store; supportedEventTypes đúng một type. Client harness explicit confirm gắn attempt/socket generation + scoped heartbeat, không tự start observer.
+- Store unique attempt/eventId, canonical conflict; counter theo attempt cùng transaction, rollback không tiêu sequence. Auth/token/ACTIVE kiểm trước duplicate, lại sau chờ lock; proxy COMMIT xong mới ACK. ACK exact statusACCEPTED/acknowledgedType/eventId/schemaVersion/timelineSequence/receivedAt/deliveryStatus/duplicate và correlation request/trace/attempt. **Không MONITOR_SIGNAL push.**
+- GET `/api/v1/monitoring/attempts/{attemptId}/signals?limit=100&after=0[&through=N]`: assigned PROCTOR ACTIVE; only query limit/after/through một giá trị; limit1..100, fixed through committed-prefix, items increasing, nextAfterSequence nullable/hasMore. Max512KiB; checkpoint chỉ through sau hoàn tất chuỗi HTTP. 400badcursor,401token,403scope/terminal; không410/tombstone.
+- Queue RAM riêng 256/1MiB/2flight, ACK5s/max5, backoff1/2/4/8s; immutable retries, finite local drops/unconfirmed, không gap/status wire. Signal admission giữ8credit cho legacy/heartbeat, max2write mới; ACK reserve không chữa socket stall. Write treo vẫn UNKNOWN, không tự mở reconnect thứ hai.
+
+Không đổi PROCESS_OBSERVED/FULL/DELTA/presence/gap/Listening/QD21 hoặc dashboard. Quyền TEST không mở terminal history hay cho phép capture dữ liệu thật.
