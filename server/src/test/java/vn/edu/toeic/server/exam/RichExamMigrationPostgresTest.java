@@ -171,6 +171,28 @@ class RichExamMigrationPostgresTest {
         rejected(block("NULL", "'Q1'", type, "NULL", "'MISSING'", "NULL"), "23514", "exam_content_blocks_media_type_required");
     }
 
+    @Test void v11NullableTypeReproducerMakesV12FailClosedWithoutEditingBadData() throws Exception {
+        migrate("11"); seedNormalized();
+        execute(block("NULL", "'Q1'", "IMAGE", "NULL", "'MISSING'", "NULL"));
+        assertThat(number("SELECT count(*) FROM exam_content_blocks WHERE media_id='MISSING' AND media_type IS NULL")).isEqualTo(1);
+        assertThrows(FlywayException.class, () -> migrate("12"));
+        assertThat(number("SELECT count(*) FROM flyway_schema_history WHERE version='12'")).isZero();
+        assertThat(number("SELECT count(*) FROM exam_content_blocks WHERE media_id='MISSING' AND media_type IS NULL")).isEqualTo(1);
+        flyway("11").validate();
+    }
+
+    @Test void v12KeepsValidTextImageAudioBlocksAndValidatedV11Checksums() throws Exception {
+        migrate("11"); seedNormalized();
+        execute(block("NULL", "'Q1'", "TEXT", "'MOCK text'", "NULL", "NULL"));
+        execute(block("'G1'", "NULL", "IMAGE", "NULL", "'PHOTO'", "'IMAGE'").replace("'B1'", "'B2'"));
+        execute(block("NULL", "'Q2'", "AUDIO", "NULL", "'AUDIO'", "'AUDIO'").replace("'B1'", "'B3'"));
+        assertThat(flyway("12").migrate().migrationsExecuted).isEqualTo(1);
+        flyway("12").validate();
+        assertThat(number("SELECT count(*) FROM exam_content_blocks")).isEqualTo(3);
+        assertThat(strings("SELECT block_type FROM exam_content_blocks ORDER BY block_id")).containsExactly("TEXT", "IMAGE", "AUDIO");
+        assertThat(number("SELECT count(*) FROM flyway_schema_history WHERE success")).isEqualTo(12);
+    }
+
     @Test void sevenPartsAndSharedOrderedBlocksRoundTripOnV11() throws Exception {
         migrate("11"); seedNormalized();
         db.setAutoCommit(false);

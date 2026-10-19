@@ -59,6 +59,7 @@ try{
     $started=$true
     if((Native (Join-Path $PostgresBin 'createdb.exe') ('-h 127.0.0.1 -p '+$port+' -U ex04_test -T template0 -E UTF8 '+$env:DB_NAME) 'createdb') -ne 0){throw 'Test database creation failed'}
     [void](Native (Join-Path $JavaHome 'bin\java.exe') '-version' 'java-version')
+    [void](Native $env:ComSpec ('/d /s /c ""'+$maven+'" --version"') 'maven-version')
     [void](Native (Join-Path $PostgresBin 'psql.exe') ('-h 127.0.0.1 -p '+$port+' -U ex04_test -d '+$env:DB_NAME+' -At -c "SELECT version();"') 'postgres-version')
     $goals=switch($Mode){
         'Reproducer' {'-pl server -am -Dtest=RichExamMigrationPostgresTest#latestSchemaRejectsNullMediaTypeInsteadOfSkippingTypedForeignKey -Dsurefire.failIfNoSpecifiedTests=false test'}
@@ -106,7 +107,7 @@ foreach($module in @('protocol','client','server','monitoring-spike')){
     }
 }
 $totals.passed=$totals.tests-$totals.failures-$totals.errors-$totals.skipped
-$result=[ordered]@{sourceSha=$source;runId=$runId;mode=$Mode;os=[Environment]::OSVersion.VersionString;java=([IO.File]::ReadAllLines((Join-Path $out 'java-version.private.err'))|Select-Object -First 1);postgres=([IO.File]::ReadAllText((Join-Path $out 'postgres-version.private.log')).Trim());database='toeic_ex04_test';host='127.0.0.1';port=$port;fixture='MOCK self-authored exam content; real PostgreSQL/Flyway/HTTP';command=('mvn --batch-mode --no-transfer-progress '+$goals);startUtc=$start;endUtc=$end;exitCode=$exitCode;runnerErrorType=$runtimeError;totals=$totals;cases=$cases;xmlHashes=$reports;cleanup=$cleanup;manualGuiLanHearing='NOT RUN'}
+$result=[ordered]@{sourceSha=$source;runId=$runId;mode=$Mode;os=[Environment]::OSVersion.VersionString;java=([IO.File]::ReadAllLines((Join-Path $out 'java-version.private.err'))|Select-Object -First 1);maven=([IO.File]::ReadAllLines((Join-Path $out 'maven-version.private.log'))|Select-Object -First 1);postgres=([IO.File]::ReadAllText((Join-Path $out 'postgres-version.private.log')).Trim());database='toeic_ex04_test';host='127.0.0.1';port=$port;fixture='MOCK self-authored exam content; real PostgreSQL/Flyway/HTTP';command=('mvn --batch-mode --no-transfer-progress '+$goals);startUtc=$start;endUtc=$end;exitCode=$exitCode;runnerErrorType=$runtimeError;totals=$totals;cases=$cases;xmlHashes=$reports;cleanup=$cleanup;manualGuiLanHearing='NOT RUN'}
 [IO.File]::WriteAllText((Join-Path $out 'result.json'),(($result|ConvertTo-Json -Depth 8).Replace("`r`n","`n")+"`n"),$utf8)
 Write-Output ('Output: '+$out)
 Write-Output (@{sourceSha=$source;mode=$Mode;exitCode=$exitCode;totals=$totals;cleanup=$cleanup;runnerErrorType=$runtimeError}|ConvertTo-Json -Depth 4)
