@@ -20,6 +20,10 @@ final class ListeningPlaybackPane extends VBox implements AutoCloseable {
     private MediaPlayer player;
     private ConnectionState connectionState;
     private boolean closed;
+    void setCompact(boolean compact) {
+        questions.setVisible(!compact);
+        questions.setManaged(!compact);
+    }
     private Runnable onStateChanged = () -> {};
     private java.util.function.Consumer<List<String>> onSegmentChanged = ids -> {};
     private List<String> lastSegmentIds = List.of();
