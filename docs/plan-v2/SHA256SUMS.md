@@ -1,5 +1,7 @@
 # SHA-256 manifest (Plan V2 imported text files)
 
+> **Lưu ý:** Đây là các hash tại thời điểm **nhập gói V2 ban đầu**, không phải manifest được cập nhật tự động sau các thay đổi kế hoạch/phê duyệt và đổi đường dẫn V1. Một số file đã thay đổi; hãy tạo lại checksum từ checkout hiện hành trước khi dùng để xác thực toàn bộ gói. `docs/plan-v1/SHA256SUMS.txt` cũng là bản snapshot lịch sử.
+
 Self-referential `SHA256SUMS.md` is intentionally excluded. Verify with `Get-FileHash` or `sha256sum` before use.
 
 | Relative file | SHA-256 |
