@@ -899,7 +899,6 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 ## 20/10/2026 · Codex · kit main tích hợp, không chờ USB
 
 Từ main a6fba311/worktree riêng, tái hiện builder cũ từ chối runtime mới; thêm BuildFromHead package/pins bản xuất và SkipArchive, regression MOCK và CI script checks. Main mới không lấy spike cũ làm nguồn. Mở rộng H01–H12 và runbook TEST GUI/LAN, phân loại đủ41cases. Mới chạy35USB/65consumer/33kit PASS, Windows MSFT READY0/Win32 UNKNOWN/cleanup/cap/no-overwrite; invocation Maven đầu sai quoting giữ log, chưa chạy test rồi sửa command. Không DB/server/.env/production runtime/hardware. [Report](../evidence/c-integrated-kit-20261020/REPORT.md) sẽ ghi source build/receipt/CI/PR đúng HEAD. User cho phép review/merge commit nếu đủ điều kiện, giữ nhánh; không human approval/gate/DONE, physicalUSB0/12/LAN0/41/Bpending. Bước sau C/B GUI FULL lifecycle với TEST scope do A cấp, chưa thực hiện trong task này.
-
 ## 2026-10-19 · A / Codex · EX-03 rich importer
 
 - Đã làm: branch/worktree riêng từ main3bdefe6 (CI đúng merge SUCCESS); strict POST v2 import200Q/7Part,11records/7enums, media bytes verification/recheck, sourceRef→RETURNING IDs, audio_file bridge, atomic transaction/deferred FK/create-only409; v1 create rich409. V14 vì PR74 đã dùngV13; không sửa V1–V12/monitoring/JavaFX/Listening hoặc seed ETS.
@@ -947,3 +946,11 @@ Source05cc694 clean verify1127PASS/6SKIP/0FAIL/0ERROR, PG18.1/HTTP thật, đề
 - Đã kiểm: PostgreSQL 18.1 thật cho 6 kịch bản Flyway và full verify. CI Windows success. Phân loại lỗi trong [release review](RELEASE_V2_MAIN_REVIEW_20261020.md) §5.
 - Còn dở: A/C chốt Flyway; review/approval của người cho 5 PR; giải xung đột docs #75/#78; Windows PG18 + GUI. Không merge `main`, không DONE, không ghi approval.
 - Tiếp theo: owner quyết §4 rồi merge theo checklist §3; acceptance trên `main`; cập nhật `EX01_DATA_PIPELINE_HANDOFF.md`.
+
+## 20/10/2026 · Codex · FULL lifecycle local, desktop NOT_RUN theo user
+
+- Main5bbeaf2 sạch/worktree riêng, build main JAR/Java21/Maven3.9.15, native PG18.3 TEST/SCRAM/port động. Seeder và import/session API cấp candidate1/2/proctor1/assignment, TEST Reading và SYNTHETIC WAV theo fixture; không .env/DB dev/SQL ép transition.
+- Mở production Application bằng JAR trong smoke có sẵn, FX controls lập trình/two Stages one JVM:6nhóm/10checkpoints Start FULL3worker→Stop0→epoch mới, logout/relogin khác candidate, process Edge sở hữu PID/start→state/history/dashboard, submit thật qua button/dialog→SUBMITTED, timeout tự nhiên8s→TIMED_OUT và app-stop→0worker/0toeic-thread. Đây không native desktop input/human acceptance.
+- ComputerUse native pipe unavailable sau retry/reset; đã chuẩn bị hai production JAR JVM riêng và nhóm thao tác ngắn. User chọn tiếp tục tự động/desktop NOT_RUN. Passive60sample UNSYNCED/seq0; hết cửa sổ240s dọn đúng hai app, không gọi force teardown là GUI Exit PASS.
+- Lượt extended49007cf FAIL executor assertion:4toeic-exam-http gồm fixture lazy workers; giữ log/dump.47caa50 đóng rõ API fixture trước assert, rerun cùng ca PASS; không sửa production expected/timeout.215unit regression PASS/0SKIP MOCK riêng, không cộng10checkpoints hoặc run lặp.
+- [Report/receipt](../evidence/c-full-lifecycle-20261020/REPORT.md):4run schema0/clusterstop0, Edgealive0, owned JVM/PGlistener0; raw/JAR/thread dumps/ảnh chưa lọc ignored, chỉ1ảnh Scene TEST đã rà công bố. FULLdefault/experimentOFF/USB0/12/LAN0/41/gate/humanpending, không DONE/ADR. Bước sau C không USB: desktop input/window-close khi helper hoặc người thao tác sẵn sàng, TEST/API tự dựng được; chưa thực hiện bước sau này.

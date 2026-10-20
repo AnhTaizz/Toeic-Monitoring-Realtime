@@ -1,5 +1,13 @@
 # Tiến độ hiện tại
 
+20/10/2026 — [FULL lifecycle local](../evidence/c-full-lifecycle-20261020/REPORT.md): production JAR main5bbeaf2,
+hai Application/Stage điều khiển bằng FX controls trong một JVM, REAL WS/HTTP/PG TEST.
+Start3worker/Stop0/epoch mới, logout đổi candidate, GUI-control submit SUBMITTED, timeout8s
+tự nhiên TIMED_OUT và app-stop0 PASS kỹ thuật;215regressionPASS/0SKIP. Sửa ownership API
+fixture trong test, giữ FAIL cũ; không lỗi production đã chứng minh. ComputerUse native pipe
+unavailable, user chọn tiếp tục tự động: desktop NOT_RUN; hai JAR handoff không thao tác đã
+teardown. FULL/experimentOFF, USB0/12/LAN0/41/gate/humanreview pending, không taskDONE.
+
 20/10/2026 — [Kit main tích hợp](../evidence/c-integrated-kit-20261020/REPORT.md): từ main a6fba311,
 USB35PASS/consumer65PASS, provider MSFT READY0/Win32 UNKNOWN và cleanup/output/no-overwrite
 đã kiểm mới, không hotplug. Sửa đường build kit LAN từ HEAD sạch, giữ legacy pins; mở rộng

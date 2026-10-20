@@ -475,9 +475,12 @@ C giữ scope review [contract](../EX02_RICH_EXAM_CONTRACT_V1.md)/[ADR](../plan-
 ### Ghi chú làm dở — kit main tích hợp 20/10/2026
 
 [Report kit](../../evidence/c-integrated-kit-20261020/REPORT.md): maina6fba311,35USB/65consumer/33kit PASS mới, provider thật READY0/UNKNOWN không hotplug. Builder mới pin source/JAR từ HEAD sạch, không relabel JAR cũ; runbook USB đủH01–12/GUI-LAN đủ41classification, TEST-only/FULL/experimentOFF. Giữ USB0/12/LAN0/41/Bpending/gateNOT_DECIDED; chưa DONE/ADR. Bước tiếp không USB: cùng B kiểm GUI start/stop/logout/submit/timeout FULL trên một Windows, dependency A cấp TEST DB/đề/audio/assigned scopes; ghi workers/actual/manual evidence, không nhận LAN hoặc triển khai observer. Chưa chạy bước tiếp này.
-
 ## Ghi chú làm dở — EX05, 19/10/2026
 
 [Checkpoint](../EX05_AUTHENTICATED_IMAGES.md): A code image resolver/manifest/route, B cần tích hợp visual RAM/renderer, C review kỹ thuật auth/lock/path/commit. Agent review không human approval. EX07 authority chưa có nên ảnh fail-closed; PG mới đang chạy, GUI/LAN/hearing NOT RUN. V13/V14 MERGE BLOCKED; tracker/hours giữ. Tiếp tục EX07 trên branch stacked riêng.
 
 20/10/2026: EX05 source05cc694 clean verify1127PASS/6SKIP (29case mới PASS), PG18.1/HTTP thật; [checkpoint/evidence](../EX05_AUTHENTICATED_IMAGES.md). EX07 tiếp tục branch stacked, chưa authority/FE integrated; V13/V14 MERGE BLOCKED, GUI/LAN/hearing NOT RUN.
+
+### Ghi chú làm dở — FULL lifecycle tự động 20/10/2026
+
+[Report](../../evidence/c-full-lifecycle-20261020/REPORT.md): runtime main5bbeaf2/scenario47caa50,6nhóm A-F/10checkpoints programmatic production Application/JAR+REAL PG/HTTP/WS PASS và215JUnitMOCKPASS/0SKIP. Có process TEST/GUI Scene/API/jcmd, submit COMMIT và timeout8s tự nhiên, worker/executor cleanup0. Sửa test fixture ownership sau FAIL thật, không có production bug chứng minh. Native ComputerUse pipe unavailable, user chọn desktop NOT_RUN; hai JAR handoff và4TESTcluster đã dọn. Không GUI desktop/two-machine/USB/audio hearing/gate/DONE PASS. C tiếp: kiểm OS input/window-close trên hai JAR riêng khi helper/người phối hợp có; dependency chỉ desktop, TEST scope/assets/API đã tự dựng được. Không observer mới, giữ FULL/experimentOFF và hardwarepending.
