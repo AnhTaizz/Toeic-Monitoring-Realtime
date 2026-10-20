@@ -84,12 +84,17 @@ class SignalPipelinePostgresTest {
         try(Client client=new Client(a,true)){
             var capabilities=getJson(a,"signal-capabilities",candidate,200).getAsJsonArray("supportedEventTypes");
             assertThat(capabilities).hasSize(6);assertThat(capabilities.toString()).doesNotContain("OBSERVER_STATUS","SIGNAL_GAP","EXAM_ACTIVITY_SUMMARY");
-            for(var m:messages) assertThat(client.delivery.enqueue(m)).isTrue();
+            // Lose ACK specifically for a new USB type. Send it first; server timeline is commit order,
+            // not observationSequence. The remaining MOCK observations keep their frozen identity.
+            assertThat(client.delivery.enqueue(messages.get(2))).isTrue();
+            assertThat(client.transport.dropped.await(10,TimeUnit.SECONDS)).isTrue();
+            for(var m:messages) if(m!=messages.get(2)) assertThat(client.delivery.enqueue(m)).isTrue();
             List<JsonObject> acks=new ArrayList<>();
             for(int i=0;i<messages.size();i++){var ack=client.transport.deliveredAcks.poll(10,TimeUnit.SECONDS);assertThat(ack).as("MOCK signal ACK after COMMIT").isNotNull();acks.add(ack);
                 assertThat(number("SELECT count(*) FROM monitoring_signal_events WHERE attempt_id='"+a+"' AND event_id='"+ack.get("eventId").getAsString()+"'" )).isEqualTo(1);
             }
             assertThat(acks).anySatisfy(ack->assertThat(ack.get("duplicate").getAsBoolean()).isTrue());
+            assertThat(acks).anySatisfy(ack->{assertThat(ack.get("eventId").getAsString()).isEqualTo("mock-typed-event-3");assertThat(ack.get("duplicate").getAsBoolean()).isTrue();assertThat(ack.get("timelineSequence").getAsLong()).isEqualTo(1);});
             assertThat(client.delivery.status().acknowledged()).isEqualTo(11);assertThat(client.delivery.status().queued()).isZero();assertThat(rows(a)).isEqualTo(11);assertThat(counter(a)).isEqualTo(11);
             var first=getJson(a,"signals?limit=3",proctor,200);assertThat(first.get("throughSequence").getAsLong()).isEqualTo(11);
             // An insert after page 1 must not change the fixed-through result, even for a different type.
@@ -277,6 +282,24 @@ class SignalPipelinePostgresTest {
                 var db=off.getBean(JdbcClient.class);assertThat(db.sql("SELECT success FROM flyway_schema_history WHERE version='13'").query(Boolean.class).single()).isTrue();
                 assertThat(db.sql("SELECT success FROM flyway_schema_history WHERE version='16'").query(Boolean.class).single()).isTrue();
                 assertThat(db.sql("SELECT count(*) FROM monitoring_signal_events").query(Long.class).single()).isZero();assertThat(db.sql("SELECT count(*) FROM monitoring_signal_counters").query(Long.class).single()).isZero();
+                long owner=db.sql("INSERT INTO user_accounts(username,display_name,role,password_hash) VALUES ('MOCK-off-candidate','MOCK','CANDIDATE','MOCK-unused') RETURNING id").query(Long.class).single();
+                db.sql("INSERT INTO monitoring_attempts(attempt_id,candidate_user_id,state) VALUES ('MOCK-off-attempt',:u,'ACTIVE')").param("u",owner).update();
+                String token=UUID.randomUUID().toString();
+                db.sql("INSERT INTO login_sessions(user_id,token_hash,issued_at,expires_at) VALUES (:u,:h,clock_timestamp(),clock_timestamp()+INTERVAL '1 hour')").param("u",owner).param("h",TokenHash.sha256(token)).update();
+                String endpoint="http://127.0.0.1:"+((WebServerApplicationContext)off).getWebServer().getPort();
+                try(HttpClient offHttp=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(3)).build()){
+                    var response=offHttp.send(HttpRequest.newBuilder(URI.create(endpoint+"/api/v1/monitoring/attempts/MOCK-off-attempt/signal-capabilities")).timeout(Duration.ofSeconds(5)).header("Authorization","Bearer "+token).GET().build(),HttpResponse.BodyHandlers.discarding());
+                    assertThat(response.statusCode()).isEqualTo(404);
+                    BlockingQueue<JsonObject> replies=new LinkedBlockingQueue<>();StringBuilder text=new StringBuilder();
+                    WebSocket ws=offHttp.newWebSocketBuilder().header("Authorization","Bearer "+token).buildAsync(AuthenticatedWebSocketOpener.websocketEndpoint(endpoint),new WebSocket.Listener(){
+                        public void onOpen(WebSocket socket){socket.request(1);}
+                        public CompletionStage<?> onText(WebSocket socket,CharSequence data,boolean last){text.append(data);if(last){replies.add(JsonParser.parseString(text.toString()).getAsJsonObject());text.setLength(0);}socket.request(1);return CompletableFuture.completedFuture(null);}
+                    }).get(5,TimeUnit.SECONDS);
+                    try{var signal=new SignalMessage("MOCK-off-attempt","mock-off-request","mock-off-trace",new WindowSignal("mock-off-event","mock-run",1,Instant.parse("2026-10-20T10:00:00Z"),EventOrigin.OFFLINE,false,false,"INITIAL"));
+                        ws.sendText(JSON.toJson(signal.envelope()),true).get(5,TimeUnit.SECONDS);JsonObject denied=replies.poll(5,TimeUnit.SECONDS);assertThat(denied).isNotNull();assertCode(denied,"INVALID_INPUT");
+                    }finally{ws.abort();}
+                    assertThat(db.sql("SELECT count(*) FROM monitoring_signal_events").query(Long.class).single()).isZero();assertThat(db.sql("SELECT count(*) FROM monitoring_signal_counters").query(Long.class).single()).isZero();
+                }
             }
         }finally{admin.createStatement().execute("DROP SCHEMA "+offSchema+" CASCADE");}
     }
