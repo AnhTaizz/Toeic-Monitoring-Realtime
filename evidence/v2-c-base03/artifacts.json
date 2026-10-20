@@ -1,0 +1,20 @@
+{
+  "sourceSha": "463cbadc50465c6ca2f2d4c0a0701dcb9c38e034",
+  "zipSha256": "5ecba6fb2a09181e3399f3db5f7a1efc1706dbba73e048b017f52a97c29684c6",
+  "manifestSha256": "f51626affd497c739fdf3a2c6bb02a1de726aeb986617f8c73fdea7d528b8d8f",
+  "lan": "NOT RUN",
+  "kitSourceSha": "2ac13d2d1a95bf655c5869542ae8c25d27ea7600",
+  "runtimeSourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+  "zipPath": "target/base03-handoff/T3C4-BASE03-463cbad.zip",
+  "bundlePath": "target/base03-handoff/T3C4-BASE03-463cbad",
+  "clientJarSha256": "b406cdc82a71f3cc9c8d3ad62a8cfbf66d46e698682382b5adbf6addf317fde2",
+  "serverJarSha256": "8a83ab5929951def4bb66af827573ae033b08a590b7a124dd78cb4a5d7b50189",
+  "byteIdenticalAcrossPrimaryAndSupplement": true,
+  "files": 22,
+  "sourceKitChecks": 29,
+  "unpackedKitChecks": 29,
+  "deliveredToMachineB": false,
+  "physicalCasesExecuted": 0,
+  "humanBReview": "PENDING",
+  "msiBuiltOrInstalledThisTask": false
+}

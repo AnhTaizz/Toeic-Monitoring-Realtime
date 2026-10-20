@@ -1,0 +1,6 @@
+{
+  "examId": "mock-ex02-200",
+  "durationMinutes": 120,
+  "candidateUserIds": [101,102],
+  "proctorUserIds": [201]
+}

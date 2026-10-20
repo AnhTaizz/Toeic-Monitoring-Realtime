@@ -1,5 +1,7 @@
 # MON-02 — Probe USB storage độc lập trên Windows
 
+20/10/2026 — Codex technical review: source aa260ef kiểm35tests/0SKIP và JAR/provider snapshots trên Windows STANDARD; MSFT READY0, Win32 UNKNOWN, child0/readers terminated. Hòa main chỉ docs/test ngoài probe, runtime probe giữ nguyên. Có thể merge như spike độc lập; physical0/12 NOT_RUN, ADR-V2-05/owner policy chưa approved. Budget classification10s chỉ thuộc TEST, CLI5s/UNKNOWN/no-false-REMOVED/finite output giữ nguyên; không khẳng định root cause CI cũ từ rerun PASS.
+
 **SPIKE ONLY — NOT INTEGRATED — ADR-V2-05 OWNER REVIEW PENDING.**
 
 Base `main@1d35b53729abade7b460d35ab07d042b6f9f3571`; nhánh riêng `spike/v2-c-mon02-usb-storage`. Chưa có probe/PR MON-02 khác khi search GitHub/ref/source đầu phiên. PR70/71 còn mở, PR72 Draft head `da89962e71c169d2ffbd0e9dfdd1ce460d00fb01`, chưa merge. Đã đọc [MON-07 proposal đúng SHA](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/da89962e71c169d2ffbd0e9dfdd1ce460d00fb01/docs/MONITORING_MULTISIGNAL_CONTRACT_PROPOSAL.md); không kế thừa/approve schema đó trong probe này.

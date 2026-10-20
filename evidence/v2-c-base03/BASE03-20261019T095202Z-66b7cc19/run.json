@@ -1,0 +1,251 @@
+{
+  "schema": "base03-verification-v1",
+  "runId": "BASE03-20261019T095202Z-66b7cc19",
+  "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+  "branch": "test/v2-c-base03-delta-gate",
+  "os": "Microsoft Windows NT 10.0.26200.0",
+  "topology": "One Windows host, owned PostgreSQL SCRAM cluster/database, loopback HTTP/WS; not physical LAN",
+  "database": "toeic_base03_test",
+  "port": 56826,
+  "steps": [
+    {
+      "name": "initdb",
+      "command": "initdb.exe -D \"<WORKTREE>\\target\\base03-runs\\BASE03-20261019T095202Z-66b7cc19\\pgdata\" -U base03_test --auth=scram-sha-256 --pwfile=\"<WORKTREE>\\target\\base03-runs\\BASE03-20261019T095202Z-66b7cc19\\password.private\" --no-locale -E UTF8",
+      "startUtc": "2026-10-19T09:52:03.0051794Z",
+      "endUtc": "2026-10-19T09:52:09.5636643Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/initdb.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/initdb.private.stderr.txt"
+    },
+    {
+      "name": "pg-start",
+      "command": "pg_ctl.exe -D \"<WORKTREE>\\target\\base03-runs\\BASE03-20261019T095202Z-66b7cc19\\pgdata\" -l \"<WORKTREE>\\target\\base03-runs\\BASE03-20261019T095202Z-66b7cc19\\postgres.private.txt\" -o \"-h 127.0.0.1 -p 56826\" -w start",
+      "startUtc": "2026-10-19T09:52:09.5855920Z",
+      "endUtc": "2026-10-19T09:52:09.8974624Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": null,
+      "rawStderr": null,
+      "captureNote": "pg_ctl start uses postgres.private.txt; Windows inherited pipes are intentionally not captured"
+    },
+    {
+      "name": "createdb",
+      "command": "createdb.exe -h 127.0.0.1 -p 56826 -U base03_test -T template0 -E UTF8 toeic_base03_test",
+      "startUtc": "2026-10-19T09:52:09.9033329Z",
+      "endUtc": "2026-10-19T09:52:10.2540304Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/createdb.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/createdb.private.stderr.txt"
+    },
+    {
+      "name": "postgres-version",
+      "command": "psql.exe -h 127.0.0.1 -p 56826 -U base03_test -d toeic_base03_test -At -c \"SELECT version();\"",
+      "startUtc": "2026-10-19T09:52:10.2579981Z",
+      "endUtc": "2026-10-19T09:52:10.3317872Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/postgres-version.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/postgres-version.private.stderr.txt"
+    },
+    {
+      "name": "java-version",
+      "command": "java.exe -version",
+      "startUtc": "2026-10-19T09:52:10.3342578Z",
+      "endUtc": "2026-10-19T09:52:10.4123884Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/java-version.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/java-version.private.stderr.txt"
+    },
+    {
+      "name": "maven-version",
+      "command": "cmd.exe /d /s /c \"\"D:\\maven\\bin\\mvn.cmd\" --version\"",
+      "startUtc": "2026-10-19T09:52:10.4155002Z",
+      "endUtc": "2026-10-19T09:52:10.8122268Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/maven-version.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/maven-version.private.stderr.txt"
+    },
+    {
+      "name": "python-version",
+      "command": "python.exe --version",
+      "startUtc": "2026-10-19T09:52:10.8153594Z",
+      "endUtc": "2026-10-19T09:52:10.8988823Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/python-version.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/python-version.private.stderr.txt"
+    },
+    {
+      "name": "full-focused",
+      "command": "cmd.exe /d /s /c \"\"D:\\maven\\bin\\mvn.cmd\" -o -B --no-transfer-progress \"-Dmaven.repo.local=<USER_HOME>/.m2/repository\" -pl protocol,client,server -am -Dtest=FullSnapshotPayloadTest,EventOriginTest,ProcessPolicyAndSourceTest,ProcessCollectorTest,MonitoringDeliveryTest,FullSnapshotDeliveryTest,FullSnapshotReducerTest,MonitoringStateServiceTest,MonitoringStateMaintenanceTest,MonitoringGapTest,ProcessEventTest,MonitoringPresenceServiceTest,ExamMonitoringIntegrationTest -Dsurefire.failIfNoSpecifiedTests=false test\"",
+      "startUtc": "2026-10-19T09:52:10.9063975Z",
+      "endUtc": "2026-10-19T09:52:41.3689689Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/full-focused.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/full-focused.private.stderr.txt"
+    },
+    {
+      "name": "package-for-smokes",
+      "command": "cmd.exe /d /s /c \"\"D:\\maven\\bin\\mvn.cmd\" -o -B --no-transfer-progress \"-Dmaven.repo.local=<USER_HOME>/.m2/repository\" -DskipTests package\"",
+      "startUtc": "2026-10-19T09:52:42.3203800Z",
+      "endUtc": "2026-10-19T09:53:11.4300911Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/package-for-smokes.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/package-for-smokes.private.stderr.txt"
+    },
+    {
+      "name": "full-baseline",
+      "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t2c1.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" -Gui",
+      "startUtc": "2026-10-19T09:53:11.4681256Z",
+      "endUtc": "2026-10-19T09:53:45.4863286Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/full-baseline.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/full-baseline.private.stderr.txt"
+    },
+    {
+      "name": "event-postgres",
+      "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-a3.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" ",
+      "startUtc": "2026-10-19T09:53:45.4890000Z",
+      "endUtc": "2026-10-19T09:53:57.8021184Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/event-postgres.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/event-postgres.private.stderr.txt"
+    },
+    {
+      "name": "delta-focused",
+      "command": "cmd.exe /d /s /c \"\"D:\\maven\\bin\\mvn.cmd\" -o -B --no-transfer-progress \"-Dmaven.repo.local=<USER_HOME>/.m2/repository\" -pl protocol,client,server -am -Dtest=DeltaSnapshotPayloadTest,DeltaSnapshotDeliveryTest,CandidateModeSessionTest,DeltaReplayTest,ReplayCampaignTest,HandwrittenTraceTest,ReplayEngineTest,RealtimeClientTest,ProcessCollectorTraceTest,MonitoringDeltaStateTest -Dsurefire.failIfNoSpecifiedTests=false test\"",
+      "startUtc": "2026-10-19T09:53:57.8045144Z",
+      "endUtc": "2026-10-19T09:54:15.8620961Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-focused.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-focused.private.stderr.txt"
+    },
+    {
+      "name": "oracle-campaign",
+      "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c3.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" -RealScan",
+      "startUtc": "2026-10-19T09:54:16.0854923Z",
+      "endUtc": "2026-10-19T09:54:38.6655919Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/oracle-campaign.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/oracle-campaign.private.stderr.txt"
+    },
+    {
+      "name": "delta-ws-pg",
+      "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c2.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" ",
+      "startUtc": "2026-10-19T09:54:38.6685999Z",
+      "endUtc": "2026-10-19T09:54:59.7084477Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-ws-pg.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-ws-pg.private.stderr.txt"
+    },
+    {
+      "name": "local-live-gate",
+      "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c4.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" ",
+      "startUtc": "2026-10-19T09:54:59.7117707Z",
+      "endUtc": "2026-10-19T09:57:16.8065701Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/local-live-gate.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/local-live-gate.private.stderr.txt"
+    },
+    {
+      "name": "python-e1-unit",
+      "command": "python.exe -B -m unittest discover -s scripts/benchmarks/e1 -p test*.py -v",
+      "startUtc": "2026-10-19T09:57:16.8129441Z",
+      "endUtc": "2026-10-19T09:57:17.4512206Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/python-e1-unit.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/python-e1-unit.private.stderr.txt"
+    },
+    {
+      "name": "python-measurement-unit",
+      "command": "python.exe -B -m unittest discover -s scripts -p test_summarize_monitoring.py -v",
+      "startUtc": "2026-10-19T09:57:17.4542229Z",
+      "endUtc": "2026-10-19T09:57:17.8597867Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/python-measurement-unit.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/python-measurement-unit.private.stderr.txt"
+    },
+    {
+      "name": "regression-package",
+      "command": "cmd.exe /d /s /c \"\"D:\\maven\\bin\\mvn.cmd\" -o -B --no-transfer-progress \"-Dmaven.repo.local=<USER_HOME>/.m2/repository\" package\"",
+      "startUtc": "2026-10-19T09:57:17.8657906Z",
+      "endUtc": "2026-10-19T09:59:16.5153058Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/regression-package.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/regression-package.private.stderr.txt"
+    },
+    {
+      "name": "schema-count",
+      "command": "psql.exe -h 127.0.0.1 -p 56826 -U base03_test -d toeic_base03_test -At -c \"SELECT count(*) FROM pg_namespace WHERE nspname NOT LIKE 'pg_%' AND nspname NOT IN ('public','information_schema');\"",
+      "startUtc": "2026-10-19T09:59:18.2794506Z",
+      "endUtc": "2026-10-19T09:59:18.3469731Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/schema-count.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/schema-count.private.stderr.txt"
+    },
+    {
+      "name": "pg-stop",
+      "command": "pg_ctl.exe -D \"<WORKTREE>\\target\\base03-runs\\BASE03-20261019T095202Z-66b7cc19\\pgdata\" -w stop -m fast",
+      "startUtc": "2026-10-19T09:59:18.3575247Z",
+      "endUtc": "2026-10-19T09:59:20.5664075Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/pg-stop.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/pg-stop.private.stderr.txt"
+    }
+  ],
+  "cleanup": {
+    "ownedSchemasRemaining": 0,
+    "clusterStopExit": 0,
+    "privateEnvRemoved": true,
+    "passwordFileRemoved": true
+  },
+  "runnerErrorType": null,
+  "skipLiveGui": false,
+  "physicalLan": "NOT_RUN",
+  "bReview": "PENDING",
+  "deltaCorrectnessGate": "NOT_DECIDED",
+  "fullDefaultPreserved": "YES",
+  "e2Allowed": "NO",
+  "metadataDerivation": {
+    "rawPath": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/run-metadata.original.json",
+    "rawSha256": "af2a832d76ebb7a22d1c72c0271d07dd886fc394a05d8a8956a30081f8904fe4",
+    "transformation": "Only replace workspace/user-home paths in metadata; original retained. No test result changed."
+  }
+}

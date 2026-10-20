@@ -1,0 +1,10 @@
+{
+    "schemaVersion":  2,
+    "examId":  "mock-ex02-200",
+    "importStatus":  "IMPORTED",
+    "contentValidation":  "VERIFIED",
+    "mediaVerification":  "VERIFIED_AT_IMPORT",
+    "totalQuestions":  200,
+    "totalGroups":  76,
+    "totalMedia":  57
+}

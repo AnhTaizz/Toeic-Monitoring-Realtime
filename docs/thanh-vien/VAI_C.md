@@ -431,3 +431,25 @@ Source `30166b3d50218a570ca523bde452a15a58dfcf0e`, nhánh `spike/v2-c-mon02-usb-
 ### Ghi chú CI73 follow-up — 19/10/2026
 
 Test source1e75924: budget classification10s/diagnostic scalar sau close; CLI5s/parser/resource/lifecycle không đổi, hang150ms vẫn kiểm. Local35PASS và focused1case×3; CI39264645975SUCCESS. Failure39258040529 thiếuproblem nên chưa kết luận nguyên nhân cold startup; experiment delayMOCK chỉ chứng minh budget path. [Report](../../evidence/v2-c-mon02/REPORT.md), [summary/hash](../../evidence/v2-c-mon02/ci73-fix-20261019.json).15runtime hashes giống30166b3; receipt/JAR/provider snapshots mới đã kiểm,29raw/JAR/report cũ giữ nguyên. Physical0/12NOT_RUN, ADR-V2-05 và A/B review pending; PR73 giữDraft, CI HEAD hồ sơ cần xác minh riêng, không merge/DONE/MON07/08/E1/E2.
+
+### Ghi chú làm dở — MON-07 contract proposal, 19/10/2026
+
+**PROPOSED — NOT IMPLEMENTED — OWNER REVIEW PENDING.** Nhánh mới `docs/v2-c-mon07-contract-proposal` từ main `1d35b537`, chỉ [proposal](../MONITORING_MULTISIGNAL_CONTRACT_PROPOSAL.md)/fixture MOCK và hồ sơ. C đề nghị v0 + type/schemaVersion mới, signal queue RAM riêng/cùng socket, bảng mới/dedup/COMMIT-before-ACK, history phân trang. A/C cần chốt ADR-V2-04/BASE-04 (auth/transaction/schema/retention), B cần review consumer/opt-in/lifetime và emitters; Windows API/hardware ADR-V2-05 còn riêng. MON-01 technical verified nhưng physical/B/BASE-02 approval PENDING; PR70/71 chưa merge, không kéo commit verification vào proposal. FULL default/gate NOT_DECIDED, E2 không phép. [Kiểm docs](../mon07-proposal/VALIDATION.md); toàn bộ implementation test NOT_RUN, chưa MON-07 DONE/backlog hoặc human signoff. Dừng sau push/Draft PR, không triển khai MON-02/08 hay merge.
+
+
+### Ghi chú làm dở — MON-07 review PR72
+
+Đã hoàn thiện [D07-01–05 và kế hoạch slice](../MONITORING_MULTISIGNAL_CONTRACT_PROPOSAL.md#11-năm-quyết-định-để-owner-xác-nhận), **tất cả PROPOSED**; review/comment PR72 rỗng khi kiểm, không có nguồn owner approval. Khuyến nghị MOCK DISPLAY_COUNT_OBSERVED duy nhất, capability một type/no push/no observer production, RAM256/1MiB/2flight, immutable retry/COMMIT-before-ACK, counter+paged history, offline60s/retention30ngày chờ duyệt. Transport write stall và revoke khi chờ lock cần A/B review hook/test. Chỉ cập nhật nhánh proposal PR72; chưa tạo feature branch/DTO/SQL. FULLdefault/gateNOT_DECIDED, MON01physical/B/BASE02pending và MON02physical12NOT_RUN giữ nguyên. [Kiểm tài liệu](../mon07-proposal/VALIDATION.md), không runtime/hardware acceptance hoặc MON07DONE.
+
+## Ghi chú làm dở BASE-03 — 19/10/2026
+
+[Thực thi mới A–J](../../evidence/v2-c-base03/REPORT.md): FULL-first/314focused/983regressionPASS+7SKIP/Python22/oracle72/local42 và probe epoch/sequence WS PASS trên PG TEST riêng; production giữ nguyên. Nhánh test/v2-c-base03-delta-gate có commit local, chưa push/PR. Bộ ZIP BASE03/hash/runbook và41case đã chuẩn bị, kit29+29PASS nhưng physicalLAN0/41 NOT RUN, B review PENDING. Việc tiếp: nhận hai máy và B thao tác F Reading/Listening/cable-loss/rejoin/cleanup, C đối chiếu SQL/epoch/history, A xem auth/COMMIT/isolation; giữ raw target cho reviewer. GateNOT_DECIDED, FULL mặc định, E2NO; không tự DONE hoặc chuyển MON-07/MON-02.
+
+
+## Ghi chú làm dở MON-01 — 19/10/2026
+
+[Report MON-01](../../evidence/v2-c-mon01/REPORT.md): pipeline14chặng/15criteria đã đối chiếu,65focused+C2WS/PG/GUI PASS mới sourcef78b407; REAL ProcessHandle/FULL bằng evidence BASE-03 kế thừa (không lượt mới). BASE-03 đã sao lưu ngoài repo có hash/Gitbundle; giữ source9a97cab sạch. BASE-02 approval PENDING, physical0 và B chưa ký nên TECHNICALLY_VERIFIED_PENDING_PHYSICAL_REVIEW. Cùng B làm [checklist16dòng](../V2_C_MON01_PHYSICAL_HANDOFF.md), actual app end/submit/timeout và cable-loss/rejoin/unique history/workers; A xác nhận BASE-02 và contract decisions trước MON-07. Không triển khai MON-07/USB, không DONE/tracker, FULL default/DELTA gate NOT_DECIDED/E2NO.
+
+## Ghi chú làm dở — review EX-02 / ADR-V2-03, 19/10/2026
+
+C giữ scope review [contract](../EX02_RICH_EXAM_CONTRACT_V1.md)/[ADR](../plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) về auth/lock/timeout/monitoring. D01–D10 đã TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn đại diện19/10](../plan-v2/EX02_TEAM_APPROVAL_20261019.md), không chữ ký/GitHub review cá nhân. EX07 cần PG/HTTP/WS barriers cho START vs takeover/invalidate/revoke/lease/restart, session→attempt→readiness locks, auth-before-receipt, no deadline reset/WS trước commit; EX06 GUI gate/heartbeat. Chấp nhận ảnh Part1 prefetch có thể trích xuất, không hứa server thấy pixels hoặc lập tức biết app đóng. Checkers là MOCK, S01–S16/V01–V20 runtime NOT RUN; FULL/WSv0/collector giữ, không tracker DONE.

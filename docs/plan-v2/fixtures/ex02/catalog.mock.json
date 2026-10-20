@@ -1,0 +1,38 @@
+{
+    "schemaVersion":  2,
+    "items":  [
+                  {
+                      "examId":  "mock-ex02-200",
+                      "title":  "MOCK EX02 200 questions",
+                      "contentVersion":  2,
+                      "profile":  "TOEIC_200",
+                      "totalQuestions":  200,
+                      "importStatus":  "IMPORTED",
+                      "contentValidation":  "VERIFIED",
+                      "mediaVerification":  "VERIFIED_AT_IMPORT",
+                      "selectable":  true,
+                      "requiresMediaRecheck":  true,
+                      "blockedReasons":  [
+
+                                         ]
+                  },
+                  {
+                      "examId":  "mock-legacy",
+                      "title":  "MOCK unverified legacy",
+                      "contentVersion":  1,
+                      "profile":  null,
+                      "totalQuestions":  200,
+                      "importStatus":  "IMPORTED",
+                      "contentValidation":  "UNVERIFIED",
+                      "mediaVerification":  "UNVERIFIED",
+                      "selectable":  false,
+                      "requiresMediaRecheck":  true,
+                      "blockedReasons":  [
+                                             "LEGACY_CONTENT",
+                                             "CONTENT_UNVERIFIED",
+                                             "MEDIA_UNVERIFIED"
+                                         ]
+                  }
+              ],
+    "nextAfterExamId":  null
+}

@@ -1,0 +1,32 @@
+{
+    "schemaVersion":  2,
+    "sessionId":  "mock-session",
+    "readAt":  "2026-10-19T00:59:59Z",
+    "allReady":  true,
+    "attempts":  [
+                     {
+                         "attemptId":  "mock-attempt",
+                         "writerEpoch":  2,
+                         "preparationEpoch":  "11111111-1111-4111-8111-111111111111",
+                         "audioReady":  true,
+                         "visualReady":  true,
+                         "visualManifestId":  "0c349b8a923bf37b0e7676d466f5eaeb200c10d507246e7b261c8b9128dbb4c1",
+                         "visualLeaseExpiresAt":  "2026-10-19T01:00:05Z",
+                         "blockedReasons":  [
+
+                                            ]
+                     },
+                     {
+                         "attemptId":  "mock-attempt-2",
+                         "writerEpoch":  2,
+                         "preparationEpoch":  "22222222-2222-4222-8222-222222222222",
+                         "audioReady":  true,
+                         "visualReady":  true,
+                         "visualManifestId":  "03d83fab6963ca98597b0fd4b8f0767552e09fea98ee69f072f82488d75d3a24",
+                         "visualLeaseExpiresAt":  "2026-10-19T01:00:05Z",
+                         "blockedReasons":  [
+
+                                            ]
+                     }
+                 ]
+}

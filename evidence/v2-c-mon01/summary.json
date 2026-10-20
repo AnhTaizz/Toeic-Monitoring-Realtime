@@ -1,0 +1,52 @@
+{
+  "schema": "mon01-summary-v1",
+  "baseSha": "9a97cab646af40e45871cb76ffbfcfcb861f2954",
+  "sourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+  "newRunId": "MON01-20261019T103217Z-25e62fdd",
+  "harnessRunId": "T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618",
+  "environment": {
+    "os": "Microsoft Windows NT 10.0.26200.0",
+    "java": "Temurin21.0.10+7",
+    "maven": "3.9.15",
+    "postgres": "18.3 native Windows SCRAM",
+    "python": "3.15.0b3",
+    "topology": "One Windows host, owned PostgreSQL SCRAM cluster/database, loopback HTTP/WS and proctor JavaFX; no physical LAN"
+  },
+  "newResults": {
+    "focusedJava": {
+      "PASS": 65
+    },
+    "integrationSmoke": "PASS",
+    "newGuiSemanticsAssertions": "PASS",
+    "endedCollectorStates": [
+      "SUBMITTED",
+      "TIMED_OUT",
+      "CLOSED"
+    ],
+    "measurement": "COMPLETE; diagnostic only, no E1/E2 performance claim",
+    "fullRegression": "NOT_RERUN: production unchanged and prior BASE03 preserved",
+    "realProcessHandle": "REUSED_BASE03: not a new MON01 ProcessHandle observation campaign"
+  },
+  "artifacts": {
+    "clientJarSha256": "7f7e938c9fdffc93f7256f6e5489ad4c30e0950b5238ebbd2e508120c683de1a",
+    "serverJarSha256": "3abf31aafb7e07fdc16c05c741c035d805b28ba05806ac72e5c0b048b8d25180"
+  },
+  "cleanup": {
+    "ownedSchemasRemaining": 0,
+    "clusterStopExit": 0,
+    "privateEnvRemoved": true,
+    "passwordFileRemoved": true
+  },
+  "final": {
+    "PROCESS_PIPELINE_VERIFIED": "YES_LOCAL",
+    "EVENT_HISTORY_VERIFIED": "YES",
+    "ROLE_SCOPE_VERIFIED": "YES",
+    "FULL_DEFAULT_PRESERVED": "YES",
+    "PHYSICAL_LAN_VERIFIED": "NO",
+    "B_REVIEW_SIGNED": "NO",
+    "BASE_02_APPROVAL": "PENDING",
+    "BASE_03_GATE": "NOT_DECIDED",
+    "MON_01_STATUS": "TECHNICALLY_VERIFIED_PENDING_PHYSICAL_REVIEW",
+    "E2_ALLOWED": "NO"
+  }
+}

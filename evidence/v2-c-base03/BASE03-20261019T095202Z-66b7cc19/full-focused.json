@@ -1,0 +1,1216 @@
+{
+    "sourceSha":  "834f683e50b22e214ab63bbf7d046a7d418b8242",
+    "runId":  "BASE03-20261019T095202Z-66b7cc19",
+    "step":  "full-focused",
+    "fixture":  "MOCK/REPLAY except explicitly enabled PostgreSQL tests; not PHYSICAL",
+    "cases":  [
+                  {
+                      "module":  "protocol",
+                      "status":  "PASS",
+                      "seconds":  "0.165",
+                      "name":  "rejectsPartialOrContradictoryOrigin",
+                      "class":  "vn.edu.toeic.protocol.monitoring.EventOriginTest"
+                  },
+                  {
+                      "module":  "protocol",
+                      "status":  "PASS",
+                      "seconds":  "0.018",
+                      "name":  "comparesConnectionIdentityWithoutComparingClocks",
+                      "class":  "vn.edu.toeic.protocol.monitoring.EventOriginTest"
+                  },
+                  {
+                      "module":  "protocol",
+                      "status":  "PASS",
+                      "seconds":  "0.07",
+                      "name":  "legacyIsUnspecifiedAndNewContextRoundTrips",
+                      "class":  "vn.edu.toeic.protocol.monitoring.EventOriginTest"
+                  },
+                  {
+                      "module":  "protocol",
+                      "status":  "PASS",
+                      "seconds":  "0.083",
+                      "name":  "measurementRecognizesFullWithoutKeepingPayload",
+                      "class":  "vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest"
+                  },
+                  {
+                      "module":  "protocol",
+                      "status":  "PASS",
+                      "seconds":  "0.019",
+                      "name":  "duplicateIdentityAndOversizeAreRejectedWithoutTruncation",
+                      "class":  "vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest"
+                  },
+                  {
+                      "module":  "protocol",
+                      "status":  "PASS",
+                      "seconds":  "0.029",
+                      "name":  "canonicalOrderAndFilenameAndEmptySnapshot",
+                      "class":  "vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest"
+                  },
+                  {
+                      "module":  "protocol",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "pathsUnknownPolicyAndIncompleteMetadataCannotClaimComplete",
+                      "class":  "vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest"
+                  },
+                  {
+                      "module":  "protocol",
+                      "status":  "PASS",
+                      "seconds":  "0.006",
+                      "name":  "strictNumericParserAndPrivateFields",
+                      "class":  "vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest"
+                  },
+                  {
+                      "module":  "protocol",
+                      "status":  "PASS",
+                      "seconds":  "0.013",
+                      "name":  "stateRequiresValidSynchronizationAndCopiesProcessList",
+                      "class":  "vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.158",
+                      "name":  "aProctorCannotStartTheCandidateCollector",
+                      "class":  "vn.edu.toeic.client.ExamMonitoringIntegrationTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.116",
+                      "name":  "startupUsesTheWholeFreshServerScopeAndBindsTheSelectedAttempt",
+                      "class":  "vn.edu.toeic.client.ExamMonitoringIntegrationTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.043",
+                      "name":  "sameExamKeepsC1FullDeliveryAndCollectorWithoutReplacingTheirScope",
+                      "class":  "vn.edu.toeic.client.ExamMonitoringIntegrationTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.007",
+                      "name":  "revokedFreshScopeCannotBeBypassedByTheAlreadyRunningCollector",
+                      "class":  "vn.edu.toeic.client.ExamMonitoringIntegrationTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "failureToStartMonitoringPropagatesInsteadOfAllowingUnmonitoredExamEntry",
+                      "class":  "vn.edu.toeic.client.ExamMonitoringIntegrationTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "aDifferentExamCannotReuseAnActiveCollector",
+                      "class":  "vn.edu.toeic.client.ExamMonitoringIntegrationTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "unsupportedActiveIdNeverStartsAnUnmonitoredExamOrChangesCollectorScope",
+                      "class":  "vn.edu.toeic.client.ExamMonitoringIntegrationTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.045",
+                      "name":  "failedScanDoesNotSendEmptyOrRequeueOldObservation",
+                      "class":  "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "writeIsNotAckAndFirstFullThenEmptyUseIncreasingSequences",
+                      "class":  "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.008",
+                      "name":  "oldSocketSendPlanIsRejectedByTransportGenerationGate",
+                      "class":  "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.018",
+                      "name":  "queueAndPayloadLimitsRejectWithoutTruncatingProcessSet",
+                      "class":  "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.011",
+                      "name":  "retryRetainsExactMessageAndAckEpochSequenceMustMatch",
+                      "class":  "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "failedCloseWriteStillReleasesCorrelationAndStopsWorker",
+                      "class":  "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "stoppedWaitsUntilCloseWriteReleasesAdapterCorrelation",
+                      "class":  "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "reconnectClearsOldEpochQueueAndNeedsScanAfterConnection",
+                      "class":  "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.072",
+                      "name":  "stuckCloseWriteIsBoundedAndCannotWriteAfterNextDeliveryStarts(boolean)[1]",
+                      "class":  "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.058",
+                      "name":  "stuckCloseWriteIsBoundedAndCannotWriteAfterNextDeliveryStarts(boolean)[2]",
+                      "class":  "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "boundedRetriesAndStopUnsubscribeAndIgnoreOldAck",
+                      "class":  "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "offlineOriginAndPayloadRemainFrozenThroughReconnectAndRetry",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "stopUnsubscribesAndLateCallbacksCannotChangeNewSession",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "reconnectKeepsIdentityAndBudgetWithoutRestartingCollector",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "offlineQueueDropsNewOncePerAppearanceAndGapIsFrozenSeparateFromNextDrops",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "failedEventDoesNotBlockAnotherQueuedEvent",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "stopIsAsyncAndRestartWaitsForBlockedScanToTerminate",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "missingStartIsUnreadableStableAndRestoredStartConservativelyNew",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "retryableErrorAndSendFailureUseBackoff",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "collectorRestartIdentityIsNew",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "firstSnapshotAndTenPollsEmitOnceUntilDisappearReappear",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "duplicateAndLateAckDoNotDeleteAnotherEvent",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "initialSnapshotEmitsEachProcessWithBoundedInFlight",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "stopInvalidatesPlannedEventSocketWrite",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "candidateGateRejectsEmptyScopeAndProctorWithoutScanning",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "snapshotLimitDoesNotCreateUnboundedBaselineOrFalseEmptySnapshot",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "earlyAckInsideSendIsNotLost",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "pidReuseWithDifferentStartIsNewButMetadataQualityIsNotIdentity",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "gapTimeoutRetriesSameFrozenPayload",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "lateSendFailureCannotMutateNewDeliveryOnSameTransport",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "permissionErrorStopsWorkerAndSubscriptionsButRetainsDiscardAccounting",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "writeSuccessWithoutAckKeepsPendingAndRetryIsByteEquivalent",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "timeoutBackoffMaxAttemptsRetainExhaustedUntilExplicitRetry",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "coordinatorBindsReturnedCollectorIdAndPermissionStopClosesLease",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "collectorChangeCannotRetagBufferedDrops",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "wrongAckCannotDeleteEvent(String)[1]",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "wrongAckCannotDeleteEvent(String)[2]",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "wrongAckCannotDeleteEvent(String)[3]",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "wrongAckCannotDeleteEvent(String)[4]",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "wrongAckCannotDeleteEvent(String)[5]",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "wrongAckCannotDeleteEvent(String)[6]",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "nonRetryableErrorsKeepPendingAndPermissionErrorsStop(String)[1]",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "nonRetryableErrorsKeepPendingAndPermissionErrorsStop(String)[2]",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "nonRetryableErrorsKeepPendingAndPermissionErrorsStop(String)[3]",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "nonRetryableErrorsKeepPendingAndPermissionErrorsStop(String)[4]",
+                      "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.025",
+                      "name":  "snapshotAndDiagnosticListenerFailuresDoNotKillWorker",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.029",
+                      "name":  "failedPollInvalidatesLatestSnapshotInsteadOfClaimingCleanOrCurrentState",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.137",
+                      "name":  "fixedDelayDoesNotOverlapAndWaitsIntervalAfterSlowScanCompletes",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.027",
+                      "name":  "snapshotsAreImmutableRestrictedOnlyWithHonestUnreadableDiagnosticsAndMonotonicTiming",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.052",
+                      "name":  "currentSetTracksAppearanceDisappearanceAndStartInstantDistinguishesPidReuse",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.017",
+                      "name":  "restartCreatesFreshSessionWhileEachRunKeepsOneIdAndCloseIsTerminal",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.016",
+                      "name":  "sourceFailureIsSanitizedAndNextPollStillPublishes",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "cannotRestartUntilNonCooperativeOldSourceHasFinished",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "stopInterruptsInFlightScanSuppressesItsCallbackAndPreventsLaterPolls",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.011",
+                      "name":  "gateChecksLifecycleSideEffectsNotJustRole(Role, boolean, boolean)[1]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "gateChecksLifecycleSideEffectsNotJustRole(Role, boolean, boolean)[2]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "gateChecksLifecycleSideEffectsNotJustRole(Role, boolean, boolean)[3]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.0",
+                      "name":  "gateChecksLifecycleSideEffectsNotJustRole(Role, boolean, boolean)[4]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "defaultIntervalIs1000msAndRejectsInvalidInterval",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "doesNotExpandPolicyOrCompareFullPath(String)[1]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "doesNotExpandPolicyOrCompareFullPath(String)[2]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "doesNotExpandPolicyOrCompareFullPath(String)[3]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "doesNotExpandPolicyOrCompareFullPath(String)[4]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "doesNotExpandPolicyOrCompareFullPath(String)[5]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.014",
+                      "name":  "sourceKeepsOnlyFilenameAndUserAvailabilityAndClosesStream",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "matchesExactlyPolicyV1CaseInsensitive(String)[1]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.0",
+                      "name":  "matchesExactlyPolicyV1CaseInsensitive(String)[2]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "matchesExactlyPolicyV1CaseInsensitive(String)[3]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "matchesExactlyPolicyV1CaseInsensitive(String)[4]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "matchesExactlyPolicyV1CaseInsensitive(String)[5]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "matchesExactlyPolicyV1CaseInsensitive(String)[6]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "matchesExactlyPolicyV1CaseInsensitive(String)[7]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "matchesExactlyPolicyV1CaseInsensitive(String)[8]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.0",
+                      "name":  "matchesExactlyPolicyV1CaseInsensitive(String)[9]",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "missingOptionalsAndMetadataSecurityExceptionAreUnreadable",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "windowsIdlePidZeroIsCountedAsUnreadableInsteadOfBreakingEnumeration",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "policyVersionAndListAreFixedAndImmutable",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "handlesPosixFilenameAndNeverInventsMissingName",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.205",
+                      "name":  "retryIsCanonicalAndDoesNotRegressAfterNewerFull",
+                      "class":  "vn.edu.toeic.server.monitoring.FullSnapshotReducerTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.075",
+                      "name":  "messageOutsideBoundedWindowIsStale",
+                      "class":  "vn.edu.toeic.server.monitoring.FullSnapshotReducerTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "sameIdDifferentSequenceOrContentConflicts",
+                      "class":  "vn.edu.toeic.server.monitoring.FullSnapshotReducerTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "sameSequenceDifferentIdStillChecksContentAndRemembersAlias",
+                      "class":  "vn.edu.toeic.server.monitoring.FullSnapshotReducerTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "startsAtOneThenFullMaySkipSequenceAndEmptyIsAccepted",
+                      "class":  "vn.edu.toeic.server.monitoring.FullSnapshotReducerTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.018",
+                      "name":  "rejectsMissingField(String)[1]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsMissingField(String)[2]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "rejectsMissingField(String)[3]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsMissingField(String)[4]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "rejectsMissingField(String)[5]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsMissingField(String)[6]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.014",
+                      "name":  "rejectsInvalidCount(String)[1]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "rejectsInvalidCount(String)[2]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsInvalidCount(String)[3]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "rejectsInvalidCount(String)[4]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsInvalidCount(String)[5]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "rejectsInvalidCount(String)[6]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "rejectsInvalidCount(String)[7]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.006",
+                      "name":  "validatesAndNormalizesClientTimes",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "rejectsReversedRangeOtherReasonAndPrivateField",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "1.331",
+                      "name":  "wallClockJumpCannotTimeoutOrExtendMonotonicDeadline",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.013",
+                      "name":  "startupRecoveryRunsBeforeExposureAndCloseRejectsLateBeat",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "freshHeartbeatBeforeScanPreventsOldTimeout",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.011",
+                      "name":  "timeoutInFlightCannotOverwriteHeartbeatThatWaitsForSameAttempt",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.035",
+                      "name":  "heartbeatCommitFailureDoesNotRefreshRuntimeOrProduceSuccess",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.006",
+                      "name":  "oneAttemptTimeoutCannotChangeAnotherLiveAttempt",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.006",
+                      "name":  "proctorForeignAndMalformedCollectorCannotCreatePresence",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.007",
+                      "name":  "boundedAssociationAndAttemptSlotsAreReleasedAfterExpiry",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.008",
+                      "name":  "scopedHeartbeatOnlineAndTimeoutBoundaryCreatesOneTransitionThenRecovery",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "revokeTokenOrScopeCleansAssociationWithoutFabricatedHeartbeatGap",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "timeoutCommitFailureRetriesAndDoesNotKillScanForOtherClients",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "multipleSocketsAndCollectorsAggregateWithoutOldSocketKillingNewOne",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.311",
+                      "name":  "transientFailureDoesNotCancelTheNextScan",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.024",
+                      "name":  "closeInterruptsAndWaitsForAnInFlightScan",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.046",
+                      "name":  "automaticallyCallsMaintainAndStopsOnClose",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.015",
+                      "name":  "invalidIntervalsDoNotStartAWorker",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.052",
+                      "name":  "reconnectRetiresOldEpochAndOldSocketCannotReopenOrCloseNew",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.038",
+                      "name":  "monotonicStalenessRetainsLastKnownAndTtlReleasesCapacity",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.007",
+                      "name":  "openRetryDoesNotResetAndRetiredOpenDoesNotReclaimEpoch",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.026",
+                      "name":  "serverRestartChangesInstanceAndEpochAndRequiresFreshOpen",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.01",
+                      "name":  "openFirstFullReplaceAndEmptyDoNotNeedHistoryStorage",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.038",
+                      "name":  "shutdownClearsRamAndRejectsLateRequests",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.012",
+                      "name":  "checksRoleScopeAndOwnershipEvenForDuplicate",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.011",
+                      "name":  "closeIsIdempotentAndLateFullCannotReviveStoppedCollector",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.048",
+                      "name":  "acceptsLegacyButIncludesFrozenOriginInConflictIdentity",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "rejectsMissingRequiredField(String)[1]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "rejectsMissingRequiredField(String)[2]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsMissingRequiredField(String)[3]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "rejectsMissingRequiredField(String)[4]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsMissingRequiredField(String)[5]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsMissingRequiredField(String)[6]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "rejectsMissingRequiredField(String)[7]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "rejectsPathsCommandLinesAndInvalidNames(String)[1]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "rejectsPathsCommandLinesAndInvalidNames(String)[2]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsPathsCommandLinesAndInvalidNames(String)[3]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "rejectsPathsCommandLinesAndInvalidNames(String)[4]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsPathsCommandLinesAndInvalidNames(String)[5]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsPathsCommandLinesAndInvalidNames(String)[6]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "normalizesInstantToPostgresqlPrecision",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.006",
+                      "name":  "completeMetadataNeedsStartAndInvalidTimestampIsRejected",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "rejectsNonPositiveOrNonIntegerPid(String)[1]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "rejectsNonPositiveOrNonIntegerPid(String)[2]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "rejectsNonPositiveOrNonIntegerPid(String)[3]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsNonPositiveOrNonIntegerPid(String)[4]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "rejectsNonPositiveOrNonIntegerPid(String)[5]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "rejectsNonPositiveOrNonIntegerPid(String)[6]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "rejectsNonPositiveOrNonIntegerPid(String)[7]",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsUnknownFieldsAndQuality",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "unreadableStartMayBeNullOrMissing",
+                      "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest"
+                  }
+              ],
+    "xmlHashes":  [
+                      {
+                          "module":  "protocol",
+                          "sha256":  "9a6a992261a8830a404798b8c18d274668fda865ee909e7c8ffdbdff12856ba9",
+                          "file":  "TEST-vn.edu.toeic.protocol.monitoring.EventOriginTest.xml"
+                      },
+                      {
+                          "module":  "protocol",
+                          "sha256":  "c1b2e00233933a29f1acc4051361c5ec9059cf107608fd75d40aee56fad38fc0",
+                          "file":  "TEST-vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "cf73371a4d0c1ca1ee37207f65bf46408c2980d7903b94b600ed37a845f4417b",
+                          "file":  "TEST-vn.edu.toeic.client.ExamMonitoringIntegrationTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "06703563814c80444d710ebb074605154c4c1892c483be4f6cd06d852ce77216",
+                          "file":  "TEST-vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "9f2fb0281f2e2b19546352e33842c060291eb6675826e576916bb7a767da7cae",
+                          "file":  "TEST-vn.edu.toeic.client.monitoring.MonitoringDeliveryTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "ffcd1730a120558e7dde719305d4745cc5f6078344dd23466afec13c6030508d",
+                          "file":  "TEST-vn.edu.toeic.client.monitoring.ProcessCollectorTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "8acfad1c68b8a82bfd015ae0f5e8d597a7d396e471c98926123c0c6cfabc3778",
+                          "file":  "TEST-vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest.xml"
+                      },
+                      {
+                          "module":  "server",
+                          "sha256":  "0bbfad266319917921987b7eec657ab3c82f547f9a375bb0d9ca12724ae3ba99",
+                          "file":  "TEST-vn.edu.toeic.server.monitoring.FullSnapshotReducerTest.xml"
+                      },
+                      {
+                          "module":  "server",
+                          "sha256":  "c228eeb0c9673b6651989a2bbf5a6e86577f8f70a03dc1fc4254d262b2dd820c",
+                          "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringGapTest.xml"
+                      },
+                      {
+                          "module":  "server",
+                          "sha256":  "f76832d5e95cce46069bee5b61878172c1a951f70e9d44baba7dd9e59ea6f623",
+                          "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest.xml"
+                      },
+                      {
+                          "module":  "server",
+                          "sha256":  "07de31cdd9aba8ad0e7eaae3a00871227a671f861cb72032085d51b2284b4589",
+                          "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest.xml"
+                      },
+                      {
+                          "module":  "server",
+                          "sha256":  "d7ac5d1584898b5313f8f3b68f8909e00bfd0cef2f2756efde8b95cf0bdf437c",
+                          "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringStateServiceTest.xml"
+                      },
+                      {
+                          "module":  "server",
+                          "sha256":  "c3083daed150601fc6560dcfbbcd81e18264ca3bcc434affa470dfabfe73333e",
+                          "file":  "TEST-vn.edu.toeic.server.monitoring.ProcessEventTest.xml"
+                      }
+                  ]
+}

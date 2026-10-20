@@ -30,6 +30,7 @@ import javax.imageio.ImageIO;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.image.WritableImage;
@@ -232,6 +233,7 @@ public final class LateEventsAndGapsSmoke {
                     }
                     verifyOverflow(client,http,p);
                     if(gui) verifyGui();
+                    verifyEndedCollector(c);
                     verifyPermissions(client,proctor,http,c,p,other);
                 }
             }
@@ -286,6 +288,25 @@ public final class LateEventsAndGapsSmoke {
             check(count("monitoring_gaps",A)==1&&count("monitoring_interruptions",A)==historyInterruptions&&count("monitoring_events",A)==historyEvents,"snapshot never erases history");
         }
         System.out.println("PASS MOCK queue capacity1 drop2; REAL gap HTTP/store/retry/conflict/full-history preservation; gap ACK loss SIMULATED");
+    }
+    private void verifyEndedCollector(LoginResponse candidate) throws Exception {
+        phase="MON01_ENDED_COLLECTOR";
+        for(String ended:List.of("SUBMITTED","TIMED_OUT","CLOSED")) {
+            var collector=new ProcessCollector(List::of,Duration.ofMillis(100));
+            try(var transport=socket(candidate);var monitoring=new CandidateMonitoringSession(collector,transport,deliverySettings(10),ignored -> {})) {
+                monitoring.start(Role.CANDIDATE,A,Set.of(A));
+                await(() -> monitoring.fullStatus().acknowledgedSequence()>0,"FULL accepted before TEST attempt end");
+                jdbc().sql("UPDATE monitoring_attempts SET state=:s WHERE attempt_id=:a").param("s",ended).param("a",A).update();
+                await(() -> !monitoring.isActive()&&!collector.isRunning(),"scope denial automatically stops collector after "+ended);
+                // Observe automatic shutdown before explicit stop/close could hide a lifecycle defect.
+                await(() -> Thread.getAllStackTraces().keySet().stream().noneMatch(t -> t.isAlive()&&Set.of("toeic-process-collector","toeic-monitoring-delivery","toeic-full-snapshot").contains(t.getName())),"collector/event/state workers terminated after "+ended);
+                monitoring.stop().stopped().get(5,TimeUnit.SECONDS);
+                System.out.println("PASS MON01 REAL WS scope rejection -> automatic collector/event/state worker cleanup for "+ended+"; TEST DB state transition SIMULATED, not HTTP submit/timeout acceptance");
+            } finally {
+                collector.close();
+                jdbc().sql("UPDATE monitoring_attempts SET state='ACTIVE' WHERE attempt_id=:a").param("a",A).update();
+            }
+        }
     }
     private void verifyPermissions(RealtimeClient client,RealtimeClient proctor,HttpClient http,LoginResponse candidate,LoginResponse p,LoginResponse other) throws Exception {
         phase="AUTH_REVOKED";String path="/api/v1/monitoring/attempts/"+A+"/gaps";
@@ -361,6 +382,21 @@ public final class LateEventsAndGapsSmoke {
         phase="GUI";fx(() -> {((Button)view.lookup("#dashboard-refresh")).fire();return null;});
         await(() -> fx(() -> this.<Gap>table("#dashboard-gaps").getItems().size())==1,"GUI gap HTTP refresh");
         check(fx(() -> this.<Event>table("#dashboard-events").getItems().stream().filter(e -> e.deliveryStatus().equals("PREVIOUS_CONNECTION")||e.deliveryStatus().equals("BUFFERED_OFFLINE")).count())>=2,"GUI late rows");
+        fx(() -> {
+            TableView<Event> events=table("#dashboard-events");
+            Event legacy=events.getItems().stream().filter(e -> e.eventId().equals("TEST-legacy")).findFirst().orElseThrow();
+            check(legacy.metadataQuality().equals("UNREADABLE"),"missing metadata survives PG/HTTP/model");
+            check(String.valueOf(events.getColumns().get(4).getCellObservableValue(legacy).getValue()).contains("thiếu thông tin"),"missing metadata displayed as limited observation");
+            String observed=String.valueOf(events.getColumns().get(1).getCellObservableValue(legacy).getValue());
+            String received=String.valueOf(events.getColumns().get(2).getCellObservableValue(legacy).getValue());
+            check(observed.contains("2099")&&!observed.equals(received),"client observedAt and server receivedAt rendered separately without clock subtraction");
+            check(events.getColumns().get(1).getText().equals("Máy thí sinh báo quan sát")&&events.getColumns().get(2).getText().equals("Server nhận"),"time ownership explicit");
+            check(((Label)events.getPlaceholder()).getText().contains("Chưa có cảnh báo"),"empty history is not proof no process ran");
+            check(((Label)table("#dashboard-current-processes").getPlaceholder()).getText().contains("snapshot"),"empty current list refers to observed snapshot only");
+            check(((Label)view.getBottom()).getText().contains("không phải kết luận gian lận"),"UNKNOWN is not cheating conclusion");
+            return null;
+        });
+        System.out.println("PASS MON01 REAL proctor GUI metadata UNREADABLE/observation-only empty labels/separate observedAt-receivedAt/no-cheating UNKNOWN; event payload MOCK");
         fx(() -> {((TabPane)view.lookup(".tab-pane")).getSelectionModel().select(1);return null;});screenshot("t2c2-late-events.png");
         fx(() -> {((TabPane)view.lookup(".tab-pane")).getSelectionModel().select(3);return null;});screenshot("t2c2-gaps.png");
         System.out.println("PASS REAL proctor JavaFX component late labels/gap tab/HTTP refresh/screenshots; full candidate GUI NOT RUN");
