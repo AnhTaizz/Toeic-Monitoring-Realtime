@@ -210,6 +210,54 @@ class SignalPipelinePostgresTest {
             }
         }finally{admin.createStatement().execute("DROP SCHEMA "+offSchema+" CASCADE");}
     }
+    @Test void fiveThousandOneCommittedSignalsPageWithoutLossAndKeepThroughDuringConcurrentWrites()throws Exception{
+        String a=attempt();
+        // Every initial fixture event traverses REAL WS/auth/transaction/COMMIT/ACK; observations remain MOCK.
+        try(Raw writer=new Raw(candidate)){
+            for(int i=1;i<=5001;i++){
+                var reply=writer.exchange(JSON.toJson(message(a,i).envelope()));
+                assertThat(reply.get("type").getAsString()).as("Committed MOCK event %s",i).isEqualTo("ACK");
+                assertThat(reply.getAsJsonObject("payload").get("timelineSequence").getAsLong()).isEqualTo(i);
+            }
+        }
+        assertThat(rows(a)).isEqualTo(5001);assertThat(counter(a)).isEqualTo(5001);
+        JsonObject page=getJson(a,"signals?limit=100",proctor,200);long through=page.get("throughSequence").getAsLong();assertThat(through).isEqualTo(5001);
+        CountDownLatch startWrites=new CountDownLatch(1),oneCommitted=new CountDownLatch(1),finishWrites=new CountDownLatch(1);
+        var pool=Executors.newSingleThreadExecutor();
+        try{
+            var writing=pool.submit(()->{await(startWrites);try(Raw writer=new Raw(candidate)){
+                for(int i=5002;i<=5025;i++){
+                    var reply=writer.exchange(JSON.toJson(message(a,i).envelope()));assertThat(reply.get("type").getAsString()).isEqualTo("ACK");
+                    if(i==5002){oneCommitted.countDown();await(finishWrites);}
+                }
+            }return true;});
+            var ids=new HashSet<String>();long expected=1;int pages=0;
+            while(true){
+                pages++;assertThat(page.get("throughSequence").getAsLong()).isEqualTo(through);
+                var items=page.getAsJsonArray("items");assertThat(items.size()).isBetween(1,100);
+                assertThat(page.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8).length).isLessThanOrEqualTo(512*1024);
+                for(var item:items){var row=item.getAsJsonObject();assertThat(row.get("timelineSequence").getAsLong()).isEqualTo(expected);
+                    assertThat(row.get("eventId").getAsString()).isEqualTo("event-"+expected);assertThat(ids.add(row.get("eventId").getAsString())).isTrue();expected++;}
+                if(pages==1){startWrites.countDown();assertThat(oneCommitted.await(8,TimeUnit.SECONDS)).isTrue();}
+                if(pages==25)finishWrites.countDown();
+                if(!page.get("hasMore").getAsBoolean()){assertThat(page.get("nextAfterSequence").isJsonNull()).isTrue();break;}
+                long next=page.get("nextAfterSequence").getAsLong();assertThat(next).isEqualTo(expected-1);
+                page=getJson(a,"signals?limit=100&after="+next+"&through="+through,proctor,200);
+            }
+            assertThat(pages).isEqualTo(51);assertThat(expected).isEqualTo(5002);assertThat(ids).hasSize(5001);
+            assertThat(writing.get(10,TimeUnit.SECONDS)).isTrue();assertThat(counter(a)).isEqualTo(5025);
+            var catchup=getJson(a,"signals?limit=100&after=5001",proctor,200);assertThat(catchup.get("throughSequence").getAsLong()).isEqualTo(5025);
+            assertThat(catchup.getAsJsonArray("items")).hasSize(24);assertThat(catchup.get("hasMore").getAsBoolean()).isFalse();
+            long catchupSequence=5002;for(var item:catchup.getAsJsonArray("items"))assertThat(item.getAsJsonObject().get("timelineSequence").getAsLong()).isEqualTo(catchupSequence++);
+            for(String q:List.of("limit=101","after=5026","after=100&through=99","after=100&through=5026","after=100&after=101"))getJson(a,"signals?"+q,proctor,400);
+            String readToken=login("proctor");getJson(a,"signals?limit=100&through=5001",readToken,200);
+            jdbc.sql("UPDATE login_sessions SET revoked_at=clock_timestamp() WHERE token_hash=:h").param("h",TokenHash.sha256(readToken)).update();
+            var revoked=getJson(a,"signals?limit=100&after=100&through=5001",readToken,401);assertThat(revoked.has("items")||revoked.has("throughSequence")).isFalse();
+            String assignedToken=login("proctor");getJson(a,"signals?limit=100&through=5001",assignedToken,200);
+            jdbc.sql("DELETE FROM monitoring_proctor_assignments WHERE attempt_id=:a").param("a",a).update();
+            var unassigned=getJson(a,"signals?limit=100&after=100&through=5001",assignedToken,403);assertThat(unassigned.has("items")||unassigned.has("throughSequence")).isFalse();
+        }finally{startWrites.countDown();finishWrites.countDown();pool.shutdownNow();assertThat(pool.awaitTermination(5,TimeUnit.SECONDS)).isTrue();}
+    }
     private void awaitBlockedCounter()throws Exception{awaitBlockedUpdate("monitoring_signal_counters");}
     private void awaitBlockedUpdate(String table)throws Exception{
         long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);boolean blocked=false;while(System.nanoTime()<until){blocked=jdbc.sql("SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND wait_event_type='Lock' AND query LIKE :q").param("q","%"+table+"%").query(Long.class).single()>0;if(blocked)break;Thread.onSpinWait();}assertThat(blocked).as("Controlled DB lock wait "+table).isTrue();
