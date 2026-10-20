@@ -1,0 +1,1117 @@
+{
+    "sourceSha":  "834f683e50b22e214ab63bbf7d046a7d418b8242",
+    "runId":  "BASE03-20261019T095202Z-66b7cc19",
+    "step":  "delta-focused",
+    "fixture":  "MOCK/REPLAY except explicitly enabled PostgreSQL tests; not PHYSICAL",
+    "cases":  [
+                  {
+                      "module":  "protocol",
+                      "status":  "PASS",
+                      "seconds":  "0.164",
+                      "name":  "rejectsInvalidBaseOverflowDuplicateIntersectionAndUnknownFields",
+                      "class":  "vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest"
+                  },
+                  {
+                      "module":  "protocol",
+                      "status":  "PASS",
+                      "seconds":  "0.029",
+                      "name":  "canonicalRoundtripKeepsNanosecondIdentityAndMissingStart",
+                      "class":  "vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest"
+                  },
+                  {
+                      "module":  "protocol",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "boundsAddRemoveAndRejectsFractionalSequence",
+                      "class":  "vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.472",
+                      "name":  "defaultFullEvenWhenServerSupportsDeltaAndExplicitDeltaUsesSameEventStream",
+                      "class":  "vn.edu.toeic.client.monitoring.CandidateModeSessionTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.317",
+                      "name":  "fallbackIsPinnedUntilExplicitStopAndNewStart(DeltaCapability)[1]",
+                      "class":  "vn.edu.toeic.client.monitoring.CandidateModeSessionTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.304",
+                      "name":  "fallbackIsPinnedUntilExplicitStopAndNewStart(DeltaCapability)[2]",
+                      "class":  "vn.edu.toeic.client.monitoring.CandidateModeSessionTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.078",
+                      "name":  "onlyCurrentCollectorAndSocketHeartbeatDenialCanStopThisRun",
+                      "class":  "vn.edu.toeic.client.monitoring.CandidateModeSessionTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.077",
+                      "name":  "lostSupportStopsDeltaInsteadOfSwitchingBaseMidRunThenFullIsAvailable",
+                      "class":  "vn.edu.toeic.client.monitoring.CandidateModeSessionTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "capabilityRaceDuringDeltaConstructionDoesNotLeaveDeliveryResources",
+                      "class":  "vn.edu.toeic.client.monitoring.CandidateModeSessionTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.372",
+                      "name":  "reconnectWaitsForCurrentSocketCapabilityThenStartsFullOne",
+                      "class":  "vn.edu.toeic.client.monitoring.CandidateModeSessionTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "wrongRoleScopeOrSecondStartCannotCreateACollectorRun",
+                      "class":  "vn.edu.toeic.client.monitoring.CandidateModeSessionTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.012",
+                      "name":  "correlatedResyncRequiresNewScanAndFullAboveAttemptedSequenceInSameEpoch",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "stopInvalidatesPlannedWriteAndOldCallbacksAndReleasesAllRam",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "revokeClosesWorkerAndSubscriptionsWithoutClosingSharedSocket(String)[1]",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "revokeClosesWorkerAndSubscriptionsWithoutClosingSharedSocket(String)[2]",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "exhaustionRetiresEpochRequiresFreshScanAndFullOneRatherThanGuessing",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "additionsRemovalsMultipleAndEmptyUseStableIdentity",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "presentingCachedSnapshotAgainCannotMakeItsObservationFresh",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "failedScanIsNotEmptyAndValidEmptyReallyRemovesState",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "collectorStopsSilentlyAndNoSavedSnapshotRefreshesIt",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.068",
+                      "name":  "scheduledPumpReallyRunsAndImmediateAckCallbackAdvancesBase",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "sameIdentityNewNameOrQualityFallsBackToFullWithoutInventingAppearanceEvent",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "retryableServerErrorRetriesSameIdButStaleRequestsFreshEpoch",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "invalidAckCannotAdvanceBase(String)[1]",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "invalidAckCannotAdvanceBase(String)[2]",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "invalidAckCannotAdvanceBase(String)[3]",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "invalidAckCannotAdvanceBase(String)[4]",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "invalidAckCannotAdvanceBase(String)[5]",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "invalidAckCannotAdvanceBase(String)[6]",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "invalidAckCannotAdvanceBase(String)[7]",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "invalidAckCannotAdvanceBase(String)[8]",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "reconciliationDueWhileAckPendingWaitsThenSendsFullOfLatestScan",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.006",
+                      "name":  "coalescingWhileDeltaWaitsDoesNotDiscardIntermediateAppearanceEvents",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "periodicFullUsesMonotonicDeadlineAndDoesNotRefreshAfterScanFailure",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "duplicateAckWithResyncDoesNotConfirmAUsableBase",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "reconnectRejectsOldAckAndFailureCallbackAndOfflineSnapshot",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "ackLossOrWriteFailureRetriesEntireFrozenDelta(boolean)[1]",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "ackLossOrWriteFailureRetriesEntireFrozenDelta(boolean)[2]",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "uncorrelatedAuthenticationFailureClosesIdleDeltaRun",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "zeroSequenceResyncNeedsNewOpenRatherThanFullAboveOne",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "unsupportedProductionTransportCannotEvenOpenDelta",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.012",
+                      "name":  "waitsForFirstFullAckAndCoalescesAgainstAcknowledgedBaseOnly",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "oversizeInvalidPolicyOrCollectorDoNotTruncateOrRetagState",
+                      "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.069",
+                      "name":  "sameProductionCollectorRecordsSuccessFailureSuccessAndStop",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTraceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "throwingRecorderNeverBreaksStartScanCallbackOrStop",
+                      "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTraceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.03",
+                      "name":  "independentOracleAndProductionCoreAgreeOnMissingDeltaFullRecoveryAndLateDelta",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.DeltaReplayTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.048",
+                      "name":  "deliberatelyIncorrectDeltaFailsIndependentRawOracle",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.DeltaReplayTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.046",
+                      "name":  "bothModesMatchHandwrittenExpectedStatesMetadataAndIdenticalEventIdsAndContent",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.DeltaReplayTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "testHarnessSchemaIsStillRefusedInBothModes",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.DeltaReplayTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.017",
+                      "name":  "deltaFaultsNowUseProductionReducerButStillRejectInvalidMode",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.DeltaReplayTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.007",
+                      "name":  "firstEpochFullAckUnchangedAndFailureHaveIndependentObservationCoverage",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.DeltaReplayTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.043",
+                      "name":  "reconnectRestartsWithFullOneAndPreservesSameEventsAcrossModes(int)[1]",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.DeltaReplayTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.055",
+                      "name":  "reconnectRestartsWithFullOneAndPreservesSameEventsAcrossModes(int)[2]",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.DeltaReplayTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.049",
+                      "name":  "reconnectRestartsWithFullOneAndPreservesSameEventsAcrossModes(int)[3]",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.DeltaReplayTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.018",
+                      "name":  "bothOracleAndReplayMatchIndependentHandwrittenExpectedTable",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.HandwrittenTraceTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.247",
+                      "name":  "conflictByIdAndAliasSequenceCoversFullDeltaEventWithoutChangingState(String)[1]",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.135",
+                      "name":  "conflictByIdAndAliasSequenceCoversFullDeltaEventWithoutChangingState(String)[2]",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.085",
+                      "name":  "fullRecoveryCannotRepairDroppedHistoricalEvent",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.153",
+                      "name":  "oracleAndEncodersMatchHandwrittenPidsAndEventAppearanceTable(String)[1]",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.138",
+                      "name":  "oracleAndEncodersMatchHandwrittenPidsAndEventAppearanceTable(String)[2]",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.132",
+                      "name":  "oracleAndEncodersMatchHandwrittenPidsAndEventAppearanceTable(String)[3]",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.008",
+                      "name":  "lateEventUsesCurrentDeliveryConnectionNotOriginConnection",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.085",
+                      "name":  "missingBasePreservesLastKnownAndDoesNotRecoverByDuplicate(String, int)[1]",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.046",
+                      "name":  "missingBasePreservesLastKnownAndDoesNotRecoverByDuplicate(String, int)[2]",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.044",
+                      "name":  "missingBasePreservesLastKnownAndDoesNotRecoverByDuplicate(String, int)[3]",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.046",
+                      "name":  "missingBasePreservesLastKnownAndDoesNotRecoverByDuplicate(String, int)[4]",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.192",
+                      "name":  "cliExitCodesHashValidationAndNoOverwrite",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.146",
+                      "name":  "negativeDeltaMetadataAndEventContentAreDetectedIndependently",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "5.966",
+                      "name":  "campaignRunsAllWorkloadsFaultsBothModesAndDeterministicReports",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.039",
+                      "name":  "epochAndLowVersionLateMessagesCannotOverwriteRecoveredState",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "failurePreservesObservationBaselineRatherThanCreatingEmptyAndNewEvent",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayEngineTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "droppedEventsAreReportedAsUnrecoverableBusinessDifferenceNotFakeClientGap",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayEngineTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "droppingFirstFullDoesNotInventRecoveryOrUnknown",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayEngineTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "reorderedOldEpochCannotOverwriteReconnectedFullAndHistoryRemains",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayEngineTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "observationNanosecondsStayInIdentityButEventPayloadUsesContractMicroseconds",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayEngineTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "disappearanceReappearancePidReuseAndMissingStartFollowExistingIdentity",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayEngineTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.006",
+                      "name":  "handwrittenExpectedEmptyEdgeUnchangedEmptyAndOneEvent",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayEngineTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "oracleDetectsDeliberatelyIncorrectFullDespiteValidParser",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayEngineTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "missingIntermediateFullCanBeReplacedByHigherFull",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayEngineTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "duplicateHasSameEventIdAndNoAdditionalEvents",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayEngineTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "sameSeedReproducesEveryIdScheduleAndResult",
+                      "class":  "vn.edu.toeic.client.monitoring.trace.ReplayEngineTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "productionOpenerRejectsCredentialInUrlWithoutLeakingInput",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.036",
+                      "name":  "measuredTxUsesExactSerializedTextIncludingVietnamese",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.014",
+                      "name":  "warningPushDoesNotConsumeEventAckAndFragmentsStillRequestNext",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.007",
+                      "name":  "monitoringReservesHeartbeatSlotAndCanReleaseExpiredCorrelation",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.006",
+                      "name":  "measuredFragmentsCountOnceEvenAcrossUnicodeSurrogates",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "oldLeaseCloseCannotClearNewCollectorBinding",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "heartbeatFollowsConfiguredIntervalAndStopsOnDisconnect",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.035",
+                      "name":  "measuredMalformedReceiveNeverLeaksTextToRaw",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "deltaCapabilityRequiresWholeHeartbeatAckAndOlderServerIsExplicitlyUnsupported",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "close1008AloneIsAuthFailureAndDoesNotRetry",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "oversizedFragmentedMessageIsDiscardedAndNextMessageCanBeRead",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "settingsRejectZeroIntervalsAndOutOfScopeSession",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "rejectsUnknownTypeWrongScopeMissingFieldsAndMismatchedAck",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "invalidCredentialsDoNotRetryOrLeakExceptionDetails",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "retryUsesIncreasingCappedDelayAndExhaustsBudget",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "unscopedHeartbeatOmitsCollectorAndDeliversCorrelatedServerAck",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "sendRejectsScopeUnknownTypesAndMissingPayloadWithoutWriting",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "realWorkerRunsOffCallerAndTerminatesAfterClose",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "reconnectOpensFreshSocketAndIgnoresStaleCallbacks",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "reconnectKeepsBindingButReconnectAfterStopCannotReviveIt",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "measuredAsyncFailureDoesNotClaimWriteCompleted",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "invalidCollectorBindingRejectedBeforeSend",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "scopedHeartbeatLeaseUsesRealCollectorAndStopReturnsToUnscopedPing",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "transientInitialFailureRetriesAndConnectFutureCompletesAfterFreshOpen",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "invalidOrForeignPushCannotBreakPendingAckOrConnection",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "directErrorPayloadIsDeliveredWithoutAutomaticMessageRetry(String)[1]",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "directErrorPayloadIsDeliveredWithoutAutomaticMessageRetry(String)[2]",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "directErrorPayloadIsDeliveredWithoutAutomaticMessageRetry(String)[3]",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "fragmentedTextIsParsedOnlyAtLastFragmentAndDemandContinues",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "closeDuringHandshakeCancelsFutureAndAbortsLateSocket",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "queuedFullPlanCannotBeWrittenAfterCollectorStopAndDoesNotDropSharedSocket",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "closeWhileConnectedStopsPeriodicHeartbeat",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "deltaCapabilityRequiresExplicitOptInAndCorrelatedServerAckAndResetsOnReconnect",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "forgetAfterAckStillRetiresLateReplies",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "malformedJsonDoesNotCrashListenerAndNextValidMessageIsDelivered(String)[1]",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "malformedJsonDoesNotCrashListenerAndNextValidMessageIsDelivered(String)[2]",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "malformedJsonDoesNotCrashListenerAndNextValidMessageIsDelivered(String)[3]",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "malformedJsonDoesNotCrashListenerAndNextValidMessageIsDelivered(String)[4]",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "malformedJsonDoesNotCrashListenerAndNextValidMessageIsDelivered(String)[5]",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "malformedJsonDoesNotCrashListenerAndNextValidMessageIsDelivered(String)[6]",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "malformedJsonDoesNotCrashListenerAndNextValidMessageIsDelivered(String)[7]",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "malformedJsonDoesNotCrashListenerAndNextValidMessageIsDelivered(String)[8]",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rawHttpScopeDoesNotPreventLoginButNeverWidensMonitoringHeartbeatIds",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "connectionStateDrivesLockModelAndObserversCannotKillAdapter",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.012",
+                      "name":  "sendFailureTriggersReconnectWithoutExposingRawCause",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "reconnectDoesNotReuseOldFragmentsOrPendingAcks",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "malformedErrorDoesNotKillHeartbeatAndUnscopedEventCannotWrite",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "forgottenCorrelationIgnoresRepeatedAckErrorAndResyncUntilRetried",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "generationBoundSendCannotUseSocketFromBeforeDisconnect",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "observationIdentityUsesCorrelatedHeartbeatAckAndClearsOnReconnect",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.0",
+                      "name":  "forgottenCorrelationIgnoresLateAckAndSameIdCanBeRetried",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "parserValidatesResyncCorrelationAndEpochBeforePublishingToEncoder",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.007",
+                      "name":  "listeningStartRequiresExactScopeMessageIdWriterAndPayloadBeforePublish",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "measuredBinaryAndOversizedTextAreUnmeasuredWithoutInventedBytes",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "measuredRetrySameEventAddsAnotherAttemptAndOneBusinessAck",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "eventIdentityCannotBeReusedWithDifferentPayloadAndPendingAcksAreBounded",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "presenceExactLongRevisionAcceptedWithoutPendingRequest",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "closeCancelsHeartbeatRetryAndClosesOpenerExactlyOnce",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.0",
+                      "name":  "manualDisconnectCancelsScheduledReconnect",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "unauthorizedErrorFailsLocksStopsHeartbeatAndRejectsOldCredentialReuse",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "scopedHeartbeatRejectionCallbackRequiresCorrelationAndExcludesTransientDbFailure",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.036",
+                      "name":  "failedRecorderCannotBreakEventAckOrTransportCleanup",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "socketWritesAreSerializedAndPendingWritesFailOnDisconnect",
+                      "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.488",
+                      "name":  "fullOrCloseLinearizesBeforeWaitingDeltaAndMaintenance(String)[1]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.013",
+                      "name":  "fullOrCloseLinearizesBeforeWaitingDeltaAndMaintenance(String)[2]",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.018",
+                      "name":  "ttlAfterUnsyncedDoesNotUseFailedDeltaAsTouch",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.012",
+                      "name":  "wrongBindingNeverPoisonsActiveEntryAndDeltaDisabledByDefault",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.022",
+                      "name":  "missingBasePreservesSetAndLeaseAndFullRecoveryClearsResync",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.012",
+                      "name":  "openAndCloseSerializeAgainstOldDeltaAndMaintenance",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest"
+                  },
+                  {
+                      "module":  "server",
+                      "status":  "PASS",
+                      "seconds":  "0.01",
+                      "name":  "duplicateNoopDoesNotRenewLeaseAndRevokedScopeIsCheckedFirst",
+                      "class":  "vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest"
+                  }
+              ],
+    "xmlHashes":  [
+                      {
+                          "module":  "protocol",
+                          "sha256":  "82396bff9ec9557c53d2f021d5310cdfd2e46d451166f955dd0c820e23942df3",
+                          "file":  "TEST-vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "4f6720b9ba8dd2b5697078c0478b1229298d9b01f56506b75c87dd1dfae56cd0",
+                          "file":  "TEST-vn.edu.toeic.client.monitoring.CandidateModeSessionTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "4805e8feafef1c3f58f1fb3a4d9f509e818a2e7ba99b1b48f413fe453f7e98f2",
+                          "file":  "TEST-vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "777ad44f238707d80457873d4fb65c943b2d5631b30cbf28e0bc06472de41cb2",
+                          "file":  "TEST-vn.edu.toeic.client.monitoring.ProcessCollectorTraceTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "b9c466150831a0d69eae1a3d8c0b96dc5dac9afc447287ab5baecd99e3728862",
+                          "file":  "TEST-vn.edu.toeic.client.monitoring.trace.DeltaReplayTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "3878988a92550795ac32c8e1a91e43d3de8ba3b66d9a14fad0a956b0474b8275",
+                          "file":  "TEST-vn.edu.toeic.client.monitoring.trace.HandwrittenTraceTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "049bb5f7217ab80f4f762e34c6ae4df3f26a72db2db82759a44bb5a977c9e3d3",
+                          "file":  "TEST-vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "8298eade88051143f4241eb1fd5621c37d21f6700e98bb1ae56581f0e6a5656c",
+                          "file":  "TEST-vn.edu.toeic.client.monitoring.trace.ReplayEngineTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "72bce9d5a295c1afd00f1cc59b0d450ce576b001824837fc67d23d74cdb91890",
+                          "file":  "TEST-vn.edu.toeic.client.realtime.RealtimeClientTest.xml"
+                      },
+                      {
+                          "module":  "server",
+                          "sha256":  "41fe3bae8d133b7385e8f978c8ad5fe1d9d4a41e972fbd1d2c3cc549513f8deb",
+                          "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest.xml"
+                      }
+                  ]
+}

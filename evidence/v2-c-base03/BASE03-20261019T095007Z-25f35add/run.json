@@ -1,0 +1,86 @@
+{
+  "schema": "base03-verification-v1",
+  "runId": "BASE03-20261019T095007Z-25f35add",
+  "sourceSha": "fc1652408694272dd85880af64d87c3628a91123",
+  "branch": "test/v2-c-base03-delta-gate",
+  "os": "Microsoft Windows NT 10.0.26200.0",
+  "topology": "One Windows host, owned PostgreSQL SCRAM cluster/database, loopback HTTP/WS; not physical LAN",
+  "database": "toeic_base03_test",
+  "port": 52855,
+  "steps": [
+    {
+      "name": "initdb",
+      "command": "initdb.exe -D \"<WORKTREE>\\target\\base03-runs\\BASE03-20261019T095007Z-25f35add\\pgdata\" -U base03_test --auth=scram-sha-256 --pwfile=\"<WORKTREE>\\target\\base03-runs\\BASE03-20261019T095007Z-25f35add\\password.private\" --no-locale -E UTF8",
+      "startUtc": "2026-10-19T09:50:07.8776044Z",
+      "endUtc": "2026-10-19T09:50:15.7370576Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095007Z-25f35add/initdb.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095007Z-25f35add/initdb.private.stderr.txt"
+    },
+    {
+      "name": "pg-start",
+      "command": "pg_ctl.exe -D \"<WORKTREE>\\target\\base03-runs\\BASE03-20261019T095007Z-25f35add\\pgdata\" -l \"<WORKTREE>\\target\\base03-runs\\BASE03-20261019T095007Z-25f35add\\postgres.private.txt\" -o \"-h 127.0.0.1 -p 52855\" -w start",
+      "startUtc": "2026-10-19T09:50:15.7931574Z",
+      "endUtc": "2026-10-19T09:51:29.7165318Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "status": "PASS",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095007Z-25f35add/pg-start.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095007Z-25f35add/pg-start.private.stderr.txt"
+    },
+    {
+      "name": "createdb",
+      "command": "createdb.exe -h 127.0.0.1 -p 52855 -U base03_test -T template0 -E UTF8 toeic_base03_test",
+      "startUtc": "2026-10-19T09:51:29.7232202Z",
+      "endUtc": "2026-10-19T09:51:33.9852112Z",
+      "exitCode": 1,
+      "timedOut": false,
+      "status": "FAIL",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095007Z-25f35add/createdb.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095007Z-25f35add/createdb.private.stderr.txt"
+    },
+    {
+      "name": "schema-count",
+      "command": "psql.exe -h 127.0.0.1 -p 52855 -U base03_test -d toeic_base03_test -At -c \"SELECT count(*) FROM pg_namespace WHERE nspname NOT LIKE 'pg_%' AND nspname NOT IN ('public','information_schema');\"",
+      "startUtc": "2026-10-19T09:51:34.0370029Z",
+      "endUtc": "2026-10-19T09:51:36.1476078Z",
+      "exitCode": 2,
+      "timedOut": false,
+      "status": "FAIL",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095007Z-25f35add/schema-count.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095007Z-25f35add/schema-count.private.stderr.txt"
+    },
+    {
+      "name": "pg-stop",
+      "command": "pg_ctl.exe -D \"<WORKTREE>\\target\\base03-runs\\BASE03-20261019T095007Z-25f35add\\pgdata\" -w stop -m fast",
+      "startUtc": "2026-10-19T09:51:36.1496095Z",
+      "endUtc": "2026-10-19T09:51:36.1806065Z",
+      "exitCode": 1,
+      "timedOut": false,
+      "status": "FAIL",
+      "rawStdout": "target/base03-runs/BASE03-20261019T095007Z-25f35add/pg-stop.private.stdout.txt",
+      "rawStderr": "target/base03-runs/BASE03-20261019T095007Z-25f35add/pg-stop.private.stderr.txt"
+    }
+  ],
+  "cleanup": {
+    "ownedSchemasRemaining": null,
+    "clusterStopExit": 1,
+    "privateEnvRemoved": true,
+    "passwordFileRemoved": true
+  },
+  "runnerErrorType": "System.Management.Automation.RuntimeException",
+  "skipLiveGui": false,
+  "physicalLan": "NOT_RUN",
+  "bReview": "PENDING",
+  "deltaCorrectnessGate": "NOT_DECIDED",
+  "fullDefaultPreserved": "YES",
+  "e2Allowed": "NO",
+  "metadataDerivation": {
+    "rawPath": "target/base03-runs/BASE03-20261019T095007Z-25f35add/run-metadata.original.json",
+    "rawSha256": "2bcc00a1c1db231bee5ca635986b44463a3fb34fb673d1137e63c2e839dfc347",
+    "transformation": "Only replace workspace/user-home paths in metadata; original retained. No test result changed."
+  },
+  "executionFinding": "RUNNER_ENVIRONMENT_FAILURE before tests: inherited pg_ctl pipes; owned cluster stopped explicitly exit0, wrapper then failed createdb/second stop. Corrected in834f683. Not a production correctness FAIL."
+}

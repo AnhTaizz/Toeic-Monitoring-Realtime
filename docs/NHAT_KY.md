@@ -779,6 +779,16 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - [Báo cáoV11/findings](EX04_V11_VERIFICATION.md), [EX02gap matrix/records/JSON/media/START/roadmap](EX02_RICH_EXAM_CONTRACT_PROPOSAL.md), [evidence](../evidence/ex04-v11-20261019/README.md). HTTP reproducer xác nhậnSCHEDULED vẫnGET/takeover/save/submit200 theoQD21; chỉ đề xuấtADR, không đổi semantics.
 - Không importETSseed, không tảimedia, không đổiimportable/keys/JavaFX/v0/writer/revision/FULL. Phạm viA cầnC reviewSQL/test vàB reviewcontract/render; không tạo chữ kýowner, không tựDONE/tracker/hours hoặcmerge. Còn richimport/read/image/filesystem config, nguồn/key/options/groups/media vàphysical acceptance.
 
+
+## 19/10/2026 · C/Codex · BASE-03 kiểm chứng FULL/DELTA
+
+- Yêu cầu thực thi BASE-03 sau audit; người dùng yêu cầu không dùng codex-with-chatgpt. Fetch và worktree riêng từ origin/main1d35b53; main local f98a37f giữ nguyên/sạch. Không push/PR/merge/reset/rebase/stash/clean/xóa worktree.
+- Nguồn834f683: FULL-first163PASS, DELTA151PASS; real ProcessHandle/Edge/WS/PG/proctor, A3 COMMIT/dedup/auth, C2 RESYNC/restart và C4 hai candidate child JVM42/42 PASS. Oracle72ca/4negative detected,77file lặp cùng bytes,35/36 cặp có checkpoint chung; một seeded pair giữ NO_COMMON_SYNC_CHECKPOINT.
+- Maven package regression983PASS/7SKIP/0FAIL/0ERROR với PG18.3 SCRAM cluster/database riêng, Java21.0.10/Maven3.9.15/Python3.15.0b3; Python analyzer22PASS. Nguồn463cbad bổ sung test WS retired DELTA và FULL low/same-sequence conflict PASS, guard bảo đảm production/POM không đổi. Hai lượt0schema,cluster stop0; private .env/password file xóa.
+- Giữ lỗi runner inherited-pipe trước test, sửa wrapper rồi chạy lại; assertion/production không sửa. C4 measurement INCOMPLETE do owned hard-kill, không gọi là performance/E1/E2. Raw/XML/screenshots/binary giữ target ignored và SHA256; metadata công bố có bản gốc/hash, không đưa env secret vào Git.
+- Kit mới pin source463cbad/runtime834f683/JAR hashes đã kiểm;22file và29+29checks source/giải nén PASS. Checklist41case vẫn NOT RUN, topology/signature B PENDING; không có thao tác mạng vật lý.
+- [Báo cáo A–J](../evidence/v2-c-base03/REPORT.md), [handoff](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md). GateNOT_DECIDED, FULL default, E2NO; C chờ cùng B chạy vật lý, A xem auth/COMMIT/DB isolation. Không sửa production/wire/migration/JavaFX/QD/tracker hoặc triển khai MON-07/MON-02.
+
 ## 19/10/2026 · Codex · EX-02 contract candidate / ADR-V2-03
 
 - Fetch main1d35b53, xác nhận PR65/V11 và PR66/V12 đã merge, CI baseline39214612088 SUCCESS; tạo worktree/branch docs/ex02-contract-adr-start-20261019 riêng. Root main3f5775b và file người dùng chưa commit được giữ, không reset/stash/checkout root.

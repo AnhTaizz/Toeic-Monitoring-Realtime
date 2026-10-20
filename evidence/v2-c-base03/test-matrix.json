@@ -1,0 +1,333 @@
+{
+  "schema": "base03-case-matrix-v1",
+  "rows": [
+    {
+      "testId": "BASELINE_FULL",
+      "runId": "BASE03-20261019T095202Z-66b7cc19",
+      "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+      "input": "Valid candidate attempt; process appears/disappears; proctor read/history; stop",
+      "expected": "FULL pipeline and dedup/history/cleanup match contract",
+      "actual": "163 FULL focused + FULL/history smokes PASS",
+      "status": "PASS",
+      "evidenceLevel": "REAL ProcessHandle/Edge/WS/PG; MOCK fault sets",
+      "commands": [
+        {
+          "stage": "full-focused",
+          "command": "cmd.exe /d /s /c \"\"D:\\maven\\bin\\mvn.cmd\" -o -B --no-transfer-progress \"-Dmaven.repo.local=<USER_HOME>/.m2/repository\" -pl protocol,client,server -am -Dtest=FullSnapshotPayloadTest,EventOriginTest,ProcessPolicyAndSourceTest,ProcessCollectorTest,MonitoringDeliveryTest,FullSnapshotDeliveryTest,FullSnapshotReducerTest,MonitoringStateServiceTest,MonitoringStateMaintenanceTest,MonitoringGapTest,ProcessEventTest,MonitoringPresenceServiceTest,ExamMonitoringIntegrationTest -Dsurefire.failIfNoSpecifiedTests=false test\""
+        },
+        {
+          "stage": "full-baseline",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t2c1.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" -Gui"
+        },
+        {
+          "stage": "event-postgres",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-a3.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" "
+        }
+      ],
+      "artifact": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19/full-pipeline-checks.json",
+      "logs": [
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/full-focused.private.stdout.txt",
+          "sha256": "60382dcdafdab14cee44d9c7a9f52538934a6dc3824780e5043ced2d822ab454"
+        },
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/full-baseline.private.stdout.txt",
+          "sha256": "ac689084e08e8df6cf55645fcf31df80a11a8603bcbf0a463381b054e2669e3d"
+        },
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/event-postgres.private.stdout.txt",
+          "sha256": "5363dadec4a8614ecf4ae01ed2a072a24d5d35fd382b16ded087c8372fb362da"
+        }
+      ],
+      "physicalLan": "NOT_RUN",
+      "bReview": "PENDING",
+      "gateConclusion": "NOT_DECIDED"
+    },
+    {
+      "testId": "MT02",
+      "runId": "BASE03-20261019T095202Z-66b7cc19",
+      "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+      "input": "Same ID/same payload; different payload; ACK lost; revoked scope",
+      "expected": "Retry immutable; no second revision/history row; CONFLICT/auth checked before cache; no ACK before COMMIT",
+      "actual": "C2 duplicate revision unchanged; A3 row once/warning once; C4 frozen retry/rollback assertions PASS",
+      "status": "PASS",
+      "evidenceLevel": "REAL WS/PG; MOCK/SIMULATED ACK and commit faults",
+      "commands": [
+        {
+          "stage": "event-postgres",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-a3.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" "
+        },
+        {
+          "stage": "delta-focused",
+          "command": "cmd.exe /d /s /c \"\"D:\\maven\\bin\\mvn.cmd\" -o -B --no-transfer-progress \"-Dmaven.repo.local=<USER_HOME>/.m2/repository\" -pl protocol,client,server -am -Dtest=DeltaSnapshotPayloadTest,DeltaSnapshotDeliveryTest,CandidateModeSessionTest,DeltaReplayTest,ReplayCampaignTest,HandwrittenTraceTest,ReplayEngineTest,RealtimeClientTest,ProcessCollectorTraceTest,MonitoringDeltaStateTest -Dsurefire.failIfNoSpecifiedTests=false test\""
+        },
+        {
+          "stage": "delta-ws-pg",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c2.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" "
+        },
+        {
+          "stage": "local-live-gate",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c4.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" "
+        }
+      ],
+      "artifact": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19/local-live-report.json",
+      "logs": [
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-focused.private.stdout.txt",
+          "sha256": "6e4139ce126d748d1c1b26b45e7121cf3d0dc4167008b1dabc218727d5199cb4"
+        },
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/event-postgres.private.stdout.txt",
+          "sha256": "5363dadec4a8614ecf4ae01ed2a072a24d5d35fd382b16ded087c8372fb362da"
+        },
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-ws-pg.private.stdout.txt",
+          "sha256": "5d57b6bf828bac1ac6fd6eca8ba63df3bbb729dce535aa43e7db1d779bef861f"
+        },
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/local-live-gate.private.stdout.txt",
+          "sha256": "1e3c90d7d40bd3a6ec255bd7f6da842faf1529631b041221d8bf9d90cd25ea7d"
+        }
+      ],
+      "physicalLan": "NOT_RUN",
+      "bReview": "PENDING",
+      "gateConclusion": "NOT_DECIDED"
+    },
+    {
+      "testId": "MT03",
+      "runId": "BASE03-20261019T095202Z-66b7cc19",
+      "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+      "input": "Dropped/reordered delta, future base",
+      "expected": "UNSYNCED retains canonical last-known; correlated RESYNC; fresh FULL recovery",
+      "actual": "Replay independent oracle and C2/C4 RESYNC/state/encoder PASS",
+      "status": "PASS",
+      "evidenceLevel": "REPLAY plus REAL WS/PG; missing/order faults SIMULATED",
+      "commands": [
+        {
+          "stage": "oracle-campaign",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c3.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" -RealScan"
+        },
+        {
+          "stage": "delta-ws-pg",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c2.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" "
+        },
+        {
+          "stage": "local-live-gate",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c4.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" "
+        }
+      ],
+      "artifact": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19/delta-network-checks.json",
+      "logs": [
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/oracle-campaign.private.stdout.txt",
+          "sha256": "3d3bc7fb36199684483e5ae127f193a55ad3a5cf21f95dfec6bd3fe07bc6cd12"
+        },
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-ws-pg.private.stdout.txt",
+          "sha256": "5d57b6bf828bac1ac6fd6eca8ba63df3bbb729dce535aa43e7db1d779bef861f"
+        },
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/local-live-gate.private.stdout.txt",
+          "sha256": "1e3c90d7d40bd3a6ec255bd7f6da842faf1529631b041221d8bf9d90cd25ea7d"
+        }
+      ],
+      "physicalLan": "NOT_RUN",
+      "bReview": "PENDING",
+      "gateConclusion": "NOT_DECIDED"
+    },
+    {
+      "testId": "MT04",
+      "runId": "BASE03-20261019T095950Z-e51076ac",
+      "sourceSha": "463cbadc50465c6ca2f2d4c0a0701dcb9c38e034",
+      "input": "OPEN/new epoch/FULL1; retired DELTA exact cached ID and fresh ID",
+      "expected": "STALE before old duplicate cache; epoch/sequence/revision/canonical set/history unchanged",
+      "actual": "Both retired DELTA requests STALE; exact before/after + SQL assertions PASS",
+      "status": "PASS",
+      "evidenceLevel": "REAL WS/PG; old payload MOCK/SIMULATED",
+      "commands": [
+        {
+          "stage": "delta-ws-pg",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c2.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" "
+        }
+      ],
+      "artifact": "evidence/v2-c-base03/BASE03-20261019T095950Z-e51076ac/delta-network-checks.json",
+      "logs": [
+        {
+          "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/delta-ws-pg.private.stdout.txt",
+          "sha256": "6db882c3688dad9a5a230164bdca997ca6b8cf6d102f1f319634a69e21ad1087"
+        }
+      ],
+      "physicalLan": "NOT_RUN",
+      "bReview": "PENDING",
+      "gateConclusion": "NOT_DECIDED"
+    },
+    {
+      "testId": "MT05",
+      "runId": "BASE03-20261019T095202Z-66b7cc19",
+      "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+      "input": "Collector/candidate/server restart, reconnect/socket generations",
+      "expected": "New OPEN/epoch/fresh FULL; no old callback/base reuse; durable history",
+      "actual": "C2/C4 restart/auth/epoch/cleanup and client callback tests PASS",
+      "status": "PASS",
+      "evidenceLevel": "REAL owned child JVM and Spring restarts/WS/PG; old callbacks MOCK",
+      "commands": [
+        {
+          "stage": "delta-focused",
+          "command": "cmd.exe /d /s /c \"\"D:\\maven\\bin\\mvn.cmd\" -o -B --no-transfer-progress \"-Dmaven.repo.local=<USER_HOME>/.m2/repository\" -pl protocol,client,server -am -Dtest=DeltaSnapshotPayloadTest,DeltaSnapshotDeliveryTest,CandidateModeSessionTest,DeltaReplayTest,ReplayCampaignTest,HandwrittenTraceTest,ReplayEngineTest,RealtimeClientTest,ProcessCollectorTraceTest,MonitoringDeltaStateTest -Dsurefire.failIfNoSpecifiedTests=false test\""
+        },
+        {
+          "stage": "delta-ws-pg",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c2.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" "
+        },
+        {
+          "stage": "local-live-gate",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c4.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" "
+        }
+      ],
+      "artifact": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19/local-live-report.json",
+      "logs": [
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-focused.private.stdout.txt",
+          "sha256": "6e4139ce126d748d1c1b26b45e7121cf3d0dc4167008b1dabc218727d5199cb4"
+        },
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-ws-pg.private.stdout.txt",
+          "sha256": "5d57b6bf828bac1ac6fd6eca8ba63df3bbb729dce535aa43e7db1d779bef861f"
+        },
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/local-live-gate.private.stdout.txt",
+          "sha256": "1e3c90d7d40bd3a6ec255bd7f6da842faf1529631b041221d8bf9d90cd25ea7d"
+        }
+      ],
+      "physicalLan": "NOT_RUN",
+      "bReview": "PENDING",
+      "gateConclusion": "NOT_DECIDED"
+    },
+    {
+      "testId": "MT06",
+      "runId": "BASE03-20261019T095950Z-e51076ac",
+      "sourceSha": "463cbadc50465c6ca2f2d4c0a0701dcb9c38e034",
+      "input": "FULL30s; FULL4 after5; changed FULL5; same input traces FULL/DELTA",
+      "expected": "STALE/CONFLICT without mutation; canonical identity/content and event maps match valid checkpoints",
+      "actual": "R2 sequence/content probes PASS; R1 72campaign/4negative detected,35of36 comparable pairs; FULL30s PASS",
+      "status": "PASS",
+      "evidenceLevel": "REAL WS/PG sequence probes; REPLAY oracle; REAL local reconciliation",
+      "commands": [
+        {
+          "stage": "delta-ws-pg",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c2.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" "
+        }
+      ],
+      "artifact": "evidence/v2-c-base03/BASE03-20261019T095950Z-e51076ac/delta-network-checks.json",
+      "logs": [
+        {
+          "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/delta-ws-pg.private.stdout.txt",
+          "sha256": "6db882c3688dad9a5a230164bdca997ca6b8cf6d102f1f319634a69e21ad1087"
+        }
+      ],
+      "physicalLan": "NOT_RUN",
+      "bReview": "PENDING",
+      "gateConclusion": "NOT_DECIDED"
+    },
+    {
+      "testId": "FULL_FALLBACK",
+      "runId": "BASE03-20261019T095202Z-66b7cc19",
+      "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+      "input": "No opt-in; UNKNOWN; unsupported/disabled server; reconnect",
+      "expected": "FULL default, capability revalidated; DELTA requires explicit current support",
+      "actual": "CandidateModeSession/RealtimeClient and C4 OLD_OR_DISABLED_SERVER_FULL/FULL_PINNED assertions PASS",
+      "status": "PASS",
+      "evidenceLevel": "MOCK capability unit plus REAL WS/PG/local Application",
+      "commands": [
+        {
+          "stage": "delta-focused",
+          "command": "cmd.exe /d /s /c \"\"D:\\maven\\bin\\mvn.cmd\" -o -B --no-transfer-progress \"-Dmaven.repo.local=<USER_HOME>/.m2/repository\" -pl protocol,client,server -am -Dtest=DeltaSnapshotPayloadTest,DeltaSnapshotDeliveryTest,CandidateModeSessionTest,DeltaReplayTest,ReplayCampaignTest,HandwrittenTraceTest,ReplayEngineTest,RealtimeClientTest,ProcessCollectorTraceTest,MonitoringDeltaStateTest -Dsurefire.failIfNoSpecifiedTests=false test\""
+        },
+        {
+          "stage": "local-live-gate",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c4.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" "
+        }
+      ],
+      "artifact": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19/local-live-report.json",
+      "logs": [
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-focused.private.stdout.txt",
+          "sha256": "6e4139ce126d748d1c1b26b45e7121cf3d0dc4167008b1dabc218727d5199cb4"
+        },
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/local-live-gate.private.stdout.txt",
+          "sha256": "1e3c90d7d40bd3a6ec255bd7f6da842faf1529631b041221d8bf9d90cd25ea7d"
+        }
+      ],
+      "physicalLan": "NOT_RUN",
+      "bReview": "PENDING",
+      "gateConclusion": "NOT_DECIDED"
+    },
+    {
+      "testId": "RECONNECT",
+      "runId": "BASE03-20261019T095202Z-66b7cc19",
+      "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+      "input": "Client disconnect/restart; Spring restart",
+      "expected": "New epoch/FULL and persisted history; other candidate continues",
+      "actual": "C2 and C4 reconnect/restart/isolation PASS",
+      "status": "PASS",
+      "evidenceLevel": "REAL loopback WS/PG/local JVM; source faults SIMULATED",
+      "commands": [
+        {
+          "stage": "delta-ws-pg",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c2.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" "
+        },
+        {
+          "stage": "local-live-gate",
+          "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"<WORKTREE>\\scripts\\smoke-t3c4.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" "
+        }
+      ],
+      "artifact": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19/local-live-report.json",
+      "logs": [
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-ws-pg.private.stdout.txt",
+          "sha256": "5d57b6bf828bac1ac6fd6eca8ba63df3bbb729dce535aa43e7db1d779bef861f"
+        },
+        {
+          "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/local-live-gate.private.stdout.txt",
+          "sha256": "1e3c90d7d40bd3a6ec255bd7f6da842faf1529631b041221d8bf9d90cd25ea7d"
+        }
+      ],
+      "physicalLan": "NOT_RUN",
+      "bReview": "PENDING",
+      "gateConclusion": "NOT_DECIDED"
+    },
+    {
+      "testId": "PHYSICAL_LAN",
+      "runId": null,
+      "sourceSha": "463cbadc50465c6ca2f2d4c0a0701dcb9c38e034",
+      "input": "Two Windows machines, IPv4 LAN, cable loss/rejoin, Reading/Listening, cleanup",
+      "expected": "41case evidence plus operator/reviewer signature",
+      "actual": "0of41; no second physical machine/live operator; prepared ZIP/checklist only",
+      "status": "NOT_RUN",
+      "evidenceLevel": "PHYSICAL",
+      "commands": [],
+      "artifact": null,
+      "logs": [],
+      "physicalLan": "NOT_RUN",
+      "bReview": "PENDING",
+      "gateConclusion": "NOT_DECIDED"
+    },
+    {
+      "testId": "B_REVIEW",
+      "runId": null,
+      "sourceSha": "463cbadc50465c6ca2f2d4c0a0701dcb9c38e034",
+      "input": "Reviewer B checks technical and physical evidence",
+      "expected": "Signed review/case results from B",
+      "actual": "PENDING; no substitute signature",
+      "status": "NOT_RUN",
+      "evidenceLevel": "HUMAN",
+      "commands": [],
+      "artifact": null,
+      "logs": [],
+      "physicalLan": "NOT_RUN",
+      "bReview": "PENDING",
+      "gateConclusion": "NOT_DECIDED"
+    }
+  ]
+}

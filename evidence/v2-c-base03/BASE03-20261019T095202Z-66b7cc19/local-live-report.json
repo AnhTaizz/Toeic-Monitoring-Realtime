@@ -1,0 +1,356 @@
+{
+  "schemaVersion": "t3c4-local-live-preparation-v1",
+  "status": "PASS",
+  "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+  "dateUtc": "2026-10-19T09:57:15.645663200Z",
+  "phase": "SERVER_DISABLED_FALLBACK",
+  "failureClass": null,
+  "failureMessage": null,
+  "topology": "ONE Windows host: owned Spring/PG TEST schema + two candidate child JVMs + production proctor Application; localhost only",
+  "serverUrl": "http://127.0.0.1:62345",
+  "stateStaleMillis": 6000,
+  "testTtlMillis": 12000,
+  "productionTtlMillis": 300000,
+  "refreshMillis": 2000,
+  "fullMillis": 30000,
+  "source": "REAL ProcessHandle/owned headless Edge; instrumented source control/ACK observer/future base SIMULATED",
+  "gate": "NOT_DECIDED; 2026-10-17 preparation; deadline 2026-10-20; human B/LAN second-machine NOT RUN; no E1/E2",
+  "cases": [
+    {
+      "name": "START_candidate-delta-default",
+      "phase": "MIGRATION",
+      "expected": "Fresh scope, selected DELTA, capability on current socket, production collector",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL Application buttons/HTTP/WS/source"
+    },
+    {
+      "name": "START_candidate-full-default",
+      "phase": "MIGRATION",
+      "expected": "Fresh scope, selected FULL, capability on current socket, production collector",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL Application buttons/HTTP/WS/source"
+    },
+    {
+      "name": "PROCTOR_NO_COLLECTOR",
+      "phase": "MIGRATION",
+      "expected": "Production proctor Application never creates CandidateMonitoringSession",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL GUI role/HTTP/WS"
+    },
+    {
+      "name": "REAL_EDGE_IDENTITY_METADATA",
+      "phase": "NORMAL_REAL_EDGE",
+      "expected": "Owned PID/start/name/quality equal independent ProcessHandle probe",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL OS/collector/encoder/server/HTTP/push"
+    },
+    {
+      "name": "UNCHANGED_FRESH_30S",
+      "phase": "NORMAL_REAL_EDGE",
+      "expected": "New successful scans/empty deltas keep SYNCED while full30s is due; heartbeat separate",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL time/ProcessHandle"
+    },
+    {
+      "name": "DEFAULT_APP_FACTORY_DELTA",
+      "phase": "NORMAL_REAL_EDGE",
+      "expected": "Opt-in + correlated capability selects production delta in the real Application",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL default factory/client/WS"
+    },
+    {
+      "name": "EVENT_HISTORY_SEPARATE",
+      "phase": "NORMAL_REAL_EDGE",
+      "expected": "Both collectors preserve observed Edge event after current-state removal",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL PostgreSQL"
+    },
+    {
+      "name": "CANDIDATE_ISOLATION",
+      "phase": "KILL_RESTART_CANDIDATE",
+      "expected": "Owned candidateA JVM killed, B GUI/heartbeat/collector stays active",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL hard-kill, one host"
+    },
+    {
+      "name": "START_candidate-delta-instrumented",
+      "phase": "KILL_RESTART_CANDIDATE",
+      "expected": "Fresh scope, selected DELTA, capability on current socket, production collector",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL Application buttons/HTTP/WS/source"
+    },
+    {
+      "name": "CANDIDATE_RESTART_EPOCH",
+      "phase": "KILL_RESTART_CANDIDATE",
+      "expected": "New actual Application login/collector/OPEN/full1; old RAM queue not restored",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL child restart/DB/WS"
+    },
+    {
+      "name": "OLD_SOCKET_EPOCH",
+      "phase": "KILL_RESTART_CANDIDATE",
+      "expected": "Old collector/epoch cannot overwrite actual restarted candidate",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL WS/binding, SIMULATED old payload"
+    },
+    {
+      "name": "CROSS_CANDIDATE_SCOPE",
+      "phase": "KILL_RESTART_CANDIDATE",
+      "expected": "Forged local scope cannot grant attemptB",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL server auth/scope; forged request SIMULATED"
+    },
+    {
+      "name": "PROCTOR_CANNOT_WRITE",
+      "phase": "KILL_RESTART_CANDIDATE",
+      "expected": "Role checked before reducer/cache",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL server/production proctor socket"
+    },
+    {
+      "name": "GAP_DB_COMMIT",
+      "phase": "KILL_RESTART_CANDIDATE",
+      "expected": "Explicit TEST sentinel gap committed then ACK; not a measured OS loss",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL network/PG, sentinel payload SIMULATED"
+    },
+    {
+      "name": "ACK_LOSS_RETRY_NO_REAPPLY",
+      "phase": "ACK_OBSERVER_LOSS",
+      "expected": "Whole ID/base/seq/payload retry; duplicate no revision/touch; paused source/HB ONLINE",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL server/network; SIMULATED delivery-observer ACK drop"
+    },
+    {
+      "name": "HTTP_PUSH_STATE_EQUAL",
+      "phase": "ACK_OBSERVER_LOSS",
+      "expected": "Quiet acknowledged state equals assigned PROCTOR HTTP view and latest push",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL HTTP/WS; paused source SIMULATED"
+    },
+    {
+      "name": "FROZEN_RETRY",
+      "phase": "ACK_OBSERVER_LOSS",
+      "expected": "Same whole envelope/ID/payload/base/sequence on actual adapter sends",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL encoder/adapter; fault SIMULATED"
+    },
+    {
+      "name": "OLD_ACK_NOT_OTHER_MESSAGE",
+      "phase": "ACK_OBSERVER_LOSS",
+      "expected": "Held old real ACK cannot reset or confirm another pending message",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL callback; SIMULATED delayed observer"
+    },
+    {
+      "name": "RESYNC_LAST_KNOWN",
+      "phase": "RESYNC_CALLBACK",
+      "expected": "Future base rejected, keep last known and wait a fresh scan",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL HTTP/WS/parser/callback; SIMULATED one wire base/seq change"
+    },
+    {
+      "name": "RESYNC_FRESH_FULL_UI_HISTORY",
+      "phase": "RESYNC_CALLBACK",
+      "expected": "New scan/full/ACK in epoch; proctor push recovers, DB history retained",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL Application/encoder/WS/RAM/DB"
+    },
+    {
+      "name": "RETRY_EXHAUSTION_FRESH_EPOCH",
+      "phase": "ACK_EXHAUSTION",
+      "expected": "Five attempts then fresh scan/OPEN/full1; no durable RAM queue claim",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL production delivery; SIMULATED ACK observer suppression"
+    },
+    {
+      "name": "HUNG_COLLECTOR_HB_ONLINE",
+      "phase": "SOURCE_HANG_STALE",
+      "expected": "Autonomous push STALE6s, retained set; no HTTP refresh/manual maintain/CLOSE during wait",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL scheduler/HB/push; SIMULATED source wait"
+    },
+    {
+      "name": "SOURCE_FAILURE_TTL",
+      "phase": "SOURCE_FAILURE_TTL",
+      "expected": "No cached scan refresh/false empty; TTL12s TEST expires while HB ONLINE; gap persists",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL maintenance/HB; SIMULATED scan exception; production TTL5min unchanged"
+    },
+    {
+      "name": "DB_SCOPE_BEFORE_DUPLICATE",
+      "phase": "SCOPE_DB_FAILURE",
+      "expected": "Own TEST table unavailable; duplicate cannot bypass scope DB check or refresh RAM; no success ACK",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL JDBC/WS; own TEST schema fault SIMULATED, shared DB not stopped"
+    },
+    {
+      "name": "DB_EVENT_ROLLBACK_NO_ACK",
+      "phase": "EVENT_DB_COMMIT_FAILURE",
+      "expected": "Deferred TEST commit trigger rolls back observed event; no false confirmed event/history",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL Edge/PG/transaction/WS; trigger SIMULATED"
+    },
+    {
+      "name": "EVENT_ID_CONTENT_RETRY_DB",
+      "phase": "EVENT_DB_COMMIT_FAILURE",
+      "expected": "Observed root\u0027s frozen eventId/content/origin preserved exactly once in DB after commit retry",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL wire payload/PG, independent SQL rows; no reducer as expected"
+    },
+    {
+      "name": "ATTEMPT_REVOKE_DUPLICATE",
+      "phase": "ATTEMPT_REVOKE_DUPLICATE",
+      "expected": "Previously accepted whole state replay forbidden after ACTIVE scope revoked; actual coordinator stops",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL DB auth/WS/GUI; duplicate trigger SIMULATED"
+    },
+    {
+      "name": "START_candidate-delta-instrumented",
+      "phase": "ATTEMPT_REVOKE_DUPLICATE",
+      "expected": "Fresh scope, selected DELTA, capability on current socket, production collector",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL Application buttons/HTTP/WS/source"
+    },
+    {
+      "name": "ASSIGNMENT_REVOKED_HTTP",
+      "phase": "PROCTOR_ASSIGNMENT_REVOKE",
+      "expected": "Authenticated PROCTOR cannot read current state/history after assignment removed",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL HTTP/auth/own TEST DB revoke"
+    },
+    {
+      "name": "ASSIGNMENT_REVOKED_PUSH",
+      "phase": "PROCTOR_ASSIGNMENT_REVOKE",
+      "expected": "No further attemptA pushes to unassigned proctor; candidate remains active",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL push/assignment; no UI refresh during wait"
+    },
+    {
+      "name": "SERVER_RESTART_RAM_DB",
+      "phase": "SERVER_RESTART",
+      "expected": "New instance/epoch, persistent DB login/history, both apps reconnect/capability/full; no RAM pretend restore",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL Spring restart same TEST port/PG/HTTP/WS/Applications"
+    },
+    {
+      "name": "CAPABILITY_LOST_STOPS_RUN",
+      "phase": "CAPABILITY_LOST_RECONNECT",
+      "expected": "DELTA never silently switches epoch/base/pending on disabled server",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL server restart/capability/adapter/coordinator"
+    },
+    {
+      "name": "START_candidate-delta-instrumented",
+      "phase": "CAPABILITY_LOST_RECONNECT",
+      "expected": "Fresh scope, selected FULL, capability on current socket, production collector",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL Application buttons/HTTP/WS/source"
+    },
+    {
+      "name": "FULL_PINNED_UNTIL_START",
+      "phase": "CAPABILITY_LOST_RECONNECT",
+      "expected": "Server support returning never auto-switches active FULL",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL Application/reconnect"
+    },
+    {
+      "name": "START_candidate-delta-instrumented",
+      "phase": "CAPABILITY_LOST_RECONNECT",
+      "expected": "Fresh scope, selected DELTA, capability on current socket, production collector",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL Application buttons/HTTP/WS/source"
+    },
+    {
+      "name": "TOKEN_REVOKE_ACTIVE_APP",
+      "phase": "TOKEN_REVOKE",
+      "expected": "UNAUTHORIZED received by real adapter/encoder/coordinator, collector/state/HB stops",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL TEST token revocation"
+    },
+    {
+      "name": "CLEANUP_candidate-delta-instrumented",
+      "phase": "TOKEN_REVOKE",
+      "expected": "All owned collector/delivery/realtime/trace/measurement workers terminated",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL Application.stop/owned child"
+    },
+    {
+      "name": "START_candidate-opt-in-unsupported",
+      "phase": "SERVER_DISABLED_FALLBACK",
+      "expected": "Fresh scope, selected FULL, capability on current socket, production collector",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL Application buttons/HTTP/WS/source"
+    },
+    {
+      "name": "OLD_OR_DISABLED_SERVER_FULL",
+      "phase": "SERVER_DISABLED_FALLBACK",
+      "expected": "Opt-in with omitted capability marker uses full; no unconditional delta",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL disabled server/current socket/default Application"
+    },
+    {
+      "name": "LOCAL_GATE_PREPARATION",
+      "phase": "SERVER_DISABLED_FALLBACK",
+      "expected": "Technical LOCAL checks only; two-machine LAN and human B review NOT RUN, gate20/10 not decided",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "one Windows host, two child JVMs + proctor Application"
+    },
+    {
+      "name": "CLEANUP_candidate-full-default",
+      "phase": "SERVER_DISABLED_FALLBACK",
+      "expected": "All owned collector/delivery/realtime/trace/measurement workers terminated",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL Application.stop/owned child"
+    },
+    {
+      "name": "CLEANUP_candidate-opt-in-unsupported",
+      "phase": "SERVER_DISABLED_FALLBACK",
+      "expected": "All owned collector/delivery/realtime/trace/measurement workers terminated",
+      "actualAssertion": true,
+      "status": "PASS",
+      "evidenceLevel": "REAL Application.stop/owned child"
+    }
+  ]
+}

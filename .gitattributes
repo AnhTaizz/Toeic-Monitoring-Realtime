@@ -1,6 +1,9 @@
 # Git tự chuẩn hóa xuống dòng cho file text, tránh diff giả giữa các máy
 * text=auto
 
+# BASE-03 evidence hashes cover exact bytes across Windows/Git checkouts.
+evidence/v2-c-base03/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
 # Script phải giữ đúng kiểu xuống dòng thì mới chạy được
 mvnw        text eol=lf
 *.sh        text eol=lf
