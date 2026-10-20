@@ -39,19 +39,21 @@ $env:TOEIC_USB_REAL_CIM=if($Mode -eq 'Real'){'true'}else{'false'};$env:TOEIC_USB
 $env:TOEIC_USB_DURATION_SECONDS=[string]$DurationSeconds;$env:TOEIC_USB_CADENCE_MILLIS=[string]$CadenceMillis;$env:TOEIC_USB_TIMEOUT_MILLIS=[string]$QueryTimeoutMillis
 foreach($name in @('TOEIC_PROCTOR_GUI','TOEIC_PACKAGED_CLIENT','TOEIC_INSTALLED_CLIENT','JAVA_TOOL_OPTIONS','JDK_JAVA_OPTIONS','_JAVA_OPTIONS')){[Environment]::SetEnvironmentVariable($name,$null,'Process')}
 $pgdata=Join-Path $out 'pgdata'
-function Native([string]$exe,[string]$arguments,[string]$label,[string]$inputText){
+function Native([string]$exe,[string]$arguments,[string]$label,[string]$inputText,[switch]$NoCapture){
     $process=New-Object Diagnostics.Process
     $process.StartInfo.FileName=$exe;$process.StartInfo.Arguments=$arguments;$process.StartInfo.WorkingDirectory=$repo
     $process.StartInfo.UseShellExecute=$false;$process.StartInfo.CreateNoWindow=$true
-    $process.StartInfo.RedirectStandardOutput=$true;$process.StartInfo.RedirectStandardError=$true;$process.StartInfo.RedirectStandardInput=$true
-    [void]$process.Start();$o=$process.StandardOutput.ReadToEndAsync();$e=$process.StandardError.ReadToEndAsync()
-    if($inputText){$process.StandardInput.Write($inputText)};$process.StandardInput.Close()
+    $process.StartInfo.RedirectStandardOutput=-not $NoCapture;$process.StartInfo.RedirectStandardError=-not $NoCapture;$process.StartInfo.RedirectStandardInput=-not $NoCapture
+    [void]$process.Start()
+    if(-not $NoCapture){$o=$process.StandardOutput.ReadToEndAsync();$e=$process.StandardError.ReadToEndAsync();if($inputText){$process.StandardInput.Write($inputText)};$process.StandardInput.Close()}
     $process.WaitForExit()
     # Never persist a plaintext bootstrap password, including unexpected command diagnostics.
-    $stdout=$o.Result.Replace($env:DB_PASSWORD,'<redacted>').Replace($env:TOEIC_SEED_PASSWORD,'<redacted>')
-    $stderr=$e.Result.Replace($env:DB_PASSWORD,'<redacted>').Replace($env:TOEIC_SEED_PASSWORD,'<redacted>')
-    [IO.File]::WriteAllText((Join-Path $out ($label+'.private.log')),$stdout,$utf8)
-    [IO.File]::WriteAllText((Join-Path $out ($label+'.private.err')),$stderr,$utf8)
+    if(-not $NoCapture){
+        $stdout=$o.Result.Replace($env:DB_PASSWORD,'<redacted>').Replace($env:TOEIC_SEED_PASSWORD,'<redacted>')
+        $stderr=$e.Result.Replace($env:DB_PASSWORD,'<redacted>').Replace($env:TOEIC_SEED_PASSWORD,'<redacted>')
+        [IO.File]::WriteAllText((Join-Path $out ($label+'.private.log')),$stdout,$utf8)
+        [IO.File]::WriteAllText((Join-Path $out ($label+'.private.err')),$stderr,$utf8)
+    }else{[IO.File]::WriteAllText((Join-Path $out ($label+'-receipt.json')),(@{exitCode=$process.ExitCode;capture=$false}|ConvertTo-Json),$utf8)}
     return $process.ExitCode
 }
 Push-Location $repo
@@ -65,9 +67,9 @@ try{
     if((Native (Join-Path $PostgresBin 'postgres.exe') ('--single -D "'+$pgdata+'" template1') 'offline-password' ("SET password_encryption='scram-sha-256';`nALTER ROLE usb_demo_test PASSWORD '"+$env:DB_PASSWORD+"';`n")) -ne 0){throw 'Offline password initialization failed'}
     $hba=Join-Path $pgdata 'pg_hba.conf';$hbaText=[IO.File]::ReadAllText($hba);$hbaText=[regex]::Replace($hbaText,'(?m)^(?!\s*#)(.*\s)trust\s*$','$1scram-sha-256');[IO.File]::WriteAllText($hba,$hbaText,$utf8)
     if([regex]::IsMatch($hbaText,'(?m)^(?!\s*#).*\strust\s*$')){throw 'Refuse network trust authentication'}
-    if((Native (Join-Path $PostgresBin 'pg_ctl.exe') ('-D "'+$pgdata+'" -l "'+$out+'\postgres.private.log" -o "-h 127.0.0.1 -p '+$env:DB_PORT+'" -w start') 'pg-start' '') -ne 0){throw 'Owned cluster start failed'};$started=$true
+    if((Native (Join-Path $PostgresBin 'pg_ctl.exe') ('-D "'+$pgdata+'" -l "'+$out+'\postgres.private.log" -o "-h 127.0.0.1 -p '+$env:DB_PORT+'" -w start') 'pg-start' '' -NoCapture) -ne 0){throw 'Owned cluster start failed'};$started=$true
     if((Native (Join-Path $PostgresBin 'createdb.exe') ('-h 127.0.0.1 -p '+$env:DB_PORT+' -U usb_demo_test -T template0 -E UTF8 '+$env:DB_NAME) 'createdb' '') -ne 0){throw 'Owned TEST database creation failed'}
-    $methods=if($Mode -eq 'Real'){'realCimReadinessCommitAckAndHistory'}else{'mockCoordinatorTimelineCommitAckLossAndPagedHistory+actualRevokeCancelsPendingSourceAndCannotFlushNewEvents+businessDeadlineStopsCoordinatorUsingRealScopedHeartbeat'}
+    $methods=if($Mode -eq 'Real'){'realCimReadinessCommitAckAndHistory'}else{'mockCoordinatorTimelineCommitAckLossAndPagedHistory+actualRevokeCancelsPendingSourceAndCannotFlushNewEvents+businessDeadlineStopsCoordinatorUsingRealScopedHeartbeat+coordinatorStatusCommitFaultRollsBackThenRetriesSameMessage'}
     $tests='UsbIntegratedDemoPostgresTest#'+$methods
     $mavenProcess=New-Object Diagnostics.Process;$mavenProcess.StartInfo.FileName=$env:ComSpec
     $mavenProcess.StartInfo.Arguments='/d /s /c ""'+$maven+'" --batch-mode --no-transfer-progress -Duser.timezone=UTC -Dmaven.repo.local="'+$MavenRepository+'" -pl server -am -Dtest='+$tests+' -Dsurefire.failIfNoSpecifiedTests=false test"'
@@ -87,6 +89,7 @@ finally{
     }
     $cleanup.postmasterPidAbsent=-not(Test-Path -LiteralPath (Join-Path $pgdata 'postmaster.pid'))
     $summary=Join-Path $out 'demo-summary.json'
+    if(Test-Path -LiteralPath (Join-Path $out 'stop.request')){$exitCode=130}
     $result=@{sourceSha=$source;runId=$runId;mode=$Mode;exitCode=$exitCode;runnerErrorType=$failedType;startUtc=$start;endUtc=[DateTime]::UtcNow.ToString('o');cleanup=$cleanup;hardware='0/12 NOT_RUN';summaryPresent=(Test-Path -LiteralPath $summary)}
     [IO.File]::WriteAllText((Join-Path $out 'result.json'),($result|ConvertTo-Json -Depth 5),$utf8)
     foreach($name in $saved.Keys){[Environment]::SetEnvironmentVariable($name,$saved[$name],'Process')};Pop-Location

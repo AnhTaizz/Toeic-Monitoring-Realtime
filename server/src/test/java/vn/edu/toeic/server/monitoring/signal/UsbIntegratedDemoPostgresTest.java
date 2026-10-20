@@ -36,11 +36,13 @@ import vn.edu.toeic.server.auth.TokenHash;
 class UsbIntegratedDemoPostgresTest {
     static final Gson JSON=new Gson();
     final String schema="usb_demo_"+UUID.randomUUID().toString().replace("-","");
-    final List<AutoCloseable> owned=new ArrayList<>();final List<Map<String,Object>> results=new ArrayList<>();
+    final List<AutoCloseable> owned=new CopyOnWriteArrayList<>();final List<Map<String,Object>> results=new ArrayList<>();
+    final AtomicBoolean teardownStarted=new AtomicBoolean();Thread shutdown;
     Connection admin;ConfigurableApplicationContext app;HttpClient http;JdbcClient jdbc;String base,candidate,proctor,exam;
     @BeforeAll void setup()throws Exception{
         if(!"127.0.0.1".equals(required("DB_HOST"))||!required("DB_NAME").matches("toeic_usb_test_[a-f0-9]{16}")||!required("DB_USER").equals("usb_demo_test"))throw new IllegalStateException("Refuse shared DB");
         int port=Integer.parseInt(required("DB_PORT"));if(port<30000||port>=39000)throw new IllegalStateException("Refuse shared port");
+        shutdown=new Thread(()->{try{teardown();}catch(Exception incomplete){ }} ,"usb-demo-owned-shutdown");Runtime.getRuntime().addShutdownHook(shutdown);
         String url="jdbc:postgresql://127.0.0.1:"+port+"/"+required("DB_NAME");
         admin=DriverManager.getConnection(url,required("DB_USER"),required("DB_PASSWORD"));admin.createStatement().execute("CREATE SCHEMA "+schema);
         var config=new HashMap<String,Object>();config.put("server.address","127.0.0.1");config.put("server.port","0");config.put("spring.datasource.url",url+"?currentSchema="+schema);config.put("spring.datasource.username",required("DB_USER"));config.put("spring.datasource.password",required("DB_PASSWORD"));config.put("spring.flyway.schemas",schema);config.put("spring.flyway.default-schema",schema);config.put("toeic.seed.password",required("TOEIC_SEED_PASSWORD"));config.put("toeic.monitoring.signal-experiment-enabled",true);config.put("exam.timeout.scheduler.enabled",true);config.put("logging.level.root","WARN");config.put("debug",false);
@@ -51,6 +53,8 @@ class UsbIntegratedDemoPostgresTest {
         post("/api/v1/exams/import",proctor,new ExamImportRequest(exam,"MOCK USB TEST","No hardware/media content",List.of(question)),200);
     }
     @AfterAll void teardown()throws Exception{
+        if(!teardownStarted.compareAndSet(false,true))return;
+        if(shutdown!=null)try{Runtime.getRuntime().removeShutdownHook(shutdown);}catch(IllegalStateException shuttingDown){ }
         Exception failure=null;
         for(int i=owned.size()-1;i>=0;i--)try{owned.get(i).close();}catch(Exception e){failure=e;}
         if(http!=null)http.close();if(app!=null)app.close();
@@ -90,6 +94,21 @@ class UsbIntegratedDemoPostgresTest {
             results.add(Map.of("kind","MOCK","revokeFixture","SIMULATED admin revoke; REAL WS authorization denial","committed",0,"sourceStopped",true));
         }
     }
+    @Test void coordinatorStatusCommitFaultRollsBackThenRetriesSameMessage()throws Exception{
+        String a=scope(60),fn="usb_commit_fault_"+UUID.randomUUID().toString().replace("-","");
+        jdbc.sql("CREATE FUNCTION "+fn+"() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'MOCK deferred USB fault'; RETURN NEW; END $$").update();
+        jdbc.sql("CREATE CONSTRAINT TRIGGER usb_demo_deferred_fail AFTER INSERT ON monitoring_signal_events DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION "+fn+"()").update();
+        var source=new ScriptedSource();var audit=new Recorder();
+        try(Lane lane=new Lane(a,candidate,false);var coordinator=new UsbScanCoordinator(source,UsbScanCoordinator.Settings.defaults(),lane.run,lane.delivery,lane.transport,audit)){
+            owned.add(coordinator);coordinator.start();source.inputs.put(ready());assertThat(audit.observed.poll(5,TimeUnit.SECONDS)).isNotNull();
+            assertThat(lane.transport.errors.poll(8,TimeUnit.SECONDS)).isEqualTo("RETRYABLE_SERVER_ERROR");assertThat(lane.transport.acks).isEmpty();
+            assertThat(jdbc.sql("SELECT count(*) FROM monitoring_signal_events WHERE attempt_id=:a").param("a",a).query(Long.class).single()).isZero();assertThat(jdbc.sql("SELECT last_sequence FROM monitoring_signal_counters WHERE attempt_id=:a").param("a",a).query(Long.class).optional().orElse(0L)).isZero();
+            jdbc.sql("DROP TRIGGER usb_demo_deferred_fail ON monitoring_signal_events").update();
+            assertThat(lane.transport.acks.poll(8,TimeUnit.SECONDS)).isNotNull();assertThat(lane.delivery.status().acknowledged()).isEqualTo(1);assertHistory(a,audit.messages);
+            assertThat(lane.transport.writes.size()).isGreaterThanOrEqualTo(2);assertThat(lane.transport.writes).allSatisfy(m->assertThat(m).isEqualTo(audit.messages.getFirst().envelope()));
+            results.add(Map.of("kind","MOCK","commitFault","SIMULATED deferred fault; REAL rollback/WS retry","committed",1));
+        }finally{jdbc.sql("DROP TRIGGER IF EXISTS usb_demo_deferred_fail ON monitoring_signal_events").update();jdbc.sql("DROP FUNCTION "+fn+"()").update();}
+    }
     @Test void businessDeadlineStopsCoordinatorUsingRealScopedHeartbeat()throws Exception{
         String a=scope(2);post("/api/v1/attempts/"+a+"/takeover",candidate,new TakeoverWriterRequest(UUID.randomUUID().toString(),a,"MOCK-usb-device"),200);var source=new ScriptedSource();
         try(Lane lane=new Lane(a,candidate,false);var coordinator=new UsbScanCoordinator(source,UsbScanCoordinator.Settings.defaults(),lane.run,lane.delivery,lane.transport,new Recorder())){
@@ -106,16 +125,20 @@ class UsbIntegratedDemoPostgresTest {
         try(Lane lane=new Lane(a,candidate,false);var coordinator=new UsbScanCoordinator(source,settings,lane.run,lane.delivery,lane.transport,audit)){
             owned.add(coordinator);
             System.out.println("EXPLICIT REAL CIM TEST: selected Number/BusType or Index/InterfaceType only; duration="+duration+"s delay="+cadence+"ms timeout="+timeout+"ms; no files/serial or production binding.");
-            coordinator.start();assertThat(coordinator.awaitStopped(Duration.ofSeconds(duration+10))).isTrue();
-            var state=coordinator.status();assertThat(state.scans()).isGreaterThan(0);assertThat(audit.messages).isNotEmpty();assertThat(audit.queued).allMatch(Boolean::booleanValue);assertThat(lane.delivery.status().queued()).isZero();assertThat(lane.delivery.status().acknowledged()).isEqualTo(audit.messages.size());
+            if(cancelRequested()){results.add(Map.of("kind","REAL_CIM","outcome","CANCELLED_BEFORE_SCAN","pipelineVerified",false));return;}
+            coordinator.start();long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(duration+10);
+            while(!coordinator.awaitStopped(Duration.ofMillis(100))&&System.nanoTime()<deadline)if(cancelRequested())coordinator.requestStop("CANCELLED");
+            assertThat(coordinator.awaitStopped(Duration.ofSeconds(1))).isTrue();boolean cancelled="CANCELLED".equals(coordinator.status().stoppedReason());
+            var state=coordinator.status();if(!cancelled){assertThat(state.scans()).isGreaterThan(0);assertThat(audit.messages).isNotEmpty();assertThat(audit.queued).allMatch(Boolean::booleanValue);assertThat(lane.delivery.status().queued()).isZero();assertThat(lane.delivery.status().acknowledged()).isEqualTo(audit.messages.size());}
             // Owner stops borrowed delivery without post-stop flush; HTTP history is still scoped/ACTIVE.
-            lane.close();assertHistory(a,audit.messages);
+            lane.close();if(!cancelled)assertHistory(a,audit.messages);
             assertThat(source.status().childrenAlive()).isZero();assertThat(source.status().readersTerminated()).isTrue();
             long usb=audit.messages.stream().filter(m->m.signal() instanceof UsbStorageSignal).count();
             if(audit.observations.stream().allMatch(o->o.health()==UsbSignalAdapter.Health.READY&&Integer.valueOf(0).equals(o.storageCount())))assertThat(usb).isZero();
-            var result=new LinkedHashMap<String,Object>();result.put("kind","REAL_CIM");result.put("provider",required("TOEIC_USB_PROVIDER"));result.put("durationSeconds",duration);result.put("cadenceDelayMillis",cadence);result.put("queryTimeoutMillis",timeout);result.put("scans",state.scans());result.put("lastHealth",state.health().name());result.put("lastStorageCount",state.storageCount());result.put("privilege",source.privilege());result.put("powershellRuntime",source.runtime());result.put("committed",audit.messages.size());result.put("usbEvents",usb);result.put("acknowledged",lane.delivery.status().acknowledged());result.put("sourceChildrenAlive",source.status().childrenAlive());result.put("pipeReadersTerminated",source.status().readersTerminated());result.put("scanWorkerStopped",state.scanWorkerStopped());result.put("controlWorkerStopped",state.controlWorkerStopped());result.put("deliveryWorkerStopped",lane.delivery.awaitStopped(Duration.ofSeconds(2)));result.put("pendingAtStop",lane.delivery.status().discarded());result.put("dropped",lane.delivery.status().dropped());result.put("unreported",lane.delivery.gapStatus().unreported());result.put("unconfirmedGapDrops",lane.delivery.gapStatus().discardedUnconfirmed());result.put("observations",audit.observations);results.add(result);
+            var result=new LinkedHashMap<String,Object>();result.put("kind","REAL_CIM");result.put("outcome",cancelled?"CANCELLED":"VERIFIED");result.put("pipelineVerified",!cancelled);result.put("provider",required("TOEIC_USB_PROVIDER"));result.put("durationSeconds",duration);result.put("cadenceDelayMillis",cadence);result.put("queryTimeoutMillis",timeout);result.put("scans",state.scans());result.put("lastHealth",state.health().name());result.put("lastStorageCount",state.storageCount());result.put("privilege",source.privilege());result.put("powershellRuntime",source.runtime());result.put("emitted",audit.messages.size());result.put("committed",lane.delivery.status().acknowledged());result.put("usbEvents",usb);result.put("acknowledged",lane.delivery.status().acknowledged());result.put("sourceChildrenAlive",source.status().childrenAlive());result.put("pipeReadersTerminated",source.status().readersTerminated());result.put("scanWorkerStopped",state.scanWorkerStopped());result.put("controlWorkerStopped",state.controlWorkerStopped());result.put("deliveryWorkerStopped",lane.delivery.awaitStopped(Duration.ofSeconds(2)));result.put("pendingAtStop",lane.delivery.status().discarded());result.put("dropped",lane.delivery.status().dropped());result.put("unreported",lane.delivery.gapStatus().unreported());result.put("unconfirmedGapDrops",lane.delivery.gapStatus().discardedUnconfirmed());result.put("observations",audit.observations);results.add(result);
         }finally{source.close();}
     }
+    boolean cancelRequested(){return Files.exists(Path.of(required("TOEIC_USB_TEST_OUTPUT"),"stop.request"));}
     void assertHistory(String a,List<SignalMessage> expected)throws Exception{
         var byId=new HashMap<String,Signal>();for(var m:expected)assertThat(byId.put(m.signal().eventId(),m.signal())).isNull();
         int seen=0;long after=0,through=-1;
@@ -156,10 +179,10 @@ class UsbIntegratedDemoPostgresTest {
         public void close()throws Exception{if(closed)return;closed=true;delivery.close();run.close();lease.close();realtime.close();assertThat(delivery.awaitStopped(Duration.ofSeconds(3))).isTrue();}
     }
     static final class Lossy implements MonitoringTransport{
-        final RealtimeClient delegate;final AtomicBoolean drop;final CountDownLatch lost=new CountDownLatch(1);final BlockingQueue<JsonObject> acks=new LinkedBlockingQueue<>();final List<MessageEnvelope<JsonObject>> writes=new CopyOnWriteArrayList<>();
+        final RealtimeClient delegate;final AtomicBoolean drop;final CountDownLatch lost=new CountDownLatch(1);final BlockingQueue<JsonObject> acks=new LinkedBlockingQueue<>();final BlockingQueue<String> errors=new LinkedBlockingQueue<>();final List<MessageEnvelope<JsonObject>> writes=new CopyOnWriteArrayList<>();
         Lossy(RealtimeClient delegate,boolean lose){this.delegate=delegate;drop=new AtomicBoolean(lose);}
         public boolean signalExperimentReady(String a){return delegate.signalExperimentReady(a);}public boolean signalCreditAvailable(){return delegate.signalCreditAvailable();}public long connectionGeneration(){return delegate.connectionGeneration();}public ConnectionState connectionState(){return delegate.connectionState();}public vn.edu.toeic.protocol.monitoring.EventOrigin observationOrigin(){return delegate.observationOrigin();}
         public CompletableFuture<Void> send(MessageEnvelope<JsonObject> m){return delegate.send(m);}public CompletableFuture<Void> sendForGeneration(MessageEnvelope<JsonObject> m,long g,BooleanSupplier guard){if(writes.size()>=512)throw new IllegalStateException("Bounded TEST audit limit");writes.add(m);return delegate.sendForGeneration(m,g,guard);}public void forgetPending(String id){delegate.forgetPending(id);}
-        public AutoCloseable onConnectionState(Consumer<ConnectionState> c){return delegate.onConnectionState(c);}public AutoCloseable onMonitoringAccessRejected(Consumer<MonitoringAccessRejection> c){return delegate.onMonitoringAccessRejected(c);}public AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> c){return delegate.onMessage(m->{if(m.type().equals("ACK")&&"MONITORING_SIGNAL".equals(m.payload().get("acknowledgedType").getAsString())){if(drop.compareAndSet(true,false)){lost.countDown();return;}c.accept(m);acks.add(m.payload().deepCopy());}else c.accept(m);});}
+        public AutoCloseable onConnectionState(Consumer<ConnectionState> c){return delegate.onConnectionState(c);}public AutoCloseable onMonitoringAccessRejected(Consumer<MonitoringAccessRejection> c){return delegate.onMonitoringAccessRejected(c);}public AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> c){return delegate.onMessage(m->{if(m.type().equals("ACK")&&"MONITORING_SIGNAL".equals(m.payload().get("acknowledgedType").getAsString())){if(drop.compareAndSet(true,false)){lost.countDown();return;}c.accept(m);acks.add(m.payload().deepCopy());}else{c.accept(m);if(m.type().equals("ERROR"))errors.add(m.payload().get("code").getAsString());}});}
     }
 }

@@ -96,6 +96,7 @@ public final class UsbScanCoordinator implements AutoCloseable {
         try{for(var e:emitted)audit.emission(e.message(),e.queued());}catch(RuntimeException failed){requestStop("AUDIT_LIMIT_OR_FAILURE");}
     }
     public void requestStop(String reason){
+        if(!Set.of("STOP","DURATION","CONNECTION_CHANGED","LANE_NOT_READY","AUDIT_LIMIT_OR_FAILURE","CANCELLED").contains(reason))throw new IllegalArgumentException("Safe stop code required");
         synchronized(lock){
             if(cleanupScheduled)return;
             if(!started && reason.equals("CONNECTION_CHANGED"))return;
