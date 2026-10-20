@@ -45,6 +45,8 @@ public final class SignalDelivery implements AutoCloseable {
                 if(dropped==SignalJson.MAX_INTEGER){problem="COUNT_LIMIT";return false;}dropped++;Instant time=message.signal().observedAt();if(firstDrop==null||time.isBefore(firstDrop))firstDrop=time;if(lastDrop==null||time.isAfter(lastDrop))lastDrop=time;problem="UNREPORTED_SIGNAL_DROPS";return false;
             }queue.put(message.requestId(),p);bytes+=p.bytes;return true;}
     }
+    /** Scope identity only, never an authorization or capability check. */
+    public boolean matchesScope(String attemptId,String observerSessionId){return attempt.equals(attemptId)&&runId.equals(observerSessionId);}
     public void tick(){
         if(closed)return;long socket=transport.connectionGeneration();boolean ready=transport.signalExperimentReady(attempt);boolean credit=transport.signalCreditAvailable();
         List<String> forget=new ArrayList<>();List<Plan> sends=new ArrayList<>();long now=ticker.getAsLong();
