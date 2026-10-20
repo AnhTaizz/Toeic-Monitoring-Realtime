@@ -112,11 +112,14 @@ class UsbSignalAdapterTest {
     }
     @Test void stopRestartOldCallbacksAndWrongScopeCannotCrossAttempts() throws Exception {
         try(Fixture f=new Fixture();var nextRun=new SignalRunContext("mock-next-attempt","mock-next-run");var nextQueue=new SignalDelivery("mock-next-attempt","mock-next-run",f.transport,SignalDelivery.Settings.defaults(),()->0L,false)){
-            f.accept(ready(1));f.adapter.stop();assertThat(f.run.active()).isTrue();assertThat(f.delivery.status().active()).isTrue();
+            f.accept(ready());String previousRef=value(f.accept(ready(1)).emissions().getFirst()).deviceRef();
+            f.adapter.stop();assertThat(f.run.active()).isTrue();assertThat(f.delivery.status().active()).isTrue();
             assertThatThrownBy(()->f.adapter.start(f.run,f.delivery)).isInstanceOf(IllegalArgumentException.class);
             assertThatThrownBy(()->f.adapter.start(nextRun,f.delivery)).isInstanceOf(IllegalArgumentException.class);
             long next=f.adapter.start(nextRun,nextQueue);assertThat(f.adapter.accept(f.generation,ready(7),TIME,EventOrigin.OFFLINE).emissions()).isEmpty();
             var r=f.adapter.accept(next,ready(2),TIME,EventOrigin.OFFLINE);assertThat(r.emissions().getFirst().message().attemptId()).isEqualTo("mock-next-attempt");assertThat(kinds(r)).containsExactly("USB_STORAGE_PRESENT_AT_START");
+            var fresh=f.adapter.accept(next,ready(1,2),TIME,EventOrigin.OFFLINE);assertThat(kinds(fresh)).containsExactly("USB_STORAGE_CONNECTED");
+            assertThat(value(fresh.emissions().getFirst()).deviceRef()).isNotEqualTo(previousRef);
         }
     }
     @Test void closedDeliveryOrRunStopsAdapterWithoutClosingOtherOwnedResources() throws Exception {
