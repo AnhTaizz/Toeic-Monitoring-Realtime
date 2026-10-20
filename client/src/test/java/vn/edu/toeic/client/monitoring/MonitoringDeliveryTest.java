@@ -293,11 +293,14 @@ class MonitoringDeliveryTest {
         try(CandidateMonitoringSession session=new CandidateMonitoringSession(collector,transport,MonitoringDelivery.Settings.defaults(),ignored->{ })) {
             String first=session.start(Role.CANDIDATE,"MOCK-A",Set.of("MOCK-A"));
             assertThat(transport.heartbeatCollector).isEqualTo(first); assertThat(transport.heartbeatAttempt).isEqualTo("MOCK-A");
+            assertThat(session.collectorSessionId()).isEqualTo(first);
             session.stop().stopped().get(2,TimeUnit.SECONDS); assertThat(transport.heartbeatCollector).isNull();
+            assertThat(session.collectorSessionId()).isNull();
             String next=session.start(Role.CANDIDATE,"MOCK-B",Set.of("MOCK-B")); assertThat(next).isNotEqualTo(first);
             JsonObject error=new JsonObject(); error.addProperty("code","UNAUTHORIZED");
             transport.deliver(new MessageEnvelope<>("v0","ERROR","MOCK-error",null,null,"MOCK-trace",error));
             assertThat(session.isActive()).isFalse(); assertThat(transport.heartbeatCollector).isNull();
+            assertThat(session.collectorSessionId()).isNull();
             session.stop().stopped().get(2,TimeUnit.SECONDS);
         }
     }
