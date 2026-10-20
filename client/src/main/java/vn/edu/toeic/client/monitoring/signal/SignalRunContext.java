@@ -11,6 +11,7 @@ public final class SignalRunContext implements AutoCloseable {
     private long sequence;
     private boolean active = true;
     private boolean usbInputClaimed;
+    private boolean focusInputClaimed;
     private boolean statusInputClaimed;
     private boolean deliveryClaimed;
 
@@ -31,6 +32,12 @@ public final class SignalRunContext implements AutoCloseable {
     public synchronized boolean claimUsbInput() {
         if (!active || usbInputClaimed) return false;
         usbInputClaimed = true;
+        return true;
+    }
+    /** One JavaFX focus observer per explicit run; stopping it never permits a second baseline. */
+    public synchronized boolean claimFocusInput() {
+        if (!active || focusInputClaimed) return false;
+        focusInputClaimed = true;
         return true;
     }
     public synchronized boolean claimStatusInput() {
