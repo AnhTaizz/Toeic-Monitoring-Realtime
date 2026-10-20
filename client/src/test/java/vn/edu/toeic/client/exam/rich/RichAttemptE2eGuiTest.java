@@ -50,6 +50,11 @@ class RichAttemptE2eGuiTest {
 
     @Test void candidateLobbyReadyStartThenRendersRealServerExamAndAutosaves() throws Exception {
         String proctor = login("proctor1").get("token").getAsString();
+        // Không phụ thuộc thứ tự test hay DB đã có sẵn đề: import fixture MOCK, 201 hoặc 409 (đã có) đều được.
+        int imported = send("POST", "/api/v2/exams/import",
+                Files.readString(java.nio.file.Path.of("..", "docs", "plan-v2", "fixtures", "ex02", "import.mock.json"), java.nio.charset.StandardCharsets.UTF_8), proctor).statusCode();
+        assertThat(imported).as("import MOCK fixture").isIn(201, 409);
+        log.add("import MOCK fixture -> HTTP " + imported);
         long candidateId = login("candidate1").getAsJsonObject("user").get("id").getAsLong();
         long proctorId = login("proctor1").getAsJsonObject("user").get("id").getAsLong();
         JsonObject create = new JsonObject();

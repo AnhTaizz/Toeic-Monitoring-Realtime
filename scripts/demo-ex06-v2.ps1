@@ -6,6 +6,7 @@
 
   Bước 1 (tạo ca):   .\scripts\demo-ex06-v2.ps1
   Bước 2 (bắt đầu):  .\scripts\demo-ex06-v2.ps1 -Start -SessionId <id in ra ở bước 1>
+  Chỉ import đề MOCK (tạo ca + START làm trên UI giám thị V2): .\scripts\demo-ex06-v2.ps1 -ImportOnly
 
   Trạng thái: luồng tương đương đã chạy bằng curl + test E2E trên Linux; script PowerShell này NOT RUN trên Windows.
 #>
@@ -16,6 +17,7 @@ param(
     [string]$Proctor = "proctor1",
     [string]$Password = $env:TOEIC_SEED_PASSWORD,
     [switch]$Start,
+    [switch]$ImportOnly,
     [string]$SessionId = ""
 )
 $ErrorActionPreference = "Stop"
@@ -51,6 +53,10 @@ if (-not $Start) {
     } catch {
         $status = $_.Exception.Response.StatusCode.value__
         if ($status -eq 409) { Write-Host "Đề MOCK đã có trong DB (409 CONFLICT) - dùng lại." } else { throw }
+    }
+    if ($ImportOnly) {
+        Write-Host "Xong. Tạo ca và START trên client giám thị: Điều khiển ca → tab 'Ca PROCTORED_V2'."
+        return
     }
     $catalog = Invoke-Api GET "/api/v2/exams" $token $null
     $item = $catalog.items | Where-Object { $_.examId -eq "mock-ex02-200" }
