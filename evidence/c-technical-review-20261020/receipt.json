@@ -1,0 +1,589 @@
+{
+  "reviewKind": "CODEX_TECHNICAL_REVIEW_USER_AUTHORIZED_NOT_A_B_C_APPROVAL",
+  "runtimeTestRunnerSourceSha": "d6bf60a0f8d0e3012ada7086ae50d673d67e7efa",
+  "mainBeforeFinalMerge": "46869ebefb5258d2934e7805a95b67633d4c8a63",
+  "reviewedAndMerged": [
+    {
+      "pr": 70,
+      "head": "ff07446fba59ee7ed21c6258be72a852ed4a07ac",
+      "mergeSha": "e0ef252d50e6a6f3d5d991b2b0894f62cd0e8a9b",
+      "ciRun": 39352554128
+    },
+    {
+      "pr": 71,
+      "head": "92f9fafed9d1211ed702188c5fe21add61cefeb2",
+      "mergeSha": "2595106ce7a95d1bd84ef733ff8f48f7c06f0601",
+      "ciRun": 39353132353
+    },
+    {
+      "pr": 72,
+      "head": "e1326e9ba77796fbf9445d0d38e0f228a2205e41",
+      "mergeSha": "a636e2a2b7d3e6549f179b320676dd9f778aa9bb",
+      "ciRun": 39353420690
+    },
+    {
+      "pr": 73,
+      "head": "5c6886b7b185f31699ef8322093c83fe672c34ae",
+      "mergeSha": "46869ebefb5258d2934e7805a95b67633d4c8a63",
+      "ciRun": 39353787127
+    }
+  ],
+  "publicationAndPr74Merge": "Exact final publication HEAD/CI/merge SHA are recorded in PR74 description and final handoff; no earlier CI substituted",
+  "versions": {
+    "os": "Microsoft Windows NT 10.0.26200.0",
+    "java": "openjdk version \"21.0.10\" 2026-01-20 LTS",
+    "maven": "Apache Maven 3.9.15 (98b2cdbfdb5f1ac8781f537ea9acccaed7922349)",
+    "postgres": "PostgreSQL 18.3 on x86_64-windows, compiled by msvc-19.44.35223, 64-bit"
+  },
+  "stages": [
+    {
+      "role": "BASE03",
+      "sourceSha": "ff07446fba59ee7ed21c6258be72a852ed4a07ac",
+      "runId": "mon07-20261020T011627Z-16b30715",
+      "command": "mvn --batch-mode --no-transfer-progress -pl server -am -Dtest=FullSnapshotPayloadTest,DeltaSnapshotPayloadTest,EventOriginTest,ProcessPolicyAndSourceTest,ProcessCollectorTest,MonitoringDeliveryTest,FullSnapshotDeliveryTest,DeltaSnapshotDeliveryTest,CandidateModeSessionTest,DeltaReplayTest,ReplayCampaignTest,HandwrittenTraceTest,ReplayEngineTest,RealtimeClientTest,ProcessCollectorTraceTest,FullSnapshotReducerTest,MonitoringDeltaStateTest,MonitoringStateServiceTest,MonitoringStateMaintenanceTest,MonitoringPresenceServiceTest,MonitoringGapTest,ProcessEventTest -Dsurefire.failIfNoSpecifiedTests=false verify",
+      "startUtc": "2026-10-20T01:16:39.1052918Z",
+      "endUtc": "2026-10-20T01:17:45.4235371Z",
+      "exitCode": 0,
+      "totals": {
+        "failures": 0,
+        "passed": 307,
+        "errors": 0,
+        "tests": 307,
+        "skipped": 0
+      },
+      "cleanup": {
+        "clusterStopExit": 0,
+        "ownedSchemasRemaining": 0
+      },
+      "evidence": [
+        {
+          "path": "base03/mon07-20261020T011627Z-16b30715/result.json",
+          "bytes": 100912,
+          "sha256": "c7cbe87f1f3ea353adcf8737094f3a7971e6d57a78ee36fb9a3b1d63d09d4bdf",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "base03/mon07-20261020T011627Z-16b30715/maven.private.log",
+          "bytes": 13930,
+          "sha256": "d1efa2c8ff9de87fc0a1951d3b87d3531a56c106bccc01995227195f250e5bc4",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "base03/mon07-20261020T011627Z-16b30715/base03-smoke.private.log",
+          "bytes": 5127,
+          "sha256": "947423ea4379776872aed447352ae4cd6cbf3e58873bdbd41d759db1e16e14a8",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "base03/mon07-20261020T011627Z-16b30715/base03-smoke.private.err",
+          "bytes": 49,
+          "sha256": "c75c2bd75aaf6bc00e05146070515fd6774ac441e73027488bcb206146059b12",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        }
+      ]
+    },
+    {
+      "role": "MON01_BEFORE_HELPER_FIX",
+      "sourceSha": "9a925d7741e97a74dff5f04e5080b125d6d6fb78",
+      "runId": "mon07-20261020T012033Z-0681b592",
+      "command": "mvn --batch-mode --no-transfer-progress -pl server -am -Dtest=DashboardControllerTest,DashboardModelTest,MonitoringApiClientTest,MonitoringJsonTest,ProctorDashboardViewTest,RealtimeClientTest,ProcessCollectorTest,MonitoringDeliveryTest,FullSnapshotDeliveryTest,CandidateModeSessionTest,MonitoringPresenceServiceTest,MonitoringStateMaintenanceTest -Dsurefire.failIfNoSpecifiedTests=false verify",
+      "startUtc": "2026-10-20T01:20:45.5138918Z",
+      "endUtc": "2026-10-20T01:21:36.7488858Z",
+      "exitCode": 1,
+      "totals": {
+        "failures": 0,
+        "passed": 204,
+        "errors": 0,
+        "tests": 204,
+        "skipped": 0
+      },
+      "cleanup": {
+        "clusterStopExit": 0,
+        "ownedSchemasRemaining": 1
+      },
+      "evidence": [
+        {
+          "path": "mon01/mon07-20261020T012033Z-0681b592/result.json",
+          "bytes": 66600,
+          "sha256": "cd978e3b17594e586aec78a59a317fe87749d70115cdd80ac8c5d36e6dfa311e",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "mon01/mon07-20261020T012033Z-0681b592/maven.private.log",
+          "bytes": 11214,
+          "sha256": "1b56d34390c1f73bfd3677301725f04be7004c7ebd532e4b05273898319cdc0a",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "mon01/mon07-20261020T012033Z-0681b592/mon01-smoke.private.log",
+          "bytes": 4616,
+          "sha256": "24129de7173ea955ae2745ad21dab3edcfb998cdef4aca23bfb4284c73301b37",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "mon01/mon07-20261020T012033Z-0681b592/mon01-smoke.private.err",
+          "bytes": 107,
+          "sha256": "7c18d30a65ec6a368e6277686b1f7b9a4c482d5061a581d0a31cab824d86df89",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        }
+      ]
+    },
+    {
+      "role": "MON01_AFTER_HELPER_FIX",
+      "sourceSha": "92f9fafed9d1211ed702188c5fe21add61cefeb2",
+      "runId": "mon07-20261020T012305Z-b15c984d",
+      "command": "mvn --batch-mode --no-transfer-progress -pl server -am -Dtest=DashboardControllerTest,DashboardModelTest,MonitoringApiClientTest,MonitoringJsonTest,LateEventsAndGapsTest,FullStateDashboardTest -Dsurefire.failIfNoSpecifiedTests=false verify",
+      "startUtc": "2026-10-20T01:23:17.9171004Z",
+      "endUtc": "2026-10-20T01:23:45.7967502Z",
+      "exitCode": 0,
+      "totals": {
+        "failures": 0,
+        "passed": 65,
+        "errors": 0,
+        "tests": 65,
+        "skipped": 0
+      },
+      "cleanup": {
+        "clusterStopExit": 0,
+        "ownedSchemasRemaining": 0
+      },
+      "evidence": [
+        {
+          "path": "mon01/mon07-20261020T012305Z-b15c984d/result.json",
+          "bytes": 22768,
+          "sha256": "2cbdaeda780fffbc7e7e72b8a2dcd4dac14a88ad60848ed4bd6813a1cc1c9621",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "mon01/mon07-20261020T012305Z-b15c984d/maven.private.log",
+          "bytes": 8518,
+          "sha256": "d463f93ead66d125dd15582dcee00206cd56f045a99ef93a04da0bcbd390b502",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "mon01/mon07-20261020T012305Z-b15c984d/mon01-smoke.private.log",
+          "bytes": 5031,
+          "sha256": "99b9bec83a24eea7c708d6331cae5cb2c74a81051e68fc66f4805a454ac6623c",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "mon01/mon07-20261020T012305Z-b15c984d/mon01-smoke.private.err",
+          "bytes": 49,
+          "sha256": "c75c2bd75aaf6bc00e05146070515fd6774ac441e73027488bcb206146059b12",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        }
+      ]
+    },
+    {
+      "role": "MON07_FOCUSED",
+      "sourceSha": "cd006306b0c313244e5ade5e4a0d62137e70a128",
+      "runId": "mon07-20261020T012617Z-bd626fab",
+      "command": "mvn --batch-mode --no-transfer-progress -pl server -am -Dtest=SignalProtocolTest,SignalDeliveryTest,SignalPipelinePostgresTest,SignalDisabledTest,RealtimeClientTest,MonitoringDeliveryTest,FullSnapshotDeliveryTest,DeltaSnapshotDeliveryTest,MonitoringPresenceServiceTest,MonitoringStateServiceTest,MonitoringStateMaintenanceTest,MonitoringDeltaStateTest,MonitoringHistoryBoundsPostgresTest -Dsurefire.failIfNoSpecifiedTests=false test",
+      "startUtc": "2026-10-20T01:26:28.6441248Z",
+      "endUtc": "2026-10-20T01:28:40.7902044Z",
+      "exitCode": 0,
+      "totals": {
+        "failures": 0,
+        "passed": 228,
+        "errors": 0,
+        "tests": 228,
+        "skipped": 0
+      },
+      "cleanup": {
+        "clusterStopExit": 0,
+        "ownedSchemasRemaining": 0
+      },
+      "evidence": [
+        {
+          "path": "mon07/mon07-20261020T012617Z-bd626fab/result.json",
+          "bytes": 74895,
+          "sha256": "c6a95348024d9222506ef27f70e45d68bd864ca78b9544d5915652b264a9ce90",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "mon07/mon07-20261020T012617Z-bd626fab/maven.private.log",
+          "bytes": 39327088,
+          "sha256": "edf72577a2e5e4a737ef596300671f4fdfe5d9b1d21285457275774d94dd287a",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        }
+      ]
+    },
+    {
+      "role": "FULL_BEFORE_ENV_FIX",
+      "sourceSha": "a5339dc0fb876a25e2adc2de41376cdda8967d2a",
+      "runId": "mon07-20261020T013325Z-8d466ebc",
+      "command": "mvn --batch-mode --no-transfer-progress verify",
+      "startUtc": "2026-10-20T01:33:34.4744314Z",
+      "endUtc": "2026-10-20T01:38:38.5211133Z",
+      "exitCode": 1,
+      "totals": {
+        "failures": 1,
+        "passed": 1070,
+        "errors": 0,
+        "tests": 1077,
+        "skipped": 6
+      },
+      "cleanup": {
+        "clusterStopExit": 0,
+        "ownedSchemasRemaining": 0
+      },
+      "evidence": [
+        {
+          "path": "mon07/mon07-20261020T013325Z-8d466ebc/result.json",
+          "bytes": 351805,
+          "sha256": "1b701d87c3d54f310e8550c5e6964238545c5933570bbc3f08d69d68d4af304e",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "mon07/mon07-20261020T013325Z-8d466ebc/maven.private.log",
+          "bytes": 43625467,
+          "sha256": "87809fda87ead91fb3d2576c447acd2854be0c6a135697f60737c66f39be8496",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        }
+      ]
+    },
+    {
+      "role": "FINAL_FULL",
+      "sourceSha": "d6bf60a0f8d0e3012ada7086ae50d673d67e7efa",
+      "runId": "mon07-20261020T014120Z-8bbf617d",
+      "command": "mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC verify",
+      "startUtc": "2026-10-20T01:41:30.8861270Z",
+      "endUtc": "2026-10-20T01:44:34.5717396Z",
+      "exitCode": 0,
+      "totals": {
+        "failures": 0,
+        "passed": 1071,
+        "errors": 0,
+        "tests": 1077,
+        "skipped": 6
+      },
+      "cleanup": {
+        "clusterStopExit": 0,
+        "ownedSchemasRemaining": 0
+      },
+      "evidence": [
+        {
+          "path": "mon07/mon07-20261020T014120Z-8bbf617d/result.json",
+          "bytes": 351728,
+          "sha256": "fbe50c82d78aa1377f4bf4c369902521c5436bb23d00d7b3ce23832fc020acea",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "mon07/mon07-20261020T014120Z-8bbf617d/maven.private.log",
+          "bytes": 66867758,
+          "sha256": "ac5dfdffe259ae9493e01428a9e1c19bbcea7c1b49d3f823788fd9ce96e2090f",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        }
+      ]
+    },
+    {
+      "role": "FINAL_SHARED_PROCESS_SMOKE",
+      "sourceSha": "d6bf60a0f8d0e3012ada7086ae50d673d67e7efa",
+      "runId": "mon07-20261020T014532Z-37848e8c",
+      "command": "mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC -pl server -am -DskipTests package",
+      "startUtc": "2026-10-20T01:45:42.4828903Z",
+      "endUtc": "2026-10-20T01:46:02.2966413Z",
+      "exitCode": 0,
+      "totals": {
+        "failures": 0,
+        "passed": 0,
+        "errors": 0,
+        "tests": 0,
+        "skipped": 0
+      },
+      "cleanup": {
+        "clusterStopExit": 0,
+        "ownedSchemasRemaining": 0
+      },
+      "evidence": [
+        {
+          "path": "integrated-process/mon07-20261020T014532Z-37848e8c/result.json",
+          "bytes": 1319,
+          "sha256": "cefa24be0145ef8ffb84c8ec6c108d5669499b10fea2f95f5d73573754599c2f",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "integrated-process/mon07-20261020T014532Z-37848e8c/maven.private.log",
+          "bytes": 7029,
+          "sha256": "b9549c285423abe6bfffa40dc764aea7a23ecde80651ba671ac668eaf647bd0e",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "integrated-process/mon07-20261020T014532Z-37848e8c/integrated-mon01-smoke.private.log",
+          "bytes": 4678,
+          "sha256": "7bf0c4563ce8dd0955c7d0c32d1f17316b23e393a202153577f0c1362ca1e14b",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "integrated-process/mon07-20261020T014532Z-37848e8c/integrated-mon01-smoke.private.err",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        }
+      ]
+    }
+  ],
+  "usb": {
+    "sourceSha": "aa260ef0e24b9bc5e78bfa5e1ecf5ca786e280dc",
+    "equivalentProbeSourceAtHead": "5c6886b7b185f31699ef8322093c83fe672c34ae",
+    "totals": {
+      "tests": 35,
+      "passed": 35,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "evidence": [
+      {
+        "path": "usb/verify.private.log",
+        "bytes": 5832,
+        "sha256": "970af32d3d6aaf2227e795215d4e8d45e8b2954f81f526fcb6e8c799e1364b09",
+        "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+      },
+      {
+        "path": "usb/msft-snapshot.private.jsonl",
+        "bytes": 1009,
+        "sha256": "ffaa625de67aabfc99a91ccfda01d90c4e8457c04339a0ebb396c16cff5d38dd",
+        "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+      },
+      {
+        "path": "usb/win32-snapshot.private.jsonl",
+        "bytes": 1043,
+        "sha256": "e3949c28509a38c274de41febfd1ed9a1955164685af6bb524cf9b43f80015c4",
+        "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+      }
+    ],
+    "snapshots": [
+      {
+        "method": "MSFT_DISK",
+        "status": "READY",
+        "storageCount": 0,
+        "privilege": "STANDARD",
+        "childrenAlive": 0,
+        "readersTerminated": true
+      },
+      {
+        "method": "WIN32_DISKDRIVE",
+        "status": "UNKNOWN",
+        "storageCount": null,
+        "privilege": "STANDARD",
+        "childrenAlive": 0,
+        "readersTerminated": true
+      }
+    ],
+    "physical": "0/12_NOT_RUN"
+  },
+  "controlledEnvironmentProof": {
+    "sameRealJvmChild": true,
+    "withInjectedOptions": {
+      "status": "ERROR",
+      "problem": "CHILD_DIAGNOSTIC",
+      "childrenAlive": 0,
+      "readersTerminated": true
+    },
+    "withoutInjectedOptions": {
+      "status": "READY",
+      "problem": "NONE",
+      "childrenAlive": 0,
+      "readersTerminated": true
+    },
+    "evidence": [
+      {
+        "path": "java-options-proof/with-options.private.log",
+        "bytes": 238,
+        "sha256": "567f9b5c90a65db82f9fdf644aad446b5ba97853fced57b16ee189c014a248d1",
+        "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+      },
+      {
+        "path": "java-options-proof/without-options.private.log",
+        "bytes": 216,
+        "sha256": "c35a7b2f3ce3890263e645a1eb04d01f8832daeb1e1c0cf8cdea36abeaf37b88",
+        "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+      }
+    ]
+  },
+  "largeHistoryProof": {
+    "method": "fiveThousandOneCommittedSignalsPageWithoutLossAndKeepThroughDuringConcurrentWrites",
+    "basis": "Assertions in the REAL WS/PG test, not benchmark measurements",
+    "status": "PASS",
+    "initialWsCommits": 5001,
+    "pages": 51,
+    "maxPage": 100,
+    "fixedThrough": 5001,
+    "concurrentWsCommits": 24,
+    "catchupCount": 24,
+    "finalSequence": 5025,
+    "invalidCursorStatus": 400,
+    "revokedBetweenPagesStatus": 401,
+    "unassignedBetweenPagesStatus": 403
+  },
+  "fullSkips": [
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+      "name": "lockSidecarCannotRedirectOutsideCache",
+      "status": "SKIP"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "symlinkInsideCacheRootIsRejectedWhereLinksCanBeCreated",
+      "status": "SKIP"
+    },
+    {
+      "class": "vn.edu.toeic.client.exam.ScoreResultDialogTest",
+      "name": "warningFollowsOnlyServerFlagAndKeepsConfirmedResult(String, boolean)",
+      "status": "SKIP"
+    },
+    {
+      "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+      "name": "installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle",
+      "status": "SKIP"
+    },
+    {
+      "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+      "name": "proctorControlsLt04RealGuiBeforeAndAfterAutomaticTimeout",
+      "status": "SKIP"
+    },
+    {
+      "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+      "name": "appImageProductionClientUsesUnifiedReadingListeningWithoutInstallerClaim",
+      "status": "SKIP"
+    }
+  ],
+  "artifacts": [
+    {
+      "module": "protocol",
+      "file": "protocol-0.1.0-SNAPSHOT.jar",
+      "bytes": 106795,
+      "sha256": "96fadf0699107183c70700ecc428121d9dc186d0c8a70b355746eb25632b4dab",
+      "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+    },
+    {
+      "module": "client",
+      "file": "client-0.1.0-SNAPSHOT-all.jar",
+      "bytes": 11483772,
+      "sha256": "09961ea3d733abb631829168526bdd6a06a7d67f0fd58f846c3ef09472ede340",
+      "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+    },
+    {
+      "module": "server",
+      "file": "server-0.1.0-SNAPSHOT.jar",
+      "bytes": 25293580,
+      "sha256": "3b0ae608a441d4fff682f3672815331598d341b1654547800fa729582e7bc435",
+      "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+    },
+    {
+      "module": "monitoring-spike",
+      "file": "monitoring-spike-0.1.0-SNAPSHOT.jar",
+      "bytes": 35713,
+      "sha256": "94f03d7442ab6012649263c1d80ca0343dc635ca94c605d076f925b443873b4c",
+      "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+    }
+  ],
+  "sourceHashes": [
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/signal/SignalJson.java",
+      "encoding": "UTF8_LF",
+      "sha256": "6fa63f1248dd4318a8e63750de8a3dbe900a03eec7befff79541bd2d73eb7965"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/signal/DisplaySignal.java",
+      "encoding": "UTF8_LF",
+      "sha256": "d1329b359bdd1954d6bef2271e36e3eece17e279348c47999e016f8a5d4aca43"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/signal/SignalMessage.java",
+      "encoding": "UTF8_LF",
+      "sha256": "7f7494aca4219af4d7d6eda5cf676cf2efccefbac973149b98eeecca3318058b"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/signal/SignalDelivery.java",
+      "encoding": "UTF8_LF",
+      "sha256": "aa66407501f2d86f109d76d7eee8b3fb463b6fcf9c7340f282825b42e1b3366b"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/realtime/MonitoringTransport.java",
+      "encoding": "UTF8_LF",
+      "sha256": "9064219c8fa511a3a14243e6dc12db05e60460a102473a90b82e7c1e829ad447"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/realtime/RealtimeClient.java",
+      "encoding": "UTF8_LF",
+      "sha256": "b6d14c783f392172dea372d0b1f425ed704593d7966e1c3a605dfe03ef2e81c6"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/signal/SignalService.java",
+      "encoding": "UTF8_LF",
+      "sha256": "9ba60802b1fc9a38fb142cc4b19153004010fb5e577e793e56233b1163f24729"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/signal/SignalController.java",
+      "encoding": "UTF8_LF",
+      "sha256": "a03f6446ce505c1501a85de8f03248be0c30d6634a3998f9cd04e01449e23991"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeWebSocketHandler.java",
+      "encoding": "UTF8_LF",
+      "sha256": "50e1ce06c64c7a52d7c7789ed0222872ec9249333541dbf9bf2000fae7309f7b"
+    },
+    {
+      "path": "server/src/main/resources/db/migration/V13__experimental_monitoring_signals.sql",
+      "encoding": "UTF8_LF",
+      "sha256": "3f795a495c8dbb3a4b994e9bfeec15b118a6708945f929331fb0c58b04a45d63"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/signal/SignalPipelinePostgresTest.java",
+      "encoding": "UTF8_LF",
+      "sha256": "ed1d68d9ed77e87ddcc69cfe886254fc6216b72a81e5b4ea8f7cdd65e95aa416"
+    },
+    {
+      "path": "scripts/verify-mon07-postgres.ps1",
+      "encoding": "UTF8_LF",
+      "sha256": "b8312b2c0c97de927e3cfd4981fbc78b089d58cc0b7e095208d80c6676250de9"
+    },
+    {
+      "path": "scripts/smoke-t2c2.ps1",
+      "encoding": "UTF8_LF",
+      "sha256": "91c54e34ff48ffeb5abc1605aeb94be334d21b71c00dd802901126b28e5de713"
+    },
+    {
+      "path": "monitoring-spike/src/main/java/vn/edu/toeic/monitoring/usb/CimSnapshotSource.java",
+      "encoding": "UTF8_LF",
+      "sha256": "408300374714dabd070d8e942f9160ee90e47a90c92cdcd1c0e62da0c9044add"
+    },
+    {
+      "path": "monitoring-spike/src/main/java/vn/edu/toeic/monitoring/usb/UsbObservationTracker.java",
+      "encoding": "UTF8_LF",
+      "sha256": "589a809db8eee045f9a2ad31aaf65e3a5aac80814ce3ed5ec157dff5a8e9ebb3"
+    },
+    {
+      "path": "monitoring-spike/src/main/java/vn/edu/toeic/monitoring/usb/UsbSnapshot.java",
+      "encoding": "UTF8_LF",
+      "sha256": "13de9d0b6b5ab341bb8fb15c3485700f694b6b619cafd0232ef4c13033489cef"
+    },
+    {
+      "path": "monitoring-spike/src/main/java/vn/edu/toeic/monitoring/usb/UsbStorageProbe.java",
+      "encoding": "UTF8_LF",
+      "sha256": "183435c5abcc3685c0c9373d240b4a9775963f90db39c5fd9c83f61f0fd32b40"
+    },
+    {
+      "path": "monitoring-spike/src/main/resources/vn/edu/toeic/monitoring/usb/cim-snapshot.ps1",
+      "encoding": "UTF8_LF",
+      "sha256": "617a35b283fe2ba1ca6125910ec0a7324b1e8dfa6fa239949365bc8c26d38e94"
+    }
+  ],
+  "reportSha256Utf8Lf": "23cb8b7acdd9faa77c20ca81919c46d014de3b01f1a2d36adc15ca39419605e1",
+  "boundaries": {
+    "input": "MOCK",
+    "transport": "REAL loopback HTTP/WS/PostgreSQL",
+    "ackLossAndDeferredFault": "SIMULATED",
+    "experimentDefault": "OFF",
+    "fullDefault": true,
+    "flywayV13AppliesWhenOff": true,
+    "sharedDevelopmentDbTouched": false,
+    "deltaGate": "NOT_DECIDED",
+    "physicalLan": "0/41_NOT_RUN",
+    "usbPhysical": "0/12_NOT_RUN",
+    "ownerPolicy": "PROPOSED_PENDING",
+    "e1e2": "NOT_RUN"
+  }
+}

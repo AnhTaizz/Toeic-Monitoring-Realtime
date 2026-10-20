@@ -963,3 +963,8 @@ Không đổi PROCESS_OBSERVED/FULL/DELTA/presence/gap/Listening/QD21 hoặc das
 ## Hợp đồng đề xuất EX-02 — chưa phải endpoint hiện hành
 
 19/10/2026: [Rich HTTP contract](EX02_RICH_EXAM_CONTRACT_V1.md) và [ADR-V2-03](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) là TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn xác nhận](plan-v2/EX02_TEAM_APPROVAL_20261019.md), không phải wire runtime mới. Preparation nhúng Part1 visual manifest; image route SCHEDULED chỉ allowlist Part1/current manifest; visual/ready và combined readiness dùng HTTPv2. Full exam/options/answers vẫn chặn trước START; cả Audio+Visual READY là precondition, LISTENING_START hiện có là authority duy nhất. EX06 phải bridge rich DTO sau START và image-visible gate trước MediaPlayer.play, không GETv1 hoặc player thứ hai. Giữ ErrorCode/ApiErrorResponse/WSv0, legacy QD21/FULL/no-replay. Chưa controller/DTO production, không GENERAL_START hoặc runtime/GUI PASS.
+
+
+### 20/10/2026 — kiểm tích hợp C bởi Codex
+
+[Review/receipt](../evidence/c-technical-review-20261020/REPORT.md) xác nhận5001MOCKsignal quaWS/COMMIT/ACK và51trangHTTP≤100/fixed-through/concurrentinsert/mấtquyền; API signal không cócap5000. RunnerTEST cô lập launcher options và truyềnUTC trực tiếp, không nới wire/parser/timeout hoặc production policy. V13/Flyway vẫnáp khiOFF, runtime lane OFF/FULLdefault giữnguyên; ownerpolicy/physicalkhông đượcphêduyệt bằngCI/merge.

@@ -887,3 +887,12 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 ## 20/10/2026 · Codex technical review USB probe PR73
 
 Đọc CIM projection/classification, tracker, parser, timeout/output/child/pipe cleanup và source receipt. Tự chạy35tests/0SKIP/JAR trên aa260ef, MSFT READY0/Win32 UNKNOWN trên STANDARD, child0/readers true; không hardware hotplug. Hòa main chỉ docs/shared tests, probe source/scripts không đổi, public7hash giữ nguyên. User cho phép merge spike nếu CI HEAD cuối đạt; không ADR-V2-05 approval, physical0/12NOT_RUN, không integration/observer/retention/FULL gate changes.
+
+
+## 20/10/2026 · Codex · review kỹ thuật C và merge theo ủy quyền user
+
+- Đã đọc/check GitHub/head/base/diff/CI/source cho70–74, không audit lại toànT1–T4. Bảo vệbranch main không enabled, rulesets rỗng; protection endpoint403, không bypass hoặc GitHub APPROVE. Merge commit70e0ef252/712595106/72a636e2a/7346869eb; xác minh tree exact testedHEAD, giữbranches/rootmainf98a37f.
+- Findings mới: standaloneC2 thiếuSmokeCleanup trong loader (FAIL NoClassDef/1schema) →92f9faf copyhelper,65PASS/GUI/WS/PGcleanup0. Fulltích hợpa5339dc FAIL1USBchild vìJAVA_TOOL_OPTIONS bannerstderr; controlled có/không env chứng minhCHILD_DIAGNOSTIC→READY, d6bf60a cô lập/restoreenv vàMavenUTC, không đổiprobeexpected/timeout. RawFAIL giữ nguyên.
+- Source d6bf60a fullverify1071PASS/6SKIP/0FAIL/ERROR,17REAL PG cases,5001event đềuquaWS/auth/transaction/COMMIT/ACK,51pages +24concurrent +revoke/unassign giữa trang. Headlessprocess smoke dùngRealtimeClienttích hợp PASS/0schema/stop0, không lặpunit/GUIcampaign. Focusedcd00630=228PASS làsubset. Receipt4JAR/sourcehash tại [báo cáo tổng hợp](../evidence/c-technical-review-20261020/REPORT.md).
+- #74 chuyểnbase main/sau72, không lặpproposal. MigrationV13OFF vẫnáp, maintrước74V12; EX03V14/EX07V15 không collision tại audit. Không .env/devDB/Flywayclean/rootclean/productiondeploy, không observer/push/dashboard/offline60s/retention30ngày.
+- Codex technical review phầnA/B liên quan đãlàm; không chữkýowner/ADR APPROVED/hardware/gate/DONE. #74 chỉmerge sauCIpublicationHEADđạt; kết quảcuối/mergeSHA ghiPR/bàn giao. FULLdefault/LAN0/41/USB0/12pending; khôngđổitracker.

@@ -467,3 +467,8 @@ Source cuối c77d8f8/DraftPR74: focused219PASS/fullverify1028PASS+6SKIP,44new c
 ## Ghi chú làm dở — review EX-02 / ADR-V2-03, 19/10/2026
 
 C giữ scope review [contract](../EX02_RICH_EXAM_CONTRACT_V1.md)/[ADR](../plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) về auth/lock/timeout/monitoring. D01–D10 đã TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn đại diện19/10](../plan-v2/EX02_TEAM_APPROVAL_20261019.md), không chữ ký/GitHub review cá nhân. EX07 cần PG/HTTP/WS barriers cho START vs takeover/invalidate/revoke/lease/restart, session→attempt→readiness locks, auth-before-receipt, no deadline reset/WS trước commit; EX06 GUI gate/heartbeat. Chấp nhận ảnh Part1 prefetch có thể trích xuất, không hứa server thấy pixels hoặc lập tức biết app đóng. Checkers là MOCK, S01–S16/V01–V20 runtime NOT RUN; FULL/WSv0/collector giữ, không tracker DONE.
+
+
+### 20/10/2026 — Codex đã review kỹ thuật, tiếp tục nghiệm thu thật
+
+[Review C/merge/receipt](../../evidence/c-technical-review-20261020/REPORT.md):70–73đãmergeđúngscope;74base main/source d6bf60a fullverify1071PASS+6SKIP/17PG,5001WS/51pages/concurrent24 vàshared process smokePASS. Đã kiểm phầnA/Cauth/locks/transaction/COMMIT/cursor vàBlease/admission/ACK/callback/cleanup; không còn ghi chưa review kỹ thuật cho các phần này. Human contract/ADR/offline/retention vàphysicalpending không đổi. BướcCtiếp: receipt/kit đúng main tíchhợp, cùngngười thật chạyUSB/LAN/GUIchecklists; khôngtựDONE hoặc lấymerge/CIthayhardware.

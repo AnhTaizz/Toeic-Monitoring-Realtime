@@ -4,6 +4,8 @@
 
 Review tiếp ngày20/10: [findings/fix/verification và hành vi migration OFF](REVIEW-20261020.md), source mới2d73605; số c77/0f9 bên dưới giữ như lịch sử, không gán cho source mới.
 
+Đợt review/merge tiếp theo20/10: [báo cáo tổng hợp C](../c-technical-review-20261020/REPORT.md), source tích hợp d6bf60a; full1071PASS+6SKIP,17PG và5001signal/51pages đã kiểm. Các số dưới đây là lịch sử theo source ghi riêng, không thay kết quả mới.
+
 ## Nguồn ủy quyền và phạm vi
 
 Người dùng trong phiên19/10/2026: “Tôi cho phép triển khai luồng MON-07 thử nghiệm theo mục 11.1 của PR #72 tại c9a5829.” Chỉ áp dụng D07-01–04 cho fixture MOCK → client delivery → REAL WS → PostgreSQL TEST cách ly → ACK sau COMMIT → history phân trang. Đây là **ủy quyền triển khai thử nghiệm của người dùng**, không là chữ ký/approval A/B/C hoặc phê duyệt D07-05.
