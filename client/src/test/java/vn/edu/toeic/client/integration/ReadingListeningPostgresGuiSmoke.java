@@ -308,7 +308,7 @@ public final class ReadingListeningPostgresGuiSmoke {
                     +"\nUse GUI-R-"+run+"-candidate1 for FULL lifecycle. No real credentials.\n");
             JsonObject ready=new JsonObject();ready.addProperty("candidatePid",apps.get(0).pid());
             ready.addProperty("proctorPid",apps.get(1).pid());ready.addProperty("serverPid",server.pid());
-            ready.addProperty("source","5bbeaf2399490f642e71456fdce93a82907b2b8d");
+            ready.addProperty("source",System.getProperty("integration.runtimeSource","UNVERSIONED"));
             ready.addProperty("desktopAcceptance","NOT_RUN until human action and API/worker evidence");
             Files.writeString(output.resolve("manual-ready.json"),json.toJson(ready));
             long end=System.nanoTime()+TimeUnit.SECONDS.toNanos(240);

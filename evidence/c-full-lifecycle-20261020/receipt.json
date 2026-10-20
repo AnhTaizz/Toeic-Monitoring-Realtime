@@ -1,0 +1,444 @@
+{
+    "schema":  "c-full-lifecycle-evidence-v1",
+    "mainSource":  "5bbeaf2399490f642e71456fdce93a82907b2b8d",
+    "scenarioVerifiedSource":  "47caa50faa1a44157e7a9f6c70a4b382b0a10d13",
+    "toolchain":  {
+                      "jdk":  "Temurin21.0.10+7",
+                      "maven":  "3.9.15",
+                      "postgres":  "18.3",
+                      "powershell":  "5.1.26100.9711",
+                      "windowsBuild":  26200
+                  },
+    "classification":  "PROGRAMMATIC production Application/JAR; two Stages in one JVM; real HTTP WS PG loopback; not desktop input/human/LAN/USB",
+    "cases":  [
+                  {
+                      "id":  "A-login-start",
+                      "status":  "PASS_PROGRAMMATIC",
+                      "nativeDesktop":  "NOT_RUN",
+                      "atUtc":  "2026-10-20T06:52:43.753571400Z",
+                      "monitoringWorkers":  3,
+                      "serverState":  "SYNCED",
+                      "sequence":  3
+                  },
+                  {
+                      "id":  "B-restart",
+                      "status":  "PASS_PROGRAMMATIC",
+                      "nativeDesktop":  "NOT_RUN",
+                      "atUtc":  "2026-10-20T06:52:46.217170200Z",
+                      "monitoringWorkers":  3,
+                      "serverState":  "SYNCED",
+                      "sequence":  1
+                  },
+                  {
+                      "id":  "B-stop",
+                      "status":  "PASS_PROGRAMMATIC",
+                      "nativeDesktop":  "NOT_RUN",
+                      "atUtc":  "2026-10-20T06:52:45.009438800Z",
+                      "monitoringWorkers":  0,
+                      "serverState":  "STALE",
+                      "sequence":  4
+                  },
+                  {
+                      "id":  "C-other-account",
+                      "status":  "PASS_PROGRAMMATIC",
+                      "nativeDesktop":  "NOT_RUN",
+                      "atUtc":  "2026-10-20T06:52:50.314190600Z",
+                      "monitoringWorkers":  3,
+                      "serverState":  "SYNCED",
+                      "sequence":  1
+                  },
+                  {
+                      "id":  "D-before-submit",
+                      "status":  "PASS_PROGRAMMATIC",
+                      "nativeDesktop":  "NOT_RUN",
+                      "atUtc":  "2026-10-20T06:52:54.480488600Z",
+                      "monitoringWorkers":  3,
+                      "serverState":  "SYNCED",
+                      "sequence":  1
+                  },
+                  {
+                      "id":  "D-submitted",
+                      "status":  "PASS_PROGRAMMATIC",
+                      "nativeDesktop":  "NOT_RUN",
+                      "atUtc":  "2026-10-20T06:52:56.287822500Z",
+                      "monitoringWorkers":  0,
+                      "serverState":  null,
+                      "sequence":  null
+                  },
+                  {
+                      "id":  "E-before-deadline",
+                      "status":  "PASS_PROGRAMMATIC",
+                      "nativeDesktop":  "NOT_RUN",
+                      "atUtc":  "2026-10-20T06:52:59.404084300Z",
+                      "monitoringWorkers":  3,
+                      "serverState":  "SYNCED",
+                      "sequence":  1
+                  },
+                  {
+                      "id":  "E-timed-out",
+                      "status":  "PASS_PROGRAMMATIC",
+                      "nativeDesktop":  "NOT_RUN",
+                      "atUtc":  "2026-10-20T06:53:07.722549800Z",
+                      "monitoringWorkers":  0,
+                      "serverState":  null,
+                      "sequence":  null
+                  },
+                  {
+                      "id":  "F-application-stop",
+                      "status":  "PASS_PROGRAMMATIC",
+                      "nativeDesktop":  "NOT_RUN",
+                      "atUtc":  "2026-10-20T06:53:10.696996300Z",
+                      "monitoringWorkers":  0,
+                      "serverState":  null,
+                      "sequence":  null
+                  },
+                  {
+                      "id":  "F-before-exit",
+                      "status":  "PASS_PROGRAMMATIC",
+                      "nativeDesktop":  "NOT_RUN",
+                      "atUtc":  "2026-10-20T06:53:09.431086Z",
+                      "monitoringWorkers":  3,
+                      "serverState":  null,
+                      "sequence":  null
+                  }
+              ],
+    "focusedJUnit":  {
+                         "error":  0,
+                         "pass":  215,
+                         "failure":  0,
+                         "tests":  215,
+                         "skip":  0,
+                         "fixtures":  "MOCK; distinct from lifecycle integration"
+                     },
+    "runs":  [
+                 {
+                     "runtimeSource":  "5bbeaf2399490f642e71456fdce93a82907b2b8d",
+                     "scenarioSource":  "cb021b773638575aef794cf149a68cc2ac53b39c",
+                     "run":  "baseline-main",
+                     "exit":  0,
+                     "cleanup":  {
+                                     "schemasRemaining":  0,
+                                     "clusterStopExit":  0
+                                 },
+                     "label":  "PROGRAMMATIC production Application, two Stages in one JVM; real HTTP WS PG; native desktop unavailable; not human/LAN/USB"
+                 },
+                 {
+                     "runtimeSource":  "5bbeaf2399490f642e71456fdce93a82907b2b8d",
+                     "scenarioSource":  "49007cf54983d42a634253dc729db4fb505b894d",
+                     "run":  "process-main",
+                     "exit":  1,
+                     "cleanup":  {
+                                     "schemasRemaining":  0,
+                                     "clusterStopExit":  0
+                                 },
+                     "label":  "PROGRAMMATIC production Application, two Stages in one JVM; real HTTP WS PG; native desktop unavailable; not human/LAN/USB"
+                 },
+                 {
+                     "runtimeSource":  "5bbeaf2399490f642e71456fdce93a82907b2b8d",
+                     "scenarioSource":  "47caa50faa1a44157e7a9f6c70a4b382b0a10d13",
+                     "run":  "corrected-ownership",
+                     "exit":  0,
+                     "cleanup":  {
+                                     "schemasRemaining":  0,
+                                     "clusterStopExit":  0
+                                 },
+                     "label":  "PROGRAMMATIC production Application, two Stages in one JVM; real HTTP WS PG; native desktop unavailable; not human/LAN/USB"
+                 },
+                 {
+                     "runtimeSource":  "5bbeaf2399490f642e71456fdce93a82907b2b8d",
+                     "scenarioSource":  "47caa50faa1a44157e7a9f6c70a4b382b0a10d13",
+                     "run":  "desktop-handoff",
+                     "exit":  0,
+                     "cleanup":  {
+                                     "schemasRemaining":  0,
+                                     "clusterStopExit":  0
+                                 },
+                     "label":  "TWO production JAR desktop JVMs; human actions pending; no automated login; loopback not LAN"
+                 }
+             ],
+    "cleanup":  {
+                    "checkedOwnedJvmIds":  [
+                                               1496,
+                                               6468,
+                                               9720,
+                                               26132,
+                                               27904,
+                                               28228
+                                           ],
+                    "ownedEdgeAlive":  0,
+                    "finalToeicNamedThreads":  0,
+                    "allRunSchemaCountZero":  true,
+                    "nativeWindowExit":  "NOT_RUN; desktop children terminated only for teardown",
+                    "ownedJvmIdsStillPresent":  0,
+                    "testPgListenersRemaining":  0
+                },
+    "desktop":  {
+                    "candidateAndProctorSeparateJvmStarted":  true,
+                    "status":  "NOT_RUN",
+                    "passiveObservedSequence":  0,
+                    "passiveObservedState":  "UNSYNCED",
+                    "reason":  "Computer Use native pipe unavailable; user chose continue automatic"
+                },
+    "artifacts":  [
+                      {
+                          "path":  "client/target/client-0.1.0-SNAPSHOT-all.jar",
+                          "runtimeSource":  "5bbeaf2399490f642e71456fdce93a82907b2b8d",
+                          "sha256":  "bf2904c0db43b1c485fc65023977b1db2e641a9c5e26b3d31f245976221f4353",
+                          "availability":  "LOCAL IGNORED; not uploaded"
+                      },
+                      {
+                          "path":  "server/target/server-0.1.0-SNAPSHOT.jar",
+                          "runtimeSource":  "5bbeaf2399490f642e71456fdce93a82907b2b8d",
+                          "sha256":  "9cd770a52e9c5a23773bff457bd6364e44ecd18ac009a8aff360f54837b25bd0",
+                          "availability":  "LOCAL IGNORED; not uploaded"
+                      }
+                  ],
+    "rawHashes":  [
+                      {
+                          "path":  "target/full-lifecycle/run-owned.ps1",
+                          "sha256":  "eccccb0f8010dd2262c271e0bfbe728011c56f5efef9b36ce24617972a4967c7",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/run-manual.ps1",
+                          "sha256":  "a842e1d1cbd044c357023f974ccb9021dc8d64c55ccee2773579c2b01f0b9cc6",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/build-main.private.log",
+                          "sha256":  "97559714a6ba79caacc7c3c5ff0c672c2cbbe42fb4ff4b24688c64df471a67b0",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/focused-regression.private.log",
+                          "sha256":  "f74a1bfa6af47f446cdc25f46219a548dcd09a5234f086797a8c8a12403eea5d",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/process-main/f-stop-wait.threads.private.txt",
+                          "sha256":  "9f17e2ab5ff6bfe90cbc7e745a2ecc9997f8bd7efa7ee2818b22364992c38315",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/baseline-main/receipt.json",
+                          "sha256":  "f1aae29a238e99a00e3a901787d065707b34c45525168fa92ad6fb0c861548fa",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/baseline-main/gui.private.log",
+                          "sha256":  "15c2ad95f25801742bcc7686fbb5a8914b39fe3fca93ccc3f64a9b9832bfd16a",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/process-main/receipt.json",
+                          "sha256":  "c9eee54661f42867a731bd7ac21d3d8ef568929227d04c28fb06727abfe4e255",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/process-main/gui.private.log",
+                          "sha256":  "545bdda84e145478bbd8d275a170e32d439ac37b54d7a9c971110b41b0d20ec1",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/receipt.json",
+                          "sha256":  "163b9f490bf9de95c3bbc77868331d69afacfcae6f4008deb7c5a691cc369995",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/gui.private.log",
+                          "sha256":  "b169bba5af6f6c951fc4157b50aeef01186d823bd3296500c8a2f40f819981a0",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/desktop-handoff/receipt.json",
+                          "sha256":  "93050bb403b92e0084f7ffe629901bb25d44b6a14b135c317c50984b56a36f15",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/desktop-handoff/gui.private.log",
+                          "sha256":  "08c0ab4ea741c721713612310d0d1748c148c85e59f8ec34553758926564d375",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/A-login-start.json",
+                          "sha256":  "1e821dab2ac5c5aee643bb7ce4d121f310d99b8a4fbd0b4f9a5a0f03640d2ab4",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/A-login-start.private.png",
+                          "sha256":  "552eda4cc02a4d263ad955cd8a04844f61d7839c702cb8f13552e516f85b28fa",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/A-login-start.threads.private.txt",
+                          "sha256":  "b0bee0d221b01ae24aaf8af263d3f0f7714fedab8e6440fe4a48d7e5b1e3b966",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/A-proctor-history.private.png",
+                          "sha256":  "91c07be80ec82df7221f06f42b41cd20b85b944cfae282b4d4502696fa81196e",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/B-restart.json",
+                          "sha256":  "997f8d33d962d0fcc025055083474b18f0a17848eaee79a435fd674cd0260162",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/B-restart.private.png",
+                          "sha256":  "ffb3ad71f4c98cc39c547d3a12f868cc5fc44864eed9770dc781c12ffb0bf73a",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/B-restart.threads.private.txt",
+                          "sha256":  "bfd12b721f2ac61d093dd22aaace5c81081f5c347522e829246a2b17d653144c",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/B-stop.json",
+                          "sha256":  "e3dfd8053b56a68b1a0ec35961b8ed69327da5dbe5871fe7646014813a46f1ec",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/B-stop.private.png",
+                          "sha256":  "f517381700df92d8ce3e2ea97af7621059710a944b33a0b138f451ceaaa5dddf",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/B-stop.threads.private.txt",
+                          "sha256":  "b66871fdc6156aabb2d9e24e6aacd542ac538d940af00f2e5a4cfb795fddfee8",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/C-other-account.json",
+                          "sha256":  "8575e515a845dd57444e8a1afa07876f0cecc67a7c582fde52f34052a97e4282",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/C-other-account.private.png",
+                          "sha256":  "0f067bd2ff5dc6c3b6f9815290e380a16250390e24bf93806ef7c169002c9c41",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/C-other-account.threads.private.txt",
+                          "sha256":  "2a7b1afa580cec5560816f5aec5b2ec1b90fa62d1f5c1f4878b886a2ac7dd03a",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/D-before-submit.json",
+                          "sha256":  "8127dc4172c887a1d9c3700944a23608695d051fc6124345005eadcc1b4bd837",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/D-before-submit.private.png",
+                          "sha256":  "d1b7521587b9a019aaf46aef665f1ad0585decf388a0e7800b0438b04e34ed69",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/D-before-submit.threads.private.txt",
+                          "sha256":  "a2b7ab1e3c2bbdb80aa8672f256f96ad2704a25a3e2ea73f6031d8187279f9fd",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/D-submitted.json",
+                          "sha256":  "ba16ccf2a80b1a5bb2b217dc479f1b6b9b51fb47134afd8a78c211a5e97bff33",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/D-submitted.private.png",
+                          "sha256":  "9ca6c65a38ac7874fc164d0833cb3fa01dabbd4b46f996c5fdc9ffc9cc304371",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/D-submitted.threads.private.txt",
+                          "sha256":  "87f1eab195e685fdd6dbef5b19409d52dfc7d0bf4ad6cbc3003dd84be2791011",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/E-before-deadline.json",
+                          "sha256":  "ec49e737d4aa292ad44844249e7a8db709f57cc15f75dd64490f067cd83814d8",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/E-before-deadline.private.png",
+                          "sha256":  "c150901dcb395db64e4093d212ef92983cfe22ed0dcfc41a0a0c9fe7f646950d",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/E-before-deadline.threads.private.txt",
+                          "sha256":  "f81858b5c119254dabff80f42a3f86bb0f560b7877cd2880b4efa3213ef8c429",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/E-timed-out.json",
+                          "sha256":  "6ea555dbcd2e8a390747e27cc4102cb0e2b06b70dbda5eb738384085c70ff626",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/E-timed-out.private.png",
+                          "sha256":  "b5774ff0173df7875cd3394189cfc9655f50f8b20a18e599831bf964e8e90ce7",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/E-timed-out.threads.private.txt",
+                          "sha256":  "c01ab45bb44c7197ebb4afdca3ff884a89c696e1e1dbcc70276450952ca6d205",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/F-application-stop.json",
+                          "sha256":  "e6f264b80ec2ead4e0783eb8a9b1e670f39b977330c1078cd59e4378eebe3377",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/F-application-stop.threads.private.txt",
+                          "sha256":  "b2f1d7288bedea4622a086d7846f1e1a27d00f56521a08d3c4e33c4d194fc442",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/F-before-exit.json",
+                          "sha256":  "a40e4494b443a09d594e9f4b9fbb0b5f9fc4606f225f89ae0436fcb5996962aa",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/F-before-exit.private.png",
+                          "sha256":  "ecfd183c648f74d220849a3066eb345d8c2d651029b00008d543e0e406c78d40",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/corrected-ownership/9699928cfdd9/F-before-exit.threads.private.txt",
+                          "sha256":  "1796dac83053a33abe0f04802f061b5bdcc841e870221500f3badd20cb57d5ed",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/desktop-handoff/1b0b88dabd3c/manual-ready.json",
+                          "sha256":  "6a8d7156fc83ba46856cdc1c5f2fa43d5131a6e44294da2034414b65188aee5c",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/desktop-handoff/1b0b88dabd3c/manual-end.json",
+                          "sha256":  "57750c6ebcb4a56e3d028e595a503907cd4575ebf4b7ec39bc7344f7a877c71b",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/desktop-handoff/1b0b88dabd3c/manual-cleanup.json",
+                          "sha256":  "b1c31d927826e0acb737cc37fe845579ff119b8182050979f86cafbd85e66a06",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      },
+                      {
+                          "path":  "target/full-lifecycle/desktop-handoff/1b0b88dabd3c/passive-state.private.jsonl",
+                          "sha256":  "a7d9b67128d80b76fb18a96ae66aa22b6a038d490b07f2e2a8e4cf3835afad34",
+                          "availability":  "LOCAL IGNORED; not a GitHub link"
+                      }
+                  ],
+    "publicImage":  {
+                        "path":  "candidate-full.png",
+                        "sha256":  "552eda4cc02a4d263ad955cd8a04844f61d7839c702cb8f13552e516f85b28fa",
+                        "review":  "TEST identity only; no password/token/answers/private hostname"
+                    },
+    "fullDefault":  true,
+    "signalExperiment":  "OFF",
+    "usbPhysical":  "0/12 NOT_RUN",
+    "lanPhysical":  "0/41 NOT_RUN",
+    "deltaGate":  "NOT_DECIDED",
+    "humanBReview":  "PENDING"
+}
