@@ -15,7 +15,11 @@ public final class ExplanationRecovery {
     static boolean teacher(String s) {
         return Pattern.compile("(?i)(the correct answer|answer is|this means|grammatical|we need|the sentence|explanation:)").matcher(s).find();
     }
-    static boolean english(String s) { return s != null && s.matches("(?s).*[A-Za-z].*") && !vietnamese(s) && !teacher(s); }
+    static boolean english(String s) {
+        // Common English loanword in the actual question DOM; accented letters alone are not a language proof.
+        String probe=s==null?null:s.replaceAll("(?iU)\\brésumés?\\b","resume");
+        return probe != null && probe.matches("(?s).*[A-Za-z].*") && !vietnamese(probe) && !teacher(s);
+    }
     static boolean positionMarker(String s) { return s != null && s.matches("\\[[1-4]\\]"); }
     static boolean originalOption(String s) { return english(s) || positionMarker(s); }
     static JsonObject field(Object value, String status, JsonArray provenance) { return obj("value",value,"status",status,"provenance",provenance); }

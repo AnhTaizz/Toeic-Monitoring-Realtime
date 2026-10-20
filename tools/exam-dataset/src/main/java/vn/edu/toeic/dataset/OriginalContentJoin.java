@@ -15,7 +15,10 @@ public final class OriginalContentJoin {
         var qs=new JsonArray();
         for(var e:dom.select("[data-question-number][data-part]")) {
             var os=new JsonArray();for(var o:e.select("[data-option-id]")) os.add(obj("optionId",o.attr("data-option-id"),"text",o.text()));
-            qs.add(obj("questionNumber",Integer.parseInt(e.attr("data-question-number")),"part",Integer.parseInt(e.attr("data-part")),"prompt",e.select("[data-original-prompt]").text(),"options",os));
+            var row=obj("questionNumber",Integer.parseInt(e.attr("data-question-number")),"part",Integer.parseInt(e.attr("data-part")),"options",os);
+            if(e.hasAttr("data-correct-option"))row.addProperty("correctOption",e.attr("data-correct-option"));
+            if(e.selectFirst("[data-original-prompt]")!=null)row.addProperty("prompt",e.select("[data-original-prompt]").text());
+            qs.add(row);
         }
         return obj("examId",exam.attr("data-exam-id"),"questions",qs);
     }
