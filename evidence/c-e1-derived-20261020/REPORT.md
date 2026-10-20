@@ -86,3 +86,17 @@ giữ nguyên Java clean verify/kit checks; kết quả exact publication HEAD/m
 Thiếu trước nghiệm thu E1: khôi phục raw lịch sử/checksums để chạy đường mới trên dữ liệu đó,
 review C/B về phương pháp/source/machine/carryover/coverage, đủ12run hợp lệ nếu muốn kết luận
 chiến dịch mới, và dependency BASE03/MON01/gate riêng. Không QA05 DONE hoặc tracker/hours changes.
+
+### Base main cập nhật trong phiên
+
+Main tiến tới `a0ad030faf9bcf2b0b473c2eed49778ca63bc9ec` (PR82/V2) trước publication.
+Đã merge main vào nhánh tool bằng `1f75f570e29f6e33d1d244a7eca6e241a27ea66a`;
+conflict chỉ NHAT_KY/VAI_C, giữ toàn bộ main và append phần E1 có kiểm prefix nguồn.
+Diff PR so main mới **0 Java/production/POM**; E1 harness/collector/trace/monitoring protocol
+giữa159954b vàa0ad030 không đổi. Source JAR5bbeaf2 và raw smoke trước integration vẫn ghi
+đúng5bbeaf2, không gọi JAR cũ là toàn bộ bản V2 mới. Proof javaSourceMatchesCurrent trong
+raw receipt được đo **tại thời điểm smoke trên code c7f12a7/base159954b**, không claim mọi
+Java của V2 hiện hành đều bằng JAR đó. Trên HEAD tích hợp1f75f57,27Python PASS/0SKIP và
+reader phân tích dẫn xuất exit0/PARTIAL; source
+thu raw/creator/analyzer và dữ liệu cũ giữ nguyên. Các conflict/line ending kế thừa từ main
+không dùng để sửa lịch sử/log của A/B; diff PR chỉ phần E1.

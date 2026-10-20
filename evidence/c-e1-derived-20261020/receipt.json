@@ -20,6 +20,8 @@
     "python": "3.15.0b3"
   },
   "fullDefault": true,
+  "integratedMainSource": "a0ad030faf9bcf2b0b473c2eed49778ca63bc9ec",
+  "integratedVerificationSource": "1f75f570e29f6e33d1d244a7eca6e241a27ea66a",
   "integration": {
     "mock": {
       "changedTrial": "trial-002",
@@ -72,6 +74,12 @@
     },
     "schemaVersion": "e1-derived-integration-check-v1",
     "toolingSource": "c7f12a762aff07e1ec7afee7f71813a3411ba7e7"
+  },
+  "integrationVerification": {
+    "analysisExit": 0,
+    "e1JavaSourcesChanged": false,
+    "proofJavaSourceMatchesCurrentMeasuredAt": "c7f12a762aff07e1ec7afee7f71813a3411ba7e7",
+    "pythonPass": 27
   },
   "localArtifacts": [
     {
@@ -138,6 +146,21 @@
       "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
       "path": "target/e1-derived-check/integration-check.py",
       "sha256": "9766617cd40309ecfb37539c965ff25086c6966a5fff7d8b00c6f779666eb9ae"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/python-publication.private.log",
+      "sha256": "d0ac38c433518c0bf20b52a5fbebcc3782deb4f50c1587d9c8ce521426b85a6e"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/python-integrated-main.private.log",
+      "sha256": "f40e31ee37a81cb493bb739d97a996b4d55c6969c507f7eabaf9d618f62b1dd9"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis.private.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
       "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
@@ -258,6 +281,46 @@
       "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
       "path": "target/e1-derived-check/MOCK-final-analysis/summary.csv",
       "sha256": "c2551c5f17d291e3b88955405fac1d5c909cc0be268b69b11a7a2546a9b49f91"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/analysis-receipt.json",
+      "sha256": "a00d704d6a45c2f2994b007ccdf39cd41b82c9fda9ba4ee610584bdcdf772fba"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/analysis.md",
+      "sha256": "087bf2ad75961d7f9760bf7f697ff423a4e75b2e5ae27ecc9b068e1e98e78b33"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/campaign-status.json",
+      "sha256": "29c3f962024be5f51e8228dcf5bbcdf6dc77408d7cec3be6c4f2e808a0f63cc6"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/join-differences.csv",
+      "sha256": "cdd4a7e4a6f95465fccf32cd887d6daab3d96a5392d1388bbf7883091b9e41c7"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/run-01-poll-500-events.csv",
+      "sha256": "c38e2daa8374efa5f80be09f10cc587b97f03aea50d0f2ba9578320222a2a388"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/run-status.json",
+      "sha256": "04dd6c70717bb6e8c34d8259a505da3e876d43a2a7bd98e4e4ad9e1ba67bd048"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/summary-by-duration.csv",
+      "sha256": "be3966a30ee3c4f92c6d94ba15831d34f99176611636dd40de1cb2870e37742f"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/summary.csv",
+      "sha256": "14ffa0ee4daf5ece41ffec99e82b90c07e9e2e206939a66f85e2e86c97d75e51"
     },
     {
       "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
