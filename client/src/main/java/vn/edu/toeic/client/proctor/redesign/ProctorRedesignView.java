@@ -88,7 +88,9 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         Wiring wiring = new Wiring(login.user().displayName(), new MonitoringApiClient(serverUrl, login.token()),
                 new MonitoringApiClient(serverUrl, login.token()), transport, transport::updateScope,
                 login.attemptScope() == null ? Set.of() : Set.copyOf(login.attemptScope()), exam::getProctorProgress,
-                (refreshScope, expired) -> new ProctorSessionView(serverUrl, login.token(), expired, refreshScope),
+                (refreshScope, expired) -> new ProctorSessionControls(
+                        ProctorV2SessionPane.forServer(serverUrl, login.token(), login.user().id(), expired, refreshScope),
+                        new ProctorSessionView(serverUrl, login.token(), expired, refreshScope)),
                 ProctorSettings.FileStore.standard(), poll < 500 || poll > 60000 ? 3000L : poll, List.of(exam::close));
         return new ProctorRedesignView(wiring, onLogout, onExpired);
     }
@@ -295,7 +297,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
             if (sessionControls == null) {
                 // Same callbacks as the legacy tab: refresh scope after create/reorganize, one shared expiry path.
                 sessionControls = wiring.sessionControls().apply(this::refreshAll, this::expired);
-                VBox page = new VBox(12, Ui.pageHeader("Điều khiển ca", "Chức năng quản lý ca hiện có (import đề, tạo ca, READY, START, tổ chức lại). Server kiểm quyền mọi thao tác."),
+                VBox page = new VBox(12, Ui.pageHeader("Điều khiển ca", "Ca PROCTORED_V2: chọn đề, tạo ca, theo dõi READY, START. Tab V1 giữ công cụ cũ (import, tổ chức lại). Server kiểm quyền mọi thao tác."),
                         sessionControls);
                 page.getStyleClass().add("page");
                 VBox.setVgrow(sessionControls, Priority.ALWAYS);
