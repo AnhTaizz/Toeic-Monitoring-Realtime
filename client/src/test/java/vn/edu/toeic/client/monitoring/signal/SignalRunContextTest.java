@@ -26,4 +26,11 @@ class SignalRunContextTest {
         var run=new SignalRunContext("mock-attempt","mock-run");assertThatThrownBy(()->run.next(time.plusNanos(1),EventOrigin.OFFLINE)).isInstanceOf(IllegalArgumentException.class);
         assertThat(run.next(time,EventOrigin.OFFLINE).sequence()).isEqualTo(1);run.close();assertThatThrownBy(()->run.next(time,EventOrigin.OFFLINE)).isInstanceOf(IllegalStateException.class);
     }
+    @Test void eachTypedInputCanBeClaimedOnlyOncePerSharedRun(){
+        try(var run=new SignalRunContext("mock-attempt","mock-run")){
+            assertThat(run.claimFocusInput()).isTrue();assertThat(run.claimFocusInput()).isFalse();
+            assertThat(run.claimWindowInput()).isTrue();assertThat(run.claimWindowInput()).isFalse();
+            assertThat(run.claimUsbInput()).isTrue();assertThat(run.claimUsbInput()).isFalse();
+        }
+    }
 }
