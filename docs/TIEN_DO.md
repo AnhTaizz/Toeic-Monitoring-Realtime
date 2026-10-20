@@ -1,5 +1,16 @@
 # Tiến độ hiện tại
 
+21/10/2026 — [USB integrated explicit TEST một lệnh](USB_INTEGRATED_TEST_DEMO.md):
+baseb68e19a (gồm PR87/88), coordinatorfdc90a1/build-demo e7cd9dc. CIM provider thật →
+snapshot/USB adapter/status → shared context/delivery/WS → PG TEST/COMMIT/ACK/history.
+REAL MSFT15s STANDARD:10scan READY0,1READY/INITIAL COMPLETE committed+ACK+readback,0USBevent;
+children0/readers+3workers stopped/0schema/PGstop0. MOCK4network PASS; baseline194/unit204;
+fullverify1220PASS/149SKIP/0lỗi,15JARchecks/CLIhelp0. EarlyStopREAL1scan CANCELLED/metadata130,
+không completed pipeline PASS. Script tự dựng DB/schema/password stdin/seeder/API scope,
+không .env/DBdev/defaultobserver. Report/CI/merge cuối tại PR/evidence. FULLdefault,
+experimentOFF/USB0of12NOT_RUN/MON02+07chưaDONE/ADR/gate/policy/ownerpending giữ nguyên.
+
+
 20/10/2026 — [MON-07 status/gap explicit MOCK](../evidence/c-mon07-status-gap-20261020/REPORT.md):
 runtime1b84d30, test1c008c8; OBSERVER_STATUS bốn nguồn và SIGNAL_GAP overflow qua shared
 context/sequence/queue/socket, REAL WS/HTTP/PG TEST/COMMIT-ACK/history. Baseline246PASS;

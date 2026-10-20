@@ -23,6 +23,13 @@ T3-A1 có API audio/manifest/READY và gate start: [docs/AUDIO_RESOURCES.md](doc
 
 ## Chạy nhanh
 
+USB TEST end-to-end (Windows/JDK21/Maven/PostgreSQL18 tools, **không cần USB hoặc DB dev**):
+`.\scripts\demo-usb-integrated.ps1 -Mode Real -ReadUsbStorage` tự dựng TEST cluster,
+seeder/API scope, đọc CIM tối thiểu hữu hạn, gửi status/USB qua WS/COMMIT/ACK, kiểm HTTP
+history và teardown. [Một lệnh, flags, expected/actual và cách dừng](docs/USB_INTEGRATED_TEST_DEMO.md).
+Đây là opt-in TEST, không bật observer candidate mặc định; FULL/experiment OFF và
+physical USB0/12 NOT_RUN giữ nguyên. `-Mode Mock` chạy cùng pipeline từ snapshot MOCK.
+
 1. Chép `.env.example` thành `.env` và đổi `DB_PASSWORD`.
 2. Khởi động DB: `docker compose up -d --wait`.
 3. Nạp các biến `DB_*` từ `.env` vào terminal, rồi chạy server: `mvn -pl server -am spring-boot:run`.

@@ -535,3 +535,21 @@ Trước production cần A reviewV17/auth/commit, B transport/lifecycle/disclos
 provider/module/cadence/nooverlap/weakidentity/hardwareH01–12. Userauthorization không
 thay review/humanapproval; USB0/12NOT_RUN, MON07chưaDONE, ADR/gate/policy pending,
 experimentOFF/FULLdefault. Không tiếp task khác sau slice.
+
+
+## Ghi chú làm dở — USB integrated TEST, 21/10/2026
+
+[Demo một lệnh](../USB_INTEGRATED_TEST_DEMO.md)/[report](../../evidence/c-usb-integrated-20261021/REPORT.md):
+UsbScanCoordinator provider-agnostic nhận Source interface; CimUsbScanSource + projection
+chỉ ở server test classpath, dùng nguyên provider/parser/resource. Script tự tạo cluster
+SCRAM/schema/seed/API scope, explicit REAL flag, không .env/DBdev/production binding.
+REALe7 MSFT STANDARD10scan READY0/1status committed+ACK+history/0USBevent, cleanup0child/
+readers+workers stopped/0schema/stop0. Unit204/MOCKnetwork4/full1220PASS+149SKIP; REALStop
+CANCELLED metadata130 không pipelinePASS/hardware. Runtimecoordinatorfdc90a1/builde7cd9dc.
+B đọc typed status/USB qua history hiện có; không push/UI mới. Handoff cần cùng run ID
+với collector lease confirmed, một shared context/sequence/delivery. Coordinator sở hữu
+source/adapters/2workers, mượn lane; owner close delivery/context/lease/realtime và kiểm
+pending/drop/unreported. Status emitter lifetime singleclaim: trước ghép source status
+khác cần host ownership chung. Trước production review packaging/disclosure/auth/provider/
+cadence/no-overlap/weak identity/H01–12 và ADR-V2-05/owner policy; giữ FULLdefault,
+experimentOFF/physical0of12NOT_RUN/MON02+07chưaDONE/gatespending; dừng sau slice này.

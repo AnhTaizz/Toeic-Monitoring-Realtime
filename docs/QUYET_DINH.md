@@ -392,3 +392,17 @@ Chọn một shared context/delivery, data256/1MiB +1gap8192byte reserve trong c
 MAX_INTEGER stops lane. ACK trước writecompletion chưa trả budget. V17 append-only,
 OFF vẫn applyDDL; upgrade15/16 giữ olddisplay/counter/checksum13–16, không DBdev.
 Owner/ADR/gate/retention/hardware pending; không MON07DONE hoặc production enable.
+
+
+### 21/10/2026 — USB coordinator explicit TEST, không ADR-V2-05 approval
+
+Theo USER_AUTHORIZED_EXPERIMENT e80d60fa, giữ client không CIM dependency và server
+runtime không probe: composition provider thật/bridge/demo chỉ test classpath đã có.
+Không module/library/scanner thứ hai. Chọn MSFT_DISK cho thử nghiệm dựa BusType và
+readiness cũ, không fallback ngầm/hardware compatibility claim. Một scan fixed-delay
+worker + một control worker (flush100ms/duration/async close), max120s/query10s/cadence
+250..10000ms. Borrow shared lane; owner đóng tài nguyên phiên. Script mới không nhận
+server/DB URL dev, chỉ ownclusterloopbacknonce/SCRAM trước listen, password qua stdin
+bootstrap offline; scope qua seeder/API. Không defaultcapture/offline60s/retention30ngày.
+Evidence thực tại report; FULLdefault/experimentOFF/USB0of12/MON02+07chưaDONE/gate/
+policy/humanownerpending, không thay tracker/ADR hoặc nghiệm thu phần cứng.
