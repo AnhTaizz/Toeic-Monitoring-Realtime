@@ -780,6 +780,24 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - Không importETSseed, không tảimedia, không đổiimportable/keys/JavaFX/v0/writer/revision/FULL. Phạm viA cầnC reviewSQL/test vàB reviewcontract/render; không tạo chữ kýowner, không tựDONE/tracker/hours hoặcmerge. Còn richimport/read/image/filesystem config, nguồn/key/options/groups/media vàphysical acceptance.
 
 
+## 19/10/2026 · C/agent · MON-02 probe USB storage độc lập
+
+- Fetch main1d35b537, PR70/71 OPEN và PR72 Draft da89962 chưa merge; đọc CLAUDE/entrypoint/BASE04/MON02/MON07/QA04/ADR/source và proposal72, search không thấy probe trùng. Nhánh riêng spike/v2-c-mon02-usb-storage, giữ checkout/nhánh cũ. Không skill codex-with-chatgpt theo lựa chọn trước của người dùng.
+- Source276c4fa: Java21 CLI trong monitoring-spike, CIM MSFT_Disk(Number,BusType) và Win32_DiskDrive(Index,InterfaceType), bounded query/pipes/time/output, stable random per-run refs/diff/error isolation/generation; build/source/runtime hash receipt và run wrapper. Không Java/native dependency mới; PnP/window message và WMI subscription chỉ nghiên cứu NOT_IMPLEMENTED.
+- Lượt Ctrl+C qua Tee mất FINISH giữ INCOMPLETE. Source30166b3 thêm direct JSONL CREATE_NEW, chạy lại clean verify riêng module35PASS/0FAIL/ERROR/SKIP và JAR SUCCESS; 34USB tests MOCK,1process test cũ, process/pipes và PowerShell resource thật. [Evidence/report](../evidence/v2-c-mon02/REPORT.md), [runbook](USB_STORAGE_PROBE.md).
+- REAL Windows11/Java21.0.10/PowerShell5.1 STANDARD token: MSFT READY/count0; Win32 SCSI→UNKNOWN/nullcount; watch, timeout100ms exit3, maxLines4 exit5, JAR snapshot, Ctrl+C directfile FINISH130/children0/readers terminated. Existing file reject/hash unchanged, tampered receipt reject/byte restore, badargs64. QueryMillis không là OS notification latency. Không operator-confirmed USB action; physical0/12 NOT_RUN, không gọi count0 là hardware absence PASS.
+- Maven sandbox đầu fail cache trước test và sandbox script policy chặn; dùng ngữ cảnh người dùng được phép, token STANDARD, không đổi ExecutionPolicy/registry hoặc che provider permission bằng Admin. Không sửa/xóa raw; raw29file/log/XML/receipt private ignored, public chỉ case/status/runID/summary/hash. Không có physical evidence khó tái tạo để tạo archive giả.
+- Khuyến nghị MSFT polling để kiểm hardware tiếp, Win32 fallback có giới hạn/UNKNOWN; ADR-V2-05 C/B review PENDING, A xem auth/privacy/retention trước MON-07 integration. Không approve thay owner/DONE/backlog/MON07/08/E1/E2; không sửa Java production/protocol/migration/.env/process policy/FULL/gate. Chỉ commit/push/mở Draft PR theo ủy quyền rồi dừng.
+
+
+## 19/10/2026 · C/agent · sửa CI PR73
+
+- Tiếp tục nhánh spike/v2-c-mon02-usb-storage HEADfa764c9 sạch, fetch/GitHub xác nhận PR73Draft/chưa merge. Đọc CLAUDE/AGENTS đã cung cấp/runbook/report/source/workflow và log job118078191497 run39258040529:35test/1failure classificationREADY→ERROR,5.102s, khôngproblem diagnostic. Giữ log fail, không suy root cause từ thời lượng.
+- Bổ sung diagnostic-only baseline5s:1PASS trong fresh JVM/PS processes, không fresh VM; faultMOCK delay5500ms:5s→QUERY_TIMEOUT5072ms,10s→READY5872ms, cleanup0. Source1e75924 chỉ test classification budget10s và scalar diagnostic sau close; không đổi expected, production/default5s/resource/parser/pipe/timeout150ms/CI workflow.
+- Focused1case×3định trướcPASS; module clean verify35PASS/0FAIL/ERROR/SKIP, JAR/receipt nguồn1e. MSFTREADY0/Win32UNKNOWN/JARsnapshot thật tokenSTANDARD,15runtime hashes giống30166b3. Giữ JAR/receipt/report cũ và29raw SHA nguyên; không rootclean hoặc đụng worktree khác.
+- CI39264645975 nguồn1e75924 SUCCESS, clean verify toàn reactor; module35PASS/classification6case suite3.612s. Chưa chứng minh chính xác nguyên nhân CI gốc vìlogcũ thiếuproblem, không gọi rerunPASS là proof. [Report](../evidence/v2-c-mon02/REPORT.md), [summary/newraw manifest](../evidence/v2-c-mon02/ci73-fix-20261019.json).
+- Bản hồ sơ sau source chỉ docs/evidence; push cùngPR73 và chờCI HEAD mới, cập nhật mô tảPR, giữDraft/khôngmerge/approve. Physical0/12NOT_RUN, chưaADR-V2-05/MON02DONE/gate; không PnP/MON07/08/server/dashboard/E1/E2/backlog hoặc sửaPR70–72.
+
 ## 19/10/2026 · C/agent · MON-07 đề xuất contract đa tín hiệu
 
 - Theo yêu cầu chỉ proposal: fetch origin/main `1d35b53729abade7b460d35ab07d042b6f9f3571`, kiểm branch/worktree/source/PR và tìm trùng. PR70 BASE-03 và PR71 MON-01 vẫn mở/chưa merge; chưa thấy proposal MON-07 riêng nên tạo nhánh `docs/v2-c-mon07-contract-proposal` từ main mới nhất trong worktree riêng. Giữ checkout gốc và các nhánh cũ.
@@ -834,3 +852,8 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 ## 20/10/2026 · Codex technical review PR72
 
 Đối chiếu proposal c9a5829/fixture7cases/43relative links với implementation thử nghiệm PR74 và test parser/correlation/dedup/cursor đã đọc. Hòa docs main giữ đủ BASE03/MON01/EX02, không đổi fixture/schema/runtime; cho phép merge tài liệu vẫn PROPOSED theo user. Không áp offline60s/retention30ngày, không human owner approval/ADR APPROVED hoặc MON07DONE.
+
+
+## 20/10/2026 · Codex technical review USB probe PR73
+
+Đọc CIM projection/classification, tracker, parser, timeout/output/child/pipe cleanup và source receipt. Tự chạy35tests/0SKIP/JAR trên aa260ef, MSFT READY0/Win32 UNKNOWN trên STANDARD, child0/readers true; không hardware hotplug. Hòa main chỉ docs/shared tests, probe source/scripts không đổi, public7hash giữ nguyên. User cho phép merge spike nếu CI HEAD cuối đạt; không ADR-V2-05 approval, physical0/12NOT_RUN, không integration/observer/retention/FULL gate changes.
