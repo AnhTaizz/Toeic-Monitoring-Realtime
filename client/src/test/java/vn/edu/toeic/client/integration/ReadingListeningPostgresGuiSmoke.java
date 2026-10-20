@@ -76,6 +76,7 @@ public final class ReadingListeningPostgresGuiSmoke {
         proctorApi.createSession(session(readingSession, "GUI-READING-" + run)).get(20, TimeUnit.SECONDS);
         proctorApi.createSession(session(listeningSession, "GUI-MIXED-" + run)).get(20, TimeUnit.SECONDS);
         CompletableFuture<Void> started = new CompletableFuture<>();
+        if(Boolean.getBoolean("integration.manualDesktop")){manualDesktop();return;}
         Platform.startup(() -> { Platform.setImplicitExit(false); started.complete(null); }); started.get(20, TimeUnit.SECONDS);
         if (Boolean.getBoolean("integration.fullLifecycle")) { fullLifecycle(readingSession, reading); return; }
         candidateApp = fx(ToeicClientApplication::new); candidateStage = fx(Stage::new);
@@ -276,6 +277,9 @@ public final class ReadingListeningPostgresGuiSmoke {
         selectAttempt("GUI-L-"+run+"-candidate1"); clickText(candidateStage,"Bắt đầu giám sát");
         until(()->monitoringThreads().size()==3,"Active monitoring before app stop");
         lifecyclePoint("F-before-exit","PASS",null);
+        // Fixture APIs can lazily create identically named workers after the initial census.
+        // Close these owned test resources before asserting application executor cleanup.
+        candidateApi.close(); proctorApi.close();
         fx(()->{candidateApp.stop();candidateStage.close();proctorApp.stop();proctorStage.close();return null;});
         until(()->monitoringThreads().isEmpty(),"Application.stop cleanup");
         until(()->Thread.getAllStackTraces().keySet().stream().noneMatch(t->t.isAlive()
@@ -288,6 +292,35 @@ public final class ReadingListeningPostgresGuiSmoke {
         until(()->fx(()->candidateStage.getScene().lookup("#candidate-attempts") instanceof ComboBox<?> box
                 && !box.isDisabled()&&box.getItems().contains(attempt)),"Selectable assigned attempt");
         fx(()->{((ComboBox<String>)candidateStage.getScene().lookup("#candidate-attempts")).setValue(attempt);return null;});
+    }
+    private void manualDesktop()throws Exception {
+        Path jar=Path.of("client/target/client-0.1.0-SNAPSHOT-all.jar").toAbsolutePath();
+        List<Process> apps=new ArrayList<>();
+        try {
+            for(String role:List.of("candidate","proctor"))apps.add(new ProcessBuilder(
+                    Path.of(System.getProperty("java.home"),"bin","javaw.exe").toString(),
+                    "-Dtoeic.server.url="+origin,"-Dtoeic.realtime.delta-experimental=false",
+                    "-Duser.home="+output.resolve(role+"-profile"),"-jar",jar.toString())
+                    .redirectOutput(output.resolve(role+".private.log").toFile())
+                    .redirectError(output.resolve(role+".private.err").toFile()).start());
+            Files.writeString(output.resolve("manual-credentials.private.txt"),"TEST loopback only\nServer: "+origin
+                    +"\nCandidate: candidate1\nProctor: proctor1\nPassword: "+required("TOEIC_SEED_PASSWORD")
+                    +"\nUse GUI-R-"+run+"-candidate1 for FULL lifecycle. No real credentials.\n");
+            JsonObject ready=new JsonObject();ready.addProperty("candidatePid",apps.get(0).pid());
+            ready.addProperty("proctorPid",apps.get(1).pid());ready.addProperty("serverPid",server.pid());
+            ready.addProperty("source","5bbeaf2399490f642e71456fdce93a82907b2b8d");
+            ready.addProperty("desktopAcceptance","NOT_RUN until human action and API/worker evidence");
+            Files.writeString(output.resolve("manual-ready.json"),json.toJson(ready));
+            long end=System.nanoTime()+TimeUnit.SECONDS.toNanos(240);
+            while(System.nanoTime()<end&&!Files.exists(output.resolve("manual-done.flag"))
+                    &&apps.stream().anyMatch(Process::isAlive))Thread.sleep(200);
+            ready.addProperty("candidateExitedBeforeTeardown",!apps.get(0).isAlive());
+            ready.addProperty("proctorExitedBeforeTeardown",!apps.get(1).isAlive());
+            Files.writeString(output.resolve("manual-end.json"),json.toJson(ready));
+        } finally {
+            for(Process app:apps)if(app.isAlive()){app.destroy();if(!app.waitFor(5,TimeUnit.SECONDS)){app.destroyForcibly();app.waitFor(5,TimeUnit.SECONDS);}}
+            Files.writeString(output.resolve("manual-cleanup.json"),"{\"ownedAppsAlive\":"+apps.stream().filter(Process::isAlive).count()+"}");
+        }
     }
     private void closeResult()throws Exception {
         until(()->fx(()->{for(Window w:List.copyOf(Window.getWindows()))
