@@ -3,7 +3,7 @@ param(
     [Parameter(Mandatory=$true)][ValidateSet('recover','archive-create','archive-verify','archive-restore')][string]$Action,
     [string]$OutputPath = '',
     [string]$Normalized = '',
-    [string]$Supplement = '',
+    [string[]]$Supplement = @(),
     [string]$Datasets = '',
     [string]$AudioRoot = '',
     [string]$ImageRoot = '',
@@ -23,7 +23,7 @@ if ($Action -eq 'recover') {
     $arguments = @('-cp',$cp,'vn.edu.toeic.dataset.RecoverExam','--root',$repo)
     if ($OutputPath) {$arguments += @('--output',$OutputPath)}
     if ($Normalized) {$arguments += @('--normalized',$Normalized)}
-    if ($Supplement) {$arguments += @('--supplement',$Supplement)}
+    foreach ($source in $Supplement) {$arguments += @('--supplement',$source)}
 } else {
     $arguments = @('-cp',$cp,'vn.edu.toeic.dataset.DatasetArchive',$Action.Replace('archive-',''))
     if ($Action -eq 'archive-create') {

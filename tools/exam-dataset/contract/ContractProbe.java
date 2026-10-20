@@ -17,7 +17,10 @@ public final class ContractProbe {
         RichExamImportRequest request = gson.fromJson(json, RichExamImportRequest.class);
         boolean rejected = false;
         try { new RichExamValidator().validate(request); }
-        catch (IllegalArgumentException expected) { rejected = true; System.out.println("DRAFT_REJECTED: " + expected.getMessage()); }
+        catch (RuntimeException expected) {
+            if (!expected.getClass().getName().equals("vn.edu.toeic.server.exam.ExamApiException")) throw expected;
+            rejected = true; System.out.println("DRAFT_REJECTED: " + expected.getMessage());
+        }
         if (!rejected) throw new AssertionError("Draft must not pass EX03 verification gate");
         System.out.println("DTO_SHAPE_PASS records=" + records + " schemaVersion=" + request.schemaVersion());
         System.out.println("HTTP_POSTGRES_NOT_RUN");
