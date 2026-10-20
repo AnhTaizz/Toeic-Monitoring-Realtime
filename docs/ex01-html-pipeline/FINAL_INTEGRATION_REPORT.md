@@ -1,5 +1,7 @@
 # EX-01 — Kết quả tích hợp cuối Test 01, 20/10/2026
 
+> **Cập nhật sau báo cáo này:** commit `13e0745` thay backup `pg_dump` toàn DB và `DatasetArchive` bằng [Portable Exam Seed](PORTABLE_EXAM_SEED.md). Các mục về backup và archive bên dưới là kết quả của lượt cũ, giữ nguyên để truy vết.
+
 **ETS_TEST01_BLOCKED_BY_MISSING_ORIGINAL_SOURCE**. Đã hoàn thiện phần kiểm kỹ thuật và bàn giao nguồn bổ sung; chưa đạt nghiệm thu đề ETS. Không import ETS, không đánh dấu EX-01/EX-08 DONE.
 
 ## Source và phạm vi

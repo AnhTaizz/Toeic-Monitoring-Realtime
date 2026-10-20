@@ -361,3 +361,21 @@ Pipeline Java21 độc lập dùng jsoup DOM/Gson và JLayer để decodeMP3 off
 Tiếp tục Java ETL cũ: recovery giữ literalSOURCE_EXACT khác human/backendVERIFIED; tách teacher/Vietnamese/evidence khỏi candidate, không suy A–D từ vocabulary hoặc document boundaries từ ảnh. Nguồn bổ sung joinexamId+part+questionNumber và đối chiếu nhãn key. Không có HUMAN_VERIFIED thì draft vẫn UNVERIFIED/BLOCKED, không sửa validator.
 
 Archive versioned ngoài Git giữ normalized/V2/recovery/provenance/receipt vàmedia<examId>/<localFile>, manifestsize/SHA; restore chỉ thư mục mới sau verify. SQL dùngpg_dump plainUTF8/psqltransaction, khôngINSERTtựviết/clean/drop; restore phải xác nhận đúng tên vàtựCREATE TESTmới+rỗng. MOCK thực chứng minh mechanics, không thay ETS acceptance. [Evidence và giới hạn](ex01-html-pipeline/BACKUP_RESTORE.md), [recovery](ex01-html-pipeline/RECOVERY_REPORT.md). Không quyết định mới vềschema/API/START hoặc quyền bypass.
+
+> **Đã thay (20/10/2026):** phần archive `DatasetArchive` và SQL `pg_dump`/`psql` ở trên bị thay bởi mục "Portable Exam Seed" ngay dưới. Kết quả đo cũ vẫn giữ ở [BACKUP_RESTORE.md](ex01-html-pipeline/BACKUP_RESTORE.md).
+
+## EX-01 — Portable Exam Seed thay backup toàn DB, 20/10/2026
+
+- **Lựa chọn:** mỗi đề một pack (`scripts/create-exam-seed.ps1`, `PortableExamSeed.java`, `restore-exam-seed.ps1` đi kèm trong pack).
+  - Pack chỉ chứa 7 bảng đề, sinh từ một lượt import V2 HTTP 201 có catalog `selectable=true`, kèm media, manifest SHA-256 và chữ ký cột schema.
+  - Restore là `INSERT` trong một transaction. Từ chối examId trùng. ID mới do DB đích cấp; `source_id` nối lại theo `source_sha256`; `created_by` lấy từ một tài khoản PROCTOR có sẵn ở DB đích.
+  - Bỏ `pg_dump` toàn DB và `DatasetArchive`, chỉ giữ một hệ thống.
+- **Lý do:** cần seed dữ liệu đề để demo mà không mang theo tài khoản, session, bài làm hay monitoring, và không cần HTML gốc khi restore.
+- **Hệ quả:**
+  - Pack gắn với schema của 7 bảng; đổi schema thì phải tạo lại seed.
+  - Checksum không thay chữ ký số; pack có đáp án nên phải giữ private.
+  - ETS còn UNVERIFIED nên không tạo được seed.
+  - Archive JSON/media cũ giữ nguyên ngoài Git, kiểm bằng manifest có trong Git.
+- **Đang chờ owner A:** restore hiện chỉ cho DB tên `toeic_*test_*`, host loopback, port khác 5433/55434. DB demo mặc định `toeic` vì vậy bị từ chối. Có mở cho DB demo hay không cần A quyết; chưa đổi code.
+- [Hướng dẫn và kiểm thử](ex01-html-pipeline/PORTABLE_EXAM_SEED.md).
+

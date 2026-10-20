@@ -49,7 +49,7 @@ Ví dụ sau là **MOCK mô tả format**, examId MOCK cố ý không join đư�
 Đây là hợp đồng adapter tường minh, không phải khẳng định Zenlish tự xuất đúng attributes này. Không có `data-exam-id` thì tool từ chối; dùng JSON hoặc bổ sung adapter dựa DOM gốc đã được review. File SHA+selector/index được giữ trong provenance. Với source bổ sung cần lưu cả file gốc riêng cùng recovery archive.
 
 ```powershell
-# Sau bước build ở BACKUP_RESTORE.md; không import backend ở đây.
+# Build trước: mvn -f tools/exam-dataset/pom.xml test dependency:build-classpath '-DincludeScope=runtime' '-Dmdep.outputFile=target/runtime-classpath.txt'; không import backend ở đây.
 .\tools\exam-dataset\maintain.ps1 -Action recover -Supplement '<original-export.json>' -OutputPath '<new-recovery-directory>'
 # Exit 2 là BLOCKED có chủ đích, đọc quality/missing reports.
 ```

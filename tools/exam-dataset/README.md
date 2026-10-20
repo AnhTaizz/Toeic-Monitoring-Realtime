@@ -88,13 +88,15 @@ File tải về được kiểm trong staging, publish atomically khi hợp lệ
 Kết quả đo và phần import còn bị chặn ở [REPORT.md](../../docs/ex01-html-pipeline/REPORT.md). Contract probe compile DTO/validator thật với hai adapter compile tối thiểu cho annotation/exception; đây là kiểm graph/DTO, **không** phải Spring HTTP/PostgreSQL.
 
 
-## Recovery Test 01 và backup/restore (20/10/2026)
+## Recovery Test 01 (20/10/2026)
 
 `maintain.ps1 -Action recover` mở rộng parser hiện có, mặc định Test01; tùy chọn `-Supplement <original-local.json|html>` join theo identity và giữ UNVERIFIED. Exit2 báo dataBLOCKED. Có178sourceexact option texts (170English+8position markers),495missing+3review;47baseline+12recovery+5archive=64tests PASS. Những số676/47 ở mô tả baseline phía trên thuộc lần parse trước recovery.
 
-`maintain.ps1 -Action archive-create|archive-verify|archive-restore` giữ JSON/provenance/media trong thư mục ngoài Git; destination mới bắt buộc. [Hướng dẫn build/lệnh/roots/giới hạn](../../docs/ex01-html-pipeline/BACKUP_RESTORE.md), [kết quả recovery và missing fields](../../docs/ex01-html-pipeline/RECOVERY_REPORT.md), [format nguồn bổ sung](../../docs/ex01-html-pipeline/ORIGINAL_SOURCE_EXPORT.md).
+## Portable Exam Seed — cách mang đề sang PostgreSQL khác
 
-`scripts/backup-toeic-db.ps1` dùngpg_dump, `scripts/restore-toeic-db.ps1` tạoTESTmới/rỗng vàpsqlrestore. `verify-db-roundtrip.ps1` đã chạy thật vớiMOCK200quaV2/PG18.1/catalog sau restore+copiedmedia, không ETS acceptance. Không credentials/binarymedia/SQLdump trong Git.
+Workflow hiện hành: parse một lần → import V2 vào DB TEST → `scripts/create-exam-seed.ps1` đóng **một pack cho mỗi đề** (dữ liệu 7 bảng đề, đáp án, documents, media metadata, file audio/ảnh, manifest SHA-256 và script restore) → `<pack>/restore-exam-seed.ps1` restore vào DB đã chạy Flyway, không cần HTML, repo hay website. Không ghi đè đề có sẵn, không chạm tài khoản/ca/bài làm/monitoring. ETS còn UNVERIFIED nên không tạo được seed (BLOCKED). [Hướng dẫn export/restore, đảm bảo an toàn, giới hạn và kết quả kiểm thử](../../docs/ex01-html-pipeline/PORTABLE_EXAM_SEED.md).
+
+Backup toàn DB bằng `pg_dump` và `DatasetArchive` (`maintain.ps1 -Action archive-*`) đã bị **xoá** ở `13e0745`. Archive JSON/media đã tạo trước đó vẫn được giữ ngoài Git và kiểm được bằng manifest; xem [lịch sử và cách kiểm](../../docs/ex01-html-pipeline/BACKUP_RESTORE.md).
 
 ## Tích hợp main / Test01 cuối ngày20/10
 
