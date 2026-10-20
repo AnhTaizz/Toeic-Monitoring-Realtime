@@ -30,6 +30,7 @@ public final class ReadingListeningPostgresGuiSmoke {
     private final Gson json = new Gson();
     private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(3)).build();
     private Process server;
+    private Process lifecycleEdge;
     private int port, passed;
     private String origin, candidateToken, proctorToken;
     private Stage candidateStage, proctorStage;
@@ -180,6 +181,7 @@ public final class ReadingListeningPostgresGuiSmoke {
 
     /** Production Application + JAR, programmatic FX controls; NOT desktop input or human acceptance. */
     private void fullLifecycle(String readingSession, String reading) throws Exception {
+        Set<Long> fixtureThreads=Thread.getAllStackTraces().keySet().stream().map(Thread::threadId).collect(java.util.stream.Collectors.toSet());
         proctorApp=fx(ToeicClientApplication::new); proctorStage=fx(Stage::new);
         fx(()->{proctorApp.start(proctorStage);return null;}); login(proctorStage,"proctor1");
         until(()->fx(()->proctorStage.getScene().lookup("#dashboard-roster")!=null),"Proctor dashboard");
@@ -191,6 +193,31 @@ public final class ReadingListeningPostgresGuiSmoke {
         until(()->fx(()->candidateStage.getScene().getRoot().lookupAll(".label").stream()
                 .filter(Label.class::isInstance).map(Label.class::cast).anyMatch(l->l.getText().contains("Chế độ FULL"))),"FULL GUI mode");
         check(monitoringThreads().size()==3,"One collector/delivery/full worker");
+        Path edge=Path.of(System.getenv("ProgramFiles(x86)"),"Microsoft/Edge/Application/msedge.exe");
+        check(Files.isRegularFile(edge),"Owned Edge TEST executable available");
+        lifecycleEdge=new ProcessBuilder(edge.toString(),"--headless=new","--disable-gpu","--no-first-run",
+                "--no-default-browser-check","--disable-background-networking","--remote-debugging-port=0",
+                "--user-data-dir="+output.resolve("owned-edge-profile"),"about:blank")
+                .redirectOutput(ProcessBuilder.Redirect.DISCARD).redirectError(ProcessBuilder.Redirect.DISCARD).start();
+        until(()->state(reading).getAsJsonArray("processes").asList().stream().anyMatch(p->
+                p.getAsJsonObject().get("pid").getAsLong()==lifecycleEdge.pid()
+                && p.getAsJsonObject().get("startInstant").getAsString().equals(lifecycleEdge.info().startInstant().orElseThrow().toString())),
+                "FULL PID/start matches independently owned ProcessHandle");
+        until(()->response("/api/v1/monitoring/attempts/"+reading+"/events",proctorToken,null)
+                .getAsJsonArray("events").asList().stream().anyMatch(e->e.getAsJsonObject().get("processName").getAsString().equals("msedge.exe")),
+                "Durable process history via assigned proctor API");
+        until(()->fx(()->((TableView<?>)proctorStage.getScene().lookup("#dashboard-roster")).getItems().stream()
+                .anyMatch(p->p instanceof vn.edu.toeic.client.dashboard.MonitoringData.Presence row&&row.attemptId().equals(reading))),"Proctor rendered assigned attempt");
+        fx(()->{var table=(TableView<?>)proctorStage.getScene().lookup("#dashboard-roster");
+            for(int i=0;i<table.getItems().size();i++)if(table.getItems().get(i) instanceof vn.edu.toeic.client.dashboard.MonitoringData.Presence row
+                    &&row.attemptId().equals(reading)){table.getSelectionModel().select(i);break;}return null;});
+        until(()->fx(()->((TableView<?>)proctorStage.getScene().lookup("#dashboard-current-processes")).getItems().stream()
+                .anyMatch(p->p instanceof vn.edu.toeic.protocol.monitoring.FullSnapshotPayload.Process row&&row.pid()==lifecycleEdge.pid())),"Proctor current process table");
+        selectProctorTab("Cảnh báo process");
+        until(()->fx(()->((TableView<?>)proctorStage.getScene().lookup("#dashboard-events")).getItems().stream()
+                .anyMatch(p->p instanceof vn.edu.toeic.client.dashboard.MonitoringData.Event row
+                    &&row.attemptId().equals(reading)&&row.processName().equals("msedge.exe"))),"Proctor history table");
+        screenshot(proctorStage,"A-proctor-history.private.png");
         JsonObject first=state(reading); lifecyclePoint("A-login-start","PASS",first);
 
         Set<Long> oldWorkers=monitoringThreads();
@@ -251,6 +278,8 @@ public final class ReadingListeningPostgresGuiSmoke {
         lifecyclePoint("F-before-exit","PASS",null);
         fx(()->{candidateApp.stop();candidateStage.close();proctorApp.stop();proctorStage.close();return null;});
         until(()->monitoringThreads().isEmpty(),"Application.stop cleanup");
+        until(()->Thread.getAllStackTraces().keySet().stream().noneMatch(t->t.isAlive()
+                &&t.getName().startsWith("toeic-")&&!fixtureThreads.contains(t.threadId())),"Owned application executors terminate");
         check(!fx(()->candidateStage.isShowing()||proctorStage.isShowing()),"Both stages closed");
         lifecyclePoint("F-application-stop","PASS",null);
         pass("FULL lifecycle A-F: production Application controls, REAL HTTP/WS/PG; desktop/human NOT RUN");
@@ -354,7 +383,8 @@ public final class ReadingListeningPostgresGuiSmoke {
         var process = new ProcessBuilder(Path.of(System.getProperty("java.home"), "bin", "java.exe").toString(), "-jar", "server/target/server-0.1.0-SNAPSHOT.jar",
                 "--server.address=127.0.0.1", "--server.port=" + port,
                 "--spring.datasource.url=jdbc:postgresql://" + required("DB_HOST") + ":" + required("DB_PORT") + "/" + required("DB_NAME") + "?currentSchema=" + schema,
-                "--spring.flyway.default-schema=" + schema, "--spring.flyway.schemas=" + schema, "--logging.level.root=WARN", "--toeic.audio.root=" + audioRoot);
+                "--spring.flyway.default-schema=" + schema, "--spring.flyway.schemas=" + schema, "--logging.level.root=WARN", "--toeic.audio.root=" + audioRoot,
+                "--toeic.state.delta-enabled=false","--toeic.monitoring.signal-experiment-enabled=false");
         server = process.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.appendTo(output.resolve("owned-server.log").toFile())).start();
         until(() -> {
             if (!server.isAlive()) throw new IllegalStateException("Owned server exited");
@@ -396,6 +426,12 @@ public final class ReadingListeningPostgresGuiSmoke {
     }
     private static String required(String key) { String value = System.getenv(key); if (value == null || value.isBlank()) throw new IllegalStateException("Missing environment " + key); return value; }
     private void cleanup() {
+        if(lifecycleEdge!=null){
+            List<ProcessHandle> owned=new ArrayList<>(lifecycleEdge.descendants().toList());owned.add(lifecycleEdge.toHandle());
+            for(ProcessHandle process:owned)if(process.isAlive())process.destroy();
+            for(ProcessHandle process:owned)try{process.onExit().get(5,TimeUnit.SECONDS);}catch(Exception pending){process.destroyForcibly();}
+            System.out.println("CLEANUP owned Edge alive="+owned.stream().filter(ProcessHandle::isAlive).count());
+        }
         try { fx(() -> { if (candidateApp != null) candidateApp.stop(); if (proctorApp != null) proctorApp.stop(); for (Window window : List.copyOf(Window.getWindows())) window.hide(); return null; }); } catch (Exception ignored) { }
         if (candidateApi != null) candidateApi.close(); if (proctorApi != null) proctorApi.close();
         try { stopServer(); } catch (Exception ignored) { }
