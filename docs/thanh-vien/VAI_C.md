@@ -429,3 +429,5 @@ C giữ scope review [contract](../EX02_RICH_EXAM_CONTRACT_V1.md)/[ADR](../plan-
 ## Ghi chú làm dở — EX05, 19/10/2026
 
 [Checkpoint](../EX05_AUTHENTICATED_IMAGES.md): A code image resolver/manifest/route, B cần tích hợp visual RAM/renderer, C review kỹ thuật auth/lock/path/commit. Agent review không human approval. EX07 authority chưa có nên ảnh fail-closed; PG mới đang chạy, GUI/LAN/hearing NOT RUN. V13/V14 MERGE BLOCKED; tracker/hours giữ. Tiếp tục EX07 trên branch stacked riêng.
+
+20/10/2026: EX05 source05cc694 clean verify1127PASS/6SKIP (29case mới PASS), PG18.1/HTTP thật; [checkpoint/evidence](../EX05_AUTHENTICATED_IMAGES.md). EX07 tiếp tục branch stacked, chưa authority/FE integrated; V13/V14 MERGE BLOCKED, GUI/LAN/hearing NOT RUN.
