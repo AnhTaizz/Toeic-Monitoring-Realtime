@@ -30,6 +30,12 @@ public class ListeningService {
     private final ExamService exams;
     private final ApplicationEventPublisher publisher;
     private final long timeoutMillis;
+    private vn.edu.toeic.server.exam.rich.V2SessionPolicy v2;
+    private vn.edu.toeic.server.exam.rich.RichSessionService richSessions;
+    @org.springframework.beans.factory.annotation.Autowired
+    public void setV2(vn.edu.toeic.server.exam.rich.V2SessionPolicy v2,vn.edu.toeic.server.exam.rich.RichSessionService richSessions) {
+        this.v2=v2;this.richSessions=richSessions;
+    }
     public record StatusChanged(String attemptId) {}
     private record Attempt(String id, long owner, String session, String state, long writer,
             String start, String manifest, long listeningWriter, Instant deadline, Instant lastSeen,
@@ -157,6 +163,8 @@ public class ListeningService {
     @Transactional
     public ListeningReorganizeResponse reorganize(AuthenticatedUser user, String oldId, ListeningReorganizeRequest request) {
         authorization.requireRole(user, Role.PROCTOR); authorization.requireExamRead(user, oldId);
+        // V2 lock order is old session -> old attempt; legacy keeps its attempt-only lock.
+        var v2Old = v2.lockForSystem(oldId);
         Attempt old = attempt(oldId, true);
         String rid = request == null ? null : request.requestId();
         if (request == null || rid == null || rid.isBlank() || rid.length() > 128 || request.newSessionId() == null
@@ -185,9 +193,18 @@ public class ListeningService {
                 SELECT u.username FROM exam_session_proctors p JOIN user_accounts u ON u.id = p.proctor_user_id
                 WHERE p.session_id = :s ORDER BY u.username
                 """).param("s",old.session()).query(String.class).list();
-        var created = exams.createSession(user, new CreateSessionRequest(request.newSessionId(),source.exam(),request.title(),
-                source.duration(),proctors,List.of(source.candidate())));
-        String newId = created.createdAttempts().getFirst().attemptId();
+        String newId;
+        if (v2Old != null) {
+            // Copy PROCTORED_V2: the replacement waits in SCHEDULED for its own READY + START, never inherits the old deadline.
+            List<Long> proctorIds = jdbc.sql("SELECT proctor_user_id FROM exam_session_proctors WHERE session_id = :s ORDER BY proctor_user_id")
+                    .param("s",old.session()).query(Long.class).list();
+            newId = request.newSessionId() + "-" + source.candidate();
+            richSessions.createReplacement(user,request.newSessionId(),source.exam(),request.title(),source.duration(),proctorIds,old.owner(),newId);
+        } else {
+            var created = exams.createSession(user, new CreateSessionRequest(request.newSessionId(),source.exam(),request.title(),
+                    source.duration(),proctors,List.of(source.candidate())));
+            newId = created.createdAttempts().getFirst().attemptId();
+        }
         jdbc.sql("""
                 INSERT INTO listening_reorganizations(old_attempt_id,new_attempt_id,new_session_id,request_id,title,created_by)
                 VALUES(:old,:new,:s,:r,:title,:u)

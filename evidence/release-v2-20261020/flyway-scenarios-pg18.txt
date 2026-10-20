@@ -1,0 +1,35 @@
+## 1 Fresh DB -> release candidate
+[1-fresh-rel] db=fw_fresh jar=server-d13b3ff.jar extra= result=STARTED
+   Successfully applied 14 migrations to schema "public", now at version v15 
+   history: 1,2,3,4,5,6,7,8,9,10,11,12,14,15
+## 2 DB V1-V12 (main) -> release candidate
+[2a-main] db=fw_upgrade jar=server-main-e0ef252.jar extra= result=STARTED
+   Successfully applied 12 migrations to schema "public", now at version v12 
+   history: 1,2,3,4,5,6,7,8,9,10,11,12
+[2b-upgrade-rel] db=fw_upgrade jar=server-d13b3ff.jar extra= result=STARTED
+   Successfully applied 2 migrations to schema "public", now at version v15 
+   history: 1,2,3,4,5,6,7,8,9,10,11,12,14,15
+## 3 DB V14/V15 then MON-07 as V13 (Option B late)
+[3-v13-after-v15] db=fw_upgrade jar=server-d13b3ff.jar extra=flyway-mon07-v13 result=EXITED
+   Detected resolved migration not applied to database: 13.
+   Validate failed: Migrations have failed validation
+   history: 1,2,3,4,5,6,7,8,9,10,11,12,14,15
+## 4 DB V14/V15 then MON-07 renumbered V16 (Option A)
+[4-mon07-as-v16] db=fw_upgrade jar=server-d13b3ff.jar extra=flyway-mon07-as-v16 result=STARTED
+   Successfully applied 1 migration to schema "public", now at version v16 
+   history: 1,2,3,4,5,6,7,8,9,10,11,12,14,15,16
+## 5 DB that applied MON-07 V13 on main (test env) -> release candidate without V13
+[5a-main-plus-v13] db=fw_mon07db jar=server-main-e0ef252.jar extra=flyway-mon07-v13 result=STARTED
+   Successfully applied 13 migrations to schema "public", now at version v13 
+   history: 1,2,3,4,5,6,7,8,9,10,11,12,13
+[5b-rel-without-v13] db=fw_mon07db jar=server-d13b3ff.jar extra= result=EXITED
+   Detected applied migration not resolved locally: 13.
+   Validate failed: Migrations have failed validation
+   history: 1,2,3,4,5,6,7,8,9,10,11,12,13
+[5c-rel-with-v13] db=fw_mon07db jar=server-d13b3ff.jar extra=flyway-mon07-v13 result=STARTED
+   Successfully applied 2 migrations to schema "public", now at version v15 
+   history: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+## 6 Option B fresh: V13+V14+V15 together
+[6-optb-fresh] db=fw_optb_fresh jar=server-d13b3ff.jar extra=flyway-mon07-v13 result=STARTED
+   Successfully applied 15 migrations to schema "public", now at version v15 
+   history: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15

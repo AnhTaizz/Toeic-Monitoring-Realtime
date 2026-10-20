@@ -1,5 +1,11 @@
 # Protocol đang dùng
 
+## EX-03 — rich import trên nhánh review, 19/10/2026
+
+`POST /api/v2/exams/import` đã có code: Bearer PROCTOR, JSON strict schemaVersion2/profile TOEIC_200, đúng200 câu/7Part, source/group/options/media verified; trả201 sau DB commit với `RichExamImportResponse`. Duplicate/race409 CONFLICT; JSON/graph400 INVALID_INPUT; body>2MiB413; local media thiếu/hỏng409 INVALID_STATE; IO/DB tạm thời503 RETRYABLE_SERVER_ERROR, retryable=true. Auth/role trước body/filesystem. [DTO/transaction/errors/schema/evidence](EX03_RICH_IMPORTER_VERIFICATION.md), [chữ ký EX02](EX02_RICH_EXAM_CONTRACT_V1.md).
+
+V1 import/đề ngắn giữ; V1 create-session từ exam content_version2 trả409 INVALID_STATE trước mutation. Chưa mở candidate GET rich/image, visual READY, catalog/preparation hoặc START gates. WSv0 và Listening runtime giữ nguyên. Phần này chỉ thuộc PR EX03, chưa merge main; kết quả runtime cuối xem report, không lấy fixture MOCK thay production acceptance.
+
 Đối chiếu hiện trạng T3-C5 (13/10/2026, main `f97c081`): [bản nháp đồng bộ và giới hạn](MONITORING_SYNC_REPORT_DRAFT.md). Server delta, scan refresh và candidate opt-in đã có từ T3-C2/C4; các đoạn theo ngày cũ ghi “chưa có/chưa chạy” bên dưới mô tả phạm vi task lúc đó. FULL vẫn mặc định; local C4 có bằng chứng riêng, LAN hai máy/B review/gate vẫn chưa chốt.
 
 **Trạng thái: v0 có login/Bearer, C3 event/queue/retry, A4 heartbeat/presence/history và B3 dashboard. T2-C1 bổ sung OPEN/full/CLOSE, state RAM, HTTP/MONITOR_STATE và tab process hiện tại. T3-C2 có reducer delta/resync và capability thử nghiệm; server/client delta mặc định tắt, candidate factory vẫn full.** File này mô tả những gì code thật đang gửi và nhận. Quy tắc nghiệp vụ đằng sau nằm ở `docs/plan-v1/02_HOP_DONG.md`; không chép lại ở đây. Các mục chặng 1 bên dưới ghi phạm vi lịch sử tại thời điểm task đó; contract T2-C1 ở cuối là phần bổ sung hiện tại.
@@ -964,7 +970,14 @@ Không đổi PROCESS_OBSERVED/FULL/DELTA/presence/gap/Listening/QD21 hoặc das
 
 19/10/2026: [Rich HTTP contract](EX02_RICH_EXAM_CONTRACT_V1.md) và [ADR-V2-03](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) là TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn xác nhận](plan-v2/EX02_TEAM_APPROVAL_20261019.md), không phải wire runtime mới. Preparation nhúng Part1 visual manifest; image route SCHEDULED chỉ allowlist Part1/current manifest; visual/ready và combined readiness dùng HTTPv2. Full exam/options/answers vẫn chặn trước START; cả Audio+Visual READY là precondition, LISTENING_START hiện có là authority duy nhất. EX06 phải bridge rich DTO sau START và image-visible gate trước MediaPlayer.play, không GETv1 hoặc player thứ hai. Giữ ErrorCode/ApiErrorResponse/WSv0, legacy QD21/FULL/no-replay. Chưa controller/DTO production, không GENERAL_START hoặc runtime/GUI PASS.
 
-
 ### 20/10/2026 — kiểm tích hợp C bởi Codex
 
 [Review/receipt](../evidence/c-technical-review-20261020/REPORT.md) xác nhận5001MOCKsignal quaWS/COMMIT/ACK và51trangHTTP≤100/fixed-through/concurrentinsert/mấtquyền; API signal không cócap5000. RunnerTEST cô lập launcher options và truyềnUTC trực tiếp, không nới wire/parser/timeout hoặc production policy. V13/Flyway vẫnáp khiOFF, runtime lane OFF/FULLdefault giữnguyên; ownerpolicy/physicalkhông đượcphêduyệt bằngCI/merge.
+
+## EX05 — image route fail-closed, 19/10/2026
+
+GET `/api/v2/attempts/{attemptId}/images/{mediaId}` đã register: token→CANDIDATE→owner trước policy/files; chưa có EX07 authority nên owned request409 INVALID_STATE, foreign/unknown403. Không bytes/checksum trước quyền. Khi EX07 cấp context hợp lệ: SCHEDULED graph Part1/current query, IN_PROGRESS committed visual ID/deadline; full200/no-store/nosniff/X-Image-SHA256, không ETag/304/Range shortcut. Chưa công bố preparation/visual READY/full rich GET. DTO VisualManifest/VisualImageSlot theo EX02 đã duyệt, WSv0 không đổi.
+
+## EX-07 — endpoint PROCTORED_V2 (nhánh chưa merge, 20/10/2026)
+
+Có trên nhánh `feat/ex07-rich-session-lifecycle-20261019`, chưa có trên `main`. Shape DTO đúng [contract EX-02 §4–7.1](EX02_RICH_EXAM_CONTRACT_V1.md); luồng gọi cho FE ở [EX07_SESSION_LIFECYCLE §1](EX07_SESSION_LIFECYCLE.md). Route: `GET /api/v2/exams`, `POST /api/v2/sessions`, `GET /api/v2/attempts/{id}/preparation`, `GET /api/v2/attempts/{id}/exam`, `POST /api/v2/attempts/{id}/visual/ready`, `GET /api/v2/sessions/{id}/readiness`; START vẫn là `POST /api/v1/sessions/{id}/listening/start`. WS v0 không đổi (vẫn `LISTENING_START` sau COMMIT).

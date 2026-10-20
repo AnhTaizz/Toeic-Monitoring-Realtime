@@ -1,0 +1,7 @@
+package vn.edu.toeic.protocol.exam.rich;
+
+import java.util.List;
+import java.time.LocalDate;
+
+/** DTO import rich; khong duoc dung lam candidate projection. */
+public record OptionContent(String optionId, int orderIndex, String text) {}
