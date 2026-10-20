@@ -3,7 +3,11 @@
   "files": [
     {
       "file": "REPORT.md",
-      "sha256": "631b6b9b8285845248bcfdf9a053b5455ed5741088f7d6c79372fad5d3a22cb2"
+      "sha256": "1a74d7ab1027f8218ca250e7948dbf96f109476bf4056a7897df695c178db933"
+    },
+    {
+      "file": "REVIEW-20261020.md",
+      "sha256": "fc55a9334a2773b5bd91b04be92dc85b6b32c2d7d812cc1f7ab98e5282d4336e"
     },
     {
       "file": "build-receipt-c77d8f8.json",
@@ -20,6 +24,10 @@
     {
       "file": "raw-manifest.json",
       "sha256": "e9ce5999990d1368c29005d155a592b3a5cc937de0b5e0fae72b5f370bfbc6e4"
+    },
+    {
+      "file": "review-20261020.json",
+      "sha256": "69029bdd28df539932a8c2dbfe7d93ba972e2dbcab231c999cebb0e09e09477c"
     },
     {
       "file": "verification-c77d8f8.json",

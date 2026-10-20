@@ -2,6 +2,8 @@
 
 **USER_AUTHORIZED_EXPERIMENT — OWNER/PHYSICAL_ACCEPTANCE_PENDING — NOT_DONE.**
 
+Review tiếp ngày20/10: [findings/fix/verification và hành vi migration OFF](REVIEW-20261020.md), source mới2d73605; số c77/0f9 bên dưới giữ như lịch sử, không gán cho source mới.
+
 ## Nguồn ủy quyền và phạm vi
 
 Người dùng trong phiên19/10/2026: “Tôi cho phép triển khai luồng MON-07 thử nghiệm theo mục 11.1 của PR #72 tại c9a5829.” Chỉ áp dụng D07-01–04 cho fixture MOCK → client delivery → REAL WS → PostgreSQL TEST cách ly → ACK sau COMMIT → history phân trang. Đây là **ủy quyền triển khai thử nghiệm của người dùng**, không là chữ ký/approval A/B/C hoặc phê duyệt D07-05.
@@ -15,7 +17,7 @@ Base chính xác `c9a5829a022b6810d1d6db2da240d57b95d3ed81` của [PR72](https:/
 - RAM256/1MiB/2flight-write, ACK5s/max5/backoff1/2/4/8s/pump25ms; guard mỗi dispatch, không retry khi write cũ chưa hoàn tất. FAILED/EXHAUSTED tính vào bound; overflow count/time/unconfirmed cục bộ, không phát SIGNAL_GAP/OBSERVER_STATUS chưa advertised.
 - Offline60s/retention30ngày **chưa áp dụng**. Không observer/capture thật; TEST schema chỉ có dữ liệu MOCK và được DROP bằng fixture teardown. Không disk queue hoặc purge job production.
 
-## Kiểm chứng cuối c77d8f8
+## Kiểm chứng trước review c77d8f8
 
 Source **`c77d8f84d00581eef54dddfc5cf7768764f3fa68`**; [summary/cases](verification-c77d8f8.json), [receipt JAR mới](build-receipt-c77d8f8.json), [raw/hash bổ sung](raw-manifest-c77d8f8.json). Bản verification/receipt0f9d8e7 bên dưới giữ nguyên như lịch sử, không là source cuối. JAR/report/receipt0f9d8e7 và7cb7478 đã giữ riêng trong ignored artifact-history; ba JAR0f9d8e7 kiểm exacthash khớp receipt công bố.
 

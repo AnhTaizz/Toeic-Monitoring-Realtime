@@ -816,3 +816,12 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 
 - Bổ sung regression thật: expiry trong session-lock wait đãFAIL trên3674633+tests (DBclock target-list tính trước lockwait);7cb7478 đọc DBclock sau locks. UnitterminalFAILED/globalUNAUTHORIZED cleanup đãFAIL trên7cb7478+tests; c77d8f8 closeworker/queue/reportunconfirmed, actual tokenrevoke casePASS. Giữraw/XML/JAR/report/receipt cũ, không sửa evidence lịch sử.
 - Sourcec77d8f8 focused219PASS/0SKIP, fullverify1034total=1028PASS/6SKIP/0FAIL/ERROR;44new cases subset/14REAL PG/WS,0schema/clusterstop0. [Report cuối](../evidence/v2-c-mon07-signal-pipeline/REPORT.md), versioned receipt/hash mới. Chỉ docs/evidence sau source; DraftPR74 stacked PR72, CI đúngpublicationHEAD theoPR. Không merge/approve/DONE/observer/push/dashboard/D07-05; FULLdefault/gate/physicalpending giữ nguyên.
+
+
+## 20/10/2026 · C/agent · review và sửa slice MON-07 PR74
+
+- Đối chiếu GitHub/Git: PR72/74 Draft/open, c9a5829 → 8b1b388; main3bdefe6/V12, worktree sạch và root f98a37f giữ nguyên. CI8b1b388 run39347449291 SUCCESS là baseline, không approval hoặc CI source sửa.
+- Review toàn đường MOCK → serialize/queue/WS → auth/transaction/COMMIT → ACK/dequeue → paged history. Tái hiện 6 adapter regression FAIL (lease identity/stale heartbeat ACK+FORBIDDEN/wrong run/queued IO/old write deleting new correlation) và REAL HTTP/PG expiry sau assignment lock vẫn200 thay401. Logs/XML giữignored; không sửa expected hoặc timeout để che lỗi.
+- Sửa RealtimeClient trực tiếp theo quyền user giao, B review identity/guard/owned cleanup; A/C review clock sau final assignment lock trong SignalService. Source2d73605 focused227PASS/0SKIP,16REAL PG cases; fullverify1042total=1036PASS+6SKIP/0FAIL/ERROR và JAR SUCCESS, teardown0schema/stop0. Receipt nguồn/JAR mới và evidence trướcfix trong review-20261020.json; CI exact publication HEAD theo Draft PR74 saupush.
+- Kiểm OFF trên schema TEST riêng: Flyway13 SUCCESS, bảng signal/counter rỗng nhưng không service/routes. Đây là migration additive độc lập runtime flag, không sửa SQL đã áp dụng hoặc DB dev. Giữ raw và JAR/receipt c77 cũ với hash đúng. [Review/evidence](../evidence/v2-c-mon07-signal-pipeline/REVIEW-20261020.md).
+- Chỉ MOCK/TEST; không observer/USB/push/dashboard/signal mới/offline60s/retention30ngày/.env/tracker. FULL default; gate/physical pending, không ký A/B/C/MON07DONE hoặc merge72/74.

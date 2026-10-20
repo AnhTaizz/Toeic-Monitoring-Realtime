@@ -440,3 +440,8 @@ User cho phép D07-01–04 PR72c9a5829 cho MOCK/REAL WS/PG TEST/commit ACK/histo
 Kết quả slice source0f9d8e7: focused216PASS/fullverify1025PASS+6SKIP,12REAL PG/WS cases,41case mới subset; teardown0schema/stop0, JARreceipt cóhash. Reviewer A/C xem auth/locks/V13/cursor, B xem capability current run/ACK/admission/writecleanup; broader22matrix/hardware chưa PASS. CI exactHEAD trong Draft PR; không tự merge/DONE.
 
 Source cuối c77d8f8/DraftPR74: focused219PASS/fullverify1028PASS+6SKIP,44new cases subset/14REAL PGWS; DBclock sau locks và terminalFAILED cleanup có regression trướcfix. Versionedreceipt/evidence mới, bản0f9d8e7/7cb7478 giữnguyên. Chỉ user-authorized experiment; A/C+B review cònpending, không MON07DONE hoặc merge.
+
+
+### Ghi chú làm dở — review MON-07 PR74, 20/10/2026
+
+Đã sửa 7 lỗi có regression trước fix tại [review](../../evidence/v2-c-mon07-signal-pipeline/REVIEW-20261020.md), source2d73605/focused227PASS,16PG/WS cases. A/C review token expiry sau assignment wait/transaction/cursor; B review lease identity, queued write guard và callback cleanup đúng request/generation. Flyway V13 vẫn áp khi experiment OFF, được kiểm trên TEST riêng; OFF không undo schema. Fullverify/JAR1036PASS+6SKIP/0FAIL/ERROR, teardown0schema/stop0; CI exact publication HEAD theo report/PR. Bước tiếp theo cho C: cùng owner review các diff này; >5000 typed history/GUI/LAN/hardware còn mở, không tự triển khai hoặc coi MON07DONE.

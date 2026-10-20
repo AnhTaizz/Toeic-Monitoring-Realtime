@@ -952,3 +952,10 @@ Nhánh `stabilize/final-rc-20261017`. Không thêm endpoint, field hay giá tr�
 - Queue RAM riêng 256/1MiB/2flight, ACK5s/max5, backoff1/2/4/8s; immutable retries, finite local drops/unconfirmed, không gap/status wire. Signal admission giữ8credit cho legacy/heartbeat, max2write mới; ACK reserve không chữa socket stall. Write treo vẫn UNKNOWN, không tự mở reconnect thứ hai. Terminal transport FAILED (kể cả token denial trước parse không correlation) đóng delivery/worker, forget correlations và ghi discarded count.
 
 Không đổi PROCESS_OBSERVED/FULL/DELTA/presence/gap/Listening/QD21 hoặc dashboard. Quyền TEST không mở terminal history hay cho phép capture dữ liệu thật.
+
+
+### MON-07 — review 20/10/2026
+
+[Findings/kiểm chứng](../evidence/v2-c-mon07-signal-pipeline/REVIEW-20261020.md): capability và ACK heartbeat gắn đúng đối tượng lease; thay lease kể cả cùng chuỗi scope cần heartbeat/capability mới. observerSessionId phải trùng run được confirm. Signal write chờ kiểm lại lease ngay trước socket IO; callback lỗi cũ chỉ dọn correlation đúng generation/request object. Scoped FORBIDDEN lease cũ không dừng lease mới; global UNAUTHORIZED vẫn terminal. Proctor expiry được kiểm lại bằng clock DB sau assignment row lock, trước history/capability.
+
+**Flyway khi OFF:** với cấu hình mặc định, server vẫn áp V13 additive vì spring.flyway.enabled=true/location db/migration; flag signal chỉ tắt service/routes/dispatch. OFF không undo/drop bảng hoặc dữ liệu. Deployment cần quyền DDL và kiểm collision/version; không sửa applied migration hoặc dùng Flyway clean để tắt lane. Kiểm OFF chỉ chạy trên schema TEST cách ly, chưa áp DB dev dùng chung.
