@@ -1,4 +1,4 @@
-package vn.edu.toeic.client.monitoring.focus;
+package vn.edu.toeic.client.monitoring;
 
 import com.google.gson.*;
 import java.io.*;

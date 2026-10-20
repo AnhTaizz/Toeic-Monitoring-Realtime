@@ -1,21 +1,24 @@
-package vn.edu.toeic.client.monitoring.focus;
+package vn.edu.toeic.client.monitoring;
 
 import com.google.gson.JsonObject;
 import java.time.Clock;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.application.Platform;
-import javafx.stage.Window;
+import javafx.stage.Stage;
+import vn.edu.toeic.client.monitoring.focus.*;
 import vn.edu.toeic.client.monitoring.signal.*;
+import vn.edu.toeic.client.monitoring.window.*;
 import vn.edu.toeic.client.realtime.*;
 import vn.edu.toeic.protocol.monitoring.signal.FocusSignal;
+import vn.edu.toeic.protocol.monitoring.signal.WindowSignal;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
 /**
- * Opt-in MON-03 coordinator. It reuses the authorized process-monitoring heartbeat and
- * current WebSocket, confirms the scoped HTTP capability, and owns all focus resources.
+ * Opt-in MON-03/MON-04 coordinator. It reuses the authorized process-monitoring heartbeat
+ * and current WebSocket, confirms the scoped HTTP capability, and owns the exam observers.
  */
-public final class CandidateFocusMonitoring implements AutoCloseable {
+public final class CandidateExamSignalMonitoring implements AutoCloseable {
     public static final String ENABLE_PROPERTY = "toeic.monitoring.signal-experiment-enabled";
     private final String attemptId;
     private final String collectorSessionId;
@@ -23,8 +26,10 @@ public final class CandidateFocusMonitoring implements AutoCloseable {
     private final SignalCapabilityApiClient api;
     private final SignalRunContext run;
     private final SignalDelivery delivery;
-    private final FocusSignalAdapter adapter;
-    private final FxFocusMonitor monitor;
+    private final FocusSignalAdapter focusAdapter;
+    private final FxFocusMonitor focusMonitor;
+    private final WindowSignalAdapter windowAdapter;
+    private final FxWindowMonitor windowMonitor;
     private final AutoCloseable messages;
     private final AutoCloseable connections;
     private final AutoCloseable accessRejections;
@@ -33,25 +38,29 @@ public final class CandidateFocusMonitoring implements AutoCloseable {
     private volatile JsonObject capability;
     private volatile long capabilityGeneration = -1;
 
-    public static CandidateFocusMonitoring start(Window examWindow, String serverUrl, String token,
+    public static CandidateExamSignalMonitoring start(Stage examWindow, String serverUrl, String token,
             String attemptId, String collectorSessionId, RealtimeClient realtime) {
         if (!Boolean.getBoolean(ENABLE_PROPERTY)) return null;
-        return new CandidateFocusMonitoring(examWindow, serverUrl, token, attemptId, collectorSessionId, realtime);
+        return new CandidateExamSignalMonitoring(examWindow, serverUrl, token, attemptId, collectorSessionId, realtime);
     }
 
-    private CandidateFocusMonitoring(Window examWindow, String serverUrl, String token,
+    private CandidateExamSignalMonitoring(Stage examWindow, String serverUrl, String token,
             String attemptId, String collectorSessionId, RealtimeClient realtime) {
-        if (!Platform.isFxApplicationThread()) throw new IllegalStateException("Focus monitoring must start on JavaFX thread");
+        if (!Platform.isFxApplicationThread()) throw new IllegalStateException("Exam signal monitoring must start on JavaFX thread");
         this.attemptId = Objects.requireNonNull(attemptId);
         this.collectorSessionId = Objects.requireNonNull(collectorSessionId);
         this.realtime = Objects.requireNonNull(realtime);
         api = new SignalCapabilityApiClient(serverUrl, token);
-        run = new SignalRunContext(attemptId, "focus-" + UUID.randomUUID());
+        run = new SignalRunContext(attemptId, "exam-signals-" + UUID.randomUUID());
         delivery = new SignalDelivery(run, realtime);
-        adapter = new FocusSignalAdapter();
-        long observerGeneration = adapter.start(run, delivery);
-        monitor = FxFocusMonitor.attach(examWindow, adapter, observerGeneration, Clock.systemUTC(),
+        focusAdapter = new FocusSignalAdapter();
+        long focusGeneration = focusAdapter.start(run, delivery);
+        focusMonitor = FxFocusMonitor.attach(examWindow, focusAdapter, focusGeneration, Clock.systemUTC(),
                 System::nanoTime, realtime::observationOrigin);
+        windowAdapter = new WindowSignalAdapter();
+        long windowGeneration = windowAdapter.start(run, delivery);
+        windowMonitor = FxWindowMonitor.attach(examWindow, windowAdapter, windowGeneration,
+                Clock.systemUTC(), realtime::observationOrigin);
         messages = realtime.onMessage(this::message);
         connections = realtime.onConnectionState(this::connection);
         accessRejections = realtime.onMonitoringAccessRejected(rejection -> {
@@ -89,7 +98,7 @@ public final class CandidateFocusMonitoring implements AutoCloseable {
         api.capabilities(attemptId).whenComplete((value, failure) -> {
             requestInFlight.set(false);
             if (closed.get() || failure != null || expected != realtime.connectionGeneration()) return;
-            if (!supportsFocus(value)) {
+            if (!supportsRequiredTypes(value)) {
                 Platform.runLater(this::close);
                 return;
             }
@@ -99,13 +108,15 @@ public final class CandidateFocusMonitoring implements AutoCloseable {
         });
     }
 
-    private static boolean supportsFocus(JsonObject value) {
+    private static boolean supportsRequiredTypes(JsonObject value) {
         if (value == null || !value.has("supportedEventTypes") || !value.get("supportedEventTypes").isJsonArray()) return false;
+        boolean focus = false, window = false;
         for (var item : value.getAsJsonArray("supportedEventTypes")) {
-            if (item.isJsonPrimitive() && item.getAsJsonPrimitive().isString()
-                    && FocusSignal.TYPE.equals(item.getAsString())) return true;
+            if (!item.isJsonPrimitive() || !item.getAsJsonPrimitive().isString()) continue;
+            focus |= FocusSignal.TYPE.equals(item.getAsString());
+            window |= WindowSignal.TYPE.equals(item.getAsString());
         }
-        return false;
+        return focus && window;
     }
 
     private void confirm() {
@@ -120,7 +131,8 @@ public final class CandidateFocusMonitoring implements AutoCloseable {
 
     @Override public void close() {
         if (!closed.compareAndSet(false, true)) return;
-        monitor.close();
+        windowMonitor.close();
+        focusMonitor.close();
         run.close();
         delivery.close();
         api.close();
