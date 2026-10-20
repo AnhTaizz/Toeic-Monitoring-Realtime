@@ -1,0 +1,353 @@
+{
+  "baseSource": "159954bc7eb74b83e86d7963293fae8e0615a9e1",
+  "baseline": {
+    "passCount": 12,
+    "skip": 0,
+    "source": "159954bc7eb74b83e86d7963293fae8e0615a9e1"
+  },
+  "campaignCollection": "NOT_RUN; exactly one smoke-short only",
+  "codeHashes": {
+    "analyze.py": "0c049cbcddd4b780698d36b4b55a7c1152f214e33d3c728f0f6c41d657bca950",
+    "derived.py": "0bcbcd11e945c474a67343580ca787731f630ec20013b1558a2dbb05f28be562",
+    "test_derived.py": "50818f14177c32eeeeb1503a72748fe2b1471a7037c9c11f579f3c4a8fc7f44d"
+  },
+  "deltaGate": "NOT_DECIDED",
+  "e1Acceptance": "PENDING",
+  "e2": "NOT_RUN",
+  "environment": {
+    "jdk": "Temurin21.0.10+7",
+    "os": "Windows11 x64",
+    "python": "3.15.0b3"
+  },
+  "fullDefault": true,
+  "integratedMainSource": "a0ad030faf9bcf2b0b473c2eed49778ca63bc9ec",
+  "integratedVerificationSource": "1f75f570e29f6e33d1d244a7eca6e241a27ea66a",
+  "integration": {
+    "mock": {
+      "changedTrial": "trial-002",
+      "collectorCpuOneCoreMean": 10,
+      "detected": 1,
+      "eligible200ms": 2,
+      "inconclusive": 0,
+      "label": "MOCK hand-calculated",
+      "missRate": 0.5,
+      "missed": 1
+    },
+    "rawHistorical": "NOT_AVAILABLE; checked documented paths under 19 registered roots only",
+    "realSmoke": {
+      "campaignStatus": "PARTIAL",
+      "changedJoinTrials": 0,
+      "derivedJoinSha256": "d3da1bfd37e09428e38ca080027503350f0e857463c10f31ae7145bceb82b2fd",
+      "deterministicOutputs": {
+        "analysis-receipt.json": "a647d005b88d8f21ffb6d6046f327ad3e4e118c9209e47eeca765a5d04a35dff",
+        "analysis.md": "087bf2ad75961d7f9760bf7f697ff423a4e75b2e5ae27ecc9b068e1e98e78b33",
+        "campaign-status.json": "29c3f962024be5f51e8228dcf5bbcdf6dc77408d7cec3be6c4f2e808a0f63cc6",
+        "join-differences.csv": "cdd4a7e4a6f95465fccf32cd887d6daab3d96a5392d1388bbf7883091b9e41c7",
+        "run-01-poll-500-events.csv": "c38e2daa8374efa5f80be09f10cc587b97f03aea50d0f2ba9578320222a2a388",
+        "run-status.json": "04dd6c70717bb6e8c34d8259a505da3e876d43a2a7bd98e4e4ad9e1ba67bd048",
+        "summary-by-duration.csv": "be3966a30ee3c4f92c6d94ba15831d34f99176611636dd40de1cb2870e37742f",
+        "summary.csv": "14ffa0ee4daf5ece41ffec99e82b90c07e9e2e206939a66f85e2e86c97d75e51"
+      },
+      "inputsAfter": {
+        "e1-manifest.json": "5622652bfe69d8180f62856d02bcff524aa14ae3fd1599c5611871b7297301b7",
+        "ground-truth.jsonl": "2d2a30804c2e8ec766ce0f77a3426bb1f5acce93a976f4c75556fb94b77200f7",
+        "join.json": "d3da1bfd37e09428e38ca080027503350f0e857463c10f31ae7145bceb82b2fd",
+        "manifest.json": "ac7acbb963ade0505c8538a9cbbaee37f1d524c5106e99c4a2ef291a9fd48737",
+        "metadata.json": "ff5a754dc220c560884c9354015b2879b5522d320f08d273e8e7ea4de4b9e49b",
+        "observations.jsonl": "26bbfaa849e3fc7d1c54985c25f2e2fca75057cba94a4dd338c679cf240354e9",
+        "resources.csv": "53ed46ac4a4ae5c63e76ab424929967635bb2b588b494e310581c1bd2a02671e"
+      },
+      "inputsBefore": {
+        "e1-manifest.json": "5622652bfe69d8180f62856d02bcff524aa14ae3fd1599c5611871b7297301b7",
+        "ground-truth.jsonl": "2d2a30804c2e8ec766ce0f77a3426bb1f5acce93a976f4c75556fb94b77200f7",
+        "join.json": "d3da1bfd37e09428e38ca080027503350f0e857463c10f31ae7145bceb82b2fd",
+        "manifest.json": "ac7acbb963ade0505c8538a9cbbaee37f1d524c5106e99c4a2ef291a9fd48737",
+        "metadata.json": "ff5a754dc220c560884c9354015b2879b5522d320f08d273e8e7ea4de4b9e49b",
+        "observations.jsonl": "26bbfaa849e3fc7d1c54985c25f2e2fca75057cba94a4dd338c679cf240354e9",
+        "resources.csv": "53ed46ac4a4ae5c63e76ab424929967635bb2b588b494e310581c1bd2a02671e"
+      },
+      "originalJoinSha256": "d3da1bfd37e09428e38ca080027503350f0e857463c10f31ae7145bceb82b2fd",
+      "rawSource": "5bbeaf2399490f642e71456fdce93a82907b2b8d",
+      "runs": 1,
+      "summaryUnchanged": true,
+      "trials": 3
+    },
+    "schemaVersion": "e1-derived-integration-check-v1",
+    "toolingSource": "c7f12a762aff07e1ec7afee7f71813a3411ba7e7"
+  },
+  "integrationVerification": {
+    "analysisExit": 0,
+    "e1JavaSourcesChanged": false,
+    "proofJavaSourceMatchesCurrentMeasuredAt": "c7f12a762aff07e1ec7afee7f71813a3411ba7e7",
+    "pythonPass": 27
+  },
+  "localArtifacts": [
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/baseline12.private.log",
+      "sha256": "609ab9505df6629e4013b8a8c42e75724155ae457956269d4339249eed2e0b94"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/baseline-proof.json",
+      "sha256": "6ca06e534af6c54bcc016beb1e25e2546ba4a7df755e68e5fb69bf1e2002047f"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/python-committed.private.log",
+      "sha256": "75e0dbcbfa339414b08a3233dedaa18a4dc02c250fa953f9acf30bc1b3b83517"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/python-final-review.private.log",
+      "sha256": "d0440f1923b115d71510b4f1f51014c44007b6c9fc92b30d66aea2e1d1862c63"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/java-smoke.private.log",
+      "sha256": "390975ce3029c9009e83936b967c368fae071ed73fa6f048b5030d153fec356f"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/java-smoke-quoted.private.log",
+      "sha256": "7bda569ad3d5274279600ac011c0eecf166db002a19ecfcc8ea01a1650c47a79"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/derive-real.private.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derive.private.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-analysis.private.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integration-result.json",
+      "sha256": "baca869640e451331a1d522cf75c5da8bd10fcd3ff618e39e514e4b180e5b95d"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/tool-build-proof.json",
+      "sha256": "35a29ab6b6fee44abbef1c12a8fec98d2aefc564b1451acc8bf289b85c93fe69"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/baseline-proof.py",
+      "sha256": "61af23bcc76ea7cc2628010d3825ea5c0854fa4413848373fba237e5725ad2b3"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integration-check.py",
+      "sha256": "9766617cd40309ecfb37539c965ff25086c6966a5fff7d8b00c6f779666eb9ae"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/python-publication.private.log",
+      "sha256": "d0ac38c433518c0bf20b52a5fbebcc3782deb4f50c1587d9c8ce521426b85a6e"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/python-integrated-main.private.log",
+      "sha256": "f40e31ee37a81cb493bb739d97a996b4d55c6969c507f7eabaf9d618f62b1dd9"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis.private.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-analysis/analysis-receipt.json",
+      "sha256": "a647d005b88d8f21ffb6d6046f327ad3e4e118c9209e47eeca765a5d04a35dff"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-analysis/analysis.md",
+      "sha256": "087bf2ad75961d7f9760bf7f697ff423a4e75b2e5ae27ecc9b068e1e98e78b33"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-analysis/campaign-status.json",
+      "sha256": "29c3f962024be5f51e8228dcf5bbcdf6dc77408d7cec3be6c4f2e808a0f63cc6"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-analysis/join-differences.csv",
+      "sha256": "cdd4a7e4a6f95465fccf32cd887d6daab3d96a5392d1388bbf7883091b9e41c7"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-analysis/run-01-poll-500-events.csv",
+      "sha256": "c38e2daa8374efa5f80be09f10cc587b97f03aea50d0f2ba9578320222a2a388"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-analysis/run-status.json",
+      "sha256": "04dd6c70717bb6e8c34d8259a505da3e876d43a2a7bd98e4e4ad9e1ba67bd048"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-analysis/summary-by-duration.csv",
+      "sha256": "be3966a30ee3c4f92c6d94ba15831d34f99176611636dd40de1cb2870e37742f"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-analysis/summary.csv",
+      "sha256": "14ffa0ee4daf5ece41ffec99e82b90c07e9e2e206939a66f85e2e86c97d75e51"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-repeat/analysis-receipt.json",
+      "sha256": "a647d005b88d8f21ffb6d6046f327ad3e4e118c9209e47eeca765a5d04a35dff"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-repeat/analysis.md",
+      "sha256": "087bf2ad75961d7f9760bf7f697ff423a4e75b2e5ae27ecc9b068e1e98e78b33"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-repeat/campaign-status.json",
+      "sha256": "29c3f962024be5f51e8228dcf5bbcdf6dc77408d7cec3be6c4f2e808a0f63cc6"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-repeat/join-differences.csv",
+      "sha256": "cdd4a7e4a6f95465fccf32cd887d6daab3d96a5392d1388bbf7883091b9e41c7"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-repeat/run-01-poll-500-events.csv",
+      "sha256": "c38e2daa8374efa5f80be09f10cc587b97f03aea50d0f2ba9578320222a2a388"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-repeat/run-status.json",
+      "sha256": "04dd6c70717bb6e8c34d8259a505da3e876d43a2a7bd98e4e4ad9e1ba67bd048"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-repeat/summary-by-duration.csv",
+      "sha256": "be3966a30ee3c4f92c6d94ba15831d34f99176611636dd40de1cb2870e37742f"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived-repeat/summary.csv",
+      "sha256": "14ffa0ee4daf5ece41ffec99e82b90c07e9e2e206939a66f85e2e86c97d75e51"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/MOCK-final-analysis/analysis-receipt.json",
+      "sha256": "c80bf06746a3ec8c235958042f8cf6dbe753ed68420b332ec9b9feca52be262b"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/MOCK-final-analysis/analysis.md",
+      "sha256": "0f122e9f52562aaca3e0512254f852b18c068c4a0617841430639fcdae50edc5"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/MOCK-final-analysis/campaign-status.json",
+      "sha256": "85a66de4f6db45d6f0f3a1dbbd43a0ab4e20852bb693d32e57355f780934b431"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/MOCK-final-analysis/join-differences.csv",
+      "sha256": "7c601f31778fe10bf9075ad6b15f5e4740504eb184eb9ddc0ae4f64b8b1c3f7c"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/MOCK-final-analysis/run-MOCK-events.csv",
+      "sha256": "7ebbaf0fff0d1c7e058a4acc51c9a35e0c02fa860b3eea5bbe42e6bbde02999c"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/MOCK-final-analysis/run-status.json",
+      "sha256": "c15ef4c9da55d118973ee8a3a6910c55a284f24514c24c6f28c528eb58c15a91"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/MOCK-final-analysis/summary-by-duration.csv",
+      "sha256": "a94abb3e0194d42aa4787bdaa91936a71c8e3f6640faf41dd67ce924fd29d964"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/MOCK-final-analysis/summary.csv",
+      "sha256": "c2551c5f17d291e3b88955405fac1d5c909cc0be268b69b11a7a2546a9b49f91"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/analysis-receipt.json",
+      "sha256": "a00d704d6a45c2f2994b007ccdf39cd41b82c9fda9ba4ee610584bdcdf772fba"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/analysis.md",
+      "sha256": "087bf2ad75961d7f9760bf7f697ff423a4e75b2e5ae27ecc9b068e1e98e78b33"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/campaign-status.json",
+      "sha256": "29c3f962024be5f51e8228dcf5bbcdf6dc77408d7cec3be6c4f2e808a0f63cc6"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/join-differences.csv",
+      "sha256": "cdd4a7e4a6f95465fccf32cd887d6daab3d96a5392d1388bbf7883091b9e41c7"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/run-01-poll-500-events.csv",
+      "sha256": "c38e2daa8374efa5f80be09f10cc587b97f03aea50d0f2ba9578320222a2a388"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/run-status.json",
+      "sha256": "04dd6c70717bb6e8c34d8259a505da3e876d43a2a7bd98e4e4ad9e1ba67bd048"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/summary-by-duration.csv",
+      "sha256": "be3966a30ee3c4f92c6d94ba15831d34f99176611636dd40de1cb2870e37742f"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/integrated-analysis/summary.csv",
+      "sha256": "14ffa0ee4daf5ece41ffec99e82b90c07e9e2e206939a66f85e2e86c97d75e51"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived/run-01-poll-500/provenance.json",
+      "sha256": "e7b188c466407c823ee8927f4499d5730b952a34d88bed51f52da3a3eaadb554"
+    },
+    {
+      "availability": "LOCAL IGNORED; not uploaded or a GitHub link",
+      "path": "target/e1-derived-check/final-derived/run-01-poll-500/join.json",
+      "sha256": "d3da1bfd37e09428e38ca080027503350f0e857463c10f31ae7145bceb82b2fd"
+    }
+  ],
+  "pythonTests": {
+    "error": 0,
+    "fail": 0,
+    "newTestMethods": 15,
+    "passCount": 27,
+    "skip": 0
+  },
+  "qa05Done": false,
+  "schemaVersion": "c-e1-derived-verification-v1",
+  "signalExperiment": "OFF",
+  "toolBuildProof": {
+    "jarSha256": "bf2904c0db43b1c485fc65023977b1db2e641a9c5e26b3d31f245976221f4353",
+    "javaSourceMatchesCurrent": true,
+    "sourceReceiptSha256": "fc63f18eb35ba6a709d72abf1ba05f6a96c525f44573e25d8f4c7d28b4dabd84",
+    "toolRuntimeSource": "5bbeaf2399490f642e71456fdce93a82907b2b8d"
+  },
+  "toolingSource": "c7f12a762aff07e1ec7afee7f71813a3411ba7e7"
+}

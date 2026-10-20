@@ -969,3 +969,10 @@ Source05cc694 clean verify1127PASS/6SKIP/0FAIL/0ERROR, PG18.1/HTTP thật, đề
 - Bảo toàn tuyệt đối database sản xuất \	oeic-db\ (cổng 5433) và worktree khác. Nhánh \eat/ex01-html-pipeline-20261020\ của Agent 4 không bị đụng tới.
 - Push release integration branch lên remote: elease/v2-main-integration-20261020\ sẵn sàng merge vào main.
 - Trạng thái: **READY_FOR_AGENT4_BACKEND**.
+
+## 20/10/2026 · Codex · E1 join dẫn xuất có provenance
+
+- Nhánh riêng từ main159954b, đọc QA05/E1/analyzer/Joiner/HarnessCli/manifest; openPR không có triển khai trùng. Chốt contract nhỏ trong README trước code, Pythonstdlib, user optout codex-with-chatgpt giữ. Không Java/production/DB/wire changes.
+- derived.py gọi HarnessCli join vào root mới, khóa7input và original join/manifest/e1manifest/resources/run/clock/collector/trial/JAR/creator+helper. Analyzer explicit vẫn fullvalidate original rồi mới chọn derived; no fallback/skip validation; diff trial/metric và receipt có input/output/toolhash, finalraw recheck. JAR version bằnghash, source null nếu không kiểmđược; raw/analyzer/toolsource tách riêng, không gánHEAD cho raw cũ.
+- Baseline12PASS, fixture MOCK thayjoin bị analyzer159954b từchối RAW_CHECKSUM đúnggiới hạn; toolingc7f12a7 27PASS/0SKIP gồm15case mới, không cộng baseline như39unique.1smoke-short (3trial) vớiJARsource5bbeaf2 đãkiểmreceipt/hash vàJava sourceequivalent:COMPLETE/resourcesCleanedtrue; rejoin0diff,7rawhash giữ,2analysis có8file giốngbyte/campaignPARTIAL. Invocation Java đầu sai quoting trướcmain giữlog, không retrymeasurement.
+- Rawlịchsử NOT_AVAILABLE:kiểm đúngsuite path trong19registeredworktree roots vàtargetđượcdocs/receipt nêu, không quét ổ/đo lại12. [Report/receipt](../evidence/c-e1-derived-20261020/REPORT.md) safehash/scalar; raw/JAR/CSV/log localignored. FULLdefault/MON07OFF/gate/E1acceptancepending, khôngQA05DONE/tracker/hours. PR/CI/merge sẽghi đúngHEAD trongPR, chỉmerge commit khiđủđiềukiện, giữnghánh.

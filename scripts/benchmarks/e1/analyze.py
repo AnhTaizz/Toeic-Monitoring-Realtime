@@ -1,5 +1,5 @@
 """Phân tích raw E1 bất biến, stdlib Python. Latency parent launch -> scan-end là cận trên, không kernel time."""
-import csv, hashlib, json, math, pathlib, statistics, sys, collections, re
+import csv, hashlib, json, math, pathlib, statistics, sys, collections, re, argparse
 
 def percentile(values, percent):
     return sorted(values)[max(0, math.ceil(len(values)*percent)-1)] if values else None
@@ -62,8 +62,12 @@ def resource_metrics(samples, low, high, period):
                 resourceStatus='OK' if good else 'PARTIAL')
 
 
-def analyze(directory):
+def analyze(directory, derived_joins=None, join_tool=None, provenance_script=None):
     directory=pathlib.Path(directory)
+    if derived_joins is not None:
+        if join_tool is None: raise ValueError('EXPLICIT_JOIN_TOOL_REQUIRED')
+        # Fully validate the immutable original, including its join, even when superseded.
+        analyze(directory)
     manifest=json.loads((directory/'manifest.json').read_text(encoding='utf-8'))
     if manifest['status']!='COMPLETE': raise ValueError('INCOMPLETE run retained')
     if set(manifest['files']) != {'ground-truth.jsonl','observations.jsonl','metadata.json','join.json'}:
@@ -76,6 +80,9 @@ def analyze(directory):
     low,high=metadata['measurementStartElapsedNanos'],metadata['measurementEndElapsedNanos']
     truth=[json.loads(x) for x in (directory/'ground-truth.jsonl').read_text(encoding='utf-8').splitlines()]
     joined=json.loads((directory/'join.json').read_text(encoding='utf-8'))
+    if derived_joins is not None:
+        from derived import load_derived
+        joined=load_derived(directory,derived_joins,join_tool,provenance_script)
     if metadata['status'] != 'COMPLETE' or joined['status'] != 'COMPLETE':
         raise ValueError('INCOMPLETE_METADATA_OR_JOIN')
     for key in ('runId','clockDomain'):
@@ -135,20 +142,72 @@ def campaign_quality(metadata_list):
     return reasons,counts
 
 def main():
-    root=pathlib.Path(sys.argv[1]);out=pathlib.Path(sys.argv[2]);out.mkdir(parents=True,exist_ok=False)
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('root',type=pathlib.Path);parser.add_argument('out',type=pathlib.Path)
+    parser.add_argument('--derived-joins',type=pathlib.Path);parser.add_argument('--join-tool',type=pathlib.Path)
+    parser.add_argument('--provenance-script',type=pathlib.Path)
+    args=parser.parse_args()
+    if bool(args.derived_joins) != bool(args.join_tool) or args.provenance_script and not args.derived_joins:
+        parser.error('--derived-joins and --join-tool must be selected together')
+    root,out=args.root,args.out
+    if args.derived_joins and (out.resolve().is_relative_to(root.resolve()) or out.resolve().is_relative_to(args.derived_joins.resolve())):
+        raise ValueError('OUTPUT_INSIDE_INPUT')
+    out.mkdir(parents=True,exist_ok=False)
+    from derived import inputs,source_version,DIFF_FIELDS
+    run_dirs=sorted(root.glob('run-*'))
+    selection_error=args.derived_joins and (not args.derived_joins.is_dir() or
+        {p.name for p in args.derived_joins.iterdir()}!={p.name for p in run_dirs})
+    receipts=[];diffs=[]
     summary=[];all_events=[];inventory=[];seen_ids=set();metadata_list=[]
-    for run in sorted(root.glob('run-*')):
+    for run in run_dirs:
+        record=dict(run=run.name,rawInputs={})
+        receipts.append(record)
         try:
-            events,rows=analyze(run)
+            before=inputs(run)
+            record['rawInputs']=before
+            if selection_error: raise ValueError('DERIVED_RUN_SET')
+            events,rows=analyze(run,args.derived_joins,args.join_tool,args.provenance_script)
+            record['rawSourceSha']=json.loads((run/'metadata.json').read_text(encoding='utf-8')).get('sourceSha')
+            if args.derived_joins:
+                folder=args.derived_joins/run.name
+                record.update(derivedJoinSha256=digest(folder/'join.json'),provenanceSha256=digest(folder/'provenance.json'))
+                old={r['trialId']:r for r in json.loads((run/'join.json').read_text(encoding='utf-8'))['rows']}
+                new={r['trialId']:r for r in json.loads((folder/'join.json').read_text(encoding='utf-8'))['rows']}
+                for trial in sorted(old):
+                    item=dict(run=run.name,trialId=trial,changed=any(old[trial].get(k)!=new[trial].get(k) for k in DIFF_FIELDS))
+                    for key in DIFF_FIELDS:
+                        item['old_'+key]=old[trial].get(key);item['new_'+key]=new[trial].get(key)
+                    diffs.append(item)
+            if inputs(run)!=before: raise ValueError('RAW_CHANGED_DURING_ANALYSIS')
             if rows[0]["runId"] in seen_ids: raise ValueError("DUPLICATE_RUN_ID")
             seen_ids.add(rows[0]["runId"])
+            record['status']='VALID'
         except (ValueError,KeyError,TypeError,IndexError,OSError) as error:
+            record['status']='INVALID'
             inventory.append(dict(run=run.name,status='INVALID',reason=type(error).__name__+': '+str(error)))
             continue
         metadata_list.append(json.loads((run/"metadata.json").read_text(encoding="utf-8")))
         inventory.append(dict(run=run.name,status='VALID',reason=rows[0]['resourceStatus']))
         write_csv(out/(run.name+'-events.csv'),events);summary.extend(rows);all_events.extend(events)
+    # A first run must remain immutable while later runs/output are being processed too.
+    for record,item in zip(receipts,inventory):
+        if item['status']=='VALID':
+            try:
+                if inputs(root/record['run'])!=record['rawInputs']: raise ValueError('RAW_CHANGED_DURING_ANALYSIS')
+            except (ValueError,OSError) as error:
+                record['status']='INVALID';item.update(status='INVALID',reason=str(error))
     (out/'run-status.json').write_text(json.dumps(inventory,indent=2),encoding='utf-8')
+    def receipt():
+        tools=dict(analyzerSha256=digest(pathlib.Path(__file__)),analyzerSourceSha=source_version(__file__),
+                   validationScriptSha256=digest(pathlib.Path(__file__).with_name('derived.py')),
+                   provenanceScriptSha256=digest(args.provenance_script or pathlib.Path(__file__).with_name('derived.py'))
+                       if (args.provenance_script or pathlib.Path(__file__).with_name('derived.py')).is_file() else None)
+        if args.join_tool: tools['joinToolJarSha256']=digest(args.join_tool) if args.join_tool.is_file() else None
+        value=dict(schemaVersion='e1-analysis-receipt-v1',joinMode='DERIVED' if args.derived_joins else 'ORIGINAL',
+                   tools=tools,runs=receipts,outputs={p.name:digest(p) for p in sorted(out.iterdir()) if p.name!='analysis-receipt.json'})
+        (out/'analysis-receipt.json').write_text(json.dumps(value,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+    if diffs: write_csv(out/'join-differences.csv',diffs)
+    receipt()
     if any(row['status']=='INVALID' for row in inventory):
         raise ValueError('INVALID_RUNS: see run-status.json; no campaign summary emitted')
     if not summary: raise ValueError('NO_RUNS; no synthetic data emitted')
@@ -191,5 +250,6 @@ def main():
     text+=['', 'Miss range là bounds trên chính tập mẫu thu được: known missed/eligible đến (known missed+unknown)/eligible; không gán một kết quả cho unknown, không phải confidence interval thống kê hoặc phép suy thời điểm process mở. PID-only thiếu start vẫn INCONCLUSIVE theo oracle gốc, không nới identity để làm kết quả đẹp.']
     text+=['','SMOKE không là E1 final. E1 final cần đủ12run/3repeats, C review; chỉ đại diện máy/fixture/policy TEST này. Suite chạy tuần tự trong một parent JVM với collector/window mới mỗi run: heap/GC/JIT có thể carryover, các run không chứng minh độc lập hoàn toàn. Ứng dụng nền của workstation không bị đóng băng; rotated order giảm nhưng không loại mọi nhiễu. Không suy hành vi người dùng; không E2/delta/load.']
     (out/'analysis.md').write_text('\n'.join(text),encoding='utf-8')
+    receipt()
 
 if __name__=='__main__':main()
