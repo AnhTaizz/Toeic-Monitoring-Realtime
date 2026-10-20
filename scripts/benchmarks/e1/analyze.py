@@ -189,6 +189,13 @@ def main():
         metadata_list.append(json.loads((run/"metadata.json").read_text(encoding="utf-8")))
         inventory.append(dict(run=run.name,status='VALID',reason=rows[0]['resourceStatus']))
         write_csv(out/(run.name+'-events.csv'),events);summary.extend(rows);all_events.extend(events)
+    # A first run must remain immutable while later runs/output are being processed too.
+    for record,item in zip(receipts,inventory):
+        if item['status']=='VALID':
+            try:
+                if inputs(root/record['run'])!=record['rawInputs']: raise ValueError('RAW_CHANGED_DURING_ANALYSIS')
+            except (ValueError,OSError) as error:
+                record['status']='INVALID';item.update(status='INVALID',reason=str(error))
     (out/'run-status.json').write_text(json.dumps(inventory,indent=2),encoding='utf-8')
     def receipt():
         tools=dict(analyzerSha256=digest(pathlib.Path(__file__)),analyzerSourceSha=source_version(__file__),

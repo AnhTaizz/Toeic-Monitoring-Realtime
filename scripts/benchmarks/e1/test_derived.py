@@ -254,5 +254,19 @@ class DerivedTest(unittest.TestCase):
         self.assertEqual(receipt['runs'][0]['rawInputs'],inputs(self.run))
         self.assertIsNone(receipt['tools']['joinToolJarSha256'])
 
+    def test_raw_changed_after_run_read_is_invalid_before_campaign_output(self):
+        import analyze as module
+        real_write=module.write_csv
+        out=self.root/'concurrent-change'
+        def mutate_after_events(path,rows):
+            real_write(path,rows)
+            if path.name.endswith('-events.csv'):
+                with (self.run/'observations.jsonl').open('ab') as raw:raw.write(b'changed during analysis')
+        argv=['analyze.py',str(self.run.parent),str(out),'--derived-joins',str(self.derived),'--join-tool',str(self.tool)]
+        with patch.object(sys,'argv',argv),patch.object(module,'write_csv',side_effect=mutate_after_events),\
+                self.assertRaisesRegex(ValueError,'INVALID_RUNS'):module.main()
+        self.assertEqual(json.loads((out/'run-status.json').read_text())[0]['status'],'INVALID')
+        self.assertFalse((out/'summary.csv').exists())
+
 
 if __name__=='__main__':unittest.main()

@@ -14,7 +14,7 @@ Provenance `e1-derived-join-v1`: identity gồm directory/runId/clockDomain/coll
 traceStartElapsedNanos; rawSourceSha lấy nguyên metadata; inputs khóa SHA256 cả7file gốc
 (ground-truth, observations, metadata, join, manifest, resources, e1-manifest). Output khóa
 `join.json` dẫn xuất. Tool có entry point/JAR SHA256 và version nhận diện bằng hash; creator
-có script SHA256. Source SHA JAR là null vì không thể xác minh source từ JAR bất kỳ;
+có script SHA256 và analyzer-helper SHA256, source chỉ nhận khi cả hai khớp Git. Source SHA JAR là null vì không thể xác minh source từ JAR bất kỳ;
 không gán HEAD đang checkout. Source analyzer/creator chỉ nhận khi file khớp Git HEAD sạch,
 nếu không để null và dùng byte hash đã kiểm. Hash không là chữ ký hay proof thuật toán đúng.
 
