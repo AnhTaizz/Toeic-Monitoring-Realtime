@@ -135,6 +135,19 @@ class UsbSignalAdapterTest {
             }finally{start.countDown();pool.shutdownNow();assertThat(pool.awaitTermination(3,TimeUnit.SECONDS)).isTrue();}
         }
     }
+    @Test void sameRunCannotBindTwoUsbAdaptersAndRepeatBaseline() throws Exception {
+        try(Fixture f=new Fixture();var duplicate=new UsbSignalAdapter()){
+            assertThatThrownBy(()->duplicate.start(f.run,f.delivery)).isInstanceOf(IllegalArgumentException.class);
+            assertThat(kinds(f.accept(ready(1)))).containsExactly("USB_STORAGE_PRESENT_AT_START");
+        }
+    }
+    @Test void oldContextCannotBeReboundAfterAnInterveningRun() throws Exception {
+        try(Fixture f=new Fixture();var next=new SignalRunContext("mock-next","mock-next-run");var queue=new SignalDelivery("mock-next","mock-next-run",f.transport,SignalDelivery.Settings.defaults(),()->0L,false)){
+            f.adapter.stop();f.adapter.start(next,queue);f.adapter.stop();
+            assertThatThrownBy(()->f.adapter.start(f.run,f.delivery)).isInstanceOf(IllegalArgumentException.class);
+            assertThat(f.run.active()).isTrue();assertThat(f.delivery.status().active()).isTrue();
+        }
+    }
     private static final class Fixture implements AutoCloseable {
         final Fake transport=new Fake();final SignalRunContext run=new SignalRunContext("mock-attempt","mock-run");final SignalDelivery delivery;final UsbSignalAdapter adapter=new UsbSignalAdapter();final long generation;
         Fixture(){this(SignalDelivery.Settings.defaults());}

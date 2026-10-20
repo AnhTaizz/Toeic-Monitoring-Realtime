@@ -10,6 +10,7 @@ public final class SignalRunContext implements AutoCloseable {
     private final String attemptId, observerSessionId;
     private long sequence;
     private boolean active = true;
+    private boolean usbInputClaimed;
 
     public SignalRunContext(String attemptId, String observerSessionId) {
         this(attemptId, observerSessionId, 0);
@@ -24,6 +25,12 @@ public final class SignalRunContext implements AutoCloseable {
     public String attemptId() { return attemptId; }
     public String observerSessionId() { return observerSessionId; }
     public synchronized boolean active() { return active; }
+    /** One USB input binding per context lifetime; adapter stop never reopens the same observer run. */
+    public synchronized boolean claimUsbInput() {
+        if (!active || usbInputClaimed) return false;
+        usbInputClaimed = true;
+        return true;
+    }
     public Metadata next(Instant observedAt, EventOrigin origin) { return reserve(1, observedAt, origin).getFirst(); }
 
     /** Reserve one finite snapshot batch atomically; exhaustion cannot publish half a batch. No IO. */

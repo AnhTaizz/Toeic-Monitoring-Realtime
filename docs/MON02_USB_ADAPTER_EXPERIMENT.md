@@ -51,6 +51,8 @@ observedAt UTC microsecond của scan và origin lấy từ transport chung khi 
 trừ giờ hai máy. `SignalDelivery` duy nhất giữ quota/bytes/flights/retries/ACK hiện có.
 
 `start(context, delivery)` explicit, trả generation; chỉ nhận đúng scope và run mới.
+Context có một USB input claim dùng một lần: không cho hai adapter lặp baseline hoặc
+tái bind context cũ sau một run khác, kể cả context còn active cho emitter khác.
 `accept(generation, input, time, origin)` chỉ xử lý RAM, serialize bằng khóa adapter;
 `stop()` vô hiệu hóa generation trước khi dọn map/binding. Callback cũ không vào run hoặc
 attempt mới. Adapter không tạo worker/subscription, không scan/IO/đợi shutdown trên FX.

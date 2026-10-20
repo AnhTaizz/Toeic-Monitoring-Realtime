@@ -39,7 +39,7 @@ public final class UsbSignalAdapter implements AutoCloseable {
     public synchronized long start(SignalRunContext run, SignalDelivery delivery) {
         Objects.requireNonNull(run); Objects.requireNonNull(delivery);
         if (!run.active() || !delivery.status().active() || !delivery.matchesScope(run.attemptId(), run.observerSessionId())
-                || run.observerSessionId().equals(lastRunId)) throw new IllegalArgumentException("Fresh matching signal run required");
+                || run.observerSessionId().equals(lastRunId) || !run.claimUsbInput()) throw new IllegalArgumentException("Fresh matching signal run required");
         stop(); // Invalidate before clearing/replacing ownership; no async adapter worker exists.
         binding = new Binding(run, delivery);
         lastRunId = run.observerSessionId();
