@@ -106,6 +106,11 @@ Bằng chứng: 6 kịch bản chạy bằng jar thật trên PostgreSQL 18.1, m
   - Kéo MON-07 chưa xong vào `main` chỉ để lấp số V13 là trái yêu cầu.
 - **Không dùng:** `outOfOrder`, V13 rỗng, `flyway repair`, sửa checksum, renumber V14/V15 (đã nằm trên 3 nhánh và nhiều DB dev).
 
+**Cảnh báo về thời điểm (cập nhật sau khi #72 merge):**
+- PR #74 đã đổi base sang `main`, head `06daa4a` đã chứa `main` `46869eb`. Nó vẫn mang `V13__experimental_monitoring_signals.sql`, nội dung không đổi (sha256 `3f795a49…`).
+- Nếu #74 merge **trước** khi A/C chốt, phương án A không còn dùng được: đổi số migration đã nằm trên `main` là vi phạm quy tắc. Khi đó buộc phải theo phương án B, và mọi DB dev đã áp V14/V15 phải reset.
+- Đề nghị A/C chốt trước khi bất kỳ PR nào trong #74 hoặc chuỗi EX được merge.
+
 **Cần owner xác minh để quyết nhanh:**
 1. C: có DB nào cần giữ đã áp V13 không? Lệnh kiểm: `SELECT version FROM flyway_schema_history`.
 2. A: DB dev/Windows của nhóm đang ở version nào?
