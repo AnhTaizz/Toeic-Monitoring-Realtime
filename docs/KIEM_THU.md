@@ -5,7 +5,7 @@
 - Lõi seed trên **PostgreSQL 18.1** (cloud, harness Python dùng nguyên văn SQL export, backend `main` `ad8c370`), MOCK `mock-ex02-200`: import HTTP 201 → pack (Java create/verify) → DB mới → restore một transaction.
   - Dữ liệu 7 bảng giống hệt nguồn; 200 câu / 775 options / 24 documents / 57 media; bảng ngoài đề không đổi; catalog `selectable=true`.
   - Bị từ chối đúng: thí sinh đứng tên giám thị, SQL đứt giữa chừng, đề trùng.
-- `verify-portable-seed.ps1` (Windows/PowerShell): Codex báo PASS, **không có receipt trong Git**; cloud NOT RUN.
+- `verify-portable-seed.ps1` (Windows/PowerShell): **PASS** trên Windows 11 x64, Oracle JDK 21.0.8, PostgreSQL 18.1 TEST độc lập (run `a1c7bbbd38dd`). MOCK 200 câu / 775 options / 24 documents / 57 media, catalog selectable=true, 19 fingerprint ngoài đề không đổi, 7/7 negative checks PASS; receipt và log tại `evidence/ex01-portable-seed-20261020/receipt.json`.
 - ETS: BLOCKED. Không nâng AT/MT/LT/IT.
 
 20/10/2026 — EX-01 tích hợp cuối: source `f290056`, main `ad8c370`; 77 tests PASS, 0 FAIL/ERROR/SKIP. Test01 khôi phục thêm 0 options, giữ 178/676 SOURCE_EXACT; còn 495 thiếu + 3 cần review, 0 key/0 document HUMAN_VERIFIED. Kiểm offline 92 media PASS. DTO 1608 records từ classes main thật PASS; validator từ chối đúng gate. PostgreSQL 18.1 TEST mới/cổng 55464: V1–V15 tuần tự, MOCK HTTP201 → backup → restore → catalog selectable và fingerprints PASS; archive verify 757 files/358 media PASS. ETS vẫn `ETS_TEST01_BLOCKED_BY_MISSING_ORIGINAL_SOURCE`; ETS import/catalog/session/restore và GUI/hearing/LAN NOT RUN. [Báo cáo cuối](ex01-html-pipeline/FINAL_INTEGRATION_REPORT.md). Không đánh DONE, cập nhật tracker/giờ hoặc ký thay owner.

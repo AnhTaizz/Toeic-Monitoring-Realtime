@@ -1,0 +1,25 @@
+﻿================================================================================
+PORTABLE EXAM SEED WINDOWS ACCEPTANCE RUN LOG
+Timestamp: 2026-10-20T18:50:15+07:00
+Host: Windows 11 x64
+JDK: Oracle JDK 21.0.8 (E:\Java\Jav\jdk-21\bin\java.exe)
+PostgreSQL: PostgreSQL 18.1 (E:\PostgreSQL\18\bin)
+Backend Jar: E:\Project\Toeic-Monitoring-Realtime\target\ex01-final-main-20261020\server\target\server-0.1.0-SNAPSHOT.jar
+Backend Commit: ad8c370992423d58c730db1320d7fe247beb587f
+Backend Jar SHA-256: c2e9349140ffbf93640cc599f9c5dd589de8da1823e067aa79edf704de8c6d20
+External Root: E:\toeic-portable-seeds
+================================================================================
+Command:
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/exam-dataset/verify-portable-seed.ps1 `
+  -PostgresBin 'E:\PostgreSQL\18\bin' `
+  -JavaExe 'E:\Java\Jav\jdk-21\bin\java.exe' `
+  -ServerJar 'E:\Project\Toeic-Monitoring-Realtime\target\ex01-final-main-20261020\server\target\server-0.1.0-SNAPSHOT.jar' `
+  -BackendCommit 'ad8c370992423d58c730db1320d7fe247beb587f' `
+  -ExternalRoot 'E:\toeic-portable-seeds'
+
+Output:
+PORTABLE_SEED_CREATE_PASS exam=mock-ex02-200 HTTP201/selectable questions=200
+PORTABLE_SEED_RESTORE_PASS exam=mock-ex02-200 questions=200 media=57
+PORTABLE_EXAM_SEED_PASS run=a1c7bbbd38dd pack=E:\toeic-portable-seeds\portable-seed-a1c7bbbd38dd\mock-ex02-200
+ExitCode: 0
+================================================================================

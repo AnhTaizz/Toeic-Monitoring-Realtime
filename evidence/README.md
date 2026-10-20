@@ -1,5 +1,8 @@
 # Mục lục bằng chứng và log
 
+20/10/2026 — [EX-01 Portable Exam Seed Windows acceptance](ex01-portable-seed-20261020/REPORT.md): PostgreSQL 18.1 TEST độc lập trên Windows 11, JDK 21.0.8, Backend V2 từ main `ad8c370`; 82 unit tests PASS; `verify-portable-seed.ps1` PASS (run `a1c7bbbd38dd`); 200 câu, 775 options, 24 documents, 57 media, catalog selectable=true, 7 negative checks PASS; [receipt](ex01-portable-seed-20261020/receipt.json). ETS Test 01 vẫn BLOCKED.
+
+
 19/10/2026 — [EX04V11/EX02 review](ex04-v11-20261019/README.md): PostgreSQL thật fresh/upgrade/negative/HTTP;2FAIL baseline→V12, targeted58PASS, cleanverify984PASS/6SKIP; [report](../docs/EX04_V11_VERIFICATION.md), [contractproposal](../docs/EX02_RICH_EXAM_CONTRACT_PROPOSAL.md). Raw/XML private, không seedproduction/media/GUI/LAN hoặc human sign-off.
 
 `evidence/<task>/` là nơi tập trung bằng chứng được đưa lên GitHub để thành viên nhóm và công cụ chat web đối chiếu code, kết quả kiểm thử và giới hạn nghiệm thu. Mỗi dòng bên dưới dẫn tới báo cáo của task; báo cáo dẫn tiếp tới log, ảnh, raw, metadata và checksum tương ứng.

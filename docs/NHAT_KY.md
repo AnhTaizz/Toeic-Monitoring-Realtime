@@ -930,3 +930,16 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - Đã kiểm: `mvn test` 82/82 PASS tại `13e0745`; lõi seed → restore PASS trên PostgreSQL 18.1 với MOCK. Script PowerShell NOT RUN (cloud không có PowerShell). Archive cũ: manifest trong Git khớp SHA `d56c25d6…`; lệnh kiểm thủ công đã thử trên archive giả lập (cả ca nguyên vẹn lẫn ca hỏng).
 - Còn dở: chạy lại `verify-portable-seed.ps1` trên Windows và commit receipt; owner A quyết có cho restore vào DB demo `toeic` không; ETS BLOCKED.
 - Tiếp theo: B/C review; đồng bộ `main` (nhánh đang sau `main` 62 commit) trước khi mở PR.
+
+## 2026-10-20 · A (EX-01) / Codex · Nghiệm thu Portable Exam Seed trên Windows 11 lần cuối
+
+- Đã làm: đồng bộ branch `feat/ex01-html-pipeline-20261020` tại commit `6c24f43` sạch trên worktree riêng `toeic-html-pipeline`; không thao tác trên thư mục gốc `main`.
+- Đã kiểm:
+  - `mvn -f tools/exam-dataset/pom.xml test`: chạy lại 82/82 unit tests PASS (0 failures, 0 errors, 0 skipped, 37.4s).
+  - `verify-portable-seed.ps1`: chạy thật trên Windows 11 x64, Oracle JDK 21.0.8, PostgreSQL 18.1 TEST độc lập và Backend V2 từ `main` `ad8c370` (JAR SHA-256 `c2e9349140ffbf93640cc599f9c5dd589de8da1823e067aa79edf704de8c6d20`).
+  - Toàn bộ luồng: cluster nguồn export MOCK qua HTTP 201 → dừng cluster nguồn và xoá sạch fixture nguồn → cluster đích khởi tạo độc lập, remapped sequence lên 10000 → restore offline bằng PowerShell không có Java/Git/Maven trong PATH từ pack trong 1 single transaction.
+  - Đối soát dữ liệu: 200 câu hỏi, 775 options, 24 documents, 57 media assets; toàn bộ 7 bảng đề thi khớp 100% dữ liệu nguồn; ID remapped >= 10000; fingerprint của 19 bảng ngoài đề không đổi; catalog `selectable=true` với `blockedReasons=[]`; 57 media files kiểm tra SHA-256 khớp 100% manifest.
+  - Kiểm tra 7 ca từ chối: candidate proctor, duplicate examId, wrong confirm, existing destination, corrupt media checksum, missing Flyway schema, non-test DB name đều bị từ chối chính xác trước khi ghi.
+- Đã lưu bằng chứng: `evidence/ex01-portable-seed-20261020/` gồm `receipt.json` (từ run `a1c7bbbd38dd`), `run.txt`, `REPORT.md`. Seed pack nằm ngoài Git tại `E:\toeic-portable-seeds\portable-seed-a1c7bbbd38dd\mock-ex02-200`.
+- Bảo toàn tuyệt đối: không `mvn clean` (bảo toàn artifacts), không reset DB dùng chung, không xoá archive ETS ngoài Git. ETS Test 01 vẫn BLOCKED (theo thiết kế fail-closed). Không merge main, không thay đổi giao diện JavaFX / backend production.
+- Trạng thái: **READY_FOR_PR_REVIEW**.

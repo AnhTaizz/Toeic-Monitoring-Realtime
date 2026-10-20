@@ -133,9 +133,26 @@ Lấy lại media cho pipeline thì chép `audio-resources/` và `image-resource
 |---|---|---|---|
 | `mvn test` (`tools/exam-dataset`) tại `13e0745` | Codex, Windows | 82 PASS | Báo cáo của Codex |
 | Cùng lệnh tại `13e0745` | Claude cloud, Linux, JDK 21.0.12, Maven 3.9.11 | **82/82 PASS** | Chạy lại thật |
-| `verify-portable-seed.ps1`, PostgreSQL 18, MOCK `mock-ex02-200` | Codex, Windows | 200 câu / 775 options / 24 documents / 57 media; restore độc lập sau khi xoá fixture nguồn; catalog selectable; fingerprint ngoài đề không đổi | **Theo báo cáo Codex; không có receipt trong Git**, cloud không kiểm được |
+| `verify-portable-seed.ps1`, PostgreSQL 18.1, MOCK `mock-ex02-200` | Codex, Windows 11, JDK 21.0.8, backend `ad8c370` | **PASS**: 200 câu / 775 options / 24 documents / 57 media; restore độc lập sau khi xoá fixture nguồn; catalog selectable; 19 fingerprint ngoài đề không đổi; 7 negative checks PASS; run `a1c7bbbd38dd` | Receipt tại `evidence/ex01-portable-seed-20261020/receipt.json` |
 | Lõi cùng các bước đó trên Linux, PostgreSQL 18.1 | Claude cloud | **PASS** (chi tiết bên dưới) | Script PowerShell **NOT RUN** (cloud không có PowerShell); harness Python dùng nguyên văn SQL export |
 | ETS Test 01 tạo seed | — | **BLOCKED** (UNVERIFIED) | Đúng thiết kế |
+
+**Lượt Windows 11 (Nghiệm thu cuối cùng):**
+- Môi trường: Windows 11 x64, Oracle JDK 21.0.8, PostgreSQL 18.1 (`E:\PostgreSQL\18\bin`), backend jar từ `main` `ad8c370` (SHA-256 `c2e9349140ffbf93640cc599f9c5dd589de8da1823e067aa79edf704de8c6d20`).
+- Run ID: `a1c7bbbd38dd`. Pack: `E:\toeic-portable-seeds\portable-seed-a1c7bbbd38dd\mock-ex02-200`.
+- Nguồn: import MOCK qua HTTP 201 trên cluster TEST nguồn cổng 61572, catalog `selectable=true`.
+- Pack: Java `create` + `verify` PASS. 7 bảng đề thi, 57 media files, `seed.sql` chỉ ghi 7 bảng đề.
+- Dừng cluster nguồn, xóa hoàn toàn fixture nguồn (`source-input/`).
+- Đích: Cluster TEST đích cổng 55053, DB mới, đẩy sequence lên 10000.
+- Restore offline bằng PowerShell độc lập (PATH loại bỏ Java/Git/Maven) từ pack PASS trong một single transaction.
+- Sau restore:
+  - Dữ liệu 7 bảng khớp 100% nguồn.
+  - 200 câu, 775 options, 24 documents, 57 media assets (toàn bộ khớp SHA-256).
+  - Khóa chính được cấp lại (>= 10000).
+  - Fingerprint của 19 bảng không thuộc đề thi trước và sau restore giống nhau tuyệt đối.
+  - Backend V2 kiểm tra catalog: `selectable=true`, `blockedReasons=[]`.
+  - 7 negative checks từ chối chính xác: candidate proctor, duplicate examId, wrong confirm, existing destination, corrupt media, missing Flyway schema, non-test DB.
+- Bằng chứng: `evidence/ex01-portable-seed-20261020/receipt.json`, `run.txt`, `REPORT.md`.
 
 **Lượt Linux trên cloud:**
 - Môi trường: PostgreSQL 18.1, jar backend build từ `main` `ad8c370` (V1–V15), sha256 `f6e8ba00…`.
