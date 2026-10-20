@@ -131,6 +131,8 @@ class ProctorRedesignGuiTest {
         RedesignFixtures.FakeTransport transport = new RedesignFixtures.FakeTransport();
         openLoaded(api, transport);
         fxRun(() -> view.show(Section.ALERTS));
+        // The button lives in a table cell, created on the next layout pass after show(): wait for it.
+        await("alert row button", () -> view.lookup("#alerts-detail-MOCK-EVT-002") != null);
         fxRun(() -> ((javafx.scene.control.Button) view.lookup("#alerts-detail-MOCK-EVT-002")).fire());
         var drawer = fx(view::alertDrawer);
         assertThat((Object) fx(view::openDrawer)).isSameAs(drawer);
@@ -292,6 +294,7 @@ class ProctorRedesignGuiTest {
         fxRun(() -> view.show(Section.SETTINGS));
         SettingsPane pane = fx(() -> view.pane(SettingsPane.class));
 
+        await("settings controls", () -> view.lookup("#settings-density-compact") != null && view.lookup("#settings-badge") != null);
         fxRun(() -> ((ToggleButton) view.lookup("#settings-density-compact")).fire());
         fxRun(() -> ((ToggleButton) view.lookup("#settings-font-large")).fire());
         fxRun(() -> ((ToggleButton) view.lookup("#settings-badge")).fire());
