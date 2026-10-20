@@ -789,6 +789,16 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - Kit mới pin source463cbad/runtime834f683/JAR hashes đã kiểm;22file và29+29checks source/giải nén PASS. Checklist41case vẫn NOT RUN, topology/signature B PENDING; không có thao tác mạng vật lý.
 - [Báo cáo A–J](../evidence/v2-c-base03/REPORT.md), [handoff](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md). GateNOT_DECIDED, FULL default, E2NO; C chờ cùng B chạy vật lý, A xem auth/COMMIT/DB isolation. Không sửa production/wire/migration/JavaFX/QD/tracker hoặc triển khai MON-07/MON-02.
 
+
+## 19/10/2026 · C/Codex · MON-01 verification kỹ thuật
+
+- Xác minh BASE-03 HEAD9a97cab sạch và remote main1d35b53; sao lưu bền vững ngoài repo tại D:/Toeic-Evidence-Archive/BASE03-before-MON01-20261019T102703Z-51d0baf1:477raw/27public/5commit Gitbundle, checksum và account-only ACL. Sau MON-01 kiểm lại477file gốc và copy khớp; source/evidence BASE-03 giữ nguyên.
+- Tạo nhánh/worktree test/v2-c-mon01-process-e2e từ9a97cab. Audit14chặng process pipeline và15acceptance criteria; không thấy BASE-02 human approval, giữ dependency pending. Người dùng tiếp tục yêu cầu không dùng codex-with-chatgpt.
+- Chỉ thêm test còn thiếu vào LateEventsAndGapsSmoke: GUI UNREADABLE/absence/time ownership/no-cheating và automatic collector/event/state worker shutdown cho SUBMITTED/TIMED_OUT/CLOSED trước explicit cleanup. Chuyển state DB TEST là SIMULATED, không nhận HTTP submit/timeout toàn luồng.
+- Sourcef78b407, runMON01-20261019T103217Z-25e62fdd:65dashboardPASS/0FAIL/0SKIP; package-DskipTests và C2 REAL Spring/WS/HTTP/PG/proctor JavaFX PASS; metadata2099/time columns, offline provenance/dedup/gap/rollback/auth/lifecycle PASS. Sources MOCK, faults SIMULATED; measurement COMPLETE chỉ diagnostic, không E1/E2. Own SCRAM cluster/DB/cổng riêng;0schema/stop0/private.env/password file đã xóa.
+- Kế thừa BASE-03 REAL ProcessHandle/FULL/A3/C4/regression với đúng SHA/run/env; không chạy lại983/oracle72/42local để tăng PASS. [Report](../evidence/v2-c-mon01/REPORT.md), [handoff16dòng](V2_C_MON01_PHYSICAL_HANDOFF.md); physical0/B PENDING/BASE02 PENDING, MON01TECHNICALLY_VERIFIED_PENDING_PHYSICAL_REVIEW, không DONE/tracker/hours.
+- Giữ FULL default/DELTA NOT_DECIDED/E2NO; không đổi production/protocol/publicDTO/migration/auth/ACK/scope. Không MON-07/USB/focus/display; không push/PR/merge/xóa branch/worktree.
+
 ## 19/10/2026 · Codex · EX-02 contract candidate / ADR-V2-03
 
 - Fetch main1d35b53, xác nhận PR65/V11 và PR66/V12 đã merge, CI baseline39214612088 SUCCESS; tạo worktree/branch docs/ex02-contract-adr-start-20261019 riêng. Root main3f5775b và file người dùng chưa commit được giữ, không reset/stash/checkout root.

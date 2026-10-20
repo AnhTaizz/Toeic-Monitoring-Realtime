@@ -1,0 +1,398 @@
+{
+  "schema": "mon01-acceptance-v1",
+  "sourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+  "criteria": [
+    {
+      "testId": "M01",
+      "criterion": "Collector chỉ CANDIDATE",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "REUSED",
+      "proof": "ExamMonitoringIntegrationTest.aProctorCannotStartTheCandidateCollector + C4 PROCTOR_NO_COLLECTOR",
+      "newRunId": null,
+      "newSourceSha": null,
+      "newEvidence": null,
+      "reusedBase03": {
+        "runId": "BASE03-20261019T095202Z-66b7cc19",
+        "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+        "evidenceRoot": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19",
+        "environment": "WindowsNT10.0.26200/Temurin21.0.10+7/Maven3.9.15/PG18.3/Python3.15.0b3",
+        "rawArchiveId": "BASE03-before-MON01-20261019T102703Z-51d0baf1"
+      },
+      "classifications": {
+        "processObservation": "REAL owned ProcessHandle in BASE03 only; missing metadata/fault fixtures MOCK",
+        "network": "REAL local in preserved BASE03",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval",
+      "newArtifacts": []
+    },
+    {
+      "testId": "M02",
+      "criterion": "PROCTOR không tự tạo collector",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "REUSED",
+      "proof": "ToeicClientApplication PROCTOR branch + C4 PROCTOR_NO_COLLECTOR",
+      "newRunId": null,
+      "newSourceSha": null,
+      "newEvidence": null,
+      "reusedBase03": {
+        "runId": "BASE03-20261019T095202Z-66b7cc19",
+        "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+        "evidenceRoot": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19",
+        "environment": "WindowsNT10.0.26200/Temurin21.0.10+7/Maven3.9.15/PG18.3/Python3.15.0b3",
+        "rawArchiveId": "BASE03-before-MON01-20261019T102703Z-51d0baf1"
+      },
+      "classifications": {
+        "processObservation": "REAL owned ProcessHandle in BASE03 only; missing metadata/fault fixtures MOCK",
+        "network": "REAL local in preserved BASE03",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval",
+      "newArtifacts": []
+    },
+    {
+      "testId": "M03",
+      "criterion": "Start chỉ sau attempt/fresh scope hợp lệ",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "REUSED_AND_NEW",
+      "proof": "BASE03 ExamMonitoringIntegration7 + A3 auth/me scope; NEW ended state denial",
+      "newRunId": "MON01-20261019T103217Z-25e62fdd",
+      "newSourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+      "newEvidence": "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json",
+      "reusedBase03": {
+        "runId": "BASE03-20261019T095202Z-66b7cc19",
+        "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+        "evidenceRoot": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19",
+        "environment": "WindowsNT10.0.26200/Temurin21.0.10+7/Maven3.9.15/PG18.3/Python3.15.0b3",
+        "rawArchiveId": "BASE03-before-MON01-20261019T102703Z-51d0baf1"
+      },
+      "classifications": {
+        "processObservation": "REAL owned ProcessHandle in BASE03 only; missing metadata/fault fixtures MOCK",
+        "network": "REAL loopback HTTP/WS/PG and proctor GUI; disconnect/write/ACK/state transition SIMULATED",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval",
+      "newArtifacts": [
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.json",
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json"
+      ]
+    },
+    {
+      "testId": "M04",
+      "criterion": "Process Windows thật scan đúng policy",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "REUSED",
+      "proof": "BASE03 FULL ProcessHandle/owned Edge and C4 REAL_EDGE_IDENTITY_METADATA; source tests19",
+      "newRunId": null,
+      "newSourceSha": null,
+      "newEvidence": null,
+      "reusedBase03": {
+        "runId": "BASE03-20261019T095202Z-66b7cc19",
+        "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+        "evidenceRoot": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19",
+        "environment": "WindowsNT10.0.26200/Temurin21.0.10+7/Maven3.9.15/PG18.3/Python3.15.0b3",
+        "rawArchiveId": "BASE03-before-MON01-20261019T102703Z-51d0baf1"
+      },
+      "classifications": {
+        "processObservation": "REAL owned ProcessHandle in BASE03 only; missing metadata/fault fixtures MOCK",
+        "network": "REAL local in preserved BASE03",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval",
+      "newArtifacts": []
+    },
+    {
+      "testId": "M05",
+      "criterion": "Mở/đóng process sinh current state và durable event đúng",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "REUSED",
+      "proof": "BASE03 full-pipeline-checks,history-checks,C4 event identity + SQL",
+      "newRunId": null,
+      "newSourceSha": null,
+      "newEvidence": null,
+      "reusedBase03": {
+        "runId": "BASE03-20261019T095202Z-66b7cc19",
+        "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+        "evidenceRoot": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19",
+        "environment": "WindowsNT10.0.26200/Temurin21.0.10+7/Maven3.9.15/PG18.3/Python3.15.0b3",
+        "rawArchiveId": "BASE03-before-MON01-20261019T102703Z-51d0baf1"
+      },
+      "classifications": {
+        "processObservation": "REAL owned ProcessHandle in BASE03 only; missing metadata/fault fixtures MOCK",
+        "network": "REAL local in preserved BASE03",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval",
+      "newArtifacts": []
+    },
+    {
+      "testId": "M06",
+      "criterion": "Không event trùng mỗi poll/retry",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "REUSED_AND_NEW",
+      "proof": "BASE03 MonitoringDelivery34/A3 dedup; NEW C2 late retry row/warning once",
+      "newRunId": "MON01-20261019T103217Z-25e62fdd",
+      "newSourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+      "newEvidence": "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json",
+      "reusedBase03": {
+        "runId": "BASE03-20261019T095202Z-66b7cc19",
+        "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+        "evidenceRoot": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19",
+        "environment": "WindowsNT10.0.26200/Temurin21.0.10+7/Maven3.9.15/PG18.3/Python3.15.0b3",
+        "rawArchiveId": "BASE03-before-MON01-20261019T102703Z-51d0baf1"
+      },
+      "classifications": {
+        "processObservation": "REAL owned ProcessHandle in BASE03 only; missing metadata/fault fixtures MOCK",
+        "network": "REAL loopback HTTP/WS/PG and proctor GUI; disconnect/write/ACK/state transition SIMULATED",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval",
+      "newArtifacts": [
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.json",
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json"
+      ]
+    },
+    {
+      "testId": "M07",
+      "criterion": "Proctor chỉ đọc attempt được phân công",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "REUSED_AND_NEW",
+      "proof": "BASE03 A3/C4; NEW C2 foreign/assignment revoke HTTP403, dashboard focused65",
+      "newRunId": "MON01-20261019T103217Z-25e62fdd",
+      "newSourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+      "newEvidence": "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json",
+      "reusedBase03": {
+        "runId": "BASE03-20261019T095202Z-66b7cc19",
+        "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+        "evidenceRoot": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19",
+        "environment": "WindowsNT10.0.26200/Temurin21.0.10+7/Maven3.9.15/PG18.3/Python3.15.0b3",
+        "rawArchiveId": "BASE03-before-MON01-20261019T102703Z-51d0baf1"
+      },
+      "classifications": {
+        "processObservation": "REAL owned ProcessHandle in BASE03 only; missing metadata/fault fixtures MOCK",
+        "network": "REAL loopback HTTP/WS/PG and proctor GUI; disconnect/write/ACK/state transition SIMULATED",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval",
+      "newArtifacts": [
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.json",
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json"
+      ]
+    },
+    {
+      "testId": "M08",
+      "criterion": "Candidate khác không bị lộ dữ liệu/ghi ngoài quyền",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "REUSED_AND_NEW",
+      "proof": "BASE03 cross-candidate scope; NEW C2 wrong attempt/proctor-only reads denied",
+      "newRunId": "MON01-20261019T103217Z-25e62fdd",
+      "newSourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+      "newEvidence": "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json",
+      "reusedBase03": {
+        "runId": "BASE03-20261019T095202Z-66b7cc19",
+        "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+        "evidenceRoot": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19",
+        "environment": "WindowsNT10.0.26200/Temurin21.0.10+7/Maven3.9.15/PG18.3/Python3.15.0b3",
+        "rawArchiveId": "BASE03-before-MON01-20261019T102703Z-51d0baf1"
+      },
+      "classifications": {
+        "processObservation": "REAL owned ProcessHandle in BASE03 only; missing metadata/fault fixtures MOCK",
+        "network": "REAL loopback HTTP/WS/PG and proctor GUI; disconnect/write/ACK/state transition SIMULATED",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval",
+      "newArtifacts": [
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.json",
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json"
+      ]
+    },
+    {
+      "testId": "M09",
+      "criterion": "Missing metadata không gây lỗi/kết luận gian lận",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "REUSED_AND_NEW",
+      "proof": "BASE03 source unreadable tests; NEW GUI UNREADABLE label/cell and no-cheating disclaimer",
+      "newRunId": "MON01-20261019T103217Z-25e62fdd",
+      "newSourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+      "newEvidence": "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json",
+      "reusedBase03": {
+        "runId": "BASE03-20261019T095202Z-66b7cc19",
+        "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+        "evidenceRoot": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19",
+        "environment": "WindowsNT10.0.26200/Temurin21.0.10+7/Maven3.9.15/PG18.3/Python3.15.0b3",
+        "rawArchiveId": "BASE03-before-MON01-20261019T102703Z-51d0baf1"
+      },
+      "classifications": {
+        "processObservation": "REAL owned ProcessHandle in BASE03 only; missing metadata/fault fixtures MOCK",
+        "network": "REAL loopback HTTP/WS/PG and proctor GUI; disconnect/write/ACK/state transition SIMULATED",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval",
+      "newArtifacts": [
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.json",
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json"
+      ]
+    },
+    {
+      "testId": "M10",
+      "criterion": "Không thấy process không chứng minh process không chạy",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "REUSED_AND_NEW",
+      "proof": "Collector diagnostics/source failure tests REUSED; NEW empty current/history labels refer to observations only",
+      "newRunId": "MON01-20261019T103217Z-25e62fdd",
+      "newSourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+      "newEvidence": "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json",
+      "reusedBase03": {
+        "runId": "BASE03-20261019T095202Z-66b7cc19",
+        "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+        "evidenceRoot": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19",
+        "environment": "WindowsNT10.0.26200/Temurin21.0.10+7/Maven3.9.15/PG18.3/Python3.15.0b3",
+        "rawArchiveId": "BASE03-before-MON01-20261019T102703Z-51d0baf1"
+      },
+      "classifications": {
+        "processObservation": "REAL owned ProcessHandle in BASE03 only; missing metadata/fault fixtures MOCK",
+        "network": "REAL loopback HTTP/WS/PG and proctor GUI; disconnect/write/ACK/state transition SIMULATED",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval",
+      "newArtifacts": [
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.json",
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json"
+      ]
+    },
+    {
+      "testId": "M11",
+      "criterion": "observedAt và receivedAt tách biệt",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "NEW",
+      "proof": "NEW future2099 event persists and renders separate client/server columns; no clock-based lateness inference",
+      "newRunId": "MON01-20261019T103217Z-25e62fdd",
+      "newSourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+      "newEvidence": "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json",
+      "reusedBase03": null,
+      "classifications": {
+        "processObservation": "MOCK in new C2 harness",
+        "network": "REAL loopback HTTP/WS/PG and proctor GUI; disconnect/write/ACK/state transition SIMULATED",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval",
+      "newArtifacts": [
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.json",
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json"
+      ]
+    },
+    {
+      "testId": "M12",
+      "criterion": "Heartbeat loss chuyển UNKNOWN",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "REUSED_AND_NEW",
+      "proof": "BASE03 C4 hard-kill (REUSED); NEW C2 disconnect without final message, interruption server times and B remains ONLINE",
+      "newRunId": "MON01-20261019T103217Z-25e62fdd",
+      "newSourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+      "newEvidence": "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json",
+      "reusedBase03": {
+        "runId": "BASE03-20261019T095202Z-66b7cc19",
+        "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+        "evidenceRoot": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19",
+        "environment": "WindowsNT10.0.26200/Temurin21.0.10+7/Maven3.9.15/PG18.3/Python3.15.0b3",
+        "rawArchiveId": "BASE03-before-MON01-20261019T102703Z-51d0baf1"
+      },
+      "classifications": {
+        "processObservation": "REAL owned ProcessHandle in BASE03 only; missing metadata/fault fixtures MOCK",
+        "network": "REAL loopback HTTP/WS/PG and proctor GUI; disconnect/write/ACK/state transition SIMULATED",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval",
+      "newArtifacts": [
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.json",
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json"
+      ]
+    },
+    {
+      "testId": "M13",
+      "criterion": "Process freshness quá hạn chuyển STALE",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "REUSED_AND_NEW",
+      "proof": "BASE03 FULL autonomous stale/TTL while heartbeat live; NEW FullStateDashboardTest stale/logout handling",
+      "newRunId": "MON01-20261019T103217Z-25e62fdd",
+      "newSourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+      "newEvidence": "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json",
+      "reusedBase03": {
+        "runId": "BASE03-20261019T095202Z-66b7cc19",
+        "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+        "evidenceRoot": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19",
+        "environment": "WindowsNT10.0.26200/Temurin21.0.10+7/Maven3.9.15/PG18.3/Python3.15.0b3",
+        "rawArchiveId": "BASE03-before-MON01-20261019T102703Z-51d0baf1"
+      },
+      "classifications": {
+        "processObservation": "REAL owned ProcessHandle in BASE03 only; missing metadata/fault fixtures MOCK",
+        "network": "REAL loopback HTTP/WS/PG and proctor GUI; disconnect/write/ACK/state transition SIMULATED",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval",
+      "newArtifacts": [
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.json",
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json"
+      ]
+    },
+    {
+      "testId": "M14",
+      "criterion": "Reconnect không xóa committed history/gap",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "REUSED_AND_NEW",
+      "proof": "NEW C2 PREVIOUS_CONNECTION/BUFFERED_OFFLINE/retry/full isolation/overflow gap; BASE03 restart",
+      "newRunId": "MON01-20261019T103217Z-25e62fdd",
+      "newSourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+      "newEvidence": "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json",
+      "reusedBase03": {
+        "runId": "BASE03-20261019T095202Z-66b7cc19",
+        "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+        "evidenceRoot": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19",
+        "environment": "WindowsNT10.0.26200/Temurin21.0.10+7/Maven3.9.15/PG18.3/Python3.15.0b3",
+        "rawArchiveId": "BASE03-before-MON01-20261019T102703Z-51d0baf1"
+      },
+      "classifications": {
+        "processObservation": "REAL owned ProcessHandle in BASE03 only; missing metadata/fault fixtures MOCK",
+        "network": "REAL loopback HTTP/WS/PG and proctor GUI; disconnect/write/ACK/state transition SIMULATED",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval",
+      "newArtifacts": [
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.json",
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json"
+      ]
+    },
+    {
+      "testId": "M15",
+      "criterion": "Stop/logout/attempt-end dừng collector và workers",
+      "technicalStatus": "PASS",
+      "evidenceReuse": "REUSED_AND_NEW",
+      "proof": "BASE03 stop/logout/application cleanup; NEW SUBMITTED/TIMED_OUT/CLOSED automatic worker shutdown before explicit close",
+      "newRunId": "MON01-20261019T103217Z-25e62fdd",
+      "newSourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+      "newEvidence": "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json",
+      "reusedBase03": {
+        "runId": "BASE03-20261019T095202Z-66b7cc19",
+        "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+        "evidenceRoot": "evidence/v2-c-base03/BASE03-20261019T095202Z-66b7cc19",
+        "environment": "WindowsNT10.0.26200/Temurin21.0.10+7/Maven3.9.15/PG18.3/Python3.15.0b3",
+        "rawArchiveId": "BASE03-before-MON01-20261019T102703Z-51d0baf1"
+      },
+      "classifications": {
+        "processObservation": "REAL owned ProcessHandle in BASE03 only; missing metadata/fault fixtures MOCK",
+        "network": "REAL loopback HTTP/WS/PG and proctor GUI; disconnect/write/ACK/state transition SIMULATED",
+        "physical": "NOT_RUN"
+      },
+      "remaining": "B review, physical applicable cases, BASE02 approval; real HTTP submit/timeout GUI flow remains manual because new end-state transition is SIMULATED",
+      "newArtifacts": [
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.json",
+        "evidence/v2-c-mon01/MON01-20261019T103217Z-25e62fdd/smoke-checks.json"
+      ]
+    }
+  ],
+  "overallStatus": "TECHNICALLY_VERIFIED_PENDING_PHYSICAL_REVIEW",
+  "base02Approval": "PENDING",
+  "humanBReview": "PENDING",
+  "physicalCasesExecuted": 0,
+  "doNotAddReusedCountsToNewCounts": true
+}
