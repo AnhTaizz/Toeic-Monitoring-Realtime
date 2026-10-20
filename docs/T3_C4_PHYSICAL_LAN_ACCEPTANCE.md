@@ -1,5 +1,134 @@
 # T3-C4 / BASE-03 — nghiệm thu LAN vật lý cho B/C
 
+## Kit từ main tích hợp — lối chạy hiện hành, 20/10/2026
+
+Main đã kiểm khi bắt đầu: `a6fba31178a1694f42df4a682d4a0ed205d77e45`, chứa PR70–74.
+Các SHA/JAR/ZIP BASE-03 dưới mục lịch sử bên dưới **không phải build main mới**.
+[Report/receipt kit](../evidence/c-integrated-kit-20261020/REPORT.md) giữ kết quả mới riêng.
+FULL mặc định; experiment OFF; gate NOT_DECIDED, LAN **0/41 NOT RUN**, B review PENDING.
+Không cần USB để chuẩn bị kit này. Không chạy server/DB chỉ để probe USB.
+
+### Build một lần và kiểm cùng artifact trên A/B
+
+Windows thường, JDK21/Maven3.9 trên PATH. Từ checkout main phù hợp + thay đổi kit đã commit,
+working tree sạch, fetch trước để biết main. Chỉ build/package, không root clean; raw để
+root target ignored hoặc archive riêng được phép, không commit JAR/ZIP/log. Builder không
+chạy tests khi package: scoped tests/CI và kết quả thực phải ghi riêng trong report.
+
+```powershell
+git fetch origin
+git status --short
+git rev-parse HEAD
+$bundle=Join-Path (Get-Location) ('target/lan-main-'+[Guid]::NewGuid().ToString('N'))
+.\scripts\lan-t3c4\New-T3C4LanBundle.ps1 -BuildFromHead -SkipArchive -OutputDirectory $bundle
+# Có thể thêm -MavenRepository; không cần ZIP hay installer mới.
+$manifestHash=(Get-FileHash "$bundle/artifact-manifest.json" -Algorithm SHA256).Hash.ToLowerInvariant()
+$manifestHash # Gửi hash qua kênh độc lập với thư mục artifact.
+```
+
+Builder giữ mặc định legacy cho bundle cũ; `-BuildFromHead` build JAR từ HEAD sạch là
+descendant origin/main đã fetch, pin SHA/JAR mới trong **Common.ps1 bản xuất** và template
+run, không sửa pin lịch sử trong source. Chép nguyên thư mục này sang B qua kênh được phép,
+không rebuild riêng ở B (Maven JAR có thể khác byte giữa lần build). Không gửi credentials,
+profiles, `.env` hay raw. Không gọi `scripts/start-monitoring-server.ps1` cho TEST vì script
+đó đọc `.env`; dùng lệnh Java trực tiếp ở mục2.
+
+Trên cả A/B, nhận `$bundle` và hash độc lập, rồi:
+
+```powershell
+$expectedManifest=Read-Host 'SHA256 manifest do C gui qua kenh doc lap'
+if($expectedManifest -notmatch '^[0-9a-f]{64}$' -or
+  (Get-FileHash "$bundle/artifact-manifest.json").Hash.ToLowerInvariant() -cne $expectedManifest){throw 'MANIFEST_HASH_MISMATCH_STOP'}
+$kit=Join-Path $bundle 'scripts/lan-t3c4'
+. "$kit/Common.ps1"
+$verified=Get-LanBundle $bundle # Kiểm mọi file + cả hai JAR, không chỉ manifest.
+$verified | Select-Object sourceSha,runtimeSourceSha,clientJarSha256,serverJarSha256,defaultMode
+$run=Read-Host 'Thu muc run MOI cua may nay; de ignored/private'
+$jdk=Read-Host 'JDK21 directory'
+$serverUrl=Read-Host 'http://IPv4-LAN-cua-A:8080 (hoac port owner cap)'
+& "$kit/Initialize-T3C4LanRun.ps1" -BundleDirectory $bundle -OutputDirectory $run
+```
+
+Không đổi execution policy. Nếu policy cơ quan chặn `.ps1`, ghi BLOCKED và nhờ owner
+cung cấp cách chạy được phép; không dùng snippet Bypass cũ trong handoff MON-01.
+
+### TEST DB, quyền và terminal
+
+Hai máy Windows vật lý: A = PostgreSQL TEST riêng + Spring + PROCTOR + CANDIDATE_A;
+B = CANDIDATE_B. Tất cả client dùng cùng IPv4 LAN A/cổng8080 hoặc cổng được cấp, DB chỉ
+trên A/cổng TEST riêng, không công bố credential/IP. Từ mục2 dùng env **process-only**,
+DB name `t3c4_test_*`, audio TEST owner cấp, Java bind đúng IP. Thêm explicit
+`--toeic.monitoring.signal-experiment-enabled=false` vào lệnh server; FULL flag vẫn false
+cho delta. **OFF vẫn chạy Flyway V13** trên DB TEST mới; không áp lên DB dev/chung.
+
+Seeder hiện có tạo `candidate1`, `candidate2`, `proctor1` khi chưa tồn tại; mật khẩu do
+owner đặt qua `TOEIC_SEED_PASSWORD` trong process server trước startup. Không ghi secret
+vào transcript/URL hoặc mặc định credential public để chạy ngoài TEST. Candidate A/B khác
+account/attempt; role do server quyết định. Owner chuẩn bị đề/audio hợp lệ theo
+[API exam/session hiện có](BACKEND_API.md#post-apiv1sessions), không tự chèn SQL bypass.
+Assigned PROCTOR có thể cấp ca/assignment bằng endpoint hiện có trong terminal riêng:
+
+```powershell
+# Chỉ sau khi TEST server/đề/audio được owner xác nhận; credential trong RAM.
+$origin=Get-LanOrigin $serverUrl
+$credential=Get-Credential -Message 'TEST proctor1'
+$login=Get-LanLogin $origin $credential
+$sessionId='lan-'+[Guid]::NewGuid().ToString('N').Substring(0,12)
+$examId=Read-Host 'Exam ID TEST hop le da chuan bi'
+$reply=Invoke-LanHttp $origin '/api/v1/sessions' 'POST' @{
+  sessionId=$sessionId;examId=$examId;title='LAN TEST';durationSeconds=7200
+  proctorUsernames=@('proctor1');candidateUsernames=@('candidate1','candidate2')
+} $login.token
+if($reply.status -ne 200){throw 'TEST_SESSION_SETUP_FAILED_NO_BODY_LOGGED'}
+$reply.data.createdAttempts # Private TEST IDs, không công bố nguyên response.
+$login=$null;$credential=$null;$reply=$null
+```
+
+Terminal A1 chạy server như mục2; A2 PROCTOR, A3 CANDIDATE_A; B1 CANDIDATE_B bằng
+Start-T3C4LanClient/Mode Full ở mục3. A4 checkpoint đọc scope bằng credential proctor
+trong RAM ở mục4. Preflight cả A/B trước login. Không chạy fault console DELTA cho lượt
+FULL/F vật lý; các case yêu cầu DELTA/SIMULATED để lượt TEST tách riêng, không đổi default.
+GUI login, nghe audio và rút mạng cần người thao tác; chưa thực hiện thì NOT RUN.
+Mỗi terminal khai báo `$bundle/$kit/$run/$jdk/$serverUrl` tương ứng máy, không giả biến
+được chia sẻ giữa các cửa sổ.
+
+Cleanup: stop/logout/close đúng ba app; lưu launch receipt + thread evidence PID sở hữu
+trước/sau, không kill theo tên. Ctrl+C server A1, kiểm listener/PID sở hữu đã dừng. Dừng
+chỉ cluster TEST do lượt này sở hữu theo cách owner cấp; nếu DB được cấp dùng chung thì
+không stop/drop. Đóng cửa sổ chứa env secret; giữ profiles/audio marker/raw bất biến,
+không xóa để replay Listening. Teardown fixture tự động khác với xóa session thật bằng SQL.
+
+### Phân loại đủ 41 case và phần bằng chứng còn thiếu
+
+CSV gốc vẫn 41 NOT RUN; bảng này chỉ phân loại khả năng kiểm, không điền PASS thay operator.
+Local = có thể kiểm **subset kỹ thuật một máy**, không tự hoàn tất dòng physical A+B.
+Evidence lịch sử có SHA/lệnh tại [review C](../evidence/c-technical-review-20261020/REPORT.md),
+[BASE03](../evidence/v2-c-base03/REPORT.md), [MON01](../evidence/v2-c-mon01/REPORT.md);
+không cộng test lịch sử thành lượt mới hoặc coi SIMULATED là packet loss thật.
+
+| IDs (đủ 41, không trùng) | Có thể local / cần phối hợp | Evidence có và phần còn thiếu |
+|---|---|---|
+| P02, P04 (2) | Local hash/TEST setup; hai máy cần receipt độc lập | Kit mới kiểm hash/init local; nhận B, đề/audio/assignment cho lượt physical còn thiếu |
+| A1–A4 (4) | Local lifecycle/mode; GUI candidate/proctor và B review | MODE/worker regressions lịch sử; user start/stop/login và GUI cùng build mới chưa có |
+| B01–B02 (2) | Local ProcessHandle/process TEST; cần GUI đối chiếu PID/start/event | REAL process smoke lịch sử; thao tác desktop/đúng attempt A+B hiện hành chưa có |
+| C01–C04 (4) | Local MOCK/SIMULATED faults; C04 cần PostgreSQL TEST/COMMIT proof | Retry/late callback/COMMIT regressions lịch sử, không LAN fault thật; checkpoint/SQL lượt mới thiếu |
+| D01–D02 (2) | Local RESYNC/FULL seam; UI cần operator | Smoke/oracle lịch sử; last-known/history GUI cùng build mới thiếu |
+| G01–G02 (2) | Local workers/stop/logout; GUI/audio marker cần operator | Worker regressions lịch sử; terminal PID/thread/GUI close thật mới thiếu |
+| H01–H04 (4) | Local HTTP/WS auth, role/assignment/invalid frame; cần TEST identities | Auth regressions lịch sử; actual scope, token expiry/forbidden và client khác còn sống lượt mới thiếu |
+| MT02–MT04, MT06 (4) | Local protocol/replay/SQL; dữ liệu MOCK phải ghi nhãn | Oracle/negative controls/COMMIT lịch sử; đủ live subset+SQL+review mới thiếu, gate chưa chốt |
+| P01, P03 (2) | **Hai Windows vật lý/LAN**, operator topology/firewall chỉ đọc | Chưa có receipt B/topology/HTTP+WS qua LAN; localhost không thay thế |
+| E01–E02, MT05 (3) | Local có thể thử restart subset; **đủ case cần hai candidate/two-machine continuity** | Restart lịch sử một máy; physical reconnect/candidate còn lại tiếp tục thiếu |
+| F01–F12 (12) | **Hai máy/LAN/người rút mạng**, GUI/save/Listening; F10–F11 cần nghe audio | Toàn bộ physical F chưa chạy; SIMULATED không thay cable loss. Mục4 quy định checkpoints BEFORE/OFFLINE/RECOVERED và SQL |
+
+Tổng local-subset24 + two-machine17 =41. Lượt kit mới chỉ scoped consumer tests và
+kit validation/provider snapshots trong report; không chạy lại full campaign/benchmark
+khi source production không đổi. Expected giữ CSV; Actual/PASS-FAIL/Evidence/Reviewer để
+người chạy điền sau thao tác, nguồn SHA lấy manifest mới, không điền SHA lịch sử. Public
+summary chỉ alias/scalar/hash và link versioned; raw/ảnh/SQL/thread dumps giữ private,
+rà token/tài khoản/answers/IP/hostname trước công bố. Human B/BASE02/gate vẫn pending.
+
+## Hồ sơ kit BASE-03 cũ (lịch sử)
+
 19/10/2026: **LAN NOT RUN, 0/41; human B review PENDING; gate NOT_DECIDED**.
 Bộ BASE-03 mới: source test `463cbadc50465c6ca2f2d4c0a0701dcb9c38e034`, runtime artifact đã kiểm trên `834f683e50b22e214ab63bbf7d046a7d418b8242` (production không đổi giữa hai SHA). Base main `1d35b53729abade7b460d35ab07d042b6f9f3571`. 983 Java PASS/7 SKIP, FULL thật, C2 thật, oracle72 và local C4 42/42 là kết quả **một máy**, không thay F vật lý. [Hồ sơ BASE-03](../evidence/v2-c-base03/REPORT.md).
 

@@ -1,5 +1,11 @@
 # Tiến độ hiện tại
 
+20/10/2026 — [Kit main tích hợp](../evidence/c-integrated-kit-20261020/REPORT.md): từ main a6fba311,
+USB35PASS/consumer65PASS, provider MSFT READY0/Win32 UNKNOWN và cleanup/output/no-overwrite
+đã kiểm mới, không hotplug. Sửa đường build kit LAN từ HEAD sạch, giữ legacy pins; mở rộng
+USB H01–12 và phân loại41LAN (24local-subset/17two-machine). FULLdefault/experimentOFF,
+LAN0/41/USB0/12NOT_RUN/Bpending/gateNOT_DECIDED/task chưa DONE; không tracker changes.
+
 20/10/2026 — [Codex technical review C/merge](../evidence/c-technical-review-20261020/REPORT.md): PR70/71/72/73 đã merge e0ef252/2595106/a636e2a/46869eb, đúng scope verification/proposal/spike. PR74 base main, source tích hợp d6bf60a fullverify1071PASS+6SKIP/0FAIL/ERROR,17REAL PG/WS và5001signal/51pages/concurrent24; shared process smoke PASS,0schema/stop0. Sửa hai lỗi harness có bằng chứng (missing cleanup helper và launcher-env banner), không đổi production probe. Codex đã review kỹ thuật phần A/B liên quan; human owner policy/physical vẫn pending. CI publication/merge cuối tại PR74; không trackerDONE. ExperimentOFF/FULLdefault/BASE03NOT_DECIDED/LAN0/41/USB0/12 giữ nguyên.
 
 20/10/2026 — Review/fix MON-07 Draft PR74: [findings và migration OFF](../evidence/v2-c-mon07-signal-pipeline/REVIEW-20261020.md). Source 2d73605 sửa lease/callback/correlation và proctor expiry sau assignment lock; 7 lỗi có regression FAIL trước sửa. Focused227PASS/0SKIP, full verify/JAR1036PASS+6SKIP/0FAIL/ERROR, teardown0schema/stop0; chỉ MOCK/TEST, không owner approval/DONE/merge. Experiment OFF vẫn áp V13 theo Flyway mặc định, chưa áp DB dev chung. FULL/gate/hardware pending giữ nguyên.

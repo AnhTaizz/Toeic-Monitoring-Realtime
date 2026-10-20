@@ -1,5 +1,11 @@
 # MON-01 — checklist B và nghiệm thu process trên LAN thật
 
+20/10/2026 — Lượt mới dùng [kit main tích hợp](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md#kit-từ-main-tích-hợp--lối-chạy-hiện-hành-20102026)
+và [receipt mới](../evidence/c-integrated-kit-20261020/REPORT.md), không lấy ZIP/SHA lịch sử
+bên dưới làm build main hiện hành. Không đổi/bypass execution policy; nếu policy chặn
+script, ghi BLOCKED/nhờ owner cung cấp cách được phép. FULL/experiment OFF, human B/BASE02
+pending, MON01 chưa DONE; 41case LAN vẫn0, USB physical vẫn0/12NOT_RUN.
+
 Trạng thái chuẩn bị 19/10/2026: **0 case vật lý đã chạy; B PENDING; MON-01 chưa DONE; BASE-02 approval còn chờ**.
 [Execution report](../evidence/v2-c-mon01/REPORT.md) · [Checklist CSV riêng](../evidence/v2-c-mon01/physical-pending/cases.csv) · [Review trống](../evidence/v2-c-mon01/physical-pending/review.json).
 

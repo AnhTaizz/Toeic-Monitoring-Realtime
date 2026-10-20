@@ -472,3 +472,7 @@ C giữ scope review [contract](../EX02_RICH_EXAM_CONTRACT_V1.md)/[ADR](../plan-
 ### 20/10/2026 — Codex đã review kỹ thuật, tiếp tục nghiệm thu thật
 
 [Review C/merge/receipt](../../evidence/c-technical-review-20261020/REPORT.md):70–73đãmergeđúngscope;74base main/source d6bf60a fullverify1071PASS+6SKIP/17PG,5001WS/51pages/concurrent24 vàshared process smokePASS. Đã kiểm phầnA/Cauth/locks/transaction/COMMIT/cursor vàBlease/admission/ACK/callback/cleanup; không còn ghi chưa review kỹ thuật cho các phần này. Human contract/ADR/offline/retention vàphysicalpending không đổi. BướcCtiếp: receipt/kit đúng main tíchhợp, cùngngười thật chạyUSB/LAN/GUIchecklists; khôngtựDONE hoặc lấymerge/CIthayhardware.
+
+### Ghi chú làm dở — kit main tích hợp 20/10/2026
+
+[Report kit](../../evidence/c-integrated-kit-20261020/REPORT.md): maina6fba311,35USB/65consumer/33kit PASS mới, provider thật READY0/UNKNOWN không hotplug. Builder mới pin source/JAR từ HEAD sạch, không relabel JAR cũ; runbook USB đủH01–12/GUI-LAN đủ41classification, TEST-only/FULL/experimentOFF. Giữ USB0/12/LAN0/41/Bpending/gateNOT_DECIDED; chưa DONE/ADR. Bước tiếp không USB: cùng B kiểm GUI start/stop/logout/submit/timeout FULL trên một Windows, dependency A cấp TEST DB/đề/audio/assigned scopes; ghi workers/actual/manual evidence, không nhận LAN hoặc triển khai observer. Chưa chạy bước tiếp này.

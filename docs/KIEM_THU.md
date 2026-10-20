@@ -1,5 +1,11 @@
 # Trạng thái kiểm thử
 
+20/10/2026 — [Lượt kit main a6fba311](../evidence/c-integrated-kit-20261020/REPORT.md): mới tự chạy
+35USB +65consumer PASS/0SKIP (hai suite khác nhau),33kit script checks PASS; provider thật
+MSFT READY0/Win32 UNKNOWN, children0/readers true, cap4/exit5 và no-overwrite exit3/hash giữ.
+Không PG/server/GUI manual/Listening/hotplug/physicalLAN mới. Không dùng lại số lịch sử
+làm lượt mới; USB0/12/LAN0/41NOT_RUN, FULLdefault/experimentOFF, gate chưa quyết định.
+
 20/10/2026 — [Tổng hợp C mới](../evidence/c-technical-review-20261020/REPORT.md), [receipt](../evidence/c-technical-review-20261020/receipt.json): source d6bf60a fullverify1077total=1071PASS/6SKIP/0FAIL/ERROR,17REAL PG/HTTP/WS cases. Focused cd00630=228PASS;5001WS COMMIT/ACK/51paged history,24concurrent inserts/cursor/revoke/unassign PASS. Shared process smoke d6bf60a PASS/0schema/stop0. BASE03ff07446:307PASS+realDeltaSmoke; MON0192f9faf:65PASS+GUI/PG smoke; USBaa260ef equivalent5c6886b:35PASS+provider snapshots, không hotplug. Không cộng overlap. Giữ trướcfix NoClassDef/cleanup1schema và fulla5339dc1070PASS/1FAIL/6SKIP; corrective có controlled proof. Không hardware/LAN/GUIoptin/E1/E2 PASS, không gate/DONE.
 
 20/10/2026 — [MON-07 review PR74](../evidence/v2-c-mon07-signal-pipeline/REVIEW-20261020.md): source2d73605 focused227PASS/0FAIL/ERROR/SKIP,16REAL PG/WS cases; 8 case mới trong review. Trước sửa giữ adapter70/4FAIL, stale-write1/1FAIL, stale-denial1/1FAIL và focused226/225PASS/1ERROR (HTTP200 sau expiry, expected401). Fullverify/JAR1042total=1036PASS/6SKIP/0FAIL/ERROR, teardown0schema/stop0; [receipt source/JAR](../evidence/v2-c-mon07-signal-pipeline/review-20261020.json). Không dùng số c77 thay source mới; hardware/owner/gate pending.
