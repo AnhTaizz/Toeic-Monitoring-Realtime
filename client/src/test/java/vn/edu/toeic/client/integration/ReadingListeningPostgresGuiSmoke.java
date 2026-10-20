@@ -76,6 +76,7 @@ public final class ReadingListeningPostgresGuiSmoke {
         proctorApi.createSession(session(listeningSession, "GUI-MIXED-" + run)).get(20, TimeUnit.SECONDS);
         CompletableFuture<Void> started = new CompletableFuture<>();
         Platform.startup(() -> { Platform.setImplicitExit(false); started.complete(null); }); started.get(20, TimeUnit.SECONDS);
+        if (Boolean.getBoolean("integration.fullLifecycle")) { fullLifecycle(readingSession, reading); return; }
         candidateApp = fx(ToeicClientApplication::new); candidateStage = fx(Stage::new);
         fx(() -> { candidateApp.start(candidateStage); return null; }); login(candidateStage, "candidate1");
         enter(reading); clickId(candidateStage, "option-R1-A");
@@ -175,6 +176,118 @@ public final class ReadingListeningPostgresGuiSmoke {
         result.addProperty("readingWriter", readingWriter); result.addProperty("sharedWriter", sharedWriter);
         result.addProperty("labels", "REAL Application/Media/JAR/PG/HTTP/WS/restart; TEST exam/WAV; SIMULATED speaker confirmation; LAN/human NOT RUN");
         Files.writeString(output.resolve("result.json"), json.toJson(result));
+    }
+
+    /** Production Application + JAR, programmatic FX controls; NOT desktop input or human acceptance. */
+    private void fullLifecycle(String readingSession, String reading) throws Exception {
+        proctorApp=fx(ToeicClientApplication::new); proctorStage=fx(Stage::new);
+        fx(()->{proctorApp.start(proctorStage);return null;}); login(proctorStage,"proctor1");
+        until(()->fx(()->proctorStage.getScene().lookup("#dashboard-roster")!=null),"Proctor dashboard");
+        check(monitoringThreads().isEmpty(),"Proctor never creates candidate monitoring workers");
+        candidateApp=fx(ToeicClientApplication::new); candidateStage=fx(Stage::new);
+        fx(()->{candidateApp.start(candidateStage);return null;}); login(candidateStage,"candidate1");
+        selectAttempt(reading); clickText(candidateStage,"Bắt đầu giám sát");
+        until(()->state(reading).get("status").getAsString().equals("SYNCED"),"First FULL snapshot");
+        until(()->fx(()->candidateStage.getScene().getRoot().lookupAll(".label").stream()
+                .filter(Label.class::isInstance).map(Label.class::cast).anyMatch(l->l.getText().contains("Chế độ FULL"))),"FULL GUI mode");
+        check(monitoringThreads().size()==3,"One collector/delivery/full worker");
+        JsonObject first=state(reading); lifecyclePoint("A-login-start","PASS",first);
+
+        Set<Long> oldWorkers=monitoringThreads();
+        clickText(candidateStage,"Dừng giám sát");
+        until(()->monitoringThreads().isEmpty(),"Stop completes all monitoring workers");
+        JsonObject stopped=state(reading); lifecyclePoint("B-stop","PASS",stopped);
+        // CLOSE state and heartbeat timeout are separate contracts; do not require immediate UNKNOWN.
+        clickText(candidateStage,"Bắt đầu giám sát");
+        until(()->state(reading).get("status").getAsString().equals("SYNCED")
+                && !state(reading).get("syncEpoch").equals(first.get("syncEpoch")),"Fresh epoch after restart");
+        check(Collections.disjoint(oldWorkers,monitoringThreads())&&monitoringThreads().size()==3,"No old or overlapping monitoring worker");
+        lifecyclePoint("B-restart","PASS",state(reading));
+
+        clickText(candidateStage,"Đăng xuất");
+        until(()->monitoringThreads().isEmpty(),"Logout worker cleanup");
+        until(()->fx(()->!candidateStage.getScene().getRoot().lookupAll(".password-field").isEmpty()),"Logout login screen");
+        login(candidateStage,"candidate2");
+        String secondSession="GUI-C2-"+run;
+        proctorApi.createSession(new CreateSessionRequest(secondSession,"GUI-READING-"+run,"TEST second candidate",600,
+                List.of("proctor1"),List.of("candidate2"))).get(20,TimeUnit.SECONDS);
+        clickText(candidateStage,"🔄 Làm mới danh sách ca thi");
+        until(()->fx(()->((ComboBox<?>)candidateStage.getScene().lookup("#candidate-attempts")).getItems()
+                .contains(secondSession+"-candidate2")),"Fresh candidate2 scope");
+        selectAttempt(secondSession+"-candidate2"); clickText(candidateStage,"Bắt đầu giám sát");
+        until(()->state(secondSession+"-candidate2").get("status").getAsString().equals("SYNCED"),"Candidate2 FULL state");
+        check(!state(secondSession+"-candidate2").get("collectorSessionId").equals(first.get("collectorSessionId")),"Cross-account collector identity isolation");
+        lifecyclePoint("C-other-account","PASS",state(secondSession+"-candidate2"));
+        clickText(candidateStage,"Đăng xuất"); until(()->monitoringThreads().isEmpty(),"Candidate2 logout cleanup");
+        login(candidateStage,"candidate1"); selectAttempt(reading);
+        clickId(candidateStage,"candidate-enter-exam");
+        until(()->enabled(candidateStage,"exam-submit"),"Real exam entry");
+        until(()->state(reading).get("status").getAsString().equals("SYNCED"),"Exam monitoring active");
+        lifecyclePoint("D-before-submit","PASS",state(reading));
+        Platform.runLater(()->((Button)candidateStage.getScene().lookup("#exam-submit")).fire());
+        until(ReadingListeningPostgresGuiSmoke::confirmSubmit,"Real submit confirmation");
+        until(()->"SUBMITTED".equals(status(reading).state()),"Real HTTP submit COMMIT");
+        until(()->monitoringThreads().isEmpty(),"Final submit monitoring workers stopped");
+        lifecyclePoint("D-submitted","PASS",null);
+        closeResult();
+        until(()->fx(()->candidateStage.getScene().lookup("#candidate-attempts")!=null),"Portal after result");
+
+        String timeoutSession="GUI-T-"+run, timed=timeoutSession+"-candidate1";
+        proctorApi.createSession(new CreateSessionRequest(timeoutSession,"GUI-READING-"+run,"TEST natural deadline",8,
+                List.of("proctor1"),List.of("candidate1"))).get(20,TimeUnit.SECONDS);
+        clickText(candidateStage,"🔄 Làm mới danh sách ca thi");
+        until(()->fx(()->((ComboBox<?>)candidateStage.getScene().lookup("#candidate-attempts")).getItems().contains(timed)),"Short attempt assigned");
+        selectAttempt(timed); clickId(candidateStage,"candidate-enter-exam");
+        until(()->enabled(candidateStage,"exam-submit"),"Short exam entered");
+        until(()->state(timed).get("status").getAsString().equals("SYNCED"),"Short exam FULL baseline");
+        lifecyclePoint("E-before-deadline","PASS",state(timed));
+        until(()->"TIMED_OUT".equals(status(timed).state()),"Server natural timeout without SQL transitions");
+        until(()->monitoringThreads().isEmpty(),"Natural timeout monitoring worker cleanup");
+        lifecyclePoint("E-timed-out","PASS",null); closeResult();
+        until(()->fx(()->candidateStage.getScene().lookup("#candidate-attempts")!=null),"Portal after timeout");
+
+        selectAttempt("GUI-L-"+run+"-candidate1"); clickText(candidateStage,"Bắt đầu giám sát");
+        until(()->monitoringThreads().size()==3,"Active monitoring before app stop");
+        lifecyclePoint("F-before-exit","PASS",null);
+        fx(()->{candidateApp.stop();candidateStage.close();proctorApp.stop();proctorStage.close();return null;});
+        until(()->monitoringThreads().isEmpty(),"Application.stop cleanup");
+        check(!fx(()->candidateStage.isShowing()||proctorStage.isShowing()),"Both stages closed");
+        lifecyclePoint("F-application-stop","PASS",null);
+        pass("FULL lifecycle A-F: production Application controls, REAL HTTP/WS/PG; desktop/human NOT RUN");
+    }
+    private void selectAttempt(String attempt)throws Exception {
+        until(()->fx(()->candidateStage.getScene().lookup("#candidate-attempts") instanceof ComboBox<?> box
+                && !box.isDisabled()&&box.getItems().contains(attempt)),"Selectable assigned attempt");
+        fx(()->{((ComboBox<String>)candidateStage.getScene().lookup("#candidate-attempts")).setValue(attempt);return null;});
+    }
+    private void closeResult()throws Exception {
+        until(()->fx(()->{for(Window w:List.copyOf(Window.getWindows()))
+            if(w instanceof Stage stage && stage!=candidateStage&&stage!=proctorStage&&stage.getScene()!=null) {
+                for(var node:stage.getScene().getRoot().lookupAll(".button"))if(node instanceof Button b
+                    && b.getText().equals("Hoàn Tất & Thoát")&&!b.isDisabled()){b.fire();return true;}
+            }return false;}),"Result dialog closed");
+    }
+    private JsonObject state(String attempt)throws Exception {
+        return response("/api/v1/monitoring/attempts/"+attempt+"/state",proctorToken,null);
+    }
+    private static Set<Long> monitoringThreads() {
+        Set<Long> ids=new HashSet<>();
+        for(Thread t:Thread.getAllStackTraces().keySet())if(t.isAlive()&&Set.of("toeic-process-collector","toeic-monitoring-delivery","toeic-full-snapshot").contains(t.getName()))ids.add(t.threadId());
+        return ids;
+    }
+    private void lifecyclePoint(String id,String status,JsonObject state)throws Exception {
+        JsonObject point=new JsonObject(); point.addProperty("case",id); point.addProperty("status",status);
+        point.addProperty("input","PROGRAMMATIC production controls; desktop/human NOT_RUN");
+        point.addProperty("at",Instant.now().toString()); point.addProperty("ownedJvmPid",ProcessHandle.current().pid());
+        point.addProperty("monitoringWorkers",monitoringThreads().size());
+        if(state!=null){point.addProperty("state",state.get("status").getAsString());point.add("sequence",state.get("sequence"));}
+        Files.writeString(output.resolve(id+".json"),json.toJson(point));
+        if(candidateStage!=null&&fx(()->candidateStage.isShowing()))screenshot(candidateStage,id+".private.png");
+        Process dump=new ProcessBuilder(Path.of(System.getProperty("java.home"),"bin","jcmd.exe").toString(),
+                Long.toString(ProcessHandle.current().pid()),"Thread.print").redirectErrorStream(true)
+                .redirectOutput(output.resolve(id+".threads.private.txt").toFile()).start();
+        if(!dump.waitFor(10,TimeUnit.SECONDS)){dump.destroyForcibly();throw new IllegalStateException("Owned jcmd timeout");}
+        check(dump.exitValue()==0,"Owned jcmd exit"); System.out.println("LIFECYCLE "+json.toJson(point));
     }
 
     private static void ensureVisible(Stage stage,String id)throws Exception {
