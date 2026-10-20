@@ -815,3 +815,10 @@ Unit focused ghi25case RichImageTest PASS; lượt PG mới/chính xác source �
 - Đã kiểm: PostgreSQL 16.15 container (không phải 18), JDK 21.0.12 Linux. Lifecycle 8/8 PASS, race 3 lượt PASS; `mvn clean verify` server 443/0 fail/4 skip, client 3 FAIL `ControlledProcessHarnessTest` có sẵn trên Linux. Lỗi trước sửa: WIP 38 ERROR (thiếu bean + thiếu `TOEIC_SEED_PASSWORD`). GUI/LAN/hearing NOT RUN.
 - Còn dở: thứ tự Flyway V13/V14/V15; chi phí verify toàn media mỗi ATTEST (owner quyết); WS disconnect hook; S08/S09/S10/S11/S15, V03/V04/V14–V20 NOT RUN. Không merge, không DONE/tracker/hours.
 - Tiếp theo: A/C review lock/transaction, B tích hợp EX-06 theo [EX07_SESSION_LIFECYCLE](EX07_SESSION_LIFECYCLE.md) §1.
+
+## 2026-10-20 · B / Claude Code (cloud) · EX-06 TOEIC Room JavaFX 7 Part
+
+- Đã làm: nhánh `feat/ex06-javafx-rich-renderer-20261020` từ EX-07 `93c7019`. Có `RichExamModel` (7 Part, bridge Listening §7.1), `RichExamApiClient` (chặn khóa scoring/provenance), `RichImageStore` (RAM, kiểm SHA/pixel), `VisiblePulseGate` (hai pulse thật), `ListeningPlayGate`, `RichExamView`, `RichLobbyPane`, `VisualReadyCoordinator`, `RichAttemptView`, `RichEntry` (probe preparation để chọn luồng V2 hay legacy), `toeic-room.css`. Có thêm script demo và ghi chú khoảng trống Zenlish→V2.
+- Commit theo checkpoint: `a25305d` (CP1), `ddc1dff` (CP2–3), `34e225f` (CP4); CP5 là E2E, tài liệu và chỉnh giao diện.
+- Đã kiểm: Linux/OpenJDK 21.0.12/Xvfb/PostgreSQL 16.15. Test rich 31/31 PASS, gồm E2E thật với server, PG và WS (3/3 lần). Lượt E2E: import MOCK 201 → lobby READY → START → 54 đoạn Listening phát xong → autosave được server xác nhận. Số liệu `mvn clean verify` ghi ở `KIEM_THU.md`. Lỗi gặp trước khi sửa: ConcurrentModification trong `RichImageStore.useScope`; ảnh tràn khung; các helper test duyệt node trùng. Ba lỗi đều đã sửa và giữ lại test tái hiện.
+- Còn dở: nghe thật, MSI/LAN/máy hai NOT RUN; âm thanh trong container dùng ALSA null. Chờ EX-07 review/merge và thứ tự Flyway; dữ liệu đề thật EX-01 chưa có. Không merge, không DONE.
