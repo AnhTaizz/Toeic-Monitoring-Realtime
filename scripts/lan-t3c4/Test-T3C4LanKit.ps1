@@ -37,6 +37,32 @@ $repo=Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $cases=@(Import-Csv -LiteralPath (Join-Path $repo 'docs/templates/t3c4-lan/cases.csv'))
 Check 'checklist-initially-NOT-RUN' ($cases.Count -ge 39 -and @($cases | Where-Object { $_.'PASS/FAIL' -ne 'NOT RUN' -or $_.Reviewer -ne 'PENDING' }).Count -eq 0)
 Check 'all-F-cases-present' (@($cases | Where-Object Case -Match '^F\d\d$').Count -eq 12)
+# MOCK byte files exercise the exported pins; these are never executable JAR evidence.
+$mock=Join-Path $OutputDirectory 'mock-bundle'
+New-Item -ItemType Directory -Path (Join-Path $mock 'client/target'),(Join-Path $mock 'server/target') | Out-Null
+[IO.File]::WriteAllText((Join-Path $mock 'client/target/client-0.1.0-SNAPSHOT-all.jar'),'MOCK CLIENT')
+[IO.File]::WriteAllText((Join-Path $mock 'server/target/server-0.1.0-SNAPSHOT.jar'),'MOCK SERVER')
+$common=Join-Path $mock 'Common.ps1'; Copy-Item (Join-Path $PSScriptRoot 'Common.ps1') $common
+$originalSha=$script:LanSourceSha
+$script:LanSourceSha='a'*40; $script:LanRuntimeSourceSha='b'*40
+$script:LanClientHash=Get-LanHash (Join-Path $mock 'client/target/client-0.1.0-SNAPSHOT-all.jar')
+$script:LanServerHash=Get-LanHash (Join-Path $mock 'server/target/server-0.1.0-SNAPSHOT.jar')
+Write-LanPinnedCommon $common
+Write-LanJson (Join-Path $mock 'artifact-manifest.json') @{
+    schema='t3c4-physical-bundle-v1';sourceSha=$script:LanSourceSha;runtimeSourceSha=$script:LanRuntimeSourceSha
+    clientJarSha256=$script:LanClientHash;serverJarSha256=$script:LanServerHash
+    files=@(@{path='Common.ps1';sha256=Get-LanHash $common})
+}
+. (Join-Path $PSScriptRoot 'Common.ps1')
+Check 'source-default-pins-unchanged' ($script:LanSourceSha -ceq $originalSha)
+$rejected=$false; try { $null=Get-LanBundle $mock } catch { $rejected=$true }
+Check 'legacy-rejects-unrelated-MOCK-bundle' $rejected
+. $common
+Check 'export-pins-accept-own-MOCK-manifest' ((Get-LanBundle $mock).sourceSha -ceq ('a'*40))
+[IO.File]::AppendAllText((Join-Path $mock 'client/target/client-0.1.0-SNAPSHOT-all.jar'),'TAMPER')
+$rejected=$false; try { $null=Get-LanBundle $mock } catch { $rejected=$true }
+Check 'export-rejects-MOCK-artifact-tamper' $rejected
+. (Join-Path $PSScriptRoot 'Common.ps1')
 Write-LanJson (Join-Path $OutputDirectory 'validation.json') ([ordered]@{
     sourceSha=$script:LanSourceSha;type='KIT VALIDATION ONLY';fixture='MOCK origins/maps/files; no network';checks=$checks.ToArray()
     lan='NOT RUN';physicalCasesExecuted=0;humanBReview='PENDING';protocolProbeRuntime='NOT RUN'

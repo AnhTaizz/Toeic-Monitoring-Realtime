@@ -62,6 +62,22 @@ function Get-LanBundle([string]$Root) {
     Test-LanFile $Root 'server/target/server-0.1.0-SNAPSHOT.jar' $script:LanServerHash
     return $m
 }
+function Write-LanPinnedCommon([string]$Path) {
+    $pins=@{LanSourceSha=$script:LanSourceSha;LanRuntimeSourceSha=$script:LanRuntimeSourceSha;
+        LanClientHash=$script:LanClientHash;LanServerHash=$script:LanServerHash}
+    $lines=[IO.File]::ReadAllLines($Path)
+    foreach($name in $pins.Keys) {
+        $prefix='$script:'+$name+'='
+        $matches=0
+        for($i=0;$i -lt $lines.Length;$i++) {
+            if($lines[$i].StartsWith($prefix,[StringComparison]::Ordinal)) {
+                $lines[$i]=$prefix+"'"+$pins[$name]+"'"; $matches++
+            }
+        }
+        if($matches -ne 1) { throw 'EXPORTED_PIN_LAYOUT_INVALID' }
+    }
+    [IO.File]::WriteAllLines($Path,$lines,[Text.UTF8Encoding]::new($false))
+}
 function Invoke-LanHttp([Uri]$Origin,[string]$Path,[string]$Method='GET',$Body=$null,[string]$Token=$null) {
     if(-not $Path.StartsWith('/api/v1/')) { throw 'HTTP_PATH_INVALID' }
     $request=[Net.HttpWebRequest]::Create($Origin.GetLeftPart([UriPartial]::Authority)+$Path)

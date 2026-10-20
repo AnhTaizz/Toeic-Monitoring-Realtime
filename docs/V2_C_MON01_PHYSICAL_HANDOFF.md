@@ -1,5 +1,11 @@
 # MON-01 — checklist B và nghiệm thu process trên LAN thật
 
+20/10/2026 — Lượt mới dùng [kit main tích hợp](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md#kit-từ-main-tích-hợp--lối-chạy-hiện-hành-20102026)
+và [receipt mới](../evidence/c-integrated-kit-20261020/REPORT.md), không lấy ZIP/SHA lịch sử
+bên dưới làm build main hiện hành. Không đổi/bypass execution policy; nếu policy chặn
+script, ghi BLOCKED/nhờ owner cung cấp cách được phép. FULL/experiment OFF, human B/BASE02
+pending, MON01 chưa DONE; 41case LAN vẫn0, USB physical vẫn0/12NOT_RUN.
+
 Trạng thái chuẩn bị 19/10/2026: **0 case vật lý đã chạy; B PENDING; MON-01 chưa DONE; BASE-02 approval còn chờ**.
 [Execution report](../evidence/v2-c-mon01/REPORT.md) · [Checklist CSV riêng](../evidence/v2-c-mon01/physical-pending/cases.csv) · [Review trống](../evidence/v2-c-mon01/physical-pending/review.json).
 
@@ -13,7 +19,7 @@ C/B đối chiếu hash độc lập khi nhận. Không dùng MSI/ZIP cfbba58 t�
 
 ## Chạy đúng runbook hiện hành
 
-Theo [T3_C4_PHYSICAL_LAN_ACCEPTANCE](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md): mục1 nhận/hash/init; mục2 preflight/TEST DB; mục3 candidate/proctor; mục4 F cable loss/rejoin; mục5 fault console/probe chỉ trên attempt riêng, nhãn SIMULATED. Mở process-scoped `powershell -NoProfile -ExecutionPolicy Bypass` trước các snippet nếu policy mặc định chặn script; không đổi policy máy.
+Theo [T3_C4_PHYSICAL_LAN_ACCEPTANCE](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md): mục1 nhận/hash/init; mục2 preflight/TEST DB; mục3 candidate/proctor; mục4 F cable loss/rejoin; mục5 fault console/probe chỉ trên attempt riêng, nhãn SIMULATED. Nếu policy chặn script, ghi BLOCKED và nhờ owner cung cấp cách chạy được phép; không đổi/bypass policy.
 
 MON-01 dùng **server FULL, client -Mode Full**. Không bật DELTA. Trên A: PostgreSQL TEST riêng, Spring, PROCTOR và CANDIDATE_A. Trên B: CANDIDATE_B trên Windows vật lý khác. Hai account/attempt khác nhau, proctor đúng assignment. Mọi client dùng cùng IPv4 LAN thật của A, DB credential chỉ trên A; không sửa .env dùng chung hoặc DB dev.
 

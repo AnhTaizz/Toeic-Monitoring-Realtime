@@ -1,5 +1,74 @@
 # MON-02 — Probe USB storage độc lập trên Windows
 
+## Kit main tích hợp — 20/10/2026
+
+Ưu tiên mục này cho lượt mới; phần base/PR cũ bên dưới là lịch sử. Main đã tích hợp
+PR70–74 tại `a6fba31178a1694f42df4a682d4a0ed205d77e45`. Không build nhánh spike cũ.
+JDK21/Maven3.9/Windows PowerShell5.1 + CimCmdlets, token thường; không cần server/DB,
+installer hoặc quyền admin. [Receipt lượt kit](../evidence/c-integrated-kit-20261020/REPORT.md).
+
+Từ checkout sạch đúng SHA main đã chọn, PowerShell thường, chạy build **trước** khi tạo raw.
+Build hiện có chạy `clean verify` chỉ module monitoring-spike: lưu evidence ở root `target`,
+không để raw cần giữ trong `monitoring-spike/target`. Không chạy root clean.
+
+```powershell
+git status --short
+git rev-parse HEAD
+java -version
+mvn -version
+.\scripts\build-usb-probe.ps1 # thêm -MavenRepository nếu cache mặc định không ghi được
+$receipt=Get-Content monitoring-spike/target/usb-probe-build.json -Raw | ConvertFrom-Json
+$receipt.sourceSha
+Get-FileHash monitoring-spike/target/monitoring-spike-0.1.0-SNAPSHOT.jar -Algorithm SHA256
+$raw=Join-Path (Get-Location) ('target/usb-'+[Guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Path $raw -ErrorAction Stop | Out-Null
+# Mỗi lệnh trong terminal riêng: wrapper exit bằng mã Java; giữ tên file mới.
+.\scripts\probe-usb-storage.ps1 -Method msft-disk -OutputFile "$raw/snapshot.jsonl" -MachineAlias WIN-A
+.\scripts\probe-usb-storage.ps1 -Method win32-diskdrive -OutputFile "$raw/comparison.jsonl" -MachineAlias WIN-A
+.\scripts\probe-usb-storage.ps1 -DurationSeconds 120 -OutputFile "$raw/watch.jsonl" -MachineAlias WIN-A
+```
+
+Nếu policy chặn script, không đổi/bypass policy. CLI trực tiếp ở mục Lệnh chạy dùng
+UNVERSIONED cho khám phá; evidence pin chỉ nhận khi kiểm đầy đủ source/runtime receipt.
+Receipt và JAR là local ignored, không gửi `.env` hoặc dump CIM. Trước/sau mỗi run ghi SHA,
+hash receipt/JAR/JSONL, alias, config, runId, thời điểm thao tác và exit code trong notes local.
+START phải đúng SHA receipt. FINISH phải childrenAlive=0/readersTerminated=true; Ctrl+C130
+là dừng có chủ đích. Thiếu FINISH/forced kill giữ INCOMPLETE, không suy cleanup PASS.
+Không đóng PowerShell/Java khác. Giữ raw bất biến local ignored, chỉ công bố bảng safe scalar
+và checksum đã rà dữ liệu riêng tư; archive ngoài build chỉ sau khi có evidence thực cần giữ.
+
+### H01–H12: thao tác để dành khi có phần cứng
+
+**Lượt chuẩn bị này: Actual trống, cả 12 dòng NOT_RUN, 0/12.** Chép
+[CSV hiện có](../evidence/v2-c-mon02/physical-pending.csv) vào run mới, thêm actual/evidence
+ở bản local, không sửa lịch sử. Giữ ID/tiêu chí gốc. Không yêu cầu thao tác phần cứng lúc này.
+
+Ký hiệu lệnh: **S** là snapshot MSFT ở trên với tên file mới; **W** là watch120s
+ở trên với tên file mới; **W2** lặp W ở terminal/run mới; **V** là snapshot Win32.
+Mỗi ca ghi caseId/runId/mốc thao tác/expected/actual/exit/FINISH và hash raw; `deviceRef`
+chỉ random trong run, không serial/index/model cá nhân. Cleanup **K**: đợi hết120s hoặc
+Ctrl+C đúng terminal, kiểm FINISH/owned child0/readers true, dừng process thử thuộc run;
+không format disk, đổi partition/letter/ACL/provider hoặc xóa raw để đạt kết quả.
+
+| ID | Thiết bị/điều kiện; lệnh | Thao tác và expected | Evidence; cleanup | PASS / FAIL / INCONCLUSIVE (khi thực chạy) |
+|---|---|---|---|---|
+| H01 | Máy Windows, người giữ máy xác nhận topology không USB storage; S | Ghi topology trước snapshot; READY/count0 hoặc UNKNOWN có nhãn thiếu classification | Notes topology + snapshot/FINISH; K | PASS nếu READY0 khớp topology; FAIL nếu báo USB sai; UNKNOWN là INCONCLUSIVE về absence, không PASS hardware |
+| H02 | Một USB storage cắm sẵn, đủ phân loại; W | Start sau khi cắm; baseline READY có PRESENT_AT_START/ref random, không CONNECTED giả tại baseline | Mốc start + baseline/ref/FINISH; K, rút thiết bị theo chính sách máy sau run | PASS đúng baseline; FAIL sai kind/count hoặc lặp; UNKNOWN/thiếu baseline là INCONCLUSIVE |
+| H03 | Một USB storage chưa cắm, baseline READY ổn định; W | Sau baseline cắm, giữ qua ít nhất hai scan thành công; CONNECTED một lần/ref mới | Mốc cắm + trước/sau + poll ổn định; K | PASS đúng transition/count; FAIL sai/lặp trên snapshot READY; thiếu classification/query lỗi là INCONCLUSIVE |
+| H04 | USB đã xuất hiện trong W và biết ref | Rút, đợi hai scan READY; REMOVED đúng ref một lần, không lặp poll tiếp | Trước/rút/sau + ref + FINISH; K | PASS đúng reconcile; FAIL REMOVED sai/ref lặp hoặc tạo từ lỗi; thiếu scan READY là INCONCLUSIVE |
+| H05 | Một USB storage, W; có người ghi từng lần | Cắm/rút nhanh có mốc riêng, không hứa polling thấy mọi transition; ghi cả lần bỏ sót | Notes từng lần so JSONL; K | PASS chỉ nếu coverage thực đáp ứng tiêu chí quan sát đã ghi; NOT_OBSERVED/thiếu mốc là INCONCLUSIVE, không quảng cáo lossless; observation sai là FAIL |
+| H06 | Một USB storage, W, baseline READY | Một lần cắm và giữ qua nhiều poll; set ổn định không event lặp; không claim native debounce | Một mốc thao tác/nhiều scan/ref; K | PASS riêng idempotent polling; FAIL lặp với set không đổi; native notification/debounce vẫn NOT_IMPLEMENTED, thiếu READY là INCONCLUSIVE |
+| H07 | Hai USB storage được phép, W | Cắm lần lượt, giữ mỗi bước qua scan rồi rút riêng; count và ref độc lập | Mốc bốn bước/count/ref; K | PASS khớp toàn chuỗi; FAIL lẫn ref/count; thiếu thiết bị giữ NOT_RUN, multi-LUN chưa rõ là INCONCLUSIVE |
+| H08 | USB mouse/keyboard và topology không storage mới; W | Cắm/rút thiết bị nhập, không dùng thiết bị đang cần để điều khiển máy; không tăng storage/event | Loại thiết bị chung + mốc + snapshots; K | PASS không storage tăng qua READY; FAIL false storage; UNKNOWN là INCONCLUSIVE |
+| H09 | Storage không drive letter hoặc UASP/bridge có sẵn được phép; S rồi V, W nếu cần | Không tự sửa letter/partition; chỉ USB khi đủ bus metadata, thiếu thì UNKNOWN/count null | Loại đường nối chung + status/problem/count, không dump CIM; K | PASS labeling đúng bằng chứng độc lập; FAIL đoán USB/absence; UNKNOWN đúng semantics nhưng hardware coverage INCONCLUSIVE |
+| H10 | Một USB còn cắm và baseline thành công ở W; W2 | Dừng run đầu bằng K, start run mới; PRESENT_AT_START/ref mới, không tái dùng run/ref cũ | Hai START/baseline/FINISH và hashes; K cả hai | PASS tách run/ref đúng; FAIL dùng lại identity/sai baseline; UNKNOWN là INCONCLUSIVE |
+| H11 | Windows có USB trong watch, PowerShell không liên quan vẫn mở; W | Ctrl+C khi query/watch đang hoạt động; không kill process theo tên | Mốc dừng/FINISH130/child0/readers true, xác nhận terminal khác còn; K | PASS cleanup đầy đủ; FAIL owned child còn/readers không dừng; thiếu FINISH hoặc forced kill là INCONCLUSIVE |
+| H12 | USB đã có baseline, chỉ môi trường provider/permission lỗi được owner cấp sẵn; W | Ghi lỗi tự nhiên/được owner bố trí; không đổi ACL/service, không nâng admin; UNKNOWN/ERROR không REMOVED giả | Last READY + status/problem + recovery nếu có; K | PASS không false REMOVED và lỗi rõ; FAIL lỗi biến thành empty/removal; không tái hiện lỗi an toàn giữ NOT_RUN/INCONCLUSIVE. MOCK regression riêng không thay ca này |
+
+H05/H06/H09 tách kết quả phần mềm và coverage thiết bị để tránh tiêu chí mâu thuẫn:
+polling idempotent không chứng minh native debounce, UNKNOWN đúng không chứng minh absence,
+bỏ sót giữa hai scan phải giữ giới hạn công khai. ADR-V2-05 và MON-02 chưa DONE.
+
 20/10/2026 — Codex technical review: source aa260ef kiểm35tests/0SKIP và JAR/provider snapshots trên Windows STANDARD; MSFT READY0, Win32 UNKNOWN, child0/readers terminated. Hòa main chỉ docs/test ngoài probe, runtime probe giữ nguyên. Có thể merge như spike độc lập; physical0/12 NOT_RUN, ADR-V2-05/owner policy chưa approved. Budget classification10s chỉ thuộc TEST, CLI5s/UNKNOWN/no-false-REMOVED/finite output giữ nguyên; không khẳng định root cause CI cũ từ rerun PASS.
 
 **SPIKE ONLY — NOT INTEGRATED — ADR-V2-05 OWNER REVIEW PENDING.**
@@ -87,20 +156,7 @@ Nguồn đã đọc, truy cập19/10/2026:
 
 Khi chạy physical: ghi source SHA/build receipt, run ID, Windows/runtime/token privilege, alias máy và loại thiết bị (flash drive/external disk, USB mouse/keyboard; không serial/model cá nhân). Ghi local UTC trước/sau thao tác trong notes riêng và đối chiếu JSONL; không sửa raw. Chỉ xuất summary đã lọc.
 
-| Case | Thao tác/expected | Trạng thái ban đầu |
-|---|---|---|
-| H01 | Không gắn USB storage, snapshot thường READY0 hoặc UNKNOWN nếu provider thiếu; operator xác nhận topology | NOT_RUN |
-| H02 | Cắm sẵn USB rồi start → baseline PRESENT_AT_START; ref random | NOT_RUN |
-| H03 | Baseline ổn định rồi cắm mới → CONNECTED một lần khi scan thấy | NOT_RUN |
-| H04 | Rút sau khi đã quan sát → REMOVED cùng ref; không lặp ở poll tiếp | NOT_RUN |
-| H05 | Cắm/rút nhanh nhiều lần, ghi cả lần polling bỏ sót; không biến NOT_OBSERVED thành PASS | NOT_RUN |
-| H06 | Một thao tác/multiple notifications: polling không lặp set; native notifications/debounce chưa triển khai | NOT_RUN |
-| H07 | Hai USB storage, cắm/rút riêng đúng ref/count; nếu thiếu thiết bị giữ NOT_RUN | NOT_RUN |
-| H08 | USB mouse/keyboard không làm storage count/event tăng | NOT_RUN |
-| H09 | Storage không drive letter/UASP/bridge/missing metadata; UNKNOWN khi chưa phân loại đủ | NOT_RUN |
-| H10 | Restart với USB còn cắm → baseline mới/ref mới, không dùng ID run cũ | NOT_RUN |
-| H11 | Ctrl+C giữa query/watch, FINISH và cleanup children0/readers true; không ảnh hưởng PowerShell khác | NOT_RUN |
-| H12 | Provider/permission failure không REMOVED giả, không yêu cầu admin để giấu lỗi | NOT_RUN |
+Dùng bảng H01–H12 mở rộng ở mục Kit main tích hợp đầu tài liệu: giữ nguyên ID/tiêu chí gốc, bổ sung lệnh, prerequisites, evidence/cleanup và điều kiện đánh giá; không duy trì bảng thao tác trùng lặp.
 
 Raw/output thật đặt thư mục riêng ignored, không dump CIM object. Nếu có physical evidence khó tái tạo, người giữ máy lưu ngoài build, ví dụ thư mục archive riêng được phép, kiểm SHA256 từng file/copy và ghi receipt metadata; không chỉ giữ trong target. Lượt chưa có thao tác USB thật không tạo physical archive giả. Kiểm code/tests/runtime thực tế và source pin xem [report](../evidence/v2-c-mon02/REPORT.md).
 
