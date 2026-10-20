@@ -133,3 +133,7 @@ Không đưa phần giải thích/đáp án đúng vào DTO candidate. `correct_
 ## 7. Kiểm chứng PostgreSQL và correction trong nhánh review
 
 [Báo cáo EX04 ngày19/10](EX04_V11_VERIFICATION.md) có freshV1–V11/upgradeV10/negative/rollback/legacyHTTP trên PostgreSQL18.1 thật. V11 có lỗi CHECK UNKNOWN khi IMAGE/AUDIO thiếu media_type; nhánhreview bổ sung `V12__require_content_block_media_type.sql`, không sửaV11. V12 fail-closed với row sai có sẵn, không tự đoán/xóa dữ liệu. LOCAL_VERIFIED vẫn chỉ là ràng buộc metadata, chưa chứng minh file/path/MIME/hash thực tế; group-part matching cần validator và review contract. Không coi EX04 hoặc đề200 đã nghiệm thu đầy đủ. [Gap matrix và proposalEX02](EX02_RICH_EXAM_CONTRACT_PROPOSAL.md) chưa được triển khai thành API.
+
+## Thiết kế tiếp theo — chưa có migration sau V12 trong task EX-02
+
+[Contract mục9](EX02_RICH_EXAM_CONTRACT_V1.md#9-mapping-postgresql-và-migration-đề-xuất) reuse V11/V12, thiết kế content_version, option_content_status, document metadata và session contract_version. D10 bổ sung preparation epoch/visual readiness/lease/receipt storage trong task EX07 sau này. Thiết kế TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn19/10](plan-v2/EX02_TEAM_APPROVAL_20261019.md); không DDL/migration mới hoặc sửa V1–V12 trong PR67, không coi các cột/rows được mô tả là đã có trong DB.

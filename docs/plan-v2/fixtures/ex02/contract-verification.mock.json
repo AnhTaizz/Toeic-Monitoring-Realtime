@@ -1,0 +1,16 @@
+{
+    "scope":  "DESIGN_ONLY_TEAM_APPROVED_AS_REPORTED",
+    "dtoRecords":  28,
+    "exampleRoots":  11,
+    "jsonFiles":  18,
+    "localLinks":  98,
+    "fieldConsistency":  "PASS",
+    "java21Signatures":  "PASS",
+    "canonicalManifestJava21":  "PASS",
+    "contractSha256":  "55015637c15ca81fc07437e77598ecdccef33e715e5dca1938678a8d6f36d12e",
+    "designApproval":  "TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE",
+    "approvalSource":  "User-provided confirmation from the project team representative, 2026-10-19.",
+    "githubApproval":  "NOT CLAIMED",
+    "runtime":  "NOT RUN",
+    "note":  "Compilation and design consistency do not implement or validate server behavior."
+}

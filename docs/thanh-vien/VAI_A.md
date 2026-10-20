@@ -409,3 +409,7 @@ Người dùng yêu cầu đưa5 HTML lên main, xác nhận quyền công khai 
 Basef98a37f; nhánhreview riêng. [ReportV11](../EX04_V11_VERIFICATION.md) và [proposalEX02](../EX02_RICH_EXAM_CONTRACT_PROPOSAL.md). Thêm RichExamMigrationPostgresTest +runnerDB riêng;2FAIL baseline chứng minhNULL media_type bypasstypedFK. V12append-only sửa discriminator theoinvariantQD35, không sửaV1–V11. Targeted58PASS; cleanverify984PASS/6SKIP, realPG18.1/Flyway/SpringHTTP, fixtureMOCK tựtạo; cleanup0schema/clusterstop0.
 
 **Ghi chú làm dở:** C reviewV12/test; A/B chốt richDTO/provenance/ordered document/media contract vàADR START/QD21 trướcEX03/05/07. Chưa richAPI/ảnhrenderer/production200Q, seedimportable:false giữnguyên. Không mergePR hoặc tựđánhEX01/02/04/08DONE, không human signatures. GUI/hearing/LAN chưa chạytrongtask.
+
+## Ghi chú làm dở — EX-02 candidate / ADR-V2-03, 19/10/2026
+
+[Contract](../EX02_RICH_EXAM_CONTRACT_V1.md), [D01–D10](../plan-v2/EX02_DECISIONS_ROADMAP.md), [ADR](../plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) đã TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [đại diện nhóm19/10](../plan-v2/EX02_TEAM_APPROVAL_20261019.md); không chữ ký/GitHub review riêng. A tiếp tục EX03/05/07 khi được giao implementation: Part1 allowlist+manifest/ATTEST/lease/current writer+epoch, combined-readiness START, gates cả v1/full-status, transaction/auth/revoke/timeout khóa nhất quán; C review, B tích hợp. PR67 chỉ docs/fixtures/checkers, không runtime/migrations mới hoặc tracker DONE. Cần PG/HTTP/WS tests thật, legacy QD21/no replay/deadline giữ.
