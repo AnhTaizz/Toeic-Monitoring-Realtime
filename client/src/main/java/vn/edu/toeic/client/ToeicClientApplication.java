@@ -34,7 +34,7 @@ import vn.edu.toeic.client.realtime.ConnectionViewModel;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.RealtimeClient;
 import vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpener;
-import vn.edu.toeic.client.dashboard.ProctorDashboardView;
+import vn.edu.toeic.client.proctor.redesign.ProctorRedesignView;
 import vn.edu.toeic.client.exam.CandidateExamView;
 import vn.edu.toeic.client.exam.ExamApiClient;
 import vn.edu.toeic.client.exam.ExamEntry;
@@ -59,7 +59,7 @@ public final class ToeicClientApplication extends Application {
     private CandidateMonitoringSession monitoring;
     private String monitoringAttempt;
     private long monitoringGeneration;
-    private ProctorDashboardView dashboard;
+    private ProctorRedesignView dashboard;
     private CandidateExamView activeExamView;
     private vn.edu.toeic.client.exam.rich.RichAttemptView activeRichView;
     private CandidateExamHistoryView historyView;
@@ -200,10 +200,10 @@ public final class ToeicClientApplication extends Application {
 
         if ("PROCTOR".equals(response.user().role())) {
             long currentView = ++viewGeneration;
-            dashboard = new ProctorDashboardView(serverUrl, response, newClient,
+            dashboard = ProctorRedesignView.forLogin(serverUrl, response, newClient,
                     () -> leaveDashboard(stage, currentView, ""),
                     () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."));
-            Scene proctorScene = applyStyles(new Scene(dashboard, 1140, 780));
+            Scene proctorScene = applyStyles(new Scene(dashboard, 1366, 768));
             stage.setScene(proctorScene);
             newClient.connect(context);
             return;
