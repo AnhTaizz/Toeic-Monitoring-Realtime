@@ -780,6 +780,22 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - Không importETSseed, không tảimedia, không đổiimportable/keys/JavaFX/v0/writer/revision/FULL. Phạm viA cầnC reviewSQL/test vàB reviewcontract/render; không tạo chữ kýowner, không tựDONE/tracker/hours hoặcmerge. Còn richimport/read/image/filesystem config, nguồn/key/options/groups/media vàphysical acceptance.
 
 
+## 19/10/2026 · C/agent · MON-07 đề xuất contract đa tín hiệu
+
+- Theo yêu cầu chỉ proposal: fetch origin/main `1d35b53729abade7b460d35ab07d042b6f9f3571`, kiểm branch/worktree/source/PR và tìm trùng. PR70 BASE-03 và PR71 MON-01 vẫn mở/chưa merge; chưa thấy proposal MON-07 riêng nên tạo nhánh `docs/v2-c-mon07-contract-proposal` từ main mới nhất trong worktree riêng. Giữ checkout gốc và các nhánh cũ.
+- Đối chiếu envelope/validator, process encoder/queue/transport, WS auth/transaction/ACK, schema/history/push/parser/dashboard và CandidateMonitoringSession lifecycle. Source hiện tại đã sửa history vượt5000 thành409 INVALID_STATE retryable:false; ghi rõ khác thông tin đầu vào. Flyway mới nhất V12, proposal không tự chọn version SQL tiếp theo.
+- Viết [contract đề xuất](MONITORING_MULTISIGNAL_CONTRACT_PROPOSAL.md): typed signal riêng, fields/bounds/JSON MOCK, auth/lifetime/preSTART giữ QD21, immutable retry/dedup/COMMIT-before-ACK, overflow/status, storage/cursor/recovery, privacy/disclosure/retention và owner decisions. Kèm [fixture](mon07-proposal/mock-exchanges.json) và22 implementation cases **NOT_RUN**. Queue256/2flight/offline60s/retention30ngày là đề xuất chờ duyệt, chưa cấu hình thực tế.
+- Kiểm docs/fixture/source refs/diff/privacy được ghi [biên bản](mon07-proposal/VALIDATION.md), không chạy lại Maven/PG/GUI/WS runtime/USB/display/LAN/E1/E2. Không sửa production Java/DTO/migration/dependency/config/PROTOCOL hoặc backlog/tracker.
+- Bàn giao C encoder/delivery, A auth/schema/transaction/retention, B consumer/emitter/lifetime. ADR-V2-04/BASE-04 và human A/B/C approval PENDING; ADR-V2-05/hardware riêng. MON-01 TECHNICALLY_VERIFIED_PENDING_PHYSICAL_REVIEW, BASE-02/LAN/B PENDING, FULL default, BASE-03 NOT_DECIDED. Chỉ push/mở Draft PR theo ủy quyền; không merge, không MON-07 DONE/MON-02/MON-08 hoặc ký thay owner. URL/HEAD cuối được trả sau khi push và xác minh PR.
+
+
+## 19/10/2026 · C/agent · MON-07 review PR72, chuẩn bị quyết định
+
+- Fetch main1d35b537 và kiểm PR70–73, PR72 Draft/da89962/CI39248150270SUCCESS; reviews/inline/conversation PR72 rỗng, không tìm approval contract. Đọc lại CLAUDE/task BASE04/MON01/MON07, architecture/ownership/ADR, protocol/QD và source transport/auth/store/push; không dùng ChatGPT theo opt-out của người dùng.
+- Sửa ngay proposal/fixture hiện hữu: chọn DISPLAY_COUNT_OBSERVED MOCK/no push cho slice đầu; tách catalog tương lai, không quảng cáo type chưa hỗ trợ. Bỏ410/tombstone không reachable dưới ACTIVE-only; làm rõ counter init atomic, auth sau chờ lock/revoke serialization, ACK/write credits và guard write treo. D07-01–05 đềuPROPOSED, gồm60s offline/30ngày retention; có kế hoạch file/thứ tự/test sau approval.
+- Kiểm docs/JSON bằng Node.js, giữ kết quả lịch sử trong VALIDATION; source/runtime mới chưa code, toàn matrix22NOT_RUN. PR73 probe độc lập/physical12NOT_RUN không kéo vào production; BASE03gateNOT_DECIDED/FULLdefault, MON01physical/B/BASE02pending không đổi.
+- Chỉ commit/push/cập nhật PR72 và theo CI, không merge/approve/backlog/DONE, không tạo nhánh implementation khi thiếu approval. A/C chốt wire/storage/auth, B transport/lifetime, nhóm notice/retention/offline. Kết quả CI cuối xem PR/report bàn giao.
+
 ## 19/10/2026 · C/Codex · BASE-03 kiểm chứng FULL/DELTA
 
 - Yêu cầu thực thi BASE-03 sau audit; người dùng yêu cầu không dùng codex-with-chatgpt. Fetch và worktree riêng từ origin/main1d35b53; main local f98a37f giữ nguyên/sạch. Không push/PR/merge/reset/rebase/stash/clean/xóa worktree.
@@ -813,3 +829,8 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - [Contract](EX02_RICH_EXAM_CONTRACT_V1.md)/[ADR](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md)/[D01–D10](plan-v2/EX02_DECISIONS_ROADMAP.md): Part1-only allowlist prefetch/manifest, ATTEST/INVALIDATE/epoch/lease, all-roster Audio+Visual trước authoritative Listening START; clock không khởi ở prefetch. Chấp nhận bytes Part1 có thể bị chủ máy trích xuất; no-store/RAM không bảo mật tuyệt đối. EX06 bridge rich→existing segments và image-visible/layout/two pulses trước play, budget/fail-closed/no replay/no deadline reset; source player/AudioService/ExamService giữ nguyên.
 - Fixture MOCK tự tạo200Q/76group/57media,54audio, six Part1 slots reuse một image và Part4/7-only refs riêng. Lượt thiết kế đầu58cases PASS (29 cũ+P01–P09/N01–N20); .NET PNG size/hash/decode thật không JavaFX GUI. Checks cuối records/JSON/canonical Java hash/links/diff/CI ghi [report](../evidence/ex02-contract-20261019/REPORT.md) theo kết quả thực.
 - Không Java/runtime/migrations/POM/WSv0/legacyQD21/seed/tracker changes; target HTTP/PG/WS/JavaFX/hearing/LAN NOT RUN. Phê duyệt thiết kế đã có theo đại diện; còn implementation tasks/evidence/dataset và human merge. Chỉ push/update PR67, không merge hoặc tự đánh EX03–08 DONE.
+
+
+## 20/10/2026 · Codex technical review PR72
+
+Đối chiếu proposal c9a5829/fixture7cases/43relative links với implementation thử nghiệm PR74 và test parser/correlation/dedup/cursor đã đọc. Hòa docs main giữ đủ BASE03/MON01/EX02, không đổi fixture/schema/runtime; cho phép merge tài liệu vẫn PROPOSED theo user. Không áp offline60s/retention30ngày, không human owner approval/ADR APPROVED hoặc MON07DONE.
