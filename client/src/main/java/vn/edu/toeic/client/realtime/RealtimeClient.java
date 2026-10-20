@@ -591,7 +591,8 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                 }
                 if((code.equals("FORBIDDEN")||code.equals("UNAUTHORIZED"))&&rejected!=null&&rejected.type().equals("HEARTBEAT")
                         &&rejected.attemptId()!=null&&rejected.payload().has("collectorSessionId")
-                        &&Objects.equals(rejected.attemptId(),message.attemptId())&&rejected.traceId().equals(message.traceId())) {
+                        &&Objects.equals(rejected.attemptId(),message.attemptId())&&rejected.traceId().equals(message.traceId())
+                        &&(!signalHeartbeatRequests.containsKey(message.requestId())||signalHeartbeatRequests.get(message.requestId())==monitoringBinding.get())) {
                     var rejection=new MonitoringAccessRejection(rejected.attemptId(),requiredString(rejected.payload(),"collectorSessionId"),code,current);
                     for(var listener:monitoringRejections)notifySafely(listener,rejection);
                 }

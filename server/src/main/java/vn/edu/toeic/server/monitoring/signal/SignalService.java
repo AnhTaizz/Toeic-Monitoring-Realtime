@@ -88,7 +88,10 @@ public class SignalService {
         if(owner==null)throw AccessDeniedException.forbidden();
         if(user.role()==Role.CANDIDATE){if(owner!=user.userId())throw AccessDeniedException.forbidden();}
         else if(user.role()==Role.PROCTOR){if(jdbc.sql("SELECT proctor_user_id FROM monitoring_proctor_assignments WHERE attempt_id=:a AND proctor_user_id=:u FOR SHARE")
-            .param("a",attempt).param("u",user.userId()).query(Long.class).optional().isEmpty())throw AccessDeniedException.forbidden();}
+            .param("a",attempt).param("u",user.userId()).query(Long.class).optional().isEmpty())throw AccessDeniedException.forbidden();
+            // Assignment is another potentially blocking auth lock. Expiry must hold after this final wait too.
+            Instant afterAssignment=jdbc.sql("SELECT clock_timestamp()").query((r,n)->r.getTimestamp(1).toInstant()).single();
+            if(!locked.expiresAt().isAfter(afterAssignment))throw AccessDeniedException.unauthorized();}
         else throw AccessDeniedException.forbidden();
     }
     private record LockedSession(AuthenticatedUser user,boolean enabled,boolean revoked,Instant expiresAt) { }
