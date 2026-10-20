@@ -829,3 +829,10 @@ Unit focused ghi25case RichImageTest PASS; lượt PG mới/chính xác source �
 - Đã kiểm: Linux, OpenJDK 21.0.12.1, PG 16.15, Xvfb. Test V2 mới 25/25 PASS; E2E thật PASS 3/3 trên `182f5f9`, giám thị tạo ca và START bằng UI, thí sinh làm bài và nộp, kết quả 1/200 khớp key MOCK, các probe âm đúng. `mvn -fae clean verify` exit 1 (chi tiết ở `KIEM_THU.md`). Lỗi gặp trước khi sửa: thiếu locale UTF-8 khi chạy suite; nút mất dấu `_` do mnemonic; race trong chính test E2E (đọc UI trước khi render).
 - Còn dở: Windows runbook/MSI/LAN, PG18, nghe thật NOT RUN. Thứ tự Flyway V13↔V14/V15 chờ A/C chọn ([phương án](INTEGRATION_EX06_PROCTOR_20261020.md#6-audit-flyway-chỉ-đề-xuất--không-sửa-migration-không-bật-outoforder)). LT04 GUI legacy FAIL cả trên main trong môi trường Linux. Chưa review/merge, không DONE.
 - Tiếp theo: A review client↔EX-07, C review START/READY, B chạy runbook mục 5 trên Windows.
+
+## 2026-10-20 · Release (Agent 3) / Claude Code (cloud) · Review chuỗi V2 trước merge `main`
+
+- Đã làm: kiểm ancestry, PR #72/#74/#75/#76 và CI. Tạo PR stacked #77 (EX-05), #78 (EX-07), #79 (EX-06). Nhánh ứng viên `stabilize/v2-rich-main-candidate-20261020` gộp chuỗi với EX-05 docs `6c5065d` và `main` `e0ef252`; xung đột chỉ ở docs, giữ cả hai bên. Sửa test phụ thuộc thứ tự `RichAttemptE2eGuiTest` (`3f5a114`). Sửa regression `refreshScope` chạy ngoài FX thread, kèm test hồi quy (`56ea3e2`). Thêm release review và bản nháp handoff Agent 4.
+- Đã kiểm: PostgreSQL 18.1 thật cho 6 kịch bản Flyway và full verify. CI Windows success. Phân loại lỗi trong [release review](RELEASE_V2_MAIN_REVIEW_20261020.md) §5.
+- Còn dở: A/C chốt Flyway; review/approval của người cho 5 PR; giải xung đột docs #75/#78; Windows PG18 + GUI. Không merge `main`, không DONE, không ghi approval.
+- Tiếp theo: owner quyết §4 rồi merge theo checklist §3; acceptance trên `main`; cập nhật `EX01_DATA_PIPELINE_HANDOFF.md`.
