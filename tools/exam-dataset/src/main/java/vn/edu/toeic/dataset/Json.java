@@ -26,6 +26,10 @@ final class Json {
         Files.writeString(path, GSON.toJson(value) + "\n");
     }
     static String hash(Path path) throws IOException { return hash(Files.readAllBytes(path)); }
+    static boolean safeFile(String name) {
+        return name != null && name.length() <= 255 && name.matches("[A-Za-z0-9][A-Za-z0-9._-]*") && !name.contains("..") && !name.endsWith(".")
+                && !name.matches("(?i)(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(\\..*)?");
+    }
     static String hash(byte[] bytes) {
         try { return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes)); }
         catch (NoSuchAlgorithmException impossible) { throw new IllegalStateException(impossible); }
