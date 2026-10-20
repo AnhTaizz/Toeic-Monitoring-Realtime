@@ -2,16 +2,28 @@
   "encoding": "UTF8_LF",
   "files": [
     {
+      "file": "REPORT.md",
+      "sha256": "631b6b9b8285845248bcfdf9a053b5455ed5741088f7d6c79372fad5d3a22cb2"
+    },
+    {
+      "file": "build-receipt-c77d8f8.json",
+      "sha256": "d1f696b5b8f07cd59bb88c7931a13606e7bc38e078e16c61bb352bbdcb6c38b4"
+    },
+    {
       "file": "build-receipt.json",
       "sha256": "c5490b40005e9f5f7a9f7076cc3a55598b577c5693d506e6dc7e1b0d33eed200"
+    },
+    {
+      "file": "raw-manifest-c77d8f8.json",
+      "sha256": "aefaeae198abd91e4104f95d13c8bf171c5b678c94b3948f1a5b596d93b4bdbf"
     },
     {
       "file": "raw-manifest.json",
       "sha256": "e9ce5999990d1368c29005d155a592b3a5cc937de0b5e0fae72b5f370bfbc6e4"
     },
     {
-      "file": "REPORT.md",
-      "sha256": "9f71610c2767a9f3d9cf99f27b9d274d34178abb4e2f03cfe5313b4e2158ed21"
+      "file": "verification-c77d8f8.json",
+      "sha256": "b6171a48d16e877530c9ebb730c7a144dc983046fd9401bf8995790f4bb3c7a8"
     },
     {
       "file": "verification.json",

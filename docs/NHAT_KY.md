@@ -810,3 +810,9 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - Hai regression mới đã tái hiện FAIL: integerwrap getAsLong và same-socket new-run capability. Sửa exact parse/clock và bindexpectedCollector/currentgen; localFAIL/XML nguyên bản giữignored. Runner entrypoint trướccluster và summaryfilter EX04 sai cũng giữbiên bản, không sửaraw hoặc nhậnsummarysai.
 - Sinh verification/case/XMLhash/raw inventory/JARreceipt từ source0f9d8e7. Chỉ docs/evidence sau đó, kiểm runtime diff rỗng. Main mới3bdefe6 chỉdocs/fixturesEX02, Java/SQL/POM không đổi, V12latest; không merge/rebase hoặc suy approval EX02 thànhMON07. Draft implementation vẫnstackedPR72c9a5829; CI đúngHEAD theoPR saupush.
 - FULLdefault, BASE03NOT_DECIDED, MON01physical/B/BASE02pending, MON02physical0/12NOT_RUN; khôngcapture/push/dashboard/D07-05, khônghuman approval/MON07DONE/merge.
+
+
+### MON07 — source cuối c77d8f8 / Draft PR74
+
+- Bổ sung regression thật: expiry trong session-lock wait đãFAIL trên3674633+tests (DBclock target-list tính trước lockwait);7cb7478 đọc DBclock sau locks. UnitterminalFAILED/globalUNAUTHORIZED cleanup đãFAIL trên7cb7478+tests; c77d8f8 closeworker/queue/reportunconfirmed, actual tokenrevoke casePASS. Giữraw/XML/JAR/report/receipt cũ, không sửa evidence lịch sử.
+- Sourcec77d8f8 focused219PASS/0SKIP, fullverify1034total=1028PASS/6SKIP/0FAIL/ERROR;44new cases subset/14REAL PG/WS,0schema/clusterstop0. [Report cuối](../evidence/v2-c-mon07-signal-pipeline/REPORT.md), versioned receipt/hash mới. Chỉ docs/evidence sau source; DraftPR74 stacked PR72, CI đúngpublicationHEAD theoPR. Không merge/approve/DONE/observer/push/dashboard/D07-05; FULLdefault/gate/physicalpending giữ nguyên.

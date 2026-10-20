@@ -1,0 +1,912 @@
+{
+  "availability": "LOCAL_IGNORED_ONLY; not GitHub downloadable files",
+  "sourceSha": "c77d8f84d00581eef54dddfc5cf7768764f3fa68",
+  "previousManifest": "raw-manifest.json (retained unchanged)",
+  "files": [
+    {
+      "path": "artifact-history-0f9d8e7/build-receipt-0f9d8e7.json",
+      "bytes": 3412,
+      "sha256": "c5490b40005e9f5f7a9f7076cc3a55598b577c5693d506e6dc7e1b0d33eed200"
+    },
+    {
+      "path": "artifact-history-0f9d8e7/client-0.1.0-SNAPSHOT-all.jar",
+      "bytes": 11483060,
+      "sha256": "e1d5c34f4a49d8a4f706e163f4e330f4e8cd6a5693ecb2c4013100baf7e0888c"
+    },
+    {
+      "path": "artifact-history-0f9d8e7/protocol-0.1.0-SNAPSHOT.jar",
+      "bytes": 106795,
+      "sha256": "96fadf0699107183c70700ecc428121d9dc186d0c8a70b355746eb25632b4dab"
+    },
+    {
+      "path": "artifact-history-0f9d8e7/receipt.json",
+      "bytes": 611,
+      "sha256": "66d138c9a58e87de0b8973c2c92b98f55cf90806fe5c3f2fcccd6e9156aa35db"
+    },
+    {
+      "path": "artifact-history-0f9d8e7/REPORT-3674633.md",
+      "bytes": 7837,
+      "sha256": "9f71610c2767a9f3d9cf99f27b9d274d34178abb4e2f03cfe5313b4e2158ed21"
+    },
+    {
+      "path": "artifact-history-0f9d8e7/server-0.1.0-SNAPSHOT.jar",
+      "bytes": 25292004,
+      "sha256": "603f637c6b073b5f5c32ae3236c5ae240133ad87deab78566d2f68c8986d3d1c"
+    },
+    {
+      "path": "artifact-history-0f9d8e7/verification-0f9d8e7.json",
+      "bytes": 12056,
+      "sha256": "24e4f398f9f0ae7b555866dc3a2e5725acd724d6a3273fff7e485654aef92498"
+    },
+    {
+      "path": "artifact-history-7cb7478/client-0.1.0-SNAPSHOT-all.jar",
+      "bytes": 11483060,
+      "sha256": "e1d5c34f4a49d8a4f706e163f4e330f4e8cd6a5693ecb2c4013100baf7e0888c"
+    },
+    {
+      "path": "artifact-history-7cb7478/protocol-0.1.0-SNAPSHOT.jar",
+      "bytes": 106795,
+      "sha256": "96fadf0699107183c70700ecc428121d9dc186d0c8a70b355746eb25632b4dab"
+    },
+    {
+      "path": "artifact-history-7cb7478/receipt.json",
+      "bytes": 630,
+      "sha256": "49935e08625fcde38c29f8ce9492aecb50f081ca1df7e16ce5141111496b6280"
+    },
+    {
+      "path": "artifact-history-7cb7478/server-0.1.0-SNAPSHOT.jar",
+      "bytes": 25293520,
+      "sha256": "bcacabc645ec1dcfa350872f4fa91c6d4e10353f8c7c9736a64cb7b61a51646a"
+    },
+    {
+      "path": "edge-before-fix-reports/terminal-transport.xml",
+      "bytes": 11469,
+      "sha256": "59e6ceea90cf1b3f491d89ff5f9f32bf6c108d8cadfcbd516f83de559d55b6ea"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/createdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/createdb.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/initdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/initdb.private.log",
+      "bytes": 1047,
+      "sha256": "0e2484ba623280bfe1d30f77136c4aec65f9e096d6f9b5bb4260454ea3049acc"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/java-version.private.err",
+      "bytes": 247,
+      "sha256": "bc9196eeb782c5e88676059fd5804e283ed5771ff47ea4318876d95d6a79573e"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/java-version.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/maven-version.private.err",
+      "bytes": 49,
+      "sha256": "c75c2bd75aaf6bc00e05146070515fd6774ac441e73027488bcb206146059b12"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/maven-version.private.log",
+      "bytes": 324,
+      "sha256": "220fc0ed638940f68ab084824324088677cdec6ff0ae18e13bea263ec6b3e47e"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/maven.private.err",
+      "bytes": 1221,
+      "sha256": "ab9eee05bb7ba573b1a6216fb4a29b8a5ac795fe536baaa43c839c734e8d72b8"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/maven.private.log",
+      "bytes": 7624109,
+      "sha256": "0b98b2b8905acdb50667e64ce24c0a6c60621f2bd2bb02f15364cf8ccd556914"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/pg-stop.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/pg-stop.private.log",
+      "bytes": 59,
+      "sha256": "3a6747065de8c2dbc66a6baa73d5ab09c2c03eb8851704f973ac4b886e6805f2"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/postgres-version.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/postgres-version.private.log",
+      "bytes": 73,
+      "sha256": "267ade76e85bb8877210127f61526a01d914ca1a059c16bf7b932068019da771"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/postgres.private.log",
+      "bytes": 1461,
+      "sha256": "7c4c6a97d9738d618018e1ef29f75e992c516cfd483704a8171e11a7217483e1"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/reports.private/client/TEST-vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest.xml",
+      "bytes": 16298,
+      "sha256": "b64ec717ad1981eb3f1d7cef378389d5dc28059cd8e0b219e280e3c0b4864708"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/reports.private/client/TEST-vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest.xml",
+      "bytes": 12997,
+      "sha256": "c8506a024a9c3c68c6b3e7734acdd35a6991b607fd1bc324d42d2708f086f3e1"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/reports.private/client/TEST-vn.edu.toeic.client.monitoring.MonitoringDeliveryTest.xml",
+      "bytes": 16813,
+      "sha256": "e9746d3686a8b14f08f4446479acdf200479a4602466ae769974b2b624e4e301"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/reports.private/client/TEST-vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest.xml",
+      "bytes": 12555,
+      "sha256": "54959d875ecd16c8269559dc1e87020fdb29dbc937c1091c584f3e1255f7a7f2"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/reports.private/client/TEST-vn.edu.toeic.client.realtime.RealtimeClientTest.xml",
+      "bytes": 21570,
+      "sha256": "33a59e217e37482e2206c0ae3cc8978824bb2d24973abd12ba9b02d2efaaa48d"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/reports.private/protocol/TEST-vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest.xml",
+      "bytes": 12126,
+      "sha256": "0544cae00d0cadffbb3b6ee93e72edf52cf842059c7eb15daa9fd9b9b674e2d8"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest.xml",
+      "bytes": 29010,
+      "sha256": "b75ebf1907f7d80e7123e570ff94521054957d85234de3dcd583311452ffa691"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest.xml",
+      "bytes": 140778,
+      "sha256": "3dc7c32c86c2b5f660a86f55322447c4a820d1e18888ed0f0b9c3137fa553acb"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest.xml",
+      "bytes": 29904,
+      "sha256": "4ab62759f198408728b0e4f9d190b99ebbb5e65be1bb6f2b41b31d9306777ed9"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest.xml",
+      "bytes": 28633,
+      "sha256": "9c36eb4b3ba2b4418d871e8ae1b778cafb26d303b375d0b32dd451dfbbf5c21e"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringStateServiceTest.xml",
+      "bytes": 29064,
+      "sha256": "077894d91051afac27ff846a3264c9ba9c67ae48045d46758a7ab8cdf7939f74"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/reports.private/server/TEST-vn.edu.toeic.server.monitoring.signal.SignalDisabledTest.xml",
+      "bytes": 27960,
+      "sha256": "a21e5a310fe58527fafe7aee77fffe2556a610a4ced694df86620c1b94004994"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/reports.private/server/TEST-vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest.xml",
+      "bytes": 7530112,
+      "sha256": "bfde4f102fa6a91c97957fcc159c7ec3980b671aca8fc2770472e699ce266967"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/result.json",
+      "bytes": 71487,
+      "sha256": "8fc387fec9dc862fe20ee1eddf11dc4cef008a2b303f7a5622824e2a038490cb"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/schema-count.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T152214Z-d1c5d5ac/schema-count.private.log",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/createdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/createdb.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/initdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/initdb.private.log",
+      "bytes": 1047,
+      "sha256": "c993a86c2a02857fada480f88610bd3d17d8995b462a89cf1b0c9a9c4416bc4e"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/java-version.private.err",
+      "bytes": 247,
+      "sha256": "bc9196eeb782c5e88676059fd5804e283ed5771ff47ea4318876d95d6a79573e"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/java-version.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/maven-version.private.err",
+      "bytes": 49,
+      "sha256": "c75c2bd75aaf6bc00e05146070515fd6774ac441e73027488bcb206146059b12"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/maven-version.private.log",
+      "bytes": 324,
+      "sha256": "220fc0ed638940f68ab084824324088677cdec6ff0ae18e13bea263ec6b3e47e"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/maven.private.err",
+      "bytes": 1221,
+      "sha256": "ab9eee05bb7ba573b1a6216fb4a29b8a5ac795fe536baaa43c839c734e8d72b8"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/maven.private.log",
+      "bytes": 9368724,
+      "sha256": "b5b31dbcb71b8e923c1e1eb40365146a658d9dfbbee81ae88f18a804f5df425a"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/pg-stop.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/pg-stop.private.log",
+      "bytes": 58,
+      "sha256": "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/postgres-version.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/postgres-version.private.log",
+      "bytes": 73,
+      "sha256": "267ade76e85bb8877210127f61526a01d914ca1a059c16bf7b932068019da771"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/postgres.private.log",
+      "bytes": 1462,
+      "sha256": "2946c822907fff60f52dd00e4e801acc9eb4aa02c1b3f5a32903bc8d820f4643"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/reports.private/client/TEST-vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest.xml",
+      "bytes": 16299,
+      "sha256": "c6e30d5fac35413c2b47632e830f3268f6f2fda20e0efa32fbf7225292e2a94c"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/reports.private/client/TEST-vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest.xml",
+      "bytes": 12993,
+      "sha256": "1f52587b5e088fd0a5266b40930cdbd3f375bf6c21b7f7893cace1d6d10ca79b"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/reports.private/client/TEST-vn.edu.toeic.client.monitoring.MonitoringDeliveryTest.xml",
+      "bytes": 16807,
+      "sha256": "9196b3b79cf134f1dc772a09fec730492478795d6090de0572c518f68e86eb3e"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/reports.private/client/TEST-vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest.xml",
+      "bytes": 12728,
+      "sha256": "4645635220330887a726f09284aa31a90c55952d88374e5e3a5d57ad987daff8"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/reports.private/client/TEST-vn.edu.toeic.client.realtime.RealtimeClientTest.xml",
+      "bytes": 21571,
+      "sha256": "8eef07ed27b8c30b94cd2e6da8a5ab8639f3c2c30b45f1d16d41c68c50726be8"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/reports.private/protocol/TEST-vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest.xml",
+      "bytes": 12124,
+      "sha256": "a717fd44d46205dde9913ef3b67c27a10da013a8d9deb433dc7b2ad66d921237"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest.xml",
+      "bytes": 29004,
+      "sha256": "5597ff40eb437a00d96b2a004148e66a0f9fc104de646f74c8374453902a62fe"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest.xml",
+      "bytes": 140771,
+      "sha256": "3266f7e73a9866cb7ebbca8423c6f7e00788229c8fdaebbfe8c116fbc37fbdf1"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest.xml",
+      "bytes": 29895,
+      "sha256": "363f0123142b1a028c910af5e6e759e5dded7a5e926fa285314b7f61efa20e85"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest.xml",
+      "bytes": 28626,
+      "sha256": "154451ebafe0becc8b9c1cf89bf736fba5f7d6e04b7de9dd6040d024b782941a"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringStateServiceTest.xml",
+      "bytes": 29055,
+      "sha256": "4f154ea2757b9bd243c3ada5f99adf3628452cdedc8a00f2af1b8b22a49bb07f"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/reports.private/server/TEST-vn.edu.toeic.server.monitoring.signal.SignalDisabledTest.xml",
+      "bytes": 27952,
+      "sha256": "e5be52a7bfe171a405742f5b7813f08a0b72bf86198dd7fe69acf5f8c08f5a96"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/reports.private/server/TEST-vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest.xml",
+      "bytes": 9275490,
+      "sha256": "d9454c766aba335979ace881a969b244bf54b4d117764ee7c6a0759b1f092df5"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/result.json",
+      "bytes": 72123,
+      "sha256": "5d20c675091ca32b6119fcc3867291f09e21e28f1b0d6b6c6b6b765692b36005"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/schema-count.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T152910Z-ec0b47d1/schema-count.private.log",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/createdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/createdb.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/initdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/initdb.private.log",
+      "bytes": 1047,
+      "sha256": "08a29b3d90a6ca61537a03eb94619d8cc14202ab51cceca4ac227d31fb26c9c0"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/java-version.private.err",
+      "bytes": 247,
+      "sha256": "bc9196eeb782c5e88676059fd5804e283ed5771ff47ea4318876d95d6a79573e"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/java-version.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/maven-version.private.err",
+      "bytes": 49,
+      "sha256": "c75c2bd75aaf6bc00e05146070515fd6774ac441e73027488bcb206146059b12"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/maven-version.private.log",
+      "bytes": 324,
+      "sha256": "220fc0ed638940f68ab084824324088677cdec6ff0ae18e13bea263ec6b3e47e"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/maven.private.err",
+      "bytes": 1471,
+      "sha256": "e1290251757f0a9643c69f805a4e1de68e0e4395e8ae002f1a84249c8f90ad73"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/maven.private.log",
+      "bytes": 12238782,
+      "sha256": "92f037d0a422b69f961b489d18caf0ce0f224fd250b591d3e40c5566fe63ecc4"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/pg-stop.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/pg-stop.private.log",
+      "bytes": 60,
+      "sha256": "dee7dfd8ceacf2d71f71537b270e2bd76b1fbc56e836a8d0272f52d90f119f17"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/postgres-version.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/postgres-version.private.log",
+      "bytes": 73,
+      "sha256": "267ade76e85bb8877210127f61526a01d914ca1a059c16bf7b932068019da771"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/postgres.private.log",
+      "bytes": 20753,
+      "sha256": "7b3fa93b397e4d06af5358a0b3ec80c00bfa9641e5bdf884443d23c0a9b417d8"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.AttemptRefreshTest.xml",
+      "bytes": 12564,
+      "sha256": "55c3193e8ef472c320d1dab59c1f1c66b080fff14ea543565c7e7ebb8d9f4609"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.audio.AudioApiClientTest.xml",
+      "bytes": 11569,
+      "sha256": "e4089eead2f8fb5cf9b4ecd8a5adb858c6db18371048508c8650ba9e3f24f1cd"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.audio.AudioFilesSharingTest.xml",
+      "bytes": 12676,
+      "sha256": "b2d8bf7cfa81c2581bdba3ed35fecb8346bb754de1383941f75e2ccd600174dd"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.audio.AudioFilesTest.xml",
+      "bytes": 14246,
+      "sha256": "76ccc9cb2e494a77136cff7156c51faa5fbd84b6a0abc2b83e1c48dc817beb50"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.audio.AudioPreparationTest.xml",
+      "bytes": 12291,
+      "sha256": "587dcfcf3270f46e7198d30521414a800508e57f5952d6fd511b8474c79172e1"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.audio.ListeningApiClientTest.xml",
+      "bytes": 11279,
+      "sha256": "ba6c06ea1b71feabb08eca553a4cc6d80c48f85abcc004d09c7843638661d870"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.audio.ListeningPlaybackTest.xml",
+      "bytes": 12048,
+      "sha256": "22732e5311671cf61e955f3fecc625b2b89f3064ab85a3e64f53e35244f95e64"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.ClientSettingsTest.xml",
+      "bytes": 11545,
+      "sha256": "84afa9d418ab240aa2cf8f8ce0f00d1d85ef8aba1eb9f6a9d8a504e890d3a042"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.dashboard.DashboardControllerTest.xml",
+      "bytes": 13438,
+      "sha256": "5bbf24e850880f0bf631322862c954e714fe4c7937aaf624c09b1614e540a8fd"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.dashboard.DashboardModelTest.xml",
+      "bytes": 12272,
+      "sha256": "179bfc36110bb5647381fcb9598203df49484593cbe080f9fdfdfc0de3d7a169"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.dashboard.FullStateDashboardTest.xml",
+      "bytes": 11496,
+      "sha256": "64225508ed1001b1671d2ec7b6e9fc01caf04d08f90c3f2f86ca21d2293a69dd"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.dashboard.LateEventsAndGapsTest.xml",
+      "bytes": 11280,
+      "sha256": "fca1124301eecffb4d5893c66d368b70c870fbc55365d7db912f29a3f6930076"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.dashboard.MonitoringApiClientTest.xml",
+      "bytes": 12838,
+      "sha256": "8d617f6e7da922f149f46250a7879a37c09769dfe3e0c089f9e63b1b4ed7da92"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.dashboard.MonitoringJsonTest.xml",
+      "bytes": 13752,
+      "sha256": "d24f60261b9b622264067d468faee9cfe2bf0d2d2ca07717148814b6f78bd8b1"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.dashboard.ProctorProgressControllerTest.xml",
+      "bytes": 11674,
+      "sha256": "2249b2ef39bc9b436cfffaf0f7c0ec998032b5bba757534ae0cbe74962b499b2"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.exam.ExamApiClientTest.xml",
+      "bytes": 14923,
+      "sha256": "080d75a4806aefddabfef265c5ffb55fa8da7935024c8fa146fd618cee58c1a4"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.exam.ExamHistoryReadTest.xml",
+      "bytes": 17490,
+      "sha256": "59b6565e3eec080926ad737ef8833e5deef7e514b6caea87183b8c54a1fef94e"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.exam.ExamPaperAndEntryTest.xml",
+      "bytes": 12360,
+      "sha256": "24a52c03a1229f7bd13e88bfc4d0911d68315cd74bb89fc65232f886970901a0"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.exam.ExamResultMappingTest.xml",
+      "bytes": 11893,
+      "sha256": "5dfa23e07cef184b791d8c7375a0c0bba218b26ccd784b19a84a947bf5c3831f"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.exam.ExamSessionTest.xml",
+      "bytes": 18269,
+      "sha256": "cc1ca47e9e46bdd92768e8c97342a5fdb802c8cb0f4d4d872c76eb811815fd2e"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.exam.ExamSessionThreadingTest.xml",
+      "bytes": 11023,
+      "sha256": "e8589ae2c275fd1ae6c59ac8b75f5d205535de935f30c05fd3bf502dc61dc9f0"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.exam.ScoreResultDialogTest.xml",
+      "bytes": 11101,
+      "sha256": "34e91f9d11312ac3a1bfd4fa72dbbdc6cff4f6d610b6f9a70a654685096e5b25"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.ExamMonitoringIntegrationTest.xml",
+      "bytes": 12963,
+      "sha256": "d484b2790930603daac1a44645776f35f69c2444981d1eb36fd068f34a5ac8dc"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.LoginApiClientTest.xml",
+      "bytes": 16408,
+      "sha256": "11b306d6a63ad6c73881620c99e8b0adfaec0ad1373ecfa460f8db36827d3e7d"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.CandidateModeSessionTest.xml",
+      "bytes": 13443,
+      "sha256": "1751bb2e4aa67b75dc24bb9c8f6e5530f0cdc7331bce55c7e389b784896d3ca3"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest.xml",
+      "bytes": 15914,
+      "sha256": "ea0c667400a6c7219752e2542003c314fb7e71149f553ed02730d26d487a894e"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest.xml",
+      "bytes": 12610,
+      "sha256": "427176102339274f6eb71c3268fa643d22134ca255c18f7e59957c6475d7abf3"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.harness.ControlledProcessHarnessTest.xml",
+      "bytes": 12315,
+      "sha256": "929f33ab8a35d2d9699b050a17ced6d988cbdcb9fa262066856941f34f49a4cb"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.harness.E1ArtifactsTest.xml",
+      "bytes": 11293,
+      "sha256": "26528fd4cd00471dfa1d8143ad7767d3fcae0177e12b1b730752ce9cf1c95442"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.harness.E1WindowTest.xml",
+      "bytes": 11154,
+      "sha256": "a7109f6e1fd57aa7095fd4512faf6ef588ad86f6a436475f7bd57096f249cf92"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.harness.HarnessArtifactsTest.xml",
+      "bytes": 11493,
+      "sha256": "394edcd411e86cfa6d6bc3db59ffcf0fad6e0c7a4411245053fb1f9efb928834"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.harness.HarnessCliTest.xml",
+      "bytes": 11185,
+      "sha256": "08da7da729a7eec2fb5625273e3be4467739d7ce76a8bb743b67357da0168557"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.harness.HarnessPlanTest.xml",
+      "bytes": 11448,
+      "sha256": "f2eb2294912e9e1642bb43845cb1684a4d729bbb0ead8fbe91c176815b595d16"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.harness.ObservationJoinerTest.xml",
+      "bytes": 12822,
+      "sha256": "aa686cd4daa4ed8769ec460239bfd283ca5df3c42f98af1d56e2846a2a7ec9ca"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.harness.TestTracePolicyTest.xml",
+      "bytes": 11393,
+      "sha256": "6635fabd066b659176eaf016a32a70407692e878e4863a6a8fa857064cf547c8"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.MonitoringDeliveryTest.xml",
+      "bytes": 16400,
+      "sha256": "7e056b51a004cbee19768df0df957e899ea3afb5405bafca13fb6203464a6e34"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.ProcessCollectorTest.xml",
+      "bytes": 13137,
+      "sha256": "f492ed3aca2dcfa131a9397a902ed7605558c1b297e45bc09e887fe53947ec5a"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.ProcessCollectorTraceTest.xml",
+      "bytes": 11175,
+      "sha256": "939fd25229b56f6cd16c305a425616f69aa43dd92db2985e7fbc912e4433c3d3"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest.xml",
+      "bytes": 13770,
+      "sha256": "27172c70638d86d5fc4f4cd8ef62df52f811f574c2a2a3237b6962d1ee7d9733"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest.xml",
+      "bytes": 12343,
+      "sha256": "c532ccb90ee450e151634a96748aa3bb907050c1376999ad96d5da67ed207b59"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.trace.DeltaReplayTest.xml",
+      "bytes": 12336,
+      "sha256": "f13c1ea5e86bd7f2178c1365bc99d0b7ae030b7b55fd178b69be9c7094207d2c"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.trace.HandwrittenTraceTest.xml",
+      "bytes": 11024,
+      "sha256": "15652b266534b904b4d00d8b2f4b97ed895166304c54f89b43e51b80f272a0e5"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest.xml",
+      "bytes": 13391,
+      "sha256": "2d9f12061d162a2de8eef77d25715013b9a54a48a4382e1298ed79e9bb09e73b"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.trace.ReplayEngineTest.xml",
+      "bytes": 12609,
+      "sha256": "3654a204513c52c8d3a9e8e6fa257928fce696dde19055c1d3fc45acac84bca7"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.trace.TraceCliTest.xml",
+      "bytes": 11274,
+      "sha256": "54d44b176edd70fa818572fc000b226b558668a350ee8b310886a0160c38e85e"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.trace.TraceReaderTest.xml",
+      "bytes": 13096,
+      "sha256": "4fca9e772f007c1af1592571b506449c673e3993d8f6f0d76cff145e54661016"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.monitoring.trace.TraceRecorderTest.xml",
+      "bytes": 11786,
+      "sha256": "a7e8860d941150c0ce526809326bd5c2612d30b1f6452aa6cc9ea89bca182acb"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.proctor.ProctorSessionApiClientTest.xml",
+      "bytes": 12205,
+      "sha256": "5f2f9926668f7ede13902ea6c4e3f1889cf3f2644648a2a9e642c07e869920a4"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.proctor.ProctorSessionControllerTest.xml",
+      "bytes": 12433,
+      "sha256": "da922d6a1559daf1bbdd0fe262b2d78c79e3fb7fa0b3a24265895f87531c1924"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpenerTest.xml",
+      "bytes": 13395,
+      "sha256": "55d4d87e27120c7120299ef3432c4aa556c86510ae2570283414d935ed21c741"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.realtime.RealtimeClientTest.xml",
+      "bytes": 21174,
+      "sha256": "b408b818a44d4f08513a0633a6f2743b0cb6401b0dd2fb13a0418110c213b7f5"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/client/TEST-vn.edu.toeic.client.ScopeLookupTest.xml",
+      "bytes": 11734,
+      "sha256": "99704cbf3c82e1c1debf52cda6d50f03aa3a55907a03f01fa6a0c574ae169a16"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/monitoring-spike/TEST-vn.edu.toeic.monitoring.ProcessObservationTest.xml",
+      "bytes": 8995,
+      "sha256": "60f156e8aec1187344cd860402c25a1157b409a46de03940ab4dd2ebb918b709"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/protocol/TEST-vn.edu.toeic.protocol.exam.AttemptIdentifierBoundaryTest.xml",
+      "bytes": 9346,
+      "sha256": "1a801610eb6564637705cc254bfa027b152315b3c0c2ce6fd7b106dd172ddc11"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/protocol/TEST-vn.edu.toeic.protocol.measurement.E1ByteAccountingTest.xml",
+      "bytes": 9354,
+      "sha256": "b2eee18b689613d80b1838779a5434ac1963407fb9381a5d990e7510dd9b7ff0"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/protocol/TEST-vn.edu.toeic.protocol.measurement.MessageMeasurementsTest.xml",
+      "bytes": 13244,
+      "sha256": "d4c1351b25301756eae2af13cc2df97d046c79030f47c7b1ab0fbe4280c760c9"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/protocol/TEST-vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest.xml",
+      "bytes": 9670,
+      "sha256": "f89fef9ecc5da982179d2b283a2d4257dfa168854f5ec6775e69e9f568c69d80"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/protocol/TEST-vn.edu.toeic.protocol.monitoring.EventOriginTest.xml",
+      "bytes": 9598,
+      "sha256": "9161b56fb11614034bdc42534e128149ab13e42b492bc03d2b086edbb033bb9e"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/protocol/TEST-vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest.xml",
+      "bytes": 10106,
+      "sha256": "137453f0c0484931e36cd451b9289a12a4b57f0fce2a019d36a54feca52aa560"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/protocol/TEST-vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest.xml",
+      "bytes": 10120,
+      "sha256": "5bd28910f5d309a4372dcea0301b33c706af155e00b71b3305d0502a365938fb"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/protocol/TEST-vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest.xml",
+      "bytes": 11695,
+      "sha256": "d6cde06832a4e99f3f94891d4c8f126d5b1e914496f45aea64b8f22a094e92a9"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.audio.AudioAuthorizationTest.xml",
+      "bytes": 27815,
+      "sha256": "eb5548dc078fc6193ad8e8480ad31b2e63c33e5667a1240bca78a7651fd138f1"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.audio.AudioCatalogTest.xml",
+      "bytes": 28204,
+      "sha256": "d36d4ccbb675bbcd52f4063ef6749b32b4ae6e66849163eeac82c37a2073c2ad"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.audio.AudioReadinessPolicyTest.xml",
+      "bytes": 26991,
+      "sha256": "1b6286357854436c0bfcab7fd474197619394f7113ab0e2793b941c85ca275fe"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.audio.AudioRuntimePostgresTest.xml",
+      "bytes": 547148,
+      "sha256": "a256499c6e10a99652a1382bfc9bde3f9d5618d3b34185a489f759f71637cf21"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.audio.ListeningRuntimePostgresTest.xml",
+      "bytes": 1053772,
+      "sha256": "295a67d852faa6b9efccd041926f886020ecf98b62ca221b5b79e5df1615b9ae"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.auth.AuthenticatedNetworkTest.xml",
+      "bytes": 38677,
+      "sha256": "3e524ce8968aa140419659cb40f8b68168e02a2196f31f79f0493388a0027a36"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.auth.AuthServiceTest.xml",
+      "bytes": 27712,
+      "sha256": "74c82636f708f4e6459f8e65e1ccb6169fd3acf6293d642cb51982bd730fe8fe"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.auth.ConcurrentRealtimeSendTest.xml",
+      "bytes": 27946,
+      "sha256": "7268b71077b25e6d04be2bf79646b554bdf457d6f9c0f6af9f03c6f5b4e9ce38"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.auth.RealtimeMeasurementTest.xml",
+      "bytes": 28219,
+      "sha256": "4c5ae3de62a0113e40c7e8bf1f7ca6db2d6a4aa95bcc7a2ccaf618a2f4f05a67"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.auth.SessionAuthenticationTest.xml",
+      "bytes": 30141,
+      "sha256": "dc5dd62240c5a977c6d69dea96c690eef67f9ba1abf1af843dd414328e950c43"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.exam.ExamControllerTest.xml",
+      "bytes": 30685,
+      "sha256": "228601a40e31be84f77785f6f2d5706d099151735f7c627a1338faaf8b6dc3da"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.exam.ExamReadAuthorizationTest.xml",
+      "bytes": 28035,
+      "sha256": "84932f99acdc174a0980661e67d660b5bb6a636bb6a29b4a1257fe53a19ebbee"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.exam.ExamRuntimePostgresTest.xml",
+      "bytes": 1023336,
+      "sha256": "b776fb693815b61e060c14ec08a367170883697b407b38683f3fcc8dd62266de"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.exam.ExamTimeoutSchedulingTest.xml",
+      "bytes": 27739,
+      "sha256": "bb1ae984d310728fe5284a9363a617978666b1231f5b4c1401904e60267fc098"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.exam.ExamValidationTest.xml",
+      "bytes": 28513,
+      "sha256": "02122aeb98f4be493f3b1b4d322709bcd9c1141ebfb4bbbe40f6d0a3f5311896"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.exam.RichExamMigrationPostgresTest.xml",
+      "bytes": 366309,
+      "sha256": "e01ae3bc42f88b3373635024ee322e68156bbc1cd0f0955c5712ffc103608b58"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.monitoring.FullSnapshotReducerTest.xml",
+      "bytes": 28194,
+      "sha256": "f238e14f66c3810e8488e1077bf647de86881e25c393e6eee194d655989d5e13"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest.xml",
+      "bytes": 28572,
+      "sha256": "d76300b08a6bc06c41968712ee19fbbcbd346184edeb72f6dcf2fda4cb4dd1d7"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringGapTest.xml",
+      "bytes": 29353,
+      "sha256": "6eb42baaab9bf95b43229492e00b5ebddc5c641ab85bfd0799c8985d9969f060"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest.xml",
+      "bytes": 139496,
+      "sha256": "8035f6dc7a53346eb5529c0d9881f75adf125d6d184256be4b3b9e1e70529a64"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest.xml",
+      "bytes": 29548,
+      "sha256": "b089e57ec4a3f72ce4c2e33a4d44c7d5511bc7c852647c36a36e44dcfe41fb28"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest.xml",
+      "bytes": 28278,
+      "sha256": "d21d71e039570bfc066eb279f6427b1a280984fa4eec30b5a9560dccf2f07435"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.monitoring.MonitoringStateServiceTest.xml",
+      "bytes": 28708,
+      "sha256": "8fef7cd2560103a7304b690d7762ccd71372aaa94cae69086f2206410bc9e271"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.monitoring.ProcessEventTest.xml",
+      "bytes": 30895,
+      "sha256": "7d53043d8bc8b404e4d4ac995c5cab5c6e1ec38dd2454e57e6cc58127491f3cb"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.monitoring.signal.SignalDisabledTest.xml",
+      "bytes": 27604,
+      "sha256": "e4369692553a84f1aa6b5fa3d82e1a2e5f5414b0604c9baed240bc0f4beb46a4"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest.xml",
+      "bytes": 9256265,
+      "sha256": "9b9b62c0efa76f234658999443bb6f1e4a6c1e146a7682b7bc37c54c60f01e8a"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/reports.private/server/TEST-vn.edu.toeic.server.monitoring.SmokeCleanupTest.xml",
+      "bytes": 27865,
+      "sha256": "9aeaa0a429f9f1f91fcbe39b41310fa163771a0598ff8e02584201e51557af05"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/result.json",
+      "bytes": 337805,
+      "sha256": "16c389f5e7241063e392ba431846b9612acc3b1b48ce0b8ade01fa128e594a24"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/schema-count.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mon07-20261019T153108Z-02884fe6/schema-count.private.log",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "terminal-transport-before-fix.log",
+      "bytes": 12438,
+      "sha256": "a7ce5a655e7a21f8815791e5e70d29856d4bd6ad3750d67d3d33bb70d5babfa2"
+    }
+  ]
+}

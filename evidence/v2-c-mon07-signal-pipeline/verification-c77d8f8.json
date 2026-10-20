@@ -1,0 +1,397 @@
+{
+  "status": "TECHNICALLY_VERIFIED_EXPERIMENT_PENDING_OWNER_REVIEW",
+  "authorization": "USER_AUTHORIZED_EXPERIMENT_ONLY_NOT_A_B_C_SIGNOFF",
+  "proposalSourceSha": "c9a5829a022b6810d1d6db2da240d57b95d3ed81",
+  "codeSourceSha": "c77d8f84d00581eef54dddfc5cf7768764f3fa68",
+  "input": "MOCK DISPLAY_COUNT_OBSERVED",
+  "transport": "REAL Spring HTTP/WebSocket/PostgreSQL loopback; ACK loss/deferred failure SIMULATED",
+  "baseline": {
+    "sourceSha": "c9a5829a022b6810d1d6db2da240d57b95d3ed81",
+    "command": "mvn test (no PostgreSQL opt-in)",
+    "result": "SUCCESS",
+    "totals": {
+      "tests": 944,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 70,
+      "passed": 874
+    },
+    "logSha256": "3f4a320058d736219736cd28faccd5abbdaf0d26dcbf19c71974d73b8459901e"
+  },
+  "focused": {
+    "sourceSha": "c77d8f84d00581eef54dddfc5cf7768764f3fa68",
+    "runId": "mon07-20261019T152910Z-ec0b47d1",
+    "mode": "Focused",
+    "startUtc": "2026-10-19T15:29:18.2765706Z",
+    "endUtc": "2026-10-19T15:30:09.1600299Z",
+    "exitCode": 0,
+    "totals": {
+      "failures": 0,
+      "passed": 219,
+      "errors": 0,
+      "tests": 219,
+      "skipped": 0
+    },
+    "cleanup": {
+      "clusterStopExit": 0,
+      "ownedSchemasRemaining": 0
+    }
+  },
+  "full": {
+    "sourceSha": "c77d8f84d00581eef54dddfc5cf7768764f3fa68",
+    "runId": "mon07-20261019T153108Z-02884fe6",
+    "mode": "Full",
+    "startUtc": "2026-10-19T15:31:17.8899835Z",
+    "endUtc": "2026-10-19T15:34:04.4782762Z",
+    "exitCode": 0,
+    "totals": {
+      "failures": 0,
+      "passed": 1028,
+      "errors": 0,
+      "tests": 1034,
+      "skipped": 6
+    },
+    "cleanup": {
+      "clusterStopExit": 0,
+      "ownedSchemasRemaining": 0
+    }
+  },
+  "versions": {
+    "os": "Microsoft Windows NT 10.0.26200.0",
+    "java": "openjdk version \"21.0.10\" 2026-01-20 LTS",
+    "maven": "Apache Maven 3.9.15 (98b2cdbfdb5f1ac8781f537ea9acccaed7922349)",
+    "postgres": "PostgreSQL 18.3 on x86_64-windows, compiled by msvc-19.44.35223, 64-bit"
+  },
+  "newCases": [
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "directObjectIntegerCannotWrapLongAndMidnight24IsNotAValidClockField",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "immutablePayloadAndTimeNormalizationGiveCanonicalEquality",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "strictIntegerLexemesAndBounds(String)[1]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "strictIntegerLexemesAndBounds(String)[2]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "strictIntegerLexemesAndBounds(String)[3]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "strictIntegerLexemesAndBounds(String)[4]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "strictIntegerLexemesAndBounds(String)[5]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "strictIntegerLexemesAndBounds(String)[6]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "rejectsDuplicateUnknownFieldsNullOriginAndUnsupportedType",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "publishedFirstSliceFixtureMatchesTypedEncoderAndNegativeCases",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "byteBoundsStrictDecoderUnicodeEscapesAndDepth",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "absentOriginIdIsRequiredForOfflineAndObservedZeroIsNotUnknown",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "strictTimes(String)[1]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "strictTimes(String)[2]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "strictTimes(String)[3]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "strictTimes(String)[4]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest",
+      "name": "strictTimes(String)[5]",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest",
+      "name": "queueAndByteCapsIncludeFailedEntriesAndDropsStayLocalWithNoGapType",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest",
+      "name": "reconnectRequiresNewCapabilityAndIgnoresOldSocketAckWithoutChangingOrigin",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest",
+      "name": "stalledWriteIsNotRetriedOrSilentlyCancelledAndOldGuardCannotWriteAfterStop",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest",
+      "name": "retriesExactlyFiveTimesThenRetainsExhaustedEntryAndManualRetryUsesSameContent",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest",
+      "name": "twoFlightsAndNoCreditPreventNewDispatch",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest",
+      "name": "failedWriteBacksOffAndRetainsSameIdentity",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest",
+      "name": "denialStopsOnlyCorrelatedScopeAndReleasesListeners",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest",
+      "name": "terminalTransportFailureStopsEvenWhenUnauthorizedHasNoRequestCorrelation",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest",
+      "name": "writeIsNotAckAndWrongCorrelationCannotReleaseFrozenEvent",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.realtime.RealtimeClientTest",
+      "name": "signalWritesHaveTwoCreditsAndMalformedAckDoesNotConsumeCorrelation",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.realtime.RealtimeClientTest",
+      "name": "signalExperimentIsExplicitScopedAndResetOnReconnectOrHeartbeatLeaseChange",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.realtime.RealtimeClientTest",
+      "name": "newSignalRunOnSameSocketCannotReuseCapabilityFromOldHeartbeatLease",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalDisabledTest",
+      "name": "experimentalServiceAndRoutesAreAbsentByDefault",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "deferredCommitFailureRollsBackCounterAndNeverEmitsSuccessAck",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "terminalUpdateWaitsForSignalCommitThenDuplicateIsForbidden",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "realUncorrelatedTokenDenialStopsDeliveryAndItsWorker",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "mockFixtureThroughClientDeliveryRealWsCommitAckLossRetryAndPagedHttp",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "actualReconnectRequiresFreshCapabilityAndPreservesOriginalConnection",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "revokeWhileCounterWaitsIsRecheckedBeforeDuplicate",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "duplicateCanonicalConflictAndUnknownTypeHaveNoExtraRows",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "expiredTokenCannotReadOrReplayStoredDuplicate",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "authorizationBeforeDuplicateHistoryAndCapabilityIncludingTerminalAssignmentAndRevoke",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "tokenRevokeAndAssignmentDeletionWaitForAuthorizedTransactionToFinish",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "fixedThroughPaginationNeverCheckpointsUncommittedOrLaterRows",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "counterLockCommitsPrefixAndInitialWriterRollbackCannotSkipLowSequence",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "expiryIsJudgedAfterSessionRowLockWaitNotBeforeIt",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "strictWireRejectsDuplicateUnknownUnicodeAndIntegerFormsWithoutMutation",
+      "status": "PASS"
+    }
+  ],
+  "fullSkippedCases": [
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+      "name": "lockSidecarCannotRedirectOutsideCache"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "symlinkInsideCacheRootIsRejectedWhereLinksCanBeCreated"
+    },
+    {
+      "class": "vn.edu.toeic.client.exam.ScoreResultDialogTest",
+      "name": "warningFollowsOnlyServerFlagAndKeepsConfirmedResult(String, boolean)"
+    },
+    {
+      "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+      "name": "installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle"
+    },
+    {
+      "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+      "name": "proctorControlsLt04RealGuiBeforeAndAfterAutomaticTimeout"
+    },
+    {
+      "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+      "name": "appImageProductionClientUsesUnifiedReadingListeningWithoutInstallerClaim"
+    }
+  ],
+  "history": [
+    {
+      "sourceSha": "cb37ea5576da5c5b791974fd0e83076003806eb7",
+      "runId": "mon07-20261019T150340Z-29e470db",
+      "status": "RUNTIME_SUCCESS_SUMMARY_FILTER_INVALID",
+      "correctedTotalsFromMavenLog": {
+        "tests": 212,
+        "passed": 212,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "note": "Original result.json copied stale EX04 XML, retained unchanged; not used as a valid summary."
+    },
+    {
+      "sourceSha": "5887b584f2f35b052dc5c0bbceb9e7a0988f2b66",
+      "runId": "mon07-20261019T150606Z-9686139c",
+      "status": "SUCCESS",
+      "tests": 212
+    },
+    {
+      "sourceSha": "5887b584f2f35b052dc5c0bbceb9e7a0988f2b66",
+      "workingTree": "Added regression tests",
+      "status": "EXPECTED_FAIL_BEFORE_FIX",
+      "cases": [
+        "directObjectIntegerCannotWrapLongAndMidnight24IsNotAValidClockField",
+        "newSignalRunOnSameSocketCannotReuseCapabilityFromOldHeartbeatLease"
+      ],
+      "fixSourceSha": "0f9d8e78275f168cde25f2649ac008301a99b2fb"
+    },
+    {
+      "sourceSha": "0f9d8e78275f168cde25f2649ac008301a99b2fb",
+      "status": "SUPERSEDED_BY_AUTH_EXPIRY_AND_TERMINAL_CLEANUP_FIXES",
+      "focusedTests": 216,
+      "fullPassed": 1025,
+      "fullSkipped": 6
+    },
+    {
+      "sourceSha": "36746330e6c4a59ea65736d3387c1c58b8251a0c",
+      "workingTree": "Added expiry lock-wait regression",
+      "runId": "mon07-20261019T152214Z-d1c5d5ac",
+      "result": "FAIL",
+      "totals": {
+        "failures": 1,
+        "passed": 216,
+        "errors": 0,
+        "tests": 217,
+        "skipped": 0
+      },
+      "cause": "SELECT target-list clock evaluated before session row lock wait; token expiry accepted after wait",
+      "fixSourceSha": "7cb7478f2fba4478fd39925db930464d6cb34581"
+    },
+    {
+      "sourceSha": "7cb7478f2fba4478fd39925db930464d6cb34581",
+      "workingTree": "Added terminal transport cleanup regression",
+      "result": "FAIL",
+      "cause": "Uncorrelated UNAUTHORIZED led to adapter FAILED but delivery worker remained active",
+      "fixSourceSha": "c77d8f84d00581eef54dddfc5cf7768764f3fa68"
+    }
+  ],
+  "notApprovedOrNotRun": [
+    "offline60s/retention30days real-data policy",
+    "production observer/capture",
+    "proctor push/dashboard",
+    "new signal history >5000 rows (paging boundaries/concurrent commit covered on smaller fixture)",
+    "OS display/USB/GUI/physical/LAN acceptance",
+    "E1/E2",
+    "owner A/B/C signoff"
+  ],
+  "fullDefaultPreserved": true,
+  "base03Gate": "NOT_DECIDED",
+  "mon07Done": false,
+  "previousPublicVerification": "verification.json (0f9d8e7; retained unchanged)",
+  "preservedArtifactHistory": [
+    {
+      "sourceSha": "0f9d8e78275f168cde25f2649ac008301a99b2fb",
+      "status": "3_JARS_EXACT_HASH_PRESERVED_LOCAL",
+      "publicReceipt": "build-receipt.json"
+    },
+    {
+      "sourceSha": "7cb7478f2fba4478fd39925db930464d6cb34581",
+      "status": "3_JARS_PRESERVED_LOCAL_WITH_RECEIPT"
+    }
+  ]
+}

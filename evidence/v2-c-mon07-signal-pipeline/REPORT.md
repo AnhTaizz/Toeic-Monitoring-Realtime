@@ -15,9 +15,27 @@ Base chính xác `c9a5829a022b6810d1d6db2da240d57b95d3ed81` của [PR72](https:/
 - RAM256/1MiB/2flight-write, ACK5s/max5/backoff1/2/4/8s/pump25ms; guard mỗi dispatch, không retry khi write cũ chưa hoàn tất. FAILED/EXHAUSTED tính vào bound; overflow count/time/unconfirmed cục bộ, không phát SIGNAL_GAP/OBSERVER_STATUS chưa advertised.
 - Offline60s/retention30ngày **chưa áp dụng**. Không observer/capture thật; TEST schema chỉ có dữ liệu MOCK và được DROP bằng fixture teardown. Không disk queue hoặc purge job production.
 
-## Kiểm chứng
+## Kiểm chứng cuối c77d8f8
 
-Code/test source cuối **`0f9d8e78275f168cde25f2649ac008301a99b2fb`**. [Summary/case/status](verification.json), [build receipt/hash](build-receipt.json), [raw inventory/hash only](raw-manifest.json).
+Source **`c77d8f84d00581eef54dddfc5cf7768764f3fa68`**; [summary/cases](verification-c77d8f8.json), [receipt JAR mới](build-receipt-c77d8f8.json), [raw/hash bổ sung](raw-manifest-c77d8f8.json). Bản verification/receipt0f9d8e7 bên dưới giữ nguyên như lịch sử, không là source cuối. JAR/report/receipt0f9d8e7 và7cb7478 đã giữ riêng trong ignored artifact-history; ba JAR0f9d8e7 kiểm exacthash khớp receipt công bố.
+
+| Lượt cuối | Run ID | Kết quả |
+|---|---|---|
+| Focused | mon07-20261019T152910Z-ec0b47d1 | **219PASS/0FAIL/ERROR/SKIP** |
+| Full verify/JAR | mon07-20261019T153108Z-02884fe6 | **1034total=1028PASS/6SKIP/0FAIL/ERROR** |
+
+**44case mới** là subset full: protocol17/delivery9/RealtimeClient3/default-disabled1/**14REAL PG/WS cases**. Hai lượt cuối đều0owned schema/clusterStopExit0. Các giới hạn scope/physical/typed-history>5000/RFC6455malformedframes và6skip vẫn như bên dưới.
+
+Hai regression follow-up có FAIL trước sửa, giữ XML/log/source context:
+
+- Session row lock giữ tới khi DB clock qua expiry: SELECT target-list clock_timestamp() được tính trước LockRows wait nên đã nhận token hết hạn (217tests/1FAIL trên3674633+regression). 7cb7478 đọc clock DB riêng **sau session/user locks**, focused217PASS/full1026PASS+6SKIP; nay cùng14case trong source cuối PASS.
+- UNAUTHORIZED trước parse không có request correlation: adapter chuyểnFAILED nhưng delivery chỉ xử lý như disconnect, worker/RAM cònactive. Unit regression trên7cb7478 FAIL; c77d8f8 đóng delivery khi terminalFAILED, xử lý callback lúc khởi tạo an toàn, expose discarded count. Real token revoke kiểm worker tự dừng/không row/đếm1unconfirmed PASS. Không sửa transport legacy/auth mutators hoặc bật observer.
+
+CI exact publication HEAD được theo dõi trong [Draft PR74](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/74); không lấy CI7cb7478 hoặc proposal thay HEAD cuối. Không tự ký A/B/C/MON07DONE/merge.
+
+## Kiểm chứng lịch sử 0f9d8e7
+
+Code/test source của lượt lịch sử **`0f9d8e78275f168cde25f2649ac008301a99b2fb`**. [Summary/case/status](verification.json), [build receipt/hash](build-receipt.json), [raw inventory/hash only](raw-manifest.json).
 
 | Lượt | Source / run | Kết quả thực tế |
 |---|---|---|
