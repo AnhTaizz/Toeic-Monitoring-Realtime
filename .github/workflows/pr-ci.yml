@@ -36,3 +36,11 @@ jobs:
       - name: Validate LAN kit scripts (MOCK files, no network)
         shell: powershell
         run: .\scripts\lan-t3c4\Test-T3C4LanKit.ps1 -OutputDirectory target/ci-lan-kit -JavaHome $env:JAVA_HOME
+
+      - name: Set up Python for E1 analysis tests
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: E1 analyzer and derived provenance tests (MOCK, no collection)
+        run: python -m unittest discover -s scripts/benchmarks/e1 -p 'test*.py' -v

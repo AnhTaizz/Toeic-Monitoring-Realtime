@@ -137,32 +137,17 @@ java -cp $jar $cli --smoke-short target/e1 $sha
 # Sau checklist/B review, dành riêng thời gian ~28 phút, KHÔNG chạy tự động trong review:
 # java -cp $jar $cli --full target/e1 $sha
 $suite = 'target/e1/E1-THAY-BANG-ID-THAT'
-$derived = 'target/e1-reanalysis-' + [guid]::NewGuid().ToString('N')
-New-Item -ItemType Directory -Path $derived | Out-Null
-$joinChanged = $false
-foreach ($run in Get-ChildItem $suite -Directory -Filter 'run-*') {
-    $out = Join-Path $derived ($run.Name + '-join.json')
-    java -cp $jar vn.edu.toeic.client.monitoring.harness.HarnessCli join --input-dir $run.FullName --output $out
-    if ($LASTEXITCODE -ne 0) { throw "Rejoin không hợp lệ: $($run.Name)" }
-    $old = Join-Path $run.FullName 'join.json'
-    $oldRows = (Get-Content $old -Raw | ConvertFrom-Json).rows | Select-Object trialId,conclusion,reason
-    $newRows = (Get-Content $out -Raw | ConvertFrom-Json).rows | Select-Object trialId,conclusion,reason
-    $oldHash = (Get-FileHash $old).Hash.ToLowerInvariant()
-    $newHash = (Get-FileHash $out).Hash.ToLowerInvariant()
-    $diff = @(Compare-Object $oldRows $newRows -Property trialId,conclusion,reason)
-    [pscustomobject]@{
-        toolSha = $sha; run = $run.Name
-        originalManifestSha256 = (Get-FileHash (Join-Path $run.FullName 'manifest.json')).Hash.ToLowerInvariant()
-        oldJoinSha256 = $oldHash; newJoinSha256 = $newHash; differences = $diff
-    } | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $derived ($run.Name + '-provenance.json')) -Encoding UTF8
-    if ($newHash -ne $oldHash) { $joinChanged = $true }
-}
-if ($joinChanged) { throw 'BLOCKED: join mới khác manifest gốc; giữ derived output, chưa chạy analyzer trên join mới' }
-python scripts/benchmarks/e1/analyze.py $suite (Join-Path $derived 'analysis')
+$derived = 'target/e1-derived-' + [guid]::NewGuid().ToString('N')
+$analysis = 'target/e1-analysis-' + [guid]::NewGuid().ToString('N')
+# Output chưa tồn tại, nằm ngoài raw suite; không mkdir trước, không sửa/seal manifest cũ.
+python scripts/benchmarks/e1/derived.py $suite $derived --join-tool $jar
+if ($LASTEXITCODE -ne 0) { throw 'Rejoin/provenance bị từ chối; giữ output lỗi riêng' }
+python scripts/benchmarks/e1/analyze.py $suite $analysis --derived-joins $derived --join-tool $jar
 if ($LASTEXITCODE -ne 0) { throw 'Xem run-status.json; không dùng summary lịch sử' }
-Get-ChildItem (Join-Path $derived 'analysis') -File -Recurse | ForEach-Object {
-    [pscustomobject]@{ path = $_.FullName; sha256 = (Get-FileHash $_.FullName).Hash.ToLowerInvariant() }
-} | ConvertTo-Json -Depth 3 | Set-Content (Join-Path $derived 'analysis-output-hashes.json') -Encoding UTF8
+# join-differences.csv: đủ trial, changed=True khi conclusion/reason/metric fields khác.
+# analysis-receipt.json: ORIGINAL/DERIVED, raw source riêng, input/tool/output hashes.
+# Đường gốc vẫn dùng được, output mới khác:
+# python scripts/benchmarks/e1/analyze.py $suite ('target/e1-original-'+[guid]::NewGuid().ToString('N'))
 ```
 
 ### Tái phân tích raw E1 lịch sử
@@ -176,7 +161,30 @@ Raw, `join.json` và summary lịch sử là evidence bất biến. Khi tìm l�
 5. Phân tích lại bằng analyzer đã sửa CPU theo trọng số thời gian và kiểm coverage, nhưng chỉ khi cơ chế checksum cho phép dùng đúng join cần phân tích.
 6. Ghi riêng SHA của `ObservationJoiner`/analyzer, hash của mọi input/output và bảng khác biệt kết quả.
 
-Analyzer hiện tại đọc `join.json` trong từng run và yêu cầu hash của file này khớp `manifest.json`. Nếu join mới giống byte join cũ, manifest gốc vẫn hợp lệ và có thể chạy analyzer hiện tại trên bộ lịch sử. Nếu join mới khác, **không** ghi đè `join.json`, không sửa hoặc seal lại manifest gốc để làm checksum khớp. Trường hợp này đang **BLOCKED**: cần owner bổ sung cách để analyzer nhận một join dẫn xuất bên ngoài kèm provenance, hash input và hash output. Việc đó nằm ngoài phạm vi audit này; chưa được phép bỏ qua checksum hay tự xây thêm pipeline.
+20/10/2026 — blocker công cụ này đã được giải quyết bằng CLI explicit ở trên và
+[contract provenance v1](../scripts/benchmarks/e1/README.md). Analyzer luôn xác minh cả
+`join.json` gốc/manifest/e1-manifest/resources/raw trước khi nhận join dẫn xuất; không ghi
+đè hoặc seal lại evidence lịch sử. Run/clock/collector/trial identity, schema/reason/counters/
+scan bounds và hash JAR/script/join phải hợp lệ. Sai/thiếu/thừa run/provenance/file, hash hoặc
+trial thì INVALID, không fallback. Không có flag bỏ validation. Blocker này được gỡ cho
+**công cụ tái phân tích**, không xác nhận raw lịch sử, QA-05 DONE hay nghiệm thu E1.
+
+`NEW_ROOT/run-*/provenance.json` khóa đủ7file gốc + run/clock và rawSourceSha từ metadata,
+JAR version bằng SHA256, script SHA/source nếu đối chiếu được Git. Source SHA của JAR không
+suy từ checkout mới: để null, đối chiếu build receipt ngoài nếu có; không gán HEAD vào raw.
+Analyzer ghi source/hash riêng và mọi output hash vào analysis-receipt.json (không tự tạo
+timestamp). Khi creator cũ ở worktree khác, chọn rõ `--provenance-script PATH-TO-OLD-derived.py`:
+script/hash và source Git đã ghi phải kiểm được, không tự tìm file. Các CSV/Markdown và
+receipt deterministic khi cùng bytes đầu vào/tool và context source Git; source-context
+đổi là metadata khác, không phải thay số đo. Không sửa công thức CPU weighted/latency/mẫu số.
+
+Ví dụ **MOCK** tính tay trong `test_derived.py`: bucket200ms có2eligible,1detected/1unknown
+trước rejoin; join mới xác định trial-002 missed thì có1detected/1missed/0unknown, missRate.5,
+latency detected100ms, CPU10%/20% giữ nguyên. Bucket khác vẫn giữ unknown và censored. Đây
+là fixture kiểm thuật toán analyzer/contract, không kết quả đo hay phép nới identity.
+`join-differences.csv` giữ đủ trial, old/new conclusion/reason/scan/metadata/hold/lifetime;
+changed=False vẫn hiển thị, không xuất PID/startInstant. Hash chỉ chứng minh liên kết/toàn
+vẹn, không chứng minh kết luận join đúng. Review correctness của Joiner vẫn độc lập.
 
 Tại audit PR43, raw lịch sử chưa có. Phiên tích hợp17/10 đã truy cập đủ84raw, kiểm hash trước/sau, rejoin12 bằng Java mới giống byte gốc và tái phân tích CPU bằng analyzer mới vào thư mục riêng. [Bằng chứng/kết luận mới](../evidence/integration-final-20261017/REPORT.md) chờ C xác nhận; không sửa raw/join/summary lịch sử hoặc gán source RC vào metadata cũ. Không chạy lại campaign12 hoặc E2.
 
