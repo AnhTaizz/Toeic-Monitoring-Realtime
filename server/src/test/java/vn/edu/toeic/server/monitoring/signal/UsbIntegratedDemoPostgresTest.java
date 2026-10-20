@@ -46,7 +46,7 @@ class UsbIntegratedDemoPostgresTest {
         String url="jdbc:postgresql://127.0.0.1:"+port+"/"+required("DB_NAME");
         admin=DriverManager.getConnection(url,required("DB_USER"),required("DB_PASSWORD"));admin.createStatement().execute("CREATE SCHEMA "+schema);
         var config=new HashMap<String,Object>();config.put("server.address","127.0.0.1");config.put("server.port","0");config.put("spring.datasource.url",url+"?currentSchema="+schema);config.put("spring.datasource.username",required("DB_USER"));config.put("spring.datasource.password",required("DB_PASSWORD"));config.put("spring.flyway.schemas",schema);config.put("spring.flyway.default-schema",schema);config.put("toeic.seed.password",required("TOEIC_SEED_PASSWORD"));config.put("toeic.monitoring.signal-experiment-enabled",true);config.put("exam.timeout.scheduler.enabled",true);config.put("logging.level.root","WARN");config.put("debug",false);
-        var spring=new SpringApplication(ToeicServerApplication.class);spring.setBannerMode(Banner.Mode.OFF);spring.addInitializers(c->c.getEnvironment().getPropertySources().addFirst(new MapPropertySource("owned-usb-demo",config)));app=spring.run();
+        var spring=new SpringApplication(ToeicServerApplication.class);spring.setBannerMode(Banner.Mode.OFF);spring.setDefaultProperties(config);spring.addInitializers(c->c.getEnvironment().getPropertySources().addFirst(new MapPropertySource("owned-usb-demo",config)));app=spring.run();
         jdbc=app.getBean(JdbcClient.class);base="http://127.0.0.1:"+((WebServerApplicationContext)app).getWebServer().getPort();http=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(3)).build();
         candidate=login("candidate1");proctor=login("proctor1");exam="USB-MOCK-"+UUID.randomUUID();
         var question=new ExamQuestionImportDto("MOCK-R1","READING",5,null,null,null,"MOCK USB TEST scope only","A",1,List.of(new ExamOptionImportDto("A","MOCK A",1),new ExamOptionImportDto("B","MOCK B",2)));
@@ -127,7 +127,10 @@ class UsbIntegratedDemoPostgresTest {
             System.out.println("EXPLICIT REAL CIM TEST: selected Number/BusType or Index/InterfaceType only; duration="+duration+"s delay="+cadence+"ms timeout="+timeout+"ms; no files/serial or production binding.");
             if(cancelRequested()){results.add(Map.of("kind","REAL_CIM","outcome","CANCELLED_BEFORE_SCAN","pipelineVerified",false));return;}
             coordinator.start();long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(duration+10);
-            while(!coordinator.awaitStopped(Duration.ofMillis(100))&&System.nanoTime()<deadline)if(cancelRequested())coordinator.requestStop("CANCELLED");
+            while(!coordinator.awaitStopped(Duration.ofMillis(100))&&System.nanoTime()<deadline){
+                if(coordinator.status().scans()>0){Path marker=Path.of(required("TOEIC_USB_TEST_OUTPUT"),"scan-observed.flag");if(!Files.exists(marker))Files.writeString(marker,"OBSERVED");}
+                if(cancelRequested())coordinator.requestStop("CANCELLED");
+            }
             assertThat(coordinator.awaitStopped(Duration.ofSeconds(1))).isTrue();boolean cancelled="CANCELLED".equals(coordinator.status().stoppedReason());
             var state=coordinator.status();if(!cancelled){assertThat(state.scans()).isGreaterThan(0);assertThat(audit.messages).isNotEmpty();assertThat(audit.queued).allMatch(Boolean::booleanValue);assertThat(lane.delivery.status().queued()).isZero();assertThat(lane.delivery.status().acknowledged()).isEqualTo(audit.messages.size());}
             // Owner stops borrowed delivery without post-stop flush; HTTP history is still scoped/ACTIVE.
