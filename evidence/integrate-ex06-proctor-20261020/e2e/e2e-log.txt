@@ -1,0 +1,25 @@
+import MOCK fixture -> HTTP 409
+UI created session cbe78e63-0a84-4edb-9345-d8b76d946557 attempt 9e9218ae-6934-4d3c-82e9-2939a0b3a084 state SCHEDULED
+START before READY -> HTTP 409
+candidate GET exam before START -> HTTP 409
+candidate token on proctor catalog -> HTTP 403
+candidate token on session readiness -> HTTP 403
+candidate2 GET preparation of candidate1 attempt -> 403
+invalid token -> HTTP 401
+candidate clicked Tải / chuẩn bị lại audio
+candidate clicked Thử loa
+candidate clicked Tôi nghe được
+candidate clicked Xác nhận sẵn sàng
+START dialog: START ca cbe78e63-0a84-4edb-9345-d8b76d946557 cho 1 thí sinh? Listening bắt đầu ở mọi máy thí sinh và không phát lại được.
+UI START startId 77c1e071-f094-4bc8-93ab-7b6d82625423 startedAt 2026-10-20T01:04:29.731949Z
+server deadlineAt 2026-10-20T03:04:29.731949Z
+listening: Server đã xác nhận phát xong Listening.
+candidate picked question 101
+candidate picked question 147
+server answers {"q101":"A","q147":"D"} revision 2 writer 2
+save with wrong writerEpoch -> HTTP 409
+proctor room has the new attempt: true
+submit dialog: Bạn còn 198 câu chưa trả lời. Nộp bài ngay?
+result state "SUBMITTED" score 1 correct 1/200 submittedAt "2026-10-20T01:04:35.079388Z"
+save after submit -> HTTP 409
+proctor V2 worker threads stopped after logout: true

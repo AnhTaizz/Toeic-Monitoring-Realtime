@@ -468,7 +468,6 @@ Source cuối c77d8f8/DraftPR74: focused219PASS/fullverify1028PASS+6SKIP,44new c
 
 C giữ scope review [contract](../EX02_RICH_EXAM_CONTRACT_V1.md)/[ADR](../plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) về auth/lock/timeout/monitoring. D01–D10 đã TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn đại diện19/10](../plan-v2/EX02_TEAM_APPROVAL_20261019.md), không chữ ký/GitHub review cá nhân. EX07 cần PG/HTTP/WS barriers cho START vs takeover/invalidate/revoke/lease/restart, session→attempt→readiness locks, auth-before-receipt, no deadline reset/WS trước commit; EX06 GUI gate/heartbeat. Chấp nhận ảnh Part1 prefetch có thể trích xuất, không hứa server thấy pixels hoặc lập tức biết app đóng. Checkers là MOCK, S01–S16/V01–V20 runtime NOT RUN; FULL/WSv0/collector giữ, không tracker DONE.
 
-
 ### 20/10/2026 — Codex đã review kỹ thuật, tiếp tục nghiệm thu thật
 
 [Review C/merge/receipt](../../evidence/c-technical-review-20261020/REPORT.md):70–73đãmergeđúngscope;74base main/source d6bf60a fullverify1071PASS+6SKIP/17PG,5001WS/51pages/concurrent24 vàshared process smokePASS. Đã kiểm phầnA/Cauth/locks/transaction/COMMIT/cursor vàBlease/admission/ACK/callback/cleanup; không còn ghi chưa review kỹ thuật cho các phần này. Human contract/ADR/offline/retention vàphysicalpending không đổi. BướcCtiếp: receipt/kit đúng main tíchhợp, cùngngười thật chạyUSB/LAN/GUIchecklists; khôngtựDONE hoặc lấymerge/CIthayhardware.
@@ -476,3 +475,9 @@ C giữ scope review [contract](../EX02_RICH_EXAM_CONTRACT_V1.md)/[ADR](../plan-
 ### Ghi chú làm dở — kit main tích hợp 20/10/2026
 
 [Report kit](../../evidence/c-integrated-kit-20261020/REPORT.md): maina6fba311,35USB/65consumer/33kit PASS mới, provider thật READY0/UNKNOWN không hotplug. Builder mới pin source/JAR từ HEAD sạch, không relabel JAR cũ; runbook USB đủH01–12/GUI-LAN đủ41classification, TEST-only/FULL/experimentOFF. Giữ USB0/12/LAN0/41/Bpending/gateNOT_DECIDED; chưa DONE/ADR. Bước tiếp không USB: cùng B kiểm GUI start/stop/logout/submit/timeout FULL trên một Windows, dependency A cấp TEST DB/đề/audio/assigned scopes; ghi workers/actual/manual evidence, không nhận LAN hoặc triển khai observer. Chưa chạy bước tiếp này.
+
+## Ghi chú làm dở — EX05, 19/10/2026
+
+[Checkpoint](../EX05_AUTHENTICATED_IMAGES.md): A code image resolver/manifest/route, B cần tích hợp visual RAM/renderer, C review kỹ thuật auth/lock/path/commit. Agent review không human approval. EX07 authority chưa có nên ảnh fail-closed; PG mới đang chạy, GUI/LAN/hearing NOT RUN. V13/V14 MERGE BLOCKED; tracker/hours giữ. Tiếp tục EX07 trên branch stacked riêng.
+
+20/10/2026: EX05 source05cc694 clean verify1127PASS/6SKIP (29case mới PASS), PG18.1/HTTP thật; [checkpoint/evidence](../EX05_AUTHENTICATED_IMAGES.md). EX07 tiếp tục branch stacked, chưa authority/FE integrated; V13/V14 MERGE BLOCKED, GUI/LAN/hearing NOT RUN.

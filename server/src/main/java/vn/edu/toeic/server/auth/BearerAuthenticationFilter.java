@@ -33,7 +33,9 @@ public final class BearerAuthenticationFilter extends OncePerRequestFilter {
                     || Collections.list(request.getHeaders("Authorization")).size() != 1) {
                 throw AccessDeniedException.unauthorized();
             }
-            user = authentication.authenticate(request.getHeader("Authorization")).user();
+            var session = authentication.authenticate(request.getHeader("Authorization"));
+            user = session.user();
+            request.setAttribute(SessionAuthenticationService.TOKEN_HASH_ATTRIBUTE, session.tokenHash());
         } catch (AccessDeniedException exception) {
             reject(response, ErrorCode.UNAUTHORIZED, exception.getMessage(), false, 401);
             return;

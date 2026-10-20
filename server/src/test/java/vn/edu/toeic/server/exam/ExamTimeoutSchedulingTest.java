@@ -40,6 +40,9 @@ class ExamTimeoutSchedulingTest {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
         context.getEnvironment().getPropertySources().addFirst(new MapPropertySource("TEST", properties));
         context.registerBean(ExamService.class, () -> service);
+        // ExamService requires the V2 gate bean; this scheduling test never reaches it.
+        context.registerBean(vn.edu.toeic.server.exam.rich.V2SessionPolicy.class,
+                () -> mock(vn.edu.toeic.server.exam.rich.V2SessionPolicy.class));
         context.register(ExamSchedulingConfiguration.class, ExamTimeoutService.class);
         context.refresh();
         return context;

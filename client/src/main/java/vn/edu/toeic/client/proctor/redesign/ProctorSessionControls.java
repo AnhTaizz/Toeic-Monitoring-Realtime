@@ -1,0 +1,31 @@
+package vn.edu.toeic.client.proctor.redesign;
+
+import javafx.scene.Node;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+
+/**
+ * "Điều khiển ca" page body: the PROCTORED_V2 panel first, the existing V1 controls (B4) unchanged in a second tab.
+ * Closing the page closes both, so their timers and HTTP workers stop on logout.
+ */
+final class ProctorSessionControls extends TabPane implements AutoCloseable {
+    private final AutoCloseable v2, legacy;
+
+    <L extends Node & AutoCloseable> ProctorSessionControls(ProctorV2SessionPane v2, L legacy) {
+        this.v2 = v2;
+        this.legacy = legacy;
+        setId("session-controls-tabs");
+        setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
+        Tab rich = new Tab("Ca PROCTORED_V2 (200 câu)", v2);
+        rich.setId("tab-v2");
+        rich.selectedProperty().addListener((observable, was, selected) -> v2.tabSelected(selected));
+        Tab old = new Tab("Ca V1 / công cụ cũ", legacy);
+        old.setId("tab-v1");
+        getTabs().addAll(rich, old);
+    }
+
+    @Override public void close() {
+        try { v2.close(); } catch (Exception ignored) { }
+        try { legacy.close(); } catch (Exception ignored) { }
+    }
+}
