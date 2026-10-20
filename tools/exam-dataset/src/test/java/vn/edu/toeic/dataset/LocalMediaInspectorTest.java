@@ -53,7 +53,11 @@ class LocalMediaInspectorTest {
         Path png = file("mock.png"); ImageIO.write(new BufferedImage(2, 2, BufferedImage.TYPE_INT_RGB), "png", png.toFile());
         var d = mock("IMAGE", "mock.png"); new LocalMediaInspector().inspect(d, null, temp);
         String before = str(d.getAsJsonArray("media").get(0).getAsJsonObject(), "sha256");
-        ImageIO.write(new BufferedImage(3, 3, BufferedImage.TYPE_INT_RGB), "png", png.toFile()); new LocalMediaInspector().inspect(d, null, temp);
+        ImageIO.write(new BufferedImage(3, 3, BufferedImage.TYPE_INT_RGB), "png", png.toFile());
+        var result = new LocalMediaInspector().inspect(d, null, temp);
+        assertEquals("REJECTED", str(result.get(0).getAsJsonObject(), "state"));
+        assertEquals("LOCAL_CHECKSUM_MISMATCH", str(result.get(0).getAsJsonObject(), "reason"));
+        assertEquals("REMOTE_REFERENCE", str(d.getAsJsonArray("media").get(0).getAsJsonObject(), "storageStatus"));
         assertNotEquals(before, str(d.getAsJsonArray("media").get(0).getAsJsonObject(), "sha256"));
     }
     @Test void rejectsTraversalAndWindowsDeviceNames() {

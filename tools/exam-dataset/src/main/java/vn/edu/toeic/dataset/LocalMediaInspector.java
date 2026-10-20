@@ -20,10 +20,14 @@ public final class LocalMediaInspector {
             var m = dataset.getAsJsonArray("media").get(i).getAsJsonObject();
             String filename = str(m, "localFile"), type = str(m, "mediaType");
             Path root = "AUDIO".equals(type) ? audioRoot : imageRoot;
+            String expectedHash = str(m, "sha256");
             String state = "MISSING", reason = "Chưa cung cấp root/file local được phép dùng.";
             // Không tin trạng thái/hash của JSON đầu vào. Đo lại bytes cho mỗi lượt.
             m.addProperty("storageStatus", "REMOTE_REFERENCE"); m.addProperty("verificationStatus", "NEEDS_REVIEW");
             m.addProperty("decodeStatus", "NOT_RUN");
+            var previousReviews = dataset.getAsJsonObject("fieldReviews");
+            if (previousReviews != null) for (String field : List.of("sizeBytes", "sha256", "mimeType", "widthPx", "heightPx", "durationMs", "decodeStatus", "storageStatus", "verificationStatus"))
+                previousReviews.add("/media/" + i + "/" + field, obj("status", "NEEDS_REVIEW", "evidence", "Đang kiểm lại local bytes; không kế thừa VERIFIED của lượt trước."));
             for (String key : List.of("sizeBytes", "sha256", "mimeType", "widthPx", "heightPx", "durationMs")) m.add(key, JsonNull.INSTANCE);
             if (root != null) try {
                 if (!safeFile(filename)) throw new IOException("Tên file không an toàn.");
@@ -37,6 +41,7 @@ public final class LocalMediaInspector {
                 try (var input = Files.newInputStream(file, LinkOption.NOFOLLOW_LINKS)) { bytes = input.readNBytes((int) limit + 1); }
                 if (bytes.length != size) throw new IOException("File thay đổi trong lúc đọc.");
                 m.addProperty("sizeBytes", size); m.addProperty("sha256", hash(bytes));
+                if (expectedHash != null && !expectedHash.equals(str(m, "sha256"))) throw new IOException("LOCAL_CHECKSUM_MISMATCH");
                 String lower = filename.toLowerCase(Locale.ROOT), mime;
                 if ("IMAGE".equals(type)) {
                     boolean png = bytes.length >= 8 && Arrays.equals(Arrays.copyOf(bytes, 8), new byte[]{(byte) 137, 80, 78, 71, 13, 10, 26, 10});

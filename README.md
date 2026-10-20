@@ -66,6 +66,8 @@ jpackage --type app-image --dest jpackage-out --name ToeicMonitor `
 | PostgreSQL JDBC Driver | Kết nối PostgreSQL 18 |
 | JavaFX Controls 21.0.12 | Một desktop app có giao diện thí sinh/giám thị |
 | Gson 2.13.2 | Contract login/client và envelope/error WS server; C4 dùng lại trong protocol để lọc metadata và ghi JSONL, không thêm framework telemetry |
+| jsoup 1.17.2 (tools/exam-dataset) | Parse DOM HTML review TOEIC và ánh xạ group/câu hỏi offline |
+| JLayer 1.0.1 (tools/exam-dataset) | Decode toàn bộ MP3 thành PCM, đo duration trong ETL; không phát thiết bị âm thanh |
 | JUnit 5 + AssertJ | Test đơn vị và test hành vi bất đồng bộ |
 | Maven Shade Plugin | Tạo fat JAR đầu vào cho spike `jpackage` |
 
@@ -369,3 +371,8 @@ Công cụ build ngoài Maven: `jpackage` trong JDK21, WiX3 (`candle/light`, t�
 Bản tích hợp review PR #35/#38 trên nền main B4/B5: [ứng dụng thống nhất](docs/UNIFIED_APPLICATION.md), [evidence mới](evidence/unified-20261016/verification.md). Trạng thái kiểm chỉ theo source ghi trong evidence; không kế thừa kết quả nhánh nguồn.
 
 Tài liệu V2 ngày19/10: [EX-02 rich exam contract](docs/EX02_RICH_EXAM_CONTRACT_V1.md), [ADR-V2-03 START/deadline](docs/plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md), [D01–D10/roadmap](docs/plan-v2/EX02_DECISIONS_ROADMAP.md) và [fixture MOCK](docs/plan-v2/fixtures/ex02/README.md). TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn đại diện nhóm](docs/plan-v2/EX02_TEAM_APPROVAL_20261019.md), không chữ ký/GitHub Approving Review. Option A prefetch đúng ảnh Part1 có quyền, Audio+Visual READY trước START, image-visible gate trước play. Chưa runtime/GUI V2; legacy QD21/audio/no-replay giữ, fixture/CI không thay integrated/physical PASS.
+
+
+## EX-01 — Pipeline HTML và media offline
+
+Công cụ Java 21 độc lập trong [tools/exam-dataset](tools/exam-dataset/README.md) parse Test01–04, giữ provenance và blocker, tải một lần media công khai được người dùng xác nhận quyền, rồi kiểm local bytes/decode theo EX03. Dữ liệu chưa import-ready vì options gốc/đáp án/document mapping còn cần review. [Báo cáo và lệnh tái lập](docs/ex01-html-pipeline/REPORT.md). Không thay backend, migrations hoặc JavaFX.
