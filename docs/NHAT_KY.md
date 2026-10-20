@@ -954,3 +954,18 @@ Source05cc694 clean verify1127PASS/6SKIP/0FAIL/0ERROR, PG18.1/HTTP thật, đề
 - ComputerUse native pipe unavailable sau retry/reset; đã chuẩn bị hai production JAR JVM riêng và nhóm thao tác ngắn. User chọn tiếp tục tự động/desktop NOT_RUN. Passive60sample UNSYNCED/seq0; hết cửa sổ240s dọn đúng hai app, không gọi force teardown là GUI Exit PASS.
 - Lượt extended49007cf FAIL executor assertion:4toeic-exam-http gồm fixture lazy workers; giữ log/dump.47caa50 đóng rõ API fixture trước assert, rerun cùng ca PASS; không sửa production expected/timeout.215unit regression PASS/0SKIP MOCK riêng, không cộng10checkpoints hoặc run lặp.
 - [Report/receipt](../evidence/c-full-lifecycle-20261020/REPORT.md):4run schema0/clusterstop0, Edgealive0, owned JVM/PGlistener0; raw/JAR/thread dumps/ảnh chưa lọc ignored, chỉ1ảnh Scene TEST đã rà công bố. FULLdefault/experimentOFF/USB0/12/LAN0/41/gate/humanpending, không DONE/ADR. Bước sau C không USB: desktop input/window-close khi helper hoặc người thao tác sẵn sàng, TEST/API tự dựng được; chưa thực hiện bước sau này.
+
+
+## 2026-10-20 · Release Integration Engineer · Hoàn tất nghiệm thu chuỗi V2 & tích hợp main
+
+- Worktree riêng \E:\Project\toeic-v2-release-integration\, branch elease/v2-main-integration-20261020\ (HEAD aa830b\).
+- Hợp nhất hoàn chỉnh nhánh QA Windows \qa/windows-v2-mon07-20261020\ (commit 8006f\) với \origin/main\ mới nhất (bbeaf2\ và sync 9954b\ PR #81).
+- Flyway V1–V15 áp dụng tuần tự không lỗi, 0 out-of-order, 0 checksum mismatch trên PostgreSQL 18.6 độc lập (cổng 55434).
+- Maven build & test: \mvn test\ BUILD SUCCESS 1264 tests (0 failures, 0 errors).
+- PostgreSQL 18.6 Integration: 159/159 tests PASS 100% (gồm 43/43 Flyway migration scenarios, 28/28 V2 rich/image/session, 70/70 runtime/audio/history bounds, 18/18 MON-07 signal pipeline & disabled check).
+- JavaFX GUI: 27/27 component tests PASS 100% (\RichExamViewGuiTest\, \ScoreResultDialogTest\, \ProctorRedesignGuiTest\, \ProctorV2SessionPaneGuiTest\).
+- Live Server E2E Full-Stack: 2/2 tests PASS 100% (\ProctorV2E2eGuiTest\, \RichAttemptE2eGuiTest\) trên server 18081 thật và PostgreSQL 18.6; xác minh trọn vẹn import V2, catalog, ca thi, negative probes, READY, START, autosave, submit và clean worker shutdown.
+- Windows PowerShell 5.1 demo script: \demo-ex06-v2.ps1\ exit code 0 cho cả \-ImportOnly\ và tạo ca PROCTORED_V2.
+- Bảo toàn tuyệt đối database sản xuất \	oeic-db\ (cổng 5433) và worktree khác. Nhánh \eat/ex01-html-pipeline-20261020\ của Agent 4 không bị đụng tới.
+- Push release integration branch lên remote: elease/v2-main-integration-20261020\ sẵn sàng merge vào main.
+- Trạng thái: **READY_FOR_AGENT4_BACKEND**.

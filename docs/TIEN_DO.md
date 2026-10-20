@@ -241,3 +241,14 @@ Overnight phase05 PARTIAL: ASCII app-imageMedia8 PASS, wrapperUnicode/installer 
 ## EX05 — clean verify20/10/2026
 
 Source05cc694 clean verify1127PASS/6SKIP/0FAIL/0ERROR, PG18.1/HTTP thật, đề MOCK tự soạn;0schema/clusterstop0. [Evidence](EX05_AUTHENTICATED_IMAGES.md).29caseEX05 mới PASS; V13 sau14 bịFlywaydefaultchặn thật. AuthorityEX07 còn thiếu, image route fail-closed; GUI_PHYSICAL_NOT_RUN/hearing/LAN NOT RUN; MERGE BLOCKED/PR75/V13coordination. Không tracker/hours/human signoff.
+
+
+## Release Integration V2 — 20/10/2026
+
+Bản tích hợp chuỗi EX (EX-03, EX-05, EX-07, EX-06, Proctor Redesign) và MON-07/V13 + PR #80/PR #81 đã được nghiệm thu toàn trình trên Windows 11 tại worktree \E:\Project\toeic-v2-release-integration\, branch elease/v2-main-integration-20261020\ (HEAD aa830b\).
+- Flyway V1–V15 sạch 100%, tuần tự trên PostgreSQL 18.6 (container độc lập \	oeic-v2-mon07-qa\, cổng 55434).
+- 159 bài test PostgreSQL 18.6 PASS 100% (43 migration, 28 V2 rich/image/lifecycle, 70 runtime/audio/history, 18 signals).
+- 27 bài test JavaFX GUI PASS 100%.
+- 2 bài test Live Server E2E (\ProctorV2E2eGuiTest\, \RichAttemptE2eGuiTest\) PASS 100%.
+- Script PowerShell 5.1 \demo-ex06-v2.ps1\ exit 0 (\-ImportOnly\ và tạo ca PROCTORED_V2).
+- Trạng thái bàn giao: **READY_FOR_AGENT4_BACKEND**.
