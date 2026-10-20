@@ -1,0 +1,495 @@
+{
+    "sourceSha":  "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+    "runId":  "MON01-20261019T103217Z-25e62fdd",
+    "step":  "mon01-dashboard-focused",
+    "fixture":  "MOCK/model/loopback HTTP focused; real PostgreSQL/GUI recorded separately; not PHYSICAL",
+    "cases":  [
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.161",
+                      "name":  "http403RemovesAttemptAndRefreshesScopeWithoutReaddingFromLateHistory",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "connectedSocketIsNotFreshUntilHttpRecoveryAndSelectionLoadsFinish",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "logoutDiscardsUncancellableResponsesAndUnsubscribesOldSession",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.006",
+                      "name":  "olderRosterGenerationCannotResurrectRevokedAttempt",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.012",
+                      "name":  "boundedInboxOverloadSchedulesOneControlledRefreshAndLeavesStale",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "historyOverLimitShowsNonRetryableMessageAndKeepsLastCompleteList",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "independentHttpFailuresKeepOldDataAndDoNotInventUnknown",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "lateSelectionResponseCannotPopulateAnotherAttempt",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "oldGapCallbackCannotRepopulateAfterAttemptSwitchOrClose",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "disconnectThenReconnectRefreshesWithoutCandidateUnknownOrDuplicateListeners",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "http401ClearsEveryPanelAndRequiresNewLogin",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.011",
+                      "name":  "fullHttpFromBeforeReconnectCannotOverwriteNewGeneration",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.049",
+                      "name":  "fullPushBeatsLateHttpAndOldSelectionAndLogoutResponsesAreDiscarded",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.013",
+                      "name":  "websocketNewPresenceWinsOverLateRosterAndWarningDedupUsesHttp",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "historyNullRecoveredBecomesRecoveredAndPendingOldHistoryNeedsFollowup",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "gapHttpFailureKeepsLastKnownWithStaleLabelAndScopeRevocationClearsIt",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "boundedBufferOverflowIsVisibleAndHttpReloadRestoresCompleteness",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardModelTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "equalRevisionIdempotentAndConflictingSnapshotIsRejected",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardModelTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "dashboardDisconnectMakesDataStaleWithoutChangingCandidateOnline",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardModelTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "warningHttpWsDedupAndHttpOrderPreservedRatherThanProcessNameDedupe",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardModelTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "sameEventIdAcrossAttemptsIsNotMergedAndConflictingRetryCannotOverwrite",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardModelTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "unknownAttemptBufferedOnlyUntilAuthorizedFullRosterAndScopeRemovalClearsData",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardModelTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "websocketNewRevisionSurvivesLateHttpAndLowerTimestamp",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardModelTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "rosterIsAuthoritativeAndOldPushCannotResurrectRemovedSelection",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardModelTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "historyRecoveryUpdatedAndOnlineCannotEraseHistory",
+                      "class":  "vn.edu.toeic.client.dashboard.DashboardModelTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "unknownPresenceOrDisconnectIsStaleAndLogoutClearsState",
+                      "class":  "vn.edu.toeic.client.dashboard.FullStateDashboardTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "newerPushWinsOverLateHttpAndNewEpochSequenceOneWinsByRevision",
+                      "class":  "vn.edu.toeic.client.dashboard.FullStateDashboardTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "stateNeverDeletesHistoryAndForeignOrOldSelectionIsIgnored",
+                      "class":  "vn.edu.toeic.client.dashboard.FullStateDashboardTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "conflictingRevisionIsRejectedAndHttpFailureRetainsExplicitlyStaleData",
+                      "class":  "vn.edu.toeic.client.dashboard.FullStateDashboardTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "modelClearsGapsOnSelectionAndRejectsChangedHistory",
+                      "class":  "vn.edu.toeic.client.dashboard.LateEventsAndGapsTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "scopeDuplicateAndBoundChecks",
+                      "class":  "vn.edu.toeic.client.dashboard.LateEventsAndGapsTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.003",
+                      "name":  "parsesExactCountAndRejectsInventedHeartbeatDropCount",
+                      "class":  "vn.edu.toeic.client.dashboard.LateEventsAndGapsTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.671",
+                      "name":  "timeoutAndCancellationUseConfiguredBoundAndCloseRejectsLateCall",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.085",
+                      "name":  "historyOverflow409IsNonRetryableLimitOnlyForHistoryEndpoints",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.773",
+                      "name":  "fullHistoryOf5000EventsAtMaximumFieldLengthsIsAcceptedInOrder",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.037",
+                      "name":  "endpointsHeadersAndUtcValuesFollowServerContract",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.134",
+                      "name":  "oversizedBodyRejectedBeforeRender",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.031",
+                      "name":  "errorsKeepStatusButNeverReflectRawBody(int)[1]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.017",
+                      "name":  "errorsKeepStatusButNeverReflectRawBody(int)[2]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.019",
+                      "name":  "errorsKeepStatusButNeverReflectRawBody(int)[3]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.015",
+                      "name":  "errorsKeepStatusButNeverReflectRawBody(int)[4]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.02",
+                      "name":  "successfulStatusWithInvalidJsonIsNotAccepted(String)[1]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.019",
+                      "name":  "successfulStatusWithInvalidJsonIsNotAccepted(String)[2]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.02",
+                      "name":  "successfulStatusWithInvalidJsonIsNotAccepted(String)[3]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.018",
+                      "name":  "successfulStatusWithInvalidJsonIsNotAccepted(String)[4]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.006",
+                      "name":  "allUnknownReasonsPreserveServerSemanticsAndPushRequiresNullRequestId",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.006",
+                      "name":  "emptyAndPopulatedRosterAndExactLongRevision",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.008",
+                      "name":  "rosterRejectsVersionDuplicateAndArrayShapeAndSize",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.007",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[1]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[2]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[3]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[4]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[5]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[6]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[7]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[8]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[9]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.004",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[10]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[11]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[12]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.001",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[13]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.005",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[14]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[15]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.002",
+                      "name":  "rejectsInvalidPresenceBeforeRendering(String)[16]",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  },
+                  {
+                      "module":  "client",
+                      "status":  "PASS",
+                      "seconds":  "0.009",
+                      "name":  "eventResponseAndEnvelopeMustMatchAttemptAndMetadataSchema",
+                      "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest"
+                  }
+              ],
+    "xmlHashes":  [
+                      {
+                          "module":  "client",
+                          "sha256":  "8c809d28f853975066cdd9c8577bb9c8e5382e2890a4c333534e874642790f7b",
+                          "file":  "TEST-vn.edu.toeic.client.dashboard.DashboardControllerTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "c3f87595109c776ffa347f51e32f9123f71a3073536a478f35bcc1d95a627318",
+                          "file":  "TEST-vn.edu.toeic.client.dashboard.DashboardModelTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "3f573e967f8b78d761d94c7472b7c1d0eba6efa3367bb65701a3d7127e9417d9",
+                          "file":  "TEST-vn.edu.toeic.client.dashboard.FullStateDashboardTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "5adedc93c942460fb2070c7fc473469e0c43b492959ec618ba238231723ab314",
+                          "file":  "TEST-vn.edu.toeic.client.dashboard.LateEventsAndGapsTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "0455d1c0e7e11c9ac62957421ebe629d80eb5e2a365def7d4fa5ccecef451609",
+                          "file":  "TEST-vn.edu.toeic.client.dashboard.MonitoringApiClientTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "0a725fe2eb8ecd84cf89c5d2f0d8b4bfb9df62b46e0c26b5bf9114c70e0f49df",
+                          "file":  "TEST-vn.edu.toeic.client.dashboard.MonitoringJsonTest.xml"
+                      }
+                  ]
+}

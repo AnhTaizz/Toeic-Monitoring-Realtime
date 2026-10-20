@@ -1,0 +1,18 @@
+{
+    "archiveId":  "BASE03-before-MON01-20261019T102703Z-51d0baf1",
+    "archivePath":  "D:\\Toeic-Evidence-Archive\\BASE03-before-MON01-20261019T102703Z-51d0baf1",
+    "sourceSha":  "9a97cab646af40e45871cb76ffbfcfcb861f2954",
+    "manifestSha256":  "f857e314a219e17fd113cf08a0c09aa2ab685cbd0e49a93c9bd58d5d988b0bd8",
+    "rawFiles":  477,
+    "publicFiles":  27,
+    "totalFiles":  507,
+    "sourceFilesBytes":  205394563,
+    "allChecksumsVerified":  true,
+    "gitBundleVerified":  true,
+    "noOverwrite":  true,
+    "outsideRepository":  true,
+    "accountOnlyAcl":  true,
+    "reverifiedAfterMon01RunUtc":  "2026-10-19T10:35:29.3685922Z",
+    "rawOriginalAndBackupFilesReverified":  477,
+    "originalBase03SourceAndEvidenceModified":  false
+}

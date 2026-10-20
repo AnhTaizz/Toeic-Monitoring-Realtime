@@ -1,0 +1,170 @@
+{
+    "schema":  "mon01-verification-v1",
+    "runId":  "MON01-20261019T103217Z-25e62fdd",
+    "sourceSha":  "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+    "baseSha":  "9a97cab646af40e45871cb76ffbfcfcb861f2954",
+    "branch":  "test/v2-c-mon01-process-e2e",
+    "os":  "Microsoft Windows NT 10.0.26200.0",
+    "topology":  "One Windows host, owned PostgreSQL SCRAM cluster/database, loopback HTTP/WS and proctor JavaFX; no physical LAN",
+    "database":  "toeic_mon01_test",
+    "port":  64716,
+    "steps":  [
+                  {
+                      "name":  "initdb",
+                      "command":  "initdb.exe -D \"\u003cWORKTREE\u003e\\target\\mon01-runs\\MON01-20261019T103217Z-25e62fdd\\pgdata\" -U mon01_test --auth=scram-sha-256 --pwfile=\"\u003cWORKTREE\u003e\\target\\mon01-runs\\MON01-20261019T103217Z-25e62fdd\\password.private\" --no-locale -E UTF8",
+                      "startUtc":  "2026-10-19T10:32:17.1038511Z",
+                      "endUtc":  "2026-10-19T10:32:24.0459378Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "status":  "PASS",
+                      "rawStdout":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/initdb.private.stdout.txt",
+                      "rawStderr":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/initdb.private.stderr.txt"
+                  },
+                  {
+                      "name":  "pg-start",
+                      "command":  "pg_ctl.exe -D \"\u003cWORKTREE\u003e\\target\\mon01-runs\\MON01-20261019T103217Z-25e62fdd\\pgdata\" -l \"\u003cWORKTREE\u003e\\target\\mon01-runs\\MON01-20261019T103217Z-25e62fdd\\postgres.private.txt\" -o \"-h 127.0.0.1 -p 64716\" -w start",
+                      "startUtc":  "2026-10-19T10:32:24.0805496Z",
+                      "endUtc":  "2026-10-19T10:32:24.3901115Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "status":  "PASS",
+                      "rawStdout":  null,
+                      "rawStderr":  null
+                  },
+                  {
+                      "name":  "createdb",
+                      "command":  "createdb.exe -h 127.0.0.1 -p 64716 -U mon01_test -T template0 -E UTF8 toeic_mon01_test",
+                      "startUtc":  "2026-10-19T10:32:24.3931281Z",
+                      "endUtc":  "2026-10-19T10:32:24.5874126Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "status":  "PASS",
+                      "rawStdout":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/createdb.private.stdout.txt",
+                      "rawStderr":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/createdb.private.stderr.txt"
+                  },
+                  {
+                      "name":  "postgres-version",
+                      "command":  "psql.exe -h 127.0.0.1 -p 64716 -U mon01_test -d toeic_mon01_test -At -c \"SELECT version();\"",
+                      "startUtc":  "2026-10-19T10:32:24.5904141Z",
+                      "endUtc":  "2026-10-19T10:32:24.7629952Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "status":  "PASS",
+                      "rawStdout":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/postgres-version.private.stdout.txt",
+                      "rawStderr":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/postgres-version.private.stderr.txt"
+                  },
+                  {
+                      "name":  "java-version",
+                      "command":  "java.exe -version",
+                      "startUtc":  "2026-10-19T10:32:24.7655058Z",
+                      "endUtc":  "2026-10-19T10:32:24.8338894Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "status":  "PASS",
+                      "rawStdout":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/java-version.private.stdout.txt",
+                      "rawStderr":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/java-version.private.stderr.txt"
+                  },
+                  {
+                      "name":  "maven-version",
+                      "command":  "cmd.exe /d /s /c \"\"D:\\maven\\bin\\mvn.cmd\" --version\"",
+                      "startUtc":  "2026-10-19T10:32:24.8364179Z",
+                      "endUtc":  "2026-10-19T10:32:25.1430659Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "status":  "PASS",
+                      "rawStdout":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/maven-version.private.stdout.txt",
+                      "rawStderr":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/maven-version.private.stderr.txt"
+                  },
+                  {
+                      "name":  "python-version",
+                      "command":  "python.exe --version",
+                      "startUtc":  "2026-10-19T10:32:25.1455834Z",
+                      "endUtc":  "2026-10-19T10:32:25.2751735Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "status":  "PASS",
+                      "rawStdout":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/python-version.private.stdout.txt",
+                      "rawStderr":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/python-version.private.stderr.txt"
+                  },
+                  {
+                      "name":  "mon01-dashboard-focused",
+                      "command":  "cmd.exe /d /s /c \"\"D:\\maven\\bin\\mvn.cmd\" -o -B --no-transfer-progress \"-Dmaven.repo.local=\u003cUSER_HOME\u003e/.m2/repository\" -pl protocol,client,server -am -Dtest=DashboardModelTest,DashboardControllerTest,FullStateDashboardTest,LateEventsAndGapsTest,MonitoringJsonTest,MonitoringApiClientTest -Dsurefire.failIfNoSpecifiedTests=false test\"",
+                      "startUtc":  "2026-10-19T10:32:25.2831826Z",
+                      "endUtc":  "2026-10-19T10:32:50.7885020Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "status":  "PASS",
+                      "rawStdout":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.private.stdout.txt",
+                      "rawStderr":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.private.stderr.txt"
+                  },
+                  {
+                      "name":  "package-for-mon01-smoke",
+                      "command":  "cmd.exe /d /s /c \"\"D:\\maven\\bin\\mvn.cmd\" -o -B --no-transfer-progress \"-Dmaven.repo.local=\u003cUSER_HOME\u003e/.m2/repository\" -DskipTests package\"",
+                      "startUtc":  "2026-10-19T10:32:50.9674833Z",
+                      "endUtc":  "2026-10-19T10:33:15.6976112Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "status":  "PASS",
+                      "rawStdout":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/package-for-mon01-smoke.private.stdout.txt",
+                      "rawStderr":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/package-for-mon01-smoke.private.stderr.txt"
+                  },
+                  {
+                      "name":  "mon01-late-presence-gui",
+                      "command":  "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"\u003cWORKTREE\u003e\\scripts\\smoke-t2c2.ps1\" -JavaHome \"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\" -Gui",
+                      "startUtc":  "2026-10-19T10:33:15.7121473Z",
+                      "endUtc":  "2026-10-19T10:33:38.5526970Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "status":  "PASS",
+                      "rawStdout":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/mon01-late-presence-gui.private.stdout.txt",
+                      "rawStderr":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/mon01-late-presence-gui.private.stderr.txt"
+                  },
+                  {
+                      "name":  "schema-count",
+                      "command":  "psql.exe -h 127.0.0.1 -p 64716 -U mon01_test -d toeic_mon01_test -At -c \"SELECT count(*) FROM pg_namespace WHERE nspname NOT LIKE \u0027pg_%\u0027 AND nspname NOT IN (\u0027public\u0027,\u0027information_schema\u0027);\"",
+                      "startUtc":  "2026-10-19T10:33:38.5552183Z",
+                      "endUtc":  "2026-10-19T10:33:38.6273521Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "status":  "PASS",
+                      "rawStdout":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/schema-count.private.stdout.txt",
+                      "rawStderr":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/schema-count.private.stderr.txt"
+                  },
+                  {
+                      "name":  "pg-stop",
+                      "command":  "pg_ctl.exe -D \"\u003cWORKTREE\u003e\\target\\mon01-runs\\MON01-20261019T103217Z-25e62fdd\\pgdata\" -w stop -m fast",
+                      "startUtc":  "2026-10-19T10:33:38.6348651Z",
+                      "endUtc":  "2026-10-19T10:33:40.0926872Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "status":  "PASS",
+                      "rawStdout":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/pg-stop.private.stdout.txt",
+                      "rawStderr":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/pg-stop.private.stderr.txt"
+                  }
+              ],
+    "cleanup":  {
+                    "ownedSchemasRemaining":  0,
+                    "clusterStopExit":  0,
+                    "privateEnvRemoved":  true,
+                    "passwordFileRemoved":  true
+                },
+    "runnerErrorType":  null,
+    "backupArchiveId":  "BASE03-before-MON01-20261019T102703Z-51d0baf1",
+    "backupManifestSha256":  "f857e314a219e17fd113cf08a0c09aa2ab685cbd0e49a93c9bd58d5d988b0bd8",
+    "base02Approval":  "PENDING",
+    "reusedBase03RunIds":  [
+                               "BASE03-20261019T095202Z-66b7cc19",
+                               "BASE03-20261019T095950Z-e51076ac"
+                           ],
+    "physicalLan":  "NOT_RUN",
+    "bReview":  "PENDING",
+    "mon01Status":  "TECHNICALLY_VERIFIED_PENDING_PHYSICAL_REVIEW",
+    "deltaCorrectnessGate":  "NOT_DECIDED",
+    "fullDefaultPreserved":  "YES",
+    "e2Allowed":  "NO",
+    "metadataDerivation":  {
+                               "rawSha256":  "166247540ee6961dc7977a7208b3da0246d1bb021de5e40f13c409c49dac3805",
+                               "transformation":  "Redact user-home/worktree command paths only; original retained; pg-start uses postgres.private.txt",
+                               "rawPath":  "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/run-metadata.original.json"
+                           }
+}

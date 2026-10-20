@@ -1,0 +1,314 @@
+{
+  "schema": "mon01-private-raw-sha256-v1",
+  "runId": "MON01-20261019T103217Z-25e62fdd",
+  "sourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+  "createdUtc": "2026-10-19T10:35:49.143Z",
+  "files": [
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/createdb.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/createdb.private.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/initdb.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/initdb.private.stdout.txt",
+      "bytes": 1082,
+      "sha256": "78f13af4c786a1dc74f90489b1b1d49d3d23753c1fbc5f9c8d162e69b8cfc417",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/java-version.private.stderr.txt",
+      "bytes": 420,
+      "sha256": "ce26632b6c0346338f8ae60ac2d5b182ce518ac88750d49580a5b9e743448d57",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/java-version.private.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/maven-version.private.stderr.txt",
+      "bytes": 222,
+      "sha256": "8350aac1bbe4ddeb3d4af24521b80eaddeacab747e692291198ffdc6732e7cd2",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/maven-version.private.stdout.txt",
+      "bytes": 324,
+      "sha256": "220fc0ed638940f68ab084824324088677cdec6ff0ae18e13bea263ec6b3e47e",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.private.stderr.txt",
+      "bytes": 445,
+      "sha256": "b1b45d5a01eb2b88143af3014e351172482e453b09e6409539cc81c8bc69d31f",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/mon01-dashboard-focused.private.stdout.txt",
+      "bytes": 7405,
+      "sha256": "fce57faffede663fa3903ccadcf7402ece527d99ef9122194c5c240653806d03",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/mon01-late-presence-gui.private.stderr.txt",
+      "bytes": 222,
+      "sha256": "8350aac1bbe4ddeb3d4af24521b80eaddeacab747e692291198ffdc6732e7cd2",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/mon01-late-presence-gui.private.stdout.txt",
+      "bytes": 5194,
+      "sha256": "3b0b17eaf9b90b96c431c161ac511fa8ef970e01441070ef1636628197412b4e",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/package-for-mon01-smoke.private.stderr.txt",
+      "bytes": 222,
+      "sha256": "8350aac1bbe4ddeb3d4af24521b80eaddeacab747e692291198ffdc6732e7cd2",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/package-for-mon01-smoke.private.stdout.txt",
+      "bytes": 10016,
+      "sha256": "a9f419354f93534d2e369e25b647306e6f6fb8cb0192dc17e0549d8a8d6865bb",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/pg-stop.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/pg-stop.private.stdout.txt",
+      "bytes": 59,
+      "sha256": "3a6747065de8c2dbc66a6baa73d5ab09c2c03eb8851704f973ac4b886e6805f2",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/postgres-version.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/postgres-version.private.stdout.txt",
+      "bytes": 73,
+      "sha256": "267ade76e85bb8877210127f61526a01d914ca1a059c16bf7b932068019da771",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/postgres.private.txt",
+      "bytes": 1410,
+      "sha256": "c5ac73e847107ca4cbdda6dbdf49c557d1c4e0d05e8e69add9bce630f969febf",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/python-version.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/python-version.private.stdout.txt",
+      "bytes": 17,
+      "sha256": "beceecf0b977f147c12202574af5044240944a4e10d729cf7a6251205cb09012",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/reports.private/mon01-dashboard-focused/client/TEST-vn.edu.toeic.client.dashboard.DashboardControllerTest.xml",
+      "bytes": 13997,
+      "sha256": "8c809d28f853975066cdd9c8577bb9c8e5382e2890a4c333534e874642790f7b",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/reports.private/mon01-dashboard-focused/client/TEST-vn.edu.toeic.client.dashboard.DashboardModelTest.xml",
+      "bytes": 12830,
+      "sha256": "c3f87595109c776ffa347f51e32f9123f71a3073536a478f35bcc1d95a627318",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/reports.private/mon01-dashboard-focused/client/TEST-vn.edu.toeic.client.dashboard.FullStateDashboardTest.xml",
+      "bytes": 12054,
+      "sha256": "3f573e967f8b78d761d94c7472b7c1d0eba6efa3367bb65701a3d7127e9417d9",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/reports.private/mon01-dashboard-focused/client/TEST-vn.edu.toeic.client.dashboard.LateEventsAndGapsTest.xml",
+      "bytes": 11839,
+      "sha256": "5adedc93c942460fb2070c7fc473469e0c43b492959ec618ba238231723ab314",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/reports.private/mon01-dashboard-focused/client/TEST-vn.edu.toeic.client.dashboard.MonitoringApiClientTest.xml",
+      "bytes": 13395,
+      "sha256": "0455d1c0e7e11c9ac62957421ebe629d80eb5e2a365def7d4fa5ccecef451609",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/reports.private/mon01-dashboard-focused/client/TEST-vn.edu.toeic.client.dashboard.MonitoringJsonTest.xml",
+      "bytes": 14322,
+      "sha256": "0a725fe2eb8ecd84cf89c5d2f0d8b4bfb9df62b46e0c26b5bf9114c70e0f49df",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/run-metadata.original.json",
+      "bytes": 11111,
+      "sha256": "166247540ee6961dc7977a7208b3da0246d1bb021de5e40f13c409c49dac3805",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/schema-count.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "target/mon01-runs/MON01-20261019T103217Z-25e62fdd/schema-count.private.stdout.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "server/target/t2c2-runtime/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618/raw/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618-CLIENT-219db7d1-edf6-4237-83a6-6f2b1ee3d360.jsonl",
+      "bytes": 171819,
+      "sha256": "7ba1fdb710d82156ff11c5a2048438e512822334c88180209e05cb4953188b4e",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "server/target/t2c2-runtime/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618/raw/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618-CLIENT-37248883-0ce0-4963-8290-ddfe28d09182.jsonl",
+      "bytes": 13726,
+      "sha256": "ac8205691f2757275fd64a9dc3ddaf2fe6ee74718aec92d8eb85b431dc091a48",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "server/target/t2c2-runtime/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618/raw/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618-CLIENT-3a58c205-eae6-4206-ba15-6fc1864a08ef.jsonl",
+      "bytes": 143390,
+      "sha256": "586afa33ca1648af25cc06ca53f457ea5f234b752a7481be06797598e511cf4d",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "server/target/t2c2-runtime/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618/raw/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618-CLIENT-7f9103a8-15b2-4245-9d38-6ee6133c6a69.jsonl",
+      "bytes": 13120,
+      "sha256": "f2853feb6dc0cd8b8ab725cf9f81f6f5dfa08ba6d85eb7d4b90d27f01f831aac",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "server/target/t2c2-runtime/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618/raw/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618-CLIENT-a26fd844-7fe7-4ca2-9dec-8d4b9840debd.jsonl",
+      "bytes": 3147,
+      "sha256": "b1514560551decfe3f2470df1df1c49861b8ee95547a4430756e51aed0d720de",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "server/target/t2c2-runtime/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618/raw/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618-CLIENT-c28265d3-a7a2-4292-8718-7654b18fbfa8.jsonl",
+      "bytes": 159980,
+      "sha256": "dbb283235e45465ab2d05b5290c65de36d0dedcbada524836285eeccb40a11ba",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "server/target/t2c2-runtime/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618/raw/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618-CLIENT-cd4d0db3-5781-405b-abcf-60bdef9921af.jsonl",
+      "bytes": 193813,
+      "sha256": "41da1ef396f91c4b6ca7fb3902daf90c251e69852e2dbe32b30ed8981f5e6c02",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "server/target/t2c2-runtime/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618/raw/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618-CLIENT-f5fc2458-a983-43c5-ac97-e1ae3a4944f0.jsonl",
+      "bytes": 13732,
+      "sha256": "eeb598876a7857bbeb9e0434150550896e7b347a7afe3df098c457d5094db652",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "server/target/t2c2-runtime/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618/raw/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618-SERVER-f7fc7610-ee73-46c7-8a8c-572d2f74b09f.jsonl",
+      "bytes": 582198,
+      "sha256": "452685717b0c1886394b1ab7ad0441a683a5de878202ab40d9d0c89e8bd88632",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "server/target/t2c2-runtime/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618/run-metadata.json",
+      "bytes": 113413,
+      "sha256": "6ad6961290c294c31468e0f680b00798562238411f65d8339481d4783b97c91d",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "server/target/t2c2-runtime/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618/summary.csv",
+      "bytes": 13226,
+      "sha256": "46bfa2288b164c0de96aff276c34f4fe2326f581f50bbeff2a4a64653d3166e8",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "server/target/t2c2-runtime/T2C2-4a57ef56-cc9e-449a-87f6-b2d8fab2c618/summary.json",
+      "bytes": 42107,
+      "sha256": "42588a8056e1ca04f938e89ad8ce33daa00ec01e530acc32f0431794dd6095ef",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "server/target/t2c2-smoke/t2c2-gaps.png",
+      "bytes": 44650,
+      "sha256": "2eb84a22642683b366a592ca78e276a536ecd5b0e8c0906acad17fab0ee5ad88",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "server/target/t2c2-smoke/t2c2-late-events.png",
+      "bytes": 58729,
+      "sha256": "e5d2096a274ed8e81e77dc35ff51472c6599a2484e12eaa87c264ca591a5d2b8",
+      "publication": "PRIVATE_RAW; original log/XML/trace/screenshot retained; hash only"
+    },
+    {
+      "path": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+      "bytes": 11458427,
+      "sha256": "7f7e938c9fdffc93f7256f6e5489ad4c30e0950b5238ebbd2e508120c683de1a",
+      "publication": "LOCAL_BINARY_OR_TEST_SUPPORT; hash only, retained for private backup, never commit binary"
+    },
+    {
+      "path": "server/target/server-0.1.0-SNAPSHOT.jar",
+      "bytes": 25269862,
+      "sha256": "3abf31aafb7e07fdc16c05c741c035d805b28ba05806ac72e5c0b048b8d25180",
+      "publication": "LOCAL_BINARY_OR_TEST_SUPPORT; hash only, retained for private backup, never commit binary"
+    },
+    {
+      "path": "server/target/t2c2-smoke-classes/vn/edu/toeic/server/monitoring/LateEventsAndGapsSmoke$Boundary.class",
+      "bytes": 6090,
+      "sha256": "c6e5df22f8bf744f3027febb5f920fd2deff526ab2ade03357154e86fe6716cb",
+      "publication": "LOCAL_BINARY_OR_TEST_SUPPORT; hash only, retained for private backup, never commit binary"
+    },
+    {
+      "path": "server/target/t2c2-smoke-classes/vn/edu/toeic/server/monitoring/LateEventsAndGapsSmoke.class",
+      "bytes": 62035,
+      "sha256": "eeea801b88b3879ddab120aa17d4b64efa45d2cab4961e886b5357bed6ba8aa0",
+      "publication": "LOCAL_BINARY_OR_TEST_SUPPORT; hash only, retained for private backup, never commit binary"
+    },
+    {
+      "path": "server/target/t2c2-smoke-classes/vn/edu/toeic/server/monitoring/SmokeCleanup$Step.class",
+      "bytes": 315,
+      "sha256": "4e0b5a5651beeb65914836634c3c8083e1081ee792eb1513b88367e4965df53e",
+      "publication": "LOCAL_BINARY_OR_TEST_SUPPORT; hash only, retained for private backup, never commit binary"
+    },
+    {
+      "path": "server/target/t2c2-smoke-classes/vn/edu/toeic/server/monitoring/SmokeCleanup.class",
+      "bytes": 4220,
+      "sha256": "c11685db883a81495d70ba3194c88988d8784b7e275266cb4ccbfed232dbf99e",
+      "publication": "LOCAL_BINARY_OR_TEST_SUPPORT; hash only, retained for private backup, never commit binary"
+    },
+    {
+      "path": "server/target/t2c2-smoke-classes/vn/edu/toeic/server/monitoring/SmokeCleanupTest.class",
+      "bytes": 7199,
+      "sha256": "4dd3dc9c481e6d9b8dccdf6756ceaa74911fe2ff2a296b32111534f504bc747a",
+      "publication": "LOCAL_BINARY_OR_TEST_SUPPORT; hash only, retained for private backup, never commit binary"
+    }
+  ]
+}

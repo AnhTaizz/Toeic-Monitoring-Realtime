@@ -1,6 +1,12 @@
 # Git tự chuẩn hóa xuống dòng cho file text, tránh diff giả giữa các máy
 * text=auto
 
+# BASE-03 evidence hashes cover exact bytes across Windows/Git checkouts.
+evidence/v2-c-base03/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
+# MON-01 evidence is checksummed byte-for-byte, including Windows raw-derived metadata.
+evidence/v2-c-mon01/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
 # Script phải giữ đúng kiểu xuống dòng thì mới chạy được
 mvnw        text eol=lf
 *.sh        text eol=lf
@@ -97,3 +103,10 @@ data/seedingTest/*.html -text whitespace=-blank-at-eol,-blank-at-eof,-space-befo
 
 # EX04 công bố case/results/hash đã lọc; giữ nguyên byte bằng chứng trên Windows/WSL.
 evidence/ex04-v11-20261019/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
+# MOCK source checksum phải giữ byte khi checkout Windows/WSL.
+docs/plan-v2/fixtures/ex02/assets/source.txt -text
+# Hai payload có SHA256 trong kết quả checker, giữ LF khi checkout mọi máy.
+docs/plan-v2/fixtures/ex02/import.mock.json text eol=lf
+docs/plan-v2/fixtures/ex02/candidate.mock.json text eol=lf
+docs/EX02_RICH_EXAM_CONTRACT_V1.md text eol=lf

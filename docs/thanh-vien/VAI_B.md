@@ -419,3 +419,7 @@ Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG
 
 
 19/10/2026 — [Kết quả thực thi cuối](../../evidence/stage3-execution-20261019/REPORT.md), [artifact và thao tác máy thật](../STAGE3_FINAL_HANDOFF.md). Buildsourcecfbba58, haiP1/main/CI/PG/regression/MSIlocal đã kiểm. Reviewer kỹ thuật Codex theo user, không chữ ký vai. Việc dở: nhận MSI/ZIP mới, nghe LT01–04, install máy2 và cùng C chạy41case; không lấy localPASS thay nghe thật. PR45 chỉ đóng sau disposition B.
+
+## Ghi chú làm dở — EX-02 candidate / ADR-V2-03, 19/10/2026
+
+Thiết kế [EX02/D10](../EX02_RICH_EXAM_CONTRACT_V1.md) và [ADR](../plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) đã TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn19/10](../plan-v2/EX02_TEAM_APPROVAL_20261019.md), không chữ ký/GitHub review riêng. EX06 bắt buộc lobby shared writer→prefetch Part1/decode/UI_PREPARED→Audio+Visual ACK→START→rich DTO→two visible pulses→play. ListeningPlayback.prepare hiện GETv1 và Pane tựplay khi onReady: bridge V2 rich→existing segments/player/journal, no v1 bypass; budget3000ms, heartbeat6000ms giữ, lỗi sau commit interruption/no reset. [Fixtures](../plan-v2/fixtures/ex02/README.md) chỉ design; real Stage/layout/snapshot/pulse/media test V15–V17 NOT RUN. Integration cần EX03/05/07, không chờ lại approval D01–D10 hoặc tự claim GUI/hearing PASS.

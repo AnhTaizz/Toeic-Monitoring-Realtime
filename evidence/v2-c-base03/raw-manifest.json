@@ -1,0 +1,2869 @@
+{
+  "schema": "base03-raw-sha256-v1",
+  "createdUtc": "2026-10-19T10:04:03.562Z",
+  "preservation": "Original logs/XML/traces/screenshots/binaries remain in owned worktree target paths; no PG data/password/temp/home cache published; no raw edited. Keep this worktree for reviewer.",
+  "files": [
+    {
+      "path": "target/base03-runs/BASE03-20261019T095007Z-25f35add/createdb.private.stderr.txt",
+      "bytes": 183,
+      "sha256": "af31485e785ebc2e8852e67c127b652673c93b695082b1a895dc35fe16c3f9c8",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095007Z-25f35add/createdb.private.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095007Z-25f35add/initdb.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095007Z-25f35add/initdb.private.stdout.txt",
+      "bytes": 1086,
+      "sha256": "ba74d3310de92eb0ff0e5b3796e5d9c9e09bbcd268fc8a541aab6210747fa12e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095007Z-25f35add/pg-start.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095007Z-25f35add/pg-start.private.stdout.txt",
+      "bytes": 54,
+      "sha256": "46038efb813fbca18a92272496901190638dea3f97b51f7af0daa1ca2eb13818",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095007Z-25f35add/pg-stop.private.stderr.txt",
+      "bytes": 188,
+      "sha256": "ff294051c87e446f765b026dbe4741ad0947d548e83aeef9f7ed579ab3635e7b",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095007Z-25f35add/pg-stop.private.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095007Z-25f35add/postgres.private.txt",
+      "bytes": 1209,
+      "sha256": "6afb8fc2b29f6e8f4e3bcc5b75e5655dc747410fe92c3daa62f42069a4d7cb98",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095007Z-25f35add/run-metadata.original.json",
+      "bytes": 5227,
+      "sha256": "2bcc00a1c1db231bee5ca635986b44463a3fb34fb673d1137e63c2e839dfc347",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095007Z-25f35add/runner-error.private.txt",
+      "bytes": 44,
+      "sha256": "9f4de4fe40ae52457a98cc3e77d87222431bbb31e111e8b314ab7da9d0370b6c",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095007Z-25f35add/schema-count.private.stderr.txt",
+      "bytes": 179,
+      "sha256": "c1618581dde5200e4884e3221b48c20aea1a81363c6963d38c7b220508b5d243",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095007Z-25f35add/schema-count.private.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/createdb.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/createdb.private.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-focused.private.stderr.txt",
+      "bytes": 1703,
+      "sha256": "2cb8b6c2ad822ae0efd251338a08b844206e501d600c267e4c2c63f6bab1440b",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-focused.private.stdout.txt",
+      "bytes": 8857,
+      "sha256": "6e4139ce126d748d1c1b26b45e7121cf3d0dc4167008b1dabc218727d5199cb4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-ws-pg.private.stderr.txt",
+      "bytes": 182,
+      "sha256": "a771cabffa1adbba479a85799e017e43cbf2f781a4396d279c963d6243f386d3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/delta-ws-pg.private.stdout.txt",
+      "bytes": 5118,
+      "sha256": "5d57b6bf828bac1ac6fd6eca8ba63df3bbb729dce535aa43e7db1d779bef861f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/event-postgres.private.stderr.txt",
+      "bytes": 182,
+      "sha256": "a771cabffa1adbba479a85799e017e43cbf2f781a4396d279c963d6243f386d3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/event-postgres.private.stdout.txt",
+      "bytes": 3872,
+      "sha256": "5363dadec4a8614ecf4ae01ed2a072a24d5d35fd382b16ded087c8372fb362da",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/full-baseline.private.stderr.txt",
+      "bytes": 182,
+      "sha256": "a771cabffa1adbba479a85799e017e43cbf2f781a4396d279c963d6243f386d3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/full-baseline.private.stdout.txt",
+      "bytes": 4915,
+      "sha256": "ac689084e08e8df6cf55645fcf31df80a11a8603bcbf0a463381b054e2669e3d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/full-focused.private.stderr.txt",
+      "bytes": 1685,
+      "sha256": "d78ba21aee385087b268649e417b380424995dd2616f9d171ff3fbd1c8da9f8e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/full-focused.private.stdout.txt",
+      "bytes": 10608,
+      "sha256": "60382dcdafdab14cee44d9c7a9f52538934a6dc3824780e5043ced2d822ab454",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/initdb.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/initdb.private.stdout.txt",
+      "bytes": 1086,
+      "sha256": "77fc730c9a0262e0cc712be95e4ee6b56611e8032c8423eeb8b8037f21cf5f7f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/java-version.private.stderr.txt",
+      "bytes": 380,
+      "sha256": "90c7e04c9e0f4a7ff03bbc185d9a4a5b8a7b997f7863af650e2abe18f1730d66",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/java-version.private.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/local-live-gate.private.stderr.txt",
+      "bytes": 282,
+      "sha256": "407566082cc2472a9ade1fe6d6f4df6e5621331dc9233343cb046d60521ad68a",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/local-live-gate.private.stdout.txt",
+      "bytes": 8446,
+      "sha256": "1e3c90d7d40bd3a6ec255bd7f6da842faf1529631b041221d8bf9d90cd25ea7d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/maven-version.private.stderr.txt",
+      "bytes": 182,
+      "sha256": "a771cabffa1adbba479a85799e017e43cbf2f781a4396d279c963d6243f386d3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/maven-version.private.stdout.txt",
+      "bytes": 324,
+      "sha256": "220fc0ed638940f68ab084824324088677cdec6ff0ae18e13bea263ec6b3e47e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/oracle-campaign.private.stderr.txt",
+      "bytes": 2366,
+      "sha256": "0f4a6e61709be4e83f917a4f680771f492d13c4da17ce81664670c49b0107457",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/oracle-campaign.private.stdout.txt",
+      "bytes": 11260,
+      "sha256": "3d3bc7fb36199684483e5ae127f193a55ad3a5cf21f95dfec6bd3fe07bc6cd12",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/package-for-smokes.private.stderr.txt",
+      "bytes": 182,
+      "sha256": "a771cabffa1adbba479a85799e017e43cbf2f781a4396d279c963d6243f386d3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/package-for-smokes.private.stdout.txt",
+      "bytes": 10016,
+      "sha256": "767dd9a800a9193c6afdf6b903b2434816b917fc232fd387d00a7098436e86ce",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/pg-stop.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/pg-stop.private.stdout.txt",
+      "bytes": 59,
+      "sha256": "3a6747065de8c2dbc66a6baa73d5ab09c2c03eb8851704f973ac4b886e6805f2",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/postgres-version.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/postgres-version.private.stdout.txt",
+      "bytes": 73,
+      "sha256": "267ade76e85bb8877210127f61526a01d914ca1a059c16bf7b932068019da771",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/postgres.private.txt",
+      "bytes": 25299,
+      "sha256": "d1af7044e2a214e8f7d743344d4651c8e37c0348a374fd1cdb7565dc9a6ea062",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/python-e1-unit.private.stderr.txt",
+      "bytes": 1578,
+      "sha256": "32263fa485201d4c16d550b2573cb46ed45f5a284213006a3c0bc01086d564af",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/python-e1-unit.private.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/python-measurement-unit.private.stderr.txt",
+      "bytes": 1610,
+      "sha256": "c95cb57dbcb696eb024e7719d0d15576a7d00702bbabda5cd52d12c0238c543f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/python-measurement-unit.private.stdout.txt",
+      "bytes": 154,
+      "sha256": "c863f527109339e22407503edc9b8e049c054f8198ae1564817c6b40636bf46d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/python-version.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/python-version.private.stdout.txt",
+      "bytes": 17,
+      "sha256": "beceecf0b977f147c12202574af5044240944a4e10d729cf7a6251205cb09012",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/regression-package.private.stderr.txt",
+      "bytes": 2136,
+      "sha256": "94839d58d59edf19e38b1f782dcb833d96e719a2fb05a32c77b5ebc854f7a319",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/regression-package.private.stdout.txt",
+      "bytes": 3006780,
+      "sha256": "e0e5bf7e393c771ac2c2952597dfae403758dae13e3981f15997b1b08a228a04",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/delta-focused/client/TEST-vn.edu.toeic.client.monitoring.CandidateModeSessionTest.xml",
+      "bytes": 14026,
+      "sha256": "4f6720b9ba8dd2b5697078c0478b1229298d9b01f56506b75c87dd1dfae56cd0",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/delta-focused/client/TEST-vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest.xml",
+      "bytes": 16497,
+      "sha256": "4805e8feafef1c3f58f1fb3a4d9f509e818a2e7ba99b1b48f413fe453f7e98f2",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/delta-focused/client/TEST-vn.edu.toeic.client.monitoring.ProcessCollectorTraceTest.xml",
+      "bytes": 11758,
+      "sha256": "777ad44f238707d80457873d4fb65c943b2d5631b30cbf28e0bc06472de41cb2",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/delta-focused/client/TEST-vn.edu.toeic.client.monitoring.trace.DeltaReplayTest.xml",
+      "bytes": 12920,
+      "sha256": "b9c466150831a0d69eae1a3d8c0b96dc5dac9afc447287ab5baecd99e3728862",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/delta-focused/client/TEST-vn.edu.toeic.client.monitoring.trace.HandwrittenTraceTest.xml",
+      "bytes": 11606,
+      "sha256": "3878988a92550795ac32c8e1a91e43d3de8ba3b66d9a14fad0a956b0474b8275",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/delta-focused/client/TEST-vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest.xml",
+      "bytes": 13974,
+      "sha256": "049bb5f7217ab80f4f762e34c6ae4df3f26a72db2db82759a44bb5a977c9e3d3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/delta-focused/client/TEST-vn.edu.toeic.client.monitoring.trace.ReplayEngineTest.xml",
+      "bytes": 13192,
+      "sha256": "8298eade88051143f4241eb1fd5621c37d21f6700e98bb1ae56581f0e6a5656c",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/delta-focused/client/TEST-vn.edu.toeic.client.realtime.RealtimeClientTest.xml",
+      "bytes": 21275,
+      "sha256": "72bce9d5a295c1afd00f1cc59b0d450ce576b001824837fc67d23d74cdb91890",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/delta-focused/protocol/TEST-vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest.xml",
+      "bytes": 10299,
+      "sha256": "82396bff9ec9557c53d2f021d5310cdfd2e46d451166f955dd0c820e23942df3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/delta-focused/server/TEST-vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest.xml",
+      "bytes": 29191,
+      "sha256": "41fe3bae8d133b7385e8f978c8ad5fe1d9d4a41e972fbd1d2c3cc549513f8deb",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/full-focused/client/TEST-vn.edu.toeic.client.ExamMonitoringIntegrationTest.xml",
+      "bytes": 13640,
+      "sha256": "cf73371a4d0c1ca1ee37207f65bf46408c2980d7903b94b600ed37a845f4417b",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/full-focused/client/TEST-vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest.xml",
+      "bytes": 13287,
+      "sha256": "06703563814c80444d710ebb074605154c4c1892c483be4f6cd06d852ce77216",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/full-focused/client/TEST-vn.edu.toeic.client.monitoring.MonitoringDeliveryTest.xml",
+      "bytes": 17103,
+      "sha256": "9f2fb0281f2e2b19546352e33842c060291eb6675826e576916bb7a767da7cae",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/full-focused/client/TEST-vn.edu.toeic.client.monitoring.ProcessCollectorTest.xml",
+      "bytes": 13815,
+      "sha256": "ffcd1730a120558e7dde719305d4745cc5f6078344dd23466afec13c6030508d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/full-focused/client/TEST-vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest.xml",
+      "bytes": 14463,
+      "sha256": "8acfad1c68b8a82bfd015ae0f5e8d597a7d396e471c98926123c0c6cfabc3778",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/full-focused/protocol/TEST-vn.edu.toeic.protocol.monitoring.EventOriginTest.xml",
+      "bytes": 10316,
+      "sha256": "9a6a992261a8830a404798b8c18d274668fda865ee909e7c8ffdbdff12856ba9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/full-focused/protocol/TEST-vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest.xml",
+      "bytes": 10825,
+      "sha256": "c1b2e00233933a29f1acc4051361c5ec9059cf107608fd75d40aee56fad38fc0",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/full-focused/server/TEST-vn.edu.toeic.server.monitoring.FullSnapshotReducerTest.xml",
+      "bytes": 28079,
+      "sha256": "0bbfad266319917921987b7eec657ab3c82f547f9a375bb0d9ca12724ae3ba99",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/full-focused/server/TEST-vn.edu.toeic.server.monitoring.MonitoringGapTest.xml",
+      "bytes": 29241,
+      "sha256": "c228eeb0c9673b6651989a2bbf5a6e86577f8f70a03dc1fc4254d262b2dd820c",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/full-focused/server/TEST-vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest.xml",
+      "bytes": 30261,
+      "sha256": "f76832d5e95cce46069bee5b61878172c1a951f70e9d44baba7dd9e59ea6f623",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/full-focused/server/TEST-vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest.xml",
+      "bytes": 28151,
+      "sha256": "07de31cdd9aba8ad0e7eaae3a00871227a671f861cb72032085d51b2284b4589",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/full-focused/server/TEST-vn.edu.toeic.server.monitoring.MonitoringStateServiceTest.xml",
+      "bytes": 28592,
+      "sha256": "d7ac5d1584898b5313f8f3b68f8909e00bfd0cef2f2756efde8b95cf0bdf437c",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/full-focused/server/TEST-vn.edu.toeic.server.monitoring.ProcessEventTest.xml",
+      "bytes": 30790,
+      "sha256": "c3083daed150601fc6560dcfbbcd81e18264ca3bcc434affa470dfabfe73333e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.AttemptRefreshTest.xml",
+      "bytes": 12858,
+      "sha256": "8acea81ca5ef8b38718247bac0005fdc627bfbcb317e75a99f4e9eb5122e2eab",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.audio.AudioApiClientTest.xml",
+      "bytes": 11865,
+      "sha256": "047d61ce0478ef47881a70f24bf1168aa7efaa4bd5ab2ba53c4cee6a35befea1",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.audio.AudioFilesSharingTest.xml",
+      "bytes": 12973,
+      "sha256": "fa469ba742c7d6bc743fe57327fc8d7693e5bf0e705085194e99d3698cc76adb",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.audio.AudioFilesTest.xml",
+      "bytes": 14990,
+      "sha256": "0621a35463a2eb8e6920e5713914b53d0027a507135d06fdc91e27e400298459",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.audio.AudioPreparationTest.xml",
+      "bytes": 12588,
+      "sha256": "9b201ca1c35590b7ceecbdd86c2269dbdfb66d2080c6c5bc57dd3943c9ce1c2d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.audio.ListeningApiClientTest.xml",
+      "bytes": 11575,
+      "sha256": "3c02e6d065f2af39cc1a9b2145ea95aefd7a56bc60061ce50564efeb8ad9779b",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.audio.ListeningPlaybackTest.xml",
+      "bytes": 12345,
+      "sha256": "93d04012808a85ac812adaf73ce04d497d12ff6cec86dc9b1aa5a2e26c797ec5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.ClientSettingsTest.xml",
+      "bytes": 11841,
+      "sha256": "1ac9d19b89edd89ecf547baed07959f4524fa68fa29786326000c3f6940c0489",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.dashboard.DashboardControllerTest.xml",
+      "bytes": 13734,
+      "sha256": "f9f65886233ea1c5191ae21e843b750df1f675298ccca1cd687834de2fdf5c5d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.dashboard.DashboardModelTest.xml",
+      "bytes": 12568,
+      "sha256": "7bbe86f80403df3e8fa14b916655eafe516edab89a12a254d7606cd6f2e0214c",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.dashboard.FullStateDashboardTest.xml",
+      "bytes": 11792,
+      "sha256": "04758df3eb3554cc1ff16d1bbc1e41e517e97df639aa8eb37afd839b3c6b577c",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.dashboard.LateEventsAndGapsTest.xml",
+      "bytes": 11577,
+      "sha256": "8b726a816d9df54e0616c33d4ea7033f09d8a7dbd502719e719d00cf6cc70e65",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.dashboard.MonitoringApiClientTest.xml",
+      "bytes": 13134,
+      "sha256": "ab2a6cef4b592198e7bc4f63be63366c47a07352c8ea2b87c6356af2796893c8",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.dashboard.MonitoringJsonTest.xml",
+      "bytes": 14052,
+      "sha256": "b2dd45d804f6fe5330e83922345284dfe28ab6b99eb2efd351815169e4ba1289",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.dashboard.ProctorProgressControllerTest.xml",
+      "bytes": 11972,
+      "sha256": "0db1dd2af359f84cef8aff33e28f65e10e4325d1c71b9808ee1346432a4dc36b",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.exam.ExamApiClientTest.xml",
+      "bytes": 15216,
+      "sha256": "1ce72bbd9ab3933a904b17582d34871f5f5b2c59cde0646fdb118de06f370665",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.exam.ExamHistoryReadTest.xml",
+      "bytes": 17781,
+      "sha256": "7315583c5eef881dbfe75d9ec59b326ab78a504b8733dc5b89db54a356b17055",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.exam.ExamPaperAndEntryTest.xml",
+      "bytes": 12656,
+      "sha256": "f137ee972c286ea16255d06d1f83a27553ae4e7a5b8a349874ad4ade73b1c868",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.exam.ExamResultMappingTest.xml",
+      "bytes": 12189,
+      "sha256": "dfe12bfcf361c93c7d6860b2923debd04aa6a4b6515da7f0caa66b222c69ad41",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.exam.ExamSessionTest.xml",
+      "bytes": 18572,
+      "sha256": "b47be2edc714956bea4da10f7ccfc114e456417680b4ee0c988ae3c28ac09254",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.exam.ExamSessionThreadingTest.xml",
+      "bytes": 11319,
+      "sha256": "9cefe4a17722c37031013d77d484207eb9726885c86e78c580c3d1e9a0dab05b",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.exam.ScoreResultDialogTest.xml",
+      "bytes": 11399,
+      "sha256": "71dab8a82ad7ab13056b47b3bad40d56fef99cb68924afdbac3b60c41138874e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.ExamMonitoringIntegrationTest.xml",
+      "bytes": 13259,
+      "sha256": "0f8885d335938f10d9b382b006e629b6b3a3702037dc033f123da190365ba5b6",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.LoginApiClientTest.xml",
+      "bytes": 16698,
+      "sha256": "75ad5a777a094347e5d8d09f46b84d925d30b2202aae467009d0de73765ecd67",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.CandidateModeSessionTest.xml",
+      "bytes": 13739,
+      "sha256": "92557cd4c8094fc031a9ec9caa279d89dcb17716c6f71e6367672766b4c28810",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest.xml",
+      "bytes": 16208,
+      "sha256": "cbb0ec3e19fc745e1aebcc1805635cbbded8a76ffb2ffe20859adfcbb800a6a4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest.xml",
+      "bytes": 12906,
+      "sha256": "c9186d8eef16963f0c2290cf433a45c090f2944c2a91d1f4cb74b3e08cedf925",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.harness.ControlledProcessHarnessTest.xml",
+      "bytes": 12611,
+      "sha256": "ea0b88abc7b539830efe15adba3411fd2059fb24e0ab178a6e96c9911bd5960a",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.harness.E1ArtifactsTest.xml",
+      "bytes": 11588,
+      "sha256": "ea5afe23c1de548fcf11524fc44492d7042cf94f0197733ba0f2258594d39660",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.harness.E1WindowTest.xml",
+      "bytes": 11450,
+      "sha256": "097eb19a64cd5c2343b45e123f28d8b466bad5b4e64905d257ba6fb73d4ce021",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.harness.HarnessArtifactsTest.xml",
+      "bytes": 11789,
+      "sha256": "d54caf8a6479bbe6acaeda5a16d9647945bdeea568fdccc9698e0ca0fc92a823",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.harness.HarnessCliTest.xml",
+      "bytes": 11480,
+      "sha256": "c69289d4f92f4e94f0aedbbee4be8d99f5580834b7007e8d0845c9276f6aa565",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.harness.HarnessPlanTest.xml",
+      "bytes": 11744,
+      "sha256": "55841bc2c8a9ee6de8005644913c3d592549c9c4abfbaaaee32c83eeaccaeee7",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.harness.ObservationJoinerTest.xml",
+      "bytes": 13120,
+      "sha256": "5fe1af88e7cad5b3e3d391ea92bbd3d3c7106c81817b5cc7be761c5c49891394",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.harness.TestTracePolicyTest.xml",
+      "bytes": 11689,
+      "sha256": "22c34f4a86c5219f67af893d087d3c91321d6d780844346b40f4fad8b75770b9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.MonitoringDeliveryTest.xml",
+      "bytes": 16716,
+      "sha256": "be35da2210bf6e21c43ce5fcf44a58f9b802aba060de32cc939b49d4851902f6",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.ProcessCollectorTest.xml",
+      "bytes": 13433,
+      "sha256": "d2303a1bd53e9dbc06efee027a26d71bbbc9c4c62549a181ff1394a993dc1850",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.ProcessCollectorTraceTest.xml",
+      "bytes": 11471,
+      "sha256": "cfb9f7cc11fd2fb1a52b455aab2c26607c4707a6e404425b139d18681247afed",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest.xml",
+      "bytes": 14076,
+      "sha256": "f2ef860b55bcf49ead29d4dc05803bc0e7190a2ca965b153142ed25d163d930e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.trace.DeltaReplayTest.xml",
+      "bytes": 12633,
+      "sha256": "ddf38be85907461baef999009ceef64c875c9c9522ac6ccb613b7ee075605f95",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.trace.HandwrittenTraceTest.xml",
+      "bytes": 11319,
+      "sha256": "fbfec36526ff7af07502ac02bd090f730b2adfeecebdf248ca21f3b089f80bd4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest.xml",
+      "bytes": 13686,
+      "sha256": "daa28622d2d3be073c5025541d88695e7e1fe95b395d14f2dc662106a1f95963",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.trace.ReplayEngineTest.xml",
+      "bytes": 12905,
+      "sha256": "c6c8945d05746dc926f2c7ecf1b7ecfaeda32693c5cc0b286f80f265b19436a3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.trace.TraceCliTest.xml",
+      "bytes": 11570,
+      "sha256": "a5e467c6824073b8420ed537319a586d60dfc3b602b2e24989dd6457e5ac8b59",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.trace.TraceReaderTest.xml",
+      "bytes": 13391,
+      "sha256": "5605304e01690dbeff4e26fd1509592a2822db00704d9e4868c3648b33b2f02e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.monitoring.trace.TraceRecorderTest.xml",
+      "bytes": 12082,
+      "sha256": "afca00949e459a19b5216c79ccdba24f8390bf8a71750e03bf25424324426d18",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.proctor.ProctorSessionApiClientTest.xml",
+      "bytes": 12499,
+      "sha256": "eff9a5ae2e2ba80548af74fabef39ad6f45fc81f85466a5ddd80c40f3f7418da",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.proctor.ProctorSessionControllerTest.xml",
+      "bytes": 12729,
+      "sha256": "9f8ec2fe5664ec359dfbe2c08fbc083feb2b526b0330e0b97200afa1bd99245f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpenerTest.xml",
+      "bytes": 13687,
+      "sha256": "d042513a60dff01a3ccf9ea12f53337ac9cffefc573ee6ff0ace025ef4a735df",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.realtime.RealtimeClientTest.xml",
+      "bytes": 20954,
+      "sha256": "1566e5a0182734d59b7b8f4ad83b7eae08ca8bb1db0c2cf4e569badaaec41d9a",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/client/TEST-vn.edu.toeic.client.ScopeLookupTest.xml",
+      "bytes": 12031,
+      "sha256": "756fefbe88126177e219614cf5342cfae1555d34e53e5e5f48493bb4981fce9b",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/monitoring-spike/TEST-vn.edu.toeic.monitoring.ProcessObservationTest.xml",
+      "bytes": 9302,
+      "sha256": "5d4150f9f1edc4fedc014cd678a631ee2438fdada83371fbbe677e9e26a6c17d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/protocol/TEST-vn.edu.toeic.protocol.exam.AttemptIdentifierBoundaryTest.xml",
+      "bytes": 9652,
+      "sha256": "cab1534b445c3417fb5954c369704e18a63ac06ea314ec877f25595413652c2f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/protocol/TEST-vn.edu.toeic.protocol.measurement.E1ByteAccountingTest.xml",
+      "bytes": 9662,
+      "sha256": "0de7567487254db3148e7790e353e0e8532146f1c4c71e8232410521a8b56177",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/protocol/TEST-vn.edu.toeic.protocol.measurement.MessageMeasurementsTest.xml",
+      "bytes": 13550,
+      "sha256": "fd1757443dde89f5a8c4139aa82a7882702979d3e76384a1e64c4558cebf0899",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/protocol/TEST-vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest.xml",
+      "bytes": 9978,
+      "sha256": "13cfb77250bf0625c1032c30dcb247221150f4fae4199001f67a21b86aa22493",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/protocol/TEST-vn.edu.toeic.protocol.monitoring.EventOriginTest.xml",
+      "bytes": 9905,
+      "sha256": "af0189588f9ddc298aae81115e309ba11b462c18b2d6ade820e5bfb70a56d122",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/protocol/TEST-vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest.xml",
+      "bytes": 10413,
+      "sha256": "29557783d57bfe4e8624f3714f5e3951d6d815afbab4847c915cef044eea90e4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/protocol/TEST-vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest.xml",
+      "bytes": 10427,
+      "sha256": "87ba5096ec047784982fc19c02ed788d42d86f6e78c11e4a24d0811fe29b4d54",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.audio.AudioAuthorizationTest.xml",
+      "bytes": 28103,
+      "sha256": "ba099f6500291b124f9d4c662d33c0f7c3136ac1a46e1ad1e3adf1b5c09313e8",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.audio.AudioCatalogTest.xml",
+      "bytes": 28492,
+      "sha256": "1912246a2bc640ef2e7149ce85ef30e3ca2102f94a67121820fcb6b4bb50db69",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.audio.AudioReadinessPolicyTest.xml",
+      "bytes": 27279,
+      "sha256": "452d44216f1fb4c11a5317701b05f0f4e14155080625e04fe3a47c5dc0f1eff1",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.audio.AudioRuntimePostgresTest.xml",
+      "bytes": 546014,
+      "sha256": "d74e7deb7f0303a0f4174a9e6821595acbd631cb53482145053542e3c81bbddc",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.audio.ListeningRuntimePostgresTest.xml",
+      "bytes": 1052455,
+      "sha256": "c30cfda6366eba9c9f00c2ceaed80b26ea7741a475f5b8c94e60c950cd16e58f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.auth.AuthenticatedNetworkTest.xml",
+      "bytes": 39131,
+      "sha256": "728026b6515a3345ec644d825461caf7790f4b924022100316def65fcd89b179",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.auth.AuthServiceTest.xml",
+      "bytes": 28168,
+      "sha256": "deafdd4a2216084d8b8fd545d6b82cb1718c881fe1fb68317d8b8eae2021e07c",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.auth.ConcurrentRealtimeSendTest.xml",
+      "bytes": 28402,
+      "sha256": "8303c8887c3651741ed69a234acd42f27fb58bc4356c2d833e2d8f1b2c2fbb19",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.auth.RealtimeMeasurementTest.xml",
+      "bytes": 28674,
+      "sha256": "b9ff7dcc2e58b30d685d20901dfec25acb14088e73e33cc8492a4e7742bdd8ce",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.auth.SessionAuthenticationTest.xml",
+      "bytes": 30593,
+      "sha256": "8119d2fe412b8c066de775f888ddb9d923ef2ff6628bfcc595eb1d9591c591d1",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.exam.ExamControllerTest.xml",
+      "bytes": 31138,
+      "sha256": "d6b631e0b93816a6d4ae444aab172f850ad88d5f7205e43be00cdb6ca04ceebd",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.exam.ExamReadAuthorizationTest.xml",
+      "bytes": 28490,
+      "sha256": "8afe015587a2bb7fcc5cf2ebaed3b72acce090860d9b01fec818315fbe9f8b32",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.exam.ExamRuntimePostgresTest.xml",
+      "bytes": 1025537,
+      "sha256": "e5201e75e768db4d26dbc45eb91d8d7e42a823262a61f07055d66c38dccebdd4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.exam.ExamTimeoutSchedulingTest.xml",
+      "bytes": 28194,
+      "sha256": "1e4a991f882283d659e5158e562e120f31c79580e939ffef312838cbd3b9e203",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.exam.ExamValidationTest.xml",
+      "bytes": 28971,
+      "sha256": "c1ec0e84dc36e569d22c7d2f81432f0288bfb598d7bb46077f49f3fb0b9d94b7",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.exam.RichExamMigrationPostgresTest.xml",
+      "bytes": 365264,
+      "sha256": "0aaa844abf60edd11ec766cedc2d65ee29d83f28359864a0e2e7b933aa9d36d9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.monitoring.FullSnapshotReducerTest.xml",
+      "bytes": 28647,
+      "sha256": "3be7e47075579f82ec50e7f5470cd0bec4fabbcca7eb66ac284a4354f7678cb7",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest.xml",
+      "bytes": 29026,
+      "sha256": "c662351ece7c283a42acc6e3b9f649a359616496f15f87d0e36a00ac9cf8c18a",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.monitoring.MonitoringGapTest.xml",
+      "bytes": 29805,
+      "sha256": "f93c712188f6d10d2831a6ce622f1db019e9a2b23532480836d417bd04a819bd",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest.xml",
+      "bytes": 139284,
+      "sha256": "d968e47ed4de8ac0035320b216531ed2ba176a79383d101a51b87a23261fc6b4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest.xml",
+      "bytes": 30002,
+      "sha256": "d80574cb654ec2d6faa653f5d3e1ee9ef64dc7159b477b4a36c47ab08dd270df",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest.xml",
+      "bytes": 28732,
+      "sha256": "8c92a52317d539cb118eff792522b8980b0e5e388081edd76dc37522b4dddc15",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.monitoring.MonitoringStateServiceTest.xml",
+      "bytes": 29162,
+      "sha256": "34a4dabb2d2895179313d260cfaf8540f43d604aec9c0902f2281d6c298d1047",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.monitoring.ProcessEventTest.xml",
+      "bytes": 31352,
+      "sha256": "37078b32d408deac9f763d2fd87ae1824d6d7abed0a7fc3dcd89f73cf8163538",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/reports.private/regression-package/server/TEST-vn.edu.toeic.server.monitoring.SmokeCleanupTest.xml",
+      "bytes": 28323,
+      "sha256": "f199dea6bb36c1ee28124a518c487f27178774def1b9c3293005aa0aa168e39b",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/run-metadata.original.json",
+      "bytes": 17534,
+      "sha256": "af2a832d76ebb7a22d1c72c0271d07dd886fc394a05d8a8956a30081f8904fe4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/schema-count.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/schema-count.private.stdout.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/createdb.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/createdb.private.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/delta-ws-pg.private.stderr.txt",
+      "bytes": 182,
+      "sha256": "021b916c28194585809e6968dfbb0b829bfedd76000069b41e0d0d628928e380",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/delta-ws-pg.private.stdout.txt",
+      "bytes": 5392,
+      "sha256": "6db882c3688dad9a5a230164bdca997ca6b8cf6d102f1f319634a69e21ad1087",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/initdb.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/initdb.private.stdout.txt",
+      "bytes": 1086,
+      "sha256": "cf36518f01fa8d65b965a81320d67c7f1721fafffb127778c24e7eeba4acb1cf",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/java-version.private.stderr.txt",
+      "bytes": 380,
+      "sha256": "126c0e20dbd589367aafe8a048120e3067c42450fd0e934c01bf9830da17ce0d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/java-version.private.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/maven-version.private.stderr.txt",
+      "bytes": 182,
+      "sha256": "021b916c28194585809e6968dfbb0b829bfedd76000069b41e0d0d628928e380",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/maven-version.private.stdout.txt",
+      "bytes": 324,
+      "sha256": "220fc0ed638940f68ab084824324088677cdec6ff0ae18e13bea263ec6b3e47e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/package-supplement.private.stderr.txt",
+      "bytes": 182,
+      "sha256": "021b916c28194585809e6968dfbb0b829bfedd76000069b41e0d0d628928e380",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/package-supplement.private.stdout.txt",
+      "bytes": 8641,
+      "sha256": "8f80211708759756320cd029658666ebb1c294c07d55079d1f8e01b9587e8d71",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/pg-stop.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/pg-stop.private.stdout.txt",
+      "bytes": 58,
+      "sha256": "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/postgres-version.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/postgres-version.private.stdout.txt",
+      "bytes": 73,
+      "sha256": "267ade76e85bb8877210127f61526a01d914ca1a059c16bf7b932068019da771",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/postgres.private.txt",
+      "bytes": 1214,
+      "sha256": "48eb9f307ae1f3e8beda0d3cc0fca3f732ee1f45ad8d07fca7244911cf832c57",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/python-version.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/python-version.private.stdout.txt",
+      "bytes": 17,
+      "sha256": "beceecf0b977f147c12202574af5044240944a4e10d729cf7a6251205cb09012",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/run-metadata.original.json",
+      "bytes": 9703,
+      "sha256": "c4e36219bf41ad55013543c5ae56c87f51b8bad00a80d33ac5b6cdc0f1cc8a8d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/schema-count.private.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/schema-count.private.stdout.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t2c1-runtime/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730/raw/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730-CLIENT-1bb4b970-eb5e-44da-9dd0-7d691325a50e.jsonl",
+      "bytes": 282839,
+      "sha256": "e71413174a84c76ff7b9a198f8eb4bb2df6f8e70b3e3b8c0e1c88864d5425f89",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t2c1-runtime/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730/raw/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730-CLIENT-a43e2014-6aee-457c-a6c2-8772500f6ea8.jsonl",
+      "bytes": 164270,
+      "sha256": "c1ad8ba1156dcea8badd65b0ae414b54e7ea8359dafe5fa421bca996d66fac55",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t2c1-runtime/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730/raw/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730-CLIENT-b1a0f8c4-f7ad-4b75-a6c4-39c2e13b5f3e.jsonl",
+      "bytes": 113828,
+      "sha256": "96934df0725ab6eda4ce678abb216e9643a66eb418be7231b30a3f824009a173",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t2c1-runtime/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730/raw/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730-CLIENT-b94dfffd-0fc4-4266-89d5-758c1f7f8880.jsonl",
+      "bytes": 62998,
+      "sha256": "f7e98704021d3e0801f6ededfb869ff8d0364013e23ed7806f2c977fc54eae94",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t2c1-runtime/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730/raw/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730-CLIENT-cb3aa393-787e-40ed-a4b7-3543db60df1d.jsonl",
+      "bytes": 63151,
+      "sha256": "fe87fc725f188bab7fd88a1be683d2daccc819aa41d95fb4bb44db52707ed085",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t2c1-runtime/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730/raw/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730-SERVER-b327f5d6-3594-455d-8cf2-5ef75d4588a8.jsonl",
+      "bytes": 656616,
+      "sha256": "620eafd76f83005c8bfd2ff1c13b593d686cc2ea21ff0e3d75007469a109ba52",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t2c1-runtime/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730/run-metadata.json",
+      "bytes": 109585,
+      "sha256": "b8ead384223e15e7a1572720089dbfe69e49ae76f87473701d2f9813bf0c7301",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t2c1-runtime/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730/summary.csv",
+      "bytes": 8737,
+      "sha256": "4eefe257d0bcb764b2f4b332c08572c93fe8eeb01276c08c7925b151143d5380",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t2c1-runtime/T2C1-6c150031-ddd9-48b7-af8c-9ebd5be73730/summary.json",
+      "bytes": 27826,
+      "sha256": "fd0f6556db105239c0a83663fc3f49cddfe6ac97f7e1542f47a2a4cbe3158ead",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t2c1-smoke/t2c1-edge-closed.png",
+      "bytes": 54033,
+      "sha256": "58dcc387770c96d7f0187751c613bce83b1afd00aa5c2475ef412cfec2295cb5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t2c1-smoke/t2c1-edge-open.png",
+      "bytes": 54073,
+      "sha256": "57d77d3fb33359ad470aa9f5ee85223ba4836e5afc0647884fc14378d6661210",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-clean-delta.json",
+      "bytes": 281882,
+      "sha256": "112f2c27fa53642cee14c099993a357e4a3feeca622de874bbd3af3038fbdcba",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-clean-full.json",
+      "bytes": 398187,
+      "sha256": "5bc10e7b398c2ccf448f58c61d63929426a77fdd0ffb730e248f346705e9c3ec",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-conflict-id-delta.json",
+      "bytes": 292116,
+      "sha256": "e8366d08fecced53a226929b25c088b66abdf51a88b8699da4036243acef2cb1",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-conflict-id-full.json",
+      "bytes": 404972,
+      "sha256": "815539c1cd0102beb912273df222a5e6b325761249dd2bd2050d89c5f5fde7dc",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-conflict-sequence-delta.json",
+      "bytes": 292248,
+      "sha256": "5dd29f918576650a00416e337f0b8214a9737e1b6cd5f16c1f6b13902fd80aca",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-conflict-sequence-full.json",
+      "bytes": 405062,
+      "sha256": "3f019053fdb0a0d58a22506735f83edb134c655087b013c46603de9326242a86",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-drop-first-delta.json",
+      "bytes": 279123,
+      "sha256": "d7df1731aa718490d382dbdfae1253a55e1839af5d13c0feecaa37d8f77f7e04",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-drop-first-full.json",
+      "bytes": 393913,
+      "sha256": "bfa315fcb88b54b8e05799508fbe8039bbc1ca486a756a3bce68cc38cb2010f1",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-drop-state-delta.json",
+      "bytes": 285167,
+      "sha256": "c4bcd6798d626b18afdf0ca29e5e6dcf506e6f5094a2d267cbb89c94176e9723",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-drop-state-full.json",
+      "bytes": 398204,
+      "sha256": "9305e355d5901cbe898645961711a700c2cca7bf42fb02c73e7542e73c078b9f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-duplicate-delta.json",
+      "bytes": 399742,
+      "sha256": "ee3eace5b24b079cfccfc78c7112ac371a26df00e43719ef0dc9dcc41c1c2966",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-duplicate-full.json",
+      "bytes": 597714,
+      "sha256": "a574df8a11f143c460d87de15cb6df10b1bcb7087fb1c8913c368496b4e3feaa",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-event-drop-delta.json",
+      "bytes": 280973,
+      "sha256": "4613e118bece3b445b767210707bae7016a6d1150de5609a9164c6d8a3f2b088",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-event-drop-full.json",
+      "bytes": 397278,
+      "sha256": "2ab91bfa43887a20e179a845d56a23418ff0b9066cc4166d780c309157599d73",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-late-after-full-delta.json",
+      "bytes": 288143,
+      "sha256": "17d751957d505de15e15adaa7162f0061396b7ebfb875ff488f8971a2465251d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-late-after-full-full.json",
+      "bytes": 400688,
+      "sha256": "bba6394a9e4965e6b02b2c7fe6619b97d21ec5e956dc439d2ac430588caa8a7c",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-reconnect-old-delta.json",
+      "bytes": 290508,
+      "sha256": "aeb012b9eb6eb14c7ff9875a2ebc0fc7018d5d0ce7af7bd0dc93be6f925f2738",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-reconnect-old-full.json",
+      "bytes": 404174,
+      "sha256": "75ccdb67dc5f13c5bb663b1924e2f881b4163dc391c562bcba4f6944bbe55a7f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-reorder-delta.json",
+      "bytes": 288969,
+      "sha256": "d8107f3b19454ac6a493ac8fa9adca8c8f60f4885feb6dbe47c763fa3da66132",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-reorder-full.json",
+      "bytes": 400680,
+      "sha256": "cd4870a39456c664eda07373f9d8973d26ab6f67e9b07f761a2ec71bd6b89087",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-retry-resync-delta.json",
+      "bytes": 295760,
+      "sha256": "2e5d271b60178dfe380e440682538ebac697ffa0c1850fc5ebcb5b0803a473c0",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-retry-resync-full.json",
+      "bytes": 407381,
+      "sha256": "50f63e4cb93f13dde1392c107eb2c7acfbc09411fdb518c9a04a867ab5b65ced",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-seeded-delta.json",
+      "bytes": 385543,
+      "sha256": "7d32082c80a36f8c0b8d723fad1aba73778a8fc81a7ab43a5b486181119c30b9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/high-change-seeded-full.json",
+      "bytes": 525378,
+      "sha256": "cf54b6d2fe22810fc29577dce44cc03bf3916b678624f11b9226ade7f8e1118d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-clean-delta.json",
+      "bytes": 261344,
+      "sha256": "c1b3f800f8950e2637b1723a7221c5f17e9ef458b8e93b2c86299a7af8abb358",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-clean-full.json",
+      "bytes": 390190,
+      "sha256": "cc9de20e7784c639916798e714b651cd3bbc10be8693785619f7c54bb9db753a",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-conflict-id-delta.json",
+      "bytes": 271560,
+      "sha256": "64f5c0c01a5a3bdc7f7292c776cada40753e552cb08c0a277183c76bba84e358",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-conflict-id-full.json",
+      "bytes": 396963,
+      "sha256": "87416980f907c80944670fc549d1890b0916312096d18cd39622153d47dd4384",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-conflict-sequence-delta.json",
+      "bytes": 271692,
+      "sha256": "02e984163c734902c7dae759a7b2e2b2acd40ff0c51aefce9ee833f543323a78",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-conflict-sequence-full.json",
+      "bytes": 397053,
+      "sha256": "e5ef99b8f7221a764d308e71d949eaf10c44d07a9e287dc5c55da52f6b6ca2a3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-drop-first-delta.json",
+      "bytes": 262193,
+      "sha256": "fb756ce72dce8817cde8eb8ec97add8d96e27dcb7a446411d59cbbc1ec73cbdd",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-drop-first-full.json",
+      "bytes": 385942,
+      "sha256": "fbd67ff19a043af0049c259ccb003670bbb52beb41173cbe704b16bfdbec6c23",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-drop-state-delta.json",
+      "bytes": 275409,
+      "sha256": "63c072f402c0886cd848922bddf7bdbb186364fa01db3bd822330c01843e6442",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-drop-state-full.json",
+      "bytes": 390207,
+      "sha256": "76b1da57d15b8555e95b72d6fe667319d03b12d5e72db257bf728378cd0ee9e8",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-duplicate-delta.json",
+      "bytes": 366283,
+      "sha256": "6866ed6a50690c52c8824bdb308301dcaaca1d9d4668f4ac7d86f4eb93eed7ef",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-duplicate-full.json",
+      "bytes": 585801,
+      "sha256": "a4aef789bde99efc60cbf9d0ba5482b5e188780722d64ebaa80ca513562a86ae",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-event-drop-delta.json",
+      "bytes": 260437,
+      "sha256": "6e5666f19067afc9030ea86ee742d5fda9335a97799b85b7a73e0d3add7cbcd3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-event-drop-full.json",
+      "bytes": 389283,
+      "sha256": "4c3d44c7603686642aa926a736c74b3bf25093b790c03e192d5e372d0cd6341a",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-late-after-full-delta.json",
+      "bytes": 278380,
+      "sha256": "b4a4f893d5421f881e1115beae73a55a4409e80f715c34ebc1c70855e86bbdd4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-late-after-full-full.json",
+      "bytes": 393199,
+      "sha256": "fe6dc8ef3562849d45eeec215e1a00d9a768eedf8f95d7be43e9c4f08e638c7b",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-reconnect-old-delta.json",
+      "bytes": 274525,
+      "sha256": "ce006dd598230965f359f218cc4e2af238901ffa162f90724caae0c589e167cf",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-reconnect-old-full.json",
+      "bytes": 396167,
+      "sha256": "97c064cae8ba2d2eb5bd74c71fb94b0d71a43b045200094cce3565e476bc34a3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-reorder-delta.json",
+      "bytes": 279204,
+      "sha256": "11175e51118d10ffe7cc17e0a64b45b2d86d3d404ffa592de06e3a9d27a26507",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-reorder-full.json",
+      "bytes": 393191,
+      "sha256": "6db090eaae14f2e20716e432e7e07596372818de1592c5e388713ab33ab62ece",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-retry-resync-delta.json",
+      "bytes": 286020,
+      "sha256": "5320d4f02c6b89a980a72b5d9cef203097cd2408357b2a3eeff041b8e4c0f860",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-retry-resync-full.json",
+      "bytes": 397752,
+      "sha256": "0d744312567114f9937c64c0f34dc3dfe4f2e4fca603135f341a88d53ff7d2a2",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-seeded-delta.json",
+      "bytes": 369656,
+      "sha256": "bd78c527f58b75ac80394d8917815e494bd1ca987c2e398a9d40e1a194587b59",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/low-change-seeded-full.json",
+      "bytes": 517435,
+      "sha256": "73198022625467f724a910a07c30c675e14ad04fad0010a380ace464301c979e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/negative-wrong-delta.json",
+      "bytes": 270856,
+      "sha256": "80c797775d5fb1b9c15f61fc9dbd79ff44c17292113a7d86bb50cd7c120c78a5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/negative-wrong-event-delta.json",
+      "bytes": 261812,
+      "sha256": "2fe07cf2944f49edcd2a63a014f0588c5c88e1b49f14dae8a6e08f1df51d7674",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/negative-wrong-event-full.json",
+      "bytes": 391021,
+      "sha256": "f4819a3883277370257baa5265ff997baa1be5e9c13ca93d37f6e6442b96b5b4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/negative-wrong-full.json",
+      "bytes": 387853,
+      "sha256": "3fd68ed6927b96fa1a22d5e915e303eee4b0ec23abbc2debd8b4497030bdf777",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-clean-delta.json",
+      "bytes": 354435,
+      "sha256": "c61846bc7f5775a4fbcfda7d834dc7a58e8f721cf95b4ae05bd0fc6966e86a75",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-clean-full.json",
+      "bytes": 515763,
+      "sha256": "0993c70e12d870084a3c87f43c087179e957e1c50ab626e6236c462059416bd2",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-conflict-id-delta.json",
+      "bytes": 364633,
+      "sha256": "f6178782ddb73aed0066d68ac77b39e223d6785730e816749c4d7780e5e2bfaf",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-conflict-id-full.json",
+      "bytes": 522524,
+      "sha256": "cf106224a76894df3a3e092bb41c2eeb9ab5a79083449ae17cae932a530c6471",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-conflict-sequence-delta.json",
+      "bytes": 364765,
+      "sha256": "c1648038f9070d85abff4db4c39b63c7317315b5867c05898bf178573396d8a6",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-conflict-sequence-full.json",
+      "bytes": 522614,
+      "sha256": "1958c7037c16d14ad8e4408b1be736678e897cef8b062979a915a76d1c7a0c69",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-drop-first-delta.json",
+      "bytes": 348591,
+      "sha256": "566fbdd4dbb92d51ec6cdd29a93cc58c255b2d09b068ba53dd1c2be0a6c8e14a",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-drop-first-full.json",
+      "bytes": 508573,
+      "sha256": "6ad792592bc620f44d4c2e83757ebc7aef4428b259fe62b85864acadfaf3a20c",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-drop-state-delta.json",
+      "bytes": 357920,
+      "sha256": "405152db464c1dfa1ff261fb7f356d01567ecc2f700eea36d603e2a32b5fa021",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-drop-state-full.json",
+      "bytes": 515780,
+      "sha256": "0d08c88e67bb41d3515e5be570d7e5d973815555e75d1a49b1a64ce44cd24e7c",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-duplicate-delta.json",
+      "bytes": 494299,
+      "sha256": "2f7a5baa08237be1df0a0abbae69a6d4da8494df115a4d4ebb65839c3783ce97",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-duplicate-full.json",
+      "bytes": 768510,
+      "sha256": "b92416af11e8f9de6f428ac91539ad13aa22ec3131ea9bce09ec4eca005df4bb",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-event-drop-delta.json",
+      "bytes": 353530,
+      "sha256": "bb88c8a2d0927d2f56979ba48088647c041ca3580db349f1fb6a722fe904baed",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-event-drop-full.json",
+      "bytes": 514858,
+      "sha256": "ff5a8a48e4cdb9e49b5e6ab7a02fe54f625970e11dcc74af3abdf88b8afa8ea8",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-late-after-full-delta.json",
+      "bytes": 360884,
+      "sha256": "dc0993f0b47646a2bb21c07b157d976b5806cf1f252ea37181835d890a756bd9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-late-after-full-full.json",
+      "bytes": 518768,
+      "sha256": "ba3026f2f1b7ff87347fddd9b0d9127b03270fc0011a3c7c0ca33503ed7ad4a8",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-reconnect-old-delta.json",
+      "bytes": 360882,
+      "sha256": "303f1a9677717cc95bc2a3f719cb7ade63d57e17fd0795b4624527b650ceccf4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-reconnect-old-full.json",
+      "bytes": 518766,
+      "sha256": "a31c94c7cfaddcb707788cd242f1f6fc9ef322fc7b2a4bcce1bda2dd6fe249c3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-reorder-delta.json",
+      "bytes": 361708,
+      "sha256": "e9104b13ec67b52b64a504fa1576753d2f8c4a3bb40c7befa5ebc4c2fd940ff3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-reorder-full.json",
+      "bytes": 518760,
+      "sha256": "c6a1eef0b83ecf753c7e3091ee0c9a11888973c00fdf73ad917415ae3d2f2ef3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-retry-resync-delta.json",
+      "bytes": 368559,
+      "sha256": "14447e2e2ede54152a8f50eb2978157a55a7e9a5c5cd035a3dc4fbf2c98afac5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-retry-resync-full.json",
+      "bytes": 523317,
+      "sha256": "7a84c6f325b8760d35b316f0e7a318d9cc5778e17b22758a117e3bede18f885f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-seeded-delta.json",
+      "bytes": 447534,
+      "sha256": "c07b02e99ea0b5971594db17da82de1e5b08a319838343b1664e564409ddb57e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/reconnect-seeded-full.json",
+      "bytes": 678949,
+      "sha256": "c0780534dc8a57983dd6ca1b242336630a176534c2150db335c2fb2f5c2aa1c5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/campaign/summary.json",
+      "bytes": 51050,
+      "sha256": "e6e3b1c9fa8987cfd4e35008916bbc835d890a55cc4d26b95b7a06495b068320",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/corrupt-copy.jsonl",
+      "bytes": 21499,
+      "sha256": "073ba167177609b14f5a0eadf314eef56b3d1cd8f60cc5b73cbaaf8e0ace76d7",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/metadata.json",
+      "bytes": 111992,
+      "sha256": "5318cc640713a78f8d740198c825f02289b8c57aa1237adc7db94afe2c0c5b00",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/negative-delta-cli.json",
+      "bytes": 270856,
+      "sha256": "80c797775d5fb1b9c15f61fc9dbd79ff44c17292113a7d86bb50cd7c120c78a5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/negative-event-cli.json",
+      "bytes": 261820,
+      "sha256": "005a749d696f4f0015f231ad91bbcebec6e5bbf1dee75569900dfee5d93d35c6",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/negative-full-cli.json",
+      "bytes": 387846,
+      "sha256": "4a89bf459eefd4701d8d43b92152fbe1cf31c2596e5555e0bedd1b5622e5de14",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/no-overwrite.json",
+      "bytes": 390191,
+      "sha256": "adb1594c2459c32ae60890f06056e3ae0f7f73a24f0a1314a3cf82423f3d93d2",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/real-delta.json",
+      "bytes": 2011046,
+      "sha256": "66cf2e6fffcd3eaf3ae1e12bca2aedf858cf6ac23b853fcc2834b75121674bfc",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/real-full.json",
+      "bytes": 2339785,
+      "sha256": "e9ca904b2408ac91ef7689c83d9bdfa7dc95e12321777ac9cc50d0f4e2cb0bbf",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/real-processhandle.jsonl",
+      "bytes": 28073,
+      "sha256": "61e1d53ccb8538a51457e5e3771b5a65e38650b0c83524115acc40bca05f02dc",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-clean-delta.json",
+      "bytes": 281882,
+      "sha256": "112f2c27fa53642cee14c099993a357e4a3feeca622de874bbd3af3038fbdcba",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-clean-full.json",
+      "bytes": 398187,
+      "sha256": "5bc10e7b398c2ccf448f58c61d63929426a77fdd0ffb730e248f346705e9c3ec",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-conflict-id-delta.json",
+      "bytes": 292116,
+      "sha256": "e8366d08fecced53a226929b25c088b66abdf51a88b8699da4036243acef2cb1",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-conflict-id-full.json",
+      "bytes": 404972,
+      "sha256": "815539c1cd0102beb912273df222a5e6b325761249dd2bd2050d89c5f5fde7dc",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-conflict-sequence-delta.json",
+      "bytes": 292248,
+      "sha256": "5dd29f918576650a00416e337f0b8214a9737e1b6cd5f16c1f6b13902fd80aca",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-conflict-sequence-full.json",
+      "bytes": 405062,
+      "sha256": "3f019053fdb0a0d58a22506735f83edb134c655087b013c46603de9326242a86",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-drop-first-delta.json",
+      "bytes": 279123,
+      "sha256": "d7df1731aa718490d382dbdfae1253a55e1839af5d13c0feecaa37d8f77f7e04",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-drop-first-full.json",
+      "bytes": 393913,
+      "sha256": "bfa315fcb88b54b8e05799508fbe8039bbc1ca486a756a3bce68cc38cb2010f1",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-drop-state-delta.json",
+      "bytes": 285167,
+      "sha256": "c4bcd6798d626b18afdf0ca29e5e6dcf506e6f5094a2d267cbb89c94176e9723",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-drop-state-full.json",
+      "bytes": 398204,
+      "sha256": "9305e355d5901cbe898645961711a700c2cca7bf42fb02c73e7542e73c078b9f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-duplicate-delta.json",
+      "bytes": 399742,
+      "sha256": "ee3eace5b24b079cfccfc78c7112ac371a26df00e43719ef0dc9dcc41c1c2966",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-duplicate-full.json",
+      "bytes": 597714,
+      "sha256": "a574df8a11f143c460d87de15cb6df10b1bcb7087fb1c8913c368496b4e3feaa",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-event-drop-delta.json",
+      "bytes": 280973,
+      "sha256": "4613e118bece3b445b767210707bae7016a6d1150de5609a9164c6d8a3f2b088",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-event-drop-full.json",
+      "bytes": 397278,
+      "sha256": "2ab91bfa43887a20e179a845d56a23418ff0b9066cc4166d780c309157599d73",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-late-after-full-delta.json",
+      "bytes": 288143,
+      "sha256": "17d751957d505de15e15adaa7162f0061396b7ebfb875ff488f8971a2465251d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-late-after-full-full.json",
+      "bytes": 400688,
+      "sha256": "bba6394a9e4965e6b02b2c7fe6619b97d21ec5e956dc439d2ac430588caa8a7c",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-reconnect-old-delta.json",
+      "bytes": 290508,
+      "sha256": "aeb012b9eb6eb14c7ff9875a2ebc0fc7018d5d0ce7af7bd0dc93be6f925f2738",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-reconnect-old-full.json",
+      "bytes": 404174,
+      "sha256": "75ccdb67dc5f13c5bb663b1924e2f881b4163dc391c562bcba4f6944bbe55a7f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-reorder-delta.json",
+      "bytes": 288969,
+      "sha256": "d8107f3b19454ac6a493ac8fa9adca8c8f60f4885feb6dbe47c763fa3da66132",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-reorder-full.json",
+      "bytes": 400680,
+      "sha256": "cd4870a39456c664eda07373f9d8973d26ab6f67e9b07f761a2ec71bd6b89087",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-retry-resync-delta.json",
+      "bytes": 295760,
+      "sha256": "2e5d271b60178dfe380e440682538ebac697ffa0c1850fc5ebcb5b0803a473c0",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-retry-resync-full.json",
+      "bytes": 407381,
+      "sha256": "50f63e4cb93f13dde1392c107eb2c7acfbc09411fdb518c9a04a867ab5b65ced",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-seeded-delta.json",
+      "bytes": 385543,
+      "sha256": "7d32082c80a36f8c0b8d723fad1aba73778a8fc81a7ab43a5b486181119c30b9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/high-change-seeded-full.json",
+      "bytes": 525378,
+      "sha256": "cf54b6d2fe22810fc29577dce44cc03bf3916b678624f11b9226ade7f8e1118d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-clean-delta.json",
+      "bytes": 261344,
+      "sha256": "c1b3f800f8950e2637b1723a7221c5f17e9ef458b8e93b2c86299a7af8abb358",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-clean-full.json",
+      "bytes": 390190,
+      "sha256": "cc9de20e7784c639916798e714b651cd3bbc10be8693785619f7c54bb9db753a",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-conflict-id-delta.json",
+      "bytes": 271560,
+      "sha256": "64f5c0c01a5a3bdc7f7292c776cada40753e552cb08c0a277183c76bba84e358",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-conflict-id-full.json",
+      "bytes": 396963,
+      "sha256": "87416980f907c80944670fc549d1890b0916312096d18cd39622153d47dd4384",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-conflict-sequence-delta.json",
+      "bytes": 271692,
+      "sha256": "02e984163c734902c7dae759a7b2e2b2acd40ff0c51aefce9ee833f543323a78",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-conflict-sequence-full.json",
+      "bytes": 397053,
+      "sha256": "e5ef99b8f7221a764d308e71d949eaf10c44d07a9e287dc5c55da52f6b6ca2a3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-drop-first-delta.json",
+      "bytes": 262193,
+      "sha256": "fb756ce72dce8817cde8eb8ec97add8d96e27dcb7a446411d59cbbc1ec73cbdd",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-drop-first-full.json",
+      "bytes": 385942,
+      "sha256": "fbd67ff19a043af0049c259ccb003670bbb52beb41173cbe704b16bfdbec6c23",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-drop-state-delta.json",
+      "bytes": 275409,
+      "sha256": "63c072f402c0886cd848922bddf7bdbb186364fa01db3bd822330c01843e6442",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-drop-state-full.json",
+      "bytes": 390207,
+      "sha256": "76b1da57d15b8555e95b72d6fe667319d03b12d5e72db257bf728378cd0ee9e8",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-duplicate-delta.json",
+      "bytes": 366283,
+      "sha256": "6866ed6a50690c52c8824bdb308301dcaaca1d9d4668f4ac7d86f4eb93eed7ef",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-duplicate-full.json",
+      "bytes": 585801,
+      "sha256": "a4aef789bde99efc60cbf9d0ba5482b5e188780722d64ebaa80ca513562a86ae",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-event-drop-delta.json",
+      "bytes": 260437,
+      "sha256": "6e5666f19067afc9030ea86ee742d5fda9335a97799b85b7a73e0d3add7cbcd3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-event-drop-full.json",
+      "bytes": 389283,
+      "sha256": "4c3d44c7603686642aa926a736c74b3bf25093b790c03e192d5e372d0cd6341a",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-late-after-full-delta.json",
+      "bytes": 278380,
+      "sha256": "b4a4f893d5421f881e1115beae73a55a4409e80f715c34ebc1c70855e86bbdd4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-late-after-full-full.json",
+      "bytes": 393199,
+      "sha256": "fe6dc8ef3562849d45eeec215e1a00d9a768eedf8f95d7be43e9c4f08e638c7b",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-reconnect-old-delta.json",
+      "bytes": 274525,
+      "sha256": "ce006dd598230965f359f218cc4e2af238901ffa162f90724caae0c589e167cf",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-reconnect-old-full.json",
+      "bytes": 396167,
+      "sha256": "97c064cae8ba2d2eb5bd74c71fb94b0d71a43b045200094cce3565e476bc34a3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-reorder-delta.json",
+      "bytes": 279204,
+      "sha256": "11175e51118d10ffe7cc17e0a64b45b2d86d3d404ffa592de06e3a9d27a26507",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-reorder-full.json",
+      "bytes": 393191,
+      "sha256": "6db090eaae14f2e20716e432e7e07596372818de1592c5e388713ab33ab62ece",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-retry-resync-delta.json",
+      "bytes": 286020,
+      "sha256": "5320d4f02c6b89a980a72b5d9cef203097cd2408357b2a3eeff041b8e4c0f860",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-retry-resync-full.json",
+      "bytes": 397752,
+      "sha256": "0d744312567114f9937c64c0f34dc3dfe4f2e4fca603135f341a88d53ff7d2a2",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-seeded-delta.json",
+      "bytes": 369656,
+      "sha256": "bd78c527f58b75ac80394d8917815e494bd1ca987c2e398a9d40e1a194587b59",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/low-change-seeded-full.json",
+      "bytes": 517435,
+      "sha256": "73198022625467f724a910a07c30c675e14ad04fad0010a380ace464301c979e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/negative-wrong-delta.json",
+      "bytes": 270856,
+      "sha256": "80c797775d5fb1b9c15f61fc9dbd79ff44c17292113a7d86bb50cd7c120c78a5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/negative-wrong-event-delta.json",
+      "bytes": 261812,
+      "sha256": "2fe07cf2944f49edcd2a63a014f0588c5c88e1b49f14dae8a6e08f1df51d7674",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/negative-wrong-event-full.json",
+      "bytes": 391021,
+      "sha256": "f4819a3883277370257baa5265ff997baa1be5e9c13ca93d37f6e6442b96b5b4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/negative-wrong-full.json",
+      "bytes": 387853,
+      "sha256": "3fd68ed6927b96fa1a22d5e915e303eee4b0ec23abbc2debd8b4497030bdf777",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-clean-delta.json",
+      "bytes": 354435,
+      "sha256": "c61846bc7f5775a4fbcfda7d834dc7a58e8f721cf95b4ae05bd0fc6966e86a75",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-clean-full.json",
+      "bytes": 515763,
+      "sha256": "0993c70e12d870084a3c87f43c087179e957e1c50ab626e6236c462059416bd2",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-conflict-id-delta.json",
+      "bytes": 364633,
+      "sha256": "f6178782ddb73aed0066d68ac77b39e223d6785730e816749c4d7780e5e2bfaf",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-conflict-id-full.json",
+      "bytes": 522524,
+      "sha256": "cf106224a76894df3a3e092bb41c2eeb9ab5a79083449ae17cae932a530c6471",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-conflict-sequence-delta.json",
+      "bytes": 364765,
+      "sha256": "c1648038f9070d85abff4db4c39b63c7317315b5867c05898bf178573396d8a6",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-conflict-sequence-full.json",
+      "bytes": 522614,
+      "sha256": "1958c7037c16d14ad8e4408b1be736678e897cef8b062979a915a76d1c7a0c69",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-drop-first-delta.json",
+      "bytes": 348591,
+      "sha256": "566fbdd4dbb92d51ec6cdd29a93cc58c255b2d09b068ba53dd1c2be0a6c8e14a",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-drop-first-full.json",
+      "bytes": 508573,
+      "sha256": "6ad792592bc620f44d4c2e83757ebc7aef4428b259fe62b85864acadfaf3a20c",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-drop-state-delta.json",
+      "bytes": 357920,
+      "sha256": "405152db464c1dfa1ff261fb7f356d01567ecc2f700eea36d603e2a32b5fa021",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-drop-state-full.json",
+      "bytes": 515780,
+      "sha256": "0d08c88e67bb41d3515e5be570d7e5d973815555e75d1a49b1a64ce44cd24e7c",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-duplicate-delta.json",
+      "bytes": 494299,
+      "sha256": "2f7a5baa08237be1df0a0abbae69a6d4da8494df115a4d4ebb65839c3783ce97",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-duplicate-full.json",
+      "bytes": 768510,
+      "sha256": "b92416af11e8f9de6f428ac91539ad13aa22ec3131ea9bce09ec4eca005df4bb",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-event-drop-delta.json",
+      "bytes": 353530,
+      "sha256": "bb88c8a2d0927d2f56979ba48088647c041ca3580db349f1fb6a722fe904baed",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-event-drop-full.json",
+      "bytes": 514858,
+      "sha256": "ff5a8a48e4cdb9e49b5e6ab7a02fe54f625970e11dcc74af3abdf88b8afa8ea8",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-late-after-full-delta.json",
+      "bytes": 360884,
+      "sha256": "dc0993f0b47646a2bb21c07b157d976b5806cf1f252ea37181835d890a756bd9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-late-after-full-full.json",
+      "bytes": 518768,
+      "sha256": "ba3026f2f1b7ff87347fddd9b0d9127b03270fc0011a3c7c0ca33503ed7ad4a8",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-reconnect-old-delta.json",
+      "bytes": 360882,
+      "sha256": "303f1a9677717cc95bc2a3f719cb7ade63d57e17fd0795b4624527b650ceccf4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-reconnect-old-full.json",
+      "bytes": 518766,
+      "sha256": "a31c94c7cfaddcb707788cd242f1f6fc9ef322fc7b2a4bcce1bda2dd6fe249c3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-reorder-delta.json",
+      "bytes": 361708,
+      "sha256": "e9104b13ec67b52b64a504fa1576753d2f8c4a3bb40c7befa5ebc4c2fd940ff3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-reorder-full.json",
+      "bytes": 518760,
+      "sha256": "c6a1eef0b83ecf753c7e3091ee0c9a11888973c00fdf73ad917415ae3d2f2ef3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-retry-resync-delta.json",
+      "bytes": 368559,
+      "sha256": "14447e2e2ede54152a8f50eb2978157a55a7e9a5c5cd035a3dc4fbf2c98afac5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-retry-resync-full.json",
+      "bytes": 523317,
+      "sha256": "7a84c6f325b8760d35b316f0e7a318d9cc5778e17b22758a117e3bede18f885f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-seeded-delta.json",
+      "bytes": 447534,
+      "sha256": "c07b02e99ea0b5971594db17da82de1e5b08a319838343b1664e564409ddb57e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/reconnect-seeded-full.json",
+      "bytes": 678949,
+      "sha256": "c0780534dc8a57983dd6ca1b242336630a176534c2150db335c2fb2f5c2aa1c5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "client/target/t3c3-smoke/65da0b98-e732-4b0f-adb2-e7d85d6a9b50/repeat/summary.json",
+      "bytes": 51050,
+      "sha256": "e6e3b1c9fa8987cfd4e35008916bbc835d890a55cc4d26b95b7a06495b068320",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c2-runtime/T3C2-233f7a55-d5cf-4b13-bb6b-7e85ed41a999/metadata.json",
+      "bytes": 110812,
+      "sha256": "d1050e5d4383863865eeaaf34f37efb45863a95ff49ffc2f088f3a8cd8566e45",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c2-runtime/T3C2-233f7a55-d5cf-4b13-bb6b-7e85ed41a999/raw/T3C2-233f7a55-d5cf-4b13-bb6b-7e85ed41a999-CLIENT-016c96c0-7a2f-4c09-901c-e648c65286d0.jsonl",
+      "bytes": 238191,
+      "sha256": "bd5cc85871edfb7141070e8a2fef2b4e2e6246abffea7dc6fdf9c7de3b542ffb",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c2-runtime/T3C2-233f7a55-d5cf-4b13-bb6b-7e85ed41a999/raw/T3C2-233f7a55-d5cf-4b13-bb6b-7e85ed41a999-CLIENT-f514c73d-7a4f-4794-a372-dacb80b71432.jsonl",
+      "bytes": 258660,
+      "sha256": "504dae199eebb21a1dff027e2e1e5d97d09db52c17c20547ac98c32b530f87e2",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c2-runtime/T3C2-233f7a55-d5cf-4b13-bb6b-7e85ed41a999/raw/T3C2-233f7a55-d5cf-4b13-bb6b-7e85ed41a999-SERVER-65adccf4-f37e-476a-8c32-968a0c19a665.jsonl",
+      "bytes": 23108,
+      "sha256": "b86eeeecdba2c2a3a01f9caf56e7852eec463833f93d462a389da56e5d87aadc",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c2-runtime/T3C2-233f7a55-d5cf-4b13-bb6b-7e85ed41a999/raw/T3C2-233f7a55-d5cf-4b13-bb6b-7e85ed41a999-SERVER-a2568468-eb52-4a3b-a94a-d971a53b3b81.jsonl",
+      "bytes": 426543,
+      "sha256": "6cb000153ef27c530ea8203ef1f0853cfa4ef3f83e6aefc273368c8e1c1a42c6",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c2-runtime/T3C2-233f7a55-d5cf-4b13-bb6b-7e85ed41a999/summary.csv",
+      "bytes": 7624,
+      "sha256": "d0398386780fd33303186574ef589438939a0df947824701e3d89ecfb49425c3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c2-runtime/T3C2-233f7a55-d5cf-4b13-bb6b-7e85ed41a999/summary.json",
+      "bytes": 23853,
+      "sha256": "b8bc4041b41f33a4d0b783842ad3aaa088e490287fbb628420b97a52f6a2d2e3",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c2-runtime/T3C2-d7b194d6-d1b5-405c-bfda-8c832ac7d109/metadata.json",
+      "bytes": 110812,
+      "sha256": "542e0e813ab49da6f357d1c89bea558ae64891489a63752e174813dbc8dce104",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c2-runtime/T3C2-d7b194d6-d1b5-405c-bfda-8c832ac7d109/raw/T3C2-d7b194d6-d1b5-405c-bfda-8c832ac7d109-CLIENT-ae6bd4ea-a200-462c-873e-6ca13baebe57.jsonl",
+      "bytes": 273486,
+      "sha256": "585f3697130bc90a033c3f51a33ef9934eeb0ed481e05f22d8cc2a130eb175a1",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c2-runtime/T3C2-d7b194d6-d1b5-405c-bfda-8c832ac7d109/raw/T3C2-d7b194d6-d1b5-405c-bfda-8c832ac7d109-CLIENT-fd0c646d-c416-4e4e-ae82-2b1d4f8af9ca.jsonl",
+      "bytes": 241193,
+      "sha256": "0c5df28fb1b6758d8bc40b4bd11342524e8ba976314bb406dbf3883e1e599b69",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c2-runtime/T3C2-d7b194d6-d1b5-405c-bfda-8c832ac7d109/raw/T3C2-d7b194d6-d1b5-405c-bfda-8c832ac7d109-SERVER-c80ab36e-e46e-4276-a8d9-1e29b2fa6420.jsonl",
+      "bytes": 16982,
+      "sha256": "5496a77ae78e5e73bb2868d6ca179bc5d0f4fffd1096ec35db29a13d872414a4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c2-runtime/T3C2-d7b194d6-d1b5-405c-bfda-8c832ac7d109/raw/T3C2-d7b194d6-d1b5-405c-bfda-8c832ac7d109-SERVER-cb4c7074-e6e2-4880-9b8e-1470a1a48000.jsonl",
+      "bytes": 448584,
+      "sha256": "e9148e8092138263edf2452b676c6e5cec527e7e229758aa25d7305f3ba956a9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c2-runtime/T3C2-d7b194d6-d1b5-405c-bfda-8c832ac7d109/summary.csv",
+      "bytes": 7622,
+      "sha256": "9d20b22efe78c7063d214f1ac04cd1eafc5a0a0f610333c907f2c91016205a02",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c2-runtime/T3C2-d7b194d6-d1b5-405c-bfda-8c832ac7d109/summary.json",
+      "bytes": 23851,
+      "sha256": "96c58b6f685b2b8f9f8ce1cc0a78e1290bb6b3c44b5ab8a671a432c10fc4e0a8",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-delta-default/candidate-delta.png",
+      "bytes": 64570,
+      "sha256": "973e8abd64a808bf6991bd3b8ed434607da8d2d6d4d717e8b646c30422eac802",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-delta-default/raw/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-CLIENT-893d4a7e-213c-4209-9f32-de4a22881c1b.jsonl",
+      "bytes": 599118,
+      "sha256": "048d3bb30e8affcfb619d9f3f5b9f6920c3042bb52e56a699ac5a2398e5fc674",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-delta-default/stderr.txt",
+      "bytes": 351,
+      "sha256": "1ecabc6d3ee66e1a9d983281cabef3b1dabd681bb49c068e452fa84b7bcd6a5b",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-delta-default/stdout.txt",
+      "bytes": 70,
+      "sha256": "91484e5eec299ec68e6b04dc8f6706f8f305823d1ba8b33fb470d550ce755cd1",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-delta-default/traces/09ea029f-1d22-406e-ba99-ec6de5d872e5.jsonl",
+      "bytes": 190327,
+      "sha256": "4bd66ab7fd4c13c6dee77d9976b6ac288917cb898bb85a4857365f5599957caa",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-delta-instrumented/fault-wire.jsonl",
+      "bytes": 278544,
+      "sha256": "127ee7e8ffd0ec2e4a9b82c7da45dab55230c7be6f4b0fe6589c8ecee4d03457",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-delta-instrumented/raw/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-CLIENT-18e1049b-f340-4359-9ff4-75e10dac24dd.jsonl",
+      "bytes": 908249,
+      "sha256": "6c4673e78b561dee4ced9f5c76d1c9e229ad0c4da8dd5bfbfa289b005b588fc5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-delta-instrumented/stderr.txt",
+      "bytes": 351,
+      "sha256": "57f573a599beebe59a5305d057b51318ee33c558c09b5fffd6c0f0a3962aa38f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-delta-instrumented/stdout.txt",
+      "bytes": 165,
+      "sha256": "187ee103493dc0bbf034f21d98ac121559bc50a1f063b248a716edc26aceec3b",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-delta-instrumented/traces/5fbbc5db-e648-4633-8ad0-8adbeaf1e344.jsonl",
+      "bytes": 5288,
+      "sha256": "ef8711b36ee8ca95832f6baf5cfe7deb6ab56118a36debb714f5ba63a8bdebd4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-delta-instrumented/traces/617e0f92-73ee-4c40-b9e9-14767ca29d2b.jsonl",
+      "bytes": 14403,
+      "sha256": "57475403f10b7c8f4021e799de2664d9696be5aa6ae7430df93a713f88c9c09c",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-delta-instrumented/traces/791a8506-fc58-43cd-bc82-fe1d82eab431.jsonl",
+      "bytes": 71454,
+      "sha256": "784cec1af6a6a1cb0d292ef75f502a70a4062e7b066c4ff72a6ae7cc07607f46",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-delta-instrumented/traces/93c228ff-aacb-47d0-a3c8-73df37c95433.jsonl",
+      "bytes": 26959,
+      "sha256": "27b8d0fbb41517f372b16a5f482dd8dac690316346696ed6cfcf4bc8fd4a36ab",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-full-default/candidate-full.png",
+      "bytes": 63329,
+      "sha256": "665e4bd3aa2c3063e6c3f7d4d5798b9ab0941eab0aa33fba8376109a7322308e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-full-default/raw/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-CLIENT-c695a408-2beb-418c-a9a0-b1a6d4138b2f.jsonl",
+      "bytes": 1426385,
+      "sha256": "89cf6e1f26fe7c29d6194254bb61351d8b9ae331316abf48a33c03ae05ebd0ba",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-full-default/stderr.txt",
+      "bytes": 351,
+      "sha256": "9013831644535b68b7692d2552785aec0575d32de37efd8cefc872efde1d0adf",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-full-default/stdout.txt",
+      "bytes": 161,
+      "sha256": "2b4845010d111e7f8f39c0397046be9b75437cf0137095cd2304d8891247a890",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-full-default/traces/af90bb97-eb1c-4e31-bc50-74991b449ef2.jsonl",
+      "bytes": 463366,
+      "sha256": "ac8d3fffd3772facce82cee53de03316ab1da6f6a5dac8fd630f698d47a90acc",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-opt-in-unsupported/candidate-full-fallback.png",
+      "bytes": 64493,
+      "sha256": "3b02051a85cb75584a77c0b4cf485d7eca0cbd2006b981bee38e363a2714b3d9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-opt-in-unsupported/raw/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-CLIENT-55ff315d-9351-4fa0-a9aa-36614ef890bf.jsonl",
+      "bytes": 127552,
+      "sha256": "ff09bce156f930b6169c51d785bb5529eae4a7ab375920dbfabb8c0330299095",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-opt-in-unsupported/stderr.txt",
+      "bytes": 351,
+      "sha256": "5a740b5233ba4a2d02b592f1e14dfa00d8e510ccd8a5038bc30a081e8a9a0ffa",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-opt-in-unsupported/stdout.txt",
+      "bytes": 161,
+      "sha256": "2b4845010d111e7f8f39c0397046be9b75437cf0137095cd2304d8891247a890",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/candidate-opt-in-unsupported/traces/e6498d3c-8e1c-4a7d-a1ab-c893f57d1e31.jsonl",
+      "bytes": 9848,
+      "sha256": "9582e7e88deb623ddba668209adfd84710cbfb2abb8505e245627439844fc81f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/local-report.json",
+      "bytes": 14028,
+      "sha256": "0e2f171ceeafb601f208d339a24784f91fda91744d85ff3af523e650b4ff11a0",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/measurement-summary.csv",
+      "bytes": 19643,
+      "sha256": "89408cc239a0cff9d7b3900467f5d18e81cda932f6f60d43aafcb51446729edf",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/measurement-summary.json",
+      "bytes": 61602,
+      "sha256": "f5db6b1e19c7d977e8bacc8dad55c817771ec35e01c0e36039a43e146c03dae8",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/metadata.json",
+      "bytes": 112677,
+      "sha256": "0bdb5c955501f5239e53d7b9971577008cf12385c4dc43d29b704fa209fc0508",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/proctor-edge-closed.png",
+      "bytes": 59268,
+      "sha256": "b97a4cc5417e6139c02e77b9ab0f200a5b19dd057647283ad142ddd83c307ff1",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/proctor-edge-open.png",
+      "bytes": 59370,
+      "sha256": "c92a7194fd52e0649dce45430ed6cb33685bb8d84b0a5a8137e166444f65d895",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/proctor-resync-recovered.png",
+      "bytes": 59380,
+      "sha256": "8ffaad77dfb1e5831630d406efb8b3272b29f5e937b4046e47daee5b69c8dc24",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-CLIENT-251a8e08-7224-4a71-b1f5-6e289839d364.jsonl",
+      "bytes": 1753408,
+      "sha256": "c0d2e80179ee66798cd0d50883c1d09813a9723f70ff83d76ebf94c27846b5c4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-CLIENT-3063e75c-757c-454c-9bed-9ab5c4f19efd.jsonl",
+      "bytes": 5185,
+      "sha256": "6b20a6e96801f8f8cd2dc59af2772db55f97ab61089e6221022aba9feb55f3c4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-CLIENT-71e40536-520f-4a17-8f56-cb39fbe605ed.jsonl",
+      "bytes": 4043,
+      "sha256": "673d9d26bde2df938b1d170b425bf08f5376e4ea3f7f436703f0e0533687b4f5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-SERVER-15704e26-ae8a-422e-930f-6f7c6e2de6e7.jsonl",
+      "bytes": 74830,
+      "sha256": "40ad4ba17f62839fd67638a8d4fcabff3f25264a4ec230d88c295cefeda898ac",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-SERVER-31fc052c-20a4-4b7e-b163-fc954df08a51.jsonl",
+      "bytes": 212259,
+      "sha256": "667385c57a5827fcd14b539269237ef1c5454d4def0d7a68ed8f2453c01d6a85",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-SERVER-45d1f797-a9d5-48f1-a1ea-29815f9c5fef.jsonl",
+      "bytes": 45092,
+      "sha256": "297131c981ae94ad99ece63f376b501a435b4502087afe3f9ddc55dbbb9c3ab1",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-SERVER-8fb4e940-e2a3-4484-bfb2-98f3e1ce1645.jsonl",
+      "bytes": 285560,
+      "sha256": "d59e4d860449899a48c51dc64d52cfe329de2a7d1e1e6ca3283d84dad547c572",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-SERVER-df083e75-ad42-401c-826e-c099fd72c010.jsonl",
+      "bytes": 3856216,
+      "sha256": "ba426ad3af15fc0723cde2ea8be97ca92b032fb64cd0811b3f5e495fe7177e26",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw-merged/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-CLIENT-18e1049b-f340-4359-9ff4-75e10dac24dd.jsonl",
+      "bytes": 908249,
+      "sha256": "6c4673e78b561dee4ced9f5c76d1c9e229ad0c4da8dd5bfbfa289b005b588fc5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw-merged/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-CLIENT-251a8e08-7224-4a71-b1f5-6e289839d364.jsonl",
+      "bytes": 1753408,
+      "sha256": "c0d2e80179ee66798cd0d50883c1d09813a9723f70ff83d76ebf94c27846b5c4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw-merged/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-CLIENT-3063e75c-757c-454c-9bed-9ab5c4f19efd.jsonl",
+      "bytes": 5185,
+      "sha256": "6b20a6e96801f8f8cd2dc59af2772db55f97ab61089e6221022aba9feb55f3c4",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw-merged/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-CLIENT-55ff315d-9351-4fa0-a9aa-36614ef890bf.jsonl",
+      "bytes": 127552,
+      "sha256": "ff09bce156f930b6169c51d785bb5529eae4a7ab375920dbfabb8c0330299095",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw-merged/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-CLIENT-71e40536-520f-4a17-8f56-cb39fbe605ed.jsonl",
+      "bytes": 4043,
+      "sha256": "673d9d26bde2df938b1d170b425bf08f5376e4ea3f7f436703f0e0533687b4f5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw-merged/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-CLIENT-893d4a7e-213c-4209-9f32-de4a22881c1b.jsonl",
+      "bytes": 599118,
+      "sha256": "048d3bb30e8affcfb619d9f3f5b9f6920c3042bb52e56a699ac5a2398e5fc674",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw-merged/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-CLIENT-c695a408-2beb-418c-a9a0-b1a6d4138b2f.jsonl",
+      "bytes": 1426385,
+      "sha256": "89cf6e1f26fe7c29d6194254bb61351d8b9ae331316abf48a33c03ae05ebd0ba",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw-merged/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-SERVER-15704e26-ae8a-422e-930f-6f7c6e2de6e7.jsonl",
+      "bytes": 74830,
+      "sha256": "40ad4ba17f62839fd67638a8d4fcabff3f25264a4ec230d88c295cefeda898ac",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw-merged/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-SERVER-31fc052c-20a4-4b7e-b163-fc954df08a51.jsonl",
+      "bytes": 212259,
+      "sha256": "667385c57a5827fcd14b539269237ef1c5454d4def0d7a68ed8f2453c01d6a85",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw-merged/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-SERVER-45d1f797-a9d5-48f1-a1ea-29815f9c5fef.jsonl",
+      "bytes": 45092,
+      "sha256": "297131c981ae94ad99ece63f376b501a435b4502087afe3f9ddc55dbbb9c3ab1",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw-merged/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-SERVER-8fb4e940-e2a3-4484-bfb2-98f3e1ce1645.jsonl",
+      "bytes": 285560,
+      "sha256": "d59e4d860449899a48c51dc64d52cfe329de2a7d1e1e6ca3283d84dad547c572",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "server/target/t3c4-live/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8/raw-merged/T3C4-1565c854-d06b-4a3b-a1d8-bf4ad3c3f2c8-SERVER-df083e75-ad42-401c-826e-c099fd72c010.jsonl",
+      "bytes": 3856216,
+      "sha256": "ba426ad3af15fc0723cde2ea8be97ca92b032fb64cd0811b3f5e495fe7177e26",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/physical-pending/cases.csv",
+      "bytes": 5753,
+      "sha256": "534b0dd3e7f68e0d43058c09749caf46b8cb0b053ef2aa762119f0c6fc1cde11",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/physical-pending/review.json",
+      "bytes": 416,
+      "sha256": "496930f8648594b8e04577c855c8ba1a51826f182c7fc03b8410efcc2533c005",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/physical-pending/run.json",
+      "bytes": 637,
+      "sha256": "9812d69da5069b76e5ff6fb64d328489ee76be3c109a58b6c6ac562608602d4e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/physical-pending/topology.json",
+      "bytes": 901,
+      "sha256": "e29fb8cea10388772781b1be5e7cf70451db54a471b2a449eed002348c149bc9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/artifact-manifest.json",
+      "bytes": 5620,
+      "sha256": "f51626affd497c739fdf3a2c6bb02a1de726aeb986617f8c73fdea7d528b8d8f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/client/target/client-0.1.0-SNAPSHOT-all.jar",
+      "bytes": 11458427,
+      "sha256": "b406cdc82a71f3cc9c8d3ad62a8cfbf66d46e698682382b5adbf6addf317fde2",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/docs/T3_C4_PHYSICAL_LAN_ACCEPTANCE.md",
+      "bytes": 21136,
+      "sha256": "0fbe4aed7cc72a7d71f18a5a992c0afb6ce086b97b8d23e69e7f284770b0d2c9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/docs/templates/t3c4-lan/cases.csv",
+      "bytes": 5753,
+      "sha256": "534b0dd3e7f68e0d43058c09749caf46b8cb0b053ef2aa762119f0c6fc1cde11",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/docs/templates/t3c4-lan/review.json",
+      "bytes": 416,
+      "sha256": "496930f8648594b8e04577c855c8ba1a51826f182c7fc03b8410efcc2533c005",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/docs/templates/t3c4-lan/topology.json",
+      "bytes": 901,
+      "sha256": "e29fb8cea10388772781b1be5e7cf70451db54a471b2a449eed002348c149bc9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/docs/templates/t3c4-lan/verify-history.sql",
+      "bytes": 1584,
+      "sha256": "8ab99b2781d8e2dfe6121fbd39ef9a928fd20a712cd2b11c68f00080622c84a9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/scripts/lan-t3c4/Capture-T3C4LanCheckpoint.ps1",
+      "bytes": 4975,
+      "sha256": "608c469c6683aafd69ea54ce37f03ead794bec22805bcfe184b87e8cd1ee367f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/scripts/lan-t3c4/Common.ps1",
+      "bytes": 7353,
+      "sha256": "766ee81368c44abf71767aed074539c46056d23602c678782d15a05941a8be8f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/scripts/lan-t3c4/Initialize-T3C4LanRun.ps1",
+      "bytes": 1265,
+      "sha256": "0e769f017745c652144d20827f103ddbf1d5087f92a6eaeb53f44ecf5700905e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/scripts/lan-t3c4/Invoke-T3C4LanProtocolProbe.ps1",
+      "bytes": 8416,
+      "sha256": "78b7bd4c69c80c49f621156f4613de0868e8eb6ef80edbb30ce348f1d55c64db",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/scripts/lan-t3c4/New-T3C4LanBundle.ps1",
+      "bytes": 3436,
+      "sha256": "67f7bf283af0f83942a8071da6d5d6ff1ca58d341cc64d38ff0f42085621fae2",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/scripts/lan-t3c4/Start-T3C4LanClient.ps1",
+      "bytes": 2185,
+      "sha256": "523d01bd80bbe7951fbd40269cd6bc9905b504308cdbccb31e719f65a31bcd13",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/scripts/lan-t3c4/Start-T3C4LanFaultConsole.ps1",
+      "bytes": 1954,
+      "sha256": "f2070f891ea636e6e6b83047853180ab3a046dd3f22d6359e7ff4bda70a9083e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/scripts/lan-t3c4/Test-T3C4LanKit.ps1",
+      "bytes": 3439,
+      "sha256": "793484fa6f46cc20927d7c3d58702b1e7f34d96f8d9840421cba9e1a9b9f809d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/scripts/lan-t3c4/Test-T3C4LanPreflight.ps1",
+      "bytes": 2773,
+      "sha256": "10b0e79f97857f2be34b1cbcda2d504d052ab9ade7c297f6e4ba64092fe0aaa6",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/scripts/start-monitoring-client.ps1",
+      "bytes": 977,
+      "sha256": "28041e5fb6f8c2f2aa03f39220f054366dd439a8b0e997d5ee45e23c41e2c26a",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/scripts/start-monitoring-server.ps1",
+      "bytes": 1255,
+      "sha256": "b13a3c9ebd07a1d9d4e941e34724e95def0b933064dee5fe1dbe940049ab2372",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/server/target/server-0.1.0-SNAPSHOT.jar",
+      "bytes": 25269862,
+      "sha256": "8a83ab5929951def4bb66af827573ae033b08a590b7a124dd78cb4a5d7b50189",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/test-support/vn/edu/toeic/client/LiveCandidateApp$1.class",
+      "bytes": 1747,
+      "sha256": "08a1244aebc71d3cee9da782f43336d8bacbdbecdf6d5fe75c3105d0fd36fc97",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/test-support/vn/edu/toeic/client/LiveCandidateApp$ControlSource.class",
+      "bytes": 1794,
+      "sha256": "d0265acdb1e8a0d246231e8693d8c887eedb902ef6a3731fd5bac7b4228ea998",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/test-support/vn/edu/toeic/client/LiveCandidateApp$FaultTransport.class",
+      "bytes": 11516,
+      "sha256": "bf78276ca67c2ad51aa4f1fef36ef85b64a233baae4e2b52d9cb8c29d2bc8b55",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad/test-support/vn/edu/toeic/client/LiveCandidateApp.class",
+      "bytes": 22124,
+      "sha256": "ebc73c29e6b8cbb1c4c1dc95b21378bd0e7929135d4186454a2d428cda8a7eca",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad.zip",
+      "bytes": 33295211,
+      "sha256": "5ecba6fb2a09181e3399f3db5f7a1efc1706dbba73e048b017f52a97c29684c6",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/T3C4-BASE03-463cbad.zip.sha256.json",
+      "bytes": 271,
+      "sha256": "4bc68e1df4a65db2a96161fb2dfded8349a948e91dcce77ade24b8de60e3ae37",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/artifact-manifest.json",
+      "bytes": 5620,
+      "sha256": "f51626affd497c739fdf3a2c6bb02a1de726aeb986617f8c73fdea7d528b8d8f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/client/target/client-0.1.0-SNAPSHOT-all.jar",
+      "bytes": 11458427,
+      "sha256": "b406cdc82a71f3cc9c8d3ad62a8cfbf66d46e698682382b5adbf6addf317fde2",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/docs/T3_C4_PHYSICAL_LAN_ACCEPTANCE.md",
+      "bytes": 21136,
+      "sha256": "0fbe4aed7cc72a7d71f18a5a992c0afb6ce086b97b8d23e69e7f284770b0d2c9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/docs/templates/t3c4-lan/cases.csv",
+      "bytes": 5753,
+      "sha256": "534b0dd3e7f68e0d43058c09749caf46b8cb0b053ef2aa762119f0c6fc1cde11",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/docs/templates/t3c4-lan/review.json",
+      "bytes": 416,
+      "sha256": "496930f8648594b8e04577c855c8ba1a51826f182c7fc03b8410efcc2533c005",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/docs/templates/t3c4-lan/topology.json",
+      "bytes": 901,
+      "sha256": "e29fb8cea10388772781b1be5e7cf70451db54a471b2a449eed002348c149bc9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/docs/templates/t3c4-lan/verify-history.sql",
+      "bytes": 1584,
+      "sha256": "8ab99b2781d8e2dfe6121fbd39ef9a928fd20a712cd2b11c68f00080622c84a9",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/scripts/lan-t3c4/Capture-T3C4LanCheckpoint.ps1",
+      "bytes": 4975,
+      "sha256": "608c469c6683aafd69ea54ce37f03ead794bec22805bcfe184b87e8cd1ee367f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/scripts/lan-t3c4/Common.ps1",
+      "bytes": 7353,
+      "sha256": "766ee81368c44abf71767aed074539c46056d23602c678782d15a05941a8be8f",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/scripts/lan-t3c4/Initialize-T3C4LanRun.ps1",
+      "bytes": 1265,
+      "sha256": "0e769f017745c652144d20827f103ddbf1d5087f92a6eaeb53f44ecf5700905e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/scripts/lan-t3c4/Invoke-T3C4LanProtocolProbe.ps1",
+      "bytes": 8416,
+      "sha256": "78b7bd4c69c80c49f621156f4613de0868e8eb6ef80edbb30ce348f1d55c64db",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/scripts/lan-t3c4/New-T3C4LanBundle.ps1",
+      "bytes": 3436,
+      "sha256": "67f7bf283af0f83942a8071da6d5d6ff1ca58d341cc64d38ff0f42085621fae2",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/scripts/lan-t3c4/Start-T3C4LanClient.ps1",
+      "bytes": 2185,
+      "sha256": "523d01bd80bbe7951fbd40269cd6bc9905b504308cdbccb31e719f65a31bcd13",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/scripts/lan-t3c4/Start-T3C4LanFaultConsole.ps1",
+      "bytes": 1954,
+      "sha256": "f2070f891ea636e6e6b83047853180ab3a046dd3f22d6359e7ff4bda70a9083e",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/scripts/lan-t3c4/Test-T3C4LanKit.ps1",
+      "bytes": 3439,
+      "sha256": "793484fa6f46cc20927d7c3d58702b1e7f34d96f8d9840421cba9e1a9b9f809d",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/scripts/lan-t3c4/Test-T3C4LanPreflight.ps1",
+      "bytes": 2773,
+      "sha256": "10b0e79f97857f2be34b1cbcda2d504d052ab9ade7c297f6e4ba64092fe0aaa6",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/scripts/start-monitoring-client.ps1",
+      "bytes": 977,
+      "sha256": "28041e5fb6f8c2f2aa03f39220f054366dd439a8b0e997d5ee45e23c41e2c26a",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/scripts/start-monitoring-server.ps1",
+      "bytes": 1255,
+      "sha256": "b13a3c9ebd07a1d9d4e941e34724e95def0b933064dee5fe1dbe940049ab2372",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/server/target/server-0.1.0-SNAPSHOT.jar",
+      "bytes": 25269862,
+      "sha256": "8a83ab5929951def4bb66af827573ae033b08a590b7a124dd78cb4a5d7b50189",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/test-support/vn/edu/toeic/client/LiveCandidateApp$1.class",
+      "bytes": 1747,
+      "sha256": "08a1244aebc71d3cee9da782f43336d8bacbdbecdf6d5fe75c3105d0fd36fc97",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/test-support/vn/edu/toeic/client/LiveCandidateApp$ControlSource.class",
+      "bytes": 1794,
+      "sha256": "d0265acdb1e8a0d246231e8693d8c887eedb902ef6a3731fd5bac7b4228ea998",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/test-support/vn/edu/toeic/client/LiveCandidateApp$FaultTransport.class",
+      "bytes": 11516,
+      "sha256": "bf78276ca67c2ad51aa4f1fef36ef85b64a233baae4e2b52d9cb8c29d2bc8b55",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/unpacked/T3C4-BASE03-463cbad/test-support/vn/edu/toeic/client/LiveCandidateApp.class",
+      "bytes": 22124,
+      "sha256": "ebc73c29e6b8cbb1c4c1dc95b21378bd0e7929135d4186454a2d428cda8a7eca",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/validation-source/validation.json",
+      "bytes": 4668,
+      "sha256": "c43703e9c6df8ed33ca386886f709ca230b8c4b4c6f2a7e7e30277a24863e7a5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/validation-source/write-once.json",
+      "bytes": 29,
+      "sha256": "e6c04003ff8fe31d500e675ebad6b82ea3982cb9e5ab1b39b40859d2278f2061",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/validation-unpacked/validation.json",
+      "bytes": 4668,
+      "sha256": "c43703e9c6df8ed33ca386886f709ca230b8c4b4c6f2a7e7e30277a24863e7a5",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-handoff/validation-unpacked/write-once.json",
+      "bytes": 29,
+      "sha256": "e6c04003ff8fe31d500e675ebad6b82ea3982cb9e5ab1b39b40859d2278f2061",
+      "publication": "PRIVATE_RAW_OR_LOCAL_BINARY; hash only, do not commit raw without review"
+    },
+    {
+      "path": "target/base03-focused.private.txt",
+      "bytes": 6404,
+      "sha256": "c154d37fc6cb348d4b26687998297bc34e6b7bd95cda7a4f32b2c268e23b38b8",
+      "publication": "PRIVATE environment failure before tests; hash only"
+    }
+  ]
+}

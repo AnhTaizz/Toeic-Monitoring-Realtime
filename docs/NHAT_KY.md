@@ -795,3 +795,42 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - Sửa ngay proposal/fixture hiện hữu: chọn DISPLAY_COUNT_OBSERVED MOCK/no push cho slice đầu; tách catalog tương lai, không quảng cáo type chưa hỗ trợ. Bỏ410/tombstone không reachable dưới ACTIVE-only; làm rõ counter init atomic, auth sau chờ lock/revoke serialization, ACK/write credits và guard write treo. D07-01–05 đềuPROPOSED, gồm60s offline/30ngày retention; có kế hoạch file/thứ tự/test sau approval.
 - Kiểm docs/JSON bằng Node.js, giữ kết quả lịch sử trong VALIDATION; source/runtime mới chưa code, toàn matrix22NOT_RUN. PR73 probe độc lập/physical12NOT_RUN không kéo vào production; BASE03gateNOT_DECIDED/FULLdefault, MON01physical/B/BASE02pending không đổi.
 - Chỉ commit/push/cập nhật PR72 và theo CI, không merge/approve/backlog/DONE, không tạo nhánh implementation khi thiếu approval. A/C chốt wire/storage/auth, B transport/lifetime, nhóm notice/retention/offline. Kết quả CI cuối xem PR/report bàn giao.
+
+## 19/10/2026 · C/Codex · BASE-03 kiểm chứng FULL/DELTA
+
+- Yêu cầu thực thi BASE-03 sau audit; người dùng yêu cầu không dùng codex-with-chatgpt. Fetch và worktree riêng từ origin/main1d35b53; main local f98a37f giữ nguyên/sạch. Không push/PR/merge/reset/rebase/stash/clean/xóa worktree.
+- Nguồn834f683: FULL-first163PASS, DELTA151PASS; real ProcessHandle/Edge/WS/PG/proctor, A3 COMMIT/dedup/auth, C2 RESYNC/restart và C4 hai candidate child JVM42/42 PASS. Oracle72ca/4negative detected,77file lặp cùng bytes,35/36 cặp có checkpoint chung; một seeded pair giữ NO_COMMON_SYNC_CHECKPOINT.
+- Maven package regression983PASS/7SKIP/0FAIL/0ERROR với PG18.3 SCRAM cluster/database riêng, Java21.0.10/Maven3.9.15/Python3.15.0b3; Python analyzer22PASS. Nguồn463cbad bổ sung test WS retired DELTA và FULL low/same-sequence conflict PASS, guard bảo đảm production/POM không đổi. Hai lượt0schema,cluster stop0; private .env/password file xóa.
+- Giữ lỗi runner inherited-pipe trước test, sửa wrapper rồi chạy lại; assertion/production không sửa. C4 measurement INCOMPLETE do owned hard-kill, không gọi là performance/E1/E2. Raw/XML/screenshots/binary giữ target ignored và SHA256; metadata công bố có bản gốc/hash, không đưa env secret vào Git.
+- Kit mới pin source463cbad/runtime834f683/JAR hashes đã kiểm;22file và29+29checks source/giải nén PASS. Checklist41case vẫn NOT RUN, topology/signature B PENDING; không có thao tác mạng vật lý.
+- [Báo cáo A–J](../evidence/v2-c-base03/REPORT.md), [handoff](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md). GateNOT_DECIDED, FULL default, E2NO; C chờ cùng B chạy vật lý, A xem auth/COMMIT/DB isolation. Không sửa production/wire/migration/JavaFX/QD/tracker hoặc triển khai MON-07/MON-02.
+
+
+## 19/10/2026 · C/Codex · MON-01 verification kỹ thuật
+
+- Xác minh BASE-03 HEAD9a97cab sạch và remote main1d35b53; sao lưu bền vững ngoài repo tại D:/Toeic-Evidence-Archive/BASE03-before-MON01-20261019T102703Z-51d0baf1:477raw/27public/5commit Gitbundle, checksum và account-only ACL. Sau MON-01 kiểm lại477file gốc và copy khớp; source/evidence BASE-03 giữ nguyên.
+- Tạo nhánh/worktree test/v2-c-mon01-process-e2e từ9a97cab. Audit14chặng process pipeline và15acceptance criteria; không thấy BASE-02 human approval, giữ dependency pending. Người dùng tiếp tục yêu cầu không dùng codex-with-chatgpt.
+- Chỉ thêm test còn thiếu vào LateEventsAndGapsSmoke: GUI UNREADABLE/absence/time ownership/no-cheating và automatic collector/event/state worker shutdown cho SUBMITTED/TIMED_OUT/CLOSED trước explicit cleanup. Chuyển state DB TEST là SIMULATED, không nhận HTTP submit/timeout toàn luồng.
+- Sourcef78b407, runMON01-20261019T103217Z-25e62fdd:65dashboardPASS/0FAIL/0SKIP; package-DskipTests và C2 REAL Spring/WS/HTTP/PG/proctor JavaFX PASS; metadata2099/time columns, offline provenance/dedup/gap/rollback/auth/lifecycle PASS. Sources MOCK, faults SIMULATED; measurement COMPLETE chỉ diagnostic, không E1/E2. Own SCRAM cluster/DB/cổng riêng;0schema/stop0/private.env/password file đã xóa.
+- Kế thừa BASE-03 REAL ProcessHandle/FULL/A3/C4/regression với đúng SHA/run/env; không chạy lại983/oracle72/42local để tăng PASS. [Report](../evidence/v2-c-mon01/REPORT.md), [handoff16dòng](V2_C_MON01_PHYSICAL_HANDOFF.md); physical0/B PENDING/BASE02 PENDING, MON01TECHNICALLY_VERIFIED_PENDING_PHYSICAL_REVIEW, không DONE/tracker/hours.
+- Giữ FULL default/DELTA NOT_DECIDED/E2NO; không đổi production/protocol/publicDTO/migration/auth/ACK/scope. Không MON-07/USB/focus/display; không push/PR/merge/xóa branch/worktree.
+
+## 19/10/2026 · Codex · EX-02 contract candidate / ADR-V2-03
+
+- Fetch main1d35b53, xác nhận PR65/V11 và PR66/V12 đã merge, CI baseline39214612088 SUCCESS; tạo worktree/branch docs/ex02-contract-adr-start-20261019 riêng. Root main3f5775b và file người dùng chưa commit được giữ, không reset/stash/checkout root.
+- Hoàn thiện [contract candidate](EX02_RICH_EXAM_CONTRACT_V1.md), [ADR START/deadline](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md), [decision register/roadmap](plan-v2/EX02_DECISIONS_ROADMAP.md). Chọn document metadata Part7, strict v2 DTO, authenticated image no304 và existing audio bridge. ADR khuyến nghị explicit PROCTORED_V2, deadline tại Listening START duy nhất, legacy QD21 giữ; audit cache/locks/gate cả v1.
+- [Fixture MOCK tự soạn](plan-v2/fixtures/ex02/README.md):200 câu/76group/55media,54 WAV im lặng và1PNG8×8; checker thiết kế positive và19 negative+10 access cases PASS. Đây không HTTP/PG/GUI/hearing production evidence. Kiểm chữ ký DTO/links/diff và CI ghi ở [report](../evidence/ex02-contract-20261019/REPORT.md) theo kết quả cuối.
+- Còn dở: A/B duyệt D01–09/ADR; C review migration/auth/lock/timeout. Chưa sửa runtime/DTO Java/migrations/QD21 hoặc seed importable:false; EX03/05/07/06 chưa được triển khai ở task này, EX08 vẫn cần data/media hợp lệ và integrated/physical acceptance. Không merge, không ký owner hoặc đánh BACKLOG/TRACKER DONE.
+
+## 19/10/2026 · Codex · PR67 Option A và xác nhận thiết kế theo đại diện nhóm
+
+- Task mới xác nhận A/B/C đã đồng ý D01–D09, ADR-V2-03 và D10 Part1 Visual Readiness Option A; ghi TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE với nguồn “User-provided confirmation from the project team representative, 2026-10-19.” Không tạo chữ ký/tên reviewer/timestamp cá nhân hoặc GitHub Approving Review (reviews đầu task=[]).
+- Fetch lại main1d35b53/PR67 HEAD91786ba, worktree riêng clean, rootmain3f5775b+dirty user files được snapshot giữ nguyên. Lần escalation fetch đầu timeout, retry một lần theo hướng dẫn tool rồi chạy được; không bypass quyền.
+- [Contract](EX02_RICH_EXAM_CONTRACT_V1.md)/[ADR](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md)/[D01–D10](plan-v2/EX02_DECISIONS_ROADMAP.md): Part1-only allowlist prefetch/manifest, ATTEST/INVALIDATE/epoch/lease, all-roster Audio+Visual trước authoritative Listening START; clock không khởi ở prefetch. Chấp nhận bytes Part1 có thể bị chủ máy trích xuất; no-store/RAM không bảo mật tuyệt đối. EX06 bridge rich→existing segments và image-visible/layout/two pulses trước play, budget/fail-closed/no replay/no deadline reset; source player/AudioService/ExamService giữ nguyên.
+- Fixture MOCK tự tạo200Q/76group/57media,54audio, six Part1 slots reuse một image và Part4/7-only refs riêng. Lượt thiết kế đầu58cases PASS (29 cũ+P01–P09/N01–N20); .NET PNG size/hash/decode thật không JavaFX GUI. Checks cuối records/JSON/canonical Java hash/links/diff/CI ghi [report](../evidence/ex02-contract-20261019/REPORT.md) theo kết quả thực.
+- Không Java/runtime/migrations/POM/WSv0/legacyQD21/seed/tracker changes; target HTTP/PG/WS/JavaFX/hearing/LAN NOT RUN. Phê duyệt thiết kế đã có theo đại diện; còn implementation tasks/evidence/dataset và human merge. Chỉ push/update PR67, không merge hoặc tự đánh EX03–08 DONE.
+
+
+## 20/10/2026 · Codex technical review PR72
+
+Đối chiếu proposal c9a5829/fixture7cases/43relative links với implementation thử nghiệm PR74 và test parser/correlation/dedup/cursor đã đọc. Hòa docs main giữ đủ BASE03/MON01/EX02, không đổi fixture/schema/runtime; cho phép merge tài liệu vẫn PROPOSED theo user. Không áp offline60s/retention30ngày, không human owner approval/ADR APPROVED hoặc MON07DONE.

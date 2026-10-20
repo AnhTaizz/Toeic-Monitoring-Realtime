@@ -1,0 +1,42 @@
+{
+  "schema": "mon01-base03-reuse-v1",
+  "preservedCommit": "9a97cab646af40e45871cb76ffbfcfcb861f2954",
+  "productionDiff": "EMPTY",
+  "backupReceipt": "evidence/v2-c-mon01/base03-backup-receipt.json",
+  "reused": [
+    {
+      "runId": "BASE03-20261019T095202Z-66b7cc19",
+      "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+      "directMon01Evidence": [
+        "full-focused.json",
+        "full-pipeline-checks.json",
+        "history-checks.json",
+        "local-live-report.json"
+      ],
+      "scope": "163 FULL +151 DELTA focused;983 regression/7SKIP; local42; REAL owned ProcessHandle/PG/WS/proctor; optional fault inputs MOCK/SIMULATED; PHYSICAL NOT_RUN"
+    },
+    {
+      "runId": "BASE03-20261019T095950Z-e51076ac",
+      "sourceSha": "463cbadc50465c6ca2f2d4c0a0701dcb9c38e034",
+      "scope": "Stale DELTA/FULL sequence supplement: preserved, supports unchanged infrastructure, not rerun for MON01 and not necessary to enable MON01 FULL"
+    }
+  ],
+  "newVerificationPurpose": [
+    "Targeted dashboard consumption, foreign/stale/closed callbacks and parsing",
+    "MT07 actual buffered offline provenance/queue overflow/gap persistence/full separation over real WS/PG",
+    "GUI missing metadata/empty observation/time ownership no-cheating semantics",
+    "Automatic worker shutdown after three ended TEST attempt states"
+  ],
+  "notRerun": [
+    "Full983 regression",
+    "DELTA oracle72",
+    "C4 local42",
+    "E1/E2 campaign",
+    "New ProcessHandle campaign: preserved real run reused"
+  ],
+  "limitations": [
+    "BASE02 human integration matrix/signoff not found; CODE_READY_STAGE3_ACCEPTANCE_PENDING remains",
+    "No physical second Windows operator or B signature",
+    "Simulated end-state transition is not full HTTP submit/timeout UI acceptance"
+  ]
+}
