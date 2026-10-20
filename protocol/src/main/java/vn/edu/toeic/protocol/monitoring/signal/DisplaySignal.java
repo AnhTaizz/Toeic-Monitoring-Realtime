@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.util.Set;
 import vn.edu.toeic.protocol.monitoring.EventOrigin;
 
-/** Immutable MOCK slice value. No OS observer or production coordinator creates this type. */
+/** Display count reported by the JavaFX runtime; it is an observation, never a policy verdict. */
 public record DisplaySignal(String eventId,String observerSessionId,long observationSequence,Instant observedAt,
                             EventOrigin origin,int count,String reason) implements Signal {
     public static final String TYPE="DISPLAY_COUNT_OBSERVED";
