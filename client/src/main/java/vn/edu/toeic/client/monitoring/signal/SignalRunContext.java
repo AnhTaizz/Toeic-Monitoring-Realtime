@@ -11,6 +11,8 @@ public final class SignalRunContext implements AutoCloseable {
     private long sequence;
     private boolean active = true;
     private boolean usbInputClaimed;
+    private boolean statusInputClaimed;
+    private boolean deliveryClaimed;
 
     public SignalRunContext(String attemptId, String observerSessionId) {
         this(attemptId, observerSessionId, 0);
@@ -29,6 +31,16 @@ public final class SignalRunContext implements AutoCloseable {
     public synchronized boolean claimUsbInput() {
         if (!active || usbInputClaimed) return false;
         usbInputClaimed = true;
+        return true;
+    }
+    public synchronized boolean claimStatusInput() {
+        if (!active || statusInputClaimed) return false;
+        statusInputClaimed = true;
+        return true;
+    }
+    synchronized boolean claimDelivery() {
+        if (!active || deliveryClaimed) return false;
+        deliveryClaimed = true;
         return true;
     }
     public Metadata next(Instant observedAt, EventOrigin origin) { return reserve(1, observedAt, origin).getFirst(); }

@@ -26,6 +26,7 @@ import vn.edu.toeic.server.monitoring.EventConflictException;
 import vn.edu.toeic.client.realtime.*;
 import vn.edu.toeic.client.monitoring.signal.SignalDelivery;
 import vn.edu.toeic.client.monitoring.signal.SignalRunContext;
+import vn.edu.toeic.client.monitoring.signal.ObserverStatusEmitter;
 import vn.edu.toeic.client.monitoring.usb.UsbSignalAdapter;
 import vn.edu.toeic.monitoring.usb.UsbSnapshot;
 import vn.edu.toeic.protocol.Role;
@@ -86,7 +87,7 @@ class SignalPipelinePostgresTest {
         for(var row:fixture.getAsJsonArray("signals")) messages.add(new SignalMessage(a,"mock-typed-request-"+(++n),"mock-typed-trace",Signal.parse(row.getAsJsonObject())));
         try(Client client=new Client(a,true)){
             var capabilities=getJson(a,"signal-capabilities",candidate,200).getAsJsonArray("supportedEventTypes");
-            assertThat(capabilities).hasSize(6);assertThat(capabilities.toString()).doesNotContain("OBSERVER_STATUS","SIGNAL_GAP","EXAM_ACTIVITY_SUMMARY");
+            assertThat(capabilities).hasSize(8);assertThat(capabilities.toString()).contains("OBSERVER_STATUS","SIGNAL_GAP").doesNotContain("EXAM_ACTIVITY_SUMMARY");
             // Lose ACK specifically for a new USB type. Send it first; server timeline is commit order,
             // not observationSequence. The remaining MOCK observations keep their frozen identity.
             assertThat(client.delivery.enqueue(messages.get(2))).isTrue();
@@ -245,6 +246,69 @@ class SignalPipelinePostgresTest {
         var catchup=getJson(a,"signals?after=4",proctor,200);assertThat(catchup.getAsJsonArray("items")).hasSize(1);assertThat(catchup.get("throughSequence").getAsLong()).isEqualTo(5);
         for(String q:List.of("limit=0","limit=101","after=6","after=3&through=2","after=1&after=2","unknown=1","after=1e0"))getJson(a,"signals?"+q,proctor,400);
     }
+    @Test void mockStatusActualQueueOverflowGapCommitAckLossAndMixedFixedThroughHistory()throws Exception{
+        String a=attempt();Instant t=Instant.parse("2026-10-20T12:00:00Z");AtomicLong nano=new AtomicLong();
+        try(Client c=new Client(a,2,Clock.fixed(t,ZoneOffset.UTC),nano::get);var emitter=new ObserverStatusEmitter(nano::get)){
+            c.transport.allow=false;long generation=emitter.start(c.run,c.delivery);
+            var status=emitter.observe(generation,ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,ObserverStatusSignal.State.UNKNOWN,ObserverStatusSignal.Reason.NO_DATA,t,c.realtime.observationOrigin()).getFirst().message();
+            assertThat(emitter.observe(generation,ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,ObserverStatusSignal.State.UNKNOWN,ObserverStatusSignal.Reason.NO_DATA,t,c.realtime.observationOrigin())).isEmpty();
+            var m=c.run.next(t,EventOrigin.OFFLINE);var display=m.message(new DisplaySignal(m.eventId(),m.observerSessionId(),m.sequence(),t,m.origin(),1,"INITIAL"));assertThat(c.delivery.enqueue(display)).isTrue();
+            m=c.run.next(t,EventOrigin.OFFLINE);assertThat(c.delivery.enqueue(m.message(new WindowSignal(m.eventId(),m.observerSessionId(),m.sequence(),t,m.origin(),true,false,"CHANGED")))).isFalse();
+            m=c.run.next(t,EventOrigin.OFFLINE);assertThat(c.delivery.enqueue(m.message(new FocusSignal(m.eventId(),m.observerSessionId(),m.sequence(),t,m.origin(),false,"OTHER_OR_UNKNOWN",null)))).isFalse();
+            c.delivery.tick();assertThat(c.delivery.status().queued()).isEqualTo(3);assertThat(c.delivery.gapStatus().unconfirmed()).isEqualTo(2);assertThat(rows(a)).isZero();
+            c.transport.loseType=SignalGap.TYPE;c.transport.lose.set(true);c.transport.allow=true;c.delivery.tick();
+            assertThat(c.transport.dropped.await(8,TimeUnit.SECONDS)).isTrue();assertThat(c.transport.deliveredAcks.poll(8,TimeUnit.SECONDS)).isNotNull();c.delivery.tick();assertThat(c.transport.deliveredAcks.poll(8,TimeUnit.SECONDS)).isNotNull();
+            var original=SignalMessage.parse(c.transport.sentSignals.stream().filter(s->s.payload().get("eventType").getAsString().equals(SignalGap.TYPE)).findFirst().orElseThrow());
+            assertThat(((SignalGap)original.signal()).droppedCount()).isEqualTo(2);assertThat(((SignalGap)original.signal()).firstDroppedAt()).isEqualTo(t);assertThat(((SignalGap)original.signal()).lastDroppedAt()).isEqualTo(t);assertThat(original.signal().observationSequence()).isEqualTo(5);
+            nano.addAndGet(TimeUnit.SECONDS.toNanos(2));c.delivery.tick();nano.addAndGet(TimeUnit.MILLISECONDS.toNanos(100));c.delivery.tick();var retryAck=c.transport.deliveredAcks.poll(8,TimeUnit.SECONDS);assertThat(retryAck).isNotNull();assertThat(retryAck.get("duplicate").getAsBoolean()).isTrue();
+            assertThat(c.transport.sentSignals.stream().filter(s->s.requestId().equals(original.requestId())).toList()).containsExactly(original.envelope(),original.envelope());
+            assertThat(c.delivery.gapStatus().acknowledgedDrops()).isEqualTo(2);assertThat(c.delivery.status().queued()).isZero();assertThat(rows(a)).isEqualTo(3);assertThat(counter(a)).isEqualTo(3);
+            var first=getJson(a,"signals?limit=1",proctor,200);assertThat(first.get("throughSequence").getAsLong()).isEqualTo(3);
+            m=c.run.next(t.plusSeconds(5),EventOrigin.OFFLINE);var later=m.message(new WindowSignal(m.eventId(),m.observerSessionId(),m.sequence(),m.observedAt(),m.origin(),false,true,"CHANGED"));c.delivery.enqueue(later);c.delivery.tick();assertThat(c.transport.deliveredAcks.poll(8,TimeUnit.SECONDS)).isNotNull();
+            var expected=Map.of(status.signal().eventId(),status.signal(),display.signal().eventId(),display.signal(),original.signal().eventId(),original.signal());List<String> seen=new ArrayList<>();JsonObject page=first;
+            while(true){for(var element:page.getAsJsonArray("items")){var item=element.getAsJsonObject().deepCopy();assertThat(item.get("timelineSequence").getAsLong()).isEqualTo(seen.size()+1);for(String key:List.of("attemptId","timelineSequence","receivedAt","deliveryStatus"))item.remove(key);Signal value=Signal.parse(item);assertThat(value).isEqualTo(expected.get(value.eventId()));seen.add(value.eventId());}if(!page.get("hasMore").getAsBoolean())break;page=getJson(a,"signals?limit=1&after="+page.get("nextAfterSequence").getAsLong()+"&through=3",proctor,200);}
+            assertThat(seen).containsExactlyInAnyOrderElementsOf(expected.keySet());assertThat(rows(a)).isEqualTo(4);
+            emitter.stop();assertThat(emitter.observe(generation,ObserverStatusSignal.Source.JAVAFX_DISPLAY,ObserverStatusSignal.State.READY,ObserverStatusSignal.Reason.INITIAL,t,EventOrigin.OFFLINE)).isEmpty();
+        }
+    }
+    private SignalMessage controlMessage(String a,boolean gap){
+        Instant t=Instant.parse("2026-10-20T10:00:00Z");Signal s=gap?new SignalGap("MOCK-control-gap","MOCK-control-run",2,t,EventOrigin.OFFLINE,3,t.minusSeconds(1),t):new ObserverStatusSignal("MOCK-control-status","MOCK-control-run",1,t,EventOrigin.OFFLINE,ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,ObserverStatusSignal.State.UNSUPPORTED,ObserverStatusSignal.Reason.API_UNAVAILABLE);
+        return new SignalMessage(a,gap?"MOCK-gap-request":"MOCK-status-request","MOCK-control-trace",s);
+    }
+    @Test void bothControlTypesCanonicalDuplicatesConflictsStrictWireAndAuthorization()throws Exception{
+        for(boolean gap:List.of(false,true)){
+            String a=attempt();var m=controlMessage(a,gap);
+            try(Raw good=new Raw(candidate)){
+                var ack=good.exchange(JSON.toJson(m.envelope()));assertThat(ack.getAsJsonObject("payload").get("timelineSequence").getAsLong()).isEqualTo(1);
+                assertThat(good.exchange(JSON.toJson(m.envelope()).replace("10:00:00Z","10:00:00.000000Z")).getAsJsonObject("payload").get("duplicate").getAsBoolean()).isTrue();
+                var changed=m.envelope().payload();if(!gap){changed.getAsJsonObject("details").addProperty("status","UNKNOWN");changed.getAsJsonObject("details").addProperty("reason","NO_DATA");changed.addProperty("metadataQuality","UNREADABLE");}else changed.getAsJsonObject("details").addProperty("droppedCount",4);
+                assertCode(good.exchange(JSON.toJson(new MessageEnvelope<>("v0","MONITORING_SIGNAL",m.requestId(),m.requestId(),a,m.traceId(),changed))),"CONFLICT");
+                String raw=JSON.toJson(m.envelope());for(String bad:List.of(raw.replace("\"reason\":","\"reason\":\"MOCK\",\"reason\":"),raw.replace("\"details\":{","\"details\":{\"serial\":\"MOCK\","),raw.replace("\"details\":{","\"details\":{"+" ".repeat(1024)),raw.replace("\"metadataQuality\":\""+(gap?"COMPLETE":"UNSUPPORTED")+"\"","\"metadataQuality\":\"PARTIAL\"")))assertCode(good.exchange(bad),"INVALID_INPUT");
+            }
+            try(Raw wrong=new Raw(foreign);Raw role=new Raw(proctor)){assertCode(wrong.exchange(JSON.toJson(m.envelope())),"FORBIDDEN");assertCode(role.exchange(JSON.toJson(m.envelope())),"FORBIDDEN");}
+            getJson(a,"signals",foreign,403);
+            for(boolean revoked:List.of(false,true)){String token=login("candidate");try(Raw ws=new Raw(token)){jdbc.sql(revoked?"UPDATE login_sessions SET revoked_at=clock_timestamp() WHERE token_hash=:h":"UPDATE login_sessions SET issued_at=clock_timestamp()-INTERVAL '2 days',expires_at=clock_timestamp()-INTERVAL '1 day' WHERE token_hash=:h").param("h",TokenHash.sha256(token)).update();assertCode(ws.exchange(JSON.toJson(m.envelope())),"UNAUTHORIZED");}}
+            jdbc.sql("UPDATE monitoring_attempts SET state='CLOSED' WHERE attempt_id=:a").param("a",a).update();try(Raw ws=new Raw(candidate)){assertCode(ws.exchange(JSON.toJson(m.envelope())),"FORBIDDEN");}getJson(a,"signals",proctor,403);assertThat(rows(a)).isEqualTo(1);assertThat(counter(a)).isEqualTo(1);
+        }
+    }
+    @Test void bothControlTypesCommitFaultRollsBackWithoutAckOrCounterIncrement()throws Exception{
+        String a=attempt(),fn="control_fail_"+UUID.randomUUID().toString().replace("-","");
+        jdbc.sql("CREATE FUNCTION "+fn+"() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'MOCK deferred control fault'; RETURN NEW; END $$").update();jdbc.sql("CREATE CONSTRAINT TRIGGER control_deferred_fail AFTER INSERT ON monitoring_signal_events DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION "+fn+"()").update();
+        try(Raw ws=new Raw(candidate)){for(boolean gap:List.of(false,true)){assertCode(ws.exchange(JSON.toJson(controlMessage(a,gap).envelope())),"RETRYABLE_SERVER_ERROR");assertThat(rows(a)).isZero();assertThat(counter(a)).isZero();}}
+        finally{jdbc.sql("DROP TRIGGER control_deferred_fail ON monitoring_signal_events").update();jdbc.sql("DROP FUNCTION "+fn+"()").update();}
+        try(Raw ws=new Raw(candidate)){for(boolean gap:List.of(false,true))assertThat(ws.exchange(JSON.toJson(controlMessage(a,gap).envelope())).getAsJsonObject("payload").get("timelineSequence").getAsLong()).isEqualTo(gap?2:1);}
+    }
+    @Test void realRevokeStopsReservedGapAndPreventsNewStatusWithoutFlushingAfterStop()throws Exception{
+        String a=attempt(),token=login("candidate");AtomicLong nano=new AtomicLong();
+        try(Client c=new Client(a,false,token,"mock-control-run",1,Clock.systemUTC(),nano::get,true);var emitter=new ObserverStatusEmitter(nano::get)){
+            long g=emitter.start(c.run,c.delivery);c.transport.allow=false;emitter.observe(g,ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,ObserverStatusSignal.State.UNKNOWN,ObserverStatusSignal.Reason.NO_DATA,Instant.parse("2026-10-20T10:00:00Z"),EventOrigin.OFFLINE);
+            var m=c.run.next(Instant.parse("2026-10-20T10:00:00Z"),EventOrigin.OFFLINE);c.delivery.enqueue(m.message(new DisplaySignal(m.eventId(),m.observerSessionId(),m.sequence(),m.observedAt(),m.origin(),1,"INITIAL")));c.delivery.tick();assertThat(c.delivery.gapStatus().unconfirmed()).isEqualTo(1);
+            CountDownLatch denied=new CountDownLatch(1);try(var listener=c.realtime.onConnectionState(s->{if(s==ConnectionState.FAILED)denied.countDown();})){
+                jdbc.sql("UPDATE login_sessions SET revoked_at=clock_timestamp() WHERE token_hash=:h").param("h",TokenHash.sha256(token)).update();assertThat(denied.await(8,TimeUnit.SECONDS)).isTrue();
+                assertThat(c.delivery.status().active()).isFalse();assertThat(c.delivery.gapStatus().discardedUnconfirmed()).isEqualTo(1);assertThat(c.delivery.awaitStopped(Duration.ofSeconds(2))).isTrue();assertThat(emitter.flush(g)).isEmpty();c.transport.allow=true;c.delivery.tick();assertThat(c.transport.sentSignals).isEmpty();assertThat(rows(a)).isZero();
+            }
+        }
+    }
     @Test void counterLockCommitsPrefixAndInitialWriterRollbackCannotSkipLowSequence()throws Exception{
         String a=attempt();CountDownLatch inserted=new CountDownLatch(1),release=new CountDownLatch(1);var pool=Executors.newFixedThreadPool(2);
         try{
@@ -339,6 +403,7 @@ class SignalPipelinePostgresTest {
                 assertThat(mappings.values()).noneMatch(m->m.getBeanType()==SignalController.class);
                 var db=off.getBean(JdbcClient.class);assertThat(db.sql("SELECT success FROM flyway_schema_history WHERE version='13'").query(Boolean.class).single()).isTrue();
                 assertThat(db.sql("SELECT success FROM flyway_schema_history WHERE version='16'").query(Boolean.class).single()).isTrue();
+                assertThat(db.sql("SELECT success FROM flyway_schema_history WHERE version='17'").query(Boolean.class).single()).isTrue();
                 assertThat(db.sql("SELECT count(*) FROM monitoring_signal_events").query(Long.class).single()).isZero();assertThat(db.sql("SELECT count(*) FROM monitoring_signal_counters").query(Long.class).single()).isZero();
                 long owner=db.sql("INSERT INTO user_accounts(username,display_name,role,password_hash) VALUES ('MOCK-off-candidate','MOCK','CANDIDATE','MOCK-unused') RETURNING id").query(Long.class).single();
                 db.sql("INSERT INTO monitoring_attempts(attempt_id,candidate_user_id,state) VALUES ('MOCK-off-attempt',:u,'ACTIVE')").param("u",owner).update();
@@ -361,13 +426,14 @@ class SignalPipelinePostgresTest {
             }
         }finally{admin.createStatement().execute("DROP SCHEMA "+offSchema+" CASCADE");}
     }
-    @Test void migrationUpgradeFromV15PreservesDisplayRowsCountersAndChecksums()throws Exception{
+    @org.junit.jupiter.params.ParameterizedTest @org.junit.jupiter.params.provider.ValueSource(ints={15,16})
+    void migrationUpgradePreservesDisplayRowsCountersAndAppliedChecksums(int version)throws Exception{
         String upgrade="signal_upgrade_"+UUID.randomUUID().toString().replace("-","");
         admin.createStatement().execute("CREATE SCHEMA "+upgrade);
         String upgradeUrl=url+"?currentSchema="+upgrade;
         try{
             var old=org.flywaydb.core.Flyway.configure().dataSource(upgradeUrl,required("DB_USER"),required("DB_PASSWORD"))
-                    .schemas(upgrade).defaultSchema(upgrade).target("15").load();old.migrate();
+                    .schemas(upgrade).defaultSchema(upgrade).target(String.valueOf(version)).load();old.migrate();
             String before;List<String> checksums=new ArrayList<>();
             try(Connection db=DriverManager.getConnection(upgradeUrl,required("DB_USER"),required("DB_PASSWORD"));Statement sql=db.createStatement()){
                 sql.execute("INSERT INTO user_accounts(id,username,display_name,role,password_hash) VALUES (1,'MOCK-upgrade-candidate','MOCK','CANDIDATE','MOCK-unused'),(2,'MOCK-upgrade-proctor','MOCK','PROCTOR','MOCK-unused')");
@@ -376,13 +442,13 @@ class SignalPipelinePostgresTest {
                 sql.execute("INSERT INTO monitoring_signal_counters VALUES ('MOCK-upgrade',1)");
                 sql.execute("INSERT INTO monitoring_signal_events(attempt_id,event_id,schema_version,observer_session_id,observation_sequence,event_type,source,metadata_quality,observed_at,observation_context,details,timeline_sequence,delivery_status) VALUES ('MOCK-upgrade','mock-old-display',1,'mock-observer-1',1,'DISPLAY_COUNT_OBSERVED','JAVAFX_DISPLAY','COMPLETE','2026-10-20T10:00:00Z','OFFLINE','{\"count\":1,\"reason\":\"INITIAL\"}',1,'BUFFERED_OFFLINE')");
                 try(var r=sql.executeQuery("SELECT row_to_json(e)::text FROM monitoring_signal_events e")){assertThat(r.next()).isTrue();before=r.getString(1);}
-                try(var r=sql.executeQuery("SELECT version||':'||checksum FROM flyway_schema_history WHERE version IN ('13','14','15') ORDER BY installed_rank")){while(r.next())checksums.add(r.getString(1));}
+                try(var r=sql.executeQuery("SELECT version||':'||checksum FROM flyway_schema_history WHERE version IN ('13','14','15','16') ORDER BY installed_rank")){while(r.next())checksums.add(r.getString(1));}
             }
             var latest=org.flywaydb.core.Flyway.configure().dataSource(upgradeUrl,required("DB_USER"),required("DB_PASSWORD"))
-                    .schemas(upgrade).defaultSchema(upgrade).load();assertThat(latest.migrate().migrationsExecuted).isEqualTo(1);latest.validate();
+                    .schemas(upgrade).defaultSchema(upgrade).load();assertThat(latest.migrate().migrationsExecuted).isEqualTo(17-version);latest.validate();
             try(Connection db=DriverManager.getConnection(upgradeUrl,required("DB_USER"),required("DB_PASSWORD"));Statement sql=db.createStatement()){
                 try(var r=sql.executeQuery("SELECT row_to_json(e)::text FROM monitoring_signal_events e")){assertThat(r.next()).isTrue();assertThat(r.getString(1)).isEqualTo(before);}
-                List<String> after=new ArrayList<>();try(var r=sql.executeQuery("SELECT version||':'||checksum FROM flyway_schema_history WHERE version IN ('13','14','15') ORDER BY installed_rank")){while(r.next())after.add(r.getString(1));}assertThat(after).isEqualTo(checksums);
+                List<String> after=new ArrayList<>();try(var r=sql.executeQuery("SELECT version||':'||checksum FROM flyway_schema_history WHERE version IN ('13','14','15','16') AND CAST(version AS int)<="+version+" ORDER BY installed_rank")){while(r.next())after.add(r.getString(1));}assertThat(after).isEqualTo(checksums);
                 try(var r=sql.executeQuery("SELECT last_sequence FROM monitoring_signal_counters")){assertThat(r.next()).isTrue();assertThat(r.getLong(1)).isEqualTo(1);}
                 // A direct DB writer cannot pair a focus event with a USB source after V16.
                 assertThatThrownBy(()->sql.execute("UPDATE monitoring_signal_events SET event_type='EXAM_FOCUS_CHANGED',source='WINDOWS_USB_STORAGE'" )).isInstanceOf(SQLException.class);
@@ -470,25 +536,32 @@ class SignalPipelinePostgresTest {
         JsonObject next(String type)throws Exception{long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(10);while(System.nanoTime()<until){var o=inbox.poll(1,TimeUnit.SECONDS);if(o!=null&&(type==null||o.get("type").getAsString().equals(type)))return o;}throw new AssertionError("TEST WS response timeout");}public void close(){ws.abort();}
     }
     private final class Client implements AutoCloseable{
-        final RealtimeClient realtime;final Lossy transport;final SignalDelivery delivery;final AutoCloseable lease;
+        final RealtimeClient realtime;final Lossy transport;final SignalDelivery delivery;final AutoCloseable lease;final SignalRunContext run;
         Client(String a,boolean lose)throws Exception{this(a,lose,candidate);}
         Client(String a,boolean lose,String token)throws Exception{this(a,lose,token,"mock-observer-1");}
         Client(String a,boolean lose,String token,String observerRun)throws Exception{
+            this(a,lose,token,observerRun,256,Clock.systemUTC(),System::nanoTime,false);
+        }
+        Client(String a,int capacity,Clock clock,LongSupplier ticker)throws Exception{this(a,false,candidate,"mock-control-run",capacity,clock,ticker,true);}
+        Client(String a,boolean lose,String token,String observerRun,int capacity,Clock clock,LongSupplier ticker,boolean controls)throws Exception{
             var opener=new AuthenticatedWebSocketOpener(base,token);realtime=new RealtimeClient(opener,new RealtimeClient.Settings(Duration.ofMillis(100),Duration.ofMillis(100),Duration.ofSeconds(1),1,65536,500));
             lease=realtime.monitoringHeartbeat(a,observerRun);resources.add(realtime);resources.add(lease);CountDownLatch hb=new CountDownLatch(1);AutoCloseable listener=realtime.onMessage(m->{if(m.type().equals("ACK")&&m.payload().get("acknowledgedType").getAsString().equals("HEARTBEAT")&&a.equals(m.attemptId()))hb.countDown();});
             realtime.connect(new RealtimeClient.Session(Set.of(a),null,null)).get(8,TimeUnit.SECONDS);assertThat(hb.await(8,TimeUnit.SECONDS)).isTrue();listener.close();
             // Fresh server scope (not a locally invented candidate assignment).
             var me=http.send(HttpRequest.newBuilder(URI.create(base+"/api/v1/auth/me")).header("Authorization","Bearer "+token).GET().build(),HttpResponse.BodyHandlers.ofString());assertThat(me.statusCode()).isEqualTo(200);assertThat(me.body()).contains(a);
-            realtime.confirmSignalExperiment(getJson(a,"signal-capabilities",token,200),realtime.connectionGeneration(),observerRun);transport=new Lossy(realtime,lose);delivery=new SignalDelivery(a,observerRun,transport,new SignalDelivery.Settings(256,1048576,2,Duration.ofSeconds(1),5,Duration.ofMillis(100),Duration.ofMillis(800),Duration.ofMillis(25)),System::nanoTime,true);
+            realtime.confirmSignalExperiment(getJson(a,"signal-capabilities",token,200),realtime.connectionGeneration(),observerRun);transport=new Lossy(realtime,lose);
+            var settings=new SignalDelivery.Settings(capacity,1048576,2,Duration.ofSeconds(1),5,Duration.ofMillis(100),Duration.ofMillis(800),Duration.ofMillis(25));
+            run=controls?new SignalRunContext(a,observerRun):null;
+            delivery=controls?new SignalDelivery(run,transport,settings,ticker,clock,false):new SignalDelivery(a,observerRun,transport,settings,ticker,true);
         }
-        public void close()throws Exception{delivery.close();lease.close();realtime.close();assertThat(delivery.awaitStopped(Duration.ofSeconds(3))).isTrue();}
+        public void close()throws Exception{delivery.close();if(run!=null)run.close();lease.close();realtime.close();assertThat(delivery.awaitStopped(Duration.ofSeconds(3))).isTrue();}
     }
     private static final class Lossy implements MonitoringTransport{
-        volatile boolean allow=true;final RealtimeClient delegate;final AtomicBoolean lose;final CountDownLatch dropped=new CountDownLatch(1),accepted=new CountDownLatch(1);final AtomicReference<JsonObject> lastAck=new AtomicReference<>();
+        volatile boolean allow=true;volatile String loseType;final RealtimeClient delegate;final AtomicBoolean lose;final CountDownLatch dropped=new CountDownLatch(1),accepted=new CountDownLatch(1);final AtomicReference<JsonObject> lastAck=new AtomicReference<>();
         final BlockingQueue<JsonObject> deliveredAcks=new LinkedBlockingQueue<>();
         final List<MessageEnvelope<JsonObject>> sentSignals=new CopyOnWriteArrayList<>();
         Lossy(RealtimeClient d,boolean lose){delegate=d;this.lose=new AtomicBoolean(lose);}
         public CompletableFuture<Void> send(MessageEnvelope<JsonObject> m){return delegate.send(m);}public CompletableFuture<Void> sendForGeneration(MessageEnvelope<JsonObject> m,long g,BooleanSupplier guard){if(m.type().equals("MONITORING_SIGNAL"))sentSignals.add(new MessageEnvelope<>(m.protocolVersion(),m.type(),m.messageId(),m.requestId(),m.attemptId(),m.traceId(),m.payload().deepCopy()));return delegate.sendForGeneration(m,g,guard);}public ConnectionState connectionState(){return delegate.connectionState();}public long connectionGeneration(){return delegate.connectionGeneration();}public boolean signalExperimentReady(String a){return delegate.signalExperimentReady(a);}public boolean signalCreditAvailable(){return allow&&delegate.signalCreditAvailable();}public AutoCloseable onConnectionState(Consumer<ConnectionState> c){return delegate.onConnectionState(c);}public AutoCloseable onMonitoringAccessRejected(Consumer<MonitoringAccessRejection> c){return delegate.onMonitoringAccessRejected(c);}public void forgetPending(String id){delegate.forgetPending(id);}
-        public AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> c){return delegate.onMessage(m->{if(m.type().equals("ACK")&&"MONITORING_SIGNAL".equals(m.payload().get("acknowledgedType").getAsString())){lastAck.set(m.payload().deepCopy());if(lose.compareAndSet(true,false)){dropped.countDown();return;}c.accept(m);deliveredAcks.add(m.payload().deepCopy());accepted.countDown();}else c.accept(m);});}
+        public AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> c){return delegate.onMessage(m->{if(m.type().equals("ACK")&&"MONITORING_SIGNAL".equals(m.payload().get("acknowledgedType").getAsString())){lastAck.set(m.payload().deepCopy());if((loseType==null||sentSignals.stream().anyMatch(s->s.requestId().equals(m.requestId())&&s.payload().get("eventType").getAsString().equals(loseType)))&&lose.compareAndSet(true,false)){dropped.countDown();return;}c.accept(m);deliveredAcks.add(m.payload().deepCopy());accepted.countDown();}else c.accept(m);});}
     }
 }

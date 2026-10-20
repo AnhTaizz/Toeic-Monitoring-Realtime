@@ -867,11 +867,11 @@ class RealtimeClientTest {
         try(Fixture f=new Fixture()){
             f.connect();try(var lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){
                 confirmSignal(f);
-                for(String type:List.of("DISPLAY_COUNT_OBSERVED","OBSERVER_STATUS","USB_CONNECTED")){
+                for(String type:List.of("DISPLAY_COUNT_OBSERVED","EXAM_ACTIVITY_SUMMARY","USB_CONNECTED")){
                     var cap=signalCapability();cap.getAsJsonArray("supportedEventTypes").add(type);
                     assertThatThrownBy(()->f.client.confirmSignalExperiment(cap,f.client.connectionGeneration(),"MOCK-signal-run")).isInstanceOf(IllegalArgumentException.class);
                 }
-                var cap=signalCapability();cap.getAsJsonArray("supportedEventTypes").add("USB_STORAGE_CONNECTED");f.client.confirmSignalExperiment(cap,f.client.connectionGeneration(),"MOCK-signal-run");
+                var cap=signalCapability();cap.getAsJsonArray("supportedEventTypes").add("USB_STORAGE_CONNECTED");cap.getAsJsonArray("supportedEventTypes").add("OBSERVER_STATUS");cap.getAsJsonArray("supportedEventTypes").add("SIGNAL_GAP");f.client.confirmSignalExperiment(cap,f.client.connectionGeneration(),"MOCK-signal-run");
                 var original=typedSignal("USB_STORAGE_CONNECTED",1);var wrong=original.payload();wrong.addProperty("observerSessionId","MOCK-other-run");
                 assertThat(f.client.send(new MessageEnvelope<>("v0","MONITORING_SIGNAL",original.messageId(),original.requestId(),original.attemptId(),original.traceId(),wrong))).isCompletedExceptionally();
             }
@@ -887,11 +887,23 @@ class RealtimeClientTest {
             }
         }
     }
+    @Test void controlTypesRequireCapabilityAtAdmissionAndAgainBeforeQueuedSocketWrite()throws Exception{
+        for(String type:List.of("OBSERVER_STATUS","SIGNAL_GAP"))try(Fixture f=new Fixture()){
+            f.connect();try(var lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){
+                confirmSignal(f);assertThat(f.client.send(typedSignal(type,2))).isCompletedExceptionally();
+                var cap=signalCapability();cap.getAsJsonArray("supportedEventTypes").add(type);f.client.confirmSignalExperiment(cap,f.client.connectionGeneration(),"MOCK-signal-run");
+                f.socket().sent.clear();f.socket().writeGate=new CompletableFuture<>();var first=f.client.send(signal(1));var queued=f.client.send(typedSignal(type,2));assertThat(queued).isNotDone();
+                f.client.confirmSignalExperiment(signalCapability(),f.client.connectionGeneration(),"MOCK-signal-run");f.socket().writeGate.complete(f.socket());assertThat(first).isCompleted();assertThat(queued).isCompletedExceptionally();assertThat(f.socket().sent).hasSize(1);
+            }
+        }
+    }
     private static MessageEnvelope<JsonObject> typedSignal(String type,int n){
         var time=java.time.Instant.parse("2026-10-20T10:00:00Z");var origin=vn.edu.toeic.protocol.monitoring.EventOrigin.OFFLINE;
         vn.edu.toeic.protocol.monitoring.signal.Signal value=switch(type){
             case "USB_STORAGE_CONNECTED"->new vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal("MOCK-typed-"+n,"MOCK-signal-run",n,time,origin,vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal.Kind.USB_STORAGE_CONNECTED,vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal.Quality.PARTIAL,1,null);
             case "EXAM_FOCUS_CHANGED"->new vn.edu.toeic.protocol.monitoring.signal.FocusSignal("MOCK-typed-"+n,"MOCK-signal-run",n,time,origin,false,"OTHER_OR_UNKNOWN",null);
+            case "OBSERVER_STATUS"->new vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal("MOCK-typed-"+n,"MOCK-signal-run",n,time,origin,vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal.State.ERROR,vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal.Reason.SCAN_FAILED);
+            case "SIGNAL_GAP"->new vn.edu.toeic.protocol.monitoring.signal.SignalGap("MOCK-typed-"+n,"MOCK-signal-run",n,time,origin,2,time.minusSeconds(1),time);
             default->new vn.edu.toeic.protocol.monitoring.signal.WindowSignal("MOCK-typed-"+n,"MOCK-signal-run",n,time,origin,false,false,"INITIAL");
         };
         return new vn.edu.toeic.protocol.monitoring.signal.SignalMessage("mock-attempt-A","MOCK-typed-request-"+n,"MOCK-typed-trace",value).envelope();
