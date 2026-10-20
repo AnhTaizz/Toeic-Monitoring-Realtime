@@ -235,8 +235,8 @@ class RichExamMigrationPostgresTest {
         // Chỉ ghi nhận giới hạn schema: không có file thật hoặc quyền runtime nào được cấp bởi test này.
     }
 
-    @Test void upgradedV11BootsAndLegacyHttpImportReadRemainCompatible() throws Exception {
-        migrate("10"); seedLegacyV10(); migrate("11"); startBackend("11");
+    @Test void upgradedV11ThenLatestBootsAndLegacyHttpImportReadRemainCompatible() throws Exception {
+        migrate("10"); seedLegacyV10(); migrate("11"); migrate(null); startBackend(null);
         String candidate = login("candidate1"), proctor = login("proctor1"), other = login("candidate2");
         var legacy = expect(get("/api/v1/attempts/LEGACY-A/exam", candidate), 200);
         assertThat(JSON.fromJson(legacy.body(), JsonObject.class).getAsJsonArray("questions")).hasSize(4);

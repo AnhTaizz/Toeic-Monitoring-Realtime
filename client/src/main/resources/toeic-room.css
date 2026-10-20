@@ -1,0 +1,140 @@
+/* TOEIC Room - giao diện sáng trắng/cam cho ca PROCTORED_V2. Chỉ áp dụng dưới .toeic-room. */
+.toeic-room {
+    -fx-background-color: #faf7f4;
+    -fx-font-family: "Segoe UI", "Inter", "Noto Sans", Arial, sans-serif;
+    -fx-font-size: 14px;
+}
+.toeic-room .label { -fx-text-fill: #1f2937; }
+.toeic-room .room-muted { -fx-text-fill: #6b7280; -fx-font-size: 12px; }
+.toeic-room .room-strong { -fx-font-weight: 700; }
+
+/* Header */
+.toeic-room .room-header {
+    -fx-background-color: #ffffff; -fx-padding: 12 24;
+    -fx-border-color: transparent transparent #eee7df transparent; -fx-border-width: 0 0 1 0;
+}
+.toeic-room .room-logo { -fx-font-size: 20px; -fx-font-weight: 800; -fx-text-fill: #111827; }
+.toeic-room .room-logo-mark {
+    -fx-background-color: #f26b1d; -fx-background-radius: 12; -fx-text-fill: white; -fx-font-weight: 800;
+    -fx-min-width: 40; -fx-min-height: 40; -fx-alignment: center;
+}
+.toeic-room .room-exam-title { -fx-font-size: 15px; -fx-text-fill: #374151; -fx-padding: 0 0 0 18; }
+.toeic-room .room-connection { -fx-font-size: 13px; }
+.toeic-room .room-connection-ok { -fx-text-fill: #16a34a; }
+.toeic-room .room-connection-wait { -fx-text-fill: #d97706; }
+.toeic-room .room-connection-bad { -fx-text-fill: #dc2626; }
+.toeic-room .room-timer { -fx-font-size: 22px; -fx-font-weight: 800; -fx-text-fill: #111827; }
+.toeic-room .room-timer-warning { -fx-text-fill: #dc2626; }
+.toeic-room .room-avatar {
+    -fx-background-color: #eef2f7; -fx-background-radius: 20; -fx-min-width: 40; -fx-min-height: 40;
+    -fx-alignment: center; -fx-font-weight: 700; -fx-text-fill: #374151;
+}
+.toeic-room .room-user-name { -fx-font-weight: 700; }
+
+/* Thanh Part */
+.toeic-room .room-section-bar {
+    -fx-background-color: #ffffff; -fx-padding: 10 24;
+    -fx-border-color: transparent transparent #eee7df transparent; -fx-border-width: 0 0 1 0;
+}
+.toeic-room .room-section { -fx-text-fill: #f26b1d; -fx-font-weight: 800; -fx-font-size: 16px; }
+.toeic-room .room-step, .toeic-room .room-step-done, .toeic-room .room-step-active {
+    -fx-background-color: transparent; -fx-text-fill: #6b7280; -fx-font-size: 13px; -fx-cursor: hand;
+}
+.toeic-room .room-step-done { -fx-text-fill: #16a34a; }
+.toeic-room .room-step-active { -fx-text-fill: #f26b1d; -fx-font-weight: 800; }
+.toeic-room .room-step-line { -fx-background-color: #e5e7eb; -fx-min-width: 60; -fx-pref-width: 80; -fx-max-height: 1; -fx-min-height: 1; }
+
+/* Thẻ */
+.toeic-room .room-card {
+    -fx-background-color: #ffffff; -fx-background-radius: 14; -fx-border-color: #eee7df;
+    -fx-border-radius: 14; -fx-padding: 18;
+}
+.toeic-room .room-card-title { -fx-font-size: 18px; -fx-font-weight: 800; }
+.toeic-room .room-overline { -fx-text-fill: #f26b1d; -fx-font-size: 12px; -fx-font-weight: 800; }
+.toeic-room .room-instruction { -fx-text-fill: #4b5563; -fx-font-size: 14px; }
+.toeic-room .room-info {
+    -fx-background-color: #f6f7f9; -fx-background-radius: 10; -fx-padding: 10 14; -fx-text-fill: #4b5563; -fx-font-size: 13px;
+}
+.toeic-room .room-warning { -fx-text-fill: #b45309; -fx-font-weight: 700; }
+.toeic-room .room-notice {
+    -fx-background-color: #fff7ed; -fx-background-radius: 10; -fx-padding: 8 12; -fx-text-fill: #9a3412;
+}
+.toeic-room .room-banner {
+    -fx-background-color: #ffffff; -fx-background-radius: 12; -fx-border-color: #eee7df; -fx-border-radius: 12; -fx-padding: 10 16;
+}
+.toeic-room .room-banner-title { -fx-font-weight: 700; }
+.toeic-room .room-progress .bar { -fx-background-color: #f26b1d; -fx-background-insets: 0; -fx-background-radius: 4; }
+.toeic-room .room-progress .track { -fx-background-color: #eceff3; -fx-background-radius: 4; }
+.toeic-room .room-strip {
+    -fx-background-color: #ffffff; -fx-background-radius: 12; -fx-border-color: #eee7df; -fx-border-radius: 12; -fx-padding: 10 16;
+}
+
+/* Câu hỏi và lựa chọn */
+.toeic-room .room-question-title { -fx-font-size: 22px; -fx-font-weight: 800; }
+.toeic-room .room-question-number { -fx-text-fill: #f26b1d; -fx-font-weight: 800; -fx-font-size: 15px; }
+.toeic-room .room-question-prompt { -fx-font-weight: 700; -fx-font-size: 15px; }
+.toeic-room .room-sentence { -fx-font-size: 22px; -fx-font-weight: 700; -fx-text-fill: #111827; }
+.toeic-room .room-passage { -fx-font-size: 15px; -fx-line-spacing: 4; -fx-text-fill: #1f2937; }
+.toeic-room .room-question-card {
+    -fx-background-color: #ffffff; -fx-background-radius: 12; -fx-border-color: #eee7df; -fx-border-radius: 12; -fx-padding: 14;
+}
+.toeic-room .room-question-card-active { -fx-border-color: #f26b1d; -fx-border-width: 1.5; }
+.toeic-room .room-option {
+    -fx-background-color: #ffffff; -fx-background-radius: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 10;
+    -fx-padding: 10 14; -fx-cursor: hand;
+}
+.toeic-room .room-option:hover { -fx-border-color: #fdba74; }
+.toeic-room .room-option-selected { -fx-background-color: #fff4ec; -fx-border-color: #f26b1d; }
+.toeic-room .room-option-letter {
+    -fx-background-color: #f3f4f6; -fx-background-radius: 6; -fx-min-width: 32; -fx-min-height: 32;
+    -fx-alignment: center; -fx-font-weight: 800;
+}
+.toeic-room .room-option-selected .room-option-letter { -fx-background-color: #ffe4d1; -fx-text-fill: #c2410c; }
+.toeic-room .room-option-text { -fx-font-size: 15px; }
+.toeic-room .radio-button .radio {
+    -fx-background-color: #9ca3af, white; -fx-background-insets: 0, 1.5; -fx-background-radius: 10; -fx-padding: 5;
+}
+.toeic-room .radio-button:selected .radio { -fx-background-color: #f26b1d, white; }
+.toeic-room .radio-button:selected .dot { -fx-background-color: #f26b1d; -fx-background-insets: 0; }
+
+/* Tài liệu Part 6/7 */
+.toeic-room .room-document {
+    -fx-background-color: #fffdfb; -fx-background-radius: 10; -fx-border-color: #efe6dc; -fx-border-radius: 10; -fx-padding: 14;
+}
+.toeic-room .room-document-title { -fx-font-weight: 800; -fx-font-size: 14px; -fx-text-fill: #111827; }
+.toeic-room .room-image-box { -fx-background-color: #f6f7f9; -fx-background-radius: 10; -fx-padding: 8; }
+
+/* Nút và chip */
+.toeic-room .button { -fx-background-radius: 10; -fx-font-size: 13px; -fx-padding: 8 14; -fx-cursor: hand; }
+.toeic-room .room-button-primary { -fx-background-color: #f26b1d; -fx-text-fill: white; -fx-font-weight: 700; }
+.toeic-room .room-button-submit { -fx-background-color: #16a34a; -fx-text-fill: white; -fx-font-weight: 700; }
+.toeic-room .room-button-secondary, .toeic-room .room-button-outline {
+    -fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 10; -fx-text-fill: #1f2937;
+}
+.toeic-room .room-button-outline { -fx-border-color: #f26b1d; -fx-text-fill: #f26b1d; -fx-font-weight: 700; }
+.toeic-room .room-chip, .toeic-room .room-chip-active, .toeic-room .room-chip-done, .toeic-room .room-tab {
+    -fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 18; -fx-background-radius: 18;
+    -fx-text-fill: #374151; -fx-padding: 6 14;
+}
+.toeic-room .room-chip-active { -fx-background-color: #fff4ec; -fx-border-color: #f26b1d; -fx-text-fill: #c2410c; -fx-font-weight: 700; }
+.toeic-room .room-chip-done { -fx-background-color: #eaf2ff; -fx-border-color: #bfd4f6; }
+.toeic-room .room-tab { -fx-border-radius: 0; -fx-background-radius: 0; -fx-border-color: transparent; -fx-font-weight: 700; }
+.toeic-room .room-list-item, .toeic-room .room-list-item-active {
+    -fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 10; -fx-alignment: center-left; -fx-text-fill: #1f2937;
+}
+.toeic-room .room-list-item-active { -fx-background-color: #fff4ec; -fx-border-color: #f26b1d; -fx-text-fill: #c2410c; -fx-font-weight: 700; }
+
+/* Footer */
+.toeic-room .room-footer {
+    -fx-background-color: #ffffff; -fx-padding: 10 24;
+    -fx-border-color: #eee7df transparent transparent transparent; -fx-border-width: 1 0 0 0;
+}
+.toeic-room .room-scroll, .toeic-room .room-scroll > .viewport { -fx-background-color: transparent; -fx-background: transparent; }
+
+/* Lobby */
+.toeic-room .room-lobby-title { -fx-font-size: 30px; -fx-font-weight: 800; -fx-text-fill: #111827; }
+.toeic-room .room-check-ok { -fx-text-fill: #16a34a; -fx-font-weight: 700; }
+.toeic-room .room-check-wait { -fx-text-fill: #d97706; -fx-font-weight: 700; }
+.toeic-room .room-check-bad { -fx-text-fill: #dc2626; -fx-font-weight: 700; }
+.toeic-room .room-visual-cover { -fx-background-color: #f6f7f9; -fx-background-radius: 0; }
+.toeic-room .room-audio-panel { -fx-background-color: #ffffff; -fx-padding: 12; }

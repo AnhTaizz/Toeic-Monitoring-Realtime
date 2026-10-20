@@ -271,6 +271,7 @@ class ExamControllerTest {
             BearerAuthenticationFilter.class,
             ExamValidationService.class,
             ExamService.class,
+            vn.edu.toeic.server.exam.rich.V2SessionPolicy.class,
             ExamController.class
     })
     static class ExamTestFixture {

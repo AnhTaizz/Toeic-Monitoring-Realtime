@@ -888,7 +888,6 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 
 Đọc CIM projection/classification, tracker, parser, timeout/output/child/pipe cleanup và source receipt. Tự chạy35tests/0SKIP/JAR trên aa260ef, MSFT READY0/Win32 UNKNOWN trên STANDARD, child0/readers true; không hardware hotplug. Hòa main chỉ docs/shared tests, probe source/scripts không đổi, public7hash giữ nguyên. User cho phép merge spike nếu CI HEAD cuối đạt; không ADR-V2-05 approval, physical0/12NOT_RUN, không integration/observer/retention/FULL gate changes.
 
-
 ## 20/10/2026 · Codex · review kỹ thuật C và merge theo ủy quyền user
 
 - Đã đọc/check GitHub/head/base/diff/CI/source cho70–74, không audit lại toànT1–T4. Bảo vệbranch main không enabled, rulesets rỗng; protection endpoint403, không bypass hoặc GitHub APPROVE. Merge commit70e0ef252/712595106/72a636e2a/7346869eb; xác minh tree exact testedHEAD, giữbranches/rootmainf98a37f.
@@ -900,6 +899,54 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 ## 20/10/2026 · Codex · kit main tích hợp, không chờ USB
 
 Từ main a6fba311/worktree riêng, tái hiện builder cũ từ chối runtime mới; thêm BuildFromHead package/pins bản xuất và SkipArchive, regression MOCK và CI script checks. Main mới không lấy spike cũ làm nguồn. Mở rộng H01–H12 và runbook TEST GUI/LAN, phân loại đủ41cases. Mới chạy35USB/65consumer/33kit PASS, Windows MSFT READY0/Win32 UNKNOWN/cleanup/cap/no-overwrite; invocation Maven đầu sai quoting giữ log, chưa chạy test rồi sửa command. Không DB/server/.env/production runtime/hardware. [Report](../evidence/c-integrated-kit-20261020/REPORT.md) sẽ ghi source build/receipt/CI/PR đúng HEAD. User cho phép review/merge commit nếu đủ điều kiện, giữ nhánh; không human approval/gate/DONE, physicalUSB0/12/LAN0/41/Bpending. Bước sau C/B GUI FULL lifecycle với TEST scope do A cấp, chưa thực hiện trong task này.
+## 2026-10-19 · A / Codex · EX-03 rich importer
+
+- Đã làm: branch/worktree riêng từ main3bdefe6 (CI đúng merge SUCCESS); strict POST v2 import200Q/7Part,11records/7enums, media bytes verification/recheck, sourceRef→RETURNING IDs, audio_file bridge, atomic transaction/deferred FK/create-only409; v1 create rich409. V14 vì PR74 đã dùngV13; không sửa V1–V12/monitoring/JavaFX/Listening hoặc seed ETS.
+- Commit: c16b617 importer; d3b0c19 corrective DB-clock test + read-back;9244321 chặn credential query aliases và NUL/surrogate. Workspace gốc và dirty tracked files giữ nguyên.
+- Đã kiểm: source9244321, run ex03-20261019T154906Z-34c16188, clean verify1104total=1098PASS/6SKIP/0FAIL/ERROR;114case mới PASS, PostgreSQL18.1/Flyway/Spring HTTP thật, fixtureMOCK tự soạn. Fresh/upgrade/preservation/200Q/documents/54audio/source mapping/roles/negative/race/rollback/v1/scoring PASS; junction Windows thật PASS;3JAR có receipt,0schema còn lại/clusterstop0.
+- Lịch sử âm giữ riêng:11ERROR helper thiếu examId trong asset path;1FAIL legacy test so DB/JVM lệch5ms;9FAIL mới trước sửa secret aliases/Unicode. [Report/evidence và6SKIP](EX03_RICH_IMPORTER_VERIFICATION.md) phân biệt từng source/run, không lấy PASS cũ thay source mới. GUI/hearing/LAN/máy2/dataset production NOT RUN.
+- Còn dở: READY_FOR_REVIEW, không tự merge/human signoff/DONE/hours. C/B review schema/auth/transaction/shared DTO; A/C phối hợp V13/V14 trước merge/deploy. EX05 image delivery/allowlist, EX07 session/visual/START, EX06 renderer/bridge/visible gate và EX01/08 media/quyền/keys thật còn riêng.
+- Tiếp theo: push nhánh/mở PR EX03 và đọc CI đúng HEAD theo task; giữ main ổn định, không merge trong lượt này.
+
+## EX05 — checkpoint triển khai, 19/10/2026
+
+19/10/2026 — EX05 đang triển khai trên stack EX03: resolver verified bytes, Part1 canonical manifest và image route fail-closed khi thiếu EX07 authority. [Checkpoint](EX05_AUTHENTICATED_IMAGES.md). Main/PR75 chưa merge; V13/V14 MERGE BLOCKED. Targeted PG/HTTP đang chạy; không EX05/FE DONE, không sửa tracker/hours.
+
+Unit focused ghi25case RichImageTest PASS; lượt PG mới/chính xác source đang chạy, không kế thừa PASS từ EX03. GUI/LAN/hearing NOT RUN.
+
+## EX05 — clean verify20/10/2026
+
+Source05cc694 clean verify1127PASS/6SKIP/0FAIL/0ERROR, PG18.1/HTTP thật, đề MOCK tự soạn;0schema/clusterstop0. [Evidence](EX05_AUTHENTICATED_IMAGES.md).29caseEX05 mới PASS; V13 sau14 bịFlywaydefaultchặn thật. AuthorityEX07 còn thiếu, image route fail-closed; GUI_PHYSICAL_NOT_RUN/hearing/LAN NOT RUN; MERGE BLOCKED/PR75/V13coordination. Không tracker/hours/human signoff.
+
+## 2026-10-20 · A / Claude Code (cloud) · EX-07 resume
+
+- Khôi phục: WIP người dùng push `6226cce` trên `feat/ex07-rich-session-lifecycle-20261019` (từ EX-05 `05cc694`). Không reset/rebase/clean; WIP giữ nguyên trong lịch sử.
+- Đã làm (`f5df3af`): reorganize V2 chép PROCTORED_V2; restart xoay epoch/xóa READY ca SCHEDULED; timeout chỉ bỏ qua SCHEDULED; `toeic.visual.lease-ms`; fixture test đăng ký bean `V2SessionPolicy` (injection vẫn bắt buộc, fail-closed); test PG/HTTP `RichSessionLifecyclePostgresTest` 8 case.
+- Đã kiểm: PostgreSQL 16.15 container (không phải 18), JDK 21.0.12 Linux. Lifecycle 8/8 PASS, race 3 lượt PASS; `mvn clean verify` server 443/0 fail/4 skip, client 3 FAIL `ControlledProcessHarnessTest` có sẵn trên Linux. Lỗi trước sửa: WIP 38 ERROR (thiếu bean + thiếu `TOEIC_SEED_PASSWORD`). GUI/LAN/hearing NOT RUN.
+- Còn dở: thứ tự Flyway V13/V14/V15; chi phí verify toàn media mỗi ATTEST (owner quyết); WS disconnect hook; S08/S09/S10/S11/S15, V03/V04/V14–V20 NOT RUN. Không merge, không DONE/tracker/hours.
+- Tiếp theo: A/C review lock/transaction, B tích hợp EX-06 theo [EX07_SESSION_LIFECYCLE](EX07_SESSION_LIFECYCLE.md) §1.
+
+## 2026-10-20 · B / Claude Code (cloud) · EX-06 TOEIC Room JavaFX 7 Part
+
+- Đã làm: nhánh `feat/ex06-javafx-rich-renderer-20261020` từ EX-07 `93c7019`. Có `RichExamModel` (7 Part, bridge Listening §7.1), `RichExamApiClient` (chặn khóa scoring/provenance), `RichImageStore` (RAM, kiểm SHA/pixel), `VisiblePulseGate` (hai pulse thật), `ListeningPlayGate`, `RichExamView`, `RichLobbyPane`, `VisualReadyCoordinator`, `RichAttemptView`, `RichEntry` (probe preparation để chọn luồng V2 hay legacy), `toeic-room.css`. Có thêm script demo và ghi chú khoảng trống Zenlish→V2.
+- Commit theo checkpoint: `a25305d` (CP1), `ddc1dff` (CP2–3), `34e225f` (CP4); CP5 là E2E, tài liệu và chỉnh giao diện.
+- Đã kiểm: Linux/OpenJDK 21.0.12/Xvfb/PostgreSQL 16.15. Test rich 31/31 PASS, gồm E2E thật với server, PG và WS (3/3 lần). Lượt E2E: import MOCK 201 → lobby READY → START → 54 đoạn Listening phát xong → autosave được server xác nhận. Số liệu `mvn clean verify` ghi ở `KIEM_THU.md`. Lỗi gặp trước khi sửa: ConcurrentModification trong `RichImageStore.useScope`; ảnh tràn khung; các helper test duyệt node trùng. Ba lỗi đều đã sửa và giữ lại test tái hiện.
+- Còn dở: nghe thật, MSI/LAN/máy hai NOT RUN; âm thanh trong container dùng ALSA null. Chờ EX-07 review/merge và thứ tự Flyway; dữ liệu đề thật EX-01 chưa có. Không merge, không DONE.
+
+## 2026-10-20 · B (tích hợp) / Claude Code (cloud) · EX-06 + Proctor redesign + PROCTORED_V2
+
+- Đã làm: worktree riêng, nhánh `integrate/ex06-proctor-20261020` từ EX-06 `448f58e`, merge UI giám thị `1359dba` (`7c53613`, không xung đột). Launcher route PROCTOR → `ProctorRedesignView` (`5c8e4a4`). Panel V2 trong "Điều khiển ca": catalog có cursor, tạo ca, READY polling có giới hạn, START có xác nhận và retry cùng `requestId` (`f002bc1`). E2E thật và CSS tab (`182f5f9`), bằng chứng (`64b7c5f`). Script demo thêm `-ImportOnly`. Không đổi contract V1/V2, migration hay server.
+- Đã kiểm: Linux, OpenJDK 21.0.12.1, PG 16.15, Xvfb. Test V2 mới 25/25 PASS; E2E thật PASS 3/3 trên `182f5f9`, giám thị tạo ca và START bằng UI, thí sinh làm bài và nộp, kết quả 1/200 khớp key MOCK, các probe âm đúng. `mvn -fae clean verify` exit 1 (chi tiết ở `KIEM_THU.md`). Lỗi gặp trước khi sửa: thiếu locale UTF-8 khi chạy suite; nút mất dấu `_` do mnemonic; race trong chính test E2E (đọc UI trước khi render).
+- Còn dở: Windows runbook/MSI/LAN, PG18, nghe thật NOT RUN. Thứ tự Flyway V13↔V14/V15 chờ A/C chọn ([phương án](INTEGRATION_EX06_PROCTOR_20261020.md#6-audit-flyway-chỉ-đề-xuất--không-sửa-migration-không-bật-outoforder)). LT04 GUI legacy FAIL cả trên main trong môi trường Linux. Chưa review/merge, không DONE.
+- Tiếp theo: A review client↔EX-07, C review START/READY, B chạy runbook mục 5 trên Windows.
+
+## 2026-10-20 · Release (Agent 3) / Claude Code (cloud) · Review chuỗi V2 trước merge `main`
+
+- Đã làm: kiểm ancestry, PR #72/#74/#75/#76 và CI. Tạo PR stacked #77 (EX-05), #78 (EX-07), #79 (EX-06). Nhánh ứng viên `stabilize/v2-rich-main-candidate-20261020` gộp chuỗi với EX-05 docs `6c5065d` và `main` `e0ef252`; xung đột chỉ ở docs, giữ cả hai bên. Sửa test phụ thuộc thứ tự `RichAttemptE2eGuiTest` (`3f5a114`). Sửa regression `refreshScope` chạy ngoài FX thread, kèm test hồi quy (`56ea3e2`). Thêm release review và bản nháp handoff Agent 4.
+- Đã kiểm: PostgreSQL 18.1 thật cho 6 kịch bản Flyway và full verify. CI Windows success. Phân loại lỗi trong [release review](RELEASE_V2_MAIN_REVIEW_20261020.md) §5.
+- Còn dở: A/C chốt Flyway; review/approval của người cho 5 PR; giải xung đột docs #75/#78; Windows PG18 + GUI. Không merge `main`, không DONE, không ghi approval.
+- Tiếp theo: owner quyết §4 rồi merge theo checklist §3; acceptance trên `main`; cập nhật `EX01_DATA_PIPELINE_HANDOFF.md`.
+
 ## 20/10/2026 · Codex · FULL lifecycle local, desktop NOT_RUN theo user
 
 - Main5bbeaf2 sạch/worktree riêng, build main JAR/Java21/Maven3.9.15, native PG18.3 TEST/SCRAM/port động. Seeder và import/session API cấp candidate1/2/proctor1/assignment, TEST Reading và SYNTHETIC WAV theo fixture; không .env/DB dev/SQL ép transition.
@@ -907,3 +954,18 @@ Từ main a6fba311/worktree riêng, tái hiện builder cũ từ chối runtime 
 - ComputerUse native pipe unavailable sau retry/reset; đã chuẩn bị hai production JAR JVM riêng và nhóm thao tác ngắn. User chọn tiếp tục tự động/desktop NOT_RUN. Passive60sample UNSYNCED/seq0; hết cửa sổ240s dọn đúng hai app, không gọi force teardown là GUI Exit PASS.
 - Lượt extended49007cf FAIL executor assertion:4toeic-exam-http gồm fixture lazy workers; giữ log/dump.47caa50 đóng rõ API fixture trước assert, rerun cùng ca PASS; không sửa production expected/timeout.215unit regression PASS/0SKIP MOCK riêng, không cộng10checkpoints hoặc run lặp.
 - [Report/receipt](../evidence/c-full-lifecycle-20261020/REPORT.md):4run schema0/clusterstop0, Edgealive0, owned JVM/PGlistener0; raw/JAR/thread dumps/ảnh chưa lọc ignored, chỉ1ảnh Scene TEST đã rà công bố. FULLdefault/experimentOFF/USB0/12/LAN0/41/gate/humanpending, không DONE/ADR. Bước sau C không USB: desktop input/window-close khi helper hoặc người thao tác sẵn sàng, TEST/API tự dựng được; chưa thực hiện bước sau này.
+
+
+## 2026-10-20 · Release Integration Engineer · Hoàn tất nghiệm thu chuỗi V2 & tích hợp main
+
+- Worktree riêng \E:\Project\toeic-v2-release-integration\, branch elease/v2-main-integration-20261020\ (HEAD aa830b\).
+- Hợp nhất hoàn chỉnh nhánh QA Windows \qa/windows-v2-mon07-20261020\ (commit 8006f\) với \origin/main\ mới nhất (bbeaf2\ và sync 9954b\ PR #81).
+- Flyway V1–V15 áp dụng tuần tự không lỗi, 0 out-of-order, 0 checksum mismatch trên PostgreSQL 18.6 độc lập (cổng 55434).
+- Maven build & test: \mvn test\ BUILD SUCCESS 1264 tests (0 failures, 0 errors).
+- PostgreSQL 18.6 Integration: 159/159 tests PASS 100% (gồm 43/43 Flyway migration scenarios, 28/28 V2 rich/image/session, 70/70 runtime/audio/history bounds, 18/18 MON-07 signal pipeline & disabled check).
+- JavaFX GUI: 27/27 component tests PASS 100% (\RichExamViewGuiTest\, \ScoreResultDialogTest\, \ProctorRedesignGuiTest\, \ProctorV2SessionPaneGuiTest\).
+- Live Server E2E Full-Stack: 2/2 tests PASS 100% (\ProctorV2E2eGuiTest\, \RichAttemptE2eGuiTest\) trên server 18081 thật và PostgreSQL 18.6; xác minh trọn vẹn import V2, catalog, ca thi, negative probes, READY, START, autosave, submit và clean worker shutdown.
+- Windows PowerShell 5.1 demo script: \demo-ex06-v2.ps1\ exit code 0 cho cả \-ImportOnly\ và tạo ca PROCTORED_V2.
+- Bảo toàn tuyệt đối database sản xuất \	oeic-db\ (cổng 5433) và worktree khác. Nhánh \eat/ex01-html-pipeline-20261020\ của Agent 4 không bị đụng tới.
+- Push release integration branch lên remote: elease/v2-main-integration-20261020\ sẵn sàng merge vào main.
+- Trạng thái: **READY_FOR_AGENT4_BACKEND**.

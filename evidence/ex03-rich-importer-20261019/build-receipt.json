@@ -1,0 +1,23 @@
+{
+    "launchPackagedGui":  "NOT RUN",
+    "codeSource":  "9244321692e348cfafcb2e85afe963398477b5e4",
+    "runId":  "ex03-20261019T154906Z-34c16188",
+    "jars":  [
+                 {
+                     "sha256":  "41bb1d526d55626831c7dc37f2ff47c794929a9c9b06bf6054abe3fe942d4d9f",
+                     "file":  "protocol/target/protocol-0.1.0-SNAPSHOT.jar",
+                     "bytes":  116453
+                 },
+                 {
+                     "sha256":  "42860368b6eff282502fdf80ccc3837532b63096950b0c50d1a499d28e1c8732",
+                     "file":  "client/target/client-0.1.0-SNAPSHOT-all.jar",
+                     "bytes":  11478188
+                 },
+                 {
+                     "sha256":  "0aeaa69c9624072359ba8ca1bddba642dab7f3b70c405850ecb68eb0e4da1b99",
+                     "file":  "server/target/server-0.1.0-SNAPSHOT.jar",
+                     "bytes":  25327083,
+                     "ex03EntriesVerified":  true
+                 }
+             ]
+}
