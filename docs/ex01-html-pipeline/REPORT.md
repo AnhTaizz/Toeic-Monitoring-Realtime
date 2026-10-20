@@ -62,7 +62,7 @@ Mỗi đề còn các blocker trong quality report:
 
 Snapshot Test01 được commit tại [data/seedingTest/generated/ex01/ets2026_test01](../../data/seedingTest/generated/ex01/ets2026_test01/): normalized, draft V2, media/download manifest, quality và blocked report. Output đầy đủ Test01–04 ở `tools/exam-dataset/target/output/`, sinh lại từ script. Manifest media cả4 đề và summary được lưu trong thư mục báo cáo; binary media không commit dù người dùng đã xác nhận quyền công bố.
 
-[artifacts-sha256.json](artifacts-sha256.json) lưu checksum/size các artifacts bàn giao. Seed/script PowerShell cũ được giữ nguyên để đối chiếu, không biến seed cũ thành import-ready.
+[artifacts-sha256.json](artifacts-sha256.json) lưu checksum/size các artifacts bàn giao. Gitattributes pin manifest đầu vào và JSON artifacts theo LF, giữ nguyên bytes log contract để checksum không đổi qua Windows/WSL. Seed/script PowerShell cũ được giữ nguyên để đối chiếu, không biến seed cũ thành import-ready.
 
 ## 5. Kiểm thử đã chạy
 

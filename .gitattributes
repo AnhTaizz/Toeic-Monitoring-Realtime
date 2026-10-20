@@ -110,3 +110,9 @@ docs/plan-v2/fixtures/ex02/assets/source.txt -text
 docs/plan-v2/fixtures/ex02/import.mock.json text eol=lf
 docs/plan-v2/fixtures/ex02/candidate.mock.json text eol=lf
 docs/EX02_RICH_EXAM_CONTRACT_V1.md text eol=lf
+
+# EX01 metadata checksums must survive Windows/WSL checkout unchanged.
+data/seedingTest/manifest.json text eol=lf
+data/seedingTest/generated/ex01/** text eol=lf
+docs/ex01-html-pipeline/** text eol=lf
+docs/ex01-html-pipeline/contract-probe.log -text -eol whitespace=cr-at-eol
