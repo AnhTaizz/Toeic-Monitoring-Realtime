@@ -1048,3 +1048,20 @@ không flush; giữ local count/time theo RAM, không hứa sống qua crash hay
 Server dùng strict DTO và transaction/auth/canonical/history cũ cho cả tám type, không
 MONITOR_SIGNAL push. V17 append-only chỉ mở mapping constraints; OFF vẫn apply Flyway
 nhưng không service/capability/history/WS runtime lane. Chưa nối observer production.
+
+### USB integrated explicit TEST — 21/10/2026
+
+[Runner một lệnh](USB_INTEGRATED_TEST_DEMO.md) nối CimSnapshotSource hiện có qua
+UsbSnapshotProjection (test-scope) vào UsbScanCoordinator ở client. Không wire type/
+field/endpoint/migration/dependency mới; metadata/reset/baseline/delivery/auth/COMMIT/
+history như trên. Seeder + HTTP login/import/create-session API tạo scope TEST, fresh
+me/capability/scoped heartbeat trước source start. Observer run ID trùng lease collector
+ID đã confirm theo transport hiện tại. Reconnect/stop/revoke invalidate coordinator,
+không resume query/snapshot cũ. Source owns process/readers, coordinator owns scan/control
+workers và USB/status adapters; context/delivery/lease/socket do runner owner đóng.
+
+REAL MSFT15s STANDARD đã có10scan READY0: chỉ1OBSERVER_STATUS READY/INITIAL COMPLETE
+COMMIT/ACK/history,0USBevent; count0 chỉ là local observed storage count, không được
+encode PRESENT0 và không phải attestation máy không thiết bị. File-stop REAL được
+ghi CANCELLED/pipelineVerified=false; hardware0/12NOT_RUN, ADR/policy/gates pending.
+Provider/bridge chỉ test classpath, không gắn CandidateExamSignalMonitoring production.

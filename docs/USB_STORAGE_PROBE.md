@@ -1,5 +1,16 @@
 # MON-02 — Probe USB storage độc lập trên Windows
 
+## Luồng tích hợp TEST một lệnh — 21/10/2026
+
+[USB integrated demo](USB_INTEGRATED_TEST_DEMO.md) đã nối provider CIM hiện có → snapshot
+→ coordinator/USB adapter/status emitter → shared lane → server/PG TEST → COMMIT/ACK/
+HTTP history. Chạy `.\scripts\demo-usb-integrated.ps1 -Mode Real -ReadUsbStorage` ở root;
+không `.env`/DB dev/observer production. Actual MSFT15s STANDARD:10scan READY0,1READY
+status committed/ACK/readback,0USBevent, cleanup0children/readers+workers stopped/0schema/
+PGstop0. Không hotplug, physical0/12NOT_RUN, ADR/gates/ownerpending. Bridge TEST-only,
+probe CLI và các runbook độc lập dưới đây giữ nguyên; “NOT INTEGRATED” bên dưới là
+phạm vi lịch sử spike/kit, không mô tả lượt integrated TEST mới.
+
 ## Adapter MOCK → MON-07, 20/10/2026
 
 [Adapter experiment](MON02_USB_ADAPTER_EXPERIMENT.md) chuyển snapshot đã phân loại sang
