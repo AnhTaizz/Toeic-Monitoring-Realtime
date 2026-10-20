@@ -1,5 +1,13 @@
 # Trạng thái kiểm thử
 
+20/10/2026 — [Lifecycle FULL mới](../evidence/c-full-lifecycle-20261020/REPORT.md), [receipt](../evidence/c-full-lifecycle-20261020/receipt.json): runtime5bbeaf2/scenario47caa50,
+6nhóm A–F/10checkpoints programmatic production Application +REAL PG/HTTP/WS PASS; owned
+Edge PID/start/state/history/dashboard khớp; Stop/Logout/Submit/timeout tự nhiên/app-stop
+worker0, dump cuối0toeic-threads.215JUnitPASS/0SKIP MOCK bổ sung, không cộng checkpoints vào
+JUnit hoặc tính run lặp như test mới. Test ownership49007cf FAIL vì API fixture lazy worker,
+47caa50 đóng fixture trước assert rồiPASS; rawFAIL giữ. Native desktop NOT_RUN theo user,
+không human/two-machine/USB/audio nghe PASS; cả4run schema0/clusterstop0, owned JVM/listener0.
+
 20/10/2026 — [Lượt kit main a6fba311](../evidence/c-integrated-kit-20261020/REPORT.md): mới tự chạy
 35USB +65consumer PASS/0SKIP (hai suite khác nhau),33kit script checks PASS; provider thật
 MSFT READY0/Win32 UNKNOWN, children0/readers true, cap4/exit5 và no-overwrite exit3/hash giữ.

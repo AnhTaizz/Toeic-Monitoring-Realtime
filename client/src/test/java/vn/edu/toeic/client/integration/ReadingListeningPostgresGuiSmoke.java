@@ -30,6 +30,7 @@ public final class ReadingListeningPostgresGuiSmoke {
     private final Gson json = new Gson();
     private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(3)).build();
     private Process server;
+    private Process lifecycleEdge;
     private int port, passed;
     private String origin, candidateToken, proctorToken;
     private Stage candidateStage, proctorStage;
@@ -75,7 +76,9 @@ public final class ReadingListeningPostgresGuiSmoke {
         proctorApi.createSession(session(readingSession, "GUI-READING-" + run)).get(20, TimeUnit.SECONDS);
         proctorApi.createSession(session(listeningSession, "GUI-MIXED-" + run)).get(20, TimeUnit.SECONDS);
         CompletableFuture<Void> started = new CompletableFuture<>();
+        if(Boolean.getBoolean("integration.manualDesktop")){manualDesktop();return;}
         Platform.startup(() -> { Platform.setImplicitExit(false); started.complete(null); }); started.get(20, TimeUnit.SECONDS);
+        if (Boolean.getBoolean("integration.fullLifecycle")) { fullLifecycle(readingSession, reading); return; }
         candidateApp = fx(ToeicClientApplication::new); candidateStage = fx(Stage::new);
         fx(() -> { candidateApp.start(candidateStage); return null; }); login(candidateStage, "candidate1");
         enter(reading); clickId(candidateStage, "option-R1-A");
@@ -177,6 +180,178 @@ public final class ReadingListeningPostgresGuiSmoke {
         Files.writeString(output.resolve("result.json"), json.toJson(result));
     }
 
+    /** Production Application + JAR, programmatic FX controls; NOT desktop input or human acceptance. */
+    private void fullLifecycle(String readingSession, String reading) throws Exception {
+        Set<Long> fixtureThreads=Thread.getAllStackTraces().keySet().stream().map(Thread::threadId).collect(java.util.stream.Collectors.toSet());
+        proctorApp=fx(ToeicClientApplication::new); proctorStage=fx(Stage::new);
+        fx(()->{proctorApp.start(proctorStage);return null;}); login(proctorStage,"proctor1");
+        until(()->fx(()->proctorStage.getScene().lookup("#dashboard-roster")!=null),"Proctor dashboard");
+        check(monitoringThreads().isEmpty(),"Proctor never creates candidate monitoring workers");
+        candidateApp=fx(ToeicClientApplication::new); candidateStage=fx(Stage::new);
+        fx(()->{candidateApp.start(candidateStage);return null;}); login(candidateStage,"candidate1");
+        selectAttempt(reading); clickText(candidateStage,"Bắt đầu giám sát");
+        until(()->state(reading).get("status").getAsString().equals("SYNCED"),"First FULL snapshot");
+        until(()->fx(()->candidateStage.getScene().getRoot().lookupAll(".label").stream()
+                .filter(Label.class::isInstance).map(Label.class::cast).anyMatch(l->l.getText().contains("Chế độ FULL"))),"FULL GUI mode");
+        check(monitoringThreads().size()==3,"One collector/delivery/full worker");
+        Path edge=Path.of(System.getenv("ProgramFiles(x86)"),"Microsoft/Edge/Application/msedge.exe");
+        check(Files.isRegularFile(edge),"Owned Edge TEST executable available");
+        lifecycleEdge=new ProcessBuilder(edge.toString(),"--headless=new","--disable-gpu","--no-first-run",
+                "--no-default-browser-check","--disable-background-networking","--remote-debugging-port=0",
+                "--user-data-dir="+output.resolve("owned-edge-profile"),"about:blank")
+                .redirectOutput(ProcessBuilder.Redirect.DISCARD).redirectError(ProcessBuilder.Redirect.DISCARD).start();
+        until(()->state(reading).getAsJsonArray("processes").asList().stream().anyMatch(p->
+                p.getAsJsonObject().get("pid").getAsLong()==lifecycleEdge.pid()
+                && p.getAsJsonObject().get("startInstant").getAsString().equals(lifecycleEdge.info().startInstant().orElseThrow().toString())),
+                "FULL PID/start matches independently owned ProcessHandle");
+        until(()->response("/api/v1/monitoring/attempts/"+reading+"/events",proctorToken,null)
+                .getAsJsonArray("events").asList().stream().anyMatch(e->e.getAsJsonObject().get("processName").getAsString().equals("msedge.exe")),
+                "Durable process history via assigned proctor API");
+        until(()->fx(()->((TableView<?>)proctorStage.getScene().lookup("#dashboard-roster")).getItems().stream()
+                .anyMatch(p->p instanceof vn.edu.toeic.client.dashboard.MonitoringData.Presence row&&row.attemptId().equals(reading))),"Proctor rendered assigned attempt");
+        fx(()->{var table=(TableView<?>)proctorStage.getScene().lookup("#dashboard-roster");
+            for(int i=0;i<table.getItems().size();i++)if(table.getItems().get(i) instanceof vn.edu.toeic.client.dashboard.MonitoringData.Presence row
+                    &&row.attemptId().equals(reading)){table.getSelectionModel().select(i);break;}return null;});
+        until(()->fx(()->((TableView<?>)proctorStage.getScene().lookup("#dashboard-current-processes")).getItems().stream()
+                .anyMatch(p->p instanceof vn.edu.toeic.protocol.monitoring.FullSnapshotPayload.Process row&&row.pid()==lifecycleEdge.pid())),"Proctor current process table");
+        selectProctorTab("Cảnh báo process");
+        until(()->fx(()->((TableView<?>)proctorStage.getScene().lookup("#dashboard-events")).getItems().stream()
+                .anyMatch(p->p instanceof vn.edu.toeic.client.dashboard.MonitoringData.Event row
+                    &&row.attemptId().equals(reading)&&row.processName().equals("msedge.exe"))),"Proctor history table");
+        screenshot(proctorStage,"A-proctor-history.private.png");
+        JsonObject first=state(reading); lifecyclePoint("A-login-start","PASS",first);
+
+        Set<Long> oldWorkers=monitoringThreads();
+        clickText(candidateStage,"Dừng giám sát");
+        until(()->monitoringThreads().isEmpty(),"Stop completes all monitoring workers");
+        JsonObject stopped=state(reading); lifecyclePoint("B-stop","PASS",stopped);
+        // CLOSE state and heartbeat timeout are separate contracts; do not require immediate UNKNOWN.
+        clickText(candidateStage,"Bắt đầu giám sát");
+        until(()->state(reading).get("status").getAsString().equals("SYNCED")
+                && !state(reading).get("syncEpoch").equals(first.get("syncEpoch")),"Fresh epoch after restart");
+        check(Collections.disjoint(oldWorkers,monitoringThreads())&&monitoringThreads().size()==3,"No old or overlapping monitoring worker");
+        lifecyclePoint("B-restart","PASS",state(reading));
+
+        clickText(candidateStage,"Đăng xuất");
+        until(()->monitoringThreads().isEmpty(),"Logout worker cleanup");
+        until(()->fx(()->!candidateStage.getScene().getRoot().lookupAll(".password-field").isEmpty()),"Logout login screen");
+        login(candidateStage,"candidate2");
+        String secondSession="GUI-C2-"+run;
+        proctorApi.createSession(new CreateSessionRequest(secondSession,"GUI-READING-"+run,"TEST second candidate",600,
+                List.of("proctor1"),List.of("candidate2"))).get(20,TimeUnit.SECONDS);
+        clickText(candidateStage,"🔄 Làm mới danh sách ca thi");
+        until(()->fx(()->((ComboBox<?>)candidateStage.getScene().lookup("#candidate-attempts")).getItems()
+                .contains(secondSession+"-candidate2")),"Fresh candidate2 scope");
+        selectAttempt(secondSession+"-candidate2"); clickText(candidateStage,"Bắt đầu giám sát");
+        until(()->state(secondSession+"-candidate2").get("status").getAsString().equals("SYNCED"),"Candidate2 FULL state");
+        check(!state(secondSession+"-candidate2").get("collectorSessionId").equals(first.get("collectorSessionId")),"Cross-account collector identity isolation");
+        lifecyclePoint("C-other-account","PASS",state(secondSession+"-candidate2"));
+        clickText(candidateStage,"Đăng xuất"); until(()->monitoringThreads().isEmpty(),"Candidate2 logout cleanup");
+        login(candidateStage,"candidate1"); selectAttempt(reading);
+        clickId(candidateStage,"candidate-enter-exam");
+        until(()->enabled(candidateStage,"exam-submit"),"Real exam entry");
+        until(()->state(reading).get("status").getAsString().equals("SYNCED"),"Exam monitoring active");
+        lifecyclePoint("D-before-submit","PASS",state(reading));
+        Platform.runLater(()->((Button)candidateStage.getScene().lookup("#exam-submit")).fire());
+        until(ReadingListeningPostgresGuiSmoke::confirmSubmit,"Real submit confirmation");
+        until(()->"SUBMITTED".equals(status(reading).state()),"Real HTTP submit COMMIT");
+        until(()->monitoringThreads().isEmpty(),"Final submit monitoring workers stopped");
+        lifecyclePoint("D-submitted","PASS",null);
+        closeResult();
+        until(()->fx(()->candidateStage.getScene().lookup("#candidate-attempts")!=null),"Portal after result");
+
+        String timeoutSession="GUI-T-"+run, timed=timeoutSession+"-candidate1";
+        proctorApi.createSession(new CreateSessionRequest(timeoutSession,"GUI-READING-"+run,"TEST natural deadline",8,
+                List.of("proctor1"),List.of("candidate1"))).get(20,TimeUnit.SECONDS);
+        clickText(candidateStage,"🔄 Làm mới danh sách ca thi");
+        until(()->fx(()->((ComboBox<?>)candidateStage.getScene().lookup("#candidate-attempts")).getItems().contains(timed)),"Short attempt assigned");
+        selectAttempt(timed); clickId(candidateStage,"candidate-enter-exam");
+        until(()->enabled(candidateStage,"exam-submit"),"Short exam entered");
+        until(()->state(timed).get("status").getAsString().equals("SYNCED"),"Short exam FULL baseline");
+        lifecyclePoint("E-before-deadline","PASS",state(timed));
+        until(()->"TIMED_OUT".equals(status(timed).state()),"Server natural timeout without SQL transitions");
+        until(()->monitoringThreads().isEmpty(),"Natural timeout monitoring worker cleanup");
+        lifecyclePoint("E-timed-out","PASS",null); closeResult();
+        until(()->fx(()->candidateStage.getScene().lookup("#candidate-attempts")!=null),"Portal after timeout");
+
+        selectAttempt("GUI-L-"+run+"-candidate1"); clickText(candidateStage,"Bắt đầu giám sát");
+        until(()->monitoringThreads().size()==3,"Active monitoring before app stop");
+        lifecyclePoint("F-before-exit","PASS",null);
+        // Fixture APIs can lazily create identically named workers after the initial census.
+        // Close these owned test resources before asserting application executor cleanup.
+        candidateApi.close(); proctorApi.close();
+        fx(()->{candidateApp.stop();candidateStage.close();proctorApp.stop();proctorStage.close();return null;});
+        until(()->monitoringThreads().isEmpty(),"Application.stop cleanup");
+        until(()->Thread.getAllStackTraces().keySet().stream().noneMatch(t->t.isAlive()
+                &&t.getName().startsWith("toeic-")&&!fixtureThreads.contains(t.threadId())),"Owned application executors terminate");
+        check(!fx(()->candidateStage.isShowing()||proctorStage.isShowing()),"Both stages closed");
+        lifecyclePoint("F-application-stop","PASS",null);
+        pass("FULL lifecycle A-F: production Application controls, REAL HTTP/WS/PG; desktop/human NOT RUN");
+    }
+    private void selectAttempt(String attempt)throws Exception {
+        until(()->fx(()->candidateStage.getScene().lookup("#candidate-attempts") instanceof ComboBox<?> box
+                && !box.isDisabled()&&box.getItems().contains(attempt)),"Selectable assigned attempt");
+        fx(()->{((ComboBox<String>)candidateStage.getScene().lookup("#candidate-attempts")).setValue(attempt);return null;});
+    }
+    private void manualDesktop()throws Exception {
+        Path jar=Path.of("client/target/client-0.1.0-SNAPSHOT-all.jar").toAbsolutePath();
+        List<Process> apps=new ArrayList<>();
+        try {
+            for(String role:List.of("candidate","proctor"))apps.add(new ProcessBuilder(
+                    Path.of(System.getProperty("java.home"),"bin","javaw.exe").toString(),
+                    "-Dtoeic.server.url="+origin,"-Dtoeic.realtime.delta-experimental=false",
+                    "-Duser.home="+output.resolve(role+"-profile"),"-jar",jar.toString())
+                    .redirectOutput(output.resolve(role+".private.log").toFile())
+                    .redirectError(output.resolve(role+".private.err").toFile()).start());
+            Files.writeString(output.resolve("manual-credentials.private.txt"),"TEST loopback only\nServer: "+origin
+                    +"\nCandidate: candidate1\nProctor: proctor1\nPassword: "+required("TOEIC_SEED_PASSWORD")
+                    +"\nUse GUI-R-"+run+"-candidate1 for FULL lifecycle. No real credentials.\n");
+            JsonObject ready=new JsonObject();ready.addProperty("candidatePid",apps.get(0).pid());
+            ready.addProperty("proctorPid",apps.get(1).pid());ready.addProperty("serverPid",server.pid());
+            ready.addProperty("source",System.getProperty("integration.runtimeSource","UNVERSIONED"));
+            ready.addProperty("desktopAcceptance","NOT_RUN until human action and API/worker evidence");
+            Files.writeString(output.resolve("manual-ready.json"),json.toJson(ready));
+            long end=System.nanoTime()+TimeUnit.SECONDS.toNanos(240);
+            while(System.nanoTime()<end&&!Files.exists(output.resolve("manual-done.flag"))
+                    &&apps.stream().anyMatch(Process::isAlive))Thread.sleep(200);
+            ready.addProperty("candidateExitedBeforeTeardown",!apps.get(0).isAlive());
+            ready.addProperty("proctorExitedBeforeTeardown",!apps.get(1).isAlive());
+            Files.writeString(output.resolve("manual-end.json"),json.toJson(ready));
+        } finally {
+            for(Process app:apps)if(app.isAlive()){app.destroy();if(!app.waitFor(5,TimeUnit.SECONDS)){app.destroyForcibly();app.waitFor(5,TimeUnit.SECONDS);}}
+            Files.writeString(output.resolve("manual-cleanup.json"),"{\"ownedAppsAlive\":"+apps.stream().filter(Process::isAlive).count()+"}");
+        }
+    }
+    private void closeResult()throws Exception {
+        until(()->fx(()->{for(Window w:List.copyOf(Window.getWindows()))
+            if(w instanceof Stage stage && stage!=candidateStage&&stage!=proctorStage&&stage.getScene()!=null) {
+                for(var node:stage.getScene().getRoot().lookupAll(".button"))if(node instanceof Button b
+                    && b.getText().equals("Hoàn Tất & Thoát")&&!b.isDisabled()){b.fire();return true;}
+            }return false;}),"Result dialog closed");
+    }
+    private JsonObject state(String attempt)throws Exception {
+        return response("/api/v1/monitoring/attempts/"+attempt+"/state",proctorToken,null);
+    }
+    private static Set<Long> monitoringThreads() {
+        Set<Long> ids=new HashSet<>();
+        for(Thread t:Thread.getAllStackTraces().keySet())if(t.isAlive()&&Set.of("toeic-process-collector","toeic-monitoring-delivery","toeic-full-snapshot").contains(t.getName()))ids.add(t.threadId());
+        return ids;
+    }
+    private void lifecyclePoint(String id,String status,JsonObject state)throws Exception {
+        JsonObject point=new JsonObject(); point.addProperty("case",id); point.addProperty("status",status);
+        point.addProperty("input","PROGRAMMATIC production controls; desktop/human NOT_RUN");
+        point.addProperty("at",Instant.now().toString()); point.addProperty("ownedJvmPid",ProcessHandle.current().pid());
+        point.addProperty("monitoringWorkers",monitoringThreads().size());
+        if(state!=null){point.addProperty("state",state.get("status").getAsString());point.add("sequence",state.get("sequence"));}
+        Files.writeString(output.resolve(id+".json"),json.toJson(point));
+        if(candidateStage!=null&&fx(()->candidateStage.isShowing()))screenshot(candidateStage,id+".private.png");
+        Process dump=new ProcessBuilder(Path.of(System.getProperty("java.home"),"bin","jcmd.exe").toString(),
+                Long.toString(ProcessHandle.current().pid()),"Thread.print").redirectErrorStream(true)
+                .redirectOutput(output.resolve(id+".threads.private.txt").toFile()).start();
+        if(!dump.waitFor(10,TimeUnit.SECONDS)){dump.destroyForcibly();throw new IllegalStateException("Owned jcmd timeout");}
+        check(dump.exitValue()==0,"Owned jcmd exit"); System.out.println("LIFECYCLE "+json.toJson(point));
+    }
+
     private static void ensureVisible(Stage stage,String id)throws Exception {
         fx(()->{
             var node=stage.getScene().lookup("#"+id);if(node==null)throw new IllegalStateException("Missing control "+id);
@@ -241,7 +416,8 @@ public final class ReadingListeningPostgresGuiSmoke {
         var process = new ProcessBuilder(Path.of(System.getProperty("java.home"), "bin", "java.exe").toString(), "-jar", "server/target/server-0.1.0-SNAPSHOT.jar",
                 "--server.address=127.0.0.1", "--server.port=" + port,
                 "--spring.datasource.url=jdbc:postgresql://" + required("DB_HOST") + ":" + required("DB_PORT") + "/" + required("DB_NAME") + "?currentSchema=" + schema,
-                "--spring.flyway.default-schema=" + schema, "--spring.flyway.schemas=" + schema, "--logging.level.root=WARN", "--toeic.audio.root=" + audioRoot);
+                "--spring.flyway.default-schema=" + schema, "--spring.flyway.schemas=" + schema, "--logging.level.root=WARN", "--toeic.audio.root=" + audioRoot,
+                "--toeic.state.delta-enabled=false","--toeic.monitoring.signal-experiment-enabled=false");
         server = process.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.appendTo(output.resolve("owned-server.log").toFile())).start();
         until(() -> {
             if (!server.isAlive()) throw new IllegalStateException("Owned server exited");
@@ -283,6 +459,12 @@ public final class ReadingListeningPostgresGuiSmoke {
     }
     private static String required(String key) { String value = System.getenv(key); if (value == null || value.isBlank()) throw new IllegalStateException("Missing environment " + key); return value; }
     private void cleanup() {
+        if(lifecycleEdge!=null){
+            List<ProcessHandle> owned=new ArrayList<>(lifecycleEdge.descendants().toList());owned.add(lifecycleEdge.toHandle());
+            for(ProcessHandle process:owned)if(process.isAlive())process.destroy();
+            for(ProcessHandle process:owned)try{process.onExit().get(5,TimeUnit.SECONDS);}catch(Exception pending){process.destroyForcibly();}
+            System.out.println("CLEANUP owned Edge alive="+owned.stream().filter(ProcessHandle::isAlive).count());
+        }
         try { fx(() -> { if (candidateApp != null) candidateApp.stop(); if (proctorApp != null) proctorApp.stop(); for (Window window : List.copyOf(Window.getWindows())) window.hide(); return null; }); } catch (Exception ignored) { }
         if (candidateApi != null) candidateApi.close(); if (proctorApi != null) proctorApi.close();
         try { stopServer(); } catch (Exception ignored) { }
