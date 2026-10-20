@@ -624,3 +624,10 @@ ADR giữ S01–S16, cập nhật image expectations và thêm V01–V20. Target
 ## EX-01 — 20/10/2026, pipeline offline
 
 Sourcee73e325: Maven độc lập `tools/exam-dataset/pom.xml`,47tests PASS/0FAIL/0ERROR/0SKIP (10DOM/8localMedia/10download/19pipeline). Có mutation negatives và HTTP/mediaMOCK; [summary](ex01-html-pipeline/tests-summary.json). Tải Zenlish thật358asset/216PCMdecode/142ảnh; lượt offline toàn bộ receipt/hash/decode verified. Cả4draft đúng shapeDTO EX06 và bị validator thật reject vì nguồn UNVERIFIED. [Report](ex01-html-pipeline/REPORT.md). PostgreSQL/import/catalog/JavaFX/hearing/LAN NOT RUN; chưa nghiệm thu EX01/EX08, không thay kết quả cũ.
+
+
+## EX-01 recovery/backup — 20/10/2026
+
+Source1b2bccf: [64tests](ex01-html-pipeline/recovery/tests-summary.json) PASS/0FAIL/0ERROR/0SKIP (47baseline+12recovery+5archive), [raw](ex01-html-pipeline/recovery/tests-final.log). Recovery negatives: VN có/không dấu, nhãn đảo, teacher/gloss, missing/conflict, transcript P1/2; join key/document mismatch; baseline group nonconsecutive/document invariants giữ. DTO graph1608records/schema2 PASS, actual validator rejectUNVERIFIED đúng gate. Test01 chỉ178/676option texts sourceexact,495missing+3review;0human key/document verified.
+
+[Archive verify/restore](ex01-html-pipeline/recovery/archive-summary.json)4dataset/800Q,358media/189902302bytes,757files size/SHA khớp sau restore ngoài Git, không website. [Real MOCK PostgreSQL18.1 roundtrip](ex01-html-pipeline/recovery/mock-roundtrip-report.json): V2 import201, source+restored catalog selectable,200Q/775options/76groups/57media/286blocks/scoringkeys fingerprints khớp, media backup ngoài Git và restored roots khác57/57hash.5negative script checks refused/target không đổi; owned server/cluster đã stop. Không schema/Flyway/client/media API edits. ETS HTTP/PG acceptance BLOCKED, GUI/hearing/LAN NOT RUN; kết quả47baseline trước đây là lịch sử, không sửa.

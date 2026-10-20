@@ -354,3 +354,10 @@ Nguồn: yêu cầu trong phiên cho phép mục11.1 PR72 tại c9a5829, D07-01�
 ## EX-01 — Lựa chọn triển khai công cụ offline, 20/10/2026
 
 Pipeline Java21 độc lập dùng jsoup DOM/Gson và JLayer để decodeMP3 offline; không thêm dependency vào server/client. Giữ review explanation tách khỏi options; Part1/2 chỉ nhãn, không transcript. Group singleton lấy từ article/audio thật; document Part6/7 không suy boundary từ ảnh khi chưa review. Media ETL chỉ URL public đã có xác nhận quyền, receipt pin checksum, không auth/redirect/hotlink hoặc binary Git; sourceURL chỉ provenance. Không đổi contract/Flyway/START/monitoring; A/B review nội dung còn PENDING. [Evidence](ex01-html-pipeline/REPORT.md).
+
+
+## EX-01 — Recovery evidence và archive/TEST restore, 20/10/2026
+
+Tiếp tục Java ETL cũ: recovery giữ literalSOURCE_EXACT khác human/backendVERIFIED; tách teacher/Vietnamese/evidence khỏi candidate, không suy A–D từ vocabulary hoặc document boundaries từ ảnh. Nguồn bổ sung joinexamId+part+questionNumber và đối chiếu nhãn key. Không có HUMAN_VERIFIED thì draft vẫn UNVERIFIED/BLOCKED, không sửa validator.
+
+Archive versioned ngoài Git giữ normalized/V2/recovery/provenance/receipt vàmedia<examId>/<localFile>, manifestsize/SHA; restore chỉ thư mục mới sau verify. SQL dùngpg_dump plainUTF8/psqltransaction, khôngINSERTtựviết/clean/drop; restore phải xác nhận đúng tên vàtựCREATE TESTmới+rỗng. MOCK thực chứng minh mechanics, không thay ETS acceptance. [Evidence và giới hạn](ex01-html-pipeline/BACKUP_RESTORE.md), [recovery](ex01-html-pipeline/RECOVERY_REPORT.md). Không quyết định mới vềschema/API/START hoặc quyền bypass.

@@ -418,3 +418,10 @@ Basef98a37f; nhánhreview riêng. [ReportV11](../EX04_V11_VERIFICATION.md) và [
 ## Ghi chú làm dở — EX-01 HTML/media, 20/10/2026
 
 Sourcee73e325 CP1–4:4 đề/200Q mỗi đề,358media local verified bytes/decode,47tests PASS, quyền media do người dùng xác nhận. [Report](../ex01-html-pipeline/REPORT.md). Cần A/B cung cấp/review676options gốc,200keys,73groups và19document boundaries/TEXT mỗi đề. CP5/API/PG/catalog/hearing/GUI NOT RUN; không DONE/tracker/hours. Media chỉ local ignored, không có binary trong public commit.
+
+
+## Ghi chú làm dở — EX-01 recovery/backup, 20/10/2026
+
+[Recovery](../ex01-html-pipeline/RECOVERY_REPORT.md): source1b2bccf/64tests PASS; Test01 recovered170English+8position texts,495missing+3lexicalprefix review (draft498null). Cần originalA–D đúng labels theo missing sheet,16prompt/passageP6,review200keys/73groups/19documents. [Export/join](../ex01-html-pipeline/ORIGINAL_SOURCE_EXPORT.md) chỉ nguồn local xuất hợp lệ; khôngbacktranslation, khôngHUMAN_VERIFIED giả. Các đề02–04 giữ baseline thiếu676options mỗi đề.
+
+[Backup/restore](../ex01-html-pipeline/BACKUP_RESTORE.md): JSON/media4đề/358files đã backup ngoàiGit/restore hash757files PASS. SQL scripts pg_dump/psql yêu cầu TEST chưa tồn tại+xác nhận đúng tên; thử thậtMOCK qua importerV2 HTTP201,200Q/775opts/76groups/57media, restoredcatalog selectable vàfingerprintshash khớp. Chưa ETS verified→không ETS import/restore acceptance. Không sửa backend/schema/JavaFX hoặc thay DONE/hours; media/SQLdump không public Git.

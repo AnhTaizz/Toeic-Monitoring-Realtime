@@ -904,3 +904,12 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - Đã parse4 đề, mỗi đề200Q/775slots/73groups; 05 trùng04. Người dùng xác nhận quyền tải/dùng/công bố media; đã tải và đo358 file,216MP3 fullPCM +142ImageIOdecode,189902302bytes. Offline revalidation pin receipt hash; media binary không commit.
 - Đã kiểm47tests PASS/0FAIL/0ERROR/0SKIP và shape/validator thật cho4draft. Fixtures testsMOCK, media Zenlish thực có manifest riêng; không dùng decode thay hearing/GUI. [Bàn giao EX-01](ex01-html-pipeline/REPORT.md).
 - Còn dở: mỗi đề676options gốc,200keys và73group/19document review; CP5DB/catalog NOT RUN/DATA BLOCKED. Không UNVERIFIED→VERIFIED giả, không DONE/BACKLOG/hours hoặc human signature.
+
+
+## 20/10/2026 · Agent 4 / Codex · EX-01 recovery và backup/restore
+
+- CP1 audit25 câu trước thuật toán commit5867299; CP2 DOM recovery4884f8c, join/reconstructioncdeb740, archiveafe1a9c, SQL/MOCKdcdea1c; source cuối1b2bccf. Sourceexact chỉ literal evidence, không HUMAN_VERIFIED. Chỉ Test01 recovery:170English+8position texts,495missing+3review;178texts projected, draft còn498null. Key200 khớp parser cũ cùng nguồn,0review độc lập;19documents/73groups pending. [Recovery report](ex01-html-pipeline/RECOVERY_REPORT.md), [hướng dẫn nguồn gốc](ex01-html-pipeline/ORIGINAL_SOURCE_EXPORT.md).
+-64tests PASS/0FAIL/0ERROR/0SKIP; thêm12recovery+5archive so với47baseline. Giữ VN/gloss/teacher/transcript riêng, không đoán A–D hoặc boundaries; fix Unicode résumé có regression. DTO graph1608records/schema2 PASS, validator thật reject UNVERIFIED. Không đổi server/client/Flyway/media API hoặc nhánh QA/main.
+-JSON/media archive thực ra ngoài Git, giữ4normalized+4V2+Test01recovery+sources/permission/receipts;358asset/189902302bytes. Restore sang thư mục mới, hash/size757files đều khớp, không fetch website. Binary vàSQL private ngoài Git.
+-PostgreSQL18.1 cluster TEST mới/cổng loopback riêng: real backendJAR pinSHA967b6f0,MOCK tự tạo importHTTP201; pg_dump UTF8→CREATE TEST mới/rỗng→psqltransaction restore; catalogselectable sau restore với57media đã backup+copy roots khác. Counts200Q/775options/76groups/57media/286blocks và toànrow/scoringkeyhash trước/sau khớp.5negative checks không đổi target; dừng owned processes/cluster. [Backup/restore](ex01-html-pipeline/BACKUP_RESTORE.md). Không dùng MOCK để nhận ETS PASS.
+-Còn dở: bổ sung nguồn gốc495labels vàreview3prefixes/Test01keys200/group73/document19; nguyên bản các đề02–04 chưa recovery. ETS acceptance BLOCKED; GUI/hearing/LAN NOT RUN, không đổi BACKLOG/TRACKER/hours hoặc ký người review.
