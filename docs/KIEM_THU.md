@@ -1,5 +1,16 @@
 # Trạng thái kiểm thử
 
+20/10/2026 — MON-02 adapter: baseline e189b61 **154PASS/0SKIP**; aac7528 focused
+**312PASS/0SKIP** gồm33protocol/181client/34probe/64server,24 REAL PG pipeline cases.
+Input USB là MOCK; REAL HTTP/WS/PG TEST, ACK-loss SIMULATED;6USB events đúng count/ref/
+sequence, retry immutable/1row, history, revoke/worker stop và old callback/new attempt.
+15 adapter +3 shared context +4 projection unit cases; expected timeline độc lập.
+Hai ownership regression2/2FAIL trước sửa được giữ; final single-claim PASS. Fake transport
+thiếu interface method ở compile đầu là lỗi fixture đã sửa, không gọi test chưa chạy PASS.
+Lượt TEST setup đầu bind socket Windows bị từ chối trước Maven; raw log giữ, chưa chứng
+minh cổng đó thuộc excluded range (không ghi lại số); chạy mới ngoài dải đã kiểm đạt.
+Các lượt PG thành công còn0schema/cluster stop0; không hotplug/USB hardware acceptance.
+
 20/10/2026 — MON-07 final review: runtime/test **abb282e**, **253 PASS/0SKIP** focused
 (33 protocol/163 client/57 server,21 REAL PG/WS cases). Sửa bypass raw payload/details
 byte bound bằng whitespace sau test1/1FAIL; giữ log lỗi, bổ sung exact boundary/+1 và

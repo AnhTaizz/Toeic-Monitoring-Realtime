@@ -960,6 +960,32 @@ Nhánh `stabilize/final-rc-20261017`. Không thêm endpoint, field hay giá tr�
 
 Không đổi PROCESS_OBSERVED/FULL/DELTA/presence/gap/Listening/QD21 hoặc dashboard. Quyền TEST không mở terminal history hay cho phép capture dữ liệu thật.
 
+### MON-02 — adapter USB explicit TEST, 20/10/2026
+
+[Contract/semantics adapter](MON02_USB_ADAPTER_EXPERIMENT.md): không thêm wire type,
+field, endpoint, migration hoặc quota. UsbSignalAdapter nhận state + immutable list
+disk slots đã phân loại mass-storage, không generic USB. Bridge MOCK test-scope dùng
+UsbSnapshot hiện có; không đưa monitoring-spike hoặc scanner vào runtime candidate.
+Baseline READY có N>0 phát một PRESENT_AT_START count=N/ref absent; READY0 chỉ baseline
+nội bộ. Thay đổi được xác nhận phát CONNECTED/REMOVED với count cuối snapshot. Lỗi/
+UNKNOWN không thay baseline và không REMOVED; lần khỏe lại chỉ ghi diff quan sát lúc
+phục hồi, không thời điểm vật lý trong khoảng nguồn lỗi. Tất cả adapter events PARTIAL.
+
+Disk Number/Index là slot tạm, không physical identity. Baseline aggregate không ref;
+slot mới sau baseline có UUID ref ổn định khi liên tục thấy, removal dùng cùng ref.
+Sau source gap bỏ correlations, không giả chắc cùng thiết bị. Reuse cùng index giữa
+hai scan có thể không thấy; không hứa lossless/hardware attestation. Không gửi index,
+serial/PNP/volume/file/username hoặc hash các giá trị đó; map≤64, input≤128, >64USB hoặc
+collision/metadata thiếu giữ UNKNOWN, không clamp/dedup rồi coi scan đầy đủ.
+
+SignalRunContext do owner cấp chung cho mọi emitter, cấp IDs/sequence/time/origin frozen;
+không counter USB riêng. Một USB input claim mỗi context lifetime, generation chặn
+callback cũ. SignalDelivery.matchesScope chỉ kiểm identity, không cấp quyền/capability.
+Adapter không scan/IO/worker/subscription; stop dọn map, không đóng queue/context/transport
+đang dùng chung. Owner kết thúc run phải đóng delivery/context/lease; event đã enqueue
+trước adapter stop vẫn do queue sở hữu. Queue full/offline không reset source baseline,
+không replay scan sau hoặc giả ACK. Drops theo delivery hiện có, chưa status/gap wire.
+
 
 ### MON-07 — review 20/10/2026
 

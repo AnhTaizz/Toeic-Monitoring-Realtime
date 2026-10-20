@@ -12,6 +12,13 @@
     <name>TOEIC Server</name>
 
     <dependencies>
+        <!-- USB snapshot/classification model reused only by the explicit adapter integration TEST. -->
+        <dependency>
+            <groupId>vn.edu.toeic</groupId>
+            <artifactId>monitoring-spike</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
         <!-- Explicit C3 integration harness exercises production client delivery, test scope only. -->
         <dependency>
             <groupId>vn.edu.toeic</groupId>

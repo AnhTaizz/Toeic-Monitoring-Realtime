@@ -1,5 +1,20 @@
 # MON-02 — Probe USB storage độc lập trên Windows
 
+## Adapter MOCK → MON-07, 20/10/2026
+
+[Adapter experiment](MON02_USB_ADAPTER_EXPERIMENT.md) chuyển snapshot đã phân loại sang
+UsbStorageSignal qua queue/socket chung. Bridge dùng model probe **chỉ test scope**;
+client không phụ thuộc monitoring-spike, CLI/CIM/resource cũ không bị copy hoặc nối vào
+candidate production. Baseline một event tổng; READY rỗng không phát PRESENT count0.
+Lỗi/UNKNOWN không removal, ref chỉ là correlation slot trong run và bị bỏ sau nguồn lỗi;
+wire PARTIAL, không khẳng định disk index là identity phần cứng. Xem bảng semantics,
+ownership run/sequence/queue và giới hạn index reuse trong tài liệu adapter.
+
+Người dùng chưa có USB: toàn bộ transition input là MOCK, transport/DB TEST được kiểm
+riêng. **Physical0/12 NOT_RUN, MON-02 chưa DONE, ADR/policy pending**, không yêu cầu cắm
+thiết bị và không lấy readiness READY0/UNKNOWN hoặc CI làm bằng chứng hotplug. Các lệnh
+probe/kit và H01–H12 bên dưới vẫn là runbook độc lập cho lượt phần cứng sau này.
+
 ## Kit main tích hợp — 20/10/2026
 
 Ưu tiên mục này cho lượt mới; phần base/PR cũ bên dưới là lịch sử. Main đã tích hợp

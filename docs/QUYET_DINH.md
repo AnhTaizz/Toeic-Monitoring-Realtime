@@ -369,3 +369,13 @@ queue/quota và capability subset theo kết nối; V16 không collision main/op
 giữ V13–V15. OFF vẫn có Flyway DDL. Source/runtime không tự chứng thực nguồn vật lý hoặc
 monotonic duration; emitter/hardware cần review riêng. Không đổi D07/ADR thành human
 APPROVED, offline60s/retention30ngày chưa áp dụng; không capture thật/observer/push/dashboard.
+
+## MON-02 · adapter thử nghiệm theo ủy quyền người dùng, 20/10/2026
+
+USER_AUTHORIZED_EXPERIMENT theo attachment f307aeae: snapshot MOCK → typed USB → shared
+MON-07/REAL TEST WS/PG. Giữ monitoring-spike CLI độc lập; client nhận minimal snapshot,
+bridge dùng model/classification probe qua server test dependency. Không copy CIM/provider,
+không native dependency/migration/type mới. Chọn aggregate baseline, PARTIAL vì weak disk
+slot identity, bỏ ref correlation sau gap; một USB input claim/context và sequence chung,
+không quota/retry USB riêng. Đây là lựa chọn kỹ thuật của slice, không ADR/owner policy
+APPROVED, không hardware acceptance. FULL mặc định/experiment OFF và gates giữ nguyên.

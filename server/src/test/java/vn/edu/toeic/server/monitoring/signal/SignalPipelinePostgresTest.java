@@ -25,6 +25,9 @@ import vn.edu.toeic.server.auth.*;
 import vn.edu.toeic.server.monitoring.EventConflictException;
 import vn.edu.toeic.client.realtime.*;
 import vn.edu.toeic.client.monitoring.signal.SignalDelivery;
+import vn.edu.toeic.client.monitoring.signal.SignalRunContext;
+import vn.edu.toeic.client.monitoring.usb.UsbSignalAdapter;
+import vn.edu.toeic.monitoring.usb.UsbSnapshot;
 import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.protocol.monitoring.EventOrigin;
 import vn.edu.toeic.protocol.monitoring.signal.*;
@@ -149,6 +152,60 @@ class SignalPipelinePostgresTest {
         jdbc.sql("UPDATE monitoring_attempts SET state='CLOSED' WHERE attempt_id=:a").param("a",a).update();
         try(Raw ws=new Raw(candidate)){assertCode(ws.exchange(JSON.toJson(m.envelope())),"FORBIDDEN");}
         getJson(a,"signals",proctor,403);assertThat(rows(a)).isEqualTo(1);assertThat(counter(a)).isEqualTo(1);
+    }
+    @Test void usbAdapterMockTimelineThroughRealDeliveryAckLossCommitAndHistory()throws Exception{
+        String a=attempt();Instant first=Instant.parse("2026-10-20T12:00:00Z");
+        try(Client client=new Client(a,false);var run=new SignalRunContext(a,"mock-observer-1");var adapter=new UsbSignalAdapter()){
+            long generation=adapter.start(run,client.delivery);var origin=client.realtime.observationOrigin();List<UsbSignalAdapter.Emission> events=new ArrayList<>();
+            events.addAll(adapter.accept(generation,MockUsbSnapshotProjection.project(MockUsbSnapshotProjection.ready(1)),first,origin).emissions());
+            assertThat(client.transport.deliveredAcks.poll(8,TimeUnit.SECONDS)).isNotNull();
+            assertThat(adapter.accept(generation,MockUsbSnapshotProjection.project(MockUsbSnapshotProjection.ready(1)),first.plusSeconds(1),origin).emissions()).isEmpty();
+            client.transport.lose.set(true);
+            events.addAll(adapter.accept(generation,MockUsbSnapshotProjection.project(MockUsbSnapshotProjection.ready(1,2)),first.plusSeconds(2),origin).emissions());
+            assertThat(client.transport.dropped.await(8,TimeUnit.SECONDS)).isTrue();
+            assertThat(adapter.accept(generation,MockUsbSnapshotProjection.project(UsbSnapshot.failed(UsbSnapshot.Status.ERROR,"MOCK",1)),first.plusSeconds(3),origin).emissions()).isEmpty();
+            var recovered=adapter.accept(generation,MockUsbSnapshotProjection.project(MockUsbSnapshotProjection.ready(2,3)),first.plusSeconds(60),origin);assertThat(recovered.recovered()).isTrue();events.addAll(recovered.emissions());
+            events.addAll(adapter.accept(generation,MockUsbSnapshotProjection.project(MockUsbSnapshotProjection.ready()),first.plusSeconds(61),origin).emissions());
+            List<JsonObject> acks=new ArrayList<>();for(int i=0;i<5;i++){var ack=client.transport.deliveredAcks.poll(8,TimeUnit.SECONDS);assertThat(ack).isNotNull();acks.add(ack);}
+            assertThat(events).hasSize(6);assertThat(events).allSatisfy(e->assertThat(e.queued()).isTrue());
+            assertThat(events.stream().map(e->e.message().signal().eventType()).toList()).containsExactly("USB_STORAGE_PRESENT_AT_START","USB_STORAGE_CONNECTED","USB_STORAGE_REMOVED","USB_STORAGE_CONNECTED","USB_STORAGE_REMOVED","USB_STORAGE_REMOVED");
+            assertThat(events.stream().map(e->((UsbStorageSignal)e.message().signal()).storageCount()).toList()).containsExactly(1,2,2,2,0,0);
+            for(int i=0;i<events.size();i++)assertThat(events.get(i).message().signal().observationSequence()).isEqualTo(i+1);
+            assertThat(events.get(2).message().signal().observedAt()).isEqualTo(first.plusSeconds(60));
+            var connect=(UsbStorageSignal)events.get(3).message().signal();var remove=(UsbStorageSignal)events.get(5).message().signal();assertThat(remove.deviceRef()).isEqualTo(connect.deviceRef());
+            assertThat(((UsbStorageSignal)events.get(4).message().signal()).deviceRef()).isNull();
+            String retryId=events.get(1).message().requestId();var writes=client.transport.sentSignals.stream().filter(m->m.requestId().equals(retryId)).toList();
+            assertThat(writes.size()).isGreaterThanOrEqualTo(2);assertThat(writes).allSatisfy(m->assertThat(m).isEqualTo(events.get(1).message().envelope()));
+            assertThat(acks).anySatisfy(ack->{assertThat(ack.get("eventId").getAsString()).isEqualTo(events.get(1).message().signal().eventId());assertThat(ack.get("duplicate").getAsBoolean()).isTrue();assertThat(ack.get("timelineSequence").getAsLong()).isEqualTo(2);});
+            assertThat(rows(a)).isEqualTo(6);assertThat(counter(a)).isEqualTo(6);assertThat(client.delivery.status().acknowledged()).isEqualTo(6);
+            var items=getJson(a,"signals?limit=100",proctor,200).getAsJsonArray("items");assertThat(items).hasSize(6);
+            for(int i=0;i<items.size();i++){var item=items.get(i).getAsJsonObject();assertThat(item.get("timelineSequence").getAsLong()).isEqualTo(i+1);var payload=item.deepCopy();for(String key:List.of("attemptId","timelineSequence","receivedAt","deliveryStatus"))payload.remove(key);assertThat(Signal.parse(payload)).isEqualTo(events.get(i).message().signal());}
+            adapter.stop();assertThat(adapter.accept(generation,MockUsbSnapshotProjection.project(MockUsbSnapshotProjection.ready(99)),first,origin).emissions()).isEmpty();assertThat(adapter.status().retainedSlots()).isZero();
+        }
+    }
+    @Test void usbAdapterOldCallbackCannotCreateRowsForReplacementAttempt()throws Exception{
+        String oldAttempt=attempt(),nextAttempt=attempt();Instant time=Instant.parse("2026-10-20T12:00:00Z");
+        try(Client oldClient=new Client(oldAttempt,false);Client nextClient=new Client(nextAttempt,false,candidate,"mock-observer-2");
+            var oldRun=new SignalRunContext(oldAttempt,"mock-observer-1");var nextRun=new SignalRunContext(nextAttempt,"mock-observer-2");var adapter=new UsbSignalAdapter()){
+            long old=adapter.start(oldRun,oldClient.delivery);adapter.accept(old,MockUsbSnapshotProjection.project(MockUsbSnapshotProjection.ready()),time,EventOrigin.OFFLINE);adapter.stop();
+            long next=adapter.start(nextRun,nextClient.delivery);
+            assertThat(adapter.accept(old,MockUsbSnapshotProjection.project(MockUsbSnapshotProjection.ready(1)),time,EventOrigin.OFFLINE).emissions()).isEmpty();
+            var r=adapter.accept(next,MockUsbSnapshotProjection.project(MockUsbSnapshotProjection.ready(2)),time,EventOrigin.OFFLINE);assertThat(r.emissions()).hasSize(1);
+            assertThat(nextClient.transport.deliveredAcks.poll(8,TimeUnit.SECONDS)).isNotNull();assertThat(rows(oldAttempt)).isZero();assertThat(rows(nextAttempt)).isEqualTo(1);assertThat(r.emissions().getFirst().message().attemptId()).isEqualTo(nextAttempt);
+            assertThat(oldClient.delivery.status().active()).isTrue();assertThat(oldRun.active()).isTrue();
+        }
+    }
+    @Test void usbAdapterCannotCreateNewEventsAfterRealTokenRejection()throws Exception{
+        String a=attempt(),token=login("candidate");Instant time=Instant.parse("2026-10-20T12:00:00Z");
+        try(Client client=new Client(a,false,token);var run=new SignalRunContext(a,"mock-observer-1");var adapter=new UsbSignalAdapter()){
+            long generation=adapter.start(run,client.delivery);adapter.accept(generation,MockUsbSnapshotProjection.project(MockUsbSnapshotProjection.ready(1)),time,EventOrigin.OFFLINE);
+            assertThat(client.transport.deliveredAcks.poll(8,TimeUnit.SECONDS)).isNotNull();CountDownLatch denied=new CountDownLatch(1);
+            try(var listener=client.realtime.onConnectionState(state->{if(state==ConnectionState.FAILED)denied.countDown();})){
+                jdbc.sql("UPDATE login_sessions SET revoked_at=clock_timestamp() WHERE token_hash=:h").param("h",TokenHash.sha256(token)).update();assertThat(denied.await(8,TimeUnit.SECONDS)).isTrue();
+                assertThat(adapter.accept(generation,MockUsbSnapshotProjection.project(MockUsbSnapshotProjection.ready(1,2)),time.plusSeconds(1),EventOrigin.OFFLINE).emissions()).isEmpty();
+                assertThat(adapter.status().active()).isFalse();assertThat(adapter.status().retainedSlots()).isZero();assertThat(rows(a)).isEqualTo(1);assertThat(counter(a)).isEqualTo(1);assertThat(client.delivery.awaitStopped(Duration.ofSeconds(3))).isTrue();
+            }
+        }
     }
     @Test void duplicateCanonicalConflictAndUnknownTypeHaveNoExtraRows()throws Exception{
         String a=attempt();var m=message(a,1);try(Raw ws=new Raw(candidate)){
@@ -415,21 +472,23 @@ class SignalPipelinePostgresTest {
     private final class Client implements AutoCloseable{
         final RealtimeClient realtime;final Lossy transport;final SignalDelivery delivery;final AutoCloseable lease;
         Client(String a,boolean lose)throws Exception{this(a,lose,candidate);}
-        Client(String a,boolean lose,String token)throws Exception{
+        Client(String a,boolean lose,String token)throws Exception{this(a,lose,token,"mock-observer-1");}
+        Client(String a,boolean lose,String token,String observerRun)throws Exception{
             var opener=new AuthenticatedWebSocketOpener(base,token);realtime=new RealtimeClient(opener,new RealtimeClient.Settings(Duration.ofMillis(100),Duration.ofMillis(100),Duration.ofSeconds(1),1,65536,500));
-            lease=realtime.monitoringHeartbeat(a,"mock-observer-1");resources.add(realtime);resources.add(lease);CountDownLatch hb=new CountDownLatch(1);AutoCloseable listener=realtime.onMessage(m->{if(m.type().equals("ACK")&&m.payload().get("acknowledgedType").getAsString().equals("HEARTBEAT")&&a.equals(m.attemptId()))hb.countDown();});
+            lease=realtime.monitoringHeartbeat(a,observerRun);resources.add(realtime);resources.add(lease);CountDownLatch hb=new CountDownLatch(1);AutoCloseable listener=realtime.onMessage(m->{if(m.type().equals("ACK")&&m.payload().get("acknowledgedType").getAsString().equals("HEARTBEAT")&&a.equals(m.attemptId()))hb.countDown();});
             realtime.connect(new RealtimeClient.Session(Set.of(a),null,null)).get(8,TimeUnit.SECONDS);assertThat(hb.await(8,TimeUnit.SECONDS)).isTrue();listener.close();
             // Fresh server scope (not a locally invented candidate assignment).
             var me=http.send(HttpRequest.newBuilder(URI.create(base+"/api/v1/auth/me")).header("Authorization","Bearer "+token).GET().build(),HttpResponse.BodyHandlers.ofString());assertThat(me.statusCode()).isEqualTo(200);assertThat(me.body()).contains(a);
-            realtime.confirmSignalExperiment(getJson(a,"signal-capabilities",token,200),realtime.connectionGeneration(),"mock-observer-1");transport=new Lossy(realtime,lose);delivery=new SignalDelivery(a,"mock-observer-1",transport,new SignalDelivery.Settings(256,1048576,2,Duration.ofSeconds(1),5,Duration.ofMillis(100),Duration.ofMillis(800),Duration.ofMillis(25)),System::nanoTime,true);
+            realtime.confirmSignalExperiment(getJson(a,"signal-capabilities",token,200),realtime.connectionGeneration(),observerRun);transport=new Lossy(realtime,lose);delivery=new SignalDelivery(a,observerRun,transport,new SignalDelivery.Settings(256,1048576,2,Duration.ofSeconds(1),5,Duration.ofMillis(100),Duration.ofMillis(800),Duration.ofMillis(25)),System::nanoTime,true);
         }
         public void close()throws Exception{delivery.close();lease.close();realtime.close();assertThat(delivery.awaitStopped(Duration.ofSeconds(3))).isTrue();}
     }
     private static final class Lossy implements MonitoringTransport{
         volatile boolean allow=true;final RealtimeClient delegate;final AtomicBoolean lose;final CountDownLatch dropped=new CountDownLatch(1),accepted=new CountDownLatch(1);final AtomicReference<JsonObject> lastAck=new AtomicReference<>();
         final BlockingQueue<JsonObject> deliveredAcks=new LinkedBlockingQueue<>();
+        final List<MessageEnvelope<JsonObject>> sentSignals=new CopyOnWriteArrayList<>();
         Lossy(RealtimeClient d,boolean lose){delegate=d;this.lose=new AtomicBoolean(lose);}
-        public CompletableFuture<Void> send(MessageEnvelope<JsonObject> m){return delegate.send(m);}public CompletableFuture<Void> sendForGeneration(MessageEnvelope<JsonObject> m,long g,BooleanSupplier guard){return delegate.sendForGeneration(m,g,guard);}public ConnectionState connectionState(){return delegate.connectionState();}public long connectionGeneration(){return delegate.connectionGeneration();}public boolean signalExperimentReady(String a){return delegate.signalExperimentReady(a);}public boolean signalCreditAvailable(){return allow&&delegate.signalCreditAvailable();}public AutoCloseable onConnectionState(Consumer<ConnectionState> c){return delegate.onConnectionState(c);}public AutoCloseable onMonitoringAccessRejected(Consumer<MonitoringAccessRejection> c){return delegate.onMonitoringAccessRejected(c);}public void forgetPending(String id){delegate.forgetPending(id);}
+        public CompletableFuture<Void> send(MessageEnvelope<JsonObject> m){return delegate.send(m);}public CompletableFuture<Void> sendForGeneration(MessageEnvelope<JsonObject> m,long g,BooleanSupplier guard){if(m.type().equals("MONITORING_SIGNAL"))sentSignals.add(new MessageEnvelope<>(m.protocolVersion(),m.type(),m.messageId(),m.requestId(),m.attemptId(),m.traceId(),m.payload().deepCopy()));return delegate.sendForGeneration(m,g,guard);}public ConnectionState connectionState(){return delegate.connectionState();}public long connectionGeneration(){return delegate.connectionGeneration();}public boolean signalExperimentReady(String a){return delegate.signalExperimentReady(a);}public boolean signalCreditAvailable(){return allow&&delegate.signalCreditAvailable();}public AutoCloseable onConnectionState(Consumer<ConnectionState> c){return delegate.onConnectionState(c);}public AutoCloseable onMonitoringAccessRejected(Consumer<MonitoringAccessRejection> c){return delegate.onMonitoringAccessRejected(c);}public void forgetPending(String id){delegate.forgetPending(id);}
         public AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> c){return delegate.onMessage(m->{if(m.type().equals("ACK")&&"MONITORING_SIGNAL".equals(m.payload().get("acknowledgedType").getAsString())){lastAck.set(m.payload().deepCopy());if(lose.compareAndSet(true,false)){dropped.countDown();return;}c.accept(m);deliveredAcks.add(m.payload().deepCopy());accepted.countDown();}else c.accept(m);});}
     }
 }

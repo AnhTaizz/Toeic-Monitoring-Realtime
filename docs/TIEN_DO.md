@@ -1,5 +1,14 @@
 # Tiến độ hiện tại
 
+20/10/2026 — [MON-02 adapter USB experiment](MON02_USB_ADAPTER_EXPERIMENT.md): base e189b61,
+runtime aac7528; snapshot MOCK → adapter stateful → shared SignalRunContext/SignalDelivery
+→ REAL WS/PG TEST/ACK/history. Baseline154PASS, focused cuối312PASS/0SKIP (24 pipeline PG
+cases,3 adapter mới); source693cf44/310PASS là trước ownership fix. Đã giữ2FAIL và sửa
+single USB binding/run, không duplicate baseline/rebind context cũ. TEST0schema/stop0.
+Không provider binding production/native dependency/migration/type/queue mới; PARTIAL/
+weak slot identity, lỗi không removal, baseline aggregate. Build/CI/receipt tại report/PR.
+USB physical0/12 NOT_RUN, MON-02 chưa DONE; FULL mặc định, experiment OFF, ADR/gate pending.
+
 20/10/2026 — MON-07 final review: runtime/test **abb282e**, **253 PASS/0SKIP** focused
 (33 protocol/163 client/57 server,21 REAL PG/WS cases). Sửa bypass raw payload/details
 byte bound bằng whitespace sau test1/1FAIL; giữ log lỗi, bổ sung exact boundary/+1 và
