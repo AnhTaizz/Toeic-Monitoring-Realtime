@@ -1,0 +1,298 @@
+/*
+ * TOEIC Proctor redesign. Every selector starts with .proctor-redesign so this sheet
+ * cannot restyle the candidate UI or the legacy dashboard even if loaded at scene level.
+ * Text sizes use em so the "Lớn" font setting scales the whole proctor view.
+ */
+.proctor-redesign {
+    -fx-font-family: "Segoe UI", "Inter", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 13px;
+    /* Looked-up colours: override the dark theme of styles.css inside this subtree only. */
+    -fx-base: #f4f6fa;
+    -fx-background: #f4f6fa;
+    -fx-control-inner-background: #ffffff;
+    -fx-accent: #f26b1d;
+    -fx-focus-color: #f26b1d;
+    -fx-faint-focus-color: #f26b1d22;
+    -fx-text-base-color: #13254a;
+    -fx-text-background-color: #13254a;
+    -fx-text-inner-color: #13254a;
+    -fx-background-color: #f4f6fa;
+    navy: #13254a;
+    muted: #6b7a90;
+    line: #e3e8ef;
+    orange: #f26b1d;
+}
+.proctor-redesign.font-large { -fx-font-size: 15px; }
+
+.proctor-redesign .label { -fx-text-fill: #13254a; }
+.proctor-redesign .muted { -fx-text-fill: #6b7a90; -fx-font-size: 0.92em; }
+.proctor-redesign .small { -fx-font-size: 0.85em; }
+.proctor-redesign .strong { -fx-font-weight: bold; }
+.proctor-redesign .link { -fx-text-fill: #1d4ed8; -fx-font-weight: bold; -fx-cursor: hand; }
+.proctor-redesign .page-title { -fx-font-size: 1.75em; -fx-font-weight: bold; -fx-text-fill: #13254a; }
+.proctor-redesign .page-subtitle { -fx-text-fill: #52627a; -fx-font-size: 1.05em; }
+.proctor-redesign .section-title { -fx-font-size: 1.3em; -fx-font-weight: bold; -fx-text-fill: #13254a; }
+.proctor-redesign .field-label { -fx-text-fill: #6b7a90; }
+.proctor-redesign .field-value { -fx-text-fill: #13254a; -fx-font-weight: bold; }
+
+/* ---------- Window chrome ---------- */
+.proctor-redesign .topbar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #e3e8ef transparent;
+    -fx-padding: 12 20 12 24;
+    -fx-spacing: 0;
+}
+.proctor-redesign .brand-title { -fx-font-size: 1.7em; -fx-font-weight: bold; -fx-text-fill: #13254a; }
+.proctor-redesign .brand-subtitle { -fx-text-fill: #6b7a90; }
+.proctor-redesign .brand-mark { -fx-background-color: #f26b1d; -fx-background-radius: 10; }
+.proctor-redesign .brand-mark .label { -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 1.4em; }
+.proctor-redesign .top-item {
+    -fx-padding: 0 18 0 18;
+    -fx-border-color: transparent transparent transparent #e3e8ef;
+    -fx-spacing: 10;
+}
+.proctor-redesign .top-item-title { -fx-font-weight: bold; -fx-text-fill: #13254a; }
+.proctor-redesign .top-item-caption { -fx-text-fill: #6b7a90; -fx-font-size: 0.92em; }
+.proctor-redesign .top-clock { -fx-font-size: 1.55em; -fx-font-weight: bold; -fx-text-fill: #13254a; }
+.proctor-redesign .top-clock.unconfirmed { -fx-font-size: 1.05em; -fx-text-fill: #b45309; }
+.proctor-redesign .server-ok { -fx-text-fill: #15803d; -fx-font-weight: bold; }
+.proctor-redesign .server-bad { -fx-text-fill: #dc2626; -fx-font-weight: bold; }
+.proctor-redesign .server-wait { -fx-text-fill: #b45309; -fx-font-weight: bold; }
+.proctor-redesign .avatar { -fx-background-color: #e8eefc; -fx-background-radius: 20; -fx-min-width: 38; -fx-min-height: 38; -fx-pref-width: 38; -fx-pref-height: 38; }
+.proctor-redesign .avatar .label { -fx-text-fill: #1e3a8a; -fx-font-weight: bold; }
+.proctor-redesign .avatar-large { -fx-min-width: 50; -fx-min-height: 50; -fx-pref-width: 50; -fx-pref-height: 50; -fx-background-radius: 25; }
+.proctor-redesign .avatar-large .label { -fx-font-size: 1.4em; }
+.proctor-redesign .account-menu { -fx-background-color: transparent; -fx-padding: 4 6 4 6; }
+.proctor-redesign .account-menu > .label { -fx-text-fill: #13254a; -fx-font-weight: bold; }
+
+.proctor-redesign .sidebar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent #e3e8ef transparent transparent;
+    -fx-padding: 16 10 16 0;
+    -fx-spacing: 6;
+    -fx-pref-width: 236;
+    -fx-min-width: 212;
+}
+.proctor-redesign .nav-item {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-padding: 12 14 12 24;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+    -fx-graphic-text-gap: 14;
+    -fx-text-fill: #13254a;
+    -fx-font-size: 1.08em;
+    -fx-border-width: 0 0 0 3;
+    -fx-border-color: transparent;
+}
+.proctor-redesign .nav-item .nav-icon { -fx-fill: transparent; -fx-stroke: #13254a; -fx-stroke-width: 1.6; }
+.proctor-redesign .nav-item:hover { -fx-background-color: #f6f8fb; }
+.proctor-redesign .nav-item:selected {
+    -fx-background-color: #fff1e8;
+    -fx-text-fill: #13254a;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent transparent transparent #f26b1d;
+}
+.proctor-redesign .nav-item:selected .nav-icon { -fx-stroke: #f26b1d; }
+.proctor-redesign .nav-item:focused { -fx-background-insets: 0; }
+.proctor-redesign .nav-badge { -fx-background-color: #dc2626; -fx-background-radius: 10; -fx-padding: 1 6 1 6; -fx-min-width: 20; -fx-alignment: center; }
+.proctor-redesign .nav-badge .label, .proctor-redesign .nav-badge { -fx-text-fill: #ffffff; -fx-font-size: 0.85em; -fx-font-weight: bold; }
+.proctor-redesign .sidebar-footer { -fx-padding: 14 10 0 20; -fx-border-color: #e3e8ef transparent transparent transparent; -fx-spacing: 4; }
+.proctor-redesign .sidebar-footer-title { -fx-text-fill: #6b7a90; -fx-font-weight: bold; -fx-font-size: 0.85em; }
+
+.proctor-redesign .page { -fx-background-color: #f4f6fa; -fx-padding: 20 22 20 22; -fx-spacing: 16; }
+.proctor-redesign .scroll-page, .proctor-redesign .scroll-page > .viewport { -fx-background-color: #f4f6fa; -fx-background: #f4f6fa; }
+
+/* ---------- Cards and badges ---------- */
+.proctor-redesign .card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+    -fx-border-color: #e3e8ef;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+.proctor-redesign .card-header { -fx-padding: 14 18 14 18; -fx-border-color: transparent transparent #e3e8ef transparent; -fx-spacing: 10; }
+.proctor-redesign .card-body { -fx-padding: 14 18 14 18; -fx-spacing: 10; }
+.proctor-redesign .stat-card { -fx-padding: 18 16 18 16; -fx-spacing: 12; }
+.proctor-redesign .stat-value { -fx-font-size: 2em; -fx-font-weight: bold; -fx-text-fill: #13254a; }
+.proctor-redesign .stat-value.danger { -fx-text-fill: #dc2626; }
+.proctor-redesign .stat-value.success { -fx-text-fill: #15803d; }
+.proctor-redesign .stat-value.warning { -fx-text-fill: #b45309; }
+.proctor-redesign .stat-title { -fx-text-fill: #13254a; -fx-font-weight: 600; }
+.proctor-redesign .stat-icon { -fx-background-radius: 10; -fx-min-width: 40; -fx-min-height: 40; -fx-pref-width: 40; -fx-pref-height: 40; -fx-alignment: center; }
+.proctor-redesign .stat-icon.blue { -fx-background-color: #eaf0fb; }
+.proctor-redesign .stat-icon.green { -fx-background-color: #e7f6ec; }
+.proctor-redesign .stat-icon.red { -fx-background-color: #fdecec; }
+.proctor-redesign .stat-icon.amber { -fx-background-color: #fff4e0; }
+.proctor-redesign .stat-icon .glyph { -fx-fill: transparent; -fx-stroke-width: 1.7; }
+.proctor-redesign .stat-icon.blue .glyph { -fx-stroke: #1e3a8a; }
+.proctor-redesign .stat-icon.green .glyph { -fx-stroke: #15803d; }
+.proctor-redesign .stat-icon.red .glyph { -fx-stroke: #dc2626; }
+.proctor-redesign .stat-icon.amber .glyph { -fx-stroke: #d97706; }
+.proctor-redesign .top-icon { -fx-fill: transparent; -fx-stroke: #13254a; -fx-stroke-width: 1.7; }
+.proctor-redesign .top-icon.orange { -fx-stroke: #f26b1d; }
+
+.proctor-redesign .badge { -fx-background-radius: 5; -fx-padding: 3 8 3 8; -fx-font-size: 0.9em; }
+.proctor-redesign .badge.green { -fx-background-color: #e7f6ec; -fx-text-fill: #15803d; }
+.proctor-redesign .badge.red { -fx-background-color: #fdecec; -fx-text-fill: #dc2626; }
+.proctor-redesign .badge.amber { -fx-background-color: #fff4e0; -fx-text-fill: #b45309; }
+.proctor-redesign .badge.blue { -fx-background-color: #eaf0fb; -fx-text-fill: #1e3a8a; }
+.proctor-redesign .badge.gray { -fx-background-color: #eef1f5; -fx-text-fill: #52627a; }
+.proctor-redesign .dot { -fx-min-width: 8; -fx-min-height: 8; -fx-max-width: 8; -fx-max-height: 8; -fx-background-radius: 4; }
+.proctor-redesign .dot.green { -fx-background-color: #16a34a; }
+.proctor-redesign .dot.red { -fx-background-color: #dc2626; }
+.proctor-redesign .dot.amber { -fx-background-color: #d97706; }
+.proctor-redesign .dot.gray { -fx-background-color: #94a3b8; }
+.proctor-redesign .status-text.green { -fx-text-fill: #15803d; }
+.proctor-redesign .status-text.red { -fx-text-fill: #dc2626; }
+.proctor-redesign .status-text.amber { -fx-text-fill: #b45309; }
+.proctor-redesign .status-text.gray { -fx-text-fill: #52627a; }
+
+.proctor-redesign .info-box {
+    -fx-background-color: #f6f8fb;
+    -fx-background-radius: 8;
+    -fx-border-color: #dfe6ef;
+    -fx-border-radius: 8;
+    -fx-padding: 12 14 12 14;
+    -fx-spacing: 10;
+}
+.proctor-redesign .info-box.warning { -fx-background-color: #fffaf0; -fx-border-color: #f5d9a8; }
+.proctor-redesign .info-box .label { -fx-text-fill: #34465f; }
+.proctor-redesign .info-icon { -fx-fill: transparent; -fx-stroke: #1d4ed8; -fx-stroke-width: 1.5; }
+
+/* ---------- Buttons and inputs ---------- */
+.proctor-redesign .button {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d5dce6;
+    -fx-border-radius: 7;
+    -fx-background-radius: 7;
+    -fx-text-fill: #13254a;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+}
+.proctor-redesign .button:hover { -fx-background-color: #f6f8fb; }
+.proctor-redesign .button:disabled { -fx-opacity: 0.5; }
+.proctor-redesign .button.primary { -fx-background-color: #f26b1d; -fx-border-color: #f26b1d; -fx-text-fill: #ffffff; }
+.proctor-redesign .button.primary:hover { -fx-background-color: #e35d10; }
+.proctor-redesign .button.link-button { -fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: #1d4ed8; -fx-padding: 2 4 2 4; }
+.proctor-redesign .button.link-button:hover { -fx-underline: true; }
+.proctor-redesign .button.icon-button { -fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 4; }
+.proctor-redesign .text-field, .proctor-redesign .text-area {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d5dce6;
+    -fx-border-radius: 7;
+    -fx-background-radius: 7;
+    -fx-text-fill: #13254a;
+    -fx-prompt-text-fill: #8a97aa;
+    -fx-padding: 9 12 9 12;
+}
+.proctor-redesign .text-area .content { -fx-background-color: #ffffff; }
+.proctor-redesign .text-area:disabled, .proctor-redesign .text-field:disabled { -fx-opacity: 0.65; }
+.proctor-redesign .text-field:focused, .proctor-redesign .text-area:focused { -fx-border-color: #f26b1d; }
+.proctor-redesign .search-field { -fx-padding: 9 12 9 34; }
+.proctor-redesign .combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d5dce6;
+    -fx-border-radius: 7;
+    -fx-background-radius: 7;
+    -fx-padding: 3 4 3 4;
+}
+.proctor-redesign .combo-box .list-cell { -fx-text-fill: #13254a; -fx-background-color: transparent; }
+.proctor-redesign .combo-box-popup .list-view { -fx-background-color: #ffffff; }
+.proctor-redesign .combo-box-popup .list-cell { -fx-text-fill: #13254a; -fx-background-color: #ffffff; }
+.proctor-redesign .combo-box-popup .list-cell:hover { -fx-background-color: #fff1e8; }
+.proctor-redesign .context-menu { -fx-background-color: #ffffff; -fx-border-color: #e3e8ef; }
+.proctor-redesign .menu-item .label { -fx-text-fill: #13254a; }
+.proctor-redesign .menu-item:focused { -fx-background-color: #fff1e8; }
+
+.proctor-redesign .segmented { -fx-background-color: #f1f4f8; -fx-background-radius: 8; -fx-padding: 3; -fx-spacing: 2; }
+.proctor-redesign .segmented .toggle-button {
+    -fx-background-color: transparent; -fx-background-radius: 6; -fx-text-fill: #52627a; -fx-padding: 7 22 7 22; -fx-cursor: hand;
+}
+.proctor-redesign .segmented .toggle-button:selected { -fx-background-color: #ffffff; -fx-text-fill: #13254a; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, #0000001a, 3, 0, 0, 1); }
+.proctor-redesign .switch { -fx-background-color: #d5dce6; -fx-background-radius: 12; -fx-min-width: 42; -fx-pref-width: 42; -fx-min-height: 24; -fx-pref-height: 24; -fx-padding: 0; -fx-cursor: hand; -fx-border-width: 0; }
+.proctor-redesign .switch:selected { -fx-background-color: #16a34a; }
+.proctor-redesign .switch:disabled { -fx-opacity: 0.45; }
+.proctor-redesign .switch-knob { -fx-fill: #ffffff; }
+
+.proctor-redesign .tabs { -fx-spacing: 26; -fx-padding: 0 18 0 18; -fx-border-color: transparent transparent #e3e8ef transparent; }
+.proctor-redesign .tabs .toggle-button {
+    -fx-background-color: transparent; -fx-text-fill: #34465f; -fx-padding: 14 2 12 2; -fx-cursor: hand;
+    -fx-border-color: transparent; -fx-border-width: 0 0 2 0; -fx-background-radius: 0;
+}
+.proctor-redesign .tabs .toggle-button:selected { -fx-text-fill: #f26b1d; -fx-font-weight: bold; -fx-border-color: transparent transparent #f26b1d transparent; }
+.proctor-redesign .count-pill { -fx-background-color: #eef1f5; -fx-background-radius: 9; -fx-padding: 0 6 0 6; -fx-text-fill: #52627a; -fx-font-size: 0.85em; }
+
+/* ---------- Tables ---------- */
+.proctor-redesign .table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-table-cell-border-color: transparent;
+    -fx-selection-bar: #fff1e8;
+    -fx-selection-bar-non-focused: #fff1e8;
+}
+.proctor-redesign .table-view .column-header-background { -fx-background-color: #f8fafc; -fx-border-color: #e3e8ef; -fx-border-width: 1 0 1 0; }
+.proctor-redesign .table-view .column-header, .proctor-redesign .table-view .filler { -fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0 0 0 4; }
+.proctor-redesign .table-view .column-header .label { -fx-text-fill: #52627a; -fx-font-weight: bold; -fx-font-size: 0.9em; -fx-alignment: center-left; -fx-padding: 12 8 12 10; }
+.proctor-redesign .table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #edf1f5 transparent;
+    -fx-cell-size: 62;
+}
+.proctor-redesign.density-compact .table-row-cell { -fx-cell-size: 44; }
+.proctor-redesign .table-row-cell:hover { -fx-background-color: #f8fafc; }
+.proctor-redesign .table-row-cell:selected { -fx-background-color: #fff6ef; }
+.proctor-redesign .table-row-cell.row-offline { -fx-background-color: #fffaf4; -fx-border-color: transparent transparent #edf1f5 #dc2626; -fx-border-width: 0 0 1 3; }
+.proctor-redesign .table-row-cell.row-attention { -fx-background-color: #fffdf8; }
+.proctor-redesign .table-cell { -fx-text-fill: #13254a; -fx-padding: 0 6 0 12; -fx-alignment: center-left; -fx-font-size: 0.96em; }
+.proctor-redesign .table-row-cell:selected .table-cell { -fx-text-fill: #13254a; }
+.proctor-redesign .table-view .placeholder .label { -fx-text-fill: #6b7a90; }
+.proctor-redesign .table-view .scroll-bar:vertical, .proctor-redesign .table-view .scroll-bar:horizontal { -fx-background-color: transparent; }
+.proctor-redesign .scroll-bar .thumb { -fx-background-color: #cfd7e2; -fx-background-radius: 4; }
+.proctor-redesign .scroll-bar .track, .proctor-redesign .scroll-bar .track-background { -fx-background-color: transparent; }
+.proctor-redesign .scroll-bar .increment-button, .proctor-redesign .scroll-bar .decrement-button { -fx-padding: 0; }
+.proctor-redesign .scroll-bar .increment-arrow, .proctor-redesign .scroll-bar .decrement-arrow { -fx-shape: " "; -fx-padding: 0; }
+
+.proctor-redesign .progress-bar { -fx-pref-height: 7; -fx-min-height: 7; -fx-max-height: 7; -fx-indeterminate-bar-length: 40; }
+.proctor-redesign .progress-bar .track { -fx-background-color: #e8edf3; -fx-background-radius: 4; -fx-background-insets: 0; }
+.proctor-redesign .progress-bar .bar { -fx-background-color: #138a5b; -fx-background-radius: 4; -fx-background-insets: 0; -fx-padding: 3.5; }
+.proctor-redesign .progress-bar.last-known .bar { -fx-background-color: #e0676b; }
+.proctor-redesign .progress-bar.unknown .bar { -fx-background-color: #b8c2cf; }
+
+/* ---------- Lists (overview) ---------- */
+.proctor-redesign .feed-item { -fx-padding: 14 16 14 16; -fx-border-color: transparent transparent #edf1f5 transparent; -fx-spacing: 4; -fx-cursor: hand; }
+.proctor-redesign .feed-item:hover { -fx-background-color: #f8fafc; }
+.proctor-redesign .feed-title { -fx-font-weight: bold; -fx-font-size: 1.1em; -fx-text-fill: #13254a; }
+.proctor-redesign .log-row { -fx-padding: 8 16 8 16; -fx-border-color: transparent transparent #edf1f5 transparent; -fx-spacing: 18; -fx-cursor: hand; }
+.proctor-redesign .log-row:hover { -fx-background-color: #f8fafc; }
+.proctor-redesign .setting-row { -fx-padding: 14 0 14 0; -fx-border-color: transparent transparent #edf1f5 transparent; -fx-spacing: 12; }
+.proctor-redesign .setting-title { -fx-font-weight: bold; -fx-text-fill: #13254a; }
+
+/* ---------- Drawer ---------- */
+.proctor-redesign .drawer-scrim { -fx-background-color: rgba(26, 38, 60, 0.42); }
+.proctor-redesign .drawer {
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, #0f1f3d40, 24, 0.1, -4, 0);
+    -fx-border-color: transparent transparent transparent #e3e8ef;
+}
+.proctor-redesign .drawer-header { -fx-padding: 22 26 14 28; -fx-spacing: 4; -fx-border-color: transparent transparent #e3e8ef transparent; }
+.proctor-redesign .drawer-eyebrow { -fx-text-fill: #f26b1d; -fx-font-weight: bold; -fx-font-size: 0.88em; }
+.proctor-redesign .drawer-title { -fx-font-size: 1.65em; -fx-font-weight: bold; -fx-text-fill: #13254a; }
+.proctor-redesign .drawer-body { -fx-padding: 6 26 16 28; -fx-spacing: 0; -fx-background-color: #ffffff; }
+.proctor-redesign .drawer-scroll, .proctor-redesign .drawer-scroll > .viewport { -fx-background-color: #ffffff; -fx-background: #ffffff; -fx-padding: 0; }
+.proctor-redesign .drawer-section { -fx-padding: 16 0 16 0; -fx-spacing: 10; -fx-border-color: transparent transparent #e3e8ef transparent; }
+.proctor-redesign .drawer-footer { -fx-padding: 16 22 18 22; -fx-spacing: 10; -fx-border-color: #e3e8ef transparent transparent transparent; -fx-alignment: center-right; }
+.proctor-redesign .close-glyph { -fx-stroke: #6b7a90; -fx-stroke-width: 1.6; }
+
+.proctor-redesign .toast {
+    -fx-background-color: #13254a; -fx-background-radius: 8; -fx-padding: 12 16 12 16; -fx-spacing: 4;
+    -fx-effect: dropshadow(gaussian, #0f1f3d55, 14, 0.1, 0, 3);
+}
+.proctor-redesign .toast .label { -fx-text-fill: #ffffff; }
+.proctor-redesign .banner { -fx-background-color: #fff4e0; -fx-background-radius: 8; -fx-padding: 9 14 9 14; }
+.proctor-redesign .banner .label { -fx-text-fill: #8a4b06; }
+.proctor-redesign .banner.error { -fx-background-color: #fdecec; }
+.proctor-redesign .banner.error .label { -fx-text-fill: #a61b1b; }
+.proctor-redesign .tooltip { -fx-background-color: #13254a; -fx-text-fill: #ffffff; -fx-font-size: 0.92em; }
