@@ -783,6 +783,47 @@ class RealtimeClientTest {
             }
         }
     }
+    @Test void reacquiringSameSignalLeaseRequiresFreshHeartbeatAndCapability()throws Exception{
+        try(Fixture f=new Fixture()){
+            f.connect();try(var first=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){confirmSignal(f);}
+            try(var replacement=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){
+                assertThat(f.client.signalExperimentReady("mock-attempt-A")).isFalse();
+                assertThatThrownBy(()->f.client.confirmSignalExperiment(signalCapability(),f.client.connectionGeneration(),"MOCK-signal-run")).isInstanceOf(IllegalArgumentException.class);
+                confirmSignal(f);assertThat(f.client.signalExperimentReady("mock-attempt-A")).isTrue();
+            }
+        }
+    }
+    @Test void oldHeartbeatAckCannotConfirmReplacementSignalLease()throws Exception{
+        try(Fixture f=new Fixture()){
+            f.connect();JsonObject oldHeartbeat;
+            try(var first=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){f.clock.advance(Duration.ofSeconds(2));oldHeartbeat=GSON.fromJson(f.socket().sent.getLast(),JsonObject.class);}
+            try(var replacement=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){
+                JsonObject ack=new JsonObject();ack.addProperty("status","ACCEPTED");ack.addProperty("acknowledgedType","HEARTBEAT");ack.addProperty("connectionId","MOCK-signal-connection-"+f.client.connectionGeneration());
+                f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ACK","MOCK-stale-hb",oldHeartbeat.get("requestId").getAsString(),"mock-attempt-A",oldHeartbeat.get("traceId").getAsString(),ack)),true);
+                assertThatThrownBy(()->f.client.confirmSignalExperiment(signalCapability(),f.client.connectionGeneration(),"MOCK-signal-run")).isInstanceOf(IllegalArgumentException.class);
+                confirmSignal(f);assertThat(f.client.signalExperimentReady("mock-attempt-A")).isTrue();
+            }
+        }
+    }
+    @Test void signalPayloadMustMatchConfirmedObserverRun()throws Exception{
+        try(Fixture f=new Fixture()){
+            f.connect();try(var lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){
+                confirmSignal(f);var original=signal(1);var payload=original.payload().deepCopy();payload.addProperty("observerSessionId","MOCK-other-run");
+                assertThat(f.client.send(new MessageEnvelope<>(original.protocolVersion(),original.type(),original.messageId(),original.requestId(),original.attemptId(),original.traceId(),payload))).isCompletedExceptionally();
+            }
+        }
+    }
+    @Test void queuedSignalCannotWriteAfterItsCapabilityLeaseEnds()throws Exception{
+        try(Fixture f=new Fixture()){
+            f.connect();var lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run");
+            try{
+                confirmSignal(f);f.socket().sent.clear();f.socket().writeGate=new CompletableFuture<>();
+                var first=f.client.send(signal(1));var second=f.client.send(signal(2));assertThat(f.socket().sent).hasSize(1);
+                lease.close();f.socket().writeGate.complete(f.socket());
+                assertThat(first).isCompleted();assertThat(second).isCompletedExceptionally();assertThat(f.socket().sent).hasSize(1);assertThat(f.client.connectionState()).isEqualTo(ConnectionState.CONNECTED);
+            }finally{lease.close();}
+        }
+    }
     private static MessageEnvelope<JsonObject> signal(int n){return new vn.edu.toeic.protocol.monitoring.signal.SignalMessage("mock-attempt-A","MOCK-signal-request-"+n,"MOCK-signal-trace",new vn.edu.toeic.protocol.monitoring.signal.DisplaySignal("MOCK-signal-event-"+n,"MOCK-signal-run",n,java.time.Instant.parse("2026-10-19T10:00:00Z"),vn.edu.toeic.protocol.monitoring.EventOrigin.OFFLINE,1,"INITIAL")).envelope();}
     private static JsonObject signalCapability(){JsonObject p=new JsonObject();p.addProperty("protocolVersion","v0");p.addProperty("schemaVersion",1);p.addProperty("traceId","MOCK-cap-trace");p.addProperty("attemptId","mock-attempt-A");com.google.gson.JsonArray a=new com.google.gson.JsonArray();a.add("DISPLAY_COUNT_OBSERVED");p.add("supportedEventTypes",a);return p;}
     private static void confirmSignal(Fixture f){ackSignalHeartbeat(f);f.client.confirmSignalExperiment(signalCapability(),f.client.connectionGeneration(),"MOCK-signal-run");}

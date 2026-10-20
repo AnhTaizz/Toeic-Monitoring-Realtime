@@ -179,6 +179,37 @@ class SignalPipelinePostgresTest {
             }
         }
     }
+    @Test void proctorTokenExpiryAfterAssignmentLockWaitCannotReadHistoryOrCapabilities()throws Exception{
+        String a=attempt();store(message(a,1));
+        for(String suffix:List.of("signals","signal-capabilities")){
+            String token=login("proctor"),hash=TokenHash.sha256(token);
+            jdbc.sql("UPDATE login_sessions SET expires_at=clock_timestamp()+INTERVAL '5 seconds' WHERE token_hash=:h").param("h",hash).update();
+            var pool=Executors.newSingleThreadExecutor();try(Connection lock=connection()){
+                lock.setAutoCommit(false);lock.createStatement().execute("SELECT * FROM monitoring_proctor_assignments WHERE attempt_id='"+a+"' FOR UPDATE");
+                var waiting=pool.submit(()->getJson(a,suffix,token,401));awaitBlockedUpdate("monitoring_proctor_assignments");
+                long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(7);boolean expired=false;
+                while(System.nanoTime()<deadline){expired=jdbc.sql("SELECT expires_at<=clock_timestamp() FROM login_sessions WHERE token_hash=:h").param("h",hash).query(Boolean.class).single();if(expired)break;Thread.onSpinWait();}
+                assertThat(expired).as("DB expiry crossed during assignment lock wait").isTrue();lock.commit();
+                var denied=waiting.get(10,TimeUnit.SECONDS);assertThat(denied.getAsJsonObject("error").get("code").getAsString()).isEqualTo("UNAUTHORIZED");
+                assertThat(rows(a)).isEqualTo(1);assertThat(counter(a)).isEqualTo(1);
+            }finally{pool.shutdownNow();assertThat(pool.awaitTermination(5,TimeUnit.SECONDS)).isTrue();}
+        }
+    }
+    @Test void experimentOffStillAppliesV13WithoutCreatingSignalServiceOrRoutes()throws Exception{
+        String offSchema="signal_off_"+UUID.randomUUID().toString().replace("-","");
+        admin.createStatement().execute("CREATE SCHEMA "+offSchema);
+        try{
+            Map<String,Object> p=new HashMap<>();p.put("server.address","127.0.0.1");p.put("server.port","0");p.put("spring.datasource.url",url+"?currentSchema="+offSchema);p.put("spring.datasource.username",required("DB_USER"));p.put("spring.datasource.password",required("DB_PASSWORD"));p.put("spring.flyway.default-schema",offSchema);p.put("spring.flyway.schemas",offSchema);p.put("toeic.seed.password",required("TOEIC_SEED_PASSWORD"));p.put("exam.timeout.scheduler.enabled","false");p.put("toeic.monitoring.signal-experiment-enabled","false");p.put("logging.level.root","WARN");
+            SpringApplication app=new SpringApplication(ToeicServerApplication.class);app.setBannerMode(Banner.Mode.OFF);app.addInitializers(c->c.getEnvironment().getPropertySources().addFirst(new MapPropertySource("isolated-signal-off-test",p)));
+            try(ConfigurableApplicationContext off=app.run()){
+                assertThat(off.getBeansOfType(SignalService.class)).isEmpty();assertThat(off.getBeansOfType(SignalController.class)).isEmpty();
+                var mappings=off.getBean(org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping.class).getHandlerMethods();
+                assertThat(mappings.values()).noneMatch(m->m.getBeanType()==SignalController.class);
+                var db=off.getBean(JdbcClient.class);assertThat(db.sql("SELECT success FROM flyway_schema_history WHERE version='13'").query(Boolean.class).single()).isTrue();
+                assertThat(db.sql("SELECT count(*) FROM monitoring_signal_events").query(Long.class).single()).isZero();assertThat(db.sql("SELECT count(*) FROM monitoring_signal_counters").query(Long.class).single()).isZero();
+            }
+        }finally{admin.createStatement().execute("DROP SCHEMA "+offSchema+" CASCADE");}
+    }
     private void awaitBlockedCounter()throws Exception{awaitBlockedUpdate("monitoring_signal_counters");}
     private void awaitBlockedUpdate(String table)throws Exception{
         long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);boolean blocked=false;while(System.nanoTime()<until){blocked=jdbc.sql("SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND wait_event_type='Lock' AND query LIKE :q").param("q","%"+table+"%").query(Long.class).single()>0;if(blocked)break;Thread.onSpinWait();}assertThat(blocked).as("Controlled DB lock wait "+table).isTrue();
