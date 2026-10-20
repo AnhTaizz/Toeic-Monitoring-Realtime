@@ -814,6 +814,36 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - Kiểm docs/JSON bằng Node.js, giữ kết quả lịch sử trong VALIDATION; source/runtime mới chưa code, toàn matrix22NOT_RUN. PR73 probe độc lập/physical12NOT_RUN không kéo vào production; BASE03gateNOT_DECIDED/FULLdefault, MON01physical/B/BASE02pending không đổi.
 - Chỉ commit/push/cập nhật PR72 và theo CI, không merge/approve/backlog/DONE, không tạo nhánh implementation khi thiếu approval. A/C chốt wire/storage/auth, B transport/lifetime, nhóm notice/retention/offline. Kết quả CI cuối xem PR/report bàn giao.
 
+
+## 19/10/2026 · C/agent · MON07 slice MOCK được người dùng ủy quyền
+
+- User cho phép D07-01–04/mục11.1 PR72c9a5829 trong TEST cách ly, không thay approval A/B/C. Fetch/main1d35b537, proposal chưa merge; tạo feat/v2-c-mon07-signal-pipeline từ đúngc9a5829, sẽ Draft stacked vào nhánh proposal.
+- Thêm typed strict parser/immutable encoder, queue RAM riêng, opt-in capability/ACK hook cùng RealtimeClient, conditional server service/counter/history và V13append-only. Không tự bật observer/capture/push/dashboard hoặc D07-05 offline/retention.
+- Baseline/focused unit ban đầu qua; integration compile có PG testsSKIP khi chưa bật fixture, không gọi PG PASS. Runtime/CI/source evidence sẽ ghi [report](../evidence/v2-c-mon07-signal-pipeline/REPORT.md); logs ngoài reactor target để giữ nguyên lịch sử. Chưa DONE/gate/owner review/merge, giữ FULLdefault.
+
+
+### MON07 — kiểm chứng cuối source0f9d8e7
+
+- Focused216PASS/0SKIP; fullverify1031total=1025PASS/6SKIP/0FAIL/ERROR,12PG/WS cases,41case mới làsubset. Runtime thật Spring/HTTP/WS/PG loopback, inputMOCK, ACK-loss/deferred failureSIMULATED; actual reconnect/counter ordering/token/terminal/unassign locks và teardown0schema/clusterstop0. [Report/receipt/provenance](../evidence/v2-c-mon07-signal-pipeline/REPORT.md).
+- Hai regression mới đã tái hiện FAIL: integerwrap getAsLong và same-socket new-run capability. Sửa exact parse/clock và bindexpectedCollector/currentgen; localFAIL/XML nguyên bản giữignored. Runner entrypoint trướccluster và summaryfilter EX04 sai cũng giữbiên bản, không sửaraw hoặc nhậnsummarysai.
+- Sinh verification/case/XMLhash/raw inventory/JARreceipt từ source0f9d8e7. Chỉ docs/evidence sau đó, kiểm runtime diff rỗng. Main mới3bdefe6 chỉdocs/fixturesEX02, Java/SQL/POM không đổi, V12latest; không merge/rebase hoặc suy approval EX02 thànhMON07. Draft implementation vẫnstackedPR72c9a5829; CI đúngHEAD theoPR saupush.
+- FULLdefault, BASE03NOT_DECIDED, MON01physical/B/BASE02pending, MON02physical0/12NOT_RUN; khôngcapture/push/dashboard/D07-05, khônghuman approval/MON07DONE/merge.
+
+
+### MON07 — source cuối c77d8f8 / Draft PR74
+
+- Bổ sung regression thật: expiry trong session-lock wait đãFAIL trên3674633+tests (DBclock target-list tính trước lockwait);7cb7478 đọc DBclock sau locks. UnitterminalFAILED/globalUNAUTHORIZED cleanup đãFAIL trên7cb7478+tests; c77d8f8 closeworker/queue/reportunconfirmed, actual tokenrevoke casePASS. Giữraw/XML/JAR/report/receipt cũ, không sửa evidence lịch sử.
+- Sourcec77d8f8 focused219PASS/0SKIP, fullverify1034total=1028PASS/6SKIP/0FAIL/ERROR;44new cases subset/14REAL PG/WS,0schema/clusterstop0. [Report cuối](../evidence/v2-c-mon07-signal-pipeline/REPORT.md), versioned receipt/hash mới. Chỉ docs/evidence sau source; DraftPR74 stacked PR72, CI đúngpublicationHEAD theoPR. Không merge/approve/DONE/observer/push/dashboard/D07-05; FULLdefault/gate/physicalpending giữ nguyên.
+
+
+## 20/10/2026 · C/agent · review và sửa slice MON-07 PR74
+
+- Đối chiếu GitHub/Git: PR72/74 Draft/open, c9a5829 → 8b1b388; main3bdefe6/V12, worktree sạch và root f98a37f giữ nguyên. CI8b1b388 run39347449291 SUCCESS là baseline, không approval hoặc CI source sửa.
+- Review toàn đường MOCK → serialize/queue/WS → auth/transaction/COMMIT → ACK/dequeue → paged history. Tái hiện 6 adapter regression FAIL (lease identity/stale heartbeat ACK+FORBIDDEN/wrong run/queued IO/old write deleting new correlation) và REAL HTTP/PG expiry sau assignment lock vẫn200 thay401. Logs/XML giữignored; không sửa expected hoặc timeout để che lỗi.
+- Sửa RealtimeClient trực tiếp theo quyền user giao, B review identity/guard/owned cleanup; A/C review clock sau final assignment lock trong SignalService. Source2d73605 focused227PASS/0SKIP,16REAL PG cases; fullverify1042total=1036PASS+6SKIP/0FAIL/ERROR và JAR SUCCESS, teardown0schema/stop0. Receipt nguồn/JAR mới và evidence trướcfix trong review-20261020.json; CI exact publication HEAD theo Draft PR74 saupush.
+- Kiểm OFF trên schema TEST riêng: Flyway13 SUCCESS, bảng signal/counter rỗng nhưng không service/routes. Đây là migration additive độc lập runtime flag, không sửa SQL đã áp dụng hoặc DB dev. Giữ raw và JAR/receipt c77 cũ với hash đúng. [Review/evidence](../evidence/v2-c-mon07-signal-pipeline/REVIEW-20261020.md).
+- Chỉ MOCK/TEST; không observer/USB/push/dashboard/signal mới/offline60s/retention30ngày/.env/tracker. FULL default; gate/physical pending, không ký A/B/C/MON07DONE hoặc merge72/74.
+
 ## 19/10/2026 · C/Codex · BASE-03 kiểm chứng FULL/DELTA
 
 - Yêu cầu thực thi BASE-03 sau audit; người dùng yêu cầu không dùng codex-with-chatgpt. Fetch và worktree riêng từ origin/main1d35b53; main local f98a37f giữ nguyên/sạch. Không push/PR/merge/reset/rebase/stash/clean/xóa worktree.
@@ -857,3 +887,12 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 ## 20/10/2026 · Codex technical review USB probe PR73
 
 Đọc CIM projection/classification, tracker, parser, timeout/output/child/pipe cleanup và source receipt. Tự chạy35tests/0SKIP/JAR trên aa260ef, MSFT READY0/Win32 UNKNOWN trên STANDARD, child0/readers true; không hardware hotplug. Hòa main chỉ docs/shared tests, probe source/scripts không đổi, public7hash giữ nguyên. User cho phép merge spike nếu CI HEAD cuối đạt; không ADR-V2-05 approval, physical0/12NOT_RUN, không integration/observer/retention/FULL gate changes.
+
+
+## 20/10/2026 · Codex · review kỹ thuật C và merge theo ủy quyền user
+
+- Đã đọc/check GitHub/head/base/diff/CI/source cho70–74, không audit lại toànT1–T4. Bảo vệbranch main không enabled, rulesets rỗng; protection endpoint403, không bypass hoặc GitHub APPROVE. Merge commit70e0ef252/712595106/72a636e2a/7346869eb; xác minh tree exact testedHEAD, giữbranches/rootmainf98a37f.
+- Findings mới: standaloneC2 thiếuSmokeCleanup trong loader (FAIL NoClassDef/1schema) →92f9faf copyhelper,65PASS/GUI/WS/PGcleanup0. Fulltích hợpa5339dc FAIL1USBchild vìJAVA_TOOL_OPTIONS bannerstderr; controlled có/không env chứng minhCHILD_DIAGNOSTIC→READY, d6bf60a cô lập/restoreenv vàMavenUTC, không đổiprobeexpected/timeout. RawFAIL giữ nguyên.
+- Source d6bf60a fullverify1071PASS/6SKIP/0FAIL/ERROR,17REAL PG cases,5001event đềuquaWS/auth/transaction/COMMIT/ACK,51pages +24concurrent +revoke/unassign giữa trang. Headlessprocess smoke dùngRealtimeClienttích hợp PASS/0schema/stop0, không lặpunit/GUIcampaign. Focusedcd00630=228PASS làsubset. Receipt4JAR/sourcehash tại [báo cáo tổng hợp](../evidence/c-technical-review-20261020/REPORT.md).
+- #74 chuyểnbase main/sau72, không lặpproposal. MigrationV13OFF vẫnáp, maintrước74V12; EX03V14/EX07V15 không collision tại audit. Không .env/devDB/Flywayclean/rootclean/productiondeploy, không observer/push/dashboard/offline60s/retention30ngày.
+- Codex technical review phầnA/B liên quan đãlàm; không chữkýowner/ADR APPROVED/hardware/gate/DONE. #74 chỉmerge sauCIpublicationHEADđạt; kết quảcuối/mergeSHA ghiPR/bàn giao. FULLdefault/LAN0/41/USB0/12pending; khôngđổitracker.

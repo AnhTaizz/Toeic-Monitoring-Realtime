@@ -341,6 +341,11 @@ Ngày 19/10/2026 · Trạng thái: IMPLEMENTED, chờ A/B review importer và re
 
 Ghi chú kiểm chứng19/10/2026, nhánhreviewEX04 chưamerge: [reportPG](EX04_V11_VERIFICATION.md) tái hiệnV11NULL-type2FAIL; V12append-only thêmCHECK để thực thi đúng typed-media invariant trên. Fresh/upgrade/rollback/legacyHTTP vàcleanverify đãchạy; không sửaV1–V11 hoặc đổiQD21. [EX02/START/media proposal](EX02_RICH_EXAM_CONTRACT_PROPOSAL.md) vẫnCHƯA DUYỆT; không xem đây là quyết định schema/API/deadline mới hoặc chữ kýA/B/C.
 
+
+## MON-07 · Ủy quyền thử nghiệm người dùng, 19/10/2026 (không chữ ký owner)
+
+Nguồn: yêu cầu trong phiên cho phép mục11.1 PR72 tại c9a5829, D07-01–04 **chỉ MOCK DISPLAY_COUNT_OBSERVED → REAL WS → PostgreSQL TEST → commit/ACK → paged history**; no observer/no real capture/no push/dashboard, teardown TEST. [Phạm vi và giới hạn](../evidence/v2-c-mon07-signal-pipeline/REPORT.md). Ghi USER_AUTHORIZED_EXPERIMENT, không chuyển D07 thành human APPROVED hoặc ký A/B/C. Offline60s/retention30ngày vẫn PENDING/chưa áp dụng; FULLdefault/gate/hardware không đổi.
+
 ## EX-02 / ADR-V2-03 / D10 — nhóm thông qua theo đại diện, 19/10/2026
 
 **TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE**: [D01–D10](plan-v2/EX02_DECISIONS_ROADMAP.md), [contract](EX02_RICH_EXAM_CONTRACT_V1.md), [ADR](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md). [Nguồn19/10](plan-v2/EX02_TEAM_APPROVAL_20261019.md): “User-provided confirmation from the project team representative, 2026-10-19.” A/B/C đồng ý theo đại diện nhóm, không chữ ký riêng hoặc GitHub Approving Review. Chọn Option A: owner prefetch đúng ảnh Part1 trước START (chấp nhận chủ máy có thể trích xuất bytes), không prompts/options/keys/passages; whole roster Audio+Visual READY current epoch/lease trước Listening START duy nhất. Server clock/deadline tại START, ảnh visible gate trước play; lỗi sau commit interruption/no replay/no deadline reset. Ca legacy giữ QD21, không infer version bằng deadlineNULL. Đây phê duyệt thiết kế, không migration/Java/runtime/GUI PASS hoặc EX03–08 DONE.

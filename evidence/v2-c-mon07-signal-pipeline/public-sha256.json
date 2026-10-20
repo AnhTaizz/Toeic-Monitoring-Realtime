@@ -1,0 +1,41 @@
+{
+  "encoding": "UTF8_LF",
+  "files": [
+    {
+      "file": "REPORT.md",
+      "sha256": "591edf205e5a031c443391cb069c1d5c6fc843bd0c18aa7562005348fc51f205"
+    },
+    {
+      "file": "REVIEW-20261020.md",
+      "sha256": "fc55a9334a2773b5bd91b04be92dc85b6b32c2d7d812cc1f7ab98e5282d4336e"
+    },
+    {
+      "file": "build-receipt-c77d8f8.json",
+      "sha256": "d1f696b5b8f07cd59bb88c7931a13606e7bc38e078e16c61bb352bbdcb6c38b4"
+    },
+    {
+      "file": "build-receipt.json",
+      "sha256": "c5490b40005e9f5f7a9f7076cc3a55598b577c5693d506e6dc7e1b0d33eed200"
+    },
+    {
+      "file": "raw-manifest-c77d8f8.json",
+      "sha256": "aefaeae198abd91e4104f95d13c8bf171c5b678c94b3948f1a5b596d93b4bdbf"
+    },
+    {
+      "file": "raw-manifest.json",
+      "sha256": "e9ce5999990d1368c29005d155a592b3a5cc937de0b5e0fae72b5f370bfbc6e4"
+    },
+    {
+      "file": "review-20261020.json",
+      "sha256": "69029bdd28df539932a8c2dbfe7d93ba972e2dbcab231c999cebb0e09e09477c"
+    },
+    {
+      "file": "verification-c77d8f8.json",
+      "sha256": "b6171a48d16e877530c9ebb730c7a144dc983046fd9401bf8995790f4bb3c7a8"
+    },
+    {
+      "file": "verification.json",
+      "sha256": "24e4f398f9f0ae7b555866dc3a2e5725acd724d6a3273fff7e485654aef92498"
+    }
+  ]
+}

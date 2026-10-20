@@ -441,6 +441,20 @@ Test source1e75924: budget classification10s/diagnostic scalar sau close; CLI5s/
 
 Đã hoàn thiện [D07-01–05 và kế hoạch slice](../MONITORING_MULTISIGNAL_CONTRACT_PROPOSAL.md#11-năm-quyết-định-để-owner-xác-nhận), **tất cả PROPOSED**; review/comment PR72 rỗng khi kiểm, không có nguồn owner approval. Khuyến nghị MOCK DISPLAY_COUNT_OBSERVED duy nhất, capability một type/no push/no observer production, RAM256/1MiB/2flight, immutable retry/COMMIT-before-ACK, counter+paged history, offline60s/retention30ngày chờ duyệt. Transport write stall và revoke khi chờ lock cần A/B review hook/test. Chỉ cập nhật nhánh proposal PR72; chưa tạo feature branch/DTO/SQL. FULLdefault/gateNOT_DECIDED, MON01physical/B/BASE02pending và MON02physical12NOT_RUN giữ nguyên. [Kiểm tài liệu](../mon07-proposal/VALIDATION.md), không runtime/hardware acceptance hoặc MON07DONE.
 
+
+### MON07 slice MOCK — ủy quyền thử nghiệm19/10/2026
+
+User cho phép D07-01–04 PR72c9a5829 cho MOCK/REAL WS/PG TEST/commit ACK/history, nhánh riêng feat/v2-c-mon07-signal-pipeline stacked. [Report](../../evidence/v2-c-mon07-signal-pipeline/REPORT.md); A/C review transaction/locks/schema, B review transport/generation/admission. Chưa human approval/D07-05/observer/push/dashboard/DONE hoặc merge. FULLdefault/gate/physicalpending giữ nguyên.
+
+Kết quả slice source0f9d8e7: focused216PASS/fullverify1025PASS+6SKIP,12REAL PG/WS cases,41case mới subset; teardown0schema/stop0, JARreceipt cóhash. Reviewer A/C xem auth/locks/V13/cursor, B xem capability current run/ACK/admission/writecleanup; broader22matrix/hardware chưa PASS. CI exactHEAD trong Draft PR; không tự merge/DONE.
+
+Source cuối c77d8f8/DraftPR74: focused219PASS/fullverify1028PASS+6SKIP,44new cases subset/14REAL PGWS; DBclock sau locks và terminalFAILED cleanup có regression trướcfix. Versionedreceipt/evidence mới, bản0f9d8e7/7cb7478 giữnguyên. Chỉ user-authorized experiment; A/C+B review cònpending, không MON07DONE hoặc merge.
+
+
+### Ghi chú làm dở — review MON-07 PR74, 20/10/2026
+
+Đã sửa 7 lỗi có regression trước fix tại [review](../../evidence/v2-c-mon07-signal-pipeline/REVIEW-20261020.md), source2d73605/focused227PASS,16PG/WS cases. A/C review token expiry sau assignment wait/transaction/cursor; B review lease identity, queued write guard và callback cleanup đúng request/generation. Flyway V13 vẫn áp khi experiment OFF, được kiểm trên TEST riêng; OFF không undo schema. Fullverify/JAR1036PASS+6SKIP/0FAIL/ERROR, teardown0schema/stop0; CI exact publication HEAD theo report/PR. Bước tiếp theo cho C: cùng owner review các diff này; >5000 typed history/GUI/LAN/hardware còn mở, không tự triển khai hoặc coi MON07DONE.
+
 ## Ghi chú làm dở BASE-03 — 19/10/2026
 
 [Thực thi mới A–J](../../evidence/v2-c-base03/REPORT.md): FULL-first/314focused/983regressionPASS+7SKIP/Python22/oracle72/local42 và probe epoch/sequence WS PASS trên PG TEST riêng; production giữ nguyên. Nhánh test/v2-c-base03-delta-gate có commit local, chưa push/PR. Bộ ZIP BASE03/hash/runbook và41case đã chuẩn bị, kit29+29PASS nhưng physicalLAN0/41 NOT RUN, B review PENDING. Việc tiếp: nhận hai máy và B thao tác F Reading/Listening/cable-loss/rejoin/cleanup, C đối chiếu SQL/epoch/history, A xem auth/COMMIT/isolation; giữ raw target cho reviewer. GateNOT_DECIDED, FULL mặc định, E2NO; không tự DONE hoặc chuyển MON-07/MON-02.
@@ -453,3 +467,8 @@ Test source1e75924: budget classification10s/diagnostic scalar sau close; CLI5s/
 ## Ghi chú làm dở — review EX-02 / ADR-V2-03, 19/10/2026
 
 C giữ scope review [contract](../EX02_RICH_EXAM_CONTRACT_V1.md)/[ADR](../plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) về auth/lock/timeout/monitoring. D01–D10 đã TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn đại diện19/10](../plan-v2/EX02_TEAM_APPROVAL_20261019.md), không chữ ký/GitHub review cá nhân. EX07 cần PG/HTTP/WS barriers cho START vs takeover/invalidate/revoke/lease/restart, session→attempt→readiness locks, auth-before-receipt, no deadline reset/WS trước commit; EX06 GUI gate/heartbeat. Chấp nhận ảnh Part1 prefetch có thể trích xuất, không hứa server thấy pixels hoặc lập tức biết app đóng. Checkers là MOCK, S01–S16/V01–V20 runtime NOT RUN; FULL/WSv0/collector giữ, không tracker DONE.
+
+
+### 20/10/2026 — Codex đã review kỹ thuật, tiếp tục nghiệm thu thật
+
+[Review C/merge/receipt](../../evidence/c-technical-review-20261020/REPORT.md):70–73đãmergeđúngscope;74base main/source d6bf60a fullverify1071PASS+6SKIP/17PG,5001WS/51pages/concurrent24 vàshared process smokePASS. Đã kiểm phầnA/Cauth/locks/transaction/COMMIT/cursor vàBlease/admission/ACK/callback/cleanup; không còn ghi chưa review kỹ thuật cho các phần này. Human contract/ADR/offline/retention vàphysicalpending không đổi. BướcCtiếp: receipt/kit đúng main tíchhợp, cùngngười thật chạyUSB/LAN/GUIchecklists; khôngtựDONE hoặc lấymerge/CIthayhardware.

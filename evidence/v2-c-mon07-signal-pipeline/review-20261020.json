@@ -1,0 +1,402 @@
+{
+  "status": "TECHNICALLY_VERIFIED_EXPERIMENT_PENDING_OWNER_PHYSICAL_REVIEW",
+  "authorization": "USER_AUTHORIZED_EXPERIMENT_NOT_A_B_C_SIGNOFF",
+  "reviewedHead": "8b1b3883b4b9c39146dc01a105fc5b962199f892",
+  "codeSourceSha": "2d736054a7c77f216e3c279bd4b93a75c81bf0bc",
+  "proposalSourceSha": "c9a5829a022b6810d1d6db2da240d57b95d3ed81",
+  "mainAtFetch": "3bdefe6ccc346a316a91f1e280fe4f5c74600cfd",
+  "input": "MOCK DISPLAY_COUNT_OBSERVED",
+  "transport": "REAL HTTP/WebSocket/PostgreSQL loopback; ACK loss/deferred fault/stalled socket SIMULATED",
+  "versions": {
+    "os": "Microsoft Windows NT 10.0.26200.0",
+    "java": "openjdk version \"21.0.10\" 2026-01-20 LTS",
+    "maven": "Apache Maven 3.9.15 (98b2cdbfdb5f1ac8781f537ea9acccaed7922349)",
+    "postgres": "PostgreSQL 18.3 on x86_64-windows, compiled by msvc-19.44.35223, 64-bit"
+  },
+  "beforeFix": [
+    {
+      "sourceSha": "076efe865c8a1e8790c22f2831f74b4cfefee973",
+      "totals": {
+        "tests": 70,
+        "failures": 4,
+        "errors": 0,
+        "skipped": 0
+      },
+      "evidence": [
+        {
+          "path": "adapter-before-fix.private.log",
+          "bytes": 17524,
+          "sha256": "6e0d07905a4aa2a8b09c3b51051ea6e26325005c39649fbbea74ee370c0f8e5c",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "before-fix-reports/RealtimeClientTest.xml",
+          "bytes": 23993,
+          "sha256": "ebfd3fa309c1ee6018b4ff1db952c08b698123e1dcbde860307c2f8c85640ec2",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        }
+      ]
+    },
+    {
+      "sourceSha": "5dc82eee1984e38b09840df066b32605acf81d06",
+      "totals": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "evidence": [
+        {
+          "path": "stale-write-before-fix.private.log",
+          "bytes": 12268,
+          "sha256": "7ce0039078211c7fe5e57e5a518ef118787ead2fce07add3c81236c89c0ee142",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "before-fix-reports/stale-write.xml",
+          "bytes": 11448,
+          "sha256": "13ca40423cc9de22c5ceca5c0af5fd2cb260fd9f074bc83b97f5e67618e9b7a9",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        }
+      ]
+    },
+    {
+      "source": {
+        "base": "79ac6200daed7a5118a99be4a72584ef5a4e9d85",
+        "testFile": "client/src/test/java/vn/edu/toeic/client/realtime/RealtimeClientTest.java",
+        "testSha256Utf8Lf": "60bdf32d5c0d8fafd9d12f41ca376c72ef444784a3a86dabf0698e8cdeb9ecc8"
+      },
+      "totals": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "evidence": [
+        {
+          "path": "old-denial-before-fix.private.log",
+          "bytes": 12720,
+          "sha256": "4352d209fc2abd76defc2f75b6d7412355d98b5e353d8f7fb98cec02670c9c23",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "before-fix-reports/old-denial.xml",
+          "bytes": 11671,
+          "sha256": "0574ce745bb2834513ca724dac67148dec25ac25f0d7aa7bdfb2ae97d00b780c",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        }
+      ]
+    },
+    {
+      "sourceSha": "79ac6200daed7a5118a99be4a72584ef5a4e9d85",
+      "runId": "mon07-20261020T005031Z-98ad2e9c",
+      "totals": {
+        "failures": 0,
+        "passed": 225,
+        "errors": 1,
+        "tests": 226,
+        "skipped": 0
+      },
+      "cleanup": {
+        "clusterStopExit": 0,
+        "ownedSchemasRemaining": 0
+      },
+      "failedCase": "proctorTokenExpiryAfterAssignmentLockWaitCannotReadHistoryOrCapabilities",
+      "actual": "HTTP history 200 after DB expiry during controlled assignment lock wait",
+      "expected": "HTTP 401",
+      "junit": "ERROR: assertion inside Future wrapped in ExecutionException; not a server transport error",
+      "evidence": [
+        {
+          "path": "mon07-20261020T005031Z-98ad2e9c/result.json",
+          "bytes": 74258,
+          "sha256": "89879a055264e08d61875b32c2b5794a3de9ba622f9296741b9438361a61ee9f",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "mon07-20261020T005031Z-98ad2e9c/maven.private.log",
+          "bytes": 25761464,
+          "sha256": "404c23d98d860f83f3d068b234eee99dc4915aee94f8e519eee115b4a950aa7c",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        },
+        {
+          "path": "mon07-20261020T005031Z-98ad2e9c/reports.private/server/TEST-vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest.xml",
+          "bytes": 25667856,
+          "sha256": "e28f18dae2565cadc03e3071d677857691173eac5376d5d90688a45772e9198b",
+          "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+        }
+      ]
+    }
+  ],
+  "focused": {
+    "sourceSha": "2d736054a7c77f216e3c279bd4b93a75c81bf0bc",
+    "runId": "mon07-20261020T005314Z-3c8b8b09",
+    "command": "mvn --batch-mode --no-transfer-progress -pl server -am -Dtest=SignalProtocolTest,SignalDeliveryTest,SignalPipelinePostgresTest,SignalDisabledTest,RealtimeClientTest,MonitoringDeliveryTest,FullSnapshotDeliveryTest,DeltaSnapshotDeliveryTest,MonitoringPresenceServiceTest,MonitoringStateServiceTest,MonitoringStateMaintenanceTest,MonitoringDeltaStateTest,MonitoringHistoryBoundsPostgresTest -Dsurefire.failIfNoSpecifiedTests=false test",
+    "startUtc": "2026-10-20T00:53:24.4362528Z",
+    "endUtc": "2026-10-20T00:54:21.2920431Z",
+    "exitCode": 0,
+    "totals": {
+      "failures": 0,
+      "passed": 227,
+      "errors": 0,
+      "tests": 227,
+      "skipped": 0
+    },
+    "cleanup": {
+      "clusterStopExit": 0,
+      "ownedSchemasRemaining": 0
+    },
+    "evidence": [
+      {
+        "path": "mon07-20261020T005314Z-3c8b8b09/result.json",
+        "bytes": 74548,
+        "sha256": "266e4a3fbbaf8540996f888e2fd62bb68d05f402d93b043cc920a252658414f3",
+        "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+      },
+      {
+        "path": "mon07-20261020T005314Z-3c8b8b09/maven.private.log",
+        "bytes": 43901953,
+        "sha256": "b64ba61795c7209e2dd56531d4cb1a71c0e351b9d860127060fd124f35ffc420",
+        "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+      },
+      {
+        "path": "mon07-20261020T005314Z-3c8b8b09/reports.private/client/TEST-vn.edu.toeic.client.realtime.RealtimeClientTest.xml",
+        "bytes": 22461,
+        "sha256": "52a50c7ce8a8132e5fbc568b7e213488be9bfb73e9042741f1812469a9ba8487",
+        "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+      },
+      {
+        "path": "mon07-20261020T005314Z-3c8b8b09/reports.private/server/TEST-vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest.xml",
+        "bytes": 43809095,
+        "sha256": "b8434efbde432053adcd3a6d4777bb790514af34e53e943c17e4c62ca389dbcc",
+        "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+      }
+    ]
+  },
+  "full": {
+    "sourceSha": "2d736054a7c77f216e3c279bd4b93a75c81bf0bc",
+    "runId": "mon07-20261020T005444Z-b7027e70",
+    "command": "mvn --batch-mode --no-transfer-progress verify",
+    "startUtc": "2026-10-20T00:54:54.4827161Z",
+    "endUtc": "2026-10-20T00:57:21.7217895Z",
+    "exitCode": 0,
+    "totals": {
+      "failures": 0,
+      "passed": 1036,
+      "errors": 0,
+      "tests": 1042,
+      "skipped": 6
+    },
+    "cleanup": {
+      "clusterStopExit": 0,
+      "ownedSchemasRemaining": 0
+    },
+    "evidence": [
+      {
+        "path": "mon07-20261020T005444Z-b7027e70/result.json",
+        "bytes": 340201,
+        "sha256": "8bb5212874d791d24417fd21b52b712ab3d6693208aaa4eb9bb16910adc84ca1",
+        "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+      },
+      {
+        "path": "mon07-20261020T005444Z-b7027e70/maven.private.log",
+        "bytes": 44906484,
+        "sha256": "f62002b172dcd0b32061f300bed604acf6c83ec316563db2252e7ad5da4c1e03",
+        "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+      },
+      {
+        "path": "mon07-20261020T005444Z-b7027e70/reports.private/client/TEST-vn.edu.toeic.client.realtime.RealtimeClientTest.xml",
+        "bytes": 22053,
+        "sha256": "5f5d2f923970659c7b5a6319339c7bba813b7bcb7105081bd1dddd20302bc43b",
+        "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+      },
+      {
+        "path": "mon07-20261020T005444Z-b7027e70/reports.private/server/TEST-vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest.xml",
+        "bytes": 41918220,
+        "sha256": "17a819d6973f67ece9fecccabf6c64bca91c22e4649f6c71e514c819564c7fb1",
+        "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+      }
+    ]
+  },
+  "newReviewCases": [
+    {
+      "class": "vn.edu.toeic.client.realtime.RealtimeClientTest",
+      "name": "queuedSignalCannotWriteAfterItsCapabilityLeaseEnds",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.realtime.RealtimeClientTest",
+      "name": "signalPayloadMustMatchConfirmedObserverRun",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.realtime.RealtimeClientTest",
+      "name": "oldScopedHeartbeatDenialCannotRejectReplacementSignalLease",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.realtime.RealtimeClientTest",
+      "name": "oldSignalWriteFailureCannotRemoveRetriedCorrelationOnNewSocket",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.realtime.RealtimeClientTest",
+      "name": "reacquiringSameSignalLeaseRequiresFreshHeartbeatAndCapability",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.client.realtime.RealtimeClientTest",
+      "name": "oldHeartbeatAckCannotConfirmReplacementSignalLease",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "experimentOffStillAppliesV13WithoutCreatingSignalServiceOrRoutes",
+      "status": "PASS"
+    },
+    {
+      "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+      "name": "proctorTokenExpiryAfterAssignmentLockWaitCannotReadHistoryOrCapabilities",
+      "status": "PASS"
+    }
+  ],
+  "fullSkips": [
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+      "name": "lockSidecarCannotRedirectOutsideCache",
+      "status": "SKIP"
+    },
+    {
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "name": "symlinkInsideCacheRootIsRejectedWhereLinksCanBeCreated",
+      "status": "SKIP"
+    },
+    {
+      "class": "vn.edu.toeic.client.exam.ScoreResultDialogTest",
+      "name": "warningFollowsOnlyServerFlagAndKeepsConfirmedResult(String, boolean)",
+      "status": "SKIP"
+    },
+    {
+      "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+      "name": "installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle",
+      "status": "SKIP"
+    },
+    {
+      "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+      "name": "proctorControlsLt04RealGuiBeforeAndAfterAutomaticTimeout",
+      "status": "SKIP"
+    },
+    {
+      "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+      "name": "appImageProductionClientUsesUnifiedReadingListeningWithoutInstallerClaim",
+      "status": "SKIP"
+    }
+  ],
+  "artifacts": [
+    {
+      "module": "protocol",
+      "file": "protocol-0.1.0-SNAPSHOT.jar",
+      "bytes": 106795,
+      "sha256": "96fadf0699107183c70700ecc428121d9dc186d0c8a70b355746eb25632b4dab",
+      "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+    },
+    {
+      "module": "client",
+      "file": "client-0.1.0-SNAPSHOT-all.jar",
+      "bytes": 11483772,
+      "sha256": "09961ea3d733abb631829168526bdd6a06a7d67f0fd58f846c3ef09472ede340",
+      "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+    },
+    {
+      "module": "server",
+      "file": "server-0.1.0-SNAPSHOT.jar",
+      "bytes": 25293580,
+      "sha256": "3b0ae608a441d4fff682f3672815331598d341b1654547800fa729582e7bc435",
+      "availability": "LOCAL_IGNORED_ONLY_NOT_GITHUB_DOWNLOAD"
+    }
+  ],
+  "sourceHashes": [
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/signal/SignalJson.java",
+      "encoding": "UTF8_LF",
+      "sha256": "6fa63f1248dd4318a8e63750de8a3dbe900a03eec7befff79541bd2d73eb7965"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/signal/DisplaySignal.java",
+      "encoding": "UTF8_LF",
+      "sha256": "d1329b359bdd1954d6bef2271e36e3eece17e279348c47999e016f8a5d4aca43"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/signal/SignalMessage.java",
+      "encoding": "UTF8_LF",
+      "sha256": "7f7494aca4219af4d7d6eda5cf676cf2efccefbac973149b98eeecca3318058b"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/signal/SignalDelivery.java",
+      "encoding": "UTF8_LF",
+      "sha256": "aa66407501f2d86f109d76d7eee8b3fb463b6fcf9c7340f282825b42e1b3366b"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/realtime/MonitoringTransport.java",
+      "encoding": "UTF8_LF",
+      "sha256": "9064219c8fa511a3a14243e6dc12db05e60460a102473a90b82e7c1e829ad447"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/realtime/RealtimeClient.java",
+      "encoding": "UTF8_LF",
+      "sha256": "b6d14c783f392172dea372d0b1f425ed704593d7966e1c3a605dfe03ef2e81c6"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/signal/SignalService.java",
+      "encoding": "UTF8_LF",
+      "sha256": "9ba60802b1fc9a38fb142cc4b19153004010fb5e577e793e56233b1163f24729"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/signal/SignalController.java",
+      "encoding": "UTF8_LF",
+      "sha256": "a03f6446ce505c1501a85de8f03248be0c30d6634a3998f9cd04e01449e23991"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/realtime/RealtimeWebSocketHandler.java",
+      "encoding": "UTF8_LF",
+      "sha256": "50e1ce06c64c7a52d7c7789ed0222872ec9249333541dbf9bf2000fae7309f7b"
+    },
+    {
+      "path": "server/src/main/resources/db/migration/V13__experimental_monitoring_signals.sql",
+      "encoding": "UTF8_LF",
+      "sha256": "3f795a495c8dbb3a4b994e9bfeec15b118a6708945f929331fb0c58b04a45d63"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/realtime/RealtimeClientTest.java",
+      "encoding": "UTF8_LF",
+      "sha256": "60bdf32d5c0d8fafd9d12f41ca376c72ef444784a3a86dabf0698e8cdeb9ecc8"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/signal/SignalPipelinePostgresTest.java",
+      "encoding": "UTF8_LF",
+      "sha256": "4e3912b416e39133ea59374ab3eaaa04cb1d9dfbbf7c81371ce0d64ca3a9c2e0"
+    },
+    {
+      "path": "scripts/verify-mon07-postgres.ps1",
+      "encoding": "UTF8_LF",
+      "sha256": "e8798243f45540a607f5a09a3458b28234181a1ae7e65195a2f864ef9ee45f26"
+    }
+  ],
+  "migrationOff": {
+    "runtimeFlag": false,
+    "flywayEnabled": true,
+    "locations": "classpath:db/migration",
+    "v13Applied": true,
+    "tablesEmpty": true,
+    "signalServiceControllerRoutesAbsent": true,
+    "testSchemaOnly": true,
+    "sqlUnchanged": true
+  },
+  "historicalC77Artifacts": {
+    "receipt": "build-receipt-c77d8f8.json",
+    "preservedLocally": true,
+    "exactHashesVerified": true
+  },
+  "jarLaunch": "NOT_RUN; Maven verify packaging only",
+  "hardwareGuiLanE1E2": "NOT_RUN",
+  "ci": "Exact publication HEAD/run tracked in Draft PR74; local PG evidence is separate"
+}

@@ -939,6 +939,32 @@ Nhánh `stabilize/final-rc-20261017`. Không thêm endpoint, field hay giá tr�
 | `events` / `interruptions` / `gaps` > 5000 dòng | 500 `RETRYABLE_SERVER_ERROR` `retryable:true` | 409 `INVALID_STATE` `retryable:false`, message cố định; không trả danh sách cắt bớt |
 | Dashboard nhận 409 từ ba endpoint lịch sử | "Không tải được dữ liệu hợp lệ…" | Thông báo giới hạn5000, giữ danh sách đầy đủ gần nhất, đánh dấu stale; trần body8 MiB (trước 4 MiB) |
 
+
+## MON-07 — Slice MOCK thử nghiệm theo ủy quyền người dùng (19/10/2026)
+
+**EXPERIMENT ONLY, mặc định tắt; chưa owner/hardware acceptance.** Người dùng cho phép D07-01–04 tại PR72 c9a5829 trong TEST cách ly; không duyệt offline60s/retention30ngày hoặc observer production. [Report/phạm vi](../evidence/v2-c-mon07-signal-pipeline/REPORT.md), [schema/bounds D07](MONITORING_MULTISIGNAL_CONTRACT_PROPOSAL.md).
+
+- `toeic.monitoring.signal-experiment-enabled=true` mới đăng ký service/capability/history; flag vắng/false không có routes mới, WS type mới bị từ chối. Flyway V13 additive tạo bảng riêng, không bật capture.
+- Envelope v0 exact7fields, type MONITORING_SIGNAL, payload schemaVersion1; chỉ DISPLAY_COUNT_OBSERVED/sourceJAVAFX_DISPLAY/qualityCOMPLETE/details count0..32/reasonINITIAL|CHANGED. Field/time/origin/ID/bounds theo proposal mục3; null origin ID bị cấm, OFFLINE/UNSPECIFIED bỏ field. Strict duplicate-key/integer lexeme/Unicode/UTF-8 bounds riêng signal, không nới parser process.
+- Capability GET `/api/v1/monitoring/attempts/{attemptId}/signal-capabilities`, candidate owner hoặc assigned proctor ACTIVE, no-store; supportedEventTypes đúng một type. Client harness explicit confirm gắn attempt/socket generation + scoped heartbeat, không tự start observer.
+- Store unique attempt/eventId, canonical conflict; counter theo attempt cùng transaction, rollback không tiêu sequence. Auth/token/ACTIVE kiểm trước duplicate, lại sau chờ lock; lấy DB clock riêng sau session/user row locks để xét expiry (không dùng target-list clock trước LockRows); proxy COMMIT xong mới ACK. ACK exact statusACCEPTED/acknowledgedType/eventId/schemaVersion/timelineSequence/receivedAt/deliveryStatus/duplicate và correlation request/trace/attempt. **Không MONITOR_SIGNAL push.**
+- GET `/api/v1/monitoring/attempts/{attemptId}/signals?limit=100&after=0[&through=N]`: assigned PROCTOR ACTIVE; only query limit/after/through một giá trị; limit1..100, fixed through committed-prefix, items increasing, nextAfterSequence nullable/hasMore. Max512KiB; checkpoint chỉ through sau hoàn tất chuỗi HTTP. 400badcursor,401token,403scope/terminal; không410/tombstone.
+- Queue RAM riêng 256/1MiB/2flight, ACK5s/max5, backoff1/2/4/8s; immutable retries, finite local drops/unconfirmed, không gap/status wire. Signal admission giữ8credit cho legacy/heartbeat, max2write mới; ACK reserve không chữa socket stall. Write treo vẫn UNKNOWN, không tự mở reconnect thứ hai. Terminal transport FAILED (kể cả token denial trước parse không correlation) đóng delivery/worker, forget correlations và ghi discarded count.
+
+Không đổi PROCESS_OBSERVED/FULL/DELTA/presence/gap/Listening/QD21 hoặc dashboard. Quyền TEST không mở terminal history hay cho phép capture dữ liệu thật.
+
+
+### MON-07 — review 20/10/2026
+
+[Findings/kiểm chứng](../evidence/v2-c-mon07-signal-pipeline/REVIEW-20261020.md): capability và ACK heartbeat gắn đúng đối tượng lease; thay lease kể cả cùng chuỗi scope cần heartbeat/capability mới. observerSessionId phải trùng run được confirm. Signal write chờ kiểm lại lease ngay trước socket IO; callback lỗi cũ chỉ dọn correlation đúng generation/request object. Scoped FORBIDDEN lease cũ không dừng lease mới; global UNAUTHORIZED vẫn terminal. Proctor expiry được kiểm lại bằng clock DB sau assignment row lock, trước history/capability.
+
+**Flyway khi OFF:** với cấu hình mặc định, server vẫn áp V13 additive vì spring.flyway.enabled=true/location db/migration; flag signal chỉ tắt service/routes/dispatch. OFF không undo/drop bảng hoặc dữ liệu. Deployment cần quyền DDL và kiểm collision/version; không sửa applied migration hoặc dùng Flyway clean để tắt lane. Kiểm OFF chỉ chạy trên schema TEST cách ly, chưa áp DB dev dùng chung.
+
 ## Hợp đồng đề xuất EX-02 — chưa phải endpoint hiện hành
 
 19/10/2026: [Rich HTTP contract](EX02_RICH_EXAM_CONTRACT_V1.md) và [ADR-V2-03](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) là TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn xác nhận](plan-v2/EX02_TEAM_APPROVAL_20261019.md), không phải wire runtime mới. Preparation nhúng Part1 visual manifest; image route SCHEDULED chỉ allowlist Part1/current manifest; visual/ready và combined readiness dùng HTTPv2. Full exam/options/answers vẫn chặn trước START; cả Audio+Visual READY là precondition, LISTENING_START hiện có là authority duy nhất. EX06 phải bridge rich DTO sau START và image-visible gate trước MediaPlayer.play, không GETv1 hoặc player thứ hai. Giữ ErrorCode/ApiErrorResponse/WSv0, legacy QD21/FULL/no-replay. Chưa controller/DTO production, không GENERAL_START hoặc runtime/GUI PASS.
+
+
+### 20/10/2026 — kiểm tích hợp C bởi Codex
+
+[Review/receipt](../evidence/c-technical-review-20261020/REPORT.md) xác nhận5001MOCKsignal quaWS/COMMIT/ACK và51trangHTTP≤100/fixed-through/concurrentinsert/mấtquyền; API signal không cócap5000. RunnerTEST cô lập launcher options và truyềnUTC trực tiếp, không nới wire/parser/timeout hoặc production policy. V13/Flyway vẫnáp khiOFF, runtime lane OFF/FULLdefault giữnguyên; ownerpolicy/physicalkhông đượcphêduyệt bằngCI/merge.

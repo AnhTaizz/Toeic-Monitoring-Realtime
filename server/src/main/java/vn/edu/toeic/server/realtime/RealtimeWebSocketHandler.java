@@ -53,6 +53,7 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
     private final MonitoringPresenceService presence;
     private final MonitoringStateService state;
     private final vn.edu.toeic.server.audio.ListeningService listening;
+    @Autowired(required=false) private vn.edu.toeic.server.monitoring.signal.SignalService signals;
     private final Gson gson = new GsonBuilder().setStrictness(Strictness.STRICT).serializeNulls().create();
     @Autowired public RealtimeWebSocketHandler(SessionAuthenticationService authentication, AuthorizationService authorization,
             @Value("${toeic.ws.max-message-bytes:65536}") int maxMessageBytes,
@@ -99,6 +100,15 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
                     || type.startsWith("MONITORING_SYNC_") || "MONITORING_FULL".equals(type) || "MONITORING_DELTA".equals(type)
                     || ("HEARTBEAT".equals(type) && attemptId!=null)) authorization.requireRole(user, Role.CANDIDATE);
             if (attemptId != null) authorization.requireAttempt(user, attemptId);
+            if ("MONITORING_SIGNAL".equals(type)) {
+                if(signals==null)throw new IllegalArgumentException();
+                authorization.requireRole(user,Role.CANDIDATE);
+                var message=vn.edu.toeic.protocol.monitoring.signal.SignalMessage.parse(text.getPayload());
+                var stored=signals.store(user,tokenHash,message,session.getId());
+                // The transactional proxy has completed COMMIT. This slice deliberately has no push.
+                send(session,new MessageEnvelope<>(Protocol.VERSION,"ACK",UUID.randomUUID().toString(),requestId,attemptId,traceId,stored.ack()));
+                return;
+            }
             if ("LISTENING_EVENT".equals(type) || "LISTENING_HEARTBEAT".equals(type)) {
                 authorization.requireRole(user,Role.CANDIDATE);
                 if (attemptId == null) throw new IllegalArgumentException();

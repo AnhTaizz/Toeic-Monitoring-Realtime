@@ -124,6 +124,31 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         return !closed&&state==ConnectionState.CONNECTED&&support.generation()==generation?support.capability():DeltaCapability.UNKNOWN;
     }
     @Override public boolean supportsMonitoringDelta(){return experimentalDelta&&deltaCapability()==DeltaCapability.SUPPORTED;}
+    private HeartbeatBinding signalHeartbeatBinding,signalBinding;
+    private final Map<String,HeartbeatBinding> signalHeartbeatRequests=new HashMap<>();
+    private String signalAttempt,signalCollector;
+    private long signalGeneration=-1;
+    private final java.util.Set<CompletableFuture<Void>> signalWrites=new java.util.HashSet<>();
+    /** Harness only: scoped HTTP capability fetched after auth/heartbeat, generation prevents stale confirmation. */
+    public synchronized void confirmSignalExperiment(JsonObject capability,long expectedGeneration,String expectedCollector) {
+        vn.edu.toeic.protocol.monitoring.signal.SignalJson.fields(capability,Set.of("protocolVersion","schemaVersion","traceId","attemptId","supportedEventTypes"),Set.of());
+        if(expectedGeneration!=generation||state!=ConnectionState.CONNECTED||observationConnectionId==null||settings.maxPendingAcks()<10
+            ||!"v0".equals(requiredString(capability,"protocolVersion")))throw new IllegalArgumentException();
+        vn.edu.toeic.protocol.monitoring.signal.SignalJson.integer(capability,"schemaVersion",1,1);
+        vn.edu.toeic.protocol.monitoring.signal.SignalJson.id(requiredString(capability,"traceId"));
+        String attempt=vn.edu.toeic.protocol.monitoring.signal.SignalJson.id(requiredString(capability,"attemptId"));validateScope(attempt);
+        if(!new Gson().toJsonTree(java.util.List.of("DISPLAY_COUNT_OBSERVED")).equals(capability.get("supportedEventTypes")))throw new IllegalArgumentException();
+        HeartbeatBinding binding=monitoringBinding.get();
+        if(binding==null||signalHeartbeatBinding!=binding||!attempt.equals(binding.attempt)||!Objects.equals(expectedCollector,binding.collector))throw new IllegalArgumentException();
+        signalAttempt=attempt;signalCollector=expectedCollector;signalGeneration=generation;signalBinding=binding;
+    }
+    @Override public synchronized boolean signalExperimentReady(String attempt) {
+        return !closed&&state==ConnectionState.CONNECTED&&signalGeneration==generation&&Objects.equals(attempt,signalAttempt)
+            &&signalBinding!=null&&monitoringBinding.get()==signalBinding&&signalHeartbeatBinding==signalBinding&&observationConnectionId!=null;
+    }
+    @Override public synchronized boolean signalCreditAvailable() {
+        return settings.maxPendingAcks()>=10&&pendingAcks.size()<settings.maxPendingAcks()-8&&writes.size()<settings.maxPendingAcks()-8&&signalWrites.size()<2;
+    }
     private volatile boolean closed;
     private boolean authenticationRejected;
     private volatile long generation;
@@ -222,7 +247,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         if (closed || state != ConnectionState.CONNECTED) return;
         heartbeatDeadlines.entrySet().removeIf(entry -> {
             if (System.nanoTime() - entry.getValue() < 0) return false;
-            pendingAcks.remove(entry.getKey()); return true;
+            pendingAcks.remove(entry.getKey());signalHeartbeatRequests.remove(entry.getKey()); return true;
         });
         if (!writes.isEmpty()) return; // Do not accumulate heartbeats behind a stalled write.
         JsonObject payload = new JsonObject();
@@ -247,9 +272,13 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         final String serialized;
         try {
             validateEnvelope(message);
-            if (!(Set.of("HEARTBEAT","PROCESS_OBSERVED","MONITORING_GAP","MONITORING_SYNC_OPEN","MONITORING_FULL","MONITORING_DELTA","MONITORING_SYNC_CLOSE").contains(message.type()))
+            if (!(Set.of("HEARTBEAT","PROCESS_OBSERVED","MONITORING_GAP","MONITORING_SYNC_OPEN","MONITORING_FULL","MONITORING_DELTA","MONITORING_SYNC_CLOSE","MONITORING_SIGNAL").contains(message.type()))
                     || !message.messageId().equals(message.requestId())) throw new IllegalArgumentException();
-            if("MONITORING_DELTA".equals(message.type())) {
+            if("MONITORING_SIGNAL".equals(message.type())) {
+                if(!signalExperimentReady(message.attemptId())||!signalCreditAvailable())return failed("Signal experiment not ready or no credit");
+                var signal=vn.edu.toeic.protocol.monitoring.signal.SignalMessage.parse(message);
+                if(!Objects.equals(signalCollector,signal.signal().observerSessionId()))throw new IllegalArgumentException();
+            } else if("MONITORING_DELTA".equals(message.type())) {
                 if(message.attemptId()==null || !supportsMonitoringDelta())throw new IllegalArgumentException();
                 DeltaSnapshotPayload.parse(message.payload());
             } else if ("MONITORING_FULL".equals(message.type())) {
@@ -300,13 +329,24 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                 return failed("Dành một ACK slot cho heartbeat");
             forgottenAcks.remove(copy.requestId());
             pendingAcks.put(copy.requestId(), copy);
+            HeartbeatBinding binding=monitoringBinding.get();
+            if(previous==null&&"HEARTBEAT".equals(copy.type())&&binding!=null&&Objects.equals(copy.attemptId(),binding.attempt)
+                    &&Objects.equals(optionalIdentifier(copy.payload(),"collectorSessionId"),binding.collector))signalHeartbeatRequests.put(copy.requestId(),binding);
             if ("HEARTBEAT".equals(copy.type()) || "MONITORING_SYNC_CLOSE".equals(copy.type())) heartbeatDeadlines.put(copy.requestId(), System.nanoTime() + settings.heartbeat().multipliedBy(3).toNanos());
         }
         CompletableFuture<Void> result = new CompletableFuture<>();
         writes.add(result);
+        if("MONITORING_SIGNAL".equals(copy.type())) {
+            signalWrites.add(result);
+            result.whenComplete((unused,error)->{synchronized(RealtimeClient.this){signalWrites.remove(result);}});
+        }
         long current = generation;
         WebSocket target = socket;
-        dispatch(() -> write(current, target, serialized, copy.requestId(),stillCurrent,result));
+        // Recheck the same capability lease immediately before socket IO, including writes queued behind a stalled send.
+        HeartbeatBinding admittedBinding=signalBinding;
+        BooleanSupplier writeGuard="MONITORING_SIGNAL".equals(copy.type())
+            ? ()->stillCurrent.getAsBoolean()&&signalBinding==admittedBinding&&signalExperimentReady(copy.attemptId()) : stillCurrent;
+        dispatch(() -> write(current, target, serialized, copy,writeGuard,result));
         return result;
     }
     @Override public synchronized long connectionGeneration() { return generation; }
@@ -323,12 +363,12 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         return sendGuarded(message,stillCurrent);
     }
 
-    private synchronized void write(long current, WebSocket target, String serialized,String requestId,BooleanSupplier stillCurrent,
+    private synchronized void write(long current, WebSocket target, String serialized,MessageEnvelope<JsonObject> request,BooleanSupplier stillCurrent,
                                     CompletableFuture<Void> result) {
         if (closed || current != generation || state != ConnectionState.CONNECTED || !stillCurrent.getAsBoolean()) {
             result.completeExceptionally(new IllegalStateException("Mất kết nối tới server"));
             writes.remove(result);
-            pendingAcks.remove(requestId);
+            forgetWriteRequest(current,request);
             return;
         }
         // java.net.http disallows overlapping text sends. Chain writes instead
@@ -350,11 +390,16 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                 if (error == null) result.complete(null);
                 else {
                     result.completeExceptionally(new IllegalStateException("Không gửi được message realtime"));
-                    pendingAcks.remove(requestId);
+                    forgetWriteRequest(current,request);
                     if(stillCurrent.getAsBoolean()) dispatch(() -> connectionLost(current, error));
                 }
             }
         });
+    }
+
+    private void forgetWriteRequest(long current,MessageEnvelope<JsonObject> request) {
+        // A late old-socket/old-write completion must not remove the replacement retry with the same stable ID.
+        if(current==generation&&pendingAcks.get(request.requestId())==request){pendingAcks.remove(request.requestId());signalHeartbeatRequests.remove(request.requestId());}
     }
 
     private synchronized void connectionLost(long current, Throwable error) {
@@ -391,6 +436,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     }
 
     private void cleanupConnection() {
+        signalAttempt=null;signalCollector=null;signalHeartbeatBinding=null;signalBinding=null;signalHeartbeatRequests.clear();signalGeneration=-1;signalWrites.clear();
         if (heartbeatTask != null) heartbeatTask.cancel(false);
         if (retryTask != null) retryTask.cancel(false);
         heartbeatTask = null;
@@ -429,7 +475,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         return () -> monitoringBinding.compareAndSet(binding, null);
     }
     @Override public synchronized void forgetPending(String requestId) {
-        pendingAcks.remove(requestId);
+        pendingAcks.remove(requestId);signalHeartbeatRequests.remove(requestId);
         // ACK or deadline cleanup may already have consumed the pending entry.
         forgottenAcks.add(requestId);
         while (forgottenAcks.size() > settings.maxPendingAcks()) forgottenAcks.remove(forgottenAcks.iterator().next());
@@ -495,8 +541,14 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                     if (!request.type().equals("MONITORING_SYNC_OPEN") && !requiredString(request.payload(),"syncEpoch").equals(requiredString(message.payload(),"syncEpoch"))) throw new IllegalArgumentException();
                     if ((request.type().equals("MONITORING_FULL") || request.type().equals("MONITORING_DELTA")) && FullSnapshotPayload.number(request.payload(),"sequence") != FullSnapshotPayload.number(message.payload(),"sequence")) throw new IllegalArgumentException();
                 }
+                if(request.type().equals("MONITORING_SIGNAL")) {
+                    var strict=vn.edu.toeic.protocol.monitoring.signal.SignalJson.parse(text);
+                    vn.edu.toeic.protocol.monitoring.signal.SignalJson.fields(strict,Set.of("protocolVersion","type","messageId","requestId","attemptId","traceId","payload"),Set.of());
+                    vn.edu.toeic.protocol.monitoring.signal.SignalMessage.validateAck(strict.getAsJsonObject("payload"),vn.edu.toeic.protocol.monitoring.signal.DisplaySignal.parse(request.payload()));
+                }
                 if(message.payload().has("resync"))validateResync(request,MonitoringResyncPayload.parse(message.payload().getAsJsonObject("resync")));
                 pendingAcks.remove(message.requestId());
+                HeartbeatBinding acknowledgedBinding=signalHeartbeatRequests.remove(message.requestId());
                 heartbeatDeadlines.remove(message.requestId());
                 DeltaCapability confirmed=null;
                 if(request.type().equals("HEARTBEAT")) {
@@ -511,6 +563,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                     String identity=FullSnapshotPayload.id(requiredString(message.payload(),"connectionId"));
                     if (observationConnectionId!=null && !observationConnectionId.equals(identity)) throw new IllegalArgumentException();
                     observationConnectionId=identity;
+                    if(acknowledgedBinding!=null&&acknowledgedBinding==monitoringBinding.get())signalHeartbeatBinding=acknowledgedBinding;
                 }
                 if(confirmed!=null)deltaSupport=new DeltaSupport(current,confirmed); // Only after the entire ACK is valid.
                 measurements.businessAck(text);
@@ -530,13 +583,20 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                 message.payload().addProperty("message", "UNAUTHORIZED".equals(code)
                         ? "Phiên hết hiệu lực. Hãy đăng nhập lại." : "Server từ chối message realtime");
                 var rejected=pendingAcks.get(message.requestId());
+                if(rejected!=null&&rejected.type().equals("MONITORING_SIGNAL")) {
+                    if(!Objects.equals(rejected.attemptId(),message.attemptId())||!rejected.traceId().equals(message.traceId()))throw new IllegalArgumentException();
+                    var strict=vn.edu.toeic.protocol.monitoring.signal.SignalJson.parse(text);
+                    vn.edu.toeic.protocol.monitoring.signal.SignalJson.fields(strict,Set.of("protocolVersion","type","messageId","requestId","attemptId","traceId","payload"),Set.of());
+                    vn.edu.toeic.protocol.monitoring.signal.SignalJson.fields(strict.getAsJsonObject("payload"),Set.of("code","message","retryable"),Set.of());
+                }
                 if((code.equals("FORBIDDEN")||code.equals("UNAUTHORIZED"))&&rejected!=null&&rejected.type().equals("HEARTBEAT")
                         &&rejected.attemptId()!=null&&rejected.payload().has("collectorSessionId")
-                        &&Objects.equals(rejected.attemptId(),message.attemptId())&&rejected.traceId().equals(message.traceId())) {
+                        &&Objects.equals(rejected.attemptId(),message.attemptId())&&rejected.traceId().equals(message.traceId())
+                        &&(!signalHeartbeatRequests.containsKey(message.requestId())||signalHeartbeatRequests.get(message.requestId())==monitoringBinding.get())) {
                     var rejection=new MonitoringAccessRejection(rejected.attemptId(),requiredString(rejected.payload(),"collectorSessionId"),code,current);
                     for(var listener:monitoringRejections)notifySafely(listener,rejection);
                 }
-                pendingAcks.remove(message.requestId());
+                pendingAcks.remove(message.requestId());signalHeartbeatRequests.remove(message.requestId());
                 heartbeatDeadlines.remove(message.requestId());
                 if ("UNAUTHORIZED".equals(code)) {
                     publish(message);
