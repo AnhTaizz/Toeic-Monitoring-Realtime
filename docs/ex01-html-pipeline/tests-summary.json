@@ -1,0 +1,44 @@
+{
+  "sourceCommit": "e73e325ad03865d6ff0a85d318e6e19a68a01424",
+  "java": "Oracle JDK 21.0.8 Windows, invoked from WSL",
+  "maven": "3.9.11",
+  "suites": [
+    {
+      "name": "vn.edu.toeic.dataset.HtmlExamParserTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "vn.edu.toeic.dataset.LocalMediaInspectorTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "vn.edu.toeic.dataset.MediaDownloaderTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "vn.edu.toeic.dataset.PipelineTest",
+      "tests": "19",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "total": {
+    "tests": 47,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "transportFixtures": "MOCK; unit tests do not fetch Zenlish",
+  "httpPostgres": "NOT_RUN",
+  "physicalHearingJavafxLan": "NOT_RUN"
+}

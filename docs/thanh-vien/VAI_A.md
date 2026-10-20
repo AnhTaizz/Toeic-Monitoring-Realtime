@@ -413,3 +413,8 @@ Basef98a37f; nhánhreview riêng. [ReportV11](../EX04_V11_VERIFICATION.md) và [
 ## Ghi chú làm dở — EX-02 candidate / ADR-V2-03, 19/10/2026
 
 [Contract](../EX02_RICH_EXAM_CONTRACT_V1.md), [D01–D10](../plan-v2/EX02_DECISIONS_ROADMAP.md), [ADR](../plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) đã TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [đại diện nhóm19/10](../plan-v2/EX02_TEAM_APPROVAL_20261019.md); không chữ ký/GitHub review riêng. A tiếp tục EX03/05/07 khi được giao implementation: Part1 allowlist+manifest/ATTEST/lease/current writer+epoch, combined-readiness START, gates cả v1/full-status, transaction/auth/revoke/timeout khóa nhất quán; C review, B tích hợp. PR67 chỉ docs/fixtures/checkers, không runtime/migrations mới hoặc tracker DONE. Cần PG/HTTP/WS tests thật, legacy QD21/no replay/deadline giữ.
+
+
+## Ghi chú làm dở — EX-01 HTML/media, 20/10/2026
+
+Sourcee73e325 CP1–4:4 đề/200Q mỗi đề,358media local verified bytes/decode,47tests PASS, quyền media do người dùng xác nhận. [Report](../ex01-html-pipeline/REPORT.md). Cần A/B cung cấp/review676options gốc,200keys,73groups và19document boundaries/TEXT mỗi đề. CP5/API/PG/catalog/hearing/GUI NOT RUN; không DONE/tracker/hours. Media chỉ local ignored, không có binary trong public commit.

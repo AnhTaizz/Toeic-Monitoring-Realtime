@@ -1,0 +1,43 @@
+{
+  "allChecksumsMatch": true,
+  "uniqueContents": 4,
+  "files": [
+    {
+      "path": "data/seedingTest/ets2026_test01.html",
+      "sha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+      "matchesManifest": true,
+      "duplicateOf": null
+    },
+    {
+      "path": "data/seedingTest/ets2026_test02.html",
+      "sha256": "c5a0eb91bd7fb6895134bf2366be8911db0496317a97ef74941abe9edf61dc60",
+      "matchesManifest": true,
+      "duplicateOf": null
+    },
+    {
+      "path": "data/seedingTest/ets2026_test03.html",
+      "sha256": "0ccd9bede9baceed977a85afac9f109e1abdc70d11adda18eece6305f3e67e0f",
+      "matchesManifest": true,
+      "duplicateOf": null
+    },
+    {
+      "path": "data/seedingTest/ets2026_test04.html",
+      "sha256": "63140e4061bb12e47bc9adb50e7427dd11f60beedc9e33598ed06352b2b07f8d",
+      "matchesManifest": true,
+      "duplicateOf": null
+    },
+    {
+      "path": "data/seedingTest/ets2026_test05.html",
+      "sha256": "63140e4061bb12e47bc9adb50e7427dd11f60beedc9e33598ed06352b2b07f8d",
+      "matchesManifest": true,
+      "duplicateOf": "data/seedingTest/ets2026_test04.html"
+    }
+  ],
+  "duplicates": [
+    {
+      "path": "data/seedingTest/ets2026_test05.html",
+      "duplicateOf": "data/seedingTest/ets2026_test04.html",
+      "status": "REJECTED"
+    }
+  ]
+}

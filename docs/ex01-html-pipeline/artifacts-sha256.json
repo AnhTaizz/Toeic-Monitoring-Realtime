@@ -1,0 +1,85 @@
+{
+  "sourceCommit": "e73e325ad03865d6ff0a85d318e6e19a68a01424",
+  "artifacts": [
+    {
+      "path": "data/seedingTest/generated/ex01/ets2026_test01/blocked-report.json",
+      "sizeBytes": 120875,
+      "sha256": "708a20cb352f364f0145dd20430c16fba2990c17b00c55ebf790e9cbff5c2f34"
+    },
+    {
+      "path": "data/seedingTest/generated/ex01/ets2026_test01/download-manifest.json",
+      "sizeBytes": 101272,
+      "sha256": "9811766a9043e2456e84a8ccb179d94e273b227cee0104f204568d00d9bbb530"
+    },
+    {
+      "path": "data/seedingTest/generated/ex01/ets2026_test01/draft.v2.json",
+      "sizeBytes": 273556,
+      "sha256": "f21607184423be1386e4115408659e6112da1497f687caaa58d89b45f30a0c7c"
+    },
+    {
+      "path": "data/seedingTest/generated/ex01/ets2026_test01/media-manifest.json",
+      "sizeBytes": 87153,
+      "sha256": "655dda762c125303d329777f0d398bbfd37ddfa772abc3d0a6fa9d2940adb13b"
+    },
+    {
+      "path": "data/seedingTest/generated/ex01/ets2026_test01/normalized.json",
+      "sizeBytes": 3523940,
+      "sha256": "9e39001b38f0313d3214c6e7f537aac32c12c939b8d2b51a5f1e01a15d161834"
+    },
+    {
+      "path": "data/seedingTest/generated/ex01/ets2026_test01/quality-report.json",
+      "sizeBytes": 96195,
+      "sha256": "c0857930675409e3cdc464f3d3c11d332160cc4e044140626008d0a5fff358f7"
+    },
+    {
+      "path": "docs/ex01-html-pipeline/batch-report.json",
+      "sizeBytes": 1927,
+      "sha256": "15f6a51f5b5edcb026de920375581690b78fa8ae922da44c137b1a502bbcb4b3"
+    },
+    {
+      "path": "docs/ex01-html-pipeline/contract-probe.log",
+      "sizeBytes": 678,
+      "sha256": "7ea1441f76c945e2b75f1245a7e14e998d5527114829d821f5850c8c824edf2f"
+    },
+    {
+      "path": "docs/ex01-html-pipeline/measured-summary.json",
+      "sizeBytes": 4073,
+      "sha256": "237ba41b6e5e0ffd05f038f103ddc05e4741780fcc82da9fcad68cfbd09f9a13"
+    },
+    {
+      "path": "docs/ex01-html-pipeline/media/ets2026_test01.download-manifest.json",
+      "sizeBytes": 101272,
+      "sha256": "9811766a9043e2456e84a8ccb179d94e273b227cee0104f204568d00d9bbb530"
+    },
+    {
+      "path": "docs/ex01-html-pipeline/media/ets2026_test02.download-manifest.json",
+      "sizeBytes": 96079,
+      "sha256": "c81f16975af7fd03f0e7791407925a348c89b2f0a77e8fa0442e8ee7d2b416dd"
+    },
+    {
+      "path": "docs/ex01-html-pipeline/media/ets2026_test03.download-manifest.json",
+      "sizeBytes": 101366,
+      "sha256": "4950671beb5e9645606c774e0f6439ef773cc7fc5fd8d1bac1c1238ddf51b910"
+    },
+    {
+      "path": "docs/ex01-html-pipeline/media/ets2026_test04.download-manifest.json",
+      "sizeBytes": 95978,
+      "sha256": "78780372551702c76e7cd96225dfe6ab62635a5de887e66a548eda59f7494a67"
+    },
+    {
+      "path": "docs/ex01-html-pipeline/media-permission.json",
+      "sizeBytes": 1006,
+      "sha256": "2041fe17176e2e615f0da71fed197d22bc68bd49a961febe3dd0c542882e74e4"
+    },
+    {
+      "path": "docs/ex01-html-pipeline/source-audit.json",
+      "sizeBytes": 1323,
+      "sha256": "50b635a5f8d2dc7d3065a35e6578d65cfb44fc227d320c2562e948670a9be17c"
+    },
+    {
+      "path": "docs/ex01-html-pipeline/tests-summary.json",
+      "sizeBytes": 1006,
+      "sha256": "0aac7b40740c6a221b6959ec1e364b27a16e40e70c2b1615a8ba8e5c14a0251c"
+    }
+  ]
+}

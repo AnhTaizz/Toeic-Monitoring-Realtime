@@ -896,3 +896,11 @@ Raw local được giữ private/ignored, XML chỉ công bố case+SHA không e
 - Source d6bf60a fullverify1071PASS/6SKIP/0FAIL/ERROR,17REAL PG cases,5001event đềuquaWS/auth/transaction/COMMIT/ACK,51pages +24concurrent +revoke/unassign giữa trang. Headlessprocess smoke dùngRealtimeClienttích hợp PASS/0schema/stop0, không lặpunit/GUIcampaign. Focusedcd00630=228PASS làsubset. Receipt4JAR/sourcehash tại [báo cáo tổng hợp](../evidence/c-technical-review-20261020/REPORT.md).
 - #74 chuyểnbase main/sau72, không lặpproposal. MigrationV13OFF vẫnáp, maintrước74V12; EX03V14/EX07V15 không collision tại audit. Không .env/devDB/Flywayclean/rootclean/productiondeploy, không observer/push/dashboard/offline60s/retention30ngày.
 - Codex technical review phầnA/B liên quan đãlàm; không chữkýowner/ADR APPROVED/hardware/gate/DONE. #74 chỉmerge sauCIpublicationHEADđạt; kết quảcuối/mergeSHA ghiPR/bàn giao. FULLdefault/LAN0/41/USB0/12pending; khôngđổitracker.
+
+
+## 20/10/2026 · Agent 4 / Codex · EX-01 HTML và media offline
+
+- Worktree/branch riêng từ origin/main a6fba31; CP1 57bbaa7, CP2 53d5b78, CP3 40a508d, CP4 e73e325. Không sửa workspace main/QA, backend/client/migrations hoặc merge EX06; chỉ đọc DTO/validator ở448f58e.
+- Đã parse4 đề, mỗi đề200Q/775slots/73groups; 05 trùng04. Người dùng xác nhận quyền tải/dùng/công bố media; đã tải và đo358 file,216MP3 fullPCM +142ImageIOdecode,189902302bytes. Offline revalidation pin receipt hash; media binary không commit.
+- Đã kiểm47tests PASS/0FAIL/0ERROR/0SKIP và shape/validator thật cho4draft. Fixtures testsMOCK, media Zenlish thực có manifest riêng; không dùng decode thay hearing/GUI. [Bàn giao EX-01](ex01-html-pipeline/REPORT.md).
+- Còn dở: mỗi đề676options gốc,200keys và73group/19document review; CP5DB/catalog NOT RUN/DATA BLOCKED. Không UNVERIFIED→VERIFIED giả, không DONE/BACKLOG/hours hoặc human signature.

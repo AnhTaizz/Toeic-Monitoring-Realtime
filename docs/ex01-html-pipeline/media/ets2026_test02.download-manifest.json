@@ -1,0 +1,3019 @@
+{
+  "examId": "ets2026-test02",
+  "permission": {
+    "schemaVersion": 1,
+    "status": "USER_CONFIRMED",
+    "confirmedOn": "2026-10-20",
+    "statement": "Có quyền tải, sử dụng và công bố media",
+    "recordedFrom": "Xác nhận trực tiếp của người dùng trong cuộc hội thoại giao nhiệm vụ EX-01 ngày 20/10/2026. Không phải văn bản cấp phép của Zenlish.",
+    "rights": {
+      "download": true,
+      "use": true,
+      "publish": true
+    },
+    "allowedHosts": [
+      "zenlishtoeic.vn"
+    ],
+    "sourceSha256": {
+      "ets2026-test01": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+      "ets2026-test02": "c5a0eb91bd7fb6895134bf2366be8911db0496317a97ef74941abe9edf61dc60",
+      "ets2026-test03": "0ccd9bede9baceed977a85afac9f109e1abdc70d11adda18eece6305f3e67e0f",
+      "ets2026-test04": "63140e4061bb12e47bc9adb50e7427dd11f60beedc9e33598ed06352b2b07f8d"
+    },
+    "excludedDuplicate": "ets2026_test05.html trùng byte Test04; dùng media và mapping Test04, không tải/import thêm.",
+    "licenseDocument": null
+  },
+  "assets": [
+    {
+      "mediaId": "audio-001",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-32-34.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "032-audio-001.mp3",
+      "relativeStoragePath": "ets2026-test02/032-audio-001.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85412",
+          "part": 3,
+          "questionNumbers": [
+            32,
+            33,
+            34
+          ],
+          "sourceLocator": "#zen-history-listening-group-85412",
+          "blockId": "g-85412-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1367886,
+      "sha256": "d0b445a1305a4019a2552ec7c959cdb0c311733725d04ed584e1ab5480afd590",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 81371,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-002",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-35-37.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "035-audio-002.mp3",
+      "relativeStoragePath": "ets2026-test02/035-audio-002.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85416",
+          "part": 3,
+          "questionNumbers": [
+            35,
+            36,
+            37
+          ],
+          "sourceLocator": "#zen-history-listening-group-85416",
+          "blockId": "g-85416-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1319097,
+      "sha256": "ca9eece6a169c0ca56e56d5fc83e26b34e0a65b29c9d0be0cd2f52a7199d5f45",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 78315,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-003",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-38-40.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "038-audio-003.mp3",
+      "relativeStoragePath": "ets2026-test02/038-audio-003.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85419",
+          "part": 3,
+          "questionNumbers": [
+            38,
+            39,
+            40
+          ],
+          "sourceLocator": "#zen-history-listening-group-85419",
+          "blockId": "g-85419-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1426683,
+      "sha256": "27014c2b5387a2e66b7298ae0c5e570dd50ae409a46635b4f32efcc24216e21f",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 85055,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-004",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-41-43.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "041-audio-004.mp3",
+      "relativeStoragePath": "ets2026-test02/041-audio-004.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85422",
+          "part": 3,
+          "questionNumbers": [
+            41,
+            42,
+            43
+          ],
+          "sourceLocator": "#zen-history-listening-group-85422",
+          "blockId": "g-85422-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1317846,
+      "sha256": "5b2657a1185d7f6b1935dabcac282fd7d0400200adc27462f8adf0a2fce68a0a",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 78237,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-005",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-44-46.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "044-audio-005.mp3",
+      "relativeStoragePath": "ets2026-test02/044-audio-005.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85425",
+          "part": 3,
+          "questionNumbers": [
+            44,
+            45,
+            46
+          ],
+          "sourceLocator": "#zen-history-listening-group-85425",
+          "blockId": "g-85425-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1292409,
+      "sha256": "00b76ec9bdbb6b2d08ea55d03cdce548dcc51820a36441d51a51ff932b534329",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 76643,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-006",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-47-49.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "047-audio-006.mp3",
+      "relativeStoragePath": "ets2026-test02/047-audio-006.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85428",
+          "part": 3,
+          "questionNumbers": [
+            47,
+            48,
+            49
+          ],
+          "sourceLocator": "#zen-history-listening-group-85428",
+          "blockId": "g-85428-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1232361,
+      "sha256": "4b4c9da1a8a35c80450e0beb091296fe7fba673345ed719cf2b109491fad9d2f",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 72882,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-007",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-50-52.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "050-audio-007.mp3",
+      "relativeStoragePath": "ets2026-test02/050-audio-007.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85432",
+          "part": 3,
+          "questionNumbers": [
+            50,
+            51,
+            52
+          ],
+          "sourceLocator": "#zen-history-listening-group-85432",
+          "blockId": "g-85432-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1330356,
+      "sha256": "fbfade3d14cd6fdb05aa40a9c600ffcdb29a6ded552a4e942612049abe24d9f2",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 79020,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-008",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-53-55.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "053-audio-008.mp3",
+      "relativeStoragePath": "ets2026-test02/053-audio-008.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85435",
+          "part": 3,
+          "questionNumbers": [
+            53,
+            54,
+            55
+          ],
+          "sourceLocator": "#zen-history-listening-group-85435",
+          "blockId": "g-85435-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1297830,
+      "sha256": "a5c818bb8f2048f4ee20455453cdb9bf32c8acc45b6f6924e0adf2cc0cec7f4d",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 76983,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-009",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-56-58.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "056-audio-009.mp3",
+      "relativeStoragePath": "ets2026-test02/056-audio-009.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85438",
+          "part": 3,
+          "questionNumbers": [
+            56,
+            57,
+            58
+          ],
+          "sourceLocator": "#zen-history-listening-group-85438",
+          "blockId": "g-85438-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1434189,
+      "sha256": "38622731b3f152741219813fc60ce846fb94f5171ad6243544fd3598c23d61bd",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 85525,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-010",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-59-61.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "059-audio-010.mp3",
+      "relativeStoragePath": "ets2026-test02/059-audio-010.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85441",
+          "part": 3,
+          "questionNumbers": [
+            59,
+            60,
+            61
+          ],
+          "sourceLocator": "#zen-history-listening-group-85441",
+          "blockId": "g-85441-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1380813,
+      "sha256": "ce178dde8865ca9720d9aaaf63c2c5fc80bcd08b5e5ceea26c802ccfd83d7edf",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 82181,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-001",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-62-64.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-001.jpg",
+      "relativeStoragePath": "ets2026-test02/image-001.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85443",
+          "part": 3,
+          "questionNumbers": [
+            62,
+            63,
+            64
+          ],
+          "sourceLocator": "#zen-history-listening-group-85443",
+          "blockId": "g-85443-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 84795,
+      "sha256": "36fc4b0156f87290a669415fc53bce14e375176783a7e02e3622e3027ad4ea0b",
+      "widthPx": 612,
+      "heightPx": 597,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-011",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-62-64.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "062-audio-011.mp3",
+      "relativeStoragePath": "ets2026-test02/062-audio-011.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85443",
+          "part": 3,
+          "questionNumbers": [
+            62,
+            63,
+            64
+          ],
+          "sourceLocator": "#zen-history-listening-group-85443",
+          "blockId": "g-85443-b2"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1446282,
+      "sha256": "3e1c8ef1ff54cadc4cd628b12e35da4321a7450076068c6e3052509278df105d",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 86282,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-002",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-65-67-1.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-002.jpg",
+      "relativeStoragePath": "ets2026-test02/image-002.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85455",
+          "part": 3,
+          "questionNumbers": [
+            65,
+            66,
+            67
+          ],
+          "sourceLocator": "#zen-history-listening-group-85455",
+          "blockId": "g-85455-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 55802,
+      "sha256": "067824904026ea9d5fc31df422caf02a4901152a2834dfcd6dc5dd9c6cd81a91",
+      "widthPx": 691,
+      "heightPx": 397,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-012",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-65-67-1.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "065-audio-012.mp3",
+      "relativeStoragePath": "ets2026-test02/065-audio-012.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85455",
+          "part": 3,
+          "questionNumbers": [
+            65,
+            66,
+            67
+          ],
+          "sourceLocator": "#zen-history-listening-group-85455",
+          "blockId": "g-85455-b3"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1453371,
+      "sha256": "454c8c845344e61706190273d4d9868fc220f503f97faa45189a4f5dc9a22cfa",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 86727,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-003",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-68-70.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-003.jpg",
+      "relativeStoragePath": "ets2026-test02/image-003.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85447",
+          "part": 3,
+          "questionNumbers": [
+            68,
+            69,
+            70
+          ],
+          "sourceLocator": "#zen-history-listening-group-85447",
+          "blockId": "g-85447-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 57069,
+      "sha256": "d6248ae010f003b80d46e57198943910e66fc478a6ca94b2079446abd0bd8a0d",
+      "widthPx": 628,
+      "heightPx": 593,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-013",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-68-70.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "068-audio-013.mp3",
+      "relativeStoragePath": "ets2026-test02/068-audio-013.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85447",
+          "part": 3,
+          "questionNumbers": [
+            68,
+            69,
+            70
+          ],
+          "sourceLocator": "#zen-history-listening-group-85447",
+          "blockId": "g-85447-b3"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1505913,
+      "sha256": "0bde997317b6bee0e885aa799ef479f33d3af5794f6d48b399b4c00052ab384a",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 90018,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-014",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-71-73.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "071-audio-014.mp3",
+      "relativeStoragePath": "ets2026-test02/071-audio-014.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85468",
+          "part": 4,
+          "questionNumbers": [
+            71,
+            72,
+            73
+          ],
+          "sourceLocator": "#zen-history-listening-group-85468",
+          "blockId": "g-85468-b2"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1362882,
+      "sha256": "fc440bd91181ba3cf1b2b8020ea91cfd2658b41576279c7da1c71c92a3391195",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 81058,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-015",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-74-76.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "074-audio-015.mp3",
+      "relativeStoragePath": "ets2026-test02/074-audio-015.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85464",
+          "part": 4,
+          "questionNumbers": [
+            74,
+            75,
+            76
+          ],
+          "sourceLocator": "#zen-history-listening-group-85464",
+          "blockId": "g-85464-b2"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1249458,
+      "sha256": "1573f8be82d913332a5be5019b815a2efd20a5ca95c918db52c9f17dbca288ff",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 73953,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-016",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-77-79.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "077-audio-016.mp3",
+      "relativeStoragePath": "ets2026-test02/077-audio-016.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85473",
+          "part": 4,
+          "questionNumbers": [
+            77,
+            78,
+            79
+          ],
+          "sourceLocator": "#zen-history-listening-group-85473",
+          "blockId": "g-85473-b2"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1443363,
+      "sha256": "fbc864addfbe39f51ff50b921e7f1549012a90c6e833ea747c6790decb5a386c",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 86100,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-017",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-80-82-1.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "080-audio-017.mp3",
+      "relativeStoragePath": "ets2026-test02/080-audio-017.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85476",
+          "part": 4,
+          "questionNumbers": [
+            80,
+            81,
+            82
+          ],
+          "sourceLocator": "#zen-history-listening-group-85476",
+          "blockId": "g-85476-b2"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1342449,
+      "sha256": "7b25a9bdda66cb9028f7a32abb1d49ac9568823a337d31a0c1e4ec08d477edae",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 79778,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-018",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-83-85-1.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "083-audio-018.mp3",
+      "relativeStoragePath": "ets2026-test02/083-audio-018.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85503",
+          "part": 4,
+          "questionNumbers": [
+            83,
+            84,
+            85
+          ],
+          "sourceLocator": "#zen-history-listening-group-85503",
+          "blockId": "g-85503-b2"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1296162,
+      "sha256": "8617bb5a75a28401ccdd2487a9f4cdf3435ce50e0584adf860f143007f7c16bd",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 76878,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-019",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-86-88.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "086-audio-019.mp3",
+      "relativeStoragePath": "ets2026-test02/086-audio-019.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85479",
+          "part": 4,
+          "questionNumbers": [
+            86,
+            87,
+            88
+          ],
+          "sourceLocator": "#zen-history-listening-group-85479",
+          "blockId": "g-85479-b2"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1333275,
+      "sha256": "5ebfbfd62bf0b34abe2fca656c9ac25ffb852eb57e8f503143596d0195c3920e",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 79203,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-020",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-89-91.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "089-audio-020.mp3",
+      "relativeStoragePath": "ets2026-test02/089-audio-020.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85485",
+          "part": 4,
+          "questionNumbers": [
+            89,
+            90,
+            91
+          ],
+          "sourceLocator": "#zen-history-listening-group-85485",
+          "blockId": "g-85485-b2"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1259883,
+      "sha256": "fb1a960f8868871fb8d61d7b20fbdb4286229392f8d3a231fed323e120990db4",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 74606,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-021",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-92-94.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "092-audio-021.mp3",
+      "relativeStoragePath": "ets2026-test02/092-audio-021.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85488",
+          "part": 4,
+          "questionNumbers": [
+            92,
+            93,
+            94
+          ],
+          "sourceLocator": "#zen-history-listening-group-85488",
+          "blockId": "g-85488-b2"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1317846,
+      "sha256": "dcdb76aa74ae9a576f846b07b056c27443216433dede6a041d9a20308e62ce10",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 78237,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-004",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-95-97.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-004.jpg",
+      "relativeStoragePath": "ets2026-test02/image-004.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85491",
+          "part": 4,
+          "questionNumbers": [
+            95,
+            96,
+            97
+          ],
+          "sourceLocator": "#zen-history-listening-group-85491",
+          "blockId": "g-85491-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 63224,
+      "sha256": "299e787c004473df4faa6f29b4318223d9e7b261af186e96374713edece2cd57",
+      "widthPx": 695,
+      "heightPx": 590,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-022",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-95-97.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "095-audio-022.mp3",
+      "relativeStoragePath": "ets2026-test02/095-audio-022.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85491",
+          "part": 4,
+          "questionNumbers": [
+            95,
+            96,
+            97
+          ],
+          "sourceLocator": "#zen-history-listening-group-85491",
+          "blockId": "g-85491-b3"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1353291,
+      "sha256": "d81ff200a70e45e0dcbbc46e5621a466169a8f9a79c92fde9ffab9d297b268e3",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 80457,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-005",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-98-100.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-005.jpg",
+      "relativeStoragePath": "ets2026-test02/image-005.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85495",
+          "part": 4,
+          "questionNumbers": [
+            98,
+            99,
+            100
+          ],
+          "sourceLocator": "#zen-history-listening-group-85495",
+          "blockId": "g-85495-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 70185,
+      "sha256": "dfa9c34fd47650f148923090d4bf0dccff503ee89466e0fcf59de3e0a5272c75",
+      "widthPx": 877,
+      "heightPx": 423,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-023",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-98-100.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "098-audio-023.mp3",
+      "relativeStoragePath": "ets2026-test02/098-audio-023.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-85495",
+          "part": 4,
+          "questionNumbers": [
+            98,
+            99,
+            100
+          ],
+          "sourceLocator": "#zen-history-listening-group-85495",
+          "blockId": "g-85495-b3"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 1440444,
+      "sha256": "f1196cb8b859e6f4298682d1361bdcdfdf9a587ebe46da4cca037694e08f21fc",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 85917,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-006",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-104939.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-006.jpg",
+      "relativeStoragePath": "ets2026-test02/image-006.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-87855",
+          "part": 6,
+          "questionNumbers": [
+            131,
+            132,
+            133,
+            134
+          ],
+          "sourceLocator": "#zen-history-reading-group-87855",
+          "blockId": "g-87855-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 55967,
+      "sha256": "821f5b14d0a598e2b193de8e79ab28d78b78fd1a77f6145a48b42beadae0607f",
+      "widthPx": 815,
+      "heightPx": 431,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-007",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-105141.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-007.jpg",
+      "relativeStoragePath": "ets2026-test02/image-007.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-87899",
+          "part": 6,
+          "questionNumbers": [
+            135,
+            136,
+            137,
+            138
+          ],
+          "sourceLocator": "#zen-history-reading-group-87899",
+          "blockId": "g-87899-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 60117,
+      "sha256": "37ba54d5a60ffe0dfa954fa5269f733dd79cce1d0fe7d48c54958aae32bef926",
+      "widthPx": 822,
+      "heightPx": 417,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-008",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-105603.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-008.jpg",
+      "relativeStoragePath": "ets2026-test02/image-008.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-87912",
+          "part": 6,
+          "questionNumbers": [
+            139,
+            140,
+            141,
+            142
+          ],
+          "sourceLocator": "#zen-history-reading-group-87912",
+          "blockId": "g-87912-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 67582,
+      "sha256": "ae5f9df647acb24a460f017b4fe1d36f33ab8d69b3a2816a0ddb34048413c1c2",
+      "widthPx": 812,
+      "heightPx": 477,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-009",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-p6-143-146-1.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-009.jpg",
+      "relativeStoragePath": "ets2026-test02/image-009.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-87926",
+          "part": 6,
+          "questionNumbers": [
+            143,
+            144,
+            145,
+            146
+          ],
+          "sourceLocator": "#zen-history-reading-group-87926",
+          "blockId": "g-87926-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 76400,
+      "sha256": "757e42d433efc6b9d85848c17368032a2f7db6962deb8205539ff0f276613a17",
+      "widthPx": 852,
+      "heightPx": 703,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-010",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-110539.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-010.jpg",
+      "relativeStoragePath": "ets2026-test02/image-010.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-87929",
+          "part": 7,
+          "questionNumbers": [
+            147,
+            148
+          ],
+          "sourceLocator": "#zen-history-reading-group-87929",
+          "blockId": "g-87929-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 86417,
+      "sha256": "98ab3abb7b44d3bdd87599272fe767c03f51be234aa308b6004b859165da4e49",
+      "widthPx": 790,
+      "heightPx": 532,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-011",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-111226.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-011.jpg",
+      "relativeStoragePath": "ets2026-test02/image-011.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-87932",
+          "part": 7,
+          "questionNumbers": [
+            149,
+            150
+          ],
+          "sourceLocator": "#zen-history-reading-group-87932",
+          "blockId": "g-87932-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 67921,
+      "sha256": "0e489563e7e85b15ac76a8c81869a557465fc75c24e93343ab647d8f0cea39d8",
+      "widthPx": 817,
+      "heightPx": 491,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-012",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-112500.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-012.jpg",
+      "relativeStoragePath": "ets2026-test02/image-012.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-87935",
+          "part": 7,
+          "questionNumbers": [
+            151,
+            152
+          ],
+          "sourceLocator": "#zen-history-reading-group-87935",
+          "blockId": "g-87935-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 99016,
+      "sha256": "a15756f2f72b84acb040824dbeb6c48c2bd4e540653b44bfefca76629f4fbca3",
+      "widthPx": 741,
+      "heightPx": 702,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-013",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-112848.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-013.jpg",
+      "relativeStoragePath": "ets2026-test02/image-013.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-87938",
+          "part": 7,
+          "questionNumbers": [
+            153,
+            154,
+            155
+          ],
+          "sourceLocator": "#zen-history-reading-group-87938",
+          "blockId": "g-87938-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 69812,
+      "sha256": "044f1b1a8c7adcc67340c1372ecd4f23e877939199457739d1b8d959c9765dc4",
+      "widthPx": 729,
+      "heightPx": 439,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-014",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-113218.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-014.jpg",
+      "relativeStoragePath": "ets2026-test02/image-014.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-87946",
+          "part": 7,
+          "questionNumbers": [
+            156,
+            157
+          ],
+          "sourceLocator": "#zen-history-reading-group-87946",
+          "blockId": "g-87946-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 55145,
+      "sha256": "16c484251794cdebab42575687193a9a2407b1fd729ea8ab9bfce1c5100d06d5",
+      "widthPx": 743,
+      "heightPx": 359,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-015",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-113500.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-015.jpg",
+      "relativeStoragePath": "ets2026-test02/image-015.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-87952",
+          "part": 7,
+          "questionNumbers": [
+            158,
+            159,
+            160
+          ],
+          "sourceLocator": "#zen-history-reading-group-87952",
+          "blockId": "g-87952-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 60337,
+      "sha256": "e58ad939c5649ba048a9b6a70711515d0fe5c45d6f67065ad32cffb78d978eda",
+      "widthPx": 698,
+      "heightPx": 361,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-016",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-113830.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-016.jpg",
+      "relativeStoragePath": "ets2026-test02/image-016.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-87958",
+          "part": 7,
+          "questionNumbers": [
+            161,
+            162,
+            163
+          ],
+          "sourceLocator": "#zen-history-reading-group-87958",
+          "blockId": "g-87958-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 72513,
+      "sha256": "9f5280934a88180d443b5762fc07921bca9a939f920e5a40809c53975287337a",
+      "widthPx": 739,
+      "heightPx": 491,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-017",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-114259.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-017.jpg",
+      "relativeStoragePath": "ets2026-test02/image-017.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-87969",
+          "part": 7,
+          "questionNumbers": [
+            164,
+            165,
+            166,
+            167
+          ],
+          "sourceLocator": "#zen-history-reading-group-87969",
+          "blockId": "g-87969-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 72812,
+      "sha256": "b72bf975604d135a37b8ab6ee7d5a108e5e3c50d4bd47058abe4ecd5a1715911",
+      "widthPx": 695,
+      "heightPx": 394,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-018",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-114831.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-018.jpg",
+      "relativeStoragePath": "ets2026-test02/image-018.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-87979",
+          "part": 7,
+          "questionNumbers": [
+            168,
+            169,
+            170,
+            171
+          ],
+          "sourceLocator": "#zen-history-reading-group-87979",
+          "blockId": "g-87979-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 67178,
+      "sha256": "1a1c34e4940f240be20d1067a78d12e37c6db240e503457a23080d2c7f9b27fa",
+      "widthPx": 712,
+      "heightPx": 428,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-019",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-115257.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-019.jpg",
+      "relativeStoragePath": "ets2026-test02/image-019.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-87989",
+          "part": 7,
+          "questionNumbers": [
+            172,
+            173,
+            174,
+            175
+          ],
+          "sourceLocator": "#zen-history-reading-group-87989",
+          "blockId": "g-87989-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 95138,
+      "sha256": "f68fc043b414374ea03d749d721cc0d8f24bca3080327df8f43d668659a8b91b",
+      "widthPx": 727,
+      "heightPx": 741,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-020",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-115703-1.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-020.jpg",
+      "relativeStoragePath": "ets2026-test02/image-020.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-88009",
+          "part": 7,
+          "questionNumbers": [
+            176,
+            177,
+            178,
+            179,
+            180
+          ],
+          "sourceLocator": "#zen-history-reading-group-88009",
+          "blockId": "g-88009-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 76107,
+      "sha256": "0379af50455c966011a7aa2d793c5b09c920a3133aa5c1b1fe9b90b59203e102",
+      "widthPx": 543,
+      "heightPx": 724,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-021",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-120545.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-021.jpg",
+      "relativeStoragePath": "ets2026-test02/image-021.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-88012",
+          "part": 7,
+          "questionNumbers": [
+            181,
+            182,
+            183,
+            184,
+            185
+          ],
+          "sourceLocator": "#zen-history-reading-group-88012",
+          "blockId": "g-88012-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 98707,
+      "sha256": "15c3b068138a4e60fe9b824d6243dd2352f5e45efdf9d49bca3ac5f0a27a193c",
+      "widthPx": 616,
+      "heightPx": 705,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-022",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-121018-1.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-022.jpg",
+      "relativeStoragePath": "ets2026-test02/image-022.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-88015",
+          "part": 7,
+          "questionNumbers": [
+            186,
+            187,
+            188,
+            189,
+            190
+          ],
+          "sourceLocator": "#zen-history-reading-group-88015",
+          "blockId": "g-88015-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 113204,
+      "sha256": "3528949cdad5d619b9e9a04821d598bac5442e133e431a655f4beff45f1adb30",
+      "widthPx": 605,
+      "heightPx": 784,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-023",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-121434-1.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-023.jpg",
+      "relativeStoragePath": "ets2026-test02/image-023.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-88015",
+          "part": 7,
+          "questionNumbers": [
+            186,
+            187,
+            188,
+            189,
+            190
+          ],
+          "sourceLocator": "#zen-history-reading-group-88015",
+          "blockId": "g-88015-b2"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 55777,
+      "sha256": "4a7715b3f250f2862b27f3354318ed1841ec5d81c71c0cf8a3dc41dd6743277d",
+      "widthPx": 586,
+      "heightPx": 369,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-024",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-121546.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-024.jpg",
+      "relativeStoragePath": "ets2026-test02/image-024.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-88018",
+          "part": 7,
+          "questionNumbers": [
+            191,
+            192,
+            193,
+            194,
+            195
+          ],
+          "sourceLocator": "#zen-history-reading-group-88018",
+          "blockId": "g-88018-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 80053,
+      "sha256": "2b7e4204d4e97f771cde5cda3b7961ad4083af78b9fee4b8360b5a038d6b5752",
+      "widthPx": 596,
+      "heightPx": 776,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-025",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-121554.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-025.jpg",
+      "relativeStoragePath": "ets2026-test02/image-025.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-88018",
+          "part": 7,
+          "questionNumbers": [
+            191,
+            192,
+            193,
+            194,
+            195
+          ],
+          "sourceLocator": "#zen-history-reading-group-88018",
+          "blockId": "g-88018-b2"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 36963,
+      "sha256": "6d58e2f9a313f7a2ff3189039b66e295f9a88e865e30606e9e36809700a3892d",
+      "widthPx": 546,
+      "heightPx": 379,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-026",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-121901.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-026.jpg",
+      "relativeStoragePath": "ets2026-test02/image-026.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-88027",
+          "part": 7,
+          "questionNumbers": [
+            196,
+            197,
+            198,
+            199,
+            200
+          ],
+          "sourceLocator": "#zen-history-reading-group-88027",
+          "blockId": "g-88027-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 85684,
+      "sha256": "404f2c42aaad7290e4a56987c732be28ac558de1e8326c4036894057d4b8a7fd",
+      "widthPx": 566,
+      "heightPx": 741,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-027",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-anh-chup-man-hinh-2025-12-27-121914.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-027.jpg",
+      "relativeStoragePath": "ets2026-test02/image-027.jpg",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g-88027",
+          "part": 7,
+          "questionNumbers": [
+            196,
+            197,
+            198,
+            199,
+            200
+          ],
+          "sourceLocator": "#zen-history-reading-group-88027",
+          "blockId": "g-88027-b2"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 55440,
+      "sha256": "0bd9ebfcfa0d176518488c5ddc85b16fd1a5edaf0a867c7e1a59835caf9f5585",
+      "widthPx": 524,
+      "heightPx": 335,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-024",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-01.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "001-audio-024.mp3",
+      "relativeStoragePath": "ets2026-test02/001-audio-024.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g001",
+          "part": 1,
+          "questionNumbers": [
+            1
+          ],
+          "sourceLocator": "#cau-1",
+          "blockId": "g001-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 478008,
+      "sha256": "1765f380e352293bb6ed05b8c9befad60f05effb0b85d95245e51a0c8074be3b",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 25626,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-028",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-p1-1-test-2.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-028.jpg",
+      "relativeStoragePath": "ets2026-test02/image-028.jpg",
+      "uses": [
+        {
+          "ownerType": "QUESTION",
+          "ownerId": "q001",
+          "part": 1,
+          "questionNumbers": [
+            1
+          ],
+          "sourceLocator": "#cau-1",
+          "blockId": "q001-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 90890,
+      "sha256": "f4274d20bb818f30d5cddaca2614498f721d1905427e2ab353e63678a770bdbb",
+      "widthPx": 462,
+      "heightPx": 643,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-025",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-02.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "002-audio-025.mp3",
+      "relativeStoragePath": "ets2026-test02/002-audio-025.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g002",
+          "part": 1,
+          "questionNumbers": [
+            2
+          ],
+          "sourceLocator": "#cau-2",
+          "blockId": "g002-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 520125,
+      "sha256": "74e7dd2ae642544a9ac034ae8305c906d0df0e85daee8d298bcd1b1e0ffa65f9",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 28264,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-029",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-1-2.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-029.jpg",
+      "relativeStoragePath": "ets2026-test02/image-029.jpg",
+      "uses": [
+        {
+          "ownerType": "QUESTION",
+          "ownerId": "q002",
+          "part": 1,
+          "questionNumbers": [
+            2
+          ],
+          "sourceLocator": "#cau-2",
+          "blockId": "q002-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 107237,
+      "sha256": "d8a28687dc1552caddaf1d307550fd19256efc668064276a046e7c5003540ae0",
+      "widthPx": 701,
+      "heightPx": 502,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-026",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-03.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "003-audio-026.mp3",
+      "relativeStoragePath": "ets2026-test02/003-audio-026.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g003",
+          "part": 1,
+          "questionNumbers": [
+            3
+          ],
+          "sourceLocator": "#cau-3",
+          "blockId": "g003-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 503028,
+      "sha256": "7927dc489a76dda33036b0cb5f07a35625051e048d01b071fece2084db4efcde",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 27193,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-030",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-1-3.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-030.jpg",
+      "relativeStoragePath": "ets2026-test02/image-030.jpg",
+      "uses": [
+        {
+          "ownerType": "QUESTION",
+          "ownerId": "q003",
+          "part": 1,
+          "questionNumbers": [
+            3
+          ],
+          "sourceLocator": "#cau-3",
+          "blockId": "q003-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 137638,
+      "sha256": "3f7678d8182c4788a68f7694220159a522142aea9bee6d480876a1d80bf0dc06",
+      "widthPx": 700,
+      "heightPx": 512,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-027",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-04.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "004-audio-027.mp3",
+      "relativeStoragePath": "ets2026-test02/004-audio-027.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g004",
+          "part": 1,
+          "questionNumbers": [
+            4
+          ],
+          "sourceLocator": "#cau-4",
+          "blockId": "g004-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 484680,
+      "sha256": "bdc5cbf7a8e5bf49d71897fe5e5273f01edd9cf9819399e3f20451271dbe2c25",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 26044,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-031",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-1-4.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-031.jpg",
+      "relativeStoragePath": "ets2026-test02/image-031.jpg",
+      "uses": [
+        {
+          "ownerType": "QUESTION",
+          "ownerId": "q004",
+          "part": 1,
+          "questionNumbers": [
+            4
+          ],
+          "sourceLocator": "#cau-4",
+          "blockId": "q004-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 67256,
+      "sha256": "eb16d2faa2c668db95f332e1361bc82accae73e5693c860ebca6ad58ed6c6ea7",
+      "widthPx": 700,
+      "heightPx": 503,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-028",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-05.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "005-audio-028.mp3",
+      "relativeStoragePath": "ets2026-test02/005-audio-028.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g005",
+          "part": 1,
+          "questionNumbers": [
+            5
+          ],
+          "sourceLocator": "#cau-5",
+          "blockId": "g005-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 483012,
+      "sha256": "51524da26fd992d1d694a760f06cd22d062aa02619b8ced0e2a6391a9765e1f5",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 25940,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-032",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-1-5.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-032.jpg",
+      "relativeStoragePath": "ets2026-test02/image-032.jpg",
+      "uses": [
+        {
+          "ownerType": "QUESTION",
+          "ownerId": "q005",
+          "part": 1,
+          "questionNumbers": [
+            5
+          ],
+          "sourceLocator": "#cau-5",
+          "blockId": "q005-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 85028,
+      "sha256": "21471b7f7caafa064b17f6ee9d4d06dfa8bb5edc5b11dbd96418015361db504c",
+      "widthPx": 700,
+      "heightPx": 491,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-029",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-06.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "006-audio-029.mp3",
+      "relativeStoragePath": "ets2026-test02/006-audio-029.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g006",
+          "part": 1,
+          "questionNumbers": [
+            6
+          ],
+          "sourceLocator": "#cau-6",
+          "blockId": "g006-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 493020,
+      "sha256": "67330c7dea8ef78e19d535b4921641009e7f6f19a7e6105cc52dfc0a85f2b9ba",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 26567,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "image-033",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-1-6.jpg",
+      "mediaType": "IMAGE",
+      "localFile": "image-033.jpg",
+      "relativeStoragePath": "ets2026-test02/image-033.jpg",
+      "uses": [
+        {
+          "ownerType": "QUESTION",
+          "ownerId": "q006",
+          "part": 1,
+          "questionNumbers": [
+            6
+          ],
+          "sourceLocator": "#cau-6",
+          "blockId": "q006-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 124251,
+      "sha256": "a18ae9a483efc4ea7a4c49464b78d8760d68e751d87895ee60fde0d38af3fcb8",
+      "widthPx": 708,
+      "heightPx": 502,
+      "durationMs": null,
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-030",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-07-1.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "007-audio-030.mp3",
+      "relativeStoragePath": "ets2026-test02/007-audio-030.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g007",
+          "part": 2,
+          "questionNumbers": [
+            7
+          ],
+          "sourceLocator": "#cau-7",
+          "blockId": "g007-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 376677,
+      "sha256": "ed9d6b658cb2b3cd7b636aed3044363e792837735e747b94b01e5ed6df744d40",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 19278,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-031",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-08.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "008-audio-031.mp3",
+      "relativeStoragePath": "ets2026-test02/008-audio-031.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g008",
+          "part": 2,
+          "questionNumbers": [
+            8
+          ],
+          "sourceLocator": "#cau-8",
+          "blockId": "g008-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 391272,
+      "sha256": "5dc2855e14066a9e98730b9ae6b24ec2ff7704ae8489018a58635d03caba5cfa",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 20193,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-032",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-09.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "009-audio-032.mp3",
+      "relativeStoragePath": "ets2026-test02/009-audio-032.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g009",
+          "part": 2,
+          "questionNumbers": [
+            9
+          ],
+          "sourceLocator": "#cau-9",
+          "blockId": "g009-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 368754,
+      "sha256": "2d26988b526218ee6bc96c641f20b4864541ca28b63feed390004365a253cec6",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 18782,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-033",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-10.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "010-audio-033.mp3",
+      "relativeStoragePath": "ets2026-test02/010-audio-033.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g010",
+          "part": 2,
+          "questionNumbers": [
+            10
+          ],
+          "sourceLocator": "#cau-10",
+          "blockId": "g010-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 392940,
+      "sha256": "efd5445424f4be79e58ae92d749bf2c7f993dadae8fb6598ae29b24a1d676d1c",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 20297,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-034",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-11-1.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "011-audio-034.mp3",
+      "relativeStoragePath": "ets2026-test02/011-audio-034.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g011",
+          "part": 2,
+          "questionNumbers": [
+            11
+          ],
+          "sourceLocator": "#cau-11",
+          "blockId": "g011-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 385851,
+      "sha256": "6b9b320e4ead96fd7706328178af1acffb64ee7218dd01748ba711ff09103555",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 19853,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-035",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-12.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "012-audio-035.mp3",
+      "relativeStoragePath": "ets2026-test02/012-audio-035.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g012",
+          "part": 2,
+          "questionNumbers": [
+            12
+          ],
+          "sourceLocator": "#cau-12",
+          "blockId": "g012-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 395859,
+      "sha256": "2babc5e9fd885b59f3015e4e23f7ad275c2df3344c09506624f63b271717aa39",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 20480,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-036",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-13.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "013-audio-036.mp3",
+      "relativeStoragePath": "ets2026-test02/013-audio-036.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g013",
+          "part": 2,
+          "questionNumbers": [
+            13
+          ],
+          "sourceLocator": "#cau-13",
+          "blockId": "g013-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 417126,
+      "sha256": "58c061539819549a207f7f7b309438bf08d67cc20c40f8d4ebde3e12d2ae2343",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 21812,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-037",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-14.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "014-audio-037.mp3",
+      "relativeStoragePath": "ets2026-test02/014-audio-037.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g014",
+          "part": 2,
+          "questionNumbers": [
+            14
+          ],
+          "sourceLocator": "#cau-14",
+          "blockId": "g014-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 403365,
+      "sha256": "8c9caf8a295ee88af19c3a9cf8bc58a98c7ca4ff6471ec3c630c90ffd20ad1d2",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 20950,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-038",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-15.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "015-audio-038.mp3",
+      "relativeStoragePath": "ets2026-test02/015-audio-038.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g015",
+          "part": 2,
+          "questionNumbers": [
+            15
+          ],
+          "sourceLocator": "#cau-15",
+          "blockId": "g015-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 377511,
+      "sha256": "12ed293bcb3a1a0f2d7a11084a925f73a0667a5ed152e9a96cdd8a100bf665db",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 19331,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-039",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-16.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "016-audio-039.mp3",
+      "relativeStoragePath": "ets2026-test02/016-audio-039.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g016",
+          "part": 2,
+          "questionNumbers": [
+            16
+          ],
+          "sourceLocator": "#cau-16",
+          "blockId": "g016-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 359580,
+      "sha256": "e3184d7ef7807178f740d5b9d7a2816e802fcd08461e718d621eef187baeafad",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 18207,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-040",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-17.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "017-audio-040.mp3",
+      "relativeStoragePath": "ets2026-test02/017-audio-040.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g017",
+          "part": 2,
+          "questionNumbers": [
+            17
+          ],
+          "sourceLocator": "#cau-17",
+          "blockId": "g017-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 435891,
+      "sha256": "9169dd1c514c52e3b33f3920889734c9b051d2a9463e066e91ad87287449e2e1",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 22988,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-041",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-18.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "018-audio-041.mp3",
+      "relativeStoragePath": "ets2026-test02/018-audio-041.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g018",
+          "part": 2,
+          "questionNumbers": [
+            18
+          ],
+          "sourceLocator": "#cau-18",
+          "blockId": "g018-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 403365,
+      "sha256": "d324c6ada765dc6a6519da6844ff57e5d7e47bdc127191c8769a3557f7c250b6",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 20950,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-042",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-19.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "019-audio-042.mp3",
+      "relativeStoragePath": "ets2026-test02/019-audio-042.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g019",
+          "part": 2,
+          "questionNumbers": [
+            19
+          ],
+          "sourceLocator": "#cau-19",
+          "blockId": "g019-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 426300,
+      "sha256": "f401d47611fd72310f66587937308bfaf185b79434b3717b85893fe69421cd37",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 22387,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-043",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-20.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "020-audio-043.mp3",
+      "relativeStoragePath": "ets2026-test02/020-audio-043.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g020",
+          "part": 2,
+          "questionNumbers": [
+            20
+          ],
+          "sourceLocator": "#cau-20",
+          "blockId": "g020-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 377511,
+      "sha256": "115fed39f9314b8e6766ef1be24751a9adc84ce09b89a3b10d306816f07e8d3a",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 19331,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-044",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-21.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "021-audio-044.mp3",
+      "relativeStoragePath": "ets2026-test02/021-audio-044.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g021",
+          "part": 2,
+          "questionNumbers": [
+            21
+          ],
+          "sourceLocator": "#cau-21",
+          "blockId": "g021-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 404616,
+      "sha256": "506b3d87a1725e1fb51f98d649d8ec148e5dbd39dcd2743cb2db0e923ad1dc97",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 21029,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-045",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-22.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "022-audio-045.mp3",
+      "relativeStoragePath": "ets2026-test02/022-audio-045.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g022",
+          "part": 2,
+          "questionNumbers": [
+            22
+          ],
+          "sourceLocator": "#cau-22",
+          "blockId": "g022-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 400029,
+      "sha256": "98e1520b3839055fb0d681621eba8f5251eec7e63bb70d91fb7061cafc493980",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 20741,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-046",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-23.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "023-audio-046.mp3",
+      "relativeStoragePath": "ets2026-test02/023-audio-046.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g023",
+          "part": 2,
+          "questionNumbers": [
+            23
+          ],
+          "sourceLocator": "#cau-23",
+          "blockId": "g023-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 402948,
+      "sha256": "8c2677541c5c84c8f6573b78ab4a6e115fa40a029f56273048c23d6f1d5c3f6a",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 20924,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-047",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-24.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "024-audio-047.mp3",
+      "relativeStoragePath": "ets2026-test02/024-audio-047.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g024",
+          "part": 2,
+          "questionNumbers": [
+            24
+          ],
+          "sourceLocator": "#cau-24",
+          "blockId": "g024-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 403782,
+      "sha256": "b8e22c84b22aeff91dc4de60b179d93e88e91bc43eaf597331fb8fe6242f59c0",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 20976,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-048",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-25.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "025-audio-048.mp3",
+      "relativeStoragePath": "ets2026-test02/025-audio-048.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g025",
+          "part": 2,
+          "questionNumbers": [
+            25
+          ],
+          "sourceLocator": "#cau-25",
+          "blockId": "g025-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 445065,
+      "sha256": "b4f4301cb0a4d2a34a5f69144ae71de98934886c3ad6ee50bcc635c819ca1cf3",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 23562,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-049",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-26.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "026-audio-049.mp3",
+      "relativeStoragePath": "ets2026-test02/026-audio-049.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g026",
+          "part": 2,
+          "questionNumbers": [
+            26
+          ],
+          "sourceLocator": "#cau-26",
+          "blockId": "g026-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 383766,
+      "sha256": "0175d9c16723144a84014d3a8d833e422cace584a83c1823cbac5a5ca935dc01",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 19722,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-050",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-27.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "027-audio-050.mp3",
+      "relativeStoragePath": "ets2026-test02/027-audio-050.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g027",
+          "part": 2,
+          "questionNumbers": [
+            27
+          ],
+          "sourceLocator": "#cau-27",
+          "blockId": "g027-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 397944,
+      "sha256": "1d6d6b80f5e23099172a541a91fccb92b6374d2c33b21f6a1faa2aae59e177a8",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 20611,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-051",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-28.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "028-audio-051.mp3",
+      "relativeStoragePath": "ets2026-test02/028-audio-051.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g028",
+          "part": 2,
+          "questionNumbers": [
+            28
+          ],
+          "sourceLocator": "#cau-28",
+          "blockId": "g028-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 405033,
+      "sha256": "ace2f0955bc7c03890186fd8f5f5eb482bdbcbcf8c6ea62625e7f2d077858c4f",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 21055,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-052",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-29.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "029-audio-052.mp3",
+      "relativeStoragePath": "ets2026-test02/029-audio-052.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g029",
+          "part": 2,
+          "questionNumbers": [
+            29
+          ],
+          "sourceLocator": "#cau-29",
+          "blockId": "g029-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 373341,
+      "sha256": "291143b5c315da154dd9d23fda581fa603ac93cd0e9f7b0eba04af5065e9080f",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 19069,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-053",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-30.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "030-audio-053.mp3",
+      "relativeStoragePath": "ets2026-test02/030-audio-053.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g030",
+          "part": 2,
+          "questionNumbers": [
+            30
+          ],
+          "sourceLocator": "#cau-30",
+          "blockId": "g030-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 400863,
+      "sha256": "1160507023eab3a3c5192bd9c89c6bc3c30ab04900f4e4d28f462059e827f533",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 20793,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-054",
+      "sourceUrl": "https://zenlishtoeic.vn/wp-content/uploads/2025/12/zenlish-test-02-31.mp3",
+      "mediaType": "AUDIO",
+      "localFile": "031-audio-054.mp3",
+      "relativeStoragePath": "ets2026-test02/031-audio-054.mp3",
+      "uses": [
+        {
+          "ownerType": "GROUP",
+          "ownerId": "g031",
+          "part": 2,
+          "questionNumbers": [
+            31
+          ],
+          "sourceLocator": "#cau-31",
+          "blockId": "g031-b1"
+        }
+      ],
+      "permissionStatus": "USER_CONFIRMED",
+      "downloadStatus": "OFFLINE_VERIFIED",
+      "blockedReason": null,
+      "httpStatus": null,
+      "serverMimeType": null,
+      "storageStatus": "LOCAL_VERIFIED",
+      "verificationStatus": "VERIFIED",
+      "mimeType": "audio/mpeg",
+      "sizeBytes": 381264,
+      "sha256": "ec045ee401ce6eec67a1529dfeb319a8daa241d275a016afda51b4e2de4600a2",
+      "widthPx": null,
+      "heightPx": null,
+      "durationMs": 19566,
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED"
+    }
+  ],
+  "hotlinkAtExamRuntime": false
+}

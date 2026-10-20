@@ -349,3 +349,8 @@ Nguồn: yêu cầu trong phiên cho phép mục11.1 PR72 tại c9a5829, D07-01�
 ## EX-02 / ADR-V2-03 / D10 — nhóm thông qua theo đại diện, 19/10/2026
 
 **TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE**: [D01–D10](plan-v2/EX02_DECISIONS_ROADMAP.md), [contract](EX02_RICH_EXAM_CONTRACT_V1.md), [ADR](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md). [Nguồn19/10](plan-v2/EX02_TEAM_APPROVAL_20261019.md): “User-provided confirmation from the project team representative, 2026-10-19.” A/B/C đồng ý theo đại diện nhóm, không chữ ký riêng hoặc GitHub Approving Review. Chọn Option A: owner prefetch đúng ảnh Part1 trước START (chấp nhận chủ máy có thể trích xuất bytes), không prompts/options/keys/passages; whole roster Audio+Visual READY current epoch/lease trước Listening START duy nhất. Server clock/deadline tại START, ảnh visible gate trước play; lỗi sau commit interruption/no replay/no deadline reset. Ca legacy giữ QD21, không infer version bằng deadlineNULL. Đây phê duyệt thiết kế, không migration/Java/runtime/GUI PASS hoặc EX03–08 DONE.
+
+
+## EX-01 — Lựa chọn triển khai công cụ offline, 20/10/2026
+
+Pipeline Java21 độc lập dùng jsoup DOM/Gson và JLayer để decodeMP3 offline; không thêm dependency vào server/client. Giữ review explanation tách khỏi options; Part1/2 chỉ nhãn, không transcript. Group singleton lấy từ article/audio thật; document Part6/7 không suy boundary từ ảnh khi chưa review. Media ETL chỉ URL public đã có xác nhận quyền, receipt pin checksum, không auth/redirect/hotlink hoặc binary Git; sourceURL chỉ provenance. Không đổi contract/Flyway/START/monitoring; A/B review nội dung còn PENDING. [Evidence](ex01-html-pipeline/REPORT.md).

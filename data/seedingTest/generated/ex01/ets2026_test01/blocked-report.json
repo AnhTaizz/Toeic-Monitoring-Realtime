@@ -1,0 +1,3322 @@
+{
+  "status": "BLOCKED",
+  "importable": false,
+  "reason": "DRAFT_ONLY: converter giữ UNVERIFIED; cần review nội dung/media và chạy EX03 trước khi có payload import-ready.",
+  "quality": {
+    "status": "BLOCKED",
+    "importable": false,
+    "summary": {
+      "questions": 200,
+      "partCounts": [
+        6,
+        25,
+        39,
+        30,
+        30,
+        16,
+        54
+      ],
+      "optionSlots": 775,
+      "missingOriginalOptionTexts": 676,
+      "groups": 73,
+      "audio": 54,
+      "images": 38,
+      "structuralErrors": 0
+    },
+    "findingCounts": {
+      "ANSWER_UNVERIFIED": 200,
+      "DOCUMENT_BOUNDARIES": 19,
+      "GROUP_UNVERIFIED": 73,
+      "MISSING_OPTION_TEXT": 1,
+      "OPTIONS_UNVERIFIED": 169,
+      "SOURCE_REVIEW": 1
+    },
+    "findings": [
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/0",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/1",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/2",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/3",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/4",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/5",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/6",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/7",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/8",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/9",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/10",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/11",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/12",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/13",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/14",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/15",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/16",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/17",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/18",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/19",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/20",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/21",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/22",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/23",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/24",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/25",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/26",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/27",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/28",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/29",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/30",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/31",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/31",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/32",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/32",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/33",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/33",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/34",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/34",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/35",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/35",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/36",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/36",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/37",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/37",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/38",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/38",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/39",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/39",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/40",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/40",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/41",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/41",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/42",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/42",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/43",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/43",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/44",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/44",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/45",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/45",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/46",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/46",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/47",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/47",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/48",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/48",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/49",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/49",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/50",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/50",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/51",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/51",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/52",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/52",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/53",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/53",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/54",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/54",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/55",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/55",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/56",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/56",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/57",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/57",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/58",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/58",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/59",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/59",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/60",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/60",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/61",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/61",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/62",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/62",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/63",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/63",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/64",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/64",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/65",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/65",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/66",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/66",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/67",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/67",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/68",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/68",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/69",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/69",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/70",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/70",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/71",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/71",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/72",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/72",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/73",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/73",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/74",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/74",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/75",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/75",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/76",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/76",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/77",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/77",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/78",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/78",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/79",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/79",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/80",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/80",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/81",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/81",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/82",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/82",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/83",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/83",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/84",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/84",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/85",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/85",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/86",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/86",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/87",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/87",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/88",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/88",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/89",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/89",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/90",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/90",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/91",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/91",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/92",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/92",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/93",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/93",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/94",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/94",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/95",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/95",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/96",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/96",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/97",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/97",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/98",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/98",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/99",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/99",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/100",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/100",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/101",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/101",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/102",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/102",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/103",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/103",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/104",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/104",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/105",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/105",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/106",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/106",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/107",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/107",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/108",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/108",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/109",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/109",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/110",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/110",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/111",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/111",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/112",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/112",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/113",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/113",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/114",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/114",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/115",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/115",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/116",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/116",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/117",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/117",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/118",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/118",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/119",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/119",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/120",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/120",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/121",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/121",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/122",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/122",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/123",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/123",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/124",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/124",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/125",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/125",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/126",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/126",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/127",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/127",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/128",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/128",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/129",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/129",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/130",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/130",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/131",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/131",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/132",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/132",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/133",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/133",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/134",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/134",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/135",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/135",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/136",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/136",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/137",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/137",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/138",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/138",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/139",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/139",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/140",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/140",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/141",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/141",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/142",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/142",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/143",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/143",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/144",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/144",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/145",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/145",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/146",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/146",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/147",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/147",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/148",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/148",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/149",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/149",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/150",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/150",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/151",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/151",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/152",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/152",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/153",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/153",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/154",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/154",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/155",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/155",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/156",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/156",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/157",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/157",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/158",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/158",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/159",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/159",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/160",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/160",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/161",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/161",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/162",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/162",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/163",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/163",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/164",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/164",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/165",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/165",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/166",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/166",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/167",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/167",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/168",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/168",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/169",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/169",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/170",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/170",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/171",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/171",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/172",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/172",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/173",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/173",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/174",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/174",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/175",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/175",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/176",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/176",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/177",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/177",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/178",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/178",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/179",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/179",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/180",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/180",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/181",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/181",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/182",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/182",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/183",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/183",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/184",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/184",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/185",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/185",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/186",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/186",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/187",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/187",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/188",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/188",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/189",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/189",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/190",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/190",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/191",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/191",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/192",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/192",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/193",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/193",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/194",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/194",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/195",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/195",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/196",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/196",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/197",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/197",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/198",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/198",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "ANSWER_UNVERIFIED",
+        "path": "/questions/199",
+        "message": "Cần đối chiếu đáp án với nguồn gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "OPTIONS_UNVERIFIED",
+        "path": "/questions/199",
+        "message": "Bổ sung đủ options gốc; reviewOptionCandidates từ explanation không được dùng làm options."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/0",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/1",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/2",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/3",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/4",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/5",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/6",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/7",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/8",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/9",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/10",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/11",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/12",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/13",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/14",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/15",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/16",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/17",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/18",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/19",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/20",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/21",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/22",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/23",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/24",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/25",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/26",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/27",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/28",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/29",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/30",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/31",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/32",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/33",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/34",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/35",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/36",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/37",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/38",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/39",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/40",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/41",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/42",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/43",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/44",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/45",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/46",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/47",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/48",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/49",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/50",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/51",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/52",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/53",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/54",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/54",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/55",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/55",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/56",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/56",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/57",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/57",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/58",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/58",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/59",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/59",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/60",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/60",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/61",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/61",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/62",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/62",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/63",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/63",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/64",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/64",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/65",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/65",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/66",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/66",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/67",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/67",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/68",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/68",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/69",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/69",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/70",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/70",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/71",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/71",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "GROUP_UNVERIFIED",
+        "path": "/groups/72",
+        "message": "Cần review mapping group từ DOM với đề gốc."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "DOCUMENT_BOUNDARIES",
+        "path": "/groups/72",
+        "message": "Cần xác nhận documentId/order/title và TEXT gốc: Part6 một document, Part7 một đến ba; ảnh hiện có chỉ là passageBlocks."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "MISSING_OPTION_TEXT",
+        "path": "/questions",
+        "message": "Thiếu 676 text options gốc của Part3–7."
+      },
+      {
+        "severity": "BLOCKED",
+        "code": "SOURCE_REVIEW",
+        "path": "/source",
+        "message": "Cần bằng chứng review keys/options/groups/media; xác nhận quyền HTML không thay quyền tải media."
+      }
+    ],
+    "sourceAudit": {
+      "allChecksumsMatch": true,
+      "uniqueContents": 4,
+      "files": [
+        {
+          "path": "data/seedingTest/ets2026_test01.html",
+          "sha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "matchesManifest": true,
+          "duplicateOf": null
+        },
+        {
+          "path": "data/seedingTest/ets2026_test02.html",
+          "sha256": "c5a0eb91bd7fb6895134bf2366be8911db0496317a97ef74941abe9edf61dc60",
+          "matchesManifest": true,
+          "duplicateOf": null
+        },
+        {
+          "path": "data/seedingTest/ets2026_test03.html",
+          "sha256": "0ccd9bede9baceed977a85afac9f109e1abdc70d11adda18eece6305f3e67e0f",
+          "matchesManifest": true,
+          "duplicateOf": null
+        },
+        {
+          "path": "data/seedingTest/ets2026_test04.html",
+          "sha256": "63140e4061bb12e47bc9adb50e7427dd11f60beedc9e33598ed06352b2b07f8d",
+          "matchesManifest": true,
+          "duplicateOf": null
+        },
+        {
+          "path": "data/seedingTest/ets2026_test05.html",
+          "sha256": "63140e4061bb12e47bc9adb50e7427dd11f60beedc9e33598ed06352b2b07f8d",
+          "matchesManifest": true,
+          "duplicateOf": "data/seedingTest/ets2026_test04.html"
+        }
+      ],
+      "duplicates": [
+        {
+          "path": "data/seedingTest/ets2026_test05.html",
+          "duplicateOf": "data/seedingTest/ets2026_test04.html",
+          "status": "REJECTED"
+        }
+      ]
+    }
+  },
+  "mediaInspection": [
+    {
+      "mediaId": "audio-001",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-002",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-003",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-004",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-005",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-006",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-007",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-008",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-009",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-010",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-001",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-011",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-002",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-012",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-003",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-013",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-014",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-015",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-016",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-017",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-018",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-019",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-020",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-021",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-004",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-022",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-005",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-023",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-006",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-007",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-008",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-009",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-010",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-011",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-012",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-013",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-014",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-015",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-016",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-017",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-018",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-019",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-020",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-021",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-022",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-023",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-024",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-025",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-026",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-027",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-028",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-029",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-030",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-031",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-032",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-024",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-033",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-025",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-034",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-026",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-035",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-027",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-036",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-028",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-037",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-029",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "image-038",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-030",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-031",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-032",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-033",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-034",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-035",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-036",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-037",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-038",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-039",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-040",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-041",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-042",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-043",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-044",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-045",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-046",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-047",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-048",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-049",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-050",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-051",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-052",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-053",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    },
+    {
+      "mediaId": "audio-054",
+      "state": "BYTES_VERIFIED",
+      "reason": "Đã đo bytes/hash/MIME và decode toàn file; không xác nhận mapping/nội dung hoặc nghe vật lý."
+    }
+  ],
+  "postgresImport": "NOT_RUN",
+  "catalogSelectable": "NOT_VERIFIED"
+}

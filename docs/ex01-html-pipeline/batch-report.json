@@ -1,0 +1,100 @@
+{
+  "status": "BLOCKED",
+  "tests": [
+    {
+      "test": "ets2026_test01",
+      "status": "BLOCKED",
+      "summary": {
+        "questions": 200,
+        "partCounts": [
+          6,
+          25,
+          39,
+          30,
+          30,
+          16,
+          54
+        ],
+        "optionSlots": 775,
+        "missingOriginalOptionTexts": 676,
+        "groups": 73,
+        "audio": 54,
+        "images": 38,
+        "structuralErrors": 0
+      },
+      "localVerifiedMedia": 92
+    },
+    {
+      "test": "ets2026_test02",
+      "status": "BLOCKED",
+      "summary": {
+        "questions": 200,
+        "partCounts": [
+          6,
+          25,
+          39,
+          30,
+          30,
+          16,
+          54
+        ],
+        "optionSlots": 775,
+        "missingOriginalOptionTexts": 676,
+        "groups": 73,
+        "audio": 54,
+        "images": 33,
+        "structuralErrors": 0
+      },
+      "localVerifiedMedia": 87
+    },
+    {
+      "test": "ets2026_test03",
+      "status": "BLOCKED",
+      "summary": {
+        "questions": 200,
+        "partCounts": [
+          6,
+          25,
+          39,
+          30,
+          30,
+          16,
+          54
+        ],
+        "optionSlots": 775,
+        "missingOriginalOptionTexts": 676,
+        "groups": 73,
+        "audio": 54,
+        "images": 38,
+        "structuralErrors": 0
+      },
+      "localVerifiedMedia": 92
+    },
+    {
+      "test": "ets2026_test04",
+      "status": "BLOCKED",
+      "summary": {
+        "questions": 200,
+        "partCounts": [
+          6,
+          25,
+          39,
+          30,
+          30,
+          16,
+          54
+        ],
+        "optionSlots": 775,
+        "missingOriginalOptionTexts": 676,
+        "groups": 73,
+        "audio": 54,
+        "images": 33,
+        "structuralErrors": 0
+      },
+      "localVerifiedMedia": 87
+    }
+  ],
+  "excluded": [
+    "ets2026_test05: byte-identical to Test04"
+  ]
+}

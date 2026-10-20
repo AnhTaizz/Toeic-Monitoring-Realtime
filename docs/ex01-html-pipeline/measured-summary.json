@@ -1,0 +1,145 @@
+{
+  "sourceCommit": "e73e325ad03865d6ff0a85d318e6e19a68a01424",
+  "tests": [
+    {
+      "test": "ets2026_test01",
+      "examId": "ets2026-test01",
+      "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+      "questions": 200,
+      "optionsSlots": 775,
+      "groups": 73,
+      "media": 92,
+      "bytes": 47340695,
+      "audio": 54,
+      "images": 38,
+      "localVerified": 92,
+      "decodeStatusCounts": {
+        "FULL_PCM_DECODE_VERIFIED": 54,
+        "FULL_IMAGE_DECODE_VERIFIED": 38
+      },
+      "structuralErrors": 0,
+      "fieldReviewCounts": {
+        "EXTRACTED": 7020,
+        "VERIFIED": 684,
+        "NEEDS_REVIEW": 1995,
+        "REJECTED": 3704
+      },
+      "findingCounts": {
+        "ANSWER_UNVERIFIED": 200,
+        "DOCUMENT_BOUNDARIES": 19,
+        "GROUP_UNVERIFIED": 73,
+        "MISSING_OPTION_TEXT": 1,
+        "OPTIONS_UNVERIFIED": 169,
+        "SOURCE_REVIEW": 1
+      },
+      "importedByThisTask": false,
+      "catalogSelectable": "NOT_VERIFIED"
+    },
+    {
+      "test": "ets2026_test02",
+      "examId": "ets2026-test02",
+      "sourceSha256": "c5a0eb91bd7fb6895134bf2366be8911db0496317a97ef74941abe9edf61dc60",
+      "questions": 200,
+      "optionsSlots": 775,
+      "groups": 73,
+      "media": 87,
+      "bytes": 46628280,
+      "audio": 54,
+      "images": 33,
+      "localVerified": 87,
+      "decodeStatusCounts": {
+        "FULL_PCM_DECODE_VERIFIED": 54,
+        "FULL_IMAGE_DECODE_VERIFIED": 33
+      },
+      "structuralErrors": 0,
+      "fieldReviewCounts": {
+        "EXTRACTED": 6971,
+        "VERIFIED": 644,
+        "NEEDS_REVIEW": 2008,
+        "REJECTED": 3500
+      },
+      "findingCounts": {
+        "ANSWER_UNVERIFIED": 200,
+        "DOCUMENT_BOUNDARIES": 19,
+        "GROUP_UNVERIFIED": 73,
+        "MISSING_OPTION_TEXT": 1,
+        "OPTIONS_UNVERIFIED": 169,
+        "SOURCE_REVIEW": 1
+      },
+      "importedByThisTask": false,
+      "catalogSelectable": "NOT_VERIFIED"
+    },
+    {
+      "test": "ets2026_test03",
+      "examId": "ets2026-test03",
+      "sourceSha256": "0ccd9bede9baceed977a85afac9f109e1abdc70d11adda18eece6305f3e67e0f",
+      "questions": 200,
+      "optionsSlots": 775,
+      "groups": 73,
+      "media": 92,
+      "bytes": 48196221,
+      "audio": 54,
+      "images": 38,
+      "localVerified": 92,
+      "decodeStatusCounts": {
+        "FULL_PCM_DECODE_VERIFIED": 54,
+        "FULL_IMAGE_DECODE_VERIFIED": 38
+      },
+      "structuralErrors": 0,
+      "fieldReviewCounts": {
+        "EXTRACTED": 7020,
+        "VERIFIED": 684,
+        "NEEDS_REVIEW": 1995,
+        "REJECTED": 3492
+      },
+      "findingCounts": {
+        "ANSWER_UNVERIFIED": 200,
+        "DOCUMENT_BOUNDARIES": 19,
+        "GROUP_UNVERIFIED": 73,
+        "MISSING_OPTION_TEXT": 1,
+        "OPTIONS_UNVERIFIED": 169,
+        "SOURCE_REVIEW": 1
+      },
+      "importedByThisTask": false,
+      "catalogSelectable": "NOT_VERIFIED"
+    },
+    {
+      "test": "ets2026_test04",
+      "examId": "ets2026-test04",
+      "sourceSha256": "63140e4061bb12e47bc9adb50e7427dd11f60beedc9e33598ed06352b2b07f8d",
+      "questions": 200,
+      "optionsSlots": 775,
+      "groups": 73,
+      "media": 87,
+      "bytes": 47737106,
+      "audio": 54,
+      "images": 33,
+      "localVerified": 87,
+      "decodeStatusCounts": {
+        "FULL_PCM_DECODE_VERIFIED": 54,
+        "FULL_IMAGE_DECODE_VERIFIED": 33
+      },
+      "structuralErrors": 0,
+      "fieldReviewCounts": {
+        "EXTRACTED": 6915,
+        "VERIFIED": 644,
+        "NEEDS_REVIEW": 1980,
+        "REJECTED": 3496
+      },
+      "findingCounts": {
+        "ANSWER_UNVERIFIED": 200,
+        "DOCUMENT_BOUNDARIES": 19,
+        "GROUP_UNVERIFIED": 73,
+        "MISSING_OPTION_TEXT": 1,
+        "OPTIONS_UNVERIFIED": 169,
+        "SOURCE_REVIEW": 1
+      },
+      "importedByThisTask": false,
+      "catalogSelectable": "NOT_VERIFIED"
+    }
+  ],
+  "totalMedia": 358,
+  "totalBytes": 189902302,
+  "postgresImport": "NOT_RUN_DATA_BLOCKED",
+  "offlineMode": "--download false; all assets OFFLINE_VERIFIED; receipt SHA pin enabled"
+}
