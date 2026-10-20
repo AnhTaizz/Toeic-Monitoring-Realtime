@@ -101,4 +101,14 @@ class TypedSignalTest {
                 raw.replace("\"storageCount\":1","\"storageCount\":1e0"),raw.replace("\"mock-ref\"","\"\\uD800\""),raw+" ".repeat(8192)))
             assertThatThrownBy(()->SignalMessage.parse(bad)).isInstanceOf(RuntimeException.class);
     }
+    @Test void wireObjectByteBoundsIncludeWhitespaceBeforeNormalization() {
+        var s=usb(UsbStorageSignal.Kind.USB_STORAGE_CONNECTED,1,"mock-ref",UsbStorageSignal.Quality.COMPLETE);
+        var m=new SignalMessage("a","q","t",s);String raw=new Gson().toJson(m.envelope());
+        int payloadBytes=s.json().toString().getBytes(java.nio.charset.StandardCharsets.UTF_8).length;
+        int detailBytes=s.details().toString().getBytes(java.nio.charset.StandardCharsets.UTF_8).length;
+        assertThat(SignalMessage.parse(raw.replace("\"payload\":{","\"payload\":{"+" ".repeat(4096-payloadBytes)))).isEqualTo(m);
+        assertThatThrownBy(()->SignalMessage.parse(raw.replace("\"payload\":{","\"payload\":{"+" ".repeat(4097-payloadBytes)))).isInstanceOf(IllegalArgumentException.class);
+        assertThat(SignalMessage.parse(raw.replace("\"details\":{","\"details\":{"+" ".repeat(1024-detailBytes)))).isEqualTo(m);
+        assertThatThrownBy(()->SignalMessage.parse(raw.replace("\"details\":{","\"details\":{"+" ".repeat(1025-detailBytes)))).isInstanceOf(IllegalArgumentException.class);
+    }
 }

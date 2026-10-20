@@ -160,7 +160,8 @@ class SignalPipelinePostgresTest {
     }
     @Test void strictWireRejectsDuplicateUnknownUnicodeAndIntegerFormsWithoutMutation()throws Exception{
         String a=attempt();String raw=JSON.toJson(message(a,1).envelope());try(Raw ws=new Raw(candidate)){
-            for(String bad:List.of(raw.replace("\"count\":1","\"count\":1,\"count\":1"),raw.replace("\"count\":1","\"count\":1e0"),raw.replace("\"count\":1","\"count\":1,\"extra\":\"MOCK\""),raw.replace("\"eventId\":\"event-1\"","\"eventId\":\"\\uD800\""),raw+" ".repeat(8192)))assertCode(ws.exchange(bad),"INVALID_INPUT");
+            for(String bad:List.of(raw.replace("\"count\":1","\"count\":1,\"count\":1"),raw.replace("\"count\":1","\"count\":1e0"),raw.replace("\"count\":1","\"count\":1,\"extra\":\"MOCK\""),raw.replace("\"eventId\":\"event-1\"","\"eventId\":\"\\uD800\""),raw+" ".repeat(8192),
+                    raw.replace("\"payload\":{","\"payload\":{"+" ".repeat(4096)),raw.replace("\"details\":{","\"details\":{"+" ".repeat(1024))))assertCode(ws.exchange(bad),"INVALID_INPUT");
         }assertThat(rows(a)).isZero();assertThat(counter(a)).isZero();
     }
     @Test void authorizationBeforeDuplicateHistoryAndCapabilityIncludingTerminalAssignmentAndRevoke()throws Exception{

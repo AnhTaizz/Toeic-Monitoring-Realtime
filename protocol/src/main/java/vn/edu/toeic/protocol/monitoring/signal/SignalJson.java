@@ -40,6 +40,24 @@ public final class SignalJson {
             default->throw new IllegalArgumentException();
         };
     }
+    /** After strict syntax validation, measure the original object spans, including whitespace/escapes.
+     * Valid signal envelopes have exactly three object levels: envelope, payload, details.
+     * This is only a size check; fields/types and malformed shapes still go through the typed parser.
+     */
+    static void wireObjectSizes(String raw){
+        int[] starts=new int[6];int depth=0;boolean quoted=false,escaped=false;
+        for(int i=0;i<raw.length();i++){
+            char c=raw.charAt(i);
+            if(quoted){if(escaped)escaped=false;else if(c=='\\')escaped=true;else if(c=='"')quoted=false;continue;}
+            if(c=='"'){quoted=true;continue;}
+            if(c=='{')starts[depth++]=i;
+            else if(c=='}'){
+                int start=starts[--depth];
+                int limit=depth==1?4096:depth==2?1024:8192;
+                if(raw.substring(start,i+1).getBytes(StandardCharsets.UTF_8).length>limit)throw new IllegalArgumentException();
+            }
+        }
+    }
     public static void unicode(String s){
         for(int i=0;i<s.length();i++){char c=s.charAt(i);if(Character.isHighSurrogate(c)){
             if(++i>=s.length()||!Character.isLowSurrogate(s.charAt(i)))throw new IllegalArgumentException();

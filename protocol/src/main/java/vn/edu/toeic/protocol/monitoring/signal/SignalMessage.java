@@ -8,7 +8,7 @@ import vn.edu.toeic.protocol.ws.MessageEnvelope;
 public record SignalMessage(String attemptId,String requestId,String traceId,Signal signal){
     public SignalMessage { SignalJson.id(attemptId);SignalJson.id(requestId);SignalJson.id(traceId);if(signal==null)throw new IllegalArgumentException(); }
     public MessageEnvelope<JsonObject> envelope(){return new MessageEnvelope<>("v0","MONITORING_SIGNAL",requestId,requestId,attemptId,traceId,signal.json());}
-    public static SignalMessage parse(String raw){JsonObject o=SignalJson.parse(raw);SignalJson.fields(o,Set.of("protocolVersion","type","messageId","requestId","attemptId","traceId","payload"),Set.of());
+    public static SignalMessage parse(String raw){JsonObject o=SignalJson.parse(raw);SignalJson.wireObjectSizes(raw);SignalJson.fields(o,Set.of("protocolVersion","type","messageId","requestId","attemptId","traceId","payload"),Set.of());
         return parse(new MessageEnvelope<>(SignalJson.text(o,"protocolVersion"),SignalJson.text(o,"type"),SignalJson.text(o,"messageId"),SignalJson.text(o,"requestId"),SignalJson.text(o,"attemptId"),SignalJson.text(o,"traceId"),o.getAsJsonObject("payload")));}
     public static SignalMessage parse(MessageEnvelope<JsonObject> m){if(!"v0".equals(m.protocolVersion())||!"MONITORING_SIGNAL".equals(m.type())||!java.util.Objects.equals(m.messageId(),m.requestId()))throw new IllegalArgumentException();
         SignalMessage s=new SignalMessage(m.attemptId(),m.requestId(),m.traceId(),Signal.parse(m.payload()));SignalJson.size(new Gson().toJsonTree(m).getAsJsonObject(),8192);return s;}
