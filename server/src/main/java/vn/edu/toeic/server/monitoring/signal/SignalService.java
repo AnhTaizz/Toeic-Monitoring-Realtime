@@ -34,13 +34,14 @@ public class SignalService {
             return new Stored(existing.get().signal(),attempt,existing.get().sequence(),existing.get().receivedAt(),existing.get().deliveryStatus(),true);
         }
         if(current==SignalJson.MAX_INTEGER)throw new IllegalStateException("Signal sequence exhausted");
-        DisplaySignal s=message.signal();
+        Signal s=message.signal();
         Stored result=jdbc.sql("""
             INSERT INTO monitoring_signal_events(attempt_id,event_id,schema_version,observer_session_id,observation_sequence,event_type,source,metadata_quality,
               observed_at,observation_context,observation_connection_id,details,timeline_sequence,delivery_status)
-            VALUES (:a,:e,1,:run,:seq,'DISPLAY_COUNT_OBSERVED','JAVAFX_DISPLAY','COMPLETE',:observed,:context,:connection,CAST(:details AS jsonb),:timeline,:delivery)
+            VALUES (:a,:e,1,:run,:seq,:type,:source,:quality,:observed,:context,:connection,CAST(:details AS jsonb),:timeline,:delivery)
             RETURNING *
             """).param("a",attempt).param("e",s.eventId()).param("run",s.observerSessionId()).param("seq",s.observationSequence())
+            .param("type",s.eventType()).param("source",s.source()).param("quality",s.metadataQuality())
             .param("observed",Timestamp.from(s.observedAt())).param("context",s.origin().context()).param("connection",s.origin().connectionId(),Types.VARCHAR)
             .param("details",s.json().getAsJsonObject("details").toString()).param("timeline",current+1).param("delivery",s.origin().deliveryStatus(connection))
             .query(SignalService::read).single();
@@ -50,7 +51,7 @@ public class SignalService {
     @Transactional(timeout=10)
     public JsonObject capabilities(AuthenticatedUser user,String tokenHash,String attempt){
         lockAttempt(attempt);authorize(user,tokenHash,attempt,null);
-        JsonObject p=header(attempt);JsonArray types=new JsonArray();types.add(DisplaySignal.TYPE);p.add("supportedEventTypes",types);return p;
+        JsonObject p=header(attempt);JsonArray types=new JsonArray();Signal.SUPPORTED_TYPES.forEach(types::add);p.add("supportedEventTypes",types);return p;
     }
     @Transactional(timeout=10)
     public JsonObject history(AuthenticatedUser user,String tokenHash,String attempt,Map<String,String[]> query){
@@ -97,11 +98,15 @@ public class SignalService {
     private record LockedSession(AuthenticatedUser user,boolean enabled,boolean revoked,Instant expiresAt) { }
     private static Stored read(ResultSet r,int n)throws SQLException{
         JsonObject d=JsonParser.parseString(r.getString("details")).getAsJsonObject();
-        DisplaySignal s=new DisplaySignal(r.getString("event_id"),r.getString("observer_session_id"),r.getLong("observation_sequence"),r.getTimestamp("observed_at").toInstant(),
-            new EventOrigin(r.getString("observation_context"),r.getString("observation_connection_id")),d.get("count").getAsInt(),d.get("reason").getAsString());
+        JsonObject p=new JsonObject();p.addProperty("schemaVersion",r.getInt("schema_version"));p.addProperty("eventId",r.getString("event_id"));
+        p.addProperty("observerSessionId",r.getString("observer_session_id"));p.addProperty("observationSequence",r.getLong("observation_sequence"));
+        p.addProperty("eventType",r.getString("event_type"));p.addProperty("source",r.getString("source"));p.addProperty("metadataQuality",r.getString("metadata_quality"));
+        p.addProperty("observedAt",r.getTimestamp("observed_at").toInstant().toString());p.addProperty("observationContext",r.getString("observation_context"));
+        if(r.getString("observation_connection_id")!=null)p.addProperty("observationConnectionId",r.getString("observation_connection_id"));p.add("details",d);
+        Signal s=Signal.parse(p);
         return new Stored(s,r.getString("attempt_id"),r.getLong("timeline_sequence"),r.getTimestamp("received_at").toInstant(),r.getString("delivery_status"),false);
     }
-    public record Stored(DisplaySignal signal,String attemptId,long sequence,Instant receivedAt,String deliveryStatus,boolean duplicate){
+    public record Stored(Signal signal,String attemptId,long sequence,Instant receivedAt,String deliveryStatus,boolean duplicate){
         public JsonObject json(){JsonObject p=signal.json();p.addProperty("attemptId",attemptId);p.addProperty("timelineSequence",sequence);p.addProperty("receivedAt",receivedAt.toString());p.addProperty("deliveryStatus",deliveryStatus);SignalJson.size(p,4608);return p;}
         public JsonObject ack(){JsonObject p=new JsonObject();p.addProperty("status","ACCEPTED");p.addProperty("acknowledgedType","MONITORING_SIGNAL");p.addProperty("eventId",signal.eventId());p.addProperty("schemaVersion",1);p.addProperty("timelineSequence",sequence);p.addProperty("receivedAt",receivedAt.toString());p.addProperty("deliveryStatus",deliveryStatus);p.addProperty("duplicate",duplicate);return p;}
     }

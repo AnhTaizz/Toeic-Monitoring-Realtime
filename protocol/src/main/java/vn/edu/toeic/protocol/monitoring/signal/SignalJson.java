@@ -40,6 +40,24 @@ public final class SignalJson {
             default->throw new IllegalArgumentException();
         };
     }
+    /** After strict syntax validation, measure the original object spans, including whitespace/escapes.
+     * Valid signal envelopes have exactly three object levels: envelope, payload, details.
+     * This is only a size check; fields/types and malformed shapes still go through the typed parser.
+     */
+    static void wireObjectSizes(String raw){
+        int[] starts=new int[6];int depth=0;boolean quoted=false,escaped=false;
+        for(int i=0;i<raw.length();i++){
+            char c=raw.charAt(i);
+            if(quoted){if(escaped)escaped=false;else if(c=='\\')escaped=true;else if(c=='"')quoted=false;continue;}
+            if(c=='"'){quoted=true;continue;}
+            if(c=='{')starts[depth++]=i;
+            else if(c=='}'){
+                int start=starts[--depth];
+                int limit=depth==1?4096:depth==2?1024:8192;
+                if(raw.substring(start,i+1).getBytes(StandardCharsets.UTF_8).length>limit)throw new IllegalArgumentException();
+            }
+        }
+    }
     public static void unicode(String s){
         for(int i=0;i<s.length();i++){char c=s.charAt(i);if(Character.isHighSurrogate(c)){
             if(++i>=s.length()||!Character.isLowSurrogate(s.charAt(i)))throw new IllegalArgumentException();
@@ -51,6 +69,7 @@ public final class SignalJson {
         for(String k:required)if(o.get(k).isJsonNull())throw new IllegalArgumentException();
     }
     public static String text(JsonObject o,String key){JsonElement v=o.get(key);if(v==null||!v.isJsonPrimitive()||!v.getAsJsonPrimitive().isString())throw new IllegalArgumentException();String s=v.getAsString();unicode(s);return s;}
+    public static boolean bool(JsonObject o,String key){JsonElement v=o.get(key);if(v==null||!v.isJsonPrimitive()||!v.getAsJsonPrimitive().isBoolean())throw new IllegalArgumentException();return v.getAsBoolean();}
     public static String id(String s){if(s==null||!s.matches("[A-Za-z0-9_.:-]{1,128}"))throw new IllegalArgumentException();return s;}
     public static long integer(JsonObject o,String key,long min,long max){JsonElement v=o.get(key);if(v==null||!v.isJsonPrimitive()||!v.getAsJsonPrimitive().isNumber()||!v.toString().matches("0|[1-9][0-9]*"))throw new IllegalArgumentException();long n=Long.parseLong(v.toString());if(n<min||n>max)throw new IllegalArgumentException();return n;}
     public static Instant time(String s){if(!s.matches("(?!0000)[0-9]{4}-[0-9]{2}-[0-9]{2}T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,6})?Z"))throw new IllegalArgumentException();return Instant.parse(s);}

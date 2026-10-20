@@ -1,0 +1,177 @@
+{
+    "fixture":  "MOCK: no physical USB, desktop input or clock measurement",
+    "signals":  [
+                    {
+                        "schemaVersion":  1,
+                        "eventId":  "mock-typed-event-1",
+                        "observerSessionId":  "mock-observer-1",
+                        "observationSequence":  1,
+                        "eventType":  "DISPLAY_COUNT_OBSERVED",
+                        "source":  "JAVAFX_DISPLAY",
+                        "metadataQuality":  "COMPLETE",
+                        "observedAt":  "2026-10-20T10:00:00Z",
+                        "observationContext":  "OFFLINE",
+                        "details":  {
+                                        "count":  1,
+                                        "reason":  "INITIAL"
+                                    }
+                    },
+                    {
+                        "schemaVersion":  1,
+                        "eventId":  "mock-typed-event-2",
+                        "observerSessionId":  "mock-observer-1",
+                        "observationSequence":  2,
+                        "eventType":  "USB_STORAGE_PRESENT_AT_START",
+                        "source":  "WINDOWS_USB_STORAGE",
+                        "metadataQuality":  "PARTIAL",
+                        "observedAt":  "2026-10-20T10:00:00Z",
+                        "observationContext":  "OFFLINE",
+                        "details":  {
+                                        "storageCount":  1,
+                                        "deviceClass":  "USB_MASS_STORAGE"
+                                    }
+                    },
+                    {
+                        "schemaVersion":  1,
+                        "eventId":  "mock-typed-event-3",
+                        "observerSessionId":  "mock-observer-1",
+                        "observationSequence":  3,
+                        "eventType":  "USB_STORAGE_CONNECTED",
+                        "source":  "WINDOWS_USB_STORAGE",
+                        "metadataQuality":  "COMPLETE",
+                        "observedAt":  "2026-10-20T10:00:00Z",
+                        "observationContext":  "OFFLINE",
+                        "details":  {
+                                        "deviceRef":  "mock-usb-2",
+                                        "deviceClass":  "USB_MASS_STORAGE",
+                                        "storageCount":  2
+                                    }
+                    },
+                    {
+                        "schemaVersion":  1,
+                        "eventId":  "mock-typed-event-4",
+                        "observerSessionId":  "mock-observer-1",
+                        "observationSequence":  4,
+                        "eventType":  "USB_STORAGE_REMOVED",
+                        "source":  "WINDOWS_USB_STORAGE",
+                        "metadataQuality":  "COMPLETE",
+                        "observedAt":  "2026-10-20T10:00:00Z",
+                        "observationContext":  "OFFLINE",
+                        "details":  {
+                                        "deviceRef":  "mock-usb-2",
+                                        "deviceClass":  "USB_MASS_STORAGE",
+                                        "storageCount":  0
+                                    }
+                    },
+                    {
+                        "schemaVersion":  1,
+                        "eventId":  "mock-typed-event-5",
+                        "observerSessionId":  "mock-observer-1",
+                        "observationSequence":  5,
+                        "eventType":  "EXAM_FOCUS_CHANGED",
+                        "source":  "JAVAFX_EXAM_FOCUS",
+                        "metadataQuality":  "COMPLETE",
+                        "observedAt":  "2026-10-20T10:00:00Z",
+                        "observationContext":  "OFFLINE",
+                        "details":  {
+                                        "context":  "OTHER_OR_UNKNOWN",
+                                        "focused":  false
+                                    }
+                    },
+                    {
+                        "schemaVersion":  1,
+                        "eventId":  "mock-typed-event-6",
+                        "observerSessionId":  "mock-observer-1",
+                        "observationSequence":  6,
+                        "eventType":  "EXAM_FOCUS_CHANGED",
+                        "source":  "JAVAFX_EXAM_FOCUS",
+                        "metadataQuality":  "COMPLETE",
+                        "observedAt":  "2026-10-20T10:00:00Z",
+                        "observationContext":  "OFFLINE",
+                        "details":  {
+                                        "context":  "OTHER_OR_UNKNOWN",
+                                        "focused":  true,
+                                        "lostDurationMillis":  125
+                                    }
+                    },
+                    {
+                        "schemaVersion":  1,
+                        "eventId":  "mock-typed-event-7",
+                        "observerSessionId":  "mock-observer-1",
+                        "observationSequence":  7,
+                        "eventType":  "EXAM_FOCUS_CHANGED",
+                        "source":  "JAVAFX_EXAM_FOCUS",
+                        "metadataQuality":  "COMPLETE",
+                        "observedAt":  "2026-10-20T10:00:00Z",
+                        "observationContext":  "OFFLINE",
+                        "details":  {
+                                        "context":  "EXAM_INTERNAL_DIALOG",
+                                        "focused":  false
+                                    }
+                    },
+                    {
+                        "schemaVersion":  1,
+                        "eventId":  "mock-typed-event-8",
+                        "observerSessionId":  "mock-observer-1",
+                        "observationSequence":  8,
+                        "eventType":  "EXAM_WINDOW_STATE",
+                        "source":  "JAVAFX_EXAM_WINDOW",
+                        "metadataQuality":  "COMPLETE",
+                        "observedAt":  "2026-10-20T10:00:00Z",
+                        "observationContext":  "OFFLINE",
+                        "details":  {
+                                        "fullscreen":  false,
+                                        "reason":  "INITIAL",
+                                        "minimized":  false
+                                    }
+                    },
+                    {
+                        "schemaVersion":  1,
+                        "eventId":  "mock-typed-event-9",
+                        "observerSessionId":  "mock-observer-1",
+                        "observationSequence":  9,
+                        "eventType":  "EXAM_WINDOW_STATE",
+                        "source":  "JAVAFX_EXAM_WINDOW",
+                        "metadataQuality":  "COMPLETE",
+                        "observedAt":  "2026-10-20T10:00:00Z",
+                        "observationContext":  "OFFLINE",
+                        "details":  {
+                                        "fullscreen":  false,
+                                        "reason":  "CHANGED",
+                                        "minimized":  true
+                                    }
+                    },
+                    {
+                        "schemaVersion":  1,
+                        "eventId":  "mock-typed-event-10",
+                        "observerSessionId":  "mock-observer-1",
+                        "observationSequence":  10,
+                        "eventType":  "EXAM_WINDOW_STATE",
+                        "source":  "JAVAFX_EXAM_WINDOW",
+                        "metadataQuality":  "COMPLETE",
+                        "observedAt":  "2026-10-20T10:00:00Z",
+                        "observationContext":  "OFFLINE",
+                        "details":  {
+                                        "fullscreen":  true,
+                                        "reason":  "CHANGED",
+                                        "minimized":  false
+                                    }
+                    },
+                    {
+                        "schemaVersion":  1,
+                        "eventId":  "mock-typed-event-11",
+                        "observerSessionId":  "mock-observer-1",
+                        "observationSequence":  11,
+                        "eventType":  "EXAM_WINDOW_STATE",
+                        "source":  "JAVAFX_EXAM_WINDOW",
+                        "metadataQuality":  "COMPLETE",
+                        "observedAt":  "2026-10-20T10:00:00Z",
+                        "observationContext":  "OFFLINE",
+                        "details":  {
+                                        "fullscreen":  false,
+                                        "reason":  "CHANGED",
+                                        "minimized":  false
+                                    }
+                    }
+                ]
+}

@@ -1,5 +1,13 @@
 # MON-07 — Đề xuất contract monitoring đa tín hiệu
 
+20/10/2026 — Slice tiếp theo được người dùng ủy quyền **USER_AUTHORIZED_EXPERIMENT**:
+[typed USB/focus/window contract đang triển khai](MON07_TYPED_SIGNALS_EXPERIMENT.md),
+cùng display cũ, chỉ input MOCK qua REAL WS/PG TEST/history. Đây là phần triển khai
+giới hạn trên catalog mục4, không biến các mục/D07 PROPOSED dưới đây thành human
+APPROVED. Status/gap/activity/push/observer/60s/30ngày vẫn deferred. Các câu “slice đầu
+chỉ display” và fixture firstSlice dưới đây mô tả lịch sử PR72/74; contract đang chạy
+của slice mở rộng nằm tại [PROTOCOL](PROTOCOL.md).
+
 20/10/2026 — Codex technical review trên nội dung c9a5829: đối chiếu schema/capability/fixture/queue/COMMIT/cursor với slice thử nghiệm PR74. Tài liệu được phép merge như proposal; các quyết định owner vẫn PROPOSED, đặc biệt offline60s/retention30ngày. Không tạo chữ ký A/B/C hoặc approval production.
 
 **PROPOSED — NOT IMPLEMENTED — OWNER REVIEW PENDING.** Ngày 19/10/2026.

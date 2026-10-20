@@ -359,3 +359,13 @@ Chọn migration **V14** vì đối chiếu PR70–74 thấy PR74 đã dùng V13
 ## EX05 — thực thi contract và stack migration, 19/10/2026
 
 Reuse RichMediaValidator để response dùng chính bytes đã hash/decode, không mở file lần hai. Image route yêu cầu RichImageSessionAuthority; thiếu implementation EX07 thì fail-closed. Transaction giữ khóa do authority cấp tới sau file read/recheck và commit. Stack base PR75; giữ MERGE BLOCKED V13/V14 đến khi phối hợp được thứ tự13→14, không sửa MON07 hoặc dùng outOfOrder/placeholder. Không thay thiết kế EX02/ADR, legacy/FULL giữ.
+
+## MON-07 · Typed USB/focus/window experiment, 20/10/2026
+
+**USER_AUTHORIZED_EXPERIMENT** theo yêu cầu attachment 02e4a7e0: cho phép protocol/parser,
+queue adapter, additive migration/persistence/history trên input MOCK và TEST cách ly.
+Chọn [contract sáu type](MON07_TYPED_SIGNALS_EXPERIMENT.md), sealed immutable DTO, shared
+queue/quota và capability subset theo kết nối; V16 không collision main/open EX PR lúc kiểm,
+giữ V13–V15. OFF vẫn có Flyway DDL. Source/runtime không tự chứng thực nguồn vật lý hoặc
+monotonic duration; emitter/hardware cần review riêng. Không đổi D07/ADR thành human
+APPROVED, offline60s/retention30ngày chưa áp dụng; không capture thật/observer/push/dashboard.

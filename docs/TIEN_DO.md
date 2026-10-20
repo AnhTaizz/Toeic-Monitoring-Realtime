@@ -1,5 +1,21 @@
 # Tiến độ hiện tại
 
+20/10/2026 — MON-07 final review: runtime/test **abb282e**, **253 PASS/0SKIP** focused
+(33 protocol/163 client/57 server,21 REAL PG/WS cases). Sửa bypass raw payload/details
+byte bound bằng whitespace sau test1/1FAIL; giữ log lỗi, bổ sung exact boundary/+1 và
+WS reject/no insert. Build/JAR mới và CI exact HEAD tại [report/receipt](../evidence/c-mon07-typed-20261020/REPORT.md).
+Các kết quả252/source c71/a0e bên dưới là lượt trước finding, không thay bản cuối.
+TEST teardown0schema/stop0; FULL mặc định/experiment OFF/gate/owner/hardware pending.
+
+20/10/2026 — [MON-07 typed signals](../evidence/c-mon07-typed-20261020/REPORT.md):
+USER_AUTHORIZED_EXPERIMENT trên base ad8c370, runtime a0e9200/test c71ddde. Thêm ba USB mass-storage,
+EXAM_FOCUS_CHANGED và EXAM_WINDOW_STATE, giữ display; immutable DTO/parser và một queue,
+REAL WS/HTTP/PG TEST từ input MOCK. V16 append-only, upgrade15→16 giữ display/checksum;
+OFF vẫn có thể áp DDL, không DB dev. Baseline227/focused252 PASS/0SKIP; 21 PG pipeline
+cases, cleanup0 schema/cluster stop0. Build/CI/source cuối tại report/PR. Không observer
+production/push/dashboard/activity/rules/offline60s/retention30ngày; FULL mặc định,
+experiment OFF, gate/owner/hardware PENDING, MON-02/03/04/07 chưa DONE.
+
 20/10/2026 — [Tool E1 join dẫn xuất](../evidence/c-e1-derived-20261020/REPORT.md): code c7f12a7,
 CLI explicit +provenance khóa7input gốc/JAR/script/run-clock-trial, vẫn kiểm join gốc,
 diff/receipt/output mới và check hash cuối toàn lượt; không sửa Joiner/công thức/production.
