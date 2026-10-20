@@ -156,20 +156,7 @@ Nguồn đã đọc, truy cập19/10/2026:
 
 Khi chạy physical: ghi source SHA/build receipt, run ID, Windows/runtime/token privilege, alias máy và loại thiết bị (flash drive/external disk, USB mouse/keyboard; không serial/model cá nhân). Ghi local UTC trước/sau thao tác trong notes riêng và đối chiếu JSONL; không sửa raw. Chỉ xuất summary đã lọc.
 
-| Case | Thao tác/expected | Trạng thái ban đầu |
-|---|---|---|
-| H01 | Không gắn USB storage, snapshot thường READY0 hoặc UNKNOWN nếu provider thiếu; operator xác nhận topology | NOT_RUN |
-| H02 | Cắm sẵn USB rồi start → baseline PRESENT_AT_START; ref random | NOT_RUN |
-| H03 | Baseline ổn định rồi cắm mới → CONNECTED một lần khi scan thấy | NOT_RUN |
-| H04 | Rút sau khi đã quan sát → REMOVED cùng ref; không lặp ở poll tiếp | NOT_RUN |
-| H05 | Cắm/rút nhanh nhiều lần, ghi cả lần polling bỏ sót; không biến NOT_OBSERVED thành PASS | NOT_RUN |
-| H06 | Một thao tác/multiple notifications: polling không lặp set; native notifications/debounce chưa triển khai | NOT_RUN |
-| H07 | Hai USB storage, cắm/rút riêng đúng ref/count; nếu thiếu thiết bị giữ NOT_RUN | NOT_RUN |
-| H08 | USB mouse/keyboard không làm storage count/event tăng | NOT_RUN |
-| H09 | Storage không drive letter/UASP/bridge/missing metadata; UNKNOWN khi chưa phân loại đủ | NOT_RUN |
-| H10 | Restart với USB còn cắm → baseline mới/ref mới, không dùng ID run cũ | NOT_RUN |
-| H11 | Ctrl+C giữa query/watch, FINISH và cleanup children0/readers true; không ảnh hưởng PowerShell khác | NOT_RUN |
-| H12 | Provider/permission failure không REMOVED giả, không yêu cầu admin để giấu lỗi | NOT_RUN |
+Dùng bảng H01–H12 mở rộng ở mục Kit main tích hợp đầu tài liệu: giữ nguyên ID/tiêu chí gốc, bổ sung lệnh, prerequisites, evidence/cleanup và điều kiện đánh giá; không duy trì bảng thao tác trùng lặp.
 
 Raw/output thật đặt thư mục riêng ignored, không dump CIM object. Nếu có physical evidence khó tái tạo, người giữ máy lưu ngoài build, ví dụ thư mục archive riêng được phép, kiểm SHA256 từng file/copy và ghi receipt metadata; không chỉ giữ trong target. Lượt chưa có thao tác USB thật không tạo physical archive giả. Kiểm code/tests/runtime thực tế và source pin xem [report](../evidence/v2-c-mon02/REPORT.md).
 

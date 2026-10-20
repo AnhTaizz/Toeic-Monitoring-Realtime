@@ -19,7 +19,7 @@ C/B đối chiếu hash độc lập khi nhận. Không dùng MSI/ZIP cfbba58 t�
 
 ## Chạy đúng runbook hiện hành
 
-Theo [T3_C4_PHYSICAL_LAN_ACCEPTANCE](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md): mục1 nhận/hash/init; mục2 preflight/TEST DB; mục3 candidate/proctor; mục4 F cable loss/rejoin; mục5 fault console/probe chỉ trên attempt riêng, nhãn SIMULATED. Mở process-scoped `powershell -NoProfile -ExecutionPolicy Bypass` trước các snippet nếu policy mặc định chặn script; không đổi policy máy.
+Theo [T3_C4_PHYSICAL_LAN_ACCEPTANCE](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md): mục1 nhận/hash/init; mục2 preflight/TEST DB; mục3 candidate/proctor; mục4 F cable loss/rejoin; mục5 fault console/probe chỉ trên attempt riêng, nhãn SIMULATED. Nếu policy chặn script, ghi BLOCKED và nhờ owner cung cấp cách chạy được phép; không đổi/bypass policy.
 
 MON-01 dùng **server FULL, client -Mode Full**. Không bật DELTA. Trên A: PostgreSQL TEST riêng, Spring, PROCTOR và CANDIDATE_A. Trên B: CANDIDATE_B trên Windows vật lý khác. Hai account/attempt khác nhau, proctor đúng assignment. Mọi client dùng cùng IPv4 LAN thật của A, DB credential chỉ trên A; không sửa .env dùng chung hoặc DB dev.
 

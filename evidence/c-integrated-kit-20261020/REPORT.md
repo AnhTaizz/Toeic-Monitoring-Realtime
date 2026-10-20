@@ -65,6 +65,29 @@ copy artifact lịch sử. Không credential/token/serial/CIM object/hostname/IP
 trong public diff. Main trước thay đổi và published-source tương đương runtime nếu chỉ
 docs/tools thay đổi; không lấy SHA publication giả làm source JAR.
 
+### Build pinned commit và kiểm bản xuất
+
+Source kit build **`7cd231e995d49a9a39ef27608d7c2e02d50f76b1`** là descendant main a6fba311;
+diff production Java/resources/POM bằng0. Lệnh
+`New-T3C4LanBundle.ps1 -BuildFromHead -SkipArchive -OutputDirectory target/kit-check/integrated-bundle`
+thành công: reactor package **skip tests**, không clean/root raw/DB/server. Kit22file,
+manifest/JAR SHA256 và bốn JAR local tại [receipt](receipt.json); không upload JAR/ZIP.
+Receipt build USB/tests/provider trước đó sourcea6fba311 giữ nguyên, không gán thành7cd231e.
+
+Test kit **đúng commit7cd231e** 33PASS; bản xuất33PASS nữa (cùng suite lặp, không66unique).
+Export manifest xác minh mọi file +hai JAR; init tạo đúng41NOT RUN/SHA mới, review.json
+đúng SHA nhưng B/C PENDING; run source đúng; init/builder từ chối ghi đè, run hash không đổi,
+không ZIP. Public receipt chứa hash raw **local ignored**, không giả URL GitHub cho raw.
+Workflow giữ nguyên clean verify, thêm bước script33checks MOCK/no network. CI exact
+publication HEAD và kết quả merge được ghi ở PR; chưa lấy CI lịch sử làm kết quả mới.
+
+Technical review Codex: source defaults vẫn kiểm legacy, export pins chỉ đổi trong copy,
+nguồn sạch trước build, HEAD descendant main đã fetch; builder không đọc `.env`, không
+đổi protocol/migration/runtime/default. Hash manifest cần kênh độc lập khi nhận, không là
+chữ ký owner. Diff chỉ tools/test/workflow/docs/evidence; rà pattern credential/private key
+và nội dung mới không có secrets/raw/media/binary. Không thay `.env`, DB dev, tracker hoặc
+physical status; không tạo approval GitHub hay ký A/B/C.
+
 Bước C tiếp theo không USB: cùng B thực hiện subset GUI lifecycle FULL trên một Windows
 với TEST DB/đề/audio/assigned attempts do A cấp, ghi actual stop/logout/submit/timeout và
 worker cleanup theo MON01. Dependency: A cấp TEST scope, B thao tác GUI; chỉ kiểm/chụp safe

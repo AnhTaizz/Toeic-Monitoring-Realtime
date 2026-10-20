@@ -1,0 +1,176 @@
+{
+    "schema":  "c-integrated-kit-verification-v1",
+    "mainSource":  "a6fba31178a1694f42df4a682d4a0ed205d77e45",
+    "kitBuildSource":  "7cd231e995d49a9a39ef27608d7c2e02d50f76b1",
+    "usbTestsAndProviderSource":  "a6fba31178a1694f42df4a682d4a0ed205d77e45",
+    "toolchain":  {
+                      "jdk":  "Temurin21.0.10+7",
+                      "maven":  "3.9.15",
+                      "powershell":  "5.1.26100.9711",
+                      "windowsBuild":  26200,
+                      "privilege":  "STANDARD"
+                  },
+    "tests":  {
+                  "kitExportChecks":  33,
+                  "kitSourceChecks":  33,
+                  "usb":  {
+                              "skip":  0,
+                              "error":  0,
+                              "pass":  35,
+                              "fail":  0
+                          },
+                  "consumer":  {
+                                   "skip":  0,
+                                   "error":  0,
+                                   "pass":  65,
+                                   "fail":  0
+                               },
+                  "kitChecksAreRepeatedSuiteNot66Unique":  true
+              },
+    "providers":  {
+                      "win32":  {
+                                    "ownedChildrenAlive":  0,
+                                    "queryMillis":  407,
+                                    "exitCode":  4,
+                                    "problem":  "CLASSIFICATION_INCOMPLETE",
+                                    "pipeReadersTerminated":  true,
+                                    "storageCount":  null,
+                                    "status":  "UNKNOWN"
+                                },
+                      "msft":  {
+                                   "ownedChildrenAlive":  0,
+                                   "status":  "READY",
+                                   "pipeReadersTerminated":  true,
+                                   "queryMillis":  1316,
+                                   "storageCount":  0
+                               }
+                  },
+    "cli":  {
+                "capExit":  5,
+                "duplicateExit":  3,
+                "originalUnchanged":  true
+            },
+    "export":  {
+                   "sourceSha":  "7cd231e995d49a9a39ef27608d7c2e02d50f76b1",
+                   "manifestFiles":  22,
+                   "all41Pending":  true,
+                   "reviewSourceCorrect":  true,
+                   "reviewPending":  true,
+                   "runSourceCorrect":  true,
+                   "initNoOverwrite":  true,
+                   "runUnchanged":  true,
+                   "bundleNoOverwrite":  true,
+                   "noZip":  true
+               },
+    "artifacts":  [
+                      {
+                          "path":  "protocol/target/protocol-0.1.0-SNAPSHOT.jar",
+                          "sha256":  "84bb8e1d75af3d42cefadda9b90e3a4a5b099e31f489b400625b4778d90dfe97",
+                          "bytes":  106795,
+                          "availability":  "LOCAL IGNORED; not uploaded to GitHub"
+                      },
+                      {
+                          "path":  "client/target/client-0.1.0-SNAPSHOT-all.jar",
+                          "sha256":  "a6315af3ccdf15f643a35f53ab71316ed439551260b5be9eb895f94939a835db",
+                          "bytes":  11483772,
+                          "availability":  "LOCAL IGNORED; not uploaded to GitHub"
+                      },
+                      {
+                          "path":  "server/target/server-0.1.0-SNAPSHOT.jar",
+                          "sha256":  "408aa3f770a68074aed168148ca60c2f896adcb6a90e5e7b8387161cf83509fa",
+                          "bytes":  25293586,
+                          "availability":  "LOCAL IGNORED; not uploaded to GitHub"
+                      },
+                      {
+                          "path":  "monitoring-spike/target/monitoring-spike-0.1.0-SNAPSHOT.jar",
+                          "sha256":  "366a45df2331fa4c9ade79041813692bc6092ce7a5b474bb74e8e3b734d1cd4a",
+                          "bytes":  35713,
+                          "availability":  "LOCAL IGNORED; not uploaded to GitHub"
+                      }
+                  ],
+    "localRawHashes":  [
+                           {
+                               "path":  "target/kit-check/baseline-failure.txt",
+                               "sha256":  "b1dabd34bff387cdfbc9c733a73338f31d41064f3898cc5455771548d2ed01f3",
+                               "availability":  "LOCAL IGNORED; not a GitHub link"
+                           },
+                           {
+                               "path":  "target/kit-check/usb-build.private.log",
+                               "sha256":  "1e44fbeaaae92328cb46dec9099f8678de3650fd8c8b9e76eb50fa433a947841",
+                               "availability":  "LOCAL IGNORED; not a GitHub link"
+                           },
+                           {
+                               "path":  "target/kit-check/gui-focused.private.log",
+                               "sha256":  "d43ce5f0bc9ec28bf39c8d3d7807c11f100f33894fe51d4f3ed3aa11eda95ce3",
+                               "availability":  "LOCAL IGNORED; not a GitHub link"
+                           },
+                           {
+                               "path":  "target/kit-check/gui-focused-corrected.private.log",
+                               "sha256":  "abc919b3892996c27e04325ac69bc1b274df451d4cd37e04444ebb64e3210740",
+                               "availability":  "LOCAL IGNORED; not a GitHub link"
+                           },
+                           {
+                               "path":  "target/kit-check/msft-main.jsonl",
+                               "sha256":  "e44e7946a4d64e1d24447f5a91b1f9b489e2fa932fed2c514a9adcd6b053ca04",
+                               "availability":  "LOCAL IGNORED; not a GitHub link"
+                           },
+                           {
+                               "path":  "target/kit-check/win32-main.jsonl",
+                               "sha256":  "da56bd5ef339fb682c3e7d39d4a38cf6fbbd93b786ba70d20b211707ae1cb62e",
+                               "availability":  "LOCAL IGNORED; not a GitHub link"
+                           },
+                           {
+                               "path":  "target/kit-check/cap-main.jsonl",
+                               "sha256":  "aa66a73972eac56fb65b7bf0985676d34821613c8cdfa5c4a7d330baacd0c73c",
+                               "availability":  "LOCAL IGNORED; not a GitHub link"
+                           },
+                           {
+                               "path":  "target/kit-check/cli-checks.json",
+                               "sha256":  "7df695293b86bc28ae288dd18df71d1464b930988d49368712af05c0b938dfc9",
+                               "availability":  "LOCAL IGNORED; not a GitHub link"
+                           },
+                           {
+                               "path":  "target/kit-check/committed-regression/validation.json",
+                               "sha256":  "c3f7cd8b2bef0f81da9c11cae1a3a67b44d05120262959a87107d2fc1f22d211",
+                               "availability":  "LOCAL IGNORED; not a GitHub link"
+                           },
+                           {
+                               "path":  "target/kit-check/integrated-build.private.log",
+                               "sha256":  "8c212ee80a64f2d199cc680733ae8c67adf22c9346c23e383b622de8792ea1fa",
+                               "availability":  "LOCAL IGNORED; not a GitHub link"
+                           },
+                           {
+                               "path":  "target/kit-check/integrated-bundle/artifact-manifest.json",
+                               "sha256":  "0bd236fc60ad1ba7ca1838504c492a61fc886bcc6f4fe97098c2118073fb7702",
+                               "availability":  "LOCAL IGNORED; not a GitHub link"
+                           },
+                           {
+                               "path":  "target/kit-check/exported-regression/validation.json",
+                               "sha256":  "2005a37077dd8a7db19bc29dd2f7c395b571dd67bf5cea68da3dec156edc6789",
+                               "availability":  "LOCAL IGNORED; not a GitHub link"
+                           },
+                           {
+                               "path":  "target/kit-check/export-checks.json",
+                               "sha256":  "a0bebd8e16587c789846baf59fe8f8e42bbde29fc832eb5e60a6f7b25c7b0dab",
+                               "availability":  "LOCAL IGNORED; not a GitHub link"
+                           }
+                       ],
+    "physicalUsb":  {
+                        "status":  "NOT_RUN",
+                        "total":  12,
+                        "executed":  0
+                    },
+    "physicalLan":  {
+                        "status":  "NOT_RUN",
+                        "total":  41,
+                        "executed":  0
+                    },
+    "defaultMode":  "FULL",
+    "signalExperiment":  "OFF",
+    "deltaGate":  "NOT_DECIDED",
+    "humanBReview":  "PENDING",
+    "databaseStarted":  false,
+    "serverStarted":  false,
+    "newManualGuiHearing":  "NOT_RUN",
+    "newRealCtrlC":  "NOT_RUN"
+}
