@@ -17,6 +17,8 @@ try {
     $classes='server/target/t2c2-smoke-classes/vn/edu/toeic/server/monitoring'
     New-Item -ItemType Directory -Force $classes | Out-Null
     Copy-Item 'server/target/test-classes/vn/edu/toeic/server/monitoring/LateEventsAndGapsSmoke*.class' $classes -Force
+    # Cleanup is a runtime dependency of the isolated harness, including failure paths.
+    Copy-Item 'server/target/test-classes/vn/edu/toeic/server/monitoring/SmokeCleanup*.class' $classes -Force
     $runId='T2C2-'+[Guid]::NewGuid().ToString()
     $output=Join-Path (Get-Location) ('server/target/t2c2-runtime/'+$runId)
     $raw=Join-Path $output 'raw'
