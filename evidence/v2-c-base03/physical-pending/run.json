@@ -1,0 +1,16 @@
+{
+    "schema":  "t3c4-physical-run-v1",
+    "runId":  "T3C4-LAN-98875f94-04f0-436d-94ce-1fc8fe0d523f",
+    "sourceSha":  "463cbadc50465c6ca2f2d4c0a0701dcb9c38e034",
+    "runtimeSourceSha":  "834f683e50b22e214ab63bbf7d046a7d418b8242",
+    "manifestSha256":  "f51626affd497c739fdf3a2c6bb02a1de726aeb986617f8c73fdea7d528b8d8f",
+    "createdUtc":  "2026-10-19T10:02:35.1195131Z",
+    "lan":  "NOT RUN",
+    "casesExecuted":  0,
+    "humanBReview":  "PENDING",
+    "deltaGate":  "NOT DECIDED",
+    "machineAliases":  [
+                           "MACHINE_A",
+                           "MACHINE_B"
+                       ]
+}

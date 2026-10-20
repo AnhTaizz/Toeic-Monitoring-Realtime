@@ -1,5 +1,5 @@
 {
-  "sourceSha": "cfbba580886ede7b1b5a4f56875197b10f284514",
+  "sourceSha": "463cbadc50465c6ca2f2d4c0a0701dcb9c38e034",
   "twoPhysicalWindowsMachinesConfirmed": false,
   "reviewer": "PENDING",
   "machineA": {"alias": "MACHINE_A", "roles": ["PostgreSQL TEST", "Spring server", "PROCTOR", "CANDIDATE_A"], "windowsVersion": "PENDING", "jdkVersion": "PENDING", "postgresVersion": "PENDING"},
