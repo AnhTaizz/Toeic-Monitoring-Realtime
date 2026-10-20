@@ -1,0 +1,342 @@
+{
+  "schema": "mon02-ci73-fix-v1",
+  "sourceSha": "1e759245f9e9b9b13ac868384e5d0892f104f77e",
+  "failedCi": {
+    "runId": 39258040529,
+    "jobId": 118078191497,
+    "headSha": "fa764c9ad39adcf6e875f01045598c75cd462987",
+    "classificationCaseSeconds": 5.102,
+    "problemDiagnostic": "NOT_RECORDED",
+    "rootCause": "UNDETERMINED_FROM_ORIGINAL_LOG"
+  },
+  "localBaseline": {
+    "original5SecondBudget": "PASS_ONCE",
+    "sourceState": "fa764c9 runtime plus uncommitted diagnostic-only test edit",
+    "freshProcesses": true,
+    "freshHostedVm": false
+  },
+  "controlledExperiment": [
+    {
+      "fixture": "MOCK_DELAY_5500MS",
+      "budgetMillis": 5000,
+      "status": "ERROR",
+      "problem": "QUERY_TIMEOUT",
+      "queryMillis": 5072,
+      "privilege": "UNKNOWN",
+      "powershell": "UNKNOWN",
+      "childrenAlive": 0,
+      "readersTerminated": true
+    },
+    {
+      "fixture": "MOCK_DELAY_5500MS",
+      "budgetMillis": 10000,
+      "status": "READY",
+      "problem": "NONE",
+      "queryMillis": 5872,
+      "privilege": "STANDARD",
+      "powershell": "5.1.26100.9711",
+      "childrenAlive": 0,
+      "readersTerminated": true
+    }
+  ],
+  "focusedRuns": [
+    {
+      "label": "focused-01",
+      "tests": 1,
+      "caseSeconds": "0.74",
+      "result": "PASS"
+    },
+    {
+      "label": "focused-02",
+      "tests": 1,
+      "caseSeconds": "0.72",
+      "result": "PASS"
+    },
+    {
+      "label": "focused-03",
+      "tests": 1,
+      "caseSeconds": "0.813",
+      "result": "PASS"
+    }
+  ],
+  "moduleTests": 35,
+  "moduleSuites": [
+    {
+      "class": "vn.edu.toeic.monitoring.ProcessObservationTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rawSha256": "c46d2c65d572b4afa5dfd9ebad416c972dd01fed94a55fe4c0468d9ed3cb5b6d"
+    },
+    {
+      "class": "vn.edu.toeic.monitoring.usb.CimClassificationScriptTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rawSha256": "fa090a4495558004ef07688ab3ebb17c176bc8ffe8cf9e45416cc50999bbf55d"
+    },
+    {
+      "class": "vn.edu.toeic.monitoring.usb.CimSnapshotSourceTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rawSha256": "db877808ad885d7a4b878f93ed3675de2fae472a671f290d6415ba9e9396d4c0"
+    },
+    {
+      "class": "vn.edu.toeic.monitoring.usb.UsbObservationTrackerTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rawSha256": "138139ab9444641ddceead4b6abc837864031762e61bf21cd229fb7c6eb78d6e"
+    },
+    {
+      "class": "vn.edu.toeic.monitoring.usb.UsbStorageProbeTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rawSha256": "390871a021b3c66d2e7f1f6614192b6d880819e996b6c1f96280f90c21e8602e"
+    }
+  ],
+  "classificationBudgetMillis": 10000,
+  "cliDefaultTimeoutMillis": 5000,
+  "intentionalHungChildTimeoutMillis": 150,
+  "runtimeFilesCompared": 15,
+  "runtimeHashChanges": 0,
+  "oldRawHashesReverified": 29,
+  "jarSha256": "98c062cf37688e6834a8e1a0ac509c8da911d1a9b354bcd4b164f23426e0690e",
+  "buildReceiptSha256": "fe4967c03bfec75cd11451fac19d2301e03c9681758040bde41331f236a7b142",
+  "snapshotRuns": [
+    {
+      "case": "msft-snapshot-1e75924",
+      "sourceSha": "1e759245f9e9b9b13ac868384e5d0892f104f77e",
+      "runId": "21c39194-2baa-433d-9af0-7d797f383ea6",
+      "status": "READY",
+      "problem": "NONE",
+      "storageCount": 0,
+      "privilege": "STANDARD",
+      "queryMillis": 1224,
+      "exitCode": 0,
+      "childrenAlive": 0,
+      "readersTerminated": true,
+      "rawSha256": "d321cbbc33102b332955d589bc2a8d2c98bb55ca8ad6d66771e69076535e7c69"
+    },
+    {
+      "case": "win32-snapshot-1e75924",
+      "sourceSha": "1e759245f9e9b9b13ac868384e5d0892f104f77e",
+      "runId": "fdcf6c4c-f803-4a8f-b43d-f46d315ba99f",
+      "status": "UNKNOWN",
+      "problem": "CLASSIFICATION_INCOMPLETE",
+      "storageCount": null,
+      "privilege": "STANDARD",
+      "queryMillis": 471,
+      "exitCode": 4,
+      "childrenAlive": 0,
+      "readersTerminated": true,
+      "rawSha256": "490416bfa1141ce908237876a72a02b33eb1b3beafd55cfe404774eb506fc31b"
+    },
+    {
+      "case": "jar-snapshot-1e75924",
+      "sourceSha": "1e759245f9e9b9b13ac868384e5d0892f104f77e",
+      "runId": "ec32bad4-940a-452c-9b4f-c0ad3465006f",
+      "status": "READY",
+      "problem": "NONE",
+      "storageCount": 0,
+      "privilege": "STANDARD",
+      "queryMillis": 450,
+      "exitCode": 0,
+      "childrenAlive": 0,
+      "readersTerminated": true,
+      "rawSha256": "255abac5a71863d3afe82c4f64f67faa35093cc5991157800e7be559a512ba01"
+    }
+  ],
+  "physical": "0/12 NOT_RUN",
+  "apiDecision": "ADR-V2-05_PENDING",
+  "rawAvailability": "LOCAL_IGNORED_NOT_UPLOADED",
+  "rawRootRelativeToWorktree": "target/ci73-fix-20261019",
+  "rawManifest": [
+    {
+      "relativePath": "BudgetExperiment.java",
+      "bytes": 2245,
+      "sha256": "075ca4dbb2422561ef166becbe6afa97a431f4b1a9646310f1e93bf1b9f29067"
+    },
+    {
+      "relativePath": "baseline-diagnostic-5s.log",
+      "bytes": 4276,
+      "sha256": "ee80d0ea5232dfaa8db6d32966fd615252592d39d2ef74474c1edb7bdcdfc81e"
+    },
+    {
+      "relativePath": "baseline-xml/classification.xml",
+      "bytes": 9044,
+      "sha256": "4cf988b74b59aeef6fc615012500d1d6035aea319c3117f0242f3e27b80c0597"
+    },
+    {
+      "relativePath": "before-fa764c9/REPORT.md",
+      "bytes": 11090,
+      "sha256": "8e92e75e6e67ad3cae2a9117125f43005bf64ac46706aae29faee775402b2e43"
+    },
+    {
+      "relativePath": "before-fa764c9/build-receipt.json",
+      "bytes": 8493,
+      "sha256": "3a395fd2d637cd28c90dda63971abb859a9b505eac19fc2a8dbd3665cea499a4"
+    },
+    {
+      "relativePath": "before-fa764c9/monitoring-spike.jar",
+      "bytes": 35705,
+      "sha256": "dfdb7dd1b0fc5a2e87342a521c1a0c3a517399d5fb4b8d6825ce14a7261a8326"
+    },
+    {
+      "relativePath": "before-fa764c9/public-sha256.json",
+      "bytes": 1025,
+      "sha256": "3e57ccff8ac32217ea8d7fbbe496790cc5ade380c56c8ad48b63807bcd605938"
+    },
+    {
+      "relativePath": "budget-experiment.jsonl",
+      "bytes": 814,
+      "sha256": "024e0966eb50b4299c5918c50348c60126db1d0c35a12128a55c552e15f082e7"
+    },
+    {
+      "relativePath": "build-1e75924.log",
+      "bytes": 6872,
+      "sha256": "d5c7b3beec022c74543c94923d558c86d5866ff9b48225e7c7e3a4287f16bb7d"
+    },
+    {
+      "relativePath": "build-receipt-1e75924.json",
+      "bytes": 8493,
+      "sha256": "fe4967c03bfec75cd11451fac19d2301e03c9681758040bde41331f236a7b142"
+    },
+    {
+      "relativePath": "ci-39258040529-job-118078191497.log",
+      "bytes": 70891,
+      "sha256": "3148f0970119f667643d3085f09070a305e43e648cf9a549793a6718acbb9bcb"
+    },
+    {
+      "relativePath": "ci-39264645975-success.log",
+      "bytes": 68966,
+      "sha256": "dd0e81ea9effe7310ff3e5309a3a97557dd52db5e97c6f1d945236ce8157c2bc"
+    },
+    {
+      "relativePath": "experiment-classes/vn/edu/toeic/monitoring/usb/BudgetExperiment.class",
+      "bytes": 4236,
+      "sha256": "51781703fc35e43977361caf602e2fb857e67d18a977a2a6cfcec473e45b018e"
+    },
+    {
+      "relativePath": "focused-01.log",
+      "bytes": 4276,
+      "sha256": "0f27809736a8f7d2f43d073eb73b2033058e5741d4fafa273c2663d9632db8c2"
+    },
+    {
+      "relativePath": "focused-01/TEST-vn.edu.toeic.monitoring.usb.CimClassificationScriptTest.xml",
+      "bytes": 9046,
+      "sha256": "76472e720959c210c715bd72e3804bf59cf4011cbe3c6724e6e7f1e12ebae302"
+    },
+    {
+      "relativePath": "focused-02.log",
+      "bytes": 4070,
+      "sha256": "b5f5b25a11389943d9b3d332e77c671c70ace570e211c5f50ea25677d13c004e"
+    },
+    {
+      "relativePath": "focused-02/TEST-vn.edu.toeic.monitoring.usb.CimClassificationScriptTest.xml",
+      "bytes": 9043,
+      "sha256": "225cfafd2ab115459802aa68e9fa0924c337213430e230baca5a2c13ced95790"
+    },
+    {
+      "relativePath": "focused-03.log",
+      "bytes": 4070,
+      "sha256": "d99c4995998f2cd3dcab71690c5d278f0b080a0ac7cf2f071c24d986a20aef73"
+    },
+    {
+      "relativePath": "focused-03/TEST-vn.edu.toeic.monitoring.usb.CimClassificationScriptTest.xml",
+      "bytes": 9047,
+      "sha256": "330e5b0c3be28285ef690bdc4229764be3211d7194fdd6c88dc0a79ed51adc95"
+    },
+    {
+      "relativePath": "jar-snapshot-1e75924.jsonl",
+      "bytes": 1009,
+      "sha256": "255abac5a71863d3afe82c4f64f67faa35093cc5991157800e7be559a512ba01"
+    },
+    {
+      "relativePath": "module-precommit-xml/TEST-vn.edu.toeic.monitoring.ProcessObservationTest.xml",
+      "bytes": 8853,
+      "sha256": "c13902ef5bc797ca240b5015402df3f2e842fc2dbb424bc81709b544462e30c9"
+    },
+    {
+      "relativePath": "module-precommit-xml/TEST-vn.edu.toeic.monitoring.usb.CimClassificationScriptTest.xml",
+      "bytes": 9624,
+      "sha256": "b88feac2a47205a0b370baa6e6b289d8f951d5dc7a6d77bd35b25b62bace76ac"
+    },
+    {
+      "relativePath": "module-precommit-xml/TEST-vn.edu.toeic.monitoring.usb.CimSnapshotSourceTest.xml",
+      "bytes": 10611,
+      "sha256": "e54974aadf1685e7a9a501cbacd4fbc197ef9b19207bbcf1af6e0e5b45585ad6"
+    },
+    {
+      "relativePath": "module-precommit-xml/TEST-vn.edu.toeic.monitoring.usb.UsbObservationTrackerTest.xml",
+      "bytes": 10221,
+      "sha256": "5e8ca2d65f7eb4af83cab18d51fad00de6bb8d6f5748e115ee36feaf422135af"
+    },
+    {
+      "relativePath": "module-precommit-xml/TEST-vn.edu.toeic.monitoring.usb.UsbStorageProbeTest.xml",
+      "bytes": 9268,
+      "sha256": "c150a395aa1956f4aed1c6fbf60787464f96662dca3d60f22d99c52ebf2b0b26"
+    },
+    {
+      "relativePath": "module-precommit.log",
+      "bytes": 5896,
+      "sha256": "6926f792db716ae23e1393c923c246e2ec2c646cc9412932fa1429c165d0961b"
+    },
+    {
+      "relativePath": "msft-snapshot-1e75924.jsonl",
+      "bytes": 1013,
+      "sha256": "d321cbbc33102b332955d589bc2a8d2c98bb55ca8ad6d66771e69076535e7c69"
+    },
+    {
+      "relativePath": "verified-xml/TEST-vn.edu.toeic.monitoring.ProcessObservationTest.xml",
+      "bytes": 8851,
+      "sha256": "c46d2c65d572b4afa5dfd9ebad416c972dd01fed94a55fe4c0468d9ed3cb5b6d"
+    },
+    {
+      "relativePath": "verified-xml/TEST-vn.edu.toeic.monitoring.usb.CimClassificationScriptTest.xml",
+      "bytes": 9620,
+      "sha256": "fa090a4495558004ef07688ab3ebb17c176bc8ffe8cf9e45416cc50999bbf55d"
+    },
+    {
+      "relativePath": "verified-xml/TEST-vn.edu.toeic.monitoring.usb.CimSnapshotSourceTest.xml",
+      "bytes": 10608,
+      "sha256": "db877808ad885d7a4b878f93ed3675de2fae472a671f290d6415ba9e9396d4c0"
+    },
+    {
+      "relativePath": "verified-xml/TEST-vn.edu.toeic.monitoring.usb.UsbObservationTrackerTest.xml",
+      "bytes": 10218,
+      "sha256": "138139ab9444641ddceead4b6abc837864031762e61bf21cd229fb7c6eb78d6e"
+    },
+    {
+      "relativePath": "verified-xml/TEST-vn.edu.toeic.monitoring.usb.UsbStorageProbeTest.xml",
+      "bytes": 9266,
+      "sha256": "390871a021b3c66d2e7f1f6614192b6d880819e996b6c1f96280f90c21e8602e"
+    },
+    {
+      "relativePath": "win32-snapshot-1e75924.jsonl",
+      "bytes": 1044,
+      "sha256": "490416bfa1141ce908237876a72a02b33eb1b3beafd55cfe404774eb506fc31b"
+    }
+  ],
+  "fixedCodeCi": {
+    "runId": 39264645975,
+    "jobId": 118100933611,
+    "sourceSha": "1e759245f9e9b9b13ac868384e5d0892f104f77e",
+    "conclusion": "SUCCESS",
+    "cleanVerify": "SUCCESS",
+    "monitoringSpikeTests": 35,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "classificationSuiteSeconds": 3.612
+  },
+  "focusedRunsSourceState": "WORKING_TREE_PATCH_BEFORE_1e75924; final committed case also passes in clean verify at sourceSha",
+  "controlledExperimentSourceState": "Unchanged runtime bytes from 30166b3; standalone ignored MOCK experiment at fa764c9 plus diagnostic-only test edit"
+}
