@@ -435,3 +435,12 @@ Thiết kế [EX02/D10](../EX02_RICH_EXAM_CONTRACT_V1.md) và [ADR](../plan-v2/A
 **EX-06 — Ghi chú làm dở (20/10/2026):** nhánh `feat/ex06-javafx-rich-renderer-20261020` (trên EX-07) đã có màn TOEIC Room V2 cho 7 Part, lobby, Visual READY, START và bridge Listening; test GUI và E2E thật PASS local ([bàn giao](../EX06_JAVAFX_RICH_RENDERER.md)). Còn: B review UX/visual, nghe thật bằng loa, MSI/máy hai/LAN, tạo lại audio view khi reclaim writer sau START, màn login/home theo mockup. A review contract client↔EX-07. Không merge/DONE.
 
 **Tích hợp EX-06 + Proctor UI + V2 — Ghi chú làm dở (20/10/2026):** nhánh `integrate/ex06-proctor-20261020`. Launcher route PROCTOR sang `ProctorRedesignView`; panel V2 (`ProctorV2SessionPane`/`ProctorV2Controller`/`ProctorV2ApiClient`) trong "Điều khiển ca" ([bàn giao](../INTEGRATION_EX06_PROCTOR_20261020.md)). E2E thật PASS; còn: chạy runbook UI trên Windows, import rich trong UI (chưa có), danh sách user/ca (chưa có API), tab V1 và `ScoreResultDialog` chưa theo style mới. Không merge/DONE.
+
+## MON-03 — bàn giao focus candidate, 20/10/2026
+
+Nhánh `feat/v2-b-mon03-focus-monitoring-20261020`, base `d2c8f01`: adapter typed
+signal, JavaFX Stage binding, MON-07 capability/queue và candidate lifecycle đã tích hợp;
+mặc định OFF. Focused 46PASS/0SKIP, trong đó 9 case MON-03 trực tiếp.
+Full clean test 1201PASS/144SKIP/0FAIL/ERROR.
+[Thiết kế/runbook](../MON03_FOCUS_MONITORING.md), [evidence](../../evidence/v2-b-mon03-focus-20261020/REPORT.md).
+Còn reviewer C và manual Alt+Tab/PROCTOR/REAL WS-PG NOT RUN; không đánh dấu DONE.
