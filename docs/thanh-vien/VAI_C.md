@@ -431,3 +431,7 @@ Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG
 ## Ghi chú làm dở MON-01 — 19/10/2026
 
 [Report MON-01](../../evidence/v2-c-mon01/REPORT.md): pipeline14chặng/15criteria đã đối chiếu,65focused+C2WS/PG/GUI PASS mới sourcef78b407; REAL ProcessHandle/FULL bằng evidence BASE-03 kế thừa (không lượt mới). BASE-03 đã sao lưu ngoài repo có hash/Gitbundle; giữ source9a97cab sạch. BASE-02 approval PENDING, physical0 và B chưa ký nên TECHNICALLY_VERIFIED_PENDING_PHYSICAL_REVIEW. Cùng B làm [checklist16dòng](../V2_C_MON01_PHYSICAL_HANDOFF.md), actual app end/submit/timeout và cable-loss/rejoin/unique history/workers; A xác nhận BASE-02 và contract decisions trước MON-07. Không triển khai MON-07/USB, không DONE/tracker, FULL default/DELTA gate NOT_DECIDED/E2NO.
+
+## Ghi chú làm dở — review EX-02 / ADR-V2-03, 19/10/2026
+
+C giữ scope review [contract](../EX02_RICH_EXAM_CONTRACT_V1.md)/[ADR](../plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) về auth/lock/timeout/monitoring. D01–D10 đã TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn đại diện19/10](../plan-v2/EX02_TEAM_APPROVAL_20261019.md), không chữ ký/GitHub review cá nhân. EX07 cần PG/HTTP/WS barriers cho START vs takeover/invalidate/revoke/lease/restart, session→attempt→readiness locks, auth-before-receipt, no deadline reset/WS trước commit; EX06 GUI gate/heartbeat. Chấp nhận ảnh Part1 prefetch có thể trích xuất, không hứa server thấy pixels hoặc lập tức biết app đóng. Checkers là MOCK, S01–S16/V01–V20 runtime NOT RUN; FULL/WSv0/collector giữ, không tracker DONE.

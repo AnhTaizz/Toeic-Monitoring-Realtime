@@ -103,3 +103,10 @@ data/seedingTest/*.html -text whitespace=-blank-at-eol,-blank-at-eof,-space-befo
 
 # EX04 công bố case/results/hash đã lọc; giữ nguyên byte bằng chứng trên Windows/WSL.
 evidence/ex04-v11-20261019/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+
+# MOCK source checksum phải giữ byte khi checkout Windows/WSL.
+docs/plan-v2/fixtures/ex02/assets/source.txt -text
+# Hai payload có SHA256 trong kết quả checker, giữ LF khi checkout mọi máy.
+docs/plan-v2/fixtures/ex02/import.mock.json text eol=lf
+docs/plan-v2/fixtures/ex02/candidate.mock.json text eol=lf
+docs/EX02_RICH_EXAM_CONTRACT_V1.md text eol=lf

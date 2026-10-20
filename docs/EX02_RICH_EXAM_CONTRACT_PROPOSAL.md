@@ -1,5 +1,7 @@
 # EX-02 — đề xuất hợp đồng rich exam để A/B chốt
 
+Tiếp nối ngày19/10/2026: [contract hiện hành](EX02_RICH_EXAM_CONTRACT_V1.md), [ADR-V2-03](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md), [decision register](plan-v2/EX02_DECISIONS_ROADMAP.md) đã TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE, gồm D10 Part1 Visual Readiness Option A. [Nguồn](plan-v2/EX02_TEAM_APPROVAL_20261019.md): “User-provided confirmation from the project team representative, 2026-10-19.” Phần bên dưới là proposal lịch sử trước xác nhận, không override ngoại lệ Part1/Audio+Visual READY và không phải API đã triển khai; không GitHub Approving Review/chữ ký riêng.
+
 Ngày19/10/2026; đối chiếu base `f98a37f73d8035e9386e930412a02e9e92933015`. **ĐỀ XUẤT, CHƯA DUYỆT, CHƯA TRIỂN KHAI DTO/ENDPOINT.** Không đổi protocol WebSocket v0, QD-21, audio READY/no-replay hoặc client trong task kiểm chứng này. [Báo cáo PostgreSQL và findings](EX04_V11_VERIFICATION.md) phân biệt source, kiểm thử thật và việc chưa có.
 
 ## 1. Contract gap matrix
