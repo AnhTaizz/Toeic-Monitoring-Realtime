@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "status": "USER_CONFIRMED",
+  "confirmedOn": "2026-10-20",
+  "statement": "Có quyền tải, sử dụng và công bố media",
+  "recordedFrom": "Xác nhận trực tiếp của người dùng trong cuộc hội thoại giao nhiệm vụ EX-01 ngày 20/10/2026. Không phải văn bản cấp phép của Zenlish.",
+  "rights": {
+    "download": true,
+    "use": true,
+    "publish": true
+  },
+  "allowedHosts": [
+    "zenlishtoeic.vn"
+  ],
+  "sourceSha256": {
+    "ets2026-test01": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+    "ets2026-test02": "c5a0eb91bd7fb6895134bf2366be8911db0496317a97ef74941abe9edf61dc60",
+    "ets2026-test03": "0ccd9bede9baceed977a85afac9f109e1abdc70d11adda18eece6305f3e67e0f",
+    "ets2026-test04": "63140e4061bb12e47bc9adb50e7427dd11f60beedc9e33598ed06352b2b07f8d"
+  },
+  "excludedDuplicate": "ets2026_test05.html trùng byte Test04; dùng media và mapping Test04, không tải/import thêm.",
+  "licenseDocument": null
+}

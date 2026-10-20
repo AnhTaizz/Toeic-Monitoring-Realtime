@@ -49,6 +49,15 @@ class HtmlExamParserTest {
         assertEquals(38, ms.asList().stream().filter(m -> "IMAGE".equals(str(m.getAsJsonObject(), "mediaType"))).count());
         for (var m : ms) { assertNull(str(m.getAsJsonObject(), "sha256")); assertEquals("REMOTE_REFERENCE", str(m.getAsJsonObject(), "storageStatus")); }
     }
+    @Test void mediaManifestRecordsQuestionOrGroupAndAllSourceQuestionNumbers() {
+        var qs = dataset.getAsJsonArray("questions"); String groupId = str(qs.get(31).getAsJsonObject(), "groupId");
+        var audio = dataset.getAsJsonArray("media").asList().stream().map(JsonElement::getAsJsonObject)
+                .filter(m -> m.getAsJsonArray("uses").asList().stream().anyMatch(u -> groupId.equals(str(u.getAsJsonObject(), "ownerId")))).findFirst().orElseThrow();
+        var use = audio.getAsJsonArray("uses").get(0).getAsJsonObject();
+        assertEquals("GROUP", str(use, "ownerType")); assertEquals("AUDIO", str(audio, "mediaType"));
+        assertEquals(arr(32,33,34), use.getAsJsonArray("questionNumbers"));
+        assertTrue(str(use, "sourceLocator").startsWith("#zen-history-listening-group-"));
+    }
     @Test void doesNotInventDocumentBoundariesFromImages() {
         for (var v : dataset.getAsJsonArray("groups")) {
             var g = v.getAsJsonObject();

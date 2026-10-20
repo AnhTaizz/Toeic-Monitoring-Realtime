@@ -108,3 +108,6 @@ $RECYCLE.BIN/
 /traces/
 # Operator-provisioned exam audio is local; test fixtures are generated in target/.
 /audio-resources/
+
+# Operator-provisioned images are local ETL assets, not source artifacts.
+/image-resources/

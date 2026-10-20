@@ -138,9 +138,24 @@ public final class HtmlExamParser {
         sorted.sort(Comparator.comparingInt(v -> num(v.getAsJsonObject(), "orderIndex")));
         groups = new JsonArray(); sorted.forEach(groups::add);
         dataset.add("groups", groups); dataset.add("questions", questions); dataset.add("media", media);
+        attachMediaUses(dataset);
         JsonObject reviews = new JsonObject(); reviewFields(dataset, "", reviews);
         dataset.add("fieldReviews", reviews);
         return dataset;
+    }
+    private void attachMediaUses(JsonObject dataset) {
+        var byId = new HashMap<String, JsonObject>();
+        for (var v : media) { var m = v.getAsJsonObject(); m.add("uses", new JsonArray()); byId.put(str(m, "mediaId"), m); }
+        for (String kind : List.of("groups", "questions")) for (var v : dataset.getAsJsonArray(kind)) {
+            var owner = v.getAsJsonObject(); boolean group = kind.equals("groups");
+            for (var block : owner.getAsJsonArray(group ? "passageBlocks" : "blocks")) {
+                var b = block.getAsJsonObject(); String id = str(b, "mediaId");
+                if (id != null) byId.get(id).getAsJsonArray("uses").add(obj("ownerType", group ? "GROUP" : "QUESTION",
+                        "ownerId", str(owner, group ? "groupId" : "questionId"), "part", num(owner, "part"),
+                        "questionNumbers", group ? owner.get("questionNumbers") : arr(num(owner, "sourceQuestionNumber")),
+                        "sourceLocator", str(owner, "sourceLocator"), "blockId", str(b, "blockId")));
+            }
+        }
     }
     private void reviewFields(JsonElement node, String path, JsonObject reviews) {
         if (node.isJsonObject()) for (var e : node.getAsJsonObject().entrySet()) reviewFields(e.getValue(), path + "/" + e.getKey(), reviews);
@@ -154,6 +169,13 @@ public final class HtmlExamParser {
             reviews.add(path, obj("status", status, "evidence", evidence.getOrDefault(path,
                     "Trích từ DOM/manifest; selector nguồn nằm trong sourceLocator của bản ghi. Chưa đối chiếu nội dung gốc.")));
         }
+    }
+    static void completeReviews(JsonObject dataset) {
+        JsonObject values = new JsonObject();
+        for (var e : dataset.entrySet()) if (!e.getKey().equals("fieldReviews")) values.add(e.getKey(), e.getValue());
+        JsonObject defaults = new JsonObject(); new HtmlExamParser().reviewFields(values, "", defaults);
+        var reviews = dataset.getAsJsonObject("fieldReviews");
+        for (var e : defaults.entrySet()) if (!reviews.has(e.getKey())) reviews.add(e.getKey(), e.getValue());
     }
     static JsonObject textBlock(String id, int order, String text) {
         return obj("blockId", id, "type", "TEXT", "orderIndex", order, "text", text, "mediaId", null, "mediaType", null);
