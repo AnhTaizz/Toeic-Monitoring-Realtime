@@ -42,7 +42,7 @@ import vn.edu.toeic.client.exam.ExamSession;
 import vn.edu.toeic.client.exam.CandidateExamHistoryView;
 import vn.edu.toeic.client.exam.ScoreResultDialog;
 import vn.edu.toeic.client.audio.AudioPreparationView;
-import vn.edu.toeic.client.monitoring.focus.CandidateFocusMonitoring;
+import vn.edu.toeic.client.monitoring.CandidateExamSignalMonitoring;
 
 public final class ToeicClientApplication extends Application {
     private final BiFunction<MonitoringTransport,Consumer<MonitoringDelivery.Status>,CandidateMonitoringSession> monitoringFactory;
@@ -64,7 +64,7 @@ public final class ToeicClientApplication extends Application {
     private CandidateExamView activeExamView;
     private vn.edu.toeic.client.exam.rich.RichAttemptView activeRichView;
     private CandidateExamHistoryView historyView;
-    private CandidateFocusMonitoring focusMonitoring;
+    private CandidateExamSignalMonitoring signalMonitoring;
 
     @Override
     public void start(Stage stage) {
@@ -442,7 +442,7 @@ public final class ToeicClientApplication extends Application {
                             () -> { activeRichView = null; showRoleScene(stage, serverUrl, login); },
                             () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."));
                     stage.setScene(applyStyles(new Scene(activeRichView, 1440, 900)));
-                    startFocusMonitoring(stage, serverUrl, login.token(), selectedAttempt, session, currentView);
+                    startExamSignalMonitoring(stage, serverUrl, login.token(), selectedAttempt, session, currentView);
                     return;
                 }
                 // Đọc trạng thái, tải đề rồi xin server cấp quyền ghi cho lần mở này; tất cả chạy trên worker HTTP.
@@ -474,7 +474,7 @@ public final class ToeicClientApplication extends Application {
                             serverUrl, login.token(), selectedAttempt, writer, realtimeClient));
                     Scene examScene = applyStyles(new Scene(activeExamView, 1380, 850));
                     stage.setScene(examScene);
-                    startFocusMonitoring(stage, serverUrl, login.token(), selectedAttempt, session, currentView);
+                    startExamSignalMonitoring(stage, serverUrl, login.token(), selectedAttempt, session, currentView);
                 }));
                 }));
             }));
@@ -537,15 +537,15 @@ public final class ToeicClientApplication extends Application {
         return "Không kết nối được tới server. Hãy kiểm tra địa chỉ và mạng.";
     }
 
-    private void startFocusMonitoring(Stage stage, String serverUrl, String token, String attemptId,
+    private void startExamSignalMonitoring(Stage stage, String serverUrl, String token, String attemptId,
             CandidateMonitoringSession processSession, long currentView) {
-        if (!Boolean.getBoolean(CandidateFocusMonitoring.ENABLE_PROPERTY)) return;
+        if (!Boolean.getBoolean(CandidateExamSignalMonitoring.ENABLE_PROPERTY)) return;
         Platform.runLater(() -> {
             if (currentView != viewGeneration || monitoring != processSession || !processSession.isActive()) return;
             String collector = processSession.collectorSessionId();
             if (collector == null) return;
-            if (focusMonitoring != null) focusMonitoring.close();
-            focusMonitoring = CandidateFocusMonitoring.start(stage, serverUrl, token, attemptId, collector, realtimeClient);
+            if (signalMonitoring != null) signalMonitoring.close();
+            signalMonitoring = CandidateExamSignalMonitoring.start(stage, serverUrl, token, attemptId, collector, realtimeClient);
         });
     }
 
@@ -571,7 +571,7 @@ public final class ToeicClientApplication extends Application {
         if (activeRichView != null) { activeRichView.close(); activeRichView = null; }
         if (historyView != null) { historyView.close(); historyView = null; }
         if (dashboard != null) { dashboard.close(); dashboard = null; }
-        if (focusMonitoring != null) { focusMonitoring.close(); focusMonitoring = null; }
+        if (signalMonitoring != null) { signalMonitoring.close(); signalMonitoring = null; }
         if (monitoring != null) { monitoring.close(); monitoring = null; }
         monitoringAttempt = null;
         if (problemSubscription != null) {

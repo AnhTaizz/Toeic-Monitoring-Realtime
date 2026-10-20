@@ -1,5 +1,12 @@
 # Trạng thái kiểm thử
 
+20/10/2026 — [MON-04 window state](../evidence/v2-b-mon04-window-20261020/REPORT.md):
+nhánh stacked trên MON-03 `d5c568a`; focused 55PASS/0SKIP, gồm 8 case window trực tiếp
+và 1 shared-claim case mới. Full clean test 1354 total = 1210PASS/144SKIP/0FAIL/ERROR.
+Baseline non-fullscreen INITIAL, minimize/restore, fullscreen transition, same-pulse debounce và
+dispose cleanup PASS tự động; không mutation/punishment. Manual Stage/REAL WS-PG/review C
+NOT RUN nên chưa đánh dấu MON-04 DONE.
+
 20/10/2026 — [MON-03 focus candidate](../evidence/v2-b-mon03-focus-20261020/REPORT.md):
 nhánh `feat/v2-b-mon03-focus-monitoring-20261020`, base d2c8f01; focused 46PASS/0SKIP,
 gồm 9 case adapter/JavaFX mới và shared lifecycle regression. Runtime opt-in OFF mặc định,

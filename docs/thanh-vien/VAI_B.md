@@ -444,3 +444,12 @@ mặc định OFF. Focused 46PASS/0SKIP, trong đó 9 case MON-03 trực tiếp.
 Full clean test 1201PASS/144SKIP/0FAIL/ERROR.
 [Thiết kế/runbook](../MON03_FOCUS_MONITORING.md), [evidence](../../evidence/v2-b-mon03-focus-20261020/REPORT.md).
 Còn reviewer C và manual Alt+Tab/PROCTOR/REAL WS-PG NOT RUN; không đánh dấu DONE.
+
+## MON-04 — bàn giao window state, 20/10/2026
+
+Nhánh `feat/v2-b-mon04-window-state-20261020` stacked trên MON-03 `d5c568a`.
+Minimize/restore/fullscreen state dùng chung run/sequence/queue với focus, có baseline INITIAL,
+same-pulse debounce và dispose cleanup; observer không ép focus/fullscreen hay hủy bài.
+Focused55PASS; full clean1210PASS/144SKIP/0FAIL/ERROR.
+[Thiết kế/runbook](../MON04_WINDOW_STATE_MONITORING.md), [evidence](../../evidence/v2-b-mon04-window-20261020/REPORT.md).
+Manual Stage/REAL WS-PG và review C NOT RUN; không đánh dấu DONE.
