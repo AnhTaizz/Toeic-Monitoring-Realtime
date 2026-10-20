@@ -419,7 +419,8 @@ class SignalPipelinePostgresTest {
                         public CompletionStage<?> onText(WebSocket socket,CharSequence data,boolean last){text.append(data);if(last){replies.add(JsonParser.parseString(text.toString()).getAsJsonObject());text.setLength(0);}socket.request(1);return CompletableFuture.completedFuture(null);}
                     }).get(5,TimeUnit.SECONDS);
                     try{var signal=new SignalMessage("MOCK-off-attempt","mock-off-request","mock-off-trace",new WindowSignal("mock-off-event","mock-run",1,Instant.parse("2026-10-20T10:00:00Z"),EventOrigin.OFFLINE,false,false,"INITIAL"));
-                        ws.sendText(JSON.toJson(signal.envelope()),true).get(5,TimeUnit.SECONDS);JsonObject denied=replies.poll(5,TimeUnit.SECONDS);assertThat(denied).isNotNull();assertCode(denied,"INVALID_INPUT");
+                        for(var message:List.of(signal,controlMessage("MOCK-off-attempt",false),controlMessage("MOCK-off-attempt",true))){
+                            ws.sendText(JSON.toJson(message.envelope()),true).get(5,TimeUnit.SECONDS);JsonObject denied=replies.poll(5,TimeUnit.SECONDS);assertThat(denied).isNotNull();assertCode(denied,"INVALID_INPUT");}
                     }finally{ws.abort();}
                     assertThat(db.sql("SELECT count(*) FROM monitoring_signal_events").query(Long.class).single()).isZero();assertThat(db.sql("SELECT count(*) FROM monitoring_signal_counters").query(Long.class).single()).isZero();
                 }
