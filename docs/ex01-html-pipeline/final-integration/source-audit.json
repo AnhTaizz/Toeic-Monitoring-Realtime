@@ -1,0 +1,31 @@
+{
+  "scope": "ETS_TEST01_LOCAL_SOURCE_AUDIT",
+  "publishedSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+  "rawSources": [
+    {
+      "relativeSourcePath": "target/seed-publication-20261019/originals/ets2026_test01.html",
+      "sha256": "2ae59fd99f7839fb096a61c0eaacac493e4d9c672e47674c103818de32c4fa7d",
+      "articles": 200,
+      "articleTextEqualToPublished": 200,
+      "articleTextDifferent": 0,
+      "scripts": 65,
+      "jsonScripts": 2,
+      "scriptsWithStructuredOriginalChoiceKeys": 0,
+      "recognizedChoiceKeysDetected": false,
+      "secretsExported": false
+    },
+    {
+      "relativeSourcePath": "target/seed-publication-20261019/originals-before-main-checkout/ets2026_test01.html",
+      "sha256": "2ae59fd99f7839fb096a61c0eaacac493e4d9c672e47674c103818de32c4fa7d",
+      "articles": 200,
+      "articleTextEqualToPublished": 200,
+      "articleTextDifferent": 0,
+      "scripts": 65,
+      "jsonScripts": 2,
+      "scriptsWithStructuredOriginalChoiceKeys": 0,
+      "recognizedChoiceKeysDetected": false,
+      "secretsExported": false
+    }
+  ],
+  "conclusion": "Review DOM has the same 200 question texts; no structured original-choice payload found by listed key scan. Supplemental original source remains required; scan is not exhaustive of arbitrary encoded payloads."
+}

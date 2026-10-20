@@ -53,3 +53,44 @@ Ví dụ sau là **MOCK mô tả format**, examId MOCK cố ý không join đư�
 .\tools\exam-dataset\maintain.ps1 -Action recover -Supplement '<original-export.json>' -OutputPath '<new-recovery-directory>'
 # Exit 2 là BLOCKED có chủ đích, đọc quality/missing reports.
 ```
+
+## Bổ sung ngày 20/10 — dùng template và ghép nhiều nguồn
+
+[Template Test01](final-integration/original-source-template.json) được sinh từ dữ liệu hiện có; [blockers đủ200câu](final-integration/question-blockers.json) và [labels thiếu/cần review](final-integration/missing-original-options.json) chỉ rõ việc cần làm. Template **INCOMPLETE_NOT_IMPORTABLE**, có null và documents rỗng, không được dùng trực tiếp như dữ liệu gốc. Điền từ export hợp lệ; chỉ giữ rows đã hoàn chỉnh trong mỗi supplement. Không dùng chuỗi `TODO`/`MOCK`/bản dịch làm options thật.
+
+Sau build, chạy trực tiếp trong PowerShell tại ETL worktree:
+
+```powershell
+# Dùng normalized baseline, giữ nguyên các raw supplements ở ngoài Git.
+.\tools\exam-dataset\maintain.ps1 -Action recover `
+  -Normalized '.\tools\exam-dataset\target\output\ets2026_test01\normalized.json' `
+  -Supplement @('<export-original-1.json>', '<export-original-2.json>') `
+  -OutputPath '<new-recovery-directory>'
+```
+
+Nguồn SOURCE_EXACT khác nội dung bị báo conflict thay vì ghi đè. Key khác lịch sử cũng bị từ chối. Người có nguồn phải giải quyết mâu thuẫn bằng evidence và review riêng; không đổi key/status để làm tool chạy qua. Một file bị từ chối không làm thay đổi dataset/recovery trong bộ nhớ; CLI không ghi output trước khi đã ghép xong. Nguồn khớp giữ cả evidence cũ và mới; SHA pin đúng bytes được parse. HTML cần đúng một `data-exam-id`; chỉ lấy questions trong container đó.
+
+Với documents chứa ảnh, cung cấp **ordered `blocks`** thay cho text-only. Ví dụ sau là **MOCK mô tả format**, không điền vào ETS:
+
+```json
+{
+  "examId": "MOCK-example",
+  "questions": [],
+  "groups": [{
+    "part": 6,
+    "questionNumbers": [131, 132, 133, 134],
+    "documents": [{
+      "documentId": "original-letter",
+      "title": "MOCK title from source",
+      "blocks": [
+        {"type": "TEXT", "text": "MOCK full original document text."},
+        {"type": "IMAGE", "mediaId": "MOCK-existing-passage-image"}
+      ]
+    }]
+  }]
+}
+```
+
+Trong dữ liệu thật, copy đúng mediaId từ normalized `groups[].passageBlocks`, giữ đầy đủ thứ tự ảnh của group và chỉ đặt ảnh vào document mà nguồn chứng minh. Không tự suy một ảnh = một document. Tool từ chối ảnh ngoài group, ảnh bị bỏ mất/đảo thứ tự, documents trùng ID hoặc khác nguồn cũ. TEXT không rỗng là bắt buộc; TEXT-only legacy vẫn dùng được cho group không có ảnh. Document/blocks giữ provenance riêng theo field; boundaries vẫn NEEDS_REVIEW. Adapter HTML hiện hỗ trợ questions; documents có ordered media cần JSON mapping tường minh.
+
+`SOURCE_EXACT`, matching key và local media hash không thay cho review độc lập. Toàn bộ200 key và73 group/19 document-boundary reviews hiện còn chờ. Hãy giữ raw export đã loại secrets cùng SHA ngoài Git và đưa vào snapshot mới khi có nguồn; không chỉ giữ pointer tới file sẽ mất.

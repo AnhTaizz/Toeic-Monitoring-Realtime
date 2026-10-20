@@ -1,0 +1,75 @@
+{
+  "scope": "MOCK_ONLY_ETS_ACCEPTANCE_BLOCKED",
+  "runId": "15624644d99f",
+  "createdAt": "2026-10-20T08:54:40.1232529Z",
+  "serverJarSha256": "c2e9349140ffbf93640cc599f9c5dd589de8da1823e067aa79edf704de8c6d20",
+  "postgresVersionNum": "180001",
+  "realV2ImportHttpStatus": 201,
+  "sourceCatalog": {
+    "examId": "mock-ex02-200",
+    "selectable": true,
+    "blockedReasons": []
+  },
+  "restoredCatalog": {
+    "examId": "mock-ex02-200",
+    "selectable": true,
+    "blockedReasons": []
+  },
+  "sourceFingerprints": {
+    "exams": "1:4485f654e6c983f4560997c9e1b88e44",
+    "exam_questions": "200:5d7b46a0eefbcfdfc1707e2c46d01cf4",
+    "exam_options": "775:eaeb216933bdefc40820be5a87f02155",
+    "exam_question_groups": "76:bcf8f5cb54f9ee6287dcd3748aaab0af",
+    "exam_sources": "1:6c669fae1ce1e3e13f72b00018c4919f",
+    "exam_media_assets": "57:860854ac4c0e602ffb980c684d06cecc",
+    "exam_content_blocks": "286:d1e1a5fe2a384c9f5a07328bae383db0",
+    "scoringKeys": "200:6503f4399bd8f2911b932a9955dfb3f8"
+  },
+  "restoredFingerprints": {
+    "exams": "1:4485f654e6c983f4560997c9e1b88e44",
+    "exam_questions": "200:5d7b46a0eefbcfdfc1707e2c46d01cf4",
+    "exam_options": "775:eaeb216933bdefc40820be5a87f02155",
+    "exam_question_groups": "76:bcf8f5cb54f9ee6287dcd3748aaab0af",
+    "exam_sources": "1:6c669fae1ce1e3e13f72b00018c4919f",
+    "exam_media_assets": "57:860854ac4c0e602ffb980c684d06cecc",
+    "exam_content_blocks": "286:d1e1a5fe2a384c9f5a07328bae383db0",
+    "scoringKeys": "200:6503f4399bd8f2911b932a9955dfb3f8"
+  },
+  "mediaCount": 57,
+  "mediaBackupOutsideGit": true,
+  "restoredServerUsesCopiedMedia": true,
+  "negativeChecks": [
+    "existing target refused unchanged",
+    "wrong confirmation refused",
+    "non-test name refused",
+    "corrupt SQL refused before database creation",
+    "backup overwrite refused"
+  ],
+  "sqlSha256": "d3d4ba4ceae8bb498618e5e520f4c69376cd513794eb652357f4dd5246df8cec",
+  "sqlBackupBytes": 164366,
+  "result": "MOCK_BACKUP_RESTORE_PASS",
+  "backendMainCommit": "ad8c370992423d58c730db1320d7fe247beb587f",
+  "flywayAppliedInOrder": [
+    "1 - auth schema",
+    "2 - monitoring events",
+    "3 - monitoring gaps",
+    "4 - monitoring presence",
+    "5 - exams and sessions",
+    "6 - exam autosave requests",
+    "7 - exam submits",
+    "8 - monitoring event delivery",
+    "9 - audio readiness",
+    "10 - listening lifecycle",
+    "11 - rich exam content",
+    "12 - require content block media type",
+    "13 - experimental monitoring signals",
+    "14 - rich import contract",
+    "15 - proctored v2 preparation"
+  ],
+  "postgresPorts": [
+    55464
+  ],
+  "clusterPostmasterPidAbsentAfterCleanup": true,
+  "externalBackupDirectoryName": "mock-db-15624644d99f",
+  "rawPrivateLogsPublished": false
+}

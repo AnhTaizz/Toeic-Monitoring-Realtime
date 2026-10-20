@@ -1,0 +1,365 @@
+[
+  {
+    "groupId": "g-86811",
+    "part": 6,
+    "questionNumbers": [
+      131,
+      132,
+      133,
+      134
+    ],
+    "sourceLocator": "#zen-history-reading-group-86811",
+    "imageMediaIds": [
+      "image-006"
+    ],
+    "candidateDocumentCountFromImages": 1,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-86878",
+    "part": 6,
+    "questionNumbers": [
+      135,
+      136,
+      137,
+      138
+    ],
+    "sourceLocator": "#zen-history-reading-group-86878",
+    "imageMediaIds": [
+      "image-007"
+    ],
+    "candidateDocumentCountFromImages": 1,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-86904",
+    "part": 6,
+    "questionNumbers": [
+      139,
+      140,
+      141,
+      142
+    ],
+    "sourceLocator": "#zen-history-reading-group-86904",
+    "imageMediaIds": [
+      "image-008"
+    ],
+    "candidateDocumentCountFromImages": 1,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-86910",
+    "part": 6,
+    "questionNumbers": [
+      143,
+      144,
+      145,
+      146
+    ],
+    "sourceLocator": "#zen-history-reading-group-86910",
+    "imageMediaIds": [
+      "image-009"
+    ],
+    "candidateDocumentCountFromImages": 1,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-86917",
+    "part": 7,
+    "questionNumbers": [
+      147,
+      148
+    ],
+    "sourceLocator": "#zen-history-reading-group-86917",
+    "imageMediaIds": [
+      "image-010"
+    ],
+    "candidateDocumentCountFromImages": 1,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-86927",
+    "part": 7,
+    "questionNumbers": [
+      149,
+      150
+    ],
+    "sourceLocator": "#zen-history-reading-group-86927",
+    "imageMediaIds": [
+      "image-011"
+    ],
+    "candidateDocumentCountFromImages": 1,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-86941",
+    "part": 7,
+    "questionNumbers": [
+      151,
+      152
+    ],
+    "sourceLocator": "#zen-history-reading-group-86941",
+    "imageMediaIds": [
+      "image-012"
+    ],
+    "candidateDocumentCountFromImages": 1,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-86951",
+    "part": 7,
+    "questionNumbers": [
+      153,
+      154
+    ],
+    "sourceLocator": "#zen-history-reading-group-86951",
+    "imageMediaIds": [
+      "image-013"
+    ],
+    "candidateDocumentCountFromImages": 1,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-86973",
+    "part": 7,
+    "questionNumbers": [
+      155,
+      156,
+      157
+    ],
+    "sourceLocator": "#zen-history-reading-group-86973",
+    "imageMediaIds": [
+      "image-014"
+    ],
+    "candidateDocumentCountFromImages": 1,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-86985",
+    "part": 7,
+    "questionNumbers": [
+      158,
+      159,
+      160
+    ],
+    "sourceLocator": "#zen-history-reading-group-86985",
+    "imageMediaIds": [
+      "image-015"
+    ],
+    "candidateDocumentCountFromImages": 1,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-86991",
+    "part": 7,
+    "questionNumbers": [
+      161,
+      162,
+      163
+    ],
+    "sourceLocator": "#zen-history-reading-group-86991",
+    "imageMediaIds": [
+      "image-016"
+    ],
+    "candidateDocumentCountFromImages": 1,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-86997",
+    "part": 7,
+    "questionNumbers": [
+      164,
+      165,
+      166,
+      167
+    ],
+    "sourceLocator": "#zen-history-reading-group-86997",
+    "imageMediaIds": [
+      "image-017"
+    ],
+    "candidateDocumentCountFromImages": 1,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-87002",
+    "part": 7,
+    "questionNumbers": [
+      168,
+      169,
+      170,
+      171
+    ],
+    "sourceLocator": "#zen-history-reading-group-87002",
+    "imageMediaIds": [
+      "image-018"
+    ],
+    "candidateDocumentCountFromImages": 1,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-87009",
+    "part": 7,
+    "questionNumbers": [
+      172,
+      173,
+      174,
+      175
+    ],
+    "sourceLocator": "#zen-history-reading-group-87009",
+    "imageMediaIds": [
+      "image-019"
+    ],
+    "candidateDocumentCountFromImages": 1,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-87014",
+    "part": 7,
+    "questionNumbers": [
+      176,
+      177,
+      178,
+      179,
+      180
+    ],
+    "sourceLocator": "#zen-history-reading-group-87014",
+    "imageMediaIds": [
+      "image-020",
+      "image-021"
+    ],
+    "candidateDocumentCountFromImages": 2,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-87023",
+    "part": 7,
+    "questionNumbers": [
+      181,
+      182,
+      183,
+      184,
+      185
+    ],
+    "sourceLocator": "#zen-history-reading-group-87023",
+    "imageMediaIds": [
+      "image-022",
+      "image-023"
+    ],
+    "candidateDocumentCountFromImages": 2,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-87091",
+    "part": 7,
+    "questionNumbers": [
+      186,
+      187,
+      188,
+      189,
+      190
+    ],
+    "sourceLocator": "#zen-history-reading-group-87091",
+    "imageMediaIds": [
+      "image-024",
+      "image-025",
+      "image-026"
+    ],
+    "candidateDocumentCountFromImages": 3,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-87098",
+    "part": 7,
+    "questionNumbers": [
+      191,
+      192,
+      193,
+      194,
+      195
+    ],
+    "sourceLocator": "#zen-history-reading-group-87098",
+    "imageMediaIds": [
+      "image-027",
+      "image-028",
+      "image-029"
+    ],
+    "candidateDocumentCountFromImages": 3,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  },
+  {
+    "groupId": "g-87105",
+    "part": 7,
+    "questionNumbers": [
+      196,
+      197,
+      198,
+      199,
+      200
+    ],
+    "sourceLocator": "#zen-history-reading-group-87105",
+    "imageMediaIds": [
+      "image-030",
+      "image-031",
+      "image-032"
+    ],
+    "candidateDocumentCountFromImages": 3,
+    "documentBoundaryStatus": "EXTRACTED_NEEDS_REVIEW",
+    "documentTextStatus": "MISSING",
+    "humanVerified": false,
+    "instruction": "Ảnh không chứng minh single/double/triple boundary; cần TEXT gốc và review. Không placeholder."
+  }
+]

@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+20/10/2026 — EX-01 tích hợp cuối: source `f290056`, main `ad8c370`; 77 tests PASS, 0 FAIL/ERROR/SKIP. Test01 khôi phục thêm 0 options, giữ 178/676 SOURCE_EXACT; còn 495 thiếu + 3 cần review, 0 key/0 document HUMAN_VERIFIED. Kiểm offline 92 media PASS. DTO 1608 records từ classes main thật PASS; validator từ chối đúng gate. PostgreSQL 18.1 TEST mới/cổng 55464: V1–V15 tuần tự, MOCK HTTP201 → backup → restore → catalog selectable và fingerprints PASS; archive verify 757 files/358 media PASS. ETS vẫn `ETS_TEST01_BLOCKED_BY_MISSING_ORIGINAL_SOURCE`; ETS import/catalog/session/restore và GUI/hearing/LAN NOT RUN. [Báo cáo cuối](ex01-html-pipeline/FINAL_INTEGRATION_REPORT.md). Không đánh DONE, cập nhật tracker/giờ hoặc ký thay owner.
+
 20/10/2026 — EX-01 recovery/backup: source `1b2bccf`,64tests PASS. Test01 khôi phục178/676option texts nguồn (170English+8position markers);495thiếu+3prefixes cần review,200key labels khớp parser cũ nhưng0key/0document human-verified, ETS vẫn BLOCKED. Backup/restore4dataset+358media/189902302bytes/757files ngoài Git PASS; PostgreSQL18.1 MOCK V2 import201→pg_dump→TESTmới→restore→catalog selectable,200Q/775options/76groups/57media/fingerprints PASS. Không ETS import/GUI/hearing/LAN hoặc DONE/tracker. [Recovery](ex01-html-pipeline/RECOVERY_REPORT.md), [backup/restore](ex01-html-pipeline/BACKUP_RESTORE.md).
 
 

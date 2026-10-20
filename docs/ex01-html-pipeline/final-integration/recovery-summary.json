@@ -1,0 +1,17 @@
+{
+  "examId": "ets2026-test01",
+  "questions": 200,
+  "part3To7Questions": 169,
+  "completeSourceExactEnglishOptionSets": 1,
+  "completeEnglishCandidateSetsIncludingNeedsReview": 2,
+  "completeSourceExactPositionMarkerSets": 2,
+  "sourceExactPositionMarkerTexts": 8,
+  "translationOnlyDistractorSetsWithAtMostOneEnglishKey": 164,
+  "sourceExactEnglishOptionTexts": 170,
+  "extractedEnglishTextsNeedsReview": 3,
+  "missingOriginalOptionTexts": 495,
+  "recordedKeyLabelsCrossCheckedWithPreviousParser": 200,
+  "answerKeysIndependentlyVerified": 0,
+  "documentsHumanVerified": 0,
+  "importState": "BLOCKED"
+}

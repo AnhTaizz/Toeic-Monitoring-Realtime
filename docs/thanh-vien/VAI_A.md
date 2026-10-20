@@ -425,3 +425,10 @@ Sourcee73e325 CP1–4:4 đề/200Q mỗi đề,358media local verified bytes/dec
 [Recovery](../ex01-html-pipeline/RECOVERY_REPORT.md): source1b2bccf/64tests PASS; Test01 recovered170English+8position texts,495missing+3lexicalprefix review (draft498null). Cần originalA–D đúng labels theo missing sheet,16prompt/passageP6,review200keys/73groups/19documents. [Export/join](../ex01-html-pipeline/ORIGINAL_SOURCE_EXPORT.md) chỉ nguồn local xuất hợp lệ; khôngbacktranslation, khôngHUMAN_VERIFIED giả. Các đề02–04 giữ baseline thiếu676options mỗi đề.
 
 [Backup/restore](../ex01-html-pipeline/BACKUP_RESTORE.md): JSON/media4đề/358files đã backup ngoàiGit/restore hash757files PASS. SQL scripts pg_dump/psql yêu cầu TEST chưa tồn tại+xác nhận đúng tên; thử thậtMOCK qua importerV2 HTTP201,200Q/775opts/76groups/57media, restoredcatalog selectable vàfingerprintshash khớp. Chưa ETS verified→không ETS import/restore acceptance. Không sửa backend/schema/JavaFX hoặc thay DONE/hours; media/SQLdump không public Git.
+
+
+## Ghi chú làm dở — EX-01 tích hợp cuối, 20/10/2026
+
+Source `f290056`, main `ad8c370`: 77 tooling tests PASS; DTO/validator main thật có shape 1608 records và từ chối UNVERIFIED đúng gate. Supplement giữ identity/labels/provenance, từ chối conflicts, áp toàn file sau validation và giữ document image mapping. Template và blockers đủ 200 câu ở [báo cáo cuối](../ex01-html-pipeline/FINAL_INTEGRATION_REPORT.md). PostgreSQL 18.1 TEST mới áp V1–V15, MOCK HTTP201 → SQL backup/restore → catalog selectable và fingerprints PASS. Kiểm offline 92 media Test01 PASS; 358 media/757 archive files được giữ và verify PASS.
+
+`ETS_TEST01_BLOCKED_BY_MISSING_ORIGINAL_SOURCE`: thêm 0 options, giữ 178 literal texts đã có, còn 495 thiếu + 3 prefix cần review, 0 key/0 document HUMAN_VERIFIED. Cần nguồn A–D đúng labels, 16 P6 prompts/passages, 19 group document/boundaries/ordered media và review 73 groups/200 keys. Không dùng template null/empty hoặc dịch ngược; import ETS vẫn NOT RUN. B review nội dung, owner approval và GUI/hearing/LAN còn chờ; không DONE hoặc sửa tracker/giờ.

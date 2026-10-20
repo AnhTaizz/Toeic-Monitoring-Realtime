@@ -1,0 +1,41 @@
+{
+  "phase": "BEFORE_FIX",
+  "tests": "8",
+  "failures": "7",
+  "errors": "1",
+  "sha256": "dbab7b42f49bd1f4c153cc7a6ca7c8e5de6bc450fe14e72affd72df56f9e1d7c",
+  "cases": [
+    {
+      "name": "secondSupplementCannotSilentlyReplaceFirstSource",
+      "result": "FAIL"
+    },
+    {
+      "name": "conflictingDocumentSupplementIsAtomic",
+      "result": "FAIL"
+    },
+    {
+      "name": "duplicateDocumentGroupsAndIdsAreRefused",
+      "result": "FAIL"
+    },
+    {
+      "name": "documentFieldsRetainProvenanceAndMediaMapping",
+      "result": "ERROR"
+    },
+    {
+      "name": "conflictingOriginalPromptIsRefused",
+      "result": "FAIL"
+    },
+    {
+      "name": "conflictingSourceExactOptionIsRefusedWithoutPartialChanges",
+      "result": "FAIL"
+    },
+    {
+      "name": "matchingSourcesKeepBothHashesAndExplicitLabels",
+      "result": "FAIL"
+    },
+    {
+      "name": "invalidLaterRowDoesNotModifyEarlierQuestion",
+      "result": "FAIL"
+    }
+  ]
+}

@@ -22,9 +22,9 @@ mvn -f tools/exam-dataset/pom.xml test
   -Permissions docs/ex01-html-pipeline/media-permission.json `
   -AudioRoot ./audio-resources -ImageRoot ./image-resources
 
-# Contract probe: chỉ đọc DTO/validator EX-06 vào target, không merge backend.
+# Contract main: build backend trong worktree TEST riêng, không merge ETL vào main.
 ./tools/exam-dataset/verify-contract.ps1 `
-  -Ref 448f58e659131ab189a81c378970a501cf8455cf
+  -Ref origin/main -MainWorktree '<built-main-worktree>'
 ```
 
 `-Offline` đặt Maven offline; HTTP tới Zenlish chỉ được thực hiện khi có `-Download`. PowerShell thực thi script phải được môi trường cho phép; có thể chạy từ PowerShell đã cấu hình theo chính sách máy. `run.cmd` là lựa chọn từ cmd: `tools\exam-dataset\run.cmd --test all --permissions docs/ex01-html-pipeline/media-permission.json --download true`.
@@ -95,3 +95,22 @@ Kết quả đo và phần import còn bị chặn ở [REPORT.md](../../docs/ex
 `maintain.ps1 -Action archive-create|archive-verify|archive-restore` giữ JSON/provenance/media trong thư mục ngoài Git; destination mới bắt buộc. [Hướng dẫn build/lệnh/roots/giới hạn](../../docs/ex01-html-pipeline/BACKUP_RESTORE.md), [kết quả recovery và missing fields](../../docs/ex01-html-pipeline/RECOVERY_REPORT.md), [format nguồn bổ sung](../../docs/ex01-html-pipeline/ORIGINAL_SOURCE_EXPORT.md).
 
 `scripts/backup-toeic-db.ps1` dùngpg_dump, `scripts/restore-toeic-db.ps1` tạoTESTmới/rỗng vàpsqlrestore. `verify-db-roundtrip.ps1` đã chạy thật vớiMOCK200quaV2/PG18.1/catalog sau restore+copiedmedia, không ETS acceptance. Không credentials/binarymedia/SQLdump trong Git.
+
+## Tích hợp main / Test01 cuối ngày20/10
+
+[FINAL_INTEGRATION_REPORT](../../docs/ex01-html-pipeline/FINAL_INTEGRATION_REPORT.md) là trạng thái mới nhất của task. ETS vẫn `ETS_TEST01_BLOCKED_BY_MISSING_ORIGINAL_SOURCE`: không có thêm nguồn nguyên văn, không có payload import-ready. Không dùng kết quả PostgreSQL MOCK để kết luận ETS PASS.
+
+Mặc định `verify-contract.ps1` đọc `origin/main`. Để dùng **DTO/validator/exception production đã build**, không dùng compile adapters:
+
+```powershell
+# Build backend trong một worktree TEST riêng của origin/main trước.
+.\tools\exam-dataset\verify-contract.ps1 `
+  -Ref '<verified-main-sha>' -MainWorktree '<built-main-worktree>' `
+  -Draft '<recovery-output>/draft.v2.json'
+```
+
+`MainWorktree` phải khớp SHA của `Ref`; main server/protocol cần có target/classes và server JAR. Tool lấy đúng spring-web dependency từ JAR để dùng exception thật, đặt classes main trước adapters cũ trên classpath. Shape PASS + source gate rejection không chứng minh document graph thiếu đã hợp lệ. Bỏ `MainWorktree` là chế độ source-export/compile adapters lịch sử, phải ghi rõ mode khi báo cáo.
+
+`maintain.ps1 -Action recover -Supplement @('first.json','second.html')` nhận nhiều nguồn, pin bytes SHA và từ chối conflicts trước khi áp toàn file. [Export/join](../../docs/ex01-html-pipeline/ORIGINAL_SOURCE_EXPORT.md) mô tả options, TEXT/IMAGE blocks và template sinh mới. `question-blockers.json` luôn có200row; `original-source-template.json` cố ý chưa hợp lệ đến khi có nội dung thật.
+
+`contract/AuditOriginalSources.java` là probe đọc-only dùng Jsoup/Gson hiện có, so HTML gốc được lưu trước sanitization với bản công bố. Khi chạy bằng runtime classpath của tool, truyền lần lượt repo gốc chứa `target/seed-publication-20261019`, published Test01 HTML và output JSON. Chỉ xuất hashes/counts, không xuất scripts/tokens. Key scan không phải bộ giải mã mọi dạng serialized payload.

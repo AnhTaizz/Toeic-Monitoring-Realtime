@@ -1,0 +1,931 @@
+{
+  "examId": "ets2026-test01",
+  "total": 92,
+  "offlineVerified": 92,
+  "downloadEnabled": false,
+  "receiptHashesPinned": true,
+  "totalBytes": 47340695,
+  "manifestSha256": "9811766a9043e2456e84a8ccb179d94e273b227cee0104f204568d00d9bbb530",
+  "media": [
+    {
+      "mediaId": "audio-001",
+      "mediaType": "AUDIO",
+      "localFile": "032-audio-001.mp3",
+      "sizeBytes": 1271976,
+      "sha256": "f152c3d7324fae4791a88a7741b24dda6ba671b7cc7a5e3743a8650275e8ac7d",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-002",
+      "mediaType": "AUDIO",
+      "localFile": "035-audio-002.mp3",
+      "sizeBytes": 1266555,
+      "sha256": "3ad6e1ebe4f8c588c6cdeb29b631955a412ca820d6bfce579d90c950af7470f5",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-003",
+      "mediaType": "AUDIO",
+      "localFile": "038-audio-003.mp3",
+      "sizeBytes": 1141455,
+      "sha256": "4c14e94df1f9062ae1627a7f799383d7745e4bbbd69bf1bf9a8936cd96a16452",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-004",
+      "mediaType": "AUDIO",
+      "localFile": "041-audio-004.mp3",
+      "sizeBytes": 1206924,
+      "sha256": "f04d688f6a0835836694906041fd73dd96e10486b86d47766eecbe43668921d3",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-005",
+      "mediaType": "AUDIO",
+      "localFile": "044-audio-005.mp3",
+      "sizeBytes": 1379562,
+      "sha256": "5f3709b23c416f7660f9c562062bd9ba95810a47fee4eb1d987498903780929a",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-006",
+      "mediaType": "AUDIO",
+      "localFile": "047-audio-006.mp3",
+      "sizeBytes": 1372056,
+      "sha256": "b5b48de1ccd8c6df46bf5cc7c8c423ee75704dbb45934bd8e73a203ecdabf831",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-007",
+      "mediaType": "AUDIO",
+      "localFile": "050-audio-007.mp3",
+      "sizeBytes": 1314927,
+      "sha256": "583fc47d0e78ad57d92522c646f9c55fb31b479b5fe32e75a440f29f9b34e15e",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-008",
+      "mediaType": "AUDIO",
+      "localFile": "053-audio-008.mp3",
+      "sizeBytes": 1354959,
+      "sha256": "0dc3701ee48c4bcee3a47541492a1ba1d552b16a0dc518eeb5fcc11c20f3b93b",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-009",
+      "mediaType": "AUDIO",
+      "localFile": "056-audio-009.mp3",
+      "sizeBytes": 1299081,
+      "sha256": "5a2e19b3722f1fd237562394f2f48aa730fd385817c4a4e0d9ec196f2f79b63e",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-010",
+      "mediaType": "AUDIO",
+      "localFile": "059-audio-010.mp3",
+      "sizeBytes": 1488399,
+      "sha256": "3c9683fe23e249de166d3cbb998ccf4db3ad8f597754e79d1293d41353e8d034",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-001",
+      "mediaType": "IMAGE",
+      "localFile": "image-001.jpg",
+      "sizeBytes": 40338,
+      "sha256": "d0a986e40e5271308daabe86397ca0a927c988ce2846d46801df1d8dae70c61c",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-011",
+      "mediaType": "AUDIO",
+      "localFile": "062-audio-011.mp3",
+      "sizeBytes": 1342449,
+      "sha256": "ff9e24c22a8adfa1e3d65ff2b0f85fcea2f2488b2cd6694dd376d9840524683c",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-002",
+      "mediaType": "IMAGE",
+      "localFile": "image-002.jpg",
+      "sizeBytes": 52706,
+      "sha256": "632540df69720c283fc4f0ec782cf1370f49ca118fac36520a06ab8077ccf53e",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-012",
+      "mediaType": "AUDIO",
+      "localFile": "065-audio-012.mp3",
+      "sizeBytes": 1518423,
+      "sha256": "8fd2529c8aa8fe19e1b32675710747b84ecfccb5d109dd1f16740d1735870d02",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-003",
+      "mediaType": "IMAGE",
+      "localFile": "image-003.jpg",
+      "sizeBytes": 75887,
+      "sha256": "b6b57d980576ca58ec11b694ca534acaec5319eec587858e7bf13b1e7c956295",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-013",
+      "mediaType": "AUDIO",
+      "localFile": "068-audio-013.mp3",
+      "sizeBytes": 1393323,
+      "sha256": "bc300cdc21681eb492a13f793822d2674f4a6d3d4fef76e6978344e6a1999bf9",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-014",
+      "mediaType": "AUDIO",
+      "localFile": "071-audio-014.mp3",
+      "sizeBytes": 1352040,
+      "sha256": "c035c3cfe0f5219efb35dad7d0d6a65566f2407cad31ea37e56ea69135f12502",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-015",
+      "mediaType": "AUDIO",
+      "localFile": "074-audio-015.mp3",
+      "sizeBytes": 1462962,
+      "sha256": "16473946bb3e49ebc652c7ef8abd309a7b49930b4eeeeb596fe9578508fc58a6",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-016",
+      "mediaType": "AUDIO",
+      "localFile": "077-audio-016.mp3",
+      "sizeBytes": 1246122,
+      "sha256": "05b8974885a16f6d1e664a7c876ffbaa0ea3b1bf616998fde9ec3a2d31988b2e",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-017",
+      "mediaType": "AUDIO",
+      "localFile": "080-audio-017.mp3",
+      "sizeBytes": 1399578,
+      "sha256": "0e68fbbd282bef766278c3990c32d9a609df162c9fb72d9601313fa47a0a7b66",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-018",
+      "mediaType": "AUDIO",
+      "localFile": "083-audio-018.mp3",
+      "sizeBytes": 1372473,
+      "sha256": "4d75de460d1948c4e039eb21a01f77b1fb8f242b5501db4e81b582253884b791",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-019",
+      "mediaType": "AUDIO",
+      "localFile": "086-audio-019.mp3",
+      "sizeBytes": 1307421,
+      "sha256": "2fbbc0eb25676704b08819a49b81c6be20bc21512c971c5789ce513c69685ea0",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-020",
+      "mediaType": "AUDIO",
+      "localFile": "089-audio-020.mp3",
+      "sizeBytes": 1581807,
+      "sha256": "a85179dd7a06fd037a591f2929f63b2c97c514db16e010dd429556c9733f2838",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-021",
+      "mediaType": "AUDIO",
+      "localFile": "092-audio-021.mp3",
+      "sizeBytes": 1319097,
+      "sha256": "9059b471d34c2568ef1d906d12645634e28967c1a74dbfcf71c716e3c2b5b557",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-004",
+      "mediaType": "IMAGE",
+      "localFile": "image-004.jpg",
+      "sizeBytes": 38624,
+      "sha256": "b330682b15e4cc79e7782c4f13c3519fa0677045ea2bde315d33ca7545e5bd32",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-022",
+      "mediaType": "AUDIO",
+      "localFile": "095-audio-022.mp3",
+      "sizeBytes": 1372890,
+      "sha256": "a76c05a2d4238c54d58b38c86160d4464f65f574d03934b4f98fca158cff7867",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-005",
+      "mediaType": "IMAGE",
+      "localFile": "image-005.jpg",
+      "sizeBytes": 32843,
+      "sha256": "05cca5080643764f66f73e2b7ba81b774f90291d16ff5e3c007c8775e166d967",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-023",
+      "mediaType": "AUDIO",
+      "localFile": "098-audio-023.mp3",
+      "sizeBytes": 1595151,
+      "sha256": "a28b5ef3f797607eb2c8cc164b7668fe732c791bd0b8c000bd092c945002b65b",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-006",
+      "mediaType": "IMAGE",
+      "localFile": "image-006.jpg",
+      "sizeBytes": 61921,
+      "sha256": "85bf85253059ce042d243d99fed043de7d956ef414fa63313e1d36d41aeaa970",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-007",
+      "mediaType": "IMAGE",
+      "localFile": "image-007.jpg",
+      "sizeBytes": 64910,
+      "sha256": "0952703e418f446dc097e4d92e96037983c716247fef0b5645185e78cf07d8e5",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-008",
+      "mediaType": "IMAGE",
+      "localFile": "image-008.jpg",
+      "sizeBytes": 56667,
+      "sha256": "e2139c3d8921764244d5f641d564527d3ab982858839d7c2bf12bca7c3f1c993",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-009",
+      "mediaType": "IMAGE",
+      "localFile": "image-009.jpg",
+      "sizeBytes": 70342,
+      "sha256": "8d42745cfc593b9ff0d453d10f971c598ff073a0288a34b521bcfa32d5d2f6f4",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-010",
+      "mediaType": "IMAGE",
+      "localFile": "image-010.jpg",
+      "sizeBytes": 53685,
+      "sha256": "380b7b8f1982657300dfc33d4e2ecc6dfa7769111ca96a5bcd3d3e5bd893c923",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-011",
+      "mediaType": "IMAGE",
+      "localFile": "image-011.jpg",
+      "sizeBytes": 87185,
+      "sha256": "b253e49a273ef9011f2438d14e0b1a328568a399fd47530846cd61c34404f982",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-012",
+      "mediaType": "IMAGE",
+      "localFile": "image-012.jpg",
+      "sizeBytes": 89660,
+      "sha256": "76f12086670f244f7a4d065ff43c47a04011023f9beb62066a0eb0f546a0d80b",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-013",
+      "mediaType": "IMAGE",
+      "localFile": "image-013.jpg",
+      "sizeBytes": 65746,
+      "sha256": "44108b22e961d5c928dbe83bd0c7bdb43d5cbae46374db15c0610ea22ef9e7fd",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-014",
+      "mediaType": "IMAGE",
+      "localFile": "image-014.jpg",
+      "sizeBytes": 106110,
+      "sha256": "8fe5d64c60483933fc0d35f55a57acc2689a6aeeff582219e1971acfecca9fa5",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-015",
+      "mediaType": "IMAGE",
+      "localFile": "image-015.jpg",
+      "sizeBytes": 87377,
+      "sha256": "95864589ad4f3ea65f89562e6fe697621d3f5f80898e9ab04af2fbe627ed192f",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-016",
+      "mediaType": "IMAGE",
+      "localFile": "image-016.jpg",
+      "sizeBytes": 74742,
+      "sha256": "3d20a3a79e9b8b6f1ed1fe80a606d27608618012592a44226845f2e5bd22303e",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-017",
+      "mediaType": "IMAGE",
+      "localFile": "image-017.jpg",
+      "sizeBytes": 111715,
+      "sha256": "a0bfc260c68b4652b913f389c166e56b720bf687ece0821990505eda67bd4475",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-018",
+      "mediaType": "IMAGE",
+      "localFile": "image-018.jpg",
+      "sizeBytes": 73597,
+      "sha256": "e2dc67dc043c57cbb2641e28701b63234f6626f4fea77f70184999121b4b6a8e",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-019",
+      "mediaType": "IMAGE",
+      "localFile": "image-019.jpg",
+      "sizeBytes": 102129,
+      "sha256": "5972fe60067f664f2f2ca5ba86a3c15b8e842534ca2bbfdb7ff1ba2143afb1e2",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-020",
+      "mediaType": "IMAGE",
+      "localFile": "image-020.jpg",
+      "sizeBytes": 102831,
+      "sha256": "c598127ace6725ebac1898f687a367b6b7511aac547e08fbad9cc2689e609b76",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-021",
+      "mediaType": "IMAGE",
+      "localFile": "image-021.jpg",
+      "sizeBytes": 62856,
+      "sha256": "8b655e154945d1e6ba054d7d1fdedc8aa177a6e467f8845b6ccdfc6c39a66f5d",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-022",
+      "mediaType": "IMAGE",
+      "localFile": "image-022.jpg",
+      "sizeBytes": 106659,
+      "sha256": "8e97b7e865aa884372a699d44e584193104c9f272ca954dba651e945433bb200",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-023",
+      "mediaType": "IMAGE",
+      "localFile": "image-023.jpg",
+      "sizeBytes": 47720,
+      "sha256": "e6cc5205808801e5b893a0f65c6daeb9167184b183cea324d4c448f5c2cbfeba",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-024",
+      "mediaType": "IMAGE",
+      "localFile": "image-024.jpg",
+      "sizeBytes": 72624,
+      "sha256": "b5edd34faab377d8c74ad40dbf8f80816f6f7eb5a6c853c9ba19b5f11b8a8222",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-025",
+      "mediaType": "IMAGE",
+      "localFile": "image-025.jpg",
+      "sizeBytes": 119219,
+      "sha256": "bf22a637190fa7fa6d40425be0cae5f8150b6fb85ee1fef0cebb269138ff1f38",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-026",
+      "mediaType": "IMAGE",
+      "localFile": "image-026.jpg",
+      "sizeBytes": 93383,
+      "sha256": "2e2a012041350a8bec3c76c72322ea1e42a9a7964c3623133e12ce56654f985e",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-027",
+      "mediaType": "IMAGE",
+      "localFile": "image-027.jpg",
+      "sizeBytes": 114283,
+      "sha256": "611fa1f85dd84ad4c2dfc4c8e3a2b9ccaf456adac7d4cb23d1a8a93c33ce27d3",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-028",
+      "mediaType": "IMAGE",
+      "localFile": "image-028.jpg",
+      "sizeBytes": 88808,
+      "sha256": "1698b0983de1341f82593618d5048cdf71d2de089dc8223a1a25a2ba22a3cfe7",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-029",
+      "mediaType": "IMAGE",
+      "localFile": "image-029.jpg",
+      "sizeBytes": 59206,
+      "sha256": "e411809a754e3f65ab61d6ac326da88ffaec8d0b9afd2174b0f11967424350eb",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-030",
+      "mediaType": "IMAGE",
+      "localFile": "image-030.jpg",
+      "sizeBytes": 96313,
+      "sha256": "c18fa541b3e9808d828fafff83f2659da33ec6de7c8343770ec0399a10dd523e",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-031",
+      "mediaType": "IMAGE",
+      "localFile": "image-031.jpg",
+      "sizeBytes": 69780,
+      "sha256": "dde08315a1efc16a42b88f7a5a946143197b7e71279cb47b97e40cbede363c25",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-032",
+      "mediaType": "IMAGE",
+      "localFile": "image-032.jpg",
+      "sizeBytes": 45057,
+      "sha256": "4998d1cefd068bfcdb5057ea34335a25ef38106010c47c5289b1bea6a0725496",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-024",
+      "mediaType": "AUDIO",
+      "localFile": "001-audio-024.mp3",
+      "sizeBytes": 463413,
+      "sha256": "30440f076c697115ceafd3e25f2ec32322c941c6d701e1f786d25176399e9705",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-033",
+      "mediaType": "IMAGE",
+      "localFile": "image-033.jpg",
+      "sizeBytes": 68568,
+      "sha256": "1fa0472ddaf82cadad274f13ef01e0d8cf50884287e70e403ff3ae61ea3ed9c8",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-025",
+      "mediaType": "AUDIO",
+      "localFile": "002-audio-025.mp3",
+      "sizeBytes": 515121,
+      "sha256": "10daaa269875c43467491e2286cb9c6cf1dbedef665d4efd85d0444c71a2577c",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-034",
+      "mediaType": "IMAGE",
+      "localFile": "image-034.jpg",
+      "sizeBytes": 113797,
+      "sha256": "a23e67b7331598ea53b886c012379872a387ab11c24506aff9cd8d2d3665b704",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-026",
+      "mediaType": "AUDIO",
+      "localFile": "003-audio-026.mp3",
+      "sizeBytes": 535971,
+      "sha256": "4622829dba75aa85a0d2853c1b188991a292add23d83ebab9a60f9f626d46f43",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-035",
+      "mediaType": "IMAGE",
+      "localFile": "image-035.jpg",
+      "sizeBytes": 110454,
+      "sha256": "fdebebd702097613deff7c05cb6cff9e9e78500371e05179a07c91eef8191ffc",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-027",
+      "mediaType": "AUDIO",
+      "localFile": "004-audio-027.mp3",
+      "sizeBytes": 527631,
+      "sha256": "7444a915bc27c2d4b4f63e74f5f9fc2374a9c3c523a6c1e1dc368af71aa43cbb",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-036",
+      "mediaType": "IMAGE",
+      "localFile": "image-036.jpg",
+      "sizeBytes": 113542,
+      "sha256": "baf565e6723fb5ba30a9ba46a2b9b7043efd854845fb2c4c532ceaee6dd9b85d",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-028",
+      "mediaType": "AUDIO",
+      "localFile": "005-audio-028.mp3",
+      "sizeBytes": 509283,
+      "sha256": "d9d7d8a0bc2f753aa793ad6c3b47406a552852bd893e0abcdc22ad32c18d8daf",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-037",
+      "mediaType": "IMAGE",
+      "localFile": "image-037.jpg",
+      "sizeBytes": 87081,
+      "sha256": "1d27388639dc0b3e9a270b4203d0933ea5aa77530cbc25acd08ef369141a70e9",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-029",
+      "mediaType": "AUDIO",
+      "localFile": "006-audio-029.mp3",
+      "sizeBytes": 524712,
+      "sha256": "e006421e3fa80adbc5b60eafbc15f9d8bedd33b05f0a106eda15e7748cd3b986",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "image-038",
+      "mediaType": "IMAGE",
+      "localFile": "image-038.jpg",
+      "sizeBytes": 102187,
+      "sha256": "03dea50310cee4e714b330ceb94edb1dad1ab968fa8a113e37c681e54c7ead5d",
+      "mimeType": "image/jpeg",
+      "decodeStatus": "FULL_IMAGE_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-030",
+      "mediaType": "AUDIO",
+      "localFile": "007-audio-030.mp3",
+      "sizeBytes": 373758,
+      "sha256": "d5991f08809bdf5d153720248b29d3e412372a32ff81ddf1c5edc7d2749e3de8",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-031",
+      "mediaType": "AUDIO",
+      "localFile": "008-audio-031.mp3",
+      "sizeBytes": 376260,
+      "sha256": "56ecd46bb96471742c2a6c0caf7ab2fb03e66828551f6aa97ee8a793e4b4e53e",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-032",
+      "mediaType": "AUDIO",
+      "localFile": "009-audio-032.mp3",
+      "sizeBytes": 402531,
+      "sha256": "082bfa5c6e8335923180f903e20eba6e98c3b838326ad0af4b6be997e442612a",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-033",
+      "mediaType": "AUDIO",
+      "localFile": "010-audio-033.mp3",
+      "sizeBytes": 385851,
+      "sha256": "568697f81fd1c567197251b0ae0f39c552589c1a0fe836ea69831ac6a480d856",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-034",
+      "mediaType": "AUDIO",
+      "localFile": "011-audio-034.mp3",
+      "sizeBytes": 413790,
+      "sha256": "a0a3acdeaf5121fba1cdd3a1a33602d2deb4a79c7e3bd18d33ac085c7d92a480",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-035",
+      "mediaType": "AUDIO",
+      "localFile": "012-audio-035.mp3",
+      "sizeBytes": 373341,
+      "sha256": "8ce8614dd88b2e5ee284abe8062ead4f8d889c7c96895aa8aa9fa62e878a3f85",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-036",
+      "mediaType": "AUDIO",
+      "localFile": "013-audio-036.mp3",
+      "sizeBytes": 387102,
+      "sha256": "dac172f68b2a177bf086cf891034690275f7fffc0be133f8112afdef37938ae3",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-037",
+      "mediaType": "AUDIO",
+      "localFile": "014-audio-037.mp3",
+      "sizeBytes": 407535,
+      "sha256": "322952b3ac412f77b674016215285d55b48da05a6fe701270153772c69e2b165",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-038",
+      "mediaType": "AUDIO",
+      "localFile": "015-audio-038.mp3",
+      "sizeBytes": 386268,
+      "sha256": "9e53d74a0b89913f009fc7fa02e812022061a47f24d55f903bc219a534a282b9",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-039",
+      "mediaType": "AUDIO",
+      "localFile": "016-audio-039.mp3",
+      "sizeBytes": 391272,
+      "sha256": "e1b3148fc2ac0dab696e495ed4be49e7257e919df1f3251b2257c30b0a5d46f7",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-040",
+      "mediaType": "AUDIO",
+      "localFile": "017-audio-040.mp3",
+      "sizeBytes": 388353,
+      "sha256": "262c30dd3aeee5cd22f065fd3ba75672d05ca6b954cb7ffb0c01e77953df7d05",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-041",
+      "mediaType": "AUDIO",
+      "localFile": "018-audio-041.mp3",
+      "sizeBytes": 384600,
+      "sha256": "dc129c8262bb7bc4cd5a1089902fd9c759aaee019684ee6e1b1868d4d8c96a5b",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-042",
+      "mediaType": "AUDIO",
+      "localFile": "019-audio-042.mp3",
+      "sizeBytes": 382098,
+      "sha256": "f077aa736de0eaff353b6c4b67d1bf71d2f20f1d4a6680dd3c33ab0a2f38602d",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-043",
+      "mediaType": "AUDIO",
+      "localFile": "020-audio-043.mp3",
+      "sizeBytes": 417126,
+      "sha256": "46268341882106c400d1086d724f1ff4bcbad5cda24f0a64db74d375d599dd13",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-044",
+      "mediaType": "AUDIO",
+      "localFile": "021-audio-044.mp3",
+      "sizeBytes": 390021,
+      "sha256": "7f2d2b83bb8742d5cc34c39431d3ed8f17f174bc4e6a99ca17b7d4ef769a669c",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-045",
+      "mediaType": "AUDIO",
+      "localFile": "022-audio-045.mp3",
+      "sizeBytes": 392940,
+      "sha256": "df449a0934c9d5dd8f51854e6464f5bf8cd14c4c76db65ad54642da04d914e50",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-046",
+      "mediaType": "AUDIO",
+      "localFile": "023-audio-046.mp3",
+      "sizeBytes": 375009,
+      "sha256": "76e86f7131c3074fde4c07c4f036ae6c63c55b16c68689f90095e187ea8fe392",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-047",
+      "mediaType": "AUDIO",
+      "localFile": "024-audio-047.mp3",
+      "sizeBytes": 411705,
+      "sha256": "0902c3626a761b956f251787b25a9057df326c34adaea9f3bd26b79572b25235",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-048",
+      "mediaType": "AUDIO",
+      "localFile": "025-audio-048.mp3",
+      "sizeBytes": 377094,
+      "sha256": "e698c54b8e3cb6e009a57d3bf2a95eccee5f77bd2157a5fb62970584c9c2d1ff",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-049",
+      "mediaType": "AUDIO",
+      "localFile": "026-audio-049.mp3",
+      "sizeBytes": 417543,
+      "sha256": "d27f91719450f82ab9f4eaf9a1717878ac06034b650c025e32ad6a014c7c222d",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-050",
+      "mediaType": "AUDIO",
+      "localFile": "027-audio-050.mp3",
+      "sizeBytes": 422964,
+      "sha256": "c2cdb07d16fb3b46d2b520c8cc9bd9a4dac417dded8ba3e79cdbaba2a7a595f2",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-051",
+      "mediaType": "AUDIO",
+      "localFile": "028-audio-051.mp3",
+      "sizeBytes": 405450,
+      "sha256": "a8567e20f428e5ce70ad5d28bb43f1f51e01fa07df8c13842ae221e6e0de38d5",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-052",
+      "mediaType": "AUDIO",
+      "localFile": "029-audio-052.mp3",
+      "sizeBytes": 422547,
+      "sha256": "d803ae6f2b1f454352e39867f67cbcf813a19ab140d19c29107122dacd36a654",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-053",
+      "mediaType": "AUDIO",
+      "localFile": "030-audio-053.mp3",
+      "sizeBytes": 397944,
+      "sha256": "5a5cd3a0c987ba744b2b4ea459cfc8e66ab5ed58619da88ff2ee53323c14236a",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    },
+    {
+      "mediaId": "audio-054",
+      "mediaType": "AUDIO",
+      "localFile": "031-audio-054.mp3",
+      "sizeBytes": 401280,
+      "sha256": "ca503b6175d09193c003e28fec2ed4b8738b633f2daa80e8b514ecb00909c6f4",
+      "mimeType": "audio/mpeg",
+      "decodeStatus": "FULL_PCM_DECODE_VERIFIED",
+      "downloadStatus": "OFFLINE_VERIFIED"
+    }
+  ]
+}

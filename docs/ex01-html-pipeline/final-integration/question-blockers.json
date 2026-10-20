@@ -1,0 +1,2866 @@
+[
+  {
+    "questionNumber": 1,
+    "part": 1,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g001",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 2,
+    "part": 1,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g002",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 3,
+    "part": 1,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g003",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 4,
+    "part": 1,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g004",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 5,
+    "part": 1,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g005",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 6,
+    "part": 1,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g006",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 7,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g007",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 8,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g008",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 9,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g009",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 10,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g010",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 11,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g011",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 12,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g012",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 13,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g013",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 14,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g014",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 15,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g015",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 16,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g016",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 17,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g017",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 18,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g018",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 19,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g019",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 20,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g020",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 21,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g021",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 22,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g022",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 23,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g023",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 24,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g024",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 25,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g025",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 26,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g026",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 27,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g027",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 28,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g028",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 29,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g029",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 30,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g030",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 31,
+    "part": 2,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g031",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 32,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85631",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 33,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85631",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 34,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85631",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 35,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85635",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 36,
+    "part": 3,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85635",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 37,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85635",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 38,
+    "part": 3,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85638",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 39,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85638",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 40,
+    "part": 3,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85638",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 41,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85641",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 42,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85641",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 43,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85641",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 44,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85652",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 45,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85652",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 46,
+    "part": 3,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85652",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 47,
+    "part": 3,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85658",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 48,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85658",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 49,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85658",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 50,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85666",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 51,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85666",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 52,
+    "part": 3,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85666",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 53,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85671",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 54,
+    "part": 3,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85671",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 55,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85671",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 56,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85674",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 57,
+    "part": 3,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85674",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 58,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85674",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 59,
+    "part": 3,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85679",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 60,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85679",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 61,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85679",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 62,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85682",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 63,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85682",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 64,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85682",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 65,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85685",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 66,
+    "part": 3,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85685",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 67,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85685",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 68,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85692",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 69,
+    "part": 3,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85692",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 70,
+    "part": 3,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-85692",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 71,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86218",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 72,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86218",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 73,
+    "part": 4,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86218",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 74,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86221",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 75,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86221",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 76,
+    "part": 4,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86221",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 77,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86224",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 78,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86224",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 79,
+    "part": 4,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86224",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 80,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86227",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 81,
+    "part": 4,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86227",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 82,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86227",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 83,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86230",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 84,
+    "part": 4,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86230",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 85,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86230",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 86,
+    "part": 4,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86233",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 87,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86233",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 88,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86233",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 89,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86239",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 90,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86239",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 91,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86239",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 92,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86245",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 93,
+    "part": 4,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86245",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 94,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86245",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 95,
+    "part": 4,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86267",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 96,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86267",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 97,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86267",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 98,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86278",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 99,
+    "part": 4,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86278",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 100,
+    "part": 4,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86278",
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 101,
+    "part": 5,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [
+      "A",
+      "C",
+      "D"
+    ],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 102,
+    "part": 5,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 103,
+    "part": 5,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 104,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 105,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 106,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 107,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 108,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 109,
+    "part": 5,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 110,
+    "part": 5,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 111,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 112,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 113,
+    "part": 5,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 114,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 115,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 116,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 117,
+    "part": 5,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 118,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 119,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 120,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 121,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 122,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 123,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 124,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 125,
+    "part": 5,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 126,
+    "part": 5,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 127,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 128,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 129,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 130,
+    "part": 5,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": null,
+    "documentVerificationRequired": false,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 131,
+    "part": 6,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86811",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 132,
+    "part": 6,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86811",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 133,
+    "part": 6,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86811",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 134,
+    "part": 6,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86811",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 135,
+    "part": 6,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86878",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 136,
+    "part": 6,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86878",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 137,
+    "part": 6,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86878",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 138,
+    "part": 6,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86878",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 139,
+    "part": 6,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86904",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 140,
+    "part": 6,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86904",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 141,
+    "part": 6,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86904",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 142,
+    "part": 6,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86904",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 143,
+    "part": 6,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86910",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 144,
+    "part": 6,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86910",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 145,
+    "part": 6,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86910",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 146,
+    "part": 6,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": true,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86910",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 147,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86917",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 148,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86917",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 149,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86927",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 150,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86927",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 151,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86941",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 152,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86941",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 153,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86951",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 154,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86951",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 155,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86973",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 156,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86973",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 157,
+    "part": 7,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86973",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 158,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86985",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 159,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86985",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 160,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86985",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 161,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86991",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 162,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86991",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 163,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86991",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 164,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86997",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 165,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86997",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 166,
+    "part": 7,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86997",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 167,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-86997",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 168,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87002",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 169,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87002",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 170,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87002",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 171,
+    "part": 7,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87002",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 172,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87009",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 173,
+    "part": 7,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87009",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 174,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87009",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 175,
+    "part": 7,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87009",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 176,
+    "part": 7,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87014",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 177,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87014",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 178,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87014",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 179,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87014",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 180,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87014",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 181,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87023",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 182,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87023",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 183,
+    "part": 7,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87023",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 184,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87023",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 185,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87023",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 186,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87091",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 187,
+    "part": 7,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87091",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 188,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87091",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 189,
+    "part": 7,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87091",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 190,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87091",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 191,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87098",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 192,
+    "part": 7,
+    "missingOptionLabels": [],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87098",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 193,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87098",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 194,
+    "part": 7,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87098",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 195,
+    "part": 7,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87098",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 196,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87105",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 197,
+    "part": 7,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87105",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 198,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "C"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87105",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 199,
+    "part": 7,
+    "missingOptionLabels": [
+      "A",
+      "B",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87105",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  },
+  {
+    "questionNumber": 200,
+    "part": 7,
+    "missingOptionLabels": [
+      "B",
+      "C",
+      "D"
+    ],
+    "optionLabelsNeedsReview": [],
+    "originalPromptMissing": false,
+    "answerKeyHumanVerified": false,
+    "groupId": "g-87105",
+    "documentVerificationRequired": true,
+    "importState": "BLOCKED"
+  }
+]

@@ -1,0 +1,175 @@
+{
+  "sourceCommit": "f29005646daeb9b6fec49fd856485f8f82d8acb1",
+  "scope": "ETL_TOOL_TESTS_NOT_ETS_ACCEPTANCE",
+  "environment": {
+    "os.name": "Windows 11",
+    "os.version": "10.0",
+    "java.version": "21.0.8",
+    "os.arch": "amd64",
+    "java.vendor": "Oracle Corporation"
+  },
+  "tests": 77,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "suites": [
+    {
+      "name": "vn.edu.toeic.dataset.DatasetArchiveTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rawXmlSha256": "f3b7639f943c33de0271a19760317dc109c055e58f4aa52c7e8c1e30c0ac7e48",
+      "cases": [
+        "refusesMissingOrChangedMedia",
+        "noOverwriteAndNoWorktreeBackup",
+        "archiveRestoreDoesNotNeedOriginalHtmlOrWebsite",
+        "rejectsArchiveTraversalPaths",
+        "corruptArchiveRejectedBeforeDestinationIsCreated"
+      ]
+    },
+    {
+      "name": "vn.edu.toeic.dataset.HtmlExamParserTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rawXmlSha256": "95f789b768924d351ea0bd278ace52cf1f287760e5d2aa9edaf28fa196b20fce",
+      "cases": [
+        "everyLeafHasAReviewStatusAndOnlyMeasuredHashesAreVerified",
+        "mediaManifestRecordsQuestionOrGroupAndAllSourceQuestionNumbers",
+        "neverPromotesExplanationOrTranslationToCandidateOptions",
+        "excludesPageChromeAndPreservesAllContentMedia",
+        "extracts200QuestionsAndSourceParts",
+        "doesNotInventDocumentBoundariesFromImages",
+        "extractsRecordedCorrectAnswerNotUsersWrongChoice",
+        "part12DisplayHasNoTranscripts",
+        "parsesNestedDomAndEntitiesWithoutRegexSlicing(Path)",
+        "usesDomAncestryForSharedGroupsAndSingletons"
+      ]
+    },
+    {
+      "name": "vn.edu.toeic.dataset.LocalMediaInspectorTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rawXmlSha256": "ca4230e56abb0159c40eb232fa10f524dbe5865090d253e37bf1d67c3fdfe0df",
+      "cases": [
+        "missingLocalFileNeverBecomesVerified",
+        "rejectsFakeAndTruncatedImages",
+        "mp3SignatureWithoutDecodableFramesIsRejected",
+        "detectsBytesChangedBetweenInspections",
+        "measuresWavDurationFromMockFrames",
+        "remoteUrlNeverSuppliesLocalVerification",
+        "measuresRealPngBytesAndDimensionsWithoutClaimingContentReview",
+        "rejectsTraversalAndWindowsDeviceNames"
+      ]
+    },
+    {
+      "name": "vn.edu.toeic.dataset.MediaDownloaderTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rawXmlSha256": "f02fcbbc8e863a7e8485664eff4b83e3cbcf038cda97058824486eab83f92f40",
+      "cases": [
+        "planningManifestNeverFetchesAnyUrl",
+        "captchaOrHtmlBodyIsRejectedEvenWith200",
+        "mismatchedHttpMimeIsRejectedAgainstActualSignature",
+        "corruptedCachedBytesAreBlockedWithoutRefetchOrOverwrite",
+        "rejectsTokenQueryRedirectAndUnauthorizedHostWithoutBypass",
+        "noPermissionMeansNoNetworkAndNoFile",
+        "changedSourceCannotReusePermission",
+        "existingUntrackedFileIsPreservedAndBlocked",
+        "rejectedHttpStatusesNeverProduceLocalFile",
+        "publishesVerifiedBytesAndSecondRunUsesReceiptWithoutNetwork"
+      ]
+    },
+    {
+      "name": "vn.edu.toeic.dataset.OriginalContentJoinTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rawXmlSha256": "9110b1af4e4c51496f9e3cfefcfb437b714935ee480ea0ca5f15847388206945",
+      "cases": [
+        "secondSupplementCannotSilentlyReplaceFirstSource",
+        "conflictingDocumentSupplementIsAtomic",
+        "generatedTemplateAndPerQuestionBlockersRemainIncomplete",
+        "duplicateDocumentGroupsAndIdsAreRefused",
+        "missingOrForeignDocumentImagesAreRejected",
+        "documentFieldsRetainProvenanceAndMediaMapping",
+        "conflictingOriginalPromptIsRefused",
+        "conflictingSourceExactOptionIsRefusedWithoutPartialChanges",
+        "converterKeepsExplicitDocumentMediaOrder",
+        "matchingSourcesKeepBothHashesAndExplicitLabels",
+        "reorderedTargetCannotJoinByArrayPositionAlone",
+        "invalidLaterRowDoesNotModifyEarlierQuestion",
+        "htmlCannotBorrowIdentityFromAnotherExamContainer"
+      ]
+    },
+    {
+      "name": "vn.edu.toeic.dataset.PipelineTest",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rawXmlSha256": "5a2829ad96ca412086417c7379fa43f9bea28f647eb310e0abcc3c9ca886b6b3",
+      "cases": [
+        "outputIsDeterministic",
+        "actualTest01HasNoStructuralErrorsButIsBlocked",
+        "catchesTranscriptInsideDisplayBlocks",
+        "converterPreservesQuestionImagesAndGroupAudioOwnership",
+        "catchesChecksumMismatch",
+        "checksExplicitDocumentCountsOrderAndRequiredOriginalText",
+        "catchesMissingAndDuplicateQuestions",
+        "catchesInvalidKeyAndMissingOptions",
+        "catchesUnsafeAndDuplicateMediaFilenames",
+        "draftHasOnlyDtoFieldsAndUsesUnverifiedEnums",
+        "catchesPartSwapDespiteSameCounts",
+        "catchesTranscriptInjection",
+        "otherUniqueInputsParseStructurally(String)[1]",
+        "otherUniqueInputsParseStructurally(String)[2]",
+        "otherUniqueInputsParseStructurally(String)[3]",
+        "catchesWrongMembershipAndSharedAudioReuse",
+        "duplicateAuditMeasuresActualBytes",
+        "rejectsExplicitTest05BeforeWritingArtifacts",
+        "catchesMissingAndMismatchedMedia"
+      ]
+    },
+    {
+      "name": "vn.edu.toeic.dataset.RecoveryTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rawXmlSha256": "906b6156be33c575aa99bc6874e1d637132195c9f932cd993eda48553b582469",
+      "cases": [
+        "unlabelledVocabularyNeverGetsGuessedLabels",
+        "malformedDocumentMappingRejected",
+        "positionMarkersPreserveLabelsWithoutCallingThemEnglish",
+        "real200QuestionsKeepKeysAndNoListeningTranscript",
+        "vietnameseAndUnaccentedTranslationNeverBecomeEnglish",
+        "conflictingOriginalTextsStayBlocked",
+        "tableCellsHaveExplicitLabelEvidence",
+        "teacherSentenceIsNotRecoveredAsOriginalOption",
+        "glossPrefixNeedsReviewAndMissingOptionsStayMissing",
+        "resumeLoanwordInEnglishQuestionIsNotVietnamese",
+        "labelsArePreservedDespiteOrder",
+        "originalJsonJoinsByIdentityAndRejectsWrongKeyOrPart"
+      ]
+    }
+  ],
+  "sourceSha256": {
+    "tools/exam-dataset/src/main/java/vn/edu/toeic/dataset/OriginalContentJoin.java": "b17a97f06f73e797cc9d3a5cbf773a6c528e903852229d40c14393e68e48ee68",
+    "tools/exam-dataset/src/main/java/vn/edu/toeic/dataset/RecoverExam.java": "72b42664b8b200bc6339e6a355673d5795747ffb5505fd5a41b8b96b85817e5a",
+    "tools/exam-dataset/src/test/java/vn/edu/toeic/dataset/OriginalContentJoinTest.java": "5716d69e7b807c9f9c0da2ca7ee457551f5903a681e900bfe76a4cb2229352e8",
+    "tools/exam-dataset/src/test/java/vn/edu/toeic/dataset/RecoveryTest.java": "2263b6cbd70f4d49b80976fe57dfc444f6872f199c777460765e129b64ea075a",
+    "tools/exam-dataset/contract/ContractProbe.java": "067ca38c9c28244ea9a8af0e3b166a809335428e814feab5ad7856b75a8dc590",
+    "tools/exam-dataset/contract/AuditOriginalSources.java": "a95d89aff52dfae49feafe64e3536c5f7641723c9fc0884a15163c4e01e09031",
+    "tools/exam-dataset/maintain.ps1": "4072600949ffe77ef657becd1c363b0e13d1f859866f482c849e2e1fbcc83f81",
+    "tools/exam-dataset/verify-contract.ps1": "01431906af477b20adc8c80b3d12689665ccdc842ccf1a4c4980d8e44be13307"
+  },
+  "rawMavenLogSha256": "b17acb697fd8d9ae2d568e1d014a5242f067f544aa805fb38c5675a2ddba2536"
+}

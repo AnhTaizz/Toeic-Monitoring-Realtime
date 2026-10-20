@@ -1,0 +1,130 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO]
+[INFO] TOEIC Monitoring Realtime                                          [pom]
+[INFO] TOEIC Protocol                                                     [jar]
+[INFO] TOEIC JavaFX Client                                                [jar]
+[INFO] TOEIC Server                                                       [jar]
+[INFO]
+[INFO] ---------------< vn.edu.toeic:toeic-monitoring-realtime >---------------
+[INFO] Building TOEIC Monitoring Realtime 0.1.0-SNAPSHOT                  [1/4]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] -----------------------< vn.edu.toeic:protocol >------------------------
+[INFO] Building TOEIC Protocol 0.1.0-SNAPSHOT                             [2/4]
+[INFO]   from protocol\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.5.0:resources (default-resources) @ protocol ---
+[INFO] skip non existing resourceDirectory <main-test-worktree>\protocol\src\main\resources
+[INFO] skip non existing resourceDirectory <main-test-worktree>\protocol\src\main\resources
+[INFO]
+[INFO] --- compiler:3.15.0:compile (default-compile) @ protocol ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 89 source files with javac [debug parameters release 21] to target\classes
+[INFO]
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ protocol ---
+[INFO] skip non existing resourceDirectory <main-test-worktree>\protocol\src\test\resources
+[INFO]
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ protocol ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 8 source files with javac [debug parameters release 21] to target\test-classes
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ protocol ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.1:jar (default-jar) @ protocol ---
+[INFO] Building jar: <main-test-worktree>\protocol\target\protocol-0.1.0-SNAPSHOT.jar
+[INFO]
+[INFO] ------------------------< vn.edu.toeic:client >-------------------------
+[INFO] Building TOEIC JavaFX Client 0.1.0-SNAPSHOT                        [3/4]
+[INFO]   from client\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.5.0:resources (default-resources) @ client ---
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.15.0:compile (default-compile) @ client ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 127 source files with javac [debug parameters release 21] to target\classes
+[INFO]
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ client ---
+[INFO] Copying 9 resources from src\test\resources to target\test-classes
+[INFO]
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ client ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 84 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] /<main-test-worktree>/client/src/test/java/vn/edu/toeic/client/InstalledClientAgent.java: Some input files use unchecked or unsafe operations.
+[INFO] /<main-test-worktree>/client/src/test/java/vn/edu/toeic/client/InstalledClientAgent.java: Recompile with -Xlint:unchecked for details.
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ client ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.1:jar (default-jar) @ client ---
+[INFO] Building jar: <main-test-worktree>\client\target\client-0.1.0-SNAPSHOT.jar
+[INFO]
+[INFO] --- shade:3.6.1:shade (default) @ client ---
+[WARNING] Discovered module-info.class. Shading will break its strong encapsulation.
+[WARNING] Discovered module-info.class. Shading will break its strong encapsulation.
+[WARNING] Discovered module-info.class. Shading will break its strong encapsulation.
+[WARNING] Discovered module-info.class. Shading will break its strong encapsulation.
+[WARNING] error_prone_annotations-2.41.0.jar, gson-2.13.2.jar define 1 overlapping classes:
+[WARNING]   - META-INF.versions.9.module-info
+[WARNING] client-0.1.0-SNAPSHOT.jar, error_prone_annotations-2.41.0.jar, gson-2.13.2.jar, javafx-base-21.0.12-win.jar, javafx-base-21.0.12.jar, javafx-controls-21.0.12-win.jar, javafx-controls-21.0.12.jar, javafx-graphics-21.0.12-win.jar, javafx-graphics-21.0.12.jar, javafx-media-21.0.12-win.jar, javafx-media-21.0.12.jar, protocol-0.1.0-SNAPSHOT.jar define 1 overlapping resource:
+[WARNING]   - META-INF/MANIFEST.MF
+[WARNING] maven-shade-plugin has detected that some files are
+[WARNING] present in two or more JARs. When this happens, only one
+[WARNING] single version of the file is copied to the uber jar.
+[WARNING] Usually this is not harmful and you can skip these warnings,
+[WARNING] otherwise try to manually exclude artifacts based on
+[WARNING] mvn dependency:tree -Ddetail=true and the above output.
+[WARNING] See https://maven.apache.org/plugins/maven-shade-plugin/
+[INFO] Attaching shaded artifact.
+[INFO]
+[INFO] ------------------------< vn.edu.toeic:server >-------------------------
+[INFO] Building TOEIC Server 0.1.0-SNAPSHOT                               [4/4]
+[INFO]   from server\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.5.0:resources (default-resources) @ server ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 15 resources from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.15.0:compile (default-compile) @ server ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 80 source files with javac [debug parameters release 21] to target\classes
+[INFO] /<main-test-worktree>/server/src/main/java/vn/edu/toeic/server/exam/rich/RichExamJson.java: <main-test-worktree>\server\src\main\java\vn\edu\toeic\server\exam\rich\RichExamJson.java uses or overrides a deprecated API.
+[INFO] /<main-test-worktree>/server/src/main/java/vn/edu/toeic/server/exam/rich/RichExamJson.java: Recompile with -Xlint:deprecation for details.
+[INFO]
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ server ---
+[INFO] skip non existing resourceDirectory <main-test-worktree>\server\src\test\resources
+[INFO]
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ server ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 53 source files with javac [debug parameters release 21] to target\test-classes
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ server ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.1:jar (default-jar) @ server ---
+[INFO] Building jar: <main-test-worktree>\server\target\server-0.1.0-SNAPSHOT.jar
+[INFO]
+[INFO] --- spring-boot:4.1.1:repackage (repackage) @ server ---
+[INFO] Replacing main artifact <main-test-worktree>\server\target\server-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to <main-test-worktree>\server\target\server-0.1.0-SNAPSHOT.jar.original
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for TOEIC Monitoring Realtime 0.1.0-SNAPSHOT:
+[INFO]
+[INFO] TOEIC Monitoring Realtime .......................... SUCCESS [  0.006 s]
+[INFO] TOEIC Protocol ..................................... SUCCESS [  8.973 s]
+[INFO] TOEIC JavaFX Client ................................ SUCCESS [ 17.373 s]
+[INFO] TOEIC Server ....................................... SUCCESS [  7.533 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  34.805 s
+[INFO] Finished at: 2026-10-20T15:50:05+07:00
+[INFO] ------------------------------------------------------------------------
