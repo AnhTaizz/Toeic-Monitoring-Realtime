@@ -1,0 +1,930 @@
+{
+  "fixture": "MOCK sensor/status inputs; REAL WS/HTTP/PostgreSQL TEST; ACK loss/COMMIT faults SIMULATED",
+  "baseSha": "519063dd556345eaa3e213967846209a504a91e9",
+  "runtimeSha": "1b84d300021109fac32ea40ae184ce2afab87dcc",
+  "testSha": "1c008c84853384d4cd51e0a45fa5d866d052e8fd",
+  "baseline": {
+    "sourceSha": "519063dd556345eaa3e213967846209a504a91e9",
+    "tests": 246,
+    "passed": 246,
+    "skipped": 0,
+    "modules": {
+      "protocol": 33,
+      "client": 181,
+      "server": 32
+    },
+    "log": "local-check/baseline-quoted.private.log"
+  },
+  "runs": [
+    {
+      "name": "first-focused",
+      "sourceSha": "1b84d300021109fac32ea40ae184ce2afab87dcc",
+      "runId": "mon07-20261020T140338Z-0e0f751f",
+      "command": "mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC -pl server -am -Dtest=SignalProtocolTest,TypedSignalTest,ControlSignalTest,ControlDeliveryTest,SignalRunContextTest,UsbSignalAdapterTest,MockUsbSnapshotProjectionTest,SignalDeliveryTest,SignalDisabledTest,RealtimeClientTest,MonitoringDeliveryTest,FullSnapshotDeliveryTest,DeltaSnapshotDeliveryTest,MonitoringPresenceServiceTest,MonitoringStateServiceTest,MonitoringStateMaintenanceTest,MonitoringDeltaStateTest,MonitoringHistoryBoundsPostgresTest,CimSnapshotSourceTest,CimClassificationScriptTest,UsbStorageProbeTest,UsbObservationTrackerTest,SignalPipelinePostgresTest#mockFixtureThroughClientDeliveryRealWsCommitAckLossRetryAndPagedHttp+actualReconnectRequiresFreshCapabilityAndPreservesOriginalConnection+mixedMockTypesThroughSharedDeliveryCommitAckRetryAndFixedThroughHistory+typedDuplicateUsesCanonicalDetailsAndConflictPreservesCommittedContent+typedCommitFailureRollsBackBothRowsAndCounterWithoutSuccessfulAck+typedStoredDuplicateStillRequiresRoleOwnerActiveAndLiveToken+usbAdapterMockTimelineThroughRealDeliveryAckLossCommitAndHistory+usbAdapterOldCallbackCannotCreateRowsForReplacementAttempt+usbAdapterCannotCreateNewEventsAfterRealTokenRejection+duplicateCanonicalConflictAndUnknownTypeHaveNoExtraRows+strictWireRejectsDuplicateUnknownUnicodeAndIntegerFormsWithoutMutation+authorizationBeforeDuplicateHistoryAndCapabilityIncludingTerminalAssignmentAndRevoke+deferredCommitFailureRollsBackCounterAndNeverEmitsSuccessAck+fixedThroughPaginationNeverCheckpointsUncommittedOrLaterRows+mockStatusActualQueueOverflowGapCommitAckLossAndMixedFixedThroughHistory+bothControlTypesCanonicalDuplicatesConflictsStrictWireAndAuthorization+bothControlTypesCommitFaultRollsBackWithoutAckOrCounterIncrement+realRevokeStopsReservedGapAndPreventsNewStatusWithoutFlushingAfterStop+counterLockCommitsPrefixAndInitialWriterRollbackCannotSkipLowSequence+revokeWhileCounterWaitsIsRecheckedBeforeDuplicate+tokenRevokeAndAssignmentDeletionWaitForAuthorizedTransactionToFinish+terminalUpdateWaitsForSignalCommitThenDuplicateIsForbidden+expiredTokenCannotReadOrReplayStoredDuplicate+expiryIsJudgedAfterSessionRowLockWaitNotBeforeIt+realUncorrelatedTokenDenialStopsDeliveryAndItsWorker+proctorTokenExpiryAfterAssignmentLockWaitCannotReadHistoryOrCapabilities+experimentOffStillAppliesV13WithoutCreatingSignalServiceOrRoutes+migrationUpgradePreservesDisplayRowsCountersAndAppliedChecksums+send -Dsurefire.failIfNoSpecifiedTests=false test",
+      "totals": {
+        "failures": 0,
+        "passed": 334,
+        "errors": 0,
+        "tests": 334,
+        "skipped": 0
+      },
+      "pipelineCases": [
+        {
+          "status": "PASS",
+          "seconds": "2.057",
+          "name": "experimentOffStillAppliesV13WithoutCreatingSignalServiceOrRoutes",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.129",
+          "name": "deferredCommitFailureRollsBackCounterAndNeverEmitsSuccessAck",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.062",
+          "name": "typedCommitFailureRollsBackBothRowsAndCounterWithoutSuccessfulAck",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.09",
+          "name": "terminalUpdateWaitsForSignalCommitThenDuplicateIsForbidden",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "1.067",
+          "name": "migrationUpgradePreservesDisplayRowsCountersAndAppliedChecksums(int)[1]",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "1.011",
+          "name": "migrationUpgradePreservesDisplayRowsCountersAndAppliedChecksums(int)[2]",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.436",
+          "name": "realUncorrelatedTokenDenialStopsDeliveryAndItsWorker",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.294",
+          "name": "mockStatusActualQueueOverflowGapCommitAckLossAndMixedFixedThroughHistory",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "1.362",
+          "name": "mockFixtureThroughClientDeliveryRealWsCommitAckLossRetryAndPagedHttp",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.327",
+          "name": "realRevokeStopsReservedGapAndPreventsNewStatusWithoutFlushingAfterStop",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "1.376",
+          "name": "usbAdapterMockTimelineThroughRealDeliveryAckLossCommitAndHistory",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.309",
+          "name": "actualReconnectRequiresFreshCapabilityAndPreservesOriginalConnection",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.04",
+          "name": "typedDuplicateUsesCanonicalDetailsAndConflictPreservesCommittedContent",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.138",
+          "name": "revokeWhileCounterWaitsIsRecheckedBeforeDuplicate",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.519",
+          "name": "bothControlTypesCanonicalDuplicatesConflictsStrictWireAndAuthorization",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.319",
+          "name": "usbAdapterOldCallbackCannotCreateRowsForReplacementAttempt",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "10.203",
+          "name": "proctorTokenExpiryAfterAssignmentLockWaitCannotReadHistoryOrCapabilities",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.327",
+          "name": "usbAdapterCannotCreateNewEventsAfterRealTokenRejection",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.035",
+          "name": "duplicateCanonicalConflictAndUnknownTypeHaveNoExtraRows",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.14",
+          "name": "expiredTokenCannotReadOrReplayStoredDuplicate",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.149",
+          "name": "authorizationBeforeDuplicateHistoryAndCapabilityIncludingTerminalAssignmentAndRevoke",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.107",
+          "name": "tokenRevokeAndAssignmentDeletionWaitForAuthorizedTransactionToFinish",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.111",
+          "name": "fixedThroughPaginationNeverCheckpointsUncommittedOrLaterRows",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.208",
+          "name": "typedStoredDuplicateStillRequiresRoleOwnerActiveAndLiveToken",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "1.393",
+          "name": "mixedMockTypesThroughSharedDeliveryCommitAckRetryAndFixedThroughHistory",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.057",
+          "name": "bothControlTypesCommitFaultRollsBackWithoutAckOrCounterIncrement",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.048",
+          "name": "counterLockCommitsPrefixAndInitialWriterRollbackCannotSkipLowSequence",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "5.093",
+          "name": "expiryIsJudgedAfterSessionRowLockWaitNotBeforeIt",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.021",
+          "name": "strictWireRejectsDuplicateUnknownUnicodeAndIntegerFormsWithoutMutation",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        }
+      ],
+      "xmlHashes": [
+        {
+          "module": "protocol",
+          "sha256": "2c219d23ae75c1e4bea9c61407b8943fdc30e9286af0bf530ef9142798c8bc82",
+          "file": "TEST-vn.edu.toeic.protocol.monitoring.signal.ControlSignalTest.xml"
+        },
+        {
+          "module": "protocol",
+          "sha256": "5c20cd07a22ab4eba0268f9afbcc19091bfdfbb3cd22bdfa0c911773595c6138",
+          "file": "TEST-vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest.xml"
+        },
+        {
+          "module": "protocol",
+          "sha256": "729e2ea859210d7730a9ac973b06cb302df6f592b0f27d15e3978a857ecd3f9a",
+          "file": "TEST-vn.edu.toeic.protocol.monitoring.signal.TypedSignalTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "77771904b5ac59fae9aa83af88170adafd7ff8c6c54bf0ab31553eca96e0a207",
+          "file": "TEST-vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "53893d693c24ed62a11361107475541fa821393807eb2103f9e14b7f7892f103",
+          "file": "TEST-vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "84ad5ef55af3d1a5b6a3d5e5abd63ddfc0eb57d77eabaf60c50e43253a459cb9",
+          "file": "TEST-vn.edu.toeic.client.monitoring.MonitoringDeliveryTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "42e79a75f7699bbd57a2e3364983bb372f24600d816943cdb3183c84877a4771",
+          "file": "TEST-vn.edu.toeic.client.monitoring.signal.ControlDeliveryTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "9a033250627bab076a4263665191f3387a6536f2fd57573b12ab57f3a52c3b0d",
+          "file": "TEST-vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "7842129f4e0e38d1a7df1b43978f6c6b74f30d437b2d1adca1fc14e229ecbb72",
+          "file": "TEST-vn.edu.toeic.client.monitoring.signal.SignalRunContextTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "a4531f9aaac6c7086158d04bf87353884c94a14ed945b11e20e153e71ad3a79b",
+          "file": "TEST-vn.edu.toeic.client.monitoring.usb.UsbSignalAdapterTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "c7282484808ff27bd6434df6dac3199ee7bf49e864daf626bddc938b4ba437c2",
+          "file": "TEST-vn.edu.toeic.client.realtime.RealtimeClientTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "d59af022e66485c98d437c20d11123821d10b38f1fdb9b3beecc6c9a9fddbb18",
+          "file": "TEST-vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "df7acc497fc0a8ed136268e8da8f2863bf42fe47d0eb25d2f58b64347df4c6c2",
+          "file": "TEST-vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "0e922753fd5e2d5848a277c6d2b3aa780571bef630b7928e759b8dd16fafae15",
+          "file": "TEST-vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "06c6b756c9859b777d0f0311930f0ef143d53e07f509238b9c81ac79078e7637",
+          "file": "TEST-vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "393c2a7139bdb29b7aa7d1fdc9f5588ce9afa51e867d30b22f36772f9c419a4c",
+          "file": "TEST-vn.edu.toeic.server.monitoring.MonitoringStateServiceTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "e25cbe77cdc7af6ae38895754fe13c8dc46a614513362608d757a480c053dbee",
+          "file": "TEST-vn.edu.toeic.server.monitoring.signal.MockUsbSnapshotProjectionTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "d0d5cbd4689f6f4c33617dee65b6907b2dc5290cd36c87e63ebb33c770b01109",
+          "file": "TEST-vn.edu.toeic.server.monitoring.signal.SignalDisabledTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "f6f5dd317fe058f15de42fac7d831a4a9f0e0a67587bb95eb2593dbe4a666544",
+          "file": "TEST-vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest.xml"
+        },
+        {
+          "module": "monitoring-spike",
+          "sha256": "fe4d5fa3a9034e4b12b33ff9c72d978bfc6aeedf7f90e13d535739b0d878f487",
+          "file": "TEST-vn.edu.toeic.monitoring.usb.CimClassificationScriptTest.xml"
+        },
+        {
+          "module": "monitoring-spike",
+          "sha256": "d9e1b1bdc6346e74abeb6eb827961fac45bfe302401b2dae2298016dff98fecc",
+          "file": "TEST-vn.edu.toeic.monitoring.usb.CimSnapshotSourceTest.xml"
+        },
+        {
+          "module": "monitoring-spike",
+          "sha256": "508566461b5ab996fb3e427e81d8ee2933ac76ecd991d9579de93b5d34333ea4",
+          "file": "TEST-vn.edu.toeic.monitoring.usb.UsbObservationTrackerTest.xml"
+        },
+        {
+          "module": "monitoring-spike",
+          "sha256": "609e206d514ce8b7c06b1873dcf1d547955a6f98dc607c54f92594b0567b0a4a",
+          "file": "TEST-vn.edu.toeic.monitoring.usb.UsbStorageProbeTest.xml"
+        }
+      ],
+      "cleanup": {
+        "clusterStopExit": 0,
+        "ownedSchemasRemaining": 0,
+        "passwordFileAbsent": true,
+        "postmasterPidAbsent": true
+      },
+      "environment": {
+        "os": "Microsoft Windows NT 10.0.26200.0",
+        "java": "openjdk version \"21.0.10\" 2026-01-20 LTS",
+        "maven": "Apache Maven 3.9.15 (98b2cdbfdb5f1ac8781f537ea9acccaed7922349)",
+        "postgres": "PostgreSQL 18.3 on x86_64-windows, compiled by msvc-19.44.35223, 64-bit"
+      },
+      "startUtc": "2026-10-20T14:03:45.4572228Z",
+      "endUtc": "2026-10-20T14:05:09.1585054Z"
+    },
+    {
+      "name": "final-focused",
+      "sourceSha": "1c008c84853384d4cd51e0a45fa5d866d052e8fd",
+      "runId": "mon07-20261020T140913Z-26c263ef",
+      "command": "mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC -pl server -am -Dtest=SignalProtocolTest,TypedSignalTest,ControlSignalTest,ControlDeliveryTest,SignalRunContextTest,UsbSignalAdapterTest,MockUsbSnapshotProjectionTest,SignalDeliveryTest,SignalDisabledTest,RealtimeClientTest,MonitoringDeliveryTest,FullSnapshotDeliveryTest,DeltaSnapshotDeliveryTest,MonitoringPresenceServiceTest,MonitoringStateServiceTest,MonitoringStateMaintenanceTest,MonitoringDeltaStateTest,MonitoringHistoryBoundsPostgresTest,CimSnapshotSourceTest,CimClassificationScriptTest,UsbStorageProbeTest,UsbObservationTrackerTest,SignalPipelinePostgresTest#mockFixtureThroughClientDeliveryRealWsCommitAckLossRetryAndPagedHttp+actualReconnectRequiresFreshCapabilityAndPreservesOriginalConnection+mixedMockTypesThroughSharedDeliveryCommitAckRetryAndFixedThroughHistory+typedDuplicateUsesCanonicalDetailsAndConflictPreservesCommittedContent+typedCommitFailureRollsBackBothRowsAndCounterWithoutSuccessfulAck+typedStoredDuplicateStillRequiresRoleOwnerActiveAndLiveToken+usbAdapterMockTimelineThroughRealDeliveryAckLossCommitAndHistory+usbAdapterOldCallbackCannotCreateRowsForReplacementAttempt+usbAdapterCannotCreateNewEventsAfterRealTokenRejection+duplicateCanonicalConflictAndUnknownTypeHaveNoExtraRows+strictWireRejectsDuplicateUnknownUnicodeAndIntegerFormsWithoutMutation+authorizationBeforeDuplicateHistoryAndCapabilityIncludingTerminalAssignmentAndRevoke+deferredCommitFailureRollsBackCounterAndNeverEmitsSuccessAck+fixedThroughPaginationNeverCheckpointsUncommittedOrLaterRows+mockStatusActualQueueOverflowGapCommitAckLossAndMixedFixedThroughHistory+bothControlTypesCanonicalDuplicatesConflictsStrictWireAndAuthorization+bothControlTypesCommitFaultRollsBackWithoutAckOrCounterIncrement+realRevokeStopsReservedGapAndPreventsNewStatusWithoutFlushingAfterStop+counterLockCommitsPrefixAndInitialWriterRollbackCannotSkipLowSequence+revokeWhileCounterWaitsIsRecheckedBeforeDuplicate+tokenRevokeAndAssignmentDeletionWaitForAuthorizedTransactionToFinish+terminalUpdateWaitsForSignalCommitThenDuplicateIsForbidden+expiredTokenCannotReadOrReplayStoredDuplicate+expiryIsJudgedAfterSessionRowLockWaitNotBeforeIt+realUncorrelatedTokenDenialStopsDeliveryAndItsWorker+proctorTokenExpiryAfterAssignmentLockWaitCannotReadHistoryOrCapabilities+experimentOffStillAppliesV13WithoutCreatingSignalServiceOrRoutes+migrationUpgradePreservesDisplayRowsCountersAndAppliedChecksums -Dsurefire.failIfNoSpecifiedTests=false test",
+      "totals": {
+        "failures": 0,
+        "passed": 334,
+        "errors": 0,
+        "tests": 334,
+        "skipped": 0
+      },
+      "pipelineCases": [
+        {
+          "status": "PASS",
+          "seconds": "1.699",
+          "name": "experimentOffStillAppliesV13WithoutCreatingSignalServiceOrRoutes",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.112",
+          "name": "deferredCommitFailureRollsBackCounterAndNeverEmitsSuccessAck",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.062",
+          "name": "typedCommitFailureRollsBackBothRowsAndCounterWithoutSuccessfulAck",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.072",
+          "name": "terminalUpdateWaitsForSignalCommitThenDuplicateIsForbidden",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.76",
+          "name": "migrationUpgradePreservesDisplayRowsCountersAndAppliedChecksums(int)[1]",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.746",
+          "name": "migrationUpgradePreservesDisplayRowsCountersAndAppliedChecksums(int)[2]",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.355",
+          "name": "realUncorrelatedTokenDenialStopsDeliveryAndItsWorker",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.272",
+          "name": "mockStatusActualQueueOverflowGapCommitAckLossAndMixedFixedThroughHistory",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "1.375",
+          "name": "mockFixtureThroughClientDeliveryRealWsCommitAckLossRetryAndPagedHttp",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.343",
+          "name": "realRevokeStopsReservedGapAndPreventsNewStatusWithoutFlushingAfterStop",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "1.381",
+          "name": "usbAdapterMockTimelineThroughRealDeliveryAckLossCommitAndHistory",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.277",
+          "name": "actualReconnectRequiresFreshCapabilityAndPreservesOriginalConnection",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.047",
+          "name": "typedDuplicateUsesCanonicalDetailsAndConflictPreservesCommittedContent",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.144",
+          "name": "revokeWhileCounterWaitsIsRecheckedBeforeDuplicate",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.534",
+          "name": "bothControlTypesCanonicalDuplicatesConflictsStrictWireAndAuthorization",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.327",
+          "name": "usbAdapterOldCallbackCannotCreateRowsForReplacementAttempt",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "10.213",
+          "name": "proctorTokenExpiryAfterAssignmentLockWaitCannotReadHistoryOrCapabilities",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.343",
+          "name": "usbAdapterCannotCreateNewEventsAfterRealTokenRejection",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.032",
+          "name": "duplicateCanonicalConflictAndUnknownTypeHaveNoExtraRows",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.118",
+          "name": "expiredTokenCannotReadOrReplayStoredDuplicate",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.129",
+          "name": "authorizationBeforeDuplicateHistoryAndCapabilityIncludingTerminalAssignmentAndRevoke",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.202",
+          "name": "tokenRevokeAndAssignmentDeletionWaitForAuthorizedTransactionToFinish",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.1",
+          "name": "fixedThroughPaginationNeverCheckpointsUncommittedOrLaterRows",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.218",
+          "name": "typedStoredDuplicateStillRequiresRoleOwnerActiveAndLiveToken",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "1.381",
+          "name": "mixedMockTypesThroughSharedDeliveryCommitAckRetryAndFixedThroughHistory",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.06",
+          "name": "bothControlTypesCommitFaultRollsBackWithoutAckOrCounterIncrement",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.036",
+          "name": "counterLockCommitsPrefixAndInitialWriterRollbackCannotSkipLowSequence",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "5.102",
+          "name": "expiryIsJudgedAfterSessionRowLockWaitNotBeforeIt",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        },
+        {
+          "status": "PASS",
+          "seconds": "0.032",
+          "name": "strictWireRejectsDuplicateUnknownUnicodeAndIntegerFormsWithoutMutation",
+          "class": "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest"
+        }
+      ],
+      "xmlHashes": [
+        {
+          "module": "protocol",
+          "sha256": "3978d6ebff46f14598b98a6f03f0f8fbd6d7473aa541fdef589ca5e9bf6f3cd6",
+          "file": "TEST-vn.edu.toeic.protocol.monitoring.signal.ControlSignalTest.xml"
+        },
+        {
+          "module": "protocol",
+          "sha256": "83e490f6530344579da3cfe66aa943538c129c09b39d75ea9792278c4c2282c4",
+          "file": "TEST-vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest.xml"
+        },
+        {
+          "module": "protocol",
+          "sha256": "783d87a129bb3da3987a82ee5fec9a82cc227d4879183cdeaa7e969f85e764df",
+          "file": "TEST-vn.edu.toeic.protocol.monitoring.signal.TypedSignalTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "6f39daffe0f8be29dc5b75fb43e67bdbb82c75307548a4f97280bd5f0aff1f2e",
+          "file": "TEST-vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "4bd5345b22099785b30bc2d36e38e5b939700b263189e5f288136c72e6242e04",
+          "file": "TEST-vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "0becfb1b5a45280255ab7bcb9ef81cfc4d9c8379d7355493f3eeeee146071c43",
+          "file": "TEST-vn.edu.toeic.client.monitoring.MonitoringDeliveryTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "296409b1995e3e3368e1fa591b3f9df958f510ec19736fe3f459e52e7e915349",
+          "file": "TEST-vn.edu.toeic.client.monitoring.signal.ControlDeliveryTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "cc64b78f15b9918f447e4e0e3cbeb28b78306814e5f89b1d5fe1ccb8c03cc435",
+          "file": "TEST-vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "310a5d99310f556ecc227bb5e34f818e9dc7132fd9d23415e6102fb2dc5562aa",
+          "file": "TEST-vn.edu.toeic.client.monitoring.signal.SignalRunContextTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "bf6cf85e670891b4b9ca9903d1439208961f196dd2b722706c04560fa725e408",
+          "file": "TEST-vn.edu.toeic.client.monitoring.usb.UsbSignalAdapterTest.xml"
+        },
+        {
+          "module": "client",
+          "sha256": "1753bd8085484e96d92cd6e0670270375dbb083888db9b0e883c3c1cbeb55d31",
+          "file": "TEST-vn.edu.toeic.client.realtime.RealtimeClientTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "3d794b9508517d2469819df573f056573c86457c4954d584600bfd43e12dec0b",
+          "file": "TEST-vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "c79b2da79fbc656c0fb0b4b83ecddfc0bc75c896ea90eed3079815c1c3bbc060",
+          "file": "TEST-vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "b0c8b50994c09e9b28f3ae9df221d8b1306b0d667b7af64c309462817b49b326",
+          "file": "TEST-vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "7fc2e17ad5ee3c4647bb4eda75759e0f79d2d1eb904d8e58662b4ac4aaea4560",
+          "file": "TEST-vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "cfad4bd7e91e9b77cb22a295f3469e0ffc8a02eb1a19a4bd092df06306c72961",
+          "file": "TEST-vn.edu.toeic.server.monitoring.MonitoringStateServiceTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "ee184032980f4e38ba2a41bbcc950b603fab5d903ca5f7a7d73cce4a0dcb39b0",
+          "file": "TEST-vn.edu.toeic.server.monitoring.signal.MockUsbSnapshotProjectionTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "64bd5a5076db96599b96fb2ef4e4744f7c637f544d0918b0881c9b8ab11796ef",
+          "file": "TEST-vn.edu.toeic.server.monitoring.signal.SignalDisabledTest.xml"
+        },
+        {
+          "module": "server",
+          "sha256": "bedf7fcb2b91da909bdc546f8c955daf16a5fd26536ff6354a37a128cb2709ed",
+          "file": "TEST-vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest.xml"
+        },
+        {
+          "module": "monitoring-spike",
+          "sha256": "3f5c41f38027ae6ada836e0c83dda10e69227d0e955d97df57be6011742cc998",
+          "file": "TEST-vn.edu.toeic.monitoring.usb.CimClassificationScriptTest.xml"
+        },
+        {
+          "module": "monitoring-spike",
+          "sha256": "faaa4f20d2b61752594319b373401d85640a6344b838b8348694cd9496990e78",
+          "file": "TEST-vn.edu.toeic.monitoring.usb.CimSnapshotSourceTest.xml"
+        },
+        {
+          "module": "monitoring-spike",
+          "sha256": "89ac036c5a722438bc194de565be0ec5818f95213e478db4b38a44b2a1ca8d37",
+          "file": "TEST-vn.edu.toeic.monitoring.usb.UsbObservationTrackerTest.xml"
+        },
+        {
+          "module": "monitoring-spike",
+          "sha256": "4af0b08ffeb20fba36bbb21a8cace5ebcca21aaf1110d3f0ab19bc9ed6d9140d",
+          "file": "TEST-vn.edu.toeic.monitoring.usb.UsbStorageProbeTest.xml"
+        }
+      ],
+      "cleanup": {
+        "clusterStopExit": 0,
+        "ownedSchemasRemaining": 0,
+        "passwordFileAbsent": true,
+        "postmasterPidAbsent": true
+      },
+      "environment": {
+        "os": "Microsoft Windows NT 10.0.26200.0",
+        "java": "openjdk version \"21.0.10\" 2026-01-20 LTS",
+        "maven": "Apache Maven 3.9.15 (98b2cdbfdb5f1ac8781f537ea9acccaed7922349)",
+        "postgres": "PostgreSQL 18.3 on x86_64-windows, compiled by msvc-19.44.35223, 64-bit"
+      },
+      "startUtc": "2026-10-20T14:09:20.9321010Z",
+      "endUtc": "2026-10-20T14:10:30.0524083Z"
+    }
+  ],
+  "fullVerify": {
+    "sourceSha": "1b84d300021109fac32ea40ae184ce2afab87dcc",
+    "command": "mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC verify; PG opt-in false",
+    "tests": 1336,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 144,
+    "passed": 1192,
+    "evidence": "Full Maven log summaries; no stale XML aggregation after later focused run"
+  },
+  "build": {
+    "buildSourceSha": "1b84d300021109fac32ea40ae184ce2afab87dcc",
+    "testOnlySourceSha": "1c008c84853384d4cd51e0a45fa5d866d052e8fd",
+    "command": "mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC verify; PG opt-in false",
+    "jars": [
+      {
+        "file": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+        "bytes": 11885938,
+        "sha256": "879606d27d72a136f70a7101d7f230dc6a5476a06477478372eae58454072d25"
+      },
+      {
+        "file": "server/target/server-0.1.0-SNAPSHOT.jar",
+        "bytes": 25465510,
+        "sha256": "13a1535740f3d0f606a97afb08ef76d3145a8e8ce599e5da7b37ab0a7c5faed9"
+      },
+      {
+        "file": "protocol/target/protocol-0.1.0-SNAPSHOT.jar",
+        "bytes": 168043,
+        "sha256": "0c462ad25f390e84291d9a767119e5e26d4fa2736fd69a0879d39bd61836659d"
+      },
+      {
+        "file": "monitoring-spike/target/monitoring-spike-0.1.0-SNAPSHOT.jar",
+        "bytes": 35713,
+        "sha256": "03dcdee9662a8aabc583dbfef611b47cc000a363ee11fe383281930fcce95f24"
+      }
+    ],
+    "checks": [
+      {
+        "entry": "vn/edu/toeic/client/monitoring/signal/SignalDelivery.class",
+        "container": "client-all",
+        "matchesCompiled": true
+      },
+      {
+        "entry": "vn/edu/toeic/client/monitoring/signal/SignalRunContext.class",
+        "container": "client-all",
+        "matchesCompiled": true
+      },
+      {
+        "entry": "vn/edu/toeic/client/monitoring/signal/ObserverStatusEmitter.class",
+        "container": "client-all",
+        "matchesCompiled": true
+      },
+      {
+        "entry": "vn/edu/toeic/protocol/monitoring/signal/Signal.class",
+        "container": "client-all",
+        "matchesCompiled": true
+      },
+      {
+        "entry": "vn/edu/toeic/protocol/monitoring/signal/SignalGap.class",
+        "container": "client-all",
+        "matchesCompiled": true
+      },
+      {
+        "entry": "vn/edu/toeic/protocol/monitoring/signal/ObserverStatusSignal.class",
+        "container": "client-all",
+        "matchesCompiled": true
+      },
+      {
+        "entry": "CimSnapshotSource.class",
+        "container": "client-all",
+        "absent": true
+      },
+      {
+        "entry": "BOOT-INF/lib/protocol-0.1.0-SNAPSHOT.jar",
+        "container": "server",
+        "matchesBuilt": true
+      },
+      {
+        "entry": "BOOT-INF/classes/db/migration/V17__experimental_signal_status_gap.sql",
+        "container": "server",
+        "matchesResource": true
+      },
+      {
+        "entry": "monitoring-spike dependency",
+        "container": "server",
+        "absent": true
+      }
+    ],
+    "runtimeChangesAfterBuild": false
+  },
+  "artifacts": [
+    {
+      "localOnly": true,
+      "label": "local-check/baseline.private.log",
+      "bytes": 932,
+      "sha256": "db5bca15beb07f826fa2bc9325420fe3c080b11e3c2da63f9ab7995ecd3f2cf0"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/baseline-pinned.private.log",
+      "bytes": 5566,
+      "sha256": "c1e6cb00b04d1519bb18941d7723aae8c926bb7894546d432e39176d9845ac54"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/baseline-quoted.private.log",
+      "bytes": 27506,
+      "sha256": "f5d5c9710cfd3b6c3c2b599d437c4b0bc8fe437d621ff7de37642695ea52ee3e"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/first-unit.private.log",
+      "bytes": 17432,
+      "sha256": "0a57dc5bbe00cc6b8655b7ac07266527ae482f49fa558b4807a0746d88884201"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/unit-corrected.private.log",
+      "bytes": 21008,
+      "sha256": "035435261f4a928a309a483c90e1b741af6431f751009c1a663165316b6d4f03"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/full-verify.private.log",
+      "bytes": 88362,
+      "sha256": "48d09a80f89fd2eee1d57c4606665978d36b79c24058b41386b6bfd40c547109"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/build-receipt.json",
+      "bytes": 2552,
+      "sha256": "d64bd3bdd607331025d7e5698f863c0a205aef1b49a3375bfc55d595f4999712"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/focused-runner.private.ps1",
+      "bytes": 12144,
+      "sha256": "9ff238e47444bc6fde175427a8136f5abeb92bbd9ca21232bd12310494fd246c"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/final-focused-runner.private.ps1",
+      "bytes": 12139,
+      "sha256": "ca32bfff2109b7a377f82bdf8054675767aa8c00f416e7e1ae77844d971beb37"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/first-unit-reports/TEST-vn.edu.toeic.client.monitoring.signal.ControlDeliveryTest.xml",
+      "bytes": 12605,
+      "sha256": "9a569da015730fd8f023f35a3d1883d158c27743d8c2cd0c9d447ff23deb8cb8"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/first-unit-reports/TEST-vn.edu.toeic.client.realtime.RealtimeClientTest.xml",
+      "bytes": 23006,
+      "sha256": "134f6e23217234511531a24b53d6ac4131f2e14d20badb5341c318dcbf3ca0d9"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/first-unit-reports/TEST-vn.edu.toeic.protocol.monitoring.signal.ControlSignalTest.xml",
+      "bytes": 10008,
+      "sha256": "703e1674ba745c84a4c73d1aee9ead47a428a536671a0429122772a42f6910a9"
+    },
+    {
+      "localOnly": true,
+      "label": "first-focused/result.json",
+      "bytes": 112247,
+      "sha256": "eef145343e3c4c079c24e476b772b795daa158491417a118e2d35d3483114510"
+    },
+    {
+      "localOnly": true,
+      "label": "first-focused/maven.private.log",
+      "bytes": 30097759,
+      "sha256": "332ea468b7b0afabbf99bf0f88cd0fcf1ec7df4a82b0106a9ef076a9e6136e8d"
+    },
+    {
+      "localOnly": true,
+      "label": "first-focused/selected-port.json",
+      "bytes": 14,
+      "sha256": "6542fc340c834f46c0b339beae8caa3316e2c8d3fa9f6545df48d871c8b860e2"
+    },
+    {
+      "localOnly": true,
+      "label": "first-focused/schema-count.private.log",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "localOnly": true,
+      "label": "first-focused/pg-stop.private.log",
+      "bytes": 59,
+      "sha256": "3a6747065de8c2dbc66a6baa73d5ab09c2c03eb8851704f973ac4b886e6805f2"
+    },
+    {
+      "localOnly": true,
+      "label": "first-focused/java-version.private.err",
+      "bytes": 198,
+      "sha256": "82a32403f15cadaa31c2e21ccdcdf594d2c23869bc4365893fb6f8a32f144cf3"
+    },
+    {
+      "localOnly": true,
+      "label": "first-focused/maven-version.private.log",
+      "bytes": 324,
+      "sha256": "220fc0ed638940f68ab084824324088677cdec6ff0ae18e13bea263ec6b3e47e"
+    },
+    {
+      "localOnly": true,
+      "label": "first-focused/postgres-version.private.log",
+      "bytes": 73,
+      "sha256": "267ade76e85bb8877210127f61526a01d914ca1a059c16bf7b932068019da771"
+    },
+    {
+      "localOnly": true,
+      "label": "final-focused/result.json",
+      "bytes": 112220,
+      "sha256": "caed7b1e034c19099eee6b5a0a2069a900aad3c88a54f1647bbbdf4fff1bfb23"
+    },
+    {
+      "localOnly": true,
+      "label": "final-focused/maven.private.log",
+      "bytes": 41401195,
+      "sha256": "9c79e047ceadb532ff7582f497c629af5f8f3614bf9bfb57ce4ed5109fd5f79c"
+    },
+    {
+      "localOnly": true,
+      "label": "final-focused/selected-port.json",
+      "bytes": 14,
+      "sha256": "f35e70bf338e40e0be5fe40e908980e4f10c7f4347e8d3fe75df23a5becc523c"
+    },
+    {
+      "localOnly": true,
+      "label": "final-focused/schema-count.private.log",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "localOnly": true,
+      "label": "final-focused/pg-stop.private.log",
+      "bytes": 59,
+      "sha256": "3a6747065de8c2dbc66a6baa73d5ab09c2c03eb8851704f973ac4b886e6805f2"
+    },
+    {
+      "localOnly": true,
+      "label": "final-focused/java-version.private.err",
+      "bytes": 198,
+      "sha256": "82a32403f15cadaa31c2e21ccdcdf594d2c23869bc4365893fb6f8a32f144cf3"
+    },
+    {
+      "localOnly": true,
+      "label": "final-focused/maven-version.private.log",
+      "bytes": 324,
+      "sha256": "220fc0ed638940f68ab084824324088677cdec6ff0ae18e13bea263ec6b3e47e"
+    },
+    {
+      "localOnly": true,
+      "label": "final-focused/postgres-version.private.log",
+      "bytes": 73,
+      "sha256": "267ade76e85bb8877210127f61526a01d914ca1a059c16bf7b932068019da771"
+    }
+  ],
+  "limits": {
+    "hardware": "0/12 NOT_RUN",
+    "productionObserver": "NOT_BOUND",
+    "experiment": "OFF",
+    "processDefault": "FULL",
+    "humanApproval": "PENDING",
+    "offline60sRetention30d": "NOT_IMPLEMENTED",
+    "5001campaign": "NOT_RUN_THIS_SLICE",
+    "MON07": "NOT_DONE"
+  }
+}

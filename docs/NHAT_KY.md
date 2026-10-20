@@ -1020,3 +1020,24 @@ CI cuối tại report/PR84, không ký owner hoặc đổi gate/DONE/hardware.
   [Contract](MON02_USB_ADAPTER_EXPERIMENT.md)/[evidence](../evidence/c-mon02-adapter-20261020/REPORT.md).
 - Build/CI/PR cuối ghi trong report/PR. Giữ USB0/12NOT_RUN, MON-02chưaDONE, FULL/default
   experimentOFF/ADR/gate/ownerpending; không production observer/dashboard/rules/E1/E2.
+
+
+## 20/10/2026 — C: MON-07 status/gap USER_AUTHORIZED_EXPERIMENT
+
+- Base main519063d/PR85, branch feat/c-mon07-status-gap-20261020 riêng; read task/proposal/
+  typed/USB/source paths.11openPR không trùng slice/migration, maxV15; mainV16. Contract
+  trước code dùng enums proposal; activity source deferred, không human approval.
+- Runtime1b84d30 thêm strict immutable status/gap DTO, generic capability/store/history
+  dùng chung; V17 append-only. Status latest4slots/1s monotonic, không worker mới.
+  Data256/1MiB+reserve1gap8192, tổng257/1056768bytes/2flight-write; freeze/reset atomic,
+  drop mới batch khác, no recursion, alternating control/data. CounterMAX/sequence stop
+  giữ unreported, close/revoke không flush; context lifetime claim và generation.
+- Baseline246PASS. First unit1FAIL fixture cũ coi status unsupported; giữlog/XML, sửa
+  fixture và thêm admission/pre-write controls guards. Không timeout/skip/swallow.
+  Focused334PASS source1b84; test-only1c008c8 tăng OFF check hai types, cuối334PASS/29PG.
+- Fullverify/JARsource1b84:1192PASS/144SKIP/0lỗi,10JARchecks,4artifact hashes. PG thật TEST,
+  inputsMOCK, ACK loss/COMMIT faultsSIMULATED; historyfixedthrough/auth/rollback/upgrade
+ 15/16→17 và OFF PASS, teardown0schema/stop0/password/pidabsent cả2focusedruns.
+- [Report/receipt](../evidence/c-mon07-status-gap-20261020/REPORT.md); raw ignored, không
+  .env/DBdev/rootclean/broadkill. Giữ FULLdefault/experimentOFF/USB0of12NOT_RUN,
+  MON07chưaDONE/ADR/gates/policy/ownerpending. CI/PR/merge đúngHEAD ghi trongPR, giữbranch.

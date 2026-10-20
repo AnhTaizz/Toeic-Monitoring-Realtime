@@ -34,9 +34,10 @@ Focus duration do emitter tính từ monotonic start/end trong cùng client/run;
 chỉ kiểm bound/điều kiện, không thể chứng thực đồng hồ hoặc hành động thật từ payload.
 Không trừ timestamp hai máy. Window state chỉ mô tả; INITIAL non-fullscreen không là
 fullscreen exit, không tự phạt/hủy bài. Không đo được thì không dựng boolean/count.
-OBSERVER_STATUS/SIGNAL_GAP/activity chưa triển khai, bị từ chối và không quảng cáo trong
-capability. UNKNOWN/UNSUPPORTED không có nghĩa không USB hoặc luôn focused; giữ trạng
-thái cục bộ và chờ slice status riêng, không gửi PRESENT count0 hay synthetic REMOVED.
+Slice typed ban đầu chưa có OBSERVER_STATUS/SIGNAL_GAP. Slice tiếp nối theo
+[contract status/gap](MON07_STATUS_GAP_EXPERIMENT.md) triển khai hai type đó; activity
+vẫn deferred. UNKNOWN/UNSUPPORTED không có nghĩa không USB hoặc luôn focused, không
+gửi PRESENT count0 hay synthetic REMOVED. Status không phải heartbeat/presence.
 
 ## Pipeline và ranh giới tích hợp
 
@@ -44,7 +45,7 @@ Typed immutable values → SignalMessage → **cùng một SignalDelivery** → 
 socket hiện có → handler/service → transaction event+counter → COMMIT → ACK → HTTP
 history phân trang. Tất cả type chia sẻ RAM256/1MiB/2flight/2write/retry5; không quota
 theo type. Capability theo connection/lease, run guard, retry immutable và cleanup cũ
-được giữ. Server chỉ công bố sáu type khi flag TEST bật. Client nhận subset hợp lệ,
+được giữ. Server công bố tám type sau slice status/gap khi flag TEST bật. Client nhận subset hợp lệ,
 không nhận duplicate/unknown type, không gửi type ngoài subset đã confirm.
 
 V16 append-only mở constraint V13 cho sáu mapping trên; không sửa V13–V15/checksum.

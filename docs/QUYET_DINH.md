@@ -379,3 +379,16 @@ không native dependency/migration/type mới. Chọn aggregate baseline, PARTIA
 slot identity, bỏ ref correlation sau gap; một USB input claim/context và sequence chung,
 không quota/retry USB riêng. Đây là lựa chọn kỹ thuật của slice, không ADR/owner policy
 APPROVED, không hardware acceptance. FULL mặc định/experiment OFF và gates giữ nguyên.
+
+
+### 20/10/2026 — MON-07 status/gap: USER_AUTHORIZED_EXPERIMENT
+
+Phạm vi attachment f09808ef: triển khai MOCK status/overflow qua REAL WS/PG TEST,
+protocol/client/server/test/docs và merge commit sau CI/rules; không human A/B/C signoff.
+Theo [contract](MON07_STATUS_GAP_EXPERIMENT.md), dùng enums catalog, bốn sensor source
+đã có value type (activity deferred). Status coalesce latest4slots/1s, không policy60s.
+Chọn một shared context/delivery, data256/1MiB +1gap8192byte reserve trong cùng map,
+2flight/write tổng; frozen gap/accumulator riêng, retry immutable/ACK COMMIT, count
+MAX_INTEGER stops lane. ACK trước writecompletion chưa trả budget. V17 append-only,
+OFF vẫn applyDDL; upgrade15/16 giữ olddisplay/counter/checksum13–16, không DBdev.
+Owner/ADR/gate/retention/hardware pending; không MON07DONE hoặc production enable.

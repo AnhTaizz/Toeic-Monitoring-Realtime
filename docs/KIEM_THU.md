@@ -1,5 +1,15 @@
 # Trạng thái kiểm thử
 
+20/10/2026 — [MON-07 status/gap explicit MOCK](../evidence/c-mon07-status-gap-20261020/REPORT.md):
+runtime1b84d30, test1c008c8; OBSERVER_STATUS bốn nguồn và SIGNAL_GAP overflow qua shared
+context/sequence/queue/socket, REAL WS/HTTP/PG TEST/COMMIT-ACK/history. Baseline246PASS;
+focused cuối334PASS/0SKIP (29pipelinePG), fullverify1192PASS/144SKIP/0lỗi,10JARchecks.
+V17 append-only, upgrade15/16→17 giữ display/counter/checksum13–16, OFF vẫn applyDDL
+nhưng window/status/gap không mở runtime lane. TEST0schema/stop0; raw ignored, CI/PR/merge
+cuối tại PR. User authorization không là humanapproval; FULLdefault/experimentOFF,
+USB0/12NOT_RUN/MON07chưaDONE/ADR/gate/policy pending. Không productionobserver/E1/E2.
+
+
 20/10/2026 — MON-02 adapter: baseline e189b61 **154PASS/0SKIP**; aac7528 focused
 **312PASS/0SKIP** gồm33protocol/181client/34probe/64server,24 REAL PG pipeline cases.
 Input USB là MOCK; REAL HTTP/WS/PG TEST, ACK-loss SIMULATED;6USB events đúng count/ref/

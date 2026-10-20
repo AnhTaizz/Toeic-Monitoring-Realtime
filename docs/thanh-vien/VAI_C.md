@@ -518,3 +518,20 @@ lease khi kết thúc phiên. Bridge probe chỉ TEST dependency; chưa native r
 C tiếp theo cần hardware H01–12, module/packaging/provider/cadence/identity review và
 owner notice/auth/lifetime/ADR/policy trước nối candidate. Không yêu cầu USB ở lượt này,
 physical0/12NOT_RUN/MON02chưaDONE/FULL/experimentOFF/gatespending giữ nguyên.
+
+
+## Ghi chú làm dở — MON-07 status/gap, 20/10/2026
+
+[Report/receipt](../../evidence/c-mon07-status-gap-20261020/REPORT.md), runtime1b84d30,
+focusedtest1c008c8:334PASS/29REAL PG pipeline, fullverify1192PASS/144SKIP,0schema/stop0.
+[Contract/handoff](../MON07_STATUS_GAP_EXPERIMENT.md): B tạo shared SignalRunContext +
+SignalDelivery(context,transport), mọi emitter chung sequence/budget; statusobserve/
+flush trên worker hiện có,4slots/1s, enum reasons an toàn. Legacy constructor không
+context chỉ local drop accounting, không tự counter mới. C nối status từ USBhealth
+sau review riêng, không raw exception/problem và không thay baseline thành rỗng khi
+UNKNOWN. Gap là actual queue overflow, không source outage/heartbeat/process gap.
+Owner đóng delivery/context/lease/socket khi stop, không flush sau revoke/run mới.
+Trước production cần A reviewV17/auth/commit, B transport/lifecycle/disclosure và C
+provider/module/cadence/nooverlap/weakidentity/hardwareH01–12. Userauthorization không
+thay review/humanapproval; USB0/12NOT_RUN, MON07chưaDONE, ADR/gate/policy pending,
+experimentOFF/FULLdefault. Không tiếp task khác sau slice.

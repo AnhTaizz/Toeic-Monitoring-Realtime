@@ -23,7 +23,8 @@ class TypedSignalTest {
         List<Signal> signals=new ArrayList<>();
         for(var row:f.getAsJsonArray("signals")) signals.add(Signal.parse(SignalJson.parse(row.toString())));
         assertThat(signals).hasSize(11);
-        assertThat(signals.stream().map(Signal::eventType).distinct().toList()).containsExactlyElementsOf(Signal.SUPPORTED_TYPES);
+        // Historical six-type fixture remains unchanged; control types have their own MOCK cases.
+        assertThat(signals.stream().map(Signal::eventType).distinct().toList()).containsExactlyElementsOf(Signal.SUPPORTED_TYPES.subList(0,6));
         assertThat((UsbStorageSignal)signals.get(1)).extracting(UsbStorageSignal::storageCount,UsbStorageSignal::deviceRef,UsbStorageSignal::quality)
                 .containsExactly(1,null,UsbStorageSignal.Quality.PARTIAL);
         assertThat(((UsbStorageSignal)signals.get(3)).storageCount()).isZero();

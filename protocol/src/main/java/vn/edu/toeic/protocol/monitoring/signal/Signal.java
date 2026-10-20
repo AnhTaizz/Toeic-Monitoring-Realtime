@@ -7,9 +7,10 @@ import java.util.Set;
 import vn.edu.toeic.protocol.monitoring.EventOrigin;
 
 /** Closed, immutable values for the MOCK experiment. No sensor registration or free-form details. */
-public sealed interface Signal permits DisplaySignal, UsbStorageSignal, FocusSignal, WindowSignal {
+public sealed interface Signal permits DisplaySignal, UsbStorageSignal, FocusSignal, WindowSignal, ObserverStatusSignal, SignalGap {
     List<String> SUPPORTED_TYPES = List.of(DisplaySignal.TYPE, "USB_STORAGE_PRESENT_AT_START",
-            "USB_STORAGE_CONNECTED", "USB_STORAGE_REMOVED", FocusSignal.TYPE, WindowSignal.TYPE);
+            "USB_STORAGE_CONNECTED", "USB_STORAGE_REMOVED", FocusSignal.TYPE, WindowSignal.TYPE,
+            ObserverStatusSignal.TYPE, SignalGap.TYPE);
 
     String eventId();
     String observerSessionId();
@@ -85,6 +86,20 @@ public sealed interface Signal permits DisplaySignal, UsbStorageSignal, FocusSig
                 SignalJson.fields(d, Set.of("minimized", "fullscreen", "reason"), Set.of());
                 yield new WindowSignal(id, run, sequence, time, origin,
                         SignalJson.bool(d, "minimized"), SignalJson.bool(d, "fullscreen"), SignalJson.text(d, "reason"));
+            }
+            case ObserverStatusSignal.TYPE -> {
+                SignalJson.fields(d, Set.of("status", "reason"), Set.of());
+                yield new ObserverStatusSignal(id, run, sequence, time, origin,
+                        ObserverStatusSignal.Source.valueOf(SignalJson.text(p, "source")),
+                        ObserverStatusSignal.State.valueOf(SignalJson.text(d, "status")),
+                        ObserverStatusSignal.Reason.valueOf(SignalJson.text(d, "reason")));
+            }
+            case SignalGap.TYPE -> {
+                SignalJson.fields(d, Set.of("reason", "droppedCount", "firstDroppedAt", "lastDroppedAt"), Set.of());
+                if (!"QUEUE_OVERFLOW".equals(SignalJson.text(d, "reason"))) throw new IllegalArgumentException();
+                yield new SignalGap(id, run, sequence, time, origin,
+                        SignalJson.integer(d, "droppedCount", 1, SignalJson.MAX_INTEGER),
+                        SignalJson.time(SignalJson.text(d, "firstDroppedAt")), SignalJson.time(SignalJson.text(d, "lastDroppedAt")));
             }
             default -> throw new IllegalArgumentException();
         };

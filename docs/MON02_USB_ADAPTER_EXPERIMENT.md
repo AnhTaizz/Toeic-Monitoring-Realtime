@@ -70,5 +70,8 @@ Event đã enqueue trước adapter stop vẫn thuộc queue/owner phiên, khôn
 Chưa có binding runtime từ CimSnapshotSource vào candidate. Bridge TEST là nơi kiểm
 projection từ model probe sang input adapter; observer thật sau này cần review module/
 packaging, provider/identity limitations, bounded cadence/no overlap, disclosure/consent,
-scope/lease/stop/revoke và hardware H01–H12. UNKNOWN không có wire status trong slice này;
-không thêm OBSERVER_STATUS/SIGNAL_GAP để lấp giới hạn. Owner policy/ADR-V2-05 vẫn pending.
+scope/lease/stop/revoke và hardware H01–H12. Slice USB gốc không có wire status.
+[Slice status/gap kế tiếp](MON07_STATUS_GAP_EXPERIMENT.md) cấp ObserverStatusEmitter
+explicit dùng cùng context/delivery; C phải ánh xạ health sang mã status/reason an toàn
+và flush trên worker được owner cấp khi tích hợp sau này, không truyền raw problem/
+exception. Chưa tự nối provider hay đổi baseline/ref. Owner policy/ADR-V2-05 vẫn pending.
