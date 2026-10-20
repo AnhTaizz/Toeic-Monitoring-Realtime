@@ -89,6 +89,18 @@ class RichExamViewGuiTest {
 
     @AfterEach void close() throws Exception { fx(() -> { view.close(); stage.close(); return null; }); denied.clear(); }
 
+    @Test void lobbyIdentifiesTheExactSessionAndAttemptForReadiness() throws Exception {
+        fx(() -> {
+            RichLobbyPane lobby = new RichLobbyPane();
+            lobby.preparation(new AttemptPreparation(1, "MOCK-attempt", "MOCK-session", "MOCK-exam", "MOCK title",
+                    "PROCTORED_V2", "SCHEDULED", "ACTIVE", 120, null, null, true, null, null));
+            Label identity = (Label) lobby.lookup("#room-preparation-identity");
+            assertThat(identity.getText()).contains("Mã ca: MOCK-session", "Mã lượt thi: MOCK-attempt");
+            lobby.close();
+            return null;
+        });
+    }
+
     @Test void rendersEverySevenPartLayoutWithServerContentAndCapturesScreens() throws Exception {
         Map<Integer, String> firstQuestion = Map.of(1, "q001", 2, "q007", 3, "q032", 4, "q071", 5, "q101", 6, "q131", 7, "q147");
         for (int part = 1; part <= 7; part++) {

@@ -40,6 +40,10 @@ chỉ candidate attempt/owned JavaFX windows, duration monotonic; không scrape 
 Full clean test 1345 total = 1201PASS/144SKIP/0FAIL/ERROR; lượt no-clean trước đó
 FAIL discovery server do stale `target` thiếu `VisualManifest`, được giữ trong report.
 Manual Alt+Tab/PROCTOR/REAL WS-PG và review C NOT RUN, nên chưa đánh dấu MON-03 DONE.
+20/10/2026 — Candidate home: focused package **84PASS/0FAIL/0ERROR/0SKIP** (AttemptRefresh13/HomeGui3/LoginGui3/LoginApi39/RichGui7/Visual9/Audio10), MOCK API/Stage HTTP thật. Giữ3FAIL của test auto-select cũ; không cộng lượt lặp. [Ảnh/evidence](../evidence/ui-candidate-home-20261020/REPORT.md). Full/MSI/LAN/hearing NOT RUN.
+
+
+20/10/2026 — Login/READY UI: **68 PASS, 0 FAIL/ERROR/SKIP** ở focused cuối; LoginScene3/LoginApi39/RichGui7/Visual9/Audio10. Input MOCK, Stage/HTTP thật; ảnh1367×820 và726×523 đã xem. Lượt đầu58PASS/10SKIP không tính GUI; không cộng lượt lặp. Full regression/MSI/LAN/hearing NOT RUN. Chỉ đọc DB để xác nhận hai cửa sổ khác ca. [Evidence](../evidence/ui-login-ready-20261020/REPORT.md).
 
 20/10/2026 — [MON-07 status/gap explicit MOCK](../evidence/c-mon07-status-gap-20261020/REPORT.md):
 runtime1b84d30, test1c008c8; OBSERVER_STATUS bốn nguồn và SIGNAL_GAP overflow qua shared

@@ -21,6 +21,7 @@ import vn.edu.toeic.protocol.exam.rich.VisualManifest;
 final class RichLobbyPane extends VBox {
     private final Label title = new Label("Đang tải thông tin ca thi…");
     private final Label meta = new Label();
+    private final Label identity = new Label();
     private final Label audioRow = new Label(), visualRow = new Label(), serverRow = new Label(), connectionRow = new Label();
     private final Label waiting = new Label();
     private final TilePane slots = new TilePane(6, 6);
@@ -32,6 +33,10 @@ final class RichLobbyPane extends VBox {
         title.getStyleClass().add("room-lobby-title");
         title.setWrapText(true);
         meta.getStyleClass().add("room-instruction");
+        identity.setId("room-preparation-identity");
+        identity.getStyleClass().add("room-instruction");
+        identity.setWrapText(true);
+        identity.setMinHeight(Region.USE_PREF_SIZE);
         Label overline = new Label("BẠN ĐÃ ĐƯỢC PHÂN CÔNG BÀI THI");
         overline.getStyleClass().add("room-overline");
         VBox checklist = new VBox(10, label("Kiểm tra trước khi bắt đầu", "room-card-title"), connectionRow, audioRow, visualRow, serverRow);
@@ -62,7 +67,7 @@ final class RichLobbyPane extends VBox {
         rules.getStyleClass().add("room-info");
         rules.setWrapText(true);
         rules.setMinHeight(Region.USE_PREF_SIZE);
-        VBox card = new VBox(14, overline, title, meta, checklist, stage, waiting, rules);
+        VBox card = new VBox(14, overline, title, meta, identity, checklist, stage, waiting, rules);
         card.getStyleClass().add("room-card");
         card.setMaxWidth(900);
         setAlignment(Pos.TOP_CENTER);
@@ -72,6 +77,8 @@ final class RichLobbyPane extends VBox {
     void preparation(AttemptPreparation preparation) {
         if (preparation == null) return;
         title.setText(preparation.title());
+        identity.setText("Mã ca: " + preparation.sessionId() + "\nMã lượt thi: " + preparation.attemptId()
+                + "\nGiám thị cần theo dõi đúng mã ca này để thấy trạng thái READY.");
         meta.setText("Thời gian làm bài: " + preparation.durationMinutes() + " phút · Trạng thái ca: "
                 + ("SCHEDULED".equals(preparation.sessionState()) ? "chờ giám thị bắt đầu" : preparation.sessionState())
                 + (preparation.visualManifest() == null ? "" : " · Ảnh Part 1 cần chuẩn bị: " + preparation.visualManifest().slots().size()));

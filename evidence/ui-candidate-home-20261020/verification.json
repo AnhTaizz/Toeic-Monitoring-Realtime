@@ -1,0 +1,33 @@
+{
+  "baseHead": "d2c8f01",
+  "workingTreeChanges": true,
+  "focusedTests": {
+    "pass": 84,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "fixtures": "MOCK",
+    "gui": "real Stage; programmatic controls"
+  },
+  "jarSha256": "26973381bb3938a0051ac916210c81b7ff1eff6e8bb62e93218656531ba647e9",
+  "packagedJarMatches": true,
+  "appImage": "jpackage-out/home-ready-20261020-2338/ToeicMonitor/ToeicMonitor.exe",
+  "nativeBuild": "PASS",
+  "preCloseDatabaseCheck": "2 SCHEDULED ACTIVE attempts, revision0, empty answers; READ ONLY",
+  "fullRegression": "NOT RUN",
+  "hearing": "NOT RUN",
+  "signIn": "BY USER",
+  "nativeLaunch": {
+    "oldClientPidsClosedNormally": [
+      17132,
+      28448
+    ],
+    "newWindowPids": [
+      16748,
+      13340
+    ],
+    "title": "TOEIC Room",
+    "responsive": true,
+    "signIn": "BY USER"
+  }
+}

@@ -436,6 +436,18 @@ Thiết kế [EX02/D10](../EX02_RICH_EXAM_CONTRACT_V1.md) và [ADR](../plan-v2/A
 
 **Tích hợp EX-06 + Proctor UI + V2 — Ghi chú làm dở (20/10/2026):** nhánh `integrate/ex06-proctor-20261020`. Launcher route PROCTOR sang `ProctorRedesignView`; panel V2 (`ProctorV2SessionPane`/`ProctorV2Controller`/`ProctorV2ApiClient`) trong "Điều khiển ca" ([bàn giao](../INTEGRATION_EX06_PROCTOR_20261020.md)). E2E thật PASS; còn: chạy runbook UI trên Windows, import rich trong UI (chưa có), danh sách user/ca (chưa có API), tab V1 và `ScoreResultDialog` chưa theo style mới. Không merge/DONE.
 
+### Ghi chú làm dở — Login/READY UI, 20/10/2026
+Người dùng đã yêu cầu và xác nhận sửa login theo mockup. Đã thêm LoginPane/CSS/minh họa,
+ID controls và định danh ca/lượt trong RichLobbyPane. Focused68PASS/0SKIP, fixturesMOCK,
+Stage/HTTP thật; [report](../../evidence/ui-login-ready-20261020/REPORT.md). READY không thiếu
+ACK ở cùng ca: candidate đang ở ca904808d3, proctor theo dõi ca cdfde543. Không bypass.
+A review callback login/role; full/MSI/LAN/hearing NOT RUN. Chưa DONE/tracker/commit.
+
+### Ghi chú làm dở — Candidate home, 20/10/2026
+Home sáng/metadata/mã ca-lượt; nhiều ca phải chọn rõ, giữ scope server. Package focused84PASS/0SKIP,
+MOCK/Stage thật. [Report](../../evidence/ui-candidate-home-20261020/REPORT.md). A review metadata/scope;
+full/MSI/LAN/hearing NOT RUN, chưa DONE/commit/tracker. Native open bổ sung tại report.
+
 ## MON-03 — bàn giao focus candidate, 20/10/2026
 
 Nhánh `feat/v2-b-mon03-focus-monitoring-20261020`, base `d2c8f01`: adapter typed

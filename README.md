@@ -33,9 +33,11 @@ physical USB0/12 NOT_RUN giữ nguyên. `-Mode Mock` chạy cùng pipeline từ 
 1. Chép `.env.example` thành `.env` và đổi `DB_PASSWORD`.
 2. Khởi động DB: `docker compose up -d --wait`.
 3. Nạp các biến `DB_*` từ `.env` vào terminal, rồi chạy server: `mvn -pl server -am spring-boot:run`.
-4. Ở terminal khác, chạy client: `mvn -pl client -am javafx:run`.
+4. Ở terminal khác, build client: `mvn -pl client -am package -DskipTests`, rồi chạy `java -jar client/target/client-0.1.0-SNAPSHOT-all.jar`. Lệnh package này bỏ chạy test; không dùng làm bằng chứng kiểm thử.
 
 Client đọc URL mặc định từ biến `TOEIC_SERVER_URL` hoặc system property `toeic.server.url`; người dùng cũng có thể sửa URL ngay trên màn đăng nhập. Server lắng nghe `0.0.0.0:8080` mặc định để máy khác trong LAN gọi được.
+
+Màn đăng nhập TOEIC Room dùng bố cục sáng theo ảnh người dùng cung cấp; mục **Kết nối máy chủ** cho phép sửa URL. Quyền thí sinh/giám thị do server trả về sau đăng nhập. Trang chủ thí sinh dùng bố cục sáng, hiển thị metadata từ server và yêu cầu chọn rõ khi có nhiều lượt. Trong phòng chờ V2, đối chiếu **mã ca và mã lượt thi** với panel READY của giám thị: READY của một ca khác không làm ca đang theo dõi sẵn sàng.
 
 Tài khoản mẫu (`MOCK`, chỉ dùng phát triển) dùng `TOEIC_SEED_PASSWORD`. Mật khẩu mặc định nằm trong cấu hình server; hãy đặt giá trị riêng ở `.env` và không commit.
 

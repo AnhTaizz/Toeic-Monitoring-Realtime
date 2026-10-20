@@ -1,0 +1,38 @@
+{
+  "baseHead": "d2c8f01ca2063aa10d797c86e1c1e7e2b62d273a",
+  "workingTreeChanges": true,
+  "focusedTests": {
+    "passed": 68,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "fixtureLabel": "MOCK",
+    "execution": "real JavaFX Stage and HTTP; programmatic controls"
+  },
+  "jarSha256": "975fb986cb62a789ff9b9ce3cbac444f5bfc682f52aec917059f36e8c46d68a2",
+  "appImage": "jpackage-out/login-ready-20261020-2307/ToeicMonitor/ToeicMonitor.exe",
+  "appImageBuild": "PASS",
+  "packagedJarMatches": true,
+  "screens": {
+    "wide": [
+      1367,
+      820
+    ],
+    "compact": [
+      726,
+      523
+    ]
+  },
+  "fullRegression": "NOT RUN",
+  "installedMsi": "NOT RUN",
+  "hearing": "NOT RUN",
+  "readyDiagnosis": "candidate and proctor are on different sessions",
+  "databaseActionsThisTask": "READ ONLY",
+  "nativeLaunch": {
+    "pid": 17132,
+    "title": "TOEIC Room",
+    "responding": true,
+    "serverHttp": 401,
+    "loginByUser": "NOT RUN by agent"
+  }
+}

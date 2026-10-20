@@ -1042,6 +1042,28 @@ CI cuối tại report/PR84, không ký owner hoặc đổi gate/DONE/hardware.
   .env/DBdev/rootclean/broadkill. Giữ FULLdefault/experimentOFF/USB0of12NOT_RUN,
   MON07chưaDONE/ADR/gates/policy/ownerpending. CI/PR/merge đúngHEAD ghi trongPR, giữbranch.
 
+## 2026-10-20 · B / Codex · Login theo mockup và đối chiếu READY
+- Đã làm: login JavaFX sáng với ảnh cáo do người dùng cung cấp; giữ role server/URL cấu hình; hiện mã ca/mã lượt trong lobby V2. Hai helper smoke dùng ID input ổn định. README sửa lệnh mở client từ JAR.
+- Chẩn đoán: ca cdfde543/lượt a222e5c3 không có READY; candidate thực tế READY ở ca 904808d3/lượt 9149ff71. Chỉ đọc DB/UI, không chuyển READY hoặc START thay người dùng.
+- Đã kiểm: focused cuối 68 PASS/0SKIP, JavaFX Stage/HTTP thật với input MOCK; ảnh rộng1367×820 và compact726×523. Lượt đầu58PASS/10SKIP do biến GUI; lượt chụp đầu chưa resize thật, đã sửa test chờ kích thước rồi kiểm lại. [Evidence](../evidence/ui-login-ready-20261020/REPORT.md).
+- Còn dở: full regression/MSI/LAN/hearing và human A review NOT RUN; không DONE/tracker/hours. Build/open EXE cập nhật theo kết quả thực tế tại report.
+
+Bổ sung cùng phiên Login/READY: package client PASS với skipTests; jpackage image riêng
+`jpackage-out/login-ready-20261020-2307/ToeicMonitor`, bundled Java21 và JAR hash khớp.
+Source/records/evidence chưa commit; giữ nguyên script server local và các cửa sổ ca thi.
+
+## 2026-10-20 · B / Codex · Trang chủ và chọn ca READY
+- Đã làm: home sáng/ảnh cáo, preview metadata và ID copy được; dropdown có mã ca/tên đề từ server; nhiều lượt cần chọn rõ. Không đổi backend READY/START/scope, không tự nghe/READY/START thay user.
+- Đã kiểm: package focused84PASS/0SKIP MOCK/Stage HTTP thật; giữ3FAIL kỳ vọng auto-select cũ và sửa theo UX mới, không cộng lượt lặp. Hai cửa sổ candidate và READY lệch ca được kiểm chỉ đọc. [Evidence](../evidence/ui-candidate-home-20261020/REPORT.md).
+- Còn dở: native image/open bổ sung sau thực hiện; full/MSI/LAN/hearing/A review NOT RUN. Không DONE/tracker/hours/commit.
+
+Bổ sung cùng phiên home: native image `home-ready-20261020-2338` PASS, JAR hash khớp
+focused package84PASS. Automatic review timeout trước thực thi được retry bằng lệnh
+trực tiếp thành công. Read-only xác nhận hai lượt SCHEDULED/revision0/đáp án rỗng trước
+thay cửa sổ client. Không đổi script server local, .env hoặc tracker.
+
+Native home launch PASS: đóng bình thường hai client cũ17132/28448 (pre-start/no answers), mở16748/13340 bản mới responsive. User tự đăng nhập/nghe thật; chưa claim production READY/START trong bản mới.
+
 
 ## 20–21/10/2026 — C: USB integrated TEST từ provider tới history
 
@@ -1074,3 +1096,4 @@ CI cuối tại report/PR84, không ký owner hoặc đổi gate/DONE/hardware.
 21/10/2026 — MON-09 C+B: [timeline đa tín hiệu](MON09_MULTI_SIGNAL_TIMELINE.md), [evidence](../evidence/cb-mon09-timeline-20261021/REPORT.md).
 Base dcb124d; runtime5066347/build1c1523b. Dashboard hiện hữu đọc typed history fixed-through100×3/cycle, poll3s/budget12s/500rows; process state riêng, Listening status projection. Sửa producer identity trùng collector lease có FAIL→9ACK. Real FX existing sources1PASS; MOCK real WS/PG/UI1PASS(A19/B1/drop3); REAL CIM1PASS(8READY0/ACK1/UI1/0USB). Full verify1263PASS/154SKIP/0lỗi, GUI cũ12PASS, JAR24checks; sort oracle sạch05e154a8PASS. TESTschema0/PGstop0/workersclosed, raw ignored. FULLdefault/experimentOFF, USB0/12/physicaldisplay/desktop/LAN NOT_RUN, owner/ADR/policy/gate pending, MON09chưaDONE. Không approval thay B hoặc đổi backlog.
 Ủy quyền người dùng: triển khai C+B và merge commit nếu CI/quy định đạt; trạng thái CI/merge cuối tại PR. Không cấp human approval. Giữ nhánh và evidence lịch sử.
+

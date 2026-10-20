@@ -14,6 +14,12 @@ không completed pipeline PASS. Script tự dựng DB/schema/password stdin/seed
 không .env/DBdev/defaultobserver. Report/CI/merge cuối tại PR/evidence. FULLdefault,
 experimentOFF/USB0of12NOT_RUN/MON02+07chưaDONE/ADR/gate/policy/ownerpending giữ nguyên.
 
+20/10/2026 — B: home thí sinh sáng, preview server/mã ca/lượt, nhiều ca phải chọn rõ. Focused package84PASS/0SKIP (MOCK/Stage thật); full/MSI/LAN/hearing/A review NOT RUN. Runtime có hai cửa sổ candidate, READY lệch ca cdfde543/904808d3. [Evidence](../evidence/ui-candidate-home-20261020/REPORT.md). Không DONE/tracker.
+
+
+20/10/2026 — B: đã sửa login theo mockup cáo và thêm mã ca/lượt trong lobby V2. READY bị lệch ca: candidate904808d3, giám thịcdfde543; không đổi gate hoặc DB. Focused68PASS/0SKIP (MOCK input, JavaFX/HTTP thật), full/MSI/LAN/hearing/A review NOT RUN. [Evidence](../evidence/ui-login-ready-20261020/REPORT.md). Chưa DONE/tracker.
+
+
 
 20/10/2026 — [MON-07 status/gap explicit MOCK](../evidence/c-mon07-status-gap-20261020/REPORT.md):
 runtime1b84d30, test1c008c8; OBSERVER_STATUS bốn nguồn và SIGNAL_GAP overflow qua shared

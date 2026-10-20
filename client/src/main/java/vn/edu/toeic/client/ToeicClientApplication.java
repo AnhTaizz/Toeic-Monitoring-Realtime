@@ -23,7 +23,6 @@ import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.client.monitoring.CandidateMonitoringSession;
 import vn.edu.toeic.client.monitoring.MonitoringDelivery;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -65,10 +64,11 @@ public final class ToeicClientApplication extends Application {
     private vn.edu.toeic.client.exam.rich.RichAttemptView activeRichView;
     private CandidateExamHistoryView historyView;
     private CandidateExamSignalMonitoring signalMonitoring;
+    private CandidateAttemptPreview candidatePreview;
 
     @Override
     public void start(Stage stage) {
-        stage.setTitle("TOEIC Realtime Monitoring Platform");
+        stage.setTitle("TOEIC Room");
         stage.setScene(loginScene(stage));
         stage.setMinWidth(720);
         stage.setMinHeight(520);
@@ -87,61 +87,19 @@ public final class ToeicClientApplication extends Application {
     }
 
     private Scene loginScene(Stage stage, String notice) {
-        Label appBadge = new Label("TOEIC REALTIME MONITORING");
-        appBadge.getStyleClass().addAll("badge", "badge-reading");
-
-        Label title = new Label("Đăng Nhập Hệ Thống");
-        title.getStyleClass().add("title-large");
-
-        Label subtitle = new Label("Nền tảng thi trắc nghiệm và giám sát tiến trình thời gian thực");
-        subtitle.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 13px;");
-
         TextField serverField = new TextField(ClientSettings.serverUrl());
-        serverField.setPromptText("http://localhost:8080");
-
         TextField usernameField = new TextField();
-        usernameField.setPromptText("Tên đăng nhập (vd: candidate1)");
-
         PasswordField passwordField = new PasswordField();
-        passwordField.setPromptText("Mật khẩu");
-
         Button loginButton = new Button("Đăng nhập");
-        loginButton.getStyleClass().add("btn-primary");
-        loginButton.setMaxWidth(Double.MAX_VALUE);
-
-        Label status = new Label(notice.isBlank()?ClientSettings.notice():notice);
-        status.setStyle("-fx-text-fill: #fb7185; -fx-font-weight: 600; -fx-font-size: 13px;");
+        Label status = new Label(notice.isBlank() ? ClientSettings.notice() : notice);
         status.setWrapText(true);
-
-        // Demo shortcuts select an account; its password is entered at runtime.
-        Label quickFillLabel = new Label("Tài khoản mẫu thử nghiệm:");
-        quickFillLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 12px; -fx-font-weight: 700;");
-
-        Button btnCand1 = new Button("Thí sinh 1 (candidate1)");
-        btnCand1.setOnAction(e -> { usernameField.setText("candidate1"); passwordField.clear(); passwordField.requestFocus(); });
-
-        Button btnCand2 = new Button("Thí sinh 2 (candidate2)");
-        btnCand2.setOnAction(e -> { usernameField.setText("candidate2"); passwordField.clear(); passwordField.requestFocus(); });
-
-        Button btnProctor = new Button("Giám thị (proctor1)");
-        btnProctor.setOnAction(e -> { usernameField.setText("proctor1"); passwordField.clear(); passwordField.requestFocus(); });
-
-        HBox quickFillBox = new HBox(8, btnCand1, btnCand2, btnProctor);
-        quickFillBox.setAlignment(Pos.CENTER);
-
-        GridPane form = new GridPane();
-        form.setHgap(14);
-        form.setVgap(14);
-        form.addRow(0, new Label("Địa chỉ Server:"), serverField);
-        form.addRow(1, new Label("Tên đăng nhập:"), usernameField);
-        form.addRow(2, new Label("Mật khẩu:"), passwordField);
-        form.add(loginButton, 1, 3);
-        form.add(status, 1, 4);
+        LoginPane root = new LoginPane(serverField, usernameField, passwordField, loginButton, status);
 
         Runnable submit = () -> {
+            if (loginButton.isDisabled()) return;
             loginButton.setDisable(true);
             status.setText("Đang kết nối và xác thực với máy chủ…");
-            status.setStyle("-fx-text-fill: #38bdf8; -fx-font-weight: 600;");
+            status.setStyle("-fx-text-fill: #4c6b99;");
             try {
                 String serverUrl = serverField.getText();
                 AuthenticatedWebSocketOpener.websocketEndpoint(serverUrl);
@@ -153,36 +111,26 @@ public final class ToeicClientApplication extends Application {
                             loginButton.setDisable(false);
                             if (failure != null) {
                                 status.setText(userMessage(failure));
-                                status.setStyle("-fx-text-fill: #fb7185; -fx-font-weight: 600;");
+                                status.setStyle("-fx-text-fill: #b63f2d; -fx-font-weight: 600;");
                                 return;
                             }
                             try {
                                 showRoleScene(stage, serverUrl, response);
                             } catch (IllegalArgumentException ignored) {
                                 status.setText("Phản hồi đăng nhập không hợp lệ. Hãy đăng nhập lại.");
-                                status.setStyle("-fx-text-fill: #fb7185; -fx-font-weight: 600;");
+                                status.setStyle("-fx-text-fill: #b63f2d; -fx-font-weight: 600;");
                             }
                         }));
             } catch (IllegalArgumentException exception) {
                 loginButton.setDisable(false);
                 status.setText(exception.getMessage());
-                status.setStyle("-fx-text-fill: #fb7185; -fx-font-weight: 600;");
+                status.setStyle("-fx-text-fill: #b63f2d; -fx-font-weight: 600;");
             }
         };
         loginButton.setOnAction(event -> submit.run());
         passwordField.setOnAction(event -> submit.run());
 
-        VBox card = new VBox(20, appBadge, title, subtitle, form, quickFillLabel, quickFillBox);
-        card.getStyleClass().add("card-accent");
-        card.setMaxWidth(520);
-        card.setAlignment(Pos.CENTER);
-
-        VBox root = new VBox(card);
-        root.setPadding(new Insets(40));
-        root.setAlignment(Pos.CENTER);
-        root.setStyle("-fx-background-color: #0b0f19;");
-
-        return applyStyles(new Scene(root, 760, 560));
+        return applyStyles(new Scene(root, 1366, 820));
     }
 
     private void showRoleScene(Stage stage, String serverUrl, LoginResponse response) {
@@ -212,17 +160,8 @@ public final class ToeicClientApplication extends Application {
         }
 
         // CANDIDATE SCENE
-        Label title = new Label("Cổng Thông Tin Thí Sinh");
-        title.getStyleClass().add("title-large");
-
-        Label identity = new Label("Họ tên: " + response.user().displayName() + " | Tài khoản: " + response.user().username());
-        identity.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 14px; -fx-font-weight: 600;");
-
-        Label connectionStatus = new Label("Đang kết nối thời gian thực...");
-        connectionStatus.getStyleClass().addAll("badge", "badge-online");
-
-        Label availability = new Label("Trạng thái: Đang khởi tạo kết nối...");
-        availability.setStyle("-fx-text-fill: #cbd5e1; -fx-font-size: 13px;");
+        Label connectionStatus = new Label("Đang kết nối thời gian thực…");
+        Label availability = new Label("Đang khởi tạo kết nối…");
 
         VBox networkControls = new VBox(12);
         long currentView = ++viewGeneration;
@@ -230,6 +169,8 @@ public final class ToeicClientApplication extends Application {
             if (currentView != viewGeneration) return;
             ConnectionViewModel connection = ConnectionViewModel.from(state);
             connectionStatus.setText("WS: " + connection.status());
+            connectionStatus.getStyleClass().removeAll("home-online", "home-offline");
+            connectionStatus.getStyleClass().add(state == ConnectionState.CONNECTED ? "home-online" : "home-offline");
             networkControls.setDisable(connection.networkLocked());
             availability.setText(state == ConnectionState.CONNECTED
                     ? "Kết nối thời gian thực sẵn sàng."
@@ -248,7 +189,7 @@ public final class ToeicClientApplication extends Application {
         updateConnection.accept(realtimeClient.connectionState());
 
         Button logout = new Button("Đăng xuất");
-        logout.getStyleClass().add("btn-danger");
+
         logout.setOnAction(event -> {
             releaseConnectionView();
             if (realtimeClient != null) { realtimeClient.close(); realtimeClient = null; }
@@ -261,48 +202,47 @@ public final class ToeicClientApplication extends Application {
                 () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."),
                 result -> ScoreResultDialog.show(stage, result,
                         "Trạng thái kết thúc: " + result.state() + " · Điểm server: " + result.score(), null));
-        Tab room = new Tab("Phòng thi đang diễn ra", candidateControls);
+        networkControls.getChildren().setAll(candidateControls);
+        javafx.scene.control.ScrollPane roomContent = new javafx.scene.control.ScrollPane(networkControls);
+        roomContent.setFitToWidth(true);
+        Tab room = new Tab("Ca thi của tôi", roomContent);
         Tab history = new Tab("Lịch sử / kết quả thi", historyView);
         room.setClosable(false);
         history.setClosable(false);
         TabPane candidateTabs = new TabPane(room, history);
         candidateTabs.setId("candidate-exam-tabs");
 
-        VBox userCard = new VBox(14, title, identity, new HBox(12, connectionStatus, availability), candidateTabs, logout);
-        userCard.getStyleClass().add("card");
-        userCard.setMaxWidth(800);
-        userCard.setAlignment(Pos.CENTER);
-
-        VBox root = new VBox(userCard);
-        root.setPadding(new Insets(30));
-        root.setAlignment(Pos.CENTER);
-        root.setStyle("-fx-background-color: #0b0f19;");
-
-        stage.setScene(applyStyles(new Scene(root, 860, 760)));
+        CandidateHomePane root = new CandidateHomePane(response.user().displayName(), response.user().username(),
+                connectionStatus, availability, candidateTabs, logout);
+        stage.setScene(applyStyles(new Scene(root, 1366, 820)));
         realtimeClient.connect(context);
     }
 
     private VBox candidateMonitoringControls(Stage stage, String serverUrl, LoginResponse login, long currentView) {
-        Label sectionTitle = new Label("PHÒNG THI ĐANG DIỄN RA (ACTIVE)");
-        sectionTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: 800; -fx-text-fill: #38bdf8; -fx-letter-spacing: 1px;");
+        Label sectionTitle = new Label("BÀI THI ĐƯỢC PHÂN CÔNG");
+        sectionTitle.getStyleClass().add("home-section");
 
         ComboBox<String> attempts = new ComboBox<>();
         attempts.setId("candidate-attempts");
         if (login.attemptScope() != null) attempts.getItems().setAll(login.attemptScope());
-        attempts.getSelectionModel().selectFirst();
-        attempts.setMinWidth(320);
+        if (attempts.getItems().size() == 1) attempts.getSelectionModel().selectFirst();
+        attempts.setPromptText("Chọn lượt thi và đối chiếu mã ca bên dưới");
+        attempts.setMinWidth(180);
+        attempts.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(attempts, Priority.ALWAYS);
 
         Label status = new Label(attempts.getItems().isEmpty() ? "Chưa được cấp lượt thi nào. Hãy yêu cầu giám thị tạo ca thi." : "Chọn lượt thi rồi bấm 'Vào Phòng Thi & Làm Bài'.");
-        status.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 13px;");
+        status.getStyleClass().add("home-availability");
         status.setWrapText(true);
 
-        Button startExamBtn = new Button("✍️ VÀO PHÒNG THI & LÀM BÀI");
+        Button startExamBtn = new Button("Kiểm tra âm thanh & vào phòng chờ");
         startExamBtn.setId("candidate-enter-exam");
-        startExamBtn.getStyleClass().add("btn-primary");
-        startExamBtn.setStyle("-fx-font-size: 15px; -fx-padding: 12 28;");
-        startExamBtn.setDisable(attempts.getItems().isEmpty());
+        startExamBtn.getStyleClass().add("home-primary");
+        startExamBtn.setMaxWidth(Double.MAX_VALUE);
+        startExamBtn.setDisable(attempts.getValue() == null);
 
-        Button refreshScopeBtn = new Button("🔄 Làm mới danh sách ca thi");
+        Button refreshScopeBtn = new Button("Làm mới ca thi");
+        refreshScopeBtn.setId("candidate-refresh-attempts");
         refreshScopeBtn.getStyleClass().add("button");
 
         Button manualMonitoringStart = new Button("Bắt đầu giám sát");
@@ -329,6 +269,18 @@ public final class ToeicClientApplication extends Application {
             });
         });
         monitoring = session;
+        CandidateAttemptPreview preview = new CandidateAttemptPreview(
+                id -> loadCandidatePreview(serverUrl, login.token(), examApiClient, id),
+                () -> currentView == viewGeneration && monitoring == session);
+        candidatePreview = preview;
+        attempts.valueProperty().addListener((observable, old, selected) -> {
+            preview.select(selected);
+            if (!refreshScopeBtn.isDisabled() && !session.isActive()) {
+                startExamBtn.setDisable(selected == null);
+                manualMonitoringStart.setDisable(selected == null);
+            }
+        });
+        preview.select(attempts.getValue());
 
         Consumer<Boolean> checkScope = begin -> {
             if (session.isActive()) return;
@@ -348,10 +300,25 @@ public final class ToeicClientApplication extends Application {
                 attempts.getItems().setAll(outcome.items());
                 attempts.setValue(outcome.selected());
                 startExamBtn.setDisable(!outcome.canEnter());
+                manualMonitoringStart.setDisable(!outcome.canEnter());
+                if (outcome.next() == AttemptRefresh.Next.CHOOSE && !outcome.items().isEmpty()) {
+                    // Bounded metadata page improves labels; it never adds attempts to the fresh auth scope.
+                    examApiClient.getCandidateAttempts(null).whenComplete((page, metadataFailure) -> Platform.runLater(() -> {
+                        if (currentView != viewGeneration || request != monitoringGeneration || monitoring != session
+                                || metadataFailure != null || page == null) return;
+                        java.util.Map<String, String> labels = new java.util.HashMap<>();
+                        for (var item : page.attempts()) if (attempts.getItems().contains(item.attemptId()))
+                            labels.put(item.attemptId(), "Ca " + item.sessionId() + " · " + item.examTitle());
+                        attempts.setConverter(new javafx.util.StringConverter<>() {
+                            @Override public String toString(String id) { return id == null ? "" : labels.getOrDefault(id, "Lượt " + id); }
+                            @Override public String fromString(String value) { return value; }
+                        });
+                    }));
+                }
                 switch (outcome.next()) {
                     case RETRY -> status.setText(userMessage(failure));
                     case NO_ATTEMPT -> status.setText("Chưa được cấp lượt thi nào. Hãy yêu cầu giám thị tạo ca và phân công lượt thi.");
-                    case CHOOSE -> status.setText("Đã cập nhật ca thi! Chọn một lượt rồi bấm 'Vào Phòng Thi'.");
+                    case CHOOSE -> status.setText("Chọn lượt thi, đối chiếu mã ca với giám thị rồi vào phòng chờ để chuẩn bị READY.");
                     case SELECTION_REVOKED -> status.setText("Lượt đã chọn không còn quyền. Hãy chọn lại.");
                     case START_MONITORING -> { }
                 }
@@ -437,6 +404,7 @@ public final class ToeicClientApplication extends Application {
                 }
                 if (rich) {
                     if (historyView != null) { historyView.close(); historyView = null; }
+                    closeCandidatePreview();
                     activeRichView = new vn.edu.toeic.client.exam.rich.RichAttemptView(serverUrl, login.token(),
                             login.user().displayName(), login.user().username(), selectedAttempt, realtimeClient, examApiClient,
                             () -> { activeRichView = null; showRoleScene(stage, serverUrl, login); },
@@ -465,6 +433,7 @@ public final class ToeicClientApplication extends Application {
                     ExamEntry.Ready ready = (ExamEntry.Ready) outcome;
                     // Portal history callbacks cannot open a result over a newly entered exam.
                     if (historyView != null) { historyView.close(); historyView = null; }
+                    closeCandidatePreview();
                     activeExamView = new CandidateExamView(selectedAttempt, login.user().username(), ready.paper(),
                             ready.start(), examApiClient, realtimeClient,
                             () -> showRoleScene(stage, serverUrl, login),
@@ -486,13 +455,38 @@ public final class ToeicClientApplication extends Application {
         // Danh sách trong response đăng nhập có thể đã cũ (ví dụ vừa nộp bài xong): hỏi lại server ngay.
         checkScope.accept(false);
 
-        HBox examActions = new HBox(12, startExamBtn, manualMonitoringStart, manualMonitoringStop);
-        examActions.setAlignment(Pos.CENTER_LEFT);
-
-        VBox container = new VBox(14, sectionTitle, attemptRow, examActions, status);
+        HBox monitorActions = new HBox(12, manualMonitoringStart, manualMonitoringStop);
+        javafx.scene.control.TitledPane monitorPanel = new javafx.scene.control.TitledPane("Giám sát trong phiên thi", monitorActions);
+        monitorPanel.setExpanded(false);
+        VBox container = new VBox(12, sectionTitle, attemptRow, preview, startExamBtn, status, monitorPanel);
         container.setPadding(new Insets(16));
         container.getStyleClass().add("card-accent");
         return container;
+    }
+
+    private void closeCandidatePreview() {
+        if (candidatePreview != null) { candidatePreview.close(); candidatePreview = null; }
+    }
+
+    private static java.util.concurrent.CompletableFuture<CandidateAttemptPreview.Details> loadCandidatePreview(
+            String serverUrl, String token, ExamApiClient api, String attemptId) {
+        var status = api.getAttemptStatus(attemptId);
+        var preparation = java.util.concurrent.CompletableFuture.supplyAsync(() -> {
+            try (var rich = new vn.edu.toeic.client.exam.rich.RichExamApiClient(serverUrl, token)) {
+                return rich.preparation(attemptId);
+            } catch (vn.edu.toeic.client.exam.ExamApiException legacy) {
+                if (legacy.statusCode() == 409 && "INVALID_STATE".equals(legacy.code())) return null;
+                throw legacy;
+            } catch (Exception failure) { throw new CompletionException(failure); }
+        });
+        return status.thenCombine(preparation, (state, ready) -> {
+            if (!attemptId.equals(state.attemptId()) || (ready != null
+                    && (!attemptId.equals(ready.attemptId()) || !Objects.equals(state.sessionId(), ready.sessionId()))))
+                throw new InvalidServerResponseException();
+            return new CandidateAttemptPreview.Details(attemptId, state.sessionId(),
+                    ready == null ? state.examId() : ready.title(), ready == null ? state.state() : ready.sessionState(),
+                    state.totalQuestions(), ready == null ? null : ready.durationMinutes());
+        });
     }
 
     /** Uses a fresh server scope; an existing collector can only serve its original attempt. */
@@ -565,6 +559,7 @@ public final class ToeicClientApplication extends Application {
     }
 
     private void releaseConnectionView() {
+        closeCandidatePreview();
         viewGeneration++;
         monitoringGeneration++;
         if (activeExamView != null) { activeExamView.close(); activeExamView = null; }

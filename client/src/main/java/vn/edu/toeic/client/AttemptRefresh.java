@@ -38,10 +38,11 @@ final class AttemptRefresh {
         List<String> items = freshScope.stream().sorted().toList();
         // Set bất biến ném NullPointerException với contains(null), nên phải kiểm null trước.
         boolean kept = previousSelection != null && freshScope.contains(previousSelection);
-        String selected = kept ? previousSelection : items.isEmpty() ? null : items.getFirst();
+        // Nhiều ca: không tự chọn UUID đầu tiên rồi vô tình READY cho ca khác.
+        String selected = kept ? previousSelection : items.size() == 1 ? items.getFirst() : null;
         if (role != Role.CANDIDATE || items.isEmpty()) return new Outcome(items, selected, false, Next.NO_ATTEMPT);
-        if (!startMonitoring) return new Outcome(items, selected, true, Next.CHOOSE);
-        return new Outcome(items, selected, true, kept ? Next.START_MONITORING : Next.SELECTION_REVOKED);
+        if (!startMonitoring) return new Outcome(items, selected, selected != null, Next.CHOOSE);
+        return new Outcome(items, selected, selected != null, kept ? Next.START_MONITORING : Next.SELECTION_REVOKED);
     }
 
     /** Lỗi mạng hoặc server: không đổi danh sách và lựa chọn; chưa cho vào thi tới khi làm mới được. */

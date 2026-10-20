@@ -393,6 +393,17 @@ MAX_INTEGER stops lane. ACK trước writecompletion chưa trả budget. V17 app
 OFF vẫn applyDDL; upgrade15/16 giữ olddisplay/counter/checksum13–16, không DBdev.
 Owner/ADR/gate/retention/hardware pending; không MON07DONE hoặc production enable.
 
+### 20/10/2026 — Ghi chú triển khai login theo mockup người dùng
+Phần trình bày B dùng bitmap tham chiếu do người dùng cung cấp và ImageView viewport
+cho minh họa/linh vật, form JavaFX thật/CSS riêng, nạp ảnh nền; không thêm thư viện.
+Màn chung cho hai role, quyền vẫn theo response server; không dùng nhãn role trong
+ảnh mockup để tự cấp quyền. Giữ gate Audio+Visual READY, hiển thị mã ca/lượt để đối chiếu.
+Đây không phải thay đổi hợp đồng/ADR hoặc chữ ký A. [Evidence](../evidence/ui-login-ready-20261020/REPORT.md).
+
+### 20/10/2026 — UX chọn ca thí sinh
+Nhiều lượt ACTIVE cần chọn rõ thay vì mặc định UUID đầu. Giữ lựa chọn còn quyền khi refresh;
+metadata history/preparation chỉ trình bày tên/mã ca, không cấp scope hoặc READY. Home sáng dùng
+ảnh tham chiếu người dùng, không thêm dependency. Không đổi hợp đồng/ADR, A review pending.
 
 ### 21/10/2026 — USB coordinator explicit TEST, không ADR-V2-05 approval
 
@@ -406,7 +417,6 @@ server/DB URL dev, chỉ ownclusterloopbacknonce/SCRAM trước listen, password
 bootstrap offline; scope qua seeder/API. Không defaultcapture/offline60s/retention30ngày.
 Evidence thực tại report; FULLdefault/experimentOFF/USB0of12/MON02+07chưaDONE/gate/
 policy/humanownerpending, không thay tracker/ADR hoặc nghiệm thu phần cứng.
-
 
 ### 21/10/2026 — MON-09 consumer slice C+B, không policy/ADR approval
 
