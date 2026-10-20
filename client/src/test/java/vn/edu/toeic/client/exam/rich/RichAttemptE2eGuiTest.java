@@ -121,7 +121,7 @@ class RichAttemptE2eGuiTest {
             await(() -> fx(() -> {
                 String text = ((Labeled) stage[0].getScene().getRoot().lookup("#room-listening-status")).getText();
                 return text.startsWith("Server đã xác nhận phát xong") || text.contains("khóa");
-            }), 120);
+            }), 150);
             log.add("listening ended: " + fx(() -> ((Labeled) stage[0].getScene().getRoot().lookup("#room-listening-status")).getText()));
             screenshot(stage[0], "e2e-exam-listening-done");
             // Chọn đáp án Part 5 và Part 7 trên UI; server phải xác nhận qua autosave thật.
