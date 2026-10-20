@@ -39,9 +39,12 @@ Stop/revoke/reconnect/socket generation đổi làm invalidate generation trư�
 dừng schedules và async cleanup source đang scan trên control worker, ngoài FX/RT
 callback. Không resume ngầm sau reconnect; owner phải fresh scope/capability/lease và
 run mới. Callback cũ không vào run/attempt mới. Close/awaitStopped ngoài JavaFX thread;
-duration stop chỉ coordinator, không flush queue sau stop. Runner đợi ACK/history khi
-coordinator còn active, sau đó owner close delivery/context/lease/socket, báo pending/
-dropped/unreported/discarded theo thực tế. RAM không sống qua crash.
+duration stop chỉ coordinator, không flush queue sau stop. Delivery dùng chung chạy
+trong lượt thử; sau khi coordinator dừng, REAL runner kiểm queue rỗng/đủ ACK, owner
+close delivery/context/lease/socket, rồi đọc HTTP history khi scope còn ACTIVE và
+server TEST còn chạy. Sau readback mới teardown server/schema/cluster; nếu thiếu ACK
+thì fail, không flush bù hoặc gọi pipeline PASS. Báo pending/dropped/unreported/
+discarded theo thực tế. RAM không sống qua crash.
 
 ## Chạy một lệnh
 
