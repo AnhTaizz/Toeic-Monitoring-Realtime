@@ -1,5 +1,13 @@
 # Trạng thái kiểm thử
 
+20/10/2026 — [E1 derived tooling](../evidence/c-e1-derived-20261020/REPORT.md), [receipt](../evidence/c-e1-derived-20261020/receipt.json):
+baseline159954b12PASS và tooling c7f12a7 **27PASS/0SKIP** (12legacy+15mới), không cộngthành39tests.
+MOCK fixedcounts/weightedCPU/unknown/censor/diff/invalid/hash/schema/run-clock/trial/output/determinism;
+analyzer nguyên bản từ chối thay join bằng RAW_CHECKSUM đúngcontract.1REAL smoke-short source/tool5bbeaf2
+(JARreceipt verified):3trials rejoin identical/0diff,7rawhash trước/saukhớp,8outputs của2analysis giốngbyte,
+campaignPARTIAL. Chỉ integration rejoin, không JavaBuild/full12/PG/GUI/E2; raw lịch sử NOT_AVAILABLE,
+không QA05DONE/E1acceptance hoặc gate change.
+
 20/10/2026 — [Lifecycle FULL mới](../evidence/c-full-lifecycle-20261020/REPORT.md), [receipt](../evidence/c-full-lifecycle-20261020/receipt.json): runtime5bbeaf2/scenario47caa50,
 6nhóm A–F/10checkpoints programmatic production Application +REAL PG/HTTP/WS PASS; owned
 Edge PID/start/state/history/dashboard khớp; Stop/Logout/Submit/timeout tự nhiên/app-stop

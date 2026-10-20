@@ -1,5 +1,12 @@
 # Tiến độ hiện tại
 
+20/10/2026 — [Tool E1 join dẫn xuất](../evidence/c-e1-derived-20261020/REPORT.md): code c7f12a7,
+CLI explicit +provenance khóa7input gốc/JAR/script/run-clock-trial, vẫn kiểm join gốc,
+diff/receipt/output mới và check hash cuối toàn lượt; không sửa Joiner/công thức/production.
+Baseline12/new27PythonPASS,1REAL smoke-short/3trial rejoin giốngbyte/0diff/7hashnguyênvẹn,
+8output deterministic; MOCK đổi1trial cho expected. Raw lịch sử NOT_AVAILABLE (chỉ kiểm
+vị trí được chỉ ra), không full12/E2/QA05DONE/E1acceptance; FULLdefault/MON07OFF/gatepending.
+
 20/10/2026 — [FULL lifecycle local](../evidence/c-full-lifecycle-20261020/REPORT.md): production JAR main5bbeaf2,
 hai Application/Stage điều khiển bằng FX controls trong một JVM, REAL WS/HTTP/PG TEST.
 Start3worker/Stop0/epoch mới, logout đổi candidate, GUI-control submit SUBMITTED, timeout8s

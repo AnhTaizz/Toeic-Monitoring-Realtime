@@ -21,13 +21,15 @@ nếu không để null và dùng byte hash đã kiểm. Hash không là chữ k
 Analyzer kiểm toàn bộ gốc kể cả join cũ trước khi chọn join mới; ràng buộc run/clock/trial
 và schema thật của ObservationJoiner, đối chiếu artifact/tool hashes. Creator script mặc định
 là derive.py hiện hành; khi đọc provenance tạo bởi bản cũ, chọn rõ `--provenance-script FILE`
-và kiểm hash, không tự tìm file. Không thực thi command đọc từ provenance. Lệnh tái tạo là
+và kiểm hash, không tự tìm file. Giữ analyzer.py của creator cạnh derived.py cũ (nếu có
+sourceSha thì dùng đúng worktree/Git object kiểm được cả cặp). Không thực thi command đọc từ provenance. Lệnh tái tạo là
 argv template với input/tool/output placeholders, không lưu private path.
 
 Output mới gồm CSV diff đủ trialId/conclusion/reason và trường ảnh hưởng metric, cùng receipt
 input/output/tool hashes. Receipt không có timestamp tự sinh; dữ liệu CSV/JSON/Markdown được
 cam kết deterministic theo cùng input/tool bytes, không phụ thuộc vị trí output. INVALID/
 PARTIAL và các mẫu số/weighted CPU/latency/censor/unknown giữ nguyên. Không bypass validation.
+CI chạy unittest với Python3.12; tool chỉ dùng stdlib Python3.11+, không cài package Python mới.
 
 - [Hướng dẫn hiện tại, công thức, checklist và lệnh cho B](../../../docs/E1_T4C1_MEASUREMENT.md).
 - [Review T4-C1 và kiểm chứng](../../../evidence/t4-c1/2026-10-16-review.md).
