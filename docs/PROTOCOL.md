@@ -950,13 +950,13 @@ Nhánh `stabilize/final-rc-20261017`. Không thêm endpoint, field hay giá tr�
 
 **EXPERIMENT ONLY, mặc định tắt; chưa owner/hardware acceptance.** Người dùng cho phép D07-01–04 tại PR72 c9a5829 trong TEST cách ly; không duyệt offline60s/retention30ngày hoặc observer production. [Report/phạm vi](../evidence/v2-c-mon07-signal-pipeline/REPORT.md), [schema/bounds D07](MONITORING_MULTISIGNAL_CONTRACT_PROPOSAL.md).
 
-- `toeic.monitoring.signal-experiment-enabled=true` mới đăng ký service/capability/history; flag vắng/false không có routes mới, WS type mới bị từ chối. Flyway V13 tạo bảng riêng, V16 additive mở constraint cho typed slice; không bật capture. V13–V15 không bị sửa.
+- `toeic.monitoring.signal-experiment-enabled=true` mới đăng ký service/capability/history; flag vắng/false không có routes mới, WS type mới bị từ chối. Flyway V13 tạo bảng riêng, V16 additive cho typed slice, V17 cho status/gap; không bật capture. Migration đã apply không bị sửa.
 - Envelope v0 exact7fields, type MONITORING_SIGNAL, payload schemaVersion1; giữ DISPLAY_COUNT_OBSERVED và thêm USB_STORAGE_PRESENT_AT_START/CONNECTED/REMOVED, EXAM_FOCUS_CHANGED, EXAM_WINDOW_STATE theo [bảng typed contract và ví dụ MOCK](MON07_TYPED_SIGNALS_EXPERIMENT.md). Source/details/quality exact theo từng type, sealed immutable records; không map tự do. USB thiếu ref phải PARTIAL, count0 chỉ hợp lệ cho REMOVED; focus duration chỉ khi restored và context khác INITIAL. Duration là giá trị client khai từ monotonic cùng run, không trừ giờ hai máy.
-- Field/time/origin/ID/bounds theo proposal mục3; null origin ID bị cấm, OFFLINE/UNSPECIFIED bỏ field. Strict duplicate-key/integer lexeme/Unicode/UTF-8 bounds giữ nguyên envelope8192/payload4096/details1024/depth6, đo original wire object spans gồm whitespace/escape trước normalization, không nới parser process. USB ref random theo run ≤64 byte; không file/serial/volume path/hardware ID/username. UNKNOWN/UNSUPPORTED không được encode thành zero/false; status/gap/activity còn chưa hỗ trợ.
-- Capability GET `/api/v1/monitoring/attempts/{attemptId}/signal-capabilities`, candidate owner hoặc assigned proctor ACTIVE, no-store; khi bật chỉ quảng cáo đúng sáu type đã triển khai. Client harness nhận subset không rỗng/không trùng/không unknown, freeze set, gắn attempt/socket generation + scoped heartbeat + đúng lease/run; admission và pre-write đều kiểm type thuộc subset hiện tại. Reconnect phải confirm mới. Không tự start observer; client experimental cũ kiểm exact một type có thể từ chối capability mở rộng, nên deploy đồng bộ client/server TEST. Payload display cũ giữ tương thích và client mới nhận capability display-only cũ.
+- Field/time/origin/ID/bounds theo proposal mục3; null origin ID bị cấm, OFFLINE/UNSPECIFIED bỏ field. Strict duplicate-key/integer lexeme/Unicode/UTF-8 bounds giữ nguyên envelope8192/payload4096/details1024/depth6, đo original wire object spans gồm whitespace/escape trước normalization, không nới parser process. USB ref random theo run ≤64 byte; không file/serial/volume path/hardware ID/username. UNKNOWN/UNSUPPORTED không được encode thành zero/false; OBSERVER_STATUS/SIGNAL_GAP theo mục status/gap bên dưới, activity vẫn chưa hỗ trợ.
+- Capability GET `/api/v1/monitoring/attempts/{attemptId}/signal-capabilities`, candidate owner hoặc assigned proctor ACTIVE, no-store; khi bật chỉ quảng cáo đúng tám type đã triển khai (sáu value types + OBSERVER_STATUS/SIGNAL_GAP). Client harness nhận subset không rỗng/không trùng/không unknown, freeze set, gắn attempt/socket generation + scoped heartbeat + đúng lease/run; admission và pre-write đều kiểm type thuộc subset hiện tại. Reconnect phải confirm mới. Không tự start observer; client experimental cũ kiểm exact một type có thể từ chối capability mở rộng, nên deploy đồng bộ client/server TEST. Payload display cũ giữ tương thích và client mới nhận capability display-only cũ.
 - Store unique attempt/eventId, canonical conflict; counter theo attempt cùng transaction, rollback không tiêu sequence. Auth/token/ACTIVE kiểm trước duplicate, lại sau chờ lock; lấy DB clock riêng sau session/user row locks để xét expiry (không dùng target-list clock trước LockRows); proxy COMMIT xong mới ACK. ACK exact statusACCEPTED/acknowledgedType/eventId/schemaVersion/timelineSequence/receivedAt/deliveryStatus/duplicate và correlation request/trace/attempt. **Không MONITOR_SIGNAL push.**
 - GET `/api/v1/monitoring/attempts/{attemptId}/signals?limit=100&after=0[&through=N]`: assigned PROCTOR ACTIVE; only query limit/after/through một giá trị; limit1..100, fixed through committed-prefix, items increasing, nextAfterSequence nullable/hasMore. Max512KiB; checkpoint chỉ through sau hoàn tất chuỗi HTTP. 400badcursor,401token,403scope/terminal; không410/tombstone.
-- Queue RAM riêng 256/1MiB/2flight, ACK5s/max5, backoff1/2/4/8s; immutable retries, finite local drops/unconfirmed, không gap/status wire. Signal admission giữ8credit cho legacy/heartbeat, max2write mới; ACK reserve không chữa socket stall. Write treo vẫn UNKNOWN, không tự mở reconnect thứ hai. Terminal transport FAILED (kể cả token denial trước parse không correlation) đóng delivery/worker, forget correlations và ghi discarded count.
+- Queue RAM riêng 256/1MiB/2flight, ACK5s/max5, backoff1/2/4/8s; immutable retries; constructor context bổ sung một reserved SIGNAL_GAP≤8192byte và accumulator drops cố định theo mục dưới. Signal admission giữ8credit cho legacy/heartbeat, max2write mới; ACK reserve không chữa socket stall. Write treo vẫn UNKNOWN, không tự mở reconnect thứ hai. Terminal transport FAILED (kể cả token denial trước parse không correlation) đóng delivery/worker, forget correlations và ghi discarded count.
 
 Không đổi PROCESS_OBSERVED/FULL/DELTA/presence/gap/Listening/QD21 hoặc dashboard. Quyền TEST không mở terminal history hay cho phép capture dữ liệu thật.
 
@@ -984,14 +984,14 @@ callback cũ. SignalDelivery.matchesScope chỉ kiểm identity, không cấp qu
 Adapter không scan/IO/worker/subscription; stop dọn map, không đóng queue/context/transport
 đang dùng chung. Owner kết thúc run phải đóng delivery/context/lease; event đã enqueue
 trước adapter stop vẫn do queue sở hữu. Queue full/offline không reset source baseline,
-không replay scan sau hoặc giả ACK. Drops theo delivery hiện có, chưa status/gap wire.
+không replay scan sau hoặc giả ACK. Drops theo delivery chung; status/gap explicit ở slice tiếp nối bên dưới, không tự hook USB provider.
 
 
 ### MON-07 — review 20/10/2026
 
 [Findings/kiểm chứng](../evidence/v2-c-mon07-signal-pipeline/REVIEW-20261020.md): capability và ACK heartbeat gắn đúng đối tượng lease; thay lease kể cả cùng chuỗi scope cần heartbeat/capability mới. observerSessionId phải trùng run được confirm. Signal write chờ kiểm lại lease ngay trước socket IO; callback lỗi cũ chỉ dọn correlation đúng generation/request object. Scoped FORBIDDEN lease cũ không dừng lease mới; global UNAUTHORIZED vẫn terminal. Proctor expiry được kiểm lại bằng clock DB sau assignment row lock, trước history/capability.
 
-**Flyway khi OFF:** với cấu hình mặc định, server vẫn áp V13 và V16 additive vì spring.flyway.enabled=true/location db/migration; flag signal chỉ tắt service/routes/dispatch. OFF không undo/drop bảng hoặc dữ liệu. Deployment cần quyền DDL và kiểm collision/version; không sửa applied migration hoặc dùng Flyway clean để tắt lane. Kiểm OFF chỉ chạy trên schema TEST cách ly, chưa áp DB dev dùng chung.
+**Flyway khi OFF:** với cấu hình mặc định, server vẫn áp V13/V16/V17 additive vì spring.flyway.enabled=true/location db/migration; flag signal chỉ tắt service/routes/dispatch. OFF không undo/drop bảng hoặc dữ liệu. Deployment cần quyền DDL và kiểm collision/version; không sửa applied migration hoặc dùng Flyway clean để tắt lane. Kiểm OFF chỉ chạy trên schema TEST cách ly, chưa áp DB dev dùng chung.
 
 ## Hợp đồng đề xuất EX-02 — chưa phải endpoint hiện hành
 
@@ -1008,3 +1008,43 @@ GET `/api/v2/attempts/{attemptId}/images/{mediaId}` đã register: token→CANDI
 ## EX-07 — endpoint PROCTORED_V2 (nhánh chưa merge, 20/10/2026)
 
 Có trên nhánh `feat/ex07-rich-session-lifecycle-20261019`, chưa có trên `main`. Shape DTO đúng [contract EX-02 §4–7.1](EX02_RICH_EXAM_CONTRACT_V1.md); luồng gọi cho FE ở [EX07_SESSION_LIFECYCLE §1](EX07_SESSION_LIFECYCLE.md). Route: `GET /api/v2/exams`, `POST /api/v2/sessions`, `GET /api/v2/attempts/{id}/preparation`, `GET /api/v2/attempts/{id}/exam`, `POST /api/v2/attempts/{id}/visual/ready`, `GET /api/v2/sessions/{id}/readiness`; START vẫn là `POST /api/v1/sessions/{id}/listening/start`. WS v0 không đổi (vẫn `LISTENING_START` sau COMMIT).
+
+
+### MON-07 — OBSERVER_STATUS/SIGNAL_GAP explicit TEST, 20/10/2026
+
+[Contract và handoff](MON07_STATUS_GAP_EXPERIMENT.md), USER_AUTHORIZED_EXPERIMENT,
+không human owner approval. Giữ schemaVersion1/envelope và strict byte bounds hiện có.
+
+| Type/source | Details/quality |
+|---|---|
+| OBSERVER_STATUS / WINDOWS_USB_STORAGE, JAVAFX_EXAM_FOCUS, JAVAFX_EXAM_WINDOW, JAVAFX_DISPLAY | READY:INITIAL/RECOVERED→COMPLETE; UNKNOWN:NO_DATA/PAUSED_OFFLINE→UNREADABLE; UNSUPPORTED:API_UNAVAILABLE→UNSUPPORTED; ERROR:PERMISSION_DENIED/SCAN_FAILED→UNREADABLE |
+| SIGNAL_GAP / CLIENT_SIGNAL_DELIVERY | reason QUEUE_OVERFLOW; droppedCount1..9007199254740991; firstDroppedAt<=lastDroppedAt UTC microsecond; COMPLETE |
+
+Status là availability nguồn, không heartbeat/presence hoặc giá trị0/false. Không exception,
+command/identifier/free text. Bốn nguồn đã có value types; activity còn deferred. Status
+unchanged dedup, mỗi nguồn tối đa một lần materialize/admit trong1s monotonic, latest
+pending coalesced trong4slots cố định; owner gọi flush trên worker hiện có. Intermediate
+observations chưa thành event không được tính overflow. PAUSED_OFFLINE không bật policy60s.
+
+Owner tạo **một SignalRunContext + SignalDelivery(context,transport)**, dùng chung sequence
+với mọi emitter. Context chỉ claim một delivery/status emitter lifetime. Constructors legacy
+không context giữ local-only drop accounting, không tự cấp counter thứ hai. Caller chỉ
+admit event mới một lần, không retry enqueue sau drop; delivery retry frozen queue entries.
+Sai scope/closed không là overflow. Local wall clock tại admission bị bỏ cấp min/max time;
+không dùng observedAt cũ để gọi là thời điểm drop, không duration/đồng hồ xuyên máy.
+
+Data256/1MiB + một gap reserve≤8192 = **257entries/1056768serialized bytes** default,
+object overhead hữu hạn và4status slots chưa materialize. Flight/write tổng≤2 gồm gap;
+control/data eligible luân phiên, không đẩy mất data/in-flight/failed/exhausted. Gap được
+freeze nguyên IDs/count/time/common sequence khi reserve trống; observedAt=lastDroppedAt,
+origin UNSPECIFIED. Accumulator chỉ reset sau internal reserved insertion thành công;
+drop mới vào batch khác. Không enqueue gap vào data queue, không recursive gap loss.
+ACK hợp lệ mới xác nhận; failed/exhausted giữ reserve/unconfirmed, manual retry cùng
+frozen content. Nếu ACK trước write completion, budget entry vẫn giữ đến completion.
+
+GapStatus tách unreported/time, frozen unconfirmed, acknowledgedDrops và discardedUnconfirmed.
+MAX_INTEGER exhaustion dừng lane rõ COUNT_LIMIT, không wrap/clamp. Stop/revoke forget và
+không flush; giữ local count/time theo RAM, không hứa sống qua crash hay chuyển attempt.
+Server dùng strict DTO và transaction/auth/canonical/history cũ cho cả tám type, không
+MONITOR_SIGNAL push. V17 append-only chỉ mở mapping constraints; OFF vẫn apply Flyway
+nhưng không service/capability/history/WS runtime lane. Chưa nối observer production.
