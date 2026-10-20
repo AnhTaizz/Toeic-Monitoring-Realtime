@@ -11,10 +11,11 @@ không ký thay A/B/C. [Contract trước code](../../docs/MON07_TYPED_SIGNALS_E
   `feat/c-mon07-typed-signals-20261020`, worktree mới sạch. Root main cũ không reset/pull;
   các nhánh/worktree trước được giữ. Main/open PR đã kiểm trước chọn migration: không
   slice typed trùng; EX PR77/78/79/76 chỉ tới V14/V15, không V16. Kiểm lại trước merge.
-- Runtime/code **`a0e9200025f06d57675e385c7d28fe6c61ae326f`**; test cuối
-  **`c71ddde0e788b06bbe4f862bfd541de362ff707b`** thêm kiểm USB ACK-loss và OFF HTTP/WS.
-  Sau a0e9200 chỉ test/docs/evidence, không relabel JAR thành source khác. Publication
-  HEAD/CI/merge SHA được ghi tại PR để không tạo vòng tự tham chiếu receipt/commit.
+- Runtime/test cuối **`abb282e81b4c6f8a3258ded26ff9c9a95b3a5aff`** sửa raw byte bounds
+  sau finding final review. Triển khai đầu a0e9200/test c71ddde đã có252PASS nhưng chưa
+  phát hiện bypass whitespace; không dùng chúng thay source cuối. JAR/receipt cũ giữ
+  riêng tại `typed-check/previous-build-a0e`, mỗi artifact giữ source/hash của chính nó.
+  Publication HEAD/CI/merge SHA được ghi tại PR để tránh vòng tự tham chiếu receipt/commit.
 - Giữ DISPLAY_COUNT_OBSERVED; thêm USB_STORAGE_PRESENT_AT_START, USB_STORAGE_CONNECTED,
   USB_STORAGE_REMOVED, EXAM_FOCUS_CHANGED, EXAM_WINDOW_STATE. Chưa OBSERVER_STATUS,
   SIGNAL_GAP, activity, rules, push hoặc dashboard; không gắn production observer.
@@ -27,6 +28,12 @@ run ≤64 byte; không file/serial/volume path/hardware ID. Focus duration chỉ
 context khác INITIAL, 0..86400000; emitter phải đo monotonic cùng run, parser không thể
 chứng thực đồng hồ. Window chỉ state/INITIAL hoặc CHANGED, không verdict/hủy bài.
 UNKNOWN/UNSUPPORTED không được biến thành count0/false; status wire chưa có, giữ hạn chế.
+
+`SignalJson.wireObjectSizes` đo original UTF-8 object spans sau strict syntax parse,
+trước normalization, gồm whitespace/escape; không chỉ đo compact JSON. Shape hợp lệ có
+ba mức object envelope/payload/details; validator schema vẫn kiểm đầy đủ, helper không
+là parser thay thế và không áp lên parser process. Test exact4096/1024 nhận, +1 từ chối;
+WS padded payload/details INVALID_INPUT và không insert.
 
 SignalMessage → **cùng SignalDelivery không đổi quota** → RealtimeClient/socket hiện có
 → handler → SignalService transaction event/counter → COMMIT → ACK → HTTP history.
@@ -55,10 +62,12 @@ Windows11 x64, Temurin21.0.10+7, Maven3.9.15, PostgreSQL18.3 local TEST cách ly
 |---|---|---|
 | Baseline trước code | ad8c370 | **227 PASS / 0 SKIP / 0 lỗi**, có16 pipeline PG cases |
 | Focused đầu sau triển khai | a0e9200 | **252 PASS / 0 SKIP / 0 lỗi** |
-| Focused cuối | c71ddde | **252 PASS / 0 SKIP / 0 lỗi** =32 protocol +163 client +57 server;21 pipeline PG cases |
+| Focused trước finding byte bounds | c71ddde | **252 PASS / 0 SKIP / 0 lỗi** |
+| Focused cuối sau fix | abb282e | **253 PASS / 0 SKIP / 0 lỗi** =33 protocol +163 client +57 server;21 pipeline PG cases |
 | Toàn reactor `verify` + JAR | runtime a0e9200 | **1289 total =1152 PASS /137 SKIP /0 lỗi**, PG opt-in false; PG đã kiểm riêng |
+| Toàn reactor `verify` + JAR cuối | abb282e | **1290 total =1153 PASS /137 SKIP /0 lỗi**, PG đã kiểm riêng253PASS |
 
-25 case mới =15 protocol +5 client +5 PG, là subset các lượt trên, không cộng repeated
+26 case mới =16 protocol +5 client +5 PG, là subset các lượt trên, không cộng repeated
 runs thành test mới. Full local có2 skip symlink/sidecar, các GUI/package và PG opt-ins
 còn lại; receipt có danh sách. Không gọi skip là PASS hoặc CI là hardware acceptance.
 
@@ -76,7 +85,7 @@ còn lại; receipt có danh sách. Không gọi skip là PASS hoặc CI là har
 - History nhiều type xen kẽ, paginate3/item order/fixed-through11 khi thêm row12; upgrade
  15→16 và OFF thật. Các barrier auth/lock/rollback/process/FULL/presence cũ chạy lại.
   Không lặp case5001 rows đã có evidence trước; không E1/E2/GUI/hardware mới.
-- Ba lượt TEST còn **0 owned schemas**, **clusterStopExit0**, password file không còn.
+- Bốn lượt TEST còn **0 owned schemas**, **clusterStopExit0**, password file không còn.
   Server/client contexts, sockets, listeners/workers đóng qua fixture teardown.
 
 ## FAIL được giữ và cách sửa
@@ -95,13 +104,20 @@ còn lại; receipt có danh sách. Không gọi skip là PASS hoặc CI là har
    receipt cũ báo211/231 thay vì227/252. Giữ nguyên original result/log, tạo
    `result-reconciled.json` từ module summaries và XML21case. Final runner sửa đúng bộ
    tổng hợp local, đếm trực tiếp252; không thay pipeline hoặc workflow để che lỗi.
+5. Final review trên publication10cabe2: test raw payload padded vượt4096 trong envelope
+   dưới8192 **1/1 FAIL** (expected rejection nhưng parse thành công). Nguyên nhân đo
+   compact JSON sau parse nên mất whitespace; thêm size check original object spans.
+   Exact boundary/+1 payload và details PASS sau sửa, PG WS từ chối cả hai padded cases.
+   Lượt focused cuối253PASS; không merge CI xanh của HEAD cũ thay cho bản sửa này.
 
 ## Artifact và lệnh
 
 Raw/log/XML/TEST cluster/JAR dưới các root `target/mon07-typed-runs` và worktree
 `target/typed-check`, đều ignored/local; **không GitHub downloads**. Receipt công bố
-hash/scalar/tên test, không token/credential/đường dẫn cá nhân. JAR mới có10 entry checks
-class/protocol dependency/V16 khớp compiled/source; runtime source a0e9200, không JAR cũ.
+hash/scalar/tên test, không token/credential/đường dẫn cá nhân. JAR/receipt trước sửa giữ
+riêng; JAR cuối source abb282e có **11 entry checks PASS** (kể cả SignalJson mới,
+protocol dependency và V16) khớp compiled/source. Hash/source build cuối nằm trong
+receipt, không relabel JAR a0e9200.
 
 ```powershell
 mvn --batch-mode --no-transfer-progress -pl server -am "-Dtest=SignalProtocolTest,TypedSignalTest,SignalDeliveryTest,RealtimeClientTest,SignalDisabledTest" -Dsurefire.failIfNoSpecifiedTests=false test

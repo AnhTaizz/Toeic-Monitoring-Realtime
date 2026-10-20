@@ -992,3 +992,12 @@ Source05cc694 clean verify1127PASS/6SKIP/0FAIL/0ERROR, PG18.1/HTTP thật, đề
 - [Evidence](../evidence/c-mon07-typed-20261020/REPORT.md), build/CI/PR cuối được ghi tại đó/PR.
   Teardown0schema/cluster stop0. Không .env/DB dev/observer/capture/push/dashboard/E1/E2,
   không ký owner, đổi gate/tracker/DONE; FULL mặc định, experiment OFF, hardware pending.
+
+### 20/10/2026 — MON-07 final review trước merge PR84
+
+Trên publication10cabe2 phát hiện raw payload/details byte bounds đo compact JSON, có
+thể bỏ sót whitespace. Test1/1FAIL được giữ; runtime abb282e đo original object spans,
+không thay process parser/schema/defaults. Focused cuối253PASS/0SKIP,21 REAL PG/WS cases
+kiểm thêm padded payload/details reject/no insert; TEST0schema/stop0. JAR/receipt cũ
+lưu riêng, build mới pin abb282e; CI HEAD cũ không dùng để merge bản mới. Source/hashes/
+CI cuối tại report/PR84, không ký owner hoặc đổi gate/DONE/hardware.

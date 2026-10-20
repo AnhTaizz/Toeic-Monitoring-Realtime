@@ -1,5 +1,12 @@
 # Trạng thái kiểm thử
 
+20/10/2026 — MON-07 final review: runtime/test **abb282e**, **253 PASS/0SKIP** focused
+(33 protocol/163 client/57 server,21 REAL PG/WS cases). Sửa bypass raw payload/details
+byte bound bằng whitespace sau test1/1FAIL; giữ log lỗi, bổ sung exact boundary/+1 và
+WS reject/no insert. Build/JAR mới và CI exact HEAD tại [report/receipt](../evidence/c-mon07-typed-20261020/REPORT.md).
+Các kết quả252/source c71/a0e bên dưới là lượt trước finding, không thay bản cuối.
+TEST teardown0schema/stop0; FULL mặc định/experiment OFF/gate/owner/hardware pending.
+
 20/10/2026 — [MON-07 typed experiment](../evidence/c-mon07-typed-20261020/REPORT.md):
 baseline ad8c370 **227 PASS/0SKIP**, focused runtime a0e9200/test c71ddde **252 PASS/0SKIP** = 32 protocol,
 163 client, 57 server; trong đó 21 case SignalPipelinePostgresTest (5 mới) qua PG/HTTP/WS

@@ -500,3 +500,8 @@ aggregate startup/ref/debounce/unknown và hardware review. Dùng chung observer
 freeze origin/time, không suy USB/focus healthy từ thiếu event. OBSERVER_STATUS/SIGNAL_GAP,
 activity/rules/push/dashboard và offline/retention chưa triển khai/phê duyệt. Không MON-02/03/04/07
 DONE hoặc ADR owner signature; physical USB0/12/LAN0/41/desktop nghiệm thu pending giữ nguyên.
+
+20/10/2026 — Final review PR84: runtime/test abb282e,253 focused PASS/0SKIP,21 PG/WS cases;
+đã sửa raw byte-bound whitespace bypass có FAIL trước sửa, giữ build/receipt cũ và tạo
+JAR mới đúng source. Handoff DTO/queue và giới hạn owner/hardware như trên; không lấy
+252PASS/CI HEAD cũ thay kết quả cuối. [Report](../../evidence/c-mon07-typed-20261020/REPORT.md).
