@@ -1,0 +1,17 @@
+CONTRACT_REF=448f58e659131ab189a81c378970a501cf8455cf
+ets2026_test01
+DRAFT_REJECTED: Rich exam: source/options/key/group/media ch?a verified
+DTO_SHAPE_PASS records=1608 schemaVersion=2
+HTTP_POSTGRES_NOT_RUN
+ets2026_test02
+DRAFT_REJECTED: Rich exam: source/options/key/group/media ch?a verified
+DTO_SHAPE_PASS records=1617 schemaVersion=2
+HTTP_POSTGRES_NOT_RUN
+ets2026_test03
+DRAFT_REJECTED: Rich exam: source/options/key/group/media ch?a verified
+DTO_SHAPE_PASS records=1608 schemaVersion=2
+HTTP_POSTGRES_NOT_RUN
+ets2026_test04
+DRAFT_REJECTED: Rich exam: source/options/key/group/media ch?a verified
+DTO_SHAPE_PASS records=1603 schemaVersion=2
+HTTP_POSTGRES_NOT_RUN
