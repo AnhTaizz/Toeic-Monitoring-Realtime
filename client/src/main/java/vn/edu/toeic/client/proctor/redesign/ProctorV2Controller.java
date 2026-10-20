@@ -252,8 +252,8 @@ final class ProctorV2Controller implements AutoCloseable {
             }
             created = value;
             notice = "Server đã tạo ca " + value.sessionId() + " (" + value.attempts().size() + " lượt, SCHEDULED).";
-            refreshScope.run();
             watchLocked(value.sessionId());
+            refreshScope.run();
         });
     }
 

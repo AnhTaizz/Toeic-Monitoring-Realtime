@@ -194,6 +194,42 @@ class ProctorV2SessionPaneGuiTest {
         view = null;
     }
 
+    @Test void scopeRefreshAfterCreateRunsOnTheFxThread() throws Exception {
+        // Regression: create completed on the HTTP worker and called refreshAll there; the redesign view then
+        // touched TopBar/Overview off the FX thread and the created session never reached the panel.
+        java.util.List<Boolean> progressReadsOnFx = new java.util.concurrent.CopyOnWriteArrayList<>();
+        AtomicReference<ProctorV2SessionPane> created = new AtomicReference<>();
+        RedesignFixtures.FakeApi dashboard = RedesignFixtures.FakeApi.room();
+        var wiring = new ProctorRedesignView.Wiring("MOCK Giám thị 1", dashboard, dashboard, new RedesignFixtures.FakeTransport(), scope -> { },
+                dashboard.scope, cursor -> {
+                    progressReadsOnFx.add(javafx.application.Platform.isFxApplicationThread());
+                    return CompletableFuture.completedFuture(RedesignFixtures.page());
+                },
+                (refresh, expired) -> {
+                    ProctorV2SessionPane v2 = ProctorV2SessionPane.create(observer -> ProctorV2Controller.create(api, observer,
+                            expired, refresh, 60_000), 3);
+                    created.set(v2);
+                    return new ProctorSessionControls(v2, new LegacyStub(new AtomicInteger()));
+                },
+                new RedesignFixtures.MemoryStore(), 60000, List.of());
+        view = fx(() -> new ProctorRedesignView(wiring, () -> { }, () -> { }));
+        stage = fx(() -> FxSupport.show(view, 1366, 768));
+        await("first progress read", () -> !progressReadsOnFx.isEmpty());
+        fxRun(() -> ((ToggleButton) view.lookup("#nav-session-controls")).fire());
+        ProctorV2SessionPane v2 = created.get();
+        await("catalog", () -> v2.controller().snapshot().catalog().size() == 2);
+        int before = progressReadsOnFx.size();
+        fxRun(() -> v2.controller().select("mock-a"));
+        fxRun(() -> ((TextField) v2.lookup("#v2-candidates")).setText("2"));
+        await("create enabled", () -> !v2.lookup("#v2-create").isDisabled());
+        fxRun(() -> ((Button) v2.lookup("#v2-create")).fire());
+        await("panel shows the created session", () -> v2.lookup("#v2-created-session") instanceof TextField field
+                && V2Fixtures.SESSION.equals(field.getText()));
+        await("scope refreshed after create", () -> progressReadsOnFx.size() > before);
+        assertThat(progressReadsOnFx.subList(before, progressReadsOnFx.size())).as("progress reads after create").containsOnly(true);
+        await("READY followed after create", () -> v2.controller().snapshot().session().equals(V2Fixtures.SESSION));
+    }
+
     private static final class LegacyStub extends Label implements AutoCloseable {
         private final AtomicInteger closes;
         LegacyStub(AtomicInteger closes) { super("MOCK V1 controls"); this.closes = closes; }

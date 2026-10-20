@@ -296,7 +296,8 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
             // Created on first use: the legacy B4 view starts its own 1 s freshness timer.
             if (sessionControls == null) {
                 // Same callbacks as the legacy tab: refresh scope after create/reorganize, one shared expiry path.
-                sessionControls = wiring.sessionControls().apply(this::refreshAll, this::expired);
+                // Controls call refreshScope from their HTTP workers; refreshAll touches FX state, so hop to the FX thread.
+                sessionControls = wiring.sessionControls().apply(() -> Platform.runLater(this::refreshAll), this::expired);
                 VBox page = new VBox(12, Ui.pageHeader("Điều khiển ca", "Ca PROCTORED_V2: chọn đề, tạo ca, theo dõi READY, START. Tab V1 giữ công cụ cũ (import, tổ chức lại). Server kiểm quyền mọi thao tác."),
                         sessionControls);
                 page.getStyleClass().add("page");
