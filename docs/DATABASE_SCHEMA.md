@@ -137,3 +137,9 @@ Không đưa phần giải thích/đáp án đúng vào DTO candidate. `correct_
 ## Thiết kế tiếp theo — chưa có migration sau V12 trong task EX-02
 
 [Contract mục9](EX02_RICH_EXAM_CONTRACT_V1.md#9-mapping-postgresql-và-migration-đề-xuất) reuse V11/V12, thiết kế content_version, option_content_status, document metadata và session contract_version. D10 bổ sung preparation epoch/visual readiness/lease/receipt storage trong task EX07 sau này. Thiết kế TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn19/10](plan-v2/EX02_TEAM_APPROVAL_20261019.md); không DDL/migration mới hoặc sửa V1–V12 trong PR67, không coi các cột/rows được mô tả là đã có trong DB.
+
+## EX-03 — migration V14 trên nhánh review, 19/10/2026
+
+`V14__rich_import_contract.sql` thêm exams.content_version SMALLINT NOT NULL DEFAULT1 CHECK1/2; exam_sources.option_content_status DEFAULT UNVERIFIED CHECK UNVERIFIED/VERIFIED; exam_content_blocks.document_id/order/title nullable cùng CHECK pair và group owner. Block order toàn group vẫn unique xuyên documents; importer kiểm consistency ID↔order/title. Rich ghi content_version2, legacy giữ1; không sửa V1–V12 hoặc thêm session version/visual readiness persistence.
+
+V13 đang được dùng trong [PR74 MON07](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/74), nên EX03 chọn số14 theo task. Nhánh này chỉ V1–V12,V14: fresh13 scripts, upgrade12→14 một script. Phải phối hợp A/C thứ tự merge/deploy trước khi tích hợp hai migration; chưa kiểm MON07 chung. [Luồng insert/FK/rollback, defaults và evidence](EX03_RICH_IMPORTER_VERIFICATION.md).

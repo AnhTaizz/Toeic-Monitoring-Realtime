@@ -1,0 +1,682 @@
+[
+    {
+        "publicContent":  false,
+        "sha256":  "03af5d1dfe81a5b2e26a35e2bd4eadd6dd811fe58d0640be6e0958fc132ae63c",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "file":  "result.json"
+    },
+    {
+        "publicContent":  false,
+        "sha256":  "f8ac590a4beef223ab9ed859feb43f4eb4e88caca7628f539bc07038ca78b0fc",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "file":  "maven.private.log"
+    },
+    {
+        "publicContent":  false,
+        "sha256":  "61056c61c7e453d95128c7e5e93ebd4e6d6bd3ca8e581a97aeacc4d95dc1077b",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "file":  "maven.private.err"
+    },
+    {
+        "module":  "protocol",
+        "sha256":  "112289dbe11feeae9a3536f7854aa49221d0b6f90834d073bab7cb95d960e58a",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.protocol.exam.AttemptIdentifierBoundaryTest.xml"
+    },
+    {
+        "module":  "protocol",
+        "sha256":  "62217187cf43dbc99a4bbf130bd9a5a6c61aeb809cf04a7588926ed4cf688c7f",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.protocol.measurement.E1ByteAccountingTest.xml"
+    },
+    {
+        "module":  "protocol",
+        "sha256":  "60337dda7368f2189be96ce49a07526ef3907b6d45273081620770651bc34ff8",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.protocol.measurement.MessageMeasurementsTest.xml"
+    },
+    {
+        "module":  "protocol",
+        "sha256":  "fb6054b4aace08b9710038b42c407e8aee2f611818702bf3225faa88e988fff6",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest.xml"
+    },
+    {
+        "module":  "protocol",
+        "sha256":  "3dac40789f78f6f604d6639887984f251eeca460a1ee535c647e42001bce5913",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.protocol.monitoring.EventOriginTest.xml"
+    },
+    {
+        "module":  "protocol",
+        "sha256":  "b0caaaba59634b2b9772833cc5dbfad8c21d0f94c1e216bb25270b4a2d61fe0d",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest.xml"
+    },
+    {
+        "module":  "protocol",
+        "sha256":  "79d61a05ff950a6a5ccbcef7896d4a2b66e0a62c2f2b7da64a2ebe31be070d5e",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "9ccfaeb797923099e3a5b75712359168d010815b4a22efc06599da0439af79d5",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.AttemptRefreshTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "9b3ed810a0e3ca2ec7e21a0e28a4c504142a4eaeb47fd3280e98a05799c39fb1",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.audio.AudioApiClientTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "ea8bc50184f294ab817b3780fd5fef96d1f4cfff8bebaa6f72fd2ff21bb1ce5e",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.audio.AudioFilesSharingTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "7de8239e4c6c9ed171e59fdce48b03b8e58a02a59a10349961f252dccab64553",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.audio.AudioFilesTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "59db59b39cb19b34e5c9e84035b7dfa986c381479bb62486316db484a338f674",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.audio.AudioPreparationTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "35eab9c216c00e7b5aef505ee5ba58aea6a24df8dce1f14c0f12a9dfab28c41b",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.audio.ListeningApiClientTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "8468747be465c255ce2e4f53b24a4eb430346df0f0c341531d7e3c1b9b1f9093",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.audio.ListeningPlaybackTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "b8b838d7f5a272b0bab3f36a206d17d13ca194d316f232c4e2282135cf483623",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.ClientSettingsTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "f53ed89fa48b38fb2e0b3e65229b4c57935411836f8184f99e8e0f000545a250",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.dashboard.DashboardControllerTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "3b221c7084747c1b53aa35f7e54faf5ad1728650a71f607ac09d9f4bfb294a27",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.dashboard.DashboardModelTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "f5e9f684767effb88993a3f8c0e7952e9ba6979054f2358f8fbc6eeb73158be5",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.dashboard.FullStateDashboardTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "50c0b093f65bc0db88b29b2420de1c1c2b1d8f692f3e9d2b8cd707da250e2232",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.dashboard.LateEventsAndGapsTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "9e34829c9432fc49595cde0c9f49be8073be442510218cc333ba4aca976fb4e7",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.dashboard.MonitoringApiClientTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "285aa82df085e224a83e2824c66c3b3244de58fd60fce207be7816374c028991",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.dashboard.MonitoringJsonTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "b2bc98936687777e166e9cf98415b1c4abbba2fa5b76bde9e7c0a5539f91a464",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.dashboard.ProctorProgressControllerTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "a298a7053f8d62941f26039f11661ba2a0ff9b8fd757b05fffd633e40c1afd7b",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.exam.ExamApiClientTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "f4d5a364e108784dd60bc64563dc63f8a1553855d9549f1e86d9fef0c4718147",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.exam.ExamHistoryReadTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "cf24f118a16c894c52b28713ceb18eb8485a7a4a85cd5a461eaadc303c197dc1",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.exam.ExamPaperAndEntryTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "8f2a1842988f720aa79a50b7902edfea1613969bec2f3c10e2cfc77c2276a835",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.exam.ExamResultMappingTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "3152565213f2f7b2472814cee98a43442ce175c3db3d2b0b7b8234e794dfbb23",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.exam.ExamSessionTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "570a04c906dfd6cdbcc25c9392f955a74ad0e16b8a56525ff8abae37b07ed509",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.exam.ExamSessionThreadingTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "5118679bcb9aa9f180948c203bce37afcf17a7340defe0584acdb08e8d6defeb",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.exam.ScoreResultDialogTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "20dd98c3878ed647e8dd3fb8e30b87e8820aab1c757fe525f4cf2ca248c1c31b",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.ExamMonitoringIntegrationTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "296798cd8713ceb3e8bb55eeb177e496065927b3256eea753a061acb5c1e7fa0",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.LoginApiClientTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "3da084c42b344b394c646ec0506f8cdad12aaa45de4a4d3988690010a13d375d",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.CandidateModeSessionTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "4f74d25e28ba2e4eaee21585fc9dc85977e6741f71c34227f5d026cb475322ef",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "5e732403a704e93e1b092f730f5236ee1e256b0634509a46f065833087cbb27d",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "4eb0f969ebb524316f0ae4bd70ba626e10eb5b3ee870e3547d6dec78aae769dd",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.harness.ControlledProcessHarnessTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "d4f91adf99f3ff27c53cdab6cce8cb20e613a282eeb2c398ea911624e47382f1",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.harness.E1ArtifactsTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "7eb9fd3a065135cccc9e658b259ff5577cba2bb9a3958c9e2553dc2e908d5e14",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.harness.E1WindowTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "3d2225a25e41f559469bde4f184e347bdd127042d9d58b557294ffd0286c7ddf",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.harness.HarnessArtifactsTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "37aa36731e6de7f449ea99b0d7a7a8ac9012e5a11da41fcef4cc58b2aeb3026d",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.harness.HarnessCliTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "89b652df025f439befdd2bcb8d316e87ca26cb65d4486c526c1bc74ef6d24128",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.harness.HarnessPlanTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "fe5ec1ee8bfad9d481b7ba27702a412574428dbb004307596706309a23837913",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.harness.ObservationJoinerTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "ab9453594cbcb35689816342605603a1709b97ac954f154611888c5947bf55b6",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.harness.TestTracePolicyTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "a083472d650b67baf23ef5254e6bb90239936d2abb368f429731a67b0e0f9e8f",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.MonitoringDeliveryTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "8775e85ee69dcc2090cd8d65916c5efc799e16a632fb4b2f6c1b9a37eea1df16",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.ProcessCollectorTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "3bb881fcd3b45255e0c6bb55a0f3427927f082a4f5e7a8299bb545a3e18d2458",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.ProcessCollectorTraceTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "86b196fda67b469b22c507ba8d13a64ac50c448d7a4e9ec7503b809adb0ab3df",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "a1fd191bc99485613a2e34a8d6655b79a919c38c7f5be9b0151c6d46815e13a8",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.trace.DeltaReplayTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "f400d598a29de81f0a4d2f1e2de00eb518bfeaa1c82b7b6d7e9e2dcf33560f7d",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.trace.HandwrittenTraceTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "6cba0db5a05f89eb5e1b48668c6a206a02f4c71440342048733cd0ba93afeec6",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "33cbbfe8575a1e4a64acf2e7e46da7a7c09c2d0b14825d3756c409c599bc99f3",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.trace.ReplayEngineTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "d3e0d762165d0b76549894a4fb591db0cd708edb65fe88ec9895d54185cb6e90",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.trace.TraceCliTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "c3dcf3aa3ffa15a98d96b012e30f9519da974a032d492a9b777aaebf1e23b184",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.trace.TraceReaderTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "a349ff8544a0c04d47958afae6b3a1a8a6778b558a7493bcec10be9032b7c847",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.monitoring.trace.TraceRecorderTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "48c0ab7dec11b90188d91ca1f9337cc9561689ac6c679ca44a33bab867965d1c",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.proctor.ProctorSessionApiClientTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "726590f0a0696419b6b867f31ea3d73a38c0818e0014a548154865753096bdf1",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.proctor.ProctorSessionControllerTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "9d51cd2cc2ddba9d611b22e0630263f77ded8bf5910f9e271dba8f12a77f5b64",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpenerTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "bab9b7266c9a5d10e1d84b16dd24203f3e6c817ffce68284f2ef143f03d89cd9",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.realtime.RealtimeClientTest.xml"
+    },
+    {
+        "module":  "client",
+        "sha256":  "ea61da5531fc95981b33f1f90c3880a0b92a6b9a0fd5a13e512f4913eaf77f34",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.client.ScopeLookupTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "826eaf4f3469e23b4e17fdd477ef348e5eeb69519ce8ab40c93e5015ec29a366",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.audio.AudioAuthorizationTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "2aca2e2c709b0b4b11190f0e29f262ea9eebe6332a45901805df29542b870b38",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.audio.AudioCatalogTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "cc3a518c071cf7990bf143693046f9cdac3eac44f1c3aa71c88397e692f6bcae",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.audio.AudioReadinessPolicyTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "d55aa9d74a1e129286a0cc45b885812ebf77756e3d801b2169d4df5ed5a86f93",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.audio.AudioRuntimePostgresTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "412a29f57f7d029d1d98a177898743b5ff58a9c99ef851db2cda45865d8cf7e5",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.audio.ListeningRuntimePostgresTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "09c741a181b0b1fe9fd40d36c23d9dc9c259922a662972687a075818cff19623",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.auth.AuthenticatedNetworkTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "3dd775a50d8e9a589ec87d9dbc5a7a89bf3974e89c82359a48e94052790a5bf8",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.auth.AuthServiceTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "b14f6c16c50b66b657d14cfba75acb10b9a2f8e871bf81834c5b938ac12b743e",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.auth.ConcurrentRealtimeSendTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "0c95711720415f0b3b839f1574fe982379c117fdd4b17879c99e65786dbf7016",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.auth.RealtimeMeasurementTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "ff0c0a1b42ef2f9f4d70fd6fa2321bd239c50a7fc54bcfaca2add5891d0a5086",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.auth.SessionAuthenticationTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "7d081ffd19d466c1c156fe1d1fba31866d75048f36a83c95f5898d8babe46d73",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.exam.ExamControllerTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "7b052c4f354e6bcd5ab6c2aab8c897e1e5d7fb946aa3f01726cbbdde9974b3c2",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.exam.ExamReadAuthorizationTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "2e3455fbd28a530c25f67a747c057b51bce9f92f3c8150e6ac2d47afe5b9ea25",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.exam.ExamRuntimePostgresTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "8c5b5b6f11885ccdb0b9115e2e13b220656fac3e32e9786253f4813fb49c549a",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.exam.ExamTimeoutSchedulingTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "a43aafb8980c9ecce043127c18b8d3f821bb304881935c1412871d5d5340c6a6",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.exam.ExamValidationTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "b6964ce6409f4e60d96f0cd3d9a1b577280f72f51c24654a350e3e01f2f0920d",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.exam.rich.RichExamBoundaryTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "fcbd5c32b6f34a855f889d7e901dfba70b7d418e6b222abb85d5375ee5cae8a7",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "dcf02bccee8817459e571fcd822a2c217d495ef766af5c8b38d9a5f0620bfa08",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.exam.rich.RichExamImportTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "670cbcb1ba023c7d1cc675211a87b9cf60e3cd5eb5a1bcc41c0bf93781fb559d",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.exam.rich.RichMediaValidatorTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "37c426a043f7dc24ea7a9aacc71efda34a8225c9344c6900e61a7f0b8c7408c5",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.exam.RichExamMigrationPostgresTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "e0e8ed0c02315ed4f25a6968181b8bbc9469658eed385d665062bbdbd0ef9d31",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.monitoring.FullSnapshotReducerTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "b1598afbb3836930883f71fbc33bb1f9632fc29eb93b93659e4dcd2e0211648e",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "c5bd5f527ff31e4f051c40eb1f48bb9c838d16278de88182354aa0c7788798f8",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringGapTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "4dbf2e6108d40b2fb9739fdb770d5873bfb06f3657aa4f6ac98b5022f0e68e5c",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "72269292c587750c82de7aaf5bc819b1558600190d5c6e0ccc995c3fd6f4e7b0",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "9482401cf6693c0b906a3248f51e724e771269ba44dbd7a0e66d3ab04fe5f4e8",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "aef604ace6101b696f3050e55d34759baca7fb52a20998491661841d2f1b5dd0",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringStateServiceTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "b17b8c8f157c275d83d8263b8670df646027aa7aa007fe309ed3276b1f987e23",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.monitoring.ProcessEventTest.xml"
+    },
+    {
+        "module":  "server",
+        "sha256":  "51d4a41052a41deb5fe48813cb17cc5e26614af0e06edf032ba89d0ed8985995",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.server.monitoring.SmokeCleanupTest.xml"
+    },
+    {
+        "module":  "monitoring-spike",
+        "sha256":  "74511cd385b475ad342929cc80f80d7c45f652d7c4f6b2c3a84d2d530ae24233",
+        "runId":  "ex03-20261019T154906Z-34c16188",
+        "publicContent":  false,
+        "file":  "TEST-vn.edu.toeic.monitoring.ProcessObservationTest.xml"
+    },
+    {
+        "phase":  "strict regression before fix",
+        "sha256":  "8dbf68c920be275359d634af44e7c1836a64a09d2a6540a437abcec39ecbd183",
+        "file":  "maven.private.log",
+        "publicContent":  false
+    },
+    {
+        "phase":  "strict regression before fix",
+        "sha256":  "2b5a9fff8fafc052a82c82ef48266fa9e78e6d7c113ebf4645ed6724932a19c8",
+        "file":  "RichExamImportTest.private.java",
+        "publicContent":  false
+    },
+    {
+        "phase":  "strict regression before fix",
+        "sha256":  "708a69c3bb623f129107bbc30df87882d4420614d9923cb8990510a8b7f34541",
+        "file":  "TEST-RichExamImportTest.private.xml",
+        "publicContent":  false
+    },
+    {
+        "publicContent":  false,
+        "scope":  "Historical run; not final-source authority",
+        "sha256":  "4cf80dc86b877d324e802743aa38f09da00ae52f59bf78c4a43899d5dca6b65f",
+        "runId":  "ex03-20261019T152410Z-aa3e6cbb",
+        "file":  "result.json"
+    },
+    {
+        "publicContent":  false,
+        "scope":  "Historical run; not final-source authority",
+        "sha256":  "4b950416741ffc729de9828ae71b82edee8d08d4a590f0ebd5a0e19cf8fdce86",
+        "runId":  "ex03-20261019T152732Z-ca580c8a",
+        "file":  "result.json"
+    },
+    {
+        "publicContent":  false,
+        "scope":  "Historical run; not final-source authority",
+        "sha256":  "a270828196193e8e77f4e0fab8b658841e58ad652da272959ed855712dec760d",
+        "runId":  "ex03-20261019T153209Z-78831a71",
+        "file":  "result.json"
+    },
+    {
+        "publicContent":  false,
+        "scope":  "Historical run; not final-source authority",
+        "sha256":  "1fc94c7af4550dd51e12f540e1a163ac3309b2ce4f42683c0393b480a1d3ac6d",
+        "runId":  "ex03-20261019T153851Z-888f1906",
+        "file":  "result.json"
+    }
+]

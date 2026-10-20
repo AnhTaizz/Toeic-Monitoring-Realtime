@@ -37,6 +37,27 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
         sharedWriter = writer;
         attempts.setVisible(false); attempts.setManaged(false);
     }
+    /**
+     * Ca PROCTORED_V2: cùng writer của lượt thi, nhưng ListeningApi lấy đề từ GET v2 (bridge §7.1)
+     * và play() chờ cổng hiển thị ảnh. Vẫn là player/journal duy nhất của lượt thi.
+     */
+    public AudioPreparationView(String serverUrl, String token, String attempt, long writer, RealtimeClient realtime,
+                                java.util.function.Function<ListeningApi, ListeningApi> richListening, ListeningPlayGate gate) {
+        this(new AudioApiClient(serverUrl, token), richListening.apply(new ListeningApiClient(serverUrl, token)),
+                cacheRoot(), List.of(attempt), realtime);
+        if (writer < 1) throw new IllegalArgumentException("Phiên ghi không hợp lệ.");
+        sharedWriter = writer;
+        attempts.setVisible(false); attempts.setManaged(false);
+        playback.playGate(gate);
+        playback.showQuestions(false);
+    }
+    private final List<Runnable> changeListeners = new ArrayList<>();
+    /** Gọi trên JavaFX thread mỗi khi trạng thái audio hoặc Listening đổi. */
+    public void onChanged(Runnable listener) { changeListeners.add(Objects.requireNonNull(listener)); }
+    public ListeningPlayback.Snapshot listeningSnapshot() { return playback.playback().snapshot(); }
+    public AudioPreparation.Snapshot audioSnapshot() { return preparation.snapshot(); }
+    /** READY đã được server ACK cho đúng writer; rỗng nếu chưa READY hoặc đã mất. */
+    public Optional<AudioPreparation.PlaybackContext> audioReady() { return preparation.playbackContext(); }
     AudioPreparationView(AudioApi api, Path cache, Collection<String> scope, MonitoringTransport realtime) {
         this(api,new ListeningApi(){
             public vn.edu.toeic.protocol.exam.CandidateExamDto exam(String attempt)throws Exception{throw new java.io.IOException("MOCK playback API chưa cấu hình");}
@@ -92,6 +113,7 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
         ready.setDisable(!connected || phase != AudioPreparation.Phase.SPEAKER_CONFIRMED);
         progress.setProgress(state.progress()); status.setText(state.message());
         connection.setText(connected ? "" : "Đang chờ kết nối thời gian thực. Các thao tác audio cần mạng đang khóa.");
+        for (Runnable listener : List.copyOf(changeListeners)) listener.run();
     }
     private void playSample() {
         disposePlayer(); long run = preparation.testSpeaker(); if (run < 0) return;

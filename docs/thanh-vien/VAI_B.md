@@ -423,3 +423,15 @@ Main8a43a56 có PR47/57 và test56; sourcece38a5f clean/package942PASS/4SKIP, PG
 ## Ghi chú làm dở — EX-02 candidate / ADR-V2-03, 19/10/2026
 
 Thiết kế [EX02/D10](../EX02_RICH_EXAM_CONTRACT_V1.md) và [ADR](../plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) đã TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn19/10](../plan-v2/EX02_TEAM_APPROVAL_20261019.md), không chữ ký/GitHub review riêng. EX06 bắt buộc lobby shared writer→prefetch Part1/decode/UI_PREPARED→Audio+Visual ACK→START→rich DTO→two visible pulses→play. ListeningPlayback.prepare hiện GETv1 và Pane tựplay khi onReady: bridge V2 rich→existing segments/player/journal, no v1 bypass; budget3000ms, heartbeat6000ms giữ, lỗi sau commit interruption/no reset. [Fixtures](../plan-v2/fixtures/ex02/README.md) chỉ design; real Stage/layout/snapshot/pulse/media test V15–V17 NOT RUN. Integration cần EX03/05/07, không chờ lại approval D01–D10 hoặc tự claim GUI/hearing PASS.
+
+## Ghi chú làm dở — EX05, 19/10/2026
+
+[Checkpoint](../EX05_AUTHENTICATED_IMAGES.md): A code image resolver/manifest/route, B cần tích hợp visual RAM/renderer, C review kỹ thuật auth/lock/path/commit. Agent review không human approval. EX07 authority chưa có nên ảnh fail-closed; PG mới đang chạy, GUI/LAN/hearing NOT RUN. V13/V14 MERGE BLOCKED; tracker/hours giữ. Tiếp tục EX07 trên branch stacked riêng.
+
+20/10/2026: EX05 source05cc694 clean verify1127PASS/6SKIP (29case mới PASS), PG18.1/HTTP thật; [checkpoint/evidence](../EX05_AUTHENTICATED_IMAGES.md). EX07 tiếp tục branch stacked, chưa authority/FE integrated; V13/V14 MERGE BLOCKED, GUI/LAN/hearing NOT RUN.
+
+**EX-07 — Ghi chú làm dở (20/10/2026):** nhánh `feat/ex07-rich-session-lifecycle-20261019` HEAD có code + test PG/HTTP local PASS ([chi tiết](../EX07_SESSION_LIFECYCLE.md)). A/C review lock/transaction và thứ tự Flyway V13/V14/V15; B dùng §1 của tài liệu để làm EX-06. GUI/LAN/hearing NOT RUN; không merge/DONE.
+
+**EX-06 — Ghi chú làm dở (20/10/2026):** nhánh `feat/ex06-javafx-rich-renderer-20261020` (trên EX-07) đã có màn TOEIC Room V2 cho 7 Part, lobby, Visual READY, START và bridge Listening; test GUI và E2E thật PASS local ([bàn giao](../EX06_JAVAFX_RICH_RENDERER.md)). Còn: B review UX/visual, nghe thật bằng loa, MSI/máy hai/LAN, tạo lại audio view khi reclaim writer sau START, màn login/home theo mockup. A review contract client↔EX-07. Không merge/DONE.
+
+**Tích hợp EX-06 + Proctor UI + V2 — Ghi chú làm dở (20/10/2026):** nhánh `integrate/ex06-proctor-20261020`. Launcher route PROCTOR sang `ProctorRedesignView`; panel V2 (`ProctorV2SessionPane`/`ProctorV2Controller`/`ProctorV2ApiClient`) trong "Điều khiển ca" ([bàn giao](../INTEGRATION_EX06_PROCTOR_20261020.md)). E2E thật PASS; còn: chạy runbook UI trên Windows, import rich trong UI (chưa có), danh sách user/ca (chưa có API), tab V1 và `ScoreResultDialog` chưa theo style mới. Không merge/DONE.

@@ -1,0 +1,1397 @@
+{
+    "schema":  "ex03-verification-v1",
+    "baseline":  "3bdefe6ccc346a316a91f1e280fe4f5c74600cfd",
+    "codeSource":  "9244321692e348cfafcb2e85afe963398477b5e4",
+    "runId":  "ex03-20261019T154906Z-34c16188",
+    "os":  "Microsoft Windows NT 10.0.26200.0",
+    "java":  "java version \"21.0.8\" 2025-07-15 LTS",
+    "maven":  "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)",
+    "postgres":  "PostgreSQL 18.1 on x86_64-windows, compiled by msvc-19.44.35221, 64-bit",
+    "fixture":  "MOCK self-authored exam content; real PostgreSQL/Flyway/HTTP",
+    "command":  "mvn --batch-mode --no-transfer-progress clean verify",
+    "startUtc":  "2026-10-19T15:49:14.0116472Z",
+    "endUtc":  "2026-10-19T15:54:53.5193148Z",
+    "exitCode":  0,
+    "totals":  {
+                   "failures":  0,
+                   "passed":  1098,
+                   "errors":  0,
+                   "tests":  1104,
+                   "skipped":  6
+               },
+    "cleanup":  {
+                    "clusterStopExit":  0,
+                    "ownedSchemasRemaining":  0
+                },
+    "suites":  [
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  1,
+                       "class":  "vn.edu.toeic.protocol.exam.AttemptIdentifierBoundaryTest",
+                       "passed":  1
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  1,
+                       "class":  "vn.edu.toeic.protocol.measurement.E1ByteAccountingTest",
+                       "passed":  1
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  25,
+                       "class":  "vn.edu.toeic.protocol.measurement.MessageMeasurementsTest",
+                       "passed":  25
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  3,
+                       "class":  "vn.edu.toeic.protocol.monitoring.DeltaSnapshotPayloadTest",
+                       "passed":  3
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  3,
+                       "class":  "vn.edu.toeic.protocol.monitoring.EventOriginTest",
+                       "passed":  3
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  6,
+                       "class":  "vn.edu.toeic.protocol.monitoring.FullSnapshotPayloadTest",
+                       "passed":  6
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  6,
+                       "class":  "vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest",
+                       "passed":  6
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  12,
+                       "class":  "vn.edu.toeic.client.AttemptRefreshTest",
+                       "passed":  12
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  5,
+                       "class":  "vn.edu.toeic.client.audio.AudioApiClientTest",
+                       "passed":  5
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  1,
+                       "tests":  10,
+                       "class":  "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+                       "passed":  9
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  1,
+                       "tests":  23,
+                       "class":  "vn.edu.toeic.client.audio.AudioFilesTest",
+                       "passed":  22
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  10,
+                       "class":  "vn.edu.toeic.client.audio.AudioPreparationTest",
+                       "passed":  10
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  3,
+                       "class":  "vn.edu.toeic.client.audio.ListeningApiClientTest",
+                       "passed":  3
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  8,
+                       "class":  "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+                       "passed":  8
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  5,
+                       "class":  "vn.edu.toeic.client.ClientSettingsTest",
+                       "passed":  5
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  16,
+                       "class":  "vn.edu.toeic.client.dashboard.DashboardControllerTest",
+                       "passed":  16
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  9,
+                       "class":  "vn.edu.toeic.client.dashboard.DashboardModelTest",
+                       "passed":  9
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  4,
+                       "class":  "vn.edu.toeic.client.dashboard.FullStateDashboardTest",
+                       "passed":  4
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  3,
+                       "class":  "vn.edu.toeic.client.dashboard.LateEventsAndGapsTest",
+                       "passed":  3
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  13,
+                       "class":  "vn.edu.toeic.client.dashboard.MonitoringApiClientTest",
+                       "passed":  13
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  20,
+                       "class":  "vn.edu.toeic.client.dashboard.MonitoringJsonTest",
+                       "passed":  20
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  5,
+                       "class":  "vn.edu.toeic.client.dashboard.ProctorProgressControllerTest",
+                       "passed":  5
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  28,
+                       "class":  "vn.edu.toeic.client.exam.ExamApiClientTest",
+                       "passed":  28
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  43,
+                       "class":  "vn.edu.toeic.client.exam.ExamHistoryReadTest",
+                       "passed":  43
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  10,
+                       "class":  "vn.edu.toeic.client.exam.ExamPaperAndEntryTest",
+                       "passed":  10
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  6,
+                       "class":  "vn.edu.toeic.client.exam.ExamResultMappingTest",
+                       "passed":  6
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  51,
+                       "class":  "vn.edu.toeic.client.exam.ExamSessionTest",
+                       "passed":  51
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  1,
+                       "class":  "vn.edu.toeic.client.exam.ExamSessionThreadingTest",
+                       "passed":  1
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  1,
+                       "tests":  1,
+                       "class":  "vn.edu.toeic.client.exam.ScoreResultDialogTest",
+                       "passed":  0
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  7,
+                       "class":  "vn.edu.toeic.client.ExamMonitoringIntegrationTest",
+                       "passed":  7
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  39,
+                       "class":  "vn.edu.toeic.client.LoginApiClientTest",
+                       "passed":  39
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  8,
+                       "class":  "vn.edu.toeic.client.monitoring.CandidateModeSessionTest",
+                       "passed":  8
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  32,
+                       "class":  "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+                       "passed":  32
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  11,
+                       "class":  "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest",
+                       "passed":  11
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  8,
+                       "class":  "vn.edu.toeic.client.monitoring.harness.ControlledProcessHarnessTest",
+                       "passed":  8
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  3,
+                       "class":  "vn.edu.toeic.client.monitoring.harness.E1ArtifactsTest",
+                       "passed":  3
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  2,
+                       "class":  "vn.edu.toeic.client.monitoring.harness.E1WindowTest",
+                       "passed":  2
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  4,
+                       "class":  "vn.edu.toeic.client.monitoring.harness.HarnessArtifactsTest",
+                       "passed":  4
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  2,
+                       "class":  "vn.edu.toeic.client.monitoring.harness.HarnessCliTest",
+                       "passed":  2
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  4,
+                       "class":  "vn.edu.toeic.client.monitoring.harness.HarnessPlanTest",
+                       "passed":  4
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  12,
+                       "class":  "vn.edu.toeic.client.monitoring.harness.ObservationJoinerTest",
+                       "passed":  12
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  3,
+                       "class":  "vn.edu.toeic.client.monitoring.harness.TestTracePolicyTest",
+                       "passed":  3
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  34,
+                       "class":  "vn.edu.toeic.client.monitoring.MonitoringDeliveryTest",
+                       "passed":  34
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  14,
+                       "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTest",
+                       "passed":  14
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  2,
+                       "class":  "vn.edu.toeic.client.monitoring.ProcessCollectorTraceTest",
+                       "passed":  2
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  19,
+                       "class":  "vn.edu.toeic.client.monitoring.ProcessPolicyAndSourceTest",
+                       "passed":  19
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  9,
+                       "class":  "vn.edu.toeic.client.monitoring.trace.DeltaReplayTest",
+                       "passed":  9
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  1,
+                       "class":  "vn.edu.toeic.client.monitoring.trace.HandwrittenTraceTest",
+                       "passed":  1
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  15,
+                       "class":  "vn.edu.toeic.client.monitoring.trace.ReplayCampaignTest",
+                       "passed":  15
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  11,
+                       "class":  "vn.edu.toeic.client.monitoring.trace.ReplayEngineTest",
+                       "passed":  11
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  3,
+                       "class":  "vn.edu.toeic.client.monitoring.trace.TraceCliTest",
+                       "passed":  3
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  13,
+                       "class":  "vn.edu.toeic.client.monitoring.trace.TraceReaderTest",
+                       "passed":  13
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  6,
+                       "class":  "vn.edu.toeic.client.monitoring.trace.TraceRecorderTest",
+                       "passed":  6
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  9,
+                       "class":  "vn.edu.toeic.client.proctor.ProctorSessionApiClientTest",
+                       "passed":  9
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  10,
+                       "class":  "vn.edu.toeic.client.proctor.ProctorSessionControllerTest",
+                       "passed":  10
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  15,
+                       "class":  "vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpenerTest",
+                       "passed":  15
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  63,
+                       "class":  "vn.edu.toeic.client.realtime.RealtimeClientTest",
+                       "passed":  63
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  7,
+                       "class":  "vn.edu.toeic.client.ScopeLookupTest",
+                       "passed":  7
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  2,
+                       "class":  "vn.edu.toeic.server.audio.AudioAuthorizationTest",
+                       "passed":  2
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  11,
+                       "class":  "vn.edu.toeic.server.audio.AudioCatalogTest",
+                       "passed":  11
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  2,
+                       "class":  "vn.edu.toeic.server.audio.AudioReadinessPolicyTest",
+                       "passed":  2
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  10,
+                       "class":  "vn.edu.toeic.server.audio.AudioRuntimePostgresTest",
+                       "passed":  10
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  3,
+                       "tests":  18,
+                       "class":  "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+                       "passed":  15
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  36,
+                       "class":  "vn.edu.toeic.server.auth.AuthenticatedNetworkTest",
+                       "passed":  36
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  2,
+                       "class":  "vn.edu.toeic.server.auth.AuthServiceTest",
+                       "passed":  2
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  3,
+                       "class":  "vn.edu.toeic.server.auth.ConcurrentRealtimeSendTest",
+                       "passed":  3
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  5,
+                       "class":  "vn.edu.toeic.server.auth.RealtimeMeasurementTest",
+                       "passed":  5
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  18,
+                       "class":  "vn.edu.toeic.server.auth.SessionAuthenticationTest",
+                       "passed":  18
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  7,
+                       "class":  "vn.edu.toeic.server.exam.ExamControllerTest",
+                       "passed":  7
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  4,
+                       "class":  "vn.edu.toeic.server.exam.ExamReadAuthorizationTest",
+                       "passed":  4
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  38,
+                       "class":  "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+                       "passed":  38
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  2,
+                       "class":  "vn.edu.toeic.server.exam.ExamTimeoutSchedulingTest",
+                       "passed":  2
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  8,
+                       "class":  "vn.edu.toeic.server.exam.ExamValidationTest",
+                       "passed":  8
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  3,
+                       "class":  "vn.edu.toeic.server.exam.rich.RichExamBoundaryTest",
+                       "passed":  3
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  17,
+                       "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest",
+                       "passed":  17
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  91,
+                       "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest",
+                       "passed":  91
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  3,
+                       "class":  "vn.edu.toeic.server.exam.rich.RichMediaValidatorTest",
+                       "passed":  3
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  43,
+                       "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest",
+                       "passed":  43
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  5,
+                       "class":  "vn.edu.toeic.server.monitoring.FullSnapshotReducerTest",
+                       "passed":  5
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  7,
+                       "class":  "vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest",
+                       "passed":  7
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  15,
+                       "class":  "vn.edu.toeic.server.monitoring.MonitoringGapTest",
+                       "passed":  15
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  4,
+                       "class":  "vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest",
+                       "passed":  4
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  12,
+                       "class":  "vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest",
+                       "passed":  12
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  4,
+                       "class":  "vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest",
+                       "passed":  4
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  8,
+                       "class":  "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest",
+                       "passed":  8
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  25,
+                       "class":  "vn.edu.toeic.server.monitoring.ProcessEventTest",
+                       "passed":  25
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  3,
+                       "class":  "vn.edu.toeic.server.monitoring.SmokeCleanupTest",
+                       "passed":  3
+                   },
+                   {
+                       "failed":  0,
+                       "skipped":  0,
+                       "tests":  1,
+                       "class":  "vn.edu.toeic.monitoring.ProcessObservationTest",
+                       "passed":  1
+                   }
+               ],
+    "skipped":  [
+                    {
+                        "status":  "SKIP",
+                        "seconds":  "0.0",
+                        "name":  "lockSidecarCannotRedirectOutsideCache",
+                        "class":  "vn.edu.toeic.client.audio.AudioFilesSharingTest"
+                    },
+                    {
+                        "status":  "SKIP",
+                        "seconds":  "0.0",
+                        "name":  "symlinkInsideCacheRootIsRejectedWhereLinksCanBeCreated",
+                        "class":  "vn.edu.toeic.client.audio.AudioFilesTest"
+                    },
+                    {
+                        "status":  "SKIP",
+                        "seconds":  "0.0",
+                        "name":  "warningFollowsOnlyServerFlagAndKeepsConfirmedResult(String, boolean)",
+                        "class":  "vn.edu.toeic.client.exam.ScoreResultDialogTest"
+                    },
+                    {
+                        "status":  "SKIP",
+                        "seconds":  "0.0",
+                        "name":  "installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle",
+                        "class":  "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest"
+                    },
+                    {
+                        "status":  "SKIP",
+                        "seconds":  "0.0",
+                        "name":  "proctorControlsLt04RealGuiBeforeAndAfterAutomaticTimeout",
+                        "class":  "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest"
+                    },
+                    {
+                        "status":  "SKIP",
+                        "seconds":  "0.0",
+                        "name":  "appImageProductionClientUsesUnifiedReadingListeningWithoutInstallerClaim",
+                        "class":  "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest"
+                    }
+                ],
+    "richCases":  [
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.912",
+                          "name":  "commitFailureCannotReturnSuccessfulImportReceipt",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamBoundaryTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.265",
+                          "name":  "candidateAndAnonymousCannotReachBodyParserOrService",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamBoundaryTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.006",
+                          "name":  "transientBodyIoMapsTo503RetryableWithoutPrivateDetails",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamBoundaryTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "5.297",
+                          "name":  "databaseFailureRollsBackExamAndEveryDependentRow(String)[1]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "4.77",
+                          "name":  "databaseFailureRollsBackExamAndEveryDependentRow(String)[2]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "5.726",
+                          "name":  "mock200RoundTripsCompleteGraphAnd54AudioFilesAfterCommit",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "4.583",
+                          "name":  "multipleSourceRefsMapToReturnedDatabaseIdsWithinExamScope",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "1.436",
+                          "name":  "freshV1ToV14HasValidatedHistoryAndOnlyEx03Markers",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "2.787",
+                          "name":  "legacyV1ImportSessionReadAutosaveSubmitAndScoringKeepQd21",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "3.185",
+                          "name":  "missingCorruptOrMisdeclaredActualMediaReturns409AndNoRows(String)[1]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "2.797",
+                          "name":  "missingCorruptOrMisdeclaredActualMediaReturns409AndNoRows(String)[2]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "3.071",
+                          "name":  "missingCorruptOrMisdeclaredActualMediaReturns409AndNoRows(String)[3]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "2.892",
+                          "name":  "missingCorruptOrMisdeclaredActualMediaReturns409AndNoRows(String)[4]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "2.728",
+                          "name":  "missingCorruptOrMisdeclaredActualMediaReturns409AndNoRows(String)[5]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "3.346",
+                          "name":  "missingCorruptOrMisdeclaredActualMediaReturns409AndNoRows(String)[6]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "4.901",
+                          "name":  "concurrentDuplicateUsesBarrierAndOnlyOneWriterCommits",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "1.801",
+                          "name":  "upgradeV12ToV14PreservesEveryLegacyRowAndDefaults",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "4.639",
+                          "name":  "fileChangesInsideTransactionAreRecheckedAndRollBack",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "2.642",
+                          "name":  "authAndRolePrecedeMalformedBodyAndMissingMediaAndNoRichGetRoutes",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "8.143",
+                          "name":  "allInvalidGraphsRejectBeforeDatabaseMutationOnRealHttp",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.02",
+                          "name":  "oversizedUtf8AndMalformedUtf8AreRejected",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.244",
+                          "name":  "validUnicodeAndPublicSourceQueryRemainAllowed",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.059",
+                          "name":  "sourceUrlCredentialAliasesAreRejected(String)[1]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.065",
+                          "name":  "sourceUrlCredentialAliasesAreRejected(String)[2]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.067",
+                          "name":  "sourceUrlCredentialAliasesAreRejected(String)[3]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.061",
+                          "name":  "sourceUrlCredentialAliasesAreRejected(String)[4]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.047",
+                          "name":  "sourceUrlCredentialAliasesAreRejected(String)[5]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.04",
+                          "name":  "sourceUrlCredentialAliasesAreRejected(String)[6]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.002",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[1]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.002",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[2]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.002",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[3]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.001",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[4]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.002",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[5]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.001",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[6]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.002",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[7]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.002",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[8]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.001",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[9]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.002",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[10]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.034",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[11]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.033",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[12]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.001",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[13]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.001",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[14]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.001",
+                          "name":  "strictJsonRejectsDuplicateKeysMissingPrimitivesAndWrongTypes(String)[15]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.035",
+                          "name":  "invalidGraphIsControlled400(Mutation)[1]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.04",
+                          "name":  "invalidGraphIsControlled400(Mutation)[2]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.034",
+                          "name":  "invalidGraphIsControlled400(Mutation)[3]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.034",
+                          "name":  "invalidGraphIsControlled400(Mutation)[4]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.047",
+                          "name":  "invalidGraphIsControlled400(Mutation)[5]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.048",
+                          "name":  "invalidGraphIsControlled400(Mutation)[6]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.042",
+                          "name":  "invalidGraphIsControlled400(Mutation)[7]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.035",
+                          "name":  "invalidGraphIsControlled400(Mutation)[8]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.041",
+                          "name":  "invalidGraphIsControlled400(Mutation)[9]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.088",
+                          "name":  "invalidGraphIsControlled400(Mutation)[10]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.109",
+                          "name":  "invalidGraphIsControlled400(Mutation)[11]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.115",
+                          "name":  "invalidGraphIsControlled400(Mutation)[12]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.084",
+                          "name":  "invalidGraphIsControlled400(Mutation)[13]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.098",
+                          "name":  "invalidGraphIsControlled400(Mutation)[14]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.092",
+                          "name":  "invalidGraphIsControlled400(Mutation)[15]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.043",
+                          "name":  "invalidGraphIsControlled400(Mutation)[16]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.041",
+                          "name":  "invalidGraphIsControlled400(Mutation)[17]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.042",
+                          "name":  "invalidGraphIsControlled400(Mutation)[18]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.039",
+                          "name":  "invalidGraphIsControlled400(Mutation)[19]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.038",
+                          "name":  "invalidGraphIsControlled400(Mutation)[20]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.042",
+                          "name":  "invalidGraphIsControlled400(Mutation)[21]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.062",
+                          "name":  "invalidGraphIsControlled400(Mutation)[22]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.104",
+                          "name":  "invalidGraphIsControlled400(Mutation)[23]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.079",
+                          "name":  "invalidGraphIsControlled400(Mutation)[24]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.068",
+                          "name":  "invalidGraphIsControlled400(Mutation)[25]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.047",
+                          "name":  "invalidGraphIsControlled400(Mutation)[26]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.052",
+                          "name":  "invalidGraphIsControlled400(Mutation)[27]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.078",
+                          "name":  "invalidGraphIsControlled400(Mutation)[28]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.036",
+                          "name":  "invalidGraphIsControlled400(Mutation)[29]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.239",
+                          "name":  "invalidGraphIsControlled400(Mutation)[30]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.054",
+                          "name":  "invalidGraphIsControlled400(Mutation)[31]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.051",
+                          "name":  "invalidGraphIsControlled400(Mutation)[32]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.044",
+                          "name":  "invalidGraphIsControlled400(Mutation)[33]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.043",
+                          "name":  "invalidGraphIsControlled400(Mutation)[34]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.043",
+                          "name":  "invalidGraphIsControlled400(Mutation)[35]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.04",
+                          "name":  "invalidGraphIsControlled400(Mutation)[36]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.04",
+                          "name":  "invalidGraphIsControlled400(Mutation)[37]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.037",
+                          "name":  "invalidGraphIsControlled400(Mutation)[38]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.039",
+                          "name":  "invalidGraphIsControlled400(Mutation)[39]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.049",
+                          "name":  "invalidGraphIsControlled400(Mutation)[40]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.088",
+                          "name":  "invalidGraphIsControlled400(Mutation)[41]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.072",
+                          "name":  "invalidGraphIsControlled400(Mutation)[42]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.053",
+                          "name":  "invalidGraphIsControlled400(Mutation)[43]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.039",
+                          "name":  "invalidGraphIsControlled400(Mutation)[44]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.045",
+                          "name":  "invalidGraphIsControlled400(Mutation)[45]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.087",
+                          "name":  "invalidGraphIsControlled400(Mutation)[46]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.17",
+                          "name":  "invalidGraphIsControlled400(Mutation)[47]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.059",
+                          "name":  "invalidGraphIsControlled400(Mutation)[48]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.013",
+                          "name":  "invalidGraphIsControlled400(Mutation)[49]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.044",
+                          "name":  "invalidGraphIsControlled400(Mutation)[50]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.06",
+                          "name":  "invalidGraphIsControlled400(Mutation)[51]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.05",
+                          "name":  "invalidGraphIsControlled400(Mutation)[52]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.049",
+                          "name":  "invalidGraphIsControlled400(Mutation)[53]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.052",
+                          "name":  "invalidGraphIsControlled400(Mutation)[54]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.047",
+                          "name":  "invalidGraphIsControlled400(Mutation)[55]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.046",
+                          "name":  "invalidGraphIsControlled400(Mutation)[56]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.044",
+                          "name":  "invalidGraphIsControlled400(Mutation)[57]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.05",
+                          "name":  "invalidGraphIsControlled400(Mutation)[58]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.047",
+                          "name":  "invalidGraphIsControlled400(Mutation)[59]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.049",
+                          "name":  "invalidGraphIsControlled400(Mutation)[60]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.048",
+                          "name":  "invalidGraphIsControlled400(Mutation)[61]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.048",
+                          "name":  "invalidGraphIsControlled400(Mutation)[62]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.048",
+                          "name":  "invalidGraphIsControlled400(Mutation)[63]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.012",
+                          "name":  "invalidGraphIsControlled400(Mutation)[64]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.052",
+                          "name":  "mock200HasExactGraphAndLabelOnlyOptions",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.0",
+                          "name":  "escapedNulAndUnpairedSurrogatesRejectBeforePersistence(String)[1]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.0",
+                          "name":  "escapedNulAndUnpairedSurrogatesRejectBeforePersistence(String)[2]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.008",
+                          "name":  "escapedNulAndUnpairedSurrogatesRejectBeforePersistence(String)[3]",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichExamImportTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.344",
+                          "name":  "windowsJunctionOrUnixDirectorySymlinkIsRejectedEvenWhenTargetIsInsideRoot",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichMediaValidatorTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "0.419",
+                          "name":  "validSignatureAndHashStillRequireSuccessfulImageDecodeAndExactDimensions",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichMediaValidatorTest"
+                      },
+                      {
+                          "status":  "PASS",
+                          "seconds":  "2.257",
+                          "name":  "actualMockPngAndWavAreVerifiedTwiceWithoutWritingRoots",
+                          "class":  "vn.edu.toeic.server.exam.rich.RichMediaValidatorTest"
+                      }
+                  ],
+    "manualGuiLanHearing":  "NOT RUN",
+    "productionDataset":  "NOT RUN; MOCK CC0 fixture only",
+    "mon07CombinedMigration":  "NOT RUN; V13 reserved in PR74",
+    "migrationVersions":  [
+                              "1",
+                              "2",
+                              "3",
+                              "4",
+                              "5",
+                              "6",
+                              "7",
+                              "8",
+                              "9",
+                              "10",
+                              "11",
+                              "12",
+                              "14"
+                          ],
+    "strictRegressionBeforeFix":  {
+                                      "failures":  9,
+                                      "fixture":  "MOCK credential values and invalid JSON strings",
+                                      "sourceParent":  "d3b0c1995d4d448b77ae37e71cc6eba2deaf9828",
+                                      "errors":  0,
+                                      "tree":  "New unit tests uncommitted on unchanged d3b0c19 runtime",
+                                      "tests":  91,
+                                      "passed":  82,
+                                      "skipped":  0,
+                                      "rawContent":  "PRIVATE, hashes only"
+                                  }
+}

@@ -21,7 +21,12 @@ final class ListeningPlaybackPane extends VBox implements AutoCloseable {
     private ConnectionState connectionState;
     private boolean closed;
     private Runnable onStateChanged = () -> {};
+    private ListeningPlayGate playGate = ListeningPlayGate.IMMEDIATE;
+    private boolean showQuestions = true;
     void onStateChanged(Runnable listener) { onStateChanged = Objects.requireNonNull(listener); }
+    void playGate(ListeningPlayGate gate) { playGate = Objects.requireNonNull(gate); }
+    /** Ca V2 có renderer riêng cho câu hỏi; pane chỉ giữ trạng thái phát. */
+    void showQuestions(boolean visible) { showQuestions = visible; render(); }
 
     ListeningPlaybackPane(ListeningApi api,AudioFiles files,ListeningPlaybackJournal journal,
                           AudioPreparation preparation,Collection<String> attemptScope,MonitoringTransport realtime){
@@ -56,7 +61,7 @@ final class ListeningPlaybackPane extends VBox implements AutoCloseable {
         if(state.phase()==ListeningPlayback.Phase.READY_TO_PLAY&&player==null)playCurrent();
         if(state.phase()==ListeningPlayback.Phase.BLOCKED||state.phase()==ListeningPlayback.Phase.COMPLETED)disposePlayer();
         var segment=state.current();questions.getChildren().clear();
-        if(segment!=null){
+        if(segment!=null&&showQuestions){
             questions.getChildren().add(new Label("Câu hỏi cho: "+segment.audioFile()));
             for(var question:segment.questions()){
                 Label prompt=new Label(question.id()+". "+question.prompt());prompt.setWrapText(true);questions.getChildren().add(prompt);
@@ -75,8 +80,14 @@ final class ListeningPlaybackPane extends VBox implements AutoCloseable {
             playing.setOnEndOfMedia(()->{if(player!=playing||closed)return;disposePlayer();playback.mediaCompleted(run,index);});
             playing.setOnReady(() -> {
                 var current = playback.snapshot();
-                if (player == playing && !closed && current.generation() == run
-                        && current.phase() == ListeningPlayback.Phase.READY_TO_PLAY) playing.play();
+                if (player != playing || closed || current.generation() != run
+                        || current.phase() != ListeningPlayback.Phase.READY_TO_PLAY) return;
+                // Media đã sẵn sàng; cổng quyết định thêm (V2: ảnh Part 1 đã hiển thị qua hai pulse).
+                playGate.await(segment, () -> {
+                    var latest = playback.snapshot();
+                    if (player == playing && !closed && latest.generation() == run
+                            && latest.phase() == ListeningPlayback.Phase.READY_TO_PLAY) playing.play();
+                }, failure);
             });
             if(playing.getError()!=null||playing.getMedia().getError()!=null)failure.run();
         }catch(RuntimeException failure){disposePlayer();playback.mediaFailed(run);}
