@@ -6,13 +6,13 @@
 
 | Ref | SHA | Ghi chú |
 |---|---|---|
-| `main` | `e0ef252` | Đã có thêm PR #70 (BASE-03) sau `3bdefe6`. Chỉ docs/evidence, script, `.gitattributes`, 1 test smoke; không đổi code production hay migration (V1–V12) |
+| `main` | `e0ef252` → **`46869eb`** (sau khi review bắt đầu, #71/#72/#73 được merge) | Thêm BASE-03 (#70), MON-01 (#71), contract MON-07 (#72, chỉ docs), USB probe (#73, module `monitoring-spike` + script + 1 server smoke test). **Không đổi migration** (vẫn V1–V12), không đổi code production server/client |
 | `feat/ex03-rich-importer-20261019` | `03d42e3` | Tách từ `3bdefe6`. PR #75 `mergeable_state=dirty`: xung đột `docs/KIEM_THU.md`, `docs/TIEN_DO.md` với `main` mới |
 | `feat/ex05-authenticated-images-20261019` | `6c5065d` | Chứa EX-03. `6c5065d` chỉ là commit docs, nằm sau `05cc694` |
 | `feat/ex07-rich-session-lifecycle-20261019` | `93c7019` | Tách từ EX-05 `05cc694`, **không** chứa `6c5065d`. Merge vào EX-05 sẽ xung đột 3 file nhật ký docs |
 | `feat/ex06-javafx-rich-renderer-20261020` | `448f58e` | Chứa EX-07 |
 | `integrate/ex06-proctor-20261020` | xem PR #76 | EX-06 + UI giám thị `1359dba` + panel V2 + 2 fix của phiên này (§5) |
-| `stabilize/v2-rich-main-candidate-20261020` | xem §2 | **Ứng viên merge.** Là integrate + `6c5065d` + `main` `e0ef252`, xung đột docs đã giải (giữ cả hai bên). Tên `stabilize/**` để workflow CI Windows chạy khi push |
+| `stabilize/v2-rich-main-candidate-20261020` | xem §2 | **Ứng viên merge.** Là integrate + `6c5065d` + `main` `46869eb`, xung đột docs đã giải (giữ cả hai bên). Tên `stabilize/**` để workflow CI Windows chạy khi push |
 
 Ancestry đã kiểm bằng `git merge-base --is-ancestor`, không suy từ tên nhánh. Trong chuỗi, code và migration đều merge sạch; mọi xung đột chỉ ở các file nhật ký/tiến độ dạng append.
 
@@ -40,6 +40,9 @@ CI **skip toàn bộ** test `*PostgresTest` (89 trên #76) và mọi test GUI/E2
 | `56ea3e2` (sau fix) | `RichAttemptE2eGuiTest` + `ProctorV2E2eGuiTest` chạy cùng JVM, đúng thứ tự như suite, server PG18 | **PASS 5/5 lượt** |
 | `f9901fd` (ứng viên cuối) | `mvn -B clean verify -Dmaven.test.failure.ignore=true` | exit 0 **chỉ do cờ**. Protocol 45/0. Client 745/**3 FAIL** (chỉ harness baseline)/5 skip. Server 443/**1 FAIL** (LT04 baseline)/3 skip. Spike 1/0. PASS: `ProctorV2E2eGuiTest`, `RichAttemptE2eGuiTest`, `RichExamImportPostgresTest` 17/0, `RichSessionLifecyclePostgresTest` 8/0, `RichImagePostgresTest` 3/0/1 skip, `RichExamMigrationPostgresTest` 43/0, `ExamRuntimePostgresTest` 38/0 (legacy V1), `AudioRuntimePostgresTest` 10/0, `ListeningRuntimePostgresTest` 18/1 FAIL (LT04)/2 skip |
 | `f9901fd` CI | GitHub Actions run 39354563109 (`windows-2025`) | **success** (không có cờ bỏ qua; PG/GUI bị skip trên CI) |
+| `f1abb66` (+ `main` `46869eb`) | `mvn -B clean verify -Dmaven.test.failure.ignore=true`, server PG18 dựng từ jar của chính commit | exit 0 **chỉ do cờ**. Protocol 45/0. Client 745/4 FAIL + 1 ERROR: harness 4 (baseline) + `ProctorRedesignGuiTest.alertDrawer…` (flaky, §5.5). Server 443/1 FAIL (LT04). Spike 35/**5 FAIL** `CimSnapshotSourceTest` (§5.6). Cả hai E2E và mọi `*PostgresTest` rich/V1 PASS |
+| `f1abb66` CI | run 39355080010 (`windows-2025`) | **success**, gồm `CimSnapshotSourceTest` trên Windows |
+| `e95e691` / `78f273b` | `ProctorRedesignGuiTest` chạy riêng sau fix chờ node | 12/12, PASS 5/5 lượt |
 
 Kết quả `mvn clean verify` exit 0 khi không có cờ bỏ qua lỗi **chưa đạt được trên Linux** vì 3 lỗi baseline của harness (§5.3). Không được coi lượt exit 0 có `-Dmaven.test.failure.ignore=true` là tương đương.
 
@@ -117,7 +120,8 @@ Bằng chứng: 6 kịch bản chạy bằng jar thật trên PostgreSQL 18.1, m
 | §5.2 `ProctorV2E2eGuiTest`: UI không hiện ca mới (1/1 lượt suite PG18 tại `246ca2b`) | **REGRESSION của tích hợp** (panel V2 + wiring redesign) | stderr: `Not on FX application thread` tại `TopBar.update`/`OverviewPane.update`, gọi từ `ProctorV2Controller` → `refreshAll` trên worker `toeic-proctor-v2` | **Đã sửa** `56ea3e2`: `refreshScope` chuyển sang FX thread, controller theo dõi ca trước khi refresh. Test hồi quy FAIL khi chưa có fix, PASS khi có. E2E PASS 5/5. Tab V1 legacy dùng cùng đường gọi nên cũng được sửa |
 | §5.3 `ControlledProcessHarnessTest` (3 FAIL, có lượt 4) | **BASELINE_FAILURE + ENVIRONMENT_DEPENDENT (Linux)** | `main` `e0ef252` Linux: 3 FAIL, 2/2 lượt. CI Windows 8/8 PASS. Dưới subreaper tự viết (reap tiến trình mồ côi): `knownOwnedDescendant…` PASS, còn 2 FAIL ở `resourcesCleaned()` cho NO_READY/HANG | PID 1 của container (`process_api`) không reap tiến trình cháu, giải thích được 1/3. 2 lỗi còn lại **chưa rõ nguyên nhân**. Chuyển C (owner harness) điều tra trên Linux. Không sửa, không disable |
 | §5.4 `ListeningRuntimePostgresTest.proctorControlsLt04RealGui…` | **BASELINE_FAILURE trên môi trường này** | FAIL giống hệt trên `main` `3bdefe6`, EX-06 `448f58e` và nhánh tích hợp (Linux/Xvfb/ALSA null, chờ READY quá 35 s). Test chỉ chạy khi `TOEIC_PROCTOR_GUI=true`; CI không bật. Nhật ký cũ ghi từng PASS trên Windows | Cần B/C chạy lại trên Windows. Chưa rõ nguyên nhân trên Linux |
-| §5.5 `ProctorRedesignGuiTest.settingsApply…` | **FLAKY (chưa tái hiện)** | FAIL 1 lần (lookup null) khi chạy cả suite trên PG16. Sau đó PASS ở mọi lượt suite (PG16 và PG18) và 3/3 khi chạy riêng | Theo dõi. Test của Agent 2, không sửa khi chưa tái hiện được |
+| §5.5 `ProctorRedesignGuiTest.settingsApply…` và `alertDrawerOpens…` | **FLAKY (thiết kế test)** | Lookup null ngay sau `show()`: node chỉ có sau lượt layout tiếp theo (cell của TableView, trang settings). Mỗi test fail 1 lần ở một lượt suite (PG16 và PG18) | **Đã sửa ở test** `e95e691`: chờ node rồi mới bấm. Không đổi code sản phẩm. Chạy riêng PASS 5/5. Tính flaky chỉ được loại trừ hẳn khi các lượt suite sau tiếp tục xanh |
+| §5.6 `CimSnapshotSourceTest` (5 FAIL, module `monitoring-spike`, đến từ `main` #73) | **BASELINE_FAILURE + ENVIRONMENT_DEPENDENT (Linux)** | `main` `46869eb` trên Linux: 5 FAIL y hệt. CI Windows success | Test chạy tiến trình thật của Windows/CIM. Không thuộc chuỗi EX; C (owner MON-02) quyết có cần chặn chạy trên non-Windows không. Không sửa |
 
 ## 6. Việc còn thiếu trước khi merge `main`
 
