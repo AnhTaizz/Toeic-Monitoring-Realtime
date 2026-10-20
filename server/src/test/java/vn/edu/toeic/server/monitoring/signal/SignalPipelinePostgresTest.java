@@ -76,12 +76,81 @@ class SignalPipelinePostgresTest {
             var item=getJson(a,"signals",proctor,200).getAsJsonArray("items").get(0).getAsJsonObject();assertThat(item.get("observationConnectionId").getAsString()).isEqualTo(origin.connectionId());assertThat(item.get("deliveryStatus").getAsString()).isEqualTo("PREVIOUS_CONNECTION");
         }
     }
+    @Test void mixedMockTypesThroughSharedDeliveryCommitAckRetryAndFixedThroughHistory()throws Exception{
+        String a=attempt();var fixture=JsonParser.parseString(java.nio.file.Files.readString(java.nio.file.Path.of("../docs/mon07-proposal/typed-mock-events.json"))).getAsJsonObject();
+        assertThat(fixture.get("fixture").getAsString()).startsWith("MOCK");
+        List<SignalMessage> messages=new ArrayList<>();int n=0;
+        for(var row:fixture.getAsJsonArray("signals")) messages.add(new SignalMessage(a,"mock-typed-request-"+(++n),"mock-typed-trace",Signal.parse(row.getAsJsonObject())));
+        try(Client client=new Client(a,true)){
+            var capabilities=getJson(a,"signal-capabilities",candidate,200).getAsJsonArray("supportedEventTypes");
+            assertThat(capabilities).hasSize(6);assertThat(capabilities.toString()).doesNotContain("OBSERVER_STATUS","SIGNAL_GAP","EXAM_ACTIVITY_SUMMARY");
+            for(var m:messages) assertThat(client.delivery.enqueue(m)).isTrue();
+            List<JsonObject> acks=new ArrayList<>();
+            for(int i=0;i<messages.size();i++){var ack=client.transport.deliveredAcks.poll(10,TimeUnit.SECONDS);assertThat(ack).as("MOCK signal ACK after COMMIT").isNotNull();acks.add(ack);
+                assertThat(number("SELECT count(*) FROM monitoring_signal_events WHERE attempt_id='"+a+"' AND event_id='"+ack.get("eventId").getAsString()+"'" )).isEqualTo(1);
+            }
+            assertThat(acks).anySatisfy(ack->assertThat(ack.get("duplicate").getAsBoolean()).isTrue());
+            assertThat(client.delivery.status().acknowledged()).isEqualTo(11);assertThat(client.delivery.status().queued()).isZero();assertThat(rows(a)).isEqualTo(11);assertThat(counter(a)).isEqualTo(11);
+            var first=getJson(a,"signals?limit=3",proctor,200);assertThat(first.get("throughSequence").getAsLong()).isEqualTo(11);
+            // An insert after page 1 must not change the fixed-through result, even for a different type.
+            var later=new SignalMessage(a,"mock-later-request","mock-later-trace",new FocusSignal("mock-later-event","mock-observer-1",12,Instant.parse("2026-10-20T10:00:00Z"),EventOrigin.OFFLINE,true,"INITIAL",null));
+            store(later);List<JsonObject> items=new ArrayList<>();JsonObject page=first;
+            while(true){for(var item:page.getAsJsonArray("items"))items.add(item.getAsJsonObject());
+                if(!page.get("hasMore").getAsBoolean())break;
+                page=getJson(a,"signals?limit=3&after="+page.get("nextAfterSequence").getAsLong()+"&through=11",proctor,200);
+                assertThat(page.get("throughSequence").getAsLong()).isEqualTo(11);
+            }
+            assertThat(items).hasSize(11);long sequence=0;Set<String> ids=new HashSet<>();
+            for(var item:items){assertThat(item.get("timelineSequence").getAsLong()).isEqualTo(++sequence);assertThat(ids.add(item.get("eventId").getAsString())).isTrue();
+                SignalMessage expected=messages.stream().filter(m->m.signal().eventId().equals(item.get("eventId").getAsString())).findFirst().orElseThrow();
+                var payload=item.deepCopy();for(String key:List.of("attemptId","timelineSequence","receivedAt","deliveryStatus"))payload.remove(key);
+                assertThat(Signal.parse(payload)).isEqualTo(expected.signal());
+            }
+            assertThat(getJson(a,"signals?after=11",proctor,200).getAsJsonArray("items")).hasSize(1);
+        }
+    }
+    @Test void typedDuplicateUsesCanonicalDetailsAndConflictPreservesCommittedContent()throws Exception{
+        String a=attempt();var value=new UsbStorageSignal("mock-usb","MOCK-run",1,Instant.parse("2026-10-20T10:00:00Z"),EventOrigin.OFFLINE,UsbStorageSignal.Kind.USB_STORAGE_CONNECTED,UsbStorageSignal.Quality.COMPLETE,1,"mock-ref");
+        var m=new SignalMessage(a,"mock-usb-request","mock-usb-trace",value);
+        try(Raw ws=new Raw(candidate)){
+            assertThat(ws.exchange(JSON.toJson(m.envelope())).getAsJsonObject("payload").get("duplicate").getAsBoolean()).isFalse();
+            var reordered=m.envelope().payload();reordered.add("details",JsonParser.parseString("{\"deviceRef\":\"mock-ref\",\"storageCount\":1,\"deviceClass\":\"USB_MASS_STORAGE\"}"));
+            assertThat(ws.exchange(JSON.toJson(new MessageEnvelope<>("v0","MONITORING_SIGNAL",m.requestId(),m.requestId(),a,m.traceId(),reordered)).replace("10:00:00Z","10:00:00.000000Z")).getAsJsonObject("payload").get("duplicate").getAsBoolean()).isTrue();
+            var changed=m.envelope().payload();changed.getAsJsonObject("details").addProperty("storageCount",2);
+            assertCode(ws.exchange(JSON.toJson(new MessageEnvelope<>("v0","MONITORING_SIGNAL",m.requestId(),m.requestId(),a,m.traceId(),changed))),"CONFLICT");
+            var otherType=new SignalMessage(a,m.requestId(),m.traceId(),new FocusSignal(value.eventId(),value.observerSessionId(),1,value.observedAt(),value.origin(),true,"INITIAL",null));
+            assertCode(ws.exchange(JSON.toJson(otherType.envelope())),"CONFLICT");
+            assertThat(rows(a)).isEqualTo(1);assertThat(counter(a)).isEqualTo(1);assertThat(store(m).signal()).isEqualTo(value);
+        }
+    }
+    @Test void typedCommitFailureRollsBackBothRowsAndCounterWithoutSuccessfulAck()throws Exception{
+        String a=attempt();String fn="typed_fail_"+UUID.randomUUID().toString().replace("-","");
+        var m=new SignalMessage(a,"mock-window-request","mock-window-trace",new WindowSignal("mock-window","MOCK-run",1,Instant.parse("2026-10-20T10:00:00Z"),EventOrigin.OFFLINE,true,false,"CHANGED"));
+        jdbc.sql("CREATE FUNCTION "+fn+"() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'MOCK deferred typed fault'; RETURN NEW; END $$").update();
+        jdbc.sql("CREATE CONSTRAINT TRIGGER typed_deferred_fail AFTER INSERT ON monitoring_signal_events DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION "+fn+"()").update();
+        try(Raw ws=new Raw(candidate)){assertCode(ws.exchange(JSON.toJson(m.envelope())),"RETRYABLE_SERVER_ERROR");assertThat(rows(a)).isZero();assertThat(counter(a)).isZero();}
+        finally{jdbc.sql("DROP TRIGGER typed_deferred_fail ON monitoring_signal_events").update();jdbc.sql("DROP FUNCTION "+fn+"()").update();}
+        try(Raw ws=new Raw(candidate)){assertThat(ws.exchange(JSON.toJson(m.envelope())).getAsJsonObject("payload").get("timelineSequence").getAsLong()).isEqualTo(1);}
+    }
+    @Test void typedStoredDuplicateStillRequiresRoleOwnerActiveAndLiveToken()throws Exception{
+        String a=attempt();var m=new SignalMessage(a,"mock-focus-request","mock-focus-trace",new FocusSignal("mock-focus","MOCK-run",1,Instant.parse("2026-10-20T10:00:00Z"),EventOrigin.OFFLINE,false,"OTHER_OR_UNKNOWN",null));store(m);
+        try(Raw wrong=new Raw(foreign);Raw role=new Raw(proctor)) {assertCode(wrong.exchange(JSON.toJson(m.envelope())),"FORBIDDEN");assertCode(role.exchange(JSON.toJson(m.envelope())),"FORBIDDEN");}
+        for(boolean revoked:List.of(false,true)){
+            String token=login("candidate");try(Raw ws=new Raw(token)){
+                jdbc.sql(revoked?"UPDATE login_sessions SET revoked_at=clock_timestamp() WHERE token_hash=:h":"UPDATE login_sessions SET issued_at=clock_timestamp()-INTERVAL '2 days',expires_at=clock_timestamp()-INTERVAL '1 day' WHERE token_hash=:h").param("h",TokenHash.sha256(token)).update();
+                assertCode(ws.exchange(JSON.toJson(m.envelope())),"UNAUTHORIZED");
+            }
+        }
+        jdbc.sql("UPDATE monitoring_attempts SET state='CLOSED' WHERE attempt_id=:a").param("a",a).update();
+        try(Raw ws=new Raw(candidate)){assertCode(ws.exchange(JSON.toJson(m.envelope())),"FORBIDDEN");}
+        getJson(a,"signals",proctor,403);assertThat(rows(a)).isEqualTo(1);assertThat(counter(a)).isEqualTo(1);
+    }
     @Test void duplicateCanonicalConflictAndUnknownTypeHaveNoExtraRows()throws Exception{
         String a=attempt();var m=message(a,1);try(Raw ws=new Raw(candidate)){
             assertThat(ws.exchange(JSON.toJson(m.envelope())).getAsJsonObject("payload").get("duplicate").getAsBoolean()).isFalse();
             var duplicate=ws.exchange(JSON.toJson(m.envelope()).replace("10:00:00Z","10:00:00.000000Z"));assertThat(duplicate.getAsJsonObject("payload").get("duplicate").getAsBoolean()).isTrue();
             var changed=m.envelope().payload();changed.getAsJsonObject("details").addProperty("count",2);assertCode(ws.exchange(JSON.toJson(new MessageEnvelope<>("v0","MONITORING_SIGNAL",m.requestId(),m.requestId(),a,m.traceId(),changed))),"CONFLICT");
-            assertCode(ws.exchange(JSON.toJson(m.envelope()).replace("DISPLAY_COUNT_OBSERVED","USB_STORAGE_CONNECTED")),"INVALID_INPUT");assertThat(rows(a)).isEqualTo(1);assertThat(counter(a)).isEqualTo(1);
+            assertCode(ws.exchange(JSON.toJson(m.envelope()).replace("DISPLAY_COUNT_OBSERVED","OBSERVER_STATUS")),"INVALID_INPUT");assertThat(rows(a)).isEqualTo(1);assertThat(counter(a)).isEqualTo(1);
         }
     }
     @Test void strictWireRejectsDuplicateUnknownUnicodeAndIntegerFormsWithoutMutation()throws Exception{
@@ -206,9 +275,44 @@ class SignalPipelinePostgresTest {
                 var mappings=off.getBean(org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping.class).getHandlerMethods();
                 assertThat(mappings.values()).noneMatch(m->m.getBeanType()==SignalController.class);
                 var db=off.getBean(JdbcClient.class);assertThat(db.sql("SELECT success FROM flyway_schema_history WHERE version='13'").query(Boolean.class).single()).isTrue();
+                assertThat(db.sql("SELECT success FROM flyway_schema_history WHERE version='16'").query(Boolean.class).single()).isTrue();
                 assertThat(db.sql("SELECT count(*) FROM monitoring_signal_events").query(Long.class).single()).isZero();assertThat(db.sql("SELECT count(*) FROM monitoring_signal_counters").query(Long.class).single()).isZero();
             }
         }finally{admin.createStatement().execute("DROP SCHEMA "+offSchema+" CASCADE");}
+    }
+    @Test void migrationUpgradeFromV15PreservesDisplayRowsCountersAndChecksums()throws Exception{
+        String upgrade="signal_upgrade_"+UUID.randomUUID().toString().replace("-","");
+        admin.createStatement().execute("CREATE SCHEMA "+upgrade);
+        String upgradeUrl=url+"?currentSchema="+upgrade;
+        try{
+            var old=org.flywaydb.core.Flyway.configure().dataSource(upgradeUrl,required("DB_USER"),required("DB_PASSWORD"))
+                    .schemas(upgrade).defaultSchema(upgrade).target("15").load();old.migrate();
+            String before;List<String> checksums=new ArrayList<>();
+            try(Connection db=DriverManager.getConnection(upgradeUrl,required("DB_USER"),required("DB_PASSWORD"));Statement sql=db.createStatement()){
+                sql.execute("INSERT INTO user_accounts(id,username,display_name,role,password_hash) VALUES (1,'MOCK-upgrade-candidate','MOCK','CANDIDATE','MOCK-unused'),(2,'MOCK-upgrade-proctor','MOCK','PROCTOR','MOCK-unused')");
+                sql.execute("INSERT INTO monitoring_attempts(attempt_id,candidate_user_id,state) VALUES ('MOCK-upgrade',1,'ACTIVE')");
+                sql.execute("INSERT INTO monitoring_proctor_assignments VALUES ('MOCK-upgrade',2)");
+                sql.execute("INSERT INTO monitoring_signal_counters VALUES ('MOCK-upgrade',1)");
+                sql.execute("INSERT INTO monitoring_signal_events(attempt_id,event_id,schema_version,observer_session_id,observation_sequence,event_type,source,metadata_quality,observed_at,observation_context,details,timeline_sequence,delivery_status) VALUES ('MOCK-upgrade','mock-old-display',1,'mock-observer-1',1,'DISPLAY_COUNT_OBSERVED','JAVAFX_DISPLAY','COMPLETE','2026-10-20T10:00:00Z','OFFLINE','{\"count\":1,\"reason\":\"INITIAL\"}',1,'BUFFERED_OFFLINE')");
+                try(var r=sql.executeQuery("SELECT row_to_json(e)::text FROM monitoring_signal_events e")){assertThat(r.next()).isTrue();before=r.getString(1);}
+                try(var r=sql.executeQuery("SELECT version||':'||checksum FROM flyway_schema_history WHERE version IN ('13','14','15') ORDER BY installed_rank")){while(r.next())checksums.add(r.getString(1));}
+            }
+            var latest=org.flywaydb.core.Flyway.configure().dataSource(upgradeUrl,required("DB_USER"),required("DB_PASSWORD"))
+                    .schemas(upgrade).defaultSchema(upgrade).load();assertThat(latest.migrate().migrationsExecuted).isEqualTo(1);latest.validate();
+            try(Connection db=DriverManager.getConnection(upgradeUrl,required("DB_USER"),required("DB_PASSWORD"));Statement sql=db.createStatement()){
+                try(var r=sql.executeQuery("SELECT row_to_json(e)::text FROM monitoring_signal_events e")){assertThat(r.next()).isTrue();assertThat(r.getString(1)).isEqualTo(before);}
+                List<String> after=new ArrayList<>();try(var r=sql.executeQuery("SELECT version||':'||checksum FROM flyway_schema_history WHERE version IN ('13','14','15') ORDER BY installed_rank")){while(r.next())after.add(r.getString(1));}assertThat(after).isEqualTo(checksums);
+                try(var r=sql.executeQuery("SELECT last_sequence FROM monitoring_signal_counters")){assertThat(r.next()).isTrue();assertThat(r.getLong(1)).isEqualTo(1);}
+                // A direct DB writer cannot pair a focus event with a USB source after V16.
+                assertThatThrownBy(()->sql.execute("UPDATE monitoring_signal_events SET event_type='EXAM_FOCUS_CHANGED',source='WINDOWS_USB_STORAGE'" )).isInstanceOf(SQLException.class);
+                String hash=TokenHash.sha256("MOCK-upgrade-proctor-token-not-a-login");
+                sql.execute("INSERT INTO login_sessions(user_id,token_hash,issued_at,expires_at) VALUES (2,'"+hash+"',clock_timestamp(),clock_timestamp()+INTERVAL '1 hour')");
+                var ds=new org.springframework.jdbc.datasource.SingleConnectionDataSource(db,true);
+                var upgradedService=new SignalService(JdbcClient.create(ds));
+                var history=upgradedService.history(new AuthenticatedUser(2,"MOCK-upgrade-proctor",Role.PROCTOR),hash,"MOCK-upgrade",Map.of());
+                var item=history.getAsJsonArray("items").get(0).getAsJsonObject();assertThat(item.get("eventType").getAsString()).isEqualTo(DisplaySignal.TYPE);assertThat(item.getAsJsonObject("details").get("count").getAsInt()).isEqualTo(1);
+            }
+        }finally{admin.createStatement().execute("DROP SCHEMA "+upgrade+" CASCADE");}
     }
     @Test void fiveThousandOneCommittedSignalsPageWithoutLossAndKeepThroughDuringConcurrentWrites()throws Exception{
         String a=attempt();
@@ -299,8 +403,9 @@ class SignalPipelinePostgresTest {
     }
     private static final class Lossy implements MonitoringTransport{
         volatile boolean allow=true;final RealtimeClient delegate;final AtomicBoolean lose;final CountDownLatch dropped=new CountDownLatch(1),accepted=new CountDownLatch(1);final AtomicReference<JsonObject> lastAck=new AtomicReference<>();
+        final BlockingQueue<JsonObject> deliveredAcks=new LinkedBlockingQueue<>();
         Lossy(RealtimeClient d,boolean lose){delegate=d;this.lose=new AtomicBoolean(lose);}
         public CompletableFuture<Void> send(MessageEnvelope<JsonObject> m){return delegate.send(m);}public CompletableFuture<Void> sendForGeneration(MessageEnvelope<JsonObject> m,long g,BooleanSupplier guard){return delegate.sendForGeneration(m,g,guard);}public ConnectionState connectionState(){return delegate.connectionState();}public long connectionGeneration(){return delegate.connectionGeneration();}public boolean signalExperimentReady(String a){return delegate.signalExperimentReady(a);}public boolean signalCreditAvailable(){return allow&&delegate.signalCreditAvailable();}public AutoCloseable onConnectionState(Consumer<ConnectionState> c){return delegate.onConnectionState(c);}public AutoCloseable onMonitoringAccessRejected(Consumer<MonitoringAccessRejection> c){return delegate.onMonitoringAccessRejected(c);}public void forgetPending(String id){delegate.forgetPending(id);}
-        public AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> c){return delegate.onMessage(m->{if(m.type().equals("ACK")&&"MONITORING_SIGNAL".equals(m.payload().get("acknowledgedType").getAsString())){lastAck.set(m.payload().deepCopy());if(lose.compareAndSet(true,false)){dropped.countDown();return;}c.accept(m);accepted.countDown();}else c.accept(m);});}
+        public AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> c){return delegate.onMessage(m->{if(m.type().equals("ACK")&&"MONITORING_SIGNAL".equals(m.payload().get("acknowledgedType").getAsString())){lastAck.set(m.payload().deepCopy());if(lose.compareAndSet(true,false)){dropped.countDown();return;}c.accept(m);deliveredAcks.add(m.payload().deepCopy());accepted.countDown();}else c.accept(m);});}
     }
 }

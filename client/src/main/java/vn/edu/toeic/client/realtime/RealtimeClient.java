@@ -127,6 +127,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     private HeartbeatBinding signalHeartbeatBinding,signalBinding;
     private final Map<String,HeartbeatBinding> signalHeartbeatRequests=new HashMap<>();
     private String signalAttempt,signalCollector;
+    private Set<String> signalTypes=Set.of();
     private long signalGeneration=-1;
     private final java.util.Set<CompletableFuture<Void>> signalWrites=new java.util.HashSet<>();
     /** Harness only: scoped HTTP capability fetched after auth/heartbeat, generation prevents stale confirmation. */
@@ -137,10 +138,17 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         vn.edu.toeic.protocol.monitoring.signal.SignalJson.integer(capability,"schemaVersion",1,1);
         vn.edu.toeic.protocol.monitoring.signal.SignalJson.id(requiredString(capability,"traceId"));
         String attempt=vn.edu.toeic.protocol.monitoring.signal.SignalJson.id(requiredString(capability,"attemptId"));validateScope(attempt);
-        if(!new Gson().toJsonTree(java.util.List.of("DISPLAY_COUNT_OBSERVED")).equals(capability.get("supportedEventTypes")))throw new IllegalArgumentException();
+        var advertised=capability.get("supportedEventTypes");
+        if(advertised==null||!advertised.isJsonArray()||advertised.getAsJsonArray().isEmpty()
+            ||advertised.getAsJsonArray().size()>vn.edu.toeic.protocol.monitoring.signal.Signal.SUPPORTED_TYPES.size())throw new IllegalArgumentException();
+        Set<String> types=new HashSet<>();
+        for(var item:advertised.getAsJsonArray()){
+            if(!item.isJsonPrimitive()||!item.getAsJsonPrimitive().isString()
+                ||!vn.edu.toeic.protocol.monitoring.signal.Signal.SUPPORTED_TYPES.contains(item.getAsString())||!types.add(item.getAsString()))throw new IllegalArgumentException();
+        }
         HeartbeatBinding binding=monitoringBinding.get();
         if(binding==null||signalHeartbeatBinding!=binding||!attempt.equals(binding.attempt)||!Objects.equals(expectedCollector,binding.collector))throw new IllegalArgumentException();
-        signalAttempt=attempt;signalCollector=expectedCollector;signalGeneration=generation;signalBinding=binding;
+        signalAttempt=attempt;signalCollector=expectedCollector;signalGeneration=generation;signalBinding=binding;signalTypes=Set.copyOf(types);
     }
     @Override public synchronized boolean signalExperimentReady(String attempt) {
         return !closed&&state==ConnectionState.CONNECTED&&signalGeneration==generation&&Objects.equals(attempt,signalAttempt)
@@ -277,7 +285,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
             if("MONITORING_SIGNAL".equals(message.type())) {
                 if(!signalExperimentReady(message.attemptId())||!signalCreditAvailable())return failed("Signal experiment not ready or no credit");
                 var signal=vn.edu.toeic.protocol.monitoring.signal.SignalMessage.parse(message);
-                if(!Objects.equals(signalCollector,signal.signal().observerSessionId()))throw new IllegalArgumentException();
+                if(!Objects.equals(signalCollector,signal.signal().observerSessionId())||!signalTypes.contains(signal.signal().eventType()))throw new IllegalArgumentException();
             } else if("MONITORING_DELTA".equals(message.type())) {
                 if(message.attemptId()==null || !supportsMonitoringDelta())throw new IllegalArgumentException();
                 DeltaSnapshotPayload.parse(message.payload());
@@ -345,7 +353,8 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
         // Recheck the same capability lease immediately before socket IO, including writes queued behind a stalled send.
         HeartbeatBinding admittedBinding=signalBinding;
         BooleanSupplier writeGuard="MONITORING_SIGNAL".equals(copy.type())
-            ? ()->stillCurrent.getAsBoolean()&&signalBinding==admittedBinding&&signalExperimentReady(copy.attemptId()) : stillCurrent;
+            ? ()->stillCurrent.getAsBoolean()&&signalBinding==admittedBinding&&signalExperimentReady(copy.attemptId())
+                &&signalTypes.contains(requiredString(copy.payload(),"eventType")) : stillCurrent;
         dispatch(() -> write(current, target, serialized, copy,writeGuard,result));
         return result;
     }
@@ -436,7 +445,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     }
 
     private void cleanupConnection() {
-        signalAttempt=null;signalCollector=null;signalHeartbeatBinding=null;signalBinding=null;signalHeartbeatRequests.clear();signalGeneration=-1;signalWrites.clear();
+        signalAttempt=null;signalCollector=null;signalHeartbeatBinding=null;signalBinding=null;signalTypes=Set.of();signalHeartbeatRequests.clear();signalGeneration=-1;signalWrites.clear();
         if (heartbeatTask != null) heartbeatTask.cancel(false);
         if (retryTask != null) retryTask.cancel(false);
         heartbeatTask = null;
@@ -544,7 +553,7 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                 if(request.type().equals("MONITORING_SIGNAL")) {
                     var strict=vn.edu.toeic.protocol.monitoring.signal.SignalJson.parse(text);
                     vn.edu.toeic.protocol.monitoring.signal.SignalJson.fields(strict,Set.of("protocolVersion","type","messageId","requestId","attemptId","traceId","payload"),Set.of());
-                    vn.edu.toeic.protocol.monitoring.signal.SignalMessage.validateAck(strict.getAsJsonObject("payload"),vn.edu.toeic.protocol.monitoring.signal.DisplaySignal.parse(request.payload()));
+                    vn.edu.toeic.protocol.monitoring.signal.SignalMessage.validateAck(strict.getAsJsonObject("payload"),vn.edu.toeic.protocol.monitoring.signal.Signal.parse(request.payload()));
                 }
                 if(message.payload().has("resync"))validateResync(request,MonitoringResyncPayload.parse(message.payload().getAsJsonObject("resync")));
                 pendingAcks.remove(message.requestId());

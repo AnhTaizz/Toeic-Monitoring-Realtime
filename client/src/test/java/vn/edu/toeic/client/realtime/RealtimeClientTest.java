@@ -849,6 +849,53 @@ class RealtimeClientTest {
             }
         }
     }
+    @Test void typedCapabilitySubsetBoundsDispatchAndSharesTwoWriteCredits()throws Exception{
+        try(Fixture f=new Fixture()){
+            f.connect();try(var lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){
+                confirmSignal(f);var usb=typedSignal("USB_STORAGE_CONNECTED",1);assertThat(f.client.send(usb)).isCompletedExceptionally();
+                var cap=signalCapability();var types=cap.getAsJsonArray("supportedEventTypes");types.add("USB_STORAGE_CONNECTED");types.add("EXAM_FOCUS_CHANGED");
+                f.client.confirmSignalExperiment(cap,f.client.connectionGeneration(),"MOCK-signal-run");
+                cap.getAsJsonArray("supportedEventTypes").add("EXAM_WINDOW_STATE");assertThat(f.client.send(typedSignal("EXAM_WINDOW_STATE",2))).isCompletedExceptionally();
+                f.socket().sent.clear();f.socket().writeGate=new CompletableFuture<>();
+                var first=f.client.send(usb);var second=f.client.send(typedSignal("EXAM_FOCUS_CHANGED",3));
+                assertThat(f.client.send(signal(4))).isCompletedExceptionally();assertThat(f.socket().sent).hasSize(1);
+                f.socket().writeGate.complete(f.socket());assertThat(first).isCompleted();assertThat(second).isCompleted();assertThat(f.socket().sent).hasSize(2);
+            }
+        }
+    }
+    @Test void typedCapabilitiesRejectDuplicatesUnknownTypesAndWrongRun()throws Exception{
+        try(Fixture f=new Fixture()){
+            f.connect();try(var lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){
+                confirmSignal(f);
+                for(String type:List.of("DISPLAY_COUNT_OBSERVED","OBSERVER_STATUS","USB_CONNECTED")){
+                    var cap=signalCapability();cap.getAsJsonArray("supportedEventTypes").add(type);
+                    assertThatThrownBy(()->f.client.confirmSignalExperiment(cap,f.client.connectionGeneration(),"MOCK-signal-run")).isInstanceOf(IllegalArgumentException.class);
+                }
+                var cap=signalCapability();cap.getAsJsonArray("supportedEventTypes").add("USB_STORAGE_CONNECTED");f.client.confirmSignalExperiment(cap,f.client.connectionGeneration(),"MOCK-signal-run");
+                var original=typedSignal("USB_STORAGE_CONNECTED",1);var wrong=original.payload();wrong.addProperty("observerSessionId","MOCK-other-run");
+                assertThat(f.client.send(new MessageEnvelope<>("v0","MONITORING_SIGNAL",original.messageId(),original.requestId(),original.attemptId(),original.traceId(),wrong))).isCompletedExceptionally();
+            }
+        }
+    }
+    @Test void queuedTypedSignalRechecksCapabilityWhenSubsetShrinks()throws Exception{
+        try(Fixture f=new Fixture()){
+            f.connect();try(var lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){
+                confirmSignal(f);var cap=signalCapability();cap.getAsJsonArray("supportedEventTypes").add("USB_STORAGE_CONNECTED");f.client.confirmSignalExperiment(cap,f.client.connectionGeneration(),"MOCK-signal-run");
+                f.socket().sent.clear();f.socket().writeGate=new CompletableFuture<>();var first=f.client.send(signal(1));var queued=f.client.send(typedSignal("USB_STORAGE_CONNECTED",2));
+                f.client.confirmSignalExperiment(signalCapability(),f.client.connectionGeneration(),"MOCK-signal-run");f.socket().writeGate.complete(f.socket());
+                assertThat(first).isCompleted();assertThat(queued).isCompletedExceptionally();assertThat(f.socket().sent).hasSize(1);
+            }
+        }
+    }
+    private static MessageEnvelope<JsonObject> typedSignal(String type,int n){
+        var time=java.time.Instant.parse("2026-10-20T10:00:00Z");var origin=vn.edu.toeic.protocol.monitoring.EventOrigin.OFFLINE;
+        vn.edu.toeic.protocol.monitoring.signal.Signal value=switch(type){
+            case "USB_STORAGE_CONNECTED"->new vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal("MOCK-typed-"+n,"MOCK-signal-run",n,time,origin,vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal.Kind.USB_STORAGE_CONNECTED,vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal.Quality.PARTIAL,1,null);
+            case "EXAM_FOCUS_CHANGED"->new vn.edu.toeic.protocol.monitoring.signal.FocusSignal("MOCK-typed-"+n,"MOCK-signal-run",n,time,origin,false,"OTHER_OR_UNKNOWN",null);
+            default->new vn.edu.toeic.protocol.monitoring.signal.WindowSignal("MOCK-typed-"+n,"MOCK-signal-run",n,time,origin,false,false,"INITIAL");
+        };
+        return new vn.edu.toeic.protocol.monitoring.signal.SignalMessage("mock-attempt-A","MOCK-typed-request-"+n,"MOCK-typed-trace",value).envelope();
+    }
     private static MessageEnvelope<JsonObject> signal(int n){return new vn.edu.toeic.protocol.monitoring.signal.SignalMessage("mock-attempt-A","MOCK-signal-request-"+n,"MOCK-signal-trace",new vn.edu.toeic.protocol.monitoring.signal.DisplaySignal("MOCK-signal-event-"+n,"MOCK-signal-run",n,java.time.Instant.parse("2026-10-19T10:00:00Z"),vn.edu.toeic.protocol.monitoring.EventOrigin.OFFLINE,1,"INITIAL")).envelope();}
     private static JsonObject signalCapability(){JsonObject p=new JsonObject();p.addProperty("protocolVersion","v0");p.addProperty("schemaVersion",1);p.addProperty("traceId","MOCK-cap-trace");p.addProperty("attemptId","mock-attempt-A");com.google.gson.JsonArray a=new com.google.gson.JsonArray();a.add("DISPLAY_COUNT_OBSERVED");p.add("supportedEventTypes",a);return p;}
     private static void confirmSignal(Fixture f){ackSignalHeartbeat(f);f.client.confirmSignalExperiment(signalCapability(),f.client.connectionGeneration(),"MOCK-signal-run");}

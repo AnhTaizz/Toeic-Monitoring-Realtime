@@ -60,6 +60,36 @@ class SignalDeliveryTest {
     @Test void failedWriteBacksOffAndRetainsSameIdentity(){try(Fixture f=new Fixture()){
         f.transport.fail=true;f.delivery.enqueue(message(1));f.delivery.tick();f.delivery.tick();assertThat(f.transport.sent).hasSize(1);f.advance(1000);f.transport.fail=false;f.delivery.tick();assertThat(f.transport.sent).hasSize(2);assertThat(f.transport.sent.getFirst()).isEqualTo(f.transport.sent.getLast());
     }}
+    @Test void mixedTypesShareQueueBytesFlightsAndFreezeRetries(){
+        var settings=new SignalDelivery.Settings(3,1048576,2,Duration.ofSeconds(5),5,Duration.ofSeconds(1),Duration.ofSeconds(8),Duration.ofMillis(25));
+        try(Fixture f=new Fixture(settings)){
+            var time=Instant.parse("2026-10-20T10:00:00Z");
+            var usb=new SignalMessage("attempt","mock-usb-request","mock-usb-trace",new UsbStorageSignal("mock-usb-event","run",2,time,EventOrigin.OFFLINE,UsbStorageSignal.Kind.USB_STORAGE_CONNECTED,UsbStorageSignal.Quality.PARTIAL,1,null));
+            var focus=new SignalMessage("attempt","mock-focus-request","mock-focus-trace",new FocusSignal("mock-focus-event","run",3,time,EventOrigin.OFFLINE,true,"OTHER_OR_UNKNOWN",125L));
+            var window=new SignalMessage("attempt","mock-window-request","mock-window-trace",new WindowSignal("mock-window-event","run",4,time,EventOrigin.OFFLINE,true,false,"CHANGED"));
+            var display=message(1);List<SignalMessage> admitted=List.of(display,usb,focus);
+            admitted.forEach(m->assertThat(f.delivery.enqueue(m)).isTrue());assertThat(f.delivery.enqueue(window)).isFalse();
+            int expectedBytes=admitted.stream().mapToInt(m->new Gson().toJson(m.envelope()).getBytes(java.nio.charset.StandardCharsets.UTF_8).length).sum();
+            assertThat(f.delivery.status().bytes()).isEqualTo(expectedBytes);f.delivery.tick();assertThat(f.transport.sent).hasSize(2);
+            f.ack(display);f.delivery.tick();assertThat(f.transport.sent).hasSize(3);assertThat(f.delivery.status().inFlight()).isEqualTo(2);
+            f.advance(5000);f.delivery.tick();f.advance(1000);f.delivery.tick();assertThat(f.transport.sent).hasSize(5);
+            assertThat(f.transport.sent.get(3)).isEqualTo(usb.envelope());assertThat(f.transport.sent.get(4)).isEqualTo(focus.envelope());
+            f.ack(usb);f.ack(focus);assertThat(f.delivery.status().bytes()).isZero();assertThat(f.delivery.enqueue(window)).isTrue();
+            f.delivery.tick();f.ack(window);assertThat(f.delivery.status().queued()).isZero();assertThat(f.delivery.status().acknowledged()).isEqualTo(4);
+        }
+    }
+    @Test void lateTypedCallbackCannotAcknowledgeReplacementDelivery(){
+        var time=Instant.parse("2026-10-20T10:00:00Z");
+        var old=new SignalMessage("attempt","mock-old","mock-trace",new WindowSignal("mock-event","run",1,time,EventOrigin.OFFLINE,false,false,"INITIAL"));
+        try(Fixture f=new Fixture()){
+            f.delivery.enqueue(old);f.delivery.tick();var oldListener=f.transport.messages.getFirst();f.delivery.close();
+            try(var replacement=new SignalDelivery("attempt","next-run",f.transport,SignalDelivery.Settings.defaults(),f.clock::get,false)){
+                var next=new SignalMessage("attempt","mock-next","mock-trace",new FocusSignal("mock-next-event","next-run",1,time,EventOrigin.OFFLINE,true,"INITIAL",null));
+                replacement.enqueue(next);replacement.tick();oldListener.accept(new MessageEnvelope<>("v0","ACK","s",old.requestId(),"attempt",old.traceId(),ack(old)));
+                assertThat(replacement.status().active()).isTrue();assertThat(replacement.status().queued()).isEqualTo(1);assertThat(replacement.status().acknowledged()).isZero();
+            }
+        }
+    }
     private JsonObject ack(SignalMessage m){JsonObject p=new JsonObject();p.addProperty("status","ACCEPTED");p.addProperty("acknowledgedType","MONITORING_SIGNAL");p.addProperty("eventId",m.signal().eventId());p.addProperty("schemaVersion",1);p.addProperty("timelineSequence",1);p.addProperty("receivedAt","2026-10-19T10:00:01Z");p.addProperty("deliveryStatus","PREVIOUS_CONNECTION");p.addProperty("duplicate",false);return p;}
     private JsonObject error(String code,boolean retry){JsonObject p=new JsonObject();p.addProperty("code",code);p.addProperty("message","MOCK");p.addProperty("retryable",retry);return p;}
     private final class Fixture implements AutoCloseable {

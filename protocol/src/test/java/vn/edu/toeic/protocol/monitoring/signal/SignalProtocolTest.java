@@ -18,10 +18,15 @@ class SignalProtocolTest {
         var f=JsonParser.parseString(Files.readString(Path.of("../docs/mon07-proposal/mock-exchanges.json"))).getAsJsonObject().getAsJsonObject("firstSlice");
         var cases=f.getAsJsonArray("cases");assertThat(cases).hasSize(7);
         var first=cases.get(0).getAsJsonObject();assertThat(SignalMessage.parse(first.get("request").toString())).isEqualTo(sample());
-        for(var element:cases){var c=element.getAsJsonObject();String raw=c.get("request").toString();if(c.get("caseId").getAsString().matches(".*validation-denied|.*unadvertised-usb"))assertThatThrownBy(()->SignalMessage.parse(raw)).isInstanceOf(IllegalArgumentException.class);else assertThat(SignalMessage.parse(raw).signal().eventId()).isEqualTo("mock-display-1");}
+        // The historical first-slice USB request is now a valid typed payload. Keep that fixture unchanged;
+        // capability, not schema validity, decides whether a particular connection may send it.
+        for(var element:cases){var c=element.getAsJsonObject();String raw=c.get("request").toString();
+            if(c.get("caseId").getAsString().endsWith("validation-denied"))assertThatThrownBy(()->SignalMessage.parse(raw)).isInstanceOf(IllegalArgumentException.class);
+            else if(c.get("caseId").getAsString().endsWith("unadvertised-usb"))assertThat(SignalMessage.parse(raw).signal()).isInstanceOf(UsbStorageSignal.class);
+            else assertThat(SignalMessage.parse(raw).signal().eventId()).isEqualTo("mock-display-1");}
         SignalMessage.validateAck(first.getAsJsonObject("response").getAsJsonObject("payload"),sample().signal());
     }
-    @Test void immutablePayloadAndTimeNormalizationGiveCanonicalEquality(){var m=sample();var envelope=m.envelope();envelope.payload().getAsJsonObject("details").addProperty("count",32);assertThat(m.signal().count()).isEqualTo(1);
+    @Test void immutablePayloadAndTimeNormalizationGiveCanonicalEquality(){var m=sample();var envelope=m.envelope();envelope.payload().getAsJsonObject("details").addProperty("count",32);assertThat(((DisplaySignal)m.signal()).count()).isEqualTo(1);
         String raw=JSON.toJson(m.envelope()).replace("10:00:00Z","10:00:00.000000Z");assertThat(SignalMessage.parse(raw)).isEqualTo(m);assertThat(JSON.toJson(m.envelope())).doesNotContain(".000000");}
     @ParameterizedTest @ValueSource(strings={"1.0","1e0","-1","9007199254740992","\"1\"","null"})
     void strictIntegerLexemesAndBounds(String bad){String raw=JSON.toJson(sample().envelope()).replace("\"observationSequence\":1","\"observationSequence\":"+bad);assertThatThrownBy(()->SignalMessage.parse(raw)).isInstanceOf(RuntimeException.class);}
