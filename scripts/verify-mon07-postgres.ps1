@@ -23,7 +23,7 @@ if(Test-Path -LiteralPath $out){throw 'Refuse to overwrite a run'}
 New-Item -ItemType Directory -Force -Path $out|Out-Null
 $utf8=New-Object Text.UTF8Encoding($false)
 $saved=@{}
-foreach($name in @('JAVA_HOME','PATH','DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','PGPASSWORD','TOEIC_SEED_PASSWORD','TOEIC_PG_INTEGRATION','TOEIC_PROCTOR_GUI','TOEIC_INSTALLED_CLIENT','TOEIC_PACKAGED_CLIENT','JAVA_TOOL_OPTIONS')){$saved[$name]=[Environment]::GetEnvironmentVariable($name,'Process')}
+foreach($name in @('JAVA_HOME','PATH','DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','PGPASSWORD','TOEIC_SEED_PASSWORD','TOEIC_PG_INTEGRATION','TOEIC_PROCTOR_GUI','TOEIC_INSTALLED_CLIENT','TOEIC_PACKAGED_CLIENT','JAVA_TOOL_OPTIONS','JDK_JAVA_OPTIONS','_JAVA_OPTIONS')){$saved[$name]=[Environment]::GetEnvironmentVariable($name,'Process')}
 $env:JAVA_HOME=$JavaHome
 $env:PATH=(Join-Path $JavaHome 'bin')+';'+$env:PATH
 $env:DB_PASSWORD=[Guid]::NewGuid().ToString('N')
@@ -32,7 +32,8 @@ $env:DB_HOST='127.0.0.1';$env:DB_USER='mon07_test';$env:DB_NAME='toeic_mon07_tes
 $env:PGPASSWORD=$env:DB_PASSWORD
 $env:TOEIC_PG_INTEGRATION='true';$env:TOEIC_PROCTOR_GUI=$null
 $env:TOEIC_INSTALLED_CLIENT=$null;$env:TOEIC_PACKAGED_CLIENT=$null
-$env:JAVA_TOOL_OPTIONS='-Duser.timezone=UTC'
+# Keep owned test JVMs isolated: inherited launcher options print stderr banners in MOCK child tests.
+$env:JAVA_TOOL_OPTIONS=$null;$env:JDK_JAVA_OPTIONS=$null;$env:_JAVA_OPTIONS=$null
 $listener=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0)
 $listener.Start();$port=$listener.LocalEndpoint.Port;$listener.Stop()
 $env:DB_PORT=[string]$port
@@ -68,7 +69,7 @@ try{
     [void](Native (Join-Path $PostgresBin 'psql.exe') ('-h 127.0.0.1 -p '+$port+' -U mon07_test -d '+$env:DB_NAME+' -At -c "SELECT version();"') 'postgres-version')
     $selected='SignalProtocolTest,SignalDeliveryTest,SignalPipelinePostgresTest,SignalDisabledTest,RealtimeClientTest,MonitoringDeliveryTest,FullSnapshotDeliveryTest,DeltaSnapshotDeliveryTest,MonitoringPresenceServiceTest,MonitoringStateServiceTest,MonitoringStateMaintenanceTest,MonitoringDeltaStateTest,MonitoringHistoryBoundsPostgresTest'
     $goals=if($Mode -eq 'Focused'){'-pl server -am -Dtest='+$selected+' -Dsurefire.failIfNoSpecifiedTests=false test'}else{'verify'}
-    $command='/d /s /c ""'+$maven+'" --batch-mode --no-transfer-progress -Dmaven.repo.local="'+$MavenRepository+'" '+$goals+'"'
+    $command='/d /s /c ""'+$maven+'" --batch-mode --no-transfer-progress -Duser.timezone=UTC -Dmaven.repo.local="'+$MavenRepository+'" '+$goals+'"'
     $start=[DateTime]::UtcNow.ToString('o')
     $exitCode=Native $env:ComSpec $command 'maven'
     $end=[DateTime]::UtcNow.ToString('o')
@@ -110,7 +111,7 @@ foreach($module in @('protocol','client','server','monitoring-spike')){
 }
 $totals.passed=$totals.tests-$totals.failures-$totals.errors-$totals.skipped
 $javaVersion=[IO.File]::ReadAllLines((Join-Path $out 'java-version.private.err'))|Where-Object{$_ -match '^(java|openjdk) version '}|Select-Object -First 1
-$result=[ordered]@{sourceSha=$source;runId=$runId;mode=$Mode;os=[Environment]::OSVersion.VersionString;java=$javaVersion;maven=([IO.File]::ReadAllLines((Join-Path $out 'maven-version.private.log'))|Select-Object -First 1);postgres=([IO.File]::ReadAllText((Join-Path $out 'postgres-version.private.log')).Trim());database='toeic_mon07_test';host='127.0.0.1';port=$port;fixture='MOCK DISPLAY_COUNT_OBSERVED; real PostgreSQL/HTTP/WS; ACK loss and faults SIMULATED';command=('mvn --batch-mode --no-transfer-progress '+$goals);startUtc=$start;endUtc=$end;exitCode=$exitCode;runnerErrorType=$runtimeError;totals=$totals;cases=$cases;xmlHashes=$reports;cleanup=$cleanup;manualGuiLanHearing='NOT RUN'}
+$result=[ordered]@{sourceSha=$source;runId=$runId;mode=$Mode;os=[Environment]::OSVersion.VersionString;java=$javaVersion;maven=([IO.File]::ReadAllLines((Join-Path $out 'maven-version.private.log'))|Select-Object -First 1);postgres=([IO.File]::ReadAllText((Join-Path $out 'postgres-version.private.log')).Trim());database='toeic_mon07_test';host='127.0.0.1';port=$port;fixture='MOCK DISPLAY_COUNT_OBSERVED; real PostgreSQL/HTTP/WS; ACK loss and faults SIMULATED';command=('mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC '+$goals);startUtc=$start;endUtc=$end;exitCode=$exitCode;runnerErrorType=$runtimeError;totals=$totals;cases=$cases;xmlHashes=$reports;cleanup=$cleanup;manualGuiLanHearing='NOT RUN'}
 [IO.File]::WriteAllText((Join-Path $out 'result.json'),(($result|ConvertTo-Json -Depth 8).Replace("`r`n","`n")+"`n"),$utf8)
 Write-Output ('Output: '+$out)
 Write-Output (@{sourceSha=$source;mode=$Mode;exitCode=$exitCode;totals=$totals;cleanup=$cleanup;runnerErrorType=$runtimeError}|ConvertTo-Json -Depth 4)
