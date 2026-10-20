@@ -1,0 +1,217 @@
+{
+    "label":  "MOCK",
+    "scope":  "Design models plus real local PNG size/hash/.NET decode; NOT HTTP, PostgreSQL, WS, JavaFX GUI or physical proof",
+    "positive":  9,
+    "negative":  20,
+    "status":  "PASS",
+    "part1Slots":  6,
+    "uniquePart1Assets":  1,
+    "manifestId":  "0c349b8a923bf37b0e7676d466f5eaeb200c10d507246e7b261c8b9128dbb4c1",
+    "cases":  [
+                  {
+                      "id":  "P01",
+                      "description":  "Owner SCHEDULED receives Part1 manifest only",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "P02",
+                      "description":  "Owner downloads allowlisted Part1 photo with current manifest",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "P03",
+                      "description":  "Actual local PNG size/hash/dimensions/.NET decode; JavaFX GUI NOT RUN",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "P04",
+                      "description":  "Visual attestation binds current writer/epoch/manifest and exact unique assets",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "P05",
+                      "description":  "Visual READY precedes authoritative START",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "P06",
+                      "description":  "All roster Audio AND Visual READY permits one modeled START",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "P07",
+                      "description":  "Modeled clock starts at START, never prefetch or READY",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "P08",
+                      "description":  "Modeled image/layout/two-pulse gate precedes PLAY; real GUI NOT RUN",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "P09",
+                      "description":  "Legacy QD21 normalized policy text unchanged",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N01",
+                      "description":  "Foreign candidate image access403",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N02",
+                      "description":  "Revoked token401 before media access",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N03",
+                      "description":  "SCHEDULED full questions/options/answers409",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N04",
+                      "description":  "SCHEDULED Part7-only media403",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N05",
+                      "description":  "SCHEDULED Part4-only media403",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N06",
+                      "description":  "Foreign-exam media403",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N07",
+                      "description":  "Corrupt/hash mismatch resources cannot READY or START",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N08",
+                      "description":  "Missing/decode-failed photo cannot READY; invalid PNG rejected by local .NET decoder",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N09",
+                      "description":  "Stale writerEpoch409 STALE",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N10",
+                      "description":  "Stale manifest409 CONFLICT",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N11",
+                      "description":  "One roster member lacks Visual READY: no START/deadline/WS authority mutation",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N12",
+                      "description":  "Takeover invalidates old READY/context",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N13",
+                      "description":  "Lost START response/retry returns same authority and deadline",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N14",
+                      "description":  "Image failure after START cannot replay/reset deadline",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N15",
+                      "description":  "Conditional headers do not bypass auth or yield304",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N16",
+                      "description":  "Logout/revocation cannot return cached readiness success",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N17",
+                      "description":  "V2 full exam remains gated; v1 bypass blocked by contract; runtime NOT RUN",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N18",
+                      "description":  "Slow scene transition does not call PLAY before visibility gate",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N19",
+                      "description":  "Slow network/render exceeds3000ms: interruption without playback/deadline reset",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  },
+                  {
+                      "id":  "N20",
+                      "description":  "Restart/reconnect invalidates stale readiness epoch",
+                      "status":  "PASS",
+                      "scope":  "MOCK_DESIGN_ONLY",
+                      "runtime":  "NOT RUN"
+                  }
+              ],
+    "gui":  "NOT RUN",
+    "runtime":  "NOT IMPLEMENTED"
+}

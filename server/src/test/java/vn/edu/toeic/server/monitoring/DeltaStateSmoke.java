@@ -134,6 +134,26 @@ public final class DeltaStateSmoke {
                 var event=new JsonObject();event.addProperty("eventId","TEST-event");event.addProperty("collectorSessionId",collector);event.addProperty("policyVersion",FullSnapshotPayload.POLICY);event.addProperty("pid",42);event.addProperty("processName","msedge.exe");event.addProperty("metadataQuality","UNREADABLE");event.addProperty("observedAt",Instant.now().toString());event.addProperty("observationContext","UNSPECIFIED");
                 check(exchange(c,request("PROCESS_OBSERVED",event)).type().equals("ACK"),"event commit ACK");var gap=new JsonObject();gap.addProperty("gapId","TEST-gap");gap.addProperty("collectorSessionId",collector);gap.addProperty("reason","QUEUE_OVERFLOW");gap.addProperty("droppedCount",1);gap.addProperty("firstDroppedAt",Instant.now().toString());gap.addProperty("lastDroppedAt",Instant.now().toString());check(exchange(c,request("MONITORING_GAP",gap)).type().equals("ACK"),"gap commit ACK");history();
                 System.out.println("PASS REAL full1/delta2/duplicate/conflict/invalid-remove/UNSYNCED/resync/full5/role scope; handwritten process set; event+gap committed separately");
+                // BASE-03: exercise sequence and retired-epoch rejection over the real WS boundary.
+                phase="BASE03_FULL_SEQUENCE";
+                var beforeSequenceProbe=read(proctor);
+                check(exchange(c,request("MONITORING_FULL",json(full(collector,epoch,4,edge)))).payload().get("code").getAsString().equals("STALE"),"lower full sequence rejected");
+                check(exchange(c,request("MONITORING_FULL",json(full(collector,epoch,5,edge)))).payload().get("code").getAsString().equals("CONFLICT"),"same sequence changed full rejected");
+                var afterSequenceProbe=read(proctor);
+                check(afterSequenceProbe.sequence()==beforeSequenceProbe.sequence()&&afterSequenceProbe.revision()==beforeSequenceProbe.revision()&&afterSequenceProbe.processes().equals(beforeSequenceProbe.processes()),"rejected full never mutates canonical state/revision");
+                history();
+                System.out.println("PASS BASE03 MT06 REAL WS lower FULL STALE / same sequence changed content CONFLICT; sequence/revision/canonical set/history unchanged");
+                phase="BASE03_RETIRED_DELTA";
+                String nextCollector="TEST-base03-new",nextEpoch=open(c,nextCollector);
+                check(!nextEpoch.equals(epoch),"new OPEN creates new epoch");
+                check(exchange(c,request("MONITORING_FULL",json(full(nextCollector,nextEpoch,1,chrome,zalo)))).type().equals("ACK"),"new epoch first FULL");
+                var beforeOldDelta=read(proctor);
+                check(exchange(c,d2).payload().get("code").getAsString().equals("STALE"),"retired epoch duplicate delta rejected before cache");
+                check(exchange(c,request("MONITORING_DELTA",json(delta(collector,epoch,1,List.of(edge))))).payload().get("code").getAsString().equals("STALE"),"retired epoch fresh ID delta rejected");
+                var afterOldDelta=read(proctor);
+                check(afterOldDelta.syncEpoch().equals(nextEpoch)&&afterOldDelta.sequence()==beforeOldDelta.sequence()&&afterOldDelta.revision()==beforeOldDelta.revision()&&afterOldDelta.processes().equals(beforeOldDelta.processes()),"old delta cannot mutate new epoch/canonical set/revision");
+                history();
+                System.out.println("PASS BASE03 MT04 REAL WS OPEN/new epoch/FULL1 then retired DELTA exact retry and new ID STALE; canonical state/revision/history unchanged");
                 phase="COLLECTOR";
                 try(var worker=new ProcessCollector(()->{
                     if(blocked.get()){entered.countDown();try{release.await();}catch(InterruptedException e){throw new IllegalStateException("TEST interrupt");}}

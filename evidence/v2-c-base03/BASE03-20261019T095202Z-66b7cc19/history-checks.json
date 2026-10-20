@@ -1,0 +1,19 @@
+{
+  "runId": "BASE03-20261019T095202Z-66b7cc19",
+  "sourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+  "step": "event-postgres",
+  "rawPath": "target/base03-runs/BASE03-20261019T095202Z-66b7cc19/event-postgres.private.stdout.txt",
+  "rawSha256": "5363dadec4a8614ecf4ae01ed2a072a24d5d35fd382b16ded087c8372fb362da",
+  "classification": "REAL loopback HTTP/WS/PostgreSQL; process readings/faults separately labelled in assertions; PHYSICAL NOT_RUN",
+  "assertions": [
+    "PASS PostgreSQL clean migration; V1 prepared for production V2 upgrade",
+    "PASS production V1->V2 migration; TEST fixtures only; assignment/owner foreign keys",
+    "PASS login/auth-me ACTIVE scopes; candidate/foreign/closed/unknown timeline denied; assigned proctor allowed",
+    "PASS valid event COMMIT->ACK->assigned warning; duplicate ACK twice/row once/warning once; changed payload CONFLICT; event FK/unique",
+    "PASS candidate own/foreign/closed/unknown + proctor cannot send; malformed/path rejection; other client survives",
+    "PASS REAL PostgreSQL deferred COMMIT failure -> rollback + retryable ERROR; NO success ACK or warning",
+    "PASS barrier-controlled concurrent real WS retry -> ACK twice, DB once, warning once",
+    "PASS nullable metadata retry; offline commit+ACK; REST reconnect recovery/order; live assignment/token revocation; four-client isolation",
+    "A3 REAL PostgreSQL + HTTP + WebSocket smoke PASS"
+  ]
+}

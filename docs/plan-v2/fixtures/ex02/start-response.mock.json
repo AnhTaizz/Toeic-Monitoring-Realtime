@@ -1,0 +1,8 @@
+{
+  "protocolVersion": "v0",
+  "requestId": "mock-start-request",
+  "sessionId": "mock-session",
+  "manifestId": "MOCK-manifest-replace-with-runtime-AudioCatalog-id",
+  "startId": "mock-start-id",
+  "startedAt": "2026-10-19T01:00:00Z"
+}

@@ -1,0 +1,20 @@
+{
+  "runId": "BASE03-20261019T095950Z-e51076ac",
+  "sourceSha": "463cbadc50465c6ca2f2d4c0a0701dcb9c38e034",
+  "step": "delta-ws-pg",
+  "rawPath": "target/base03-runs/BASE03-20261019T095950Z-e51076ac/delta-ws-pg.private.stdout.txt",
+  "rawSha256": "6db882c3688dad9a5a230164bdca997ca6b8cf6d102f1f319634a69e21ad1087",
+  "classification": "REAL loopback HTTP/WS/PostgreSQL; process readings/faults separately labelled in assertions; PHYSICAL NOT_RUN",
+  "assertions": [
+    "PASS REAL full1/delta2/duplicate/conflict/invalid-remove/UNSYNCED/resync/full5/role scope; handwritten process set; event+gap committed separately",
+    "PASS BASE03 MT06 REAL WS lower FULL STALE / same sequence changed content CONFLICT; sequence/revision/canonical set/history unchanged",
+    "PASS BASE03 MT04 REAL WS OPEN/new epoch/FULL1 then retired DELTA exact retry and new ID STALE; canonical state/revision/history unchanged",
+    "PASS REAL no-op deltas from successful MOCK scans keep SYNCED across stale1200ms with full reconciliation30000ms",
+    "PASS REAL hung collector auto STALE while heartbeat ONLINE; SIMULATED future-base injection -> real correlated resync/parser/encoder fresh full recovery in same epoch",
+    "PASS REAL SOURCE_FAILURE/heartbeat ONLINE -> autonomous STALE/TTL; fresh scan -> old epoch rejected -> OPEN/new epoch/full1; event/gap retained",
+    "PASS REAL Spring restart / same port / persisted auth -> B2 reconnect / new serverInstanceId / new epoch / full; history retained",
+    "PASS REAL token revocation before handling -> UNAUTHORIZED -> encoder/collector callback cleanup; no fake ACK",
+    "T3-C2 REAL Spring/PG/HTTP/WS/client resync/freshness/restart PASS; readings MOCK, bad-order injection SIMULATED; TEST schema removed; gate/GUI/LAN/E1/E2/human review NOT RUN",
+    "PASS measurement DELTA/RESYNC classified; no added delivery counters or double-counted ACK bytes."
+  ]
+}

@@ -785,3 +785,7 @@ Client chỉ phát đúng manifest/writer/start ID, không autoplay lại khi re
 - Chưa có API monitoring đa tín hiệu V2 (USB/focus/display); chỉ process monitoring v0 hiện hữu.
 
 [Review EX02](EX02_RICH_EXAM_CONTRACT_PROPOSAL.md) đề xuất records/HTTPv2/media vàSTARTgate, **chưa phê duyệt hoặc triển khai**. [Kiểm chứngPGV11](EX04_V11_VERIFICATION.md) xác nhận APIv1 vẫn hoạt động trên schema nâng cấp, duplicateimport trả400 không overwrite vàSCHEDULED còn có thể đọc/lưu/nộp theoQD21. Không suy APIrich/image/STARTgate đãcó từ việc mergeSQL.
+
+## API V2 — thiết kế đã được nhóm thông qua, chưa triển khai
+
+[EX-02](EX02_RICH_EXAM_CONTRACT_V1.md) định nghĩa records/payload/validation/RBAC, gồm Part1-only prefetch manifest nhúng preparation, POST visual/ready ATTEST/INVALIDATE và GET combined session readiness. [ADR-V2-03](plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md) yêu cầu cả Audio+Visual READY trước authoritative Listening START cho PROCTORED_V2; v1 exam/full-status/answers routes không bypass SCHEDULED gate. D01–D10/ADR là TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [xác nhận19/10](plan-v2/EX02_TEAM_APPROVAL_20261019.md), không GitHub Approving Review hoặc runtime implementation. Ca legacy QD21/WSv0 giữ; các route v2 chưa callable ở baseline1d35b53.

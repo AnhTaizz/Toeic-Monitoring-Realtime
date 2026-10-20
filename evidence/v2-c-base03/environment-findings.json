@@ -1,0 +1,49 @@
+{
+  "schema": "base03-environment-findings-v1",
+  "doesNotChangeCorrectnessGate": true,
+  "observations": [
+    {
+      "id": "ENV-01",
+      "sourceSha": "1d35b53729abade7b460d35ab07d042b6f9f3571",
+      "status": "FAIL",
+      "classification": "ENVIRONMENT; no tests executed",
+      "command": "Maven -o focused test with explicit user cache and owned temp",
+      "expected": "Compile and run focused tests",
+      "actual": "Protocol compilation failed reading cached error_prone_annotations dependency under sandbox",
+      "rawPath": "target/base03-focused.private.txt",
+      "rawSha256": "c154d37fc6cb348d4b26687998297bc34e6b7bd95cda7a4f32b2c268e23b38b8",
+      "resolution": "Authorized verification process outside restricted sandbox; R1/R2 succeeded"
+    },
+    {
+      "id": "ENV-02",
+      "runId": "BASE03-20261019T095007Z-25f35add",
+      "status": "FAIL",
+      "classification": "RUNNER; before correctness tests",
+      "command": "verify-v2-c-base03.ps1 at fc16524",
+      "expected": "pg_ctl start returns and cluster is available",
+      "actual": "Windows child inherited redirected pipes, wrapper waited; explicit stop of owned cluster exit0 released pipes, createdb then failed; second stop exit1",
+      "evidence": "evidence/v2-c-base03/BASE03-20261019T095007Z-25f35add/run.json",
+      "resolution": "834f683 disables pg-start stdout/stderr capture; fresh R1/R2 cluster cleanup0"
+    },
+    {
+      "id": "ENV-03",
+      "status": "FAIL",
+      "classification": "KIT INVOCATION; before output creation",
+      "command": "New-T3C4LanBundle.ps1 -OutputDirectory <new-path> without -RepositoryRoot",
+      "expected": "Resolve repository root from PSScriptRoot default",
+      "actual": "PowerShell5.1 parameter default sees empty PSScriptRoot: Split-Path binding error",
+      "rawCapture": "Observed tool execution output, not a retained raw process transcript",
+      "resolution": "Pass -RepositoryRoot explicitly; exact kit packaged/validated successfully"
+    },
+    {
+      "id": "ENV-04",
+      "status": "FAIL",
+      "classification": "HOST EXECUTION POLICY / READ CONTEXT",
+      "command": "Dot-source unpacked Common.ps1 in default PowerShell process; read root Git as sandbox identity",
+      "expected": "Validate bundle and inspect root",
+      "actual": "Default execution policy blocked scripts; root Git reported dubious ownership under sandbox identity",
+      "rawCapture": "Observed tool execution output, not a retained raw process transcript",
+      "resolution": "Child powershell -ExecutionPolicy Bypass scoped to process for Initialize; root Git read with command-scoped safe.directory; no global policy/config change"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "sessionId": "mock-session",
+  "examId": "mock-ex02-200",
+  "contractVersion": "PROCTORED_V2",
+  "state": "SCHEDULED",
+  "attempts": [
+    {"candidateUserId":101,"attemptId":"mock-attempt"},
+    {"candidateUserId":102,"attemptId":"mock-attempt-2"}
+  ]
+}

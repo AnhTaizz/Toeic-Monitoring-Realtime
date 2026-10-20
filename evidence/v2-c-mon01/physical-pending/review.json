@@ -1,0 +1,17 @@
+{
+  "task": "MON-01",
+  "verificationSourceSha": "f78b40776d0e414e2a631f9e0eb0725b2f1033aa",
+  "reviewedSourceSha": null,
+  "bundleSourceSha": "463cbadc50465c6ca2f2d4c0a0701dcb9c38e034",
+  "runtimeSourceSha": "834f683e50b22e214ab63bbf7d046a7d418b8242",
+  "base02Approval": "PENDING",
+  "humanBReview": "PENDING",
+  "reviewerB": null,
+  "reviewedUtc": null,
+  "evidenceReferences": [],
+  "twoPhysicalWindowsMachinesConfirmed": false,
+  "physicalLinkLossWitnessed": false,
+  "physicalCasesExecuted": 0,
+  "mon01Status": "TECHNICALLY_VERIFIED_PENDING_PHYSICAL_REVIEW",
+  "notes": "Prepared by agent; only human B may sign. No physical/manual PASS claimed."
+}
