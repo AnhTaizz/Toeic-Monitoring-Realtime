@@ -24,6 +24,7 @@ public final class CandidateMonitoringSession implements AutoCloseable {
     private final boolean experimentalDelta;
     private ModeStatus mode=new ModeStatus("STOPPED","NOT_STARTED");
     private AutoCloseable heartbeat;
+    private String collectorSessionId;
     private AutoCloseable capability;
     private AutoCloseable scopeRejection;
     private void stopHeartbeat() {
@@ -72,6 +73,7 @@ public final class CandidateMonitoringSession implements AutoCloseable {
                 next.observe(snapshot); nextFull.observe(snapshot);
             }, ignored -> { next.sourceFailed(); nextFull.sourceFailed(); });
             nextFull.bind(collectorId);
+            collectorSessionId = collectorId;
             scopeRejection=transport.onMonitoringAccessRejected(rejected->{
                 if(closed||current!=generation||!attempt.equals(rejected.attemptId())||!collectorId.equals(rejected.collectorSessionId())
                         ||rejected.connectionGeneration()!=transport.connectionGeneration())return;
@@ -85,12 +87,13 @@ public final class CandidateMonitoringSession implements AutoCloseable {
             });
             heartbeat = transport.monitoringHeartbeat(attempt, collectorId);
             return collectorId;
-        } catch (RuntimeException failure) { stopHeartbeat(); collector.stop(); delivery = null; FullSnapshotDelivery created=full;full=null;
+        } catch (RuntimeException failure) { stopHeartbeat(); collector.stop(); delivery = null; collectorSessionId=null; FullSnapshotDelivery created=full;full=null;
             if(created!=null)created.close();next.close();throw failure; }
     }
     public synchronized boolean isActive() { return delivery != null && delivery.status().active(); }
     public synchronized MonitoringDelivery.Status status() { return delivery == null ? null : delivery.status(); }
     public synchronized FullSnapshotDelivery.Status fullStatus() { return full==null ? null : full.status(); }
+    public synchronized String collectorSessionId() { return isActive() ? collectorSessionId : null; }
     public synchronized ModeStatus modeStatus() {
         return mode.mode().equals("DELTA")&&transport.deltaCapability()==DeltaCapability.UNKNOWN
                 ?new ModeStatus("DELTA","WAITING_CURRENT_SOCKET_CAPABILITY"):mode;
@@ -102,7 +105,7 @@ public final class CandidateMonitoringSession implements AutoCloseable {
         CompletableFuture<Void> previous;
         CompletableFuture<Void> completion = new CompletableFuture<>();
         synchronized (this) {
-            generation++; stopHeartbeat(); old = delivery; delivery = null; oldFull=full; full=null; previous = stopping; stopping = completion;
+            generation++; stopHeartbeat(); old = delivery; delivery = null; collectorSessionId=null; oldFull=full; full=null; previous = stopping; stopping = completion;
         }
         MonitoringDelivery.Discarded discarded = old == null ? new MonitoringDelivery.Discarded(0, false, 0) : old.stop();
         if (oldFull!=null) oldFull.close();

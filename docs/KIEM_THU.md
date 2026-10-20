@@ -1,5 +1,13 @@
 # Trạng thái kiểm thử
 
+20/10/2026 — [MON-03 focus candidate](../evidence/v2-b-mon03-focus-20261020/REPORT.md):
+nhánh `feat/v2-b-mon03-focus-monitoring-20261020`, base d2c8f01; focused 46PASS/0SKIP,
+gồm 9 case adapter/JavaFX mới và shared lifecycle regression. Runtime opt-in OFF mặc định,
+chỉ candidate attempt/owned JavaFX windows, duration monotonic; không scrape app ngoài.
+Full clean test 1345 total = 1201PASS/144SKIP/0FAIL/ERROR; lượt no-clean trước đó
+FAIL discovery server do stale `target` thiếu `VisualManifest`, được giữ trong report.
+Manual Alt+Tab/PROCTOR/REAL WS-PG và review C NOT RUN, nên chưa đánh dấu MON-03 DONE.
+
 20/10/2026 — [MON-07 status/gap explicit MOCK](../evidence/c-mon07-status-gap-20261020/REPORT.md):
 runtime1b84d30, test1c008c8; OBSERVER_STATUS bốn nguồn và SIGNAL_GAP overflow qua shared
 context/sequence/queue/socket, REAL WS/HTTP/PG TEST/COMMIT-ACK/history. Baseline246PASS;
