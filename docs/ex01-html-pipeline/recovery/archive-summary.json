@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "1b2bccf8f17e5f2468dc9e6729df8b0bcfa43a62",
+  "archiveVersion": "dataset-20261020-1b2bccf",
+  "restoredVersion": "restored-20261020-1b2bccf",
+  "archiveManifestSha256": "d56c25d61f7dba4453f5f6354163a3d6bdeb0838109c420e16355d8f158f4e52",
+  "archiveFiles": 757,
+  "datasetCount": 4,
+  "mediaCount": 358,
+  "mediaBytes": 189902302,
+  "audioCount": 216,
+  "imageCount": 142,
+  "independentPythonAllFilesHashCheck": "PASS",
+  "archiveCli": "ARCHIVE_VERIFY_PASS",
+  "restoreCli": "ARCHIVE_RESTORE_PASS",
+  "sourceWebsiteFetched": false,
+  "etsImportReady": false,
+  "scope": "Captured JSON/media restored; original content gaps and UNVERIFIED gates preserved"
+}

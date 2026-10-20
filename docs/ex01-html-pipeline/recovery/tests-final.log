@@ -1,0 +1,71 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< vn.edu.toeic.tools:exam-dataset >-------------------
+[INFO] Building exam-dataset 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ exam-dataset ---
+[INFO] skip non existing resourceDirectory E:\Project\toeic-html-pipeline\tools\exam-dataset\src\main\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ exam-dataset ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 12 source files with javac [debug release 21] to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ exam-dataset ---
+[INFO] skip non existing resourceDirectory E:\Project\toeic-html-pipeline\tools\exam-dataset\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ exam-dataset ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 6 source files with javac [debug release 21] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ exam-dataset ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running vn.edu.toeic.dataset.DatasetArchiveTest
+ARCHIVE_VERIFY_PASS files=3 media=1
+ARCHIVE_VERIFY_PASS files=3 media=1
+ARCHIVE_VERIFY_PASS files=3 media=1
+ARCHIVE_VERIFY_PASS files=3 media=1
+ARCHIVE_VERIFY_PASS files=3 media=1
+ARCHIVE_RESTORE_PASS captured data only; import verification unchanged
+ARCHIVE_VERIFY_PASS files=3 media=1
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.152 s -- in vn.edu.toeic.dataset.DatasetArchiveTest
+[INFO] Running vn.edu.toeic.dataset.HtmlExamParserTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.691 s -- in vn.edu.toeic.dataset.HtmlExamParserTest
+[INFO] Running vn.edu.toeic.dataset.LocalMediaInspectorTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.433 s -- in vn.edu.toeic.dataset.LocalMediaInspectorTest
+[INFO] Running vn.edu.toeic.dataset.MediaDownloaderTest
+mock-media image-001 BLOCKED
+mock-media image-001 BLOCKED
+mock-media image-001 BLOCKED
+mock-media image-001 DOWNLOADED
+mock-media image-001 BLOCKED
+mock-media image-001 BLOCKED
+mock-media image-001 BLOCKED
+mock-media image-001 BLOCKED
+mock-media image-001 BLOCKED
+mock-media image-001 BLOCKED
+mock-media image-001 BLOCKED
+mock-media image-001 BLOCKED
+mock-media image-001 BLOCKED
+mock-media image-001 DOWNLOADED
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.333 s -- in vn.edu.toeic.dataset.MediaDownloaderTest
+[INFO] Running vn.edu.toeic.dataset.PipelineTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.720 s -- in vn.edu.toeic.dataset.PipelineTest
+[INFO] Running vn.edu.toeic.dataset.RecoveryTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 33.88 s -- in vn.edu.toeic.dataset.RecoveryTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 64, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  51.032 s
+[INFO] Finished at: 2026-10-20T14:51:40+07:00
+[INFO] ------------------------------------------------------------------------

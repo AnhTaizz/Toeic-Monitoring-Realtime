@@ -1,0 +1,4199 @@
+[
+  {
+    "questionNumber": 1,
+    "part": 1,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 2,
+    "part": 1,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 3,
+    "part": 1,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 4,
+    "part": 1,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 5,
+    "part": 1,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 6,
+    "part": 1,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 7,
+    "part": 2,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 8,
+    "part": 2,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 9,
+    "part": 2,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 10,
+    "part": 2,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 11,
+    "part": 2,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 12,
+    "part": 2,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 13,
+    "part": 2,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 14,
+    "part": 2,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 15,
+    "part": 2,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 16,
+    "part": 2,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 17,
+    "part": 2,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 18,
+    "part": 2,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 19,
+    "part": 2,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 20,
+    "part": 2,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 21,
+    "part": 2,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 22,
+    "part": 2,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 23,
+    "part": 2,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 24,
+    "part": 2,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 25,
+    "part": 2,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 26,
+    "part": 2,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 27,
+    "part": 2,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 28,
+    "part": 2,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 29,
+    "part": 2,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 30,
+    "part": 2,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 31,
+    "part": 2,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": null
+  },
+  {
+    "questionNumber": 32,
+    "part": 3,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Cheese",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-32 .zen-history-answer-details p",
+          "rawText": "B. Cheese",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 33,
+    "part": 3,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Offering additional options",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-33 .zen-history-answer-details p",
+          "rawText": "D. Offering additional options",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 34,
+    "part": 3,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Contact a production manager",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-34 .zen-history-answer-details p",
+          "rawText": "B. Contact a production manager",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 35,
+    "part": 3,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "To buy tickets to an event",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-35 .zen-history-answer-details p",
+          "rawText": "C. To buy tickets to an event",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 36,
+    "part": 3,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "She won a regional tournament.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-36 .zen-history-answer-details p",
+          "rawText": "A. She won a regional tournament.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 37,
+    "part": 3,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Advance payment",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-37 .zen-history-answer-details p",
+          "rawText": "D. Advance payment",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 38,
+    "part": 3,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A fund-raising dinner",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-38 .zen-history-answer-details p",
+          "rawText": "A. A fund-raising dinner",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 39,
+    "part": 3,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Sending out invitations",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-39 .zen-history-answer-details p",
+          "rawText": "D. Sending out invitations",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 40,
+    "part": 3,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "E-mail a list",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-40 .zen-history-answer-details p",
+          "rawText": "A. E-mail a list",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 41,
+    "part": 3,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A community festival",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-41 .zen-history-answer-details p",
+          "rawText": "C. A community festival",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 42,
+    "part": 3,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "They are made from paper.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-42 .zen-history-answer-details p",
+          "rawText": "D. They are made from paper.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 43,
+    "part": 3,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Place an order",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-43 .zen-history-answer-details p",
+          "rawText": "B. Place an order",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 44,
+    "part": 3,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "At a recycling facility",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-44 .zen-history-answer-details p",
+          "rawText": "C. At a recycling facility",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 45,
+    "part": 3,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Electronics",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-45 .zen-history-answer-details p",
+          "rawText": "C. Electronics",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 46,
+    "part": 3,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A list of companies",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-46 .zen-history-answer-details p",
+          "rawText": "A. A list of companies",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 47,
+    "part": 3,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "They took a class together.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-47 .zen-history-answer-details p",
+          "rawText": "A. They took a class together.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 48,
+    "part": 3,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A bakery",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-48 .zen-history-answer-details p",
+          "rawText": "D. A bakery",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 49,
+    "part": 3,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Its location",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-49 .zen-history-answer-details p",
+          "rawText": "C. Its location",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 50,
+    "part": 3,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Video game developers",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-50 .zen-history-answer-details p",
+          "rawText": "C. Video game developers",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 51,
+    "part": 3,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "He tested a product.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-51 .zen-history-answer-details p",
+          "rawText": "B. He tested a product.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 52,
+    "part": 3,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Consulting a colleague",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-52 .zen-history-answer-details p",
+          "rawText": "A. Consulting a colleague",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 53,
+    "part": 3,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A maintenance worker",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-53 .zen-history-answer-details p",
+          "rawText": "C. A maintenance worker",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 54,
+    "part": 3,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A device is malfunctioning.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-54 .zen-history-answer-details p",
+          "rawText": "A. A device is malfunctioning.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 55,
+    "part": 3,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "She wants a service to be completed sooner.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-55 .zen-history-answer-details p",
+          "rawText": "B. She wants a service to be completed sooner.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 56,
+    "part": 3,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "To discuss a loan",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-56 .zen-history-answer-details p",
+          "rawText": "B. To discuss a loan",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 57,
+    "part": 3,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A sports equipment store",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-57 .zen-history-answer-details p",
+          "rawText": "A. A sports equipment store",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 58,
+    "part": 3,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Tourism has increased.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-58 .zen-history-answer-details p",
+          "rawText": "C. Tourism has increased.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 59,
+    "part": 3,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Provide training opportunities",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-59 .zen-history-answer-details p",
+          "rawText": "A. Provide training opportunities",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 60,
+    "part": 3,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Reducing productivity",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-60 .zen-history-answer-details p",
+          "rawText": "C. Reducing productivity",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 61,
+    "part": 3,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "An idea is easy to implement.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-61 .zen-history-answer-details p",
+          "rawText": "B. An idea is easy to implement.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 62,
+    "part": 3,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "At an airport",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-62 .zen-history-answer-details p",
+          "rawText": "C. At an airport",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 63,
+    "part": 3,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "On Wednesday",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-63 .zen-history-answer-details p",
+          "rawText": "C. On Wednesday",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 64,
+    "part": 3,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A company won an award.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-64 .zen-history-answer-details p",
+          "rawText": "D. A company won an award.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 65,
+    "part": 3,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "At a botanical garden",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-65 .zen-history-answer-details p",
+          "rawText": "D. At a botanical garden",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 66,
+    "part": 3,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Page 1",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-66 .zen-history-answer-details p",
+          "rawText": "A. Page 1",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 67,
+    "part": 3,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Some software is being updated.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-67 .zen-history-answer-details p",
+          "rawText": "C. Some software is being updated.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 68,
+    "part": 3,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A project has been approved.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-68 .zen-history-answer-details p",
+          "rawText": "B. A project has been approved.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 69,
+    "part": 3,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Near the covered parking area",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-69 .zen-history-answer-details p",
+          "rawText": "A. Near the covered parking area",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 70,
+    "part": 3,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "To ask for estimates",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-70 .zen-history-answer-details p",
+          "rawText": "C. To ask for estimates",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 71,
+    "part": 4,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Vehicles",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-71 .zen-history-answer-details p",
+          "rawText": "B. Vehicles",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 72,
+    "part": 4,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Extended warranties",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-72 .zen-history-answer-details p",
+          "rawText": "C. Extended warranties",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 73,
+    "part": 4,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "For an inventory count",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-73 .zen-history-answer-details p",
+          "rawText": "A. For an inventory count",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 74,
+    "part": 4,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A human resources representative",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-74 .zen-history-answer-details p",
+          "rawText": "B. A human resources representative",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 75,
+    "part": 4,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Log-in credentials",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-75 .zen-history-answer-details p",
+          "rawText": "D. Log-in credentials",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 76,
+    "part": 4,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "They are only accessible from company computers.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-76 .zen-history-answer-details p",
+          "rawText": "A. They are only accessible from company computers.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 77,
+    "part": 4,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "At an amusement park",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-77 .zen-history-answer-details p",
+          "rawText": "B. At an amusement park",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 78,
+    "part": 4,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "She is pleased with it.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-78 .zen-history-answer-details p",
+          "rawText": "D. She is pleased with it.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 79,
+    "part": 4,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Whether a new product will be available soon",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-79 .zen-history-answer-details p",
+          "rawText": "A. Whether a new product will be available soon",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 80,
+    "part": 4,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Clothing",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-80 .zen-history-answer-details p",
+          "rawText": "D. Clothing",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 81,
+    "part": 4,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Manufacturing some products locally",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-81 .zen-history-answer-details p",
+          "rawText": "A. Manufacturing some products locally",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 82,
+    "part": 4,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A consultant will give a presentation.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-82 .zen-history-answer-details p",
+          "rawText": "B. A consultant will give a presentation.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 83,
+    "part": 4,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A travel delay",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-83 .zen-history-answer-details p",
+          "rawText": "D. A travel delay",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 84,
+    "part": 4,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "To suggest an alternative arrangement",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-84 .zen-history-answer-details p",
+          "rawText": "A. To suggest an alternative arrangement",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 85,
+    "part": 4,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Where to buy food",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-85 .zen-history-answer-details p",
+          "rawText": "D. Where to buy food",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 86,
+    "part": 4,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "At a graphic design company",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-86 .zen-history-answer-details p",
+          "rawText": "A. At a graphic design company",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 87,
+    "part": 4,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Some images",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-87 .zen-history-answer-details p",
+          "rawText": "B. Some images",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 88,
+    "part": 4,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "She will be on vacation.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-88 .zen-history-answer-details p",
+          "rawText": "C. She will be on vacation.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 89,
+    "part": 4,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Journalists",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-89 .zen-history-answer-details p",
+          "rawText": "D. Journalists",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 90,
+    "part": 4,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "An upgrade is not feasible.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-90 .zen-history-answer-details p",
+          "rawText": "B. An upgrade is not feasible.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 91,
+    "part": 4,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A report summary",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-91 .zen-history-answer-details p",
+          "rawText": "C. A report summary",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 92,
+    "part": 4,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Upgrade a payment system",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-92 .zen-history-answer-details p",
+          "rawText": "B. Upgrade a payment system",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 93,
+    "part": 4,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Long lines",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-93 .zen-history-answer-details p",
+          "rawText": "A. Long lines",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 94,
+    "part": 4,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "To justify a choice",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-94 .zen-history-answer-details p",
+          "rawText": "D. To justify a choice",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 95,
+    "part": 4,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "It features an indoor garden.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-95 .zen-history-answer-details p",
+          "rawText": "A. It features an indoor garden.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 96,
+    "part": 4,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Floors 11–14",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-96 .zen-history-answer-details p",
+          "rawText": "C. Floors 11–14",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 97,
+    "part": 4,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A recorded interview",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-97 .zen-history-answer-details p",
+          "rawText": "D. A recorded interview",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 98,
+    "part": 4,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Business investors",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-98 .zen-history-answer-details p",
+          "rawText": "D. Business investors",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 99,
+    "part": 4,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "At site 3",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-99 .zen-history-answer-details p",
+          "rawText": "C. At site 3",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 100,
+    "part": 4,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Applying for permits",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-100 .zen-history-answer-details p",
+          "rawText": "A. Applying for permits",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 101,
+    "part": 5,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "after",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-101 .zen-history-answer-details p",
+          "rawText": "B. after",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 102,
+    "part": 5,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "last",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-102 .zen-history-answer-details p",
+          "rawText": "A. last",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 103,
+    "part": 5,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "update",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-103 .zen-history-answer-details p",
+          "rawText": "A. update",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 104,
+    "part": 5,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "her",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-104 .zen-history-answer-details p",
+          "rawText": "B. her",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 105,
+    "part": 5,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "spread",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-105 .zen-history-answer-details p",
+          "rawText": "B. spread",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 106,
+    "part": 5,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "carefully",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-106 .zen-history-answer-details p",
+          "rawText": "C. carefully",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 107,
+    "part": 5,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "and",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-107 .zen-history-answer-details p",
+          "rawText": "C. and",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 108,
+    "part": 5,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "line",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-108 .zen-history-answer-details p",
+          "rawText": "D. line",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 109,
+    "part": 5,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "seeks",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-109 .zen-history-answer-details p",
+          "rawText": "A. seeks",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 110,
+    "part": 5,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "calculate",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-110 .zen-history-answer-details p",
+          "rawText": "A. calculate",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 111,
+    "part": 5,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "precisely",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-111 .zen-history-answer-details p",
+          "rawText": "C. precisely",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 112,
+    "part": 5,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "financially",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-112 .zen-history-answer-details p",
+          "rawText": "C. financially",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 113,
+    "part": 5,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "certainty",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-113 .zen-history-answer-details p",
+          "rawText": "A. certainty",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 114,
+    "part": 5,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "actively",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-114 .zen-history-answer-details p",
+          "rawText": "C. actively",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 115,
+    "part": 5,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "absorb",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-115 .zen-history-answer-details p",
+          "rawText": "C. absorb",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 116,
+    "part": 5,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "productivity",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-116 .zen-history-answer-details p",
+          "rawText": "D. productivity",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 117,
+    "part": 5,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "in",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-117 .zen-history-answer-details p",
+          "rawText": "A. in",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 118,
+    "part": 5,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "so that",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-118 .zen-history-answer-details p",
+          "rawText": "D. so that",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 119,
+    "part": 5,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "compensate",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-119 .zen-history-answer-details p",
+          "rawText": "C. compensate",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 120,
+    "part": 5,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "neither",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-120 .zen-history-answer-details p",
+          "rawText": "B. neither",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 121,
+    "part": 5,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "despite",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-121 .zen-history-answer-details p",
+          "rawText": "D. despite",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 122,
+    "part": 5,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "sell",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-122 .zen-history-answer-details p",
+          "rawText": "C. sell",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 123,
+    "part": 5,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "cooperative",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-123 .zen-history-answer-details p",
+          "rawText": "B. cooperative",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 124,
+    "part": 5,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "restrictions",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-124 .zen-history-answer-details p",
+          "rawText": "C. restrictions",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 125,
+    "part": 5,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "diligently",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-125 .zen-history-answer-details p",
+          "rawText": "A. diligently",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 126,
+    "part": 5,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "assurance",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-126 .zen-history-answer-details p",
+          "rawText": "A. assurance",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 127,
+    "part": 5,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "dedication",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-127 .zen-history-answer-details p",
+          "rawText": "D. dedication",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 128,
+    "part": 5,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "rather than",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-128 .zen-history-answer-details p",
+          "rawText": "D. rather than",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 129,
+    "part": 5,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "commercial",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-129 .zen-history-answer-details p",
+          "rawText": "D. commercial",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 130,
+    "part": 5,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "diagnostic",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-130 .zen-history-answer-details p",
+          "rawText": "B. diagnostic",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 131,
+    "part": 6,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Riessler Landscaping’s goal is to make your vision a reality.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-131 .zen-history-answer-details p",
+          "rawText": "D. Riessler Landscaping’s goal is to make your vision a reality.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 132,
+    "part": 6,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "beauty",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-132 .zen-history-answer-details p",
+          "rawText": "C. beauty",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 133,
+    "part": 6,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "also",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-133 .zen-history-answer-details p",
+          "rawText": "A. also",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 134,
+    "part": 6,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "our",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-134 .zen-history-answer-details p",
+          "rawText": "B. our",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 135,
+    "part": 6,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "You have been a valuable member of our team.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-135 .zen-history-answer-details p",
+          "rawText": "D. You have been a valuable member of our team.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 136,
+    "part": 6,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "have shown",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-136 .zen-history-answer-details p",
+          "rawText": "C. have shown",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 137,
+    "part": 6,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "soon",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-137 .zen-history-answer-details p",
+          "rawText": "B. soon",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 138,
+    "part": 6,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "milestone",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-138 .zen-history-answer-details p",
+          "rawText": "A. milestone",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 139,
+    "part": 6,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "finalizing",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-139 .zen-history-answer-details p",
+          "rawText": "A. finalizing",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 140,
+    "part": 6,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "colors",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-140 .zen-history-answer-details p",
+          "rawText": "C. colors",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 141,
+    "part": 6,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "We are not planning to begin work for another two weeks.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-141 .zen-history-answer-details p",
+          "rawText": "B. We are not planning to begin work for another two weeks.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 142,
+    "part": 6,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "me",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-142 .zen-history-answer-details p",
+          "rawText": "D. me",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 143,
+    "part": 6,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "satisfactory",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-143 .zen-history-answer-details p",
+          "rawText": "C. satisfactory",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 144,
+    "part": 6,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "summary",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-144 .zen-history-answer-details p",
+          "rawText": "C. summary",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 145,
+    "part": 6,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "For instance",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-145 .zen-history-answer-details p",
+          "rawText": "B. For instance",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 146,
+    "part": 6,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "We hope you will use this resource to manage your health-care needs.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-146 .zen-history-answer-details p",
+          "rawText": "A. We hope you will use this resource to manage your health-care needs.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 147,
+    "part": 7,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "To inform residents of an upcoming project",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-147 .zen-history-answer-details p",
+          "rawText": "C. To inform residents of an upcoming project",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 148,
+    "part": 7,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "It assigns tenants specific parking spots",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-148 .zen-history-answer-details p",
+          "rawText": "D. It assigns tenants specific parking spots",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 149,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Art instructor",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-149 .zen-history-answer-details p",
+          "rawText": "B. Art instructor",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 150,
+    "part": 7,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "She can share her sea glass with all the workshop participants.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-150 .zen-history-answer-details p",
+          "rawText": "C. She can share her sea glass with all the workshop participants.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 151,
+    "part": 7,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "He will be moving to another company location.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-151 .zen-history-answer-details p",
+          "rawText": "D. He will be moving to another company location.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 152,
+    "part": 7,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Inform her of plans to attend an event.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-152 .zen-history-answer-details p",
+          "rawText": "C. Inform her of plans to attend an event.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 153,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "To announce a business reopening",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-153 .zen-history-answer-details p",
+          "rawText": "B. To announce a business reopening",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 154,
+    "part": 7,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Ms. Lafferty’s business partner",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-154 .zen-history-answer-details p",
+          "rawText": "C. Ms. Lafferty’s business partner",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 155,
+    "part": 7,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "To offer a substitute item",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-155 .zen-history-answer-details p",
+          "rawText": "D. To offer a substitute item",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 156,
+    "part": 7,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "It includes a protective case.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-156 .zen-history-answer-details p",
+          "rawText": "C. It includes a protective case.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 157,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "[2]",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "html.loading-site.no-js.bg-fill > body.wp-singular.page-template-default.page.page-id-95906.wp-theme-flatsome.wp-child-theme-lbk.stm_lms_button.full-width.bg-fill.lightbox.nav-dropdown-has-arrow.nav-dropdown-has-shadow.nav-dropdown-has-border > div:nth-child(3) > main > main.zen-history-page > section.zen-history-answers > section.zen-history-reading-group:nth-child(94) > div.zen-history-reading-answers > article.zen-history-answer.zen-history-reading-answer:nth-child(3) > div.zen-history-answer-panel > div.zen-history-explanation > div > p:nth-child(1)",
+          "rawText": "[2]",
+          "method": "EXPLICIT_OPTION_LABEL"
+        }
+      ],
+      "contentKind": "POSITION_MARKER"
+    }
+  },
+  {
+    "questionNumber": 158,
+    "part": 7,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "To indicate that Mr. Delpit is out of the office",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-158 .zen-history-answer-details p",
+          "rawText": "D. To indicate that Mr. Delpit is out of the office",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 159,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A product will be launched",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-159 .zen-history-answer-details p",
+          "rawText": "B. A product will be launched",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 160,
+    "part": 7,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "By visiting Hamerkoptech's Web site",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-160 .zen-history-answer-details p",
+          "rawText": "C. By visiting Hamerkoptech's Web site",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 161,
+    "part": 7,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "To announce a new product line",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-161 .zen-history-answer-details p",
+          "rawText": "C. To announce a new product line",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 162,
+    "part": 7,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "only",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-162 .zen-history-answer-details p",
+          "rawText": "D. only",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 163,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "It is as nutritious as fresh food.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-163 .zen-history-answer-details p",
+          "rawText": "B. It is as nutritious as fresh food.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 164,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A business owner",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-164 .zen-history-answer-details p",
+          "rawText": "B. A business owner",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 165,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "It initially employed two people.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-165 .zen-history-answer-details p",
+          "rawText": "B. It initially employed two people.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 166,
+    "part": 7,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Skill in working with others",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-166 .zen-history-answer-details p",
+          "rawText": "A. Skill in working with others",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 167,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A deadline will occur.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-167 .zen-history-answer-details p",
+          "rawText": "B. A deadline will occur.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 168,
+    "part": 7,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "It needed major renovations.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-168 .zen-history-answer-details p",
+          "rawText": "C. It needed major renovations.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 169,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "It occasionally hires temporary workers.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-169 .zen-history-answer-details p",
+          "rawText": "B. It occasionally hires temporary workers.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 170,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "The restaurant will offer special menu items.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-170 .zen-history-answer-details p",
+          "rawText": "B. The restaurant will offer special menu items.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 171,
+    "part": 7,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "[1]",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "html.loading-site.no-js.bg-fill > body.wp-singular.page-template-default.page.page-id-95906.wp-theme-flatsome.wp-child-theme-lbk.stm_lms_button.full-width.bg-fill.lightbox.nav-dropdown-has-arrow.nav-dropdown-has-shadow.nav-dropdown-has-border > div:nth-child(3) > main > main.zen-history-page > section.zen-history-answers > section.zen-history-reading-group:nth-child(98) > div.zen-history-reading-answers > article.zen-history-answer.zen-history-reading-answer:nth-child(4) > div.zen-history-answer-panel > div.zen-history-explanation > div > p:nth-child(1)",
+          "rawText": "[1]",
+          "method": "EXPLICIT_OPTION_LABEL"
+        }
+      ],
+      "contentKind": "POSITION_MARKER"
+    }
+  },
+  {
+    "questionNumber": 172,
+    "part": 7,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "To ask for clarification about a request",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-172 .zen-history-answer-details p",
+          "rawText": "D. To ask for clarification about a request",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 173,
+    "part": 7,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Account holders in one age-group",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-173 .zen-history-answer-details p",
+          "rawText": "A. Account holders in one age-group",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 174,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Make a change to a form",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-174 .zen-history-answer-details p",
+          "rawText": "B. Make a change to a form",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 175,
+    "part": 7,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Ms. Barry will need to ask for more time to do the request.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-175 .zen-history-answer-details p",
+          "rawText": "A. Ms. Barry will need to ask for more time to do the request.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 176,
+    "part": 7,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "By word of mouth",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-176 .zen-history-answer-details p",
+          "rawText": "A. By word of mouth",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 177,
+    "part": 7,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Seasonal food items",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-177 .zen-history-answer-details p",
+          "rawText": "D. Seasonal food items",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 178,
+    "part": 7,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Web design",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-178 .zen-history-answer-details p",
+          "rawText": "C. Web design",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 179,
+    "part": 7,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "The News page",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-179 .zen-history-answer-details p",
+          "rawText": "D. The News page",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 180,
+    "part": 7,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "On April 5",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-180 .zen-history-answer-details p",
+          "rawText": "C. On April 5",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 181,
+    "part": 7,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "It will change the way an institution heats its buildings.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-181 .zen-history-answer-details p",
+          "rawText": "D. It will change the way an institution heats its buildings.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 182,
+    "part": 7,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "carry out",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-182 .zen-history-answer-details p",
+          "rawText": "D. carry out",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 183,
+    "part": 7,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "It is located near a university campus.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-183 .zen-history-answer-details p",
+          "rawText": "A. It is located near a university campus.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 184,
+    "part": 7,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "To avoid noise from nearby construction",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-184 .zen-history-answer-details p",
+          "rawText": "C. To avoid noise from nearby construction",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 185,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "It will have artwork for sale on its property.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-185 .zen-history-answer-details p",
+          "rawText": "B. It will have artwork for sale on its property.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 186,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Repairing gutters",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-186 .zen-history-answer-details p",
+          "rawText": "B. Repairing gutters",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 187,
+    "part": 7,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "It has developed a leak.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-187 .zen-history-answer-details p",
+          "rawText": "A. It has developed a leak.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 188,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "On December 13",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-188 .zen-history-answer-details p",
+          "rawText": "B. On December 13",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 189,
+    "part": 7,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "A project supervisor",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-189 .zen-history-answer-details p",
+          "rawText": "A. A project supervisor",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 190,
+    "part": 7,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "The tools they used for a job",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-190 .zen-history-answer-details p",
+          "rawText": "D. The tools they used for a job",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 191,
+    "part": 7,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Graphic design",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-191 .zen-history-answer-details p",
+          "rawText": "D. Graphic design",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 192,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "World Suitcase",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "html.loading-site.no-js.bg-fill > body.wp-singular.page-template-default.page.page-id-95906.wp-theme-flatsome.wp-child-theme-lbk.stm_lms_button.full-width.bg-fill.lightbox.nav-dropdown-has-arrow.nav-dropdown-has-shadow.nav-dropdown-has-border > div:nth-child(3) > main > main.zen-history-page > section.zen-history-answers > section.zen-history-reading-group:nth-child(103) > div.zen-history-reading-answers > article.zen-history-answer.zen-history-reading-answer:nth-child(2) > div.zen-history-answer-panel > div.zen-history-explanation > div > p",
+          "rawText": "World Suitcase",
+          "method": "EXPLICIT_OPTION_LABEL"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 193,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "June 11",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-193 .zen-history-answer-details p",
+          "rawText": "B. June 11",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 194,
+    "part": 7,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "It will include a display stand.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-194 .zen-history-answer-details p",
+          "rawText": "A. It will include a display stand.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 195,
+    "part": 7,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Blue",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-195 .zen-history-answer-details p",
+          "rawText": "A. Blue",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 196,
+    "part": 7,
+    "recordedKey": "B",
+    "recoveredRecordedKey": "B",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "To ask for opinions from managers",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-196 .zen-history-answer-details p",
+          "rawText": "B. To ask for opinions from managers",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 197,
+    "part": 7,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "Mr. Salehi",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-197 .zen-history-answer-details p",
+          "rawText": "A. Mr. Salehi",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 198,
+    "part": 7,
+    "recordedKey": "D",
+    "recoveredRecordedKey": "D",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "He negotiated with Ms. Black for a lower price.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-198 .zen-history-answer-details p",
+          "rawText": "D. He negotiated with Ms. Black for a lower price.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 199,
+    "part": 7,
+    "recordedKey": "C",
+    "recoveredRecordedKey": "C",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "She is responsible for an increase in customer feedback.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-199 .zen-history-answer-details p",
+          "rawText": "C. She is responsible for an increase in customer feedback.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  },
+  {
+    "questionNumber": 200,
+    "part": 7,
+    "recordedKey": "A",
+    "recoveredRecordedKey": "A",
+    "sourceLabelsMatch": true,
+    "independentKeyReview": "MISSING",
+    "humanVerified": false,
+    "correctEnglishText": {
+      "value": "She received votes from at least three managers.",
+      "status": "SOURCE_EXACT",
+      "provenance": [
+        {
+          "sourcePath": "data/seedingTest/ets2026_test01.html",
+          "sourceSha256": "7b9c38f3772f2f3d02d14896f0debe120eb7e17f483962dc7c8489df7ba003fe",
+          "selector": "#cau-200 .zen-history-answer-details p",
+          "rawText": "A. She received votes from at least three managers.",
+          "method": "CORRECT_ANSWER_TEXT"
+        }
+      ],
+      "contentKind": "ENGLISH_TEXT"
+    }
+  }
+]

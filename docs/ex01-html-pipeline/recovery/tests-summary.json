@@ -1,0 +1,54 @@
+{
+  "sourceCommit": "1b2bccf8f17e5f2468dc9e6729df8b0bcfa43a62",
+  "runtime": "Oracle JDK 21.0.8 / Maven 3.9.11 / Windows x64 via WSL",
+  "tests": 64,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "suites": [
+    {
+      "name": "vn.edu.toeic.dataset.DatasetArchiveTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "vn.edu.toeic.dataset.HtmlExamParserTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "vn.edu.toeic.dataset.LocalMediaInspectorTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "vn.edu.toeic.dataset.MediaDownloaderTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "vn.edu.toeic.dataset.PipelineTest",
+      "tests": "19",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "vn.edu.toeic.dataset.RecoveryTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "rawLogSha256": "dbb3d98a384411dd8c7ebfed429c7ac1b638e024ddef3195b7ccf92c5c49177e",
+  "scope": "Standalone ETL tests; no JavaFX/hearing/LAN acceptance"
+}

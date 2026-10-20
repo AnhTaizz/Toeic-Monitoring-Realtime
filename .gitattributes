@@ -116,3 +116,6 @@ data/seedingTest/manifest.json text eol=lf
 data/seedingTest/generated/ex01/** text eol=lf
 docs/ex01-html-pipeline/** text eol=lf
 docs/ex01-html-pipeline/contract-probe.log -text -eol whitespace=cr-at-eol
+
+# EX01 recovery raw logs retain their captured Windows bytes.
+docs/ex01-html-pipeline/recovery/*.log -text -eol whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
