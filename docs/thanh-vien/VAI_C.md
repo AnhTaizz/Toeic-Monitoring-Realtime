@@ -505,3 +505,16 @@ DONE hoặc ADR owner signature; physical USB0/12/LAN0/41/desktop nghiệm thu p
 đã sửa raw byte-bound whitespace bypass có FAIL trước sửa, giữ build/receipt cũ và tạo
 JAR mới đúng source. Handoff DTO/queue và giới hạn owner/hardware như trên; không lấy
 252PASS/CI HEAD cũ thay kết quả cuối. [Report](../../evidence/c-mon07-typed-20261020/REPORT.md).
+
+### Ghi chú làm dở — MON-02 USB adapter experiment, 20/10/2026
+
+[Contract](../MON02_USB_ADAPTER_EXPERIMENT.md)/[report](../../evidence/c-mon02-adapter-20261020/REPORT.md):
+source aac7528, baseline154/focused312PASS (24 PGcases), all input transition MOCK,
+REAL WS/HTTP/PG TEST, single USB claim/run sau2FAIL giữ nguyên. Adapter nhận classified
+slots, aggregate baseline/ref absent, errors UNKNOWN/no removal, bounded mapping/ref
+PARTIAL và không physical identity guarantee. SignalRunContext cấp sequence cho mọi
+emitter; adapter không sở hữu queue/transport/worker, owner phải close cả run/delivery/
+lease khi kết thúc phiên. Bridge probe chỉ TEST dependency; chưa native runtime binding.
+C tiếp theo cần hardware H01–12, module/packaging/provider/cadence/identity review và
+owner notice/auth/lifetime/ADR/policy trước nối candidate. Không yêu cầu USB ở lượt này,
+physical0/12NOT_RUN/MON02chưaDONE/FULL/experimentOFF/gatespending giữ nguyên.

@@ -1001,3 +1001,22 @@ không thay process parser/schema/defaults. Focused cuối253PASS/0SKIP,21 REAL 
 kiểm thêm padded payload/details reject/no insert; TEST0schema/stop0. JAR/receipt cũ
 lưu riêng, build mới pin abb282e; CI HEAD cũ không dùng để merge bản mới. Source/hashes/
 CI cuối tại report/PR84, không ký owner hoặc đổi gate/DONE/hardware.
+
+## 20/10/2026 — C: adapter USB MOCK qua MON-07
+
+- Từ main e189b61, nhánh feat/c-mon02-usb-adapter-20261020 riêng; đọc probe/typed pipeline/
+  task cards, không PR adapter trùng. Chốt semantics trong MON02_USB_ADAPTER_EXPERIMENT
+  trước code; client không phụ thuộc monitoring-spike, server chỉ test dependency để
+  bridge model/classification, không copy provider/CLI hoặc scanner runtime mới.
+- Source693cf44 có unit174PASS và focused310PASS/24PG; review tìm hai lỗi ownership
+  duplicate adapter/rebind old context,2/2FAIL được giữ. aac7528 sửa one USB claim/context;
+  focused cuối312PASS/0SKIP, cùng24PGcases,0schema/stop0; không rerun blind.
+- Baseline154PASS trước sửa. SetupPG đầu lỗi socket Permission denied trước test, runner
+  mask DateTime lỗi vì chưa có startUtc; log cũ giữ nguyên. Kiểm Windows excluded ranges,
+  chọn range TEST khác và ghi cổng ở runner local; không khẳng định nguyên nhân exclusion
+  khi số cổng FAIL chưa được lưu, không đổi .env/DBdev hoặc source provider/timeout.
+- Shared run cấp IDs/sequence, source baseline độc lập delivery/offline/full, map≤64 và
+  generation cleanup; allPARTIAL, ref chỉ slot correlation liên tục, lỗi bỏ ref/no removal.
+  [Contract](MON02_USB_ADAPTER_EXPERIMENT.md)/[evidence](../evidence/c-mon02-adapter-20261020/REPORT.md).
+- Build/CI/PR cuối ghi trong report/PR. Giữ USB0/12NOT_RUN, MON-02chưaDONE, FULL/default
+  experimentOFF/ADR/gate/ownerpending; không production observer/dashboard/rules/E1/E2.
