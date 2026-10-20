@@ -1,0 +1,543 @@
+{
+    "schema":  "mon07-typed-experiment-receipt-v1",
+    "authorization":  "USER_AUTHORIZED_EXPERIMENT; not human A/B/C approval",
+    "baseSha":  "ad8c370992423d58c730db1320d7fe247beb587f",
+    "runtimeSourceSha":  "a0e9200025f06d57675e385c7d28fe6c61ae326f",
+    "finalTestSourceSha":  "c71ddde0e788b06bbe4f862bfd541de362ff707b",
+    "environment":  {
+                        "java":  "Temurin 21.0.10+7",
+                        "transport":  "REAL HTTP/WS loopback",
+                        "postgres":  "18.3",
+                        "faults":  "SIMULATED USB ACK loss, deferred COMMIT failure, socket/clock faults",
+                        "observations":  "11 MOCK states across 6 eventTypes",
+                        "maven":  "3.9.15",
+                        "os":  "Windows 11 x64"
+                    },
+    "runs":  [
+                 {
+                     "cleanup":  {
+                                     "clusterStopExit":  0,
+                                     "ownedSchemasRemaining":  0
+                                 },
+                     "totals":  {
+                                    "failures":  0,
+                                    "passed":  227,
+                                    "errors":  0,
+                                    "tests":  227,
+                                    "skipped":  0
+                                },
+                     "passwordFileRemaining":  false,
+                     "runId":  "mon07-20261020T115701Z-911669df",
+                     "sourceSha":  "ad8c370992423d58c730db1320d7fe247beb587f",
+                     "phase":  "baseline"
+                 },
+                 {
+                     "cleanup":  {
+                                     "clusterStopExit":  0,
+                                     "ownedSchemasRemaining":  0
+                                 },
+                     "totals":  {
+                                    "failures":  0,
+                                    "passed":  252,
+                                    "errors":  0,
+                                    "tests":  252,
+                                    "skipped":  0
+                                },
+                     "passwordFileRemaining":  false,
+                     "runId":  "mon07-20261020T120712Z-c86eae71",
+                     "sourceSha":  "a0e9200025f06d57675e385c7d28fe6c61ae326f",
+                     "phase":  "focused"
+                 },
+                 {
+                     "cleanup":  {
+                                     "clusterStopExit":  0,
+                                     "ownedSchemasRemaining":  0
+                                 },
+                     "totals":  {
+                                    "failures":  0,
+                                    "passed":  252,
+                                    "errors":  0,
+                                    "tests":  252,
+                                    "skipped":  0
+                                },
+                     "passwordFileRemaining":  false,
+                     "runId":  "mon07-20261020T121352Z-97fe22de",
+                     "sourceSha":  "c71ddde0e788b06bbe4f862bfd541de362ff707b",
+                     "phase":  "final-focused"
+                 }
+             ],
+    "fullVerify":  {
+                       "totals":  {
+                                      "failures":  0,
+                                      "passed":  1152,
+                                      "skipped":  137,
+                                      "tests":  1289,
+                                      "errors":  0
+                                  },
+                       "sourceSha":  "a0e9200025f06d57675e385c7d28fe6c61ae326f",
+                       "skippedSuites":  [
+                                             {
+                                                 "class":  "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+                                                 "count":  1
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.client.audio.AudioFilesTest",
+                                                 "count":  1
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.client.exam.rich.RichAttemptE2eGuiTest",
+                                                 "count":  1
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.client.exam.rich.RichExamViewGuiTest",
+                                                 "count":  6
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.client.exam.ScoreResultDialogTest",
+                                                 "count":  1
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.client.proctor.redesign.ProctorRedesignGuiTest",
+                                                 "count":  10
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.client.proctor.redesign.ProctorV2E2eGuiTest",
+                                                 "count":  1
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.client.proctor.redesign.ProctorV2SessionPaneGuiTest",
+                                                 "count":  5
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.server.audio.AudioRuntimePostgresTest",
+                                                 "count":  10
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+                                                 "count":  15
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+                                                 "count":  27
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.server.exam.rich.RichExamImportPostgresTest",
+                                                 "count":  11
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.server.exam.rich.RichImagePostgresTest",
+                                                 "count":  3
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.server.exam.rich.RichSessionLifecyclePostgresTest",
+                                                 "count":  8
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.server.exam.RichExamMigrationPostgresTest",
+                                                 "count":  11
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest",
+                                                 "count":  4
+                                             },
+                                             {
+                                                 "class":  "vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest",
+                                                 "count":  22
+                                             }
+                                         ],
+                       "postgresOptIn":  false
+                   },
+    "build":  {
+                  "runtimeSourceSha":  "a0e9200025f06d57675e385c7d28fe6c61ae326f",
+                  "testSourceSha":  "c71ddde0e788b06bbe4f862bfd541de362ff707b",
+                  "runtimeDiffSinceBuild":  "NONE; later changes test/docs only",
+                  "buildCommand":  "mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC verify",
+                  "buildLogSha256":  "b19d4da110f08f048ae0f1825e803a271fb81f1bb28110daec6d382bb2baac5d",
+                  "jars":  [
+                               {
+                                   "sha256":  "f74f6f3fd8ebe5ab18177660ee0c0625601f88a0d4f1b1ca985a2760dc022a6a",
+                                   "file":  "protocol/target/protocol-0.1.0-SNAPSHOT.jar",
+                                   "bytes":  160045
+                               },
+                               {
+                                   "sha256":  "d3618b746092c6e59cb82a1d3a249e947ca3c0cd3a544ca89055b2c71fbd3c6f",
+                                   "file":  "client/target/client-0.1.0-SNAPSHOT-all.jar",
+                                   "bytes":  11848168
+                               },
+                               {
+                                   "sha256":  "07c0dc3a1c4c62b1d34a338bd5c4ca242d4de8690c0ff4657eb11c4473a9ba9c",
+                                   "file":  "server/target/server-0.1.0-SNAPSHOT.jar",
+                                   "bytes":  25456654
+                               }
+                           ],
+                  "entryChecks":  [
+                                      {
+                                          "sha256":  "ef664e47e0bcf130314a6c563b0676f4d77b8e1ab202dc10434a8948fe7c8c97",
+                                          "entry":  "vn/edu/toeic/protocol/monitoring/signal/Signal.class",
+                                          "matchesCompiled":  true,
+                                          "container":  "client-all.jar"
+                                      },
+                                      {
+                                          "sha256":  "1aa27394a817825e6b0f2b3331aeadce3d5d74f4e06effdbc83354d9640d558b",
+                                          "entry":  "vn/edu/toeic/protocol/monitoring/signal/SignalMessage.class",
+                                          "matchesCompiled":  true,
+                                          "container":  "client-all.jar"
+                                      },
+                                      {
+                                          "sha256":  "60006ff5ec6dd0c919c90759bcc821323a145cdb4a9d97f4d0103fabadef831e",
+                                          "entry":  "vn/edu/toeic/protocol/monitoring/signal/UsbStorageSignal.class",
+                                          "matchesCompiled":  true,
+                                          "container":  "client-all.jar"
+                                      },
+                                      {
+                                          "sha256":  "96fc1384d8cf21c03f3be1687f691e234db800705ff6c3110e2d6a17d223be14",
+                                          "entry":  "vn/edu/toeic/protocol/monitoring/signal/FocusSignal.class",
+                                          "matchesCompiled":  true,
+                                          "container":  "client-all.jar"
+                                      },
+                                      {
+                                          "sha256":  "44e7c674e078af4003ab76d7b3b55212164129614bf0993fd64e1fc8ea229860",
+                                          "entry":  "vn/edu/toeic/protocol/monitoring/signal/WindowSignal.class",
+                                          "matchesCompiled":  true,
+                                          "container":  "client-all.jar"
+                                      },
+                                      {
+                                          "sha256":  "3cf5185c2faa925319a37f909ee897efdcf3e93b88fcda3761e81841da5eee17",
+                                          "entry":  "vn/edu/toeic/protocol/monitoring/signal/DisplaySignal.class",
+                                          "matchesCompiled":  true,
+                                          "container":  "client-all.jar"
+                                      },
+                                      {
+                                          "sha256":  "7b11971c7ab7fc68ee4e62f06029c9a13f577e5cd2bdea3ade9c1d0a21d1d45f",
+                                          "entry":  "vn/edu/toeic/client/realtime/RealtimeClient.class",
+                                          "matchesCompiled":  true,
+                                          "container":  "client-all.jar"
+                                      },
+                                      {
+                                          "sha256":  "081beb1953e1ceb87bc010fc1b84882ea00e3f14553f9be1bc1a880de9a91328",
+                                          "entry":  "vn/edu/toeic/server/monitoring/signal/SignalService.class",
+                                          "matchesCompiled":  true,
+                                          "container":  "server.jar"
+                                      },
+                                      {
+                                          "matchesSource":  true,
+                                          "sha256":  "be697b2f4cda213e67f761085a13a07f39085614e166f1b626c7fec4cbcc81a2",
+                                          "entry":  "db/migration/V16__experimental_typed_signals.sql",
+                                          "container":  "server.jar"
+                                      },
+                                      {
+                                          "sha256":  "f74f6f3fd8ebe5ab18177660ee0c0625601f88a0d4f1b1ca985a2760dc022a6a",
+                                          "entry":  "protocol-0.1.0-SNAPSHOT.jar",
+                                          "matchesBuiltProtocol":  true,
+                                          "container":  "server.jar"
+                                      }
+                                  ]
+              },
+    "focusedCommand":  "mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC -pl server -am -Dtest=SignalProtocolTest,TypedSignalTest,SignalDeliveryTest,SignalPipelinePostgresTest#mockFixtureThroughClientDeliveryRealWsCommitAckLossRetryAndPagedHttp+actualReconnectRequiresFreshCapabilityAndPreservesOriginalConnection+mixedMockTypesThroughSharedDeliveryCommitAckRetryAndFixedThroughHistory+typedDuplicateUsesCanonicalDetailsAndConflictPreservesCommittedContent+typedCommitFailureRollsBackBothRowsAndCounterWithoutSuccessfulAck+typedStoredDuplicateStillRequiresRoleOwnerActiveAndLiveToken+duplicateCanonicalConflictAndUnknownTypeHaveNoExtraRows+strictWireRejectsDuplicateUnknownUnicodeAndIntegerFormsWithoutMutation+authorizationBeforeDuplicateHistoryAndCapabilityIncludingTerminalAssignmentAndRevoke+deferredCommitFailureRollsBackCounterAndNeverEmitsSuccessAck+fixedThroughPaginationNeverCheckpointsUncommittedOrLaterRows+counterLockCommitsPrefixAndInitialWriterRollbackCannotSkipLowSequence+revokeWhileCounterWaitsIsRecheckedBeforeDuplicate+tokenRevokeAndAssignmentDeletionWaitForAuthorizedTransactionToFinish+terminalUpdateWaitsForSignalCommitThenDuplicateIsForbidden+expiredTokenCannotReadOrReplayStoredDuplicate+expiryIsJudgedAfterSessionRowLockWaitNotBeforeIt+realUncorrelatedTokenDenialStopsDeliveryAndItsWorker+proctorTokenExpiryAfterAssignmentLockWaitCannotReadHistoryOrCapabilities+experimentOffStillAppliesV13WithoutCreatingSignalServiceOrRoutes+migrationUpgradeFromV15PreservesDisplayRowsCountersAndChecksums,SignalDisabledTest,RealtimeClientTest,MonitoringDeliveryTest,FullSnapshotDeliveryTest,DeltaSnapshotDeliveryTest,MonitoringPresenceServiceTest,MonitoringStateServiceTest,MonitoringStateMaintenanceTest,MonitoringDeltaStateTest,MonitoringHistoryBoundsPostgresTest -Dsurefire.failIfNoSpecifiedTests=false test",
+    "finalFocusedXml":  [
+                            {
+                                "skipped":  0,
+                                "errors":  0,
+                                "sha256":  "e842b169bfbee99026a994aa2ac5673f1b8e4cb6c62ac058fabb4369d64183d0",
+                                "failures":  0,
+                                "tests":  32,
+                                "file":  "TEST-vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest.xml"
+                            },
+                            {
+                                "skipped":  0,
+                                "errors":  0,
+                                "sha256":  "fb5a87419a4faa7990507e9ac2b60d341eaa801f64d37b0ea214c6fd07bf9f99",
+                                "failures":  0,
+                                "tests":  11,
+                                "file":  "TEST-vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest.xml"
+                            },
+                            {
+                                "skipped":  0,
+                                "errors":  0,
+                                "sha256":  "11b2ffbb04f8683e49406d1732ae6b5aaedd5e75e32f01f9c6f6175721387343",
+                                "failures":  0,
+                                "tests":  34,
+                                "file":  "TEST-vn.edu.toeic.client.monitoring.MonitoringDeliveryTest.xml"
+                            },
+                            {
+                                "skipped":  0,
+                                "errors":  0,
+                                "sha256":  "7da4bbd471293cfffd12672a06d4efd33d0b588b159e7b7c83938decc93e393b",
+                                "failures":  0,
+                                "tests":  11,
+                                "file":  "TEST-vn.edu.toeic.client.monitoring.signal.SignalDeliveryTest.xml"
+                            },
+                            {
+                                "skipped":  0,
+                                "errors":  0,
+                                "sha256":  "40371dd4c69678db042a9317f4e85aebf921d078fb7905933d2e744cd097384d",
+                                "failures":  0,
+                                "tests":  75,
+                                "file":  "TEST-vn.edu.toeic.client.realtime.RealtimeClientTest.xml"
+                            },
+                            {
+                                "skipped":  0,
+                                "errors":  0,
+                                "sha256":  "9f25718e86b0255beb295d40c854e6bc571ac97752fe8dae392fd7835520cf28",
+                                "failures":  0,
+                                "tests":  17,
+                                "file":  "TEST-vn.edu.toeic.protocol.monitoring.signal.SignalProtocolTest.xml"
+                            },
+                            {
+                                "skipped":  0,
+                                "errors":  0,
+                                "sha256":  "b5522427024dd6553f1cd9aba977167bcf4b0c0ec5b2d0a8d4965164b0304223",
+                                "failures":  0,
+                                "tests":  15,
+                                "file":  "TEST-vn.edu.toeic.protocol.monitoring.signal.TypedSignalTest.xml"
+                            },
+                            {
+                                "skipped":  0,
+                                "errors":  0,
+                                "sha256":  "462424d4b253ec152b18c2ac87d38dce25a92c07246a5ea4e9bd4422e5256ffe",
+                                "failures":  0,
+                                "tests":  7,
+                                "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringDeltaStateTest.xml"
+                            },
+                            {
+                                "skipped":  0,
+                                "errors":  0,
+                                "sha256":  "9eb97454a8a7ac876e075ce4ac1df6b21f10d1fe6602c559912e981a4506053a",
+                                "failures":  0,
+                                "tests":  4,
+                                "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringHistoryBoundsPostgresTest.xml"
+                            },
+                            {
+                                "skipped":  0,
+                                "errors":  0,
+                                "sha256":  "a0e544ef5d1db3b790ecf0382bbc37f264ec69814455ac4b8094ea90b952add0",
+                                "failures":  0,
+                                "tests":  12,
+                                "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringPresenceServiceTest.xml"
+                            },
+                            {
+                                "skipped":  0,
+                                "errors":  0,
+                                "sha256":  "8f7bf53a95464fe08f59b7a820127034325bcf75dfcdf6e78c391a466d252dd2",
+                                "failures":  0,
+                                "tests":  4,
+                                "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest.xml"
+                            },
+                            {
+                                "skipped":  0,
+                                "errors":  0,
+                                "sha256":  "b99b0cc50af5337e7f2679acc46ba56b76a847fb572d5961a6faeb4645abb543",
+                                "failures":  0,
+                                "tests":  8,
+                                "file":  "TEST-vn.edu.toeic.server.monitoring.MonitoringStateServiceTest.xml"
+                            },
+                            {
+                                "skipped":  0,
+                                "errors":  0,
+                                "sha256":  "8469ae237ce2b5b2f6767e545b6ffc73fc161ecc7618119fbb96bd03c671b0f1",
+                                "failures":  0,
+                                "tests":  1,
+                                "file":  "TEST-vn.edu.toeic.server.monitoring.signal.SignalDisabledTest.xml"
+                            },
+                            {
+                                "skipped":  0,
+                                "errors":  0,
+                                "sha256":  "916f03ffaad68e5164a7f24c212cead4272ccba19599777df910f3a3d6cb24ee",
+                                "failures":  0,
+                                "tests":  21,
+                                "file":  "TEST-vn.edu.toeic.server.monitoring.signal.SignalPipelinePostgresTest.xml"
+                            }
+                        ],
+    "pipelineCases":  [
+                          {
+                              "name":  "experimentOffStillAppliesV13WithoutCreatingSignalServiceOrRoutes",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "deferredCommitFailureRollsBackCounterAndNeverEmitsSuccessAck",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "typedCommitFailureRollsBackBothRowsAndCounterWithoutSuccessfulAck",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "terminalUpdateWaitsForSignalCommitThenDuplicateIsForbidden",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "realUncorrelatedTokenDenialStopsDeliveryAndItsWorker",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "mockFixtureThroughClientDeliveryRealWsCommitAckLossRetryAndPagedHttp",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "actualReconnectRequiresFreshCapabilityAndPreservesOriginalConnection",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "typedDuplicateUsesCanonicalDetailsAndConflictPreservesCommittedContent",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "revokeWhileCounterWaitsIsRecheckedBeforeDuplicate",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "migrationUpgradeFromV15PreservesDisplayRowsCountersAndChecksums",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "proctorTokenExpiryAfterAssignmentLockWaitCannotReadHistoryOrCapabilities",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "duplicateCanonicalConflictAndUnknownTypeHaveNoExtraRows",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "expiredTokenCannotReadOrReplayStoredDuplicate",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "authorizationBeforeDuplicateHistoryAndCapabilityIncludingTerminalAssignmentAndRevoke",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "tokenRevokeAndAssignmentDeletionWaitForAuthorizedTransactionToFinish",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "fixedThroughPaginationNeverCheckpointsUncommittedOrLaterRows",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "typedStoredDuplicateStillRequiresRoleOwnerActiveAndLiveToken",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "mixedMockTypesThroughSharedDeliveryCommitAckRetryAndFixedThroughHistory",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "counterLockCommitsPrefixAndInitialWriterRollbackCannotSkipLowSequence",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "expiryIsJudgedAfterSessionRowLockWaitNotBeforeIt",
+                              "status":  "PASS"
+                          },
+                          {
+                              "name":  "strictWireRejectsDuplicateUnknownUnicodeAndIntegerFormsWithoutMutation",
+                              "status":  "PASS"
+                          }
+                      ],
+    "localArtifactHashes":  [
+                                {
+                                    "sha256":  "322de44ee6a02dede38a9fc7be1dbadb31995002efb89c916160ab10b591e594",
+                                    "file":  "baseline/maven.private.log"
+                                },
+                                {
+                                    "sha256":  "593cf358902b0164168e74224a220324ba240ceb4bfe839183e0376ae53b1082",
+                                    "file":  "baseline/result.json"
+                                },
+                                {
+                                    "sha256":  "92561b559467880b1973abfa931d4d269eacf51435d19f4800b901272316b250",
+                                    "file":  "baseline/result-reconciled.json"
+                                },
+                                {
+                                    "sha256":  "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+                                    "file":  "baseline/schema-count.private.log"
+                                },
+                                {
+                                    "sha256":  "3a6747065de8c2dbc66a6baa73d5ab09c2c03eb8851704f973ac4b886e6805f2",
+                                    "file":  "baseline/pg-stop.private.log"
+                                },
+                                {
+                                    "sha256":  "87a532f01987023ed62b1a15e884207408043b772cb83372695025bc023d3108",
+                                    "file":  "focused/maven.private.log"
+                                },
+                                {
+                                    "sha256":  "bc926ad9783cac88d40daae3f2e91ba1b38bb6d5855b9032fa712a534b79590c",
+                                    "file":  "focused/result.json"
+                                },
+                                {
+                                    "sha256":  "9f3e8b9579bfcfdaf3344b9b8237b8c5f52b493d530169d9e13d674772fd3c04",
+                                    "file":  "focused/result-reconciled.json"
+                                },
+                                {
+                                    "sha256":  "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+                                    "file":  "focused/schema-count.private.log"
+                                },
+                                {
+                                    "sha256":  "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb",
+                                    "file":  "focused/pg-stop.private.log"
+                                },
+                                {
+                                    "sha256":  "563e837d7474269edbb042c68a7de4b48a153dccb4db5245a0adef6794288e97",
+                                    "file":  "final-focused/maven.private.log"
+                                },
+                                {
+                                    "sha256":  "636899a2452397ecd78a1143f541c755120d6d86df3cdeeda789b55e12aa7bf9",
+                                    "file":  "final-focused/result.json"
+                                },
+                                {
+                                    "sha256":  "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+                                    "file":  "final-focused/schema-count.private.log"
+                                },
+                                {
+                                    "sha256":  "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb",
+                                    "file":  "final-focused/pg-stop.private.log"
+                                },
+                                {
+                                    "sha256":  "db5bca15beb07f826fa2bc9325420fe3c080b11e3c2da63f9ab7995ecd3f2cf0",
+                                    "file":  "typed-check/baseline.private.log"
+                                },
+                                {
+                                    "sha256":  "3881bc0e58718f0104c9fadd936e0e8fd67074a30ecc2097b95077ed47db84fa",
+                                    "file":  "typed-check/baseline-cache.private.log"
+                                },
+                                {
+                                    "sha256":  "1e6fe767519f5766f64597eb312422f47e6a574cbb6db57048d900a023cef08b",
+                                    "file":  "typed-check/first-typed.private.log"
+                                },
+                                {
+                                    "sha256":  "fd38a930b296bb1402b304c4cb62d2a913154fbbbc3b4610ebfbae0a17aa2018",
+                                    "file":  "typed-check/capability-before-fix.private.log"
+                                },
+                                {
+                                    "sha256":  "2e523998f495595b0088191694ada9a239fa90030aa54b033b60cec54604c21b",
+                                    "file":  "typed-check/capability-before-fix.xml"
+                                },
+                                {
+                                    "sha256":  "3e09766960ba36896d06bbec00f868502ab4a83717416388652c80f0339dafe0",
+                                    "file":  "typed-check/typed-unit-after-guard.private.log"
+                                },
+                                {
+                                    "sha256":  "b19d4da110f08f048ae0f1825e803a271fb81f1bb28110daec6d382bb2baac5d",
+                                    "file":  "typed-check/full-verify.private.log"
+                                },
+                                {
+                                    "sha256":  "e7223cc4adfbfde335478dadb47741c03f65c73a3b5c4320175424e5ba3f0fa5",
+                                    "file":  "typed-check/full-totals.private.json"
+                                },
+                                {
+                                    "sha256":  "867289eba51096fd679ed29051d992095ed361b7340aaee1926848fd524ef5ce",
+                                    "file":  "typed-check/build-receipt.json"
+                                },
+                                {
+                                    "sha256":  "2e15b64eac03cb39d7a1d7ccba91adeb1fd39d8c11e634e2d1b3f10d707b7f98",
+                                    "file":  "typed-check/final-focused-runner.private.ps1"
+                                }
+                            ],
+    "limits":  [
+                   "No USB hotplug, Alt-Tab, minimize/fullscreen desktop or display hardware acceptance",
+                   "No observer production, real capture, push/dashboard/rules/activity",
+                   "No E1/E2 campaign or 5001-row repeat",
+                   "OFF still applies V16 through default Flyway; no shared dev DB used",
+                   "FULL default; experiment OFF; gates and owner review pending"
+               ],
+    "aggregationNote":  "Early local #method selector receipts omitted pipeline XML; preserved originals and separate reconciled totals 227/252. Final focused runner counts all 252 directly. Do not sum repeated runs."
+}

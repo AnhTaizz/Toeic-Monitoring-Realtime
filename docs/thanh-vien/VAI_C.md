@@ -488,3 +488,15 @@ C giữ scope review [contract](../EX02_RICH_EXAM_CONTRACT_V1.md)/[ADR](../plan-
 ### Ghi chú làm dở — QA05/E1 derived join 20/10/2026
 
 [Tool/report](../../evidence/c-e1-derived-20261020/REPORT.md): sourcec7f12a7/27PythonPASS0SKIP, provenance/inputtool/hash/strictbindings, raworiginal luônverify/nooverwrite/no bypass.1REAL smoke-short3trial rejoinidentical/7hashnguyênvẹn/8outputsdeterministic, MOCK1changedtrial; khôngfull12/E2. Rawlịchsửc1601b5 NOT_AVAILABLE tronglượtnày, khôngdùngcountshistory làmkếtquảmới. BướcCtiếp thuộcQA05: khôi phụcsuite theo manifest/cấprawarchive rồirejoin/analyze bằngCLI mới vàooutputmới vàreview đúngphạmvi; khôngtựđo12lượt/gate/E1acceptance hoặcDONE. GiữFULL/MON07OFF, khôngproduction/GUI/USB/LAN/ADR changes.
+
+### Ghi chú làm dở — MON-07 typed slice, 20/10/2026
+
+[Contract](../MON07_TYPED_SIGNALS_EXPERIMENT.md)/[report](../../evidence/c-mon07-typed-20261020/REPORT.md):
+runtime a0e9200/test c71ddde, sáu type qua shared SignalDelivery/RealtimeClient/transaction/history,
+V16 additive/upgrade15→16 và MOCK/REAL PG/WS. Baseline227/focused252 PASS (21 pipeline PG),
+không observer production; FULL mặc định/experiment OFF. B nối FocusSignal/WindowSignal/
+DisplaySignal sau emitter/lifecycle/notice review; C nối UsbStorageSignal sau USB classification,
+aggregate startup/ref/debounce/unknown và hardware review. Dùng chung observer run/sequence,
+freeze origin/time, không suy USB/focus healthy từ thiếu event. OBSERVER_STATUS/SIGNAL_GAP,
+activity/rules/push/dashboard và offline/retention chưa triển khai/phê duyệt. Không MON-02/03/04/07
+DONE hoặc ADR owner signature; physical USB0/12/LAN0/41/desktop nghiệm thu pending giữ nguyên.
