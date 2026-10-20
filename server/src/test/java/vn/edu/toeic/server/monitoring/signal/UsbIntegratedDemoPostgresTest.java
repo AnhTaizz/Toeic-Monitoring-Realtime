@@ -144,12 +144,13 @@ class UsbIntegratedDemoPostgresTest {
     boolean cancelRequested(){return Files.exists(Path.of(required("TOEIC_USB_TEST_OUTPUT"),"stop.request"));}
     void assertHistory(String a,List<SignalMessage> expected)throws Exception{
         var byId=new HashMap<String,Signal>();for(var m:expected)assertThat(byId.put(m.signal().eventId(),m.signal())).isNull();
-        int seen=0;long after=0,through=-1;
+        int seen=0;long after=0,through=-1;var readback=new ArrayList<JsonObject>();
         do{var page=get("/api/v1/monitoring/attempts/"+a+"/signals?limit=2&after="+after+(through<0?"":"&through="+through),proctor,200);if(through<0)through=page.get("throughSequence").getAsLong();
-            for(var row:page.getAsJsonArray("items")){var p=row.getAsJsonObject().deepCopy();assertThat(p.get("timelineSequence").getAsLong()).isEqualTo(++seen);for(String key:List.of("attemptId","timelineSequence","receivedAt","deliveryStatus"))p.remove(key);var signal=Signal.parse(p);assertThat(signal).isEqualTo(byId.remove(signal.eventId()));}
+            for(var row:page.getAsJsonArray("items")){readback.add(row.getAsJsonObject().deepCopy());var p=row.getAsJsonObject().deepCopy();assertThat(p.get("timelineSequence").getAsLong()).isEqualTo(++seen);for(String key:List.of("attemptId","timelineSequence","receivedAt","deliveryStatus"))p.remove(key);var signal=Signal.parse(p);assertThat(signal).isEqualTo(byId.remove(signal.eventId()));}
             if(!page.get("hasMore").getAsBoolean())break;after=page.get("nextAfterSequence").getAsLong();
         }while(seen<=512);
         assertThat(seen).isEqualTo(expected.size());assertThat(byId).isEmpty();
+        Files.writeString(Path.of(required("TOEIC_USB_TEST_OUTPUT"),"history-"+a+".private.json"),JSON.toJson(Map.of("sourceSha",required("TOEIC_USB_TEST_SOURCE"),"throughSequence",through,"items",readback,"canonicalEquality",true)),StandardOpenOption.CREATE_NEW);
     }
     String login(String name)throws Exception{return post("/api/v1/auth/login",null,new LoginRequest(UUID.randomUUID().toString(),name,required("TOEIC_SEED_PASSWORD")),200).get("token").getAsString();}
     JsonObject post(String path,String token,Object body,int status)throws Exception{return request("POST",path,token,JSON.toJson(body),status);}

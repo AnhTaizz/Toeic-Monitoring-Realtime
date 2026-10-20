@@ -77,6 +77,10 @@ try{
     [void]$mavenProcess.Start();$stdout=$mavenProcess.StandardOutput.ReadToEndAsync();$stderr=$mavenProcess.StandardError.ReadToEndAsync();$mavenProcess.WaitForExit();$exitCode=$mavenProcess.ExitCode
     [IO.File]::WriteAllText((Join-Path $out 'maven.private.log'),$stdout.Result.Replace($env:DB_PASSWORD,'<redacted>').Replace($env:TOEIC_SEED_PASSWORD,'<redacted>'),$utf8)
     [IO.File]::WriteAllText((Join-Path $out 'maven.private.err'),$stderr.Result.Replace($env:DB_PASSWORD,'<redacted>').Replace($env:TOEIC_SEED_PASSWORD,'<redacted>'),$utf8)
+    $reports=Join-Path $repo 'server\target\surefire-reports';$xml=Join-Path $reports 'TEST-vn.edu.toeic.server.monitoring.signal.UsbIntegratedDemoPostgresTest.xml'
+    if((Test-Path -LiteralPath $xml) -and (Get-Item -LiteralPath $xml).LastWriteTimeUtc -ge [DateTime]::Parse($start).ToUniversalTime()){
+        $archive=Join-Path $out 'reports.private';New-Item -ItemType Directory -Path $archive|Out-Null;Copy-Item -LiteralPath $xml -Destination $archive
+    }
     if($exitCode -ne 0){throw 'Maven TEST failed; private logs preserved'}
 }catch{$failedType=$_.Exception.GetType().FullName;[IO.File]::WriteAllText((Join-Path $out 'runner-error.private.txt'),($_.ToString().Replace($env:DB_PASSWORD,'<redacted>').Replace($env:TOEIC_SEED_PASSWORD,'<redacted>')),$utf8);Write-Output ('TEST failed: '+$failedType+'; inspect local logs')}
 finally{
