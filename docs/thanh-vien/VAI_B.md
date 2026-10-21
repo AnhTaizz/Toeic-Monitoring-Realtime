@@ -462,3 +462,12 @@ và status READY/UNKNOWN/UNSUPPORTED/ERROR dùng chung run/sequence/queue với 
 Full clean 1219PASS/144SKIP/0FAIL/ERROR; 9 case MON-05 trực tiếp là MOCK/TEST seam.
 [Thiết kế/runbook](../MON05_DISPLAY_MONITORING.md), [evidence](../../evidence/v2-b-mon05-display-20261020/REPORT.md).
 Cắm/rút màn hình thứ hai, REAL WS-HTTP-PG/proctor và review C NOT RUN; không đánh dấu DONE.
+
+## MON-06 — bàn giao exam-local activity, 21/10/2026
+
+Nhánh `feat/v2-b-mon06-exam-activity-20261021` stacked trên MON-05 `66f897c`.
+Chỉ tổng hợp navigation/answer-action và idle monotonic; không ghi ID/nội dung, phím, clipboard,
+URL, chat, file hay verdict. Threshold configurable và clock gap là PARTIAL, không idle giả.
+Focused94PASS; JavaFX Stage MON-06 1PASS; full clean1232PASS/146SKIP/0FAIL/ERROR.
+[Thiết kế/runbook](../MON06_ACTIVITY_MONITORING.md), [evidence](../../evidence/v2-b-mon06-activity-20261021/REPORT.md).
+REAL WS-PG/V18, manual submit/timeout/history và review C NOT RUN; không đánh dấu DONE.

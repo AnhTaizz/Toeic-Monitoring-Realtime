@@ -1,5 +1,11 @@
 # Trạng thái kiểm thử
 
+21/10/2026 — [MON-06 exam-local activity](../evidence/v2-b-mon06-activity-20261021/REPORT.md):
+nhánh stacked trên MON-05 `66f897c`; 4 protocol + 9 adapter/monitor + 1 JavaFX Stage case mới PASS.
+Focused 94PASS; full clean 1378 total = 1232PASS/146SKIP/0FAIL/ERROR. Chỉ aggregate navigation,
+answer-action và idle; không ID/nội dung/phím/clipboard/URL/file/verdict. Clock gap ghi PARTIAL,
+không suy diễn idle. REAL WS-PG/V18, manual lifecycle và review C NOT RUN nên chưa DONE.
+
 20/10/2026 — [MON-05 display monitoring](../evidence/v2-b-mon05-display-20261020/REPORT.md):
 nhánh stacked trên MON-04 `0ae71bf`; 9 case MON-05 trực tiếp kiểm tra baseline/change/dedupe,
 polling 1–30 giây, lỗi UNKNOWN/UNSUPPORTED/ERROR, recovery và disposal. Full clean test 1363 total
