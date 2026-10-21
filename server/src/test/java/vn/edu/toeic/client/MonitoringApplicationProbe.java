@@ -13,11 +13,12 @@ public final class MonitoringApplicationProbe {
     public final CopyOnWriteArrayList<CandidateMonitoringSession> sessions=new CopyOnWriteArrayList<>();
     public final ToeicClientApplication application;
     public volatile vn.edu.toeic.client.realtime.MonitoringTransport transport;
+    public final OwnedProcessHandleFixture source;
     public MonitoringApplicationProbe(long ownedPid){
-        var source=new ProcessHandleSnapshotSource();
+        source=new OwnedProcessHandleFixture(ownedPid);
         application=new ToeicClientApplication((transport,status)->{
             this.transport=transport;
-            var collector=new ProcessCollector(()->{polls.incrementAndGet();return source.scan().stream().filter(p->p.pid()==ownedPid).toList();},Duration.ofMillis(250),new ObservationTrace(){
+            var collector=new ProcessCollector(()->{polls.incrementAndGet();return source.scan();},Duration.ofMillis(250),new ObservationTrace(){
                 @Override public void stopped(String id,long tick){stops.incrementAndGet();}
             });
             var session=new CandidateMonitoringSession(collector,transport,MonitoringDelivery.Settings.defaults(),status);sessions.add(session);return session;

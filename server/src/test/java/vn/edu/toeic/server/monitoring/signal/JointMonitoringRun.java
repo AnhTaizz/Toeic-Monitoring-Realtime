@@ -38,9 +38,9 @@ final class JointMonitoringRun implements AutoCloseable {
     JointMonitoringRun(MonitoringTimelinePostgresTest test,String attempt,String token,Stage stage,long ownedPid)throws Exception {
         this.stage=stage;
         realtime=new RealtimeClient(new AuthenticatedWebSocketOpener(test.base,token),new RealtimeClient.Settings(Duration.ofMillis(100),Duration.ofMillis(100),Duration.ofSeconds(1),1,65536,500),connectionWorker);test.owned.add(realtime);
-        var source=new ProcessHandleSnapshotSource();
+        var source=new OwnedProcessHandleFixture(ownedPid);
         // Transmit only the owned TEST PID. No process command line or unrelated readings enter evidence/server.
-        var collector=new ProcessCollector(()->{polls.incrementAndGet();return source.scan().stream().filter(p->p.pid()==ownedPid).toList();},Duration.ofMillis(250),new ObservationTrace(){
+        var collector=new ProcessCollector(()->{polls.incrementAndGet();return source.scan();},Duration.ofMillis(250),new ObservationTrace(){
             @Override public void stopped(String id,long tick){collectorStopped.countDown();}
         });
         process=new CandidateMonitoringSession(collector,realtime,MonitoringDelivery.Settings.defaults(),ignored->{});
