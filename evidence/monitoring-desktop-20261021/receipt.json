@@ -1,0 +1,149 @@
+{
+    "schemaVersion":  1,
+    "baseMain":  "2a596deb50c52dbc0abf656f902046dae9e4030e",
+    "buildSource":  "4aacab4264e3dda2dfba10be3e11e2ef9eab7a29",
+    "runId":  "usb-58b5512e26404bc8",
+    "startUtc":  "2026-10-21T12:27:02.9738978Z",
+    "endUtc":  "2026-10-21T13:04:18.3090053Z",
+    "jarHashes":  {
+                      "client-0.1.0-SNAPSHOT-all.jar":  "4688746213c40ca8acd53b96640dd837e86857cbef99c0a871086ba9fcb40a37",
+                      "server-0.1.0-SNAPSHOT.jar":  "234a457ced645a162c8fe9495a18842c62e5a31df87dbd998b8cb606fe70711b"
+                  },
+    "provenance":  "USER desktop input; two production JVMs; real ProcessHandle/JavaFX/HTTP/WS/PostgreSQL loopback; self-authored TEST Reading exam; owned cmd.exe copy chrome.exe, not a real browser",
+    "userConfirmed":  [
+                          "login/start/enter exam",
+                          "proctor sees Chrome and focus/window in multi-signal timeline",
+                          "exit exam; Stop disabled",
+                          "logout to login then close both apps"
+                      ],
+    "final":  {
+                  "typedByType":  [
+                                      {
+                                          "count":  1,
+                                          "type":  "DISPLAY_COUNT_OBSERVED"
+                                      },
+                                      {
+                                          "count":  1,
+                                          "type":  "OBSERVER_STATUS"
+                                      },
+                                      {
+                                          "count":  28,
+                                          "type":  "EXAM_FOCUS_CHANGED"
+                                      },
+                                      {
+                                          "count":  17,
+                                          "type":  "EXAM_WINDOW_STATE"
+                                      },
+                                      {
+                                          "count":  66,
+                                          "type":  "EXAM_ACTIVITY_SUMMARY"
+                                      }
+                                  ],
+                  "allProcessHistoryIsNotOwnedTestCount":  true,
+                  "fullSequence":  1810,
+                  "allProcessHistoryEvents":  153,
+                  "typedEvents":  113
+              },
+    "stop":  {
+                 "ownedProcessAlive":  false,
+                 "sequenceAndTypedFrozen":  true,
+                 "monitoringWorkers":  0
+             },
+    "cleanup":  {
+                    "appsAlive":  0,
+                    "clusterStopExit":  0,
+                    "databaseDropExit":  0,
+                    "postmasterPidAbsent":  true,
+                    "workloadsAlive":  0,
+                    "serverAlive":  false,
+                    "userClosedAppsBeforeTeardown":  true,
+                    "schemaCount":  0
+                },
+    "ciAtBuild":  {
+                      "run":  39599752809,
+                      "pythonPass":  27,
+                      "failure":  0,
+                      "javaPass":  1307,
+                      "error":  0,
+                      "javaSkip":  157,
+                      "job":  119220956562
+                  },
+    "result":  "USER_CONFIRMED_DEMO_SEQUENCE_AND_TECHNICAL_CLEANUP_VERIFIED",
+    "scope":  "Demo only, no MON task DONE, gate, policy, hardware or A/B/C approval",
+    "hardware":  "USB/hotplug/LAN/second-display NOT_RUN",
+    "fullDefault":  true,
+    "repositoryExperiments":  "OFF",
+    "rawAvailability":  "Local-only ignored target/desktop-second; no GitHub raw links",
+    "rawHashes":  [
+                      {
+                          "sha256":  "ff01d9eac7c01804ae6612174cb1b7c087e83ffc41233f358f70f201b773c33b",
+                          "file":  "desktop-build-receipt.json",
+                          "bytes":  718
+                      },
+                      {
+                          "sha256":  "3b5b4c9997376a579a129eb0bc536d55db9db9416192c9a915c44b85916c5332",
+                          "file":  "desktop-ready.json",
+                          "bytes":  655
+                      },
+                      {
+                          "sha256":  "65cae2cc327ff9d58198e21838f583f4add312db7706ee234833226fc9d12d13",
+                          "file":  "desktop-observations.private.jsonl",
+                          "bytes":  43471481
+                      },
+                      {
+                          "sha256":  "bec5cfe6284b993cb61b0d2b99ae15a4d7bdd28f9d3e85e36b6670c96bfbaebe",
+                          "file":  "active-worker-mapping.json",
+                          "bytes":  1396
+                      },
+                      {
+                          "sha256":  "6365d5d70784726118a5efb9b49b05229b800505fa6e4d421254fa346cc0ca2e",
+                          "file":  "candidate-after-exit-threads.private.txt",
+                          "bytes":  27494
+                      },
+                      {
+                          "sha256":  "874b2f09ebb09e8892a4e8f0ca91709860d79b28f8436107876f12c0f3dcca49",
+                          "file":  "after-stop-proof.json",
+                          "bytes":  594
+                      },
+                      {
+                          "sha256":  "f8234c83426ba65d332cf530478c2d09dbe76b8884137541c9f10e0133129d65",
+                          "file":  "test-process-correlation.private.json",
+                          "bytes":  4895
+                      },
+                      {
+                          "sha256":  "319177e6bb20adce8988a797d3ddfeb20492296092a050f217d4deadb10ca156",
+                          "file":  "proctor-read-check.txt",
+                          "bytes":  256
+                      },
+                      {
+                          "sha256":  "c3f38c1af7401f6b3ad0d08c8dfa4e82c6eb4488b2ebb396620fc99acb1804cf",
+                          "file":  "proctor-controller-read-check.txt",
+                          "bytes":  177
+                      },
+                      {
+                          "sha256":  "94fd966293ffdc84429fc6e5db2002754a60dfd4a7de709999627dd041e73f36",
+                          "file":  "desktop-cleanup.json",
+                          "bytes":  218
+                      },
+                      {
+                          "sha256":  "474a907d874beb195bf98fb5a0680adbd844f98c3678f726832aa92de77c0f7b",
+                          "file":  "result.json",
+                          "bytes":  734
+                      },
+                      {
+                          "sha256":  "41b48ac5e34a36971e6028755826e8430c92342f1e79ac15f9c5899476afc51c",
+                          "file":  "desktop-server.stdout.private.log",
+                          "bytes":  28871055
+                      },
+                      {
+                          "sha256":  "fa1bc9f4b8ff9cdbdce3b1de37b163d1f060b01a2a9f6e0c1ef48530e7d0f2f8",
+                          "file":  "candidate.stderr.private.log",
+                          "bytes":  168
+                      },
+                      {
+                          "sha256":  "47900c8a3f824b4cce85637d96b05c4cf4e2985bbfbcdd1564b3572aafa986a6",
+                          "file":  "proctor.stderr.private.log",
+                          "bytes":  169
+                      }
+                  ]
+}
