@@ -1,5 +1,10 @@
 # Trạng thái kiểm thử
 
+20/10/2026 — [MON-05 display monitoring](../evidence/v2-b-mon05-display-20261020/REPORT.md):
+nhánh stacked trên MON-04 `0ae71bf`; 9 case MON-05 trực tiếp kiểm tra baseline/change/dedupe,
+polling 1–30 giây, lỗi UNKNOWN/UNSUPPORTED/ERROR, recovery và disposal. Full clean test 1363 total
+= 1219PASS/144SKIP/0FAIL/ERROR. Supplier/clock/callback là MOCK; cắm/rút màn hình thứ hai,
+REAL WS-HTTP-PG/proctor và review C NOT RUN nên chưa đánh dấu MON-05 DONE.
 21/10/2026 — [USB integrated explicit TEST một lệnh](USB_INTEGRATED_TEST_DEMO.md):
 baseb68e19a (gồm PR87/88), coordinatorfdc90a1/build-demo e7cd9dc. CIM provider thật →
 snapshot/USB adapter/status → shared context/delivery/WS → PG TEST/COMMIT/ACK/history.

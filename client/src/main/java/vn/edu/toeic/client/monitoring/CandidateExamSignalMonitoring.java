@@ -6,16 +6,19 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import vn.edu.toeic.client.monitoring.display.*;
 import vn.edu.toeic.client.monitoring.focus.*;
 import vn.edu.toeic.client.monitoring.signal.*;
 import vn.edu.toeic.client.monitoring.window.*;
 import vn.edu.toeic.client.realtime.*;
 import vn.edu.toeic.protocol.monitoring.signal.FocusSignal;
+import vn.edu.toeic.protocol.monitoring.signal.DisplaySignal;
+import vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal;
 import vn.edu.toeic.protocol.monitoring.signal.WindowSignal;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
 /**
- * Opt-in MON-03/MON-04 coordinator. It reuses the authorized process-monitoring heartbeat
+ * Opt-in MON-03/MON-04/MON-05 coordinator. It reuses the authorized process-monitoring heartbeat
  * and current WebSocket, confirms the scoped HTTP capability, and owns the exam observers.
  */
 public final class CandidateExamSignalMonitoring implements AutoCloseable {
@@ -26,6 +29,9 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
     private final SignalCapabilityApiClient api;
     private final SignalRunContext run;
     private final SignalDelivery delivery;
+    private final ObserverStatusEmitter statusEmitter;
+    private final DisplaySignalAdapter displayAdapter;
+    private final FxDisplayMonitor displayMonitor;
     private final FocusSignalAdapter focusAdapter;
     private final FxFocusMonitor focusMonitor;
     private final WindowSignalAdapter windowAdapter;
@@ -53,6 +59,12 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
         api = new SignalCapabilityApiClient(serverUrl, token);
         run = new SignalRunContext(attemptId, "exam-signals-" + UUID.randomUUID());
         delivery = new SignalDelivery(run, realtime);
+        statusEmitter = new ObserverStatusEmitter();
+        long statusGeneration = statusEmitter.start(run, delivery);
+        displayAdapter = new DisplaySignalAdapter();
+        long displayGeneration = displayAdapter.start(run, delivery);
+        displayMonitor = FxDisplayMonitor.attach(displayAdapter, displayGeneration, statusEmitter,
+                statusGeneration, Clock.systemUTC(), realtime::observationOrigin);
         focusAdapter = new FocusSignalAdapter();
         long focusGeneration = focusAdapter.start(run, delivery);
         focusMonitor = FxFocusMonitor.attach(examWindow, focusAdapter, focusGeneration, Clock.systemUTC(),
@@ -110,13 +122,15 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
 
     private static boolean supportsRequiredTypes(JsonObject value) {
         if (value == null || !value.has("supportedEventTypes") || !value.get("supportedEventTypes").isJsonArray()) return false;
-        boolean focus = false, window = false;
+        boolean focus = false, window = false, display = false, status = false;
         for (var item : value.getAsJsonArray("supportedEventTypes")) {
             if (!item.isJsonPrimitive() || !item.getAsJsonPrimitive().isString()) continue;
             focus |= FocusSignal.TYPE.equals(item.getAsString());
             window |= WindowSignal.TYPE.equals(item.getAsString());
+            display |= DisplaySignal.TYPE.equals(item.getAsString());
+            status |= ObserverStatusSignal.TYPE.equals(item.getAsString());
         }
-        return focus && window;
+        return focus && window && display && status;
     }
 
     private void confirm() {
@@ -131,6 +145,8 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
 
     @Override public void close() {
         if (!closed.compareAndSet(false, true)) return;
+        displayMonitor.close();
+        statusEmitter.close();
         windowMonitor.close();
         focusMonitor.close();
         run.close();
