@@ -278,6 +278,7 @@ class MonitoringTimelinePostgresTest {
                     first.realtime.confirmSignalExperiment(get("/api/v1/monitoring/attempts/"+a+"/signal-capabilities",candidate,200),first.realtime.connectionGeneration(),first.run.observerSessionId());
                 }
                 waitFor("actual gap commits after fresh capability and reconnect",()->first.delivery.status().queued()==0&&first.delivery.status().inFlight()==0&&first.delivery.gapStatus().acknowledgedDrops()==dropped);
+                waitFor("FULL state also catches up after reconnect",()->first.process.fullStatus().acknowledgedSequence()>0&&api.state(a).join().status().equals("SYNCED"));
                 assertThat(first.usb.status().active()).isFalse();
                 var all=signalPages(api,a);
                 assertThat(all).extracting(e->e.signal().eventId()).doesNotHaveDuplicates();
@@ -359,5 +360,49 @@ class MonitoringTimelinePostgresTest {
                 }finally{fx(()->{monitor.close();return null;});process.stop().stopped().get(8,TimeUnit.SECONDS);process.close();rt.close();}
             }
         }finally{if(previous==null)System.clearProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,previous);}
+    }
+    @Test @EnabledIfEnvironmentVariable(named="TOEIC_MON_INTEGRATED",matches="true")
+    void applicationControlsStopRestartLogoutAndSwitchAccount()throws Exception {
+        var scopes=twoScopes();String a=scopes.get("candidate1"),b=scopes.get("candidate2");
+        try(var workload=new JointMonitoringRun.Workload(Path.of(required("TOEIC_USB_TEST_OUTPUT")));var api=new MonitoringApiClient(base,proctor)){
+            var probe=new vn.edu.toeic.client.MonitoringApplicationProbe(workload.child.pid());Stage s=stage("REAL application controls TEST · MOCK accounts/scope · no OS input");
+            fx(()->{probe.application.start(s);return null;});gui.add(()->fx(()->{probe.application.stop();s.close();return null;}));
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.login(s,base,"proctor1",required("TOEIC_SEED_PASSWORD"));return null;});
+            waitFor("real application proctor login",()->{try{return fx(()->s.getScene().lookup("#proctor-account")!=null);}catch(Exception e){throw new RuntimeException(e);}});
+            assertThat(probe.sessions).isEmpty();assertThat(probe.polls).hasValue(0);
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.logout(s);vn.edu.toeic.client.MonitoringApplicationProbe.login(s,base,"candidate1",required("TOEIC_SEED_PASSWORD"));return null;});
+            waitCandidateControls(s,a);
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Bắt đầu giám sát").fire();return null;});
+            waitFor("candidate A FULL acknowledged from actual start control",()->probe.sessions.size()==1&&probe.sessions.getFirst().fullStatus()!=null&&probe.sessions.getFirst().fullStatus().acknowledgedSequence()>0);
+            waitFor("initial process event committed before stop",()->api.events(a).join().size()==1);
+            var first=probe.sessions.getFirst();String oldRun=first.collectorSessionId(),oldEpoch=first.fullStatus().syncEpoch();
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Dừng giám sát").fire();return null;});
+            waitFor("stop control waits for owned collector termination",()->probe.stops.get()==1&&!first.isActive());
+            waitCandidateControls(s,a);
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Bắt đầu giám sát").fire();return null;});
+            waitFor("restart control opens a fresh FULL epoch",()->first.isActive()&&first.fullStatus()!=null&&first.fullStatus().acknowledgedSequence()>0);
+            assertThat(first.collectorSessionId()).isNotEqualTo(oldRun);assertThat(first.fullStatus().syncEpoch()).isNotEqualTo(oldEpoch);
+            waitFor("process observed in restarted run",()->api.events(a).join().size()==2);
+            workload.close();
+            waitFor("owned process exit changes current FULL but preserves history",()->api.state(a).join().status().equals("SYNCED")&&api.state(a).join().processes().isEmpty());
+            assertThat(api.events(a).get(5,TimeUnit.SECONDS)).hasSize(2);
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.logout(s);return null;});
+            first.stop().stopped().get(8,TimeUnit.SECONDS);assertThat(probe.stops).hasValue(2);assertThat(first.isActive()).isFalse();
+            int oldPolls=probe.polls.get();
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.login(s,base,"candidate2",required("TOEIC_SEED_PASSWORD"));return null;});
+            waitCandidateControls(s,b);assertThat(probe.sessions).hasSize(2);
+            fx(()->{ @SuppressWarnings("unchecked")var box=(ComboBox<String>)s.getScene().lookup("#candidate-attempts");assertThat(box.getItems()).doesNotContain(a);vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Bắt đầu giám sát").fire();return null;});
+            var second=probe.sessions.getLast();waitFor("candidate B starts with separate scope",()->second.isActive()&&second.fullStatus()!=null&&second.fullStatus().acknowledgedSequence()>0);
+            assertThat(first.isActive()).isFalse();assertThat(probe.polls.get()).isGreaterThan(oldPolls);assertThat(api.events(a).get(5,TimeUnit.SECONDS)).hasSize(2);
+            fx(()->{probe.application.stop();return null;});second.stop().stopped().get(8,TimeUnit.SECONDS);assertThat(probe.stops).hasValue(3);
+            results.add(Map.of("kind","REAL_APPLICATION_CONTROLS","activation","Button/MenuItem.fire, Application.stop; NOT OS/human acceptance","proctorCollectorFactories",0,"candidateRuns",3,"collectorTerminations",3,"logoutAccountIsolation",true,"processHistoryAfterExit",2,"currentProcessCountAfterExit",0));
+        }
+    }
+    void waitCandidateControls(Stage stage,String attempt)throws Exception {
+        waitFor("candidate scope and start control ready",()->{try{return fx(()->{
+            @SuppressWarnings("unchecked")var box=(ComboBox<String>)stage.getScene().lookup("#candidate-attempts");
+            if(box==null||!box.getItems().contains(attempt)||vn.edu.toeic.client.MonitoringApplicationProbe.button(stage,"Bắt đầu giám sát").isDisabled())return false;
+            box.setValue(attempt);return true;
+        });}catch(Exception e){throw new RuntimeException(e);}});
     }
 }
