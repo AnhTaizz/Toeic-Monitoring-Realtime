@@ -1,5 +1,8 @@
 # Tiến độ hiện tại
 
+
+21/10/2026 — MON01–09 integrated TEST: [ma trận/runbook](MONITORING_INTEGRATION.md), [report/receipt](../evidence/monitoring-integrated-20261021/REPORT.md). Base65fa83b; build/testdffa227, runtime51e65dc. Fix shared status ownership/retire và khóa Start/chọn ca khi fresh scope pending; có FAIL→regression PASS. Integrated Mock4PASS + explicit CIM4PASS (cùng4case, không8test mới), app controls/stop-restart/logout/account isolation + terminal/revoke, owned ProcessHandle/FX/WS/PG. Fullverify1305PASS/159SKIP/0lỗi, 674class/resource match4JAR. Giữ historical allProcesses app startup failures chưa rõ exact cause; fixture cuối owned handle, không claim latency production đã sửa. Schema0/PGstop0/readers/owned workers dọn; FULLdefault/cả2experimentOFF, USB0/12/second-display/desktop/LAN0/41NOT_RUN; policy/ADR/gates/human review pending, không MON DONE.
+
 21/10/2026 — MON-08 C+B: [rule/aggregation thử nghiệm](MON08_EXPERIMENTAL_ALERTS.md), [report/ảnh/receipt](../evidence/cb-mon08-alerts-20261021/REPORT.md).
 Base1507591; runtime1e4b1ca/build+TEST9e31d50.4rule EXPERIMENTAL, ngưỡng3/6 trên bucket60s/window300s; server committed/scoped/ACTIVE/capped read model → timeline hiện có, không cache/migration/observer/persistentpipeline. Baseline95/focused134PASS; fullverify1302PASS/155SKIP/0lỗi, GUI12PASS, JAR21checks. MON08MOCK→realWS/HTTP/PG/Scene1PASS(10initialinputs/focus6/USB1/actual3drops/sourcecap20TEST); OFFlegacy1PASS. GiữFAILoverflow/no-store/fixture và0schema/PGstop0. FULLdefault/cả2experimentOFF, USB0/12/physicaldisplay/OSdesktop/LAN NOT_RUN, owner/policy/ADR/gatespending, MON08chưaDONE; không approval thay B/backlog/E1/E2.
 

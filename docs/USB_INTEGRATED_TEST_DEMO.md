@@ -137,3 +137,8 @@ Context/sequence/delivery dùng chung mọi emitter; coordinator hiện sở h�
 emitter (claim lifetime), nên host chung cần điều phối quyền sở hữu status trước khi
 ghép status của focus/window. Stop coordinator không đóng lane mượn; owner phiên phải
 close delivery/context/lease/realtime, kiểm discarded/unreported, không flush sang run mới.
+
+
+## Composition chung MON01–09
+
+Coordinator vẫn own status theo default constructor. Overload TEST mới mượn emitter duy nhất đã active với exact context/delivery/generation; không claim owner thứ hai, không close emitter mượn. Khi owner retire thì USB scan bị hủy; display status không bị stop theo USB. Entry thống nhất `.\scripts\demo-mon08-alerts.ps1 -Integrated` và opt-in `-Mode Real -ReadUsbStorage`; [source/ma trận/actual/limits](MONITORING_INTEGRATION.md). Bản cuối chỉ đọc owned ProcessHandle trước metadata qua supplier seam, không thay observer/provider/timeout production.

@@ -746,3 +746,8 @@ Unit focused ghi25case RichImageTest PASS; lượt PG mới/chính xác source �
 ## EX05 — clean verify20/10/2026
 
 Source05cc694 clean verify1127PASS/6SKIP/0FAIL/0ERROR, PG18.1/HTTP thật, đề MOCK tự soạn;0schema/clusterstop0. [Evidence](EX05_AUTHENTICATED_IMAGES.md).29caseEX05 mới PASS; V13 sau14 bịFlywaydefaultchặn thật. AuthorityEX07 còn thiếu, image route fail-closed; GUI_PHYSICAL_NOT_RUN/hearing/LAN NOT RUN; MERGE BLOCKED/PR75/V13coordination. Không tracker/hours/human signoff.
+
+
+21/10/2026 — MON01–09 integrated TEST: [ma trận/runbook](MONITORING_INTEGRATION.md), [report/receipt](../evidence/monitoring-integrated-20261021/REPORT.md). Base65fa83b; build/testdffa227, runtime51e65dc. Fix shared status ownership/retire và khóa Start/chọn ca khi fresh scope pending; có FAIL→regression PASS. Integrated Mock4PASS + explicit CIM4PASS (cùng4case, không8test mới), app controls/stop-restart/logout/account isolation + terminal/revoke, owned ProcessHandle/FX/WS/PG. Fullverify1305PASS/159SKIP/0lỗi, 674class/resource match4JAR. Giữ historical allProcesses app startup failures chưa rõ exact cause; fixture cuối owned handle, không claim latency production đã sửa. Schema0/PGstop0/readers/owned workers dọn; FULLdefault/cả2experimentOFF, USB0/12/second-display/desktop/LAN0/41NOT_RUN; policy/ADR/gates/human review pending, không MON DONE.
+
+Scope GUI20PASS tại51e65dc và standalone USB4PASS tại983249d là lượt riêng có overlap với full suite; không cộng repeated runs. Raw ignored được giữ cả FAIL, không có physical acceptance mới.

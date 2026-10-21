@@ -1,0 +1,488 @@
+{
+  "baseSha": "65fa83b73d1c11ffc2257345cb94359cf4521cdf",
+  "sourceSha": "dffa22729434d3d95d67c225ebd035d24d1b3b8d",
+  "dirty": false,
+  "runtimeLastChange": "51e65dcb311a3b5a29c9d28c13de9d913a4d199a",
+  "maven": "verify, no clean; fresh task worktree; default integration flags unset",
+  "modules": {
+    "protocol": {
+      "tests": 86,
+      "pass": 86,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "monitoring-spike": {
+      "tests": 35,
+      "pass": 35,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "client": {
+      "tests": 874,
+      "pass": 846,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 28
+    },
+    "server": {
+      "tests": 469,
+      "pass": 338,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 131
+    }
+  },
+  "totals": {
+    "tests": 1464,
+    "pass": 1305,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 159
+  },
+  "artifacts": {
+    "protocol/target/protocol-0.1.0-SNAPSHOT.jar": {
+      "sha256": "951348d05c9daf564780dfe740876d9ac55b4fd6716050e75599257373e6db38",
+      "bytes": 170496,
+      "access": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    "monitoring-spike/target/monitoring-spike-0.1.0-SNAPSHOT.jar": {
+      "sha256": "77bc7d1bc79c27d6a6551896801c031c409052c0c13d256fd1ff00eca85580f1",
+      "bytes": 35713,
+      "access": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    "client/target/client-0.1.0-SNAPSHOT-all.jar": {
+      "sha256": "d0f4f3ef513ab25e3e496bbc6124981ac00dccde2038192499af4bad2f41661c",
+      "bytes": 12003201,
+      "access": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    "server/target/server-0.1.0-SNAPSHOT.jar": {
+      "sha256": "81fbf2847040924135c88fe2a9cfc7fe3e3328e5bdbacb4221ebd554f14cd776",
+      "bytes": 25493622,
+      "access": "LOCAL_IGNORED_NOT_UPLOADED"
+    }
+  },
+  "compiledFilesEqualPackagedFiles": {
+    "protocol": 119,
+    "monitoring-spike": 15,
+    "client": 373,
+    "server": 167
+  },
+  "packagingChecks": [
+    "client: no TEST bridge, provider/resource/dependency or .env",
+    "server: no TEST bridge, provider/resource/dependency or .env"
+  ],
+  "toolchain": {
+    "jdk": "Temurin 21.0.10+7",
+    "maven": "3.9.15",
+    "javafx": "21.0.12",
+    "springBoot": "4.1.1",
+    "postgres": "18.3",
+    "powershellHost": "5.1.26100.9711",
+    "os": "Windows NT 10.0.26200.0"
+  },
+  "monitoringDefault": "FULL",
+  "signalExperimentDefault": "OFF",
+  "alertExperimentDefault": "OFF",
+  "hardware": "USB0/12, second-display, desktop manual, LAN0/41 NOT_RUN",
+  "fullVerifyLogSha256": "528beddeefd134a6bd18d59b52fd0098970c5db05cfc18bc042be4642a0c15f7",
+  "runs": {
+    "baseline-mon08": {
+      "sourceSha": "65fa83b73d1c11ffc2257345cb94359cf4521cdf",
+      "dirty": false,
+      "runId": "usb-ccb2d34e006b441a",
+      "mode": "Mock",
+      "cleanup": {
+        "ownedSchemasRemaining": 0,
+        "clusterStopExit": 0,
+        "postmasterPidAbsent": true
+      },
+      "tests": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "results": [
+        {
+          "gapDroppedCount": "3 actual queue drops",
+          "kind": "MON08_MOCK",
+          "focusEventCount": 6,
+          "reconnect": "REAL stable identities/counts",
+          "desktop": "Scene controls; OS/hardware NOT_RUN",
+          "rollbackVisible": false,
+          "committedInitialInputs": 10,
+          "usbEventCount": 1,
+          "sourceCapTest": 20,
+          "committedTypedAfterCap": 30
+        }
+      ],
+      "rawResultSha256": "47a5b10ee045f48fe176c87bfb3ad0d53c844e09b346a6ebde818152bee56e65",
+      "rawSummarySha256": "fcba6947c8c66d46d9a9b7d78a9ca095e5051bfdf79c003b9567515c95c08d06",
+      "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    "joint-mock-owned": {
+      "sourceSha": "dffa22729434d3d95d67c225ebd035d24d1b3b8d",
+      "dirty": false,
+      "runId": "usb-f60ec7dfbf3549eb",
+      "mode": "Mock",
+      "cleanup": {
+        "ownedSchemasRemaining": 0,
+        "clusterStopExit": 0,
+        "postmasterPidAbsent": true
+      },
+      "tests": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "results": [
+        {
+          "activation": "Button/MenuItem.fire, Application.stop; NOT OS/human acceptance",
+          "processHistoryAfterExit": 2,
+          "kind": "REAL_APPLICATION_CONTROLS",
+          "currentProcessCountAfterExit": 0,
+          "logoutAccountIsolation": true,
+          "collectorTerminations": 3,
+          "proctorCollectorFactories": 0,
+          "candidateRuns": 3
+        },
+        {
+          "deliveryWorkerStopped": true,
+          "activation": "Stage property API, not OS input",
+          "acknowledged": 9,
+          "committedTypes": [
+            "DISPLAY_COUNT_OBSERVED",
+            "EXAM_ACTIVITY_SUMMARY",
+            "EXAM_FOCUS_CHANGED",
+            "EXAM_WINDOW_STATE",
+            "OBSERVER_STATUS"
+          ],
+          "kind": "REAL_JAVAFX",
+          "hardware": "NOT_RUN",
+          "dropped": 0,
+          "discarded": 0,
+          "collectorIdentity": "COMMIT_ACK_VERIFIED"
+        },
+        {
+          "kind": "JOINT_MONITORING_TEST",
+          "USB": "MOCK_SNAPSHOTS",
+          "process": "REAL ProcessHandle; owned cmd workload named chrome.exe, not a browser",
+          "JavaFX": "REAL Screen count/Stage listeners; window/activity activation PROGRAMMATIC; no OS input",
+          "firstRunDiscardedUnconfirmed": 0,
+          "restartDiscardedUnconfirmed": 3,
+          "firstRunTypedCommitted": 32,
+          "processEvents": 1,
+          "actualOverflowDrops": 34,
+          "rawCursorPages": 11,
+          "summaryInputEvents": 21,
+          "committedTypes": [
+            "DISPLAY_COUNT_OBSERVED",
+            "EXAM_ACTIVITY_SUMMARY",
+            "EXAM_FOCUS_CHANGED",
+            "EXAM_WINDOW_STATE",
+            "OBSERVER_STATUS",
+            "SIGNAL_GAP",
+            "USB_STORAGE_CONNECTED",
+            "USB_STORAGE_PRESENT_AT_START",
+            "USB_STORAGE_REMOVED"
+          ],
+          "reportedDisplayCounts": [
+            1
+          ],
+          "sharedSequenceUnique": true,
+          "stopRestart": true,
+          "realReconnect": true,
+          "assignmentRevokeIsolated": true,
+          "usbHealth": "READY",
+          "usbStorageCount": "1",
+          "USBScans": 4,
+          "usbChildren": 0,
+          "pipeReadersTerminated": true,
+          "heartbeatFullAckContinues": true
+        },
+        {
+          "processSource": "MOCK empty; real collector workers",
+          "typedDiscardedUnconfirmed": 0,
+          "typedWorkerStopped": true,
+          "typedDropped": 0,
+          "actualServerDenial": true,
+          "kind": "PRODUCTION_OPT_IN_LIFECYCLE",
+          "hardware": "NOT_RUN",
+          "typedAcknowledged": 5,
+          "action": "SUBMIT"
+        },
+        {
+          "processSource": "MOCK empty; real collector workers",
+          "typedDiscardedUnconfirmed": 0,
+          "typedWorkerStopped": true,
+          "typedDropped": 0,
+          "actualServerDenial": true,
+          "kind": "PRODUCTION_OPT_IN_LIFECYCLE",
+          "hardware": "NOT_RUN",
+          "typedAcknowledged": 5,
+          "action": "TIMEOUT"
+        },
+        {
+          "processSource": "MOCK empty; real collector workers",
+          "typedDiscardedUnconfirmed": 3,
+          "typedWorkerStopped": true,
+          "typedDropped": 0,
+          "actualServerDenial": true,
+          "kind": "PRODUCTION_OPT_IN_LIFECYCLE",
+          "hardware": "NOT_RUN",
+          "typedAcknowledged": 2,
+          "action": "TOKEN_REVOKE"
+        }
+      ],
+      "rawResultSha256": "6aceace56a636e59cfb4f5c92b6dbeab363b8b4deaa94e5a92f5cad418f91cbd",
+      "rawSummarySha256": "06e105f0c8b3c55b663a48ab90e4613c4398a895bdaae887e384863098551f9f",
+      "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    "joint-real-owned": {
+      "sourceSha": "dffa22729434d3d95d67c225ebd035d24d1b3b8d",
+      "dirty": false,
+      "runId": "usb-ba1001d26a52496c",
+      "mode": "Real",
+      "cleanup": {
+        "ownedSchemasRemaining": 0,
+        "clusterStopExit": 0,
+        "postmasterPidAbsent": true
+      },
+      "tests": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "results": [
+        {
+          "candidateRuns": 3,
+          "proctorCollectorFactories": 0,
+          "collectorTerminations": 3,
+          "logoutAccountIsolation": true,
+          "currentProcessCountAfterExit": 0,
+          "kind": "REAL_APPLICATION_CONTROLS",
+          "processHistoryAfterExit": 2,
+          "activation": "Button/MenuItem.fire, Application.stop; NOT OS/human acceptance"
+        },
+        {
+          "collectorIdentity": "COMMIT_ACK_VERIFIED",
+          "discarded": 0,
+          "dropped": 0,
+          "hardware": "NOT_RUN",
+          "kind": "REAL_JAVAFX",
+          "committedTypes": [
+            "DISPLAY_COUNT_OBSERVED",
+            "EXAM_ACTIVITY_SUMMARY",
+            "EXAM_FOCUS_CHANGED",
+            "EXAM_WINDOW_STATE",
+            "OBSERVER_STATUS"
+          ],
+          "acknowledged": 9,
+          "activation": "Stage property API, not OS input",
+          "deliveryWorkerStopped": true
+        },
+        {
+          "kind": "JOINT_MONITORING_TEST",
+          "USB": "REAL_CIM_MINIMAL_READ",
+          "process": "REAL ProcessHandle; owned cmd workload named chrome.exe, not a browser",
+          "JavaFX": "REAL Screen count/Stage listeners; window/activity activation PROGRAMMATIC; no OS input",
+          "firstRunDiscardedUnconfirmed": 0,
+          "restartDiscardedUnconfirmed": 0,
+          "firstRunTypedCommitted": 27,
+          "processEvents": 1,
+          "actualOverflowDrops": 34,
+          "rawCursorPages": 9,
+          "summaryInputEvents": 21,
+          "committedTypes": [
+            "DISPLAY_COUNT_OBSERVED",
+            "EXAM_ACTIVITY_SUMMARY",
+            "EXAM_FOCUS_CHANGED",
+            "EXAM_WINDOW_STATE",
+            "OBSERVER_STATUS",
+            "SIGNAL_GAP"
+          ],
+          "reportedDisplayCounts": [
+            1
+          ],
+          "sharedSequenceUnique": true,
+          "stopRestart": true,
+          "realReconnect": true,
+          "assignmentRevokeIsolated": true,
+          "usbHealth": "READY",
+          "usbStorageCount": "0",
+          "USBScans": 6,
+          "privilege": "STANDARD",
+          "powershellRuntime": "5.1.26100.9711",
+          "usbChildren": 0,
+          "pipeReadersTerminated": true,
+          "heartbeatFullAckContinues": true
+        },
+        {
+          "processSource": "MOCK empty; real collector workers",
+          "action": "SUBMIT",
+          "typedAcknowledged": 5,
+          "hardware": "NOT_RUN",
+          "kind": "PRODUCTION_OPT_IN_LIFECYCLE",
+          "actualServerDenial": true,
+          "typedDropped": 0,
+          "typedWorkerStopped": true,
+          "typedDiscardedUnconfirmed": 0
+        },
+        {
+          "processSource": "MOCK empty; real collector workers",
+          "action": "TIMEOUT",
+          "typedAcknowledged": 5,
+          "hardware": "NOT_RUN",
+          "kind": "PRODUCTION_OPT_IN_LIFECYCLE",
+          "actualServerDenial": true,
+          "typedDropped": 0,
+          "typedWorkerStopped": true,
+          "typedDiscardedUnconfirmed": 0
+        },
+        {
+          "processSource": "MOCK empty; real collector workers",
+          "action": "TOKEN_REVOKE",
+          "typedAcknowledged": 2,
+          "hardware": "NOT_RUN",
+          "kind": "PRODUCTION_OPT_IN_LIFECYCLE",
+          "actualServerDenial": true,
+          "typedDropped": 0,
+          "typedWorkerStopped": true,
+          "typedDiscardedUnconfirmed": 3
+        }
+      ],
+      "rawResultSha256": "2835c0e92e9dbf2c54b9546b8d85668a0331f8a0fa1a8d09c027b6347815e334",
+      "rawSummarySha256": "bd1b1ee35b1a004e38e94bccde7991cb78e6179d02c8f3b7b4ea0d4fd290843d",
+      "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    "standalone-usb-regression": {
+      "sourceSha": "983249d63602fa1a331d35c45bfb322aaddc9bce",
+      "dirty": false,
+      "runId": "usb-bf8303d2b5984189",
+      "mode": "Mock",
+      "cleanup": {
+        "ownedSchemasRemaining": 0,
+        "clusterStopExit": 0,
+        "postmasterPidAbsent": true
+      },
+      "tests": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "results": [
+        {
+          "sourceStopped": true,
+          "kind": "MOCK",
+          "ackLoss": "SIMULATED",
+          "expectedEvents": 9,
+          "actualCommitted": 9
+        },
+        {
+          "sourceStopped": true,
+          "revokeFixture": "SIMULATED admin revoke; REAL WS authorization denial",
+          "kind": "MOCK",
+          "committed": 0
+        },
+        {
+          "sourceStopped": true,
+          "kind": "MOCK",
+          "timeout": "REAL business deadline and scoped rejection"
+        },
+        {
+          "committed": 1,
+          "kind": "MOCK",
+          "commitFault": "SIMULATED deferred fault; REAL rollback/WS retry"
+        }
+      ],
+      "rawResultSha256": "3df368bd5a9f8e63bad9044e4219ed46150e7c172abe9222b9b7a2691487bd99",
+      "rawSummarySha256": "79033081b14693c324bcd63a2d3fbd5fd3d875940b406cadd9719e319a961812",
+      "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+    }
+  },
+  "focused": {
+    "source": "51e65dc",
+    "scopeGuiAndScopeCollectorTests": {
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "earlierOwnershipFocused": {
+      "source": "65fa83b plus ownership patch",
+      "tests": 103,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "supersededByFinalFullSuite": true
+    }
+  },
+  "historicalFailures": [
+    {
+      "localDirectory": "target/baseline-shared-status",
+      "classification": "NEW_FIXTURE_COMPILE_ERROR",
+      "logSha256": "dcaa0b9367f4da5d2adb922c54fd4caaba789646c746c608e116f08d886b729f",
+      "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    {
+      "localDirectory": "target/baseline-shared-status-runtime",
+      "classification": "STATUS_OWNER_CONFLICT",
+      "logSha256": "74da2d6254f58cf2e977a76dbcb400cea3897acce6a6b94e5a23ba48522ed1b4",
+      "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    {
+      "localDirectory": "target/borrowed-status-retire-before",
+      "classification": "BORROWED_STATUS_RETIRE_NOT_CANCELLING",
+      "logSha256": "e2f577f2662638620dc5717a4106acba32cf14f919a56fa6a373b3c9e474130c",
+      "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    {
+      "localDirectory": "target/joint-mock-first",
+      "classification": "FIXTURE_DISPLAY_COUNT_OUT_OF_CONTRACT",
+      "logSha256": "89a5a5ab40ff9de0330964bfcd6fdfa56795f5a3f347e48cc22dd06149d5fb85",
+      "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    {
+      "localDirectory": "target/joint-mock-bounded",
+      "classification": "FIXTURE_CONFIRM_BEFORE_HEARTBEAT",
+      "logSha256": "6d85cab3e2e3e52220932bdbdf9149197a984ece1caf75278e0acf237805fd5a",
+      "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    {
+      "localDirectory": "target/joint-mock-authorized",
+      "classification": "FIXTURE_ENUM_STRING_ASSERTION",
+      "logSha256": "d612442a7656fa077e5152a6ae3b6b0ae1910a1457789a5b80e7b141a1072197",
+      "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    {
+      "localDirectory": "target/joint-mock-app-controls",
+      "classification": "NEW_FIXTURE_SCENE_LOOKUP_COMPILE",
+      "logSha256": "b3d9181917fa1790f0d5ec1593112f0ac596794ec1f36b20ac95dbedf104203a",
+      "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    {
+      "localDirectory": "target/joint-mock-app-root",
+      "classification": "APP_PROCESS_EVENT_WAIT_UNRESOLVED_EXACT_CAUSE",
+      "logSha256": "114acf071cac03633c109e2f08245bcb61a305b41bc9e47dd8e47c9310b8fdd2",
+      "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    {
+      "localDirectory": "target/initial-scope-gui-before",
+      "classification": "INITIAL_SCOPE_CONTROL_GUARD",
+      "logSha256": "a05f35dda54f4b759a6eec2c5ad1285156ab717d656cae007d81fa862a8a6f0a",
+      "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+    },
+    {
+      "localDirectory": "target/joint-real-final",
+      "classification": "APP_FULL_ACK_WAIT_UNRESOLVED_EXACT_CAUSE",
+      "logSha256": "d24cff9ac03909045163d8c5d51d695341aa2899e42af16bc5b191089ea6de53",
+      "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+    }
+  ],
+  "uncertainty": "Historical broad allProcesses app event/FULL-ACK failures lack conclusive diagnostics; later isolated PASS is not a root-cause proof. Current fixture reads only owned ProcessHandle through the existing supplier seam. Production host-wide metadata latency/OS acceptance remains outside this TEST result."
+}
