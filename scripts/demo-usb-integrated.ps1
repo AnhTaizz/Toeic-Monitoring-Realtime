@@ -14,17 +14,20 @@ param(
     [switch]$TimelineIdentityOnly,
     [switch]$AlertRules,
     [switch]$Integrated,
-    [ValidateRange(0,120)][int]$ViewSeconds=20
+    [ValidateRange(0,120)][int]$ViewSeconds=20,
+    [switch]$Desktop
 )
 $ErrorActionPreference='Stop'
 $repo=if($PSScriptRoot){[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))}else{[IO.Path]::GetFullPath((Get-Location).Path)}
 if(-not(Test-Path -LiteralPath (Join-Path $repo 'pom.xml'))){throw 'Run from repository root'}
+if($Desktop -and ($ReadUsbStorage -or $Mode -ne 'Mock' -or $Integrated -or $TimelineIdentityOnly)){throw 'Desktop uses real existing observers, no USB source or synthetic integrated fixture; use -Desktop alone'}
 if($AlertRules -and (($Mode -ne 'Mock' -and -not $Integrated) -or -not $Timeline)){throw 'Alert demo requires MOCK timeline or explicit integrated TEST'}
 if($Integrated -and (-not $AlertRules -or -not $Timeline -or $TimelineIdentityOnly)){throw 'Integrated TEST requires timeline and alert rules'}
 if($Mode -eq 'Real' -and -not $ReadUsbStorage){throw 'REAL source requires explicit -ReadUsbStorage'}
 if($Mode -eq 'Mock' -and $ReadUsbStorage){throw 'Do not mix REAL permission with MOCK mode'}
 if(-not $MavenRepository){$MavenRepository=Join-Path ([Environment]::GetFolderPath('UserProfile')) '.m2\repository'}
 $runId='usb-'+[Guid]::NewGuid().ToString('N').Substring(0,16)
+$runMode=if($Desktop){'Desktop'}else{$Mode}
 if(-not $OutputDirectory){$OutputDirectory=Join-Path $repo ('target\usb-integrated-'+$runId)}
 $out=[IO.Path]::GetFullPath($OutputDirectory)
 if(Test-Path -LiteralPath $out){throw 'Refuse existing output directory'}
@@ -70,9 +73,9 @@ Push-Location $repo
 try{
     $source=(& git.exe rev-parse HEAD).Trim();if($LASTEXITCODE -ne 0){throw 'Cannot pin source'};$env:TOEIC_USB_TEST_SOURCE=$source
     $sourceDirty=[bool](& git.exe status --porcelain)
-    Write-Output ('USB '+$Mode+' TEST run='+$runId+' source='+$source+' output='+$out)
+    Write-Output ($runMode+' monitoring TEST run='+$runId+' source='+$source+' output='+$out)
     if($Mode -eq 'Real'){Write-Output ('EXPLICIT REAL CIM: provider='+$Provider+' duration='+$DurationSeconds+'s delay='+$CadenceMillis+'ms queryTimeout='+$QueryTimeoutMillis+'ms; only minimal storage classification, no files/serial; TEST server only.')}
-    [IO.File]::WriteAllText((Join-Path $out 'config.json'),(@{mode=$Mode;provider=$Provider;durationSeconds=$DurationSeconds;cadenceDelayMillis=$CadenceMillis;queryTimeoutMillis=$QueryTimeoutMillis;dbPort=[int]$env:DB_PORT;sourceSha=$source;sourceDirty=$sourceDirty;timeline=[bool]$Timeline;alertRules=[bool]$AlertRules;integrated=[bool]$Integrated;identityOnly=[bool]$TimelineIdentityOnly;viewSeconds=$ViewSeconds}|ConvertTo-Json),$utf8)
+    [IO.File]::WriteAllText((Join-Path $out 'config.json'),(@{mode=$runMode;desktop=[bool]$Desktop;provider=$Provider;durationSeconds=$DurationSeconds;cadenceDelayMillis=$CadenceMillis;queryTimeoutMillis=$QueryTimeoutMillis;dbPort=[int]$env:DB_PORT;sourceSha=$source;sourceDirty=$sourceDirty;timeline=[bool]$Timeline;alertRules=[bool]$AlertRules;integrated=[bool]$Integrated;identityOnly=[bool]$TimelineIdentityOnly;viewSeconds=$ViewSeconds}|ConvertTo-Json),$utf8)
     # Offline bootstrap has no listening socket. Password travels only over process stdin.
     if((Native (Join-Path $PostgresBin 'initdb.exe') ('-D "'+$pgdata+'" -U usb_demo_test --auth=trust --no-locale -E UTF8') 'initdb' '') -ne 0){throw 'Owned initdb failed'}
     if((Native (Join-Path $PostgresBin 'postgres.exe') ('--single -D "'+$pgdata+'" template1') 'offline-password' ("SET password_encryption='scram-sha-256';`nALTER ROLE usb_demo_test PASSWORD '"+$env:DB_PASSWORD+"';`n")) -ne 0){throw 'Offline password initialization failed'}
@@ -80,6 +83,10 @@ try{
     if([regex]::IsMatch($hbaText,'(?m)^(?!\s*#).*\strust\s*$')){throw 'Refuse network trust authentication'}
     if((Native (Join-Path $PostgresBin 'pg_ctl.exe') ('-D "'+$pgdata+'" -l "'+$out+'\postgres.private.log" -o "-h 127.0.0.1 -p '+$env:DB_PORT+'" -w start') 'pg-start' '' -NoCapture) -ne 0){throw 'Owned cluster start failed'};$started=$true
     if((Native (Join-Path $PostgresBin 'createdb.exe') ('-h 127.0.0.1 -p '+$env:DB_PORT+' -U usb_demo_test -T template0 -E UTF8 '+$env:DB_NAME) 'createdb' '') -ne 0){throw 'Owned TEST database creation failed'}
+    if($Desktop){
+        & (Join-Path $PSScriptRoot 'monitoring-desktop-session.ps1') -Repository $repo -OutputDirectory $out -JavaHome $JavaHome -MavenCommand $maven -MavenRepository $MavenRepository -SourceSha $source
+        $exitCode=0
+    }else{
     $methods=if($Mode -eq 'Real'){'realCimReadinessCommitAckAndHistory'}else{'mockCoordinatorTimelineCommitAckLossAndPagedHistory+actualRevokeCancelsPendingSourceAndCannotFlushNewEvents+businessDeadlineStopsCoordinatorUsingRealScopedHeartbeat+coordinatorStatusCommitFaultRollsBackThenRetriesSameMessage'}
     $tests='UsbIntegratedDemoPostgresTest#'+$methods
     if($Timeline){$methods=if($AlertRules){'experimentalAlertsReachDashboard'}elseif($TimelineIdentityOnly){'candidateObserversReachAuthorizedLane'}elseif($Mode -eq 'Real'){'realCimStatusReachesDashboard'}else{'mixedMockDeliveryReachesTwoAttemptDashboard'};$tests='MonitoringTimelinePostgresTest#'+$methods}
@@ -96,6 +103,7 @@ try{
         $archive=Join-Path $out 'reports.private';New-Item -ItemType Directory -Path $archive|Out-Null;Copy-Item -LiteralPath $xml -Destination $archive
     }
     if($exitCode -ne 0){throw 'Maven TEST failed; private logs preserved'}
+    }
 }catch{$failedType=$_.Exception.GetType().FullName;[IO.File]::WriteAllText((Join-Path $out 'runner-error.private.txt'),($_.ToString().Replace($env:DB_PASSWORD,'<redacted>').Replace($env:TOEIC_SEED_PASSWORD,'<redacted>')),$utf8);Write-Output ('TEST failed: '+$failedType+'; inspect local logs')}
 finally{
     if($mavenProcess -and -not $mavenProcess.HasExited){[IO.File]::WriteAllText((Join-Path $out 'stop.request'),'STOP',$utf8);[void]$mavenProcess.WaitForExit(15000);$cleanup.mavenStopped=$mavenProcess.HasExited}
@@ -103,14 +111,15 @@ finally{
         try{
             $code=Native (Join-Path $PostgresBin 'psql.exe') ('-h 127.0.0.1 -p '+$env:DB_PORT+' -U usb_demo_test -d '+$env:DB_NAME+' -At -c "SELECT count(*) FROM pg_namespace WHERE nspname NOT LIKE ''pg_%'' AND nspname NOT IN (''public'',''information_schema'');"') 'schema-count' ''
             if($code -eq 0){$cleanup.ownedSchemasRemaining=[int]([IO.File]::ReadAllText((Join-Path $out 'schema-count.private.log')).Trim())}
+            if($Desktop){$cleanup.testDatabaseDropExit=Native (Join-Path $PostgresBin 'dropdb.exe') ('-h 127.0.0.1 -p '+$env:DB_PORT+' -U usb_demo_test '+$env:DB_NAME) 'drop-test-db' ''}
         }finally{$cleanup.clusterStopExit=Native (Join-Path $PostgresBin 'pg_ctl.exe') ('-D "'+$pgdata+'" -w stop -m fast') 'pg-stop' ''}
     }
     $cleanup.postmasterPidAbsent=-not(Test-Path -LiteralPath (Join-Path $pgdata 'postmaster.pid'))
     $summary=Join-Path $out 'demo-summary.json'
     if(Test-Path -LiteralPath (Join-Path $out 'stop.request')){$exitCode=130}
-    $result=@{sourceSha=$source;sourceDirty=$sourceDirty;runId=$runId;mode=$Mode;timeline=[bool]$Timeline;alertRules=[bool]$AlertRules;integrated=[bool]$Integrated;identityOnly=[bool]$TimelineIdentityOnly;exitCode=$exitCode;runnerErrorType=$failedType;startUtc=$start;endUtc=[DateTime]::UtcNow.ToString('o');cleanup=$cleanup;hardware='0/12 NOT_RUN';summaryPresent=(Test-Path -LiteralPath $summary)}
+    $result=@{sourceSha=$source;sourceDirty=$sourceDirty;runId=$runId;mode=$runMode;desktop=[bool]$Desktop;timeline=[bool]$Timeline;alertRules=[bool]$AlertRules;integrated=[bool]$Integrated;identityOnly=[bool]$TimelineIdentityOnly;exitCode=$exitCode;runnerErrorType=$failedType;startUtc=$start;endUtc=[DateTime]::UtcNow.ToString('o');cleanup=$cleanup;hardware='0/12 NOT_RUN';summaryPresent=(Test-Path -LiteralPath $summary)}
     [IO.File]::WriteAllText((Join-Path $out 'result.json'),($result|ConvertTo-Json -Depth 5),$utf8)
     foreach($name in $saved.Keys){[Environment]::SetEnvironmentVariable($name,$saved[$name],'Process')};Pop-Location
 }
 Write-Output ($result|ConvertTo-Json -Depth 5)
-if($failedType -or $exitCode -ne 0 -or $cleanup.clusterStopExit -ne 0 -or $cleanup.ownedSchemasRemaining -ne 0){throw 'USB TEST demo incomplete/failed; preserve output'}
+if($failedType -or $exitCode -ne 0 -or $cleanup.clusterStopExit -ne 0 -or $cleanup.ownedSchemasRemaining -ne 0 -or ($Desktop -and $cleanup.testDatabaseDropExit -ne 0)){throw 'Monitoring TEST demo incomplete/failed; preserve output'}
