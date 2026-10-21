@@ -53,4 +53,12 @@ class SignalHistoryTest {
         var rows=TimelineRows.merge(TimelineRows.legacy(List.of(),List.of(interruption),List.of(gap)),List.of(),500);
         assertThat(rows).extracting(TimelineRows.Row::type).containsExactly("MONITORING_GAP","HEARTBEAT_RECOVERED","HEARTBEAT_INTERRUPTION");assertThat(rows.stream().map(TimelineRows.Row::key).distinct()).hasSize(3);assertThat(rows.getFirst().observedAt()).isEqualTo(T.minusSeconds(1));assertThat(rows.getFirst().receivedAt()).isEqualTo(T.plusSeconds(7));assertThat(rows.getFirst().description()).contains("bỏ 3");assertThat(rows.getLast().observedAt()).isNull();assertThat(rows.getLast().receivedAt()).isEqualTo(T.plusSeconds(1));
     }
+    @Test void sameServerTimeUsesServerTimelineSequenceAcrossClientRuns() {
+        var first = new SignalHistory.Entry("A",100,T,"LIVE",new DisplaySignal("first","MOCK-old-run",900,T,EventOrigin.UNSPECIFIED,1,"INITIAL"));
+        var second = new SignalHistory.Entry("A",101,T,"LIVE",new DisplaySignal("second","MOCK-new-run",1,T,EventOrigin.UNSPECIFIED,2,"INITIAL"));
+        var rows = TimelineRows.merge(List.of(TimelineRows.signal(first)),List.of(TimelineRows.signal(second)),500);
+        assertThat(rows).extracting(TimelineRows.Row::signalSequence).containsExactly(101L,100L);
+        assertThat(rows).extracting(TimelineRows.Row::key).containsExactly("signal:A:second","signal:A:first");
+    }
+
 }
