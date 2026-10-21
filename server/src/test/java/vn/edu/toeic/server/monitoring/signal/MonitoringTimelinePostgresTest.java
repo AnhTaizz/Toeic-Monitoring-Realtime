@@ -161,7 +161,7 @@ class MonitoringTimelinePostgresTest {
     void experimentalAlertsReachDashboard()throws Exception{
         var scopes=twoScopes();String a=scopes.get("candidate1"),b=scopes.get("candidate2"),tokenB=login("candidate2");String path="/api/v1/monitoring/attempts/"+a+"/alert-summary";
         var user=get("/api/v1/auth/me",candidate,200).getAsJsonObject("user");
-        var principal=new AuthenticatedUser(user.get("id").getAsLong(),"candidate1",Role.CANDIDATE);
+        var principal=new AuthenticatedUser(user.get("userId").getAsLong(),"candidate1",Role.CANDIDATE);
         var transaction=new org.springframework.transaction.support.TransactionTemplate(app.getBean(org.springframework.transaction.PlatformTransactionManager.class));
         // Deliberate uncommitted/rollback fixture through the SAME authenticated transactional store, no direct SQL event insertion.
         transaction.executeWithoutResult(tx->{var now=Instant.now().truncatedTo(ChronoUnit.MICROS);var pending=new DisplaySignal("MOCK-rolled-back","MOCK-rollback-run",1,now,EventOrigin.UNSPECIFIED,2,"INITIAL");app.getBean(SignalService.class).store(principal,TokenHash.sha256(candidate),new SignalMessage(a,"MOCK-request","MOCK-trace",pending),null);
