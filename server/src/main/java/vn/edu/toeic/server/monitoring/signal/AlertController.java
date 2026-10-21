@@ -16,4 +16,10 @@ public final class AlertController {
     }
     @ExceptionHandler({org.springframework.dao.DataAccessException.class,org.springframework.transaction.TransactionException.class})
     public ResponseEntity<vn.edu.toeic.protocol.error.ApiErrorResponse> unavailable(RuntimeException ignored){return ResponseEntity.status(503).cacheControl(CacheControl.noStore()).body(new vn.edu.toeic.protocol.error.ApiErrorResponse("v0","ERROR",null,java.util.UUID.randomUUID().toString(),new vn.edu.toeic.protocol.error.ApiErrorResponse.ErrorDetail("RETRYABLE_SERVER_ERROR","Alert read model temporarily unavailable",true)));}
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<vn.edu.toeic.protocol.error.ApiErrorResponse> invalid(IllegalArgumentException ignored){return error(400,"INVALID_INPUT","Invalid alert query");}
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<vn.edu.toeic.protocol.error.ApiErrorResponse> denied(AccessDeniedException failure){return error(failure.status(),failure.code().name(),failure.getMessage());}
+    private static ResponseEntity<vn.edu.toeic.protocol.error.ApiErrorResponse> error(int status,String code,String message){return ResponseEntity.status(status).cacheControl(CacheControl.noStore()).body(new vn.edu.toeic.protocol.error.ApiErrorResponse("v0","ERROR",null,java.util.UUID.randomUUID().toString(),new vn.edu.toeic.protocol.error.ApiErrorResponse.ErrorDetail(code,message,false)));}
+
 }

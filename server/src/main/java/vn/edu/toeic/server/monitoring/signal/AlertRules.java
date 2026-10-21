@@ -55,6 +55,7 @@ public final class AlertRules {
                 default -> "Quan sát được ghi nhận; count là số event riêng biệt cùng loại/nguồn/run trong cửa sổ, không phải số hành động hoặc số lần vi phạm. Có thể có nguyên nhân vô hại.";
             };
             if(g.source().equals("WINDOWS_USB_STORAGE")&&g.rule().equals("OBSERVATION"))explanation+=" USB dùng định danh slot yếu; không suy số thiết bị duy nhất hay hành động vật lý.";
+            if(repeatable)explanation+=" Cửa sổ theo giờ server nhận; batch/offline/reconnect có thể tạo cụm, không suy tốc độ thao tác tại client.";
             if(repeatable&&priority!=Priority.INFO)explanation+=" Ngưỡng lặp EXPERIMENTAL chỉ tăng ưu tiên giám thị xem xét; chưa là policy APPROVED.";
             String identity=String.join("|",attempt,g.run(),g.source(),g.type(),g.rule(),Long.toString(g.bucket()),policy.version());
             Instant start=Instant.ofEpochSecond(g.bucket()),end=start.plusSeconds(policy.bucketSeconds());if(start.isBefore(from))start=from;if(end.isAfter(cutoff))end=cutoff;
