@@ -1090,3 +1090,6 @@ Không approval/chữ ký A/B/C, không tracker/DONE/E1/E2. Git/CI/merge cuối 
 
 
 21/10/2026 — Bổ sung producer FX reconnect a12d349:1case mở rộng PASS/0SKIP, production tự refresh capability/scoped heartbeat sau loopback reconnect, transition mới COMMIT/ACK/history; không test-side confirm. JAR build dffa227/main output674files giữ byte-identical, không gán nhãn build mới; ACK11/discarded unconfirmed2/drop0,0schema/PGstop0. Chi tiết tại report integrated; full/common campaign vẫn dùng source đã ghi riêng. Không hardware/policy/human approval.
+
+### 21/10/2026 — Demo desktop monitoring từ main 2a596de
+Theo ủy quyền người dùng: thêm -Desktop vào entrypoint demo hiện có, hai production JAR/JVM riêng, TEST DB/API và thao tác desktop do người dùng thực hiện. Signal/alert bật theo process demo, FULL/defaults giữ nguyên. Hướng dẫn: docs/MONITORING_DESKTOP_DEMO.md. Trạng thái: PENDING_USER_ACTION, chưa nghiệm thu desktop/USB/LAN, chưa DONE/gate/policy/approval. Computer Use lỗi khởi tạo kernel assets. Kiểm chứng và cleanup sẽ ghi theo lượt thực tế.
