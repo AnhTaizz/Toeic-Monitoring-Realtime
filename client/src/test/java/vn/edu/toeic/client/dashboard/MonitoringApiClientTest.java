@@ -23,6 +23,10 @@ import vn.edu.toeic.client.LoginFailedException;
 
 /** REAL local HTTP transport, MOCK response fixtures; not production server evidence. */
 class MonitoringApiClientTest {
+    @Test void experimentalSummaryUsesHeaderAndBoundedBody()throws Exception{try(Fixture f=new Fixture()){
+        f.body.set(AlertSummaryTest.body().toString());assertThat(f.api.alerts("MOCK-A").get(3,TimeUnit.SECONDS).items()).hasSize(1);assertThat(f.path.get()).isEqualTo("/api/v1/monitoring/attempts/MOCK-A/alert-summary");assertThat(f.authorization.get()).isEqualTo("Bearer MOCK-token-only");
+        f.body.set(" ".repeat(512*1024+1));assertThatThrownBy(()->f.api.alerts("MOCK-A").join()).hasCauseInstanceOf(InvalidServerResponseException.class);
+    }}
     @Test void listeningStatusReusesExistingParserAndRejectsOtherAttempt() throws Exception {
         try(Fixture f=new Fixture()){
             var body=new JsonObject();body.addProperty("protocolVersion","v0");body.addProperty("attemptId","MOCK-A");body.addProperty("sessionId","MOCK-session");body.addProperty("startId","MOCK-start");body.addProperty("writerEpoch",1);body.addProperty("phase","INTERRUPTED");body.addProperty("playbackStartedAt",TIME.toString());body.addProperty("interrupted",true);body.addProperty("interruptedAt",TIME.toString());body.addProperty("interruptionReason","MEDIA_ERROR");

@@ -155,6 +155,54 @@ class MonitoringTimelinePostgresTest {
             usb.close();focus.close();window.close();display.close();status.close();results.add(Map.of("kind","MOCK_TYPED","A_rows",19,"B_rows",1,"actualQueueDrops",3,"ackLoss","SIMULATED","reconnect","REAL disconnect/connect and fresh scope/history","JavaFX","Scene controls/snapshot; not OS input"));
         }
     }
+
+    @SuppressWarnings("unchecked") List<AlertSummary.Item> alertRows(Dashboard d)throws Exception{return fx(()->List.copyOf(((TableView<AlertSummary.Item>)d.view.lookup("#multi-alert-table")).getItems()));}
+    @Test @EnabledIfEnvironmentVariable(named="TOEIC_MON08_TEST",matches="true")
+    void experimentalAlertsReachDashboard()throws Exception{
+        var scopes=twoScopes();String a=scopes.get("candidate1"),b=scopes.get("candidate2"),tokenB=login("candidate2");String path="/api/v1/monitoring/attempts/"+a+"/alert-summary";
+        var user=get("/api/v1/auth/me",candidate,200).getAsJsonObject("user");
+        var principal=new AuthenticatedUser(user.get("id").getAsLong(),"candidate1",Role.CANDIDATE);
+        var transaction=new org.springframework.transaction.support.TransactionTemplate(app.getBean(org.springframework.transaction.PlatformTransactionManager.class));
+        // Deliberate uncommitted/rollback fixture through the SAME authenticated transactional store, no direct SQL event insertion.
+        transaction.executeWithoutResult(tx->{var now=Instant.now().truncatedTo(ChronoUnit.MICROS);var pending=new DisplaySignal("MOCK-rolled-back","MOCK-rollback-run",1,now,EventOrigin.UNSPECIFIED,2,"INITIAL");app.getBean(SignalService.class).store(principal,TokenHash.sha256(candidate),new SignalMessage(a,"MOCK-request","MOCK-trace",pending),null);
+            try{assertThat(get(path,proctor,200).getAsJsonArray("items")).isEmpty();}catch(Exception e){throw new RuntimeException(e);}tx.setRollbackOnly();});
+        assertThat(get(path,proctor,200).getAsJsonArray("items")).isEmpty();
+        get(path+"?limit=1000",proctor,400);get(path+"?cutoff=invalid",proctor,400);get(path+"?cutoff=2999-01-01T00:00:00Z",proctor,400);
+        try(Lane lane=fixture.new Lane(a,candidate,true);Lane other=fixture.new Lane(b,tokenB,false)){
+            for(int n=0;n<6;n++){var m=lane.run.next(Instant.now().minusSeconds(86400).truncatedTo(ChronoUnit.MICROS),lane.realtime.observationOrigin());lane.delivery.enqueue(m.message(new FocusSignal(m.eventId(),m.observerSessionId(),m.sequence(),m.observedAt(),m.origin(),false,"OTHER_OR_UNKNOWN",null)));}
+            var u=lane.run.next(Instant.now().truncatedTo(ChronoUnit.MICROS),lane.realtime.observationOrigin());lane.delivery.enqueue(u.message(new UsbStorageSignal(u.eventId(),u.observerSessionId(),u.sequence(),u.observedAt(),u.origin(),UsbStorageSignal.Kind.USB_STORAGE_CONNECTED,UsbStorageSignal.Quality.PARTIAL,1,null)));
+            var st=lane.run.next(Instant.now().truncatedTo(ChronoUnit.MICROS),lane.realtime.observationOrigin());lane.delivery.enqueue(st.message(new ObserverStatusSignal(st.eventId(),st.observerSessionId(),st.sequence(),st.observedAt(),st.origin(),ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,ObserverStatusSignal.State.UNKNOWN,ObserverStatusSignal.Reason.NO_DATA)));
+            var g=lane.run.next(Instant.now().truncatedTo(ChronoUnit.MICROS),lane.realtime.observationOrigin());lane.delivery.enqueue(g.message(new SignalGap(g.eventId(),g.observerSessionId(),g.sequence(),g.observedAt(),g.origin(),3,g.observedAt(),g.observedAt()))); // MOCK gap content, not an overflow claim
+            enqueueDisplay(other,1);waitFor("nine MOCK inputs commit through real delivery including simulated ACK loss",()->lane.delivery.status().acknowledged()==9&&other.delivery.status().acknowledged()==1);
+            var full=processFixture(lane);
+            AlertSummary classified;try(var api=new MonitoringApiClient(base,proctor)){classified=api.alerts(a).get(5,TimeUnit.SECONDS);}
+            assertThat(classified.inputEvents()).isEqualTo(10);assertThat(classified.gapEvents()).isEqualTo(1);assertThat(classified.unavailableEvents()).isEqualTo(1);assertThat(classified.sourceLimited()).isEmpty();
+            assertThat(classified.items()).anySatisfy(r->{assertThat(r.type()).isEqualTo("USB_STORAGE_CONNECTED");assertThat(r.priority()).isEqualTo("INFO");assertThat(r.count()).isEqualTo(1);});
+            assertThat(classified.items().stream().filter(r->r.type().equals("EXAM_FOCUS_CHANGED_LOST")).mapToInt(AlertSummary.Item::count).sum()).isEqualTo(6);
+            // Independent oracle from committed raw timestamps: exact UTC minute bucket counts, not engine-produced expected values.
+            var raw=get("/api/v1/monitoring/attempts/"+a+"/signals?limit=100",proctor,200).getAsJsonArray("items");var buckets=new HashMap<Long,Integer>();
+            for(var e:raw){var r=e.getAsJsonObject();if(r.get("eventType").getAsString().equals("EXAM_FOCUS_CHANGED")){long bucket=Math.floorDiv(Instant.parse(r.get("receivedAt").getAsString()).getEpochSecond(),60);buckets.merge(bucket,1,Integer::sum);}}
+            for(var row:classified.items().stream().filter(r->r.type().equals("EXAM_FOCUS_CHANGED_LOST")).toList()){int count=buckets.get(Math.floorDiv(row.start().getEpochSecond(),60));assertThat(row.count()).isEqualTo(count);assertThat(row.priority()).isEqualTo(count>=6?"HIGH_ATTENTION":count>=3?"REVIEW":"INFO");}
+            var frozen=get(path+"?cutoff="+classified.cutoff(),proctor,200);assertThat(frozen.getAsJsonArray("items").size()).isEqualTo(classified.items().size());
+            var dash=dashboard(a,"MON-08 EXPERIMENTAL · MOCK observations/accounts/gap · REAL WS/HTTP/PG/Scene · not human acceptance");awaitRows(dash,10);
+            waitFor("server classification rendered",()->{try{return alertRows(dash).stream().map(r->r.id()+":"+r.count()+":"+r.priority()).toList().equals(classified.items().stream().map(r->r.id()+":"+r.count()+":"+r.priority()).toList());}catch(Exception e){throw new RuntimeException(e);}});
+            fx(()->{@SuppressWarnings("unchecked")var table=(TableView<AlertSummary.Item>)dash.view.lookup("#multi-alert-table");table.getSelectionModel().selectFirst();return null;});
+            assertThat(fx(()->((Label)dash.view.lookup("#multi-alert-details")).getText())).contains("EXPERIMENTAL".toLowerCase());
+            screenshot(dash,"mon08-groups");viewTime();
+            fx(()->{@SuppressWarnings("unchecked")var selection=(ComboBox<String>)dash.view.lookup("#multi-attempt");selection.setValue(a);@SuppressWarnings("unchecked")var filter=(ComboBox<String>)dash.view.lookup("#multi-source-filter");filter.setValue("Tất cả nguồn");return null;});awaitRows(dash,10);
+            fx(()->{@SuppressWarnings("unchecked")var filter=(ComboBox<String>)dash.view.lookup("#multi-source-filter");filter.setValue("PROCESS");return null;});assertThat(fx(()->((Label)dash.view.lookup("#multi-alert-coverage")).getText())).contains("gap=1","nguồn chưa đủ=1");
+            fx(()->{((Button)dash.view.lookup("#multi-alert-raw")).fire();return null;});assertThat(rows(dash)).hasSize(10);
+            var ids=classified.items().stream().map(r->r.id()+":"+r.count()+":"+r.priority()).toList();dash.realtime.disconnect();dash.realtime.connect(new RealtimeClient.Session(Set.of(a,b),null,null)).get(8,TimeUnit.SECONDS);
+            waitFor("classification catchup retains identities/counts",()->{try{return alertRows(dash).stream().map(r->r.id()+":"+r.count()+":"+r.priority()).toList().equals(ids);}catch(Exception e){throw new RuntimeException(e);}});
+            get(path,candidate,403);get(path,tokenB,403);app.getBean(UserAccountStore.class).createIfAbsent("MOCK-proctor2","MOCK unassigned proctor",Role.PROCTOR,app.getBean(PasswordEncoder.class).encode(required("TOEIC_SEED_PASSWORD")));get(path,login("MOCK-proctor2"),403);
+            for(int n=0;n<21;n++)enqueueDisplay(lane,1);waitFor("source cap fixture committed",()->lane.delivery.status().acknowledged()==30);
+            try(var api=new MonitoringApiClient(base,proctor)){var capped=api.alerts(a).get(5,TimeUnit.SECONDS);assertThat(capped.sourceLimited()).containsExactly("SIGNAL");assertThat(capped.inputEvents()).isEqualTo(21);}
+            fx(()->{((Button)dash.view.lookup("#multi-refresh")).fire();return null;});waitFor("source cap visibly partial",()->{try{return fx(()->((Label)dash.view.lookup("#multi-alert-coverage")).getText().contains("cap nguồn=[SIGNAL]"));}catch(Exception e){throw new RuntimeException(e);}});screenshot(dash,"mon08-limited");
+            fx(()->{@SuppressWarnings("unchecked")var selection=(ComboBox<String>)dash.view.lookup("#multi-attempt");selection.setValue(b);return null;});waitFor("attempt B classification isolated",()->{try{return alertRows(dash).size()==1&&alertRows(dash).getFirst().attempt().equals(b);}catch(Exception e){throw new RuntimeException(e);}});
+            jdbc.sql("UPDATE login_sessions SET revoked_at=clock_timestamp() WHERE token_hash=:h").param("h",TokenHash.sha256(dash.credential)).update();fx(()->{((Button)dash.view.lookup("#multi-refresh")).fire();return null;});waitFor("revoke closes and clears derived and raw",dash.expired::get);assertThat(alertRows(dash)).isEmpty();assertThat(rows(dash)).isEmpty();
+            full.close();full.stopped().get(5,TimeUnit.SECONDS);results.add(Map.of("kind","MON08_MOCK","committedInitialInputs",10,"focusEventCount",6,"usbEventCount",1,"gapDroppedCount","3 MOCK reported","sourceCapTest",20,"committedTypedAfterCap",30,"rollbackVisible",false,"reconnect","REAL stable identities/counts","desktop","Scene controls; OS/hardware NOT_RUN"));
+        }
+    }
     @Test @EnabledIfEnvironmentVariable(named="TOEIC_USB_REAL_CIM",matches="true")
     void realCimStatusReachesDashboard()throws Exception{
         int duration=Integer.parseInt(required("TOEIC_USB_DURATION_SECONDS")),cadence=Integer.parseInt(required("TOEIC_USB_CADENCE_MILLIS")),timeout=Integer.parseInt(required("TOEIC_USB_TIMEOUT_MILLIS"));

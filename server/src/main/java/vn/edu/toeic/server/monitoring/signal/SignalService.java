@@ -70,6 +70,7 @@ public class SignalService {
         if(!q.containsKey(k))return fallback;String s=q.get(k)[0];if(!s.matches("0|[1-9][0-9]{0,15}"))throw new IllegalArgumentException();long n=Long.parseLong(s);if(n<min||n>max)throw new IllegalArgumentException();return n;
     }
     private static JsonObject header(String a){JsonObject p=new JsonObject();p.addProperty("protocolVersion","v0");p.addProperty("schemaVersion",1);p.addProperty("traceId",UUID.randomUUID().toString());p.addProperty("attemptId",a);return p;}
+    void authorizeHistory(AuthenticatedUser user,String hash,String attempt){lockAttempt(attempt);authorize(user,hash,attempt,Role.PROCTOR);}
     private void lockAttempt(String a){SignalJson.id(a);if(jdbc.sql("SELECT attempt_id FROM monitoring_attempts WHERE attempt_id=:a FOR SHARE").param("a",a).query(String.class).optional().isEmpty())throw AccessDeniedException.forbidden();}
     private void authorize(AuthenticatedUser user,String hash,String attempt,Role required){
         var identities=jdbc.sql("""
@@ -96,7 +97,7 @@ public class SignalService {
         else throw AccessDeniedException.forbidden();
     }
     private record LockedSession(AuthenticatedUser user,boolean enabled,boolean revoked,Instant expiresAt) { }
-    private static Stored read(ResultSet r,int n)throws SQLException{
+    static Stored read(ResultSet r,int n)throws SQLException{
         JsonObject d=JsonParser.parseString(r.getString("details")).getAsJsonObject();
         JsonObject p=new JsonObject();p.addProperty("schemaVersion",r.getInt("schema_version"));p.addProperty("eventId",r.getString("event_id"));
         p.addProperty("observerSessionId",r.getString("observer_session_id"));p.addProperty("observationSequence",r.getLong("observation_sequence"));

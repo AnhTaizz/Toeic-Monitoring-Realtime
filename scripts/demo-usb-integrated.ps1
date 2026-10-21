@@ -12,11 +12,13 @@ param(
     [string]$OutputDirectory,
     [switch]$Timeline,
     [switch]$TimelineIdentityOnly,
+    [switch]$AlertRules,
     [ValidateRange(0,120)][int]$ViewSeconds=20
 )
 $ErrorActionPreference='Stop'
 $repo=if($PSScriptRoot){[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))}else{[IO.Path]::GetFullPath((Get-Location).Path)}
 if(-not(Test-Path -LiteralPath (Join-Path $repo 'pom.xml'))){throw 'Run from repository root'}
+if($AlertRules -and ($Mode -ne 'Mock' -or -not $Timeline)){throw 'Alert demo requires explicit MOCK timeline'}
 if($Mode -eq 'Real' -and -not $ReadUsbStorage){throw 'REAL source requires explicit -ReadUsbStorage'}
 if($Mode -eq 'Mock' -and $ReadUsbStorage){throw 'Do not mix REAL permission with MOCK mode'}
 if(-not $MavenRepository){$MavenRepository=Join-Path ([Environment]::GetFolderPath('UserProfile')) '.m2\repository'}
@@ -32,7 +34,7 @@ if(-not(Test-Path -LiteralPath (Join-Path $JavaHome 'bin\java.exe'))){throw 'Jav
 New-Item -ItemType Directory -Path $out|Out-Null
 $utf8=New-Object Text.UTF8Encoding($false)
 $saved=@{};$started=$false;$mavenProcess=$null;$exitCode=1;$failedType=$null;$cleanup=@{};$start=[DateTime]::UtcNow.ToString('o')
-$names=@('JAVA_HOME','PATH','DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','PGPASSWORD','TOEIC_SEED_PASSWORD','TOEIC_PG_INTEGRATION','TOEIC_PROCTOR_GUI','TOEIC_PACKAGED_CLIENT','TOEIC_INSTALLED_CLIENT','JAVA_TOOL_OPTIONS','JDK_JAVA_OPTIONS','_JAVA_OPTIONS','TOEIC_USB_TEST_RUN_ID','TOEIC_USB_TEST_OUTPUT','TOEIC_USB_TEST_SOURCE','TOEIC_USB_REAL_CIM','TOEIC_USB_PROVIDER','TOEIC_USB_DURATION_SECONDS','TOEIC_USB_CADENCE_MILLIS','TOEIC_USB_TIMEOUT_MILLIS','TOEIC_MON09_GUI','TOEIC_MON09_VIEW_SECONDS')
+$names=@('JAVA_HOME','PATH','DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','PGPASSWORD','TOEIC_SEED_PASSWORD','TOEIC_PG_INTEGRATION','TOEIC_PROCTOR_GUI','TOEIC_PACKAGED_CLIENT','TOEIC_INSTALLED_CLIENT','JAVA_TOOL_OPTIONS','JDK_JAVA_OPTIONS','_JAVA_OPTIONS','TOEIC_USB_TEST_RUN_ID','TOEIC_USB_TEST_OUTPUT','TOEIC_USB_TEST_SOURCE','TOEIC_USB_REAL_CIM','TOEIC_USB_PROVIDER','TOEIC_USB_DURATION_SECONDS','TOEIC_USB_CADENCE_MILLIS','TOEIC_USB_TIMEOUT_MILLIS','TOEIC_MON09_GUI','TOEIC_MON09_VIEW_SECONDS','TOEIC_MON08_TEST')
 foreach($name in $names){$saved[$name]=[Environment]::GetEnvironmentVariable($name,'Process')}
 $env:JAVA_HOME=$JavaHome;$env:PATH=(Join-Path $JavaHome 'bin')+';'+$env:PATH
 $env:DB_HOST='127.0.0.1';$env:DB_PORT=[string](Get-Random -Minimum 30000 -Maximum 39000);$env:DB_NAME='toeic_usb_test_'+$runId.Substring(4);$env:DB_USER='usb_demo_test'
@@ -41,6 +43,7 @@ $env:TOEIC_PG_INTEGRATION='true';$env:TOEIC_USB_TEST_RUN_ID=$runId;$env:TOEIC_US
 $env:TOEIC_USB_REAL_CIM=if($Mode -eq 'Real'){'true'}else{'false'};$env:TOEIC_USB_PROVIDER=$Provider
 $env:TOEIC_USB_DURATION_SECONDS=[string]$DurationSeconds;$env:TOEIC_USB_CADENCE_MILLIS=[string]$CadenceMillis;$env:TOEIC_USB_TIMEOUT_MILLIS=[string]$QueryTimeoutMillis
 foreach($name in @('TOEIC_PROCTOR_GUI','TOEIC_PACKAGED_CLIENT','TOEIC_INSTALLED_CLIENT','JAVA_TOOL_OPTIONS','JDK_JAVA_OPTIONS','_JAVA_OPTIONS')){[Environment]::SetEnvironmentVariable($name,$null,'Process')}
+$env:TOEIC_MON08_TEST=if($AlertRules){'true'}else{'false'}
 $env:TOEIC_MON09_GUI=if($Timeline){'true'}else{'false'};$env:TOEIC_MON09_VIEW_SECONDS=[string]$ViewSeconds
 $pgdata=Join-Path $out 'pgdata'
 function Native([string]$exe,[string]$arguments,[string]$label,[string]$inputText,[switch]$NoCapture){
@@ -66,7 +69,7 @@ try{
     $sourceDirty=[bool](& git.exe status --porcelain)
     Write-Output ('USB '+$Mode+' TEST run='+$runId+' source='+$source+' output='+$out)
     if($Mode -eq 'Real'){Write-Output ('EXPLICIT REAL CIM: provider='+$Provider+' duration='+$DurationSeconds+'s delay='+$CadenceMillis+'ms queryTimeout='+$QueryTimeoutMillis+'ms; only minimal storage classification, no files/serial; TEST server only.')}
-    [IO.File]::WriteAllText((Join-Path $out 'config.json'),(@{mode=$Mode;provider=$Provider;durationSeconds=$DurationSeconds;cadenceDelayMillis=$CadenceMillis;queryTimeoutMillis=$QueryTimeoutMillis;dbPort=[int]$env:DB_PORT;sourceSha=$source;sourceDirty=$sourceDirty;timeline=[bool]$Timeline;identityOnly=[bool]$TimelineIdentityOnly;viewSeconds=$ViewSeconds}|ConvertTo-Json),$utf8)
+    [IO.File]::WriteAllText((Join-Path $out 'config.json'),(@{mode=$Mode;provider=$Provider;durationSeconds=$DurationSeconds;cadenceDelayMillis=$CadenceMillis;queryTimeoutMillis=$QueryTimeoutMillis;dbPort=[int]$env:DB_PORT;sourceSha=$source;sourceDirty=$sourceDirty;timeline=[bool]$Timeline;alertRules=[bool]$AlertRules;identityOnly=[bool]$TimelineIdentityOnly;viewSeconds=$ViewSeconds}|ConvertTo-Json),$utf8)
     # Offline bootstrap has no listening socket. Password travels only over process stdin.
     if((Native (Join-Path $PostgresBin 'initdb.exe') ('-D "'+$pgdata+'" -U usb_demo_test --auth=trust --no-locale -E UTF8') 'initdb' '') -ne 0){throw 'Owned initdb failed'}
     if((Native (Join-Path $PostgresBin 'postgres.exe') ('--single -D "'+$pgdata+'" template1') 'offline-password' ("SET password_encryption='scram-sha-256';`nALTER ROLE usb_demo_test PASSWORD '"+$env:DB_PASSWORD+"';`n")) -ne 0){throw 'Offline password initialization failed'}
@@ -76,7 +79,7 @@ try{
     if((Native (Join-Path $PostgresBin 'createdb.exe') ('-h 127.0.0.1 -p '+$env:DB_PORT+' -U usb_demo_test -T template0 -E UTF8 '+$env:DB_NAME) 'createdb' '') -ne 0){throw 'Owned TEST database creation failed'}
     $methods=if($Mode -eq 'Real'){'realCimReadinessCommitAckAndHistory'}else{'mockCoordinatorTimelineCommitAckLossAndPagedHistory+actualRevokeCancelsPendingSourceAndCannotFlushNewEvents+businessDeadlineStopsCoordinatorUsingRealScopedHeartbeat+coordinatorStatusCommitFaultRollsBackThenRetriesSameMessage'}
     $tests='UsbIntegratedDemoPostgresTest#'+$methods
-    if($Timeline){$methods=if($TimelineIdentityOnly){'candidateObserversReachAuthorizedLane'}elseif($Mode -eq 'Real'){'realCimStatusReachesDashboard'}else{'mixedMockDeliveryReachesTwoAttemptDashboard'};$tests='MonitoringTimelinePostgresTest#'+$methods}
+    if($Timeline){$methods=if($AlertRules){'experimentalAlertsReachDashboard'}elseif($TimelineIdentityOnly){'candidateObserversReachAuthorizedLane'}elseif($Mode -eq 'Real'){'realCimStatusReachesDashboard'}else{'mixedMockDeliveryReachesTwoAttemptDashboard'};$tests='MonitoringTimelinePostgresTest#'+$methods}
     $mavenProcess=New-Object Diagnostics.Process;$mavenProcess.StartInfo.FileName=$env:ComSpec
     $mavenProcess.StartInfo.Arguments='/d /s /c ""'+$maven+'" --batch-mode --no-transfer-progress -Duser.timezone=UTC -Dmaven.repo.local="'+$MavenRepository+'" -pl server -am -Dtest='+$tests+' -Dsurefire.failIfNoSpecifiedTests=false test"'
     $mavenProcess.StartInfo.WorkingDirectory=$repo;$mavenProcess.StartInfo.UseShellExecute=$false;$mavenProcess.StartInfo.CreateNoWindow=$true;$mavenProcess.StartInfo.RedirectStandardOutput=$true;$mavenProcess.StartInfo.RedirectStandardError=$true
@@ -101,7 +104,7 @@ finally{
     $cleanup.postmasterPidAbsent=-not(Test-Path -LiteralPath (Join-Path $pgdata 'postmaster.pid'))
     $summary=Join-Path $out 'demo-summary.json'
     if(Test-Path -LiteralPath (Join-Path $out 'stop.request')){$exitCode=130}
-    $result=@{sourceSha=$source;sourceDirty=$sourceDirty;runId=$runId;mode=$Mode;timeline=[bool]$Timeline;identityOnly=[bool]$TimelineIdentityOnly;exitCode=$exitCode;runnerErrorType=$failedType;startUtc=$start;endUtc=[DateTime]::UtcNow.ToString('o');cleanup=$cleanup;hardware='0/12 NOT_RUN';summaryPresent=(Test-Path -LiteralPath $summary)}
+    $result=@{sourceSha=$source;sourceDirty=$sourceDirty;runId=$runId;mode=$Mode;timeline=[bool]$Timeline;alertRules=[bool]$AlertRules;identityOnly=[bool]$TimelineIdentityOnly;exitCode=$exitCode;runnerErrorType=$failedType;startUtc=$start;endUtc=[DateTime]::UtcNow.ToString('o');cleanup=$cleanup;hardware='0/12 NOT_RUN';summaryPresent=(Test-Path -LiteralPath $summary)}
     [IO.File]::WriteAllText((Join-Path $out 'result.json'),($result|ConvertTo-Json -Depth 5),$utf8)
     foreach($name in $saved.Keys){[Environment]::SetEnvironmentVariable($name,$saved[$name],'Process')};Pop-Location
 }

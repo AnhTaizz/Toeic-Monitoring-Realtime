@@ -114,4 +114,19 @@ class TimelineControllerTest {
         f.controller.select("A");var s=f.ready("A");assertThat(s.rows()).hasSize(3);var row=s.rows().stream().filter(r->r.type().equals("LISTENING_INTERRUPTED")).findFirst().orElseThrow();assertThat(row.observedAt()).isNull();assertThat(row.receivedAt()).isEqualTo(T.plusSeconds(1));assertThat(row.quality()).contains("interruptedAt");assertThat(row.description()).contains("không phải receivedAt");
         f.controller.refresh();s=f.ready("A");assertThat(s.rows()).hasSize(3);assertThat(s.listeningStatus().interrupted()).isTrue();
     }}
+    static AlertSummary classification(String attempt){return new AlertSummary(attempt,"mon08-experimental-v1",T.minusSeconds(300),T,List.of(),false,0,0,0,0,"MOCK window only",List.of());}
+    @Test void classificationSharesGenerationAndCannotLeakLateAttemptResponse()throws Exception{
+        var held=new CompletableFuture<AlertSummary>(){public boolean cancel(boolean interrupt){return false;}};var entered=new CountDownLatch(1);
+        var api=new Api(){public CompletableFuture<AlertSummary> alerts(String a){if(a.equals("A")){entered.countDown();return held;}return CompletableFuture.completedFuture(classification(a));}};
+        try(var f=new Fixture(api)){f.controller.select("A");assertThat(entered.await(2,TimeUnit.SECONDS)).isTrue();f.controller.select("B");assertThat(f.ready("B").alerts().attempt()).isEqualTo("B");held.complete(classification("A"));f.controller.refresh();var s=f.ready("B");assertThat(s.alerts().attempt()).isEqualTo("B");assertThat(s.rows()).allMatch(r->r.attempt().equals("B"));}
+    }
+    @Test void summaryFailureIsStaleAndRevokeClearsSummaryAlongsideRawHistory()throws Exception{
+        var status=new AtomicInteger();var api=new Api(){public CompletableFuture<AlertSummary> alerts(String a){return status.get()==0?CompletableFuture.completedFuture(classification(a)):CompletableFuture.failedFuture(new LoginFailedException(status.get(),"MOCK classification error"));}};
+        try(var f=new Fixture(api)){f.controller.select("A");assertThat(f.ready("A").alerts()).isNotNull();status.set(503);f.controller.refresh();assertThat(f.waitFor(s->s.stale()&&!s.loading()&&s.message().contains("Không tải được")).alerts()).isNotNull();status.set(401);f.controller.refresh();var denied=f.waitFor(s->s.message().contains("Phiên hết"));assertThat(denied.alerts()).isNull();assertThat(denied.rows()).isEmpty();}
+    }
+    @Test void closeCancelsSummaryRequestWithoutClosingSharedSocket()throws Exception{
+        var held=new CompletableFuture<AlertSummary>();var entered=new CountDownLatch(1);var api=new Api(){public CompletableFuture<AlertSummary> alerts(String a){entered.countDown();return held;}};
+        try(var f=new Fixture(api)){f.controller.select("A");assertThat(entered.await(2,TimeUnit.SECONDS)).isTrue();f.controller.close();assertThat(held).isCancelled();assertThat(f.controller.snapshot().alerts()).isNull();assertThat(f.transport.state).isEqualTo(ConnectionState.CONNECTED);}
+    }
+
 }

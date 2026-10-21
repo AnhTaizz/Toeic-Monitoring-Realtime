@@ -10,6 +10,7 @@ import vn.edu.toeic.client.dashboard.MonitoringData.Gap;
 import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
 
 public interface DashboardApi extends AutoCloseable {
+    default CompletableFuture<AlertSummary> alerts(String attempt) { return CompletableFuture.completedFuture(null); }
     CompletableFuture<ScopeView> scope();
     CompletableFuture<Roster> roster();
     CompletableFuture<List<Event>> events(String attempt);

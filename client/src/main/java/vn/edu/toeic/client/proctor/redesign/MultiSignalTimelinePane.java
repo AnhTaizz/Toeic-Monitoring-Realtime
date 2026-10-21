@@ -6,11 +6,14 @@ import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import vn.edu.toeic.client.dashboard.DashboardApi;
+import vn.edu.toeic.client.dashboard.AlertSummary;
 import vn.edu.toeic.client.proctor.timeline.*;
 import vn.edu.toeic.client.realtime.*;
 
 /** MON-09 slice inside the existing dashboard. No candidate observer or hardware source here. */
 final class MultiSignalTimelinePane extends VBox implements ProctorRedesignView.RoomPane,AutoCloseable {
+    private final TableView<AlertSummary.Item> alerts=new TableView<>();
+    private final Label alertCoverage=Ui.wrapping("MON-08 chưa tải; không suy rằng toàn khoảng bình thường.","muted"),alertDetails=Ui.wrapping("Chọn nhóm để xem rule, count và evidence.","muted");
     private final ComboBox<String> attempt=new ComboBox<>(),source=new ComboBox<>();
     private final TableView<TimelineRows.Row> table=new TableView<>();
     private final Label status=Ui.wrapping("Chọn lượt thi được phân công.","muted"),completeness=Ui.wrapping("","muted"),presence=Ui.wrapping("","muted"),details=Ui.wrapping("Chọn một dòng.","muted");
@@ -29,6 +32,11 @@ final class MultiSignalTimelinePane extends VBox implements ProctorRedesignView.
         attempt.valueProperty().addListener((o,b,a)->{if(!changing){clearVisible();if(controller!=null)controller.select(active?a:null);}});
         source.valueProperty().addListener((o,b,a)->render());refresh.setId("multi-refresh");more.setId("multi-more");
         refresh.setOnAction(e->{if(controller!=null)controller.refresh();});more.setOnAction(e->{if(controller!=null)controller.refresh();});
+        alerts.setId("multi-alert-table");alertCoverage.setId("multi-alert-coverage");alertDetails.setId("multi-alert-details");
+        alerts.setPrefHeight(170);alerts.setPlaceholder(new Label("Chưa có nhóm trong cửa sổ; không chứng minh bình thường."));
+        alerts.getColumns().addAll(Ui.textColumn("Ưu tiên xem xét",150,AlertSummary.Item::priority),Ui.textColumn("Nguồn / loại",300,r->r.source()+" / "+r.type()),Ui.<AlertSummary.Item>textColumn("Số event",90,r->Integer.toString(r.count())),Ui.textColumn("Giải thích",550,AlertSummary.Item::explanation));
+        alerts.getSelectionModel().selectedItemProperty().addListener((o,b,a)->alertDetails.setText(a==null?"Chọn nhóm để xem rule/count/evidence.":a.rule()+" · "+a.policy()+" · run="+a.run()+"\n"+a.start()+" → "+a.end()+" · "+a.count()+" event · dropped="+a.dropped()+"\n"+a.explanation()+"\nEvidence keys: "+String.join(", ",a.evidence())+(a.evidenceLimited()?" · chỉ hiện 5 tham chiếu":"")));
+        var showRaw=new Button("Xem history gốc của nhóm");showRaw.setId("multi-alert-raw");showRaw.setOnAction(e->{source.setValue("Tất cả nguồn");var a=alerts.getSelectionModel().getSelectedItem();if(a!=null){var row=table.getItems().stream().filter(r->a.evidence().contains(r.key())).findFirst().orElse(null);if(row!=null){table.getSelectionModel().select(row);table.scrollTo(row);}else alertDetails.setText(alertDetails.getText()+"\nEvent không nằm trong cửa sổ 500 dòng UI; dùng evidence key/endpoint history gốc để đối chiếu, không tạo event giả.");}});
         table.setId("multi-timeline-table");table.setPlaceholder(new Label("Chưa có quan sát được ghi; không có nghĩa là không vi phạm."));
         table.getColumns().addAll(Ui.<TimelineRows.Row>textColumn("Server nhận / ghi nhận",185,r->Ui.dateClock(r.receivedAt(),"—")),
                 Ui.<TimelineRows.Row>textColumn("Client quan sát",170,r->Ui.dateClock(r.observedAt(),"Không có / không áp dụng")),
@@ -37,7 +45,8 @@ final class MultiSignalTimelinePane extends VBox implements ProctorRedesignView.
         table.setPrefHeight(360);table.getSelectionModel().selectedItemProperty().addListener((o,b,a)->details.setText(a==null?"Chọn một dòng.":a.description()+"\n"+a.quality()+(a.signalSequence()>0?" · Sequence signal do server gán trong attempt: "+a.signalSequence():" · Không áp dụng sequence signal cho nguồn này.")));
         status.setId("multi-status");completeness.setId("multi-completeness");presence.setId("multi-presence");current.setId("multi-process-state");details.setId("multi-details");listening.setId("multi-listening-state");
         getChildren().addAll(Ui.pageHeader("Timeline đa tín hiệu","Quan sát được máy chủ ghi nhận; chọn lượt thi được phân công."),
-                new HBox(10,attempt,refresh,more),status,presence,completeness,source,table,details,
+                new HBox(10,attempt,refresh,more),status,presence,completeness,
+                Ui.label("Nhóm ưu tiên xem xét — MON-08 EXPERIMENTAL","card-title"),alertCoverage,alerts,alertDetails,showRaw,source,table,details,
                 Ui.wrapping("Sort: server receivedAt giảm dần → source → signal sequence giảm dần → identity. Đây là thứ tự hiển thị, không suy quan hệ nhân quả; không trừ đồng hồ hai máy.","muted","small"),
                 Ui.card(new VBox(8,Ui.label("Process hiện tại — nguồn state, không phải event history","card-title"),current)),
                 listening,Ui.wrapping("Listening (nếu có) là projection trạng thái server, không phải lịch sử phát đầy đủ. READY là bản ghi lịch sử, không bảo đảm nguồn vẫn khỏe. Không gán tội hoặc đề nghị hủy bài.","muted","small"));
@@ -54,7 +63,7 @@ final class MultiSignalTimelinePane extends VBox implements ProctorRedesignView.
         }
         if(controller!=null)controller.roster(Set.copyOf(ids),room.connected()&&!room.rosterStale()&&!room.dashboard().rosterLoading());
     }
-    private void clearVisible(){snapshot=null;table.getItems().clear();details.setText("Chọn một dòng.");current.setText("Process hiện tại chưa tải.");listening.setText("Listening chưa tải.");presence.setText("");completeness.setText("");status.setText(controller==null?"Chưa cấu hình API typed history.":"Đang kiểm tra quyền; chưa có dữ liệu của lượt đang chọn.");}
+    private void clearVisible(){snapshot=null;table.getItems().clear();alerts.getItems().clear();alertCoverage.setText("MON-08 chưa có dữ liệu được xác nhận.");alertDetails.setText("Chọn nhóm để xem chi tiết.");details.setText("Chọn một dòng.");current.setText("Process hiện tại chưa tải.");listening.setText("Listening chưa tải.");presence.setText("");completeness.setText("");status.setText(controller==null?"Chưa cấu hình API typed history.":"Đang kiểm tra quyền; chưa có dữ liệu của lượt đang chọn.");}
     private void accept(TimelineController.Snapshot value){Platform.runLater(()->{if(closed.get()||!active||!Objects.equals(value.attempt(),attempt.getValue())||value.revision()<revision)return;revision=value.revision();snapshot=value;render();});}
     private void render(){
         if(snapshot==null)return;
@@ -69,6 +78,11 @@ final class MultiSignalTimelinePane extends VBox implements ProctorRedesignView.
                 +"Không có event không chứng minh không vi phạm.");
         presence.setText(snapshot.presence()==null?"Presence chưa được server xác nhận.":"Presence server: "+snapshot.presence().status()+" / "+snapshot.presence().reason()+"; khác trạng thái observer và kết nối dashboard.");
         String filter=source.getValue();table.getItems().setAll(snapshot.rows().stream().filter(r->"Tất cả nguồn".equals(filter)||r.source().equals(filter)).toList());
+        var classified=snapshot.alerts();
+        var selectedAlert=alerts.getSelectionModel().getSelectedItem();
+        alerts.getItems().setAll(classified==null?List.of():classified.items());
+        if(selectedAlert!=null)alerts.getItems().stream().filter(a->a.id().equals(selectedAlert.id())).findFirst().ifPresent(a->alerts.getSelectionModel().select(a));
+        alertCoverage.setText(classified==null?"MON-08 chưa bật/không khả dụng (404); không có kết luận phân loại.":"EXPERIMENTAL · "+classified.policy()+" · "+classified.from()+" → "+classified.cutoff()+" · input="+classified.inputEvents()+" · gap="+classified.gapEvents()+" · nguồn chưa đủ="+classified.unavailableEvents()+" · process ngoài policy="+classified.excludedProcessEvents()+" · cap nguồn="+classified.sourceLimited()+" · cap nhóm="+classified.summaryLimited()+"\n"+classified.coverageNote()+" Bộ lọc raw không lọc nhóm/coverage. "+(snapshot.stale()?"DỮ LIỆU CÓ THỂ CŨ.":""));
         var state=snapshot.processState();current.setText(state==null?"Chưa có state được xác nhận.":state.receivedAt()==null?state.status()+" · chưa có snapshot process được server ghi nhận; không suy rằng máy không có process.":state.status()+" · server nhận "+state.receivedAt()+" · "+state.processes().size()+" process\n"+state.processes().stream().limit(50).map(p->p.processName()).reduce((a,b)->a+", "+b).orElse("Không có process trong snapshot đã ghi")+(state.processes().size()>50?" · chỉ hiện 50 tên":""));
         var playback=snapshot.listeningStatus();listening.setText(playback==null?"Listening chưa có status khả dụng; không suy từ focus/presence.":"Listening đã đọc từ server: "+playback.phase()+"; interrupted="+playback.interrupted()+(playback.interrupted()?"; interruptedAt="+playback.interruptedAt()+" (giờ server, không phải receivedAt gói tin)":""));
     }
