@@ -1,0 +1,716 @@
+{
+  "baseSha": "1507591b0260f8b9a8b67ed6025a77f820687563",
+  "branch": "feat/cb-mon08-alert-rules-20261021",
+  "runtimeSourceSha": "1e4b1ca8661651bd5ec020c282037e509ff038aa",
+  "buildAndPassingIntegrationSha": "9e31d5062234ef121479ec8ae6f2879f9d19c4d4",
+  "build": {
+    "sourceSha": "9e31d5062234ef121479ec8ae6f2879f9d19c4d4",
+    "runtimeSourceSha": "1e4b1ca8661651bd5ec020c282037e509ff038aa",
+    "sourceDirty": false,
+    "moduleCounts": [
+      [
+        86,
+        0,
+        0,
+        0
+      ],
+      [
+        35,
+        0,
+        0,
+        0
+      ],
+      [
+        870,
+        0,
+        0,
+        27
+      ],
+      [
+        466,
+        0,
+        0,
+        128
+      ]
+    ],
+    "total": 1457,
+    "passed": 1302,
+    "skipped": 155,
+    "checks": [
+      {
+        "compiledMatch": "client/dashboard/AlertSummary"
+      },
+      {
+        "compiledMatch": "client/dashboard/MonitoringApiClient"
+      },
+      {
+        "compiledMatch": "client/dashboard/DashboardApi"
+      },
+      {
+        "compiledMatch": "client/proctor/timeline/TimelineController"
+      },
+      {
+        "compiledMatch": "client/proctor/timeline/TimelineRows"
+      },
+      {
+        "compiledMatch": "client/proctor/redesign/MultiSignalTimelinePane"
+      },
+      {
+        "compiledMatch": "server/monitoring/signal/AlertRules"
+      },
+      {
+        "compiledMatch": "server/monitoring/signal/AlertService"
+      },
+      {
+        "compiledMatch": "server/monitoring/signal/AlertController"
+      },
+      {
+        "compiledMatch": "server/monitoring/signal/SignalService"
+      },
+      {
+        "present": "javafx/scene/control/Control.class"
+      },
+      {
+        "present": "glass.dll"
+      },
+      {
+        "present": "proctor-redesign/proctor-redesign.css"
+      },
+      {
+        "clientAbsent": "server/monitoring/signal/AlertRules.class"
+      },
+      {
+        "clientAbsent": "CimSnapshotSource.class"
+      },
+      {
+        "clientAbsent": "cim-snapshot.ps1"
+      },
+      {
+        "clientAbsent": "MonitoringTimelinePostgresTest.class"
+      },
+      {
+        "serverDependencyAbsent": "client-"
+      },
+      {
+        "serverDependencyAbsent": "monitoring-spike"
+      },
+      {
+        "serverTestAbsent": true
+      },
+      {
+        "nestedProtocolMatches": true
+      }
+    ],
+    "artifacts": [
+      {
+        "file": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+        "bytes": 12002772,
+        "sha256": "de096bf6414d6a68a6192efc580a8de90eb6a4950cbc36a05409ad0387f66d37"
+      },
+      {
+        "file": "server/target/server-0.1.0-SNAPSHOT.jar",
+        "bytes": 25493622,
+        "sha256": "4481753fd585d50518aff39b976f329bd205a5f73f7a45c52eaa4b12b35a3a43"
+      },
+      {
+        "file": "protocol/target/protocol-0.1.0-SNAPSHOT.jar",
+        "bytes": 170496,
+        "sha256": "2f46d96e29fcbd47327efc0bc2c64646b421f49b6d2bafd93f56cdb0375a65a4"
+      },
+      {
+        "file": "monitoring-spike/target/monitoring-spike-0.1.0-SNAPSHOT.jar",
+        "bytes": 35713,
+        "sha256": "73f7ca9c16aa20f8287ef8e13a366dfbe32d197c9dd5cce95e31713ce4553a07"
+      }
+    ]
+  },
+  "exe": {
+    "jarSha256": "de096bf6414d6a68a6192efc580a8de90eb6a4950cbc36a05409ad0387f66d37",
+    "exeSha256": "00cecb298a795fe5419a8e8bd5ef73a4c668e465d73005f4abe05ae0a917dc66",
+    "runtimeSourceSha": "1e4b1ca8661651bd5ec020c282037e509ff038aa",
+    "monitoringDefault": "FULL",
+    "format": "portable app-image, ASCII path",
+    "unicodePatched": false,
+    "signalExperimentDefault": "OFF",
+    "alertExperimentDefault": "OFF",
+    "buildSourceSha": "9e31d5062234ef121479ec8ae6f2879f9d19c4d4",
+    "installerAcceptance": "NOT_RUN"
+  },
+  "exeStartup": {
+    "buildSourceSha": "9e31d5062234ef121479ec8ae6f2879f9d19c4d4",
+    "expectedWindow": true,
+    "bundledJvm": true,
+    "normalClose": true,
+    "parentExited": true,
+    "loginOrNetworkTest": "NOT_RUN",
+    "osMouseKeyboardAcceptance": "NOT_RUN"
+  },
+  "runs": [
+    {
+      "localIgnoredDirectory": "mon08-integrated-first",
+      "config": {
+        "mode": "Mock",
+        "cadenceDelayMillis": 1000,
+        "identityOnly": false,
+        "durationSeconds": 15,
+        "viewSeconds": 0,
+        "timeline": true,
+        "sourceDirty": false,
+        "alertRules": true,
+        "sourceSha": "6344160d94169ba7ef117872803f7545dcf841cb",
+        "provider": "MSFT_DISK",
+        "queryTimeoutMillis": 5000
+      },
+      "result": {
+        "sourceSha": "6344160d94169ba7ef117872803f7545dcf841cb",
+        "identityOnly": false,
+        "exitCode": 1,
+        "startUtc": "2026-10-21T06:20:05.0770024Z",
+        "alertRules": true,
+        "cleanup": {
+          "ownedSchemasRemaining": 0,
+          "clusterStopExit": 0,
+          "postmasterPidAbsent": true
+        },
+        "sourceDirty": false,
+        "endUtc": "2026-10-21T06:20:31.6078527Z",
+        "summaryPresent": true,
+        "runId": "usb-9300514d49474d04",
+        "mode": "Mock",
+        "runnerErrorType": "System.Management.Automation.RuntimeException",
+        "hardware": "0/12 NOT_RUN",
+        "timeline": true
+      },
+      "summary": {
+        "hardware": "0/12 NOT_RUN",
+        "runs": [],
+        "schemaDropped": true,
+        "sourceSha": "6344160d94169ba7ef117872803f7545dcf841cb",
+        "runId": "usb-9300514d49474d04"
+      }
+    },
+    {
+      "localIgnoredDirectory": "mon08-integrated-auth-fixed",
+      "config": {
+        "mode": "Mock",
+        "cadenceDelayMillis": 1000,
+        "identityOnly": false,
+        "durationSeconds": 15,
+        "viewSeconds": 0,
+        "timeline": true,
+        "sourceDirty": false,
+        "alertRules": true,
+        "sourceSha": "5ff546b2e93db1c52b76669c25aecef2568804ec",
+        "provider": "MSFT_DISK",
+        "queryTimeoutMillis": 5000
+      },
+      "result": {
+        "sourceSha": "5ff546b2e93db1c52b76669c25aecef2568804ec",
+        "identityOnly": false,
+        "exitCode": 1,
+        "startUtc": "2026-10-21T06:21:27.2335991Z",
+        "alertRules": true,
+        "cleanup": {
+          "ownedSchemasRemaining": 0,
+          "clusterStopExit": 0,
+          "postmasterPidAbsent": true
+        },
+        "sourceDirty": false,
+        "endUtc": "2026-10-21T06:21:59.1198978Z",
+        "summaryPresent": true,
+        "runId": "usb-2028b1363db94acc",
+        "mode": "Mock",
+        "runnerErrorType": "System.Management.Automation.RuntimeException",
+        "hardware": "0/12 NOT_RUN",
+        "timeline": true
+      },
+      "summary": {
+        "runs": [],
+        "hardware": "0/12 NOT_RUN",
+        "runId": "usb-2028b1363db94acc",
+        "sourceSha": "5ff546b2e93db1c52b76669c25aecef2568804ec",
+        "schemaDropped": true
+      }
+    },
+    {
+      "localIgnoredDirectory": "mon08-integrated-no-store-fixed",
+      "config": {
+        "mode": "Mock",
+        "cadenceDelayMillis": 1000,
+        "identityOnly": false,
+        "durationSeconds": 15,
+        "viewSeconds": 0,
+        "timeline": true,
+        "sourceDirty": false,
+        "alertRules": true,
+        "sourceSha": "1e4b1ca8661651bd5ec020c282037e509ff038aa",
+        "provider": "MSFT_DISK",
+        "queryTimeoutMillis": 5000
+      },
+      "result": {
+        "sourceSha": "1e4b1ca8661651bd5ec020c282037e509ff038aa",
+        "identityOnly": false,
+        "exitCode": 1,
+        "startUtc": "2026-10-21T06:23:50.4157124Z",
+        "alertRules": true,
+        "cleanup": {
+          "ownedSchemasRemaining": 0,
+          "clusterStopExit": 0,
+          "postmasterPidAbsent": true
+        },
+        "sourceDirty": false,
+        "endUtc": "2026-10-21T06:24:43.0331060Z",
+        "summaryPresent": true,
+        "runId": "usb-71532addfc3c4fd4",
+        "mode": "Mock",
+        "runnerErrorType": "System.Management.Automation.RuntimeException",
+        "hardware": "0/12 NOT_RUN",
+        "timeline": true
+      },
+      "summary": {
+        "runs": [],
+        "hardware": "0/12 NOT_RUN",
+        "runId": "usb-71532addfc3c4fd4",
+        "sourceSha": "1e4b1ca8661651bd5ec020c282037e509ff038aa",
+        "schemaDropped": true
+      }
+    },
+    {
+      "localIgnoredDirectory": "mon08-integrated-gap-fixed",
+      "config": {
+        "mode": "Mock",
+        "cadenceDelayMillis": 1000,
+        "identityOnly": false,
+        "durationSeconds": 15,
+        "viewSeconds": 0,
+        "timeline": true,
+        "sourceDirty": false,
+        "alertRules": true,
+        "sourceSha": "9e31d5062234ef121479ec8ae6f2879f9d19c4d4",
+        "provider": "MSFT_DISK",
+        "queryTimeoutMillis": 5000
+      },
+      "result": {
+        "sourceSha": "9e31d5062234ef121479ec8ae6f2879f9d19c4d4",
+        "identityOnly": false,
+        "exitCode": 0,
+        "startUtc": "2026-10-21T06:26:22.8507563Z",
+        "alertRules": true,
+        "cleanup": {
+          "ownedSchemasRemaining": 0,
+          "clusterStopExit": 0,
+          "postmasterPidAbsent": true
+        },
+        "sourceDirty": false,
+        "endUtc": "2026-10-21T06:27:03.9471590Z",
+        "summaryPresent": true,
+        "runId": "usb-a5e3875cb7d5425f",
+        "mode": "Mock",
+        "runnerErrorType": null,
+        "hardware": "0/12 NOT_RUN",
+        "timeline": true
+      },
+      "summary": {
+        "schemaDropped": true,
+        "sourceSha": "9e31d5062234ef121479ec8ae6f2879f9d19c4d4",
+        "runId": "usb-a5e3875cb7d5425f",
+        "hardware": "0/12 NOT_RUN",
+        "runs": [
+          {
+            "committedInitialInputs": 10,
+            "usbEventCount": 1,
+            "sourceCapTest": 20,
+            "committedTypedAfterCap": 30,
+            "gapDroppedCount": "3 actual queue drops",
+            "kind": "MON08_MOCK",
+            "focusEventCount": 6,
+            "reconnect": "REAL stable identities/counts",
+            "desktop": "Scene controls; OS/hardware NOT_RUN",
+            "rollbackVisible": false
+          }
+        ]
+      }
+    },
+    {
+      "localIgnoredDirectory": "mon08-alert-off-regression",
+      "config": {
+        "mode": "Mock",
+        "cadenceDelayMillis": 1000,
+        "identityOnly": false,
+        "durationSeconds": 15,
+        "viewSeconds": 0,
+        "timeline": true,
+        "sourceDirty": false,
+        "alertRules": false,
+        "sourceSha": "9e31d5062234ef121479ec8ae6f2879f9d19c4d4",
+        "provider": "MSFT_DISK",
+        "queryTimeoutMillis": 5000
+      },
+      "result": {
+        "sourceSha": "9e31d5062234ef121479ec8ae6f2879f9d19c4d4",
+        "identityOnly": false,
+        "exitCode": 0,
+        "startUtc": "2026-10-21T06:27:46.3839254Z",
+        "alertRules": false,
+        "cleanup": {
+          "ownedSchemasRemaining": 0,
+          "clusterStopExit": 0,
+          "postmasterPidAbsent": true
+        },
+        "sourceDirty": false,
+        "endUtc": "2026-10-21T06:28:21.7537380Z",
+        "summaryPresent": true,
+        "runId": "usb-3878b670f1a8433b",
+        "mode": "Mock",
+        "runnerErrorType": null,
+        "hardware": "0/12 NOT_RUN",
+        "timeline": true
+      },
+      "summary": {
+        "runs": [
+          {
+            "reconnect": "REAL disconnect/connect and fresh scope/history",
+            "A_rows": 19,
+            "JavaFX": "Scene controls/snapshot; not OS input",
+            "actualQueueDrops": 3,
+            "kind": "MOCK_TYPED",
+            "ackLoss": "SIMULATED",
+            "B_rows": 1
+          }
+        ],
+        "hardware": "0/12 NOT_RUN",
+        "runId": "usb-3878b670f1a8433b",
+        "sourceSha": "9e31d5062234ef121479ec8ae6f2879f9d19c4d4",
+        "schemaDropped": true
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "screens/groups-mock.png",
+      "sourceSha": "9e31d5062234ef121479ec8ae6f2879f9d19c4d4",
+      "sha256": "6f4cf015fd119ae680d8135675b35d63905da6ce29a80da7c12aa21235525949",
+      "capture": "JavaFX Scene; MOCK inputs/accounts, REAL WS/HTTP/PG; not OS/human acceptance"
+    },
+    {
+      "file": "screens/limited-mock.png",
+      "sourceSha": "9e31d5062234ef121479ec8ae6f2879f9d19c4d4",
+      "sha256": "3a52e9c83402ee092e3ae0f9bfa894bb01f80de64f9b0a47eadc266b0c9d52ae",
+      "capture": "JavaFX Scene; MOCK inputs/accounts, REAL WS/HTTP/PG; not OS/human acceptance"
+    }
+  ],
+  "localOnlyManifest": [
+    {
+      "localIgnoredFile": "target/mon08-alert-off-regression/config.json",
+      "bytes": 371,
+      "sha256": "5e31358140024bd60be501f48dbb9ef2e1da751fccb858eed5752121c906531d"
+    },
+    {
+      "localIgnoredFile": "target/mon08-alert-off-regression/demo-summary.json",
+      "bytes": 342,
+      "sha256": "94b5df2e75706ed9cad8523f703a246fca81b932ab1e5dee4ce8376231c6073c"
+    },
+    {
+      "localIgnoredFile": "target/mon08-alert-off-regression/maven.private.err",
+      "bytes": 169,
+      "sha256": "88f1a95080458b5a8ce8dd625eb44ad0d3b1ede0cee4f756b0a64051242c1f34"
+    },
+    {
+      "localIgnoredFile": "target/mon08-alert-off-regression/maven.private.log",
+      "bytes": 1462281,
+      "sha256": "8e254b0ca4d1b0bbef96a6ef415538bfb14a769daea53a3ebec1fe48a015dbee"
+    },
+    {
+      "localIgnoredFile": "target/mon08-alert-off-regression/reports.private/TEST-vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest.xml",
+      "bytes": 1483033,
+      "sha256": "8e3125ddaaadf0a968a5d070d092ba00859db8b36ecc6e4590e3ac62cee72d21"
+    },
+    {
+      "localIgnoredFile": "target/mon08-alert-off-regression/result.json",
+      "bytes": 632,
+      "sha256": "0a1f9999e95ce13b354248716fdc0eed7a3976fc6b82d13a9eb675be9d60756f"
+    },
+    {
+      "localIgnoredFile": "target/mon08-exe-build/build-receipt.json",
+      "bytes": 555,
+      "sha256": "c96ec78ba8d1fdfe58bf30097f956b1cd77a68390414395126f93a2ff1eed84c"
+    },
+    {
+      "localIgnoredFile": "target/mon08-exe-build/startup-smoke.json",
+      "bytes": 272,
+      "sha256": "0c1c4a48df1d321b6a4b658b4350e0ab40ceffb8ab523958991c317c753d146f"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-auth-fixed/config.json",
+      "bytes": 370,
+      "sha256": "43b058ba9775a8cfd9f5b9037d879e8e540f97d45b6cc1deb720ba259ba2ad8d"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-auth-fixed/demo-summary.json",
+      "bytes": 144,
+      "sha256": "a63fccc3c4e6149bc27e3800164f260341222d5c97737b7a2d17f85b31e71d6b"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-auth-fixed/maven.private.err",
+      "bytes": 169,
+      "sha256": "a9f7fc50da17ba3e5e96e61c1530344a57da664c7f0d5fcf1ff7ee3fe4f85c79"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-auth-fixed/maven.private.log",
+      "bytes": 90695,
+      "sha256": "01b331e012e0c830af50d7c1c5d3de9031a8ef937da1a4cc2f23bef94b993a50"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-auth-fixed/reports.private/TEST-vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest.xml",
+      "bytes": 110226,
+      "sha256": "13a8fa910470022f962db57e1f0b7a48806d35aa080481ee9ed6b6cf17739ea3"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-auth-fixed/result.json",
+      "bytes": 674,
+      "sha256": "88afc2a2d2a1f3bd15914ad5ef4cde4261f1af7eb70aecce469cd6f004459a1d"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-first/config.json",
+      "bytes": 370,
+      "sha256": "4264d31170eaffa87e8dd9d9745fdfa2485ae363c008520ec6521c655c349b0e"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-first/demo-summary.json",
+      "bytes": 144,
+      "sha256": "886aa138b2710dfad21cc29c11906ef5fd30214cf4c85350a1e0b1b82e963d47"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-first/maven.private.err",
+      "bytes": 169,
+      "sha256": "87d6866555fb508dab64bc4534c25d8c48101419e88e305c3176df9f374e88ee"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-first/maven.private.log",
+      "bytes": 72967,
+      "sha256": "8c688cf2d517f7d437216e683d85c6a1226d598fd9aeae4ab0e60c99b1034df4"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-first/reports.private/TEST-vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest.xml",
+      "bytes": 92610,
+      "sha256": "12219a6d282c6d177393a8de99a71a278353bbe0eaf993bc1c77def68b2aff5c"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-first/result.json",
+      "bytes": 674,
+      "sha256": "7140791e4e443d8d1e48c7a67db4e4e3cf3b1aef50144d76b2b918a02ef1d141"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-gap-fixed/config.json",
+      "bytes": 370,
+      "sha256": "574069d0fd546b6bf6371a18b5eb37e20998d4fd19a23f5163f45473e628452d"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-gap-fixed/demo-summary.json",
+      "bytes": 435,
+      "sha256": "34b1da1ad0976788304566e687c47c8627d86d288cdeeae14e030d6ca5267d84"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-gap-fixed/maven.private.err",
+      "bytes": 169,
+      "sha256": "d24af67ebb90f940c1c41a122acdd35ab1f274bd7a09f7ed5a462767c30a0087"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-gap-fixed/maven.private.log",
+      "bytes": 1254036,
+      "sha256": "e672fef2269867ce837311d38ea7f7c89f0c74d428d592d1c7bcb3565cca4b90"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-gap-fixed/reports.private/TEST-vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest.xml",
+      "bytes": 1274652,
+      "sha256": "afab0554eb0a42e0b1a1648382fd31a39f92cf3de064d21e227a31d1c300e42e"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-gap-fixed/result.json",
+      "bytes": 631,
+      "sha256": "14779d3397cd6b952ffe6e25d40e572d065478cb343d4ab0ad22d2b8b68cf3e9"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-no-store-fixed/config.json",
+      "bytes": 370,
+      "sha256": "b789178eb19e31d602e3343b98515056849f69e736e3be3d82c5ab187e2e0d14"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-no-store-fixed/demo-summary.json",
+      "bytes": 144,
+      "sha256": "2a5d8d3425f52fbe7e9df7244aa548683d15e5fa208f6cda7a5a02730610f9a3"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-no-store-fixed/maven.private.err",
+      "bytes": 169,
+      "sha256": "6b6071793d35aa725cc0bf2d61184ab3bd22477b1a0b4983f599a598195059ee"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-no-store-fixed/maven.private.log",
+      "bytes": 128613,
+      "sha256": "d51155295df0fd5e15c08e38d51fd2e35084c340c3bb47ab1de5774a0f011d3e"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-no-store-fixed/reports.private/TEST-vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest.xml",
+      "bytes": 146366,
+      "sha256": "1c570ace03d866ed230f44c7770bf38c8339f540e09e87ca6fbf99da0f9a77a5"
+    },
+    {
+      "localIgnoredFile": "target/mon08-integrated-no-store-fixed/result.json",
+      "bytes": 674,
+      "sha256": "044c6ea8afef324c546feb9a5fd0e50b1c0445582a6aa941a4b134a4f0853df4"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/baseline-mon08/maven.private.err",
+      "bytes": 954,
+      "sha256": "bbc8ab81e89d3eabca2bb92e4652b6fb0ec37041e63e2f22d218ef2ab6dc0a09"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/baseline-mon08/maven.private.log",
+      "bytes": 10618,
+      "sha256": "0e03ecde1c1a1235cad416a09ffacdd7f77bd552532196cb2b0c0f1f3e076f4e"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/consumer-unit/maven.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/consumer-unit/maven.private.log",
+      "bytes": 5328,
+      "sha256": "543978cd1b5fdcee7a001931df4f368106274e73249835d71baddc6e46b537bd"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/first-compile/maven.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/first-compile/maven.private.log",
+      "bytes": 10844,
+      "sha256": "ad9a64bbdb8f46be9d5fc832979a7b3e5e36b2f8cb00a6294b76c49b767ada13"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/focused-corrected/maven.private.err",
+      "bytes": 954,
+      "sha256": "bbc8ab81e89d3eabca2bb92e4652b6fb0ec37041e63e2f22d218ef2ab6dc0a09"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/focused-corrected/maven.private.log",
+      "bytes": 10839,
+      "sha256": "47c5731eb7120442c8c107a26c3a20200262ac466d96565e654baf57a2b30ebc"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/focused-final-wip/maven.private.err",
+      "bytes": 954,
+      "sha256": "bbc8ab81e89d3eabca2bb92e4652b6fb0ec37041e63e2f22d218ef2ab6dc0a09"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/focused-final-wip/maven.private.log",
+      "bytes": 10839,
+      "sha256": "2b2f331754fdeaa44440e14056a64b08c32071fe186f445dfb49980bad719342"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/full-verify-mon08/build-receipt.json",
+      "bytes": 2743,
+      "sha256": "826904428bd888a15bd8ec030f77fb1291c3ccd2fb0e01fa366d6cefa79eb1a7"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/full-verify-mon08/maven.private.err",
+      "bytes": 1222,
+      "sha256": "5c1f8a0dc1c8239f24a0abfdc0c85234543d93210358197b0e31e1e52e4abcb2"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/full-verify-mon08/maven.private.log",
+      "bytes": 44830,
+      "sha256": "fa0baca39afdcb54a63d0e1980f1fefcb0205cca912b82b5b0f9531726391dfe"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/gap-overflow-before/failure.private.xml",
+      "bytes": 28086,
+      "sha256": "8d1b0bea54177508ba6fe1943aac8e36cecb4841b8ba035d25d4c846ea913765"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/gap-overflow-before/maven.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/gap-overflow-before/maven.private.log",
+      "bytes": 9032,
+      "sha256": "bad2ec4037d024c49518d9f6547ea294346ef81540832509bb73eac7d5ac47c6"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/gap-overflow-before/source-receipt.json",
+      "bytes": 541,
+      "sha256": "5513fb5be902446abe6b82dfb6ae5ec079ad15a84c74d1fc0eb407738d6dd28e"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/legacy-gui-mon08/maven.private.err",
+      "bytes": 169,
+      "sha256": "b4a455d6f0f5db22f02a973b53593e70714bf9da10ba47b9a59291d9745f73c7"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/legacy-gui-mon08/maven.private.log",
+      "bytes": 4221,
+      "sha256": "64dcc44a81760f9e59deb86c3b623296da30bd9acae0e8cfe355d2d26b102db1"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/rule-unit/maven.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/rule-unit/maven.private.log",
+      "bytes": 12113,
+      "sha256": "34a82d8eb436bdb99672527fdc73c485e096e1038249b4064039a4059ee02eb7"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/rules-unit-fixed/maven.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localIgnoredFile": "target/mon09-check/rules-unit-fixed/maven.private.log",
+      "bytes": 7057,
+      "sha256": "6a7a36c87662de41c679dd50af9d6edc326525d79b8872bfd7ce0128d94559c3"
+    }
+  ],
+  "experimentalDefaultPolicy": {
+    "bucketSeconds": 60,
+    "windowSeconds": 300,
+    "reviewCount": 3,
+    "highCount": 6,
+    "sourceCap": 200,
+    "demoSourceCapOverride": 20,
+    "maxGroups": 100,
+    "maxEvidencePerGroup": 5
+  },
+  "defaults": {
+    "monitoring": "FULL",
+    "signalExperiment": "OFF",
+    "alertExperiment": "OFF"
+  },
+  "acceptance": {
+    "USBPhysical": "0/12 NOT_RUN",
+    "secondDisplayPhysical": "NOT_RUN",
+    "twoMachineLAN": "NOT_RUN",
+    "desktopOSInput": "NOT_RUN",
+    "MON08": "TECHNICAL_SLICE_ONLY_NOT_DONE",
+    "humanOwnerPolicyApproval": "PENDING"
+  },
+  "environment": {
+    "os": "Windows 11 x64 / NT10.0.26200.0",
+    "jdk": "Temurin21.0.10",
+    "postgres": "18.3",
+    "hostIdentifier": "omitted",
+    "fixtureSeed": "fresh TEST UUID/runId; MOCK observation inputs; not hardware traces"
+  },
+  "baseline": {
+    "sourceSha": "1507591b0260f8b9a8b67ed6025a77f820687563",
+    "sourceDirty": false,
+    "passed": 95,
+    "skipped": 0,
+    "scope": "focused before edits; 43 client +52 server"
+  }
+}
