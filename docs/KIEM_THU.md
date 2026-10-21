@@ -1,5 +1,9 @@
 # Trạng thái kiểm thử
 
+21/10/2026 — MON-09 C+B: [timeline đa tín hiệu](MON09_MULTI_SIGNAL_TIMELINE.md), [evidence](../evidence/cb-mon09-timeline-20261021/REPORT.md).
+Base dcb124d; runtime5066347/build1c1523b. Dashboard hiện hữu đọc typed history fixed-through100×3/cycle, poll3s/budget12s/500rows; process state riêng, Listening status projection. Sửa producer identity trùng collector lease có FAIL→9ACK. Real FX existing sources1PASS; MOCK real WS/PG/UI1PASS(A19/B1/drop3); REAL CIM1PASS(8READY0/ACK1/UI1/0USB). Full verify1263PASS/154SKIP/0lỗi, GUI cũ12PASS, JAR24checks; sort oracle sạch05e154a8PASS. TESTschema0/PGstop0/workersclosed, raw ignored. FULLdefault/experimentOFF, USB0/12/physicaldisplay/desktop/LAN NOT_RUN, owner/ADR/policy/gate pending, MON09chưaDONE. Không approval thay B hoặc đổi backlog.
+
+
 21/10/2026 — [MON-06 exam-local activity](../evidence/v2-b-mon06-activity-20261021/REPORT.md):
 nhánh stacked trên MON-05 `66f897c`; 4 protocol + 9 adapter/monitor + 1 JavaFX Stage case mới PASS.
 Focused 94PASS; full clean 1378 total = 1232PASS/146SKIP/0FAIL/ERROR. Chỉ aggregate navigation,

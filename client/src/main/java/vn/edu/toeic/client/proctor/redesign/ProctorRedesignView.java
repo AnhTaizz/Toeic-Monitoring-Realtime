@@ -63,14 +63,19 @@ import vn.edu.toeic.protocol.auth.LoginResponse;
  * view created; it does not close the shared {@link RealtimeClient}, which the application owns.
  */
 public final class ProctorRedesignView extends BorderPane implements AutoCloseable {
-    public enum Section { OVERVIEW, CANDIDATES, ALERTS, HISTORY, SETTINGS, SESSION_CONTROLS }
+    public enum Section { OVERVIEW, CANDIDATES, ALERTS, HISTORY, TIMELINE, SETTINGS, SESSION_CONTROLS }
 
     /** Everything the view needs, as interfaces, so tests and the preview can pass MOCK sources. */
     record Wiring(String proctorName, DashboardApi dashboardApi, DashboardApi feedApi, MonitoringTransport transport,
             Consumer<Set<String>> applyScope, Set<String> initialScope, ProctorProgressController.Gateway progress,
             BiFunction<Runnable, Runnable, Node> sessionControls, ProctorSettings.Store settingsStore, long progressPollMillis,
-            List<AutoCloseable> resources) {
+            List<AutoCloseable> resources, DashboardApi timelineApi) {
         Wiring { initialScope = Set.copyOf(initialScope); resources = List.copyOf(resources); }
+        Wiring(String name,DashboardApi api,DashboardApi feed,MonitoringTransport transport,Consumer<Set<String>> scope,
+                Set<String> initial,ProctorProgressController.Gateway progress,BiFunction<Runnable,Runnable,Node> controls,
+                ProctorSettings.Store store,long interval,List<AutoCloseable> resources) {
+            this(name,api,feed,transport,scope,initial,progress,controls,store,interval,resources,null);
+        }
     }
 
     static final String STYLESHEET = "/proctor-redesign/proctor-redesign.css";
@@ -91,7 +96,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
                 (refreshScope, expired) -> new ProctorSessionControls(
                         ProctorV2SessionPane.forServer(serverUrl, login.token(), login.user().id(), expired, refreshScope),
                         new ProctorSessionView(serverUrl, login.token(), expired, refreshScope)),
-                ProctorSettings.FileStore.standard(), poll < 500 || poll > 60000 ? 3000L : poll, List.of(exam::close));
+                ProctorSettings.FileStore.standard(), poll < 500 || poll > 60000 ? 3000L : poll, List.of(exam::close),new MonitoringApiClient(serverUrl,login.token()));
         return new ProctorRedesignView(wiring, onLogout, onExpired);
     }
 
@@ -214,6 +219,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         addNav(items, group, Section.CANDIDATES, "Thí sinh", Ui.ICON_USER, null);
         addNav(items, group, Section.ALERTS, "Cảnh báo", Ui.ICON_BELL, alertBadge);
         addNav(items, group, Section.HISTORY, "Nhật ký giám sát", Ui.ICON_CLOCK, null);
+        addNav(items, group, Section.TIMELINE, "Timeline đa tín hiệu", Ui.ICON_CLOCK, null);
         addNav(items, group, Section.SETTINGS, "Cài đặt", Ui.ICON_GEAR, null);
         if (wiring.sessionControls() != null) {
             Label legacy = Ui.label("QUẢN LÝ CA", "sidebar-footer-title");
@@ -264,6 +270,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         register(Section.CANDIDATES, new CandidatesPane(actions));
         register(Section.ALERTS, new AlertsPane(actions));
         register(Section.HISTORY, new HistoryPane(actions));
+        register(Section.TIMELINE, new MultiSignalTimelinePane(wiring.timelineApi(),wiring.transport(),this::expired));
         register(Section.SETTINGS, new SettingsPane(new SettingsPane.Host() {
             @Override public void applySettings(ProctorSettings value) { ProctorRedesignView.this.applySettings(value); }
             @Override public CompletableFuture<String> saveSettings(ProctorSettings value) { return ProctorRedesignView.this.saveSettings(value); }
@@ -291,6 +298,8 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
     // ------------------------------------------------------------------ navigation + drawers
 
     void show(Section target) {
+        MultiSignalTimelinePane timeline=pane(MultiSignalTimelinePane.class);
+        if(timeline!=null)timeline.active(target==Section.TIMELINE);
         if (target == Section.SESSION_CONTROLS) {
             if (wiring.sessionControls() == null) return;
             // Created on first use: the legacy B4 view starts its own 1 s freshness timer.
@@ -530,6 +539,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         if (!closed.compareAndSet(false, true)) return;
         ticker.stop();
         poller.shutdownNow();
+        for(RoomPane pane:panes)if(pane instanceof MultiSignalTimelinePane timeline)timeline.close();
         try { feed.close(); } catch (RuntimeException ignored) { }
         try { progress.close(); } catch (RuntimeException ignored) { }
         try { dashboard.close(); } catch (RuntimeException ignored) { }

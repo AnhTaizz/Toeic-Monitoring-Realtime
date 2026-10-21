@@ -64,7 +64,8 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
         this.examWindow = Objects.requireNonNull(examWindow);
         this.realtime = Objects.requireNonNull(realtime);
         api = new SignalCapabilityApiClient(serverUrl, token);
-        run = new SignalRunContext(attemptId, "exam-signals-" + UUID.randomUUID());
+        // The confirmed transport lane is bound to this collector lease. A second ID is rejected before socket IO.
+        run = new SignalRunContext(attemptId, collectorSessionId);
         delivery = new SignalDelivery(run, realtime);
         statusEmitter = new ObserverStatusEmitter();
         long statusGeneration = statusEmitter.start(run, delivery);
@@ -177,6 +178,11 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
     }
 
     public SignalDelivery.Status deliveryStatus() { return delivery.status(); }
+    /** Owned delivery shutdown evidence; callers must wait off the FX thread. */
+    public boolean awaitStopped(java.time.Duration timeout) throws InterruptedException {
+        if(Platform.isFxApplicationThread()) throw new IllegalStateException("Await signal shutdown off JavaFX thread");
+        return delivery.awaitStopped(timeout);
+    }
 
     @Override public void close() {
         if (!closed.compareAndSet(false, true)) return;

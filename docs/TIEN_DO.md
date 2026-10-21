@@ -1,5 +1,9 @@
 # Tiến độ hiện tại
 
+21/10/2026 — MON-09 C+B: [timeline đa tín hiệu](MON09_MULTI_SIGNAL_TIMELINE.md), [evidence](../evidence/cb-mon09-timeline-20261021/REPORT.md).
+Base dcb124d; runtime5066347/build1c1523b. Dashboard hiện hữu đọc typed history fixed-through100×3/cycle, poll3s/budget12s/500rows; process state riêng, Listening status projection. Sửa producer identity trùng collector lease có FAIL→9ACK. Real FX existing sources1PASS; MOCK real WS/PG/UI1PASS(A19/B1/drop3); REAL CIM1PASS(8READY0/ACK1/UI1/0USB). Full verify1263PASS/154SKIP/0lỗi, GUI cũ12PASS, JAR24checks; sort oracle sạch05e154a8PASS. TESTschema0/PGstop0/workersclosed, raw ignored. FULLdefault/experimentOFF, USB0/12/physicaldisplay/desktop/LAN NOT_RUN, owner/ADR/policy/gate pending, MON09chưaDONE. Không approval thay B hoặc đổi backlog.
+
+
 21/10/2026 — [USB integrated explicit TEST một lệnh](USB_INTEGRATED_TEST_DEMO.md):
 baseb68e19a (gồm PR87/88), coordinatorfdc90a1/build-demo e7cd9dc. CIM provider thật →
 snapshot/USB adapter/status → shared context/delivery/WS → PG TEST/COMMIT/ACK/history.

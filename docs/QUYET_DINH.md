@@ -406,3 +406,8 @@ server/DB URL dev, chỉ ownclusterloopbacknonce/SCRAM trước listen, password
 bootstrap offline; scope qua seeder/API. Không defaultcapture/offline60s/retention30ngày.
 Evidence thực tại report; FULLdefault/experimentOFF/USB0of12/MON02+07chưaDONE/gate/
 policy/humanownerpending, không thay tracker/ADR hoặc nghiệm thu phần cứng.
+
+
+### 21/10/2026 — MON-09 consumer slice C+B, không policy/ADR approval
+
+Theo ủy quyền người dùng bdaae9a3, tái sử dụng dashboard/API/typed lane và existing FX observers. Chọn HTTP polling3s/max3page100/12s cycle/500rows thay vì wire push mới; fixed-through không thay giới hạn server. Sort server received/recorded time, source, server timelineSequence, identity; không sequence toàn mạng/causality. Listening chỉ conditional status projection, không event/wire mới. Sửa context candidate dùng collector lease ID vì guarded transport đã từ chối ID riêng (FAIL→ACK9); không nới guard. USB provider chỉ explicit TEST, FULLdefault/experimentOFF. Đây là quyết định implementation trong slice, không offline60s/retention30ngày/ADR/humanapproval/hardware acceptance hoặc MON09DONE. Xem MON09_MULTI_SIGNAL_TIMELINE.md và evidence tương ứng; CI/merge final tại PR.

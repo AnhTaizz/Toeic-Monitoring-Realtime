@@ -67,11 +67,14 @@ public final class MonitoringApiClient implements DashboardApi {
         return mapped;
     }
     private <T> CompletableFuture<T> get(String path, Function<JsonObject,T> parser) {
+        return get(path, parser, MAX_BODY_BYTES);
+    }
+    private <T> CompletableFuture<T> get(String path, Function<JsonObject,T> parser, int bodyLimit) {
         String credential = token;
         if (credential == null) return CompletableFuture.failedFuture(new IllegalStateException("Dashboard đã đóng"));
         HttpRequest request = HttpRequest.newBuilder(URI.create(base + "/api/v1/" + path)).timeout(timeout)
                 .header("Authorization", "Bearer " + credential).GET().build();
-        CompletableFuture<HttpResponse<String>> raw = http.sendAsync(request, ignored -> new LimitedBody());
+        CompletableFuture<HttpResponse<String>> raw = http.sendAsync(request, ignored -> new LimitedBody(bodyLimit));
         CompletableFuture<T> result = raw.thenApplyAsync(response -> {
             if (response.statusCode() != 200) throw new LoginFailedException(response.statusCode(),
                     response.statusCode() == 401 ? "Phiên hết hiệu lực. Hãy đăng nhập lại." : "Không tải được dữ liệu giám sát.");
@@ -90,6 +93,20 @@ public final class MonitoringApiClient implements DashboardApi {
     @Override public CompletableFuture<List<Event>> events(String attempt) { return history(attemptPath(attempt)+"/events",body -> MonitoringJson.events(body,attempt,maximum)); }
     @Override public CompletableFuture<List<Interruption>> interruptions(String attempt) { return history(attemptPath(attempt)+"/interruptions",body -> MonitoringJson.interruptions(body,attempt,maximum)); }
     @Override public CompletableFuture<List<Gap>> gaps(String attempt) { return history(attemptPath(attempt)+"/gaps",body -> MonitoringJson.gaps(body,attempt,maximum)); }
+    @Override public CompletableFuture<SignalHistory.Page> signals(String attempt, long after, Long through, int limit) {
+        if (after < 0 || after > vn.edu.toeic.protocol.monitoring.signal.SignalJson.MAX_INTEGER || limit < 1 || limit > 100
+                || through != null && (through < after || through > vn.edu.toeic.protocol.monitoring.signal.SignalJson.MAX_INTEGER)) throw new IllegalArgumentException();
+        return get(attemptPath(attempt)+"/signals?limit="+limit+"&after="+after+(through==null?"":"&through="+through),
+                body -> SignalHistory.parse(body,attempt,after,through,limit),512*1024);
+    }
+    @Override public CompletableFuture<vn.edu.toeic.protocol.audio.ListeningStatusResponse> listeningStatus(String attempt) {
+        attemptPath(attempt);
+        return get("attempts/"+attempt+"/listening/status",body -> {
+            var status=vn.edu.toeic.client.audio.ListeningMessages.status(body);
+            if(!attempt.equals(status.attemptId()))throw new IllegalArgumentException();
+            return status;
+        },512*1024);
+    }
     @Override public CompletableFuture<MonitoringStateView> state(String attempt) {
         return get(attemptPath(attempt)+"/state",body -> {
             MonitoringStateView value=MonitoringStateView.parse(body);
@@ -107,11 +124,13 @@ public final class MonitoringApiClient implements DashboardApi {
         private final HttpResponse.BodySubscriber<String> delegate = HttpResponse.BodySubscribers.ofString(StandardCharsets.UTF_8);
         private Flow.Subscription subscription;
         private long size;
+        private final int maximum;
+        LimitedBody(int maximum) { this.maximum = maximum; }
         @Override public CompletionStage<String> getBody() { return delegate.getBody(); }
         @Override public void onSubscribe(Flow.Subscription value) { subscription = value; delegate.onSubscribe(value); }
         @Override public void onNext(List<ByteBuffer> buffers) {
             for (ByteBuffer buffer : buffers) size += buffer.remaining();
-            if (size > MAX_BODY_BYTES) { subscription.cancel(); delegate.onError(new InvalidServerResponseException()); }
+            if (size > maximum) { subscription.cancel(); delegate.onError(new InvalidServerResponseException()); }
             else delegate.onNext(buffers);
         }
         @Override public void onError(Throwable failure) { delegate.onError(failure); }
