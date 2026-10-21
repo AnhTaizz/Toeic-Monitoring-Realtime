@@ -31,6 +31,7 @@ class SignalRunContextTest {
             assertThat(run.claimFocusInput()).isTrue();assertThat(run.claimFocusInput()).isFalse();
             assertThat(run.claimWindowInput()).isTrue();assertThat(run.claimWindowInput()).isFalse();
             assertThat(run.claimDisplayInput()).isTrue();assertThat(run.claimDisplayInput()).isFalse();
+            assertThat(run.claimActivityInput()).isTrue();assertThat(run.claimActivityInput()).isFalse();
             assertThat(run.claimUsbInput()).isTrue();assertThat(run.claimUsbInput()).isFalse();
         }
     }

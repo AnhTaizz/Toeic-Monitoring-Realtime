@@ -867,7 +867,7 @@ class RealtimeClientTest {
         try(Fixture f=new Fixture()){
             f.connect();try(var lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){
                 confirmSignal(f);
-                for(String type:List.of("DISPLAY_COUNT_OBSERVED","EXAM_ACTIVITY_SUMMARY","USB_CONNECTED")){
+                for(String type:List.of("DISPLAY_COUNT_OBSERVED","NOT_IMPLEMENTED","USB_CONNECTED")){
                     var cap=signalCapability();cap.getAsJsonArray("supportedEventTypes").add(type);
                     assertThatThrownBy(()->f.client.confirmSignalExperiment(cap,f.client.connectionGeneration(),"MOCK-signal-run")).isInstanceOf(IllegalArgumentException.class);
                 }
@@ -887,8 +887,8 @@ class RealtimeClientTest {
             }
         }
     }
-    @Test void controlTypesRequireCapabilityAtAdmissionAndAgainBeforeQueuedSocketWrite()throws Exception{
-        for(String type:List.of("OBSERVER_STATUS","SIGNAL_GAP"))try(Fixture f=new Fixture()){
+    @Test void additionalTypesRequireCapabilityAtAdmissionAndAgainBeforeQueuedSocketWrite()throws Exception{
+        for(String type:List.of("OBSERVER_STATUS","SIGNAL_GAP","EXAM_ACTIVITY_SUMMARY"))try(Fixture f=new Fixture()){
             f.connect();try(var lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){
                 confirmSignal(f);assertThat(f.client.send(typedSignal(type,2))).isCompletedExceptionally();
                 var cap=signalCapability();cap.getAsJsonArray("supportedEventTypes").add(type);f.client.confirmSignalExperiment(cap,f.client.connectionGeneration(),"MOCK-signal-run");
@@ -904,6 +904,7 @@ class RealtimeClientTest {
             case "EXAM_FOCUS_CHANGED"->new vn.edu.toeic.protocol.monitoring.signal.FocusSignal("MOCK-typed-"+n,"MOCK-signal-run",n,time,origin,false,"OTHER_OR_UNKNOWN",null);
             case "OBSERVER_STATUS"->new vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal("MOCK-typed-"+n,"MOCK-signal-run",n,time,origin,vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal.State.ERROR,vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal.Reason.SCAN_FAILED);
             case "SIGNAL_GAP"->new vn.edu.toeic.protocol.monitoring.signal.SignalGap("MOCK-typed-"+n,"MOCK-signal-run",n,time,origin,2,time.minusSeconds(1),time);
+            case "EXAM_ACTIVITY_SUMMARY"->new vn.edu.toeic.protocol.monitoring.signal.ActivitySignal("MOCK-typed-"+n,"MOCK-signal-run",n,time,origin,2,3,5000L,"INTERVAL");
             default->new vn.edu.toeic.protocol.monitoring.signal.WindowSignal("MOCK-typed-"+n,"MOCK-signal-run",n,time,origin,false,false,"INITIAL");
         };
         return new vn.edu.toeic.protocol.monitoring.signal.SignalMessage("mock-attempt-A","MOCK-typed-request-"+n,"MOCK-typed-trace",value).envelope();

@@ -87,7 +87,7 @@ class SignalPipelinePostgresTest {
         for(var row:fixture.getAsJsonArray("signals")) messages.add(new SignalMessage(a,"mock-typed-request-"+(++n),"mock-typed-trace",Signal.parse(row.getAsJsonObject())));
         try(Client client=new Client(a,true)){
             var capabilities=getJson(a,"signal-capabilities",candidate,200).getAsJsonArray("supportedEventTypes");
-            assertThat(capabilities).hasSize(8);assertThat(capabilities.toString()).contains("OBSERVER_STATUS","SIGNAL_GAP").doesNotContain("EXAM_ACTIVITY_SUMMARY");
+            assertThat(capabilities).hasSize(9);assertThat(capabilities.toString()).contains("OBSERVER_STATUS","SIGNAL_GAP","EXAM_ACTIVITY_SUMMARY");
             // Lose ACK specifically for a new USB type. Send it first; server timeline is commit order,
             // not observationSequence. The remaining MOCK observations keep their frozen identity.
             assertThat(client.delivery.enqueue(messages.get(2))).isTrue();
@@ -131,6 +131,17 @@ class SignalPipelinePostgresTest {
             assertCode(ws.exchange(JSON.toJson(otherType.envelope())),"CONFLICT");
             assertThat(rows(a)).isEqualTo(1);assertThat(counter(a)).isEqualTo(1);assertThat(store(m).signal()).isEqualTo(value);
         }
+    }
+    @Test void mockActivitySummaryPersistsAndHistoryKeepsPrivacyMinimalShape()throws Exception{
+        String a=attempt();Instant t=Instant.parse("2026-10-21T02:00:00Z");
+        var value=new ActivitySignal("mock-activity","MOCK-activity-run",1,t,EventOrigin.OFFLINE,12,34,60_000L,"IDLE_THRESHOLD");
+        var message=new SignalMessage(a,"mock-activity-request","mock-activity-trace",value);
+        assertThat(store(message).signal()).isEqualTo(value);
+        var item=getJson(a,"signals",proctor,200).getAsJsonArray("items").get(0).getAsJsonObject();
+        assertThat(item.get("eventType").getAsString()).isEqualTo(ActivitySignal.TYPE);
+        assertThat(item.get("source").getAsString()).isEqualTo("JAVAFX_EXAM_ACTIVITY");
+        assertThat(item.getAsJsonObject("details").keySet()).containsExactlyInAnyOrder("reason","idleMillis","navigationCount","answerActionCount");
+        assertThat(item.toString()).doesNotContain("questionId","optionId","clipboard","url","verdict");
     }
     @Test void typedCommitFailureRollsBackBothRowsAndCounterWithoutSuccessfulAck()throws Exception{
         String a=attempt();String fn="typed_fail_"+UUID.randomUUID().toString().replace("-","");
@@ -404,6 +415,7 @@ class SignalPipelinePostgresTest {
                 var db=off.getBean(JdbcClient.class);assertThat(db.sql("SELECT success FROM flyway_schema_history WHERE version='13'").query(Boolean.class).single()).isTrue();
                 assertThat(db.sql("SELECT success FROM flyway_schema_history WHERE version='16'").query(Boolean.class).single()).isTrue();
                 assertThat(db.sql("SELECT success FROM flyway_schema_history WHERE version='17'").query(Boolean.class).single()).isTrue();
+                assertThat(db.sql("SELECT success FROM flyway_schema_history WHERE version='18'").query(Boolean.class).single()).isTrue();
                 assertThat(db.sql("SELECT count(*) FROM monitoring_signal_events").query(Long.class).single()).isZero();assertThat(db.sql("SELECT count(*) FROM monitoring_signal_counters").query(Long.class).single()).isZero();
                 long owner=db.sql("INSERT INTO user_accounts(username,display_name,role,password_hash) VALUES ('MOCK-off-candidate','MOCK','CANDIDATE','MOCK-unused') RETURNING id").query(Long.class).single();
                 db.sql("INSERT INTO monitoring_attempts(attempt_id,candidate_user_id,state) VALUES ('MOCK-off-attempt',:u,'ACTIVE')").param("u",owner).update();
@@ -427,7 +439,7 @@ class SignalPipelinePostgresTest {
             }
         }finally{admin.createStatement().execute("DROP SCHEMA "+offSchema+" CASCADE");}
     }
-    @org.junit.jupiter.params.ParameterizedTest @org.junit.jupiter.params.provider.ValueSource(ints={15,16})
+    @org.junit.jupiter.params.ParameterizedTest @org.junit.jupiter.params.provider.ValueSource(ints={15,16,17})
     void migrationUpgradePreservesDisplayRowsCountersAndAppliedChecksums(int version)throws Exception{
         String upgrade="signal_upgrade_"+UUID.randomUUID().toString().replace("-","");
         admin.createStatement().execute("CREATE SCHEMA "+upgrade);
@@ -443,13 +455,13 @@ class SignalPipelinePostgresTest {
                 sql.execute("INSERT INTO monitoring_signal_counters VALUES ('MOCK-upgrade',1)");
                 sql.execute("INSERT INTO monitoring_signal_events(attempt_id,event_id,schema_version,observer_session_id,observation_sequence,event_type,source,metadata_quality,observed_at,observation_context,details,timeline_sequence,delivery_status) VALUES ('MOCK-upgrade','mock-old-display',1,'mock-observer-1',1,'DISPLAY_COUNT_OBSERVED','JAVAFX_DISPLAY','COMPLETE','2026-10-20T10:00:00Z','OFFLINE','{\"count\":1,\"reason\":\"INITIAL\"}',1,'BUFFERED_OFFLINE')");
                 try(var r=sql.executeQuery("SELECT row_to_json(e)::text FROM monitoring_signal_events e")){assertThat(r.next()).isTrue();before=r.getString(1);}
-                try(var r=sql.executeQuery("SELECT version||':'||checksum FROM flyway_schema_history WHERE version IN ('13','14','15','16') ORDER BY installed_rank")){while(r.next())checksums.add(r.getString(1));}
+                try(var r=sql.executeQuery("SELECT version||':'||checksum FROM flyway_schema_history WHERE version IN ('13','14','15','16','17') ORDER BY installed_rank")){while(r.next())checksums.add(r.getString(1));}
             }
             var latest=org.flywaydb.core.Flyway.configure().dataSource(upgradeUrl,required("DB_USER"),required("DB_PASSWORD"))
-                    .schemas(upgrade).defaultSchema(upgrade).load();assertThat(latest.migrate().migrationsExecuted).isEqualTo(17-version);latest.validate();
+                    .schemas(upgrade).defaultSchema(upgrade).load();assertThat(latest.migrate().migrationsExecuted).isEqualTo(18-version);latest.validate();
             try(Connection db=DriverManager.getConnection(upgradeUrl,required("DB_USER"),required("DB_PASSWORD"));Statement sql=db.createStatement()){
                 try(var r=sql.executeQuery("SELECT row_to_json(e)::text FROM monitoring_signal_events e")){assertThat(r.next()).isTrue();assertThat(r.getString(1)).isEqualTo(before);}
-                List<String> after=new ArrayList<>();try(var r=sql.executeQuery("SELECT version||':'||checksum FROM flyway_schema_history WHERE version IN ('13','14','15','16') AND CAST(version AS int)<="+version+" ORDER BY installed_rank")){while(r.next())after.add(r.getString(1));}assertThat(after).isEqualTo(checksums);
+                List<String> after=new ArrayList<>();try(var r=sql.executeQuery("SELECT version||':'||checksum FROM flyway_schema_history WHERE version IN ('13','14','15','16','17') AND CAST(version AS int)<="+version+" ORDER BY installed_rank")){while(r.next())after.add(r.getString(1));}assertThat(after).isEqualTo(checksums);
                 try(var r=sql.executeQuery("SELECT last_sequence FROM monitoring_signal_counters")){assertThat(r.next()).isTrue();assertThat(r.getLong(1)).isEqualTo(1);}
                 // A direct DB writer cannot pair a focus event with a USB source after V16.
                 assertThatThrownBy(()->sql.execute("UPDATE monitoring_signal_events SET event_type='EXAM_FOCUS_CHANGED',source='WINDOWS_USB_STORAGE'" )).isInstanceOf(SQLException.class);
