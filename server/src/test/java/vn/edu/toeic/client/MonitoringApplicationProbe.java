@@ -12,9 +12,11 @@ public final class MonitoringApplicationProbe {
     public final AtomicInteger polls=new AtomicInteger(),stops=new AtomicInteger();
     public final CopyOnWriteArrayList<CandidateMonitoringSession> sessions=new CopyOnWriteArrayList<>();
     public final ToeicClientApplication application;
+    public volatile vn.edu.toeic.client.realtime.MonitoringTransport transport;
     public MonitoringApplicationProbe(long ownedPid){
         var source=new ProcessHandleSnapshotSource();
         application=new ToeicClientApplication((transport,status)->{
+            this.transport=transport;
             var collector=new ProcessCollector(()->{polls.incrementAndGet();return source.scan().stream().filter(p->p.pid()==ownedPid).toList();},Duration.ofMillis(250),new ObservationTrace(){
                 @Override public void stopped(String id,long tick){stops.incrementAndGet();}
             });

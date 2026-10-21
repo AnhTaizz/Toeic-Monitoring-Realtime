@@ -374,14 +374,23 @@ class MonitoringTimelinePostgresTest {
             fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.logout(s);vn.edu.toeic.client.MonitoringApplicationProbe.login(s,base,"candidate1",required("TOEIC_SEED_PASSWORD"));return null;});
             waitCandidateControls(s,a);
             fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Bắt đầu giám sát").fire();return null;});
-            waitFor("candidate A FULL acknowledged from actual start control",()->probe.sessions.size()==1&&probe.sessions.getFirst().fullStatus()!=null&&probe.sessions.getFirst().fullStatus().acknowledgedSequence()>0);
-            try{waitFor("initial process event committed before stop",()->api.events(a).join().size()==1);}
+            var progress=new ArrayList<Map<String,Object>>();var sampled=new java.util.concurrent.atomic.AtomicLong();
+            try{waitFor("candidate A FULL acknowledged from actual start control",()->{
+                    long now=System.nanoTime();if(now-sampled.get()>TimeUnit.SECONDS.toNanos(1)){
+                        sampled.set(now);var step=new LinkedHashMap<String,Object>();step.put("sessions",probe.sessions.size());step.put("state",probe.transport.connectionState().name());step.put("polls",probe.polls.get());
+                        if(!probe.sessions.isEmpty()){var current=probe.sessions.getFirst();step.put("active",current.isActive());var full=current.fullStatus();step.put("fullProblem",full==null?"NOT_STARTED":full.problem());step.put("fullAck",full==null?-1:full.acknowledgedSequence());}
+                        progress.add(step);
+                    }
+                    return probe.sessions.size()==1&&probe.sessions.getFirst().fullStatus()!=null&&probe.sessions.getFirst().fullStatus().acknowledgedSequence()>0;
+                });
+                waitFor("initial process event committed before stop",()->api.events(a).join().size()==1);}
             catch(AssertionError missing){
                 var selected=fx(()->((ComboBox<?>)s.getScene().lookup("#candidate-attempts")).getValue().toString());
                 var session=probe.sessions.getFirst();var state=api.state(a).get(5,TimeUnit.SECONDS);var status=session.status();
-                var diagnosis=new LinkedHashMap<String,Object>();diagnosis.put("sourceSha",required("TOEIC_USB_TEST_SOURCE"));diagnosis.put("selectedMatchesRequested",selected.equals(a));diagnosis.put("requestedAttemptRows",api.events(a).get(5,TimeUnit.SECONDS).size());diagnosis.put("selectedAttemptRows",api.events(selected).get(5,TimeUnit.SECONDS).size());diagnosis.put("requestedState",state.status());diagnosis.put("processProblem",status.problem());diagnosis.put("processPending",status.pendingEvents());diagnosis.put("processAcknowledged",status.acknowledged());diagnosis.put("ownedWorkloadAlive",workload.child.isAlive());diagnosis.put("polls",probe.polls.get());
+                var diagnosis=new LinkedHashMap<String,Object>();diagnosis.put("sourceSha",required("TOEIC_USB_TEST_SOURCE"));diagnosis.put("selectedMatchesRequested",selected.equals(a));diagnosis.put("requestedAttemptRows",api.events(a).get(5,TimeUnit.SECONDS).size());diagnosis.put("selectedAttemptRows",api.events(selected).get(5,TimeUnit.SECONDS).size());diagnosis.put("requestedState",state.status());diagnosis.put("processProblem",status==null?"NOT_STARTED":status.problem());diagnosis.put("processPending",status==null?-1:status.pendingEvents());diagnosis.put("processAcknowledged",status==null?-1:status.acknowledged());diagnosis.put("ownedWorkloadAlive",workload.child.isAlive());diagnosis.put("polls",probe.polls.get());diagnosis.put("sessionCount",probe.sessions.size());diagnosis.put("transportState",probe.transport.connectionState().name());diagnosis.put("fullProblem",session.fullStatus()==null?"NOT_STARTED":session.fullStatus().problem());diagnosis.put("fullSequence",session.fullStatus()==null?-1:session.fullStatus().sequence());diagnosis.put("fullAck",session.fullStatus()==null?-1:session.fullStatus().acknowledgedSequence());
+                diagnosis.put("portalStatus",fx(()->s.getScene().getRoot().lookupAll(".label").stream().filter(n->n instanceof Label l&&(l.getText().startsWith("Không")||l.getText().startsWith("Chưa")||l.getText().startsWith("Giám sát:"))).map(n->((Label)n).getText()).toList()));
                 Files.writeString(Path.of(required("TOEIC_USB_TEST_OUTPUT"),"application-diagnostic.private.json"),JSON.toJson(diagnosis));throw missing;
-            }
+            }finally{Files.writeString(Path.of(required("TOEIC_USB_TEST_OUTPUT"),"application-start-progress.private.json"),JSON.toJson(progress));}
             var first=probe.sessions.getFirst();String oldRun=first.collectorSessionId(),oldEpoch=first.fullStatus().syncEpoch();
             fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Dừng giám sát").fire();return null;});
             waitFor("stop control waits for owned collector termination",()->probe.stops.get()==1&&!first.isActive());
