@@ -336,6 +336,9 @@ public final class ToeicClientApplication extends Application {
             long request = ++monitoringGeneration;
             refreshScopeBtn.setDisable(true);
             startExamBtn.setDisable(true);
+            // The response uses the captured selection; keep input stable until fresh authority arrives.
+            manualMonitoringStart.setDisable(true);
+            attempts.setDisable(true);
             status.setText("Đang kiểm tra quyền với server…");
 
             loginApiClient.scope(serverUrl, login.token()).whenComplete((scope, failure) -> Platform.runLater(() -> {
@@ -348,6 +351,8 @@ public final class ToeicClientApplication extends Application {
                 attempts.getItems().setAll(outcome.items());
                 attempts.setValue(outcome.selected());
                 startExamBtn.setDisable(!outcome.canEnter());
+                manualMonitoringStart.setDisable(!outcome.canEnter());
+                attempts.setDisable(false);
                 switch (outcome.next()) {
                     case RETRY -> status.setText(userMessage(failure));
                     case NO_ATTEMPT -> status.setText("Chưa được cấp lượt thi nào. Hãy yêu cầu giám thị tạo ca và phân công lượt thi.");

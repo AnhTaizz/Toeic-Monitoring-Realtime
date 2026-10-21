@@ -386,3 +386,8 @@ Windows + JDK21/Maven/PostgreSQL binaries: `.\scripts\demo-mon09-timeline.ps1 -M
 ### Demo TEST nhóm monitoring MON-08
 
 `.\scripts\demo-mon08-alerts.ps1` (Windows/JDK21/Maven/PostgreSQL18 binaries) tự mở timeline có nhóm ưu tiên EXPERIMENTAL từ MOCK observations qua real WS/HTTP/PG và dọn TEST. [Runbook/rule/coverage](docs/MON08_EXPERIMENTAL_ALERTS.md), [report/ảnh](evidence/cb-mon08-alerts-20261021/REPORT.md). FULL giữ mặc định; cả signal/alert experiments mặc địnhOFF; không kết luận hành vi hoặc đổi trạng thái thi.
+
+
+### Monitoring MON01–09 — integrated TEST
+
+`.\scripts\demo-mon08-alerts.ps1 -Integrated` dựng TEST cách ly và kiểm process/FX/USB/status/gap/history/timeline/experimental alerts cùng lifecycle app. CIM minimal là opt-in thêm `-Mode Real -ReadUsbStorage`. [Ma trận/runbook](docs/MONITORING_INTEGRATION.md) · [Actual/source/JAR hashes và giới hạn](evidence/monitoring-integrated-20261021/REPORT.md). FULL mặc định/experiments OFF; không phải USB hardware, desktop manual, LAN hay policy acceptance.

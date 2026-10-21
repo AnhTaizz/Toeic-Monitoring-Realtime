@@ -26,6 +26,7 @@ import vn.edu.toeic.client.monitoring.usb.*;
 import vn.edu.toeic.client.monitoring.focus.*;
 import vn.edu.toeic.client.monitoring.window.*;
 import vn.edu.toeic.client.monitoring.display.*;
+import vn.edu.toeic.client.monitoring.activity.ExamActivityEvent;
 import vn.edu.toeic.client.proctor.redesign.ProctorRedesignView;
 import vn.edu.toeic.client.proctor.timeline.*;
 import vn.edu.toeic.client.realtime.*;
@@ -59,9 +60,10 @@ class MonitoringTimelinePostgresTest {
     JsonObject get(String path,String token,int status)throws Exception{return fixture.get(path,token,status);}
     boolean cancelRequested(){return fixture.cancelRequested();}
     final List<AutoCloseable> gui=new ArrayList<>();
+    final Set<Thread> initialThreads=Thread.getAllStackTraces().keySet();
     @BeforeAll void toolkit(){try{Platform.startup(()->{});}catch(IllegalStateException started){ }Platform.setImplicitExit(false);}
     @AfterEach void closeGui()throws Exception{for(int n=gui.size()-1;n>=0;n--)gui.get(n).close();gui.clear();}
-    @AfterAll void teardown()throws Exception{try{closeGui();fixture.teardown();}finally{Platform.exit();}}
+    @AfterAll void teardown()throws Exception{try{closeGui();fixture.teardown();waitFor("owned toeic workers terminate after resource close",()->Thread.getAllStackTraces().keySet().stream().noneMatch(t->!initialThreads.contains(t)&&t.getName().startsWith("toeic-")&&t.isAlive()));}finally{Platform.exit();}}
     static <T>T fx(Callable<T> action)throws Exception{var f=new CompletableFuture<T>();Platform.runLater(()->{try{f.complete(action.call());}catch(Throwable t){f.completeExceptionally(t);}});return f.get(8,TimeUnit.SECONDS);}
     static void waitFor(String condition,BooleanSupplier ready)throws Exception{long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(10);while(System.nanoTime()<until){if(ready.getAsBoolean())return;Thread.sleep(25);}throw new AssertionError(condition);}
     Stage stage(String title)throws Exception{return fx(()->{var s=new Stage();s.setTitle(title);s.setScene(new Scene(new Label(title),640,400));s.show();gui.add(()->fx(()->{s.close();return null;}));return s;});}
@@ -78,9 +80,17 @@ class MonitoringTimelinePostgresTest {
             try(var api=new MonitoringApiClient(base,proctor)){
                 waitFor("minimize transition reaches committed history",()->api.signals(a,0,null,100).join().items().stream().anyMatch(e->e.signal() instanceof WindowSignal w&&w.minimized()));
                 var page=api.signals(a,0,null,100).get(8,TimeUnit.SECONDS);assertThat(page.items()).isNotEmpty().allSatisfy(e->assertThat(e.signal().observerSessionId()).isEqualTo(collector));assertThat(page.items()).anyMatch(e->e.signal() instanceof DisplaySignal);committedTypes=page.items().stream().map(e->e.signal().eventType()).distinct().sorted().toList();
+                waitFor("restore commits before reconnect boundary",()->api.signals(a,0,null,100).join().items().stream().filter(e->e.signal() instanceof WindowSignal).reduce((x,y)->y).map(e->!((WindowSignal)e.signal()).minimized()).orElse(false));
+                long before=api.signals(a,0,null,100).get(5,TimeUnit.SECONDS).through();
+                rt.disconnect();rt.connect(new RealtimeClient.Session(Set.of(a),null,null)).get(8,TimeUnit.SECONDS);
+                // Production coordinator owns capability refresh; no test-side confirmSignalExperiment here.
+                waitFor("production FX coordinator confirms fresh socket capability",()->rt.signalExperimentReady(a));
+                fx(()->{candidateStage.setIconified(true);return null;});
+                waitFor("new FX transition commits after reconnect with original collector lease",()->api.signals(a,before,null,100).join().items().stream().anyMatch(e->e.signal() instanceof WindowSignal w&&w.minimized()&&w.observerSessionId().equals(collector)));
+                fx(()->{candidateStage.setIconified(false);return null;});
             }
             fx(()->{monitor.close();return null;});assertThat(monitor.awaitStopped(Duration.ofSeconds(3))).isTrue();long accepted=monitor.deliveryStatus().acknowledged();fx(()->{candidateStage.setIconified(true);return null;});assertThat(monitor.deliveryStatus().active()).isFalse();assertThat(monitor.deliveryStatus().acknowledged()).isEqualTo(accepted);
-            results.add(Map.of("kind","REAL_JAVAFX","activation","Stage property API, not OS input","collectorIdentity","COMMIT_ACK_VERIFIED","committedTypes",committedTypes,"deliveryWorkerStopped",true,"acknowledged",monitor.deliveryStatus().acknowledged(),"discarded",monitor.deliveryStatus().discarded(),"dropped",monitor.deliveryStatus().dropped(),"hardware","NOT_RUN"));
+            results.add(Map.of("kind","REAL_JAVAFX","activation","Stage property API, not OS input","collectorIdentity","COMMIT_ACK_VERIFIED","committedTypes",committedTypes,"deliveryWorkerStopped",true,"acknowledged",monitor.deliveryStatus().acknowledged(),"discarded",monitor.deliveryStatus().discarded(),"dropped",monitor.deliveryStatus().dropped(),"hardware","NOT_RUN","freshReconnectCapability",true));
         }finally{if(previous==null)System.clearProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,previous);}
     }
     Map<String,String> twoScopes()throws Exception{
@@ -216,5 +226,207 @@ class MonitoringTimelinePostgresTest {
             screenshot(dash,"real-cim-status-timeline");viewTime();assertThat(source.status().childrenAlive()).isZero();assertThat(source.status().readersTerminated()).isTrue();
             var actual=new LinkedHashMap<String,Object>();actual.put("kind","REAL_CIM_DASHBOARD");actual.put("scans",coordinator.status().scans());actual.put("health",coordinator.status().health().name());actual.put("storageCount",coordinator.status().storageCount());actual.put("ACK",lane.delivery.status().acknowledged());actual.put("UI_rows",rows(dash).size());actual.put("children",source.status().childrenAlive());actual.put("readersTerminated",source.status().readersTerminated());actual.put("scanWorkerStopped",coordinator.status().scanWorkerStopped());actual.put("controlWorkerStopped",coordinator.status().controlWorkerStopped());results.add(actual);
         }finally{source.close();}
+    }
+
+    /** Same context/sequence/queue/socket for USB, focus/window/display/activity; process FULL stays separate. */
+    @Test @EnabledIfEnvironmentVariable(named="TOEIC_MON_INTEGRATED",matches="true")
+    void allExistingSourcesShareRunAndReachHistoryTimelineAndAlerts()throws Exception {
+        var scopes=twoScopes();String a=scopes.get("candidate1"),b=scopes.get("candidate2"),tokenB=login("candidate2");
+        boolean real="true".equals(System.getenv("TOEIC_USB_REAL_CIM"));
+        String oldReport=System.getProperty("toeic.monitoring.activityReportMillis");
+        System.setProperty("toeic.monitoring.activityReportMillis","5000"); // finite TEST override; production stays 30s
+        var actual=new LinkedHashMap<String,Object>();actual.put("kind","JOINT_MONITORING_TEST");actual.put("USB",real?"REAL_CIM_MINIMAL_READ":"MOCK_SNAPSHOTS");
+        actual.put("process","REAL ProcessHandle; owned cmd workload named chrome.exe, not a browser");
+        actual.put("JavaFX","REAL Screen count/Stage listeners; window/activity activation PROGRAMMATIC; no OS input");
+        try(var workload=new JointMonitoringRun.Workload(Path.of(required("TOEIC_USB_TEST_OUTPUT")))){
+            Stage candidateStage=stage("Integrated candidate TEST · programmatic FX · USB "+(real?"REAL CIM":"MOCK"));
+            var first=new JointMonitoringRun(this,a,candidate,candidateStage,workload.child.pid());
+            try(first;var other=fixture.new Lane(b,tokenB,false);var api=new MonitoringApiClient(base,proctor)){
+                var audit=new Recorder();
+                if(real){
+                    var cim=new CimUsbScanSource(vn.edu.toeic.monitoring.usb.CimSnapshotSource.Method.valueOf(required("TOEIC_USB_PROVIDER")),Duration.ofMillis(Integer.parseInt(required("TOEIC_USB_TIMEOUT_MILLIS"))));
+                    first.startUsb(cim,audit);
+                }else{
+                    var mock=new UsbIntegratedDemoPostgresTest.ScriptedSource();first.startUsb(mock,audit);
+                    for(var reading:List.of(UsbIntegratedDemoPostgresTest.ready(1L),UsbIntegratedDemoPostgresTest.ready(1L,2L),UsbIntegratedDemoPostgresTest.failed(),UsbIntegratedDemoPostgresTest.ready(2L))){
+                        mock.inputs.put(reading);assertThat(audit.observed.poll(5,TimeUnit.SECONDS)).isNotNull();
+                    }
+                }
+                fx(()->{ExamActivityEvent.fire(candidateStage,ExamActivityEvent.Kind.NAVIGATION);ExamActivityEvent.fire(candidateStage,ExamActivityEvent.Kind.ANSWER_ACTION);candidateStage.setIconified(true);return null;});
+                waitFor("real window listener delivers minimize alongside other sources",()->api.signals(a,0,null,100).join().items().stream().anyMatch(e->e.signal() instanceof WindowSignal w&&w.minimized()));
+                fx(()->{candidateStage.setIconified(false);return null;});
+                waitFor("all existing FX sources commit while process and USB run",()->{
+                    var page=api.signals(a,0,null,100).join();var types=page.items().stream().map(e->e.signal().eventType()).toList();
+                    return types.containsAll(List.of("EXAM_FOCUS_CHANGED","EXAM_WINDOW_STATE","DISPLAY_COUNT_OBSERVED","EXAM_ACTIVITY_SUMMARY","OBSERVER_STATUS"))
+                        &&page.items().stream().anyMatch(e->e.signal() instanceof vn.edu.toeic.protocol.monitoring.signal.ActivitySignal s&&s.navigationCount()==1&&s.answerActionCount()==1)
+                        &&page.items().stream().anyMatch(e->e.signal() instanceof ObserverStatusSignal s&&s.source().equals("WINDOWS_USB_STORAGE"));
+                });
+                waitFor("owned process observed once and FULL synced",()->api.events(a).join().size()==1&&api.state(a).join().status().equals("SYNCED"));
+                assertThat(first.process.fullStatus().acknowledgedSequence()).isPositive();assertThat(first.polls.get()).isGreaterThan(1);
+                enqueueDisplay(other,1);waitFor("attempt B has its own committed row",()->other.delivery.status().acknowledged()==1);
+                var dash=dashboard(a,"MON01–09 joint TEST · REAL workers/WS/PG · mixed source provenance · EXPERIMENTAL alerts");
+                waitFor("actual process and activity shown in common timeline",()->{try{return rows(dash).stream().anyMatch(r->r.source().equals("PROCESS"))&&rows(dash).stream().anyMatch(r->r.type().equals("EXAM_ACTIVITY_SUMMARY"));}catch(Exception e){throw new RuntimeException(e);}});
+                waitFor("derived alerts visible",()->{try{return !alertRows(dash).isEmpty();}catch(Exception e){throw new RuntimeException(e);}});
+                first.stopUsb(); // USB is intentionally terminal on reconnect; its owner is NOT silently rebound.
+                assertThat(first.usb.status().scanWorkerStopped()).isTrue();assertThat(first.usb.status().controlWorkerStopped()).isTrue();
+                first.quiesceObservers();
+                waitFor("normal lane drains before deliberate outage",()->first.delivery.status().queued()==0&&first.delivery.status().inFlight()==0);
+                first.realtime.disconnect();
+                long before=first.delivery.status().dropped();
+                for(int n=0;n<50;n++){
+                    var m=first.run.next(Instant.now().truncatedTo(ChronoUnit.MICROS),first.realtime.observationOrigin());
+                    first.delivery.enqueue(m.message(new DisplaySignal(m.eventId(),m.observerSessionId(),m.sequence(),m.observedAt(),m.origin(),1,"CHANGED")));
+                }
+                long dropped=first.delivery.status().dropped()-before;assertThat(dropped).isPositive();
+                var bounded=first.delivery.status();assertThat(bounded.queued()).isLessThanOrEqualTo(17);assertThat(bounded.bytes()).isLessThanOrEqualTo(1056768);assertThat(bounded.inFlight()).isLessThanOrEqualTo(2);assertThat(bounded.writes()).isLessThanOrEqualTo(2);
+                var freshHeartbeat=new CountDownLatch(1);
+                try(var listener=first.realtime.onMessage(m->{if("ACK".equals(m.type())&&"HEARTBEAT".equals(m.payload().get("acknowledgedType").getAsString()))freshHeartbeat.countDown();})){
+                    first.realtime.connect(new RealtimeClient.Session(Set.of(a),null,null)).get(8,TimeUnit.SECONDS);
+                    assertThat(freshHeartbeat.await(8,TimeUnit.SECONDS)).as("WS open is not scoped heartbeat authorization").isTrue();
+                    first.realtime.confirmSignalExperiment(get("/api/v1/monitoring/attempts/"+a+"/signal-capabilities",candidate,200),first.realtime.connectionGeneration(),first.run.observerSessionId());
+                }
+                waitFor("actual gap commits after fresh capability and reconnect",()->first.delivery.status().queued()==0&&first.delivery.status().inFlight()==0&&first.delivery.gapStatus().acknowledgedDrops()==dropped);
+                waitFor("FULL state also catches up after reconnect",()->first.process.fullStatus().acknowledgedSequence()>0&&api.state(a).join().status().equals("SYNCED"));
+                assertThat(first.usb.status().active()).isFalse();
+                var all=signalPages(api,a);
+                assertThat(all).extracting(e->e.signal().eventId()).doesNotHaveDuplicates();
+                assertThat(all).extracting(e->e.signal().observationSequence()).doesNotHaveDuplicates();
+                assertThat(all).allSatisfy(e->{assertThat(e.signal().observerSessionId()).isEqualTo(first.run.observerSessionId());assertThat(e.receivedAt()).isNotNull();assertThat(e.signal().observedAt()).isNotNull();});
+                assertThat(all.stream().filter(e->e.signal() instanceof SignalGap).mapToLong(e->((SignalGap)e.signal()).droppedCount()).sum()).isEqualTo(dropped);
+                if(real){
+                    if(first.usb.status().health()==UsbSignalAdapter.Health.READY&&Integer.valueOf(0).equals(first.usb.status().storageCount()))assertThat(all).noneMatch(e->e.signal() instanceof UsbStorageSignal);
+                }else{
+                    assertThat(all.stream().filter(e->e.signal() instanceof UsbStorageSignal).map(e->e.signal().eventType())).containsExactly("USB_STORAGE_PRESENT_AT_START","USB_STORAGE_CONNECTED","USB_STORAGE_REMOVED");
+                    assertThat(all).anyMatch(e->e.signal() instanceof ObserverStatusSignal s&&s.source().equals("WINDOWS_USB_STORAGE")&&s.status()==ObserverStatusSignal.State.ERROR);
+                }
+                var summary=api.alerts(a).get(5,TimeUnit.SECONDS);
+                assertThat(summary.sourceLimited()).contains("SIGNAL");assertThat(summary.inputEvents()).isLessThan(all.size()+1);
+                String cutoff=summary.cutoff().toString();var stable=get("/api/v1/monitoring/attempts/"+a+"/alert-summary?cutoff="+cutoff,proctor,200);
+                assertThat(get("/api/v1/monitoring/attempts/"+a+"/alert-summary?cutoff="+cutoff,proctor,200).getAsJsonArray("items")).isEqualTo(stable.getAsJsonArray("items"));
+                fx(()->{((Button)dash.view.lookup("#multi-refresh")).fire();return null;});awaitRows(dash,all.size()+1);
+                assertThat(rows(dash)).isSortedAccordingTo(TimelineRows.ORDER);
+                fx(()->{@SuppressWarnings("unchecked")var filter=(ComboBox<String>)dash.view.lookup("#multi-source-filter");filter.setValue("PROCESS");return null;});
+                assertThat(fx(()->((Label)dash.view.lookup("#multi-alert-coverage")).getText())).contains("cap nguồn");
+                screenshot(dash,"joint-coverage");viewTime();
+                get("/api/v1/monitoring/attempts/"+a+"/signals",tokenB,403);get("/api/v1/monitoring/attempts/"+a+"/alert-summary",candidate,403);
+                String oldEpoch=first.process.fullStatus().syncEpoch();first.close();long accepted=first.delivery.status().acknowledged();int polls=first.polls.get();
+                var restarted=new JointMonitoringRun(this,a,candidate,candidateStage,workload.child.pid());try(restarted){
+                    assertThat(restarted.run.observerSessionId()).isNotEqualTo(first.run.observerSessionId());
+                    fx(()->{ExamActivityEvent.fire(candidateStage,ExamActivityEvent.Kind.ANSWER_ACTION);return null;});
+                    waitFor("new run commits a fresh baseline",()->restarted.delivery.status().acknowledged()>0);
+                    waitFor("new FULL epoch acknowledged",()->restarted.process.fullStatus().acknowledgedSequence()>0);
+                    assertThat(restarted.process.fullStatus().syncEpoch()).isNotEqualTo(oldEpoch);
+                    assertThat(first.polls.get()).isEqualTo(polls);assertThat(first.delivery.status().acknowledged()).isEqualTo(accepted);
+                    assertThat(first.run.active()).isFalse();assertThat(restarted.process.modeStatus().mode()).isEqualTo("FULL");
+                }
+                actual.put("firstRunDiscardedUnconfirmed",first.delivery.status().discarded());actual.put("restartDiscardedUnconfirmed",restarted.delivery.status().discarded());
+                // Actual assignment revoke fixture: denies only proctor A; B remains available, never grants scope.
+                jdbc.sql("DELETE FROM monitoring_proctor_assignments WHERE attempt_id=:a").param("a",a).update();
+                get("/api/v1/monitoring/attempts/"+a+"/signals",proctor,403);assertThat(api.signals(b,0,null,100).get(5,TimeUnit.SECONDS).items()).hasSize(1);
+                fx(()->{((Button)dash.view.lookup("#multi-refresh")).fire();return null;});waitFor("scope revoke clears selected private data",()->{try{return rows(dash).stream().noneMatch(r->r.attempt().equals(a))&&alertRows(dash).stream().noneMatch(r->r.attempt().equals(a));}catch(Exception e){throw new RuntimeException(e);}});
+                actual.put("firstRunTypedCommitted",all.size());actual.put("processEvents",1);actual.put("actualOverflowDrops",dropped);actual.put("rawCursorPages",(all.size()+2)/3);actual.put("summaryInputEvents",summary.inputEvents());
+                actual.put("committedTypes",all.stream().map(e->e.signal().eventType()).distinct().sorted().toList());actual.put("reportedDisplayCounts",all.stream().filter(e->e.signal() instanceof DisplaySignal).map(e->((DisplaySignal)e.signal()).count()).distinct().sorted().toList());
+                actual.put("sharedSequenceUnique",true);actual.put("stopRestart",true);actual.put("realReconnect",true);actual.put("assignmentRevokeIsolated",true);
+                actual.put("usbHealth",first.usb.status().health().name());actual.put("usbStorageCount",String.valueOf(first.usb.status().storageCount()));actual.put("USBScans",first.usb.status().scans());
+                if(first.usbSource instanceof CimUsbScanSource cim){actual.put("privilege",cim.privilege());actual.put("powershellRuntime",cim.runtime());}
+                actual.put("usbChildren",first.usbSource.status().childrenAlive());actual.put("pipeReadersTerminated",first.usbSource.status().readersTerminated());actual.put("heartbeatFullAckContinues",true);
+                results.add(actual);
+            }
+        }finally{if(oldReport==null)System.clearProperty("toeic.monitoring.activityReportMillis");else System.setProperty("toeic.monitoring.activityReportMillis",oldReport);}
+    }
+    List<SignalHistory.Entry> signalPages(MonitoringApiClient api,String attempt)throws Exception {
+        var result=new ArrayList<SignalHistory.Entry>();long after=0;Long through=null;
+        for(int pageNumber=0;pageNumber<50;pageNumber++){
+            var page=api.signals(attempt,after,through,3).get(5,TimeUnit.SECONDS);if(through==null)through=page.through();
+            result.addAll(page.items());if(page.next()==null)return List.copyOf(result);after=page.next();
+        }
+        throw new AssertionError("Bounded TEST history exceeds 50 pages");
+    }
+    @Test @EnabledIfEnvironmentVariable(named="TOEIC_MON_INTEGRATED",matches="true")
+    void productionObserversRetireOnTerminalAndRevoke()throws Exception {
+        String previous=System.getProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY);System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,"true");
+        try{
+            for(String action:List.of("SUBMIT","TIMEOUT","TOKEN_REVOKE")){
+                String a=scope(action.equals("TIMEOUT")?2:60),token=login("candidate1");var rt=realtime(token,Set.of(a));
+                var process=new CandidateMonitoringSession(new ProcessCollector(()->List.of(),Duration.ofMillis(250)),rt,MonitoringDelivery.Settings.defaults(),ignored->{});owned.add(process);
+                rt.connect(new RealtimeClient.Session(Set.of(a),null,null)).get(8,TimeUnit.SECONDS);String id=process.start(Role.CANDIDATE,a,Set.of(a));
+                var candidateStage=stage("Production lifecycle hook TEST "+action+"; MOCK empty process source");
+                var monitor=fx(()->CandidateExamSignalMonitoring.start(candidateStage,base,token,a,id,rt));
+                try{
+                    waitFor("production opt-in observer baseline acknowledged before "+action,()->monitor.deliveryStatus().acknowledged()>0);
+                    if(action.equals("TOKEN_REVOKE"))jdbc.sql("UPDATE login_sessions SET revoked_at=clock_timestamp() WHERE token_hash=:h").param("h",TokenHash.sha256(token)).update();
+                    else{
+                        var writer=post("/api/v1/attempts/"+a+"/takeover",token,new TakeoverWriterRequest(UUID.randomUUID().toString(),a,"MOCK-integrated-device"),200);
+                        if(action.equals("SUBMIT"))post("/api/v1/attempts/"+a+"/submit",token,new SubmitExamRequest(UUID.randomUUID().toString(),a,writer.get("writerEpoch").getAsLong(),writer.get("savedRevision").getAsLong()+1,Map.of()),200);
+                    }
+                    waitFor("server terminal/revoke retires collector and typed observers: "+action,()->!process.isActive()&&!monitor.deliveryStatus().active());
+                    assertThat(monitor.awaitStopped(Duration.ofSeconds(3))).isTrue();
+                    if(!action.equals("TOKEN_REVOKE")){
+                        get("/api/v1/monitoring/attempts/"+a+"/signals",proctor,403);get("/api/v1/monitoring/attempts/"+a+"/alert-summary",proctor,403);
+                        assertThat(get("/api/v1/attempts/"+a+"/status",token,200).get("state").getAsString()).isEqualTo(action.equals("SUBMIT")?"SUBMITTED":"TIMED_OUT");
+                    }
+                    results.add(Map.of("kind","PRODUCTION_OPT_IN_LIFECYCLE","action",action,"actualServerDenial",true,"processSource","MOCK empty; real collector workers","typedWorkerStopped",true,"typedDiscardedUnconfirmed",monitor.deliveryStatus().discarded(),"typedAcknowledged",monitor.deliveryStatus().acknowledged(),"typedDropped",monitor.deliveryStatus().dropped(),"hardware","NOT_RUN"));
+                }finally{fx(()->{monitor.close();return null;});process.stop().stopped().get(8,TimeUnit.SECONDS);process.close();rt.close();}
+            }
+        }finally{if(previous==null)System.clearProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,previous);}
+    }
+    @Test @EnabledIfEnvironmentVariable(named="TOEIC_MON_INTEGRATED",matches="true")
+    void applicationControlsStopRestartLogoutAndSwitchAccount()throws Exception {
+        var scopes=twoScopes();String a=scopes.get("candidate1"),b=scopes.get("candidate2");
+        try(var workload=new JointMonitoringRun.Workload(Path.of(required("TOEIC_USB_TEST_OUTPUT")));var api=new MonitoringApiClient(base,proctor)){
+            var probe=new vn.edu.toeic.client.MonitoringApplicationProbe(workload.child.pid());Stage s=stage("REAL application controls TEST · MOCK accounts/scope · no OS input");
+            fx(()->{probe.application.start(s);return null;});gui.add(()->fx(()->{probe.application.stop();s.close();return null;}));
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.login(s,base,"proctor1",required("TOEIC_SEED_PASSWORD"));return null;});
+            waitFor("real application proctor login",()->{try{return fx(()->s.getScene().lookup("#proctor-account")!=null);}catch(Exception e){throw new RuntimeException(e);}});
+            assertThat(probe.sessions).isEmpty();assertThat(probe.polls).hasValue(0);
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.logout(s);vn.edu.toeic.client.MonitoringApplicationProbe.login(s,base,"candidate1",required("TOEIC_SEED_PASSWORD"));return null;});
+            waitCandidateControls(s,a);
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Bắt đầu giám sát").fire();return null;});
+            var progress=new ArrayList<Map<String,Object>>();var sampled=new java.util.concurrent.atomic.AtomicLong();
+            try{waitFor("candidate A FULL acknowledged from actual start control",()->{
+                    long now=System.nanoTime();if(now-sampled.get()>TimeUnit.SECONDS.toNanos(1)){
+                        sampled.set(now);var step=new LinkedHashMap<String,Object>();step.put("sessions",probe.sessions.size());step.put("state",probe.transport.connectionState().name());step.put("polls",probe.polls.get());step.put("sourceCompleted",probe.source.completed.get());step.put("lastOwnedReadings",probe.source.lastReadingCount);step.put("lastQueryMillis",probe.source.lastQueryMillis);
+                        if(!probe.sessions.isEmpty()){var current=probe.sessions.getFirst();step.put("active",current.isActive());var full=current.fullStatus();step.put("fullProblem",full==null?"NOT_STARTED":full.problem());step.put("fullAck",full==null?-1:full.acknowledgedSequence());}
+                        progress.add(step);
+                    }
+                    return probe.sessions.size()==1&&probe.sessions.getFirst().fullStatus()!=null&&probe.sessions.getFirst().fullStatus().acknowledgedSequence()>0;
+                });
+                waitFor("initial process event committed before stop",()->api.events(a).join().size()==1);}
+            catch(AssertionError missing){
+                var selected=fx(()->((ComboBox<?>)s.getScene().lookup("#candidate-attempts")).getValue().toString());
+                var session=probe.sessions.getFirst();var state=api.state(a).get(5,TimeUnit.SECONDS);var status=session.status();
+                var diagnosis=new LinkedHashMap<String,Object>();diagnosis.put("sourceSha",required("TOEIC_USB_TEST_SOURCE"));diagnosis.put("selectedMatchesRequested",selected.equals(a));diagnosis.put("requestedAttemptRows",api.events(a).get(5,TimeUnit.SECONDS).size());diagnosis.put("selectedAttemptRows",api.events(selected).get(5,TimeUnit.SECONDS).size());diagnosis.put("requestedState",state.status());diagnosis.put("processProblem",status==null?"NOT_STARTED":status.problem());diagnosis.put("processPending",status==null?-1:status.pendingEvents());diagnosis.put("processAcknowledged",status==null?-1:status.acknowledged());diagnosis.put("ownedWorkloadAlive",workload.child.isAlive());diagnosis.put("polls",probe.polls.get());diagnosis.put("sourceCompleted",probe.source.completed.get());diagnosis.put("lastOwnedReadings",probe.source.lastReadingCount);diagnosis.put("lastQueryMillis",probe.source.lastQueryMillis);diagnosis.put("sessionCount",probe.sessions.size());diagnosis.put("transportState",probe.transport.connectionState().name());diagnosis.put("fullProblem",session.fullStatus()==null?"NOT_STARTED":session.fullStatus().problem());diagnosis.put("fullSequence",session.fullStatus()==null?-1:session.fullStatus().sequence());diagnosis.put("fullAck",session.fullStatus()==null?-1:session.fullStatus().acknowledgedSequence());
+                diagnosis.put("portalStatus",fx(()->s.getScene().getRoot().lookupAll(".label").stream().filter(n->n instanceof Label l&&(l.getText().startsWith("Không")||l.getText().startsWith("Chưa")||l.getText().startsWith("Giám sát:"))).map(n->((Label)n).getText()).toList()));
+                Files.writeString(Path.of(required("TOEIC_USB_TEST_OUTPUT"),"application-diagnostic.private.json"),JSON.toJson(diagnosis));throw missing;
+            }finally{Files.writeString(Path.of(required("TOEIC_USB_TEST_OUTPUT"),"application-start-progress.private.json"),JSON.toJson(progress));}
+            var first=probe.sessions.getFirst();String oldRun=first.collectorSessionId(),oldEpoch=first.fullStatus().syncEpoch();
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Dừng giám sát").fire();return null;});
+            waitFor("stop control waits for owned collector termination",()->probe.stops.get()==1&&!first.isActive());
+            waitCandidateControls(s,a);
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Bắt đầu giám sát").fire();return null;});
+            waitFor("restart control opens a fresh FULL epoch",()->first.isActive()&&first.fullStatus()!=null&&first.fullStatus().acknowledgedSequence()>0);
+            assertThat(first.collectorSessionId()).isNotEqualTo(oldRun);assertThat(first.fullStatus().syncEpoch()).isNotEqualTo(oldEpoch);
+            waitFor("process observed in restarted run",()->api.events(a).join().size()==2);
+            workload.close();
+            waitFor("owned process exit changes current FULL but preserves history",()->api.state(a).join().status().equals("SYNCED")&&api.state(a).join().processes().isEmpty());
+            assertThat(api.events(a).get(5,TimeUnit.SECONDS)).hasSize(2);
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.logout(s);return null;});
+            first.stop().stopped().get(8,TimeUnit.SECONDS);assertThat(probe.stops).hasValue(2);assertThat(first.isActive()).isFalse();
+            int oldPolls=probe.polls.get();
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.login(s,base,"candidate2",required("TOEIC_SEED_PASSWORD"));return null;});
+            waitCandidateControls(s,b);assertThat(probe.sessions).hasSize(2);
+            fx(()->{ @SuppressWarnings("unchecked")var box=(ComboBox<String>)s.getScene().lookup("#candidate-attempts");assertThat(box.getItems()).doesNotContain(a);vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Bắt đầu giám sát").fire();return null;});
+            var second=probe.sessions.getLast();waitFor("candidate B starts with separate scope",()->second.isActive()&&second.fullStatus()!=null&&second.fullStatus().acknowledgedSequence()>0);
+            assertThat(first.isActive()).isFalse();assertThat(probe.polls.get()).isGreaterThan(oldPolls);assertThat(api.events(a).get(5,TimeUnit.SECONDS)).hasSize(2);
+            fx(()->{probe.application.stop();return null;});second.stop().stopped().get(8,TimeUnit.SECONDS);assertThat(probe.stops).hasValue(3);
+            results.add(Map.of("kind","REAL_APPLICATION_CONTROLS","activation","Button/MenuItem.fire, Application.stop; NOT OS/human acceptance","proctorCollectorFactories",0,"candidateRuns",3,"collectorTerminations",3,"logoutAccountIsolation",true,"processHistoryAfterExit",2,"currentProcessCountAfterExit",0));
+        }
+    }
+    void waitCandidateControls(Stage stage,String attempt)throws Exception {
+        waitFor("candidate scope and start control ready",()->{try{return fx(()->{
+            @SuppressWarnings("unchecked")var box=(ComboBox<String>)stage.getScene().lookup("#candidate-attempts");
+            if(box==null||!box.getItems().contains(attempt)||vn.edu.toeic.client.MonitoringApplicationProbe.button(stage,"Bắt đầu giám sát").isDisabled())return false;
+            box.setValue(attempt);return true;
+        });}catch(Exception e){throw new RuntimeException(e);}});
     }
 }

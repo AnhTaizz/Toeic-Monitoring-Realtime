@@ -52,3 +52,8 @@ Không new scheduler/socket: thêm request trong cycle hiện hữu (poll3s khi 
 ## Trước production/nghiệm thu
 
 Cần nhóm duyệt policy/threshold và false-positive budget trên dữ liệu phù hợp, review B/A/C, hardware và lifecycle/desktop/LAN acceptance. Chuyển app khác để mở cửa sổ hỗ trợ, lặp do bounce hoặc delivery batch đều có thể là nguyên nhân vô hại; HIGH_ATTENTION chỉ mời xem record gốc. USB0/12/màn hình thứ hai/OS input/LAN hai máy NOT_RUN. Không E1/E2, MON-08 chưa DONE, gates/ADR/policy/owner pending và FULL/experiments OFF giữ nguyên.
+
+
+## Lượt chung MON01–09
+
+`.\scripts\demo-mon08-alerts.ps1 -Integrated` tái sử dụng entrypoint này để ghép process/FX/USB/status/gap → committed history/timeline/summary và app lifecycle. `-Integrated -Mode Real -ReadUsbStorage` chỉ thay nguồn USB bằng CIM minimal trong TEST. Các mode trước vẫn giữ. [Ma trận, provenance, prerequisite/cleanup và actual](MONITORING_INTEGRATION.md); không MON DONE/hardware/policy approval.
