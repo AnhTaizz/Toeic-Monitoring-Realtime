@@ -76,7 +76,8 @@ public final class UsbScanCoordinator implements AutoCloseable {
             return generation;
         }
     }
-    private boolean laneReady(){return transport.signalExperimentReady(run.attemptId())&&transport.connectionGeneration()==socket&&run.active()&&delivery.status().active();}
+    private boolean laneReady(){return transport.signalExperimentReady(run.attemptId())&&transport.connectionGeneration()==socket&&run.active()&&delivery.status().active()
+            &&(ownsStatuses||statuses.usesContext(run,delivery,statusGeneration));}
     private void scan(long expected){
         if(!laneReady()){requestStop("LANE_NOT_READY");return;}
         synchronized(lock){if(!active||generation!=expected)return;}

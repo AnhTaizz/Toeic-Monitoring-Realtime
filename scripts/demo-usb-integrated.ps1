@@ -72,7 +72,7 @@ try{
     $sourceDirty=[bool](& git.exe status --porcelain)
     Write-Output ('USB '+$Mode+' TEST run='+$runId+' source='+$source+' output='+$out)
     if($Mode -eq 'Real'){Write-Output ('EXPLICIT REAL CIM: provider='+$Provider+' duration='+$DurationSeconds+'s delay='+$CadenceMillis+'ms queryTimeout='+$QueryTimeoutMillis+'ms; only minimal storage classification, no files/serial; TEST server only.')}
-    [IO.File]::WriteAllText((Join-Path $out 'config.json'),(@{mode=$Mode;provider=$Provider;durationSeconds=$DurationSeconds;cadenceDelayMillis=$CadenceMillis;queryTimeoutMillis=$QueryTimeoutMillis;dbPort=[int]$env:DB_PORT;sourceSha=$source;sourceDirty=$sourceDirty;timeline=[bool]$Timeline;alertRules=[bool]$AlertRules;identityOnly=[bool]$TimelineIdentityOnly;viewSeconds=$ViewSeconds}|ConvertTo-Json),$utf8)
+    [IO.File]::WriteAllText((Join-Path $out 'config.json'),(@{mode=$Mode;provider=$Provider;durationSeconds=$DurationSeconds;cadenceDelayMillis=$CadenceMillis;queryTimeoutMillis=$QueryTimeoutMillis;dbPort=[int]$env:DB_PORT;sourceSha=$source;sourceDirty=$sourceDirty;timeline=[bool]$Timeline;alertRules=[bool]$AlertRules;integrated=[bool]$Integrated;identityOnly=[bool]$TimelineIdentityOnly;viewSeconds=$ViewSeconds}|ConvertTo-Json),$utf8)
     # Offline bootstrap has no listening socket. Password travels only over process stdin.
     if((Native (Join-Path $PostgresBin 'initdb.exe') ('-D "'+$pgdata+'" -U usb_demo_test --auth=trust --no-locale -E UTF8') 'initdb' '') -ne 0){throw 'Owned initdb failed'}
     if((Native (Join-Path $PostgresBin 'postgres.exe') ('--single -D "'+$pgdata+'" template1') 'offline-password' ("SET password_encryption='scram-sha-256';`nALTER ROLE usb_demo_test PASSWORD '"+$env:DB_PASSWORD+"';`n")) -ne 0){throw 'Offline password initialization failed'}
@@ -108,7 +108,7 @@ finally{
     $cleanup.postmasterPidAbsent=-not(Test-Path -LiteralPath (Join-Path $pgdata 'postmaster.pid'))
     $summary=Join-Path $out 'demo-summary.json'
     if(Test-Path -LiteralPath (Join-Path $out 'stop.request')){$exitCode=130}
-    $result=@{sourceSha=$source;sourceDirty=$sourceDirty;runId=$runId;mode=$Mode;timeline=[bool]$Timeline;alertRules=[bool]$AlertRules;identityOnly=[bool]$TimelineIdentityOnly;exitCode=$exitCode;runnerErrorType=$failedType;startUtc=$start;endUtc=[DateTime]::UtcNow.ToString('o');cleanup=$cleanup;hardware='0/12 NOT_RUN';summaryPresent=(Test-Path -LiteralPath $summary)}
+    $result=@{sourceSha=$source;sourceDirty=$sourceDirty;runId=$runId;mode=$Mode;timeline=[bool]$Timeline;alertRules=[bool]$AlertRules;integrated=[bool]$Integrated;identityOnly=[bool]$TimelineIdentityOnly;exitCode=$exitCode;runnerErrorType=$failedType;startUtc=$start;endUtc=[DateTime]::UtcNow.ToString('o');cleanup=$cleanup;hardware='0/12 NOT_RUN';summaryPresent=(Test-Path -LiteralPath $summary)}
     [IO.File]::WriteAllText((Join-Path $out 'result.json'),($result|ConvertTo-Json -Depth 5),$utf8)
     foreach($name in $saved.Keys){[Environment]::SetEnvironmentVariable($name,$saved[$name],'Process')};Pop-Location
 }

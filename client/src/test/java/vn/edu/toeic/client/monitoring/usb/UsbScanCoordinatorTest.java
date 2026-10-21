@@ -85,6 +85,16 @@ class UsbScanCoordinatorTest {
             }
         }
     }
+    @Test void retiredBorrowedStatusOwnerCancelsBlockedUsb()throws Exception{
+        try(Fixture f=new Fixture(256);var statuses=new ObserverStatusEmitter()){
+            long generation=statuses.start(f.run,f.delivery);
+            try(var shared=new UsbScanCoordinator(f.source,UsbScanCoordinator.Settings.defaults(),f.run,f.delivery,f.transport,(m,q)->{throw new AssertionError("stale callback");},statuses,generation)){
+                shared.start();assertThat(f.source.entered.await(3,TimeUnit.SECONDS)).isTrue();statuses.close();
+                assertThat(shared.awaitStopped(Duration.ofSeconds(3))).isTrue();
+                assertThat(f.source.closed).isTrue();assertThat(f.run.active()).isTrue();assertThat(f.delivery.status().active()).isTrue();
+            }
+        }
+    }
     static final class FakeSource implements UsbScanCoordinator.Source{
         final BlockingQueue<UsbScanCoordinator.Reading> inputs=new LinkedBlockingQueue<>();final CountDownLatch entered=new CountDownLatch(1);final AtomicInteger active=new AtomicInteger(),maxActive=new AtomicInteger(),calls=new AtomicInteger();volatile boolean closed;
         public UsbScanCoordinator.Reading scan(Duration timeout){calls.incrementAndGet();int n=active.incrementAndGet();maxActive.accumulateAndGet(n,Math::max);entered.countDown();try{return inputs.take();}catch(InterruptedException stopped){Thread.currentThread().interrupt();return ready(99L);}finally{active.decrementAndGet();}}

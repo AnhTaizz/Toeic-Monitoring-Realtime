@@ -60,9 +60,10 @@ class MonitoringTimelinePostgresTest {
     JsonObject get(String path,String token,int status)throws Exception{return fixture.get(path,token,status);}
     boolean cancelRequested(){return fixture.cancelRequested();}
     final List<AutoCloseable> gui=new ArrayList<>();
+    final Set<Thread> initialThreads=Thread.getAllStackTraces().keySet();
     @BeforeAll void toolkit(){try{Platform.startup(()->{});}catch(IllegalStateException started){ }Platform.setImplicitExit(false);}
     @AfterEach void closeGui()throws Exception{for(int n=gui.size()-1;n>=0;n--)gui.get(n).close();gui.clear();}
-    @AfterAll void teardown()throws Exception{try{closeGui();fixture.teardown();}finally{Platform.exit();}}
+    @AfterAll void teardown()throws Exception{try{closeGui();fixture.teardown();waitFor("owned toeic workers terminate after resource close",()->Thread.getAllStackTraces().keySet().stream().noneMatch(t->!initialThreads.contains(t)&&t.getName().startsWith("toeic-")&&t.isAlive()));}finally{Platform.exit();}}
     static <T>T fx(Callable<T> action)throws Exception{var f=new CompletableFuture<T>();Platform.runLater(()->{try{f.complete(action.call());}catch(Throwable t){f.completeExceptionally(t);}});return f.get(8,TimeUnit.SECONDS);}
     static void waitFor(String condition,BooleanSupplier ready)throws Exception{long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(10);while(System.nanoTime()<until){if(ready.getAsBoolean())return;Thread.sleep(25);}throw new AssertionError(condition);}
     Stage stage(String title)throws Exception{return fx(()->{var s=new Stage();s.setTitle(title);s.setScene(new Scene(new Label(title),640,400));s.show();gui.add(()->fx(()->{s.close();return null;}));return s;});}
@@ -266,7 +267,7 @@ class MonitoringTimelinePostgresTest {
                 long before=first.delivery.status().dropped();
                 for(int n=0;n<50;n++){
                     var m=first.run.next(Instant.now().truncatedTo(ChronoUnit.MICROS),first.realtime.observationOrigin());
-                    first.delivery.enqueue(m.message(new DisplaySignal(m.eventId(),m.observerSessionId(),m.sequence(),m.observedAt(),m.origin(),2+n,"CHANGED")));
+                    first.delivery.enqueue(m.message(new DisplaySignal(m.eventId(),m.observerSessionId(),m.sequence(),m.observedAt(),m.origin(),1,"CHANGED")));
                 }
                 long dropped=first.delivery.status().dropped()-before;assertThat(dropped).isPositive();
                 var bounded=first.delivery.status();assertThat(bounded.queued()).isLessThanOrEqualTo(17);assertThat(bounded.bytes()).isLessThanOrEqualTo(1056768);assertThat(bounded.inFlight()).isLessThanOrEqualTo(2);assertThat(bounded.writes()).isLessThanOrEqualTo(2);
@@ -310,6 +311,7 @@ class MonitoringTimelinePostgresTest {
                 actual.put("firstRunTypedCommitted",all.size());actual.put("processEvents",1);actual.put("actualOverflowDrops",dropped);actual.put("rawCursorPages",(all.size()+2)/3);actual.put("summaryInputEvents",summary.inputEvents());
                 actual.put("sharedSequenceUnique",true);actual.put("stopRestart",true);actual.put("realReconnect",true);actual.put("assignmentRevokeIsolated",true);
                 actual.put("usbHealth",first.usb.status().health().name());actual.put("usbStorageCount",String.valueOf(first.usb.status().storageCount()));actual.put("USBScans",first.usb.status().scans());
+                actual.put("usbChildren",first.usbSource.status().childrenAlive());actual.put("pipeReadersTerminated",first.usbSource.status().readersTerminated());actual.put("heartbeatFullAckContinues",true);
                 results.add(actual);
             }
         }finally{if(oldReport==null)System.clearProperty("toeic.monitoring.activityReportMillis");else System.setProperty("toeic.monitoring.activityReportMillis",oldReport);}

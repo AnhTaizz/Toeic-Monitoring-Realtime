@@ -22,6 +22,7 @@ import static vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTe
 /** Composition TEST only. Production observers, collector, FULL, delivery and transport are reused unchanged. */
 final class JointMonitoringRun implements AutoCloseable {
     final RealtimeClient realtime;
+    final ScheduledExecutorService connectionWorker=Executors.newSingleThreadScheduledExecutor(r->{var t=new Thread(r,"toeic-joint-realtime");t.setDaemon(true);return t;});
     final CandidateMonitoringSession process;
     final SignalRunContext run;
     final SignalDelivery delivery;
@@ -32,10 +33,11 @@ final class JointMonitoringRun implements AutoCloseable {
     final AtomicInteger polls=new AtomicInteger();
     final CountDownLatch collectorStopped=new CountDownLatch(1);
     UsbScanCoordinator usb;
+    UsbScanCoordinator.Source usbSource;
     boolean closed;
     JointMonitoringRun(MonitoringTimelinePostgresTest test,String attempt,String token,Stage stage,long ownedPid)throws Exception {
         this.stage=stage;
-        realtime=test.realtime(token,Set.of(attempt));
+        realtime=new RealtimeClient(new AuthenticatedWebSocketOpener(test.base,token),new RealtimeClient.Settings(Duration.ofMillis(100),Duration.ofMillis(100),Duration.ofSeconds(1),1,65536,500),connectionWorker);test.owned.add(realtime);
         var source=new ProcessHandleSnapshotSource();
         // Transmit only the owned TEST PID. No process command line or unrelated readings enter evidence/server.
         var collector=new ProcessCollector(()->{polls.incrementAndGet();return source.scan().stream().filter(p->p.pid()==ownedPid).toList();},Duration.ofMillis(250),new ObservationTrace(){
@@ -66,11 +68,13 @@ final class JointMonitoringRun implements AutoCloseable {
         });
     }
     void startUsb(UsbScanCoordinator.Source source,UsbScanCoordinator.Audit audit)throws Exception {
+        usbSource=source;
         usb=new UsbScanCoordinator(source,new UsbScanCoordinator.Settings(Duration.ofMillis(Integer.parseInt(required("TOEIC_USB_CADENCE_MILLIS"))),Duration.ofMillis(Integer.parseInt(required("TOEIC_USB_TIMEOUT_MILLIS"))),Duration.ofSeconds(Integer.parseInt(required("TOEIC_USB_DURATION_SECONDS")))),run,delivery,realtime,audit,statuses,statusGeneration);
         usb.start();
     }
     void stopUsb()throws Exception {
         if(usb!=null){usb.close();assertThat(usb.awaitStopped(Duration.ofSeconds(5))).isTrue();}
+        if(usbSource!=null){assertThat(usbSource.status().childrenAlive()).isZero();assertThat(usbSource.status().readersTerminated()).isTrue();}
         assertThat(statuses.status().active()).as("USB close must not retire display status owner").isTrue();
     }
     void quiesceObservers()throws Exception {
@@ -83,7 +87,7 @@ final class JointMonitoringRun implements AutoCloseable {
             statuses.close();run.close();delivery.close();
             var stopped=process.stop();
             try{stopped.stopped().get(8,TimeUnit.SECONDS);assertThat(delivery.awaitStopped(Duration.ofSeconds(3))).isTrue();assertThat(collectorStopped.await(3,TimeUnit.SECONDS)).isTrue();}
-            finally{process.close();realtime.close();}
+            finally{process.close();realtime.close();assertThat(connectionWorker.awaitTermination(3,TimeUnit.SECONDS)).isTrue();}
         }
     }
     /** Harmless stdin-controlled cmd fixture with an allowlisted TEST filename; this is not a real browser. */
