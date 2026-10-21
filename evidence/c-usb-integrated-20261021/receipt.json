@@ -1,0 +1,1156 @@
+{
+  "authorization": "USER_AUTHORIZED_EXPERIMENT e80d60fa; not human approval A/B/C",
+  "baseSha": "b68e19afca151e53dd03cb3ff5741d4d08e5ea73",
+  "branch": "feat/c-usb-integrated-demo-20261020",
+  "firstCodeSha": "36cc749123f2b88ded899d3443e8435baf337572",
+  "coordinatorRuntimeSha": "fdc90a130330b0264d01925a04eb6dd72e426e36",
+  "finalExecutableDemoAndBuildSha": "e7cd9dc6578a70a4b6ab3adfaff34ccdb9d96863",
+  "baseline": {
+    "sourceSha": "b68e19afca151e53dd03cb3ff5741d4d08e5ea73",
+    "passed": 194,
+    "skipped": 0,
+    "modules": {
+      "protocol": 37,
+      "probe": 34,
+      "client": 118,
+      "server": 5
+    }
+  },
+  "firstUnit": {
+    "source": "worktree before first commit36cc749; not final runtime SHA",
+    "passed": 204,
+    "skipped": 0
+  },
+  "finalCoordinatorUnit": {
+    "sourceSha": "e7cd9dc6578a70a4b6ab3adfaff34ccdb9d96863",
+    "tests": 10,
+    "failures": 0,
+    "errors": 0,
+    "xmlLabel": "local-check/final-coordinator.xml"
+  },
+  "runs": [
+    {
+      "name": "mock-first",
+      "mode": "Mock",
+      "sourceSha": "36cc749123f2b88ded899d3443e8435baf337572",
+      "runId": "usb-907069bc46a7417a",
+      "exitCode": 1,
+      "runnerErrorType": "System.Management.Automation.RuntimeException",
+      "startUtc": "2026-10-20T17:06:32.9791142Z",
+      "endUtc": "2026-10-20T17:08:28.1246206Z",
+      "cleanup": {
+        "postmasterPidAbsent": true,
+        "clusterStopExit": 1
+      },
+      "completedPipelineVerified": false
+    },
+    {
+      "name": "mock-fixed",
+      "mode": "Mock",
+      "sourceSha": "fdc90a130330b0264d01925a04eb6dd72e426e36",
+      "runId": "usb-e1439cc0734c480f",
+      "exitCode": 0,
+      "runnerErrorType": null,
+      "startUtc": "2026-10-20T17:10:27.9811385Z",
+      "endUtc": "2026-10-20T17:11:04.8505982Z",
+      "cleanup": {
+        "ownedSchemasRemaining": 0,
+        "clusterStopExit": 0,
+        "postmasterPidAbsent": true
+      },
+      "completedPipelineVerified": true,
+      "runs": [
+        {
+          "sourceStopped": true,
+          "kind": "MOCK",
+          "ackLoss": "SIMULATED",
+          "expectedEvents": 9,
+          "actualCommitted": 9
+        },
+        {
+          "sourceStopped": true,
+          "revokeFixture": "SIMULATED admin revoke; REAL WS authorization denial",
+          "kind": "MOCK",
+          "committed": 0
+        },
+        {
+          "sourceStopped": true,
+          "kind": "MOCK",
+          "timeout": "REAL business deadline and scoped rejection"
+        },
+        {
+          "committed": 1,
+          "kind": "MOCK",
+          "commitFault": "SIMULATED deferred fault; REAL rollback/WS retry"
+        }
+      ],
+      "schemaDropped": true
+    },
+    {
+      "name": "real-first",
+      "mode": "Real",
+      "sourceSha": "33e4a7eb866aca07c2bb35393da54b7fd3814071",
+      "runId": "usb-d5057a64ccc14c70",
+      "exitCode": 0,
+      "runnerErrorType": null,
+      "startUtc": "2026-10-20T17:12:43.4371638Z",
+      "endUtc": "2026-10-20T17:13:24.1609360Z",
+      "cleanup": {
+        "ownedSchemasRemaining": 0,
+        "clusterStopExit": 0,
+        "postmasterPidAbsent": true
+      },
+      "completedPipelineVerified": true,
+      "runs": [
+        {
+          "kind": "REAL_CIM",
+          "outcome": "VERIFIED",
+          "pipelineVerified": true,
+          "provider": "MSFT_DISK",
+          "durationSeconds": 15,
+          "cadenceDelayMillis": 1000,
+          "queryTimeoutMillis": 5000,
+          "scans": 10,
+          "lastHealth": "READY",
+          "lastStorageCount": 0,
+          "privilege": "STANDARD",
+          "powershellRuntime": "5.1.26100.9711",
+          "emitted": 1,
+          "committed": 1,
+          "usbEvents": 0,
+          "acknowledged": 1,
+          "sourceChildrenAlive": 0,
+          "pipeReadersTerminated": true,
+          "scanWorkerStopped": true,
+          "controlWorkerStopped": true,
+          "deliveryWorkerStopped": true,
+          "pendingAtStop": 0,
+          "dropped": 0,
+          "unreported": 0,
+          "unconfirmedGapDrops": 0
+        }
+      ],
+      "schemaDropped": true
+    },
+    {
+      "name": "mock-final",
+      "mode": "Mock",
+      "sourceSha": "e7cd9dc6578a70a4b6ab3adfaff34ccdb9d96863",
+      "runId": "usb-00e26bde532f4ec6",
+      "exitCode": 0,
+      "runnerErrorType": null,
+      "startUtc": "2026-10-20T17:17:42.7422503Z",
+      "endUtc": "2026-10-20T17:18:12.7846508Z",
+      "cleanup": {
+        "ownedSchemasRemaining": 0,
+        "clusterStopExit": 0,
+        "postmasterPidAbsent": true
+      },
+      "completedPipelineVerified": true,
+      "runs": [
+        {
+          "sourceStopped": true,
+          "kind": "MOCK",
+          "ackLoss": "SIMULATED",
+          "expectedEvents": 9,
+          "actualCommitted": 9
+        },
+        {
+          "sourceStopped": true,
+          "revokeFixture": "SIMULATED admin revoke; REAL WS authorization denial",
+          "kind": "MOCK",
+          "committed": 0
+        },
+        {
+          "sourceStopped": true,
+          "kind": "MOCK",
+          "timeout": "REAL business deadline and scoped rejection"
+        },
+        {
+          "committed": 1,
+          "kind": "MOCK",
+          "commitFault": "SIMULATED deferred fault; REAL rollback/WS retry"
+        }
+      ],
+      "schemaDropped": true
+    },
+    {
+      "name": "real-final",
+      "mode": "Real",
+      "sourceSha": "e7cd9dc6578a70a4b6ab3adfaff34ccdb9d96863",
+      "runId": "usb-64dacf7cf6fd4c78",
+      "exitCode": 0,
+      "runnerErrorType": null,
+      "startUtc": "2026-10-20T17:19:12.6421165Z",
+      "endUtc": "2026-10-20T17:19:48.1156384Z",
+      "cleanup": {
+        "ownedSchemasRemaining": 0,
+        "clusterStopExit": 0,
+        "postmasterPidAbsent": true
+      },
+      "completedPipelineVerified": true,
+      "runs": [
+        {
+          "kind": "REAL_CIM",
+          "outcome": "VERIFIED",
+          "pipelineVerified": true,
+          "provider": "MSFT_DISK",
+          "durationSeconds": 15,
+          "cadenceDelayMillis": 1000,
+          "queryTimeoutMillis": 5000,
+          "scans": 10,
+          "lastHealth": "READY",
+          "lastStorageCount": 0,
+          "privilege": "STANDARD",
+          "powershellRuntime": "5.1.26100.9711",
+          "emitted": 1,
+          "committed": 1,
+          "usbEvents": 0,
+          "acknowledged": 1,
+          "sourceChildrenAlive": 0,
+          "pipeReadersTerminated": true,
+          "scanWorkerStopped": true,
+          "controlWorkerStopped": true,
+          "deliveryWorkerStopped": true,
+          "pendingAtStop": 0,
+          "dropped": 0,
+          "unreported": 0,
+          "unconfirmedGapDrops": 0
+        }
+      ],
+      "schemaDropped": true
+    },
+    {
+      "name": "real-cancel",
+      "mode": "Real",
+      "sourceSha": "e7cd9dc6578a70a4b6ab3adfaff34ccdb9d96863",
+      "runId": "usb-c5f9680e4ccf4a05",
+      "exitCode": 130,
+      "runnerErrorType": null,
+      "startUtc": "2026-10-20T17:20:55.8009730Z",
+      "endUtc": "2026-10-20T17:21:15.9753615Z",
+      "cleanup": {
+        "ownedSchemasRemaining": 0,
+        "clusterStopExit": 0,
+        "postmasterPidAbsent": true
+      },
+      "completedPipelineVerified": false,
+      "runs": [
+        {
+          "kind": "REAL_CIM",
+          "outcome": "CANCELLED",
+          "pipelineVerified": false,
+          "provider": "MSFT_DISK",
+          "durationSeconds": 30,
+          "cadenceDelayMillis": 1000,
+          "queryTimeoutMillis": 5000,
+          "scans": 1,
+          "lastHealth": "READY",
+          "lastStorageCount": 0,
+          "privilege": "STANDARD",
+          "powershellRuntime": "5.1.26100.9711",
+          "emitted": 1,
+          "committed": 1,
+          "usbEvents": 0,
+          "acknowledged": 1,
+          "sourceChildrenAlive": 0,
+          "pipeReadersTerminated": true,
+          "scanWorkerStopped": true,
+          "controlWorkerStopped": true,
+          "deliveryWorkerStopped": true,
+          "pendingAtStop": 0,
+          "dropped": 0,
+          "unreported": 0,
+          "unconfirmedGapDrops": 0
+        }
+      ],
+      "schemaDropped": true
+    }
+  ],
+  "realCommittedReadback": {
+    "eventType": "OBSERVER_STATUS",
+    "source": "WINDOWS_USB_STORAGE",
+    "metadataQuality": "COMPLETE",
+    "details": {
+      "status": "READY",
+      "reason": "INITIAL"
+    },
+    "timelineSequence": 1,
+    "deliveryStatus": "LIVE"
+  },
+  "fullVerifyAndBuild": {
+    "buildSourceSha": "e7cd9dc6578a70a4b6ab3adfaff34ccdb9d96863",
+    "coordinatorRuntimeSha": "fdc90a130330b0264d01925a04eb6dd72e426e36",
+    "tests": {
+      "tests": 1369,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 149,
+      "passed": 1220
+    },
+    "moduleSummaries": {
+      "protocol": [
+        82,
+        0,
+        0,
+        0
+      ],
+      "monitoring-spike": [
+        35,
+        0,
+        0,
+        0
+      ],
+      "client": [
+        822,
+        0,
+        0,
+        26
+      ],
+      "server": [
+        430,
+        0,
+        0,
+        123
+      ]
+    },
+    "checks": [
+      {
+        "entry": "vn/edu/toeic/client/monitoring/usb/UsbScanCoordinator.class",
+        "matchesCompiled": true
+      },
+      {
+        "entry": "vn/edu/toeic/client/monitoring/usb/UsbScanCoordinator$Source.class",
+        "matchesCompiled": true
+      },
+      {
+        "entry": "vn/edu/toeic/client/monitoring/usb/UsbSignalAdapter.class",
+        "matchesCompiled": true
+      },
+      {
+        "entry": "vn/edu/toeic/client/monitoring/signal/ObserverStatusEmitter.class",
+        "matchesCompiled": true
+      },
+      {
+        "entry": "vn/edu/toeic/client/monitoring/signal/SignalRunContext.class",
+        "matchesCompiled": true
+      },
+      {
+        "entry": "vn/edu/toeic/client/monitoring/signal/SignalDelivery.class",
+        "matchesCompiled": true
+      },
+      {
+        "clientAbsent": "CimSnapshotSource.class"
+      },
+      {
+        "clientAbsent": "cim-snapshot.ps1"
+      },
+      {
+        "serverAbsent": "monitoring-spike dependency"
+      },
+      {
+        "serverAbsent": "TEST bridge/demo"
+      },
+      {
+        "nestedProtocolMatches": true
+      },
+      {
+        "probeEntryMatches": "vn/edu/toeic/monitoring/usb/CimSnapshotSource.class"
+      },
+      {
+        "probeEntryMatches": "vn/edu/toeic/monitoring/usb/UsbStorageProbe.class"
+      },
+      {
+        "probeEntryMatches": "vn/edu/toeic/monitoring/usb/cim-snapshot.ps1"
+      },
+      {
+        "testBridgeCompiled": true
+      }
+    ],
+    "artifacts": [
+      {
+        "file": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+        "bytes": 11928294,
+        "sha256": "c068427e4504c754fb62dcc1e1fa15b7372c775d0b5f8551930cc079ea777de2"
+      },
+      {
+        "file": "server/target/server-0.1.0-SNAPSHOT.jar",
+        "bytes": 25465514,
+        "sha256": "a0d357d2ac8dc156a59568c157a968d71c8305d3f9b8e1c82c50f0e6c9d4f1f0"
+      },
+      {
+        "file": "protocol/target/protocol-0.1.0-SNAPSHOT.jar",
+        "bytes": 168043,
+        "sha256": "9191794ca47f33d6a6de65527a32dd96d2c09f7b6e4f562cd04ab8cc24f6199d"
+      },
+      {
+        "file": "monitoring-spike/target/monitoring-spike-0.1.0-SNAPSHOT.jar",
+        "bytes": 35713,
+        "sha256": "1679ad4c9f01f51dd9bb1b9ed45f1f4ec0946be7387f2eaa09c6305e7b85712b"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "localOnly": true,
+      "label": "local-check/baseline.private.log",
+      "bytes": 12310,
+      "sha256": "dbf34fe2c2f7b3f07e14f295ebb4f7073ee090d3de2a8836cf929f0cb5d79310"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/baseline.private.err",
+      "bytes": 68,
+      "sha256": "864d27791c5be910b65cd0cbb44eb42715990c3f27fc277d1375f33a66a84172"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/first-unit.private.log",
+      "bytes": 11519,
+      "sha256": "28d44de5dae20825710b5490c5198872fe0aacf84c45dae08f9bc7cedbb1be0b"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/first-unit.private.err",
+      "bytes": 68,
+      "sha256": "864d27791c5be910b65cd0cbb44eb42715990c3f27fc277d1375f33a66a84172"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/full-verify.private.log",
+      "bytes": 43989,
+      "sha256": "5025da52d3248e507e222b350f3b85f4f54a4ec6dce1f4c0314fcc41278a5b0a"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/full-verify.private.err",
+      "bytes": 1222,
+      "sha256": "5c1f8a0dc1c8239f24a0abfdc0c85234543d93210358197b0e31e1e52e4abcb2"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/build-receipt.json",
+      "bytes": 2755,
+      "sha256": "6d285aea0556ab70d14805a7432cb62d92158de1d607483acbc970a8e66e97db"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/probe-help.private.log",
+      "bytes": 868,
+      "sha256": "fe58363db4f43fc0a432719ce67ab894d7a88fde0adb59b78ba03ac54797a5b9"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/probe-help-correct.private.log",
+      "bytes": 884,
+      "sha256": "df5bd386658b4b8996e767cb9e7a5794f6d1004b9f09d26de4a2b47361a5baf8"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/script-guards.json",
+      "bytes": 183,
+      "sha256": "d5be4ca9d4465d8aefc592202704d7f87f5a5c42fac2a676447722c8792c8bbb"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/cancel-driver.private.ps1",
+      "bytes": 3185,
+      "sha256": "5b68363aefe78948a3007232f819b3fe67b400a3a5882297165deaf66821d5a1"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/config.json",
+      "bytes": 239,
+      "sha256": "506505ec23c1c64d8e345a7655d62d89dbd22396dd216ac9b88024061b849c10"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/createdb.private.err",
+      "bytes": 183,
+      "sha256": "8592d2dbb6f7725ce649bfc9335ead60a41f32681612cbb4a5610ef7256b24c5"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/createdb.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/initdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/initdb.private.log",
+      "bytes": 1063,
+      "sha256": "40491901bc3fa11f3d4b65ac2b71113142a3bde09ba5160dd38a4eaeb5a4fcab"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/offline-password.private.err",
+      "bytes": 393,
+      "sha256": "154e9b82d2c77911e637c6948af713bc1e8ce8c50ca25bc6fa1031a5dbc04ada"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/offline-password.private.log",
+      "bytes": 66,
+      "sha256": "159074be9ec962031017960c44d4b8abfeca3f94c6ae64f8fb6aa43b86b190e8"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/pg-start.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/pg-start.private.log",
+      "bytes": 54,
+      "sha256": "46038efb813fbca18a92272496901190638dea3f97b51f7af0daa1ca2eb13818"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/pg-stop.private.err",
+      "bytes": 177,
+      "sha256": "cf7e99fb3270d5c3a1b161c1cb7c824da4323dbab4c10f4f35d2e0f593efcb80"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/pg-stop.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/postgres.private.log",
+      "bytes": 1209,
+      "sha256": "44c1cffdb94c76545131d6ca10ab8daf26bb883064e036258f2b628dc2eb4276"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/result.json",
+      "bytes": 518,
+      "sha256": "54c86b4e38035187b3a8f45f13dd525a6b7782f98f242de2ff5e7f141fc7e923"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/runner-error.private.txt",
+      "bytes": 35,
+      "sha256": "b9bdcbdcc39ba6de31e26ca826a5ddff8d807bc7a7fc81bb2fb74f1391d0f80c"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/schema-count.private.err",
+      "bytes": 179,
+      "sha256": "f7ae4eeb230fcdba7c605a421e12b8f95e0e8d322b6475cc03a653477223f269"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-first/schema-count.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/config.json",
+      "bytes": 239,
+      "sha256": "e69f3a01c6c482bbd76ac242f905757632376efa0ce4dd63b956f95d6c351984"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/createdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/createdb.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/demo-summary.json",
+      "bytes": 551,
+      "sha256": "66bc8c0d9ecd9c8b0f07402b0621817e5ae5840a3cebfa660b0fc5e06cec81b6"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/initdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/initdb.private.log",
+      "bytes": 1063,
+      "sha256": "c947d9d38d806d21d6655277333c9c93a4615b074d0d2d8ee56b162a042893dd"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/maven.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/maven.private.log",
+      "bytes": 428497,
+      "sha256": "a3f1a05d520b0b1e63f79073401615ff9044d6938697d1c904dbb214c44eb656"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/offline-password.private.err",
+      "bytes": 391,
+      "sha256": "bd010af94769d502660ea24963ff8532e56c3ab829376e6c79c646a69c880593"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/offline-password.private.log",
+      "bytes": 66,
+      "sha256": "159074be9ec962031017960c44d4b8abfeca3f94c6ae64f8fb6aa43b86b190e8"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/pg-start-receipt.json",
+      "bytes": 48,
+      "sha256": "fbd8a42df96da038889e2ced858bcf9800a5ce005c83cc1020e2b6c0c21ebc7d"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/pg-stop.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/pg-stop.private.log",
+      "bytes": 58,
+      "sha256": "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/postgres.private.log",
+      "bytes": 1460,
+      "sha256": "1a58d9ab3b8bfd02155adb849224c45c5699c44d3b60eeb978964555529954d3"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/result.json",
+      "bytes": 524,
+      "sha256": "96cfa53f275a8992ce897c4dbbb70187be5559e2f2e5602f230c7e32884fce65"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/schema-count.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-fixed/schema-count.private.log",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/config.json",
+      "bytes": 239,
+      "sha256": "ac3cd43214e34bb6dd4159fb79ce6b20ddb282098483b9f874234e3494d6f3f7"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/createdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/createdb.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/demo-summary.json",
+      "bytes": 2407,
+      "sha256": "acfa0e0c8b61a691bce435a8b44596c8c9ae8fdc3d8b14cbc69af144f13b2f35"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/initdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/initdb.private.log",
+      "bytes": 1063,
+      "sha256": "5fec01c0494efee2ac07cec2ada8d281027e224366ffc7c21a77a954349234b0"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/maven.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/maven.private.log",
+      "bytes": 742913,
+      "sha256": "d77850590d73dc9ae0a697862453f11662b60554382270cdb066517fe797bb79"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/offline-password.private.err",
+      "bytes": 391,
+      "sha256": "0e13f74cd975d290bc888716efde742118925434a1836df01434866e0e970947"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/offline-password.private.log",
+      "bytes": 66,
+      "sha256": "159074be9ec962031017960c44d4b8abfeca3f94c6ae64f8fb6aa43b86b190e8"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/pg-start-receipt.json",
+      "bytes": 48,
+      "sha256": "fbd8a42df96da038889e2ced858bcf9800a5ce005c83cc1020e2b6c0c21ebc7d"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/pg-stop.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/pg-stop.private.log",
+      "bytes": 58,
+      "sha256": "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/postgres.private.log",
+      "bytes": 1211,
+      "sha256": "5880a740c1e917b47208995c84b0d80776f1395df97a1abd693c42d26de78e98"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/result.json",
+      "bytes": 524,
+      "sha256": "b224cfac9889c9ee9f5fd9cbdc55c65e01f088125492ec3581989b0333cd5ed7"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/scan-observed.flag",
+      "bytes": 8,
+      "sha256": "5d0b2f6bd44e0e86ecbc6ef8fb82bc3177bc58cf59825969d11b093800b9b26b"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/schema-count.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-first/schema-count.private.log",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/config.json",
+      "bytes": 239,
+      "sha256": "7b40b0e445b48ee9749c89e383f06c201fafa6d31e452f398f6cee01b22228dc"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/createdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/createdb.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/demo-summary.json",
+      "bytes": 551,
+      "sha256": "7aa3287b810d7d994537b5914d291519f9583ac619b78dc8975b485f37fac728"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/history-USB-TEST-5648d218-9157-47a8-b699-beda812e069d-candidate1.private.json",
+      "bytes": 5853,
+      "sha256": "5ec2194e9ddf7ed3a86631cf413afb847d35a9b0c77dcdf12f8a7c7282cd0a2b"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/history-USB-TEST-d4125add-25a2-41e0-8255-0dd7e0f6ecf6-candidate1.private.json",
+      "bytes": 717,
+      "sha256": "df48b251b1be297b95fed9431f00ad77af49a75e72c60e40dd3321bcfddb31a5"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/initdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/initdb.private.log",
+      "bytes": 1063,
+      "sha256": "b8cafae4c8cf5de66e17d009faf577b7615bcf732a30ed833cd093305a39ff34"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/maven.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/maven.private.log",
+      "bytes": 422242,
+      "sha256": "c2c0a352150baeba7c9e0ee8eaeb2709c63e27043016018e39194b8a90760b86"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/offline-password.private.err",
+      "bytes": 393,
+      "sha256": "6f0d397b14f3a5c49086da0052f8229eb7c7cf3c3a8238e1dd42c9c73e4b2f48"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/offline-password.private.log",
+      "bytes": 66,
+      "sha256": "159074be9ec962031017960c44d4b8abfeca3f94c6ae64f8fb6aa43b86b190e8"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/pg-start-receipt.json",
+      "bytes": 48,
+      "sha256": "fbd8a42df96da038889e2ced858bcf9800a5ce005c83cc1020e2b6c0c21ebc7d"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/pg-stop.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/pg-stop.private.log",
+      "bytes": 58,
+      "sha256": "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/postgres.private.log",
+      "bytes": 1465,
+      "sha256": "9e11ddd6317ae6489169de92a49e50286f1568acea742e0c1c5ec304dfb649c5"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/result.json",
+      "bytes": 524,
+      "sha256": "cc3a4d81587bc65772f2ba92d9ca0e74ec4fc656e9a5d5e92a73156c031ed5ab"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/schema-count.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/schema-count.private.log",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "localOnly": true,
+      "label": "mock-final/reports.private/TEST-vn.edu.toeic.server.monitoring.signal.UsbIntegratedDemoPostgresTest.xml",
+      "bytes": 443547,
+      "sha256": "cf8a25ea359c1ccb3e020b8d1aefa43431fd6194daedeb71f60f121628cfc7c3"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/config.json",
+      "bytes": 239,
+      "sha256": "809cf5a0f711b895ba5bfb3d750dbc8143082212b45e6ef2e803f2fdd604c634"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/createdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/createdb.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/demo-summary.json",
+      "bytes": 2406,
+      "sha256": "0fc5355acf51db0106b088b3032606f2a4399bbfe702470597720d82d38b45b7"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/history-USB-TEST-010f6f2f-75df-4b15-a725-7048e65fefb9-candidate1.private.json",
+      "bytes": 717,
+      "sha256": "94384676326e7a96bf34971c41275c56ef94c92c6066130c12d40c5781243fb0"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/initdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/initdb.private.log",
+      "bytes": 1063,
+      "sha256": "563e15d85ba0ffa2641a5d746059efc4a41971ec9e1410b670230dd7302b60d4"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/maven.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/maven.private.log",
+      "bytes": 774666,
+      "sha256": "339a1a13caa5e231ddaec0b2765b66214fc1d1eb49eef6ec52b0b51b608c4d1e"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/offline-password.private.err",
+      "bytes": 393,
+      "sha256": "c7464f5af002f0656e32bada406728cb446199b6ce30a8abf3ce26ecabca5be6"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/offline-password.private.log",
+      "bytes": 66,
+      "sha256": "159074be9ec962031017960c44d4b8abfeca3f94c6ae64f8fb6aa43b86b190e8"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/pg-start-receipt.json",
+      "bytes": 48,
+      "sha256": "fbd8a42df96da038889e2ced858bcf9800a5ce005c83cc1020e2b6c0c21ebc7d"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/pg-stop.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/pg-stop.private.log",
+      "bytes": 58,
+      "sha256": "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/postgres.private.log",
+      "bytes": 1210,
+      "sha256": "34b68bb85d5b1742056d7082d590081eb17d39359bbeb7d413f2d0c36cd854de"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/result.json",
+      "bytes": 524,
+      "sha256": "13d89e72ecf9346b3d647613f65349265f0b90d3884dc9129f47f77a190a4ee4"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/scan-observed.flag",
+      "bytes": 8,
+      "sha256": "5d0b2f6bd44e0e86ecbc6ef8fb82bc3177bc58cf59825969d11b093800b9b26b"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/schema-count.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/schema-count.private.log",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "localOnly": true,
+      "label": "real-final/reports.private/TEST-vn.edu.toeic.server.monitoring.signal.UsbIntegratedDemoPostgresTest.xml",
+      "bytes": 795190,
+      "sha256": "af23c8e3eab843e5fb8579379f2d7d0d785b538218ac0b3366843fd4cb704337"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/config.json",
+      "bytes": 239,
+      "sha256": "f657e784c1d5d7367751cf674625df9216909be2d7434939397ec689767db86d"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/createdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/createdb.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/demo-summary.json",
+      "bytes": 867,
+      "sha256": "053e5f9126fa145e2ec35979a6cf877d8b3c6bac4b0dc3595d3871dca1a058ef"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/initdb.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/initdb.private.log",
+      "bytes": 1065,
+      "sha256": "f3cae15903d9a425e1c16f9da05d4f8141bb491f05592679dd079284801890c4"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/maven.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/maven.private.log",
+      "bytes": 114937,
+      "sha256": "73e9451ce88589f5e0c6f32663117e6d36b27cc167b859bb20a13edf5d35fda8"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/offline-password.private.err",
+      "bytes": 393,
+      "sha256": "a1f0fed4b4a81ac5a2c8123d5e50c758a0f3eb92253ebb8a893dfaf5b8e46644"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/offline-password.private.log",
+      "bytes": 66,
+      "sha256": "159074be9ec962031017960c44d4b8abfeca3f94c6ae64f8fb6aa43b86b190e8"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/parent.private.err",
+      "bytes": 425,
+      "sha256": "bef52f7fb22fdd0ca5042e6d9950a6443fb032579008e9a5ee3d9308226c6f17"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/parent.private.log",
+      "bytes": 882,
+      "sha256": "e5b5405267fb9ec5109459b03058c6dc6c22c53f5748405e29864e7ace14ce70"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/pg-start-receipt.json",
+      "bytes": 48,
+      "sha256": "fbd8a42df96da038889e2ced858bcf9800a5ce005c83cc1020e2b6c0c21ebc7d"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/pg-stop.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/pg-stop.private.log",
+      "bytes": 58,
+      "sha256": "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/postgres.private.log",
+      "bytes": 1214,
+      "sha256": "f4591dd217793427383babc3372e43cc4d1bd75816dc2b0feb6880c4b065befd"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/result.json",
+      "bytes": 526,
+      "sha256": "306559758445ae62f887c332b5cf514cc695ccf7e9f2dce9f830352aac01c56f"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/scan-observed.flag",
+      "bytes": 8,
+      "sha256": "5d0b2f6bd44e0e86ecbc6ef8fb82bc3177bc58cf59825969d11b093800b9b26b"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/schema-count.private.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/schema-count.private.log",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/stop.request",
+      "bytes": 4,
+      "sha256": "04dedf8afeb8a4177a009f41bb78018af601e341ed4322d4073911c9ac879726"
+    },
+    {
+      "localOnly": true,
+      "label": "real-cancel/reports.private/TEST-vn.edu.toeic.server.monitoring.signal.UsbIntegratedDemoPostgresTest.xml",
+      "bytes": 134419,
+      "sha256": "9390b003e71f4597897536dac12e34ce785d8c9e4b9ba6a21d7693f961771aa6"
+    },
+    {
+      "localOnly": true,
+      "label": "local-check/final-coordinator.xml",
+      "bytes": 12570,
+      "sha256": "c49b40e20f477da621d69c9536d2889ff349a53518ab3c0626d3731075df8b58"
+    }
+  ],
+  "limits": {
+    "physicalUSB": "0/12 NOT_RUN",
+    "productionUsbObserver": "NOT_BOUND",
+    "experimentDefault": "OFF",
+    "processDefault": "FULL",
+    "MON02_MON07": "NOT_DONE",
+    "ADR_V2_05_policy_owner_gates": "PENDING",
+    "consoleCtrlC": "NOT_RUN; file-stop verified separately",
+    "offline60s_retention30d": "NOT_IMPLEMENTED",
+    "E1_E2_MON08_UI_push": "OUT_OF_SCOPE"
+  }
+}

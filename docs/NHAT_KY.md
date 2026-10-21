@@ -1041,3 +1041,31 @@ CI cuối tại report/PR84, không ký owner hoặc đổi gate/DONE/hardware.
 - [Report/receipt](../evidence/c-mon07-status-gap-20261020/REPORT.md); raw ignored, không
   .env/DBdev/rootclean/broadkill. Giữ FULLdefault/experimentOFF/USB0of12NOT_RUN,
   MON07chưaDONE/ADR/gates/policy/ownerpending. CI/PR/merge đúngHEAD ghi trongPR, giữbranch.
+
+
+## 20–21/10/2026 — C: USB integrated TEST từ provider tới history
+
+- Attachment e80d60fa USER_AUTHORIZED_EXPERIMENT cho đọc CIM tối thiểu trong TEST explicit,
+  không human A/B/C approval; base mainb68e19a gồm B MON03/04, branch/worktree riêng.
+- Chọn coordinator provider-agnostic trong client, bridge/projection/demo trên server
+  test classpath đã có dependency; không module/native/lib/scanner mới, không runtime
+  CIM trong client/server JAR, không hook candidate production. Cadence fixed-delay,
+  query timeout100..10000ms/duration1..120s, no overlap; control flush/stop độc lập query.
+- Baseline194PASS. Coordinator+shared/provider regressions204PASS,10case mới dùng latch;
+  timeline/error/unknown/queue drop/reconnect/stop/duration/ownership/invalidconfig.
+- Runner36cc749 lỗi pg_ctl inherited output pipe: PG READY nhưng wrapper chưa return,
+  chưa chạy Maven. Giữ rawFAIL, stop đúng cluster ownpath; fdc90a1 dùng NoCapture startup,
+  cleanup tự động sau đó PASS. Không đổi provider/parser/timeouts/DBdev/.env/broadkill.
+- MOCK4REAL WS/HTTP/PG cases trên fdc/e7PASS:9event/status/canonical history, ACK loss
+  SIMULATED retry1row, admin revoke fixture/actualWSdenial, business deadline thật,
+  deferred COMMIT faultSIMULATED rollback/noACK rồi retrycùngmessage. Seeder+API login/
+  import/create-session tạo scope, không SQL INSERT user/attempt/assignment.
+- REAL33e/e7 MSFT15s/delay1s/query5s:10scan READY0 STANDARD,1OBSERVER_STATUS READY/INITIAL
+  COMPLETE được COMMIT/ACK/history,0USBevent. e7 lưu readback/XML theo invocation. Stop-file
+  REAL sau1scan CANCELLED/metadata130/shell1/pipelineVerifiedfalse; cleanup tất cả0child/
+  readers+workers stopped/0schema/PGstop0. Không hotplug hoặc kiểm phímCtrl+C thực.
+- Build e7 fullverify1220PASS/149SKIP/0lỗi,15JAR/dependency checks; probeClasspathCLIhelp0.
+  Invocation -jar sai vì probe không có mainmanifest đã giữlog, không phải sourcebug.
+- [Report/receipt](../evidence/c-usb-integrated-20261021/REPORT.md), raw/JAR localignored.
+  FULLdefault/experimentOFF/USB0of12NOT_RUN/MON02+07chưaDONE/ADR/gate/ownerpolicy pending.
+  Chỉ merge commit sau exactHEAD CI/rules/finalreview; giữ branch/worktree, không task khác.
