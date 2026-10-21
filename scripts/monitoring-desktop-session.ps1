@@ -68,7 +68,7 @@ try{
         $apps+=StartOwned (Join-Path $JavaHome 'bin/javaw.exe') $args $role @{} -Visible
     }
     $text="TEST loopback only - EXPERIMENTAL, no cheating verdict`r`nServer: $origin`r`nCandidate: candidate1`r`nProctor: proctor1`r`nTemporary password (both): $env:TOEIC_SEED_PASSWORD`r`nAttempt: $attempt`r`n`r`n1. Log into the two separate apps. Candidate: select this attempt, Start monitoring, enter exam.`r`n2. Proctor: Process hien tai / Timeline da tin hieu, select this attempt.`r`n3. Open chrome.exe in THIS output folder: harmless TEST cmd process, NOT a browser. Switch focus, minimize/restore candidate, choose an answer.`r`n4. Close TEST process by typing exit. Candidate: exit exam, Stop monitoring, logout. Proctor: logout. Close BOTH apps.`r`nDo not submit exam until history has been checked. USB/LAN NOT_RUN.`r`nBudget: 60 minutes. To stop early create stop.request in this folder. Never share this credential file.`r`n"
-    $credentials=Join-Path $out 'desktop-credentials.private.txt';[IO.File]::WriteAllText($credentials,$text,$utf8)
+    $credentials=Join-Path $out ($run+'-credentials.private.txt');[IO.File]::WriteAllText($credentials,$text,$utf8)
     $notes=Start-Process -FilePath (Join-Path $env:SystemRoot 'System32/notepad.exe') -ArgumentList ('"'+$credentials+'"') -PassThru
     WriteJson 'desktop-ready.json' @{sourceSha=$SourceSha;server=$origin;session=$run;attempt=$attempt;candidatePid=$apps[0].process.Id;proctorPid=$apps[1].process.Id;serverPid=$server.process.Id;testProcess=$testExe;desktop='PENDING_USER_ACTION';credentialsFile=$credentials;expiresUtc=[DateTime]::UtcNow.AddMinutes(60).ToString('o')}
     Write-Output ('DESKTOP READY: '+(Join-Path $out 'desktop-ready.json'))
