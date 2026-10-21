@@ -1,0 +1,225 @@
+{
+  "joinMode": "DERIVED",
+  "outputs": {
+    "analysis.md": "3027aaf67db8140653fdeb31b73a3c2975be47d845cffbe544853a901bc24862",
+    "campaign-status.json": "ff75df8f0f005bde6b208866b19c006876a2aba09012b54cf5451a47ed68c8ae",
+    "join-differences.csv": "08a26a88fcf474fd934bdba858499d4ef82fbe427ead322d0f6a679b5f744407",
+    "run-01-poll-250-events.csv": "c50d9554a28f7a50ce2325cdbeb97550e7d3d131ff18797f602d824178cf763b",
+    "run-02-poll-500-events.csv": "f8bb85869cf6bb21dc0613befb4c8e732e67b0391e7386c155b4f07f7fffc79a",
+    "run-03-poll-1000-events.csv": "1ea57e02763669c4722685585a7a60675608eb0485215fdd860c9f0e9fd817f9",
+    "run-04-poll-2000-events.csv": "21628dc1508d621734447e76f6afc485608d59c4835e1cfc530ec398643fb8a8",
+    "run-05-poll-500-events.csv": "64061c65b02b79e4653279f1fb1a9e0793e1255e311ccffb34305b84174ff45c",
+    "run-06-poll-1000-events.csv": "425c330d7f6cd984c0fc09c63466ff903faa8a8c566bb317d6e2f78d4f3ae5bd",
+    "run-07-poll-2000-events.csv": "1e83d1d960010d0c546ae5b75f9ff37a867c4400a169f0193d63ab234e667951",
+    "run-08-poll-250-events.csv": "35ad2db18a2dcf070bb6bbadcae4c8c61a8f7aa41068a5382d30c49f13c8ee6d",
+    "run-09-poll-1000-events.csv": "743d2142551b360865469f595bb9b25e2ad00e7c01272cc230fdc86cfb81363c",
+    "run-10-poll-2000-events.csv": "16ef96499e8ba4d4cc5e3d09ddf509be23c29581008d40313d0bfad64ac47d78",
+    "run-11-poll-250-events.csv": "c23bb72d6f9a829fdc8e7e7fa1856df2ea8ca97a78d562d81822cbe96797c77e",
+    "run-12-poll-500-events.csv": "c107a684550b71ec52cfc9cdb7bdd5ae564f52eed4b98ca4b8d2a92f6284dce7",
+    "run-status.json": "dea973ae07997904d553f547e24d0783ca13182c82d8b155d49c922c6ced48cd",
+    "summary-by-duration.csv": "cbe3b67b65549059793e9e7c4f8ed28807484fe75167ce3ba4126df69ac36214",
+    "summary.csv": "6d471c361258c9d9454ed1339238c278147e2fd6afdd7583e0ed4cc83bcf5d40"
+  },
+  "runs": [
+    {
+      "derivedJoinSha256": "c4db16c8f56b796a4142ddc17a07e81bd68a4fe766f783fbc23f62f43f51cf93",
+      "provenanceSha256": "007fa4c76adf0e03c872916bae6015849e972c7611831f120d0e4d488bf6b347",
+      "rawInputs": {
+        "e1-manifest.json": "5e766803c61a7c66f23960191f9641ca3272a0638b5f99a6792b85ed457e8914",
+        "ground-truth.jsonl": "093a2690517c0b56fb82cc4a3e41d727cef1e743d96c9ecff6c0067af17afa42",
+        "join.json": "c4db16c8f56b796a4142ddc17a07e81bd68a4fe766f783fbc23f62f43f51cf93",
+        "manifest.json": "d0e4605901eb8ddaa5fc2f9316e552cdd53387156dd7a0d8377147e4a1b3ec28",
+        "metadata.json": "beef5cf38ca450be069924bb408fa0594eb2daf5c409c5cae38c32a95f5c1b29",
+        "observations.jsonl": "a694827e5c600797a42f590d81a78843f2ad050b76b920df4d3f8949ed96359d",
+        "resources.csv": "4edfb1c0304a0667dd3625f9f1dc8b5ef72f616c03ea4eebf0fd0950ea38639d"
+      },
+      "rawSourceSha": "a9ab6609a995132e8059e132022d328e1852a94d",
+      "run": "run-01-poll-250",
+      "status": "VALID"
+    },
+    {
+      "derivedJoinSha256": "bc03cde0a0bfd2d2f9d1197e094503fed376039e2a3d373a2ea7b03b043db33e",
+      "provenanceSha256": "74a1158c579731992818e24fc4c4166abe5e26db60f32bb6551ebc686c248cdb",
+      "rawInputs": {
+        "e1-manifest.json": "d0621c0cb23ddcfa75b685aa3ddc5655c5e06f79045124dd3efa53546a27c308",
+        "ground-truth.jsonl": "ef3f84afb84e31e4f11ea76abd6358214d7e0814c876bd41ad4413ddaa006017",
+        "join.json": "bc03cde0a0bfd2d2f9d1197e094503fed376039e2a3d373a2ea7b03b043db33e",
+        "manifest.json": "ff03630260e8f1b0a7d4e62f784c27be3340249d11f4c52c15c5facb39ce9d34",
+        "metadata.json": "52ac24925b7555f537f2537acd6df5c62769b1c7ce23a6d0e3242fdc8a10a1a8",
+        "observations.jsonl": "80fdff4a16bcc5e87b1d57a7dd83ea36bb3a63295e01da682198e620f51bedd9",
+        "resources.csv": "92c7d2315500d3a025f09651f7e984e446d29b5d0c6ba3280a620505d1c22034"
+      },
+      "rawSourceSha": "a9ab6609a995132e8059e132022d328e1852a94d",
+      "run": "run-02-poll-500",
+      "status": "VALID"
+    },
+    {
+      "derivedJoinSha256": "d8e1ca4fab67ee5dcbb63f8c834b4d8b6cc2c510586a1ffa9074d073c0266310",
+      "provenanceSha256": "682061d442a8b3055a1972246568d28cbb5aec62b65c34d227b4b2363b8426b7",
+      "rawInputs": {
+        "e1-manifest.json": "e691237eb476193f81d96f10dd305458dc3fde653f6b98df5d32787af8986d8c",
+        "ground-truth.jsonl": "9d84031792c5932275658d56fc3b807edd9ec08577bf93a96852e70beb139015",
+        "join.json": "d8e1ca4fab67ee5dcbb63f8c834b4d8b6cc2c510586a1ffa9074d073c0266310",
+        "manifest.json": "aa652770fc19533db16f706463a1316245b22ec61a7b0d2f92e5bae5f1bd95d8",
+        "metadata.json": "63246e19dfe67221315679c3070d609159c797fd7860f32a489a34d18594909c",
+        "observations.jsonl": "0107cf5ef93c70a767ab25c5fccaaee1f1b38f1b186c80b6c0a7d1a44e4719c2",
+        "resources.csv": "327d4c70f6f5720d6eb72ba2e4f53e9360ada5cd84151d6e8776a6d07d13d61f"
+      },
+      "rawSourceSha": "a9ab6609a995132e8059e132022d328e1852a94d",
+      "run": "run-03-poll-1000",
+      "status": "VALID"
+    },
+    {
+      "derivedJoinSha256": "f4b02bbe0b6af33d0e5734e9925a92de00334c4ebc7c7c78236bcbc93262d666",
+      "provenanceSha256": "417dfd7f663301fe7b5023d171f8fe6ab2302b8ad4aef699edcf02c1a3d18f8a",
+      "rawInputs": {
+        "e1-manifest.json": "0bdf288ef03c95217fb9dad34ab9b4e3fc2aaa196fbc6708f887f58f017089d3",
+        "ground-truth.jsonl": "f897d6d1a48e2ed5a936128b3398edcebeb4093b12931698ccebbe21ae7529f4",
+        "join.json": "f4b02bbe0b6af33d0e5734e9925a92de00334c4ebc7c7c78236bcbc93262d666",
+        "manifest.json": "fcc61b00a4e2162013d049c93d55c297ba4cea0cdf28f90a0f44d0b1cdfc87fe",
+        "metadata.json": "462fb1c6c3ba08c9b4e0245d79dd3a2274b12328211c36a081d5ee35177bafe8",
+        "observations.jsonl": "c4ddaff6f9150553ba56514eb585f13fd3490e0040667180dc2db3db045cd650",
+        "resources.csv": "020ba0c78e8eaa754f95fe4af80bb2ef923d0be511c393fbe3ddd2f06acc3de2"
+      },
+      "rawSourceSha": "a9ab6609a995132e8059e132022d328e1852a94d",
+      "run": "run-04-poll-2000",
+      "status": "VALID"
+    },
+    {
+      "derivedJoinSha256": "766d5e7417c4480e030ece1097df909d27b44d178089cce08acf3c6492283ae2",
+      "provenanceSha256": "df727eeb1fae1e6e497ec01d1f7def26b0c1b3dcc2373ca3f8c8e92e4e2a924e",
+      "rawInputs": {
+        "e1-manifest.json": "4ba7d2bf57c6d44c7c49e9bac806d980df9776ad90095e940326fada4ac6c886",
+        "ground-truth.jsonl": "3bf9a013721c826b59a6aa5922e9f5f1f0805681c84b5acba590259beed9c951",
+        "join.json": "766d5e7417c4480e030ece1097df909d27b44d178089cce08acf3c6492283ae2",
+        "manifest.json": "f86119461b413e06621c9ce2ee55352210e232059ce5aa14a0c2dda28467e99f",
+        "metadata.json": "b6faa1e7506c690d451a6161109abdb59d3f109aea882071ab9064d4be85e34f",
+        "observations.jsonl": "c2f1e2cb4bab2363f6563f33ccad5095dbea37ddf823cbf8ac5dfdabd3329d2e",
+        "resources.csv": "33fb80018a48cab3278db05d5c96da5a1ca92d98564b14117b4c146fdfe40a42"
+      },
+      "rawSourceSha": "a9ab6609a995132e8059e132022d328e1852a94d",
+      "run": "run-05-poll-500",
+      "status": "VALID"
+    },
+    {
+      "derivedJoinSha256": "c023b0b66f0eafa34a8c51bfec8ed64d5e2ad87095b5f697991b8b623fc7ca8f",
+      "provenanceSha256": "22896e94ee2706a5c540b33b7e72107f309f8a2069b21701880b54331c5f2e46",
+      "rawInputs": {
+        "e1-manifest.json": "7609cba6b06efd680852e87006f8c5cec8865953bd700adbc36d49aaf0a76325",
+        "ground-truth.jsonl": "f03e60ad2f45243f6da4a92a2055675850d754fb6e17eba54bdd94a16d0fe603",
+        "join.json": "c023b0b66f0eafa34a8c51bfec8ed64d5e2ad87095b5f697991b8b623fc7ca8f",
+        "manifest.json": "6eb063805a96b3c3135991ec997e0a183a9fd3a471ef4b02a75bde1ab24d39e2",
+        "metadata.json": "d56198011e6b41abd25e7a03be17bd3ca00439672412f81b080a9a3295fc738c",
+        "observations.jsonl": "b1106aedc442f1b028d326d542599609e71a4ad9ae36585207459d360fda5c38",
+        "resources.csv": "3ae9f9d914a254bf59d831acd232d11dabb4bdee35c3b37c2d22bb06ca962a74"
+      },
+      "rawSourceSha": "a9ab6609a995132e8059e132022d328e1852a94d",
+      "run": "run-06-poll-1000",
+      "status": "VALID"
+    },
+    {
+      "derivedJoinSha256": "44addd6bc337f0f23686cf34821e90c08d30c3e93d19020ac7672629775d8243",
+      "provenanceSha256": "fc01e04bfec1f2d1b207dd114fb114168702fcf559aa04d2f5512dc3bce3bd31",
+      "rawInputs": {
+        "e1-manifest.json": "2a328ebb0574d52ed02a565196f21b2f995b945c9c830e0e87f5a0f42967b38a",
+        "ground-truth.jsonl": "b88806cc98a5ea5f2cfa76ddcec76d74a57c10210d199397fb0a5b0e64a023c9",
+        "join.json": "44addd6bc337f0f23686cf34821e90c08d30c3e93d19020ac7672629775d8243",
+        "manifest.json": "ee58074d93dfdf33678129fe3dc440b3dd9ac6a3dcc9fe433cec91ba8b775af5",
+        "metadata.json": "7a18c5084fef5aae0f5ce126925380456b18817a99d7a999e7f4f4ee1480fec8",
+        "observations.jsonl": "a6d63492874fa50f836dfb0e802da80a44afdaf7796266b36fdafdcef13c3751",
+        "resources.csv": "6927f6b5256af0df358913f4f18ae7dcac5de61284f4ce46eb9c4a0a18f432b0"
+      },
+      "rawSourceSha": "a9ab6609a995132e8059e132022d328e1852a94d",
+      "run": "run-07-poll-2000",
+      "status": "VALID"
+    },
+    {
+      "derivedJoinSha256": "94d7713de1778d385b2164aa931743c4cc412b0b1876c0418e9d5b7846151190",
+      "provenanceSha256": "5b885cdecf0a946e5b28ca134850fdc226ea142fe5fdb22251322651ec244966",
+      "rawInputs": {
+        "e1-manifest.json": "b7f0f3ceed61430cc09fccc68485f8f8805df27b25fa2f007e93ecd8da9145d5",
+        "ground-truth.jsonl": "c65a4e506093b186bdd647fe059d8e8254af8743a73f14cd4364deda0af2ac29",
+        "join.json": "94d7713de1778d385b2164aa931743c4cc412b0b1876c0418e9d5b7846151190",
+        "manifest.json": "0999724e862e2e2927e1b725da774a783532ecc48ba75e9d6f78e705d523c9c5",
+        "metadata.json": "2f4dd3950ed5265fcd91350c8b9b2f0df11ff6e849d840a6a61a64470ff39bee",
+        "observations.jsonl": "f1f8e60877f6ad31d21b64c81e740220e3955686e23eed42c0dd80cc125f3ae6",
+        "resources.csv": "685517dccdc8fd4a39ea8737809e511875a239cbbee934e175816a93b0c33163"
+      },
+      "rawSourceSha": "a9ab6609a995132e8059e132022d328e1852a94d",
+      "run": "run-08-poll-250",
+      "status": "VALID"
+    },
+    {
+      "derivedJoinSha256": "516b209d281f05be198e66c4556589fee73bac7d0d0a7d83f09f50a2c0d0713e",
+      "provenanceSha256": "bc76fee91c5717d5c91199d561ff255f4cdeb434fcfd2d8d02744b7f046399c4",
+      "rawInputs": {
+        "e1-manifest.json": "b3e2efaeada2abb7e13d40e36a5105f57af685fd377a139b4ed7a7454fb3601f",
+        "ground-truth.jsonl": "bf93e69c455f07196b0988cd0b32faeaf6d8f6c74282cdba4ce80480b02c9de1",
+        "join.json": "516b209d281f05be198e66c4556589fee73bac7d0d0a7d83f09f50a2c0d0713e",
+        "manifest.json": "648eb16e745131f6f67226712f20c93613eaa0822282fd04afe365375ce70856",
+        "metadata.json": "d61f58a49fae944acfcf09833e67e34c06882e7c7206730c0082088574d45c0e",
+        "observations.jsonl": "d068b92ec7525cd1e2e5e80de66119e8209196c5eabda52e26ecee536c90ac09",
+        "resources.csv": "cf3e8e88e474c13de903f18eab2fe90bc14c4f861e7ae5a121dcd4c682263ff4"
+      },
+      "rawSourceSha": "a9ab6609a995132e8059e132022d328e1852a94d",
+      "run": "run-09-poll-1000",
+      "status": "VALID"
+    },
+    {
+      "derivedJoinSha256": "6b0015d9f096ffeb161f359466b195e87ed5d2d353c0aa935fd9d4604f3fa432",
+      "provenanceSha256": "e551b74a11a803c65c43f29203c7faa3704671755ce06b47232d17c38c1124c6",
+      "rawInputs": {
+        "e1-manifest.json": "5e8fc69740c9477509185c7cff6f867a3aeb019d856e6e0f680f62e091b88543",
+        "ground-truth.jsonl": "aa45929eba15232803247d846d4ac8df84f7513181dd39be34ac6b105ff86f74",
+        "join.json": "6b0015d9f096ffeb161f359466b195e87ed5d2d353c0aa935fd9d4604f3fa432",
+        "manifest.json": "8e6e5ee6162e5ce72fe28a686f8d731e9ea8dba852117594903ce4d6e1069bab",
+        "metadata.json": "a011b78e9b487570135c84bde1de262c098e2a6935e3198041e4213c54f4a612",
+        "observations.jsonl": "2ecbc860da13e9dc2473c03371dc464ce42892a93e744b3677a764caef5c4169",
+        "resources.csv": "fa4409b73e809f111e391b15a764ef370f20c90195e0689346cda5c15c86fee7"
+      },
+      "rawSourceSha": "a9ab6609a995132e8059e132022d328e1852a94d",
+      "run": "run-10-poll-2000",
+      "status": "VALID"
+    },
+    {
+      "derivedJoinSha256": "90f8e055ad6e9b1dd4f37c75ef78874d0db64f29d6cb44ba4208f93e06246cee",
+      "provenanceSha256": "f539c52a1a46e142193904a21dadeb028d0c91c60c096b4a8e52df20ca5b43d5",
+      "rawInputs": {
+        "e1-manifest.json": "b58355e396e8d10a6028882d20db606cce99672f4af7ee87a3a02a7b95760f73",
+        "ground-truth.jsonl": "5684ed02305713edad954d7ab67ec378c129a337b1391cfd4e077899d0a649c5",
+        "join.json": "90f8e055ad6e9b1dd4f37c75ef78874d0db64f29d6cb44ba4208f93e06246cee",
+        "manifest.json": "d30f4afb56e934ecc951be6f885ca31ff337bf5438f3cf8f76ab65cc100fdbed",
+        "metadata.json": "d248d8688e61b86016f4a5116eafa142cd1681ec363e6565a72bd98922121d57",
+        "observations.jsonl": "ec09d96b3c106cc879f5f70a9c8846e9299c15f82f80b556a520ac6fad8fa3ca",
+        "resources.csv": "078394762237fc39ce6703b0887b978ad054d24be8ebf48d28e60fa8b6730ad0"
+      },
+      "rawSourceSha": "a9ab6609a995132e8059e132022d328e1852a94d",
+      "run": "run-11-poll-250",
+      "status": "VALID"
+    },
+    {
+      "derivedJoinSha256": "fef7e7b75e8b7e62bba11d6a7c9947f577bee122029c425bab86cf39bba3aaee",
+      "provenanceSha256": "25858ab306eebf1efaf44489d458eb44520b8da8d2f67ed9efe351d1b6e9dc59",
+      "rawInputs": {
+        "e1-manifest.json": "0abd58a49ef0109ea320a302305b7ef40784ca0f8a33ef7e2cc521acce49bf08",
+        "ground-truth.jsonl": "6d282b604d23badc2060b588e33a459c070fde5fba857a39742a506a09b7f06f",
+        "join.json": "fef7e7b75e8b7e62bba11d6a7c9947f577bee122029c425bab86cf39bba3aaee",
+        "manifest.json": "6db73df680262021969cd6e70de44409a45f958587184de5d2e773b54a5aab0c",
+        "metadata.json": "65d23766e0bb784f49e6f5ba034750174bf895fb1164d8311f70916baa139b29",
+        "observations.jsonl": "3497e4eea9e562d67639402e09c64db2e14cb494b57a18bf00836d98c6767c7b",
+        "resources.csv": "e1b2ebb33aeae7bd8fc17a2cfa696c3ad91b2a26211e9abcd49877ea9b4a0111"
+      },
+      "rawSourceSha": "a9ab6609a995132e8059e132022d328e1852a94d",
+      "run": "run-12-poll-500",
+      "status": "VALID"
+    }
+  ],
+  "schemaVersion": "e1-analysis-receipt-v1",
+  "tools": {
+    "analyzerSha256": "0c049cbcddd4b780698d36b4b55a7c1152f214e33d3c728f0f6c41d657bca950",
+    "analyzerSourceSha": "a9ab6609a995132e8059e132022d328e1852a94d",
+    "joinToolJarSha256": "002d0de35d40e5b78fe884252c1cc5f8d62839b849d28030f14653b8d99b3c4a",
+    "provenanceScriptSha256": "79b698d07dfd9c9d055f5535e9afb7046d18922796112320acabd6a9affc242c",
+    "validationScriptSha256": "79b698d07dfd9c9d055f5535e9afb7046d18922796112320acabd6a9affc242c"
+  }
+}

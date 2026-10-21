@@ -391,3 +391,7 @@ Windows + JDK21/Maven/PostgreSQL binaries: `.\scripts\demo-mon09-timeline.ps1 -M
 ### Monitoring MON01–09 — integrated TEST
 
 `.\scripts\demo-mon08-alerts.ps1 -Integrated` dựng TEST cách ly và kiểm process/FX/USB/status/gap/history/timeline/experimental alerts cùng lifecycle app. CIM minimal là opt-in thêm `-Mode Real -ReadUsbStorage`. [Ma trận/runbook](docs/MONITORING_INTEGRATION.md) · [Actual/source/JAR hashes và giới hạn](evidence/monitoring-integrated-20261021/REPORT.md). FULL mặc định/experiments OFF; không phải USB hardware, desktop manual, LAN hay policy acceptance.
+
+### QA-05/E1 — kết quả đo mới
+
+[Báo cáo12lượt Windows21/10/2026](evidence/qa05-e1-20261021/REPORT.md) và [hướng dẫn](docs/E1_T4C1_MEASUREMENT.md). Acquisition/rejoin/analyzer dùng Java/stdlib Python như cũ. Thư viện bổ sung **Matplotlib3.11.2** (NumPy2.5.4 là dependency) chỉ để xuất biểu đồ offline qua scripts/benchmarks/e1/report.py, không dependency ứng dụng/measurement. Renderer dùng Python ổn định3.13.2 local, versions plotting pinned trong evidence/qa05-e1-20261021/plot-requirements.txt; không thay runtime đo Temurin21.0.10. FULL mặc định, experiments OFF; E2/hardware/gates/approval còn riêng.

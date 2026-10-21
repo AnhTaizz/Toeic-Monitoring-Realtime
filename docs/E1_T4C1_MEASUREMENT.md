@@ -202,3 +202,31 @@ Cập nhật RC17/10: không cần tìm lại raw cho phiên này; dùng provena
 Analyzer không đổi so với RC (`scripts/benchmarks/e1/analyze.py`, SHA256 `ae6a522070f7770cbc8f2eeb6a95e7b0606d2fd5ae66d375960f2dfb9ecffb52`). Trên raw local `E1-2ff52082` (nguồn đo `c1601b5`): 84/84 hash khớp manifest, không có file ngoài manifest; hai lần phân tích vào hai thư mục mới cho 17 file giống byte nhau và giống nội dung output RC (chỉ khác kết thúc dòng). Kết quả: 12 run, 360 trial eligible, 287 OBSERVED, 62 NOT_OBSERVED_IN_TRACE, 11 INCONCLUSIVE (`PID_ONLY_MISSING_START_INCONCLUSIVE`), 0 censored; 12/12 test Python PASS.
 
 Collector CPU một core theo trọng số thời gian (mean 3 run): poll 250 ms 29,88 %; 500 ms 18,85 %; 1000 ms 10,32 %; 2000 ms 5,54 %. Lệch so với số theo cách tính cũ ghi trong báo cáo RC (29,886 / 18,855 / 10,319 / 5,556) tối đa 0,012 điểm phần trăm, nên nhận định trade-off không đổi. Đây là CPU của thread collector trên một core trong harness E1, không phải chi phí toàn ứng dụng; chia cho số core nếu cần tỉ lệ toàn máy. Heap là heap JVM cha, không phải RSS. Latency là cận trên launch→scan-end ở parent. Target hold khác lifetime thật (target 200 ms ↔ quan sát 431–767 ms). Fixed delay giữa các lần quét khác khoảng cách scan-start. Ba lần lặp mỗi poll, chạy tuần tự trong một JVM cha nên có carryover GC/JIT. Chưa có xác nhận của C; không chạy campaign mới, không chạy E2.
+
+## QA-05 — chiến dịch mới 21/10/2026
+
+User đã ủy quyền chạy đủ12 lượt trong một phiên (~30phút), không cần hỏi lại về thời lượng. Review kỹ thuật Codex không thay human B/method approval. Main/source đo **a9ab6609a995132e8059e132022d328e1852a94d**, alias QA05-LAB-A, Temurin21.0.10+7; JAR SHA256 **002d0de35d40e5b78fe884252c1cc5f8d62839b849d28030f14653b8d99b3c4a**. Lịch/công thức/policy/window ở trên được giữ nguyên. Không tìm raw cũ hay thay kết quả c1601b5.
+
+[Kết quả12lượt/method review/giới hạn](../evidence/qa05-e1-20261021/REPORT.md), [receipt](../evidence/qa05-e1-20261021/receipt.json), [checksum artifact](../evidence/qa05-e1-20261021/CHECKSUMS.sha256). Raw suite mới `E1-57b7839a-d0b9-4933-bb24-c9f8f5ddf76c` ở local ignored `target/e1-new-20261021/`; không có link GitHub tới raw. Worktree đo được giữ riêng, source đo không đổi thành SHA commit báo cáo.
+
+12COMPLETE/VALID,0measurementFAIL/PARTIAL; resourceOK12.360eligible,273observed,84missed,3PID_ONLY_MISSING_START_INCONCLUSIVE,0censored. 250ms có89/90observed và1unknown trên3hold;2000ms có47observed/41missed/2unknown. CPU collector mean17,01→9,02→4,94→2,57% một core theo250→500→1000→2000ms. Mẫu hold200ms không đơn điệu1000→2000; không ép giả thuyết hoặc tự chọn poll production. Full/window/seed1234/hold200,800,3000/maxConcurrent2 vẫn như trên; target hold khác lifetime proxy thực tế.
+
+84/84rawhash trước/sau rejoin/analyzer/đồ thị không đổi,12join byte-identical,360diff rows/0changed;19analysisfiles và18reportfiles (trước thêm narrative/receipt) giống byte ở hai lần xuất. Parent thoát0,360child identity không còn sống,1PID reused được phân biệt bằng startInstant. Giữ log wrapper/export lỗi riêng, không thay measurement run bằng lần chạy lại.
+
+Tái phân tích bằng công cụ hiện có, output mới:
+
+```powershell
+$suite = 'target/e1-new-20261021/E1-57b7839a-d0b9-4933-bb24-c9f8f5ddf76c'
+$jar = 'client/target/client-0.1.0-SNAPSHOT-all.jar' # phải khớp SHA đo phía trên
+$id = [guid]::NewGuid().ToString('N')
+python scripts/benchmarks/e1/derived.py $suite "target/derived-$id" --join-tool $jar
+python scripts/benchmarks/e1/analyze.py $suite "target/analysis-$id" --derived-joins "target/derived-$id" --join-tool $jar
+# Phần này cần Python ổn định có matplotlib3.11.2; analyzer/rejoin vẫn chỉ stdlib:
+.\target\plot-python313\python.exe scripts/benchmarks/e1/report.py $suite "target/analysis-$id" "target/report-$id"
+```
+
+Exporter chỉ tổng hợp CSV/biểu đồ từ output analyzer đã kiểm hash; pooled quantile vẫn nearest-rank trên OBSERVED eligible; không trộn ba duration thành repeat. Unknown giữ bounds/point=null, số repeat point-defined công bố riêng. Resource PARTIAL giữ số lượt/chi tiết, chỉ OK dùng cho kết luận resource. Exporter từ chối output trong raw/analysis input và từ chối ghi đè output. Không sửa runner/joiner/analyzer gốc hoặc workflow.
+
+Python3.15.0b3 trên máy import Matplotlib bị fatal native; đã tái hiện import không dataset và giữ log. Renderer Python3.13.2 embeddable+Matplotlib3.11.2/NumPy2.5.4 được đặt local ignored sau khi đo, không cài hệ thống/đổi Java/analyzer hoặc thu lại. Dependency plotting pinned trong evidence/qa05-e1-20261021/plot-requirements.txt. Không suy chính xác extension/ABI cause từ workaround. Hai lần tái phân tích tại cùng tool/Git context cho receipt giống byte; Git HEAD khác sẽ ghi analyzerSourceSha khác dù cùng bytes, rawSourceSha vẫn a9ab660. Plot hash cần cùng renderer/fonts; checksum không là human approval.
+
+Campaign-status vẫn CANDIDATE_REVIEW_REQUIRED/human NOT_ASSERTED. QA05/backlog không tự DONE. FULL mặc định, experiments OFF; không dùng E1 để chốt E2/gate/USB/LAN/GUI/release.

@@ -1,0 +1,62 @@
+[
+  {
+    "run": "run-01-poll-250",
+    "status": "VALID",
+    "reason": "OK"
+  },
+  {
+    "run": "run-02-poll-500",
+    "status": "VALID",
+    "reason": "OK"
+  },
+  {
+    "run": "run-03-poll-1000",
+    "status": "VALID",
+    "reason": "OK"
+  },
+  {
+    "run": "run-04-poll-2000",
+    "status": "VALID",
+    "reason": "OK"
+  },
+  {
+    "run": "run-05-poll-500",
+    "status": "VALID",
+    "reason": "OK"
+  },
+  {
+    "run": "run-06-poll-1000",
+    "status": "VALID",
+    "reason": "OK"
+  },
+  {
+    "run": "run-07-poll-2000",
+    "status": "VALID",
+    "reason": "OK"
+  },
+  {
+    "run": "run-08-poll-250",
+    "status": "VALID",
+    "reason": "OK"
+  },
+  {
+    "run": "run-09-poll-1000",
+    "status": "VALID",
+    "reason": "OK"
+  },
+  {
+    "run": "run-10-poll-2000",
+    "status": "VALID",
+    "reason": "OK"
+  },
+  {
+    "run": "run-11-poll-250",
+    "status": "VALID",
+    "reason": "OK"
+  },
+  {
+    "run": "run-12-poll-500",
+    "status": "VALID",
+    "reason": "OK"
+  }
+]
