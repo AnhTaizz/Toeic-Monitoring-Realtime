@@ -62,8 +62,8 @@ final class MultiSignalTimelinePane extends VBox implements ProctorRedesignView.
         var names=new TreeSet<String>();snapshot.rows().forEach(r->names.add(r.source()));var choices=new ArrayList<String>();choices.add("Tất cả nguồn");choices.addAll(names);
         String selected=source.getValue();if(!source.getItems().equals(choices)){source.getItems().setAll(choices);source.setValue(choices.contains(selected)?selected:"Tất cả nguồn");}
         long gaps=snapshot.rows().stream().filter(TimelineRows.Row::gap).count(),unknown=snapshot.rows().stream().filter(TimelineRows.Row::unavailable).count();
-        completeness.setText("Trong vùng đã tải (không phụ thuộc filter): "+gaps+" bản ghi gap; "+unknown+" bản ghi nguồn/liên lạc chưa xác định. "
-                +(snapshot.limited()?"GIỚI HẠN: chỉ giữ tối đa 500 dòng mới nhất; dữ liệu cũ không nằm trong bộ nhớ. ":"")
+        completeness.setText("Trên "+snapshot.rows().size()+" dòng trước bộ lọc: "+gaps+" bản ghi gap; "+unknown+" bản ghi nguồn/liên lạc chưa xác định. "
+                +(snapshot.limited()?"GIỚI HẠN: chỉ hiển thị tối đa 500 dòng mới nhất; lịch sử ngoài vùng này chưa được hiển thị, không suy là đầy đủ. ":"")
                 +(snapshot.more()?"Chưa đọc hết loạt lịch sử đang tải; có thể tải thêm. ":"")
                 +"Không có event không chứng minh không vi phạm.");
         presence.setText(snapshot.presence()==null?"Presence chưa được server xác nhận.":"Presence server: "+snapshot.presence().status()+" / "+snapshot.presence().reason()+"; khác trạng thái observer và kết nối dashboard.");
