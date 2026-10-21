@@ -47,4 +47,10 @@ class SignalHistoryTest {
     @Test void listeningWithoutServerInterruptionTimeCannotInventTimelineTimestamp(){
         var state=new vn.edu.toeic.protocol.audio.ListeningStatusResponse("v0",null,"A","MOCK-session","MOCK-start",null,1,"INTERRUPTED",null,T,null,true,null,"MEDIA_ERROR");assertThat(TimelineRows.listening(state)).isEmpty();
     }
+    @Test void heartbeatRecoveryAndProcessGapKeepTheirOwnIdentityAndServerClockMeaning(){
+        var interruption=new MonitoringData.Interruption("same-gap","A","MOCK-run","HEARTBEAT_TIMEOUT",T.minusSeconds(30),T.plusSeconds(1),T.plusSeconds(5));
+        var gap=new MonitoringData.Gap("same-gap","A","MOCK-run","QUEUE_OVERFLOW",3,T.minusSeconds(5),T.minusSeconds(1),T.plusSeconds(7));
+        var rows=TimelineRows.merge(TimelineRows.legacy(List.of(),List.of(interruption),List.of(gap)),List.of(),500);
+        assertThat(rows).extracting(TimelineRows.Row::type).containsExactly("MONITORING_GAP","HEARTBEAT_RECOVERED","HEARTBEAT_INTERRUPTION");assertThat(rows.stream().map(TimelineRows.Row::key).distinct()).hasSize(3);assertThat(rows.getFirst().observedAt()).isEqualTo(T.minusSeconds(1));assertThat(rows.getFirst().receivedAt()).isEqualTo(T.plusSeconds(7));assertThat(rows.getFirst().description()).contains("bỏ 3");assertThat(rows.getLast().observedAt()).isNull();assertThat(rows.getLast().receivedAt()).isEqualTo(T.plusSeconds(1));
+    }
 }
