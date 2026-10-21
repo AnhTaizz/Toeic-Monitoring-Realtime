@@ -170,13 +170,8 @@ final class Drawers {
             MonitoringStateView state = dashboard.currentState();
             if (dashboard.stateLoading() && state == null) return Ui.label("Đang tải trạng thái process…", "muted");
             if (state == null || "UNSYNCED".equals(state.status())) return Ui.wrapping("UNSYNCED — chưa có full snapshot được server xác nhận.", "muted");
-            VBox list = new VBox(6, Ui.label(state.processes().size() + " process · server nhận " + Ui.clock(
-                    state.receivedAt() == null ? null : java.time.Instant.parse(state.receivedAt()), "—")
-                    + (dashboard.stateStale() ? " · dữ liệu cũ" : ""), "muted"));
-            for (var process : state.processes().stream().limit(8).toList())
-                list.getChildren().add(Ui.label("Quan sát thấy " + process.processName() + " (PID " + process.pid() + ")", "label"));
-            if (state.processes().size() > 8) list.getChildren().add(Ui.label("…và " + (state.processes().size() - 8) + " process khác", "muted"));
-            return list;
+            return Ui.wrapping(vn.edu.toeic.client.proctor.timeline.ProcessRiskPresentation.summarize(
+                    state.processes(), state.receivedAt(), dashboard.stateStale()), "label");
         }
 
         private Node recent(RoomModel.Room room, CandidateRow row) {
