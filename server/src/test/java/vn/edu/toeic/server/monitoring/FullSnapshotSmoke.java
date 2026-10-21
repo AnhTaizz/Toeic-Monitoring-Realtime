@@ -96,7 +96,7 @@ public final class FullSnapshotSmoke {
                 var app=new SpringApplication(ToeicServerApplication.class);app.setBannerMode(Banner.Mode.OFF);
                 context=app.run("--server.port=0","--server.address=127.0.0.1","--spring.datasource.url="+url+"?currentSchema="+schema,
                         "--spring.flyway.schemas="+schema,"--spring.flyway.default-schema="+schema,"--logging.level.root=OFF","--debug=false",
-                        "--toeic.presence.timeout-ms=1200","--toeic.presence.scan-interval-ms=25","--toeic.state.stale-ms=1200","--toeic.state.scan-ms=25",
+                        "--toeic.presence.scan-interval-ms=25","--toeic.state.stale-ms=1200","--toeic.state.scan-ms=25",
                         "--toeic.state.ttl-ms=4000","--toeic.state.max-attempts=1");
                 measurements.add(context.getBean(RealtimeSessionRegistry.class).measurements());
                 origin="http://127.0.0.1:"+((WebServerApplicationContext)context).getWebServer().getPort();fixtures();verify(gui);
@@ -263,7 +263,13 @@ public final class FullSnapshotSmoke {
                     int before=heartbeats.get();
                     MonitoringStateView stale=nextState(updates,s -> epoch.equals(s.syncEpoch()) && s.status().equals("STALE"));
                     check(stale.sequence()==1 && stale.processes().equals(full.processes()) && stale.revision()>synced.revision(),"scheduled STALE retains last full");
-                    check(candidate.connectionState()==ConnectionState.CONNECTED && heartbeats.get()>before,"socket and scoped heartbeat remain live without full/CLOSE");
+                    // STALE measures missing FULL, not missing heartbeat. Default heartbeat is 2s,
+                    // so its next ACK need not arrive before the accelerated 1.2s STALE transition.
+                    await(() -> heartbeats.get()>before,"next default-cadence scoped heartbeat ACK after STALE");
+                    check(candidate.connectionState()==ConnectionState.CONNECTED,"socket and scoped heartbeat remain live without full/CLOSE");
+                    System.out.println("HEARTBEAT defaultMillis="+RealtimeClient.Settings.configured().heartbeat().toMillis()
+                            +" presenceTimeoutMillis="+context.getEnvironment().getProperty("toeic.presence.timeout-ms")
+                            +" staleMillis=1200 ACKsBefore="+before+" ACKsAfter="+heartbeats.get());
                     System.out.println("PASS REAL autonomous STALE push with open socket/scoped heartbeat; no CLOSE/HTTP state read/manual maintain; last process set retained (MOCK process)");
                     phase="AUTO_TTL_CAPACITY";
                     MonitoringStateView expired=nextState(updates,s -> s.syncEpoch()==null && s.status().equals("UNSYNCED") && s.revision()>stale.revision());

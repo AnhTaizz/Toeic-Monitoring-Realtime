@@ -17,6 +17,7 @@ import javafx.scene.image.WritableImage;
 import javafx.stage.*;
 import vn.edu.toeic.client.*;
 import vn.edu.toeic.client.exam.*;
+import vn.edu.toeic.client.proctor.redesign.ProctorIntegrationProbe;
 import vn.edu.toeic.protocol.exam.*;
 
 /** REAL production Application, JavaFX Media, HTTP/WS, JAR and isolated PostgreSQL schema.
@@ -107,7 +108,7 @@ public final class ReadingListeningPostgresGuiSmoke {
         proctorApp = fx(ToeicClientApplication::new); proctorStage = fx(Stage::new);
         fx(() -> { proctorApp.start(proctorStage); return null; }); login(proctorStage, "proctor1");
         selectProctorTab("Tiến độ đã lưu");
-        until(()->fx(()->((TableView<?>)proctorStage.getScene().lookup("#proctor-progress")).getItems().stream().anyMatch(row->row instanceof ProctorProgressRow p&&reading.equals(p.attemptId())&&"SUBMITTED".equals(p.state())&&p.answeredCount()==1)),"Committed final progress rendered");
+        until(()->fx(()->ProctorIntegrationProbe.savedProgress(proctorStage.getScene().getRoot(),reading,"SUBMITTED",1)),"Committed final progress rendered");
         pass("REAL proctor progress shows committed finalized row without answers or writer acquisition");screenshot(proctorStage,"07-progress.png");
         enter(listening); clickId(candidateStage, "option-L1-A");
         until(() -> "A".equals(status(listening).answers().get("L1")), "Listening answer save");
@@ -152,10 +153,9 @@ public final class ReadingListeningPostgresGuiSmoke {
         selectProctorTab("Process hiện tại");
         until(() -> "SYNCED".equals(response("/api/v1/monitoring/attempts/" + listening + "/state", proctorToken, null).get("status").getAsString()), "FULL state after restart");
         check(!response("/api/v1/monitoring/attempts", proctorToken, null).toString().contains(reading), "Final attempt stays outside monitoring scope");
-        until(() -> fx(() -> ((TableView<?>)proctorStage.getScene().lookup("#dashboard-roster")).getItems().toString().contains(listening)),"Proctor roster rendered");
-        fx(() -> {((TableView<?>)proctorStage.getScene().lookup("#dashboard-roster")).getSelectionModel().select(0);return null;});
-        until(() -> fx(() -> proctorStage.getScene().lookup("#dashboard-current-status") instanceof Label label
-                && label.getText().contains("Quan sát gần nhất") && label.getText().contains("Đã đồng bộ")),
+        until(() -> fx(() -> ProctorIntegrationProbe.rosterContains(proctorStage.getScene().getRoot(),listening)),"Proctor roster rendered");
+        clickId(proctorStage,"candidates-detail-"+listening);
+        until(() -> fx(() -> ProctorIntegrationProbe.currentProcessSynced(proctorStage.getScene().getRoot(),listening)),
                 "Proctor full observation rendered without stale/loading flags");
         pass("REAL proctor Application/HTTP roster + candidate FULL state; final attempt excluded"); screenshot(proctorStage, "06-proctor.png");
         var oldStatus=status(listening);
@@ -377,7 +377,19 @@ public final class ReadingListeningPostgresGuiSmoke {
         });
     }
 
-    private void selectProctorTab(String title)throws Exception {fx(()->{var tabs=(TabPane)proctorStage.getScene().lookup("#proctor-main-tabs");tabs.getSelectionModel().select(tabs.getTabs().stream().filter(tab->title.equals(tab.getText())).findFirst().orElseThrow());return null;});}
+    private void selectProctorTab(String title)throws Exception {
+        String nav=switch(title){
+            case "Tiến độ đã lưu","Process hiện tại" -> "nav-candidates";
+            case "Cảnh báo process" -> "nav-history";
+            case "Điều khiển ca / kết quả" -> "nav-session-controls";
+            default -> throw new IllegalArgumentException("Unknown proctor destination: "+title);
+        };
+        clickId(proctorStage,nav);
+        if(nav.equals("nav-session-controls"))fx(()->{
+            var tabs=(TabPane)proctorStage.getScene().lookup("#session-controls-tabs");
+            tabs.getSelectionModel().select(tabs.getTabs().stream().filter(t->"tab-v1".equals(t.getId())).findFirst().orElseThrow());return null;
+        });
+    }
     private static boolean confirmOk()throws Exception{return fx(()->{for(Window window:List.copyOf(Window.getWindows()))if(window.getScene()!=null&&window.getScene().getRoot() instanceof DialogPane pane&&pane.getButtonTypes().contains(ButtonType.OK)){((Button)pane.lookupButton(ButtonType.OK)).fire();return true;}return false;});}
 
     private void enter(String attempt) throws Exception {
