@@ -84,6 +84,7 @@ public final class MonitoringApiClient implements DashboardApi {
         result.whenComplete((value,failure) -> { if (result.isCancelled()) raw.cancel(true); });
         return result;
     }
+    @Override public CompletableFuture<AlertSummary> alerts(String attempt) { return get(attemptPath(attempt)+"/alert-summary",body -> AlertSummary.parse(body,attempt),512*1024); }
     @Override public CompletableFuture<ScopeView> scope() { return get("auth/me", body -> MonitoringJson.scope(body,maximum)); }
     @Override public CompletableFuture<Roster> roster() { return get("monitoring/attempts", body -> MonitoringJson.roster(body,maximum)); }
     private static String attemptPath(String attempt) {

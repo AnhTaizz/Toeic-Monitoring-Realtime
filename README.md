@@ -381,3 +381,8 @@ Tài liệu V2 ngày19/10: [EX-02 rich exam contract](docs/EX02_RICH_EXAM_CONTRA
 ### Demo TEST timeline đa tín hiệu (MON-09 slice)
 
 Windows + JDK21/Maven/PostgreSQL binaries: `.\scripts\demo-mon09-timeline.ps1 -Mode Mock` tự mở dashboard và dọn DB TEST. [Runbook/giới hạn](docs/MON09_MULTI_SIGNAL_TIMELINE.md), [ảnh và evidence](evidence/cb-mon09-timeline-20261021/REPORT.md). CIM thật chỉ với `-Mode Real -ReadUsbStorage`; không production observer mặc định. FULL/experiment OFF giữ nguyên, physical/desktop/LAN acceptance pending.
+
+
+### Demo TEST nhóm monitoring MON-08
+
+`.\scripts\demo-mon08-alerts.ps1` (Windows/JDK21/Maven/PostgreSQL18 binaries) tự mở timeline có nhóm ưu tiên EXPERIMENTAL từ MOCK observations qua real WS/HTTP/PG và dọn TEST. [Runbook/rule/coverage](docs/MON08_EXPERIMENTAL_ALERTS.md), [report/ảnh](evidence/cb-mon08-alerts-20261021/REPORT.md). FULL giữ mặc định; cả signal/alert experiments mặc địnhOFF; không kết luận hành vi hoặc đổi trạng thái thi.
