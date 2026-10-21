@@ -23,11 +23,11 @@ public final class MonitoringApplicationProbe {
     }
     public static Button button(Stage stage,String text){
         stage.getScene().getRoot().applyCss();
-        return stage.getScene().lookupAll(".button").stream().filter(n->n instanceof Button b&&text.equals(b.getText())).map(n->(Button)n).findFirst().orElseThrow(()->new AssertionError("Missing TEST control: "+text));
+        return stage.getScene().getRoot().lookupAll(".button").stream().filter(n->n instanceof Button b&&text.equals(b.getText())).map(n->(Button)n).findFirst().orElseThrow(()->new AssertionError("Missing TEST control: "+text));
     }
     public static void login(Stage stage,String base,String name,String password){
         stage.getScene().getRoot().applyCss();
-        for(var node:stage.getScene().lookupAll(".text-field")){
+        for(var node:stage.getScene().getRoot().lookupAll(".text-field")){
             var field=(TextField)node;
             if(field instanceof PasswordField)field.setText(password);
             else if("http://localhost:8080".equals(field.getPromptText()))field.setText(base);
