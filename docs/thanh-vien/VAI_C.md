@@ -553,3 +553,8 @@ pending/drop/unreported. Status emitter lifetime singleclaim: trước ghép sou
 khác cần host ownership chung. Trước production review packaging/disclosure/auth/provider/
 cadence/no-overlap/weak identity/H01–12 và ADR-V2-05/owner policy; giữ FULLdefault,
 experimentOFF/physical0of12NOT_RUN/MON02+07chưaDONE/gatespending; dừng sau slice này.
+
+
+21/10/2026 — MON-09 C+B: [timeline đa tín hiệu](../MON09_MULTI_SIGNAL_TIMELINE.md), [evidence](../../evidence/cb-mon09-timeline-20261021/REPORT.md).
+Base dcb124d; runtime5066347/build1c1523b. Dashboard hiện hữu đọc typed history fixed-through100×3/cycle, poll3s/budget12s/500rows; process state riêng, Listening status projection. Sửa producer identity trùng collector lease có FAIL→9ACK. Real FX existing sources1PASS; MOCK real WS/PG/UI1PASS(A19/B1/drop3); REAL CIM1PASS(8READY0/ACK1/UI1/0USB). Full verify1263PASS/154SKIP/0lỗi, GUI cũ12PASS, JAR24checks; sort oracle sạch05e154a8PASS. TESTschema0/PGstop0/workersclosed, raw ignored. FULLdefault/experimentOFF, USB0/12/physicaldisplay/desktop/LAN NOT_RUN, owner/ADR/policy/gate pending, MON09chưaDONE. Không approval thay B hoặc đổi backlog.
+Ghi chú làm dở: cần owner review/hardware/manual/LAN; không đánh MON-09 DONE. Đây là ghi nhận công việc kỹ thuật theo ủy quyền C+B, không phải thành viên B đã review/approve.

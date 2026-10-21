@@ -471,3 +471,8 @@ URL, chat, file hay verdict. Threshold configurable và clock gap là PARTIAL, k
 Focused94PASS; JavaFX Stage MON-06 1PASS; full clean1232PASS/146SKIP/0FAIL/ERROR.
 [Thiết kế/runbook](../MON06_ACTIVITY_MONITORING.md), [evidence](../../evidence/v2-b-mon06-activity-20261021/REPORT.md).
 REAL WS-PG/V18, manual submit/timeout/history và review C NOT RUN; không đánh dấu DONE.
+
+
+21/10/2026 — MON-09 C+B: [timeline đa tín hiệu](../MON09_MULTI_SIGNAL_TIMELINE.md), [evidence](../../evidence/cb-mon09-timeline-20261021/REPORT.md).
+Base dcb124d; runtime5066347/build1c1523b. Dashboard hiện hữu đọc typed history fixed-through100×3/cycle, poll3s/budget12s/500rows; process state riêng, Listening status projection. Sửa producer identity trùng collector lease có FAIL→9ACK. Real FX existing sources1PASS; MOCK real WS/PG/UI1PASS(A19/B1/drop3); REAL CIM1PASS(8READY0/ACK1/UI1/0USB). Full verify1263PASS/154SKIP/0lỗi, GUI cũ12PASS, JAR24checks; sort oracle sạch05e154a8PASS. TESTschema0/PGstop0/workersclosed, raw ignored. FULLdefault/experimentOFF, USB0/12/physicaldisplay/desktop/LAN NOT_RUN, owner/ADR/policy/gate pending, MON09chưaDONE. Không approval thay B hoặc đổi backlog.
+Ghi chú làm dở: cần owner review/hardware/manual/LAN; không đánh MON-09 DONE. Đây là ghi nhận công việc kỹ thuật theo ủy quyền C+B, không phải thành viên B đã review/approve.

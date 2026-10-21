@@ -1069,3 +1069,8 @@ CI cuối tại report/PR84, không ký owner hoặc đổi gate/DONE/hardware.
 - [Report/receipt](../evidence/c-usb-integrated-20261021/REPORT.md), raw/JAR localignored.
   FULLdefault/experimentOFF/USB0of12NOT_RUN/MON02+07chưaDONE/ADR/gate/ownerpolicy pending.
   Chỉ merge commit sau exactHEAD CI/rules/finalreview; giữ branch/worktree, không task khác.
+
+
+21/10/2026 — MON-09 C+B: [timeline đa tín hiệu](MON09_MULTI_SIGNAL_TIMELINE.md), [evidence](../evidence/cb-mon09-timeline-20261021/REPORT.md).
+Base dcb124d; runtime5066347/build1c1523b. Dashboard hiện hữu đọc typed history fixed-through100×3/cycle, poll3s/budget12s/500rows; process state riêng, Listening status projection. Sửa producer identity trùng collector lease có FAIL→9ACK. Real FX existing sources1PASS; MOCK real WS/PG/UI1PASS(A19/B1/drop3); REAL CIM1PASS(8READY0/ACK1/UI1/0USB). Full verify1263PASS/154SKIP/0lỗi, GUI cũ12PASS, JAR24checks; sort oracle sạch05e154a8PASS. TESTschema0/PGstop0/workersclosed, raw ignored. FULLdefault/experimentOFF, USB0/12/physicaldisplay/desktop/LAN NOT_RUN, owner/ADR/policy/gate pending, MON09chưaDONE. Không approval thay B hoặc đổi backlog.
+Ủy quyền người dùng: triển khai C+B và merge commit nếu CI/quy định đạt; trạng thái CI/merge cuối tại PR. Không cấp human approval. Giữ nhánh và evidence lịch sử.

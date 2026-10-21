@@ -376,3 +376,8 @@ Công cụ build ngoài Maven: `jpackage` trong JDK21, WiX3 (`candle/light`, t�
 Bản tích hợp review PR #35/#38 trên nền main B4/B5: [ứng dụng thống nhất](docs/UNIFIED_APPLICATION.md), [evidence mới](evidence/unified-20261016/verification.md). Trạng thái kiểm chỉ theo source ghi trong evidence; không kế thừa kết quả nhánh nguồn.
 
 Tài liệu V2 ngày19/10: [EX-02 rich exam contract](docs/EX02_RICH_EXAM_CONTRACT_V1.md), [ADR-V2-03 START/deadline](docs/plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md), [D01–D10/roadmap](docs/plan-v2/EX02_DECISIONS_ROADMAP.md) và [fixture MOCK](docs/plan-v2/fixtures/ex02/README.md). TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE theo [nguồn đại diện nhóm](docs/plan-v2/EX02_TEAM_APPROVAL_20261019.md), không chữ ký/GitHub Approving Review. Option A prefetch đúng ảnh Part1 có quyền, Audio+Visual READY trước START, image-visible gate trước play. Chưa runtime/GUI V2; legacy QD21/audio/no-replay giữ, fixture/CI không thay integrated/physical PASS.
+
+
+### Demo TEST timeline đa tín hiệu (MON-09 slice)
+
+Windows + JDK21/Maven/PostgreSQL binaries: `.\scripts\demo-mon09-timeline.ps1 -Mode Mock` tự mở dashboard và dọn DB TEST. [Runbook/giới hạn](docs/MON09_MULTI_SIGNAL_TIMELINE.md), [ảnh và evidence](evidence/cb-mon09-timeline-20261021/REPORT.md). CIM thật chỉ với `-Mode Real -ReadUsbStorage`; không production observer mặc định. FULL/experiment OFF giữ nguyên, physical/desktop/LAN acceptance pending.

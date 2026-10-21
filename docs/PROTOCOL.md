@@ -1075,3 +1075,8 @@ COMMIT/ACK/history,0USBevent; count0 chỉ là local observed storage count, kh�
 encode PRESENT0 và không phải attestation máy không thiết bị. File-stop REAL được
 ghi CANCELLED/pipelineVerified=false; hardware0/12NOT_RUN, ADR/policy/gates pending.
 Provider/bridge chỉ test classpath, không gắn CandidateExamSignalMonitoring production.
+
+
+## MON-09 read consumer (21/10/2026)
+
+Không đổi endpoint/wire/auth/schema. Dashboard dùng API typed history ACTIVE-only hiện hữu qua `MonitoringApiClient.signals`, fixed-through/page100/max3pages/cycle, HTTP poll3s/12s budget; token header. Sequence để sort là server timelineSequence trong attempt, không client sequence hoặc sequence toàn hệ thống. Process state tách history. Listening reuse GET status/parser/assigned-PROCTOR hiện hữu: conditional UI projection dùng interruptedAt, không thêm wire event; observedAt không có thì để trống. Presence server-recorded time khác packet receivedAt. 401/403 clear private UI/cache, không nới terminal history. Xem [runbook](MON09_MULTI_SIGNAL_TIMELINE.md).
