@@ -26,6 +26,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
+import vn.edu.toeic.client.monitoring.activity.ExamActivityEvent;
 import vn.edu.toeic.protocol.exam.CandidateOptionDto;
 import vn.edu.toeic.protocol.exam.CandidateQuestionDto;
 
@@ -226,10 +227,10 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
         audioContainer.getChildren().add(audioLabel);
 
         prevBtn.setId("exam-prev");
-        prevBtn.setOnAction(event -> showGroup(groupIndex - 1));
+        prevBtn.setOnAction(event -> navigateGroup(groupIndex - 1));
         nextBtn.setId("exam-next");
         nextBtn.getStyleClass().add("btn-primary");
-        nextBtn.setOnAction(event -> showGroup(groupIndex + 1));
+        nextBtn.setOnAction(event -> navigateGroup(groupIndex + 1));
         HBox navBox = new HBox(12, prevBtn, nextBtn);
         navBox.setPadding(new Insets(16, 0, 0, 0));
 
@@ -258,7 +259,7 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
             Button btn = new Button(String.valueOf(questionNumbers.get(question.questionId())));
             btn.setId("palette-" + question.questionId());
             btn.getStyleClass().add("palette-btn");
-            btn.setOnAction(event -> showGroup(paper.groupIndexOf(question.questionId())));
+            btn.setOnAction(event -> navigateGroup(paper.groupIndexOf(question.questionId())));
             paletteButtons.put(question.questionId(), btn);
             grid.getChildren().add(btn);
         }
@@ -400,6 +401,12 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
         updatePaletteHighlights(group);
     }
 
+    private void navigateGroup(int index) {
+        if (index < 0 || index >= paper.groups().size() || index == groupIndex) return;
+        showGroup(index);
+        ExamActivityEvent.fire(this, ExamActivityEvent.Kind.NAVIGATION);
+    }
+
     private VBox questionBlock(CandidateQuestionDto question, boolean editable) {
         String questionId = question.questionId();
         String selected = current == null ? null : current.answers().get(questionId);
@@ -422,14 +429,20 @@ public final class CandidateExamView extends BorderPane implements AutoCloseable
             card.setAlignment(Pos.CENTER_LEFT);
             card.setWrapText(true);
             card.setDisable(!editable);
-            card.setOnAction(event -> session.selectAnswer(questionId, option.optionId()));
+            card.setOnAction(event -> {
+                if (session.selectAnswer(questionId, option.optionId()))
+                    ExamActivityEvent.fire(this, ExamActivityEvent.Kind.ANSWER_ACTION);
+            });
             block.getChildren().add(card);
         }
 
         Button clear = new Button("Bỏ chọn câu " + questionNumbers.get(questionId));
         clear.setId("clear-" + questionId);
         clear.setDisable(!editable || selected == null);
-        clear.setOnAction(event -> session.clearAnswer(questionId));
+        clear.setOnAction(event -> {
+            if (session.clearAnswer(questionId))
+                ExamActivityEvent.fire(this, ExamActivityEvent.Kind.ANSWER_ACTION);
+        });
         block.getChildren().add(clear);
         return block;
     }

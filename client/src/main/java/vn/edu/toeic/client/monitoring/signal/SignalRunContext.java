@@ -14,6 +14,7 @@ public final class SignalRunContext implements AutoCloseable {
     private boolean focusInputClaimed;
     private boolean windowInputClaimed;
     private boolean displayInputClaimed;
+    private boolean activityInputClaimed;
     private boolean statusInputClaimed;
     private boolean deliveryClaimed;
 
@@ -52,6 +53,12 @@ public final class SignalRunContext implements AutoCloseable {
     public synchronized boolean claimDisplayInput() {
         if (!active || displayInputClaimed) return false;
         displayInputClaimed = true;
+        return true;
+    }
+    /** One privacy-minimal exam activity input per explicit run. */
+    public synchronized boolean claimActivityInput() {
+        if (!active || activityInputClaimed) return false;
+        activityInputClaimed = true;
         return true;
     }
     public synchronized boolean claimStatusInput() {

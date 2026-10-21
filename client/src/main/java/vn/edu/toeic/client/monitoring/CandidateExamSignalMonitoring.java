@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import vn.edu.toeic.client.monitoring.activity.*;
 import vn.edu.toeic.client.monitoring.display.*;
 import vn.edu.toeic.client.monitoring.focus.*;
 import vn.edu.toeic.client.monitoring.signal.*;
@@ -15,16 +16,18 @@ import vn.edu.toeic.protocol.monitoring.signal.FocusSignal;
 import vn.edu.toeic.protocol.monitoring.signal.DisplaySignal;
 import vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal;
 import vn.edu.toeic.protocol.monitoring.signal.WindowSignal;
+import vn.edu.toeic.protocol.monitoring.signal.ActivitySignal;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
 /**
- * Opt-in MON-03/MON-04/MON-05 coordinator. It reuses the authorized process-monitoring heartbeat
+ * Opt-in MON-03/MON-04/MON-05/MON-06 coordinator. It reuses the authorized process-monitoring heartbeat
  * and current WebSocket, confirms the scoped HTTP capability, and owns the exam observers.
  */
 public final class CandidateExamSignalMonitoring implements AutoCloseable {
     public static final String ENABLE_PROPERTY = "toeic.monitoring.signal-experiment-enabled";
     private final String attemptId;
     private final String collectorSessionId;
+    private final Stage examWindow;
     private final RealtimeClient realtime;
     private final SignalCapabilityApiClient api;
     private final SignalRunContext run;
@@ -36,6 +39,9 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
     private final FxFocusMonitor focusMonitor;
     private final WindowSignalAdapter windowAdapter;
     private final FxWindowMonitor windowMonitor;
+    private ActivitySignalAdapter activityAdapter;
+    private FxActivityMonitor activityMonitor;
+    private boolean activityRetired;
     private final AutoCloseable messages;
     private final AutoCloseable connections;
     private final AutoCloseable accessRejections;
@@ -55,6 +61,7 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
         if (!Platform.isFxApplicationThread()) throw new IllegalStateException("Exam signal monitoring must start on JavaFX thread");
         this.attemptId = Objects.requireNonNull(attemptId);
         this.collectorSessionId = Objects.requireNonNull(collectorSessionId);
+        this.examWindow = Objects.requireNonNull(examWindow);
         this.realtime = Objects.requireNonNull(realtime);
         api = new SignalCapabilityApiClient(serverUrl, token);
         run = new SignalRunContext(attemptId, "exam-signals-" + UUID.randomUUID());
@@ -116,8 +123,36 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
             }
             capability = value.deepCopy();
             capabilityGeneration = expected;
-            confirm();
+            boolean activitySupported = supportsActivity(value);
+            Platform.runLater(() -> {
+                if (closed.get() || expected != capabilityGeneration
+                        || expected != realtime.connectionGeneration()) return;
+                configureActivity(activitySupported);
+                confirm();
+            });
         });
+    }
+
+    private static boolean supportsActivity(JsonObject value) {
+        if (value == null || !value.has("supportedEventTypes") || !value.get("supportedEventTypes").isJsonArray()) return false;
+        for (var item : value.getAsJsonArray("supportedEventTypes"))
+            if (item.isJsonPrimitive() && item.getAsJsonPrimitive().isString()
+                    && ActivitySignal.TYPE.equals(item.getAsString())) return true;
+        return false;
+    }
+
+    private void configureActivity(boolean supported) {
+        if (supported && activityMonitor == null && !activityRetired) {
+            activityAdapter = new ActivitySignalAdapter();
+            long generation = activityAdapter.start(run, delivery);
+            activityMonitor = FxActivityMonitor.attach(examWindow, activityAdapter, generation, Clock.systemUTC(),
+                    System::nanoTime, realtime::observationOrigin);
+        } else if (!supported && activityMonitor != null) {
+            activityMonitor.close();
+            activityMonitor = null;
+            activityAdapter = null;
+            activityRetired = true;
+        }
     }
 
     private static boolean supportsRequiredTypes(JsonObject value) {
@@ -145,6 +180,7 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
 
     @Override public void close() {
         if (!closed.compareAndSet(false, true)) return;
+        if (activityMonitor != null) activityMonitor.close();
         displayMonitor.close();
         statusEmitter.close();
         windowMonitor.close();

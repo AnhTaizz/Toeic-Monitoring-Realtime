@@ -22,6 +22,7 @@ import vn.edu.toeic.client.exam.ExamSettings;
 import vn.edu.toeic.client.exam.ScoreResultDialog;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
+import vn.edu.toeic.client.monitoring.activity.ExamActivityEvent;
 import vn.edu.toeic.protocol.exam.rich.*;
 
 /**
@@ -216,12 +217,12 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         List<RichExamModel.Unit> all = new ArrayList<>();
         model.parts().forEach(p -> all.addAll(p.units()));
         int index = all.indexOf(unit) + direction;
-        if (index >= 0 && index < all.size()) showUnit(all.get(index), null);
+        if (index >= 0 && index < all.size()) navigate(all.get(index), null);
     }
 
     private void goToQuestion(String questionId) {
         RichExamModel.Unit target = model.unitOf(questionId);
-        if (target != null) showUnit(target, questionId);
+        if (target != null) navigate(target, questionId);
     }
 
     private void buildStepper(RichExamModel.PartInfo active) {
@@ -233,7 +234,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
             Button step = new Button((done && part != active ? "✓" : String.valueOf(part.part())) + "  Part " + part.part());
             step.setId("room-step-part-" + part.part());
             step.getStyleClass().add(part == active ? "room-step-active" : done ? "room-step-done" : "room-step");
-            step.setOnAction(event -> showUnit(part.units().getFirst(), null));
+            step.setOnAction(event -> navigate(part.units().getFirst(), null));
             if (!stepper.getChildren().isEmpty()) {
                 Region line = new Region();
                 line.getStyleClass().add("room-step-line");
@@ -321,7 +322,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
             item.setId("room-group-" + other.firstNumber());
             item.setMaxWidth(Double.MAX_VALUE);
             item.getStyleClass().add(other == u ? "room-list-item-active" : "room-list-item");
-            item.setOnAction(event -> showUnit(other, null));
+            item.setOnAction(event -> navigate(other, null));
             statusRefreshers.add(() -> item.setText("Câu " + other.firstNumber() + "–" + other.lastNumber() + "   " + groupStatus(other)));
             groups.getChildren().add(item);
         }
@@ -369,7 +370,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         for (RichExamModel.Unit other : model.part(6).units()) {
             Button chip = new Button("Câu " + other.firstNumber() + " – " + other.lastNumber());
             chip.getStyleClass().add(other == u ? "room-chip-active" : "room-chip");
-            chip.setOnAction(event -> showUnit(other, null));
+            chip.setOnAction(event -> navigate(other, null));
             chips.getChildren().add(chip);
         }
         HBox strip = new HBox(16, overline("PART 6 · TEXT COMPLETION"),
@@ -414,7 +415,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
                 chip.getStyleClass().removeAll("room-chip", "room-chip-active", "room-chip-done");
                 chip.getStyleClass().add(q.id().equals(focused) ? "room-chip-active" : answered(q) ? "room-chip-done" : "room-chip");
             });
-            chip.setOnAction(event -> showUnit(u, q.id()));
+            chip.setOnAction(event -> navigate(u, q.id()));
             chips.getChildren().add(chip);
         }
         RichExamModel.Question focus = model.question(focused);
@@ -457,17 +458,32 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
             card.getStyleClass().remove("room-question-card-active");
             if (q.id().equals(focused)) card.getStyleClass().add("room-question-card-active");
         });
-        card.setOnMouseClicked(event -> { if (!q.id().equals(focused)) { focused = q.id(); refreshAnswers(); } });
+        card.setOnMouseClicked(event -> {
+            if (!q.id().equals(focused)) {
+                focused = q.id();
+                refreshAnswers();
+                ExamActivityEvent.fire(this, ExamActivityEvent.Kind.NAVIGATION);
+            }
+        });
         return card;
     }
 
     private RichContent.OptionList options(RichExamModel.Question q) {
         RichContent.OptionList list = new RichContent.OptionList(q, (question, option) -> {
             focused = question;
-            if (!session.selectAnswer(question, option)) refreshAnswers();
+            if (session.selectAnswer(question, option))
+                ExamActivityEvent.fire(this, ExamActivityEvent.Kind.ANSWER_ACTION);
+            else refreshAnswers();
         }, session::canEditQuestion);
         optionLists.put(q.id(), list);
         return list;
+    }
+
+    private void navigate(RichExamModel.Unit next, String focus) {
+        String targetFocus = focus != null ? focus : next.questions().getFirst().id();
+        if (unit == next && Objects.equals(focused, targetFocus)) return;
+        showUnit(next, focus);
+        ExamActivityEvent.fire(this, ExamActivityEvent.Kind.NAVIGATION);
     }
 
     /** Chip câu lân cận cho Part 2/5 (trạng thái lấy từ session). */
@@ -485,7 +501,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
                 chip.getStyleClass().add(other == unit ? "room-chip-active" : answered(q) ? "room-chip-done" : "room-chip");
                 chip.setText("Câu " + q.number() + (other == unit ? " · Đang xem" : answered(q) ? " · Đã chọn" : ""));
             });
-            chip.setOnAction(event -> showUnit(other, null));
+            chip.setOnAction(event -> navigate(other, null));
             chips.getChildren().add(chip);
         }
         return chips;

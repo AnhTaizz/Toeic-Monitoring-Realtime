@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 import vn.edu.toeic.protocol.monitoring.EventOrigin;
 
-/** Closed, immutable values for the MOCK experiment. No sensor registration or free-form details. */
+/** Closed, immutable values for the opt-in signal experiment. No sensor registration or free-form details. */
 public sealed interface Signal permits DisplaySignal, UsbStorageSignal, FocusSignal, WindowSignal, ActivitySignal, ObserverStatusSignal, SignalGap {
     List<String> SUPPORTED_TYPES = List.of(DisplaySignal.TYPE, "USB_STORAGE_PRESENT_AT_START",
             "USB_STORAGE_CONNECTED", "USB_STORAGE_REMOVED", FocusSignal.TYPE, WindowSignal.TYPE, ActivitySignal.TYPE,
