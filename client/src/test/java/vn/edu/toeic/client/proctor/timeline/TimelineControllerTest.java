@@ -29,6 +29,8 @@ class TimelineControllerTest {
     }
     static class Api implements DashboardApi {
         volatile Role role=Role.PROCTOR;volatile int total=350,denied;volatile boolean closed;volatile CompletableFuture<ScopeView> heldScope;
+        volatile vn.edu.toeic.protocol.audio.ListeningStatusResponse playback;
+        public CompletableFuture<vn.edu.toeic.protocol.audio.ListeningStatusResponse> listeningStatus(String attempt){return CompletableFuture.completedFuture(playback);}
         final List<String> queries=new CopyOnWriteArrayList<>();final AtomicInteger scopes=new AtomicInteger();
         public CompletableFuture<ScopeView> scope(){scopes.incrementAndGet();var h=heldScope;heldScope=null;return h==null?CompletableFuture.completedFuture(new ScopeView(role,Set.of("A","B"))):h;}
         public CompletableFuture<Roster> roster(){return CompletableFuture.completedFuture(new Roster(T,List.of(new Presence("A",1,"MOCK candidate A","ONLINE","HEARTBEAT",1,"run",T,null),new Presence("B",2,"MOCK candidate B","UNKNOWN","NEVER_SEEN",1,null,null,null))));}
@@ -107,5 +109,9 @@ class TimelineControllerTest {
         f.controller.select("A");TimelineController.Snapshot timeout=null;
         for(int n=0;n<5;n++){var s=f.updates.poll(15,TimeUnit.SECONDS);if(s!=null&&!s.loading()&&s.message().contains("ngân sách 12s")){timeout=s;break;}}
         assertThat(timeout).isNotNull();assertThat(held).isCancelled();assertThat(api.scopes).hasValue(1);f.controller.refresh();var recovered=f.ready("A");assertThat(recovered.rows()).hasSize(301);assertThat(recovered.after()).isEqualTo(300);assertThat(recovered.more()).isTrue();
+    }}
+    @Test void listeningIsAuthoritativeStateProjectionAndDedupesAcrossRefresh()throws Exception{var api=new Api();api.total=1;api.playback=new vn.edu.toeic.protocol.audio.ListeningStatusResponse("v0",null,"A","MOCK-session","MOCK-start",null,1,"INTERRUPTED",null,T,null,true,T.plusSeconds(1),"MEDIA_ERROR");try(var f=new Fixture(api)){
+        f.controller.select("A");var s=f.ready("A");assertThat(s.rows()).hasSize(3);var row=s.rows().stream().filter(r->r.type().equals("LISTENING_INTERRUPTED")).findFirst().orElseThrow();assertThat(row.observedAt()).isNull();assertThat(row.receivedAt()).isEqualTo(T.plusSeconds(1));assertThat(row.quality()).contains("interruptedAt");assertThat(row.description()).contains("không phải receivedAt");
+        f.controller.refresh();s=f.ready("A");assertThat(s.rows()).hasSize(3);assertThat(s.listeningStatus().interrupted()).isTrue();
     }}
 }

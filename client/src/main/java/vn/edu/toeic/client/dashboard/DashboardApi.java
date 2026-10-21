@@ -17,6 +17,9 @@ public interface DashboardApi extends AutoCloseable {
     default CompletableFuture<SignalHistory.Page> signals(String attempt, long after, Long through, int limit) {
         return CompletableFuture.failedFuture(new UnsupportedOperationException("Typed history unavailable"));
     }
+    default CompletableFuture<vn.edu.toeic.protocol.audio.ListeningStatusResponse> listeningStatus(String attempt) {
+        return CompletableFuture.completedFuture(null);
+    }
     default CompletableFuture<List<Gap>> gaps(String attempt) { return CompletableFuture.failedFuture(new UnsupportedOperationException("Gap API chưa được cung cấp")); }
     default CompletableFuture<MonitoringStateView> state(String attempt) {
         return CompletableFuture.failedFuture(new UnsupportedOperationException("Full state API chưa được cung cấp"));

@@ -99,6 +99,14 @@ public final class MonitoringApiClient implements DashboardApi {
         return get(attemptPath(attempt)+"/signals?limit="+limit+"&after="+after+(through==null?"":"&through="+through),
                 body -> SignalHistory.parse(body,attempt,after,through,limit),512*1024);
     }
+    @Override public CompletableFuture<vn.edu.toeic.protocol.audio.ListeningStatusResponse> listeningStatus(String attempt) {
+        attemptPath(attempt);
+        return get("attempts/"+attempt+"/listening/status",body -> {
+            var status=vn.edu.toeic.client.audio.ListeningMessages.status(body);
+            if(!attempt.equals(status.attemptId()))throw new IllegalArgumentException();
+            return status;
+        },512*1024);
+    }
     @Override public CompletableFuture<MonitoringStateView> state(String attempt) {
         return get(attemptPath(attempt)+"/state",body -> {
             MonitoringStateView value=MonitoringStateView.parse(body);

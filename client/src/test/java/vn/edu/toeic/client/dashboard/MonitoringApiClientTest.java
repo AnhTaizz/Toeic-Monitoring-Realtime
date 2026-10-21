@@ -23,6 +23,13 @@ import vn.edu.toeic.client.LoginFailedException;
 
 /** REAL local HTTP transport, MOCK response fixtures; not production server evidence. */
 class MonitoringApiClientTest {
+    @Test void listeningStatusReusesExistingParserAndRejectsOtherAttempt() throws Exception {
+        try(Fixture f=new Fixture()){
+            var body=new JsonObject();body.addProperty("protocolVersion","v0");body.addProperty("attemptId","MOCK-A");body.addProperty("sessionId","MOCK-session");body.addProperty("startId","MOCK-start");body.addProperty("writerEpoch",1);body.addProperty("phase","INTERRUPTED");body.addProperty("playbackStartedAt",TIME.toString());body.addProperty("interrupted",true);body.addProperty("interruptedAt",TIME.toString());body.addProperty("interruptionReason","MEDIA_ERROR");
+            f.body.set(body.toString());assertThat(f.api.listeningStatus("MOCK-A").get(3,TimeUnit.SECONDS).interruptedAt()).isEqualTo(TIME);assertThat(f.path.get()).isEqualTo("/api/v1/attempts/MOCK-A/listening/status");assertThat(f.authorization.get()).isEqualTo("Bearer MOCK-token-only");
+            assertThatThrownBy(()->f.api.listeningStatus("MOCK-B").join()).hasCauseInstanceOf(InvalidServerResponseException.class);
+        }
+    }
     @Test void typedHistoryUsesHeaderAndFixedThroughAndTighterBodyCap() throws Exception {
         try(Fixture f=new Fixture()){
             JsonObject body=response();body.addProperty("schemaVersion",1);body.addProperty("attemptId","MOCK-A");body.addProperty("afterSequence",0);body.addProperty("throughSequence",0);body.addProperty("hasMore",false);body.add("nextAfterSequence",com.google.gson.JsonNull.INSTANCE);body.add("items",new JsonArray());

@@ -44,4 +44,7 @@ class SignalHistoryTest {
         var later=new TimelineRows.Row("signal:A:s","A","JAVAFX_DISPLAY","DISPLAY_COUNT_OBSERVED","MOCK",T.minusSeconds(5000),T.plusSeconds(1),"COMPLETE",1,false,false);
         assertThat(TimelineRows.merge(List.of(early),List.of(later),500)).containsExactly(later,early);
     }
+    @Test void listeningWithoutServerInterruptionTimeCannotInventTimelineTimestamp(){
+        var state=new vn.edu.toeic.protocol.audio.ListeningStatusResponse("v0",null,"A","MOCK-session","MOCK-start",null,1,"INTERRUPTED",null,T,null,true,null,"MEDIA_ERROR");assertThat(TimelineRows.listening(state)).isEmpty();
+    }
 }

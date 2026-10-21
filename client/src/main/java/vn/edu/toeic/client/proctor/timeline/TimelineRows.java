@@ -52,4 +52,11 @@ public final class TimelineRows {
         for(var list:List.of(a,b)) for(var row:list) {var old=unique.putIfAbsent(row.key(),row);if(old!=null&&!old.equals(row))throw new IllegalArgumentException("Conflicting history identity");}
         return unique.values().stream().sorted(ORDER).limit(maximum).toList();
     }
+    /** Existing state projection, not a new event stream or a fabricated receivedAt. */
+    public static List<Row> listening(vn.edu.toeic.protocol.audio.ListeningStatusResponse status) {
+        if(status==null||!status.interrupted()||status.interruptedAt()==null)return List.of();
+        String reason=Set.of("NETWORK_LOST","MEDIA_ERROR","HEARTBEAT_TIMEOUT","SERVER_RESTART").contains(Objects.toString(status.interruptionReason(),""))?status.interruptionReason():"Lý do chưa được hỗ trợ";
+        return List.of(new Row("listening-state:"+status.attemptId()+":"+status.startId()+":"+status.interruptedAt(),status.attemptId(),"SERVER_LISTENING_STATE","LISTENING_INTERRUPTED",
+                "Server báo Listening gián đoạn: "+reason+". Giờ server là interruptedAt của trạng thái; không phải receivedAt gói tin hoặc lịch sử phát đầy đủ.",null,status.interruptedAt(),"SERVER_STATE / interruptedAt",0,false,false));
+    }
 }
