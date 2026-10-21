@@ -10,6 +10,8 @@ Chạy từ main đã xác minh, dùng hai ứng dụng production JAR/JVM riên
 
 Có thể truyền `-JavaHome` và `-PostgresBin`. Runner hiện có tạo cluster/database TEST loopback với SCRAM, mật khẩu ngẫu nhiên, không đọc `.env`/DB dev. Build JAR từ HEAD sạch, ghi SHA/hash trong `target/usb-integrated-*/desktop-build-receipt.json`; bật signal/alert experiment cho các process demo, FULL giữ mặc định, defaults repository không đổi. Không tạo installer/kit khác.
 
+Nếu PowerShell hiện chặn script, dùng `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\demo-mon08-alerts.ps1 -Desktop` (chỉ process này, không đổi policy hệ thống). `-JavaHome` cần trỏ tới JDK21 nếu chưa đặt JAVA_HOME.
+
 Hai cửa sổ app và Notepad hướng dẫn/credential TEST sẽ mở. Mật khẩu chỉ dùng cục bộ trong lượt chạy, không công bố file private. Cùng bản JAR, hai JVM độc lập; app thứ nhất dùng candidate1, app thứ hai proctor1.
 
 1. Đăng nhập, candidate chọn attempt `DESKTOP-…-candidate1`, bấm **Bắt đầu giám sát**, sau đó **Vào phòng thi & làm bài** để gắn observer focus/window/display/activity đúng phạm vi màn thi.
