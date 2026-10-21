@@ -80,9 +80,17 @@ class MonitoringTimelinePostgresTest {
             try(var api=new MonitoringApiClient(base,proctor)){
                 waitFor("minimize transition reaches committed history",()->api.signals(a,0,null,100).join().items().stream().anyMatch(e->e.signal() instanceof WindowSignal w&&w.minimized()));
                 var page=api.signals(a,0,null,100).get(8,TimeUnit.SECONDS);assertThat(page.items()).isNotEmpty().allSatisfy(e->assertThat(e.signal().observerSessionId()).isEqualTo(collector));assertThat(page.items()).anyMatch(e->e.signal() instanceof DisplaySignal);committedTypes=page.items().stream().map(e->e.signal().eventType()).distinct().sorted().toList();
+                waitFor("restore commits before reconnect boundary",()->api.signals(a,0,null,100).join().items().stream().filter(e->e.signal() instanceof WindowSignal).reduce((x,y)->y).map(e->!((WindowSignal)e.signal()).minimized()).orElse(false));
+                long before=api.signals(a,0,null,100).get(5,TimeUnit.SECONDS).through();
+                rt.disconnect();rt.connect(new RealtimeClient.Session(Set.of(a),null,null)).get(8,TimeUnit.SECONDS);
+                // Production coordinator owns capability refresh; no test-side confirmSignalExperiment here.
+                waitFor("production FX coordinator confirms fresh socket capability",()->rt.signalExperimentReady(a));
+                fx(()->{candidateStage.setIconified(true);return null;});
+                waitFor("new FX transition commits after reconnect with original collector lease",()->api.signals(a,before,null,100).join().items().stream().anyMatch(e->e.signal() instanceof WindowSignal w&&w.minimized()&&w.observerSessionId().equals(collector)));
+                fx(()->{candidateStage.setIconified(false);return null;});
             }
             fx(()->{monitor.close();return null;});assertThat(monitor.awaitStopped(Duration.ofSeconds(3))).isTrue();long accepted=monitor.deliveryStatus().acknowledged();fx(()->{candidateStage.setIconified(true);return null;});assertThat(monitor.deliveryStatus().active()).isFalse();assertThat(monitor.deliveryStatus().acknowledged()).isEqualTo(accepted);
-            results.add(Map.of("kind","REAL_JAVAFX","activation","Stage property API, not OS input","collectorIdentity","COMMIT_ACK_VERIFIED","committedTypes",committedTypes,"deliveryWorkerStopped",true,"acknowledged",monitor.deliveryStatus().acknowledged(),"discarded",monitor.deliveryStatus().discarded(),"dropped",monitor.deliveryStatus().dropped(),"hardware","NOT_RUN"));
+            results.add(Map.of("kind","REAL_JAVAFX","activation","Stage property API, not OS input","collectorIdentity","COMMIT_ACK_VERIFIED","committedTypes",committedTypes,"deliveryWorkerStopped",true,"acknowledged",monitor.deliveryStatus().acknowledged(),"discarded",monitor.deliveryStatus().discarded(),"dropped",monitor.deliveryStatus().dropped(),"hardware","NOT_RUN","freshReconnectCapability",true));
         }finally{if(previous==null)System.clearProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,previous);}
     }
     Map<String,String> twoScopes()throws Exception{
