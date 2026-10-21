@@ -484,5 +484,45 @@
       "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
     }
   ],
-  "uncertainty": "Historical broad allProcesses app event/FULL-ACK failures lack conclusive diagnostics; later isolated PASS is not a root-cause proof. Current fixture reads only owned ProcessHandle through the existing supplier seam. Production host-wide metadata latency/OS acceptance remains outside this TEST result."
+  "uncertainty": "Historical broad allProcesses app event/FULL-ACK failures lack conclusive diagnostics; later isolated PASS is not a root-cause proof. Current fixture reads only owned ProcessHandle through the existing supplier seam. Production host-wide metadata latency/OS acceptance remains outside this TEST result.",
+  "supplementalProductionFxReconnect": {
+    "sourceSha": "a12d34929be0360942ce61e4762b481683d5273d",
+    "dirty": false,
+    "runtimeAndScriptsIdenticalToBuildSource": true,
+    "samePackagedMainOutputFiles": 674,
+    "runId": "usb-cf83c4f191e14542",
+    "tests": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "results": [
+      {
+        "deliveryWorkerStopped": true,
+        "kind": "REAL_JAVAFX",
+        "collectorIdentity": "COMMIT_ACK_VERIFIED",
+        "acknowledged": 11,
+        "freshReconnectCapability": true,
+        "hardware": "NOT_RUN",
+        "dropped": 0,
+        "discarded": 2,
+        "activation": "Stage property API, not OS input",
+        "committedTypes": [
+          "DISPLAY_COUNT_OBSERVED",
+          "EXAM_ACTIVITY_SUMMARY",
+          "EXAM_FOCUS_CHANGED",
+          "EXAM_WINDOW_STATE",
+          "OBSERVER_STATUS"
+        ]
+      }
+    ],
+    "cleanup": {
+      "ownedSchemasRemaining": 0,
+      "clusterStopExit": 0,
+      "postmasterPidAbsent": true
+    },
+    "rawResultSha256": "02bc87fb88320070b77157efa6481e57bc3bf5d51929ea8f8a02abed6a73deb3",
+    "rawAccess": "LOCAL_IGNORED_NOT_UPLOADED"
+  }
 }

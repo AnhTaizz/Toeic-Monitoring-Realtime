@@ -5,7 +5,7 @@
 ## Bản được kiểm
 
 - Base main `65fa83b73d1c11ffc2257345cb94359cf4521cdf`, đã fetch; worktree/branch `test/monitoring-integrated-20261021`. Các PR EX/UI chưa merge không được nhập.
-- Source/build/test cuối `dffa22729434d3d95d67c225ebd035d24d1b3b8d`, dirty=false. Runtime thay đổi lần cuối `51e65dc`; những commit sau chỉ test/diagnostic và cô lập source TEST theo owned handle. Main/merge/publication HEAD thực tế được ghi trong PR, không gán JAR này cho SHA merge mới.
+- Source/build/common campaign `dffa22729434d3d95d67c225ebd035d24d1b3b8d`, dirty=false. Supplemental FX reconnect test tại `a12d34929be0360942ce61e4762b481683d5273d`; runtime/script không đổi, 674 output main vẫn bằng JAR build dffa227. Runtime thay đổi lần cuối `51e65dc`; những commit sau chỉ test/diagnostic và cô lập source TEST theo owned handle. Main/merge/publication HEAD thực tế được ghi trong PR, không gán JAR này cho SHA merge mới.
 - Windows NT10.0.26200.0, Temurin21.0.10+7, Maven3.9.15, JavaFX21.0.12, Spring Boot4.1.1, PostgreSQL18.3, host PowerShell5.1.26100.9711. Diagnostics provider sau close là UNKNOWN, không suy privilege/runtime từ host shell.
 - Cùng reactor classpath/output cho candidate, proctor, candidate2; Spring chạy trong JUnit, không tuyên bố đã launch packaged server/client JAR. Sau đó `mvn verify` tạo bốn JAR mới; **674 file class/resource** bằng byte với output biên dịch, bridge TEST/CIM không vào runtime client/server. [Receipt/hashes](receipt.json); JAR/raw lớn chỉ local ignored, không có link tải GitHub giả.
 - [Ma trận MON01–09, owners/methods, production opt-in vs TEST, runbook và thiếu nghiệm thu](../../docs/MONITORING_INTEGRATION.md).
@@ -36,6 +36,10 @@ Pending/drop được giữ đúng nghĩa: first run quiesced/drained có0 uncon
 **Phần chưa biết:** các lượt `joint-mock-app-root` và `joint-real-final` trên fixture cũ đọc allProcesses rồi lọc PID có failure chờ process event/FULL ACK; lúc đó chưa có diagnostic đầy đủ, nguyên nhân chính xác **chưa chứng minh**. Case riêng hoặc rerun có diagnostic PASS không chứng minh đã tìm nguyên nhân. Fixture cuối dùng owned handle từ đầu đúng yêu cầu TEST, thêm bounded safe status/count/latency diagnostics; không sửa production ProcessHandle enumerator/timeout hoặc tuyên bố đã sửa một lỗi latency host-wide. Giữ lịch sử/limits này để owner xem; kết quả trên không nghiệm thu startup/metadata host-wide production.
 
 Fixture mới cũng giữ log compile lỗi import/Scene lookup; Display count>32 bị parser từ chối, confirm-before-heartbeat bị guard từ chối, enum-vs-string assertion sai. Đã sửa fixture đúng contract; không nới validator, không đổi READY thành ERROR, không skip hoặc retry mù. Receipt liệt kê hashes các FAIL, raw không được sửa/xóa.
+
+## Producer reconnect bổ sung
+
+Source a12d349, run usb-cf83c4f191e14542:1 PASS/0 skip bằng runner cũ `demo-usb-integrated.ps1 -Mode Mock -Timeline -TimelineIdentityOnly -ViewSeconds 0`. Production `CandidateExamSignalMonitoring` tự refresh HTTP capability + scoped heartbeat/lease sau disconnect/connect loopback; **không test-side confirmSignalExperiment**. Window transition mới được COMMIT/đọc từ cursor sau boundary với cùng collector identity. ACK11, discarded unconfirmed2 khi close, dropped0; owned worker/readers/PG/schema dọn. Đây là mở rộng1case đã có, không cộng thành một campaign/testcase mới. Các lượt4case hai mode phía trên vẫn ghi đúng source dffa227, không đổi nhãn sang source supplemental. Receipt phân biệt hai nguồn test và build.
 
 ## Verification và cleanup
 
