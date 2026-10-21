@@ -302,7 +302,7 @@ class MonitoringTimelinePostgresTest {
                 screenshot(dash,"joint-coverage");viewTime();
                 get("/api/v1/monitoring/attempts/"+a+"/signals",tokenB,403);get("/api/v1/monitoring/attempts/"+a+"/alert-summary",candidate,403);
                 String oldEpoch=first.process.fullStatus().syncEpoch();first.close();long accepted=first.delivery.status().acknowledged();int polls=first.polls.get();
-                try(var restarted=new JointMonitoringRun(this,a,candidate,candidateStage,workload.child.pid())){
+                var restarted=new JointMonitoringRun(this,a,candidate,candidateStage,workload.child.pid());try(restarted){
                     assertThat(restarted.run.observerSessionId()).isNotEqualTo(first.run.observerSessionId());
                     fx(()->{ExamActivityEvent.fire(candidateStage,ExamActivityEvent.Kind.ANSWER_ACTION);return null;});
                     waitFor("new run commits a fresh baseline",()->restarted.delivery.status().acknowledged()>0);
@@ -311,6 +311,7 @@ class MonitoringTimelinePostgresTest {
                     assertThat(first.polls.get()).isEqualTo(polls);assertThat(first.delivery.status().acknowledged()).isEqualTo(accepted);
                     assertThat(first.run.active()).isFalse();assertThat(restarted.process.modeStatus().mode()).isEqualTo("FULL");
                 }
+                actual.put("firstRunDiscardedUnconfirmed",first.delivery.status().discarded());actual.put("restartDiscardedUnconfirmed",restarted.delivery.status().discarded());
                 // Actual assignment revoke fixture: denies only proctor A; B remains available, never grants scope.
                 jdbc.sql("DELETE FROM monitoring_proctor_assignments WHERE attempt_id=:a").param("a",a).update();
                 get("/api/v1/monitoring/attempts/"+a+"/signals",proctor,403);assertThat(api.signals(b,0,null,100).get(5,TimeUnit.SECONDS).items()).hasSize(1);
@@ -356,7 +357,7 @@ class MonitoringTimelinePostgresTest {
                         get("/api/v1/monitoring/attempts/"+a+"/signals",proctor,403);get("/api/v1/monitoring/attempts/"+a+"/alert-summary",proctor,403);
                         assertThat(get("/api/v1/attempts/"+a+"/status",token,200).get("state").getAsString()).isEqualTo(action.equals("SUBMIT")?"SUBMITTED":"TIMED_OUT");
                     }
-                    results.add(Map.of("kind","PRODUCTION_OPT_IN_LIFECYCLE","action",action,"actualServerDenial",true,"processSource","MOCK empty; real collector workers","typedWorkerStopped",true,"hardware","NOT_RUN"));
+                    results.add(Map.of("kind","PRODUCTION_OPT_IN_LIFECYCLE","action",action,"actualServerDenial",true,"processSource","MOCK empty; real collector workers","typedWorkerStopped",true,"typedDiscardedUnconfirmed",monitor.deliveryStatus().discarded(),"typedAcknowledged",monitor.deliveryStatus().acknowledged(),"typedDropped",monitor.deliveryStatus().dropped(),"hardware","NOT_RUN"));
                 }finally{fx(()->{monitor.close();return null;});process.stop().stopped().get(8,TimeUnit.SECONDS);process.close();rt.close();}
             }
         }finally{if(previous==null)System.clearProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,previous);}
@@ -374,7 +375,13 @@ class MonitoringTimelinePostgresTest {
             waitCandidateControls(s,a);
             fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Bắt đầu giám sát").fire();return null;});
             waitFor("candidate A FULL acknowledged from actual start control",()->probe.sessions.size()==1&&probe.sessions.getFirst().fullStatus()!=null&&probe.sessions.getFirst().fullStatus().acknowledgedSequence()>0);
-            waitFor("initial process event committed before stop",()->api.events(a).join().size()==1);
+            try{waitFor("initial process event committed before stop",()->api.events(a).join().size()==1);}
+            catch(AssertionError missing){
+                var selected=fx(()->((ComboBox<?>)s.getScene().lookup("#candidate-attempts")).getValue().toString());
+                var session=probe.sessions.getFirst();var state=api.state(a).get(5,TimeUnit.SECONDS);var status=session.status();
+                var diagnosis=new LinkedHashMap<String,Object>();diagnosis.put("sourceSha",required("TOEIC_USB_TEST_SOURCE"));diagnosis.put("selectedMatchesRequested",selected.equals(a));diagnosis.put("requestedAttemptRows",api.events(a).get(5,TimeUnit.SECONDS).size());diagnosis.put("selectedAttemptRows",api.events(selected).get(5,TimeUnit.SECONDS).size());diagnosis.put("requestedState",state.status());diagnosis.put("processProblem",status.problem());diagnosis.put("processPending",status.pendingEvents());diagnosis.put("processAcknowledged",status.acknowledged());diagnosis.put("ownedWorkloadAlive",workload.child.isAlive());diagnosis.put("polls",probe.polls.get());
+                Files.writeString(Path.of(required("TOEIC_USB_TEST_OUTPUT"),"application-diagnostic.private.json"),JSON.toJson(diagnosis));throw missing;
+            }
             var first=probe.sessions.getFirst();String oldRun=first.collectorSessionId(),oldEpoch=first.fullStatus().syncEpoch();
             fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Dừng giám sát").fire();return null;});
             waitFor("stop control waits for owned collector termination",()->probe.stops.get()==1&&!first.isActive());
