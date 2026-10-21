@@ -288,7 +288,7 @@ class MonitoringTimelinePostgresTest {
                     if(first.usb.status().health()==UsbSignalAdapter.Health.READY&&Integer.valueOf(0).equals(first.usb.status().storageCount()))assertThat(all).noneMatch(e->e.signal() instanceof UsbStorageSignal);
                 }else{
                     assertThat(all.stream().filter(e->e.signal() instanceof UsbStorageSignal).map(e->e.signal().eventType())).containsExactly("USB_STORAGE_PRESENT_AT_START","USB_STORAGE_CONNECTED","USB_STORAGE_REMOVED");
-                    assertThat(all).anyMatch(e->e.signal() instanceof ObserverStatusSignal s&&s.source().equals("WINDOWS_USB_STORAGE")&&s.status().equals("ERROR"));
+                    assertThat(all).anyMatch(e->e.signal() instanceof ObserverStatusSignal s&&s.source().equals("WINDOWS_USB_STORAGE")&&s.status()==ObserverStatusSignal.State.ERROR);
                 }
                 var summary=api.alerts(a).get(5,TimeUnit.SECONDS);
                 assertThat(summary.sourceLimited()).contains("SIGNAL");assertThat(summary.inputEvents()).isLessThan(all.size()+1);
@@ -315,8 +315,10 @@ class MonitoringTimelinePostgresTest {
                 get("/api/v1/monitoring/attempts/"+a+"/signals",proctor,403);assertThat(api.signals(b,0,null,100).get(5,TimeUnit.SECONDS).items()).hasSize(1);
                 fx(()->{((Button)dash.view.lookup("#multi-refresh")).fire();return null;});waitFor("scope revoke clears selected private data",()->{try{return rows(dash).stream().noneMatch(r->r.attempt().equals(a))&&alertRows(dash).stream().noneMatch(r->r.attempt().equals(a));}catch(Exception e){throw new RuntimeException(e);}});
                 actual.put("firstRunTypedCommitted",all.size());actual.put("processEvents",1);actual.put("actualOverflowDrops",dropped);actual.put("rawCursorPages",(all.size()+2)/3);actual.put("summaryInputEvents",summary.inputEvents());
+                actual.put("committedTypes",all.stream().map(e->e.signal().eventType()).distinct().sorted().toList());actual.put("reportedDisplayCounts",all.stream().filter(e->e.signal() instanceof DisplaySignal).map(e->((DisplaySignal)e.signal()).count()).distinct().sorted().toList());
                 actual.put("sharedSequenceUnique",true);actual.put("stopRestart",true);actual.put("realReconnect",true);actual.put("assignmentRevokeIsolated",true);
                 actual.put("usbHealth",first.usb.status().health().name());actual.put("usbStorageCount",String.valueOf(first.usb.status().storageCount()));actual.put("USBScans",first.usb.status().scans());
+                if(first.usbSource instanceof CimUsbScanSource cim){actual.put("privilege",cim.privilege());actual.put("powershellRuntime",cim.runtime());}
                 actual.put("usbChildren",first.usbSource.status().childrenAlive());actual.put("pipeReadersTerminated",first.usbSource.status().readersTerminated());actual.put("heartbeatFullAckContinues",true);
                 results.add(actual);
             }
