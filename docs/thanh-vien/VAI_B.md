@@ -453,3 +453,12 @@ same-pulse debounce và dispose cleanup; observer không ép focus/fullscreen ha
 Focused55PASS; full clean1210PASS/144SKIP/0FAIL/ERROR.
 [Thiết kế/runbook](../MON04_WINDOW_STATE_MONITORING.md), [evidence](../../evidence/v2-b-mon04-window-20261020/REPORT.md).
 Manual Stage/REAL WS-PG và review C NOT RUN; không đánh dấu DONE.
+
+## MON-05 — bàn giao display monitoring, 20/10/2026
+
+Nhánh `feat/v2-b-mon05-display-monitoring-20261020` stacked trên MON-04 `0ae71bf`.
+JavaFX Screen count có baseline INITIAL, CHANGED dedupe, polling hữu hạn 1–30 giây, cleanup
+và status READY/UNKNOWN/UNSUPPORTED/ERROR dùng chung run/sequence/queue với focus/window.
+Full clean 1219PASS/144SKIP/0FAIL/ERROR; 9 case MON-05 trực tiếp là MOCK/TEST seam.
+[Thiết kế/runbook](../MON05_DISPLAY_MONITORING.md), [evidence](../../evidence/v2-b-mon05-display-20261020/REPORT.md).
+Cắm/rút màn hình thứ hai, REAL WS-HTTP-PG/proctor và review C NOT RUN; không đánh dấu DONE.

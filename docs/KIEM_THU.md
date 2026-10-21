@@ -1,5 +1,11 @@
 # Trạng thái kiểm thử
 
+20/10/2026 — [MON-05 display monitoring](../evidence/v2-b-mon05-display-20261020/REPORT.md):
+nhánh stacked trên MON-04 `0ae71bf`; 9 case MON-05 trực tiếp kiểm tra baseline/change/dedupe,
+polling 1–30 giây, lỗi UNKNOWN/UNSUPPORTED/ERROR, recovery và disposal. Full clean test 1363 total
+= 1219PASS/144SKIP/0FAIL/ERROR. Supplier/clock/callback là MOCK; cắm/rút màn hình thứ hai,
+REAL WS-HTTP-PG/proctor và review C NOT RUN nên chưa đánh dấu MON-05 DONE.
+
 20/10/2026 — [MON-04 window state](../evidence/v2-b-mon04-window-20261020/REPORT.md):
 nhánh stacked trên MON-03 `d5c568a`; focused 55PASS/0SKIP, gồm 8 case window trực tiếp
 và 1 shared-claim case mới. Full clean test 1354 total = 1210PASS/144SKIP/0FAIL/ERROR.

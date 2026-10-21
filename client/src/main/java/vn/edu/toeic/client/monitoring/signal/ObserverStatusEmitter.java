@@ -7,7 +7,7 @@ import vn.edu.toeic.protocol.monitoring.EventOrigin;
 import vn.edu.toeic.protocol.monitoring.signal.*;
 import vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal.*;
 
-/** Explicit MOCK input, one latest status per supported source. No scheduler, provider or transport ownership. */
+/** Classified observer-health input, one latest status per supported source. No scheduler, provider or transport ownership. */
 public final class ObserverStatusEmitter implements AutoCloseable {
     public static final long MIN_INTERVAL_NANOS = 1_000_000_000L;
     public record Emission(SignalMessage message, boolean queued) { }
