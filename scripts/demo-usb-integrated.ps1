@@ -13,12 +13,14 @@ param(
     [switch]$Timeline,
     [switch]$TimelineIdentityOnly,
     [switch]$AlertRules,
+    [switch]$Integrated,
     [ValidateRange(0,120)][int]$ViewSeconds=20
 )
 $ErrorActionPreference='Stop'
 $repo=if($PSScriptRoot){[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))}else{[IO.Path]::GetFullPath((Get-Location).Path)}
 if(-not(Test-Path -LiteralPath (Join-Path $repo 'pom.xml'))){throw 'Run from repository root'}
-if($AlertRules -and ($Mode -ne 'Mock' -or -not $Timeline)){throw 'Alert demo requires explicit MOCK timeline'}
+if($AlertRules -and (($Mode -ne 'Mock' -and -not $Integrated) -or -not $Timeline)){throw 'Alert demo requires MOCK timeline or explicit integrated TEST'}
+if($Integrated -and (-not $AlertRules -or -not $Timeline -or $TimelineIdentityOnly)){throw 'Integrated TEST requires timeline and alert rules'}
 if($Mode -eq 'Real' -and -not $ReadUsbStorage){throw 'REAL source requires explicit -ReadUsbStorage'}
 if($Mode -eq 'Mock' -and $ReadUsbStorage){throw 'Do not mix REAL permission with MOCK mode'}
 if(-not $MavenRepository){$MavenRepository=Join-Path ([Environment]::GetFolderPath('UserProfile')) '.m2\repository'}
@@ -34,7 +36,7 @@ if(-not(Test-Path -LiteralPath (Join-Path $JavaHome 'bin\java.exe'))){throw 'Jav
 New-Item -ItemType Directory -Path $out|Out-Null
 $utf8=New-Object Text.UTF8Encoding($false)
 $saved=@{};$started=$false;$mavenProcess=$null;$exitCode=1;$failedType=$null;$cleanup=@{};$start=[DateTime]::UtcNow.ToString('o')
-$names=@('JAVA_HOME','PATH','DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','PGPASSWORD','TOEIC_SEED_PASSWORD','TOEIC_PG_INTEGRATION','TOEIC_PROCTOR_GUI','TOEIC_PACKAGED_CLIENT','TOEIC_INSTALLED_CLIENT','JAVA_TOOL_OPTIONS','JDK_JAVA_OPTIONS','_JAVA_OPTIONS','TOEIC_USB_TEST_RUN_ID','TOEIC_USB_TEST_OUTPUT','TOEIC_USB_TEST_SOURCE','TOEIC_USB_REAL_CIM','TOEIC_USB_PROVIDER','TOEIC_USB_DURATION_SECONDS','TOEIC_USB_CADENCE_MILLIS','TOEIC_USB_TIMEOUT_MILLIS','TOEIC_MON09_GUI','TOEIC_MON09_VIEW_SECONDS','TOEIC_MON08_TEST')
+$names=@('JAVA_HOME','PATH','DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','PGPASSWORD','TOEIC_SEED_PASSWORD','TOEIC_PG_INTEGRATION','TOEIC_PROCTOR_GUI','TOEIC_PACKAGED_CLIENT','TOEIC_INSTALLED_CLIENT','JAVA_TOOL_OPTIONS','JDK_JAVA_OPTIONS','_JAVA_OPTIONS','TOEIC_USB_TEST_RUN_ID','TOEIC_USB_TEST_OUTPUT','TOEIC_USB_TEST_SOURCE','TOEIC_USB_REAL_CIM','TOEIC_USB_PROVIDER','TOEIC_USB_DURATION_SECONDS','TOEIC_USB_CADENCE_MILLIS','TOEIC_USB_TIMEOUT_MILLIS','TOEIC_MON09_GUI','TOEIC_MON09_VIEW_SECONDS','TOEIC_MON08_TEST','TOEIC_MON_INTEGRATED')
 foreach($name in $names){$saved[$name]=[Environment]::GetEnvironmentVariable($name,'Process')}
 $env:JAVA_HOME=$JavaHome;$env:PATH=(Join-Path $JavaHome 'bin')+';'+$env:PATH
 $env:DB_HOST='127.0.0.1';$env:DB_PORT=[string](Get-Random -Minimum 30000 -Maximum 39000);$env:DB_NAME='toeic_usb_test_'+$runId.Substring(4);$env:DB_USER='usb_demo_test'
@@ -44,6 +46,7 @@ $env:TOEIC_USB_REAL_CIM=if($Mode -eq 'Real'){'true'}else{'false'};$env:TOEIC_USB
 $env:TOEIC_USB_DURATION_SECONDS=[string]$DurationSeconds;$env:TOEIC_USB_CADENCE_MILLIS=[string]$CadenceMillis;$env:TOEIC_USB_TIMEOUT_MILLIS=[string]$QueryTimeoutMillis
 foreach($name in @('TOEIC_PROCTOR_GUI','TOEIC_PACKAGED_CLIENT','TOEIC_INSTALLED_CLIENT','JAVA_TOOL_OPTIONS','JDK_JAVA_OPTIONS','_JAVA_OPTIONS')){[Environment]::SetEnvironmentVariable($name,$null,'Process')}
 $env:TOEIC_MON08_TEST=if($AlertRules){'true'}else{'false'}
+$env:TOEIC_MON_INTEGRATED=if($Integrated){'true'}else{'false'}
 $env:TOEIC_MON09_GUI=if($Timeline){'true'}else{'false'};$env:TOEIC_MON09_VIEW_SECONDS=[string]$ViewSeconds
 $pgdata=Join-Path $out 'pgdata'
 function Native([string]$exe,[string]$arguments,[string]$label,[string]$inputText,[switch]$NoCapture){
@@ -80,6 +83,7 @@ try{
     $methods=if($Mode -eq 'Real'){'realCimReadinessCommitAckAndHistory'}else{'mockCoordinatorTimelineCommitAckLossAndPagedHistory+actualRevokeCancelsPendingSourceAndCannotFlushNewEvents+businessDeadlineStopsCoordinatorUsingRealScopedHeartbeat+coordinatorStatusCommitFaultRollsBackThenRetriesSameMessage'}
     $tests='UsbIntegratedDemoPostgresTest#'+$methods
     if($Timeline){$methods=if($AlertRules){'experimentalAlertsReachDashboard'}elseif($TimelineIdentityOnly){'candidateObserversReachAuthorizedLane'}elseif($Mode -eq 'Real'){'realCimStatusReachesDashboard'}else{'mixedMockDeliveryReachesTwoAttemptDashboard'};$tests='MonitoringTimelinePostgresTest#'+$methods}
+    if($Integrated){$tests='MonitoringTimelinePostgresTest#allExistingSourcesShareRunAndReachHistoryTimelineAndAlerts+candidateObserversReachAuthorizedLane+productionObserversRetireOnTerminalAndRevoke'}
     $mavenProcess=New-Object Diagnostics.Process;$mavenProcess.StartInfo.FileName=$env:ComSpec
     $mavenProcess.StartInfo.Arguments='/d /s /c ""'+$maven+'" --batch-mode --no-transfer-progress -Duser.timezone=UTC -Dmaven.repo.local="'+$MavenRepository+'" -pl server -am -Dtest='+$tests+' -Dsurefire.failIfNoSpecifiedTests=false test"'
     $mavenProcess.StartInfo.WorkingDirectory=$repo;$mavenProcess.StartInfo.UseShellExecute=$false;$mavenProcess.StartInfo.CreateNoWindow=$true;$mavenProcess.StartInfo.RedirectStandardOutput=$true;$mavenProcess.StartInfo.RedirectStandardError=$true

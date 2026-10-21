@@ -38,6 +38,7 @@ public final class UsbScanCoordinator implements AutoCloseable {
     private final Source source;private final Settings settings;private final SignalRunContext run;
     private final SignalDelivery delivery;private final MonitoringTransport transport;private final Clock clock;private final Audit audit;
     private final UsbSignalAdapter adapter=new UsbSignalAdapter();private final ObserverStatusEmitter statuses;
+    private final boolean ownsStatuses;
     private final ScheduledThreadPoolExecutor scanner=executor("toeic-usb-test-scan"),control=executor("toeic-usb-test-control");
     private final AutoCloseable connections;
     private boolean started,active,cleanupScheduled;private long generation,scanGeneration,statusGeneration,socket,scans;
@@ -47,10 +48,18 @@ public final class UsbScanCoordinator implements AutoCloseable {
         this(source,settings,run,delivery,transport,Clock.systemUTC(),System::nanoTime,audit);
     }
     public UsbScanCoordinator(Source source,Settings settings,SignalRunContext run,SignalDelivery delivery,MonitoringTransport transport,Clock clock,LongSupplier ticker,Audit audit){
+        this(source,settings,run,delivery,transport,clock,audit,new ObserverStatusEmitter(ticker),0,true);
+    }
+    /** TEST composition: borrow the single status owner already shared with display; do not stop it. */
+    public UsbScanCoordinator(Source source,Settings settings,SignalRunContext run,SignalDelivery delivery,MonitoringTransport transport,Audit audit,ObserverStatusEmitter statuses,long statusGeneration){
+        this(source,settings,run,delivery,transport,Clock.systemUTC(),audit,statuses,statusGeneration,false);
+    }
+    private UsbScanCoordinator(Source source,Settings settings,SignalRunContext run,SignalDelivery delivery,MonitoringTransport transport,Clock clock,Audit audit,ObserverStatusEmitter statuses,long statusGeneration,boolean ownsStatuses){
         this.source=Objects.requireNonNull(source);this.settings=Objects.requireNonNull(settings);this.run=Objects.requireNonNull(run);
         this.delivery=Objects.requireNonNull(delivery);this.transport=Objects.requireNonNull(transport);this.clock=Objects.requireNonNull(clock);this.audit=Objects.requireNonNull(audit);
-        statuses=new ObserverStatusEmitter(ticker);
+        this.statuses=Objects.requireNonNull(statuses);this.statusGeneration=statusGeneration;this.ownsStatuses=ownsStatuses;
         if(!delivery.usesContext(run))throw new IllegalArgumentException("Shared context delivery required");
+        if(!ownsStatuses&&!statuses.usesContext(run,delivery,statusGeneration))throw new IllegalArgumentException("Fresh shared status owner required");
         connections=transport.onConnectionState(state->{if(state!=ConnectionState.CONNECTED)requestStop("CONNECTION_CHANGED");});
     }
     private static ScheduledThreadPoolExecutor executor(String name){var e=new ScheduledThreadPoolExecutor(1,r->{var t=new Thread(r,name);t.setDaemon(true);return t;});e.setRemoveOnCancelPolicy(true);e.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);return e;}
@@ -58,7 +67,8 @@ public final class UsbScanCoordinator implements AutoCloseable {
         boolean ready=transport.signalExperimentReady(run.attemptId());long current=transport.connectionGeneration();
         synchronized(lock){
             if(started||cleanupScheduled||!ready||!run.active()||!delivery.status().active())throw new IllegalStateException("Fresh authorized lane required");
-            started=true;socket=current;scanGeneration=adapter.start(run,delivery);statusGeneration=statuses.start(run,delivery);
+            if(!ownsStatuses&&!statuses.usesContext(run,delivery,statusGeneration))throw new IllegalStateException("Shared status owner stopped");
+            started=true;socket=current;scanGeneration=adapter.start(run,delivery);if(ownsStatuses)statusGeneration=statuses.start(run,delivery);
             active=true;stoppedReason="NONE";generation++;long expected=generation;
             scanner.scheduleWithFixedDelay(()->scan(expected),0,settings.cadence().toMillis(),TimeUnit.MILLISECONDS);
             control.scheduleWithFixedDelay(()->flush(expected),100,100,TimeUnit.MILLISECONDS);
@@ -100,7 +110,7 @@ public final class UsbScanCoordinator implements AutoCloseable {
         synchronized(lock){
             if(cleanupScheduled)return;
             if(!started && reason.equals("CONNECTION_CHANGED"))return;
-            active=false;generation++;stoppedReason=reason;cleanupScheduled=true;adapter.stop();statuses.stop();scanner.shutdown();
+            active=false;generation++;stoppedReason=reason;cleanupScheduled=true;adapter.stop();if(ownsStatuses)statuses.stop();scanner.shutdown();
             control.execute(this::cleanup);
         }
     }

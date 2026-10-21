@@ -60,6 +60,31 @@ class UsbScanCoordinatorTest {
         for(long ms:List.of(999L,120001L))assertThatThrownBy(()->new UsbScanCoordinator.Settings(Duration.ofSeconds(1),Duration.ofSeconds(5),Duration.ofMillis(ms))).isInstanceOf(IllegalArgumentException.class);
         try(Fixture f=new Fixture(256);var other=new SignalRunContext("a","r")){assertThatThrownBy(()->new UsbScanCoordinator(new FakeSource(),UsbScanCoordinator.Settings.defaults(),other,f.delivery,f.transport,(m,q)->{})).isInstanceOf(IllegalArgumentException.class);}
     }
+    @Test void displayAndUsbCanShareOneStatusOwner()throws Exception{
+        try(Fixture f=new Fixture(256);var statuses=new ObserverStatusEmitter(f.nano::get)){
+            long generation=statuses.start(f.run,f.delivery);
+            statuses.observe(generation,ObserverStatusSignal.Source.JAVAFX_DISPLAY,ObserverStatusSignal.State.READY,Reason.INITIAL,T,vn.edu.toeic.protocol.monitoring.EventOrigin.UNSPECIFIED);
+            var audit=new UsbScanCoordinator.Audit(){public void emission(SignalMessage m,boolean q){f.messages.add(m);}public void observed(UsbScanCoordinator.Status value){f.observed.add(value);}};
+            try(var shared=new UsbScanCoordinator(f.source,UsbScanCoordinator.Settings.defaults(),f.run,f.delivery,f.transport,audit,statuses,generation)){
+                shared.start();f.step(ready());shared.close();
+                assertThat(shared.awaitStopped(Duration.ofSeconds(3))).isTrue();
+            }
+            assertThat(f.messages).anyMatch(m->m.signal() instanceof ObserverStatusSignal s&&s.source().equals("WINDOWS_USB_STORAGE"));
+            assertThat(statuses.status().active()).isTrue();
+            assertThat(statuses.observe(generation,ObserverStatusSignal.Source.JAVAFX_DISPLAY,ObserverStatusSignal.State.ERROR,Reason.SCAN_FAILED,T,vn.edu.toeic.protocol.monitoring.EventOrigin.UNSPECIFIED)).isNotNull();
+        }
+    }
+    @Test void borrowedStatusMustMatchContextDeliveryAndGeneration(){
+        try(Fixture f=new Fixture(256);var statuses=new ObserverStatusEmitter();var other=new SignalRunContext("b","r2")){
+            long generation=statuses.start(f.run,f.delivery);
+            assertThat(statuses.usesContext(other,f.delivery,generation)).isFalse();
+            assertThatThrownBy(()->new UsbScanCoordinator(f.source,UsbScanCoordinator.Settings.defaults(),f.run,f.delivery,f.transport,(m,q)->{},statuses,generation+1)).isInstanceOf(IllegalArgumentException.class);
+            try(var shared=new UsbScanCoordinator(f.source,UsbScanCoordinator.Settings.defaults(),f.run,f.delivery,f.transport,(m,q)->{},statuses,generation)){
+                statuses.close();assertThatThrownBy(shared::start).isInstanceOf(IllegalStateException.class);
+                assertThat(f.source.calls.get()).isZero();
+            }
+        }
+    }
     static final class FakeSource implements UsbScanCoordinator.Source{
         final BlockingQueue<UsbScanCoordinator.Reading> inputs=new LinkedBlockingQueue<>();final CountDownLatch entered=new CountDownLatch(1);final AtomicInteger active=new AtomicInteger(),maxActive=new AtomicInteger(),calls=new AtomicInteger();volatile boolean closed;
         public UsbScanCoordinator.Reading scan(Duration timeout){calls.incrementAndGet();int n=active.incrementAndGet();maxActive.accumulateAndGet(n,Math::max);entered.countDown();try{return inputs.take();}catch(InterruptedException stopped){Thread.currentThread().interrupt();return ready(99L);}finally{active.decrementAndGet();}}

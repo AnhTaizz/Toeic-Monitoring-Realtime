@@ -26,6 +26,10 @@ public final class ObserverStatusEmitter implements AutoCloseable {
     private long generation;
     public ObserverStatusEmitter() { this(System::nanoTime); }
     public ObserverStatusEmitter(LongSupplier ticker) { this.ticker = Objects.requireNonNull(ticker); }
+    /** Explicit composition may borrow this owner; never claim a second status input for the run. */
+    public synchronized boolean usesContext(SignalRunContext context, SignalDelivery target, long callbackGeneration) {
+        return run == context && delivery == target && current(callbackGeneration);
+    }
     public synchronized long start(SignalRunContext context, SignalDelivery delivery) {
         Objects.requireNonNull(context); Objects.requireNonNull(delivery);
         if (!context.active() || !delivery.status().active() || !delivery.usesContext(context) || !delivery.matchesScope(context.attemptId(), context.observerSessionId())
