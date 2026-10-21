@@ -11,7 +11,7 @@ import vn.edu.toeic.client.realtime.*;
 import vn.edu.toeic.protocol.monitoring.signal.*;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
-/** Explicit MOCK harness lane only. Finite RAM, no disk, no collector/observer integration. */
+/** Opt-in typed-signal lane. Finite RAM, no disk; observers only enqueue immutable values. */
 public final class SignalDelivery implements AutoCloseable {
     public record Settings(int capacity,int byteLimit,int flights,Duration ackTimeout,int attempts,Duration backoff,Duration maxBackoff,Duration pump){
         public Settings {if(capacity<1||capacity>256||byteLimit<1||byteLimit>1048576||flights<1||flights>2||ackTimeout.toNanos()<1||attempts<1||attempts>5||backoff.toNanos()<1||maxBackoff.compareTo(backoff)<0||pump.toMillis()<1)throw new IllegalArgumentException();}

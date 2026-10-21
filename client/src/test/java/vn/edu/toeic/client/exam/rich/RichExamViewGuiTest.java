@@ -19,6 +19,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
+import javafx.event.EventHandler;
 import javax.imageio.ImageIO;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -28,6 +29,7 @@ import vn.edu.toeic.client.exam.ExamGateway;
 import vn.edu.toeic.client.exam.ExamSession;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
+import vn.edu.toeic.client.monitoring.activity.ExamActivityEvent;
 import vn.edu.toeic.protocol.exam.*;
 import vn.edu.toeic.protocol.exam.rich.*;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
@@ -118,6 +120,23 @@ class RichExamViewGuiTest {
         AutosaveAnswersRequest last = gateway.saves.getLast();
         assertThat(last.writerEpoch()).isEqualTo(2);
         assertThat(last.answers()).containsEntry("q001", "C").containsEntry("q133", "B");
+    }
+
+    @Test void acceptedNavigationAndAnswerEmitOnlyPrivacyMinimalKinds() throws Exception {
+        List<ExamActivityEvent.Kind> observed = new CopyOnWriteArrayList<>();
+        EventHandler<ExamActivityEvent> handler = event -> observed.add(event.kind());
+        fx(() -> { stage.addEventHandler(ExamActivityEvent.ANY, handler); return null; });
+        try {
+            fx(() -> { ((javafx.scene.control.Button) stage.getScene().lookup("#room-next")).fire(); return null; });
+            await(() -> fx(() -> view.currentUnit().questions().getFirst().id().equals("q002")));
+            clickOption("q002", "A");
+            clickOption("q002", "A"); // unchanged answer is rejected by ExamSession and must not increment.
+            assertThat(observed).containsExactly(ExamActivityEvent.Kind.NAVIGATION, ExamActivityEvent.Kind.ANSWER_ACTION);
+            assertThat(ExamActivityEvent.class.getDeclaredFields()).extracting(java.lang.reflect.Field::getName)
+                    .containsExactlyInAnyOrder("kind", "ANY");
+        } finally {
+            fx(() -> { stage.removeEventHandler(ExamActivityEvent.ANY, handler); return null; });
+        }
     }
 
     @Test void deniedImageShowsHonestErrorAndRetryLoadsAfterAccessReturns() throws Exception {
