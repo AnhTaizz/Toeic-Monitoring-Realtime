@@ -36,3 +36,7 @@ CI chạy unittest với Python3.12; tool chỉ dùng stdlib Python3.11+, không
 - [Lệnh lịch sử trước review](../../../evidence/overnight-20261015/phase-02/E1_RUN_COMMANDS.md).
 
 Không gọi runner từ app production. SMOKE không thay12run; E1 không thay gate delta/E2. Summary mới phải ở output mới, không ghi đè raw/evidence lịch sử. Chạy `python -m unittest discover -s scripts/benchmarks/e1 -p 'test*.py' -v` để kiểm analyzer và fixture tính tay.
+
+## Export bảng và biểu đồ (QA05 campaign mới)
+
+report.py SUITE ANALYSIS NEW_OUTPUT kiểm hash output analyzer trước tổng hợp; không đo thêm hoặc sửa raw. CPU/unknown/eligibility/nearest-rank dùng định nghĩa analyzer có sẵn; plots hiển thị số repeat, n detected và sample SD (không CI). CLI cần Python ổn định với Matplotlib3.11.2 cho4figure PNG/SVG; import/tests helpers vẫn stdlib, CI không cần plotting packages. Output phải mới và ngoài raw/analysis. Regression mới kiểm pooled detected-only/censored/unknown bounds, n point-defined, PARTIAL resource và guard output. [Dataset mới/report/reproduction](../../../evidence/qa05-e1-20261021/REPORT.md); không thay dữ liệu lịch sử hoặc tự duyệt phương pháp.

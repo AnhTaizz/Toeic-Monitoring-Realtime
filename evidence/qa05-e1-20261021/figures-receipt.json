@@ -1,0 +1,25 @@
+{
+  "analysisReceiptSha256": "6e7afe5cccdbe0b935a28a05642f444295477affc47c1761a04fd223541711cc",
+  "files": {
+    "analysis-receipt.json": "6e7afe5cccdbe0b935a28a05642f444295477affc47c1761a04fd223541711cc",
+    "analysis.md": "3027aaf67db8140653fdeb31b73a3c2975be47d845cffbe544853a901bc24862",
+    "campaign-status.json": "ff75df8f0f005bde6b208866b19c006876a2aba09012b54cf5451a47ed68c8ae",
+    "cpu.png": "7583a6d8e55ebd4b9eccb5236c193da4de27432adf51e0081818e87408cef822",
+    "cpu.svg": "9349bba7749dc9d1420446c0bf074469d5dceba3b2d01db75d373dea9ec6a9e4",
+    "heap.png": "c7ee7c1431f86f2cecf78d595341ffad148d48eb43c0304f42a5ca8607198b67",
+    "heap.svg": "9cc92735ef65d8e9a550c47968f52a0996e799a93ec46ada0ae3d71cf127b68a",
+    "latency-proxy.png": "44a7d084b7951e3daa2b8b4dbe8987aa25b85f0210471fc7dcc81e8b9e2c0938",
+    "latency-proxy.svg": "0c90eb27f668703d28bee9098a320050f8d424f72550a124cc4943f308da69c5",
+    "outcomes-by-period-hold.csv": "a2f791bb19ed72dc30737daf181be5dca95f7ac88e6d8ff8e0a164dbb9d168d9",
+    "outcomes.png": "6a85340e31db5c2565426955d60a6c0b12f78286192733a2c219b8268d036817",
+    "outcomes.svg": "f8c99afa3f79e4f95e0ff6335c944c83756c3f949133c4980889cbe466067069",
+    "resources-by-period.csv": "9287a4ae0f1d76954fe3737fe9725be0335b6eac765014d245c668073e070858",
+    "run-results.csv": "1104a45e45c3c2cf166f0c6077e657e40f48f22e870ca99f6ec379ab5035a57f",
+    "run-status.json": "dea973ae07997904d553f547e24d0783ca13182c82d8b155d49c922c6ced48cd",
+    "summary-by-duration.csv": "cbe3b67b65549059793e9e7c4f8ed28807484fe75167ce3ba4126df69ac36214",
+    "summary.csv": "6d471c361258c9d9454ed1339238c278147e2fd6afdd7583e0ed4cc83bcf5d40"
+  },
+  "matplotlibVersion": "3.11.2",
+  "schemaVersion": "e1-report-artifacts-v1",
+  "scriptSha256": "22834c55ab9ea9ec3c10f17f8d42cd4018aef5c92aece669b75d686b5a7062cc"
+}
