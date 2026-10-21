@@ -394,6 +394,9 @@ public final class ReadingListeningPostgresGuiSmoke {
 
     private void enter(String attempt) throws Exception {
         until(() -> fx(() -> candidateStage.getScene().lookup("#candidate-enter-exam") != null), "Exam portal");
+        // Initial async scope refresh restores its captured selection; wait before choosing.
+        until(() -> enabled(candidateStage,"candidate-refresh-attempts"), "Initial scope refresh complete");
+        until(() -> fx(() -> ((ComboBox<?>)candidateStage.getScene().lookup("#candidate-attempts")).getItems().contains(attempt)), "Assigned attempt loaded");
         fx(() -> { ((ComboBox<String>) candidateStage.getScene().lookup("#candidate-attempts")).setValue(attempt); return null; });
         clickId(candidateStage, "candidate-enter-exam");
         until(() -> enabled(candidateStage, attempt.startsWith("GUI-L") ? "option-L1-A" : "option-R1-A"), "Editable exam");
