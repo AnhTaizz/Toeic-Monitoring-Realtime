@@ -175,10 +175,13 @@ class UsbIntegratedDemoPostgresTest {
     final class Lane implements AutoCloseable{
         final RealtimeClient realtime;final AutoCloseable lease;final SignalRunContext run;final SignalDelivery delivery;final Lossy transport;boolean closed;
         Lane(String a,String token,boolean lose)throws Exception{
+            this(a,token,lose,256,true);
+        }
+        Lane(String a,String token,boolean lose,int capacity,boolean automatic)throws Exception{
             String observer="usb-test-"+UUID.randomUUID();realtime=new RealtimeClient(new AuthenticatedWebSocketOpener(base,token),new RealtimeClient.Settings(Duration.ofMillis(100),Duration.ofMillis(100),Duration.ofSeconds(1),1,65536,500));owned.add(realtime);lease=realtime.monitoringHeartbeat(a,observer);owned.add(lease);var hb=new CountDownLatch(1);
             try(var listener=realtime.onMessage(m->{if(m.type().equals("ACK")&&"HEARTBEAT".equals(m.payload().get("acknowledgedType").getAsString()))hb.countDown();})){realtime.connect(new RealtimeClient.Session(Set.of(a),null,null)).get(8,TimeUnit.SECONDS);assertThat(hb.await(8,TimeUnit.SECONDS)).isTrue();}
             assertThat(get("/api/v1/auth/me",token,200).toString()).contains(a);realtime.confirmSignalExperiment(get("/api/v1/monitoring/attempts/"+a+"/signal-capabilities",token,200),realtime.connectionGeneration(),observer);
-            run=new SignalRunContext(a,observer);owned.add(run);transport=new Lossy(realtime,lose);delivery=new SignalDelivery(run,transport,new SignalDelivery.Settings(256,1048576,2,Duration.ofSeconds(1),5,Duration.ofMillis(100),Duration.ofMillis(800),Duration.ofMillis(25)),System::nanoTime,Clock.systemUTC(),true);owned.add(delivery);
+            run=new SignalRunContext(a,observer);owned.add(run);transport=new Lossy(realtime,lose);delivery=new SignalDelivery(run,transport,new SignalDelivery.Settings(capacity,1048576,2,Duration.ofSeconds(1),5,Duration.ofMillis(100),Duration.ofMillis(800),Duration.ofMillis(25)),System::nanoTime,Clock.systemUTC(),automatic);owned.add(delivery);
         }
         public void close()throws Exception{if(closed)return;closed=true;delivery.close();run.close();lease.close();realtime.close();assertThat(delivery.awaitStopped(Duration.ofSeconds(3))).isTrue();}
     }

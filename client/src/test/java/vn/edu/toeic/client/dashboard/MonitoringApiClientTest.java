@@ -23,6 +23,14 @@ import vn.edu.toeic.client.LoginFailedException;
 
 /** REAL local HTTP transport, MOCK response fixtures; not production server evidence. */
 class MonitoringApiClientTest {
+    @Test void typedHistoryUsesHeaderAndFixedThroughAndTighterBodyCap() throws Exception {
+        try(Fixture f=new Fixture()){
+            JsonObject body=response();body.addProperty("schemaVersion",1);body.addProperty("attemptId","MOCK-A");body.addProperty("afterSequence",0);body.addProperty("throughSequence",0);body.addProperty("hasMore",false);body.add("nextAfterSequence",com.google.gson.JsonNull.INSTANCE);body.add("items",new JsonArray());
+            f.body.set(body.toString());assertThat(f.api.signals("MOCK-A",0,0L,100).get(3,TimeUnit.SECONDS).items()).isEmpty();
+            assertThat(f.path.get()).isEqualTo("/api/v1/monitoring/attempts/MOCK-A/signals?limit=100&after=0&through=0");assertThat(f.authorization.get()).isEqualTo("Bearer MOCK-token-only");
+            f.body.set(" ".repeat(512*1024+1));assertThatThrownBy(()->f.api.signals("MOCK-A",0,null,100).join()).hasCauseInstanceOf(InvalidServerResponseException.class);
+        }
+    }
     @Test void endpointsHeadersAndUtcValuesFollowServerContract() throws Exception {
         try(Fixture f=new Fixture()) {
             JsonObject body=response(); body.addProperty("serverTime",TIME.toString()); JsonArray attempts=new JsonArray(); attempts.add(presenceJson("MOCK-A",3)); body.add("attempts",attempts);
