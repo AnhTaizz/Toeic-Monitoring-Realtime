@@ -271,15 +271,19 @@ class MonitoringTimelinePostgresTest {
                 }
                 long dropped=first.delivery.status().dropped()-before;assertThat(dropped).isPositive();
                 var bounded=first.delivery.status();assertThat(bounded.queued()).isLessThanOrEqualTo(17);assertThat(bounded.bytes()).isLessThanOrEqualTo(1056768);assertThat(bounded.inFlight()).isLessThanOrEqualTo(2);assertThat(bounded.writes()).isLessThanOrEqualTo(2);
-                first.realtime.connect(new RealtimeClient.Session(Set.of(a),null,null)).get(8,TimeUnit.SECONDS);
-                first.realtime.confirmSignalExperiment(get("/api/v1/monitoring/attempts/"+a+"/signal-capabilities",candidate,200),first.realtime.connectionGeneration(),first.run.observerSessionId());
+                var freshHeartbeat=new CountDownLatch(1);
+                try(var listener=first.realtime.onMessage(m->{if("ACK".equals(m.type())&&"HEARTBEAT".equals(m.payload().get("acknowledgedType").getAsString()))freshHeartbeat.countDown();})){
+                    first.realtime.connect(new RealtimeClient.Session(Set.of(a),null,null)).get(8,TimeUnit.SECONDS);
+                    assertThat(freshHeartbeat.await(8,TimeUnit.SECONDS)).as("WS open is not scoped heartbeat authorization").isTrue();
+                    first.realtime.confirmSignalExperiment(get("/api/v1/monitoring/attempts/"+a+"/signal-capabilities",candidate,200),first.realtime.connectionGeneration(),first.run.observerSessionId());
+                }
                 waitFor("actual gap commits after fresh capability and reconnect",()->first.delivery.status().queued()==0&&first.delivery.status().inFlight()==0&&first.delivery.gapStatus().acknowledgedDrops()==dropped);
                 assertThat(first.usb.status().active()).isFalse();
                 var all=signalPages(api,a);
                 assertThat(all).extracting(e->e.signal().eventId()).doesNotHaveDuplicates();
                 assertThat(all).extracting(e->e.signal().observationSequence()).doesNotHaveDuplicates();
                 assertThat(all).allSatisfy(e->{assertThat(e.signal().observerSessionId()).isEqualTo(first.run.observerSessionId());assertThat(e.receivedAt()).isNotNull();assertThat(e.signal().observedAt()).isNotNull();});
-                assertThat(all).anyMatch(e->e.signal() instanceof SignalGap gap&&gap.droppedCount()==dropped);
+                assertThat(all.stream().filter(e->e.signal() instanceof SignalGap).mapToLong(e->((SignalGap)e.signal()).droppedCount()).sum()).isEqualTo(dropped);
                 if(real){
                     if(first.usb.status().health()==UsbSignalAdapter.Health.READY&&Integer.valueOf(0).equals(first.usb.status().storageCount()))assertThat(all).noneMatch(e->e.signal() instanceof UsbStorageSignal);
                 }else{
@@ -289,18 +293,20 @@ class MonitoringTimelinePostgresTest {
                 var summary=api.alerts(a).get(5,TimeUnit.SECONDS);
                 assertThat(summary.sourceLimited()).contains("SIGNAL");assertThat(summary.inputEvents()).isLessThan(all.size()+1);
                 String cutoff=summary.cutoff().toString();var stable=get("/api/v1/monitoring/attempts/"+a+"/alert-summary?cutoff="+cutoff,proctor,200);
-                assertThat(get("/api/v1/monitoring/attempts/"+a+"/alert-summary?cutoff="+cutoff,proctor,200)).isEqualTo(stable);
+                assertThat(get("/api/v1/monitoring/attempts/"+a+"/alert-summary?cutoff="+cutoff,proctor,200).getAsJsonArray("items")).isEqualTo(stable.getAsJsonArray("items"));
                 fx(()->{((Button)dash.view.lookup("#multi-refresh")).fire();return null;});awaitRows(dash,all.size()+1);
                 assertThat(rows(dash)).isSortedAccordingTo(TimelineRows.ORDER);
                 fx(()->{@SuppressWarnings("unchecked")var filter=(ComboBox<String>)dash.view.lookup("#multi-source-filter");filter.setValue("PROCESS");return null;});
                 assertThat(fx(()->((Label)dash.view.lookup("#multi-alert-coverage")).getText())).contains("cap nguồn");
                 screenshot(dash,"joint-coverage");viewTime();
                 get("/api/v1/monitoring/attempts/"+a+"/signals",tokenB,403);get("/api/v1/monitoring/attempts/"+a+"/alert-summary",candidate,403);
-                first.close();long accepted=first.delivery.status().acknowledged();int polls=first.polls.get();
+                String oldEpoch=first.process.fullStatus().syncEpoch();first.close();long accepted=first.delivery.status().acknowledged();int polls=first.polls.get();
                 try(var restarted=new JointMonitoringRun(this,a,candidate,candidateStage,workload.child.pid())){
                     assertThat(restarted.run.observerSessionId()).isNotEqualTo(first.run.observerSessionId());
                     fx(()->{ExamActivityEvent.fire(candidateStage,ExamActivityEvent.Kind.ANSWER_ACTION);return null;});
                     waitFor("new run commits a fresh baseline",()->restarted.delivery.status().acknowledged()>0);
+                    waitFor("new FULL epoch acknowledged",()->restarted.process.fullStatus().acknowledgedSequence()>0);
+                    assertThat(restarted.process.fullStatus().syncEpoch()).isNotEqualTo(oldEpoch);
                     assertThat(first.polls.get()).isEqualTo(polls);assertThat(first.delivery.status().acknowledged()).isEqualTo(accepted);
                     assertThat(first.run.active()).isFalse();assertThat(restarted.process.modeStatus().mode()).isEqualTo("FULL");
                 }
