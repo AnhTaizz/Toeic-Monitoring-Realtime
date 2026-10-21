@@ -1,6 +1,6 @@
 # ADR-V2-03 — START toàn bài và deadline ca V2
 
-**Status: TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE — 19/10/2026.** [Nguồn xác nhận](EX02_TEAM_APPROVAL_20261019.md): “User-provided confirmation from the project team representative, 2026-10-19.” Đại diện nhóm xác nhận A/B/C đã đồng ý D01–D09, hướng ADR và D10 Option A; không phải chữ ký riêng hoặc GitHub Approving Review. Thiết kế được thông qua, runtime chưa triển khai/nghiệm thu. Không sửa QD-21 legacy, production hoặc migrations trong task này. [Contract](../EX02_RICH_EXAM_CONTRACT_V1.md), [decision register](EX02_DECISIONS_ROADMAP.md).
+**Status: TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE — 19/10/2026; RUNTIME_INTEGRATED / OWNER_AND_PHYSICAL_ACCEPTANCE_PENDING — 22/10/2026.** [Nguồn xác nhận](EX02_TEAM_APPROVAL_20261019.md): “User-provided confirmation from the project team representative, 2026-10-19.” Đại diện nhóm xác nhận A/B/C đã đồng ý D01–D09, hướng ADR và D10 Option A; không phải chữ ký riêng hoặc GitHub Approving Review. Runtime V2 hiện đã được tích hợp qua PR #82 và được rà soát kỹ thuật trong [BASE-02](BASE02_PHASE3_REVIEW_20261022.md); việc này không thay thế owner review, PostgreSQL/GUI/physical acceptance. Không sửa QD-21 legacy. [Contract](../EX02_RICH_EXAM_CONTRACT_V1.md), [decision register](EX02_DECISIONS_ROADMAP.md).
 
 ## Context và bằng chứng
 
@@ -24,7 +24,7 @@ Phương án bị loại: takeover làm mốc cho V2 khiến mỗi người có 
 
 SCHEDULED + ACTIVE là lobby/monitoring; Audio+Visual READY gắn writerEpoch/preparationEpoch/manifest, chưa có quyền đọc câu hỏi hoặc làm bài. Part1 photo prefetch là ngoại lệ hữu hạn. START transaction chuyển SCHEDULED→IN_PROGRESS; CLOSED là terminal, không reopen. SUBMITTED/TIMED_OUT attempt là terminal độc lập với ca; status/history/result theo quyền vẫn đọc được. Không tạo state attempt mới chỉ để chặn UI.
 
-Mọi route: token còn hiệu lực trước role/scope/cache; foreign/unknown attempt403, unassigned proctor403, revoked401. Candidate endpoint không dành cho proctor. Preparation chứa metadata/Part1 image manifest, không câu hỏi/options/keys/answers/source URLs. Ma trận dưới là **target V2, chưa triển khai**; legacy giữ hiện trạng ngoại trừ thay đổi bảo mật riêng nếu được owner giao task.
+Mọi route: token còn hiệu lực trước role/scope/cache; foreign/unknown attempt403, unassigned proctor403, revoked401. Candidate endpoint không dành cho proctor. Preparation chứa metadata/Part1 image manifest, không câu hỏi/options/keys/answers/source URLs. Ma trận dưới là **contract V2 đã được tích hợp qua PR #82**; các hàng vẫn cần được đối chiếu với test/evidence tại SHA phát hành và các gate vật lý, còn legacy giữ semantics QD-21.
 
 | Route / actor | SCHEDULED + ACTIVE | IN_PROGRESS + ACTIVE, chưa deadline | CLOSED / attempt final |
 |---|---|---|---|
@@ -98,7 +98,7 @@ V2 save/submit: auth→session/attempt locks→scope/version/current writer→ga
 | S15 | Timeout/close/reorg nhiều attempts bằng barriers | Không deadlock, một final; new version copy, old data bất biến |
 | S16 | Conditional image GET/no token trước START |401 trước cache; owner Part1 current manifest200, non-Part1-only403; không304 |
 
-## Acceptance visual Option A — runtime NOT RUN
+## Acceptance visual Option A — runtime integrated; full GUI/physical matrix pending
 
 | ID | Test HTTP/PG/WS/GUI phải triển khai | Expected target |
 |---|---|---|
@@ -123,4 +123,4 @@ V2 save/submit: auth→session/attempt locks→scope/version/current writer→ga
 | V19 |START valid nhưng reconnect/restart sau đó |No replay/resume; journal giữ ID, deadline và receipt bất biến |
 | V20 |Legacy QD21/client/audio; V2 old client cố GETv1 |Legacy semantics giữ; V2 GETv1409; Part3/4 shared segment, một player |
 
-S01–S16 giữ IDs, chỉ sửa image expectations theo quyết định D10, không xóa test cũ. S01–S16/V01–V20 đều **NOT IMPLEMENTED / NOT RUN cho target runtime V2**. Fixture P01–P09/N01–N20 chỉ kiểm thiết kế; không thay backend auth/PG/WS races hoặc GUI thật. Thiết kế D01–D10/ADR đã được đại diện nhóm xác nhận, không còn blocker “chưa owner đồng ý” này; implementation acceptance, source/data evidence và human merge riêng vẫn bắt buộc. Rủi ro: rò ảnh trước START được chấp nhận, server không thấy pixel vật lý, client có thể khai báo sai, lease có độ trễ, old client chưa V2, file hashing giữ khóa, giao thoa scheduler và no-replay cần reorg khi sự cố — phải kiểm thật trước release.
+S01–S16 giữ IDs, chỉ sửa image expectations theo quyết định D10, không xóa test cũ. Runtime V2 đã được tích hợp qua PR #82 và có automated coverage; tuy nhiên bảng S01–S16/V01–V20 chưa được xác nhận đầy đủ bằng PostgreSQL/HTTP/WS/GUI/physical evidence tại SHA phát hành. Fixture P01–P09/N01–N20 chỉ kiểm thiết kế; không thay backend auth/PG/WS races hoặc GUI thật. Thiết kế D01–D10/ADR đã được đại diện nhóm xác nhận; implementation acceptance, source/data evidence và human review riêng vẫn bắt buộc. Rủi ro: rò ảnh trước START được chấp nhận, server không thấy pixel vật lý, client có thể khai báo sai, lease có độ trễ, old client chưa V2, file hashing giữ khóa, giao thoa scheduler và no-replay cần reorg khi sự cố — phải kiểm thật trước release.
