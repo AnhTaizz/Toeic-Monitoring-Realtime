@@ -128,6 +128,10 @@ function Get-QuestionOptions {
     })
 }
 
+# HTML nguon khong con duoc commit. Giai nen ZIP vao duong dan trong manifest truoc khi chay.
+if (-not (Test-Path -LiteralPath $InputPath -PathType Leaf)) {
+    throw "Khong tim thay HTML nguon: '$InputPath'. Hay giai nen bo ZIP vao dung duong dan ghi trong data/seedingTest/manifest.json."
+}
 $resolvedInput = (Resolve-Path -LiteralPath $InputPath).Path
 $resolvedManifest = (Resolve-Path -LiteralPath $ManifestPath).Path
 $sourceStem = [System.IO.Path]::GetFileNameWithoutExtension($resolvedInput)
