@@ -108,3 +108,6 @@ $RECYCLE.BIN/
 /traces/
 # Operator-provisioned exam audio is local; test fixtures are generated in target/.
 /audio-resources/
+
+# HTML nguon duoc dong goi rieng; khong commit lai file HTML sau khi giai nen
+/data/seedingTest/*.html

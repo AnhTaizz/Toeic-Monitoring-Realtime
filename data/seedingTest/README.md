@@ -1,4 +1,8 @@
-# Dữ liệu HTML đầu vào cho EX-01
+# Hồ sơ dữ liệu HTML nguồn cho EX-01
+
+> **Tình trạng từ 22/10/2026:** Năm file nguồn `ets2026_test01.html` đến `ets2026_test05.html` đã được gỡ khỏi cây file Git để tinh gọn bản demo. Bảng số liệu bên dưới và `manifest.json` là **hồ sơ lịch sử**, không phải danh sách HTML hiện có. `generated/ets2026_test01.seed.json` vẫn được giữ để đối chiếu nhưng có `importable: false` và **không phải dữ liệu import sẵn dùng**.
+>
+> File ZIP chứa dữ liệu nguồn sẽ được quản lý/nạp riêng. Nếu cần tái tạo seed từ HTML, giải nén HTML về đúng các đường dẫn trong `manifest.json` rồi chạy `scripts/build-exam-seed.ps1`. Các file `.html` ở thư mục này được `.gitignore` bỏ qua để tránh commit nhầm lần nữa.
 
 Năm bản HTML do người dùng cung cấp, lấy từ **Zenlish TOEIC** (zenlishtoeic.vn), có footer “Copyright 2026 c Zenlish”. Ngày 19/10/2026, người dùng xác nhận: **“Có quyền công khai — tôi sẽ nêu căn cứ”** khi được hỏi về công bố trong repository public này. Đây là xác nhận của người cung cấp dữ liệu; chưa kèm văn bản cấp phép. Không gán giấy phép mã nguồn của repository cho nội dung bên thứ ba.
 
