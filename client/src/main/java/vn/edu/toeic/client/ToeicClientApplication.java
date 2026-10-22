@@ -472,25 +472,36 @@ public final class ToeicClientApplication extends Application {
         if (candidatePreview != null) { candidatePreview.close(); candidatePreview = null; }
     }
 
-    private static java.util.concurrent.CompletableFuture<CandidateAttemptPreview.Details> loadCandidatePreview(
+    static java.util.concurrent.CompletableFuture<CandidateAttemptPreview.Details> loadCandidatePreview(
             String serverUrl, String token, ExamApiClient api, String attemptId) {
-        var status = api.getAttemptStatus(attemptId);
-        var preparation = java.util.concurrent.CompletableFuture.supplyAsync(() -> {
+        // V1 status rejects scheduled V2 attempts. Probe read-only V2 metadata first;
+        // only the contract's explicit legacy/finished response permits V1 fallback.
+        return java.util.concurrent.CompletableFuture.<CandidateAttemptPreview.Details>supplyAsync(() -> {
             try (var rich = new vn.edu.toeic.client.exam.rich.RichExamApiClient(serverUrl, token)) {
-                return rich.preparation(attemptId);
+                var ready = rich.preparation(attemptId);
+                if (ready == null || ready.schemaVersion() != 2 || !attemptId.equals(ready.attemptId())
+                        || ready.sessionId() == null || ready.sessionId().isBlank()
+                        || ready.examId() == null || ready.examId().isBlank()
+                        || ready.title() == null || ready.title().isBlank()
+                        || !"PROCTORED_V2".equals(ready.contractVersion())
+                        || !("SCHEDULED".equals(ready.sessionState()) || "IN_PROGRESS".equals(ready.sessionState()))
+                        || ready.durationMinutes() < 1) throw new InvalidServerResponseException();
+                // Preparation deliberately does not expose question count or the exam paper.
+                return new CandidateAttemptPreview.Details(attemptId, ready.sessionId(), ready.title(),
+                        ready.sessionState(), null, ready.durationMinutes());
             } catch (vn.edu.toeic.client.exam.ExamApiException legacy) {
                 if (legacy.statusCode() == 409 && "INVALID_STATE".equals(legacy.code())) return null;
                 throw legacy;
             } catch (Exception failure) { throw new CompletionException(failure); }
-        });
-        return status.thenCombine(preparation, (state, ready) -> {
-            if (!attemptId.equals(state.attemptId()) || (ready != null
-                    && (!attemptId.equals(ready.attemptId()) || !Objects.equals(state.sessionId(), ready.sessionId()))))
-                throw new InvalidServerResponseException();
-            return new CandidateAttemptPreview.Details(attemptId, state.sessionId(),
-                    ready == null ? state.examId() : ready.title(), ready == null ? state.state() : ready.sessionState(),
-                    state.totalQuestions(), ready == null ? null : ready.durationMinutes());
-        });
+        }).thenCompose(details -> details != null
+                ? java.util.concurrent.CompletableFuture.completedFuture(details)
+                : api.getAttemptStatus(attemptId).thenApply(state -> {
+                    if (!attemptId.equals(state.attemptId()) || state.sessionId() == null
+                            || state.sessionId().isBlank() || state.examId() == null || state.examId().isBlank()
+                            || state.totalQuestions() < 1) throw new InvalidServerResponseException();
+                    return new CandidateAttemptPreview.Details(attemptId, state.sessionId(), state.examId(),
+                            state.state(), state.totalQuestions(), null);
+                }));
     }
 
     /** Uses a fresh server scope; an existing collector can only serve its original attempt. */

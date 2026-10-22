@@ -70,6 +70,19 @@ class CandidateHomeGuiTest {
         snapshot("home-compact.png");
     }
 
+    @Test void v2MetadataShowsSessionTitleAndDurationWithoutInventingQuestionCount() throws Exception {
+        fx(() -> { choices.setValue("MOCK-A"); return null; });
+        pending.get("MOCK-A").complete(new CandidateAttemptPreview.Details("MOCK-A", "MOCK-session-V2",
+                "Study4 Test 1", "SCHEDULED", null, 120));
+        fx(() -> {
+            assertThat(((TextField) preview.lookup("#candidate-session-id")).getText()).isEqualTo("MOCK-session-V2");
+            assertThat(((Label) preview.lookup("#candidate-preview-title")).getText()).isEqualTo("Study4 Test 1");
+            assertThat(((Label) preview.lookup("#candidate-preview-facts")).getText())
+                    .contains("120 phút", "Chờ giám thị bắt đầu").doesNotContain("câu", "null");
+            return null;
+        });
+    }
+
     @Test void switchingAttemptsRejectsThePreviousSessionsLateMetadata() throws Exception {
         fx(() -> { choices.setValue("MOCK-A"); choices.setValue("MOCK-B"); return null; });
         pending.get("MOCK-B").complete(details("MOCK-B", "MOCK-session-B"));

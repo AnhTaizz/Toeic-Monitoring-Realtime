@@ -15,7 +15,7 @@ import vn.edu.toeic.client.exam.ExamApiClient;
 /** Read-only metadata; selecting a session never claims a writer or attests READY. */
 final class CandidateAttemptPreview extends VBox implements AutoCloseable {
     record Details(String attemptId, String sessionId, String title, String sessionState,
-                   int totalQuestions, Integer durationMinutes) { }
+                   Integer totalQuestions, Integer durationMinutes) { }
     private final Function<String, CompletableFuture<Details>> loader;
     private final BooleanSupplier current;
     private final Label title = new Label("Chọn ca thi được phân công");
@@ -63,9 +63,9 @@ final class CandidateAttemptPreview extends VBox implements AutoCloseable {
                 title.setText("Thông tin ca thi không khớp"); guidance.setText("Làm mới danh sách và chọn lại ca."); return;
             }
             title.setText(details.title()); session.setText(details.sessionId());
-            facts.setText(details.totalQuestions() + " câu"
-                    + (details.durationMinutes() == null ? "" : "  ·  " + details.durationMinutes() + " phút")
-                    + "  ·  " + state(details.sessionState()));
+            facts.setText((details.totalQuestions() == null ? "" : details.totalQuestions() + " câu  ·  ")
+                    + (details.durationMinutes() == null ? "" : details.durationMinutes() + " phút  ·  ")
+                    + state(details.sessionState()));
             guidance.setText("Đối chiếu mã ca ở trên với giám thị. Bấm “Kiểm tra âm thanh & vào phòng chờ”, "
                     + "sau đó tải audio, thử loa và xác nhận sẵn sàng. Trang này chưa gửi READY.");
         }));
