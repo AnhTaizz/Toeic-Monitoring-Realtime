@@ -99,10 +99,11 @@ public final class InstalledClientAgent {
     }
     private static void login(String username)throws Exception{
         fx(()->{
-            var fields=nodes().stream().filter(n->n instanceof TextField).map(n->(TextField)n).toList();
-            var plain=fields.stream().filter(n->!(n instanceof PasswordField)).toList();
-            if(!plain.getFirst().getText().equals(env("TOEIC_SERVER_URL")))throw new AssertionError("LAN server environment setting missing");
-            plain.get(1).setText(username);find(PasswordField.class).setText(env("TOEIC_PACKAGE_TEST_PASSWORD"));button("Đăng nhập").fire();return null;
+            var server=(TextField)stage.getScene().lookup("#login-server-url");
+            if(!server.getText().equals(env("TOEIC_SERVER_URL")))throw new AssertionError("LAN server environment setting missing");
+            ((TextField)stage.getScene().lookup("#login-username")).setText(username);
+            ((PasswordField)stage.getScene().lookup("#login-password")).setText(env("TOEIC_PACKAGE_TEST_PASSWORD"));
+            button("Đăng nhập").fire();return null;
         });
     }
     private static Object field(Object target,String name)throws Exception{var f=target.getClass().getDeclaredField(name);f.setAccessible(true);return f.get(target);}

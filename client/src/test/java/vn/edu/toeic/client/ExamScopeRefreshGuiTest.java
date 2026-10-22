@@ -35,18 +35,23 @@ class ExamScopeRefreshGuiTest {
         });http.start();
         var app=new ToeicClientApplication();var stage=fx(Stage::new);
         try{
-            fx(()->{app.start(stage);stage.getScene().getRoot().applyCss();for(var n:stage.getScene().getRoot().lookupAll(".text-field")){
-                var f=(TextField)n;if(f instanceof PasswordField)f.setText("MOCK-password");else if("http://localhost:8080".equals(f.getPromptText()))f.setText("http://127.0.0.1:"+http.getAddress().getPort());else f.setText("candidate1");
-            }button(stage,"Đăng nhập").fire();return null;});
+            fx(()->{app.start(stage);
+                ((TextField)stage.getScene().lookup("#login-server-url")).setText("http://127.0.0.1:"+http.getAddress().getPort());
+                ((TextField)stage.getScene().lookup("#login-username")).setText("candidate1");
+                ((PasswordField)stage.getScene().lookup("#login-password")).setText("MOCK-password");
+            button(stage,"Đăng nhập").fire();return null;});
             assertThat(arrived.await(8,TimeUnit.SECONDS)).isTrue();
-            fx(()->{assertThat(button(stage,"🔄 Làm mới danh sách ca thi").isDisabled()).isTrue();
-                assertThat(button(stage,"Bắt đầu giám sát").isDisabled()).as("Start cannot race initial captured selection").isTrue();
-                assertThat(stage.getScene().lookup("#candidate-attempts").isDisabled()).as("selection waits for fresh scope").isTrue();return null;});
+            fx(()->{assertThat(((Button)stage.getScene().lookup("#candidate-refresh-attempts")).isDisable()).isTrue();
+                assertThat(button(stage,"Bắt đầu giám sát").isDisable()).as("Start cannot race initial captured selection").isTrue();
+                assertThat(stage.getScene().lookup("#candidate-attempts").isDisable()).as("selection waits for fresh scope").isTrue();return null;});
+            // MOCK WebSocket is 404, so the ancestor remains network-locked. Check each control's own
+            // disable property to verify the scope guard independently of that ancestor.
             release.countDown();
             long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(8);boolean loaded=false;
-            while(System.nanoTime()<until){loaded=fx(()->!button(stage,"Bắt đầu giám sát").isDisabled()&&!stage.getScene().lookup("#candidate-attempts").isDisabled());if(loaded)break;Thread.sleep(20);}
+            while(System.nanoTime()<until){loaded=fx(()->!stage.getScene().lookup("#candidate-attempts").isDisable());if(loaded)break;Thread.sleep(20);}
             assertThat(loaded).isTrue();
-            fx(()->{@SuppressWarnings("unchecked")var box=(ComboBox<String>)stage.getScene().lookup("#candidate-attempts");box.setValue("MOCK-A");assertThat(box.getValue()).isEqualTo("MOCK-A");return null;});
-        }finally{release.countDown();fx(()->{app.stop();stage.close();return null;});http.stop(0);pool.shutdownNow();assertThat(pool.awaitTermination(3,TimeUnit.SECONDS)).isTrue();Platform.exit();}
+            fx(()->{assertThat(stage.getScene().lookup("#candidate-attempts").isDisabled()).as("MOCK WebSocket outage still locks the ancestor").isTrue();return null;});
+            fx(()->{@SuppressWarnings("unchecked")var box=(ComboBox<String>)stage.getScene().lookup("#candidate-attempts");assertThat(box.getValue()).as("multiple attempts require explicit selection").isNull();assertThat(button(stage,"Bắt đầu giám sát").isDisable()).isTrue();box.setValue("MOCK-A");assertThat(box.getValue()).isEqualTo("MOCK-A");assertThat(button(stage,"Bắt đầu giám sát").isDisabled()).as("Selecting an attempt never bypasses the MOCK WebSocket outage").isTrue();return null;});
+        }finally{release.countDown();fx(()->{app.stop();stage.close();return null;});http.stop(0);pool.shutdownNow();assertThat(pool.awaitTermination(3,TimeUnit.SECONDS)).isTrue();}
     }
 }

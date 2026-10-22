@@ -1,0 +1,37 @@
+.candidate-home { -fx-font-family: "Segoe UI", "Arial", sans-serif; -fx-font-size: 14px; -fx-background-color: #fcf8f2; }
+.candidate-home .label { -fx-text-fill: #263957; }
+.candidate-home .home-header { -fx-background-color: white; -fx-padding: 18 28; -fx-border-color: transparent transparent #e4e8ef transparent; }
+.candidate-home .home-brand { -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0a2053; }
+.candidate-home .home-muted { -fx-text-fill: #7b879e; -fx-font-size: 12px; }
+.candidate-home .home-identity { -fx-text-fill: #3f526d; -fx-font-size: 13px; }
+.candidate-home .home-connection { -fx-text-fill: #697b95; -fx-font-size: 12px; }
+.candidate-home .home-availability { -fx-text-fill: #607495; }
+.candidate-home .home-instruction { -fx-background-color: #fff1e4; -fx-background-radius: 8; -fx-padding: 12 16; -fx-text-fill: #ac510e; }
+.candidate-home .home-tabs, .candidate-home .tab-pane { -fx-background-color: transparent; -fx-border-color: transparent; }
+.candidate-home .tab-header-background { -fx-background-color: transparent; }
+.candidate-home .tab { -fx-background-color: #f0eee9; -fx-background-radius: 7 7 0 0; -fx-padding: 9 15; }
+.candidate-home .tab:selected { -fx-background-color: white; }
+.candidate-home .tab .tab-label { -fx-text-fill: #526580; }
+.candidate-home .tab:selected .tab-label { -fx-text-fill: #e46b11; -fx-font-weight: bold; }
+.candidate-home .tab-content-area { -fx-background-color: white; -fx-background-radius: 0 12 12 12; -fx-border-color: #e3e7ee; -fx-border-radius: 0 12 12 12; }
+.candidate-home .card-accent { -fx-background-color: white; -fx-border-color: transparent; -fx-padding: 22; }
+.candidate-home .home-section { -fx-font-weight: bold; -fx-text-fill: #e16a15; -fx-font-size: 13px; }
+.candidate-home .home-exam-title { -fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #102648; }
+.candidate-home .home-preview { -fx-padding: 10 0; }
+.candidate-home .home-preview .text-field { -fx-font-size: 13px; -fx-background-color: #f7f9fc; }
+.candidate-home .text-field, .candidate-home .combo-box { -fx-background-color: white; -fx-border-color: #d9e0eb; -fx-border-radius: 6; -fx-background-radius: 6; -fx-text-fill: #243958; -fx-padding: 8; }
+.candidate-home .combo-box .list-cell { -fx-text-fill: #243958; -fx-background-color: white; }
+.candidate-home .button { -fx-background-color: #f0f3f8; -fx-text-fill: #344e70; -fx-border-color: transparent; -fx-background-radius: 7; -fx-padding: 10 14; -fx-cursor: hand; }
+.candidate-home .button:focused { -fx-border-color: #d97b35; -fx-border-radius: 7; }
+.candidate-home .home-primary { -fx-background-color: #fc781c; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-padding: 14 20; }
+.candidate-home .home-primary:hover { -fx-background-color: #e76510; }
+.candidate-home .button:disabled { -fx-opacity: .5; }
+.candidate-home .scroll-pane, .candidate-home .scroll-pane > .viewport { -fx-background-color: white; -fx-background-insets: 0; -fx-padding: 0; }
+.candidate-home .table-view, .candidate-home .table-row-cell, .candidate-home .table-cell { -fx-background-color: white; -fx-text-fill: #263957; }
+.candidate-home .table-row-cell:selected, .candidate-home .table-row-cell:selected .table-cell { -fx-background-color: #fff0e4; -fx-text-fill: #263957; }
+.candidate-home .column-header, .candidate-home .column-header-background { -fx-background-color: #f2f5fa; }
+.candidate-home .titled-pane > .title { -fx-background-color: #f2f5fa; -fx-padding: 9; }
+.candidate-home .titled-pane > .content { -fx-background-color: white; -fx-border-color: #e2e7ef; }
+
+.candidate-home .home-connection.home-online { -fx-text-fill: #118b68; }
+.candidate-home .home-connection.home-offline { -fx-text-fill: #b14f2b; }

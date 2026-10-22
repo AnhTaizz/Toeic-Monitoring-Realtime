@@ -388,12 +388,9 @@ public final class ReadingListeningPostgresGuiSmoke {
     }
     private void login(Stage stage, String user) throws Exception {
         fx(() -> {
-            for (var node : stage.getScene().getRoot().lookupAll(".text-field")) {
-                if (node instanceof PasswordField password) password.setText(required("TOEIC_SEED_PASSWORD"));
-                else if (node instanceof TextField field) field.setText(field.getText().startsWith("http") ? origin : user);
-            }
-            ((PasswordField) stage.getScene().getRoot().lookupAll(".password-field").iterator().next())
-                    .setText(required("TOEIC_SEED_PASSWORD"));
+            ((TextField) stage.getScene().lookup("#login-server-url")).setText(origin);
+            ((TextField) stage.getScene().lookup("#login-username")).setText(user);
+            ((PasswordField) stage.getScene().lookup("#login-password")).setText(required("TOEIC_SEED_PASSWORD"));
             button(stage, "Đăng nhập").fire(); return null;
         });
         until(() -> fx(() -> stage.getScene().getRoot().lookupAll(".password-field").isEmpty()), "Production login " + user);
