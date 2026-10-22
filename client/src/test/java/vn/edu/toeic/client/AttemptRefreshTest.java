@@ -41,15 +41,16 @@ class AttemptRefreshTest {
     /** 1 và 2 phần tử là Set12, từ 3 trở lên là SetN: hai lớp này ném lỗi ở hai chỗ khác nhau với contains(null). */
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 5})
-    void nothingSelectedPicksTheFirstAttemptForEveryImmutableSetSize(int size) {
+    void onlyASingleAttemptMayBeSelectedAutomaticallyForEveryImmutableSetSize(int size) {
         String[] attempts = new String[size];
         for (int i = 0; i < size; i++) attempts[i] = "MOCK-" + (char) ('E' - i);
 
         Outcome outcome = AttemptRefresh.loaded(Role.CANDIDATE, scope(attempts), null, false);
 
         assertThat(outcome.items()).hasSize(size).isSorted();
-        assertThat(outcome.selected()).as("chưa chọn gì thì chọn lượt đầu theo thứ tự").isEqualTo(outcome.items().getFirst());
-        assertThat(outcome.canEnter()).isTrue();
+        if (size == 1) assertThat(outcome.selected()).isEqualTo(outcome.items().getFirst());
+        else assertThat(outcome.selected()).as("nhiều ca cần được người dùng chọn rõ ràng").isNull();
+        assertThat(outcome.canEnter()).isEqualTo(size == 1);
         assertThat(outcome.next()).isEqualTo(Next.CHOOSE);
     }
 
@@ -68,19 +69,28 @@ class AttemptRefreshTest {
     }
 
     @Test
-    void selectedAttemptThatIsNoLongerGrantedIsReplacedAndMonitoringIsNotStarted() {
+    void revokedSelectionWithMultipleRemainingAttemptsIsClearedAndMonitoringIsNotStarted() {
         Outcome refreshed = AttemptRefresh.loaded(Role.CANDIDATE, scope("MOCK-B", "MOCK-C"), "MOCK-A", false);
-        assertThat(refreshed.selected()).isEqualTo("MOCK-B");
+        assertThat(refreshed.selected()).isNull();
         assertThat(refreshed.next()).isEqualTo(Next.CHOOSE);
 
         Outcome startRequested = AttemptRefresh.loaded(Role.CANDIDATE, scope("MOCK-B", "MOCK-C"), "MOCK-A", true);
         assertThat(startRequested.next()).as("không bật giám sát cho lượt đã mất quyền").isEqualTo(Next.SELECTION_REVOKED);
-        assertThat(startRequested.selected()).isEqualTo("MOCK-B");
+        assertThat(startRequested.selected()).isNull();
 
         Outcome allRevoked = AttemptRefresh.loaded(Role.CANDIDATE, scope(), "MOCK-A", true);
         assertThat(allRevoked.next()).isEqualTo(Next.NO_ATTEMPT);
         assertThat(allRevoked.selected()).isNull();
         assertThat(allRevoked.canEnter()).isFalse();
+    }
+
+    @Test
+    void multipleAssignedAttemptsRequireAnExplicitSelection() {
+        Outcome outcome = AttemptRefresh.loaded(Role.CANDIDATE, scope("MOCK-A", "MOCK-B"), null, false);
+        assertThat(outcome.items()).containsExactly("MOCK-A", "MOCK-B");
+        assertThat(outcome.selected()).isNull();
+        assertThat(outcome.canEnter()).isFalse();
+        assertThat(outcome.next()).isEqualTo(Next.CHOOSE);
     }
 
     @Test
