@@ -1,5 +1,7 @@
 # Plan V2 index - task-first agent package
 
+EX-01 internal dataset evidence: [STUDY4_6852 audit - 22/10/2026](EX01_STUDY4_6852_AUDIT_20261022.md) and [SHA-256 manifest](EX01_STUDY4_6852_SHA256_20261022.csv).
+
 Current live reconciliation: [BASE-01 audit — 22/10/2026](BASE01_LIVE_BASELINE_20261022.md).
 
 Phase 3 integration review: [BASE-02 review — 22/10/2026](BASE02_PHASE3_REVIEW_20261022.md).

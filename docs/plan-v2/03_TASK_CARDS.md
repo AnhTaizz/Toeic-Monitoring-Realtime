@@ -113,13 +113,14 @@
 - **Owner:** A / **Reviewer:** B / **Priority:** P0 / **Dependencies:** BASE-01
 - **Objective:** Identify one complete 7-Part exam and verify all source materials before coding large-scale imports.
 - **Acceptance criteria:**
-  - [ ] Count 6/25/39/30/30/16/54 questions in Parts 1-7, respectively.
-  - [ ] Inventory audio, images, passages, groups, original answer options and correct answer keys.
-  - [ ] Report missing items honestly; separate remote media URLs from files already downloaded.
-  - [ ] Identify the license/permission status before distributing third-party material.
+  - [x] Count 6/25/39/30/30/16/54 questions in Parts 1-7, respectively.
+  - [x] Inventory audio, images, passages, groups, original answer options and correct answer keys.
+  - [x] Report missing items honestly; separate remote media URLs from files already downloaded.
+  - [x] Identify the license/permission status before distributing third-party material.
 - **Verification/evidence:**
   - Produce manifest with original source, SHA-256 where local, missing-file flags and zero invented answer data.
   - Content review by A/B.
+- **Evidence (2026-10-22):** [STUDY4_6852 audit](EX01_STUDY4_6852_AUDIT_20261022.md) and [67-file SHA-256 manifest](EX01_STUDY4_6852_SHA256_20261022.csv). Technical/content-consistency review is accepted for internal use; this does not claim the human B's identity or signature.
 - **Likely files/components:** Offline input HTML/JSON, media manifest, dataset-audit report
 - **Watch-out:** The plan package includes no copyrighted exams or media.
 
