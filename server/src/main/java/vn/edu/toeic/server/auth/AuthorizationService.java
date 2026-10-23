@@ -13,13 +13,15 @@ public final class AuthorizationService {
     }
     public void requireAttempt(AuthenticatedUser user, String attemptId) {
         if (user == null) throw AccessDeniedException.unauthorized();
-        if (attemptId == null || attemptId.isBlank() || !scopes.canAccess(user, attemptId)) {
+        if (attemptId == null || attemptId.isBlank() || user.roomAttemptId() != null && !user.roomAttemptId().equals(attemptId)
+                || !scopes.canAccess(user, attemptId)) {
             throw AccessDeniedException.forbidden();
         }
     }
     public void requireExamRead(AuthenticatedUser user, String attemptId) {
         if (user == null) throw AccessDeniedException.unauthorized();
-        if (attemptId == null || attemptId.isBlank() || !scopes.canReadExam(user, attemptId)) {
+        if (attemptId == null || attemptId.isBlank() || user.roomAttemptId() != null && !user.roomAttemptId().equals(attemptId)
+                || !scopes.canReadExam(user, attemptId)) {
             throw AccessDeniedException.forbidden();
         }
     }

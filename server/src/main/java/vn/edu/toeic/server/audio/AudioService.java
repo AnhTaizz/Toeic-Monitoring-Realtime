@@ -40,6 +40,7 @@ public class AudioService {
 
     private Attempt ownedAttempt(AuthenticatedUser user, String attemptId, boolean lock) {
         authorization.requireRole(user, Role.CANDIDATE);
+        authorization.requireExamRead(user, attemptId);
         return jdbc.sql("""
                 SELECT a.attempt_id, a.session_id, a.state, a.writer_epoch, a.deadline_at
                 FROM monitoring_attempts a JOIN exam_sessions s ON s.session_id = a.session_id AND s.exam_id = a.exam_id

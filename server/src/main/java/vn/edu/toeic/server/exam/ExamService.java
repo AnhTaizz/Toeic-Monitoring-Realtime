@@ -95,6 +95,7 @@ public class ExamService {
                 JOIN exam_sessions s ON s.session_id = a.session_id
                 JOIN exams e ON e.exam_id = a.exam_id AND e.exam_id = s.exam_id
                 WHERE a.candidate_user_id = :candidateUserId
+                """ + vn.edu.toeic.server.monitoring.JdbcAttemptScopeStore.ADMISSION_SCOPE + """
                   AND a.state IN ('ACTIVE', 'SUBMITTED', 'TIMED_OUT')
                   AND (a.state = 'ACTIVE' OR a.submitted_at IS NOT NULL)
                 """ + cursorClause + """
@@ -102,6 +103,7 @@ public class ExamService {
                 LIMIT :fetchLimit
                 """)
                 .param("candidateUserId", candidate.userId())
+                .param("user", candidate.userId()).param("role", candidate.role().name()).param("bound", candidate.roomAttemptId())
                 .param("fetchLimit", limit + 1);
         if (afterAttemptId != null) {
             historyQuery = historyQuery.param("afterAttemptId", afterAttemptId);

@@ -26,6 +26,7 @@ public class V2SessionPolicy implements RichImageSessionAuthority {
     }
     public State lockForMutation(AuthenticatedUser user,String attemptId) {
         auth.requireRole(user,Role.CANDIDATE);
+        auth.requireExamRead(user,attemptId);
         return lock(attemptId,user.userId());
     }
     public State lockForSystem(String attemptId) {return lock(attemptId,null);}
