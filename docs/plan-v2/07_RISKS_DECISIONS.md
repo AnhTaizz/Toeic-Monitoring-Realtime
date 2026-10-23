@@ -2,6 +2,8 @@
 
 > **Status (19-Oct-2026):** The team has approved the **overall V2 scope**, as reported by the user. ADR-V2-01/02 and the remaining entries below are **technical decision checkpoints**, not a claim that A/B/C have each approved exact wire fields, QD-21 clock semantics, OS API choice or data rights. See [adoption record](ADOPTION_STATUS_20261019.md).
 
+> **Implementation reconciliation (22-Oct-2026):** See the [BASE-04 decision packet](BASE04_DECISION_PACKET_20261022.md). It records what is now integrated and recommends safe dispositions, while keeping A/C/B human decisions, data rights, retention policy and physical USB/LAN evidence explicitly pending.
+
 ## Explicit V2 change requests
 
 | Decision | Existing reality / conflict | Proposed resolution | Owner |

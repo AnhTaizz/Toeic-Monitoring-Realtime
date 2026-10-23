@@ -1,5 +1,13 @@
 # Plan V2 index - task-first agent package
 
+EX-01 internal dataset evidence: [STUDY4_6852 audit - 22/10/2026](EX01_STUDY4_6852_AUDIT_20261022.md) and [SHA-256 manifest](EX01_STUDY4_6852_SHA256_20261022.csv).
+
+Current live reconciliation: [BASE-01 audit — 22/10/2026](BASE01_LIVE_BASELINE_20261022.md).
+
+Phase 3 integration review: [BASE-02 review — 22/10/2026](BASE02_PHASE3_REVIEW_20261022.md).
+
+V2 technical decision packet: [BASE-04 review — 22/10/2026](BASE04_DECISION_PACKET_20261022.md).
+
 > **Status: TEAM SCOPE APPROVED (user-reported, 19-Oct-2026).** See [adoption record](ADOPTION_STATUS_20261019.md) and [kickoff](V2_EXECUTION_KICKOFF_20261019.md). Scope-only appendices have been made to `CLAUDE.md` and the existing contract; exact protocol, deadline, migration and hardware implementation ADRs still require A/B/C decisions. Phase 3 physical gates are unchanged.
 
 This is an additive `docs/plan-v2/` planning pack intended for the existing Java TOEIC + realtime monitoring repository. All work is defined as tasks, **not as a daily calendar**.

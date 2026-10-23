@@ -1,10 +1,10 @@
 # Protocol đang dùng
 
-## EX-03 — rich import trên nhánh review, 19/10/2026
+## EX-03 — rich import đã tích hợp, cập nhật baseline 22/10/2026
 
 `POST /api/v2/exams/import` đã có code: Bearer PROCTOR, JSON strict schemaVersion2/profile TOEIC_200, đúng200 câu/7Part, source/group/options/media verified; trả201 sau DB commit với `RichExamImportResponse`. Duplicate/race409 CONFLICT; JSON/graph400 INVALID_INPUT; body>2MiB413; local media thiếu/hỏng409 INVALID_STATE; IO/DB tạm thời503 RETRYABLE_SERVER_ERROR, retryable=true. Auth/role trước body/filesystem. [DTO/transaction/errors/schema/evidence](EX03_RICH_IMPORTER_VERIFICATION.md), [chữ ký EX02](EX02_RICH_EXAM_CONTRACT_V1.md).
 
-V1 import/đề ngắn giữ; V1 create-session từ exam content_version2 trả409 INVALID_STATE trước mutation. Chưa mở candidate GET rich/image, visual READY, catalog/preparation hoặc START gates. WSv0 và Listening runtime giữ nguyên. Phần này chỉ thuộc PR EX03, chưa merge main; kết quả runtime cuối xem report, không lấy fixture MOCK thay production acceptance.
+V1 import/đề ngắn được giữ; V1 create-session từ exam `content_version=2` trả 409 `INVALID_STATE` trước mutation. Chuỗi EX-03/05/07/06 đã vào `main` qua PR #82: candidate rich GET/image, visual READY, catalog/preparation và START gate hiện có trong runtime. WS v0 và nguyên tắc Listening không tự phát lại vẫn được giữ. Evidence tích hợp hiện tại dùng fixture MOCK nên không thay thế EX-01/EX-08 với dữ liệu được phép sử dụng.
 
 Đối chiếu hiện trạng T3-C5 (13/10/2026, main `f97c081`): [bản nháp đồng bộ và giới hạn](MONITORING_SYNC_REPORT_DRAFT.md). Server delta, scan refresh và candidate opt-in đã có từ T3-C2/C4; các đoạn theo ngày cũ ghi “chưa có/chưa chạy” bên dưới mô tả phạm vi task lúc đó. FULL vẫn mặc định; local C4 có bằng chứng riêng, LAN hai máy/B review/gate vẫn chưa chốt.
 
@@ -1013,11 +1013,11 @@ bằng chứng tại [MON-06 runbook](MON06_ACTIVITY_MONITORING.md).
 
 ## EX05 — image route fail-closed, 19/10/2026
 
-GET `/api/v2/attempts/{attemptId}/images/{mediaId}` đã register: token→CANDIDATE→owner trước policy/files; chưa có EX07 authority nên owned request409 INVALID_STATE, foreign/unknown403. Không bytes/checksum trước quyền. Khi EX07 cấp context hợp lệ: SCHEDULED graph Part1/current query, IN_PROGRESS committed visual ID/deadline; full200/no-store/nosniff/X-Image-SHA256, không ETag/304/Range shortcut. Chưa công bố preparation/visual READY/full rich GET. DTO VisualManifest/VisualImageSlot theo EX02 đã duyệt, WSv0 không đổi.
+GET `/api/v2/attempts/{attemptId}/images/{mediaId}` đã register: token→CANDIDATE→owner trước policy/files; foreign/unknown trả 403 và không đọc bytes/checksum trước quyền. Authority EX-07 hiện kiểm context: SCHEDULED dùng graph Part 1/current preparation, IN_PROGRESS dùng committed visual manifest/deadline; response full 200/no-store/nosniff/X-Image-SHA256, không ETag/304/Range shortcut. Preparation, visual READY và full rich GET đã vào `main` trong chuỗi PR #82. DTO VisualManifest/VisualImageSlot theo EX-02, WS v0 không đổi.
 
-## EX-07 — endpoint PROCTORED_V2 (nhánh chưa merge, 20/10/2026)
+## EX-07 — endpoint PROCTORED_V2 đã tích hợp (cập nhật 22/10/2026)
 
-Có trên nhánh `feat/ex07-rich-session-lifecycle-20261019`, chưa có trên `main`. Shape DTO đúng [contract EX-02 §4–7.1](EX02_RICH_EXAM_CONTRACT_V1.md); luồng gọi cho FE ở [EX07_SESSION_LIFECYCLE §1](EX07_SESSION_LIFECYCLE.md). Route: `GET /api/v2/exams`, `POST /api/v2/sessions`, `GET /api/v2/attempts/{id}/preparation`, `GET /api/v2/attempts/{id}/exam`, `POST /api/v2/attempts/{id}/visual/ready`, `GET /api/v2/sessions/{id}/readiness`; START vẫn là `POST /api/v1/sessions/{id}/listening/start`. WS v0 không đổi (vẫn `LISTENING_START` sau COMMIT).
+Có trên `main` từ PR #82. Shape DTO đúng [contract EX-02 §4–7.1](EX02_RICH_EXAM_CONTRACT_V1.md); luồng gọi cho FE ở [EX07_SESSION_LIFECYCLE §1](EX07_SESSION_LIFECYCLE.md). Route: `GET /api/v2/exams`, `POST /api/v2/sessions`, `GET /api/v2/attempts/{id}/preparation`, `GET /api/v2/attempts/{id}/exam`, `POST /api/v2/attempts/{id}/visual/ready`, `GET /api/v2/sessions/{id}/readiness`; START vẫn là `POST /api/v1/sessions/{id}/listening/start`. WS v0 không đổi (vẫn `LISTENING_START` sau COMMIT). Trạng thái tích hợp không tự nâng EX-07/EX-08 thành DONE; owner review và các gate physical vẫn được theo dõi riêng.
 
 
 ### MON-07 — OBSERVER_STATUS/SIGNAL_GAP explicit TEST, 20/10/2026
