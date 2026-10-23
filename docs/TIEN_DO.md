@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+23/10/2026 — EX-08 technical closeout trên nhánh `feat/a-ex08-study4-adapter-20261023`: adapter offline chuyển bộ `STUDY4_6852` nội bộ thành rich V2, không commit đề/media; kiểm đúng 200 câu theo `6/25/39/30/30/16/54`, 73 group, 54 audio, 11 ảnh. Source `e6b4320`, runner PostgreSQL 18.1 `1/1 PASS`, toàn bộ 65 media tải qua route có xác thực và khớp SHA-256; production `RichExamApiClient/RichExamModel` nhận đủ 7 Part; START retry giữ deadline, takeover khóa Listening, stale writer bị từ chối, server chấm `200/200`. App-image Windows mới với runtime Java 21.0.12.1 và đường dẫn Unicode PASS smoke JavaFX Media; package-only API/WS là MOCK. [Báo cáo](plan-v2/EX08_STUDY4_ACCEPTANCE_20261023.md). Human hearing/MSI/clean-machine/LAN và chữ ký cá nhân B không được tuyên bố.
+
 
 21/10/2026 — Bổ sung producer FX reconnect a12d349:1case mở rộng PASS/0SKIP, production tự refresh capability/scoped heartbeat sau loopback reconnect, transition mới COMMIT/ACK/history; không test-side confirm. JAR build dffa227/main output674files giữ byte-identical, không gán nhãn build mới; ACK11/discarded unconfirmed2/drop0,0schema/PGstop0. Chi tiết tại report integrated; full/common campaign vẫn dùng source đã ghi riêng. Không hardware/policy/human approval.
 

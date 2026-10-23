@@ -114,3 +114,6 @@ docs/plan-v2/fixtures/ex02/assets/source.txt -text
 docs/plan-v2/fixtures/ex02/import.mock.json text eol=lf
 docs/plan-v2/fixtures/ex02/candidate.mock.json text eol=lf
 docs/EX02_RICH_EXAM_CONTRACT_V1.md text eol=lf
+
+# Legacy journal is stored with CRLF; do not report its line terminators as trailing whitespace.
+docs/NHAT_KY.md whitespace=cr-at-eol
