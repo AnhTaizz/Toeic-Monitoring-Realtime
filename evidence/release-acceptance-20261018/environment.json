@@ -1,0 +1,28 @@
+{
+  "observedUtc": "2026-10-18T15:32:41.464376+00:00",
+  "device": "LOCAL_BUILD_HOST",
+  "operator": "Codex agent",
+  "label": "REAL",
+  "os": "Windows-11-10.0.26200-SP0",
+  "x64": true,
+  "java": "openjdk version \"21.0.10\" 2026-01-20 LTS\nOpenJDK Runtime Environment Temurin-21.0.10+7 (build 21.0.10+7-LTS)\nOpenJDK 64-Bit Server VM Temurin-21.0.10+7 (build 21.0.10+7-LTS, mixed mode, sharing)",
+  "jpackage": "21.0.10",
+  "maven": [
+    "Apache Maven 3.9.15 (98b2cdbfdb5f1ac8781f537ea9acccaed7922349)",
+    "Maven home: D:\\maven",
+    "Java version: 21.0.10, vendor: Eclipse Adoptium, runtime: C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot"
+  ],
+  "jdkToolsPresent": {
+    "java.exe": true,
+    "javac.exe": true,
+    "jar.exe": true,
+    "jpackage.exe": true,
+    "jlink.exe": true
+  },
+  "wix3OnPath": false,
+  "mtOnPath": false,
+  "knownToolLocationsFound": 0,
+  "installerPreflight": "BLOCKED: missing target/t3-b5/tools/wix",
+  "installerBuild": "NOT RUN: PR47 owner gate pending; WiX3 and mt.exe not located",
+  "scope": "PATH and documented/common locations; not whole-disk absence proof"
+}

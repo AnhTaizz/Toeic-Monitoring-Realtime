@@ -1,0 +1,197 @@
+[
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "scripts/package-windows.ps1",
+    "sha256": "f52d3e53ba82bf3a06a0c08c5c9b4459c5b4ea212dc8e4ecd90759f95f65893c"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "scripts/package-t3b1.ps1",
+    "sha256": "51f23e7f4a2c8fba80be871971ec965f6520b62144b54f8a2e1b8ef963d39fc6"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "scripts/smoke-windows-installer.ps1",
+    "sha256": "966a6a6c6f946e42e5120b3a6f57350296b1f121bbf5ef50a1e3c04185c87e27"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "docs/WINDOWS_INSTALLER.md",
+    "sha256": "0ae0aa67df5a0a935c17a250cd57baf6b9c58e006ca802f05e8d9e0ba1dade78"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "docs/ACCEPTANCE_B_MANUAL_MATRIX.md",
+    "sha256": "daa3d8acf05ecb0b6fc8f26300d03db7e09c1e74cf915afc1b1062791ce89513"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "docs/QUYET_DINH.md",
+    "sha256": "3077bfabab13b4d3805b76be149be8c6e4feda23386ec3dbcdd89ae930ffb8ef"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "docs/MONITORING_SERVER_HOOKS.md",
+    "sha256": "fe2d0fd3f3941a1ce7d3c9838517d436c655e678a932ca83d62eb4efa76d54cb"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "docs/T3_A5_NETWORK_CONCURRENCY_REPORT_DRAFT.md",
+    "sha256": "4b05a343bcb8677cd28ebedc37cb43c6aba97cf99e5bfd81271c6e1c1e0a244e"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringStateService.java",
+    "sha256": "5db07daaa462a2c769b3f770d76a7ff046433df850c7581d23cb91617e13b154"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringStateMaintenance.java",
+    "sha256": "df4d405a2dc2d1a4f9b2ee6f2f6676cd6608a89c1283dc3c9a531e8a565aa017"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringEventService.java",
+    "sha256": "9479282e5a69124a30805639aa0aaebfd891b98fae8d7c0f118f6c24fc84e5f6"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringGapService.java",
+    "sha256": "284b343811b939e46b7765a67b5b912f9795d9aacdb603a4d374fe9a5e0734b6"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "server/src/main/java/vn/edu/toeic/server/monitoring/JdbcPresenceStore.java",
+    "sha256": "4b7149f53dce6ef757dd978e97941f9c8de06c7411a107b741ca6da680a68816"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringHistoryLimit.java",
+    "sha256": "398b34a92b8a71f6a6c220da7d8cf7943c699405f09b50a3a088f13da63e5284"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "client/src/main/java/vn/edu/toeic/client/monitoring/CandidateMonitoringSession.java",
+    "sha256": "00d495b3e5000835695ee8b5622f669dc45a451f2985700da3035d6cdcae0c04"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "client/src/main/java/vn/edu/toeic/client/monitoring/MonitoringDelivery.java",
+    "sha256": "8ad5ab52d42db28f98d7adc0d94fd88e6bf90ddbe8c4566400e095c045f1156f"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "evidence/stabilize-20261017/REPORT.md",
+    "sha256": "f013197ad2a6ec94468034f2564067f692b904429c1ca2527b2db1de6810c5d9"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "evidence/stabilize-20261017/ACCEPTANCE_CHECKLIST.md",
+    "sha256": "816dd3c3f717a83dd5bd950bb81e89da1c0269b522564b9f67872c31711f0359"
+  },
+  {
+    "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "path": "evidence/stabilize-20261017/MSI_PROVENANCE.json",
+    "sha256": "f2c642884229068c334fdd3e6b08d0659c6bd6aaaa785c09d3ea5d077b0efa79"
+  },
+  {
+    "sourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+    "path": "client/src/main/java/vn/edu/toeic/client/monitoring/FullSnapshotDelivery.java",
+    "sha256": "eed9a0c61b8bd54268a8d2a48ea0ae7ad9a824eaf945e1f86e0eb439fa0b5165"
+  },
+  {
+    "sourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+    "path": "client/src/main/java/vn/edu/toeic/client/realtime/RealtimeClient.java",
+    "sha256": "9a68569902d8ce24b129283b457688da51fa18076f0334b15063039e27a708a5"
+  },
+  {
+    "sourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+    "path": "evidence/pr47-stabilize-20261018/REPORT.md",
+    "sha256": "77efe6fbb0536b9f314f42ee27a42054b5c8dd391fd8ebceb0c360d806008921"
+  },
+  {
+    "sourceSha": "b057b0fa5c4f99f00dfaa29d49c2030f1e8a5f16",
+    "path": "docs/MONITORING_SYNC_REPORT_DRAFT.md",
+    "sha256": "7d5d27dd2c32fc066f5beaea6f62069d93727226800360f7e6de3b9a32c9ec23"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "scripts/lan-t3c4/Capture-T3C4LanCheckpoint.ps1",
+    "sha256": "6e32493f39c695a9388636d1a41d559b8126fe69d3eb9b2cc0084639041cef2e"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "scripts/lan-t3c4/Common.ps1",
+    "sha256": "46c5fe08d68ced677d9b070fad430ff5caba38be29c93c8019283c800672bf6f"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "scripts/lan-t3c4/Initialize-T3C4LanRun.ps1",
+    "sha256": "fae1239a259705f48a32b881defb116cb07e32681bb7577a8185b6d5eb1cf050"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "scripts/lan-t3c4/Invoke-T3C4LanProtocolProbe.ps1",
+    "sha256": "be005d165d6069447ed3e637ca4335a73582c9040b7afa4c98a07346115114cb"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "scripts/lan-t3c4/New-T3C4LanBundle.ps1",
+    "sha256": "cb786cca3f3a800cb9ab838fae9139df779f324365df5160e7d08fb43700ce6d"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "scripts/lan-t3c4/Start-T3C4LanClient.ps1",
+    "sha256": "31224b88272b4761648e5c970fda194c459e2a5010501b689e1b04d4339be528"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "scripts/lan-t3c4/Start-T3C4LanFaultConsole.ps1",
+    "sha256": "ab265dd75b5147ec3a4082a66a0005b155aef406d7dde2b2fc221480c43d3021"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "scripts/lan-t3c4/Test-T3C4LanKit.ps1",
+    "sha256": "5ba30931da048454d176f4d1fd8c5459fe839d3f92abe0b0d56851e94ca19b15"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "scripts/lan-t3c4/Test-T3C4LanPreflight.ps1",
+    "sha256": "5d46eac300e6e0936e9112680dbf055995e558636159c90527f2c28f146744c8"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "docs/templates/t3c4-lan/cases.csv",
+    "sha256": "71427c9e3c5beb299a168cd5ecf14a706e6c1f0105781bbdfa7794d3dcc02cfa"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "docs/templates/t3c4-lan/review.json",
+    "sha256": "21af533b7cfc002314e5106ff159eeb4e24783dd715e7b9f242ef2dcb146f7dc"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "docs/templates/t3c4-lan/topology.json",
+    "sha256": "00a64e883e63718107e82fe2e7c2449bdc7dd04ee6acacce9cfc1bd52bb9b871"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "docs/templates/t3c4-lan/verify-history.sql",
+    "sha256": "69a278a8f652c356f58f2ebf9f2fe574573290f86fef56bd147b73f417dbfeaa"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "docs/T3_C4_PHYSICAL_LAN_ACCEPTANCE.md",
+    "sha256": "2a1b7d0908590fca8e8a7b483771bb39b3ca99da2c4bdb20e76de44427c6af10"
+  },
+  {
+    "sourceSha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "path": "evidence/t3-c4-physical-prep-20261018/bundle-checksums.json",
+    "sha256": "98a9c42464771756f1cb38a1bb13b08d5c79642149000e5e8f7f15b05e51bfde"
+  },
+  {
+    "sourceSha": "9bd052a34d17d05a8dd7d7310ffb9667e91eebb0",
+    "path": "client/src/test/java/vn/edu/toeic/client/monitoring/CandidateModeSessionTest.java",
+    "sha256": "6895481a78fe6b783f0f798ea35ea1997e39cbdb7ebfc22c61b427e838489d0e"
+  }
+]
