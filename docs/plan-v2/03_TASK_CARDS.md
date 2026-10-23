@@ -159,13 +159,14 @@
 - **Owner:** A / **Reviewer:** C / **Priority:** P0 / **Dependencies:** EX-02, BASE-04
 - **Objective:** Add minimum Flyway migration and filesystem configuration for exam images and content blocks.
 - **Acceptance criteria:**
-  - [ ] Check the latest existing Flyway version before naming a new migration; never edit applied V1..Vn.
-  - [ ] Keep structured metadata in PostgreSQL; media binaries remain outside the DB/JAR.
-  - [ ] Store relative paths, MIME, content length, SHA-256, ordering and question/group association.
-  - [ ] Do not break the established TOEIC_AUDIO_ROOT manifest/READY semantics.
+  - [x] Check the latest existing Flyway version before naming a new migration; never edit applied V1..Vn.
+  - [x] Keep structured metadata in PostgreSQL; media binaries remain outside the DB/JAR.
+  - [x] Store relative paths, MIME, content length, SHA-256, ordering and question/group association.
+  - [x] Do not break the established TOEIC_AUDIO_ROOT manifest/READY semantics.
 - **Verification/evidence:**
   - Fresh database migration test and upgrade test from the current release schema.
   - Reject invalid file paths and dangling asset references.
+- **Evidence (2026-10-23):** [EX-04 closeout](EX04_CLOSEOUT_20261023.md): real PostgreSQL 18.1 migration/constraint/legacy suite `58/58`, audio/media regression `18/18`, clean cluster teardown, and completed `TOEIC_IMAGE_ROOT` operator configuration.
 - **Likely files/components:** server/src/main/resources/db/migration/, exam services, configuration
 
 ### EX-05 - Authenticated image delivery and media validation

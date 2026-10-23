@@ -3,7 +3,7 @@ $ErrorActionPreference='Stop';$previous=@{}
 Push-Location (Split-Path -Parent $PSScriptRoot)
 try {
     foreach($line in Get-Content -LiteralPath '.env' -Encoding UTF8) {
-        if($line -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD|TOEIC_AUDIO_ROOT)\s*=(.*)$') {
+        if($line -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD|TOEIC_AUDIO_ROOT|TOEIC_IMAGE_ROOT)\s*=(.*)$') {
             $key=$Matches[1];$previous[$key]=[Environment]::GetEnvironmentVariable($key,'Process');[Environment]::SetEnvironmentVariable($key,$Matches[2].Trim().Trim('"').Trim("'"),'Process')
         }
     }
