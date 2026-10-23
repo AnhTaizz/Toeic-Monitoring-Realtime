@@ -204,13 +204,14 @@
 - **Owner:** A / **Reviewer:** B / **Priority:** P0 / **Dependencies:** BASE-02, EX-02, BASE-04
 - **Objective:** Let a proctor select a stored exam and start a scheduled session without granting premature answer access.
 - **Acceptance criteria:**
-  - [ ] Provide an authenticated exam catalog with metadata only; preserve existing import/session compatibility.
-  - [ ] An attempt may be ACTIVE for monitoring and READY while its session is SCHEDULED; GET questions, submit and save must be gated by authoritative server rules.
-  - [ ] Preserve allowed pre-start manifest/download/checksum and READY flows.
-  - [ ] Resolve server deadline policy explicitly against QD-21; retries/takeover cannot reset or prolong an existing deadline.
+  - [x] Provide an authenticated exam catalog with metadata only; preserve existing import/session compatibility.
+  - [x] An attempt may be ACTIVE for monitoring and READY while its session is SCHEDULED; GET questions, submit and save must be gated by authoritative server rules.
+  - [x] Preserve allowed pre-start manifest/download/checksum and READY flows.
+  - [x] Resolve server deadline policy explicitly against QD-21; retries/takeover cannot reset or prolong an existing deadline.
 - **Verification/evidence:**
   - PG/HTTP tests before START and after START for questions, save and submit.
   - RBAC and READY/Listening start idempotency/reconnect regression.
+- **Evidence (2026-10-23):** [EX-07 closeout](EX07_CLOSEOUT_20261023.md): integrated lifecycle implementation reused; all `8/8` PostgreSQL 18 lifecycle cases passed inside a full `1477`-pass regression run, including concurrent START and START/takeover races.
 - **Likely files/components:** server ExamService/controllers, client proctor exam picker, contract documentation
 - **Watch-out:** Backend gate is mandatory; disabling UI controls is not a security boundary.
 
