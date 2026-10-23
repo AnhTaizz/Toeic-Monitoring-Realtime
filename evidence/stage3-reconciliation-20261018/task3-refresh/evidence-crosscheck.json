@@ -1,0 +1,45 @@
+{
+  "observedUtc": "2026-10-18T15:59:01.007588+00:00",
+  "label": "STATIC_READ_EXISTING_EVIDENCE",
+  "operator": "Codex agent",
+  "device": "LOCAL_BUILD_HOST",
+  "runtimeTestsInTask3": "NOT RUN",
+  "physicalLan": {
+    "source": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "pass": 0,
+    "fail": 0,
+    "notRun": 41,
+    "actualRowsEmpty": true,
+    "humanReview": "PENDING"
+  },
+  "cachePublication": {
+    "source": "e3fdfea82a1b69d12b0270008b64db92243050bc",
+    "runtimeSource": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "errors": 467,
+    "operations": 1280,
+    "failedBatches": 4,
+    "newTask3Execution": false,
+    "verdict": "REQUEST_CHANGES"
+  },
+  "qd31qd32": {
+    "source": "b4177a7e7e2b28a73b622349be0a2a0c48c5945f",
+    "technical": "ACCEPT",
+    "owners": "A+C PENDING",
+    "evidence": "166 historical cases; no rerun"
+  },
+  "e1": {
+    "historicalCampaign": "12 runs/84 raw, source c1601b5; old numerical conclusions remain historical",
+    "currentRaw": "NOT AVAILABLE per Task2 search; no new search/reanalysis in Task3",
+    "python": "12 PASS in Task1; not rerun in Task3",
+    "ownerMethodReview": "PENDING"
+  },
+  "msi": {
+    "historical": "0.3.10 source3702b6d; not PR47",
+    "latestTask2": "BLOCKED final build; WiX3/mt not found in checked locations",
+    "secondMachine": "NOT RUN",
+    "newTask3Execution": false
+  },
+  "e2": "NOT RUN",
+  "load": "NOT RUN",
+  "mode": "FULL baseline; DELTA experimental opt-in; QD19 pending, QD10 presence unchanged"
+}

@@ -1,0 +1,216 @@
+{
+  "main": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "changedByPR": {
+    "47": [
+      "client/src/main/java/vn/edu/toeic/client/monitoring/FullSnapshotDelivery.java",
+      "client/src/main/java/vn/edu/toeic/client/realtime/RealtimeClient.java",
+      "client/src/test/java/vn/edu/toeic/client/monitoring/DeltaSnapshotDeliveryTest.java",
+      "client/src/test/java/vn/edu/toeic/client/monitoring/FullSnapshotDeliveryTest.java",
+      "client/src/test/java/vn/edu/toeic/client/realtime/RealtimeClientTest.java",
+      "docs/KIEM_THU.md",
+      "docs/MONITORING_DELTA_LIVE_GATE.md",
+      "docs/NHAT_KY.md",
+      "docs/TIEN_DO.md",
+      "docs/thanh-vien/VAI_B.md",
+      "docs/thanh-vien/VAI_C.md",
+      "evidence/pr47-stabilize-20261018/REPORT.md",
+      "evidence/pr47-stabilize-20261018/SHA256SUMS.txt",
+      "evidence/pr47-stabilize-20261018/cleanup.json",
+      "evidence/pr47-stabilize-20261018/logs/ack-retired-before.log",
+      "evidence/pr47-stabilize-20261018/logs/clean-test-final.log",
+      "evidence/pr47-stabilize-20261018/logs/clean-test-owned-pg.log",
+      "evidence/pr47-stabilize-20261018/logs/clean-test-pg.log",
+      "evidence/pr47-stabilize-20261018/logs/focused-after.log",
+      "evidence/pr47-stabilize-20261018/logs/focused-source-final.log",
+      "evidence/pr47-stabilize-20261018/logs/package-owned-pg.log",
+      "evidence/pr47-stabilize-20261018/logs/regression-before.log",
+      "evidence/pr47-stabilize-20261018/logs/server-focused.log",
+      "evidence/pr47-stabilize-20261018/logs/smoke-t3c2.log",
+      "evidence/pr47-stabilize-20261018/logs/smoke-t3c4.log",
+      "evidence/pr47-stabilize-20261018/runs.json",
+      "evidence/pr47-stabilize-20261018/smoke-t3c4-report.json",
+      "evidence/pr47-stabilize-20261018/smokes.json",
+      "evidence/t3-c4/2026-10-17-lan-gate.md",
+      "scripts/smoke-t3c4.ps1",
+      "server/src/test/java/vn/edu/toeic/client/LiveCandidateApp.java",
+      "server/src/test/java/vn/edu/toeic/server/monitoring/DeltaLiveGateSmoke.java"
+    ],
+    "51": [
+      "docs/KIEM_THU.md",
+      "docs/MONITORING_SYNC_REPORT_DRAFT.md",
+      "docs/NHAT_KY.md",
+      "docs/TIEN_DO.md",
+      "docs/thanh-vien/VAI_C.md",
+      "evidence/t3-c5/2026-10-18-update.md"
+    ],
+    "52": [
+      ".gitattributes",
+      "docs/ACCEPTANCE_B_MANUAL_MATRIX.md",
+      "docs/KIEM_THU.md",
+      "docs/LAN_TWO_MACHINE_RUNBOOK.md",
+      "docs/MONITORING_DELTA_LIVE_GATE.md",
+      "docs/NHAT_KY.md",
+      "docs/T3_C4_PHYSICAL_LAN_ACCEPTANCE.md",
+      "docs/TIEN_DO.md",
+      "docs/templates/t3c4-lan/cases.csv",
+      "docs/templates/t3c4-lan/review.json",
+      "docs/templates/t3c4-lan/topology.json",
+      "docs/templates/t3c4-lan/verify-history.sql",
+      "docs/thanh-vien/VAI_B.md",
+      "docs/thanh-vien/VAI_C.md",
+      "evidence/t3-c4-physical-prep-20261018/PUBLISH.md",
+      "evidence/t3-c4-physical-prep-20261018/REPORT.md",
+      "evidence/t3-c4-physical-prep-20261018/SHA256SUMS.txt",
+      "evidence/t3-c4-physical-prep-20261018/bundle-checksums.json",
+      "evidence/t3-c4-physical-prep-20261018/final-audit.json",
+      "evidence/t3-c4-physical-prep-20261018/kit-validation-portable.json",
+      "evidence/t3-c4-physical-prep-20261018/kit-validation-source.json",
+      "evidence/t3-c4-physical-prep-20261018/portable-verification.json",
+      "evidence/t3-c4-physical-prep-20261018/publish-audit.json",
+      "scripts/lan-t3c4/Capture-T3C4LanCheckpoint.ps1",
+      "scripts/lan-t3c4/Common.ps1",
+      "scripts/lan-t3c4/Initialize-T3C4LanRun.ps1",
+      "scripts/lan-t3c4/Invoke-T3C4LanProtocolProbe.ps1",
+      "scripts/lan-t3c4/New-T3C4LanBundle.ps1",
+      "scripts/lan-t3c4/Start-T3C4LanClient.ps1",
+      "scripts/lan-t3c4/Start-T3C4LanFaultConsole.ps1",
+      "scripts/lan-t3c4/Test-T3C4LanKit.ps1",
+      "scripts/lan-t3c4/Test-T3C4LanPreflight.ps1"
+    ],
+    "53": [
+      "evidence/cross-review-20261018/.gitattributes",
+      "evidence/cross-review-20261018/QD31_QD32_REVIEW_PACKET.md",
+      "evidence/cross-review-20261018/SHA256SUMS.txt",
+      "evidence/cross-review-20261018/environment-cleanup.json",
+      "evidence/cross-review-20261018/source-manifest.json",
+      "evidence/cross-review-20261018/test-commands.json",
+      "evidence/cross-review-20261018/test-results.json"
+    ],
+    "55": [
+      "evidence/stage3-cross-review-20261018/.gitattributes",
+      "evidence/stage3-cross-review-20261018/OWNER_SIGNOFF_MATRIX.md",
+      "evidence/stage3-cross-review-20261018/QD33_QD34_REVIEW.md",
+      "evidence/stage3-cross-review-20261018/RAW_EVIDENCE_SHA256.json",
+      "evidence/stage3-cross-review-20261018/REPRODUCERS.md",
+      "evidence/stage3-cross-review-20261018/SHA256SUMS.txt",
+      "evidence/stage3-cross-review-20261018/STAGE3_CROSS_REVIEW.md",
+      "evidence/stage3-cross-review-20261018/TEST_COMMANDS.md",
+      "evidence/stage3-cross-review-20261018/environment-cleanup.json",
+      "evidence/stage3-cross-review-20261018/publication-results.json",
+      "evidence/stage3-cross-review-20261018/source-manifest.json",
+      "evidence/stage3-cross-review-20261018/test-commands.json",
+      "evidence/stage3-cross-review-20261018/test-results.json"
+    ],
+    "56": [
+      "client/src/test/java/vn/edu/toeic/client/monitoring/CandidateModeSessionTest.java",
+      "evidence/release-acceptance-20261018/.gitattributes",
+      "evidence/release-acceptance-20261018/C5_PR51.patch",
+      "evidence/release-acceptance-20261018/HANDOFF_B_C.md",
+      "evidence/release-acceptance-20261018/MODE_DECISION_DRAFT.md",
+      "evidence/release-acceptance-20261018/REPORT.md",
+      "evidence/release-acceptance-20261018/SHA256SUMS.txt",
+      "evidence/release-acceptance-20261018/acceptance-checks.json",
+      "evidence/release-acceptance-20261018/environment.json",
+      "evidence/release-acceptance-20261018/github-checkpoint.json",
+      "evidence/release-acceptance-20261018/packet-validation.json",
+      "evidence/release-acceptance-20261018/source-bindings.json"
+    ]
+  },
+  "pairs": [
+    {
+      "prs": [
+        47,
+        51
+      ],
+      "left": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+      "right": "b057b0fa5c4f99f00dfaa29d49c2030f1e8a5f16",
+      "commonChangedFiles": [
+        "docs/KIEM_THU.md",
+        "docs/NHAT_KY.md",
+        "docs/TIEN_DO.md",
+        "docs/thanh-vien/VAI_C.md"
+      ],
+      "virtualMergeExit": 1,
+      "conflictedPaths": [
+        "docs/NHAT_KY.md",
+        "docs/TIEN_DO.md"
+      ],
+      "method": "git merge-tree --write-tree --messages only; no commit/ref/index/worktree merge"
+    },
+    {
+      "prs": [
+        47,
+        52
+      ],
+      "left": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+      "right": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+      "commonChangedFiles": [
+        "docs/KIEM_THU.md",
+        "docs/MONITORING_DELTA_LIVE_GATE.md",
+        "docs/NHAT_KY.md",
+        "docs/TIEN_DO.md",
+        "docs/thanh-vien/VAI_B.md",
+        "docs/thanh-vien/VAI_C.md"
+      ],
+      "virtualMergeExit": 0,
+      "conflictedPaths": [],
+      "method": "git merge-tree --write-tree --messages only; no commit/ref/index/worktree merge"
+    },
+    {
+      "prs": [
+        51,
+        52
+      ],
+      "left": "b057b0fa5c4f99f00dfaa29d49c2030f1e8a5f16",
+      "right": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+      "commonChangedFiles": [
+        "docs/KIEM_THU.md",
+        "docs/NHAT_KY.md",
+        "docs/TIEN_DO.md",
+        "docs/thanh-vien/VAI_C.md"
+      ],
+      "virtualMergeExit": 1,
+      "conflictedPaths": [
+        "docs/NHAT_KY.md",
+        "docs/TIEN_DO.md"
+      ],
+      "method": "git merge-tree --write-tree --messages only; no commit/ref/index/worktree merge"
+    },
+    {
+      "prs": [
+        47,
+        56
+      ],
+      "left": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+      "right": "7d98514ec64b9fd3e96c3b9bc0d729cd5dcd462c",
+      "commonChangedFiles": [],
+      "virtualMergeExit": 0,
+      "conflictedPaths": [],
+      "method": "git merge-tree --write-tree --messages only; no commit/ref/index/worktree merge"
+    },
+    {
+      "prs": [
+        53,
+        55
+      ],
+      "left": "b4177a7e7e2b28a73b622349be0a2a0c48c5945f",
+      "right": "e3fdfea82a1b69d12b0270008b64db92243050bc",
+      "commonChangedFiles": [],
+      "virtualMergeExit": 0,
+      "conflictedPaths": [],
+      "method": "git merge-tree --write-tree --messages only; no commit/ref/index/worktree merge"
+    },
+    {
+      "prs": [
+        55,
+        56
+      ],
+      "left": "e3fdfea82a1b69d12b0270008b64db92243050bc",
+      "right": "7d98514ec64b9fd3e96c3b9bc0d729cd5dcd462c",
+      "commonChangedFiles": [],
+      "virtualMergeExit": 0,
+      "conflictedPaths": [],
+      "method": "git merge-tree --write-tree --messages only; no commit/ref/index/worktree merge"
+    }
+  ]
+}

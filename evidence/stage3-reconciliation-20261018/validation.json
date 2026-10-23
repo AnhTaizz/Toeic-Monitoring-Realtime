@@ -1,0 +1,91 @@
+{
+  "observed_at_utc": "2026-10-18T10:22:40.283837+00:00",
+  "source_main_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "checks": [
+    {
+      "check": "PR41 ancestry main/46 and zero unique commits",
+      "status": "PASS"
+    },
+    {
+      "check": "PR42 ancestry main/46 and zero unique commits",
+      "status": "PASS"
+    },
+    {
+      "check": "PR43 ancestry main/46 and zero unique commits",
+      "status": "PASS"
+    },
+    {
+      "check": "PR47 ancestor PR52, three handoff commits",
+      "status": "PASS"
+    },
+    {
+      "check": "41 unique cases NOT RUN/reviewer PENDING/no actual evidence",
+      "status": "PASS"
+    },
+    {
+      "check": "CI patch id same",
+      "status": "PASS"
+    },
+    {
+      "check": "PR53 seven evidence files",
+      "status": "PASS"
+    },
+    {
+      "check": "PR41 CLOSED without merge and closure comment",
+      "status": "PASS"
+    },
+    {
+      "check": "PR42 CLOSED without merge and closure comment",
+      "status": "PASS"
+    },
+    {
+      "check": "PR43 CLOSED without merge and closure comment",
+      "status": "PASS"
+    },
+    {
+      "check": "PR45 remains OPEN/unmerged",
+      "status": "PASS"
+    },
+    {
+      "check": "PR47 remains OPEN/unmerged",
+      "status": "PASS"
+    },
+    {
+      "check": "PR51 remains OPEN/unmerged",
+      "status": "PASS"
+    },
+    {
+      "check": "PR52 remains OPEN/unmerged",
+      "status": "PASS"
+    },
+    {
+      "check": "PR53 remains OPEN/unmerged",
+      "status": "PASS"
+    },
+    {
+      "check": "Markdown source/evidence links exist",
+      "status": "PASS"
+    },
+    {
+      "check": "No conflict markers",
+      "status": "PASS"
+    },
+    {
+      "check": "Text scan no credential/private IP/user path patterns",
+      "status": "PASS"
+    },
+    {
+      "check": "Readiness STAGE3_PARTIAL without DONE approval",
+      "status": "PASS"
+    }
+  ],
+  "pass": 19,
+  "fail": 0,
+  "markdown_local_links_checked": 4,
+  "runtime_tests_this_task": "NOT RUN",
+  "historical_runtime_evidence": "Cited by source SHA; no reused count treated as new test",
+  "physical_lan_cases_executed_this_task": 0,
+  "human_b_review": "PENDING",
+  "stage3": "STAGE3_PARTIAL",
+  "scope": "New reconciliation Markdown and curated JSON/checksum evidence only; staged diff separately checked before commit."
+}

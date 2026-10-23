@@ -1,0 +1,106 @@
+{
+  "observed_at_utc": "2026-10-18T10:21:24.557120+00:00",
+  "main_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "old_pr_ancestry": [
+    {
+      "pr": 41,
+      "head_sha": "304bc509bf26966499d6d0fb98a922794743b2ee",
+      "ancestor_main_exit": 0,
+      "ancestor_pr46_merge_exit": 0,
+      "commits_outside_main": 0
+    },
+    {
+      "pr": 42,
+      "head_sha": "7af7046512d008a289df3877c0d43f4207634821",
+      "ancestor_main_exit": 0,
+      "ancestor_pr46_merge_exit": 0,
+      "commits_outside_main": 0
+    },
+    {
+      "pr": 43,
+      "head_sha": "772c6e9864cd6ce0ad45aad0433f5bfce53fee54",
+      "ancestor_main_exit": 0,
+      "ancestor_pr46_merge_exit": 0,
+      "commits_outside_main": 0
+    }
+  ],
+  "remote_refs": {
+    "gate/t3-c4-lan-20261017": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+    "docs/t3-c5-update-20261018": "b057b0fa5c4f99f00dfaa29d49c2030f1e8a5f16",
+    "prepare/t3-c4-physical-lan-20261018": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+    "review/qd31-qd32-20261018": "b4177a7e7e2b28a73b622349be0a2a0c48c5945f"
+  },
+  "merge_parents": {
+    "c954e42": "c954e42c0716b24b19820b03159444a4fb9065ba 093429ab1abb19f9c6d37be9b86ae8e00f11a284 1b3062cff70f00d6f3e001396fb02a41b2cd41ee",
+    "6ac8835": "6ac8835b59fbb6b5c35873b860305eba0f9266bf 07c4024ee728ce533149d8c0175e35084ee8931a c954e42c0716b24b19820b03159444a4fb9065ba",
+    "167caf3": "167caf312767566417ad55840a008833844e1f15 5d81aa04925387fe90c3b7ac53aef14f6824b417 f86403489bdd01887b926f2f9e4b72ddf05d1423"
+  },
+  "ci_patch_id_original": "475510ffc80bb21224678f590831197431cef613",
+  "ci_patch_id_integrated": "475510ffc80bb21224678f590831197431cef613",
+  "patch_id_evidence": "Native Git show c1e3405/d562581 --format= -- .github/workflows/pr-ci.yml | git patch-id --stable; both equal, observed before cleanup.",
+  "docs_merge_tree": [
+    {
+      "pr_a": 47,
+      "pr_b": 51,
+      "conflicts": [
+        "CONFLICT (content): Merge conflict in docs/NHAT_KY.md",
+        "CONFLICT (content): Merge conflict in docs/TIEN_DO.md"
+      ]
+    },
+    {
+      "pr_a": 51,
+      "pr_b": 52,
+      "conflicts": [
+        "CONFLICT (content): Merge conflict in docs/NHAT_KY.md",
+        "CONFLICT (content): Merge conflict in docs/TIEN_DO.md"
+      ]
+    },
+    {
+      "pr_a": 47,
+      "pr_b": 53,
+      "conflicts": []
+    },
+    {
+      "pr_a": 51,
+      "pr_b": 53,
+      "conflicts": []
+    },
+    {
+      "pr_a": 52,
+      "pr_b": 53,
+      "conflicts": []
+    }
+  ],
+  "pr47_ancestor_pr52_exit": 0,
+  "pr52_commits_beyond_pr47": 3,
+  "pr53_changed_files": [
+    "evidence/cross-review-20261018/.gitattributes",
+    "evidence/cross-review-20261018/QD31_QD32_REVIEW_PACKET.md",
+    "evidence/cross-review-20261018/SHA256SUMS.txt",
+    "evidence/cross-review-20261018/environment-cleanup.json",
+    "evidence/cross-review-20261018/source-manifest.json",
+    "evidence/cross-review-20261018/test-commands.json",
+    "evidence/cross-review-20261018/test-results.json"
+  ],
+  "lan_checklist": {
+    "count": 41,
+    "unique_ids": 41,
+    "status": [
+      "NOT RUN"
+    ],
+    "reviewers": [
+      "PENDING"
+    ],
+    "actual_or_evidence_filled": 0
+  },
+  "commands": [
+    "git fetch origin (native Windows preflight successful)",
+    "git merge-base --is-ancestor <head> origin/main",
+    "git merge-base --is-ancestor <head> c954e42",
+    "git rev-list --count origin/main..<head>",
+    "git merge-tree --write-tree <headA> <headB>",
+    "git show <commit> --format= -- .github/workflows/pr-ci.yml | git patch-id --stable",
+    "git diff --name-only <base>...<head>"
+  ],
+  "additional_fetch_note": "Fetch bổ sung bị treo và đã dừng tiến trình sở hữu; refs của preflight giữ nguyên. GitHub compare main/f864034 trả identical sau đó; không nhận fetch bị dừng là PASS."
+}

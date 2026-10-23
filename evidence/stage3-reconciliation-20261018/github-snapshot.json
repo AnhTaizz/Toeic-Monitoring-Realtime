@@ -1,0 +1,348 @@
+{
+  "observed_at_utc": "2026-10-18 10:16:55 UTC",
+  "repository": "AnhTaizz/Toeic-Monitoring-Realtime",
+  "main_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "main_ci_note": "API chỉ trả pull_request-triggered runs và trang đầu; không có run exact main SHA trong kết quả, không suy ra FAIL hoặc PASS.",
+  "main_ci": {
+    "workflow_runs": []
+  },
+  "pull_requests": [
+    {
+      "number": 39,
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/39",
+      "state": "closed",
+      "merged": true,
+      "merged_at": "2026-10-17T12:41:24Z",
+      "closed_at": "2026-10-17T12:41:24Z",
+      "head": "integrate/unified-reading-listening-b4-b5-20261015",
+      "head_sha": "c954e42c0716b24b19820b03159444a4fb9065ba",
+      "base": "main",
+      "base_sha": "07c4024ee728ce533149d8c0175e35084ee8931a",
+      "actual_merge_commit": "6ac8835b59fbb6b5c35873b860305eba0f9266bf",
+      "pre_cleanup_comment_count": null,
+      "review_count": null,
+      "inline_review_thread_count": null,
+      "ci": null,
+      "closure_comment_id": null
+    },
+    {
+      "number": 41,
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/41",
+      "state": "closed",
+      "merged": false,
+      "merged_at": null,
+      "closed_at": "2026-10-18T10:15:59Z",
+      "head": "review/c-e1-methodology-t4c1",
+      "head_sha": "304bc509bf26966499d6d0fb98a922794743b2ee",
+      "base": "qa/b-pr39-acceptance-20261016",
+      "base_sha": "3fc5bb4e8ef93b60bf479fc52fe725e4b8f072af",
+      "actual_merge_commit": null,
+      "pre_cleanup_comment_count": 0,
+      "review_count": 0,
+      "inline_review_thread_count": 0,
+      "ci": [],
+      "closure_comment_id": 6248651978
+    },
+    {
+      "number": 42,
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/42",
+      "state": "closed",
+      "merged": false,
+      "merged_at": null,
+      "closed_at": "2026-10-18T10:16:08Z",
+      "head": "qa/f01-listening-result-20261016",
+      "head_sha": "7af7046512d008a289df3877c0d43f4207634821",
+      "base": "qa/b-pr39-acceptance-20261016",
+      "base_sha": "3fc5bb4e8ef93b60bf479fc52fe725e4b8f072af",
+      "actual_merge_commit": null,
+      "pre_cleanup_comment_count": 0,
+      "review_count": 0,
+      "inline_review_thread_count": 0,
+      "ci": [],
+      "closure_comment_id": 6248653264
+    },
+    {
+      "number": 43,
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/43",
+      "state": "closed",
+      "merged": false,
+      "merged_at": null,
+      "closed_at": "2026-10-18T10:16:15Z",
+      "head": "fix/c-monitoring-audit-20261017",
+      "head_sha": "772c6e9864cd6ce0ad45aad0433f5bfce53fee54",
+      "base": "review/c-e1-methodology-t4c1",
+      "base_sha": "304bc509bf26966499d6d0fb98a922794743b2ee",
+      "actual_merge_commit": null,
+      "pre_cleanup_comment_count": 0,
+      "review_count": 0,
+      "inline_review_thread_count": 0,
+      "ci": [],
+      "closure_comment_id": 6248654381
+    },
+    {
+      "number": 45,
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/45",
+      "state": "open",
+      "merged": false,
+      "merged_at": null,
+      "closed_at": null,
+      "head": "feat/t3-b3-listening-interruption-recovery",
+      "head_sha": "a6524823c6a8d97cc7652fe4b776279db17d7d55",
+      "base": "main",
+      "base_sha": "07c4024ee728ce533149d8c0175e35084ee8931a",
+      "actual_merge_commit": null,
+      "pre_cleanup_comment_count": 0,
+      "review_count": 0,
+      "inline_review_thread_count": 0,
+      "ci": [
+        {
+          "id": 39006248748,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 4,
+          "jobs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39006248748/jobs",
+          "logs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39006248748/logs",
+          "workflow_id": 387381642
+        },
+        {
+          "id": 39006228168,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "run_number": 3,
+          "jobs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39006228168/jobs",
+          "logs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39006228168/logs",
+          "workflow_id": 387381642
+        }
+      ],
+      "closure_comment_id": null
+    },
+    {
+      "number": 46,
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/46",
+      "state": "closed",
+      "merged": true,
+      "merged_at": "2026-10-17T12:35:56Z",
+      "closed_at": "2026-10-17T12:35:56Z",
+      "head": "stabilize/final-rc-20261017",
+      "head_sha": "1b3062cff70f00d6f3e001396fb02a41b2cd41ee",
+      "base": "integrate/unified-reading-listening-b4-b5-20261015",
+      "base_sha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+      "actual_merge_commit": "c954e42c0716b24b19820b03159444a4fb9065ba",
+      "pre_cleanup_comment_count": null,
+      "review_count": null,
+      "inline_review_thread_count": null,
+      "ci": null,
+      "closure_comment_id": null
+    },
+    {
+      "number": 47,
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/47",
+      "state": "open",
+      "merged": false,
+      "merged_at": null,
+      "closed_at": null,
+      "head": "gate/t3-c4-lan-20261017",
+      "head_sha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+      "base": "main",
+      "base_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "actual_merge_commit": null,
+      "pre_cleanup_comment_count": 0,
+      "review_count": 0,
+      "inline_review_thread_count": 0,
+      "ci": [
+        {
+          "id": 39093801431,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 17,
+          "jobs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39093801431/jobs",
+          "logs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39093801431/logs",
+          "workflow_id": 387381642
+        }
+      ],
+      "closure_comment_id": null
+    },
+    {
+      "number": 48,
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/48",
+      "state": "closed",
+      "merged": true,
+      "merged_at": "2026-10-17T18:09:44Z",
+      "closed_at": "2026-10-17T18:09:44Z",
+      "head": "feat/t3-a3-delta-server-hooks",
+      "head_sha": "8fef5bb2f9c2879de286e19cafb358bbb004f31b",
+      "base": "main",
+      "base_sha": "6ac8835b59fbb6b5c35873b860305eba0f9266bf",
+      "actual_merge_commit": "a1e08459af07f6668e5dce34b7e67bcd605a34e1",
+      "pre_cleanup_comment_count": null,
+      "review_count": null,
+      "inline_review_thread_count": null,
+      "ci": [
+        {
+          "id": 39056726100,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 12,
+          "jobs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39056726100/jobs",
+          "logs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39056726100/logs",
+          "workflow_id": 387381642
+        }
+      ],
+      "closure_comment_id": null
+    },
+    {
+      "number": 49,
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/49",
+      "state": "closed",
+      "merged": true,
+      "merged_at": "2026-10-17T18:46:31Z",
+      "closed_at": "2026-10-17T18:46:31Z",
+      "head": "test/t3-a4-transaction-multiclient-regression",
+      "head_sha": "44b426db1964424b379f0d1518f8face4aff7ab8",
+      "base": "main",
+      "base_sha": "a1e08459af07f6668e5dce34b7e67bcd605a34e1",
+      "actual_merge_commit": "c0f21b4f885f98742557ab0fc09994c0777f26c7",
+      "pre_cleanup_comment_count": null,
+      "review_count": null,
+      "inline_review_thread_count": null,
+      "ci": [
+        {
+          "id": 39059436361,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 13,
+          "jobs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39059436361/jobs",
+          "logs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39059436361/logs",
+          "workflow_id": 387381642
+        }
+      ],
+      "closure_comment_id": null
+    },
+    {
+      "number": 50,
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/50",
+      "state": "closed",
+      "merged": true,
+      "merged_at": "2026-10-17T18:55:07Z",
+      "closed_at": "2026-10-17T18:55:08Z",
+      "head": "docs/t3-a5-network-concurrency-report",
+      "head_sha": "145ed77df947e3d6afe1657ad9c3fbf6545a9915",
+      "base": "main",
+      "base_sha": "c0f21b4f885f98742557ab0fc09994c0777f26c7",
+      "actual_merge_commit": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "pre_cleanup_comment_count": null,
+      "review_count": null,
+      "inline_review_thread_count": null,
+      "ci": [
+        {
+          "id": 39059782824,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 14,
+          "jobs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39059782824/jobs",
+          "logs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39059782824/logs",
+          "workflow_id": 387381642
+        }
+      ],
+      "closure_comment_id": null
+    },
+    {
+      "number": 51,
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/51",
+      "state": "open",
+      "merged": false,
+      "merged_at": null,
+      "closed_at": null,
+      "head": "docs/t3-c5-update-20261018",
+      "head_sha": "b057b0fa5c4f99f00dfaa29d49c2030f1e8a5f16",
+      "base": "main",
+      "base_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "actual_merge_commit": null,
+      "pre_cleanup_comment_count": 0,
+      "review_count": 0,
+      "inline_review_thread_count": 0,
+      "ci": [
+        {
+          "id": 39063829880,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 15,
+          "jobs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39063829880/jobs",
+          "logs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39063829880/logs",
+          "workflow_id": 387381642
+        }
+      ],
+      "closure_comment_id": null
+    },
+    {
+      "number": 52,
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/52",
+      "state": "open",
+      "merged": false,
+      "merged_at": null,
+      "closed_at": null,
+      "head": "prepare/t3-c4-physical-lan-20261018",
+      "head_sha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+      "base": "gate/t3-c4-lan-20261017",
+      "base_sha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+      "actual_merge_commit": null,
+      "pre_cleanup_comment_count": 0,
+      "review_count": 0,
+      "inline_review_thread_count": 0,
+      "ci": [
+        {
+          "id": 39097078572,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 19,
+          "jobs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39097078572/jobs",
+          "logs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39097078572/logs",
+          "workflow_id": 387381642
+        }
+      ],
+      "closure_comment_id": null
+    },
+    {
+      "number": 53,
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/53",
+      "state": "open",
+      "merged": false,
+      "merged_at": null,
+      "closed_at": null,
+      "head": "review/qd31-qd32-20261018",
+      "head_sha": "b4177a7e7e2b28a73b622349be0a2a0c48c5945f",
+      "base": "main",
+      "base_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "actual_merge_commit": null,
+      "pre_cleanup_comment_count": 0,
+      "review_count": 0,
+      "inline_review_thread_count": 0,
+      "ci": [
+        {
+          "id": 39112594829,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 20,
+          "jobs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39112594829/jobs",
+          "logs_url": "https://api.github.com/repos/AnhTaizz/Toeic-Monitoring-Realtime/actions/runs/39112594829/logs",
+          "workflow_id": 387381642
+        }
+      ],
+      "closure_comment_id": null
+    }
+  ],
+  "aggregate_review_pr": {
+    "status": "NOT_FOUND",
+    "method": "GitHub repo-wide search is:pr theo created desc (30 kết quả mới nhất, mới nhất #53) + QD-33 search chỉ tìm thấy #46; không xác định được PR review tổng hợp riêng Task1. Không suy ra đã review QD-33/34.",
+    "latest_known_pr": 53
+  }
+}

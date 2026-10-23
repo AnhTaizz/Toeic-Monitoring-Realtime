@@ -1,0 +1,82 @@
+{
+  "observedUtc": "2026-10-18T15:59:01.008084+00:00",
+  "actor": "Codex agent",
+  "items": [
+    {
+      "pr": 41,
+      "action": "VERIFY_ALREADY_CLOSED_NO_DUPLICATE_COMMENT",
+      "closedBeforeTask": true,
+      "closedAt": "2026-10-18T10:15:59Z",
+      "originalActor": "AnhTaizz",
+      "existingComment": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/41#issuecomment-6248651978",
+      "newCloseOrMerge": false
+    },
+    {
+      "pr": 42,
+      "action": "VERIFY_ALREADY_CLOSED_NO_DUPLICATE_COMMENT",
+      "closedBeforeTask": true,
+      "closedAt": "2026-10-18T10:16:08Z",
+      "originalActor": "AnhTaizz",
+      "existingComment": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/42#issuecomment-6248653264",
+      "newCloseOrMerge": false
+    },
+    {
+      "pr": 43,
+      "action": "VERIFY_ALREADY_CLOSED_NO_DUPLICATE_COMMENT",
+      "closedBeforeTask": true,
+      "closedAt": "2026-10-18T10:16:15Z",
+      "originalActor": "AnhTaizz",
+      "existingComment": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/43#issuecomment-6248654381",
+      "newCloseOrMerge": false
+    },
+    {
+      "pr": 45,
+      "action": "KEEP_OPEN_PENDING_B_SIGNOFF",
+      "ownerApprovalPresent": false,
+      "closureComment": "DRAFT in current report; not posted as approval",
+      "newCloseOrMerge": false
+    },
+    {
+      "pr": 54,
+      "action": "UPDATE_EXISTING_DRAFT_RECONCILIATION_PR",
+      "previousHead": "2170f4f30d8cfa6c891b9c6e79bbf3603fb270fc",
+      "method": "fast-forward existing branch then normal commit/push; no new duplicate PR"
+    },
+    {
+      "pr": 47,
+      "action": "READ_ONLY_KEEP_STATE_BASE_HEAD",
+      "sourceHead": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+      "newCloseOrMerge": false
+    },
+    {
+      "pr": 51,
+      "action": "READ_ONLY_KEEP_STATE_BASE_HEAD",
+      "sourceHead": "b057b0fa5c4f99f00dfaa29d49c2030f1e8a5f16",
+      "newCloseOrMerge": false
+    },
+    {
+      "pr": 52,
+      "action": "READ_ONLY_KEEP_STATE_BASE_HEAD",
+      "sourceHead": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+      "newCloseOrMerge": false
+    },
+    {
+      "pr": 53,
+      "action": "READ_ONLY_KEEP_STATE_BASE_HEAD",
+      "sourceHead": "b4177a7e7e2b28a73b622349be0a2a0c48c5945f",
+      "newCloseOrMerge": false
+    },
+    {
+      "pr": 55,
+      "action": "READ_ONLY_KEEP_STATE_BASE_HEAD",
+      "sourceHead": "e3fdfea82a1b69d12b0270008b64db92243050bc",
+      "newCloseOrMerge": false
+    },
+    {
+      "pr": 56,
+      "action": "READ_ONLY_KEEP_STATE_BASE_HEAD",
+      "sourceHead": "7d98514ec64b9fd3e96c3b9bc0d729cd5dcd462c",
+      "newCloseOrMerge": false
+    }
+  ]
+}

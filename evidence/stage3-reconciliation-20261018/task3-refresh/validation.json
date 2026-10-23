@@ -1,0 +1,309 @@
+{
+  "observedUtc": "2026-10-18T16:05:09.574824+00:00",
+  "main": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "previousReconciliationHead": "2170f4f30d8cfa6c891b9c6e79bbf3603fb270fc",
+  "operator": "Codex agent",
+  "device": "LOCAL_BUILD_HOST",
+  "label": "STATIC_GIT_GITHUB_DOCS",
+  "runtimeTests": "NOT RUN",
+  "result": "PASS",
+  "checks": [
+    {
+      "check": "ANCESTRY_41",
+      "expected": "PASS under stated static scope",
+      "actual": "All4 ancestry predicates exit0;0 unique commits/production patch commits",
+      "result": "PASS"
+    },
+    {
+      "check": "CLEANUP_41",
+      "expected": "PASS under stated static scope",
+      "actual": "Already CLOSED with integration comment; no duplicate mutation needed",
+      "result": "PASS"
+    },
+    {
+      "check": "ANCESTRY_42",
+      "expected": "PASS under stated static scope",
+      "actual": "All4 ancestry predicates exit0;0 unique commits/production patch commits",
+      "result": "PASS"
+    },
+    {
+      "check": "CLEANUP_42",
+      "expected": "PASS under stated static scope",
+      "actual": "Already CLOSED with integration comment; no duplicate mutation needed",
+      "result": "PASS"
+    },
+    {
+      "check": "ANCESTRY_43",
+      "expected": "PASS under stated static scope",
+      "actual": "All4 ancestry predicates exit0;0 unique commits/production patch commits",
+      "result": "PASS"
+    },
+    {
+      "check": "CLEANUP_43",
+      "expected": "PASS under stated static scope",
+      "actual": "Already CLOSED with integration comment; no duplicate mutation needed",
+      "result": "PASS"
+    },
+    {
+      "check": "PR45_CI_PATCH",
+      "expected": "PASS under stated static scope",
+      "actual": "475510ffc80bb21224678f590831197431cef613",
+      "result": "PASS"
+    },
+    {
+      "check": "PR45_KEEP_OPEN",
+      "expected": "PASS under stated static scope",
+      "actual": "Not closed without B; QD33 REQUEST_CHANGES",
+      "result": "PASS"
+    },
+    {
+      "check": "PR47_INDEPENDENT_BASE",
+      "expected": "PASS under stated static scope",
+      "actual": "Base main; main ancestor PR47",
+      "result": "PASS"
+    },
+    {
+      "check": "DOC_CONFLICT_47_51",
+      "expected": "PASS under stated static scope",
+      "actual": [
+        "docs/NHAT_KY.md",
+        "docs/TIEN_DO.md"
+      ],
+      "result": "PASS"
+    },
+    {
+      "check": "DOC_CONFLICT_51_52",
+      "expected": "PASS under stated static scope",
+      "actual": [
+        "docs/NHAT_KY.md",
+        "docs/TIEN_DO.md"
+      ],
+      "result": "PASS"
+    },
+    {
+      "check": "SOURCE_UNCHANGED_docs/TIEN_DO.md",
+      "expected": "PASS under stated static scope",
+      "actual": "Exact working-copy bytes unchanged from preflight;sourcef86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "result": "PASS"
+    },
+    {
+      "check": "SOURCE_UNCHANGED_docs/NHAT_KY.md",
+      "expected": "PASS under stated static scope",
+      "actual": "Exact working-copy bytes unchanged from preflight;sourcef86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "result": "PASS"
+    },
+    {
+      "check": "SOURCE_UNCHANGED_docs/KIEM_THU.md",
+      "expected": "PASS under stated static scope",
+      "actual": "Exact working-copy bytes unchanged from preflight;sourcef86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "result": "PASS"
+    },
+    {
+      "check": "SOURCE_UNCHANGED_docs/QUYET_DINH.md",
+      "expected": "PASS under stated static scope",
+      "actual": "Exact working-copy bytes unchanged from preflight;sourcef86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "result": "PASS"
+    },
+    {
+      "check": "SOURCE_UNCHANGED_docs/thanh-vien/VAI_A.md",
+      "expected": "PASS under stated static scope",
+      "actual": "Exact working-copy bytes unchanged from preflight;sourcef86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "result": "PASS"
+    },
+    {
+      "check": "SOURCE_UNCHANGED_docs/thanh-vien/VAI_B.md",
+      "expected": "PASS under stated static scope",
+      "actual": "Exact working-copy bytes unchanged from preflight;sourcef86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "result": "PASS"
+    },
+    {
+      "check": "SOURCE_UNCHANGED_docs/thanh-vien/VAI_C.md",
+      "expected": "PASS under stated static scope",
+      "actual": "Exact working-copy bytes unchanged from preflight;sourcef86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "result": "PASS"
+    },
+    {
+      "check": "SOURCE_UNCHANGED_Ke_hoach_LT_Mang_5_chang/TRACKER.json",
+      "expected": "PASS under stated static scope",
+      "actual": "Exact working-copy bytes unchanged from preflight;sourcef86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "result": "PASS"
+    },
+    {
+      "check": "TRACKER18",
+      "expected": "PASS under stated static scope",
+      "actual": "18 rows:15 TODO/3 IN_PROGRESS;0 DONE writes",
+      "result": "PASS"
+    },
+    {
+      "check": "OLD_EVIDENCE_UNCHANGED_evidence/stage3-reconciliation-20261018/.gitattributes",
+      "expected": "PASS under stated static scope",
+      "actual": "Exact bytes preserved",
+      "result": "PASS"
+    },
+    {
+      "check": "OLD_EVIDENCE_UNCHANGED_evidence/stage3-reconciliation-20261018/SHA256SUMS.txt",
+      "expected": "PASS under stated static scope",
+      "actual": "Exact bytes preserved",
+      "result": "PASS"
+    },
+    {
+      "check": "OLD_EVIDENCE_UNCHANGED_evidence/stage3-reconciliation-20261018/git-audit.json",
+      "expected": "PASS under stated static scope",
+      "actual": "Exact bytes preserved",
+      "result": "PASS"
+    },
+    {
+      "check": "OLD_EVIDENCE_UNCHANGED_evidence/stage3-reconciliation-20261018/github-snapshot.json",
+      "expected": "PASS under stated static scope",
+      "actual": "Exact bytes preserved",
+      "result": "PASS"
+    },
+    {
+      "check": "OLD_EVIDENCE_UNCHANGED_evidence/stage3-reconciliation-20261018/validation.json",
+      "expected": "PASS under stated static scope",
+      "actual": "Exact bytes preserved",
+      "result": "PASS"
+    },
+    {
+      "check": "HISTORICAL_BINDING_docs/STAGE3_RECONCILIATION.md",
+      "expected": "PASS under stated static scope",
+      "actual": "Original Git blob from2170f4f verified",
+      "result": "PASS"
+    },
+    {
+      "check": "HISTORICAL_BINDING_evidence/stage3-reconciliation-20261018/.gitattributes",
+      "expected": "PASS under stated static scope",
+      "actual": "Original Git blob from2170f4f verified",
+      "result": "PASS"
+    },
+    {
+      "check": "HISTORICAL_BINDING_evidence/stage3-reconciliation-20261018/git-audit.json",
+      "expected": "PASS under stated static scope",
+      "actual": "Original Git blob from2170f4f verified",
+      "result": "PASS"
+    },
+    {
+      "check": "HISTORICAL_BINDING_evidence/stage3-reconciliation-20261018/github-snapshot.json",
+      "expected": "PASS under stated static scope",
+      "actual": "Original Git blob from2170f4f verified",
+      "result": "PASS"
+    },
+    {
+      "check": "HISTORICAL_BINDING_evidence/stage3-reconciliation-20261018/validation.json",
+      "expected": "PASS under stated static scope",
+      "actual": "Original Git blob from2170f4f verified",
+      "result": "PASS"
+    },
+    {
+      "check": "PHYSICAL_LAN_NOT_RUN",
+      "expected": "PASS under stated static scope",
+      "actual": "41 NOT RUN;0/0; no physical run",
+      "result": "PASS"
+    },
+    {
+      "check": "P1_PUBLICATION_RETAINED",
+      "expected": "PASS under stated static scope",
+      "actual": "Task1 historical four failed batches retained; not rerun",
+      "result": "PASS"
+    },
+    {
+      "check": "GOVERNANCE",
+      "expected": "PASS under stated static scope",
+      "actual": "No false owner approvals/DONE",
+      "result": "PASS"
+    },
+    {
+      "check": "UTF8",
+      "expected": "PASS under stated static scope",
+      "actual": "One current readiness verdict:STAGE3_BLOCKED; historical report linked",
+      "result": "PASS"
+    },
+    {
+      "check": "LOCAL_LINK_../evidence/stage3-reconciliation-20261018/task3-refresh/github-before.json",
+      "expected": "PASS under stated static scope",
+      "actual": "evidence\\stage3-reconciliation-20261018\\task3-refresh\\github-before.json",
+      "result": "PASS"
+    },
+    {
+      "check": "LOCAL_LINK_../evidence/stage3-reconciliation-20261018/task3-refresh/git-ancestry.json",
+      "expected": "PASS under stated static scope",
+      "actual": "evidence\\stage3-reconciliation-20261018\\task3-refresh\\git-ancestry.json",
+      "result": "PASS"
+    },
+    {
+      "check": "LOCAL_LINK_../evidence/stage3-reconciliation-20261018/task3-refresh/cleanup-actions.json",
+      "expected": "PASS under stated static scope",
+      "actual": "evidence\\stage3-reconciliation-20261018\\task3-refresh\\cleanup-actions.json",
+      "result": "PASS"
+    },
+    {
+      "check": "LOCAL_LINK_../evidence/stage3-reconciliation-20261018/task3-refresh/main-ci.json",
+      "expected": "PASS under stated static scope",
+      "actual": "evidence\\stage3-reconciliation-20261018\\task3-refresh\\main-ci.json",
+      "result": "PASS"
+    },
+    {
+      "check": "LOCAL_LINK_../evidence/stage3-reconciliation-20261018/task3-refresh/docs-overlap.json",
+      "expected": "PASS under stated static scope",
+      "actual": "evidence\\stage3-reconciliation-20261018\\task3-refresh\\docs-overlap.json",
+      "result": "PASS"
+    },
+    {
+      "check": "LOCAL_LINK_../evidence/stage3-reconciliation-20261018/task3-refresh/read-documents.json",
+      "expected": "PASS under stated static scope",
+      "actual": "evidence\\stage3-reconciliation-20261018\\task3-refresh\\read-documents.json",
+      "result": "PASS"
+    },
+    {
+      "check": "LOCAL_LINK_../evidence/stage3-reconciliation-20261018/task3-refresh/tracker-reconciliation.json",
+      "expected": "PASS under stated static scope",
+      "actual": "evidence\\stage3-reconciliation-20261018\\task3-refresh\\tracker-reconciliation.json",
+      "result": "PASS"
+    },
+    {
+      "check": "LOCAL_LINK_../evidence/stage3-reconciliation-20261018/task3-refresh/evidence-crosscheck.json",
+      "expected": "PASS under stated static scope",
+      "actual": "evidence\\stage3-reconciliation-20261018\\task3-refresh\\evidence-crosscheck.json",
+      "result": "PASS"
+    },
+    {
+      "check": "LOCAL_LINK_../evidence/stage3-reconciliation-20261018/task3-refresh/historical-bindings.json",
+      "expected": "PASS under stated static scope",
+      "actual": "evidence\\stage3-reconciliation-20261018\\task3-refresh\\historical-bindings.json",
+      "result": "PASS"
+    },
+    {
+      "check": "LOCAL_LINK_../evidence/stage3-reconciliation-20261018/task3-refresh/SHA256SUMS.txt",
+      "expected": "PASS under stated static scope",
+      "actual": "evidence\\stage3-reconciliation-20261018\\task3-refresh\\SHA256SUMS.txt",
+      "result": "PASS"
+    },
+    {
+      "check": "LOCAL_LINK_../evidence/stage3-reconciliation-20261018/task3-refresh/validation.json",
+      "expected": "PASS under stated static scope",
+      "actual": "evidence\\stage3-reconciliation-20261018\\task3-refresh\\validation.json",
+      "result": "PASS"
+    },
+    {
+      "check": "PS_SYNTAX",
+      "expected": "PASS under stated static scope",
+      "actual": "1 example block parsed; not executed",
+      "result": "PASS"
+    },
+    {
+      "check": "DOCS_ONLY",
+      "expected": "PASS under stated static scope",
+      "actual": "No production/test/build changes",
+      "result": "PASS"
+    },
+    {
+      "check": "PRIVACY_SCAN",
+      "expected": "PASS under stated static scope",
+      "actual": "No token or private user path patterns; public PR actor/URL metadata retained",
+      "result": "PASS"
+    }
+  ],
+  "localLinkCount": 11,
+  "powershellExampleBlocksParsed": 1,
+  "limits": "No Maven/PG/MSI/GUI/physical LAN/hearing/E1/E2/load executions in Task3; CI push result reported separately at exact HEAD."
+}

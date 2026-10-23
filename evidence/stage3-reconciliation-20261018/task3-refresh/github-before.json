@@ -1,0 +1,399 @@
+{
+  "observedUtc": "2026-10-18T15:51:58.851Z",
+  "repository": "AnhTaizz/Toeic-Monitoring-Realtime",
+  "operator": "Codex agent",
+  "device": "LOCAL_BUILD_HOST",
+  "label": "REAL_GITHUB_READ_ONLY",
+  "prs": {
+    "39": {
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/39",
+      "title": "feat: thống nhất Reading/Listening, B4 và progress trên nền MSI main",
+      "state": "closed",
+      "merged": true,
+      "draft": false,
+      "mergeable": false,
+      "base": "main",
+      "base_sha": "07c4024ee728ce533149d8c0175e35084ee8931a",
+      "head": "integrate/unified-reading-listening-b4-b5-20261015",
+      "head_sha": "c954e42c0716b24b19820b03159444a4fb9065ba",
+      "merge_commit_sha": "6ac8835b59fbb6b5c35873b860305eba0f9266bf",
+      "created_at": "2026-10-16T02:50:17Z",
+      "updated_at": "2026-10-17T12:41:24Z",
+      "closed_at": "2026-10-17T12:41:24Z",
+      "merged_at": "2026-10-17T12:41:24Z",
+      "author": "AnhTaizz",
+      "ci": [
+        {
+          "id": 39033165878,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 11
+        }
+      ],
+      "reviews": [],
+      "comments": []
+    },
+    "41": {
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/41",
+      "title": "fix(E1): kiểm phép đo CPU, tái lập join và bàn giao T4-C1",
+      "state": "closed",
+      "merged": false,
+      "draft": true,
+      "mergeable": true,
+      "base": "qa/b-pr39-acceptance-20261016",
+      "base_sha": "3fc5bb4e8ef93b60bf479fc52fe725e4b8f072af",
+      "head": "review/c-e1-methodology-t4c1",
+      "head_sha": "304bc509bf26966499d6d0fb98a922794743b2ee",
+      "merge_commit_sha": "e3b9506c20ea6843f9fc04b40f01252a5710a4de",
+      "created_at": "2026-10-16T14:20:40Z",
+      "updated_at": "2026-10-18T10:15:59Z",
+      "closed_at": "2026-10-18T10:15:59Z",
+      "merged_at": null,
+      "author": "conglam56",
+      "ci": [],
+      "reviews": [],
+      "comments": [
+        {
+          "id": 6248651978,
+          "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/41#issuecomment-6248651978",
+          "actor": "AnhTaizz",
+          "body": "ALREADY_INTEGRATED_VIA_PR46_PR39\n\nĐối chiếu GitHub và fetch ngày 18/10/2026: HEAD `304bc509bf26966499d6d0fb98a922794743b2ee` là ancestor của main `f86403489bdd01887b926f2f9e4b72ddf05d1423`; `git rev-list --count origin/main..304bc509bf26966499d6d0fb98a922794743b2ee` = 0, không còn commit/production patch riêng cần tích hợp.\n\nChuỗi merge thật: [PR46 — c954e42](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/commit/c954e42c0716b24b19820b03159444a4fb9065ba) → [PR39 vào main — 6ac8835](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/commit/6ac8835b59fbb6b5c35873b860305eba0f9266bf). HEAD này cũng là ancestor của merge PR46. PR47 hiện target main, đã merge main qua `167caf312767566417ad55840a008833844e1f15`, không phụ thuộc base PR cũ.\n\nKhông có comment/review submission/inline thread yêu cầu patch mới khi kiểm. Đóng PR vì code đã tích hợp; không merge lại, không xóa branch hoặc evidence. Việc đóng không thay chữ ký owner A/B/C, QD approval, nghiệm thu LAN hay gate DELTA; các mục đó vẫn chờ evidence/review riêng.",
+          "created_at": "2026-10-18T10:15:55Z",
+          "updated_at": "2026-10-18T10:15:55Z",
+          "path": null
+        }
+      ]
+    },
+    "42": {
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/42",
+      "title": "fix(client): giữ cờ Listening gián đoạn trong kết quả submit/status/history",
+      "state": "closed",
+      "merged": false,
+      "draft": true,
+      "mergeable": true,
+      "base": "qa/b-pr39-acceptance-20261016",
+      "base_sha": "3fc5bb4e8ef93b60bf479fc52fe725e4b8f072af",
+      "head": "qa/f01-listening-result-20261016",
+      "head_sha": "7af7046512d008a289df3877c0d43f4207634821",
+      "merge_commit_sha": "4f21996f40af1c185441d35cb922339f93335aec",
+      "created_at": "2026-10-16T16:28:30Z",
+      "updated_at": "2026-10-18T10:16:08Z",
+      "closed_at": "2026-10-18T10:16:08Z",
+      "merged_at": null,
+      "author": "AnhTaizz",
+      "ci": [],
+      "reviews": [],
+      "comments": [
+        {
+          "id": 6248653264,
+          "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/42#issuecomment-6248653264",
+          "actor": "AnhTaizz",
+          "body": "ALREADY_INTEGRATED_VIA_PR46_PR39\n\nĐối chiếu GitHub và fetch ngày 18/10/2026: HEAD `7af7046512d008a289df3877c0d43f4207634821` là ancestor của main `f86403489bdd01887b926f2f9e4b72ddf05d1423`; `git rev-list --count origin/main..7af7046512d008a289df3877c0d43f4207634821` = 0, không còn commit/production patch riêng cần tích hợp.\n\nChuỗi merge thật: [PR46 — c954e42](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/commit/c954e42c0716b24b19820b03159444a4fb9065ba) → [PR39 vào main — 6ac8835](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/commit/6ac8835b59fbb6b5c35873b860305eba0f9266bf). HEAD này cũng là ancestor của merge PR46. PR47 hiện target main, đã merge main qua `167caf312767566417ad55840a008833844e1f15`, không phụ thuộc base PR cũ.\n\nKhông có comment/review submission/inline thread yêu cầu patch mới khi kiểm. Đóng PR vì code đã tích hợp; không merge lại, không xóa branch hoặc evidence. Việc đóng không thay chữ ký owner A/B/C, QD approval, nghiệm thu LAN hay gate DELTA; các mục đó vẫn chờ evidence/review riêng.",
+          "created_at": "2026-10-18T10:16:05Z",
+          "updated_at": "2026-10-18T10:16:05Z",
+          "path": null
+        }
+      ]
+    },
+    "43": {
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/43",
+      "title": "fix(C): dọn terminal delivery và siết evidence E1",
+      "state": "closed",
+      "merged": false,
+      "draft": true,
+      "mergeable": true,
+      "base": "review/c-e1-methodology-t4c1",
+      "base_sha": "304bc509bf26966499d6d0fb98a922794743b2ee",
+      "head": "fix/c-monitoring-audit-20261017",
+      "head_sha": "772c6e9864cd6ce0ad45aad0433f5bfce53fee54",
+      "merge_commit_sha": "a00e81c57d18452076b74b321a21c773e297db48",
+      "created_at": "2026-10-17T04:40:46Z",
+      "updated_at": "2026-10-18T10:16:15Z",
+      "closed_at": "2026-10-18T10:16:15Z",
+      "merged_at": null,
+      "author": "conglam56",
+      "ci": [],
+      "reviews": [],
+      "comments": [
+        {
+          "id": 6248654381,
+          "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/43#issuecomment-6248654381",
+          "actor": "AnhTaizz",
+          "body": "ALREADY_INTEGRATED_VIA_PR46_PR39\n\nĐối chiếu GitHub và fetch ngày 18/10/2026: HEAD `772c6e9864cd6ce0ad45aad0433f5bfce53fee54` là ancestor của main `f86403489bdd01887b926f2f9e4b72ddf05d1423`; `git rev-list --count origin/main..772c6e9864cd6ce0ad45aad0433f5bfce53fee54` = 0, không còn commit/production patch riêng cần tích hợp.\n\nChuỗi merge thật: [PR46 — c954e42](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/commit/c954e42c0716b24b19820b03159444a4fb9065ba) → [PR39 vào main — 6ac8835](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/commit/6ac8835b59fbb6b5c35873b860305eba0f9266bf). HEAD này cũng là ancestor của merge PR46. PR47 hiện target main, đã merge main qua `167caf312767566417ad55840a008833844e1f15`, không phụ thuộc base PR cũ.\n\nKhông có comment/review submission/inline thread yêu cầu patch mới khi kiểm. Đóng PR vì code đã tích hợp; không merge lại, không xóa branch hoặc evidence. Việc đóng không thay chữ ký owner A/B/C, QD approval, nghiệm thu LAN hay gate DELTA; các mục đó vẫn chờ evidence/review riêng.",
+          "created_at": "2026-10-18T10:16:13Z",
+          "updated_at": "2026-10-18T10:16:13Z",
+          "path": null
+        }
+      ]
+    },
+    "45": {
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/45",
+      "title": "ci: run PR tests on Windows",
+      "state": "open",
+      "merged": false,
+      "draft": false,
+      "mergeable": false,
+      "base": "main",
+      "base_sha": "07c4024ee728ce533149d8c0175e35084ee8931a",
+      "head": "feat/t3-b3-listening-interruption-recovery",
+      "head_sha": "a6524823c6a8d97cc7652fe4b776279db17d7d55",
+      "merge_commit_sha": null,
+      "created_at": "2026-10-17T05:15:28Z",
+      "updated_at": "2026-10-17T05:26:12Z",
+      "closed_at": null,
+      "merged_at": null,
+      "author": "Djicz",
+      "ci": [
+        {
+          "id": 39006248748,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 4
+        },
+        {
+          "id": 39006228168,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "run_number": 3
+        }
+      ],
+      "reviews": [],
+      "comments": []
+    },
+    "46": {
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/46",
+      "title": "stabilize: QD-29, lịch sử >5000, cache audio thay PR45, cleanup C1 — RC 0.3.10",
+      "state": "closed",
+      "merged": true,
+      "draft": false,
+      "mergeable": false,
+      "base": "integrate/unified-reading-listening-b4-b5-20261015",
+      "base_sha": "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+      "head": "stabilize/final-rc-20261017",
+      "head_sha": "1b3062cff70f00d6f3e001396fb02a41b2cd41ee",
+      "merge_commit_sha": "c954e42c0716b24b19820b03159444a4fb9065ba",
+      "created_at": "2026-10-17T08:53:07Z",
+      "updated_at": "2026-10-17T12:35:56Z",
+      "closed_at": "2026-10-17T12:35:56Z",
+      "merged_at": "2026-10-17T12:35:56Z",
+      "author": "AnhTaizz",
+      "ci": [
+        {
+          "id": 39019041726,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 10
+        }
+      ],
+      "reviews": [],
+      "comments": []
+    },
+    "47": {
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/47",
+      "title": "fix(monitoring): stabilize CLOSE cleanup on main",
+      "state": "open",
+      "merged": false,
+      "draft": false,
+      "mergeable": true,
+      "base": "main",
+      "base_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "head": "gate/t3-c4-lan-20261017",
+      "head_sha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+      "merge_commit_sha": "ed7320a2ec1016a3d39215fc1f84ee64d8cdbaae",
+      "created_at": "2026-10-17T10:33:26Z",
+      "updated_at": "2026-10-18T03:31:48Z",
+      "closed_at": null,
+      "merged_at": null,
+      "author": "conglam56",
+      "ci": [
+        {
+          "id": 39093801431,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 17
+        }
+      ],
+      "reviews": [],
+      "comments": []
+    },
+    "51": {
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/51",
+      "title": "docs(t3-c5): cập nhật bản nháp đồng bộ sau 13/10, kiểm PR #47 trên main",
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "mergeable": true,
+      "base": "main",
+      "base_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "head": "docs/t3-c5-update-20261018",
+      "head_sha": "b057b0fa5c4f99f00dfaa29d49c2030f1e8a5f16",
+      "merge_commit_sha": "ebc1d681844eabb4c0d287a838439c25c7e0d5bc",
+      "created_at": "2026-10-17T19:45:30Z",
+      "updated_at": "2026-10-17T19:45:30Z",
+      "closed_at": null,
+      "merged_at": null,
+      "author": "AnhTaizz",
+      "ci": [
+        {
+          "id": 39063829880,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 15
+        }
+      ],
+      "reviews": [],
+      "comments": []
+    },
+    "52": {
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/52",
+      "title": "docs(lan): công bố bộ bàn giao T3-C4 cho B/C",
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "mergeable": true,
+      "base": "gate/t3-c4-lan-20261017",
+      "base_sha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+      "head": "prepare/t3-c4-physical-lan-20261018",
+      "head_sha": "c58931e7567b4ff21315a5de3d93efb03d9c0581",
+      "merge_commit_sha": "06eb0601f364875abcd0cfc0173406e9cf01620e",
+      "created_at": "2026-10-18T04:24:41Z",
+      "updated_at": "2026-10-18T04:26:35Z",
+      "closed_at": null,
+      "merged_at": null,
+      "author": "AnhTaizz",
+      "ci": [
+        {
+          "id": 39097078572,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 19
+        }
+      ],
+      "reviews": [],
+      "comments": []
+    },
+    "53": {
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/53",
+      "title": "docs(review): đối chiếu QD-31 và QD-32 trên main",
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "mergeable": true,
+      "base": "main",
+      "base_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "head": "review/qd31-qd32-20261018",
+      "head_sha": "b4177a7e7e2b28a73b622349be0a2a0c48c5945f",
+      "merge_commit_sha": "68c487ff730a9237c0b198edc33f60a6de0d699f",
+      "created_at": "2026-10-18T08:44:09Z",
+      "updated_at": "2026-10-18T08:44:09Z",
+      "closed_at": null,
+      "merged_at": null,
+      "author": "AnhTaizz",
+      "ci": [
+        {
+          "id": 39112594829,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 20
+        }
+      ],
+      "reviews": [],
+      "comments": []
+    },
+    "54": {
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/54",
+      "title": "docs(stage3): reconciliation PR cleanup và nghiệm thu còn thiếu",
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "mergeable": true,
+      "base": "main",
+      "base_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "head": "docs/stage3-reconciliation-20261018",
+      "head_sha": "2170f4f30d8cfa6c891b9c6e79bbf3603fb270fc",
+      "merge_commit_sha": "38effd45f8ec94e9ca16447b7e1c6b9bede3eaf9",
+      "created_at": "2026-10-18T10:24:15Z",
+      "updated_at": "2026-10-18T10:24:15Z",
+      "closed_at": null,
+      "merged_at": null,
+      "author": "AnhTaizz",
+      "ci": [
+        {
+          "id": 39119112689,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 21
+        }
+      ],
+      "reviews": [],
+      "comments": []
+    },
+    "55": {
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/55",
+      "title": "docs(review): Stage 3 cross-review và packet sign-off A/B/C",
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "mergeable": true,
+      "base": "main",
+      "base_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "head": "review/stage3-cross-review-20261018",
+      "head_sha": "e3fdfea82a1b69d12b0270008b64db92243050bc",
+      "merge_commit_sha": "ed2bfa61ebbe794449ffbc549feda5eb94cb869b",
+      "created_at": "2026-10-18T15:11:04Z",
+      "updated_at": "2026-10-18T15:11:04Z",
+      "closed_at": null,
+      "merged_at": null,
+      "author": "conglam56",
+      "ci": [
+        {
+          "id": 39139325117,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "failure",
+          "run_number": 22
+        }
+      ],
+      "reviews": [],
+      "comments": []
+    },
+    "56": {
+      "url": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/56",
+      "title": "docs(release): prepare MSI/LAN acceptance and monitoring gate",
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "mergeable": true,
+      "base": "main",
+      "base_sha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+      "head": "review/release-acceptance-20261018",
+      "head_sha": "7d98514ec64b9fd3e96c3b9bc0d729cd5dcd462c",
+      "merge_commit_sha": "441e29304481bb5c853eca02625fa349e9ee8946",
+      "created_at": "2026-10-18T15:40:11Z",
+      "updated_at": "2026-10-18T15:42:41Z",
+      "closed_at": null,
+      "merged_at": null,
+      "author": "conglam56",
+      "ci": [
+        {
+          "id": 39141524216,
+          "name": "PR CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 23
+        }
+      ],
+      "reviews": [],
+      "comments": []
+    }
+  }
+}

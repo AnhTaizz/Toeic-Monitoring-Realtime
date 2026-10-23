@@ -1,0 +1,137 @@
+{
+  "observedUtc": "2026-10-18T15:54:34.920288+00:00",
+  "main": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+  "label": "REAL_GIT_STATIC",
+  "operator": "Codex agent",
+  "device": "LOCAL_BUILD_HOST",
+  "merge46": {
+    "sha": "c954e42c0716b24b19820b03159444a4fb9065ba",
+    "parents": [
+      "093429ab1abb19f9c6d37be9b86ae8e00f11a284",
+      "1b3062cff70f00d6f3e001396fb02a41b2cd41ee"
+    ]
+  },
+  "merge39": {
+    "sha": "6ac8835b59fbb6b5c35873b860305eba0f9266bf",
+    "parents": [
+      "07c4024ee728ce533149d8c0175e35084ee8931a",
+      "c954e42c0716b24b19820b03159444a4fb9065ba"
+    ]
+  },
+  "prs": {
+    "41": {
+      "head": "304bc509bf26966499d6d0fb98a922794743b2ee",
+      "base": "3fc5bb4e8ef93b60bf479fc52fe725e4b8f072af",
+      "checksExitCode": {
+        "head_in_pr46_merge": 0,
+        "pr46_merge_in_pr39_merge": 0,
+        "pr39_merge_in_main": 0,
+        "head_in_main": 0
+      },
+      "uniqueCommitsVsMain": 0,
+      "uniqueProductionPatchCommits": [],
+      "productionPathsOriginallyChanged": [
+        "client/src/main/java/vn/edu/toeic/client/monitoring/harness/HarnessArtifacts.java",
+        "client/src/main/java/vn/edu/toeic/client/monitoring/harness/HarnessCli.java",
+        "scripts/benchmarks/e1/README.md",
+        "scripts/benchmarks/e1/analyze.py",
+        "scripts/benchmarks/e1/review_fixture.py",
+        "scripts/benchmarks/e1/test_review.py"
+      ],
+      "remainingDiffNote": "Later main edits may differ in bytes; no unique original commit remains. Do not revert main to old branch tree.",
+      "branchRefsPresent": {
+        "refs/heads/review/c-e1-methodology-t4c1": true,
+        "refs/remotes/origin/review/c-e1-methodology-t4c1": true
+      },
+      "githubState": "closed",
+      "closedAt": "2026-10-18T10:15:59Z",
+      "existingIntegrationComment": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/41#issuecomment-6248651978",
+      "newReviewRequests": 0,
+      "newCommentAfterCleanup": false,
+      "action": "ALREADY_CLOSED_VERIFIED_NO_DUPLICATE_MUTATION"
+    },
+    "42": {
+      "head": "7af7046512d008a289df3877c0d43f4207634821",
+      "base": "3fc5bb4e8ef93b60bf479fc52fe725e4b8f072af",
+      "checksExitCode": {
+        "head_in_pr46_merge": 0,
+        "pr46_merge_in_pr39_merge": 0,
+        "pr39_merge_in_main": 0,
+        "head_in_main": 0
+      },
+      "uniqueCommitsVsMain": 0,
+      "uniqueProductionPatchCommits": [],
+      "productionPathsOriginallyChanged": [
+        "client/src/main/java/vn/edu/toeic/client/exam/ExamSession.java",
+        "client/src/main/java/vn/edu/toeic/client/exam/ScoreResultDialog.java"
+      ],
+      "remainingDiffNote": "Later main edits may differ in bytes; no unique original commit remains. Do not revert main to old branch tree.",
+      "branchRefsPresent": {
+        "refs/heads/qa/f01-listening-result-20261016": false,
+        "refs/remotes/origin/qa/f01-listening-result-20261016": true
+      },
+      "githubState": "closed",
+      "closedAt": "2026-10-18T10:16:08Z",
+      "existingIntegrationComment": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/42#issuecomment-6248653264",
+      "newReviewRequests": 0,
+      "newCommentAfterCleanup": false,
+      "action": "ALREADY_CLOSED_VERIFIED_NO_DUPLICATE_MUTATION"
+    },
+    "43": {
+      "head": "772c6e9864cd6ce0ad45aad0433f5bfce53fee54",
+      "base": "304bc509bf26966499d6d0fb98a922794743b2ee",
+      "checksExitCode": {
+        "head_in_pr46_merge": 0,
+        "pr46_merge_in_pr39_merge": 0,
+        "pr39_merge_in_main": 0,
+        "head_in_main": 0
+      },
+      "uniqueCommitsVsMain": 0,
+      "uniqueProductionPatchCommits": [],
+      "productionPathsOriginallyChanged": [
+        "client/src/main/java/vn/edu/toeic/client/monitoring/MonitoringDelivery.java",
+        "client/src/main/java/vn/edu/toeic/client/monitoring/harness/ControlledProcessHarness.java",
+        "client/src/main/java/vn/edu/toeic/client/monitoring/harness/E1Cli.java",
+        "client/src/main/java/vn/edu/toeic/client/monitoring/harness/ObservationJoiner.java",
+        "scripts/benchmarks/e1/analyze.py",
+        "scripts/benchmarks/e1/test_analyze.py",
+        "scripts/smoke-c-history-bounds.ps1",
+        "server/src/main/java/vn/edu/toeic/server/monitoring/JdbcPresenceStore.java",
+        "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringEventService.java"
+      ],
+      "remainingDiffNote": "Later main edits may differ in bytes; no unique original commit remains. Do not revert main to old branch tree.",
+      "branchRefsPresent": {
+        "refs/heads/fix/c-monitoring-audit-20261017": true,
+        "refs/remotes/origin/fix/c-monitoring-audit-20261017": true
+      },
+      "githubState": "closed",
+      "closedAt": "2026-10-18T10:16:15Z",
+      "existingIntegrationComment": "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/43#issuecomment-6248654381",
+      "newReviewRequests": 0,
+      "newCommentAfterCleanup": false,
+      "action": "ALREADY_CLOSED_VERIFIED_NO_DUPLICATE_MUTATION"
+    }
+  },
+  "pr47": {
+    "head": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+    "base": "main",
+    "mainAncestor": true,
+    "mainMergeCommit": "167caf312767566417ad55840a008833844e1f15",
+    "oldBaseDependency": "NONE in PR metadata; old commits are already in main history"
+  },
+  "pr45": {
+    "head": "a6524823c6a8d97cc7652fe4b776279db17d7d55",
+    "headInMain": false,
+    "ciOriginal": "c1e3405678740e292747dd67951e29840e716a53",
+    "ciCherryPick": "d562581c03c5513e97c5a087d568a87332c3f383",
+    "workflowStablePatchId": "475510ffc80bb21224678f590831197431cef613",
+    "workflowPatchEquivalent": true,
+    "ciCherryPickInMain": true,
+    "cacheReplacementCommit": "d53122135485f5a27015d4d03d196ea2c9bd03a5",
+    "cacheReplacementInMain": true,
+    "audioCacheBlobDifferent": true,
+    "technicalVerdict": "REQUEST_CHANGES on current cache publication per Task1; directory-creation race replacement is historical, no fresh runtime test in Task3",
+    "ownerB": "PENDING_B_SIGNOFF",
+    "action": "KEEP_OPEN"
+  }
+}
