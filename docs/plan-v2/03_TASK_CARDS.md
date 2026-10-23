@@ -175,13 +175,14 @@
 - **Owner:** A / **Reviewer:** B / **Priority:** P0 / **Dependencies:** EX-04
 - **Objective:** Allow authorized candidates/proctors to retrieve referenced image assets without expanding the audio protocol.
 - **Acceptance criteria:**
-  - [ ] Check user role, assignment and attempt scope before returning bytes or cache metadata.
-  - [ ] Prevent ../ traversal, escaping symlinks, unexpected MIME and oversized files.
-  - [ ] Support predictable checksum and cache behavior; no answer key in image endpoint metadata.
-  - [ ] Keep the existing audio manifest, READY and start semantics intact.
+  - [x] Check user role, assignment and attempt scope before returning bytes or cache metadata.
+  - [x] Prevent ../ traversal, escaping symlinks, unexpected MIME and oversized files.
+  - [x] Support predictable checksum and cache behavior; no answer key in image endpoint metadata.
+  - [x] Keep the existing audio manifest, READY and start semantics intact.
 - **Verification/evidence:**
   - Real HTTP auth tests for owner vs other attempt, missing/changed asset, traversal and checksums.
   - Manual client downloads with filenames containing spaces/Unicode.
+- **Evidence (2026-10-23):** [EX-05 closeout](EX05_CLOSEOUT_20261023.md): the integrated implementation was reused; PostgreSQL 18 targeted auth/media/import suite passed `200/201` with one obsolete reserved-V13 scenario skipped and clean teardown. The public endpoint deliberately addresses media by stable ID, not by a filesystem filename.
 - **Likely files/components:** server exam media controller/service, protocol DTOs, media config
 
 ### EX-06 - Render real seven-Part content in JavaFX
