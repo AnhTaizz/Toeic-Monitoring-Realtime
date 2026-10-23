@@ -220,13 +220,14 @@
 - **Owner:** A / **Reviewer:** B / **Priority:** P0 / **Dependencies:** EX-03, EX-05, EX-06, EX-07, BASE-02
 - **Objective:** Prove one complete exam works from proctor selection to final score.
 - **Acceptance criteria:**
-  - [ ] Proctor selects approved stored exam, assigns candidates, confirms READY and starts it.
-  - [ ] Candidate navigates all Parts with real media, autosaves, submits or times out.
-  - [ ] Correct-answer keys never leak into candidate DTO and final score is computed by the server.
-  - [ ] Listening interruption, stale save, deadline and writer takeover remain correct.
+  - [x] Proctor selects approved stored exam, assigns candidates, confirms READY and starts it.
+  - [x] Candidate navigates all Parts with real media, autosaves, submits or times out.
+  - [x] Correct-answer keys never leak into candidate DTO and final score is computed by the server.
+  - [x] Listening interruption, stale save, deadline and writer takeover remain correct.
 - **Verification/evidence:**
   - Real PostgreSQL end-to-end evidence for 200 questions.
   - Packaged Windows app smoke and checksum manifest for all media.
+- **Evidence (2026-10-23):** [STUDY4_6852 EX-08 acceptance](EX08_STUDY4_ACCEPTANCE_20261023.md): exact source `e6b4320`, PostgreSQL 18.1 real-data case `1/1` passed, authenticated SHA-256 verification for all `54` audio + `11` images, production client mapping for all seven Parts, and a fresh bundled-runtime Windows smoke. Human hearing, installer, clean-machine and physical LAN checks remain outside this technical closeout.
 - **Likely files/components:** Integration tests, evidence/exam-200/, delivery guide
 
 
