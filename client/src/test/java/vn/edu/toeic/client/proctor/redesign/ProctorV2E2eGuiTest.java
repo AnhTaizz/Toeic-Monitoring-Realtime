@@ -107,8 +107,9 @@ class ProctorV2E2eGuiTest {
             TableView<ExamCatalogItem> exams = FxSupport.fx(() -> (TableView<ExamCatalogItem>) pane.lookup("#v2-exams"));
             await("catalog shows " + EXAM, () -> FxSupport.fx(() -> exams.getItems().stream().anyMatch(i -> i.examId().equals(EXAM) && i.selectable())), 20);
             FxSupport.fxRun(() -> exams.getSelectionModel().select(exams.getItems().stream().filter(i -> i.examId().equals(EXAM)).findFirst().orElseThrow()));
+            FxSupport.await("candidate catalog",()->pane.controller().snapshot().candidates().stream().anyMatch(c->c.userId()==candidateId));
+            FxSupport.fxRun(()->pane.controller().toggleCandidate(candidateId));
             await("create enabled", () -> FxSupport.fx(() -> !pane.lookup("#v2-create").isDisabled()), 10);
-            FxSupport.fxRun(() -> ((TextField) pane.lookup("#v2-candidates")).setText(Long.toString(candidateId)));
             screenshot(proctorStage[0], "p1-catalog-create");
             FxSupport.fxRun(() -> ((Button) pane.lookup("#v2-create")).fire());
             await("server created the session", () -> FxSupport.fx(() -> pane.controller().snapshot().created() != null), 20);

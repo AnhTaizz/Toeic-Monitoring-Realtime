@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import vn.edu.toeic.client.proctor.ProctorSessionApiClient.Rejected;
 import vn.edu.toeic.protocol.audio.ListeningStartRequest;
 import vn.edu.toeic.protocol.exam.rich.CreateRichSessionRequest;
+import vn.edu.toeic.protocol.exam.rich.CreateCandidateRequest;
 
 /** REAL loopback HTTP with MOCK server bodies; says nothing about the real server's authorization. */
 class ProctorV2ApiClientTest {
@@ -135,5 +136,26 @@ class ProctorV2ApiClientTest {
     @Test void closedClientSendsNothing() {
         api.close();
         assertThatThrownBy(() -> api.catalog(null)).isInstanceOf(IOException.class);
+    }
+
+    @Test void candidateCatalogEncodesLiteralSearchAndRejectsInvalidCursors() throws Exception {
+        body="{\"schemaVersion\":2,\"items\":[{\"userId\":4,\"username\":\"B23\",\"displayName\":\"Nguyễn An\"}],\"nextAfterUserId\":4}";
+        assertThat(api.candidates("An_%",null).items()).hasSize(1);
+        assertThat(target).isEqualTo("/api/v2/candidates?limit=20&search=An_%25");
+        assertThat(authorization).isEqualTo("Bearer TEST-only-token");
+        body=body.replace("\"nextAfterUserId\":4","\"nextAfterUserId\":8");
+        assertThatThrownBy(()->api.candidates("",null)).isInstanceOf(IOException.class);
+    }
+
+    @Test void candidateCreateOnlySendsIdentityAndRejectsMismatchedConfirmationAndConflicts() throws Exception {
+        code=201;body="{\"userId\":4,\"username\":\"B23\",\"displayName\":\"Nguyễn An\"}";
+        var request=new CreateCandidateRequest("B23","Nguyễn An");
+        assertThat(api.createCandidate(request).userId()).isEqualTo(4);
+        assertThat(method).isEqualTo("POST");assertThat(target).isEqualTo("/api/v2/candidates");
+        assertThat(com.google.gson.JsonParser.parseString(requestBody).getAsJsonObject().keySet()).containsExactlyInAnyOrder("username","displayName");
+        body=body.replace("B23","DIFFERENT");
+        assertThatThrownBy(()->api.createCandidate(request)).isInstanceOf(IOException.class).hasMessageContaining("không khớp");
+        code=409;body="{\"error\":{\"code\":\"CONFLICT\"}}";
+        assertThatThrownBy(()->api.createCandidate(request)).isInstanceOf(Rejected.class);
     }
 }

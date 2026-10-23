@@ -96,8 +96,9 @@ class ProctorV2SessionPaneGuiTest {
         assertThat(api.afterCursors).containsExactly("<first>", "mock-b");
 
         fxRun(() -> exams.getSelectionModel().select(0));
+        await("candidate catalog",()->!pane.controller().snapshot().candidates().isEmpty());
+        fxRun(()->pane.controller().toggleCandidate(2));
         await("create enabled", () -> !pane.lookup("#v2-create").isDisabled());
-        fxRun(() -> ((TextField) pane.lookup("#v2-candidates")).setText("2"));
         fxRun(() -> ((Button) pane.lookup("#v2-create")).fire());
         await("created session", () -> pane.lookup("#v2-created-session") != null);
         assertThat(fx(() -> ((TextField) pane.lookup("#v2-created-session")).getText())).isEqualTo(V2Fixtures.SESSION);
@@ -220,7 +221,8 @@ class ProctorV2SessionPaneGuiTest {
         await("catalog", () -> v2.controller().snapshot().catalog().size() == 2);
         int before = progressReadsOnFx.size();
         fxRun(() -> v2.controller().select("mock-a"));
-        fxRun(() -> ((TextField) v2.lookup("#v2-candidates")).setText("2"));
+        await("candidate catalog",()->!v2.controller().snapshot().candidates().isEmpty());
+        fxRun(()->v2.controller().toggleCandidate(2));
         await("create enabled", () -> !v2.lookup("#v2-create").isDisabled());
         fxRun(() -> ((Button) v2.lookup("#v2-create")).fire());
         await("panel shows the created session", () -> v2.lookup("#v2-created-session") instanceof TextField field

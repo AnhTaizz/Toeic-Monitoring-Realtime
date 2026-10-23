@@ -36,6 +36,9 @@ import vn.edu.toeic.protocol.exam.rich.CreatedAttempt;
 import vn.edu.toeic.protocol.exam.rich.ExamCatalogItem;
 import vn.edu.toeic.protocol.exam.rich.ExamCatalogPage;
 import vn.edu.toeic.protocol.exam.rich.SessionReadiness;
+import vn.edu.toeic.protocol.exam.rich.CandidateCatalogPage;
+import vn.edu.toeic.protocol.exam.rich.CandidateCatalogItem;
+import vn.edu.toeic.protocol.exam.rich.CreateCandidateRequest;
 
 /**
  * HTTP client for the PROCTORED_V2 panel. The v2 calls are validated here; the v1 audio manifest and START reuse
@@ -86,6 +89,36 @@ final class ProctorV2ApiClient implements ProctorV2Api {
             if (next != null && (page.items().isEmpty() || !next.equals(page.items().getLast().examId()))) throw new IllegalArgumentException();
             return page;
         } catch (RuntimeException invalid) { throw new IOException("Danh sách đề từ server không hợp lệ."); }
+    }
+
+    @Override public CandidateCatalogPage candidates(String search, Long afterUserId) throws Exception {
+        String text = search == null ? "" : search.trim();
+        if (text.length() > 100 || text.chars().anyMatch(Character::isISOControl)
+                || afterUserId != null && afterUserId <= 0) throw new IllegalArgumentException("Từ khóa hoặc trang thí sinh không hợp lệ.");
+        String query = "limit=" + PAGE_SIZE + "&search=" + URLEncoder.encode(text, StandardCharsets.UTF_8);
+        if (afterUserId != null) query += "&afterUserId=" + afterUserId;
+        CandidateCatalogPage page = parse(call("GET", "candidates?" + query, null, 200), CandidateCatalogPage.class);
+        try {
+            if (page.schemaVersion() != 2 || page.items() == null || page.items().size() > PAGE_SIZE) throw new IllegalArgumentException();
+            long previous = afterUserId == null ? 0 : afterUserId;
+            for (var item : page.items()) {
+                if (item == null || item.userId() <= previous || item.username() == null || item.username().isBlank()
+                        || item.displayName() == null || item.username().length() > 80 || item.displayName().codePointCount(0,item.displayName().length()) > 160)
+                    throw new IllegalArgumentException();
+                previous = item.userId();
+            }
+            if (page.nextAfterUserId() != null && (page.items().isEmpty() || page.nextAfterUserId() != previous))
+                throw new IllegalArgumentException();
+            return page;
+        } catch (RuntimeException invalid) { throw new IOException("Danh sách thí sinh từ server không hợp lệ."); }
+    }
+
+    @Override public CandidateCatalogItem createCandidate(CreateCandidateRequest request) throws Exception {
+        CandidateCatalogItem item=parse(call("POST","candidates",request,201),CandidateCatalogItem.class);
+        if(item.userId()<1 || !request.username().strip().equals(item.username())
+                || !request.displayName().strip().equals(item.displayName()))
+            throw new IOException("Xác nhận tạo thí sinh không khớp yêu cầu. Hãy tìm lại mã thí sinh.");
+        return item;
     }
 
     @Override public CreateRichSessionResponse create(CreateRichSessionRequest request) throws Exception {

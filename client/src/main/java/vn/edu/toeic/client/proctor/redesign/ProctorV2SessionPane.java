@@ -11,6 +11,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -22,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import vn.edu.toeic.protocol.exam.rich.AttemptReadiness;
+import vn.edu.toeic.protocol.exam.rich.CandidateCatalogItem;
 import vn.edu.toeic.protocol.exam.rich.CreatedAttempt;
 import vn.edu.toeic.protocol.exam.rich.ExamCatalogItem;
 
@@ -44,7 +50,17 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
 
     private final Label selectedExam = Ui.wrapping("Chưa chọn đề.", "muted");
     private final TextField duration = new TextField("120");
-    private final TextField candidates = new TextField();
+    private final TableView<CandidateCatalogItem> candidates=new TableView<>();
+    private final TextField candidateSearch=new TextField();
+    private final Button findCandidates=new Button("Tìm"),moreCandidates=new Button("Tải thêm thí sinh"),clearCandidates=new Button("Bỏ chọn tất cả");
+    private final MenuButton manageCandidates=new MenuButton("Quản lý thí sinh");
+    private final Label candidateStatus=Ui.wrapping(""),selectedPeople=Ui.wrapping("");
+    private Dialog<Void> candidateDialog;
+    private TextField candidateCode,candidateName;
+    private Label candidateFormStatus;
+    private Button candidateSave,candidateCancel;
+    private long lastSavedId;
+    private volatile boolean closed;
     private final TextField extraProctors = new TextField();
     private final Button create = new Button("Tạo ca PROCTORED_V2");
     private final Label createStatus = Ui.wrapping("");
@@ -82,6 +98,7 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
         ProctorV2SessionPane pane = new ProctorV2SessionPane(controller, selfId);
         self.set(pane);
         controller.loadCatalog(false);
+        controller.loadCandidates("",false);
         return pane;
     }
 
@@ -115,11 +132,12 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
 
     /** Any thread: coalesces snapshots so the FX thread renders only the latest one. */
     void post(ProctorV2Controller.Snapshot snapshot) {
+        if(closed)return;
         pending.set(snapshot);
         if (queued.compareAndSet(false, true)) Platform.runLater(() -> {
             queued.set(false);
             ProctorV2Controller.Snapshot latest = pending.getAndSet(null);
-            if (latest != null) render(latest);
+            if (latest != null && !closed) render(latest);
         });
     }
 
@@ -158,24 +176,64 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
         duration.setId("v2-duration");
         duration.setPrefColumnCount(5);
         candidates.setId("v2-candidates");
-        candidates.setPromptText("vd 1, 2");
-        HBox.setHgrow(candidates, Priority.ALWAYS);
+        Ui.plainTable(candidates,"Chưa có thí sinh phù hợp. Tìm theo mã hoặc thêm thí sinh.");
+        candidates.getColumns().add(Ui.nodeColumn("Chọn",70,item->{
+            CheckBox check=new CheckBox();
+            check.setAccessibleText("Chọn "+item.displayName()+" ("+item.username()+")");
+            check.setSelected(shown!=null && shown.selectedCandidates().stream().anyMatch(row->row.userId()==item.userId()));
+            check.setDisable(shown!=null && shown.creating());
+            check.setOnAction(event->controller.toggleCandidate(item.userId()));return check;
+        }));
+        candidates.getColumns().add(Ui.textColumn("Mã thí sinh",220,CandidateCatalogItem::username));
+        candidates.getColumns().add(Ui.textColumn("Họ và tên",320,CandidateCatalogItem::displayName));
+        candidates.setPrefHeight(180);
+        candidateSearch.setId("v2-candidate-search");candidateSearch.setPromptText("Tìm mã thí sinh hoặc họ tên");
+        HBox.setHgrow(candidateSearch,Priority.ALWAYS);
+        findCandidates.setId("v2-candidate-find");findCandidates.setOnAction(e->controller.loadCandidates(candidateSearch.getText(),false));
+        candidateSearch.setOnAction(e->findCandidates.fire());
+        moreCandidates.setId("v2-candidate-more");moreCandidates.setOnAction(e->controller.loadCandidates(candidateSearch.getText(),true));
+        clearCandidates.setOnAction(e->controller.clearCandidates());clearCandidates.setId("v2-candidate-clear");
+        candidateStatus.setId("v2-candidate-status");selectedPeople.setId("v2-selected-people");
+        manageCandidates.setId("candidate-management");manageCandidates.setMnemonicParsing(false);
+        MenuItem addCandidate=new MenuItem("Thêm thí sinh");addCandidate.setId("candidate-add");
+        addCandidate.setOnAction(e->openCandidateForm());manageCandidates.getItems().add(addCandidate);
         extraProctors.setId("v2-extra-proctors");
         extraProctors.setPromptText("tùy chọn");
         create.setId("v2-create");
         create.getStyleClass().add("primary");
-        create.setOnAction(event -> controller.createSession(duration.getText(), candidates.getText(), selfId, extraProctors.getText()));
+        create.setOnAction(event -> controller.createSelectedSession(duration.getText(),selfId,extraProctors.getText()));
         createStatus.setId("v2-create-status");
         createdBox.setId("v2-created");
         FlowPane form = new FlowPane(16, 10,
                 field("Thời lượng (phút)", duration),
-                field("ID thí sinh", candidates),
                 field("ID giám thị thêm", extraProctors));
-        return card("2. Tạo ca PROCTORED_V2", null, selectedExam, form,
-                Ui.wrapping("Bạn (ID " + selfId + ") luôn được gán làm giám thị của ca.", "muted", "small"),
-                Ui.infoBox("Hạn chế: server chưa có API danh sách người dùng, nên nhập ID số của tài khoản thí sinh (do quản trị cấp). "
-                        + "Server kiểm vai trò, trạng thái và trùng lặp; mã ca và mã lượt do server sinh."),
-                new HBox(10, create), createStatus, createdBox);
+        return card("2. Tạo ca PROCTORED_V2",manageCandidates,selectedExam,
+                new HBox(8,candidateSearch,findCandidates),candidates,
+                new HBox(8,clearCandidates,moreCandidates),candidateStatus,selectedPeople,form,
+                Ui.wrapping("Chọn thí sinh theo mã và họ tên. Bạn luôn được gán làm giám thị của ca.","muted","small"),
+                new HBox(10,create),createStatus,createdBox);
+    }
+
+    private void openCandidateForm() {
+        if(closed || candidateDialog!=null)return;
+        controller.beginCandidate();
+        Dialog<Void> dialog=new Dialog<>();candidateDialog=dialog;
+        if(getScene()!=null)dialog.initOwner(getScene().getWindow());
+        dialog.setTitle("Thêm thí sinh");dialog.setHeaderText("Thêm thí sinh");
+        candidateCode=new TextField();candidateCode.setId("candidate-code");
+        candidateName=new TextField();candidateName.setId("candidate-name");
+        candidateFormStatus=Ui.wrapping("");candidateFormStatus.setId("candidate-form-status");
+        VBox fields=new VBox(10,field("Mã thí sinh",candidateCode),field("Họ và tên",candidateName),
+                Ui.wrapping("Mã gồm chữ, số và dấu . _ -; tối đa 80 ký tự, phân biệt hoa/thường.","muted","small"),candidateFormStatus);
+        fields.setPrefWidth(420);dialog.getDialogPane().setContent(fields);
+        ButtonType save=new ButtonType("Lưu",ButtonBar.ButtonData.OK_DONE),cancel=new ButtonType("Hủy",ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().setAll(save,cancel);
+        candidateSave=(Button)dialog.getDialogPane().lookupButton(save);candidateSave.setId("candidate-save");
+        candidateCancel=(Button)dialog.getDialogPane().lookupButton(cancel);
+        candidateSave.addEventFilter(javafx.event.ActionEvent.ACTION,e->{e.consume();controller.createCandidate(candidateCode.getText(),candidateName.getText());});
+        dialog.setOnCloseRequest(e->{if(!closed && controller.snapshot().candidateSaving())e.consume();});
+        dialog.setOnHidden(e->{if(candidateDialog==dialog)candidateDialog=null;});
+        dialog.show();render(controller.snapshot());candidateCode.requestFocus();
     }
 
     private VBox readyCard() {
@@ -268,7 +326,8 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
         selectedExam.setText(selected == null ? "Chưa chọn đề."
                 : "Đề: " + selected.title() + " (" + selected.examId() + ", " + selected.totalQuestions() + " câu)"
                 + (s.canCreate() || s.creating() ? "" : " — server chặn: " + String.join(", ", selected.blockedReasons())));
-        create.setDisable(!s.canCreate());
+        create.setDisable(!s.canCreate() || s.selectedCandidates().isEmpty());
+        renderCandidates(s);
         createStatus.setText(s.creating() ? "Đang gửi yêu cầu tạo ca…" : s.createError());
         renderCreated(s);
 
@@ -286,6 +345,27 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
         else if (s.starting()) startStatus.setText("Đang gửi START…");
         else startStatus.setText(s.canStart() ? "Đủ READY theo lần đọc gần nhất của server." : "Chưa thể START.");
         notice.setText(s.notice());
+    }
+
+    private void renderCandidates(ProctorV2Controller.Snapshot s) {
+        if(!candidates.getItems().equals(s.candidates()))candidates.getItems().setAll(s.candidates());
+        candidates.refresh();
+        candidateStatus.setText(s.candidatesLoading()?"Đang tải thí sinh…":!s.candidatesError().isEmpty()?s.candidatesError()
+                :s.candidates().size()+" thí sinh"+(s.candidatesHasMore()?" · còn trang sau":""));
+        selectedPeople.setText("Đã chọn "+s.selectedCandidates().size()+" thí sinh: "+s.selectedCandidates().stream()
+                .map(CandidateCatalogItem::username).collect(java.util.stream.Collectors.joining(", ")));
+        moreCandidates.setDisable(s.candidatesLoading()||!s.candidatesHasMore());
+        clearCandidates.setDisable(s.creating()||s.selectedCandidates().isEmpty());
+        if(candidateDialog!=null) {
+            candidateCode.setDisable(s.candidateSaving());candidateName.setDisable(s.candidateSaving());
+            candidateSave.setDisable(s.candidateSaving());candidateCancel.setDisable(s.candidateSaving());
+            candidateFormStatus.setText(s.candidateSaving()?"Đang lưu…":s.candidateSaveError());
+            if(s.savedCandidate()!=null)candidateDialog.close();
+        }
+        if(s.savedCandidate()!=null && lastSavedId!=s.savedCandidate().userId()) {
+            lastSavedId=s.savedCandidate().userId();candidateSearch.setText(s.savedCandidate().username());
+            candidateStatus.setText("Đã thêm "+s.savedCandidate().displayName()+". Chọn thí sinh để phân công ca thi.");
+        }
     }
 
     private void renderCreated(ProctorV2Controller.Snapshot s) {
@@ -314,5 +394,8 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
         readyStatus.setText(s.session().isEmpty() ? "Chưa theo dõi ca nào." : text);
     }
 
-    @Override public void close() { controller.close(); }
+    @Override public void close() {
+        if(closed)return;closed=true;controller.close();
+        if(candidateDialog!=null)candidateDialog.close();
+    }
 }

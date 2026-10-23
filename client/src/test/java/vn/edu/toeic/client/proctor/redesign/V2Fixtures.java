@@ -14,6 +14,9 @@ import vn.edu.toeic.protocol.exam.rich.CreatedAttempt;
 import vn.edu.toeic.protocol.exam.rich.ExamCatalogItem;
 import vn.edu.toeic.protocol.exam.rich.ExamCatalogPage;
 import vn.edu.toeic.protocol.exam.rich.SessionReadiness;
+import vn.edu.toeic.protocol.exam.rich.CandidateCatalogPage;
+import vn.edu.toeic.protocol.exam.rich.CandidateCatalogItem;
+import vn.edu.toeic.protocol.exam.rich.CreateCandidateRequest;
 
 /** MOCK data for the PROCTORED_V2 panel tests; never evidence of a real server integration. */
 final class V2Fixtures {
@@ -49,6 +52,16 @@ final class V2Fixtures {
 
         volatile Call<ExamCatalogPage> firstPage = () -> new ExamCatalogPage(2, List.of(selectable("mock-a"), blocked("mock-b")), "mock-b");
         volatile Call<ExamCatalogPage> nextPage = () -> new ExamCatalogPage(2, List.of(selectable("mock-c")), null);
+        final List<CandidateCatalogItem> candidateRows=new CopyOnWriteArrayList<>(List.of(new CandidateCatalogItem(2,"candidate2","MOCK Thí sinh 2")));
+        final List<CreateCandidateRequest> candidateCreates=new CopyOnWriteArrayList<>();
+        volatile Call<CandidateCatalogPage> candidatePage=()->new CandidateCatalogPage(2,List.copyOf(candidateRows),null);
+        volatile Call<CandidateCatalogItem> candidateCreate=()->{
+            var request=candidateCreates.getLast();
+            if(candidateRows.stream().anyMatch(c->c.username().equals(request.username())))throw new vn.edu.toeic.client.proctor.ProctorSessionApiClient.Rejected(409,"CONFLICT");
+            var item=new CandidateCatalogItem(100+candidateCreates.size(),request.username(),request.displayName());candidateRows.add(item);return item;
+        };
+        @Override public CandidateCatalogPage candidates(String search,Long after) throws Exception {return candidatePage.get();}
+        @Override public CandidateCatalogItem createCandidate(CreateCandidateRequest request) throws Exception {candidateCreates.add(request);return candidateCreate.get();}
         volatile Call<CreateRichSessionResponse> create;
         volatile Call<SessionReadiness> readiness = () -> ready(SESSION, attempt("MOCK-attempt-1", true, true));
         volatile Call<String> manifest = () -> MANIFEST;

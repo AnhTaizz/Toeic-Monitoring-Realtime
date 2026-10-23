@@ -3,6 +3,7 @@ package vn.edu.toeic.client.proctor.redesign;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -24,6 +25,8 @@ import vn.edu.toeic.protocol.exam.rich.CreateRichSessionRequest;
 import vn.edu.toeic.protocol.exam.rich.CreateRichSessionResponse;
 import vn.edu.toeic.protocol.exam.rich.ExamCatalogItem;
 import vn.edu.toeic.protocol.exam.rich.SessionReadiness;
+import vn.edu.toeic.protocol.exam.rich.CandidateCatalogItem;
+import vn.edu.toeic.protocol.exam.rich.CreateCandidateRequest;
 
 /**
  * State of the PROCTORED_V2 panel: catalog → create session → READY → START.
@@ -48,6 +51,9 @@ final class ProctorV2Controller implements AutoCloseable {
     static final int MAX_CATALOG = 500;
 
     record Snapshot(List<ExamCatalogItem> catalog, boolean catalogLoading, boolean catalogHasMore, String catalogError,
+            List<CandidateCatalogItem> candidates, List<CandidateCatalogItem> selectedCandidates,
+            boolean candidatesLoading, boolean candidatesHasMore, String candidatesError,
+            boolean candidateSaving, CandidateCatalogItem savedCandidate, String candidateSaveError,
             String selectedExamId, boolean creating, CreateRichSessionResponse created, String createError,
             String session, SessionReadiness readiness, boolean readyLoading, boolean readyStale, String readyError,
             boolean polling, ListeningStartRequest pendingStart, ListeningStartResponse started, boolean starting,
@@ -66,6 +72,14 @@ final class ProctorV2Controller implements AutoCloseable {
     private String nextAfter, catalogError = "", selectedExamId = "";
     private boolean catalogLoading, catalogHasMore;
     private long catalogGeneration;
+
+    private final List<CandidateCatalogItem> candidates=new ArrayList<>();
+    private final Map<Long,CandidateCatalogItem> selectedCandidates=new LinkedHashMap<>();
+    private String candidateSearch="", candidatesError="",candidateSaveError="";
+    private Long nextCandidate;
+    private long candidatesGeneration;
+    private boolean candidatesLoading,candidatesHasMore,candidateSaving;
+    private CandidateCatalogItem savedCandidate;
 
     private boolean creating;
     private CreateRichSessionResponse created;
@@ -106,7 +120,9 @@ final class ProctorV2Controller implements AutoCloseable {
     }
 
     synchronized Snapshot snapshot() {
-        return new Snapshot(List.copyOf(catalog), catalogLoading, catalogHasMore, catalogError, selectedExamId, creating, created,
+        return new Snapshot(List.copyOf(catalog), catalogLoading, catalogHasMore, catalogError,
+                List.copyOf(candidates),List.copyOf(selectedCandidates.values()),candidatesLoading,candidatesHasMore,candidatesError,
+                candidateSaving,savedCandidate,candidateSaveError,selectedExamId, creating, created,
                 createError, session, readiness, readyLoading, readyStale, readyError, poll != null, pendingStarts.get(session),
                 started.get(session), starting, notice, canCreate(), canStart());
     }
@@ -199,7 +215,112 @@ final class ProctorV2Controller implements AutoCloseable {
 
     // ------------------------------------------------------------------ create
 
-    /** Parses "1, 2 3" into unique positive user IDs (no user-list API exists; IDs are entered by hand). */
+    synchronized void loadCandidates(String search, boolean more) {
+        if (closed || more && (candidatesLoading || !candidatesHasMore)) return;
+        String text = search == null ? "" : search.trim();
+        if (text.length() > 100 || text.chars().anyMatch(Character::isISOControl)) {
+            candidatesError = "Tìm theo tên hoặc tài khoản, tối đa 100 ký tự.";
+            publish();
+            return;
+        }
+        if (!more) {
+            candidateSearch = text;
+            candidates.clear();
+            nextCandidate = null;
+            candidatesHasMore = false;
+        }
+        String query = candidateSearch;
+        Long after = more ? nextCandidate : null;
+        long generation = ++candidatesGeneration;
+        candidatesLoading = true;
+        candidatesError = "";
+        publish();
+        execute(() -> api.candidates(query, after), (page, failure) -> {
+            if (generation != candidatesGeneration) return;
+            candidatesLoading = false;
+            if (failure != null) { candidatesError = error(failure); return; }
+            for (var item : page.items()) {
+                if (candidates.size() >= MAX_CATALOG) break;
+                candidates.removeIf(old -> old.userId() == item.userId());
+                candidates.add(item);
+            }
+            nextCandidate = page.nextAfterUserId();
+            candidatesHasMore = nextCandidate != null && candidates.size() < MAX_CATALOG;
+        });
+    }
+
+    synchronized void toggleCandidate(long id) {
+        if (closed || creating) return;
+        if (selectedCandidates.remove(id) == null) {
+            var item = candidates.stream().filter(row -> row.userId() == id).findFirst().orElse(null);
+            if (item == null) return;
+            if (selectedCandidates.size() >= 100) {
+                candidatesError = "Mỗi ca tối đa 100 thí sinh. Bỏ chọn một người để thêm người khác.";
+                publish();
+                return;
+            }
+            selectedCandidates.put(id, item);
+        }
+        publish();
+    }
+
+    synchronized void selectVisibleCandidates() {
+        if (closed || creating || candidatesLoading) return;
+        long extra = candidates.stream().filter(row -> !selectedCandidates.containsKey(row.userId())).count();
+        if (selectedCandidates.size() + extra > 100) {
+            candidatesError = "Mỗi ca tối đa 100 thí sinh. Hãy chọn từng người hoặc bỏ bớt lựa chọn.";
+        } else {
+            for (var item : candidates) selectedCandidates.put(item.userId(), item);
+        }
+        publish();
+    }
+
+    synchronized void clearCandidates() {
+        if (closed || creating) return;
+        selectedCandidates.clear();
+        publish();
+    }
+
+    synchronized void createSelectedSession(String duration, long selfId, String extraProctors) {
+        String ids = selectedCandidates.keySet().stream().map(Object::toString).collect(java.util.stream.Collectors.joining(","));
+        createSession(duration, ids, selfId, extraProctors);
+    }
+
+    synchronized void beginCandidate() {
+        if(closed || candidateSaving)return;
+        savedCandidate=null;candidateSaveError="";publish();
+    }
+
+    synchronized void createCandidate(String code,String name) {
+        if(closed || candidateSaving)return;
+        savedCandidate=null;
+        String username=code==null?"":code.strip(),displayName=name==null?"":name.strip();
+        if(!username.matches("[A-Za-z0-9][A-Za-z0-9._-]{0,79}") || displayName.isBlank()
+                || displayName.codePointCount(0,displayName.length())>160
+                || displayName.codePoints().anyMatch(c->Character.isISOControl(c)||Character.getType(c)==Character.FORMAT||Character.getType(c)==Character.SURROGATE)) {
+            candidateSaveError="Nhập mã hợp lệ (tối đa 80 ký tự) và họ tên (tối đa 160 ký tự).";publish();return;
+        }
+        candidateSaving=true;candidateSaveError="";publish();
+        execute(()->api.createCandidate(new CreateCandidateRequest(username,displayName)),(value,failure)->{
+            candidateSaving=false;
+            if(failure!=null) {
+                int codeStatus=status(failure);
+                candidateSaveError=codeStatus==409?"Mã thí sinh đã tồn tại. Hãy tìm lại mã; thông tin cũ được giữ nguyên."
+                    :codeStatus==400?"Mã thí sinh hoặc họ tên không hợp lệ. Kiểm tra thông tin rồi lưu lại."
+                    :codeStatus==403?"Bạn không có quyền thêm thí sinh."
+                    :codeStatus==401?error(failure)
+                    :"Chưa nhận được xác nhận lưu. Hãy đóng form và tìm lại mã thí sinh trước khi gửi lại.";
+                return;
+            }
+            savedCandidate=value;
+            // Show the server-confirmed identity immediately, even when the previous catalog page was full.
+            candidatesGeneration++;candidatesLoading=false;candidatesError="";
+            candidateSearch=value.username();candidates.clear();candidates.add(value);
+            nextCandidate=null;candidatesHasMore=false;
+        });
+    }
+
+    /** Parses IDs used internally by the request builder and additional-proctor field. */
     static List<Long> userIds(String text, int max) {
         LinkedHashSet<Long> ids = new LinkedHashSet<>();
         for (String part : text == null ? new String[0] : text.trim().split("[\\s,;]+")) {
@@ -418,12 +539,14 @@ final class ProctorV2Controller implements AutoCloseable {
         if (closed) return;
         closed = true;
         catalogGeneration++;
+        candidatesGeneration++;
         readyGeneration++;
         stopPolling();
         if (timer != null) timer.shutdownNow();
         if (ownedIo != null) ownedIo.shutdownNow();
         api.close();
         catalog.clear();
+        candidates.clear();selectedCandidates.clear();savedCandidate=null;
         pendingStarts.clear();
         started.clear();
         startedOrder.clear();

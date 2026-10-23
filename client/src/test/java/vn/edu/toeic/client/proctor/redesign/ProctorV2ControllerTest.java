@@ -35,6 +35,41 @@ class ProctorV2ControllerTest {
 
     private void advanceMillis(long millis) { clock.addAndGet(TimeUnit.MILLISECONDS.toNanos(millis)); }
 
+    @Test void provisionedCandidateIsVisibleImmediatelyWithoutCreatingOrStartingAnExam() {
+        var c=direct();c.loadCandidates("",false);c.createCandidate(" B23NEW "," Nguyễn An ");
+        assertThat(c.snapshot().savedCandidate().username()).isEqualTo("B23NEW");
+        assertThat(c.snapshot().candidates()).containsExactly(c.snapshot().savedCandidate());
+        assertThat(c.snapshot().selectedCandidates()).isEmpty();
+        assertThat(api.creates).isEmpty();assertThat(api.starts).isEmpty();assertThat(scopeRefreshes.get()).isZero();
+        c.toggleCandidate(c.snapshot().savedCandidate().userId());c.loadCatalog(false);c.select("mock-a");
+        c.createSelectedSession("120",3,"");
+        assertThat(api.creates.getFirst().candidateUserIds()).containsExactly(c.snapshot().savedCandidate().userId());
+    }
+
+    @Test void duplicateAndUnknownOutcomeAreExplainedWithoutAutomaticResubmission() {
+        var c=direct();api.candidateCreate=()->{throw new Rejected(409,"CONFLICT");};
+        c.createCandidate("B23NEW","Nguyễn An");assertThat(c.snapshot().candidateSaveError()).contains("đã tồn tại");
+        assertThat(api.candidateCreates).hasSize(1);assertThat(c.snapshot().savedCandidate()).isNull();
+        api.candidateCreate=()->{throw new IOException("Lost response");};
+        c.createCandidate("B23NEW","Nguyễn An");assertThat(c.snapshot().candidateSaveError()).contains("tìm lại mã");
+        assertThat(api.candidateCreates).hasSize(2);assertThat(api.creates).isEmpty();
+    }
+
+    @Test void staleSearchCannotReplaceFreshCandidateResultsOrCreatedIdentity() {
+        var queue=new java.util.ArrayList<Runnable>();
+        controller=new ProctorV2Controller(api,last::set,expired::incrementAndGet,scopeRefreshes::incrementAndGet,
+                queue::add,null,null,3000,clock::get);
+        controller.loadCandidates("old",false);controller.loadCandidates("new",false);
+        var fresh=new vn.edu.toeic.protocol.exam.rich.CandidateCatalogItem(9,"NEW","MOCK new");
+        api.candidatePage=()->new vn.edu.toeic.protocol.exam.rich.CandidateCatalogPage(2,List.of(fresh),null);queue.get(1).run();
+        api.candidatePage=()->new vn.edu.toeic.protocol.exam.rich.CandidateCatalogPage(2,List.of(),null);queue.get(0).run();
+        assertThat(controller.snapshot().candidates()).containsExactly(fresh);
+        controller.createCandidate("B23NEW","Nguyễn An");controller.createCandidate("B23OTHER","MOCK duplicate click");
+        assertThat(queue).hasSize(3);queue.get(2).run();
+        assertThat(api.candidateCreates).hasSize(1);
+        assertThat(controller.snapshot().candidates()).containsExactly(controller.snapshot().savedCandidate());
+    }
+
     @Test void catalogUsesServerCursorAndBlockedExamsCannotCreateSessions() {
         var c = direct();
         c.loadCatalog(false);
