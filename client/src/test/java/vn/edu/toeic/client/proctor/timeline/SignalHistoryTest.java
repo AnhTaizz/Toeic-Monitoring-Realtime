@@ -38,6 +38,27 @@ class SignalHistoryTest {
         var merged=TimelineRows.merge(typed,process,500);assertThat(merged).hasSize(10);assertThat(TimelineRows.merge(process,typed,500)).isEqualTo(merged);assertThat(TimelineRows.merge(merged,typed,500)).isEqualTo(merged);assertThat(merged.stream().map(TimelineRows.Row::key)).contains("signal:A:same-id","process:A:same-id");
         var duplicate=new TimelineRows.Row(process.getFirst().key(),"A","PROCESS","PROCESS_OBSERVED","different",T,T,"COMPLETE",0,false,false);assertThatThrownBy(()->TimelineRows.merge(process,List.of(duplicate),500)).isInstanceOf(IllegalArgumentException.class);
     }
+    @Test void processChildrenAreGroupedIntoRiskChangesWithoutLosingLaterBursts(){
+        var events=List.of(
+                new Event("c1","A","chrome.exe","COMPLETE","process-policy-v1",T,T),
+                new Event("c2","A","chrome.exe","COMPLETE","process-policy-v1",T.plusSeconds(2),T.plusSeconds(2)),
+                new Event("a1","A","anydesk.exe","COMPLETE","process-policy-v1",T.plusSeconds(3),T.plusSeconds(3)),
+                new Event("c3","A","chrome.exe","COMPLETE","process-policy-v1",T.plusSeconds(40),T.plusSeconds(40)));
+        var rows=TimelineRows.legacy(events,List.of(),List.of());
+        assertThat(rows).hasSize(3);
+        assertThat(rows).anyMatch(r->r.description().contains("NGHIÊM TRỌNG")&&r.description().contains("Điều khiển từ xa")&&r.description().contains("AnyDesk"));
+        assertThat(rows).anyMatch(r->r.description().contains("Google Chrome")&&r.description().contains("2 process con")&&r.description().contains("đã gộp"));
+        assertThat(rows.stream().filter(r->r.description().contains("Google Chrome"))).hasSize(2);
+    }
+    @Test void currentStateIsAggregatedByApplicationAndOrderedByRisk(){
+        var state=List.of(new vn.edu.toeic.protocol.monitoring.FullSnapshotPayload.Process(1,"chrome.exe",T.toString(),"COMPLETE"),
+                new vn.edu.toeic.protocol.monitoring.FullSnapshotPayload.Process(2,"chrome.exe",T.plusSeconds(1).toString(),"COMPLETE"),
+                new vn.edu.toeic.protocol.monitoring.FullSnapshotPayload.Process(3,"teamviewer.exe",T.toString(),"COMPLETE"));
+        String summary=ProcessRiskPresentation.summarize(state,T.toString(),false);
+        assertThat(summary).contains("2 ứng dụng","3 process","TeamViewer ×1","Google Chrome ×2");
+        assertThat(summary.indexOf("NGHIÊM TRỌNG")).isLessThan(summary.indexOf("CAO"));
+        assertThat(summary).doesNotContain("PID");
+    }
     @Test void bodyPageAndDetailsBoundsAreNotRelaxed(){assertThatThrownBy(()->SignalHistory.parse(page(),"A",0,null,2)).isInstanceOf(IllegalArgumentException.class);var oversized=page();oversized.addProperty("extra","x".repeat(512*1024));assertThatThrownBy(()->SignalHistory.parse(oversized,"A",0,null,100)).isInstanceOf(IllegalArgumentException.class);}
     @Test void displayOrderUsesServerTimeEvenWhenClientClockIsFarAhead(){
         var early=new TimelineRows.Row("process:A:p","A","PROCESS","PROCESS_OBSERVED","MOCK",T.plusSeconds(5000),T,"COMPLETE",0,false,false);

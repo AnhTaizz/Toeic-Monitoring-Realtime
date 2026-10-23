@@ -35,8 +35,7 @@ public final class TimelineRows {
     }
     public static List<Row> legacy(List<Event> events,List<Interruption> interruptions,List<Gap> gaps) {
         var rows=new ArrayList<Row>();
-        for(var e:events) rows.add(new Row("process:"+e.attemptId()+":"+e.eventId(),e.attemptId(),"PROCESS","PROCESS_OBSERVED",
-                "Quan sát tiến trình: "+e.processName()+"; policy "+e.policyVersion(),e.observedAt(),e.receivedAt(),e.metadataQuality()+" / "+e.deliveryStatus(),0,false,false));
+        rows.addAll(ProcessRiskPresentation.compactEvents(events));
         for(var g:gaps) rows.add(new Row("process-gap:"+g.attemptId()+":"+g.gapId(),g.attemptId(),"PROCESS_QUEUE","MONITORING_GAP",
                 "Client báo bỏ "+g.droppedCount()+" process event; khoảng giờ client "+g.firstDroppedAt()+" → "+g.lastDroppedAt(),g.lastDroppedAt(),g.receivedAt(),g.reason(),0,true,false));
         for(var i:interruptions) {
