@@ -1,0 +1,819 @@
+{
+  "scope": "NEW EXECUTIONS IN THIS REVIEW; not prior PR53/qd33 packet or stabilization results",
+  "positiveJUnit": {
+    "total": 123,
+    "passed": 122,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 1,
+    "postgresCasesIncluded": 16,
+    "cases": [
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioApiClientTest",
+        "case": "readinessRequiresCorrelatedAckAndServerTimestamp",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioApiClientTest",
+        "case": "rejectsFractionalWriterMalformedJsonWrongAttemptAndDuplicateNames",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioApiClientTest",
+        "case": "refusesRedirectAuthenticationFailureAndCallsAfterClose",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioApiClientTest",
+        "case": "invalidUrlCannotIncludeCredentialsQueryOrFragment",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioApiClientTest",
+        "case": "exactWriterAndUnicodeFileDownloadWithBearerOnly",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "unicodePathDownloadProgressAndLocalRevalidation",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "rootReplacedByJunctionAfterUseIsRejected",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "rejectsUnsafeWindowsNames(String)[1]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "rejectsUnsafeWindowsNames(String)[2]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "rejectsUnsafeWindowsNames(String)[3]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "rejectsUnsafeWindowsNames(String)[4]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "rejectsUnsafeWindowsNames(String)[5]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "rejectsUnsafeWindowsNames(String)[6]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "rejectsUnsafeWindowsNames(String)[7]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "rejectsUnsafeWindowsNames(String)[8]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "rejectsUnsafeWindowsNames(String)[9]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "rejectsUnsafeWindowsNames(String)[10]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "corruptTruncatedAndOversizedDownloadsNeverReplaceValidCache",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "existingFileCannotBeAcceptedAsCacheDirectory",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "junctionAtOrBelowCacheRootIsRejectedAndNothingIsWrittenOutside",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "rejectsWrongScopeDuplicatesAndResourceLimits",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "repeatedStressWithMixedFileAndVerifyCallsNeverRacesDirectoryCreation",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "symlinkInsideCacheRootIsRejectedWhereLinksCanBeCreated",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "SKIP",
+        "reason": "Windows symbolic-link privilege unavailable; actual junction and 8.3 tests ran"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "concurrentReadersCanCreateTheSameManifestCacheDirectory",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "pcmSpeakerSampleIsSeparateAndHasValidHeader",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "cacheRootUnderAncestorShortNameIsAllowed",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "cacheRootUnderAncestorJunctionIsAllowed",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioFilesTest",
+        "case": "cancelledDownloadLeavesNoPartialOrReadyFile",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioPreparationTest",
+        "case": "closeDuringSlowManifestDiscardsLateCompletion",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioPreparationTest",
+        "case": "sharedWriterCloseRejectsLatePreparationBeforeAnotherViewOpens",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioPreparationTest",
+        "case": "corruptionOnDownloadAndWithdrawalFailureBlockPreparation",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioPreparationTest",
+        "case": "missingFileImmediatelyBeforeReadyNeverSendsTrue",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioPreparationTest",
+        "case": "malformedAckCannotDisplayReady",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioPreparationTest",
+        "case": "oneByteCorruptionImmediatelyBeforeReadyNeverSendsTrue",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioPreparationTest",
+        "case": "mediaErrorInvalidatesConfirmationAndWithdraws",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioPreparationTest",
+        "case": "sharedExamWriterNeverAcquiresAnotherEpoch",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioPreparationTest",
+        "case": "requiresHumanConfirmationAndServerAckAndReusesWriterOnRetry",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.AudioPreparationTest",
+        "case": "disconnectRejectsOldMediaCompletionAndRequiresExplicitPreparation",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+        "case": "questionAudioMismatchAndDurableReservationBlockPlayback",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+        "case": "mediaErrorStopsLocksPersistsAndReportsInterruption",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+        "case": "corruptCacheAndMismatchedCommandNeverReachMediaOrStartedEvent",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+        "case": "duplicateStartPlaysOneOrderedPlaylistAndReportsLifecycle",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+        "case": "reopenQueriesServerAndNeverReplaysActiveOrInterruptedListening",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+        "case": "serverInterruptionAfterStartedLocksPlayback",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+        "case": "matchingServerInterruptionStopsPlaylistAndRejectsOldMediaCallbacks",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+        "case": "networkLossDuringPlaybackReportsAndNeverResumes",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.exam.ExamPaperAndEntryTest",
+        "case": "lostTakeoverAckIsNeverRetriedAutomaticallyAndReopenUsesAFreshRequestId",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.exam.ExamSessionTest",
+        "case": "staleWriterEpochBlocksThisSessionUntilItIsGrantedANewEpoch",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.exam.ExamSessionTest",
+        "case": "lateListeningAuthorityAfterCloseCannotMutateAnotherSessionOrAcquireWriter",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.exam.ExamSessionTest",
+        "case": "listeningInterruptionKeepsReadingChangesAndReplacesOnlyFrozenListeningFromServer",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.exam.ExamSessionTest",
+        "case": "closingIgnoresLateResultsAndFurtherCalls",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.exam.ExamSessionTest",
+        "case": "closingStopsTheTimerThreadTheSessionOwns",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.exam.ExamSessionTest",
+        "case": "reclaimingAWriterOnADecidedAttemptShowsTheServerResult",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "correlatedResyncRequiresNewScanAndFullAboveAttemptedSequenceInSameEpoch",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "failedScanIsNotEmptyAndValidEmptyReallyRemovesState",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "collectorStopsSilentlyAndNoSavedSnapshotRefreshesIt",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "invalidAckCannotAdvanceBase(String)[1]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "invalidAckCannotAdvanceBase(String)[2]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "invalidAckCannotAdvanceBase(String)[3]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "invalidAckCannotAdvanceBase(String)[4]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "invalidAckCannotAdvanceBase(String)[5]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "invalidAckCannotAdvanceBase(String)[6]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "invalidAckCannotAdvanceBase(String)[7]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "invalidAckCannotAdvanceBase(String)[8]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "reconnectRejectsOldAckAndFailureCallbackAndOfflineSnapshot",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "ackLossOrWriteFailureRetriesEntireFrozenDelta(boolean)[1]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "ackLossOrWriteFailureRetriesEntireFrozenDelta(boolean)[2]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "uncorrelatedAuthenticationFailureClosesIdleDeltaRun",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.DeltaSnapshotDeliveryTest",
+        "case": "waitsForFirstFullAckAndCoalescesAgainstAcknowledgedBaseOnly",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest",
+        "case": "canonicalAliasDuplicateAndMetadataFullReplacement",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest",
+        "case": "unknownRemoveAndDuplicateAddDoNotPartiallyMutate",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest",
+        "case": "sixRulesFullDeltaRetryMissingBaseRecoveryOldEpoch",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest",
+        "case": "maxSetAndCacheWindowApplyToBothKinds",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest",
+        "case": "olderFullCannotClearResyncAndDuplicateCannotClearItEither",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.protocol.monitoring.MonitoringStateReducerTest",
+        "case": "conflictAndSharedFullDeltaSequenceAreAtomic",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.audio.AudioRuntimePostgresTest",
+        "case": "withdrawalAndWriterTakeoverInvalidateReadiness",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.audio.AudioRuntimePostgresTest",
+        "case": "clientPreparationChecksRealLocalBytesBeforeReadyOnProductionHttpAndPostgres",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.audio.AudioRuntimePostgresTest",
+        "case": "databaseCommitFailureDoesNotAckReadyOrStart",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.audio.AudioRuntimePostgresTest",
+        "case": "authenticatedEndpointsAllowOnlyOwnerAndSessionProctor",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+        "case": "deferredCommitFailureSendsNoStartOrSuccessfulEventAck",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+        "case": "takeoverAndRestartCannotResumeOldPlayback",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+        "case": "eventsEnforceOwnershipWriterStartIdAndValidPayload",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+        "case": "startPushIsCommittedScopedAndRetryKeepsIdAndDeadline",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+        "case": "saveSubmitAndTimeoutContendOnPostgresRowAcrossDeadline",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+        "case": "concurrentFirstEntriesReconnectAndTakeoverKeepOneDeadline",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+        "case": "submitRetryAuthorizationAndIdempotencyKeepFinalResultImmutable",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+        "case": "unansweredAttemptTimesOutByAutonomousRuntimeScheduler",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+        "case": "readsRequireOwnershipOrAssignmentForEveryState(String)[1]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+        "case": "readsRequireOwnershipOrAssignmentForEveryState(String)[2]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+        "case": "readsRequireOwnershipOrAssignmentForEveryState(String)[3]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+        "case": "takeoverReplayAfterLostAckAdvancesEpochButNeverLosesAnswersDeadlineOrFinal",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest",
+        "case": "transientFailureDoesNotCancelTheNextScan",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest",
+        "case": "closeInterruptsAndWaitsForAnInFlightScan",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest",
+        "case": "automaticallyCallsMaintainAndStopsOnClose",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.MonitoringStateMaintenanceTest",
+        "case": "invalidIntervalsDoNotStartAWorker",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest",
+        "case": "reconnectRetiresOldEpochAndOldSocketCannotReopenOrCloseNew",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest",
+        "case": "monotonicStalenessRetainsLastKnownAndTtlReleasesCapacity",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest",
+        "case": "openRetryDoesNotResetAndRetiredOpenDoesNotReclaimEpoch",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest",
+        "case": "serverRestartChangesInstanceAndEpochAndRequiresFreshOpen",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest",
+        "case": "openFirstFullReplaceAndEmptyDoNotNeedHistoryStorage",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest",
+        "case": "shutdownClearsRamAndRejectsLateRequests",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest",
+        "case": "checksRoleScopeAndOwnershipEvenForDuplicate",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.MonitoringStateServiceTest",
+        "case": "closeIsIdempotentAndLateFullCannotReviveStoppedCollector",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.SmokeCleanupTest",
+        "case": "primaryFailureKeepsPropagatingAndCarriesCleanupFailure",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.SmokeCleanupTest",
+        "case": "everyStepRunsAndAFailedStepIsReportedWithoutPathsOrPass",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.monitoring.SmokeCleanupTest",
+        "case": "allPassingStepsFinishSilently",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.CandidateModeSessionTest",
+        "case": "defaultFullEvenWhenServerSupportsDeltaAndExplicitDeltaUsesSameEventStream",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.CandidateModeSessionTest",
+        "case": "fallbackIsPinnedUntilExplicitStopAndNewStart(DeltaCapability)[1]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.CandidateModeSessionTest",
+        "case": "fallbackIsPinnedUntilExplicitStopAndNewStart(DeltaCapability)[2]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.CandidateModeSessionTest",
+        "case": "wrongRoleScopeOrSecondStartCannotCreateACollectorRun",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.auth.AuthenticatedNetworkTest",
+        "case": "websocketRevalidatesSessionBeforeEveryMessage(String)[1]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.auth.AuthenticatedNetworkTest",
+        "case": "websocketRevalidatesSessionBeforeEveryMessage(String)[2]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.auth.AuthenticatedNetworkTest",
+        "case": "websocketRevalidatesSessionBeforeEveryMessage(String)[3]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.auth.AuthenticatedNetworkTest",
+        "case": "restRoleGuardReturns403AndScopeGuardRunsBeforeBusiness",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.auth.AuthenticatedNetworkTest",
+        "case": "ownAttemptAllowedForeignForbiddenAndUnsupportedEventNeverGetsSuccessAck",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.server.auth.AuthenticatedNetworkTest",
+        "case": "invalidMessageFromOneClientDoesNotAffectAnotherClient",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest",
+        "case": "failedCloseWriteStillReleasesCorrelationAndStopsWorker",
+        "sourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest",
+        "case": "stoppedWaitsUntilCloseWriteReleasesAdapterCorrelation",
+        "sourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest",
+        "case": "stuckCloseWriteIsBoundedAndCannotWriteAfterNextDeliveryStarts(boolean)[1]",
+        "sourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest",
+        "case": "stuckCloseWriteIsBoundedAndCannotWriteAfterNextDeliveryStarts(boolean)[2]",
+        "sourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.realtime.RealtimeClientTest",
+        "case": "forgetAfterAckStillRetiresLateReplies",
+        "sourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.realtime.RealtimeClientTest",
+        "case": "forgottenCorrelationIgnoresRepeatedAckErrorAndResyncUntilRetried",
+        "sourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+        "status": "PASS"
+      },
+      {
+        "suite": "vn.edu.toeic.client.realtime.RealtimeClientTest",
+        "case": "forgottenCorrelationIgnoresLateAckAndSameIdCanBeRetried",
+        "sourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+        "status": "PASS"
+      }
+    ]
+  },
+  "mainBeforePr47": {
+    "total": 3,
+    "expectedFailures": 3,
+    "productionSource": "main",
+    "testSource": "PR47",
+    "cases": [
+      {
+        "suite": "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest",
+        "case": "stuckCloseWriteIsBoundedAndCannotWriteAfterNextDeliveryStarts(boolean)[1]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "FAIL",
+        "testSourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+        "expectedBaselineFailure": true
+      },
+      {
+        "suite": "vn.edu.toeic.client.monitoring.FullSnapshotDeliveryTest",
+        "case": "stuckCloseWriteIsBoundedAndCannotWriteAfterNextDeliveryStarts(boolean)[2]",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "FAIL",
+        "testSourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+        "expectedBaselineFailure": true
+      },
+      {
+        "suite": "vn.edu.toeic.client.realtime.RealtimeClientTest",
+        "case": "forgottenCorrelationIgnoresRepeatedAckErrorAndResyncUntilRetried",
+        "sourceSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+        "status": "FAIL",
+        "testSourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+        "expectedBaselineFailure": true
+      }
+    ]
+  },
+  "pythonE1": {
+    "passed": 12,
+    "cases": [
+      "test_analyze.MetricsTest.test_campaign_requires_explicit_machine_alias_and_detects_mixing",
+      "test_analyze.MetricsTest.test_cpu_one_core",
+      "test_analyze.MetricsTest.test_detected_only_nearest_rank",
+      "test_analyze.MetricsTest.test_sample_variance_missing_and_single_run",
+      "test_analyze.MetricsTest.test_window_censoring",
+      "test_review.ReviewTest.test_binding_and_checksum_rejected",
+      "test_review.ReviewTest.test_copied_run_cannot_be_counted_as_another_repeat",
+      "test_review.ReviewTest.test_hand_calculated_counts_latency_and_weighted_cpu",
+      "test_review.ReviewTest.test_invalid_run_is_in_inventory_and_prevents_campaign_summary",
+      "test_review.ReviewTest.test_missing_counters_and_boundary_samples_report_coverage",
+      "test_review.ReviewTest.test_negative_latency_rejected_not_clamped",
+      "test_review.ReviewTest.test_unknown_outcome_and_duplicate_ids_rejected"
+    ]
+  },
+  "httpLostResponse": {
+    "test": "productionHttpClientDoesNotReplayAmbiguousTakeoverPost",
+    "status": "PASS",
+    "automaticRequestsAfterLostResponse": 1,
+    "requestsAfterExplicitNewCall": 2,
+    "jdkEnableAllMethodRetry": "default:false",
+    "transport": "REAL loopback HTTP",
+    "serverCommit": "MOCK",
+    "fault": "SIMULATED close after reading request without response"
+  },
+  "notRun": [
+    "Full Maven suite/package in this review",
+    "MSI/install/uninstall",
+    "GUI/manual hearing",
+    "Physical LAN/two-machine acceptance",
+    "New E1/E2/load campaign",
+    "Historical E1 raw reanalysis"
+  ]
+}

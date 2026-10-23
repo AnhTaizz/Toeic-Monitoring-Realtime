@@ -1,0 +1,95 @@
+[
+  {
+    "selector": "AudioFilesTest,AudioPreparationTest,AudioApiClientTest,ListeningPlaybackTest,ExamPaperAndEntryTest#lostTakeoverAckIsNeverRetriedAutomaticallyAndReopenUsesAFreshRequestId,ExamSessionTest#staleWriterEpochBlocksThisSessionUntilItIsGrantedANewEpoch+reclaimingAWriterOnADecidedAttemptShowsTheServerResult+closingIgnoresLateResultsAndFurtherCalls+closingStopsTheTimerThreadTheSessionOwns+listeningInterruptionKeepsReadingChangesAndReplacesOnlyFrozenListeningFromServer+lateListeningAuthorityAfterCloseCannotMutateAnotherSessionOrAcquireWriter",
+    "command": [
+      "mvn",
+      "-B",
+      "-ntp",
+      "-pl",
+      "client",
+      "-am",
+      "-Dsurefire.failIfNoSpecifiedTests=false",
+      "-Dtest=AudioFilesTest,AudioPreparationTest,AudioApiClientTest,ListeningPlaybackTest,ExamPaperAndEntryTest#lostTakeoverAckIsNeverRetriedAutomaticallyAndReopenUsesAFreshRequestId,ExamSessionTest#staleWriterEpochBlocksThisSessionUntilItIsGrantedANewEpoch+reclaimingAWriterOnADecidedAttemptShowsTheServerResult+closingIgnoresLateResultsAndFurtherCalls+closingStopsTheTimerThreadTheSessionOwns+listeningInterruptionKeepsReadingChangesAndReplacesOnlyFrozenListeningFromServer+lateListeningAuthorityAfterCloseCannotMutateAnotherSessionOrAcquireWriter",
+      "-Djava.io.tmpdir=<OWNED_WINDOWS_TEMP>",
+      "-Duser.timezone=UTC",
+      "test"
+    ],
+    "source": "main",
+    "probesFrom": "e8acc44880a38bb18595aefb1488dc2443afa185"
+  },
+  {
+    "selector": "ExamRuntimePostgresTest#takeoverReplayAfterLostAckAdvancesEpochButNeverLosesAnswersDeadlineOrFinal+concurrentFirstEntriesReconnectAndTakeoverKeepOneDeadline+unansweredAttemptTimesOutByAutonomousRuntimeScheduler+readsRequireOwnershipOrAssignmentForEveryState+submitRetryAuthorizationAndIdempotencyKeepFinalResultImmutable+saveSubmitAndTimeoutContendOnPostgresRowAcrossDeadline,AudioRuntimePostgresTest#databaseCommitFailureDoesNotAckReadyOrStart+withdrawalAndWriterTakeoverInvalidateReadiness+clientPreparationChecksRealLocalBytesBeforeReadyOnProductionHttpAndPostgres+authenticatedEndpointsAllowOnlyOwnerAndSessionProctor,ListeningRuntimePostgresTest#deferredCommitFailureSendsNoStartOrSuccessfulEventAck+startPushIsCommittedScopedAndRetryKeepsIdAndDeadline+takeoverAndRestartCannotResumeOldPlayback+eventsEnforceOwnershipWriterStartIdAndValidPayload,MonitoringStateServiceTest,MonitoringStateMaintenanceTest,SmokeCleanupTest,MonitoringStateReducerTest,DeltaSnapshotDeliveryTest#waitsForFirstFullAckAndCoalescesAgainstAcknowledgedBaseOnly+invalidAckCannotAdvanceBase+failedScanIsNotEmptyAndValidEmptyReallyRemovesState+ackLossOrWriteFailureRetriesEntireFrozenDelta+reconnectRejectsOldAckAndFailureCallbackAndOfflineSnapshot+correlatedResyncRequiresNewScanAndFullAboveAttemptedSequenceInSameEpoch+collectorStopsSilentlyAndNoSavedSnapshotRefreshesIt+uncorrelatedAuthenticationFailureClosesIdleDeltaRun",
+    "command": [
+      "mvn",
+      "-B",
+      "-ntp",
+      "-pl",
+      "server",
+      "-am",
+      "-Dsurefire.failIfNoSpecifiedTests=false",
+      "-Dtest=ExamRuntimePostgresTest#takeoverReplayAfterLostAckAdvancesEpochButNeverLosesAnswersDeadlineOrFinal+concurrentFirstEntriesReconnectAndTakeoverKeepOneDeadline+unansweredAttemptTimesOutByAutonomousRuntimeScheduler+readsRequireOwnershipOrAssignmentForEveryState+submitRetryAuthorizationAndIdempotencyKeepFinalResultImmutable+saveSubmitAndTimeoutContendOnPostgresRowAcrossDeadline,AudioRuntimePostgresTest#databaseCommitFailureDoesNotAckReadyOrStart+withdrawalAndWriterTakeoverInvalidateReadiness+clientPreparationChecksRealLocalBytesBeforeReadyOnProductionHttpAndPostgres+authenticatedEndpointsAllowOnlyOwnerAndSessionProctor,ListeningRuntimePostgresTest#deferredCommitFailureSendsNoStartOrSuccessfulEventAck+startPushIsCommittedScopedAndRetryKeepsIdAndDeadline+takeoverAndRestartCannotResumeOldPlayback+eventsEnforceOwnershipWriterStartIdAndValidPayload,MonitoringStateServiceTest,MonitoringStateMaintenanceTest,SmokeCleanupTest,MonitoringStateReducerTest,DeltaSnapshotDeliveryTest#waitsForFirstFullAckAndCoalescesAgainstAcknowledgedBaseOnly+invalidAckCannotAdvanceBase+failedScanIsNotEmptyAndValidEmptyReallyRemovesState+ackLossOrWriteFailureRetriesEntireFrozenDelta+reconnectRejectsOldAckAndFailureCallbackAndOfflineSnapshot+correlatedResyncRequiresNewScanAndFullAboveAttemptedSequenceInSameEpoch+collectorStopsSilentlyAndNoSavedSnapshotRefreshesIt+uncorrelatedAuthenticationFailureClosesIdleDeltaRun",
+      "-Djava.io.tmpdir=<OWNED_WINDOWS_TEMP>",
+      "-Duser.timezone=UTC",
+      "test"
+    ],
+    "postgres": "OWNED_LOCAL_PG18_LOOPBACK",
+    "source": "main"
+  },
+  {
+    "selector": "AuthenticatedNetworkTest#restRoleGuardReturns403AndScopeGuardRunsBeforeBusiness+ownAttemptAllowedForeignForbiddenAndUnsupportedEventNeverGetsSuccessAck+websocketRevalidatesSessionBeforeEveryMessage+invalidMessageFromOneClientDoesNotAffectAnotherClient,CandidateModeSessionTest#defaultFullEvenWhenServerSupportsDeltaAndExplicitDeltaUsesSameEventStream+fallbackIsPinnedUntilExplicitStopAndNewStart+wrongRoleScopeOrSecondStartCannotCreateACollectorRun",
+    "command": [
+      "mvn",
+      "-B",
+      "-ntp",
+      "-pl",
+      "server",
+      "-am",
+      "-Dsurefire.failIfNoSpecifiedTests=false",
+      "-Dtest=AuthenticatedNetworkTest#restRoleGuardReturns403AndScopeGuardRunsBeforeBusiness+ownAttemptAllowedForeignForbiddenAndUnsupportedEventNeverGetsSuccessAck+websocketRevalidatesSessionBeforeEveryMessage+invalidMessageFromOneClientDoesNotAffectAnotherClient,CandidateModeSessionTest#defaultFullEvenWhenServerSupportsDeltaAndExplicitDeltaUsesSameEventStream+fallbackIsPinnedUntilExplicitStopAndNewStart+wrongRoleScopeOrSecondStartCannotCreateACollectorRun",
+      "-Djava.io.tmpdir=<OWNED_WINDOWS_TEMP>",
+      "-Duser.timezone=UTC",
+      "test"
+    ],
+    "source": "main",
+    "store": "MOCK",
+    "network": "REAL_LOOPBACK"
+  },
+  {
+    "sha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+    "selector": "FullSnapshotDeliveryTest#stoppedWaitsUntilCloseWriteReleasesAdapterCorrelation+stuckCloseWriteIsBoundedAndCannotWriteAfterNextDeliveryStarts+failedCloseWriteStillReleasesCorrelationAndStopsWorker,RealtimeClientTest#forgottenCorrelationIgnoresLateAckAndSameIdCanBeRetried+forgottenCorrelationIgnoresRepeatedAckErrorAndResyncUntilRetried+forgetAfterAckStillRetiresLateReplies",
+    "command": [
+      "mvn",
+      "-B",
+      "-ntp",
+      "-pl",
+      "client",
+      "-am",
+      "-Dsurefire.failIfNoSpecifiedTests=false",
+      "-Dtest=FullSnapshotDeliveryTest#stoppedWaitsUntilCloseWriteReleasesAdapterCorrelation+stuckCloseWriteIsBoundedAndCannotWriteAfterNextDeliveryStarts+failedCloseWriteStillReleasesCorrelationAndStopsWorker,RealtimeClientTest#forgottenCorrelationIgnoresLateAckAndSameIdCanBeRetried+forgottenCorrelationIgnoresRepeatedAckErrorAndResyncUntilRetried+forgetAfterAckStillRetiresLateReplies",
+      "-Djava.io.tmpdir=<OWNED_WINDOWS_TEMP>",
+      "-Duser.timezone=UTC",
+      "test"
+    ],
+    "scope": "ISOLATED_PR47_SOURCE_NOT_MAIN"
+  },
+  {
+    "productionSha": "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "testSourceSha": "3044e5bc963f7ac9d8cdc4d8410696c301080534",
+    "selector": "FullSnapshotDeliveryTest#stuckCloseWriteIsBoundedAndCannotWriteAfterNextDeliveryStarts,RealtimeClientTest#forgottenCorrelationIgnoresRepeatedAckErrorAndResyncUntilRetried",
+    "command": [
+      "mvn",
+      "-B",
+      "-ntp",
+      "-pl",
+      "client",
+      "-am",
+      "-Dsurefire.failIfNoSpecifiedTests=false",
+      "-Dtest=FullSnapshotDeliveryTest#stuckCloseWriteIsBoundedAndCannotWriteAfterNextDeliveryStarts,RealtimeClientTest#forgottenCorrelationIgnoresRepeatedAckErrorAndResyncUntilRetried",
+      "-Djava.io.tmpdir=<OWNED_WINDOWS_TEMP>",
+      "-Duser.timezone=UTC",
+      "test"
+    ],
+    "scope": "PRIVATE_MAIN_ARCHIVE_WITH_PR47_TESTS_ONLY",
+    "expectedFailure": true
+  }
+]
