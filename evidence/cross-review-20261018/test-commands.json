@@ -1,0 +1,38 @@
+{
+    "sourceSha":  "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "prerequisites":  [
+                          "Windows JDK21/Maven3.9.11",
+                          "TEST PostgreSQL schema-creation privilege only on owned TEST cluster",
+                          "DB_HOST/DB_PORT/DB_NAME/DB_USER/DB_PASSWORD/TOEIC_SEED_PASSWORD set privately",
+                          "TOEIC_PG_INTEGRATION=true"
+                      ],
+    "workingDirectory":  "isolated checkout at sourceSha",
+    "command1":  [
+                     "mvn",
+                     "--batch-mode",
+                     "--no-transfer-progress",
+                     "-pl",
+                     "protocol,server,client",
+                     "-am",
+                     "test",
+                     "-Dtest=AttemptIdentifierBoundaryTest,ExamValidationTest,ExamPaperAndEntryTest,ExamMonitoringIntegrationTest,MonitoringApiClientTest,DashboardControllerTest,ExamApiClientTest,ExamHistoryReadTest,ProctorSessionApiClientTest,ProctorSessionControllerTest,ExamRuntimePostgresTest#qd29*+activeIssuance*+queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner,MonitoringHistoryBoundsPostgresTest,ListeningRuntimePostgresTest#onlyAssignedProctorCreatesOneFreshAttemptAndOldOneTimesOutWithMarker+proctorB4ApiUsesRealPermissionReadinessAndIdempotentReplacement",
+                     "-Dsurefire.failIfNoSpecifiedTests=false"
+                 ],
+    "command2":  [
+                     "mvn",
+                     "--batch-mode",
+                     "--no-transfer-progress",
+                     "-pl",
+                     "server",
+                     "-am",
+                     "test",
+                     "-Dtest=ExamRuntimePostgresTest#candidateAttemptHistoryRoundTripsMixedServerCursorsWithoutChangingIds+candidateAttemptHistoryHidesNonExamRowsAndRejectsRevokedSessions+readsRequireOwnershipOrAssignmentForEveryState",
+                     "-Dsurefire.failIfNoSpecifiedTests=false"
+                 ],
+    "exitCodes":  [
+                      0,
+                      0
+                  ],
+    "fullSuiteRun":  false,
+    "sourceOrTestEdits":  false
+}

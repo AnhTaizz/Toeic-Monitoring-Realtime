@@ -1,0 +1,2 @@
+# Preserve exact curated evidence bytes on Windows and WSL; no raw logs are published.
+* -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol

@@ -1,0 +1,182 @@
+{
+    "sourceSha":  "f86403489bdd01887b926f2f9e4b72ddf05d1423",
+    "dateLocal":  "2026-10-18",
+    "timezone":  "Asia/Bangkok",
+    "reviewBranch":  "review/qd31-qd32-20261018",
+    "sourceOrTestEdits":  false,
+    "productionDiff":  "NONE",
+    "protectedPrsEdited":  [
+
+                           ],
+    "protectedSharedDocsEdited":  [
+
+                                  ],
+    "packetLocalLinksVerified":  34,
+    "sourceFiles":  [
+                        {
+                            "path":  "docs/QUYET_DINH.md",
+                            "gitBlob":  "4d8cb5debbef33de661a09341cbe3ea48fcd52cb",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/docs/QUYET_DINH.md"
+                        },
+                        {
+                            "path":  "docs/PROTOCOL.md",
+                            "gitBlob":  "ab9cee8e504361f5b1894b6ed2262bf82436b47e",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/docs/PROTOCOL.md"
+                        },
+                        {
+                            "path":  "evidence/stabilize-20261017/REPORT.md",
+                            "gitBlob":  "42aaa60fc55de5c45e923ffdb3bb6be64c8bf378",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/evidence/stabilize-20261017/REPORT.md"
+                        },
+                        {
+                            "path":  "protocol/src/main/java/vn/edu/toeic/protocol/exam/AttemptIdentifier.java",
+                            "gitBlob":  "93914096ed88aa58a4d68c5f1b0f4891ecd9552b",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/protocol/src/main/java/vn/edu/toeic/protocol/exam/AttemptIdentifier.java"
+                        },
+                        {
+                            "path":  "protocol/src/test/java/vn/edu/toeic/protocol/exam/AttemptIdentifierBoundaryTest.java",
+                            "gitBlob":  "f1492aa0d721ec4dd9eec519b2c82e8130ad3c16",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/protocol/src/test/java/vn/edu/toeic/protocol/exam/AttemptIdentifierBoundaryTest.java"
+                        },
+                        {
+                            "path":  "server/src/main/java/vn/edu/toeic/server/exam/ExamService.java",
+                            "gitBlob":  "99be246821589b3ef71f488ae82806dd0f180f9d",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/main/java/vn/edu/toeic/server/exam/ExamService.java"
+                        },
+                        {
+                            "path":  "server/src/main/java/vn/edu/toeic/server/audio/AudioService.java",
+                            "gitBlob":  "4480e94ab7079366b53050c888bc4209142bbea6",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/main/java/vn/edu/toeic/server/audio/AudioService.java"
+                        },
+                        {
+                            "path":  "server/src/main/java/vn/edu/toeic/server/audio/ListeningService.java",
+                            "gitBlob":  "ac52ced6fdb044da0885209d1bb6053d4ddd1dd4",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/main/java/vn/edu/toeic/server/audio/ListeningService.java"
+                        },
+                        {
+                            "path":  "server/src/main/java/vn/edu/toeic/server/auth/AuthorizationService.java",
+                            "gitBlob":  "0ebd32ee8ff34b6fc4dcb03ed67bb23513403064",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/main/java/vn/edu/toeic/server/auth/AuthorizationService.java"
+                        },
+                        {
+                            "path":  "server/src/main/java/vn/edu/toeic/server/auth/ApiExceptionHandler.java",
+                            "gitBlob":  "bbdffc6d6debad87760bdce930bebbb444ae2126",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/main/java/vn/edu/toeic/server/auth/ApiExceptionHandler.java"
+                        },
+                        {
+                            "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/JdbcAttemptScopeStore.java",
+                            "gitBlob":  "b56dce195f498ec8de435e7d837795db1727f955",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/main/java/vn/edu/toeic/server/monitoring/JdbcAttemptScopeStore.java"
+                        },
+                        {
+                            "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringHistoryLimit.java",
+                            "gitBlob":  "8558686ffa65560b628d18c4c205e9a8ea29f038",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringHistoryLimit.java"
+                        },
+                        {
+                            "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringEventService.java",
+                            "gitBlob":  "21bd8a8f0230f66af705cb8bff62b96038b79f77",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringEventService.java"
+                        },
+                        {
+                            "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/JdbcPresenceStore.java",
+                            "gitBlob":  "50e261cadf1bd80be01c9b0ecd7a9898207e33b1",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/main/java/vn/edu/toeic/server/monitoring/JdbcPresenceStore.java"
+                        },
+                        {
+                            "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringGapService.java",
+                            "gitBlob":  "68f66e9670c59a086fea9e589ae586e503b57a11",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringGapService.java"
+                        },
+                        {
+                            "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringTimelineController.java",
+                            "gitBlob":  "6f37b0dbf0e3bef4a23b5577beabfc0b1096468a",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringTimelineController.java"
+                        },
+                        {
+                            "path":  "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringPresenceController.java",
+                            "gitBlob":  "41ffe2667b6c4b4282673c0059a5fc6e7067eb24",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringPresenceController.java"
+                        },
+                        {
+                            "path":  "server/src/test/java/vn/edu/toeic/server/exam/ExamRuntimePostgresTest.java",
+                            "gitBlob":  "2a5da4aca19dbe2d3e9c9ad594c13b091e797f3b",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/test/java/vn/edu/toeic/server/exam/ExamRuntimePostgresTest.java"
+                        },
+                        {
+                            "path":  "server/src/test/java/vn/edu/toeic/server/audio/ListeningRuntimePostgresTest.java",
+                            "gitBlob":  "8221eaf74cbdeb2b3f1e69e384faf84b1a9cd0ff",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/test/java/vn/edu/toeic/server/audio/ListeningRuntimePostgresTest.java"
+                        },
+                        {
+                            "path":  "server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringHistoryBoundsPostgresTest.java",
+                            "gitBlob":  "4bec3a09f44dbceca16687d6831745daccb8b9ef",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/server/src/test/java/vn/edu/toeic/server/monitoring/MonitoringHistoryBoundsPostgresTest.java"
+                        },
+                        {
+                            "path":  "client/src/main/java/vn/edu/toeic/client/ToeicClientApplication.java",
+                            "gitBlob":  "ef2a057a8539975e6c1f39bd3f0a6e980159d06a",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/client/src/main/java/vn/edu/toeic/client/ToeicClientApplication.java"
+                        },
+                        {
+                            "path":  "client/src/main/java/vn/edu/toeic/client/exam/ExamEntry.java",
+                            "gitBlob":  "cae6cad245bfe7fbaac2a78031aee5bf39e014fb",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/client/src/main/java/vn/edu/toeic/client/exam/ExamEntry.java"
+                        },
+                        {
+                            "path":  "client/src/main/java/vn/edu/toeic/client/exam/ExamSession.java",
+                            "gitBlob":  "8c24cd24177e818ec825de8d971de46d970b6f85",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/client/src/main/java/vn/edu/toeic/client/exam/ExamSession.java"
+                        },
+                        {
+                            "path":  "client/src/main/java/vn/edu/toeic/client/exam/ExamSettings.java",
+                            "gitBlob":  "09c57e4117244f61e5a44d847dd5bd5574e0f396",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/client/src/main/java/vn/edu/toeic/client/exam/ExamSettings.java"
+                        },
+                        {
+                            "path":  "client/src/main/java/vn/edu/toeic/client/dashboard/MonitoringApiClient.java",
+                            "gitBlob":  "1acd6a21839a32dd7f366c20cd529a5f2ffecdcc",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/client/src/main/java/vn/edu/toeic/client/dashboard/MonitoringApiClient.java"
+                        },
+                        {
+                            "path":  "client/src/main/java/vn/edu/toeic/client/dashboard/MonitoringJson.java",
+                            "gitBlob":  "e44827e2f8ce7bfbedc38738c15e6663795e659a",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/client/src/main/java/vn/edu/toeic/client/dashboard/MonitoringJson.java"
+                        },
+                        {
+                            "path":  "client/src/main/java/vn/edu/toeic/client/dashboard/DashboardController.java",
+                            "gitBlob":  "077d167e9fb74920ecab49b56de71e3060b96ea5",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/client/src/main/java/vn/edu/toeic/client/dashboard/DashboardController.java"
+                        },
+                        {
+                            "path":  "client/src/main/java/vn/edu/toeic/client/dashboard/DashboardModel.java",
+                            "gitBlob":  "bec304dcfdcd8441c287dd7928cbd8f194cd899c",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/client/src/main/java/vn/edu/toeic/client/dashboard/DashboardModel.java"
+                        },
+                        {
+                            "path":  "client/src/main/java/vn/edu/toeic/client/dashboard/ProctorDashboardView.java",
+                            "gitBlob":  "e172277a4b33edd2030824214a605f160284116f",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/client/src/main/java/vn/edu/toeic/client/dashboard/ProctorDashboardView.java"
+                        },
+                        {
+                            "path":  "client/src/test/java/vn/edu/toeic/client/exam/ExamPaperAndEntryTest.java",
+                            "gitBlob":  "ea9d5f3a86b7e8e3dd1886f78969c0d9a659bacf",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/client/src/test/java/vn/edu/toeic/client/exam/ExamPaperAndEntryTest.java"
+                        },
+                        {
+                            "path":  "client/src/test/java/vn/edu/toeic/client/ExamMonitoringIntegrationTest.java",
+                            "gitBlob":  "ecaa51bf9862b2131f75b272e2668bb790d6ee4d",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/client/src/test/java/vn/edu/toeic/client/ExamMonitoringIntegrationTest.java"
+                        },
+                        {
+                            "path":  "client/src/test/java/vn/edu/toeic/client/dashboard/MonitoringApiClientTest.java",
+                            "gitBlob":  "d18e8e0f6474651914c211498d03022ed9bda8d8",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/client/src/test/java/vn/edu/toeic/client/dashboard/MonitoringApiClientTest.java"
+                        },
+                        {
+                            "path":  "client/src/test/java/vn/edu/toeic/client/dashboard/DashboardControllerTest.java",
+                            "gitBlob":  "f6334711bf32bf18ec1f3383100ff53b9e2b5a6d",
+                            "url":  "https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/blob/f86403489bdd01887b926f2f9e4b72ddf05d1423/client/src/test/java/vn/edu/toeic/client/dashboard/DashboardControllerTest.java"
+                        }
+                    ]
+}
