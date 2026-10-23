@@ -141,11 +141,16 @@ public final class ListeningPlayback implements AutoCloseable {
             journal.started(started,localStarted);
             ListeningStatusResponse ack=send(started,"STARTED",null,"PLAYING");
             if(!current(run)||ack.interrupted())throw new IllegalStateException("Server đã khóa Listening.");
-            synchronized(this){if(current(run)&&snapshot.phase()==Phase.PLAYING)heartbeat=worker.scheduleWithFixedDelay(()->heartbeat(run,started),2,2,TimeUnit.SECONDS);}
+            // A short segment may finish before STARTED is acknowledged. Keep the listening
+            // lease alive while the next segment is prepared, without starting or replaying media.
+            synchronized(this){if(current(run)&&heartbeatPhase())heartbeat=worker.scheduleWithFixedDelay(()->heartbeat(run,started),2,2,TimeUnit.SECONDS);}
         }catch(Exception failure){networkFailure(run,started,userMessage(failure));}
     }
+    private boolean heartbeatPhase(){
+        return snapshot.playbackStarted()!=null && (snapshot.phase()==Phase.PLAYING || snapshot.phase()==Phase.READY_TO_PLAY);
+    }
     private void heartbeat(long run,ListeningStartCommand started){
-        if(!current(run)||snapshot.phase()!=Phase.PLAYING)return;
+        if(!current(run)||!heartbeatPhase())return;
         try{ListeningStatusResponse ack=send(started,"HEARTBEAT",null,"PLAYING");if(ack.interrupted())block(run,"Server đã ghi Listening gián đoạn; đã khóa phát.");}
         catch(Exception failure){networkFailure(run,started,userMessage(failure));}
     }

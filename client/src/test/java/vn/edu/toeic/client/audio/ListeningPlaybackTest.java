@@ -27,10 +27,11 @@ class ListeningPlaybackTest {
         final List<String> events=new CopyOnWriteArrayList<>();
         final List<ListeningEventRequest> requests=new CopyOnWriteArrayList<>();
         CandidateExamDto exam=ListeningPlaybackTest.this.exam();boolean interrupted;String statusPhase="NOT_STARTED";
+        Runnable onStarted=()->{};
         public CandidateExamDto exam(String attempt){return exam;}
         public ListeningStatusResponse status(String attempt){return response(null,attempt,statusPhase,"INTERRUPTED".equals(statusPhase));}
         public ListeningStatusResponse event(String attempt,ListeningEventRequest request){
-            events.add(request.event());requests.add(request);String phase=switch(request.event()){case "STARTED","HEARTBEAT"->"PLAYING";case "COMPLETED"->"COMPLETED";default->"INTERRUPTED";};
+            events.add(request.event());requests.add(request);if("STARTED".equals(request.event()))onStarted.run();String phase=switch(request.event()){case "STARTED","HEARTBEAT"->"PLAYING";case "COMPLETED"->"COMPLETED";default->"INTERRUPTED";};
             statusPhase=interrupted?"INTERRUPTED":phase;
             return response(request.requestId(),attempt,interrupted?"INTERRUPTED":phase,interrupted||"INTERRUPTED".equals(phase));
         }
@@ -61,6 +62,23 @@ class ListeningPlaybackTest {
         assertThat(api.events).containsExactly("STARTED","COMPLETED");
         playback.accept(command);assertThat(playback.snapshot().phase()).isEqualTo(ListeningPlayback.Phase.COMPLETED);
         assertThat(Files.readString(Files.list(directory.resolve("journal")).findFirst().orElseThrow())).contains("\"playbackStarted\":true");
+    }
+
+    @Test void startedAckDuringSegmentHandoffStillSchedulesHeartbeatWithoutReplaying() throws Exception {
+        playback.accept(start());await(()->playback.snapshot().phase()==ListeningPlayback.Phase.READY_TO_PLAY);
+        long run=playback.snapshot().generation();
+        // A short segment ends before the STARTED HTTP response arrives: deterministic callback order.
+        api.onStarted=()->playback.mediaCompleted(run,0);
+        playback.mediaPlaying(run,0);
+        await(()->playback.snapshot().phase()==ListeningPlayback.Phase.READY_TO_PLAY && playback.snapshot().segmentIndex()==1);
+        await(()->api.events.contains("HEARTBEAT"));
+        assertThat(api.events).filteredOn("STARTED"::equals).hasSize(1);
+        assertThat(playback.snapshot().phase()).isEqualTo(ListeningPlayback.Phase.READY_TO_PLAY);
+        assertThat(playback.snapshot().segmentIndex()).isEqualTo(1);
+        playback.mediaPlaying(run,1);playback.mediaCompleted(run,1);
+        await(()->playback.snapshot().phase()==ListeningPlayback.Phase.COMPLETED);
+        assertThat(api.events).filteredOn("STARTED"::equals).hasSize(1);
+        assertThat(api.events).filteredOn("COMPLETED"::equals).hasSize(1);
     }
 
     @Test void corruptCacheAndMismatchedCommandNeverReachMediaOrStartedEvent()throws Exception{

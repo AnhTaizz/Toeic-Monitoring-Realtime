@@ -103,6 +103,8 @@ class RoomFlowPostgresGuiTest {
         props.put("toeic.audio.root",temporary.resolve("audio").toString());props.put("toeic.image.root",temporary.resolve("images").toString());
         props.put("toeic.visual.lease-ms","60000");props.put("toeic.listening.maintenance-enabled","true");props.put("logging.level.root","ERROR");
         var spring=new SpringApplication(vn.edu.toeic.server.ToeicServerApplication.class);spring.setBannerMode(Banner.Mode.OFF);
+        // Logging initializes before context initializers; isolate this GUI fixture from earlier test contexts.
+        spring.setDefaultProperties(Map.of("logging.level.root","ERROR","logging.level.org.springframework.jdbc","ERROR","logging.level.org.springframework.web","ERROR","debug","false"));
         spring.addInitializers(c->c.getEnvironment().getPropertySources().addFirst(new MapPropertySource("owned-room-e2e",props)));
         server=spring.run();base="http://127.0.0.1:"+((WebServerApplicationContext)server).getWebServer().getPort();
     }
@@ -115,19 +117,37 @@ class RoomFlowPostgresGuiTest {
 
     @Test void proctorCreatesRoomTwoCandidatesEnterPrepareListenAnswerAutosaveAndSubmit() throws Exception {
         LoginApiClient logins=new LoginApiClient();var proctor=logins.login(base,"proctor1",password).get(15,TimeUnit.SECONDS);importFixture(proctor.token());
-        long first=logins.login(base,"candidate1",password).get(15,TimeUnit.SECONDS).user().id();
         long second=logins.login(base,"candidate2",password).get(15,TimeUnit.SECONDS).user().id();
-        var rt=new RealtimeClient(base,proctor.token());
-        var pv=FxSupport.fx(()->ProctorRedesignView.forLogin(base,proctor,rt,()->{},()->{}));
-        var ps=FxSupport.fx(()->stage(pv,1366,1000,"MOCK Proctor"));
+        var proctorApp=new ToeicClientApplication();var ps=FxSupport.fx(Stage::new);
+        FxSupport.fxRun(()->{
+            proctorApp.start(ps);((TextField)ps.getScene().lookup("#login-server-url")).setText(base);
+            ((TextField)ps.getScene().lookup("#login-username")).setText("proctor1");
+            ((javafx.scene.control.PasswordField)ps.getScene().lookup("#login-password")).setText(password);
+            ((Button)ps.getScene().lookup("#login-submit")).fire();
+        });
+        await("production Proctor account login",()->FxSupport.fx(()->find(ps.getScene().getRoot(),ProctorRedesignView.class)!=null),30);
+        var pv=FxSupport.fx(()->find(ps.getScene().getRoot(),ProctorRedesignView.class));
+        FxSupport.fxRun(()->{ps.setWidth(1366);ps.setHeight(1000);});
+        log.add("PASS: Proctor login through production application and real HTTP authentication");
         ToeicClientApplication[] clients=new ToeicClientApplication[2];Stage[] stages=new Stage[2];
         try {
-            rt.connect(new RealtimeClient.Session(Set.copyOf(proctor.attemptScope()),null,null));
             FxSupport.fxRun(()->((ToggleButton)pv.lookup("#nav-session-controls")).fire());
             var pane=FxSupport.fx(()->find(pv,ProctorV2SessionPane.class));
             await("catalogs",()->FxSupport.fx(()->pane.controller().snapshot().catalog().stream().anyMatch(e->e.examId().equals(EXAM))
                 && pane.controller().snapshot().candidates().size()>=2),20);
-            FxSupport.fxRun(()->{pane.controller().select(EXAM);pane.controller().toggleCandidate(first);pane.controller().toggleCandidate(second);});
+            String candidateCode="P4-E2E-"+UUID.randomUUID().toString().substring(0,8);
+            FxSupport.fxRun(()->{var menu=(javafx.scene.control.MenuButton)pv.lookup("#candidate-management");menu.show();menu.getItems().getFirst().fire();menu.hide();});
+            await("candidate form opened",()->FxSupport.fx(()->dialogNode("candidate-code")!=null),10);
+            FxSupport.fxRun(()->{((TextField)dialogNode("candidate-code")).setText(candidateCode);((TextField)dialogNode("candidate-name")).setText("MOCK Phase 4 new candidate");((Button)dialogNode("candidate-save")).fire();});
+            await("new candidate in catalog",()->FxSupport.fx(()->pane.controller().snapshot().candidates().stream().anyMatch(c->c.username().equals(candidateCode))),20);
+            long first=FxSupport.fx(()->pane.controller().snapshot().candidates().stream().filter(c->c.username().equals(candidateCode)).findFirst().orElseThrow().userId());
+            assertThat(count("SELECT count(*) FROM monitoring_attempts WHERE candidate_user_id="+first)).isZero();
+            log.add("PASS: candidate provisioned through production GUI before assignment; no automatic attempt");
+            FxSupport.fxRun(()->{pane.controller().select(EXAM);pane.controller().toggleCandidate(first);
+                ((TextField)pane.lookup("#v2-candidate-search")).clear();((Button)pane.lookup("#v2-candidate-find")).fire();});
+            await("search restores other candidate",()->FxSupport.fx(()->pane.controller().snapshot().candidates().stream().anyMatch(c->c.userId()==second)),20);
+            FxSupport.fxRun(()->pane.controller().toggleCandidate(second));
+            assertThat(pane.controller().snapshot().selectedCandidates()).extracting(CandidateCatalogItem::userId).containsExactlyInAnyOrder(first,second);
             await("create enabled after selection rendered",()->FxSupport.fx(()->!pane.lookup("#v2-create").isDisabled()),10);
             FxSupport.fxRun(()->((Button)pane.lookup("#v2-create")).fire());
             await("room created",()->pane.controller().snapshot().room()!=null,20);
@@ -156,7 +176,10 @@ class RoomFlowPostgresGuiTest {
                 assertThat(FxSupport.fx(()->stages[index].getScene().lookup("#room-entry-pin"))).isNull();
                 var joined=logins.joinRoom(base,room.roomCode(),ticket.username(),ticket.pin()).get(15,TimeUnit.SECONDS);
                 assertThat(joined.attemptId()).isEqualTo(ticket.attemptId());assertions.add(joined.login());
-                clickWhenEnabled(stages[i],"Tải / chuẩn bị lại audio");clickWhenEnabled(stages[i],"Thử loa");
+                int audioFiles=call("GET","/api/v1/attempts/"+ticket.attemptId()+"/audio/manifest",null,joined.login().token(),200).getAsJsonArray("files").size();
+                long preparing=System.nanoTime();
+                clickWhenEnabled(stages[i],"Tải / chuẩn bị lại audio");clickWhenEnabled(stages[i],"Thử loa",120);
+                log.add("Actual prepare-to-speaker-action: files="+audioFiles+", milliseconds="+(System.nanoTime()-preparing)/1_000_000);
                 clickWhenEnabled(stages[i],"Tôi nghe được");clickWhenEnabled(stages[i],"Xác nhận sẵn sàng");
                 awaitText(stages[i],"✓  Server: đã xác nhận Audio + Ảnh READY",45);
                 screenshot(stages[i],"candidate-"+i+"-ready");
@@ -180,7 +203,11 @@ class RoomFlowPostgresGuiTest {
             }
             for(int i=0;i<2;i++) {
                 // Playback must actually complete. LOCKED is a failure, not a successful Listening run.
-                awaitText(stages[i],"Server đã xác nhận phát xong",150);
+                try{awaitText(stages[i],"Server đã xác nhận phát xong",150);}catch(AssertionError failure){
+                    var failed=call("GET","/api/v1/attempts/"+room.candidates().get(i).attemptId()+"/listening/status",null,assertions.get(i).token(),200);
+                    log.add("Listening failure: phase="+failed.get("phase")+", reason="+failed.get("interruptionReason"));
+                    throw failure;
+                }
                 pickQuestion(stages[i],1);clickRadio(stages[i],"option-q001-A");
                 screenshot(stages[i],"candidate-"+i+"-listening-answered-no-replay");
                 pickQuestion(stages[i],101);clickRadio(stages[i],"option-q101-A");
@@ -207,8 +234,8 @@ class RoomFlowPostgresGuiTest {
             assertThat(count("SELECT count(*) FROM monitoring_attempts WHERE session_id='"+session+"' AND state='SUBMITTED'")).isEqualTo(2);
             log.add("PASS: two independent PIN-entry applications, real media completion, Reading autosave, submit, monitoring dashboard");
         }finally{
-            closeDialogs();FxSupport.fxRun(()->{for(int i=0;i<2;i++){if(clients[i]!=null)clients[i].stop();if(stages[i]!=null)stages[i].close();}pv.close();ps.close();});
-            rt.close();logins.close();Files.write(OUT.resolve("e2e-log.txt"),log,StandardCharsets.UTF_8);
+            closeDialogs();FxSupport.fxRun(()->{for(int i=0;i<2;i++){if(clients[i]!=null)clients[i].stop();if(stages[i]!=null)stages[i].close();}proctorApp.stop();ps.close();});
+            logins.close();Files.write(OUT.resolve("e2e-log.txt"),log,StandardCharsets.UTF_8);
         }
     }
     @Test void proctorRecoversExistingRoomAndRotatesThenRevokesPinFromRealUi() throws Exception {
@@ -354,8 +381,10 @@ class RoomFlowPostgresGuiTest {
         return null;
     }
 
-    private void clickWhenEnabled(Stage stage, String text) throws Exception {
-        await("button " + text, () -> FxSupport.fx(() -> { Button b = button(stage.getScene().getRoot(), text); return b != null && !b.isDisabled(); }), 60);
+    private void clickWhenEnabled(Stage stage, String text) throws Exception {clickWhenEnabled(stage,text,60);}
+    private void clickWhenEnabled(Stage stage, String text,int seconds) throws Exception {
+        try{await("button " + text, () -> FxSupport.fx(() -> { Button b = button(stage.getScene().getRoot(), text); return b != null && !b.isDisabled(); }), seconds);}
+        catch(AssertionError failure){screenshot(stage,"timeout-button");log.add("button timeout visible texts: "+FxSupport.fx(()->texts(stage.getScene().getRoot())));throw failure;}
         FxSupport.fxRun(() -> button(stage.getScene().getRoot(), text).fire());
         log.add("candidate clicked " + text);
     }
@@ -375,6 +404,11 @@ class RoomFlowPostgresGuiTest {
         List<RadioButton> found = new ArrayList<>();
         collect(root, RadioButton.class, r -> { if (id.equals(r.getId())) found.add(r); });
         return found.isEmpty() ? null : found.getFirst();
+    }
+
+    private static Node dialogNode(String id) {
+        for(Window w:Window.getWindows())if(w.isShowing()&&w.getScene()!=null){Node n=w.getScene().getRoot().lookup("#"+id);if(n!=null)return n;}
+        return null;
     }
 
     private void awaitText(Stage stage, String prefix, int seconds) throws Exception {

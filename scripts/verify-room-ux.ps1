@@ -1,9 +1,10 @@
-param(
+﻿param(
     [ValidateSet('Targeted','Gui','Full')][string]$Mode='Targeted',
     [Parameter(Mandatory=$true)][string]$PostgresBin,
     [string]$JavaHome=$env:JAVA_HOME,
     [string]$MavenCommand='mvn.cmd',
-    [string]$OutputRoot
+    [string]$OutputRoot,
+    [switch]$AllGui
 )
 $ErrorActionPreference='Stop'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -18,7 +19,7 @@ if(Test-Path -LiteralPath $out){throw 'Refuse to overwrite a run'}
 New-Item -ItemType Directory -Force -Path $out|Out-Null
 $utf8=New-Object Text.UTF8Encoding($false)
 $saved=@{}
-foreach($name in @('JAVA_HOME','PATH','PATHEXT','DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','PGPASSWORD','TOEIC_SEED_PASSWORD','TOEIC_PG_INTEGRATION','TOEIC_PROCTOR_GUI','TOEIC_CANDIDATE_GUI','TOEIC_INSTALLED_CLIENT','TOEIC_PACKAGED_CLIENT','JAVA_TOOL_OPTIONS','TOEIC_ROOM_GUI','TOEIC_LOGIN_GUI')){$saved[$name]=[Environment]::GetEnvironmentVariable($name,'Process')}
+foreach($name in @('JAVA_HOME','PATH','PATHEXT','DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','PGPASSWORD','TOEIC_SEED_PASSWORD','TOEIC_PG_INTEGRATION','TOEIC_PROCTOR_GUI','TOEIC_CANDIDATE_GUI','TOEIC_INSTALLED_CLIENT','TOEIC_PACKAGED_CLIENT','JAVA_TOOL_OPTIONS','TOEIC_ROOM_GUI','TOEIC_LOGIN_GUI','TOEIC_RICH_GUI','TOEIC_MONITORING_SCOPE_GUI')){$saved[$name]=[Environment]::GetEnvironmentVariable($name,'Process')}
 $env:JAVA_HOME=$JavaHome
 $env:PATH=(Join-Path $JavaHome 'bin')+';'+$env:PATH
 $env:PATHEXT='.COM;.EXE;.BAT;.CMD'
@@ -30,7 +31,9 @@ $env:TOEIC_PG_INTEGRATION='true';$env:TOEIC_PROCTOR_GUI=$null
 $env:TOEIC_LOGIN_GUI=if($Mode -in @('Gui','Full')){'true'}else{$null}
 $env:TOEIC_ROOM_GUI=if($Mode -in @('Gui','Full')){'true'}else{$null}
 $env:TOEIC_CANDIDATE_GUI=if($Mode -in @('Gui','Full')){'true'}else{$null}
-if($Mode -eq 'Gui'){$env:TOEIC_PROCTOR_GUI='true'}
+if($Mode -eq 'Gui' -or $AllGui){$env:TOEIC_PROCTOR_GUI='true'}
+$env:TOEIC_RICH_GUI=if($AllGui){'true'}else{$null}
+$env:TOEIC_MONITORING_SCOPE_GUI=if($AllGui){'true'}else{$null}
 $env:TOEIC_INSTALLED_CLIENT=$null;$env:TOEIC_PACKAGED_CLIENT=$null
 # JAVA_TOOL_OPTIONS prints a banner on every nested java.exe stderr. The real
 # child-process diagnostic tests correctly reject that banner as child output.
