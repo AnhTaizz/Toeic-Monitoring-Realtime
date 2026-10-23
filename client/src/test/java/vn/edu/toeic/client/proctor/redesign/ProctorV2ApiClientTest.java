@@ -53,6 +53,16 @@ class ProctorV2ApiClientTest {
                 + "\"selectable\":" + selectable + ",\"requiresMediaRecheck\":true,\"blockedReasons\":[" + reasons + "]}";
     }
 
+    @Test void pinLifecycleUsesPostAndNoContentWithoutLeakingCredentials() throws Exception {
+        code=200;body="{\"userId\":2,\"username\":\"candidate2\",\"displayName\":\"MOCK\",\"attemptId\":\"A-2\",\"pin\":\"12345678\"}";
+        var pin=api.rotatePin("S-1",2);assertThat(method).isEqualTo("POST");
+        assertThat(target).isEqualTo("/api/v2/rooms/S-1/candidates/2/pin/rotate");
+        assertThat(pin.toString()).doesNotContain("12345678");
+        body=body.replace("A-2","../foreign");assertThatThrownBy(()->api.rotatePin("S-1",2)).isInstanceOf(IOException.class);
+        code=204;body="";api.revokePin("S-1",2);
+        assertThat(method).isEqualTo("POST");assertThat(target).isEqualTo("/api/v2/rooms/S-1/candidates/2/pin/revoke");
+    }
+
     @Test void catalogSendsLimitAndCursorAndChecksThePage() throws Exception {
         body = "{\"schemaVersion\":2,\"items\":[" + item("mock-a", true, "") + "," + item("mock-b", false, "\"MEDIA_UNVERIFIED\"") + "],\"nextAfterExamId\":\"mock-b\"}";
         var page = api.catalog(null);

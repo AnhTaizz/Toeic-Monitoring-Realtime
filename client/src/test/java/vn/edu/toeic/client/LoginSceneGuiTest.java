@@ -68,6 +68,36 @@ class LoginSceneGuiTest {
         snapshot("login-compact.png");
     }
 
+    @Test void candidateCanEnterRoomCredentialsAndWrongPinDoesNotLeaveThemOnScreen() throws Exception {
+        var captured=new java.util.concurrent.atomic.AtomicReference<String>();
+        HttpServer server=HttpServer.create(new InetSocketAddress("127.0.0.1",0),0);
+        server.createContext("/api/v2/rooms/join",exchange->{
+            captured.set(new String(exchange.getRequestBody().readAllBytes(),StandardCharsets.UTF_8));
+            byte[] bytes="{}".getBytes(StandardCharsets.UTF_8);exchange.sendResponseHeaders(401,bytes.length);
+            try(var out=exchange.getResponseBody()){out.write(bytes);}
+        });server.start();
+        try {
+            fx(()->{((Button)stage.getScene().lookup("#login-switch-mode")).fire();return null;});
+            await(()->stage.getScene().lookup("#room-entry-code")!=null);
+            fx(()->{
+                ((TextField)stage.getScene().lookup("#login-server-url")).setText(serverUrl(server));
+                ((TextField)stage.getScene().lookup("#room-entry-code")).setText("TOEIC-123456");
+                ((TextField)stage.getScene().lookup("#room-entry-candidate")).setText("candidate1");
+                ((PasswordField)stage.getScene().lookup("#room-entry-pin")).setText("12345678");
+                ((Button)stage.getScene().lookup("#room-entry-submit")).fire();return null;
+            });
+            await(()->captured.get()!=null && !stage.getScene().lookup("#room-entry-submit").isDisabled());
+            assertThat(captured.get()).contains("TOEIC-123456","candidate1","12345678");
+            fx(()->{
+                assertThat(((PasswordField)stage.getScene().lookup("#room-entry-pin")).getText()).isEmpty();
+                assertThat(((Label)stage.getScene().lookup("#login-status")).getText()).contains("PIN");return null;
+            });
+            snapshot("room-entry.png");
+        }finally {server.stop(0);}
+    }
+
+    private static String serverUrl(HttpServer server) {return "http://127.0.0.1:"+server.getAddress().getPort();}
+
     @Test void passwordToggleSharesTheValueAndInvalidOriginNeverAuthenticates() throws Exception {
         fx(() -> {
             var server = (TextField) stage.getScene().lookup("#login-server-url");

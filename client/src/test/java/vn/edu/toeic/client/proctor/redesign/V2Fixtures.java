@@ -48,6 +48,19 @@ final class V2Fixtures {
 
     /** Scripted fake: every field may be replaced by a test; calls are recorded. */
     static final class FakeApi implements ProctorV2Api {
+        @Override public vn.edu.toeic.protocol.exam.rich.CreatedRoom createRoom(CreateRichSessionRequest r) throws Exception {
+            var s=create(r);return new vn.edu.toeic.protocol.exam.rich.CreatedRoom("TOEIC-123456",s,
+                s.attempts().stream().map(a->new vn.edu.toeic.protocol.exam.rich.RoomCredentials(a.candidateUserId(),"candidate"+a.candidateUserId(),"MOCK",a.attemptId(),"12345678")).toList());
+        }
+        @Override public vn.edu.toeic.protocol.exam.rich.RoomPresence roomPresence(String id) {
+            return new vn.edu.toeic.protocol.exam.rich.RoomPresence("TOEIC-123456",id,"SCHEDULED",List.of(
+                new vn.edu.toeic.protocol.exam.rich.RoomPresence.Member(2,"candidate2","MOCK","MOCK-attempt-1",Instant.now())));
+        }
+        @Override public vn.edu.toeic.protocol.exam.rich.RoomCatalogPage rooms(String after) {
+            return new vn.edu.toeic.protocol.exam.rich.RoomCatalogPage(List.of(),null);
+        }
+        @Override public vn.edu.toeic.protocol.exam.rich.RoomCredentials rotatePin(String id,long candidate) {return new vn.edu.toeic.protocol.exam.rich.RoomCredentials(candidate,"candidate"+candidate,"MOCK","MOCK-attempt-"+candidate,"87654321");}
+        @Override public void revokePin(String id,long candidate) {throw new UnsupportedOperationException();}
         interface Call<T> { T get() throws Exception; }
 
         volatile Call<ExamCatalogPage> firstPage = () -> new ExamCatalogPage(2, List.of(selectable("mock-a"), blocked("mock-b")), "mock-b");

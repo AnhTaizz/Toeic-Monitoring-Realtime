@@ -96,7 +96,9 @@ class CandidateManagementGuiPostgresTest {
             CheckBox select=table.lookupAll(".check-box").stream().filter(n->n instanceof CheckBox && n.getAccessibleText()!=null && n.getAccessibleText().contains("B23GUI-PG"))
                     .map(n->(CheckBox)n).findFirst().orElseThrow();select.fire();
             @SuppressWarnings("unchecked") TableView<ExamCatalogItem> exams=(TableView<ExamCatalogItem>)view.lookup("#v2-exams");
-            exams.getSelectionModel().select(0);return null;
+            exams.getSelectionModel().select(0);
+            ((CheckBox)view.lookup("#v2-room-mode")).setSelected(false); // Preserve explicit legacy non-room V2 GUI regression.
+            return null;
         });
         awaitFx(()->!view.lookup("#v2-create").isDisabled());
         capture("candidate-created-selected");

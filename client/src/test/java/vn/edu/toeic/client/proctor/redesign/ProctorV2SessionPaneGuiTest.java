@@ -78,6 +78,22 @@ class ProctorV2SessionPaneGuiTest {
 
     private boolean disabled(String id) throws Exception { Node n = node(id); return fx(n::isDisabled); }
 
+    @Test void issuingAnotherPinCannotExtendEarlierPlaintextVisibilityAndExpiryClearsThePane() throws Exception {
+        api.candidateRows.add(new vn.edu.toeic.protocol.exam.rich.CandidateCatalogItem(4,"candidate4","MOCK 4"));
+        open();await("catalog loaded",()->pane.controller().snapshot().catalog().size()==2 && pane.controller().snapshot().candidates().size()==2);
+        fxRun(()->{var c=pane.controller();c.select("mock-a");c.toggleCandidate(2);c.toggleCandidate(4);c.createSelectedRoom("120",3,"");});
+        await("two credentials rendered",()->pane.lookup("#v2-room-credentials") instanceof TableView<?> t && t.getItems().size()==2);
+        await("room roster loaded",()->pane.controller().snapshot().presence()!=null && !pane.controller().snapshot().readyStale());
+        var field=ProctorV2SessionPane.class.getDeclaredField("pinExpiry");field.setAccessible(true);
+        var expiry=(javafx.animation.PauseTransition)field.get(pane);
+        fxRun(()->{expiry.jumpTo(javafx.util.Duration.seconds(30));pane.controller().managePin(2,true);});
+        await("rotated credential rendered",()->!pane.controller().snapshot().pinBusy() && pane.lookup("#v2-room-credentials") instanceof TableView<?> t
+            && t.getItems().size()==2 && pane.controller().snapshot().issuedPins().stream().anyMatch(c->c.userId()==2 && "87654321".equals(c.pin())));
+        assertThat(fx(()->expiry.getCurrentTime().toSeconds())).isGreaterThanOrEqualTo(30);
+        fxRun(()->expiry.jumpTo(javafx.util.Duration.millis(119950)));
+        await("credential expiry clears memory and UI",()->pane.controller().snapshot().issuedPins().isEmpty() && pane.lookup("#v2-room-credentials")==null);
+    }
+
     @Test void proctorChoosesExamCreatesSessionWatchesReadyAndStartsOnce() throws Exception {
         open();
         TableView<ExamCatalogItem> exams = node("v2-exams");

@@ -21,6 +21,8 @@ import vn.edu.toeic.protocol.auth.LoginRequest;
 import vn.edu.toeic.protocol.auth.LoginResponse;
 import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.protocol.error.ApiErrorResponse;
+import vn.edu.toeic.protocol.exam.rich.JoinRoomRequest;
+import vn.edu.toeic.protocol.exam.rich.JoinedRoom;
 
 public final class LoginApiClient implements AutoCloseable {
     private final Gson gson = new Gson();
@@ -55,6 +57,30 @@ public final class LoginApiClient implements AutoCloseable {
     }
     public record ScopeView(Role role, Set<String> attemptScope) {
         public ScopeView { attemptScope = Set.copyOf(attemptScope); }
+    }
+    public CompletableFuture<JoinedRoom> joinRoom(String serverUrl,String roomCode,String candidateCode,String pin) {
+        vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpener.websocketEndpoint(serverUrl);
+        URI endpoint=URI.create(serverUrl.trim().replaceAll("/+$","")+"/api/v2/rooms/join");
+        var body=new JoinRoomRequest(roomCode,candidateCode,pin,UUID.randomUUID().toString());
+        var request=HttpRequest.newBuilder(endpoint).timeout(Duration.ofSeconds(15)).header("Content-Type","application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(body))).build();
+        return httpClient.sendAsync(request,HttpResponse.BodyHandlers.ofString()).thenApply(response->{
+            if(response.statusCode()!=200)throw new LoginFailedException(response.statusCode(),
+                    response.statusCode()==409?"Phòng thi không còn nhận thí sinh mới. Hãy liên hệ giám thị."
+                            :"Không vào được phòng. Kiểm tra mã phòng, mã thí sinh và PIN; nếu bị tạm khóa hãy liên hệ giám thị.");
+            try {
+                JoinedRoom joined=responseGson.fromJson(response.body(),JoinedRoom.class);
+                if(joined==null || joined.roomCode()==null || !joined.roomCode().equalsIgnoreCase(roomCode.trim())
+                        || joined.attemptId()==null || !joined.attemptId().matches("[A-Za-z0-9][A-Za-z0-9_-]{0,127}")
+                        || !Set.of("WAITING","IN_PROGRESS").contains(joined.state()) || joined.login()==null
+                        || joined.login().user()==null || !"CANDIDATE".equals(joined.login().user().role())
+                        || !candidateCode.trim().equals(joined.login().user().username())
+                        || !"v0".equals(joined.login().protocolVersion()) || !"Bearer".equals(joined.login().tokenType())
+                        || joined.login().token()==null || !joined.login().token().matches("[A-Za-z0-9_-]{1,512}")
+                        || !java.util.List.of(joined.attemptId()).equals(joined.login().attemptScope()))throw new InvalidServerResponseException();
+                return joined;
+            }catch(RuntimeException invalid){throw new InvalidServerResponseException();}
+        });
     }
     public CompletableFuture<ScopeView> scope(String serverUrl, String token) {
         URI login = loginEndpoint(serverUrl);

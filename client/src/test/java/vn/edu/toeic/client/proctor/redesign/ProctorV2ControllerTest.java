@@ -35,6 +35,15 @@ class ProctorV2ControllerTest {
 
     private void advanceMillis(long millis) { clock.addAndGet(TimeUnit.MILLISECONDS.toNanos(millis)); }
 
+    @Test void roomCreationTimeoutBlocksBlindRecreationUntilExistingRoomIsOpened() throws Exception {
+        var api=new V2Fixtures.FakeApi();var controller=new ProctorV2Controller(api,x->{},()->{},()->{},Runnable::run,null,null,3000,System::nanoTime);
+        controller.loadCatalog(false);controller.select("mock-a");controller.loadCandidates("",false);controller.toggleCandidate(2);
+        api.create=()->{throw new java.io.IOException("timeout");};
+        controller.createSelectedRoom("120",3,"");controller.createSelectedRoom("120",3,"");
+        assertThat(api.creates).hasSize(1);assertThat(controller.snapshot().canCreate()).isFalse();
+        assertThat(controller.snapshot().createError()).contains("kiểm tra dashboard");controller.close();
+    }
+
     @Test void provisionedCandidateIsVisibleImmediatelyWithoutCreatingOrStartingAnExam() {
         var c=direct();c.loadCandidates("",false);c.createCandidate(" B23NEW "," Nguyễn An ");
         assertThat(c.snapshot().savedCandidate().username()).isEqualTo("B23NEW");

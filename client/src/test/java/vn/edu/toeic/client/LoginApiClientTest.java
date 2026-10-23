@@ -27,6 +27,29 @@ import org.junit.jupiter.params.provider.ValueSource;
 import vn.edu.toeic.protocol.auth.LoginResponse;
 
 class LoginApiClientTest {
+    @Test void roomEntryUsesThreeCredentialsAndRejectsABroaderAccountSession() throws Exception {
+        var login=new LoginResponse("v0","r","trace","MOCK-token","Bearer","2026-10-23T12:00:00Z",
+                new LoginResponse.UserView(1,"candidate1","MOCK An","CANDIDATE"),List.of("A-1"));
+        var body=new java.util.concurrent.atomic.AtomicReference<String>();
+        var response=new java.util.concurrent.atomic.AtomicReference<>(new Gson().toJson(
+                new vn.edu.toeic.protocol.exam.rich.JoinedRoom("TOEIC-123456","A-1","WAITING",login)));
+        HttpServer server=HttpServer.create(new InetSocketAddress("127.0.0.1",0),0);
+        server.createContext("/api/v2/rooms/join",exchange->{
+            body.set(new String(exchange.getRequestBody().readAllBytes(),StandardCharsets.UTF_8));
+            byte[] bytes=response.get().getBytes(StandardCharsets.UTF_8);
+            exchange.sendResponseHeaders(200,bytes.length);
+            try(var out=exchange.getResponseBody()){out.write(bytes);}
+        });
+        server.start();
+        try(LoginApiClient client=new LoginApiClient()) {
+            var joined=client.joinRoom(serverUrl(server),"TOEIC-123456","candidate1","12345678").get(5,TimeUnit.SECONDS);
+            assertThat(joined.state()).isEqualTo("WAITING");
+            assertThat(body.get()).contains("\"roomCode\":\"TOEIC-123456\"","\"candidateCode\":\"candidate1\"","\"pin\":\"12345678\"");
+            response.set(response.get().replace("\"attemptScope\":[\"A-1\"]","\"attemptScope\":[\"A-1\",\"A-2\"]"));
+            assertThatThrownBy(()->client.joinRoom(serverUrl(server),"TOEIC-123456","candidate1","12345678").get(5,TimeUnit.SECONDS))
+                    .hasCauseInstanceOf(InvalidServerResponseException.class);
+        }finally {server.stop(0);}
+    }
     @Test
     void buildsLoginEndpointFromEditableLanAddress() {
         URI endpoint = LoginApiClient.loginEndpoint("http://192.168.1.20:8080/");

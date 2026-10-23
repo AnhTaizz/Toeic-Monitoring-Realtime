@@ -25,6 +25,16 @@ public final class ExamRoomController {
     public ResponseEntity<JoinedRoom> join(@RequestBody JoinRoomRequest request) {
         return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(rooms.join(request));
     }
+    @PostMapping("/api/v2/rooms/{sessionId}/candidates/{candidateId}/pin/rotate")
+    public ResponseEntity<RoomCredentials> rotate(HttpServletRequest http,@PathVariable String sessionId,@PathVariable long candidateId) {
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(
+                rooms.rotatePin((AuthenticatedUser)http.getUserPrincipal(),sessionId,candidateId));
+    }
+    @PostMapping("/api/v2/rooms/{sessionId}/candidates/{candidateId}/pin/revoke")
+    public ResponseEntity<Void> revoke(HttpServletRequest http,@PathVariable String sessionId,@PathVariable long candidateId) {
+        rooms.revokePin((AuthenticatedUser)http.getUserPrincipal(),sessionId,candidateId);
+        return ResponseEntity.noContent().cacheControl(CacheControl.noStore()).build();
+    }
     @GetMapping("/api/v2/rooms/{sessionId}/presence")
     public ResponseEntity<RoomPresence> presence(HttpServletRequest http,@PathVariable String sessionId) {
         return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(rooms.presence((AuthenticatedUser)http.getUserPrincipal(),sessionId));

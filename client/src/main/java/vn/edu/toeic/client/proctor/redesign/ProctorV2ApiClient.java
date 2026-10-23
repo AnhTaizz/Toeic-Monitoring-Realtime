@@ -39,6 +39,7 @@ import vn.edu.toeic.protocol.exam.rich.SessionReadiness;
 import vn.edu.toeic.protocol.exam.rich.CandidateCatalogPage;
 import vn.edu.toeic.protocol.exam.rich.CandidateCatalogItem;
 import vn.edu.toeic.protocol.exam.rich.CreateCandidateRequest;
+import vn.edu.toeic.protocol.exam.rich.*;
 
 /**
  * HTTP client for the PROCTORED_V2 panel. The v2 calls are validated here; the v1 audio manifest and START reuse
@@ -123,6 +124,10 @@ final class ProctorV2ApiClient implements ProctorV2Api {
 
     @Override public CreateRichSessionResponse create(CreateRichSessionRequest request) throws Exception {
         CreateRichSessionResponse created = parse(call("POST", "sessions", request, 201), CreateRichSessionResponse.class);
+        return verifyCreated(request,created);
+    }
+
+    private CreateRichSessionResponse verifyCreated(CreateRichSessionRequest request,CreateRichSessionResponse created) throws IOException {
         try {
             if (!ListeningMessages.identifier(created.sessionId()) || !request.examId().equals(created.examId())
                     || !"PROCTORED_V2".equals(created.contractVersion()) || !"SCHEDULED".equals(created.state())
@@ -139,6 +144,64 @@ final class ProctorV2ApiClient implements ProctorV2Api {
             // The server may have committed; the panel must not offer a blind re-create.
             throw new IOException("Server trả xác nhận tạo ca không khớp yêu cầu. Kiểm tra lại trước khi tạo ca khác.");
         }
+    }
+
+    @Override public CreatedRoom createRoom(CreateRichSessionRequest request) throws Exception {
+        CreatedRoom room=parse(call("POST","rooms",request,201),CreatedRoom.class);
+        try {
+            verifyCreated(request,room.session());
+            if(room.roomCode()==null || !room.roomCode().matches("TOEIC-[0-9]{6}") || room.candidates()==null
+                    || room.candidates().size()!=request.candidateUserIds().size())throw new IllegalArgumentException();
+            Set<Long> users=new HashSet<>();
+            for(var member:room.candidates()) {
+                if(member==null || !users.add(member.userId()) || member.pin()==null || !member.pin().matches("[0-9]{8}")
+                        || member.username()==null || member.username().isBlank() || member.displayName()==null
+                        || room.session().attempts().stream().noneMatch(a->a.candidateUserId()==member.userId() && a.attemptId().equals(member.attemptId())))
+                    throw new IllegalArgumentException();
+            }
+            return room;
+        } catch(RuntimeException invalid) {throw new IOException("Xác nhận tạo phòng không hợp lệ. Kiểm tra dashboard trước khi tạo lại.");}
+    }
+
+    @Override public RoomPresence roomPresence(String sessionId) throws Exception {
+        RoomPresence room=parse(call("GET","rooms/"+ProctorInputs.attempt(sessionId)+"/presence",null,200),RoomPresence.class);
+        try {
+            if(!sessionId.equals(room.sessionId()) || room.roomCode()==null || !room.roomCode().matches("TOEIC-[0-9]{6}")
+                    || room.state()==null || room.members()==null || room.members().size()>100)throw new IllegalArgumentException();
+            Set<Long> ids=new HashSet<>();
+            for(var m:room.members())if(m==null || m.userId()<=0 || !ids.add(m.userId()) || m.username()==null
+                    || m.displayName()==null || !ListeningMessages.identifier(m.attemptId()))throw new IllegalArgumentException();
+            return room;
+        } catch(RuntimeException invalid) {throw new IOException("Danh sách vào phòng không hợp lệ.");}
+    }
+
+    @Override public RoomCatalogPage rooms(String afterRoomCode) throws Exception {
+        if(afterRoomCode!=null && !afterRoomCode.matches("TOEIC-[0-9]{6}"))throw new IllegalArgumentException("Mã trang phòng không hợp lệ.");
+        RoomCatalogPage page=parse(call("GET","rooms"+(afterRoomCode==null?"":"?afterRoomCode="+afterRoomCode),null,200),RoomCatalogPage.class);
+        try {
+            if(page.items()==null || page.items().size()>20)throw new IllegalArgumentException();
+            String previous=afterRoomCode==null?"":afterRoomCode;Set<String> ids=new HashSet<>();
+            for(var r:page.items()) {
+                if(r==null || r.roomCode()==null || !r.roomCode().matches("TOEIC-[0-9]{6}") || r.roomCode().compareTo(previous)<=0
+                        || !ListeningMessages.identifier(r.sessionId()) || !ids.add(r.sessionId()) || r.title()==null
+                        || !Set.of("SCHEDULED","IN_PROGRESS").contains(r.state()) || r.candidates()<1 || r.candidates()>100
+                        || r.joined()<0 || r.joined()>r.candidates())throw new IllegalArgumentException();
+                previous=r.roomCode();
+            }
+            if(page.nextAfterRoomCode()!=null && (page.items().isEmpty() || !page.nextAfterRoomCode().equals(previous)))throw new IllegalArgumentException();
+            return page;
+        }catch(RuntimeException invalid){throw new IOException("Danh sách phòng thi không hợp lệ.");}
+    }
+
+    @Override public RoomCredentials rotatePin(String sessionId,long candidateId) throws Exception {
+        RoomCredentials c=parse(call("POST","rooms/"+ProctorInputs.attempt(sessionId)+"/candidates/"+candidateId+"/pin/rotate",null,200),RoomCredentials.class);
+        if(c==null || c.userId()!=candidateId || c.pin()==null || !c.pin().matches("[0-9]{8}")
+                || !ListeningMessages.identifier(c.attemptId()) || c.username()==null || c.displayName()==null)
+            throw new IOException("Chưa xác nhận PIN mới. Hãy cấp lại trước START.");
+        return c;
+    }
+    @Override public void revokePin(String sessionId,long candidateId) throws Exception {
+        call("POST","rooms/"+ProctorInputs.attempt(sessionId)+"/candidates/"+candidateId+"/pin/revoke",null,204);
     }
 
     @Override public SessionReadiness readiness(String sessionId) throws Exception {
@@ -169,7 +232,8 @@ final class ProctorV2ApiClient implements ProctorV2Api {
         if (credential == null) throw new IOException("Phiên điều khiển đã đóng.");
         HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(base + "/api/v2/" + path)).timeout(timeout)
                 .header("Authorization", "Bearer " + credential).header("Accept", "application/json");
-        if (payload == null) builder.GET();
+        if ("GET".equals(method)) builder.GET();
+        else if(payload==null)builder.POST(HttpRequest.BodyPublishers.noBody());
         else builder.header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json.toJson(payload), StandardCharsets.UTF_8));
         CompletableFuture<HttpResponse<InputStream>> pending = http.sendAsync(builder.build(), HttpResponse.BodyHandlers.ofInputStream());
@@ -183,6 +247,7 @@ final class ProctorV2ApiClient implements ProctorV2Api {
         } catch (Exception failure) { pending.cancel(true); throw failure; }
         if (bytes.length > MAX_BODY) throw new IOException("Phản hồi quá lớn.");
         if (status != expected) throw new Rejected(status, errorCode(bytes));
+        if(expected==204)return new JsonObject();
         try {
             JsonObject body = json.fromJson(new String(bytes, StandardCharsets.UTF_8), JsonObject.class);
             if (body == null) throw new IllegalArgumentException();

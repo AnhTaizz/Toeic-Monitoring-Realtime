@@ -111,7 +111,7 @@ class ProctorV2E2eGuiTest {
             FxSupport.fxRun(()->pane.controller().toggleCandidate(candidateId));
             await("create enabled", () -> FxSupport.fx(() -> !pane.lookup("#v2-create").isDisabled()), 10);
             screenshot(proctorStage[0], "p1-catalog-create");
-            FxSupport.fxRun(() -> ((Button) pane.lookup("#v2-create")).fire());
+            FxSupport.fxRun(() -> {((javafx.scene.control.CheckBox)pane.lookup("#v2-room-mode")).setSelected(false);((Button) pane.lookup("#v2-create")).fire();});
             await("server created the session", () -> FxSupport.fx(() -> pane.controller().snapshot().created() != null), 20);
             var created = FxSupport.fx(() -> pane.controller().snapshot().created());
             String sessionId = created.sessionId();

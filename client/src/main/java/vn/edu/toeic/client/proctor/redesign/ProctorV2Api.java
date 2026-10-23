@@ -15,6 +15,11 @@ import vn.edu.toeic.protocol.exam.rich.CreateCandidateRequest;
  * never on the JavaFX Application Thread. Errors are {@code ProctorSessionApiClient.Rejected} (HTTP status) or I/O.
  */
 interface ProctorV2Api extends AutoCloseable {
+    vn.edu.toeic.protocol.exam.rich.CreatedRoom createRoom(CreateRichSessionRequest request) throws Exception;
+    vn.edu.toeic.protocol.exam.rich.RoomPresence roomPresence(String sessionId) throws Exception;
+    vn.edu.toeic.protocol.exam.rich.RoomCatalogPage rooms(String afterRoomCode) throws Exception;
+    vn.edu.toeic.protocol.exam.rich.RoomCredentials rotatePin(String sessionId,long candidateId) throws Exception;
+    void revokePin(String sessionId,long candidateId) throws Exception;
     /** {@code GET /api/v2/exams?limit=..&afterExamId=..}; {@code afterExamId} null for the first page. */
     ExamCatalogPage catalog(String afterExamId) throws Exception;
 

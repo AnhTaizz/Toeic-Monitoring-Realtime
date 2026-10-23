@@ -55,6 +55,7 @@ public final class ToeicClientApplication extends Application {
     private ExamApiClient examApiClient;
     private AutoCloseable problemSubscription;
     private AutoCloseable connectionSubscription;
+    private AutoCloseable roomEntrySubscription;
     private long viewGeneration;
     private CandidateMonitoringSession monitoring;
     private String monitoringAttempt;
@@ -93,7 +94,8 @@ public final class ToeicClientApplication extends Application {
         Button loginButton = new Button("Đăng nhập");
         Label status = new Label(notice.isBlank() ? ClientSettings.notice() : notice);
         status.setWrapText(true);
-        LoginPane root = new LoginPane(serverField, usernameField, passwordField, loginButton, status);
+        LoginPane root = new LoginPane(serverField, usernameField, passwordField, loginButton, status,null,
+                ()->stage.setScene(roomEntryScene(stage)));
 
         Runnable submit = () -> {
             if (loginButton.isDisabled()) return;
@@ -131,6 +133,42 @@ public final class ToeicClientApplication extends Application {
         passwordField.setOnAction(event -> submit.run());
 
         return applyStyles(new Scene(root, 1366, 820));
+    }
+
+    private Scene roomEntryScene(Stage stage) {
+        TextField server=new TextField(ClientSettings.serverUrl()),room=new TextField(),candidate=new TextField();
+        PasswordField pin=new PasswordField();Button enter=new Button("Vào phòng chờ");
+        Label status=new Label(ClientSettings.notice());
+        LoginPane root=new LoginPane(server,candidate,pin,enter,status,room,()->stage.setScene(loginScene(stage)));
+        enter.setId("room-entry-submit");candidate.setId("room-entry-candidate");pin.setId("room-entry-pin");
+        Runnable submit=()->{
+            if(enter.isDisabled())return;
+            enter.setDisable(true);status.setText("Đang kiểm tra thông tin vào phòng…");
+            try {
+                long generation=viewGeneration;
+                loginApiClient.joinRoom(server.getText(),room.getText(),candidate.getText(),pin.getText())
+                        .whenComplete((joined,failure)->Platform.runLater(()->{
+                            if(generation!=viewGeneration)return;
+                            pin.clear();enter.setDisable(false);
+                            if(failure!=null){status.setText(userMessage(failure));return;}
+                            showRoleScene(stage,server.getText(),joined.login());
+                            long roomView=viewGeneration;
+                            Consumer<ConnectionState> enterWhenConnected=state->{
+                                if(state!=ConnectionState.CONNECTED)return;
+                                Platform.runLater(()->{
+                                    if(roomView!=viewGeneration || realtimeClient==null)return;
+                                    if(roomEntrySubscription!=null){try{roomEntrySubscription.close();}catch(Exception ignored){}roomEntrySubscription=null;}
+                                    javafx.scene.Node button=stage.getScene().lookup("#candidate-enter-exam");
+                                    if(button instanceof Button b)b.fire();
+                                });
+                            };
+                            roomEntrySubscription=realtimeClient.onConnectionState(enterWhenConnected);
+                            enterWhenConnected.accept(realtimeClient.connectionState());
+                        }));
+            }catch(IllegalArgumentException invalid){enter.setDisable(false);status.setText(invalid.getMessage());}
+        };
+        enter.setOnAction(event->submit.run());pin.setOnAction(event->submit.run());
+        return applyStyles(new Scene(root,1366,820));
     }
 
     private void showRoleScene(Stage stage, String serverUrl, LoginResponse response) {
@@ -574,6 +612,7 @@ public final class ToeicClientApplication extends Application {
     }
 
     private void releaseConnectionView() {
+        if(roomEntrySubscription!=null){try{roomEntrySubscription.close();}catch(Exception ignored){}roomEntrySubscription=null;}
         closeCandidatePreview();
         viewGeneration++;
         monitoringGeneration++;

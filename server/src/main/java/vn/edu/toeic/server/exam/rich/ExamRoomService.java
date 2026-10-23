@@ -66,13 +66,13 @@ public class ExamRoomService {
         var rows=jdbc.sql("""
                 SELECT r.room_code,r.session_id,s.title,s.state,
                        (SELECT count(*) FROM exam_room_members m WHERE m.session_id=r.session_id) AS candidates,
-                       (SELECT count(*) FROM exam_room_members m WHERE m.session_id=r.session_id AND m.joined_at IS NOT NULL) AS joined
+                       (SELECT count(*) FROM exam_room_members m WHERE m.session_id=r.session_id AND m.joined_at IS NOT NULL) AS joined,r.created_at
                 FROM exam_rooms r JOIN exam_sessions s ON s.session_id=r.session_id
                 WHERE s.state IN ('SCHEDULED','IN_PROGRESS') AND r.room_code > :after
                 AND EXISTS (SELECT 1 FROM exam_session_proctors p WHERE p.session_id=r.session_id AND p.proctor_user_id=:u)
                 ORDER BY r.room_code LIMIT 21
                 """).param("after",after==null?"":after).param("u",proctor.userId()).query((r,n)->new RoomCatalogPage.Item(
-                        r.getString(1),r.getString(2),r.getString(3),r.getString(4),r.getInt(5),r.getInt(6))).list();
+                        r.getString(1),r.getString(2),r.getString(3),r.getString(4),r.getInt(5),r.getInt(6),r.getTimestamp(7).toInstant())).list();
         boolean more=rows.size()>20;var page=more?rows.subList(0,20):rows;
         return new RoomCatalogPage(page,more?page.getLast().roomCode():null);
     }
@@ -86,12 +86,54 @@ public class ExamRoomService {
                 .param("s",sessionId).query((r,n)->List.of(r.getString(1),r.getString(2))).optional()
                 .orElseThrow(()->new ExamApiException(HttpStatus.NOT_FOUND,ErrorCode.INVALID_INPUT,"Không tìm thấy phòng thi",null));
         var members=jdbc.sql("""
-                SELECT m.candidate_user_id,u.username,u.display_name,m.attempt_id,m.joined_at
+                SELECT m.candidate_user_id,u.username,u.display_name,m.attempt_id,m.joined_at,COALESCE(p.status,'UNKNOWN'),COALESCE(p.reason,'NOT_SEEN'),p.last_seen_at
                 FROM exam_room_members m JOIN user_accounts u ON u.id=m.candidate_user_id
+                LEFT JOIN monitoring_presence p ON p.attempt_id=m.attempt_id
                 WHERE m.session_id=:s ORDER BY m.candidate_user_id
                 """).param("s",sessionId).query((r,n)->new RoomPresence.Member(r.getLong(1),r.getString(2),r.getString(3),r.getString(4),
-                        r.getTimestamp(5)==null?null:r.getTimestamp(5).toInstant())).list();
+                        r.getTimestamp(5)==null?null:r.getTimestamp(5).toInstant(),r.getString(6),r.getString(7),
+                        r.getTimestamp(8)==null?null:r.getTimestamp(8).toInstant())).list();
         return new RoomPresence(header.get(0),sessionId,header.get(1),members);
+    }
+
+    /** SCHEDULED only. Session lock serializes PIN changes against JOIN and START. */
+    @Transactional
+    public RoomCredentials rotatePin(AuthenticatedUser proctor,String sessionId,long candidateId) {
+        return changePin(proctor,sessionId,candidateId,true);
+    }
+
+    @Transactional
+    public void revokePin(AuthenticatedUser proctor,String sessionId,long candidateId) {
+        changePin(proctor,sessionId,candidateId,false);
+    }
+
+    private RoomCredentials changePin(AuthenticatedUser proctor,String sessionId,long candidateId,boolean issue) {
+        authorization.requireRole(proctor,Role.PROCTOR);
+        if(jdbc.sql("SELECT count(*) FROM exam_session_proctors WHERE session_id=:s AND proctor_user_id=:u")
+                .param("s",sessionId).param("u",proctor.userId()).query(Long.class).single()!=1)
+            throw AccessDeniedException.forbidden();
+        String state=jdbc.sql("SELECT state FROM exam_sessions WHERE session_id=:s FOR UPDATE")
+                .param("s",sessionId).query(String.class).optional().orElseThrow(AccessDeniedException::forbidden);
+        if(!"SCHEDULED".equals(state))throw V2SessionPolicy.error(ErrorCode.INVALID_STATE,
+                "Chỉ cấp lại/thu hồi PIN trước START. Bài đang thi được giữ nguyên.");
+        record Member(String attempt,String username,String displayName,boolean enabled,String oldHash) { }
+        var member=jdbc.sql("""
+                SELECT m.attempt_id,u.username,u.display_name,u.enabled,m.pin_hash
+                FROM exam_room_members m JOIN user_accounts u ON u.id=m.candidate_user_id
+                WHERE m.session_id=:s AND m.candidate_user_id=:u FOR UPDATE OF m
+                """).param("s",sessionId).param("u",candidateId)
+                .query((r,n)->new Member(r.getString(1),r.getString(2),r.getString(3),r.getBoolean(4),r.getString(5))).optional()
+                .orElseThrow(AccessDeniedException::forbidden);
+        if(issue && !member.enabled())throw ExamApiException.invalidInput("Thí sinh đã bị vô hiệu hóa.");
+        String pin=null,credential;
+        if(issue) {do{pin=String.format(Locale.ROOT,"%08d",random.nextInt(100000000));}while(passwords.matches(pin,member.oldHash()));credential=pin;}
+        else {byte[] secret=new byte[32];random.nextBytes(secret);credential=Base64.getUrlEncoder().withoutPadding().encodeToString(secret);}
+        jdbc.sql("UPDATE exam_room_members SET pin_hash=:h,failed_attempts=0,locked_until=NULL WHERE session_id=:s AND candidate_user_id=:u")
+                .param("h",passwords.encode(credential)).param("s",sessionId).param("u",candidateId).update();
+        jdbc.sql("UPDATE login_sessions SET revoked_at=COALESCE(revoked_at,clock_timestamp()) WHERE room_attempt_id=:a")
+                .param("a",member.attempt()).update();
+        // Do not touch joined_at, writer, readiness, answers, listening or timing.
+        return new RoomCredentials(candidateId,member.username(),member.displayName(),member.attempt(),pin);
     }
 
     @Transactional(noRollbackFor=InvalidCredentialsException.class)
