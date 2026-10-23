@@ -144,13 +144,14 @@
 - **Owner:** A / **Reviewer:** C / **Priority:** P0 / **Dependencies:** EX-02, EX-04
 - **Objective:** Transform permitted content into validated imports; seed once and create multiple sessions from the existing exam.
 - **Acceptance criteria:**
-  - [ ] Validator enforces 200 unique ordered questions and expected Part distribution.
-  - [ ] Every referenced audio/image exists, has an allowed format and passes SHA-256 before release.
-  - [ ] No duplicate group mismatch, missing correct option or broken passage links.
-  - [ ] Importer is deterministic and refuses a conflicting duplicate examId rather than silently overwriting.
+  - [x] Validator enforces 200 unique ordered questions and expected Part distribution.
+  - [x] Every referenced audio/image exists, has an allowed format and passes SHA-256 before release.
+  - [x] No duplicate group mismatch, missing correct option or broken passage links.
+  - [x] Importer is deterministic and refuses a conflicting duplicate examId rather than silently overwriting.
 - **Verification/evidence:**
   - Valid fixture succeeds; incomplete/corrupt/mismatched fixtures are rejected with exact reasons.
   - Database import + retrieval round trip on test PostgreSQL.
+- **Evidence (2026-10-23):** [EX-03 closeout](EX03_CLOSEOUT_20261023.md): implementation commits are already integrated; focused contract/validator suite `97/97` and PostgreSQL 18 targeted import/migration/round-trip suite `172/172` passed with clean teardown.
 - **Likely files/components:** Offline tooling (Java by default), import/seed adapter, local dataset report
 - **Watch-out:** CLAUDE.md currently limits Python to CSV/plots. Do not introduce a Python HTML parser unless the owner explicitly amends that rule.
 
