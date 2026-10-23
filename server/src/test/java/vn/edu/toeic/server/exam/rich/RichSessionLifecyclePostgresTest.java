@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.*;
 import com.google.gson.*;
 import java.net.*;
 import java.net.http.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.security.MessageDigest;
 import java.sql.*;
 import java.time.*;
 import java.util.*;
@@ -16,6 +18,8 @@ import org.springframework.boot.*;
 import org.springframework.boot.web.server.context.WebServerApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.MapPropertySource;
+import vn.edu.toeic.client.exam.rich.RichExamApiClient;
+import vn.edu.toeic.client.exam.rich.RichExamModel;
 import vn.edu.toeic.server.exam.ExamService;
 
 /**
@@ -24,15 +28,22 @@ import vn.edu.toeic.server.exam.ExamService;
  */
 @EnabledIfEnvironmentVariable(named="TOEIC_PG_INTEGRATION",matches="true")
 class RichSessionLifecyclePostgresTest {
-    private static final String EXAM="mock-ex02-200";
+    private static final String MOCK_EXAM="mock-ex02-200";
     @TempDir Path temporary;
     private String url,user,password,schema,base;
     private Connection admin,db;
     private ConfigurableApplicationContext app;
     private HttpClient http;
     private String proctor,owner,other;
+    private String examId=MOCK_EXAM, importBody;
+    private boolean externalStudy4;
 
-    @BeforeEach void database() throws Exception {
+    @BeforeEach void database(TestInfo test) throws Exception {
+        externalStudy4=test.getTestMethod().map(m->m.getName().equals("study4RealTwoHundredQuestionAcceptance")).orElse(false);
+        if(externalStudy4) {
+            Path payload=Path.of(env("TOEIC_STUDY4_IMPORT"));importBody=Files.readString(payload);
+            examId=JsonParser.parseString(importBody).getAsJsonObject().getAsJsonObject("exam").get("examId").getAsString();
+        }
         url="jdbc:postgresql://"+env("DB_HOST")+":"+env("DB_PORT")+"/"+env("DB_NAME");
         user=env("DB_USER");password=env("DB_PASSWORD");schema="ex07_"+UUID.randomUUID().toString().replace("-","");
         admin=DriverManager.getConnection(url,user,password);
@@ -40,7 +51,7 @@ class RichSessionLifecyclePostgresTest {
         db=DriverManager.getConnection(url+"?currentSchema="+schema,user,password);
         start();
         proctor=login("proctor1");owner=login("candidate1");other=login("candidate2");
-        check(post("/api/v2/exams/import",RichExamFixtures.tree().toString(),proctor),201,null);
+        check(post("/api/v2/exams/import",externalStudy4?importBody:RichExamFixtures.tree().toString(),proctor),201,null);
     }
     @AfterEach void cleanup() throws Exception {
         try {
@@ -51,7 +62,7 @@ class RichSessionLifecyclePostgresTest {
     @Test void catalogAndCreatePersistProctoredV2WithoutClockOrQuestionData() throws Exception {
         var page=json(check(get("/api/v2/exams",proctor),200,null));
         var item=page.getAsJsonArray("items").get(0).getAsJsonObject();
-        assertThat(item.get("examId").getAsString()).isEqualTo(EXAM);
+        assertThat(item.get("examId").getAsString()).isEqualTo(examId);
         assertThat(item.get("selectable").getAsBoolean()).isTrue();
         assertThat(page.toString()).doesNotContain("prompt","options","correctOption");
         check(get("/api/v2/exams",owner),403,"FORBIDDEN");
@@ -67,7 +78,7 @@ class RichSessionLifecyclePostgresTest {
         assertThat(text("SELECT contract_version FROM exam_sessions WHERE session_id='"+session+"'")).isEqualTo("PROCTORED_V2");
         assertThat(number("SELECT count(*) FROM monitoring_attempts WHERE session_id='"+session+"' AND deadline_at IS NULL AND state='ACTIVE'")).isEqualTo(2);
         // S14: legacy v1 create from a rich exam stays blocked.
-        var v1=new JsonObject();v1.addProperty("sessionId","V1-RICH");v1.addProperty("examId",EXAM);v1.addProperty("title","MOCK");
+        var v1=new JsonObject();v1.addProperty("sessionId","V1-RICH");v1.addProperty("examId",examId);v1.addProperty("title","MOCK");
         v1.addProperty("durationSeconds",3600);v1.add("proctorUsernames",new JsonArray());var c=new JsonArray();c.add("candidate1");v1.add("candidateUsernames",c);
         check(post("/api/v1/sessions",v1.toString(),proctor),409,"INVALID_STATE");
     }
@@ -302,6 +313,83 @@ class RichSessionLifecyclePostgresTest {
         assertThat(json(check(get("/api/v2/attempts/"+next+"/preparation",owner),200,null)).get("sessionState").getAsString()).isEqualTo("SCHEDULED");
     }
 
+    @Test
+    @EnabledIfEnvironmentVariable(named="TOEIC_STUDY4_IMPORT",matches=".+")
+    void study4RealTwoHundredQuestionAcceptance() throws Exception {
+        var page=json(check(get("/api/v2/exams",proctor),200,null));
+        var catalog=page.getAsJsonArray("items").get(0).getAsJsonObject();
+        assertThat(catalog.get("examId").getAsString()).isEqualTo(examId);
+        assertThat(catalog.get("totalQuestions").getAsInt()).isEqualTo(200);
+        assertThat(catalog.get("selectable").getAsBoolean()).isTrue();
+        assertThat(page.toString()).doesNotContain("correctOption","questions","sourcePath");
+
+        var created=createSession(List.of(id("candidate1")));String session=created.get("sessionId").getAsString();
+        String attempt=attemptOf(created,"candidate1");long writer=takeover(attempt,owner);
+        var prep=preparation(attempt,owner);var visual=prep.getAsJsonObject("visualManifest");
+        assertThat(visual.getAsJsonArray("slots")).hasSize(6);
+        for(JsonElement value:visual.getAsJsonArray("slots")) {
+            String path=value.getAsJsonObject().get("downloadPath").getAsString();
+            var image=get(path,owner);assertThat(image.statusCode()).isEqualTo(200);
+            assertThat(image.body().getBytes(StandardCharsets.ISO_8859_1)).isNotEmpty();
+        }
+        var audio=audioManifest(attempt,owner);assertThat(audio.getAsJsonArray("files")).hasSize(54);
+        for(JsonElement value:audio.getAsJsonArray("files")) {
+            var file=value.getAsJsonObject();String name=file.get("fileName").getAsString();
+            String path="/api/v1/attempts/"+attempt+"/audio/files/"+URLEncoder.encode(name,StandardCharsets.UTF_8)
+                    +"?manifestId="+audio.get("manifestId").getAsString();
+            var downloaded=getBytes(path,owner);assertThat(downloaded.statusCode()).isEqualTo(200);
+            assertThat(sha256(downloaded.body())).isEqualTo(file.get("sha256").getAsString());
+        }
+        audioReady(attempt,owner,writer);String committed=attestOk(attempt,owner,writer,"study4-ready");
+        String audioManifest=audio.get("manifestId").getAsString();
+        var started=json(check(post(startPath(session),start("study4-start",audioManifest),proctor),200,null));
+        String deadline=text("SELECT deadline_at::text FROM monitoring_attempts WHERE attempt_id='"+attempt+"'");
+        var retry=json(check(post(startPath(session),start("study4-start-retry",audioManifest),proctor),200,null));
+        assertThat(retry.get("startId")).isEqualTo(started.get("startId"));
+        assertThat(text("SELECT deadline_at::text FROM monitoring_attempts WHERE attempt_id='"+attempt+"'")).isEqualTo(deadline);
+
+        var exam=json(check(get("/api/v2/attempts/"+attempt+"/exam",owner),200,null));
+        assertThat(exam.get("visualManifestId").getAsString()).isEqualTo(committed);
+        assertThat(exam.getAsJsonArray("questions")).hasSize(200);
+        int[] parts=new int[7];for(JsonElement value:exam.getAsJsonArray("questions"))parts[value.getAsJsonObject().get("part").getAsInt()-1]++;
+        assertThat(parts).containsExactly(6,25,39,30,30,16,54);
+        assertThat(exam.toString()).doesNotContain("correctOption","answerKeyStatus","sourcePath","sourceUrl","localFile");
+        try(var client=new RichExamApiClient(base,owner)) {
+            var model=RichExamModel.from(client.exam(attempt));
+            assertThat(model.totalQuestions()).isEqualTo(200);
+            assertThat(model.parts()).extracting(RichExamModel.PartInfo::part).containsExactly(1,2,3,4,5,6,7);
+            assertThat(model.parts()).allSatisfy(part->assertThat(part.units()).isNotEmpty());
+            assertThat(model.questions()).allSatisfy(question->assertThat(model.unitOf(question.id())).isNotNull());
+        }
+        int imageCount=0;
+        for(JsonElement value:exam.getAsJsonArray("media")) {
+            var media=value.getAsJsonObject();if(!"IMAGE".equals(media.get("mediaType").getAsString()))continue;
+            imageCount++;var downloaded=getBytes(media.get("imagePath").getAsString(),owner);
+            assertThat(downloaded.statusCode()).isEqualTo(200);
+            assertThat(sha256(downloaded.body())).isEqualTo(media.get("sha256").getAsString());
+        }
+        assertThat(imageCount).isEqualTo(11);
+
+        var playback=new JsonObject();playback.addProperty("requestId",UUID.randomUUID().toString());
+        playback.addProperty("startId",started.get("startId").getAsString());playback.addProperty("writerEpoch",writer);
+        playback.addProperty("event","STARTED");
+        assertThat(json(check(post("/api/v1/attempts/"+attempt+"/listening/events",playback.toString(),owner),200,null))
+                .get("phase").getAsString()).isEqualTo("PLAYING");
+
+        var imported=JsonParser.parseString(importBody).getAsJsonObject();Map<String,String> answers=new LinkedHashMap<>();
+        for(JsonElement value:imported.getAsJsonArray("questions")) {var q=value.getAsJsonObject();answers.put(q.get("questionId").getAsString(),q.getAsJsonObject("scoring").get("correctOption").getAsString());}
+        check(post("/api/v1/attempts/"+attempt+"/answers",answers(attempt,writer,1,answers),owner),200,null);
+        long replacement=takeover(attempt,owner);assertThat(replacement).isGreaterThan(writer);
+        assertThat(text("SELECT deadline_at::text FROM monitoring_attempts WHERE attempt_id='"+attempt+"'")).isEqualTo(deadline);
+        var interrupted=json(check(get("/api/v1/attempts/"+attempt+"/listening/status",owner),200,null));
+        assertThat(interrupted.get("phase").getAsString()).isEqualTo("INTERRUPTED");
+        assertThat(interrupted.get("interruptionReason").getAsString()).isEqualTo("WRITER_TAKEOVER");
+        check(post("/api/v1/attempts/"+attempt+"/answers",answers(attempt,writer,2,answers),owner),409,"STALE");
+        var submitted=json(check(post("/api/v1/attempts/"+attempt+"/submit",answers(attempt,replacement,2,answers),owner),200,null));
+        assertThat(submitted.get("score").getAsInt()).isEqualTo(200);
+        assertThat(number("SELECT count(*) FROM monitoring_attempts WHERE attempt_id='"+attempt+"' AND state='SUBMITTED' AND total_questions=200 AND correct_count=200 AND score=200")).isEqualTo(1);
+    }
+
     // ---- helpers ----
     private void assertNotStarted(String session) throws SQLException {
         assertThat(text("SELECT state FROM exam_sessions WHERE session_id='"+session+"'")).isEqualTo("SCHEDULED");
@@ -312,7 +400,7 @@ class RichSessionLifecyclePostgresTest {
     private JsonObject createSession() throws Exception {return createSession(List.of(id("candidate1"),id("candidate2")));}
     private JsonObject createSession(List<Long> candidates) throws Exception {return json(check(post("/api/v2/sessions",createBody(candidates),proctor),201,null));}
     private String createBody(List<Long> candidates) throws Exception {
-        var body=new JsonObject();body.addProperty("examId",EXAM);body.addProperty("durationMinutes",120);
+        var body=new JsonObject();body.addProperty("examId",examId);body.addProperty("durationMinutes",120);
         var c=new JsonArray();candidates.forEach(c::add);body.add("candidateUserIds",c);
         var p=new JsonArray();p.add(id("proctor1"));body.add("proctorUserIds",p);return body.toString();
     }
@@ -373,8 +461,9 @@ class RichSessionLifecyclePostgresTest {
         b.addProperty("writerEpoch",writer);b.addProperty("answerRevision",revision);var a=new JsonObject();answers.forEach(a::addProperty);b.add("answers",a);return b.toString();
     }
     private void start() throws Exception {
-        Path audio=temporary.resolve("audio"),images=temporary.resolve("images");
-        RichExamFixtures.files(audio,images,RichExamFixtures.request());
+        Path audio,images;
+        if(externalStudy4) {audio=Path.of(env("TOEIC_STUDY4_AUDIO_ROOT"));images=Path.of(env("TOEIC_STUDY4_IMAGE_ROOT"));}
+        else {audio=temporary.resolve("audio");images=temporary.resolve("images");RichExamFixtures.files(audio,images,RichExamFixtures.request());}
         var props=new HashMap<String,Object>();
         props.put("server.port","0");props.put("server.address","127.0.0.1");
         props.put("spring.datasource.url",url+"?currentSchema="+schema);props.put("spring.datasource.username",user);props.put("spring.datasource.password",password);
@@ -398,6 +487,11 @@ class RichSessionLifecyclePostgresTest {
         if(token!=null)request.header("Authorization","Bearer "+token);
         return http.send(request.build(),HttpResponse.BodyHandlers.ofString());
     }
+    private HttpResponse<byte[]> getBytes(String path,String token) throws Exception {
+        var request=HttpRequest.newBuilder(URI.create(base+path)).timeout(Duration.ofSeconds(30)).GET();
+        if(token!=null)request.header("Authorization","Bearer "+token);
+        return http.send(request.build(),HttpResponse.BodyHandlers.ofByteArray());
+    }
     private HttpResponse<String> post(String path,String body,String token) throws Exception {
         var request=HttpRequest.newBuilder(URI.create(base+path)).timeout(Duration.ofSeconds(30)).header("Content-Type","application/json").POST(HttpRequest.BodyPublishers.ofString(body));
         if(token!=null)request.header("Authorization","Bearer "+token);
@@ -414,5 +508,6 @@ class RichSessionLifecyclePostgresTest {
     private void sql(String sql) throws SQLException {try(var s=db.createStatement()){s.execute(sql);}}
     private long number(String sql) throws SQLException {try(var s=db.createStatement();var r=s.executeQuery(sql)){r.next();return r.getLong(1);}}
     private String text(String sql) throws SQLException {try(var s=db.createStatement();var r=s.executeQuery(sql)){r.next();return r.getString(1);}}
+    private static String sha256(byte[] value) throws Exception {return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(value));}
     private static String env(String name){String v=System.getenv(name);if(v==null||v.isBlank())throw new IllegalStateException("Missing test setting "+name);return v;}
 }
