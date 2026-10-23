@@ -89,10 +89,16 @@ System.out.println("Java canonical manifest hash: PASS");}}
 '@
 $probePath=Join-Path $compileDir 'VisualManifestHashProbe.java'
 [IO.File]::WriteAllText($probePath,$probe,(New-Object Text.UTF8Encoding($false)))
-& $JavacPath --release 21 -encoding UTF-8 -cp $compileDir -d $compileDir $probePath
+# Compile the probe and extracted signatures together. Using the absolute output
+# directory as a classpath is unreliable on Windows checkouts whose path contains
+# non-ASCII characters, while a single javac invocation has no such dependency.
+& $JavacPath --release 21 -encoding UTF-8 -d $compileDir $sourcePath $probePath
 if($LASTEXITCODE -ne 0){throw 'Manifest Java probe compile failed'}
-& (Join-Path $javacBin 'java.exe') -cp $compileDir VisualManifestHashProbe
-if($LASTEXITCODE -ne 0){throw 'Manifest Java probe failed'}
+Push-Location $compileDir
+try {
+    & (Join-Path $javacBin 'java.exe') -cp . VisualManifestHashProbe
+    if($LASTEXITCODE -ne 0){throw 'Manifest Java probe failed'}
+} finally { Pop-Location }
 $result=[ordered]@{scope='DESIGN_ONLY_TEAM_APPROVED_AS_REPORTED';dtoRecords=$records.Count;exampleRoots=$roots.Count;
     jsonFiles=$jsonFiles.Count;localLinks=$links;fieldConsistency='PASS';java21Signatures='PASS';canonicalManifestJava21='PASS';
     contractSha256=(Get-FileHash -LiteralPath $contractPath -Algorithm SHA256).Hash.ToLowerInvariant();

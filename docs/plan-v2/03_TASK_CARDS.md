@@ -129,13 +129,14 @@
 - **Owner:** A / **Reviewer:** B / **Priority:** P0 / **Dependencies:** EX-01, BASE-04
 - **Objective:** Extend the existing exam DTO only as needed for grouped passages, images and legitimate audio-based choices.
 - **Acceptance criteria:**
-  - [ ] Support question order, 7 Parts, groupId, reusable audio, zero-or-more ordered content blocks and per-question options.
-  - [ ] Allow Part 1/2 letter choices when transcripts are not available; do not fabricate dialogue/transcripts.
-  - [ ] Correct options remain server-only; authorized candidate DTO never exposes answer key.
-  - [ ] Keep compatibility with existing text/audio JSON if possible.
+  - [x] Support question order, 7 Parts, groupId, reusable audio, zero-or-more ordered content blocks and per-question options.
+  - [x] Allow Part 1/2 letter choices when transcripts are not available; do not fabricate dialogue/transcripts.
+  - [x] Correct options remain server-only; authorized candidate DTO never exposes answer key.
+  - [x] Keep compatibility with existing text/audio JSON if possible.
 - **Verification/evidence:**
   - Schema/DTO fixtures including Part 1 photo, Part 3 shared audio, Part 6 passage and Part 7 multi-document.
   - Negative validator fixtures.
+- **Evidence (2026-10-23):** [EX-02 closeout](EX02_CLOSEOUT_20261023.md): design oracle `58/58`, Java 21 contract/signature checks PASS, and protocol Maven suite `89/89` including production DTO secrecy/compatibility tests.
 - **Likely files/components:** protocol exam DTOs, import contracts, docs/PROTOCOL.md
 
 ### EX-03 - Build offline parser, validator and repeatable seed
@@ -158,13 +159,14 @@
 - **Owner:** A / **Reviewer:** C / **Priority:** P0 / **Dependencies:** EX-02, BASE-04
 - **Objective:** Add minimum Flyway migration and filesystem configuration for exam images and content blocks.
 - **Acceptance criteria:**
-  - [ ] Check the latest existing Flyway version before naming a new migration; never edit applied V1..Vn.
-  - [ ] Keep structured metadata in PostgreSQL; media binaries remain outside the DB/JAR.
-  - [ ] Store relative paths, MIME, content length, SHA-256, ordering and question/group association.
-  - [ ] Do not break the established TOEIC_AUDIO_ROOT manifest/READY semantics.
+  - [x] Check the latest existing Flyway version before naming a new migration; never edit applied V1..Vn.
+  - [x] Keep structured metadata in PostgreSQL; media binaries remain outside the DB/JAR.
+  - [x] Store relative paths, MIME, content length, SHA-256, ordering and question/group association.
+  - [x] Do not break the established TOEIC_AUDIO_ROOT manifest/READY semantics.
 - **Verification/evidence:**
   - Fresh database migration test and upgrade test from the current release schema.
   - Reject invalid file paths and dangling asset references.
+- **Evidence (2026-10-23):** [EX-04 closeout](EX04_CLOSEOUT_20261023.md): real PostgreSQL 18.1 migration/constraint/legacy suite `58/58`, audio/media regression `18/18`, clean cluster teardown, and completed `TOEIC_IMAGE_ROOT` operator configuration.
 - **Likely files/components:** server/src/main/resources/db/migration/, exam services, configuration
 
 ### EX-05 - Authenticated image delivery and media validation

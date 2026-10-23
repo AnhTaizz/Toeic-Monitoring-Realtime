@@ -774,6 +774,7 @@ Client chỉ phát đúng manifest/writer/start ID, không autoplay lại khi re
 | `MONITORING_STATE_TTL_MS` | `300000` | TTL state RAM. |
 | `EXAM_TIMEOUT_SCAN_INTERVAL_MS` | `1000` | Chu kỳ quét hết giờ. |
 | `TOEIC_AUDIO_ROOT` | `audio-resources` | Root file audio theo `<examId>/<audioFile>`. |
+| `TOEIC_IMAGE_ROOT` | `image-resources` | Root file PNG/JPEG theo `<examId>/<localFile>`; binary nằm ngoài DB/JAR. |
 | `LISTENING_HEARTBEAT_TIMEOUT_MS` | `6000` | Ngưỡng gián đoạn Listening. |
 
 ## 10. Những API chưa có

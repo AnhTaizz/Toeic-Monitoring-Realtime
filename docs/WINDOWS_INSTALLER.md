@@ -65,7 +65,7 @@ MSI chỉ gỡ các file cài. Cache/journal người dùng được giữ: khô
 | `audio-cache/speaker`, `audio-cache/playback-started` | WAV thử loa tạm và journal chống phát lại/gián đoạn. Journal được giữ qua restart/uninstall. |
 | `%TEMP%` của người dùng | JavaFX/native library tạm; không cần ghi vào thư mục cài. |
 | Log/trace | Ứng dụng thường không tạo file log/trace. Measurement/trace mặc định OFF; nếu chủ động bật, phải cấu hình `toeic.measurement.directory` / `toeic.trace.directory` tới thư mục người dùng có quyền ghi (mặc định CLI dev là đường dẫn tương đối). |
-| Máy server | Spring Boot, PostgreSQL, `.env` riêng và `<TOEIC_AUDIO_ROOT>/<examId>/<audioFile>`. Không copy các dữ liệu này vào MSI hoặc sang thư mục cài client. |
+| Máy server | Spring Boot, PostgreSQL, `.env` riêng, `<TOEIC_AUDIO_ROOT>/<examId>/<audioFile>` và `<TOEIC_IMAGE_ROOT>/<examId>/<localFile>`. Không copy các dữ liệu này vào MSI hoặc sang thư mục cài client. |
 
 ## Chạy kiểm thử tự động trên máy build
 
