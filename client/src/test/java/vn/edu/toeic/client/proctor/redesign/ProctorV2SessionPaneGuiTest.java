@@ -235,6 +235,7 @@ class ProctorV2SessionPaneGuiTest {
         fxRun(() -> ((ToggleButton) view.lookup("#nav-session-controls")).fire());
         ProctorV2SessionPane v2 = created.get();
         await("catalog", () -> v2.controller().snapshot().catalog().size() == 2);
+        await("create form mounted", () -> v2.lookup("#v2-candidates") instanceof TextField);
         int before = progressReadsOnFx.size();
         fxRun(() -> v2.controller().select("mock-a"));
         await("candidate catalog",()->!v2.controller().snapshot().candidates().isEmpty());
