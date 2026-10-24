@@ -58,6 +58,33 @@ public final class LoginApiClient implements AutoCloseable {
     public record ScopeView(Role role, Set<String> attemptScope) {
         public ScopeView { attemptScope = Set.copyOf(attemptScope); }
     }
+    public CompletableFuture<JoinedRoom> joinAccountPin(String serverUrl,LoginResponse account,String pin) {
+        vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpener.websocketEndpoint(serverUrl);
+        if(account==null || account.user()==null || !"CANDIDATE".equals(account.user().role()) || account.token()==null
+                || !account.token().matches("[A-Za-z0-9_-]{1,512}") || pin==null || !pin.matches("[1-9][0-9]{4}"))throw new IllegalArgumentException("Nhập PIN phòng gồm 5 chữ số.");
+        var endpoint=URI.create(serverUrl.trim().replaceAll("/+$","")+"/api/v2/pin-rooms/join");
+        var request=HttpRequest.newBuilder(endpoint).timeout(Duration.ofSeconds(15)).header("Content-Type","application/json")
+                .header("Authorization","Bearer "+account.token())
+                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(new vn.edu.toeic.protocol.exam.rich.JoinPinRoomRequest(pin,UUID.randomUUID().toString())))).build();
+        return httpClient.sendAsync(request,HttpResponse.BodyHandlers.ofString()).thenApply(response->{
+            if(response.statusCode()!=200){String message=switch(response.statusCode()) {
+                case 400->"PIN không đúng hoặc đã được cấp lại.";case 429->"Nhập sai PIN quá nhiều lần. Thử lại sau 5 phút.";
+                case 401->"Phiên đăng nhập hết hiệu lực. Hãy đăng nhập lại.";case 403->"Tài khoản không có quyền vào phòng.";
+                case 409->"Phòng đã bắt đầu/kết thúc hoặc đã đủ thí sinh.";default->"Chưa kết nối được phòng. Kiểm tra Server và thử lại.";};
+                throw new LoginFailedException(response.statusCode(),message);}
+            try {
+                if(response.body().length()>262144)throw new InvalidServerResponseException();
+                var joined=responseGson.fromJson(response.body(),JoinedRoom.class);
+                if(joined==null || joined.attemptId()==null || !joined.attemptId().matches("[A-Za-z0-9][A-Za-z0-9_-]{0,127}")
+                        || !Set.of("WAITING","IN_PROGRESS").contains(joined.state()) || joined.login()==null || joined.login().user()==null
+                        || joined.login().user().id()!=account.user().id() || !account.user().username().equals(joined.login().user().username())
+                        || !"CANDIDATE".equals(joined.login().user().role()) || !"v0".equals(joined.login().protocolVersion())
+                        || !"Bearer".equals(joined.login().tokenType()) || joined.login().token()==null || !joined.login().token().matches("[A-Za-z0-9_-]{1,512}")
+                        || !java.util.List.of(joined.attemptId()).equals(joined.login().attemptScope()))throw new InvalidServerResponseException();
+                return joined;
+            }catch(RuntimeException invalid){throw new InvalidServerResponseException();}
+        });
+    }
     public CompletableFuture<JoinedRoom> joinRoom(String serverUrl,String roomCode,String candidateCode,String pin) {
         vn.edu.toeic.client.realtime.AuthenticatedWebSocketOpener.websocketEndpoint(serverUrl);
         URI endpoint=URI.create(serverUrl.trim().replaceAll("/+$","")+"/api/v2/rooms/join");

@@ -48,6 +48,11 @@ final class V2Fixtures {
 
     /** Scripted fake: every field may be replaced by a test; calls are recorded. */
     static final class FakeApi implements ProctorV2Api {
+        final java.util.List<vn.edu.toeic.protocol.exam.rich.CreatePinRoomRequest> pinCreates=new CopyOnWriteArrayList<>();
+        volatile Call<vn.edu.toeic.protocol.exam.rich.CreatedPinRoom> pinCreate=()->new vn.edu.toeic.protocol.exam.rich.CreatedPinRoom(
+                new CreateRichSessionResponse(SESSION,"mock-a","PROCTORED_V2","SCHEDULED",List.of()),"58321");
+        @Override public vn.edu.toeic.protocol.exam.rich.CreatedPinRoom createPinRoom(vn.edu.toeic.protocol.exam.rich.CreatePinRoomRequest request) throws Exception {pinCreates.add(request);return pinCreate.get();}
+        @Override public vn.edu.toeic.protocol.exam.rich.RoomCatalogPage pinRooms(String after) {return new vn.edu.toeic.protocol.exam.rich.RoomCatalogPage(List.of(),null);}
         @Override public vn.edu.toeic.protocol.exam.rich.CreatedRoom createRoom(CreateRichSessionRequest r) throws Exception {
             var s=create(r);return new vn.edu.toeic.protocol.exam.rich.CreatedRoom("TOEIC-123456",s,
                 s.attempts().stream().map(a->new vn.edu.toeic.protocol.exam.rich.RoomCredentials(a.candidateUserId(),"candidate"+a.candidateUserId(),"MOCK",a.attemptId(),"12345678")).toList());

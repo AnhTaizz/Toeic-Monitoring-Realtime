@@ -101,7 +101,11 @@ class ProctorV2E2eGuiTest {
         try {
             // ---- Proctor: catalog → create in the V2 panel
             FxSupport.fxRun(() -> ((ToggleButton) proctorView[0].lookup("#nav-session-controls")).fire());
-            ProctorV2SessionPane pane = FxSupport.fx(() -> find(proctorView[0], ProctorV2SessionPane.class));
+            ProctorV2SessionPane pane = FxSupport.fx(() -> {
+                var tabs=(javafx.scene.control.TabPane)proctorView[0].lookup("#session-controls-tabs");
+                var tab=tabs.getTabs().stream().filter(t->"tab-v2".equals(t.getId())).findFirst().orElseThrow();
+                tabs.getSelectionModel().select(tab);return (ProctorV2SessionPane)tab.getContent();
+            });
             assertThat(pane).as("V2 panel inside 'Điều khiển ca'").isNotNull();
             @SuppressWarnings("unchecked")
             TableView<ExamCatalogItem> exams = FxSupport.fx(() -> (TableView<ExamCatalogItem>) pane.lookup("#v2-exams"));

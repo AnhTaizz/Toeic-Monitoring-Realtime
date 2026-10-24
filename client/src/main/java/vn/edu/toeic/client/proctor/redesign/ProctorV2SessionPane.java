@@ -76,6 +76,7 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
     private final PauseTransition clipboardExpiry=new PauseTransition(Duration.seconds(30));
     private List<RoomCredentials> renderedPins=List.of();
     private String copiedPin,pinSession;
+    private String renderedSharedPin;
 
     private final TextField extraProctors = new TextField();
     private final Button create = new Button("Tạo ca PROCTORED_V2");
@@ -103,6 +104,10 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
         ProctorV2Api api = new ProctorV2ApiClient(serverUrl, token);
         return create(observer -> ProctorV2Controller.create(api, observer, expired, refreshScope, bounded), selfId);
     }
+    static ProctorV2SessionPane forAccountPinServer(String serverUrl,String token,long selfId,Runnable expired,Runnable refreshScope) {
+        var api=new ProctorV2ApiClient(serverUrl,token);
+        return create(observer->{var c=ProctorV2Controller.create(api,observer,expired,refreshScope,3000);c.enableAccountPin();return c;},selfId);
+    }
 
     /** The controller is built with an observer that forwards to this pane; the catalog loads once wired. */
     static ProctorV2SessionPane create(Function<Consumer<ProctorV2Controller.Snapshot>, ProctorV2Controller> controllerFor, long selfId) {
@@ -114,7 +119,7 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
         ProctorV2SessionPane pane = new ProctorV2SessionPane(controller, selfId);
         self.set(pane);
         controller.loadCatalog(false);
-        controller.loadCandidates("",false);
+        if(!controller.accountPin())controller.loadCandidates("",false);
         controller.loadRooms(false);
         return pane;
     }
@@ -224,6 +229,7 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
             else controller.createSelectedSession(duration.getText(),selfId,extraProctors.getText());});
         createStatus.setId("v2-create-status");
         createdBox.setId("v2-created");
+        if(controller.accountPin())return card("2. Tạo phòng thi",null,selectedExam,new HBox(10,create),createStatus,createdBox);
         FlowPane form = new FlowPane(16, 10,
                 field("Thời lượng (phút)", duration),
                 field("ID giám thị thêm", extraProctors));
@@ -258,7 +264,7 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
 
     private VBox roomsCard() {
         rooms.setId("v2-rooms");Ui.plainTable(rooms,"Chưa có phòng đang tổ chức.");rooms.setPrefHeight(150);
-        rooms.getColumns().add(Ui.textColumn("Room Code",160,RoomCatalogPage.Item::roomCode));
+        if(!controller.accountPin())rooms.getColumns().add(Ui.textColumn("Room Code",160,RoomCatalogPage.Item::roomCode));
         rooms.getColumns().add(Ui.textColumn("Đề",300,RoomCatalogPage.Item::title));
         rooms.getColumns().add(Ui.textColumn("Trạng thái",140,RoomCatalogPage.Item::state));
         rooms.getColumns().add(Ui.textColumn("Tạo lúc",200,r->Ui.dateClock(r.createdAt(),"Chưa rõ")));
@@ -286,6 +292,8 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
         rotatePin.setId("v2-pin-rotate");revokePin.setId("v2-pin-revoke");pinStatus.setId("v2-pin-status");
         rotatePin.setOnAction(e->changePin(true));revokePin.setOnAction(e->changePin(false));
         members.getSelectionModel().selectedItemProperty().addListener((o,a,b)->updatePinButtons());
+        if(controller.accountPin())return new VBox(8,members,pinStatus,
+                Ui.wrapping("Thí sinh đăng nhập và nhập PIN chung. READY là điều kiện cá nhân; giám thị có thể START khi đã có người JOIN.","muted","small"));
         return new VBox(8,members,new HBox(8,rotatePin,revokePin),pinStatus,
             Ui.wrapping("JOINED là đã xác thực. CONNECTED lấy từ heartbeat Monitoring; READY lấy Audio + Visual. Trạng thái ca do server quyết định.","muted","small"));
     }
@@ -327,6 +335,7 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
         attempts.setPrefHeight(200);
         HBox row = new HBox(8, sessionField, watch, refresh);
         row.setAlignment(Pos.CENTER_LEFT);
+        if(controller.accountPin())return card("3. Thí sinh trong phòng",null,new HBox(10,refresh,allReady,readyStatus),membershipCard());
         return card("3. READY của thí sinh", null, row, new HBox(10, allReady, readyStatus), membershipCard(), attempts,
                 Ui.infoBox("READY = server đã nhận Audio READY và Ảnh Part 1 READY (lease còn hạn) của đúng writer. "
                         + "Panel tự đọc lại có giới hạn; rời trang hoặc đăng xuất sẽ dừng."));
@@ -339,6 +348,11 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
             if (shown == null || !shown.canStart()) return;
             String id = shown.session();
             int count = shown.readiness() == null ? 0 : shown.readiness().attempts().size();
+            if(shown.accountPin()) {
+                long unready=shown.readiness()==null?count:shown.readiness().attempts().stream().filter(a->!a.audioReady() || !a.visualReady()).count();
+                if(unready==0 || confirm.test("Có "+unready+" thí sinh chưa sẵn sàng; họ sẽ không nghe được Listening. Bắt đầu?"))controller.start();
+                return;
+            }
             if (confirm.test("START ca " + id + " cho " + count + " thí sinh? Listening bắt đầu ở mọi máy thí sinh và không phát lại được."))
                 controller.start();
         });
@@ -347,8 +361,9 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
         startStatus.setId("v2-start-status");
         notice.setId("v2-notice");
         return card("4. START", null,
-                Ui.wrapping("START chỉ bật khi server vừa báo đủ READY. Server kiểm lại READY khi nhận lệnh, tính deadline bằng giờ DB "
-                        + "và phát lệnh tới thí sinh qua WebSocket. Máy giám thị không phát audio.", "muted"),
+                Ui.wrapping(controller.accountPin()
+                        ? "Có ít nhất một thí sinh vào phòng là có thể bắt đầu. Người chưa READY sẽ chỉ được làm Reading trong thời gian còn lại."
+                        : "START chỉ bật khi server vừa báo đủ READY. Server kiểm lại READY khi nhận lệnh, tính deadline bằng giờ DB và phát lệnh tới thí sinh qua WebSocket. Máy giám thị không phát audio.", "muted"),
                 new HBox(10, start, retryStart), startStatus, notice);
     }
 
@@ -403,7 +418,7 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
         selectedExam.setText(selected == null ? "Chưa chọn đề."
                 : "Đề: " + selected.title() + " (" + selected.examId() + ", " + selected.totalQuestions() + " câu)"
                 + (s.canCreate() || s.creating() ? "" : " — server chặn: " + String.join(", ", selected.blockedReasons())));
-        create.setDisable(!s.canCreate() || s.selectedCandidates().isEmpty());
+        create.setDisable(!s.canCreate() || !s.accountPin() && s.selectedCandidates().isEmpty());
         renderCandidates(s);
         createStatus.setText(s.creating() ? "Đang gửi yêu cầu tạo ca…" : s.createError());
         renderCreated(s);
@@ -420,7 +435,7 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
                 + Ui.dateClock(s.started().startedAt(), "?"));
         else if (s.pendingStart() != null) startStatus.setText("START chưa rõ kết quả · requestId " + s.pendingStart().requestId());
         else if (s.starting()) startStatus.setText("Đang gửi START…");
-        else startStatus.setText(s.canStart() ? "Đủ READY theo lần đọc gần nhất của server." : "Chưa thể START.");
+        else startStatus.setText(s.canStart() ? s.accountPin()?"Có thể START. Người chưa READY sẽ không được nghe Listening.":"Đủ READY theo lần đọc gần nhất của server." : "Chưa thể START.");
         notice.setText(s.notice());
     }
 
@@ -446,6 +461,7 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
     }
 
     private void renderCreated(ProctorV2Controller.Snapshot s) {
+        if(s.accountPin()){renderSharedPin(s);return;}
         String sessionId=s.presence()!=null?s.presence().sessionId():s.created()!=null?s.created().sessionId():null;
         if(sessionId==null){createdBox.getChildren().clear();return;}
         String roomCode=s.presence()!=null?s.presence().roomCode():s.room()!=null?s.room().roomCode():null;
@@ -473,6 +489,23 @@ final class ProctorV2SessionPane extends ScrollPane implements AutoCloseable {
             if(!sessionId.equals(pinSession)){pinExpiry.stop();pinSession=sessionId;}
             if(pinExpiry.getStatus()!=javafx.animation.Animation.Status.RUNNING)pinExpiry.playFromStart();
         }else {pinExpiry.stop();pinSession=null;}
+    }
+    private void renderSharedPin(ProctorV2Controller.Snapshot s) {
+        if(s.session().isEmpty()){createdBox.getChildren().clear();return;}
+        createdBox.getChildren().clear();
+        if(s.sharedPin()!=null) {
+            TextField pin=new TextField(s.sharedPin());pin.setId("account-pin-value");pin.setEditable(false);pin.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
+            Button copy=new Button("Sao chép PIN");copy.setId("account-pin-copy");copy.setOnAction(e->{clearCopiedPin();copiedPin=pin.getText();var content=new ClipboardContent();content.putString(copiedPin);Clipboard.getSystemClipboard().setContent(content);clipboardExpiry.setOnFinished(done->clearCopiedPin());clipboardExpiry.playFromStart();});
+            Button hide=new Button("Ẩn PIN");hide.setOnAction(e->{clearCopiedPin();controller.forgetPins();});
+            createdBox.getChildren().addAll(Ui.label("PIN chung của phòng","strong"),pin,new HBox(8,copy,hide));
+            if(!java.util.Objects.equals(renderedSharedPin,s.sharedPin()) || !s.session().equals(pinSession)) {
+                renderedSharedPin=s.sharedPin();pinSession=s.session();pinExpiry.stop();pinExpiry.setOnFinished(e->{clearCopiedPin();controller.forgetPins();});pinExpiry.playFromStart();
+            }
+        }else {renderedSharedPin=null;pinExpiry.stop();createdBox.getChildren().add(Ui.wrapping("PIN đã ẩn. Có thể cấp lại trước START nếu bị mất.","muted"));}
+        Button rotate=new Button("Cấp lại PIN chung");rotate.setId("account-pin-rotate");
+        rotate.setDisable(s.pinBusy() || s.presence()==null || !"SCHEDULED".equals(s.presence().state()));
+        rotate.setOnAction(e->{if(confirm.test("Cấp lại PIN chung? Mọi token vào phòng cũ bị thu hồi; thí sinh cần nhập lại PIN mới."))controller.rotateSharedPin();});
+        createdBox.getChildren().add(rotate);
     }
 
     private void renderReadiness(ProctorV2Controller.Snapshot s) {

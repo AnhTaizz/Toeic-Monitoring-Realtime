@@ -120,12 +120,14 @@ public class AudioService {
         // QD-29: a legacy ID outside monitoring v0 never becomes READY, so start cannot include it.
         vn.edu.toeic.server.exam.ExamService.requireMonitorable(attemptId, request.requestId());
         if (attempt.writerEpoch() != request.writerEpoch()) throw error(ErrorCode.STALE, "Phiên ghi cũ không được báo READY.", request.requestId());
-        if (!"SCHEDULED".equals(session.state()) || session.startId() != null)
-            throw error(ErrorCode.INVALID_STATE, "READY chỉ được thay đổi trong bước chuẩn bị.", request.requestId());
         var v2State=v2==null?null:v2.lockForMutation(user,attemptId);
-        if(v2State!=null)v2.requireActiveContent(v2State);
+        boolean late=v2State!=null && v2.latePreparation(v2State);
+        if ((!"SCHEDULED".equals(session.state()) || session.startId() != null) && !late)
+            throw error(ErrorCode.INVALID_STATE, "READY chỉ được thay đổi trong bước chuẩn bị.", request.requestId());
+        if(v2State!=null)v2.requirePreparationContent(v2State);
         if (!request.ready()) {
-            if(v2State!=null)v2.invalidate(v2State);
+            if(v2State!=null && !late)v2.invalidate(v2State);
+            if(late)jdbc.sql("DELETE FROM attempt_visual_readiness WHERE attempt_id=:a").param("a",attemptId).update();
             jdbc.sql("DELETE FROM attempt_audio_readiness WHERE attempt_id = :a").param("a", attemptId).update();
             return new AudioReadyResponse(Protocol.VERSION, request.requestId(), attemptId, attempt.writerEpoch(), false, null, null);
         }
@@ -217,6 +219,10 @@ public class AudioService {
                 FROM exam_sessions s WHERE a.session_id = s.session_id AND s.session_id = :session
                 """).param("start", startId).param("manifest", manifest.manifestId())
                 .param("at", java.sql.Timestamp.from(decisionAt)).param("session", sessionId).update();
+        if(rich)for(String blocked:verified.interruptedAttempts()) {
+            jdbc.sql("UPDATE monitoring_attempts SET listening_interrupted=TRUE,listening_interrupted_at=:at,listening_interruption_reason='NOT_READY_AT_START' WHERE attempt_id=:a")
+                    .param("at",java.sql.Timestamp.from(decisionAt)).param("a",blocked).update();
+        }
         publisher.publishEvent(new StartAuthorized(sessionId, startId));
         return new ListeningStartResponse(Protocol.VERSION, request.requestId(), sessionId, manifest.manifestId(), startId, decisionAt);
     }

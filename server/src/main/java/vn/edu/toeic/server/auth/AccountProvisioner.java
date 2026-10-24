@@ -37,6 +37,10 @@ public class AccountProvisioner {
 
     @Transactional
     public CreatedAccount create(String username, String name, Role role) {
+        return create(username,name,role,false);
+    }
+    @Transactional
+    public CreatedAccount create(String username, String name, Role role,boolean issueLoginPassword) {
         if (role != Role.CANDIDATE && role != Role.PROCTOR)
             throw ExamApiException.invalidInput("Chỉ được tạo PROCTOR hoặc CANDIDATE.");
         validate(username, name);
@@ -53,6 +57,6 @@ public class AccountProvisioner {
                 .optional().orElseThrow(() -> new ExamApiException(HttpStatus.CONFLICT, ErrorCode.CONFLICT,
                         "Mã tài khoản đã tồn tại. Thông tin tài khoản hiện có được giữ nguyên.", null));
         // PIN-only Candidate secret stays unreturned, exactly as in Phase 2.
-        return new CreatedAccount(account, role == Role.PROCTOR ? credential : null);
+        return new CreatedAccount(account, role == Role.PROCTOR || issueLoginPassword ? credential : null);
     }
 }

@@ -15,8 +15,11 @@ public class AdminAccountService {
     private final JdbcClient jdbc;
     private final AuthorizationService authorization;
     private final AccountProvisioner accounts;
-    public AdminAccountService(JdbcClient jdbc, AuthorizationService authorization, AccountProvisioner accounts) {
-        this.jdbc=jdbc; this.authorization=authorization; this.accounts=accounts;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwords;
+    private final java.security.SecureRandom random;
+    public AdminAccountService(JdbcClient jdbc, AuthorizationService authorization, AccountProvisioner accounts,
+            org.springframework.security.crypto.password.PasswordEncoder passwords,java.security.SecureRandom random) {
+        this.jdbc=jdbc; this.authorization=authorization; this.accounts=accounts;this.passwords=passwords;this.random=random;
     }
 
     @Transactional(readOnly=true)
@@ -53,10 +56,36 @@ public class AdminAccountService {
 
     @Transactional
     public CreatedAccount create(AuthenticatedUser admin,String username,String displayName,String role) {
+        return create(admin,username,displayName,role,false);
+    }
+    @Transactional
+    public CreatedAccount create(AuthenticatedUser admin,String username,String displayName,String role,boolean issueLoginPassword) {
         authorization.requireRole(admin,Role.ADMIN);
         if (!Set.of("PROCTOR","CANDIDATE").contains(role==null?"":role))
             throw ExamApiException.invalidInput("Chỉ được tạo PROCTOR hoặc CANDIDATE.");
-        return accounts.create(username,displayName,Role.valueOf(role));
+        return accounts.create(username,displayName,Role.valueOf(role),issueLoginPassword);
+    }
+
+    @Transactional
+    public CreatedAccount resetCandidatePassword(AuthenticatedUser admin,long id) {
+        authorization.requireRole(admin,Role.ADMIN);
+        var observed=sessions(id);
+        for(String session:observed)jdbc.sql("SELECT session_id FROM exam_sessions WHERE session_id=:s FOR UPDATE").param("s",session).query(String.class).single();
+        var account=jdbc.sql("SELECT id,username,display_name,role,enabled FROM user_accounts WHERE id=:u FOR UPDATE")
+                .param("u",id).query((r,n)->new AccountView(r.getLong(1),r.getString(2),r.getString(3),r.getString(4),r.getBoolean(5))).optional()
+                .orElseThrow(()->new ExamApiException(HttpStatus.NOT_FOUND,ErrorCode.INVALID_INPUT,"Không tìm thấy tài khoản.",null));
+        if(!"CANDIDATE".equals(account.role()))throw conflict("Chỉ cấp lại mật khẩu cho Candidate.");
+        if(!observed.containsAll(sessions(id)))throw conflict("Ca thi vừa thay đổi. Hãy tải lại và thử lại.");
+        if(jdbc.sql("""
+                SELECT EXISTS(SELECT 1 FROM monitoring_attempts a LEFT JOIN exam_sessions s ON s.session_id=a.session_id
+                WHERE a.candidate_user_id=:u AND a.state='ACTIVE' AND (s.session_id IS NULL OR s.state='IN_PROGRESS'))
+                """).param("u",id).query(Boolean.class).single())throw conflict("Không thể cấp lại mật khẩu cho thí sinh đang thi.");
+        byte[] bytes=new byte[32];random.nextBytes(bytes);
+        String password=java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+        jdbc.sql("UPDATE user_accounts SET password_hash=:h WHERE id=:u").param("u",id)
+                .param("h",passwords.encode(password)).update();
+        jdbc.sql("UPDATE login_sessions SET revoked_at=COALESCE(revoked_at,clock_timestamp()) WHERE user_id=:u").param("u",id).update();
+        return new CreatedAccount(account,password);
     }
 
     @Transactional

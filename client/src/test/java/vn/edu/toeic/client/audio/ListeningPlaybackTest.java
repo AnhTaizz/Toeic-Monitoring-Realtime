@@ -27,7 +27,7 @@ class ListeningPlaybackTest {
         final List<String> events=new CopyOnWriteArrayList<>();
         final List<ListeningEventRequest> requests=new CopyOnWriteArrayList<>();
         CandidateExamDto exam=ListeningPlaybackTest.this.exam();boolean interrupted;String statusPhase="NOT_STARTED";
-        Runnable onStarted=()->{};
+        Runnable onStarted=()->{};String interruptionReason="HEARTBEAT_TIMEOUT";
         public CandidateExamDto exam(String attempt){return exam;}
         public ListeningStatusResponse status(String attempt){return response(null,attempt,statusPhase,"INTERRUPTED".equals(statusPhase));}
         public ListeningStatusResponse event(String attempt,ListeningEventRequest request){
@@ -37,7 +37,7 @@ class ListeningPlaybackTest {
         }
         private ListeningStatusResponse response(String request,String attempt,String phase,boolean stopped){return new ListeningStatusResponse("v0",request,attempt,"SESSION","START",manifest.manifestId(),9007199254740993L,
                 phase,Instant.now().plusSeconds(100),"NOT_STARTED".equals(phase)||"ARMED".equals(phase)?null:Instant.now(),"COMPLETED".equals(phase)?Instant.now():null,
-                stopped,stopped?Instant.now():null,stopped?"HEARTBEAT_TIMEOUT":null);}
+                stopped,stopped?Instant.now():null,stopped?interruptionReason:null);}
         public void close(){}
     }
     @BeforeEach void setup()throws Exception{
@@ -50,6 +50,12 @@ class ListeningPlaybackTest {
         playback=new ListeningPlayback(api,files,new ListeningPlaybackJournal(directory.resolve("journal")),()->Optional.of(context),ignored->{});
     }
     @AfterEach void close(){playback.close();}
+    @Test void notReadyAtStartRecoveryExplainsReadingWithoutStartingPlayback() throws Exception {
+        api.statusPhase="INTERRUPTED";api.interruptionReason="NOT_READY_AT_START";
+        playback.connected(List.of("ATTEMPT"));await(()->playback.snapshot().phase()==ListeningPlayback.Phase.BLOCKED);
+        assertThat(playback.snapshot().message()).contains("Reading","chưa READY");
+        assertThat(playback.snapshot().segments()).isEmpty();assertThat(api.events).isEmpty();
+    }
 
     @Test void duplicateStartPlaysOneOrderedPlaylistAndReportsLifecycle()throws Exception{
         var command=start();playback.accept(command);await(()->playback.snapshot().phase()==ListeningPlayback.Phase.READY_TO_PLAY);

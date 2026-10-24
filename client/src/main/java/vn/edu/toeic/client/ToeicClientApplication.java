@@ -118,7 +118,8 @@ public final class ToeicClientApplication extends Application {
                                 return;
                             }
                             try {
-                                showRoleScene(stage, serverUrl, response);
+                                if("CANDIDATE".equals(response.user().role()))showAccountPinScene(stage,serverUrl,response);
+                                else showRoleScene(stage, serverUrl, response);
                             } catch (IllegalArgumentException ignored) {
                                 status.setText("Phản hồi đăng nhập không hợp lệ. Hãy đăng nhập lại.");
                                 status.setStyle("-fx-text-fill: #b63f2d; -fx-font-weight: 600;");
@@ -170,6 +171,42 @@ public final class ToeicClientApplication extends Application {
         };
         enter.setOnAction(event->submit.run());pin.setOnAction(event->submit.run());
         return applyStyles(new Scene(root,1366,820));
+    }
+    private void showAccountPinScene(Stage stage,String serverUrl,LoginResponse account) {
+        releaseConnectionView();
+        if(realtimeClient!=null){realtimeClient.close();realtimeClient=null;}
+        if(examApiClient!=null){examApiClient.close();examApiClient=null;}
+        long generation=++viewGeneration;
+        PasswordField pin=new PasswordField();pin.setId("account-pin-input");pin.setPromptText("PIN 5 chữ số");
+        pin.setTextFormatter(new javafx.scene.control.TextFormatter<String>(change->change.getControlNewText().matches("[0-9]{0,5}")?change:null));
+        Button enter=new Button("Vào phòng");enter.setId("account-pin-enter");enter.getStyleClass().add("home-primary");
+        Label status=new Label("Nhập PIN do giám thị cung cấp.");status.setId("account-pin-status");status.setWrapText(true);
+        Button legacy=new Button("Ca thi được phân công trước đây");legacy.setOnAction(e->showRoleScene(stage,serverUrl,account));
+        VBox fields=new VBox(14,new Label("Tham gia phòng thi"),pin,enter,status,legacy);fields.setPadding(new javafx.geometry.Insets(24));
+        Tab tab=new Tab("Vào phòng",fields);tab.setClosable(false);TabPane tabs=new TabPane(tab);
+        Button logout=new Button("Đăng xuất");logout.setOnAction(e->{releaseConnectionView();stage.setScene(loginScene(stage));});
+        var root=new CandidateHomePane(account.user().displayName(),account.user().username(),new Label("Đã đăng nhập"),new Label("Nhập PIN → Chuẩn bị Audio/Ảnh → Chờ giám thị START"),tabs,logout);
+        stage.setScene(applyStyles(new Scene(root,1366,820)));
+        Runnable submit=()->{
+            if(enter.isDisabled())return;
+            try {
+                var pending=loginApiClient.joinAccountPin(serverUrl,account,pin.getText());enter.setDisable(true);pin.setDisable(true);status.setText("Đang vào phòng…");
+                pending.whenComplete((joined,failure)->Platform.runLater(()->{
+                    if(generation!=viewGeneration)return;
+                    pin.clear();pin.setDisable(false);enter.setDisable(false);
+                    if(failure!=null){status.setText(userMessage(failure));return;}
+                    showRoleScene(stage,serverUrl,joined.login());
+                    long roomView=viewGeneration;
+                    Consumer<ConnectionState> connected=state->{if(state==ConnectionState.CONNECTED)Platform.runLater(()->{
+                        if(roomView!=viewGeneration || realtimeClient==null)return;
+                        if(roomEntrySubscription!=null){try{roomEntrySubscription.close();}catch(Exception ignored){}roomEntrySubscription=null;}
+                        var button=stage.getScene().lookup("#candidate-enter-exam");if(button instanceof Button b)b.fire();
+                    });};
+                    roomEntrySubscription=realtimeClient.onConnectionState(connected);connected.accept(realtimeClient.connectionState());
+                }));
+            }catch(IllegalArgumentException bad){status.setText(bad.getMessage());}
+        };
+        enter.setOnAction(e->submit.run());pin.setOnAction(e->submit.run());
     }
 
     private void showRoleScene(Stage stage, String serverUrl, LoginResponse response) {

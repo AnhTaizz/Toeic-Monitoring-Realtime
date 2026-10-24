@@ -27,7 +27,7 @@ $env:PATH=(Join-Path $JavaHome 'bin')+';'+$env:PATH
 $env:PATHEXT='.COM;.EXE;.BAT;.CMD'
 $env:DB_PASSWORD=[Guid]::NewGuid().ToString('N')
 $env:TOEIC_SEED_PASSWORD=[Guid]::NewGuid().ToString('N')
-foreach($name in @('TOEIC_ADMIN_BOOTSTRAP_USERNAME','TOEIC_ADMIN_BOOTSTRAP_PASSWORD')) {
+foreach($name in @('TOEIC_ADMIN_BOOTSTRAP_USERNAME','TOEIC_ADMIN_BOOTSTRAP_PASSWORD','TOEIC_ROOM_PIN_KEY')) {
     $saved[$name]=[Environment]::GetEnvironmentVariable($name,'Process')
     [Environment]::SetEnvironmentVariable($name,$null,'Process')
 }
@@ -77,7 +77,7 @@ try{
     [void](Native (Join-Path $JavaHome 'bin\java.exe') '-version' 'java-version')
     [void](Native $env:ComSpec ('/d /s /c ""'+$maven+'" --version"') 'maven-version')
     [void](Native (Join-Path $PostgresBin 'psql.exe') ('-h 127.0.0.1 -p '+$port+' -U room_admission_test -d '+$env:DB_NAME+' -At -c "SELECT version();"') 'postgres-version')
-    $selected=if($Mode -eq 'Gui'){'AdminAccountGuiTest,AdminAccountPostgresTest,CandidateManagementGuiTest,ProctorV2SessionPaneGuiTest,CandidateManagementGuiPostgresTest,RoomFlowPostgresGuiTest,LoginSceneGuiTest'}else{'AdminAccountPostgresTest,AdminBootstrapTest,AdminAccountApiClientTest,ProctorV2ApiClientTest,ProctorV2ControllerTest,LoginApiClientTest,RoomUxPostgresTest,RoomAdmissionPostgresTest,RoomTokenAuthorizationTest,CandidateManagementPostgresTest,SignalPipelinePostgresTest,RichSessionLifecyclePostgresTest,SessionAuthenticationTest,AuthenticatedNetworkTest,CandidateDirectoryServiceTest'}
+    $selected=if($Mode -eq 'Gui'){'AccountPinFlowPostgresGuiTest,AccountPinPostgresTest,AdminAccountGuiTest,AdminAccountPostgresTest,CandidateManagementGuiTest,ProctorV2SessionPaneGuiTest,CandidateManagementGuiPostgresTest,RoomFlowPostgresGuiTest,LoginSceneGuiTest'}else{'AccountPinPostgresTest,RoomPinCodecTest,AdminAccountPostgresTest,AdminBootstrapTest,AdminAccountApiClientTest,ProctorV2ApiClientTest,ProctorV2ControllerTest,LoginApiClientTest,RoomUxPostgresTest,RoomAdmissionPostgresTest,RoomTokenAuthorizationTest,CandidateManagementPostgresTest,SignalPipelinePostgresTest,RichSessionLifecyclePostgresTest,SessionAuthenticationTest,AuthenticatedNetworkTest,CandidateDirectoryServiceTest'}
     if($SelectedTests){if($SelectedTests -notmatch '^[A-Za-z0-9_,#]+$'){throw 'Invalid test selector'};$selected=$SelectedTests}
     $goals=if($Mode -eq 'Full') {'package'} else {'-pl server -am -Dtest='+$selected+' -Dsurefire.failIfNoSpecifiedTests=false test'}
     $command='/d /s /c ""'+$maven+'" --batch-mode --no-transfer-progress -Duser.timezone=UTC '+$goals+'"'

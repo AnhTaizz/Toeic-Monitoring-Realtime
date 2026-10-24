@@ -60,7 +60,7 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
     private VisualReadyCoordinator<Image> visual;
     private RichExamView exam;
     private long writer;
-    private boolean entering, closed, wasDisconnected;
+    private boolean entering, closed, wasDisconnected, readingOnly;
 
     public RichAttemptView(String serverUrl, String token, String displayName, String username, String attemptId,
                            vn.edu.toeic.client.realtime.RealtimeClient realtime, ExamApiClient gateway,
@@ -143,6 +143,13 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
         if (closed || exam != null) return;
         lobby.visual(state);
         if (state.preparation() != null) header.examTitle(state.preparation().title());
+        if(state.preparation()!=null && audio!=null)audio.preserveConfirmedPreparation("ACCOUNT_PIN".equals(state.preparation().roomMode()));
+        if(state.preparation()!=null && "ACCOUNT_PIN".equals(state.preparation().roomMode()) && "IN_PROGRESS".equals(state.preparation().sessionState())
+                && Boolean.FALSE.equals(state.preparation().readyForExam())) {
+            readingOnly=true;if(audio!=null)audio.allowLatePreparation(true);
+            header.deadline(state.preparation().deadlineAt(),java.time.Instant.now());
+            status.setText("Phòng đã bắt đầu. Listening bị khóa vì chưa READY lúc START. Hoàn tất chuẩn bị để làm Reading; thời gian vẫn tính theo phòng.");
+        }
         if (state.sessionExpired()) { close(); onSessionExpired.run(); return; }
         if (state.phase() == VisualReadyCoordinator.Phase.STARTED) enterExam();
     }
@@ -153,8 +160,11 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
         if (state != ConnectionState.CONNECTED) wasDisconnected = true;
         else if (wasDisconnected) {
             wasDisconnected = false;
-            // Reconnect trước START: READY cũ không được dùng lại; hủy và chuẩn bị lại (contract §7.1).
-            if (visual != null && exam == null) visual.invalidate();
+            // Legacy retains §7.1 invalidation. ACCOUNT_PIN transport reconnect never changes preparation/epoch.
+            if (visual != null && exam == null) {
+                var preparation=visual.snapshot().preparation();
+                if(preparation!=null && !"ACCOUNT_PIN".equals(preparation.roomMode()) && !"IN_PROGRESS".equals(preparation.sessionState()))visual.invalidate();
+            }
         }
     }
 
@@ -191,6 +201,8 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
         ExamSession.Start start = new ExamSession.Start(attemptId, writer, state.savedRevision(), state.answers(), model.exam().deadlineAt());
         header.examTitle(model.exam().title());
         exam = new RichExamView(model, start, gateway, realtime, images, header, audio, this::leave, () -> { close(); onSessionExpired.run(); });
+        if(readingOnly || state.listeningInterrupted() && visual!=null && visual.snapshot().preparation()!=null
+                && "ACCOUNT_PIN".equals(visual.snapshot().preparation().roomMode()))exam.openReading();
         // Player vẫn chạy (MediaPlayer không cần nằm trong scene); trạng thái Listening hiện ở banner của màn thi.
         setLeft(null);
         setCenter(exam);

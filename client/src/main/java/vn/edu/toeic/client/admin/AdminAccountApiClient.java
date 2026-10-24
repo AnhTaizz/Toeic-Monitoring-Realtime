@@ -31,12 +31,24 @@ public final class AdminAccountApiClient implements AutoCloseable {
         return page;
     }
     public CreatedAccount create(String code,String name,String role) throws Exception {
-        var result=json.fromJson(call("POST","",json.toJson(Map.of("username",code,"displayName",name,"role",role)),201),CreatedAccount.class);
+        return create(code,name,role,false);
+    }
+    public CreatedAccount create(String code,String name,String role,boolean issueLoginPassword) throws Exception {
+        var body=new java.util.LinkedHashMap<String,Object>();body.put("username",code);body.put("displayName",name);body.put("role",role);
+        if(issueLoginPassword)body.put("issueLoginPassword",true);
+        var result=json.fromJson(call("POST","",json.toJson(body),201),CreatedAccount.class);
         if(result==null)throw new IllegalStateException("Phản hồi tạo tài khoản không hợp lệ.");
         valid(result.account());
         if(!role.equals(result.account().role()) || !code.strip().equals(result.account().username())
-                || "PROCTOR".equals(role) && (result.initialPassword()==null || !result.initialPassword().matches("[A-Za-z0-9_-]{43}"))
-                || "CANDIDATE".equals(role) && result.initialPassword()!=null) throw new IllegalStateException("Phản hồi tạo tài khoản không hợp lệ.");
+                || ("PROCTOR".equals(role)||issueLoginPassword) && (result.initialPassword()==null || !result.initialPassword().matches("[A-Za-z0-9_-]{43}"))
+                || "CANDIDATE".equals(role) && !issueLoginPassword && result.initialPassword()!=null) throw new IllegalStateException("Phản hồi tạo tài khoản không hợp lệ.");
+        return result;
+    }
+    public CreatedAccount resetPassword(long id) throws Exception {
+        var result=json.fromJson(call("POST","/"+id+"/password/reset","{}",200),CreatedAccount.class);
+        if(result==null)throw new IllegalStateException("Phản hồi cấp mật khẩu không hợp lệ.");valid(result.account());
+        if(result.account().userId()!=id || !"CANDIDATE".equals(result.account().role()) || result.initialPassword()==null
+                || !result.initialPassword().matches("[A-Za-z0-9_-]{43}"))throw new IllegalStateException("Phản hồi cấp mật khẩu không hợp lệ.");
         return result;
     }
     public AccountView enabled(long id,boolean enabled) throws Exception {

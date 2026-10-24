@@ -34,6 +34,23 @@ class ProctorV2ControllerTest {
     @AfterEach void close() { if (controller != null) controller.close(); }
 
     private void advanceMillis(long millis) { clock.addAndGet(TimeUnit.MILLISECONDS.toNanos(millis)); }
+    @Test void accountPinNeedsNoPreselectedRosterAndUsesCanStartWithoutRedefiningAllReady() {
+        var c=direct();c.enableAccountPin();c.loadCatalog(false);c.select("mock-a");
+        api.readiness=()->new vn.edu.toeic.protocol.exam.rich.SessionReadiness(2,V2Fixtures.SESSION,java.time.Instant.now(),false,
+                List.of(V2Fixtures.attempt("MOCK-attempt-1",false,false)),"ACCOUNT_PIN",true);
+        c.createSelectedRoom("120",3,"");
+        assertThat(api.pinCreates).hasSize(1);assertThat(api.creates).isEmpty();assertThat(c.snapshot().created().attempts()).isEmpty();
+        assertThat(c.snapshot().readiness().allReady()).isFalse();assertThat(c.snapshot().canStart()).isTrue();
+        assertThat(c.snapshot().toString()).doesNotContain("58321");c.forgetPins();assertThat(c.snapshot().sharedPin()).isNull();
+        c.start();assertThat(api.starts).hasSize(1);
+    }
+    @Test void accountPinCreationTimeoutNeverAutomaticallyCreatesAnotherSession() {
+        var c=direct();c.enableAccountPin();c.loadCatalog(false);c.select("mock-a");
+        api.pinCreate=()->{throw new IOException("MOCK lost create response");};
+        c.createSelectedRoom("120",3,"");c.createSelectedRoom("120",3,"");
+        assertThat(api.pinCreates).hasSize(1);assertThat(c.snapshot().canCreate()).isFalse();
+        assertThat(c.snapshot().createError()).contains("Tìm lại phòng");assertThat(api.starts).isEmpty();
+    }
 
     @Test void roomCreationTimeoutBlocksBlindRecreationUntilExistingRoomIsOpened() throws Exception {
         var api=new V2Fixtures.FakeApi();var controller=new ProctorV2Controller(api,x->{},()->{},()->{},Runnable::run,null,null,3000,System::nanoTime);

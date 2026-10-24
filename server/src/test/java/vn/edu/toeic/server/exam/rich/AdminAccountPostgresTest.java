@@ -265,7 +265,7 @@ class AdminAccountPostgresTest {
                 for(String table:List.of("user_accounts","exam_sessions","exam_session_proctors","monitoring_attempts","exam_rooms","exam_room_members","login_sessions"))
                     try(var rows=statement.executeQuery("SELECT json_agg(row_to_json(t) ORDER BY row_to_json(t)::text)::text FROM "+table+" t")){rows.next();before.put(table,rows.getString(1));}
                 var checksums=new ArrayList<String>();try(var rows=statement.executeQuery("SELECT version||':'||checksum FROM flyway_schema_history ORDER BY installed_rank")){while(rows.next())checksums.add(rows.getString(1));}
-                var latest=Flyway.configure().dataSource(upgradeUrl,user,password).schemas(upgrade).defaultSchema(upgrade).load();
+                var latest=Flyway.configure().dataSource(upgradeUrl,user,password).schemas(upgrade).defaultSchema(upgrade).target("20").load();
                 assertThat(latest.migrate().migrationsExecuted).isEqualTo(1);latest.validate();
                 for(var entry:before.entrySet())try(var rows=statement.executeQuery("SELECT json_agg(row_to_json(t) ORDER BY row_to_json(t)::text)::text FROM "+entry.getKey()+" t")){
                     rows.next();assertThat(rows.getString(1)).as(entry.getKey()).isEqualTo(entry.getValue());}

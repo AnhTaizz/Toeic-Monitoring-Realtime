@@ -162,6 +162,28 @@ final class ProctorV2ApiClient implements ProctorV2Api {
             return room;
         } catch(RuntimeException invalid) {throw new IOException("Xác nhận tạo phòng không hợp lệ. Kiểm tra dashboard trước khi tạo lại.");}
     }
+    @Override public CreatedPinRoom createPinRoom(CreatePinRoomRequest request) throws Exception {
+        var room=parse(call("POST","pin-rooms",request,201),CreatedPinRoom.class);
+        verifyPinRoom(room);if(!request.examId().equals(room.session().examId()))throw new IOException("Đề xác nhận không khớp. Tìm lại phòng trước khi tạo tiếp.");return room;
+    }
+    @Override public CreatedPinRoom rotateSharedPin(String sessionId) throws Exception {
+        var room=parse(call("POST","pin-rooms/"+ProctorInputs.attempt(sessionId)+"/pin/rotate",null,200),CreatedPinRoom.class);
+        verifyPinRoom(room);if(!sessionId.equals(room.session().sessionId()))throw new IOException("Phòng xác nhận không khớp.");return room;
+    }
+    private void verifyPinRoom(CreatedPinRoom room) throws IOException {
+        if(room==null || room.session()==null || !ListeningMessages.identifier(room.session().sessionId())
+                || !"PROCTORED_V2".equals(room.session().contractVersion()) || !"SCHEDULED".equals(room.session().state())
+                || room.session().attempts()==null || !room.session().attempts().isEmpty() || room.session().examId()==null || !room.session().examId().matches(EXAM_ID)
+                || room.pin()==null || !room.pin().matches("[1-9][0-9]{4}"))throw new IOException("Xác nhận phòng không hợp lệ. Tìm lại phòng trước khi tạo tiếp.");
+    }
+    @Override public RoomCatalogPage pinRooms(String afterRoomCode) throws Exception {
+        if(afterRoomCode!=null && !afterRoomCode.matches("TOEIC-[0-9]{6}"))throw new IllegalArgumentException("Mã trang không hợp lệ.");
+        var page=parse(call("GET","pin-rooms"+(afterRoomCode==null?"":"?afterRoomCode="+afterRoomCode),null,200),RoomCatalogPage.class);
+        if(page==null || page.items()==null || page.items().size()>20)throw new IOException("Danh sách phòng không hợp lệ.");
+        for(var item:page.items())if(item==null || !ListeningMessages.identifier(item.sessionId()) || item.title()==null
+                || item.roomCode()==null || !item.roomCode().matches("TOEIC-[0-9]{6}") || !Set.of("SCHEDULED","IN_PROGRESS").contains(item.state()))throw new IOException("Danh sách phòng không hợp lệ.");
+        return page;
+    }
 
     @Override public RoomPresence roomPresence(String sessionId) throws Exception {
         RoomPresence room=parse(call("GET","rooms/"+ProctorInputs.attempt(sessionId)+"/presence",null,200),RoomPresence.class);

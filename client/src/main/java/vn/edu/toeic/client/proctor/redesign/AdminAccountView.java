@@ -53,7 +53,10 @@ public final class AdminAccountView extends BorderPane implements AutoCloseable 
         table.getColumns().add(Ui.nodeColumn("Trạng thái",150,a->Ui.badge(a.enabled()?"Hoạt động":"Đã khóa",a.enabled()?"green":"gray")));
         table.getColumns().add(Ui.nodeColumn("Thao tác",140,a->{
             Button button=new Button(a.enabled()?"Khóa":"Mở khóa");button.setId("admin-toggle-"+a.userId());
-            button.setDisable(busy);button.setOnAction(e->confirmEnabled(a));return button;
+            button.setDisable(busy);button.setOnAction(e->confirmEnabled(a));
+            if(!"CANDIDATE".equals(a.role()))return button;
+            Button reset=new Button("Cấp mật khẩu");reset.setId("admin-reset-"+a.userId());reset.setDisable(busy);reset.setOnAction(e->confirmPassword(a));
+            return new HBox(6,button,reset);
         }));
         VBox card=Ui.card(filters,actions,table,status);card.setSpacing(16);card.setPadding(new Insets(20));VBox.setVgrow(table,Priority.ALWAYS);
         status.setId("admin-status");status.setMinHeight(32);
@@ -80,7 +83,7 @@ public final class AdminAccountView extends BorderPane implements AutoCloseable 
         Label error=Ui.wrapping("");error.setId("admin-create-status");
         VBox fields=new VBox(10,field("Username / mã thí sinh",code),field("Họ và tên",name),field("Vai trò",selectedRole),
                 Ui.wrapping("Mã phân biệt hoa/thường, tối đa 80 ký tự: chữ, số, . _ -.","muted","small"),
-                Ui.wrapping("Candidate dùng PIN phòng thi. Proctor nhận mật khẩu ngẫu nhiên hiển thị một lần; hiện chưa có khôi phục/đổi mật khẩu trong ứng dụng.","muted","small"),error);
+                Ui.wrapping("Tài khoản nhận mật khẩu riêng hiển thị một lần. Candidate đăng nhập rồi nhập PIN chung của phòng.","muted","small"),error);
         fields.setPrefWidth(440);form.getDialogPane().setContent(fields);
         var saveType=new ButtonType("Lưu",ButtonBar.ButtonData.OK_DONE);form.getDialogPane().getButtonTypes().setAll(saveType,ButtonType.CANCEL);
         Button save=(Button)form.getDialogPane().lookupButton(saveType);save.setId("admin-create-save");save.getStyleClass().add("primary");
@@ -92,7 +95,7 @@ public final class AdminAccountView extends BorderPane implements AutoCloseable 
             String c=code.getText(),n=name.getText(),r=selectedRole.getValue();
             fields.setDisable(true);save.setDisable(true);form.getDialogPane().lookupButton(ButtonType.CANCEL).setDisable(true);
             error.setText("Đang lưu…");
-            submit(()->api.create(c,n,r),created->{form.close();status.setText("Đã tạo "+created.account().username()+".");
+            submit(()->api.create(c,n,r,true),created->{form.close();status.setText("Đã tạo "+created.account().username()+".");
                 if(created.initialPassword()!=null)credential(created);load(null);},failure->{
                     fields.setDisable(false);save.setDisable(false);form.getDialogPane().lookupButton(ButtonType.CANCEL).setDisable(false);error.setText(failure);
                 },true);
@@ -102,9 +105,9 @@ public final class AdminAccountView extends BorderPane implements AutoCloseable 
 
     private void credential(CreatedAccount created) {
         var prompt=new Dialog<Void>();dialog=prompt;prompt.initOwner(getScene().getWindow());style(prompt);
-        prompt.setTitle("Thông tin đăng nhập Proctor");prompt.setHeaderText("Đã tạo "+created.account().username());
+        prompt.setTitle("Thông tin đăng nhập");prompt.setHeaderText(created.account().username());
         TextField secret=new TextField(created.initialPassword());secret.setId("admin-initial-password");secret.setEditable(false);
-        prompt.getDialogPane().setContent(new VBox(12,Ui.wrapping("Mật khẩu chỉ hiển thị lần này. Bàn giao qua kênh riêng trước khi đóng. Không có chức năng xem lại hoặc khôi phục mật khẩu trong MVP.","muted"),secret));
+        prompt.getDialogPane().setContent(new VBox(12,Ui.wrapping("Mật khẩu chỉ hiển thị lần này. Bàn giao qua kênh riêng trước khi đóng. Không thể xem lại mật khẩu.","muted"),secret));
         prompt.getDialogPane().setPrefWidth(500);prompt.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         prompt.setOnHidden(e->{secret.clear();if(dialog==prompt)dialog=null;});prompt.show();secret.selectAll();
     }
@@ -117,6 +120,14 @@ public final class AdminAccountView extends BorderPane implements AutoCloseable 
         dialog=confirm;confirm.initOwner(getScene().getWindow());style(confirm);confirm.setHeaderText(account.enabled()?"Khóa tài khoản":"Mở khóa tài khoản");
         confirm.setOnHidden(e->{dialog=null;if(confirm.getResult()==ButtonType.OK && !closed)
             submit(()->api.enabled(account.userId(),!account.enabled()),updated->{status.setText("Đã cập nhật "+updated.username()+".");load(null);},null,false);});
+        confirm.show();
+    }
+    private void confirmPassword(AccountView account) {
+        if(busy || closed || dialog!=null)return;
+        var confirm=new Alert(Alert.AlertType.CONFIRMATION,"Cấp mật khẩu mới cho "+account.username()+"? Các phiên đăng nhập sẽ bị thu hồi. Không thực hiện được khi thí sinh đang thi.",ButtonType.OK,ButtonType.CANCEL);
+        dialog=confirm;confirm.initOwner(getScene().getWindow());style(confirm);confirm.setHeaderText("Cấp lại mật khẩu Candidate");
+        confirm.setOnHidden(e->{dialog=null;if(confirm.getResult()==ButtonType.OK && !closed)
+            submit(()->api.resetPassword(account.userId()),created->{credential(created);status.setText("Đã cấp mật khẩu mới; token cũ đã thu hồi.");},null,true);});
         confirm.show();
     }
     private <T> void submit(Callable<T> work,Consumer<T> success,Consumer<String> failure,boolean create) {

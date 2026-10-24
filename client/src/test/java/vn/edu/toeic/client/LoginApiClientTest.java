@@ -27,6 +27,26 @@ import org.junit.jupiter.params.provider.ValueSource;
 import vn.edu.toeic.protocol.auth.LoginResponse;
 
 class LoginApiClientTest {
+    @Test void accountPinUsesAccountPrincipalAndDistinguishesWrongPinFromExpiredLogin() throws Exception {
+        var account=new LoginResponse("v0","r","t","MOCK-account","Bearer","2099-01-01T00:00:00Z",new LoginResponse.UserView(1,"candidate1","MOCK","CANDIDATE"),List.of());
+        var scoped=new LoginResponse("v0","r","t","MOCK-scoped","Bearer","2099-01-01T00:00:00Z",account.user(),List.of("A-1"));
+        var status=new java.util.concurrent.atomic.AtomicInteger(200);
+        var body=new java.util.concurrent.atomic.AtomicReference<>(new Gson().toJson(new vn.edu.toeic.protocol.exam.rich.JoinedRoom("TOEIC-123456","A-1","WAITING",scoped)));
+        HttpServer server=HttpServer.create(new InetSocketAddress("127.0.0.1",0),0);
+        server.createContext("/api/v2/pin-rooms/join",e->{
+            assertThat(e.getRequestHeaders().getFirst("Authorization")).isEqualTo("Bearer MOCK-account");
+            var payload=com.google.gson.JsonParser.parseString(new String(e.getRequestBody().readAllBytes(),StandardCharsets.UTF_8)).getAsJsonObject();
+            assertThat(payload.keySet()).containsExactlyInAnyOrder("pin","requestId");assertThat(payload.get("pin").getAsString()).isEqualTo("58321");
+            byte[] data=body.get().getBytes(StandardCharsets.UTF_8);e.sendResponseHeaders(status.get(),data.length);try(var out=e.getResponseBody()){out.write(data);}
+        });server.start();
+        try(var api=new LoginApiClient()) {
+            assertThat(api.joinAccountPin(serverUrl(server),account,"58321").get(5,TimeUnit.SECONDS).login().attemptScope()).containsExactly("A-1");
+            body.set(body.get().replace("\"attemptScope\":[\"A-1\"]","\"attemptScope\":[\"A-1\",\"A-2\"]"));
+            assertThatThrownBy(()->api.joinAccountPin(serverUrl(server),account,"58321").get(5,TimeUnit.SECONDS)).hasCauseInstanceOf(InvalidServerResponseException.class);
+            status.set(400);assertThatThrownBy(()->api.joinAccountPin(serverUrl(server),account,"58321").get(5,TimeUnit.SECONDS)).hasRootCauseMessage("PIN không đúng hoặc đã được cấp lại.");
+            status.set(401);assertThatThrownBy(()->api.joinAccountPin(serverUrl(server),account,"58321").get(5,TimeUnit.SECONDS)).hasRootCauseMessage("Phiên đăng nhập hết hiệu lực. Hãy đăng nhập lại.");
+        } finally {server.stop(0);}
+    }
     @Test void roomEntryUsesThreeCredentialsAndRejectsABroaderAccountSession() throws Exception {
         var login=new LoginResponse("v0","r","trace","MOCK-token","Bearer","2026-10-23T12:00:00Z",
                 new LoginResponse.UserView(1,"candidate1","MOCK An","CANDIDATE"),List.of("A-1"));

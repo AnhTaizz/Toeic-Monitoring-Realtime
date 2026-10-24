@@ -58,6 +58,23 @@ public class RichSessionService {
         catch(ExamApiException | IllegalArgumentException bad){throw V2SessionPolicy.invalid();}
     }
     @Transactional
+    public CreateRichSessionResponse createEmpty(AuthenticatedUser proctor,CreatePinRoomRequest request) {
+        auth.requireRole(proctor,Role.PROCTOR);
+        if(request==null)throw ExamApiException.invalidInput("Chọn đề thi.");
+        RichExamValidator.id(request.examId());
+        int minutes=request.durationMinutes()==null?120:request.durationMinutes();
+        if(minutes<1 || minutes>240)throw ExamApiException.invalidInput("Thời lượng từ 1 đến 240 phút.");
+        if(jdbc.sql("SELECT id FROM user_accounts WHERE id=:u AND role='PROCTOR' AND enabled FOR SHARE")
+                .param("u",proctor.userId()).query(Long.class).optional().isEmpty())throw AccessDeniedException.forbidden();
+        var graph=verifiedResources(request.examId());var before=media.verify(graph);
+        String session=UUID.randomUUID().toString();
+        jdbc.sql("INSERT INTO exam_sessions(session_id,exam_id,title,duration_seconds,created_by,contract_version) VALUES(:s,:e,:t,:d,:u,'PROCTORED_V2')")
+                .param("s",session).param("e",request.examId()).param("t",graph.exam().title()).param("d",minutes*60).param("u",proctor.userId()).update();
+        jdbc.sql("INSERT INTO exam_session_proctors(session_id,proctor_user_id) VALUES(:s,:u)").param("s",session).param("u",proctor.userId()).update();
+        media.recheck(graph,before);
+        return new CreateRichSessionResponse(session,request.examId(),"PROCTORED_V2","SCHEDULED",List.of());
+    }
+    @Transactional
     public CreateRichSessionResponse create(AuthenticatedUser proctor,CreateRichSessionRequest request) {
         auth.requireRole(proctor,Role.PROCTOR);
         if(request==null)throw ExamApiException.invalidInput("Thiếu payload");RichExamValidator.id(request.examId());
@@ -119,10 +136,11 @@ public class RichSessionService {
     @Transactional
     public AttemptPreparation preparation(AuthenticatedUser candidate,String attempt) {
         auth.requireRole(candidate,Role.CANDIDATE);auth.requireExamRead(candidate,attempt);
-        var s=policy.lockForMutation(candidate,attempt);if(s==null)throw V2SessionPolicy.invalid();policy.requireActiveContent(s);
+        var s=policy.lockForMutation(candidate,attempt);if(s==null)throw V2SessionPolicy.invalid();policy.requirePreparationContent(s);
         return new AttemptPreparation(2,s.attemptId(),s.sessionId(),s.examId(),s.title(),"PROCTORED_V2",s.sessionState(),s.attemptState(),
                 s.durationSeconds()/60,s.startedAt(),s.deadline(),true,"/api/v1/attempts/"+s.attemptId()+"/audio/manifest",
-                "SCHEDULED".equals(s.sessionState())?manifests.build(s.imageContext()):null);
+                "SCHEDULED".equals(s.sessionState()) || policy.latePreparation(s)?manifests.build(s.imageContext()):null,
+                policy.roomMode(s.sessionId()),"IN_PROGRESS".equals(s.sessionState()) && s.committedManifest()!=null);
     }
     @Transactional
     public RichCandidateExam exam(AuthenticatedUser candidate,String attempt) {

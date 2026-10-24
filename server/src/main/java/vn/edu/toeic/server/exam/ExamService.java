@@ -167,6 +167,7 @@ public class ExamService {
         if(v2State!=null) {
             v2.requireWriter(v2State,request.writerEpoch());
             v2.requireStarted(v2State);
+            v2.requirePersonalReadiness(v2State);
         }
 
         record AttemptLockRow(
@@ -844,7 +845,7 @@ public class ExamService {
             }
         }
 
-        if(v2State!=null)v2.requireStarted(v2State);
+        if(v2State!=null){v2.requireStarted(v2State);v2.requirePersonalReadiness(v2State);}
 
         if (!"ACTIVE".equalsIgnoreCase(attempt.state())) {
             throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.INVALID_STATE, "Lượt thi đã kết thúc hoặc đã nộp (state=" + attempt.state() + ")", request.requestId());
@@ -1097,7 +1098,7 @@ public class ExamService {
         }
 
         var v2State=v2==null?null:v2.lockForMutation(user,request.attemptId());
-        if(v2State!=null)v2.requireActiveContent(v2State);
+        if(v2State!=null)v2.requirePreparationContent(v2State);
 
         record AttemptLockRow(
                 String attemptId,

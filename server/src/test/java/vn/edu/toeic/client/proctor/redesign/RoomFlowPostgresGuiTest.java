@@ -136,7 +136,7 @@ class RoomFlowPostgresGuiTest {
         ToeicClientApplication[] clients=new ToeicClientApplication[2];Stage[] stages=new Stage[2];
         try {
             FxSupport.fxRun(()->((ToggleButton)pv.lookup("#nav-session-controls")).fire());
-            var pane=FxSupport.fx(()->find(pv,ProctorV2SessionPane.class));
+            var pane=legacyPane(pv);
             await("catalogs",()->FxSupport.fx(()->pane.controller().snapshot().catalog().stream().anyMatch(e->e.examId().equals(EXAM))
                 && pane.controller().snapshot().candidates().size()>=2),20);
             String candidateCode="P4-E2E-"+UUID.randomUUID().toString().substring(0,8);
@@ -267,6 +267,10 @@ class RoomFlowPostgresGuiTest {
             FxSupport.fxRun(()->{for(Window w:new ArrayList<>(Window.getWindows()))if(w.getScene()!=null&&w.getScene().getRoot() instanceof DialogPane d&&d.lookupButton(ButtonType.CLOSE)!=null)((Button)d.lookupButton(ButtonType.CLOSE)).fire();});
             await("Admin list refreshed",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-find").isDisabled()),20);
             adminForm(stage,candidateCode,"MOCK Thí sinh Admin","CANDIDATE");
+            await("one-time Candidate credential",()->FxSupport.fx(()->dialogNode("admin-initial-password")!=null),20);
+            String candidatePassword=FxSupport.fx(()->((TextField)dialogNode("admin-initial-password")).getText());
+            assertThat(logins.login(base,candidateCode,candidatePassword).get(15,TimeUnit.SECONDS).user().role()).isEqualTo("CANDIDATE");
+            pressDialog(ButtonType.CLOSE,10);
             await("Candidate form saved",()->FxSupport.fx(()->dialogNode("admin-create-code")==null&&!stage.getScene().lookup("#admin-find").isDisabled()),20);
             long candidateId=count("SELECT id FROM user_accounts WHERE username='"+candidateCode+"'");
             assertThat(count("SELECT count(*) FROM monitoring_attempts WHERE candidate_user_id="+candidateId)).isZero();
@@ -311,7 +315,7 @@ class RoomFlowPostgresGuiTest {
             try {
                 rt.connect(new RealtimeClient.Session(Set.copyOf(login.attemptScope()),null,null));
                 FxSupport.fxRun(()->((ToggleButton)view.lookup("#nav-session-controls")).fire());
-                var pane=FxSupport.fx(()->find(view,ProctorV2SessionPane.class));
+                var pane=legacyPane(view);
                 await("room catalog recovery",()->FxSupport.fx(()->pane.controller().snapshot().rooms().stream().anyMatch(r->r.sessionId().equals(session))),20);
                 FxSupport.fxRun(()->{ @SuppressWarnings("unchecked") var rooms=(TableView<RoomCatalogPage.Item>)pane.lookup("#v2-rooms");rooms.getSelectionModel().select(rooms.getItems().stream().filter(r->r.sessionId().equals(session)).findFirst().orElseThrow());});
                 await("room members",()->pane.controller().snapshot().presence()!=null,20);
@@ -333,6 +337,11 @@ class RoomFlowPostgresGuiTest {
         }
     }
 
+    private ProctorV2SessionPane legacyPane(Parent root) throws Exception {
+        return FxSupport.fx(()->{var tabs=(javafx.scene.control.TabPane)root.lookup("#session-controls-tabs");
+            var tab=tabs.getTabs().stream().filter(t->"tab-v2".equals(t.getId())).findFirst().orElseThrow();
+            tabs.getSelectionModel().select(tab);return (ProctorV2SessionPane)tab.getContent();});
+    }
     private long count(String sql) throws Exception {try(var s=database.createStatement();var r=s.executeQuery(sql)){r.next();return r.getLong(1);}}
     private void injectMonitoring(String token,String attempt) throws Exception {
         String payload=new com.google.gson.Gson().toJson(Map.of("eventId","MOCK-room-e2e-event","collectorSessionId","MOCK-room-e2e-collector","policyVersion","process-policy-v1","pid",123,"processName","chrome.exe","startInstant","2026-10-23T00:00:00Z","metadataQuality","COMPLETE","observedAt","2026-10-23T00:00:00Z"));
@@ -391,7 +400,7 @@ class RoomFlowPostgresGuiTest {
                     if (window.getScene() != null && window.getScene().getRoot() instanceof DialogPane dialog && dialog.lookupButton(type) != null) {
                         String content = dialog.getContentText();
                         ((Button) dialog.lookupButton(type)).fire();
-                        return content;
+                        return content==null?"":content;
                     }
                 }
                 return null;

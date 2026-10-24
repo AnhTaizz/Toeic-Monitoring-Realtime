@@ -62,6 +62,14 @@ class ProctorV2ApiClientTest {
         code=204;body="";api.revokePin("S-1",2);
         assertThat(method).isEqualTo("POST");assertThat(target).isEqualTo("/api/v2/rooms/S-1/candidates/2/pin/revoke");
     }
+    @Test void sharedPinRoomCreatesAnEmptyRosterAndRotatesOnlyAtTheRoomEndpoint() throws Exception {
+        code=201;body="{\"session\":{\"sessionId\":\"S-1\",\"examId\":\"mock-a\",\"contractVersion\":\"PROCTORED_V2\",\"state\":\"SCHEDULED\",\"attempts\":[]},\"pin\":\"58321\"}";
+        var room=api.createPinRoom(new vn.edu.toeic.protocol.exam.rich.CreatePinRoomRequest("mock-a",120));
+        assertThat(target).isEqualTo("/api/v2/pin-rooms");assertThat(requestBody).doesNotContain("candidateUserIds","proctorUserIds");
+        assertThat(room.session().attempts()).isEmpty();assertThat(room.toString()).doesNotContain("58321");
+        code=200;assertThat(api.rotateSharedPin("S-1").pin()).isEqualTo("58321");assertThat(target).isEqualTo("/api/v2/pin-rooms/S-1/pin/rotate");
+        body=body.replace("58321","123456");assertThatThrownBy(()->api.rotateSharedPin("S-1")).isInstanceOf(IOException.class);
+    }
 
     @Test void catalogSendsLimitAndCursorAndChecksThePage() throws Exception {
         body = "{\"schemaVersion\":2,\"items\":[" + item("mock-a", true, "") + "," + item("mock-b", false, "\"MEDIA_UNVERIFIED\"") + "],\"nextAfterExamId\":\"mock-b\"}";
