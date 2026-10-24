@@ -107,8 +107,19 @@ class LoginApiClientTest {
     @Test
     void rejectsUnknownRoleWithControlledFailure() throws Exception {
         JsonObject body = validBody();
-        body.getAsJsonObject("user").addProperty("role", "ADMIN");
+        body.getAsJsonObject("user").addProperty("role", "ROOT");
         assertInvalidResponse(body.toString());
+    }
+
+    @Test void acceptsAdminLoginUsingTheExistingAccountEndpointAndAdminViewModel() throws Exception {
+        var login=new LoginResponse("v0","MOCK-request","MOCK-trace","MOCK-token","Bearer","2099-01-01T00:00:00Z",
+                new LoginResponse.UserView(10,"admin","Quản trị viên","ADMIN"),List.of());
+        var server=startResponseServer(200,new Gson().toJson(login));
+        try(var api=new LoginApiClient()) {
+            var result=api.login(serverUrl(server),"admin","MOCK-password").get(3,TimeUnit.SECONDS);
+            assertThat(result.user().role()).isEqualTo("ADMIN");assertThat(result.attemptScope()).isEmpty();
+            assertThat(RoleViewModel.from(result).heading()).isEqualTo("Quản lý tài khoản");
+        } finally {server.stop(0);}
     }
 
     @Test

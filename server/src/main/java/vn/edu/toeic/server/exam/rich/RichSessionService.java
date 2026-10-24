@@ -93,6 +93,13 @@ public class RichSessionService {
     public void createReplacement(AuthenticatedUser proctor,String sessionId,String examId,String title,int durationSeconds,
             List<Long> proctorIds,long candidateId,String attemptId) {
         auth.requireRole(proctor,Role.PROCTOR);
+        var accountRoles=new TreeMap<Long,Role>();
+        accountRoles.put(candidateId,Role.CANDIDATE);
+        proctorIds.forEach(id->accountRoles.put(id,Role.PROCTOR));
+        for(var entry:accountRoles.entrySet())
+            if(jdbc.sql("SELECT id FROM user_accounts WHERE id=:u AND role=:r AND enabled FOR SHARE")
+                    .param("u",entry.getKey()).param("r",entry.getValue().name()).query(Long.class).optional().isEmpty())
+                throw ExamApiException.invalidInput("Tài khoản roster không tồn tại hoặc đã khóa");
         var graph=verifiedResources(examId);var before=media.verify(graph);
         int inserted=jdbc.sql("""
                 INSERT INTO exam_sessions(session_id,exam_id,title,duration_seconds,created_by,contract_version)

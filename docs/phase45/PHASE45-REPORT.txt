@@ -1,0 +1,275 @@
+PHASE 4.5 — ADMIN ACCOUNT MANAGEMENT MVP
+
+TRẠNG THÁI
+ĐÃ HOÀN THÀNH kiểm thử tự động Phase 4.5; LAN hai máy/nghe vật lý vẫn NOT_RUN.
+Không merge vào main hoặc tự chuyển sang phase tiếp theo.
+Portable QA được kiểm tra trên máy hiện tại; phần LAN/audio vật lý chưa được nghiệm thu.
+
+CHECKPOINT / PHẠM VI
+Phase 4 checkpoint: 273872c35c72596381fefc83ad435930247e93b4.
+Chỉ commit 15 file Phase 4 khớp manifest SHA và báo cáo kiểm thử; không commit runtime, credentials hoặc dữ liệu.
+Nhánh riêng: feature/phase45-admin-mvp-20261023.
+main giữ nguyên 90f1b387ab9401bec1f21dd85973ae29e8ec3316.
+Không reset, rollback, merge, force checkout hoặc push. Phase 4.5 chưa commit;
+working tree đang ở nhánh riêng để review, main ref không bị thay đổi.
+README.md, scripts/start-monitoring-server.ps1, RUN.bat, scripts/run-local.ps1, run-local/,
+.local/, data/crawled-exams/, task.txt và các thay đổi có sẵn được giữ ngoài checkpoint.
+ProctorSessionControls.java và RichSessionLifecyclePostgresTest.java có cờ thay đổi line ending từ trước;
+không sửa nội dung nghiệp vụ các file đó trong Phase 4.5.
+
+AUDIT TRƯỚC KHI BỔ SUNG
+user_accounts: username VARCHAR(80) UNIQUE, display_name VARCHAR(160), BCrypt hash NOT NULL,
+enabled BOOLEAN và role CHECK chỉ cho CANDIDATE/PROCTOR. Protocol Role và RoleViewModel cũng chỉ có hai role.
+Không có Admin role/bootstrap/controller/dashboard hay API đổi/reset password trước Phase 4.5.
+SeedDataInitializer chỉ cấp hai Candidate và một Proctor; không dùng seed password đó cho Admin.
+Account login cấp token 8 giờ, lưu SHA-256 trong login_sessions; PIN JOIN cấp cùng loại session
+với room_attempt_id. Bearer filter và WebSocket dùng SessionAuthenticationService hiện có.
+HTTP revalidate mỗi request; WebSocket revalidate mỗi message và trước push có dữ liệu.
+Phase 2 tạo Candidate với secret ngẫu nhiên không trả về, BCrypt và INSERT ON CONFLICT DO NOTHING.
+V19 giữ room membership/PIN hash và scope admission độc lập với account password.
+
+Đã đọc LoginPane/login.css, styles.css, CandidateHomePane, ProctorRedesignView/TopBar/sidebar,
+ProctorV2SessionPane (Candidate form/dialog/status), Ui factories, CSS proctor-redesign,
+RichAttemptView và navigation/lifecycle của ToeicClientApplication.
+Admin dùng trực tiếp Ui factories và proctor-redesign.css: Segoe UI, navy/orange, card,
+TableView, badge, button, sidebar, dialog. Không thêm CSS/theme hoặc làm lại các UI cũ.
+
+ROLE / PERMISSION MATRIX
+Hành động                            ADMIN                  PROCTOR                 CANDIDATE
+List/search/filter account           Có, chỉ P/C            Không                   Không
+Tạo PROCTOR                          Có                     Không                   Không
+Tạo CANDIDATE                        Có                     API Phase 2 cũ          Không
+Tạo ADMIN / đổi role/password        Không                  Không                   Không
+Khóa/mở khóa P/C                     Có, có guard ca thi    Không                   Không
+Khóa Admin / chính mình              Không                  Không                   Không
+Tạo Session/Room, READY/START         Không                  Hợp đồng cũ             READY cho Attempt mình
+Đọc/sửa Attempt, monitoring          Không có scope thi     Scope được phân công    Legacy own / admission own
+Room PIN token                       Không áp dụng          Không áp dụng           Chỉ Attempt được cấp
+ADMIN không kế thừa quyền PROCTOR/CANDIDATE. /auth/me trả attemptScope rỗng cho Admin.
+UI chỉ điều hướng theo role do Server trả; backend vẫn kiểm quyền độc lập.
+
+API / DTO
+GET /api/v2/admin/accounts
+  search: username/displayName, không phân biệt hoa/thường, %, _ và backslash là ký tự literal.
+  role: PROCTOR hoặc CANDIDATE; enabled: true/false; bỏ bộ lọc để lấy cả hai.
+  limit: 1..100, mặc định 20; afterUserId: cursor dương, ORDER BY id.
+  Trả AccountPage(items,nextAfterUserId). Chỉ userId,username,displayName,role,enabled.
+POST /api/v2/admin/accounts
+  Body chính xác {username,displayName,role}; chỉ PROCTOR/CANDIDATE. HTTP 201.
+  CreatedAccount(account,initialPassword). Candidate không có password được trả về.
+  Proctor có secret SecureRandom 32 byte, base64url 43 ký tự; chỉ phản hồi tạo có credential.
+  Tất cả phản hồi thành công Admin đặt Cache-Control: no-store.
+PATCH /api/v2/admin/accounts/{id}/enabled
+  Body chính xác {enabled:boolean}; trả AccountView.
+  409 khi Admin/ca thi được bảo vệ hoặc roster vừa đổi; 404 khi không tìm thấy account.
+  400 khi dữ liệu/query sai; 401 khi phiên hết hiệu lực; 403 khi sai role/scope.
+DTO mới: protocol/admin/AccountView, AccountPage, CreatedAccount.
+CreatedAccount.toString() che credential. Không có password/hash/PIN/token trong AccountView/Page.
+Giữ nguyên API/DTO Phase 2 /api/v2/candidates và các API Room/PIN/thi/monitoring.
+
+SECURITY / ROOT CAUSE / GIẢI PHÁP
+1. Chưa có ADMIN trong enum/schema/navigation:
+   Thêm role và V20, Admin service/controller/view riêng, giữ authorization exact-role hiện có.
+   V20 chỉ đổi CHECK role; không thêm bảng/cột, không sửa V1–V19 hoặc dữ liệu thi.
+2. Hai đường tạo account cần thống nhất:
+   Tách đúng phần validate + insert nguyên tử của Phase 2 vào AccountProvisioner.
+   CandidateManagementService giữ requireRole(PROCTOR) và DTO cũ; Admin service kiểm ADMIN.
+   Không upsert, không sửa account trùng username; database UNIQUE quyết định cả request đồng thời.
+3. Token đã cấp có thể sống lại nếu chỉ bật/tắt enabled:
+   Disable cập nhật enabled và revoked_at của mọi login_sessions trong cùng transaction.
+   Enable không bao giờ xóa revoked_at. Bao gồm room_attempt_id sessions.
+4. Login/JOIN và disable đồng thời có thể cấp token sau bước revoke:
+   Account lookup dùng FOR SHARE trong transaction login. JOIN giữ session -> account FOR SHARE.
+   Disable khóa các Session liên quan trước account, kiểm lại roster mới dưới account lock.
+   Nếu roster thay đổi trong lúc chờ, từ chối 409 để retry từ dữ liệu mới.
+5. Khóa giữa START/đang thi có thể làm mất quyền lưu/nộp:
+   Cùng session lock với START; từ chối Candidate ACTIVE trong ca IN_PROGRESS hoặc legacy ACTIVE
+   không Session. Proctor có ca SCHEDULED/IN_PROGRESS hoặc legacy ACTIVE không Session cũng bị chặn.
+   Trường hợp SCHEDULED Candidate được khóa: token revoke làm Visual READY receipt cũ không hợp lệ
+   theo kiểm tra token có sẵn của START. Không xóa/reset receipt hoặc writer để đạt điều này.
+6. Legacy roster issuance và replacement có thể dùng account vừa bị khóa:
+   Thêm enabled + FOR SHARE trước cấp Session/Attempt, giữ creation/state machine cũ.
+   RichSessionService.create đã có enabled/role lock, được tái sử dụng nguyên trạng.
+
+Không thay đổi Attempt state, answers, revision, writer_epoch, deadline, startId,
+Listening journal/play-once policy, autosave, Audio/Visual READY contract hoặc Monitoring pipeline.
+Admin không tạo/xóa/đóng Session/Attempt, cấp PIN hoặc admission. Việc cấp account không tạo login_session.
+WebSocket idle có thể còn mở; message tiếp theo/push có dữ liệu revalidate và từ chối/đóng session đã revoke.
+
+FILE THAY ĐỔI — 29 FILE CODE/TEST/RUNNER
+Protocol:
+  protocol/.../Role.java — thêm ADMIN.
+  protocol/.../admin/AccountView.java — DTO công khai, không credential.
+  protocol/.../admin/AccountPage.java — cursor page.
+  protocol/.../admin/CreatedAccount.java — credential Proctor một lần; toString redacted.
+Client:
+  client/.../RoleViewModel.java — mô tả role ADMIN.
+  client/.../ToeicClientApplication.java — điều hướng Admin, cleanup worker/view khi logout/stop.
+  client/.../admin/AdminAccountApiClient.java — HTTP client, validate response, no create retry.
+  client/.../proctor/redesign/AdminAccountView.java — reuse theme/components, list/form/confirmation/error.
+Server:
+  server/.../auth/JdbcUserAccountStore.java — serialize login với account disable.
+  server/.../auth/AccountProvisioner.java — logic tạo account thống nhất, BCrypt và UNIQUE.
+  server/.../auth/AdminBootstrap.java — opt-in riêng, không overwrite/promotion, không mặc định Admin.
+  server/.../admin/AdminAccountService.java — list/create/status guard và revoke transaction.
+  server/.../admin/AdminAccountController.java — exact body/role checks và no-store.
+  server/.../exam/rich/CandidateManagementService.java — reuse provisioner, contract cũ.
+  server/.../exam/rich/ExamRoomService.java — serialize JOIN với disable; không thêm Attempt/reset.
+  server/.../exam/rich/RichSessionService.java — guard enabled khi replacement issuance.
+  server/.../exam/ExamService.java — enabled roster lock khi legacy issuance.
+  server/src/main/resources/application.properties — hai bootstrap environment options, mặc định rỗng.
+  server/src/main/resources/db/migration/V20__admin_account_role.sql — mở rộng CHECK role.
+Tests/runner:
+  client/.../LoginApiClientTest.java — unknown role ROOT thay ADMIN đã hợp lệ; thêm Admin login hợp lệ.
+  client/.../ScopeLookupTest.java — giữ assertion unknown-role denial, thêm Admin scope rỗng hợp lệ.
+  client/.../admin/AdminAccountApiClientTest.java — URL/credential safety, errors, response validation.
+  client/.../proctor/redesign/AdminAccountGuiTest.java — theme/layout/filter/page/form/errors/role gates.
+  server/.../auth/AdminBootstrapTest.java — off mặc định, independent password, no promotion/overwrite.
+  server/.../exam/rich/AdminAccountPostgresTest.java — real HTTP/WS/PG, revoke/races/upgrade/legacy.
+  server/.../proctor/redesign/RoomFlowPostgresGuiTest.java — Admin -> Proctor -> hai Candidate -> Submit.
+  server/.../exam/rich/RoomAdmissionPostgresTest.java — pin test migration V18->V19 đúng target 19.
+  server/.../monitoring/signal/SignalPipelinePostgresTest.java — pin historical migration đúng target 19.
+  scripts/verify-room-ux.ps1 — lựa chọn targeted test, Admin coverage, isolated DB location/options.
+Hai test migration lịch sử giữ nguyên count/checksum/data assertions, không nới assertion để làm xanh.
+V19->V20 có test riêng với accounts, room, PIN token, Session, Attempt writer/deadline/answers đã có.
+Danh sách đầy đủ và source hashes: docs/phase45/SOURCE-MANIFEST.json và artifact manifest của bản đóng gói.
+Tài liệu: docs/phase45/ADMIN-DEMO.txt, báo cáo này, ảnh bằng chứng GUI sau lượt full được chấp nhận.
+
+TEST THỰC TẾ / LỊCH SỬ
+Build ban đầu -DskipTests package: biên dịch thành công; không tính là test PASS/E2E.
+Targeted đầu trên E: 81 PASS, 1 FAIL, 62 ERROR, 0 SKIP; PostgreSQL PANIC hết dung lượng WAL.
+  target/phase45/targeted/room-ux-20261023T155241Z-c304ea6f/result.json
+Targeted trên C: 144 PASS, 0 FAIL, 1 ERROR, 0 SKIP.
+  target/phase45/runs/targeted/room-ux-20261023T155958Z-d7d75b37/result.json
+  ERROR do fixture V20 chèn ID thủ công không tiến identity sequence; sửa fixture dùng ID mặc định.
+GUI + PostgreSQL: 30 PASS, 0 FAIL, 0 ERROR, 0 SKIP; exit 0, cluster stopped, schemas remaining 0.
+  target/phase45/runs/gui/room-ux-20261023T164045Z-42f8d9ef/result.json
+  Admin GUI 5, Candidate Management GUI 4, E2E Room 2, Admin PG 19 (bản test tại lượt đó).
+  Có Admin tạo Proctor/Candidate, credential login, disable/enable thật, new Proctor tạo Candidate/Room,
+  hai Candidate PIN JOIN, Audio/Visual READY, START refusal/success, MediaPlayer Listening,
+  Reading answers, autosave, monitoring đến dashboard, reconnect giữ writer/deadline và Submit.
+Full lần đầu: 1046 PASS, 2 FAIL, 0 ERROR, 4 SKIP (Server chưa chạy vì reactor dừng ở Client).
+  target/phase45/runs/full/room-ux-20261023T165304Z-ad5ed664/result.json
+  Hai fixture unknown-role cũ dùng ADMIN. Đổi input thành ROOT (role không tồn tại), giữ nguyên
+  assertion InvalidServerResponseException; thêm hai positive tests ADMIN hợp lệ/scope rỗng.
+Full lần hai: 1656 PASS, 1 FAIL, 0 ERROR, 20 SKIP; cleanup cluster/schema thành công.
+  target/phase45/runs/full/room-ux-20261023T165933Z-42e19c8a/result.json
+  FAIL duy nhất: test bấm Submit sau transport reconnect khi UI/probe chưa cho phép Submit;
+  button.fire() bị bỏ qua lúc disabled nên không có dialog Yes. Chờ điều kiện nút enabled trước
+  thao tác; giữ nguyên assertion dialog, SUBMITTED, answers, writer/deadline và Listening COMPLETED.
+  Không sửa production exam/reconnect để làm xanh test. Có bổ sung validation ID/status body Admin
+  và test dữ liệu sai để trả 400 rõ ràng thay vì để lỗi ép kiểu đường dẫn rơi vào generic 500.
+Full cuối: 1658 PASS, 0 FAIL, 0 ERROR, 20 SKIP; exit 0.
+  target/phase45/runs/full/room-ux-20261023T172804Z-061105b8/result.json
+  Cluster stop: 0; owned schemas remaining: 0.
+  Chi tiết theo suite và toàn bộ SKIP: docs/phase45/TEST-RESULTS.json.
+Portable mới: target/phase45/distribution/toeic-phase45-admin-20261023T174549Z-final.zip
+  SHA-256: 835cbd55f01b35b5b0042d6b9b221facbf1100e7aa656b3886bc3556ae1c37ff
+  Client launcher/runtime ASCII: 9 PASS, 0 FAIL. Unicode/spaces: 9 PASS, 0 FAIL.
+  Server JAR/runtime/PostgreSQL/Admin bootstrap/create/disable/enable: 15 PASS, 0 FAIL; cluster stop 0.
+  ZIP CRC + toàn bộ 190 file SHA-256 + nguồn 29 file + bytecode inventory: PASS.
+  docs/phase45/PORTABLE-RESULTS.json ghi scope từng smoke; đây không phải packaged exam/LAN E2E.
+  Giữ ZIP mới trên E; bản test unpacked/runtime copy nằm ở C Windows Temp. Không tạo installer mới.
+  Giải nén ZIP cuối thật bằng Windows Expand-Archive và ValidateOnly với bundled Java21: PASS.
+  Kiểm tra artifact lần đầu phát hiện Get-Content của PowerShell gắn PSPath/PSDrive metadata vào
+  source path trong manifest. Chuẩn hóa thành chuỗi đường dẫn tương đối, đóng ZIP cuối mới;
+  xác minh SHA của toàn bộ 190 payload file không đổi so với bản đã qua 9+9+15 smoke.
+  ZIP QA ban đầu được giữ riêng trong Windows Temp; chỉ bàn giao ZIP -final.zip đã kiểm CRC/SHA.
+Không tính SKIP là PASS; giữ các lượt lỗi và nguyên nhân thay vì xóa log hoặc disable test.
+
+LỆNH TÁI HIỆN
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-room-ux.ps1
+  -Mode Full -AllGui -PostgresBin <PostgreSQL18/bin> -JavaHome <JDK21>
+  -MavenCommand <apache-maven-3.9.11/bin/mvn.cmd> -DatabaseRoot <ổ đủ dung lượng/test-clusters>
+  -OutputRoot <thư mục kết quả mới>
+Targeted: đổi Mode thành Targeted và dùng SelectedTests chỉ định lớp cần chạy.
+GUI: Mode Gui -AllGui, SelectedTests AdminAccountGuiTest,AdminAccountPostgresTest,RoomFlowPostgresGuiTest.
+Runner tạo DB/schema/credentials kiểm thử riêng, bind loopback, thu gom XML mới theo startUtc,
+đếm PASS/FAIL/ERROR/SKIP thật, cleanup cluster; không dùng DB ứng dụng hiện tại.
+
+ENVIRONMENT / NGUYÊN NHÂN GIÁN ĐOẠN
+Windows 11 host, Java 21.0.8, Maven 3.9.11, PostgreSQL 18.1.
+E: chỉ còn ~39 MiB khiến test DB crash. Giữ log/DB lượt lỗi trên E, không xóa dữ liệu cũ.
+Chuyển duy nhất Maven target sinh tự động của bốn module sang Windows Temp C:, giữ đường dẫn repo
+bằng junction; test cluster/log mới trên C: có ~36 GiB trống. Source/Git/runtime data không di chuyển.
+target/phase45/runs là junction tới Windows Temp chứa kết quả. Không dựa vào các path tạm để triển khai.
+Một lệnh shell thêm test gặp auto-review timeout (không kết luận unsafe); dùng apply_patch thay thế.
+Không còn thao tác nào đang chờ người dùng cấp quyền vì timeout đó.
+
+DEMO / ADMIN BOOTSTRAP
+Xem docs/phase45/ADMIN-DEMO.txt. Chỉ operator set TOEIC_ADMIN_BOOTSTRAP_USERNAME và mật khẩu riêng
+TOEIC_ADMIN_BOOTSTRAP_PASSWORD ít nhất 20 ký tự/tối đa 72 byte qua environment Server. Không có Admin mặc định.
+Sau bootstrap thành công bỏ cả hai biến ở lần chạy sau; không đặt secret trong CLI/Git/log.
+Admin Login -> Quản lý tài khoản -> Thêm tài khoản -> chọn PROCTOR hoặc CANDIDATE -> Lưu.
+Proctor nhận random credential chỉ một lần, bàn giao qua kênh riêng. Candidate theo Room/PIN cũ.
+
+GIỚI HẠN / CHƯA KIỂM THỬ
+Không có đổi/reset/khôi phục password, email/OTP hay quản lý nhiều Admin trong MVP.
+Mất response tạo Proctor: có thể tìm account, nhưng không lấy lại credential; UI giải thích rõ.
+Không có edit name/role, bulk import, delete hoặc audit analytics. Search page không phải snapshot
+xuyên nhiều request khi account được tạo/đổi enabled đồng thời.
+Pin invitation không bị xóa khi disable; sau enable có thể dùng PIN còn hợp lệ để lấy token mới.
+Guard Proctor bảo thủ: chặn cả SCHEDULED/IN_PROGRESS dù tất cả Candidate có thể đã nộp.
+Rà soát code không có API/UI đóng/bàn giao ca và không tự chuyển Session sang CLOSED khi mọi
+Candidate Submit. Vì vậy Proctor có ca còn mang các trạng thái đó tiếp tục bị chặn khóa trong MVP;
+demo khóa/mở khóa dùng Proctor chưa có ca. Không sửa DB hoặc mở rộng nghiệp vụ đóng ca để vượt guard.
+Khả năng restart/presence/writer được regression theo hợp đồng cũ; không coi đây là nghiệm thu
+restart vật lý giữa ca trên hai máy LAN hoặc full-length audio với người nghe trực tiếp.
+Chưa có máy Windows thứ hai/người nghe: docs/phase4/LAN-AUDIO-CHECKLIST.csv giữ NOT_RUN.
+Load benchmark Phase 4 không chạy lại cho Admin MVP; không tuyên bố capacity mới.
+Không sửa Authentication/Session/Attempt/Monitoring state machine hoặc tự triển khai phase tiếp theo.
+
+SUITE BẮT BUỘC TRONG LƯỢT FULL CUỐI
+AdminAccountPostgresTest: 21 PASS, 0 FAIL/ERROR/SKIP.
+AdminBootstrapTest: 4 PASS, 0 FAIL/ERROR/SKIP.
+AdminAccountApiClientTest: 3 PASS, 0 FAIL/ERROR/SKIP.
+AdminAccountGuiTest: 5 PASS, 0 FAIL/ERROR/SKIP.
+RoomFlowPostgresGuiTest: 2 PASS, 0 FAIL/ERROR/SKIP.
+CandidateManagementPostgresTest: 26 PASS, 0 FAIL/ERROR/SKIP.
+RoomAdmissionPostgresTest: 20 PASS, 0 FAIL/ERROR/SKIP.
+RoomTokenAuthorizationTest: 15 PASS, 0 FAIL/ERROR/SKIP.
+SignalPipelinePostgresTest: 32 PASS, 0 FAIL/ERROR/SKIP.
+LoginApiClientTest: 41 PASS, 0 FAIL/ERROR/SKIP.
+ScopeLookupTest: 8 PASS, 0 FAIL/ERROR/SKIP.
+
+GUI EVIDENCE MỚI TỪ LƯỢT FULL ĐƯỢC CHẤP NHẬN
+docs/phase45/screenshots/admin-accounts.png
+docs/phase45/screenshots/admin-create-candidate-0.png
+docs/phase45/screenshots/admin-create-candidate-1.png
+docs/phase45/screenshots/admin-create-proctor-0.png
+docs/phase45/screenshots/admin-create-proctor-1.png
+docs/phase45/screenshots/admin-proctor-disabled.png
+docs/phase45/screenshots/admin-proctor-enabled.png
+
+SKIP (KHÔNG TÍNH LÀ PASS)
+AudioFilesSharingTest.lockSidecarCannotRedirectOutsideCache
+AudioFilesTest.symlinkInsideCacheRootIsRejectedWhereLinksCanBeCreated
+RichAttemptE2eGuiTest.candidateLobbyReadyStartThenRendersRealServerExamAndAutosaves
+ProctorV2E2eGuiTest.proctorCreatesAndStartsInTheNewUiCandidateTakesAndSubmits
+ListeningRuntimePostgresTest.installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle
+ListeningRuntimePostgresTest.appImageProductionClientUsesUnifiedReadingListeningWithoutInstallerClaim
+Phase4RoomBenchmarkTest.measureThreeRoundsAtFiveConcurrencyLevels
+RichImagePostgresTest.realReservedV13CannotBeAddedAfterV14WithDefaultFlywayPolicy
+MonitoringTimelinePostgresTest.applicationControlsStopRestartLogoutAndSwitchAccount
+MonitoringTimelinePostgresTest.candidateObserversReachAuthorizedLane
+MonitoringTimelinePostgresTest.allExistingSourcesShareRunAndReachHistoryTimelineAndAlerts
+MonitoringTimelinePostgresTest.experimentalAlertsReachDashboard
+MonitoringTimelinePostgresTest.realCimStatusReachesDashboard
+MonitoringTimelinePostgresTest.productionObserversRetireOnTerminalAndRevoke
+MonitoringTimelinePostgresTest.mixedMockDeliveryReachesTwoAttemptDashboard
+UsbIntegratedDemoPostgresTest.mockCoordinatorTimelineCommitAckLossAndPagedHistory
+UsbIntegratedDemoPostgresTest.realCimReadinessCommitAckAndHistory
+UsbIntegratedDemoPostgresTest.actualRevokeCancelsPendingSourceAndCannotFlushNewEvents
+UsbIntegratedDemoPostgresTest.businessDeadlineStopsCoordinatorUsingRealScopedHeartbeat
+UsbIntegratedDemoPostgresTest.coordinatorStatusCommitFaultRollsBackThenRetriesSameMessage
+
+LÝ DO SKIP TỪ XML LƯỢT FULL CUỐI
+AudioFilesSharingTest: 1 SKIP; org.opentest4j.TestAbortedException: symlink privilege unavailable
+AudioFilesTest: 1 SKIP; org.opentest4j.TestAbortedException: symlink creation needs privilege here: FileSystemException
+ListeningRuntimePostgresTest: 2 SKIP; Environment variable [TOEIC_INSTALLED_CLIENT] does not exist | Environment variable [TOEIC_PACKAGED_CLIENT] does not exist
+MonitoringTimelinePostgresTest: 7 SKIP; Environment variable [TOEIC_MON09_GUI] does not exist
+Phase4RoomBenchmarkTest: 1 SKIP; Environment variable [TOEIC_PHASE4_BENCHMARK] does not exist
+ProctorV2E2eGuiTest: 1 SKIP; Environment variable [TOEIC_INTEGRATION_E2E_URL] does not exist
+RichAttemptE2eGuiTest: 1 SKIP; Environment variable [TOEIC_RICH_E2E_URL] does not exist
+RichImagePostgresTest: 1 SKIP; Environment variable [TOEIC_RESERVED_V13_SCRIPT] does not exist
+UsbIntegratedDemoPostgresTest: 5 SKIP; Environment variable [TOEIC_USB_TEST_RUN_ID] does not exist

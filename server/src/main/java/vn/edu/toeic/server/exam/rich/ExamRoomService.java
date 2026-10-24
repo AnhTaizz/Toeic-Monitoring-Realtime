@@ -149,6 +149,8 @@ public class ExamRoomService {
         var room=jdbc.sql("SELECT session_id FROM exam_rooms WHERE room_code=:c").param("c",code).query(String.class).optional()
                 .orElseThrow(()->new InvalidCredentialsException(request.requestId(), "Thông tin vào phòng không đúng hoặc tạm khóa. Kiểm tra mã phòng, mã thí sinh và PIN riêng."));
         jdbc.sql("SELECT session_id FROM exam_sessions WHERE session_id=:s FOR UPDATE").param("s",room).query(String.class).single();
+        // Admission and account disable serialize before issuing a new login_session.
+        jdbc.sql("SELECT id FROM user_accounts WHERE username=:u FOR SHARE").param("u",candidate).query(Long.class).optional();
         var admission=jdbc.sql("""
                 SELECT m.session_id,s.state,m.attempt_id,m.candidate_user_id,u.display_name,m.pin_hash,m.joined_at,m.locked_until,u.enabled
                 FROM exam_room_members m JOIN user_accounts u ON u.id=m.candidate_user_id

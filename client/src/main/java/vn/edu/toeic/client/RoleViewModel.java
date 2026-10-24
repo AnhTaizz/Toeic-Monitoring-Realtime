@@ -7,6 +7,7 @@ record RoleViewModel(String heading, String description) {
     static RoleViewModel from(LoginResponse response) {
         Role role = Role.valueOf(response.user().role());
         return switch (role) {
+            case ADMIN -> new RoleViewModel("Quản lý tài khoản", "Quản trị Proctor và Candidate.");
             case CANDIDATE -> new RoleViewModel(
                     "Giao diện thí sinh",
                     "Đăng nhập thành công. Collector chưa được bật ở task T1-B1.");

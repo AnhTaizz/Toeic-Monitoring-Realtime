@@ -99,6 +99,7 @@ class RoomFlowPostgresGuiTest {
         }
         var props=new HashMap<String,Object>();props.put("server.port","0");props.put("server.address","127.0.0.1");
         props.put("spring.datasource.url",url+"?currentSchema="+schema);props.put("spring.datasource.username",System.getenv("DB_USER"));props.put("spring.datasource.password",System.getenv("DB_PASSWORD"));
+        props.put("toeic.admin.bootstrap.username","admin-e2e");props.put("toeic.admin.bootstrap.password",password+"-separate-admin");
         props.put("spring.flyway.schemas",schema);props.put("spring.flyway.default-schema",schema);props.put("toeic.seed.password",password);
         props.put("toeic.audio.root",temporary.resolve("audio").toString());props.put("toeic.image.root",temporary.resolve("images").toString());
         props.put("toeic.visual.lease-ms","60000");props.put("toeic.listening.maintenance-enabled","true");props.put("logging.level.root","ERROR");
@@ -116,13 +117,16 @@ class RoomFlowPostgresGuiTest {
     }
 
     @Test void proctorCreatesRoomTwoCandidatesEnterPrepareListenAnswerAutosaveAndSubmit() throws Exception {
-        LoginApiClient logins=new LoginApiClient();var proctor=logins.login(base,"proctor1",password).get(15,TimeUnit.SECONDS);importFixture(proctor.token());
-        long second=logins.login(base,"candidate2",password).get(15,TimeUnit.SECONDS).user().id();
+        LoginApiClient logins=new LoginApiClient();
+        String suffix=UUID.randomUUID().toString().substring(0,8), proctorCode="P45-P-"+suffix,candidateCodeAdmin="P45-C-"+suffix;
+        String proctorPassword=adminProvisionThroughUi(proctorCode,candidateCodeAdmin,logins);
+        var proctor=logins.login(base,proctorCode,proctorPassword).get(15,TimeUnit.SECONDS);importFixture(proctor.token());
+        long second=count("SELECT id FROM user_accounts WHERE username='"+candidateCodeAdmin+"'");
         var proctorApp=new ToeicClientApplication();var ps=FxSupport.fx(Stage::new);
         FxSupport.fxRun(()->{
             proctorApp.start(ps);((TextField)ps.getScene().lookup("#login-server-url")).setText(base);
-            ((TextField)ps.getScene().lookup("#login-username")).setText("proctor1");
-            ((javafx.scene.control.PasswordField)ps.getScene().lookup("#login-password")).setText(password);
+            ((TextField)ps.getScene().lookup("#login-username")).setText(proctorCode);
+            ((javafx.scene.control.PasswordField)ps.getScene().lookup("#login-password")).setText(proctorPassword);
             ((Button)ps.getScene().lookup("#login-submit")).fire();
         });
         await("production Proctor account login",()->FxSupport.fx(()->find(ps.getScene().getRoot(),ProctorRedesignView.class)!=null),30);
@@ -225,7 +229,13 @@ class RoomFlowPostgresGuiTest {
                 assertThat(afterReconnect.get("deadlineAt").getAsString()).isEqualTo(deadline);
                 assertThat(afterReconnect.get("writerEpoch").getAsLong()).isEqualTo(writer);
                 assertThat(call("GET","/api/v1/attempts/"+attempt+"/listening/status",null,token,200).get("phase").getAsString()).isEqualTo("COMPLETED");
-                final Stage current=stages[i];Platform.runLater(()->((Button)current.getScene().lookup("#room-submit")).fire());pressDialog(ButtonType.YES,10);
+                final Stage current=stages[i];
+                // connect() completes at transport level. The FX listener and authoritative
+                // reconnect probe must also finish before a user can press Submit.
+                await("Submit enabled after reconnect",()->FxSupport.fx(()->{
+                    var submit=(Button)current.getScene().lookup("#room-submit");return submit!=null&&!submit.isDisabled();
+                }),20);
+                Platform.runLater(()->((Button)current.getScene().lookup("#room-submit")).fire());pressDialog(ButtonType.YES,10);
                 await("SUBMITTED",()->"SUBMITTED".equals(call("GET","/api/v1/attempts/"+attempt+"/status",null,token,200).get("state").getAsString()),25);
                 var result=call("GET","/api/v1/attempts/"+attempt+"/status",null,token,200);
                 assertThat(result.get("deadlineAt").getAsString()).isEqualTo(deadline);assertThat(result.get("readingCorrect").getAsInt()).isEqualTo(1);
@@ -237,6 +247,58 @@ class RoomFlowPostgresGuiTest {
             closeDialogs();FxSupport.fxRun(()->{for(int i=0;i<2;i++){if(clients[i]!=null)clients[i].stop();if(stages[i]!=null)stages[i].close();}proctorApp.stop();ps.close();});
             logins.close();Files.write(OUT.resolve("e2e-log.txt"),log,StandardCharsets.UTF_8);
         }
+    }
+    /** Full production Admin login, both account forms, real disable/enable and Proctor credential handoff. */
+    private String adminProvisionThroughUi(String proctorCode,String candidateCode,LoginApiClient logins) throws Exception {
+        var app=new ToeicClientApplication();var stage=FxSupport.fx(Stage::new);
+        FxSupport.fxRun(()->{app.start(stage);((TextField)stage.getScene().lookup("#login-server-url")).setText(base);
+            ((TextField)stage.getScene().lookup("#login-username")).setText("admin-e2e");
+            ((javafx.scene.control.PasswordField)stage.getScene().lookup("#login-password")).setText(password+"-separate-admin");
+            ((Button)stage.getScene().lookup("#login-submit")).fire();});
+        try {
+            await("Admin production navigation",()->FxSupport.fx(()->stage.getScene().lookup("#admin-accounts")!=null),30);
+            await("Admin accounts loaded",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-find").isDisabled()),20);
+            assertThat(FxSupport.fx(()->stage.getScene().lookup("#proctor-redesign"))).isNull();screenshot(stage,"admin-accounts");
+            adminForm(stage,proctorCode,"MOCK Giám thị Phase 4.5","PROCTOR");
+            await("one-time Proctor credential",()->FxSupport.fx(()->dialogNode("admin-initial-password")!=null),20);
+            String initial=FxSupport.fx(()->((TextField)dialogNode("admin-initial-password")).getText());
+            assertThat(initial).matches("[A-Za-z0-9_-]{43}");
+            // Do not photograph the one-time credential dialog.
+            FxSupport.fxRun(()->{for(Window w:new ArrayList<>(Window.getWindows()))if(w.getScene()!=null&&w.getScene().getRoot() instanceof DialogPane d&&d.lookupButton(ButtonType.CLOSE)!=null)((Button)d.lookupButton(ButtonType.CLOSE)).fire();});
+            await("Admin list refreshed",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-find").isDisabled()),20);
+            adminForm(stage,candidateCode,"MOCK Thí sinh Admin","CANDIDATE");
+            await("Candidate form saved",()->FxSupport.fx(()->dialogNode("admin-create-code")==null&&!stage.getScene().lookup("#admin-find").isDisabled()),20);
+            long candidateId=count("SELECT id FROM user_accounts WHERE username='"+candidateCode+"'");
+            assertThat(count("SELECT count(*) FROM monitoring_attempts WHERE candidate_user_id="+candidateId)).isZero();
+            var credential=logins.login(base,proctorCode,initial).get(15,TimeUnit.SECONDS);
+            // Filter to the idle new Proctor so its row action is actually rendered, then use confirmation dialogs.
+            FxSupport.fxRun(()->{((TextField)stage.getScene().lookup("#admin-search")).setText(proctorCode);((Button)stage.getScene().lookup("#admin-find")).fire();});
+            await("Admin filtered row",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-find").isDisabled()),20);
+            long id=credential.user().id();
+            await("Admin row button",()->FxSupport.fx(()->stage.getScene().lookup("#admin-toggle-"+id)!=null),15);
+            FxSupport.fxRun(()->((Button)stage.getScene().lookup("#admin-toggle-"+id)).fire());pressDialog(ButtonType.OK,10);
+            await("Proctor disabled",()->count("SELECT count(*) FROM user_accounts WHERE id="+id+" AND NOT enabled")==1,20);
+            assertStatus("revoked Proctor token",send("GET","/api/v1/auth/me",null,credential.token()),401);
+            assertStatus("disabled login",send("POST","/api/v1/auth/login",new com.google.gson.Gson().toJson(Map.of("username",proctorCode,"password",initial,"requestId",UUID.randomUUID().toString())),null),401);
+            await("Admin disable refresh",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-find").isDisabled()),20);screenshot(stage,"admin-proctor-disabled");
+            FxSupport.fxRun(()->((Button)stage.getScene().lookup("#admin-toggle-"+id)).fire());pressDialog(ButtonType.OK,10);
+            await("Proctor enabled",()->count("SELECT count(*) FROM user_accounts WHERE id="+id+" AND enabled")==1,20);
+            assertStatus("old token stays revoked",send("GET","/api/v1/auth/me",null,credential.token()),401);
+            assertThat(logins.login(base,proctorCode,initial).get(15,TimeUnit.SECONDS).user().role()).isEqualTo("PROCTOR");
+            await("Admin enable refresh",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-find").isDisabled()),20);screenshot(stage,"admin-proctor-enabled");
+            log.add("PASS: production Admin login -> create Proctor/Candidate -> disable/enable idle Proctor -> real login revocation; one-time secret not captured");
+            return initial;
+        } finally {closeDialogs();FxSupport.fxRun(()->{app.stop();stage.close();});}
+    }
+    private void adminForm(Stage stage,String code,String name,String role) throws Exception {
+        await("Admin add enabled",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-add").isDisabled()),20);
+        FxSupport.fxRun(()->((Button)stage.getScene().lookup("#admin-add")).fire());
+        await("Admin form open",()->FxSupport.fx(()->dialogNode("admin-create-code")!=null),10);
+        FxSupport.fxRun(()->{((TextField)dialogNode("admin-create-code")).setText(code);((TextField)dialogNode("admin-create-name")).setText(name);
+            @SuppressWarnings("unchecked") var roles=(javafx.scene.control.ComboBox<String>)dialogNode("admin-create-role");roles.setValue(role);});
+        // No credential exists yet: capture the real form/dialog as well as the parent window.
+        screenshotAll("admin-create-"+role.toLowerCase());
+        FxSupport.fxRun(()->((Button)dialogNode("admin-create-save")).fire());
     }
     @Test void proctorRecoversExistingRoomAndRotatesThenRevokesPinFromRealUi() throws Exception {
         try(var logins=new LoginApiClient()) {

@@ -458,7 +458,7 @@ class SignalPipelinePostgresTest {
                 try(var r=sql.executeQuery("SELECT version||':'||checksum FROM flyway_schema_history WHERE version IN ('13','14','15','16','17') ORDER BY installed_rank")){while(r.next())checksums.add(r.getString(1));}
             }
             var latest=org.flywaydb.core.Flyway.configure().dataSource(upgradeUrl,required("DB_USER"),required("DB_PASSWORD"))
-                    .schemas(upgrade).defaultSchema(upgrade).load();assertThat(latest.migrate().migrationsExecuted).isEqualTo(19-version);latest.validate();
+                    .schemas(upgrade).defaultSchema(upgrade).target("19").load();assertThat(latest.migrate().migrationsExecuted).isEqualTo(19-version);latest.validate();
             try(Connection db=DriverManager.getConnection(upgradeUrl,required("DB_USER"),required("DB_PASSWORD"));Statement sql=db.createStatement()){
                 try(var r=sql.executeQuery("SELECT row_to_json(e)::text FROM monitoring_signal_events e")){assertThat(r.next()).isTrue();assertThat(r.getString(1)).isEqualTo(before);}
                 List<String> after=new ArrayList<>();try(var r=sql.executeQuery("SELECT version||':'||checksum FROM flyway_schema_history WHERE version IN ('13','14','15','16','17') AND CAST(version AS int)<="+version+" ORDER BY installed_rank")){while(r.next())after.add(r.getString(1));}assertThat(after).isEqualTo(checksums);

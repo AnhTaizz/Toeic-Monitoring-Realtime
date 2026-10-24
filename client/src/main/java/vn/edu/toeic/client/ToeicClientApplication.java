@@ -53,6 +53,7 @@ public final class ToeicClientApplication extends Application {
     private final LoginApiClient loginApiClient = new LoginApiClient();
     private RealtimeClient realtimeClient;
     private ExamApiClient examApiClient;
+    private vn.edu.toeic.client.proctor.redesign.AdminAccountView adminView;
     private AutoCloseable problemSubscription;
     private AutoCloseable connectionSubscription;
     private AutoCloseable roomEntrySubscription;
@@ -177,6 +178,17 @@ public final class ToeicClientApplication extends Application {
             throw new IllegalArgumentException("Phiên đăng nhập không hợp lệ");
         }
         Set<String> scope = response.attemptScope() == null ? Set.of() : Set.copyOf(response.attemptScope());
+        if ("ADMIN".equals(response.user().role())) {
+            releaseConnectionView();
+            if (realtimeClient != null) { realtimeClient.close(); realtimeClient = null; }
+            if (examApiClient != null) { examApiClient.close(); examApiClient = null; }
+            long currentView = ++viewGeneration;
+            adminView = new vn.edu.toeic.client.proctor.redesign.AdminAccountView(serverUrl, response,
+                    () -> leaveDashboard(stage, currentView, ""),
+                    () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."));
+            stage.setScene(applyStyles(new Scene(adminView, 1366, 820)));
+            return;
+        }
         RealtimeClient.Session context = new RealtimeClient.Session(scope, null, null);
         RealtimeClient newClient = new RealtimeClient(serverUrl, response.token());
         releaseConnectionView();
@@ -612,6 +624,7 @@ public final class ToeicClientApplication extends Application {
     }
 
     private void releaseConnectionView() {
+        if (adminView != null) { adminView.close(); adminView = null; }
         if(roomEntrySubscription!=null){try{roomEntrySubscription.close();}catch(Exception ignored){}roomEntrySubscription=null;}
         closeCandidatePreview();
         viewGeneration++;

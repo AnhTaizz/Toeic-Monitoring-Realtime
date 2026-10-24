@@ -387,7 +387,8 @@ class RoomAdmissionPostgresTest {
                 try(var rows=statement.executeQuery("SELECT row_to_json(s)::text FROM exam_sessions s")){rows.next();sessionBefore=rows.getString(1);}
                 var checksums=new ArrayList<String>();
                 try(var rows=statement.executeQuery("SELECT version||':'||checksum FROM flyway_schema_history ORDER BY installed_rank")){while(rows.next())checksums.add(rows.getString(1));}
-                var latest=Flyway.configure().dataSource(upgradeUrl,user,password).schemas(upgrade).defaultSchema(upgrade).load();
+                // This regression certifies the V18 -> V19 admission migration specifically.
+                var latest=Flyway.configure().dataSource(upgradeUrl,user,password).schemas(upgrade).defaultSchema(upgrade).target("19").load();
                 assertThat(latest.migrate().migrationsExecuted).isEqualTo(1);latest.validate();
                 try(var rows=statement.executeQuery("SELECT row_to_json(a)::text FROM monitoring_attempts a")){rows.next();assertThat(rows.getString(1)).isEqualTo(before);}
                 try(var rows=statement.executeQuery("SELECT row_to_json(s)::text FROM exam_sessions s")){rows.next();assertThat(rows.getString(1)).isEqualTo(sessionBefore);}
