@@ -18,6 +18,7 @@ client/src/main/java/vn/edu/toeic/client/proctor/redesign/ProctorV2Api.java
 client/src/main/java/vn/edu/toeic/client/proctor/redesign/ProctorV2ApiClient.java
 client/src/main/java/vn/edu/toeic/client/proctor/redesign/ProctorV2Controller.java
 client/src/main/java/vn/edu/toeic/client/proctor/redesign/ProctorV2SessionPane.java
+client/src/test/java/vn/edu/toeic/client/ExamScopeRefreshGuiTest.java
 client/src/test/java/vn/edu/toeic/client/LoginApiClientTest.java
 client/src/test/java/vn/edu/toeic/client/LoginSceneGuiTest.java
 client/src/test/java/vn/edu/toeic/client/audio/ListeningPlaybackTest.java
