@@ -108,7 +108,7 @@ foreach($module in @('protocol','client','server','monitoring-spike')){
     foreach($file in Get-ChildItem -LiteralPath $folder -Filter 'TEST-*.xml'){
         # Only reports produced by this invocation count; stale XML is never evidence.
         if($file.LastWriteTimeUtc -lt [DateTime]::Parse($start).ToUniversalTime()){continue}
-        if($Mode -ne 'Full' -and $selected.Split(',') -notcontains ($file.BaseName -replace '^TEST-.*\.','')){continue}
+        if($Mode -ne 'Full' -and @($selected.Split(',')|ForEach-Object {($_ -split '#')[0]}) -notcontains ($file.BaseName -replace '^TEST-.*\.','')){continue}
         Copy-Item -LiteralPath $file.FullName -Destination $dest
         [xml]$xml=[IO.File]::ReadAllText($file.FullName)
         $suite=$xml.testsuite

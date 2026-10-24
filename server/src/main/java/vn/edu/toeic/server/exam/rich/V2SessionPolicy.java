@@ -30,6 +30,8 @@ public class V2SessionPolicy implements RichImageSessionAuthority {
         return lock(attemptId,user.userId());
     }
     public State lockForSystem(String attemptId) {return lock(attemptId,null);}
+    /** Deadline finalization must also run for disabled ACCOUNT_PIN members; never used by client mutations. */
+    public State lockForTimeout(String attemptId) {return lock(attemptId,null,true);}
     State lockForStartInspection(String attemptId) {return lock(attemptId,null,true);}
     private State lock(String attemptId,Long owner) {
         return lock(attemptId,owner,false);

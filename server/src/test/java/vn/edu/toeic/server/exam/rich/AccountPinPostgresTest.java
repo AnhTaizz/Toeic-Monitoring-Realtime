@@ -297,6 +297,25 @@ class AccountPinPostgresTest {
         assertThat(number("SELECT count(*) FROM exam_rooms")).isEqualTo(2);assertThat(number("SELECT count(*) FROM exam_sessions")).isEqualTo(2);
         assertThat(number("SELECT count(*) FROM monitoring_attempts")).isZero();pinJoin(second,owner);
     }
+    @Test void disabledJoinedCandidateStillFinalizesOnceAtDeadline() throws Exception {
+        var room=pinRoom();var a=pinJoin(room,owner);String attempt=aid(a);long writer=takeover(attempt,scoped(a));
+        check(patch(id("candidate1"),false,adminToken),200,null);check(startRoom(room),200,null);
+        sql("UPDATE monitoring_attempts SET deadline_at=clock_timestamp()-INTERVAL '1 second' WHERE attempt_id='"+attempt+"'");
+        String deadline=text("SELECT deadline_at::text FROM monitoring_attempts WHERE attempt_id='"+attempt+"'");
+        String answers=text("SELECT answers_json::text FROM monitoring_attempts WHERE attempt_id='"+attempt+"'");
+        assertThat(app.getBean(ExamService.class).timeoutAttempt(attempt)).isTrue();String finalized=examState();
+        assertThat(app.getBean(ExamService.class).timeoutAttempt(attempt)).isFalse();assertThat(examState()).isEqualTo(finalized);
+        assertThat(text("SELECT state FROM monitoring_attempts WHERE attempt_id='"+attempt+"'")).isEqualTo("TIMED_OUT");
+        assertThat(number("SELECT writer_epoch FROM monitoring_attempts WHERE attempt_id='"+attempt+"'")).isEqualTo(writer);
+        assertThat(text("SELECT deadline_at::text FROM monitoring_attempts WHERE attempt_id='"+attempt+"'")).isEqualTo(deadline);
+        assertThat(text("SELECT answers_json::text FROM monitoring_attempts WHERE attempt_id='"+attempt+"'")).isEqualTo(answers);
+        assertThat(number("SELECT count(*) FROM user_accounts WHERE id="+id("candidate1")+" AND NOT enabled")).isEqualTo(1);
+        assertThat(number("SELECT total_questions FROM monitoring_attempts WHERE attempt_id='"+attempt+"'")).isEqualTo(200);
+        assertThat(number("SELECT score FROM monitoring_attempts WHERE attempt_id='"+attempt+"'")).isZero();
+        assertThat(text("SELECT listening_interruption_reason FROM monitoring_attempts WHERE attempt_id='"+attempt+"'")).isEqualTo("NOT_READY_AT_START");
+        assertThat(number("SELECT count(*) FROM monitoring_attempts WHERE session_id='"+sid(room)+"'")).isEqualTo(1);
+        check(get("/api/v1/auth/me",owner),401,"UNAUTHORIZED");check(get("/api/v2/attempts/"+attempt+"/preparation",scoped(a)),401,"UNAUTHORIZED");
+    }
     @Test void roomCapacityRejectsNewMemberButPreservesRepeatedAdmission() throws Exception {
         var room=pinRoom();var member=pinJoin(room,owner);String session=sid(room);
         sql("INSERT INTO user_accounts(username,display_name,role,password_hash) SELECT 'MOCK-cap-'||g,'MOCK','CANDIDATE',u.password_hash FROM generate_series(1,99) g CROSS JOIN user_accounts u WHERE u.username='candidate1'");
