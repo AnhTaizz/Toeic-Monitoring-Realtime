@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "task": "QA-01",
+  "outcome": "PARTIAL",
+  "campaignDate": "2026-10-24",
+  "releaseCandidateSource": "acc1f82ed64410ae3759c572813cb80dcc6de8f4",
+  "testStabilizationCommit": "682358e",
+  "environment": {
+    "os": "Microsoft Windows NT 10.0.26300.0",
+    "java": "21.0.12.1",
+    "maven": "3.9.16",
+    "postgres": "18.1"
+  },
+  "fullVerify": {
+    "runId": "mon07-20261024T080942Z-7ad04118",
+    "tests": 1553,
+    "passed": 1500,
+    "skipped": 53,
+    "failures": 0,
+    "errors": 0,
+    "ownedSchemasRemaining": 0,
+    "clusterStopExit": 0,
+    "resultSha256": "9d92623a33dc1a798f30380b53887d6fa6013134344100161775c26ee9a62f06"
+  },
+  "study4": {
+    "runId": "ex08-20261024T081354Z-1616e3a9",
+    "tests": 1,
+    "passed": 1,
+    "skipped": 0,
+    "failures": 0,
+    "errors": 0,
+    "questions": 200,
+    "parts": [6, 25, 39, 30, 30, 16, 54],
+    "groups": 73,
+    "audio": 54,
+    "images": 11,
+    "importSha256": "354408ded85e5c160c1556bd644bb82cab5bb5011757ee0832c4e26104d4424c",
+    "resultSha256": "b249a14411501a0488e61163d111edf60a3d485ed256656f83caa6d80a0838f6"
+  },
+  "javaFx": {
+    "tests": 37,
+    "passed": 37,
+    "skipped": 0,
+    "failures": 0,
+    "errors": 0,
+    "initialFinding": "36 PASS, 1 ERROR: form lookup raced scene mounting",
+    "classes": [
+      {"name": "vn.edu.toeic.client.CandidateHomeGuiTest", "tests": 4, "xmlSha256": "780cc2f041304022d6d38b917acd16f9c88d69e7580cbd2e606a6f8e50532aad"},
+      {"name": "vn.edu.toeic.client.LoginSceneGuiTest", "tests": 3, "xmlSha256": "0899fb698f0d7f803b6ab74947ad524958a5eb56e27df5cd2da4de7ad2f22181"},
+      {"name": "vn.edu.toeic.client.ExamScopeRefreshGuiTest", "tests": 1, "xmlSha256": "501d51b94085c06ef1ae58f50e12cffd2e5fc7330ccdacadedf3309ad8e9d64d"},
+      {"name": "vn.edu.toeic.client.exam.rich.RichExamViewGuiTest", "tests": 8, "xmlSha256": "31bb06665129c7831ada2792dd14b0fb621f39ffbb1399977aa900b97ebf9c3d"},
+      {"name": "vn.edu.toeic.client.exam.ScoreResultDialogTest", "tests": 4, "xmlSha256": "19ad2a143452280242e5d4bff5549a3e6c2a5c82a6db5af6ed4b4fd8a31e1415"},
+      {"name": "vn.edu.toeic.client.proctor.redesign.ProctorRedesignGuiTest", "tests": 12, "xmlSha256": "93f40a6caa851916c2530eac90d943237b33d4583b99fb3b455b7f1fcdb227e1"},
+      {"name": "vn.edu.toeic.client.proctor.redesign.ProctorV2SessionPaneGuiTest", "tests": 5, "xmlSha256": "30977c78ee464d8c7c0cc6609842c555ca43517ad96120ed15b1f03255dc9f4b"}
+    ]
+  },
+  "windowsAppImage": {
+    "assertionsPassed": 8,
+    "runtime": "bundled 21.0.12.1",
+    "unicodeLauncher": "REAL",
+    "javaFxMedia": "REAL",
+    "hearing": "SIMULATED",
+    "apiWs": "MOCK",
+    "installer": "NOT RUN",
+    "clientJarSha256": "4939d4cfe3324901716429222052ae9c13d5b5164e9dc73f9351c30a7c6d640b",
+    "metadataSha256": "89e656b767e491830bfe4d240c301366d24186abe1eef87be2933b869d699f3e"
+  },
+  "monitoring": {
+    "integratedAttempts": [
+      {"runId": "usb-e29189fe06f74485", "result": "FAIL", "passedBeforeFailure": 3, "failed": 1, "failure": "applicationControlsStopRestartLogoutAndSwitchAccount: real application proctor login", "resultSha256": "6764f57623c382ac94a1a2c554e07ac66ed19797987556b0143b364b66dedcb7"},
+      {"runId": "usb-edfd465e22044463", "result": "FAIL", "passedBeforeFailure": 3, "failed": 1, "failure": "applicationControlsStopRestartLogoutAndSwitchAccount: real application proctor login", "resultSha256": "025296dea0b88eccb882dfcf7d9b0dc0314842dba8d29cf273d5bdb960694b8e"}
+    ],
+    "realCim": {
+      "runId": "usb-4da9b92100c14e4f",
+      "result": "PASS",
+      "scans": 10,
+      "health": "READY",
+      "storageCount": 0,
+      "acknowledged": 1,
+      "hardware": "0/12 NOT_RUN",
+      "resultSha256": "7e7397cc854123e521627999ba80ba13c7869295563d64a59bc8e199dce0161f"
+    }
+  },
+  "manual": {
+    "physicalLan": "NOT RUN",
+    "humanHearing": "NOT RUN",
+    "installerCleanMachine": "NOT RUN",
+    "usbHotPlug": "NOT RUN",
+    "secondDisplay": "NOT RUN"
+  }
+}
