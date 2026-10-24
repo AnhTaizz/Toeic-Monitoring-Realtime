@@ -1105,3 +1105,11 @@ Theo ủy quyền người dùng: thêm -Desktop vào entrypoint demo hiện có
 - Thêm runner `verify-ex08-postgres.ps1` dựng cluster PostgreSQL riêng, chỉ chạy case EX-08, lưu receipt và luôn dọn schema/cluster. Lượt chốt trên source `e6b4320`, PostgreSQL 18.1: `1/1 PASS`, `0 FAIL/ERROR/SKIP`, 0 schema còn lại, stop exit 0.
 - Case thật kiểm catalog/create/READY/START, retry không đổi deadline, production client model đủ 7 Part/200 câu, tải và hash đủ 65 media, DTO không lộ key/source, autosave, takeover làm Listening `INTERRUPTED`, stale writer bị từ chối, submit và server score `200/200`.
 - Dựng app-image mới và chạy smoke Windows trong đường dẫn Unicode: bundled Java 21.0.12.1, JavaFX Media lifecycle PASS; API/WS riêng của smoke này là MOCK. Human hearing, MSI, clean-machine, LAN và reviewer B cá nhân NOT RUN/không được giả mạo. Chi tiết: [EX-08 closeout](plan-v2/EX08_STUDY4_ACCEPTANCE_20261023.md).
+
+## 24/10/2026 — A: QA-01 integrated regression
+
+- Chạy clean verify trên source `acc1f82` với PostgreSQL 18.1: 1553 ca, 1500 PASS, 53 SKIP, 0 FAIL/ERROR; teardown còn 0 schema và cluster stop 0.
+- Chạy lại STUDY4 thật 200 câu `1/1 PASS`, JavaFX opt-in `37/37 PASS`, Windows app-image `8/8` và CIM thật `1/1 PASS`. Raw đề/media/log/package không commit.
+- Phát hiện race trong test V2 khi catalog sẵn sàng trước lúc form mount; thêm bounded wait, không đổi production. Suite chọn lọc sau sửa đạt 37/37.
+- Integrated monitoring fail ổn định 2/2 lần tại `real application proctor login`; các luồng trước đó sinh evidence hợp lệ nhưng toàn run không được gọi PASS. QA-01 ghi **PARTIAL**; LAN, nghe thật, installer/clean-machine, USB hot-plug và màn hình thứ hai NOT RUN.
+- Report, receipt, 53 skip ID và mapping AT/LT/MT/IT: [QA-01 evidence](../evidence/qa01-regression-20261024/REPORT.md).

@@ -432,10 +432,11 @@
 
 - **Owner:** A / **Reviewer:** B / **Priority:** P0 / **Dependencies:** EX-08, UI-05, MON-09
 - **Objective:** Validate all user-facing paths and the network invariants of the integrated release candidate.
+- **Executed outcome (2026-10-24):** **PARTIAL**; automated regression completed, with physical/manual gaps and one reproducible integrated-login failure documented in `evidence/qa01-regression-20261024/`.
 - **Acceptance criteria:**
-  - [ ] AT01-AT11, LT01-LT04, MT01-MT08 and IT01-IT04 handled according to their specified coverage.
-  - [ ] Include new image/media, USB, focus/display and start-gate cases.
-  - [ ] Capture actual failures and skipped cases by ID, SHA, OS, environment and input.
+  - [x] AT01-AT11, LT01-LT04, MT01-MT08 and IT01-IT04 handled according to their specified coverage.
+  - [x] Include new image/media, USB, focus/display and start-gate cases.
+  - [x] Capture actual failures and skipped cases by ID, SHA, OS, environment and input.
 - **Verification/evidence:**
   - Clean Maven test/package with real PostgreSQL where required.
   - Report PASS/PARTIAL/FAIL/BLOCKED/NOT RUN without promotion based on mocks.

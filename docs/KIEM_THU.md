@@ -1,5 +1,13 @@
 # Trạng thái kiểm thử
 
+24/10/2026 — QA-01 regression campaign: **PARTIAL**. Clean real-PostgreSQL verify
+`1500 PASS / 53 SKIP / 0 FAIL/ERROR`; opt-in JavaFX `37/37 PASS`; STUDY4 real
+200-question acceptance `1/1 PASS`; Windows app-image smoke `8/8`; real CIM baseline
+`1/1 PASS` with 0 USB devices. Integrated monitoring reached `3/4 PASS` but the real
+application-control case failed twice while waiting for proctor login. Physical LAN,
+human hearing, installer/clean-machine, USB hot-plug and second-display operations remain
+`NOT RUN`. Exact IDs, hashes, environment, inputs and status matrix: [QA-01 report](../evidence/qa01-regression-20261024/REPORT.md).
+
 21/10/2026 — MON-08 C+B: [rule/aggregation thử nghiệm](MON08_EXPERIMENTAL_ALERTS.md), [report/ảnh/receipt](../evidence/cb-mon08-alerts-20261021/REPORT.md).
 Base1507591; runtime1e4b1ca/build+TEST9e31d50.4rule EXPERIMENTAL, ngưỡng3/6 trên bucket60s/window300s; server committed/scoped/ACTIVE/capped read model → timeline hiện có, không cache/migration/observer/persistentpipeline. Baseline95/focused134PASS; fullverify1302PASS/155SKIP/0lỗi, GUI12PASS, JAR21checks. MON08MOCK→realWS/HTTP/PG/Scene1PASS(10initialinputs/focus6/USB1/actual3drops/sourcecap20TEST); OFFlegacy1PASS. GiữFAILoverflow/no-store/fixture và0schema/PGstop0. FULLdefault/cả2experimentOFF, USB0/12/physicaldisplay/OSdesktop/LAN NOT_RUN, owner/policy/ADR/gatespending, MON08chưaDONE; không approval thay B/backlog/E1/E2.
 
