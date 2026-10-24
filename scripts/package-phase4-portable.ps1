@@ -1,9 +1,10 @@
-param([Parameter(Mandatory=$true)][string]$JavaHome,[string]$OutputRoot,[switch]$WithoutRuntime,[string]$ManifestTool)
+param([Parameter(Mandatory=$true)][string]$JavaHome,[string]$OutputRoot,[switch]$WithoutRuntime,[string]$ManifestTool,
+ [ValidatePattern('^[A-Za-z0-9_-]+$')][string]$ReleaseName='toeic-phase4',[string]$ReadMe)
 $ErrorActionPreference='Stop'
 $env:PATHEXT='.COM;.EXE;.BAT;.CMD'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 if(-not $OutputRoot){$OutputRoot=Join-Path $repo 'target\phase4\distribution'}
-$run='toeic-phase4-'+[DateTime]::UtcNow.ToString('yyyyMMddTHHmmssZ')+'-'+[Guid]::NewGuid().ToString('N').Substring(0,8)
+$run=$ReleaseName+'-'+[DateTime]::UtcNow.ToString('yyyyMMddTHHmmssZ')+'-'+[Guid]::NewGuid().ToString('N').Substring(0,8)
 $root=Join-Path $OutputRoot $run
 if(Test-Path -LiteralPath $root){throw 'Output already exists'}
 foreach($name in @('java.exe','jlink.exe')){if(-not(Test-Path -LiteralPath (Join-Path $JavaHome ('bin\'+$name)))){throw ('Missing '+$name)}}
@@ -11,7 +12,8 @@ New-Item -ItemType Directory -Force $root|Out-Null
 Copy-Item -LiteralPath (Join-Path $repo 'client\target\client-0.1.0-SNAPSHOT-all.jar') -Destination (Join-Path $root 'client.jar')
 Copy-Item -LiteralPath (Join-Path $repo 'server\target\server-0.1.0-SNAPSHOT.jar') -Destination (Join-Path $root 'server.jar')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'start-release.ps1') -Destination $root
-Copy-Item -LiteralPath (Join-Path $repo 'docs\phase4\DEMO-RUNBOOK.txt') -Destination (Join-Path $root 'READ-ME.txt')
+if(-not $ReadMe){$ReadMe=Join-Path $repo 'docs\phase4\DEMO-RUNBOOK.txt'}
+Copy-Item -LiteralPath $ReadMe -Destination (Join-Path $root 'READ-ME.txt')
 $ascii=[Text.Encoding]::ASCII
 foreach($role in @('Client','Server')){
  $bat='@echo off'+"`r`n"+'"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File "%~dp0start-release.ps1" -Role '+$role+' %*'+"`r`n"+'if errorlevel 1 pause'+"`r`n"

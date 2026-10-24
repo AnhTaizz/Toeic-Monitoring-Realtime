@@ -20,7 +20,7 @@ Giữ nguyên khóa qua mỗi lần restart và sao lưu cùng cấu hình bí m
 Từ repository, chạy launcher đã đọc `.env`:
 
 ```powershell
-.\scripts\start-monitoring-server.ps1 -JavaHome 'DUONG_DAN_JDK_21' -BindAddress 0.0.0.0 -Port 8080
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-monitoring-server.ps1 -JavaHome 'DUONG_DAN_JDK_21' -BindAddress 0.0.0.0 -Port 8080
 ```
 
 Build theo README trước khi chạy. Server đang chạy từ JAR cũ không tự cập nhật khi source thay đổi. Các menu chạy cục bộ tự ép media MOCK không phù hợp với DB chứa đề STUDY4.
@@ -28,6 +28,26 @@ Build theo README trước khi chạy. Server đang chạy từ JAR cũ không t
 Bootstrap Admin dùng cơ chế hiện có: đặt `TOEIC_ADMIN_BOOTSTRAP_USERNAME` và `TOEIC_ADMIN_BOOTSTRAP_PASSWORD` riêng trong môi trường tiến trình Server; không dùng chung seed password. Không có public signup. Sau khi bootstrap thành công, dùng tài khoản đó đăng nhập trang Admin. Xem thêm [ADMIN-DEMO.txt](../phase45/ADMIN-DEMO.txt).
 
 Trong portable bundle, `Start-Server.bat` dùng biến môi trường tiến trình; không tự đọc `.env` của repository. Cần cấp DB, seed password, media roots và `TOEIC_ROOM_PIN_KEY` trước khi chạy. Dùng **đường dẫn tuyệt đối** cho audio/image roots: các đường dẫn tương đối trong `.env` của repository không tự trỏ về repository khi chạy từ bundle. `Start-Client.bat -ServerUrl http://IP_SERVER:8080` mở Client.
+
+Nếu đang dùng workspace nghiệm thu này, bản portable mới được chỉ ra bởi `target/account-pin/runs/distribution/latest.json`. Bước repackage trong `target` gốc bị Windows từ chối đổi tên JAR, nên bản phát hành được build trong worktree sạch; không dùng JAR gốc bị build dở. Dừng Server cũ có kiểm soát trước khi mở bản mới. Có thể nạp `.env` cục bộ rồi chạy Server có runtime đi kèm như sau, tại thư mục repository (không in secret):
+
+```powershell
+$repo = (Get-Location).Path
+Get-Content -LiteralPath (Join-Path $repo '.env') -Encoding UTF8 | ForEach-Object {
+    if ($_ -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD|TOEIC_AUDIO_ROOT|TOEIC_IMAGE_ROOT|TOEIC_ROOM_PIN_KEY)\s*=(.*)$') {
+        [Environment]::SetEnvironmentVariable($Matches[1], $Matches[2].Trim().Trim('"').Trim("'"), 'Process')
+    }
+}
+foreach ($name in @('TOEIC_AUDIO_ROOT','TOEIC_IMAGE_ROOT')) {
+    $mediaRoot = [Environment]::GetEnvironmentVariable($name, 'Process')
+    if (-not [IO.Path]::IsPathRooted($mediaRoot)) { $mediaRoot = Join-Path $repo $mediaRoot }
+    [Environment]::SetEnvironmentVariable($name, (Resolve-Path -LiteralPath $mediaRoot).ProviderPath, 'Process')
+}
+$release = Get-Content 'target/account-pin/runs/distribution/latest.json' -Raw | ConvertFrom-Json
+& (Join-Path $release.directory 'Start-Server.bat')
+```
+
+Trên PowerShell khác, mở Client bằng `& (Join-Path $release.directory 'Start-Client.bat') -ServerUrl http://127.0.0.1:8080` sau khi đọc lại biến `$release` từ `latest.json`. Máy Candidate trong LAN dùng IP của Server thay cho `127.0.0.1`. Khi chép bundle sang máy khác, dùng đường dẫn thư mục đã giải nén thay cho `latest.json` của workspace này.
 
 ## Demo với hai Candidate
 
@@ -62,9 +82,9 @@ Tình trạng nghiệm thu hai máy Windows thật và người nghe trực ti�
 Runner `scripts/verify-room-ux.ps1` tạo cluster PostgreSQL riêng, không dùng DB ứng dụng. Ví dụ đổi các đường dẫn theo máy:
 
 ```powershell
-.\scripts\verify-room-ux.ps1 -Mode Targeted -PostgresBin 'DUONG_DAN_PG_BIN' -JavaHome 'DUONG_DAN_JDK_21' -MavenCommand 'DUONG_DAN_MVN_CMD' -SelectedTests 'AccountPinPostgresTest,RoomPinCodecTest,RoomAdmissionPostgresTest,RichSessionLifecyclePostgresTest,AdminAccountPostgresTest,RoomTokenAuthorizationTest'
-.\scripts\verify-room-ux.ps1 -Mode Gui -PostgresBin 'DUONG_DAN_PG_BIN' -JavaHome 'DUONG_DAN_JDK_21' -MavenCommand 'DUONG_DAN_MVN_CMD' -SelectedTests 'AccountPinFlowPostgresGuiTest,RoomFlowPostgresGuiTest,AdminAccountGuiTest,ProctorV2SessionPaneGuiTest,LoginSceneGuiTest'
-.\scripts\verify-room-ux.ps1 -Mode Full -AllGui -PostgresBin 'DUONG_DAN_PG_BIN' -JavaHome 'DUONG_DAN_JDK_21' -MavenCommand 'DUONG_DAN_MVN_CMD'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify-room-ux.ps1 -Mode Targeted -PostgresBin 'DUONG_DAN_PG_BIN' -JavaHome 'DUONG_DAN_JDK_21' -MavenCommand 'DUONG_DAN_MVN_CMD' -SelectedTests 'AccountPinPostgresTest,RoomPinCodecTest,RoomAdmissionPostgresTest,RichSessionLifecyclePostgresTest,AdminAccountPostgresTest,RoomTokenAuthorizationTest'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify-room-ux.ps1 -Mode Gui -PostgresBin 'DUONG_DAN_PG_BIN' -JavaHome 'DUONG_DAN_JDK_21' -MavenCommand 'DUONG_DAN_MVN_CMD' -SelectedTests 'AccountPinFlowPostgresGuiTest,RoomFlowPostgresGuiTest,AdminAccountGuiTest,ProctorV2SessionPaneGuiTest,LoginSceneGuiTest'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify-room-ux.ps1 -Mode Full -AllGui -PostgresBin 'DUONG_DAN_PG_BIN' -JavaHome 'DUONG_DAN_JDK_21' -MavenCommand 'DUONG_DAN_MVN_CMD'
 ```
 
 `result.json` chỉ tính XML sinh trong invocation đó. SKIP luôn ghi riêng. Log/XML có thể chứa cấu hình môi trường kiểm thử, chỉ chia sẻ bản đã rà soát; không commit các thư mục `.private`.

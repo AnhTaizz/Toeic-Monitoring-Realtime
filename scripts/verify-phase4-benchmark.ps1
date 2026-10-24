@@ -3,7 +3,8 @@
     [Parameter(Mandatory=$true)][string]$PostgresBin,
     [string]$JavaHome=$env:JAVA_HOME,
     [string]$MavenCommand='mvn.cmd',
-    [string]$OutputRoot
+    [string]$OutputRoot,
+    [switch]$AccountPin
 )
 $ErrorActionPreference='Stop'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -37,6 +38,11 @@ $env:TOEIC_INSTALLED_CLIENT=$null;$env:TOEIC_PACKAGED_CLIENT=$null
 $env:JAVA_TOOL_OPTIONS=$null
 $env:TOEIC_PHASE4_BENCHMARK='true'
 $env:TOEIC_PHASE4_OUTPUT=$out
+foreach($name in @('TOEIC_ROOM_PIN_KEY','TOEIC_ADMIN_BOOTSTRAP_USERNAME','TOEIC_ADMIN_BOOTSTRAP_PASSWORD')) {
+ $saved[$name]=[Environment]::GetEnvironmentVariable($name,'Process');[Environment]::SetEnvironmentVariable($name,$null,'Process')
+}
+$saved['TOEIC_BENCHMARK_ACCOUNT_PIN']=$env:TOEIC_BENCHMARK_ACCOUNT_PIN
+$env:TOEIC_BENCHMARK_ACCOUNT_PIN=if($AccountPin){'true'}else{$null}
 $listener=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0)
 $listener.Start();$port=$listener.LocalEndpoint.Port;$listener.Stop()
 $env:DB_PORT=[string]$port

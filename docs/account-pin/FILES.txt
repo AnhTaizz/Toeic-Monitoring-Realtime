@@ -1,6 +1,7 @@
-ACCOUNT_PIN implementation checkpoint scope. README and Server launcher are staged as partial hunks.
-Benchmark/portable packaging amendments and final evidence follow after their verification.
+ACCOUNT_PIN checkpoint scope. README and Server launcher used scoped partial hunks;
+unrelated existing changes remain unstaged. Final tooling/evidence were verified separately.
 
+.gitattributes
 .env.example
 README.md
 client/src/main/java/vn/edu/toeic/client/LoginApiClient.java
@@ -35,6 +36,8 @@ protocol/src/main/java/vn/edu/toeic/protocol/exam/rich/CreatedPinRoom.java
 protocol/src/main/java/vn/edu/toeic/protocol/exam/rich/JoinPinRoomRequest.java
 protocol/src/main/java/vn/edu/toeic/protocol/exam/rich/SessionReadiness.java
 scripts/start-monitoring-server.ps1
+scripts/package-phase4-portable.ps1
+scripts/verify-phase4-benchmark.ps1
 scripts/verify-room-ux.ps1
 server/src/main/java/vn/edu/toeic/server/admin/AdminAccountController.java
 server/src/main/java/vn/edu/toeic/server/admin/AdminAccountService.java
@@ -55,3 +58,8 @@ server/src/test/java/vn/edu/toeic/client/proctor/redesign/RoomFlowPostgresGuiTes
 server/src/test/java/vn/edu/toeic/server/exam/rich/AccountPinPostgresTest.java
 server/src/test/java/vn/edu/toeic/server/exam/rich/AdminAccountPostgresTest.java
 server/src/test/java/vn/edu/toeic/server/exam/rich/RoomPinCodecTest.java
+server/src/test/java/vn/edu/toeic/server/exam/rich/Phase4RoomBenchmarkTest.java
+
+docs/account-pin/validation/ — reviewed test cases, SKIP inventory, build/smoke/artifact records and evidence hashes
+docs/account-pin/benchmark/ — actual raw samples, environment metadata and derived summaries
+docs/account-pin/screenshots/ — actual GUI captures reviewed to exclude PIN/password/token

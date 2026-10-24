@@ -28,7 +28,8 @@ class Phase4RoomBenchmarkTest {
     final Map<String,Long> eventStarts=new ConcurrentHashMap<>();
     final Map<String,CompletableFuture<Long>> events=new ConcurrentHashMap<>();
     final AtomicInteger errors=new AtomicInteger();
-    String base,proctor; long proctorId; int clients,round;
+    final boolean accountPin="true".equals(System.getenv("TOEIC_BENCHMARK_ACCOUNT_PIN"));
+    String base,proctor,adminToken; long proctorId; int clients,round;
     Path out; Process server; String schema;
     void row(String kind,String operation,String id,long started,int status,boolean success){
         raw.add(String.join(",",String.valueOf(clients),String.valueOf(round),kind,operation,id,
@@ -62,8 +63,12 @@ class Phase4RoomBenchmarkTest {
     }
     record Candidate(String attempt,String token,long writer,String manifest){}
     Candidate prepare(JsonObject ticket,String room) throws Exception {
-        String a=ticket.get("attemptId").getAsString();var joined=request("POST","/api/v2/rooms/join",fields("roomCode",room,"candidateCode",ticket.get("username").getAsString(),"pin",ticket.get("pin").getAsString(),"requestId",UUID.randomUUID().toString()),null,200,"join");
-        assertThat(joined.get("attemptId").getAsString()).isEqualTo(a);
+        JsonObject joined;
+        if(accountPin) {
+            var login=request("POST","/api/v1/auth/login",fields("username",ticket.get("username").getAsString(),"password",ticket.get("initialPassword").getAsString(),"requestId",UUID.randomUUID().toString()),null,200,"candidate_login");
+            joined=request("POST","/api/v2/pin-rooms/join",fields("pin",room,"requestId",UUID.randomUUID().toString()),login.get("token").getAsString(),200,"join");
+        } else joined=request("POST","/api/v2/rooms/join",fields("roomCode",room,"candidateCode",ticket.get("username").getAsString(),"pin",ticket.get("pin").getAsString(),"requestId",UUID.randomUUID().toString()),null,200,"join");
+        String a=joined.get("attemptId").getAsString();if(!accountPin)assertThat(a).isEqualTo(ticket.get("attemptId").getAsString());
         String token=joined.getAsJsonObject("login").get("token").getAsString();
         long writer=request("POST","/api/v1/attempts/"+a+"/takeover",fields("requestId",UUID.randomUUID().toString(),"attemptId",a,"clientSessionId",UUID.randomUUID().toString()),token,200,"takeover").get("writerEpoch").getAsLong();
         var manifest=request("GET","/api/v1/attempts/"+a+"/audio/manifest",null,token,200,"audio_manifest");
@@ -93,6 +98,12 @@ class Phase4RoomBenchmarkTest {
                 var command=new ProcessBuilder(Path.of(System.getProperty("java.home"),"bin","java.exe").toString(),"-Xmx768m","-Duser.timezone=UTC","-jar",jar.toString(),"--server.address=127.0.0.1","--server.port="+port,"--spring.flyway.schemas="+schema,"--spring.flyway.default-schema="+schema,"--toeic.visual.lease-ms=60000");
                 command.environment().put("SPRING_DATASOURCE_URL",url+"?currentSchema="+schema);
                 command.environment().put("TOEIC_AUDIO_ROOT",root.resolve("audio").toString());command.environment().put("TOEIC_IMAGE_ROOT",root.resolve("images").toString());
+                command.environment().remove("TOEIC_ADMIN_BOOTSTRAP_USERNAME");command.environment().remove("TOEIC_ADMIN_BOOTSTRAP_PASSWORD");
+                if(accountPin) {
+                    command.environment().put("TOEIC_ADMIN_BOOTSTRAP_USERNAME","MOCK-benchmark-admin");
+                    command.environment().put("TOEIC_ADMIN_BOOTSTRAP_PASSWORD",System.getenv("TOEIC_SEED_PASSWORD")+"-admin-separate");
+                    command.environment().put("TOEIC_ROOM_PIN_KEY",Base64.getUrlEncoder().withoutPadding().encodeToString("MOCK-32-byte-account-pin-test-key!".getBytes(java.nio.charset.StandardCharsets.US_ASCII)));
+                }
                 server=command.redirectOutput(out.resolve("server.private.log").toFile()).redirectErrorStream(true).start();
                 boolean ready=false;long end=System.nanoTime()+TimeUnit.SECONDS.toNanos(90);
                 while(server.isAlive()&&System.nanoTime()<end){
@@ -104,10 +115,13 @@ class Phase4RoomBenchmarkTest {
                 }
                 assertThat(ready).as("Production server JAR ready; inspect private log on failure").isTrue();
                 var login=request("POST","/api/v1/auth/login",fields("username","proctor1","password",System.getenv("TOEIC_SEED_PASSWORD"),"requestId",UUID.randomUUID().toString()),null,200,"setup_login");proctor=login.get("token").getAsString();proctorId=login.getAsJsonObject("user").get("id").getAsLong();
+                if(accountPin)adminToken=request("POST","/api/v1/auth/login",fields("username","MOCK-benchmark-admin","password",System.getenv("TOEIC_SEED_PASSWORD")+"-admin-separate","requestId",UUID.randomUUID().toString()),null,200,"setup_admin_login").get("token").getAsString();
                 request("POST","/api/v2/exams/import",RichExamFixtures.tree().toString(),proctor,201,"setup_import");
                 var hardware=new ProcessBuilder("powershell.exe","-NoProfile","-Command","(Get-CimInstance Win32_Processor | Select-Object -First 1).Name; (Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory").start();
                 String hardwareText=new String(hardware.getInputStream().readAllBytes(),java.nio.charset.StandardCharsets.UTF_8).trim();int hardwareExit=hardware.waitFor();
                 Files.writeString(out.resolve("environment.json"),JSON.toJson(fields("os",System.getProperty("os.name"),"osVersion",System.getProperty("os.version"),"architecture",System.getProperty("os.arch"),"java",System.getProperty("java.version"),"cpuCount",Runtime.getRuntime().availableProcessors(),"hardware",hardwareExit==0?hardwareText:"UNAVAILABLE","serverMaxHeapMiB",768,"generatorMaxHeapMiB",Runtime.getRuntime().maxMemory()/1024/1024,"fixtureImportSha256",java.util.HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(Files.readAllBytes(RichExamFixtures.ROOT.resolve("import.mock.json")))),"serverJarSha256",java.util.HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(Files.readAllBytes(jar))),"serverPid",server.pid(),"generatorPid",ProcessHandle.current().pid(),"network","loopback; one physical Windows host", "levels",List.of(1,2,5,10,20),"repetitions",3,"readiness","SIMULATED protocol; no audio playback","visualLeaseMs",60000,"httpTimeoutSeconds",90,"resourceMetric","CPU process-time deltas; RAM Windows working set snapshots; client is generator JVM, not JavaFX client")));
+                var environment=JsonParser.parseString(Files.readString(out.resolve("environment.json"))).getAsJsonObject();
+                environment.addProperty("admissionMode",accountPin?"ACCOUNT_PIN":"LEGACY_PIN");Files.writeString(out.resolve("environment.json"),JSON.toJson(environment));
                 var resources=new ArrayList<String>();resources.add("clients,round,elapsed_ms,server_cpu_ms,generator_cpu_ms,server_working_set_bytes,generator_working_set_bytes");
                 // Warm up transport and auth outside the measured rounds. No fabricated baseline is used.
                 for(int i=0;i<5;i++)request("GET","/api/v1/auth/me",null,proctor,200,"warmup_me");
@@ -131,10 +145,24 @@ class Phase4RoomBenchmarkTest {
         }
     }
     void scenario(Socket dashboard) throws Exception {
+        var tickets=new JsonArray();JsonObject room;String session,code;
+        if(accountPin) {
+            for(int i=0;i<clients;i++) {
+                String username="AP-B-"+UUID.randomUUID().toString().substring(0,18);
+                var created=request("POST","/api/v2/admin/accounts",fields("username",username,"displayName","MOCK benchmark candidate","role","CANDIDATE","issueLoginPassword",true),adminToken,201,"create_candidate");
+                var ticket=new JsonObject();ticket.addProperty("username",username);ticket.add("initialPassword",created.get("initialPassword"));tickets.add(ticket);
+            }
+            room=request("POST","/api/v2/pin-rooms",fields("examId","mock-ex02-200","durationMinutes",120),proctor,201,"create_room");
+            session=room.getAsJsonObject("session").get("sessionId").getAsString();code=room.get("pin").getAsString();
+        } else {
         var ids=new ArrayList<Long>();for(int i=0;i<clients;i++){var c=request("POST","/api/v2/candidates",fields("username","P4-"+UUID.randomUUID().toString().substring(0,18),"displayName","MOCK benchmark candidate"),proctor,201,"create_candidate");ids.add(c.get("userId").getAsLong());}
-        var room=request("POST","/api/v2/rooms",fields("examId","mock-ex02-200","durationMinutes",120,"candidateUserIds",ids,"proctorUserIds",List.of(proctorId)),proctor,201,"create_room");String session=room.getAsJsonObject("session").get("sessionId").getAsString(),code=room.get("roomCode").getAsString();
+        room=request("POST","/api/v2/rooms",fields("examId","mock-ex02-200","durationMinutes",120,"candidateUserIds",ids,"proctorUserIds",List.of(proctorId)),proctor,201,"create_room");session=room.getAsJsonObject("session").get("sessionId").getAsString();code=room.get("roomCode").getAsString();
         assertThat(room.getAsJsonArray("candidates")).hasSize(clients);
-        var prepTasks=new ArrayList<Callable<Candidate>>();for(var ticket:room.getAsJsonArray("candidates"))prepTasks.add(()->prepare(ticket.getAsJsonObject(),code));var candidates=concurrent(prepTasks);
+        tickets=room.getAsJsonArray("candidates");
+        }
+        var prepTasks=new ArrayList<Callable<Candidate>>();for(var ticket:tickets)prepTasks.add(()->prepare(ticket.getAsJsonObject(),code));var candidates=concurrent(prepTasks);
+        // Production UI refreshes the authenticated dashboard scope when JOIN grows membership.
+        if(accountPin)request("GET","/api/v1/auth/me",null,proctor,200,"dashboard_scope_refresh");
         var sockets=new ArrayList<Socket>();var keepalive=Executors.newScheduledThreadPool(Math.min(4,clients));
         try{
             var connectTasks=new ArrayList<Callable<Socket>>();for(var c:candidates)connectTasks.add(()->{long t=System.nanoTime();var s=new Socket(c.token());s.exchange(envelope("HEARTBEAT",c.attempt(),fields("sentAt",Instant.now().toString(),"collectorSessionId","phase4-"+c.attempt()),UUID.randomUUID().toString()));waitPresence(session,c.attempt(),true,t,"connected_detection");return s;});sockets.addAll(concurrent(connectTasks));

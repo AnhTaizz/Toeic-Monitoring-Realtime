@@ -1,0 +1,46 @@
+{
+  "sourceSha": "88bf0345784177136781b20089e8ac876b335f62",
+  "runId": "room-ux-20261024T120705Z-536978c3",
+  "mode": "Targeted",
+  "os": "Microsoft Windows NT 10.0.26200.0",
+  "java": "java version \"21.0.8\" 2025-07-15 LTS",
+  "maven": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)",
+  "postgres": "PostgreSQL 18.1 on x86_64-windows, compiled by msvc-19.44.35221, 64-bit",
+  "database": "toeic_room_admission_test",
+  "host": "127.0.0.1",
+  "port": 62964,
+  "fixture": "MOCK self-authored exam content; real PostgreSQL/Flyway/HTTP/WebSocket",
+  "command": "mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC -pl server -am -Dtest=AccountPinPostgresTest#disabledJoinedCandidateStillFinalizesOnceAtDeadline -Dsurefire.failIfNoSpecifiedTests=false test",
+  "startUtc": "2026-10-24T12:07:29.0857140Z",
+  "endUtc": "2026-10-24T12:08:37.2294555Z",
+  "exitCode": 0,
+  "runnerErrorType": null,
+  "totals": {
+    "failures": 0,
+    "passed": 1,
+    "errors": 0,
+    "tests": 1,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "status": "PASS",
+      "seconds": "40.238",
+      "name": "disabledJoinedCandidateStillFinalizesOnceAtDeadline",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    }
+  ],
+  "xmlHashes": [
+    {
+      "module": "server",
+      "sha256": "aa760c974486508f7111dbe828a1f8279dce75365e34f30777db024d245d45d5",
+      "file": "TEST-vn.edu.toeic.server.exam.rich.AccountPinPostgresTest.xml"
+    }
+  ],
+  "cleanup": {
+    "clusterStopExit": 0,
+    "ownedSchemasRemaining": 0
+  },
+  "guiEvidence": "NOT RUN",
+  "manualLanHearing": "NOT RUN"
+}

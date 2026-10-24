@@ -1,0 +1,65 @@
+{
+  "physicalSecondMachine": "NOT_RUN",
+  "cases": [
+    {
+      "status": "PASS",
+      "case": "origin",
+      "exitCode": 0
+    },
+    {
+      "status": "PASS",
+      "case": "path-denied",
+      "exitCode": 1
+    },
+    {
+      "status": "PASS",
+      "case": "credential-denied",
+      "exitCode": 1
+    },
+    {
+      "status": "PASS",
+      "case": "query-denied",
+      "exitCode": 1
+    },
+    {
+      "status": "PASS",
+      "case": "scheme-denied",
+      "exitCode": 1
+    },
+    {
+      "status": "PASS",
+      "case": "server-missing-config",
+      "exitCode": 1
+    },
+    {
+      "through": "Start-Client.bat -> start-release.ps1",
+      "expectedTitle": "TOEIC Room",
+      "case": "bundled-production-login-window",
+      "resourceSample": {
+        "scope": "production desktop login window, five-second post-open sample; not exam load",
+        "cpuOneCorePercent": 0.9350455988076897,
+        "workingSetBytes": 549191680,
+        "cpuMs": 46.875,
+        "elapsedMs": 5013.1245
+      },
+      "status": "PASS",
+      "windowObserved": true
+    },
+    {
+      "status": "PASS",
+      "case": "launcher-graceful-exit",
+      "exitCode": 0
+    },
+    {
+      "api": "MOCK; real JavaFX and local files",
+      "status": "PASS",
+      "case": "existing-audio-qa-under-bundled-runtime",
+      "hearing": "SIMULATED confirmation, not human hearing",
+      "exitCode": 0
+    }
+  ],
+  "humanHearing": "NOT_RUN",
+  "bundle": "ToeicPortable",
+  "failed": 0,
+  "scope": "Same-host Windows production login window and launcher validation, not packaged exam flow"
+}
