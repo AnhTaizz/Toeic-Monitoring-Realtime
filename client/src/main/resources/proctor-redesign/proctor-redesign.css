@@ -250,17 +250,6 @@
 .proctor-redesign .table-row-cell:selected .table-cell { -fx-text-fill: #13254a; }
 
 /* Last recorded typed observations; unknown/partial never inherit a healthy green badge. */
-.proctor-redesign .signal-summary-cell { -fx-alignment: center-left; }
-.proctor-redesign .button.signal-summary-button {
-    -fx-font-size: 0.82em;
-    -fx-padding: 3 5 3 5;
-    -fx-background-radius: 5;
-    -fx-border-radius: 5;
-    -fx-min-height: 23;
-}
-.proctor-redesign .button.signal-summary-button.green { -fx-background-color: #e7f6ec; -fx-border-color: #b8dfc5; -fx-text-fill: #166534; }
-.proctor-redesign .button.signal-summary-button.amber { -fx-background-color: #fff4db; -fx-border-color: #f1d392; -fx-text-fill: #92400e; }
-.proctor-redesign .button.signal-summary-button.gray { -fx-background-color: #f0f3f7; -fx-border-color: #d9e0e9; -fx-text-fill: #52627a; }
 .proctor-redesign .signal-source-card { -fx-padding: 10; -fx-background-color: #f8fafc; -fx-background-radius: 7; }
 .proctor-redesign .table-view .placeholder .label { -fx-text-fill: #6b7a90; }
 .proctor-redesign .table-view .scroll-bar:vertical, .proctor-redesign .table-view .scroll-bar:horizontal { -fx-background-color: transparent; }

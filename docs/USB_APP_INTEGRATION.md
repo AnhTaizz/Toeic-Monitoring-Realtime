@@ -72,3 +72,8 @@ Demo lưu inventory/hash source và JAR kể cả working tree chưa commit; t�
 source đổi lúc build. Test tự động không thay cho thao tác và quan sát vật lý.
 PnP comparison, ADR/retention, H01–H12 và owner review còn pending; không tự đánh task
 DONE hay bật mặc định ngoài lượt thử nghiệm được ủy quyền.
+
+
+## Sửa Start thủ công — 25/10/2026
+
+USB nay cùng vòng đời với process tại Bắt đầu/Dừng giám sát; không còn cần mở thành công màn bài thi mới tạo nguồn USB. Candidate cần cả hai cờ signal/USB, fresh scope và heartbeat/capability như cũ. Chuyển vào bài giữ run để tránh PRESENT_AT_START trùng; Stop chờ dọn USB worker trước bật lại. Hai lệnh server/client trong runbook vẫn đúng. App/JVM đang mở từ bản cũ cần đóng và chạy lại client; không reset hoặc kéo dài lượt đã hết giờ. [Hướng dẫn mới](PROCTOR_SIGNAL_SUMMARY.md), [bằng chứng](../evidence/unified-monitoring-20261025/REPORT.md).

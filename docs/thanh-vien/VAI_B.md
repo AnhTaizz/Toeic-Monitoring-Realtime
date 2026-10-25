@@ -505,3 +505,8 @@ Theo ủy quyền người dùng: thêm -Desktop vào entrypoint demo hiện có
 ## 25/10/2026 — Tổng quan/Chi tiết: USB, focus và cửa sổ
 
 Theo yêu cầu triển khai và push của người dùng, đã nối reader scoped typed history vào hai màn hình, giữ Process; chi tiết có thời điểm client/server và nút Timeline đúng lượt/nguồn. Xem [runbook](../PROCTOR_SIGNAL_SUMMARY.md) và [bằng chứng](../../evidence/proctor-signals-20261024/REPORT.md). Chạm giao diện B và cách đọc monitoring C, không wire/schema hoặc tracker DONE. Ghi chú bàn giao: nguồn USB vẫn cần opt-in ở candidate và server; bản đang mở từ trước cần dùng bản build mới để có UI mới. Policy/ADR/hardware H01–H12/LAN/chữ ký owner chưa được nghiệm thu qua lượt tự động này.
+
+
+### 25/10/2026 — Điều chỉnh giám sát chung
+
+Bỏ cột riêng; Chi tiết có một khối process+USB/focus/window. Start thủ công nay khởi tạo typed sources cùng process sau fresh scope, giữ run khi vào bài; activity chỉ sau exam entry; Stop chờ cả USB workers. [Report](../../evidence/unified-monitoring-20261025/REPORT.md), full1420PASS/154SKIP, PGREAL2PASS baselineUSB1, không hotplug/H01–H12 mới. JVM client cũ cần đóng/mở JAR mới; server có signalON giữ được. Không API/wire/DB/OSapproach/trackerDONE hoặc chữ ký owner.

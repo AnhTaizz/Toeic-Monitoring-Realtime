@@ -1,14 +1,11 @@
 package vn.edu.toeic.client.proctor.redesign;
 
-import java.time.Instant;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import vn.edu.toeic.client.proctor.signals.CandidateSignals;
@@ -17,14 +14,14 @@ import vn.edu.toeic.client.proctor.signals.CandidateSignals.Reading;
 import vn.edu.toeic.client.proctor.signals.CandidateSignals.Source;
 import vn.edu.toeic.client.proctor.signals.CandidateSignals.State;
 
-/** Renders the same immutable, scoped signal summary in the table and drawer. No reader or worker. */
+/** Renders scoped observations inside the candidate's common monitoring section. No reader or worker. */
 final class SignalSummaryView {
     private SignalSummaryView() { }
 
     enum Kind {
         USB("USB lưu trữ", "WINDOWS_USB_STORAGE", "usb"),
-        FOCUS("Focus phòng thi", "JAVAFX_EXAM_FOCUS", "focus"),
-        WINDOW("Cửa sổ phòng thi", "JAVAFX_EXAM_WINDOW", "window");
+        FOCUS("Focus cửa sổ thí sinh", "JAVAFX_EXAM_FOCUS", "focus"),
+        WINDOW("Trạng thái cửa sổ thí sinh", "JAVAFX_EXAM_WINDOW", "window");
         final String title, source, id;
         Kind(String title, String source, String id) { this.title=title;this.source=source;this.id=id; }
     }
@@ -38,33 +35,10 @@ final class SignalSummaryView {
                 &&Objects.equals(row.collectorSessionId(),value.collectorSessionId()))?value:null;
     }
 
-    static Node overview(String attempt, CandidateSignals summary, boolean stale, boolean loading, Runnable open) {
-        HBox indicators=new HBox(4);
-        indicators.setAlignment(Pos.CENTER_LEFT);
-        for(Kind kind:Kind.values()) {
-            Badge value=badge(kind,summary,stale,loading);
-            Button button=new Button(value.text());
-            button.setId("overview-signal-"+kind.id+"-"+attempt);
-            button.getStyleClass().addAll("signal-summary-button",value.colour());
-            button.setTooltip(new Tooltip(kind.title+": "+value.explanation()+"\nMở chi tiết thí sinh."));
-            button.setOnAction(event->open.run());
-            indicators.getChildren().add(button);
-        }
-        Instant observed=lastObserved(summary);
-        Label time=Ui.label(observed==null?"Chưa có quan sát": "Quan sát "+Ui.clock(observed,"—")
-                +(hasPartial(summary)?" · một phần":""),"muted","small");
-        time.setId("overview-signal-time-"+attempt);
-        time.setTooltip(new Tooltip("Mốc client quan sát gần nhất trong ba nguồn; không phải heartbeat hoặc giờ tải trang."));
-        VBox box=new VBox(3,indicators,time);
-        box.getStyleClass().add("signal-summary-cell");
-        box.setMinWidth(0);
-        return box;
-    }
-
     static Node details(CandidateSignals summary,boolean stale,boolean loading,Consumer<String> timeline) {
         VBox result=new VBox(10);
         result.setId("candidate-signal-summary");
-        String note=summary==null?(loading?"Đang tải các quan sát đã được server lưu…":"Chưa có dữ liệu giám sát mở rộng.")
+        String note=summary==null?(loading?"Đang tải các quan sát đã được server lưu…":"Chưa có dữ liệu USB/focus/cửa sổ được server xác nhận.")
                 :!summary.complete()?"Lịch sử chưa tải đủ; các giá trị chưa được xác nhận."
                 :stale||summary.stale()?"Dữ liệu cũ hoặc nguồn chưa xác nhận; chỉ giữ thông tin quan sát cuối."
                 :"Giá trị dưới đây là quan sát cuối được server ghi nhận, không thay cho trạng thái kết nối.";
@@ -145,7 +119,7 @@ final class SignalSummaryView {
         if(reading==null)return kind==Kind.USB?"USB ?":kind==Kind.FOCUS?"Focus ?":"Cửa sổ ?";
         return switch(kind) {
             case USB->reading.storageCount()==null?"USB ?":"USB "+reading.storageCount();
-            case FOCUS->reading.focused()==null?"Focus ?":reading.focused()?"Trong bài":"Rời bài";
+            case FOCUS->reading.focused()==null?"Focus ?":reading.focused()?"Có focus":"Mất focus";
             case WINDOW->Boolean.TRUE.equals(reading.minimized())?"Thu nhỏ":Boolean.TRUE.equals(reading.fullscreen())?"Toàn màn"
                     :Boolean.FALSE.equals(reading.minimized())&&Boolean.FALSE.equals(reading.fullscreen())?"Cửa sổ":"Cửa sổ ?";
         };
@@ -162,14 +136,5 @@ final class SignalSummaryView {
     }
     private static boolean observed(CandidateSignals summary,Source source,boolean stale) {
         return summary!=null&&summary.complete()&&!summary.stale()&&!summary.unsupported()&&!stale&&source!=null&&source.state()==State.OBSERVED;
-    }
-    private static Instant lastObserved(CandidateSignals summary) {
-        if(summary==null)return null;
-        return Stream.of(summary.usb(),summary.focus(),summary.window()).filter(Objects::nonNull)
-                .map(Source::observation).filter(Objects::nonNull).map(Reading::observedAt).filter(Objects::nonNull).max(Instant::compareTo).orElse(null);
-    }
-    private static boolean hasPartial(CandidateSignals summary) {
-        return summary!=null&&Stream.of(summary.usb(),summary.focus(),summary.window()).filter(Objects::nonNull)
-                .map(Source::observation).filter(Objects::nonNull).anyMatch(reading->"PARTIAL".equals(reading.quality()));
     }
 }

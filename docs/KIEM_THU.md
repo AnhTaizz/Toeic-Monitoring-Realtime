@@ -777,3 +777,8 @@ Windows app-image smoke mới PASS với bundled runtime 21.0.12.1, Unicode laun
 ## 25/10/2026 — Chỉ báo USB/focus/window ở Tổng quan và Chi tiết
 
 Full Maven verify: 1396PASS/172SKIP/0FAIL/ERROR, 1568test/149suite; 7module buildPASS, STUDY4 không testsource. GUI thật bật, fixture MOCK; 22test mới gồm raw700rows/paging/run/gap/scope/fairness/global2request/unknown/stale/deeplink/render. Focused33PASS có overlap; PendingLimit1PASS trong full. PG MOCK1method PASS (lặp để xuất ảnh) và REAL CIM1method PASS, localcount0/8ACK, không hotplug mới. PackagefinalPASS/13JARentries byte-equal/cleanup0schema-stop0. Có lỗi PowerShellargument và fixturelayout trước đó đã giữlog/sửa/rerun. [Report/receipt](../evidence/proctor-signals-20261024/REPORT.md), không H01–H12/LAN/installer/policy/owner approval hoặc trackerDONE; CI feat không tự chạy, không PR/merge.
+
+
+## 25/10/2026 — Start/Stop chung process + USB/focus/window
+
+Rootcause thật: flagsON cảserver/client, CIMSTANDARD1USB, nhưng portalManualStart cũ chỉprocess. ĐãgomStart/Stop vàrunidentity; bỏcộtriêng, gomtrongchungkhốiChi tiết. Focused50PASS overlap; fullverify1420PASS/154SKIP/0FAIL-ERROR/1574test/149suite, GUI bật. PGREAL2methodPASS (manualapp+productionhook), baseline1USB, activitychỉsauentry, restartnewrun, enterexamreuse, cleanup0schema/stop0/PIDabsent. JARc35b931a…/10entriesbyteequal. Giữfailedfixturesloginplaceholder/photolayout/tablayout, sửaawait/stableIDvàrerun; khôngskipbug hoặchotplug/H01–H12/LAN/humanapproval/DONE. [Report](../evidence/unified-monitoring-20261025/REPORT.md).

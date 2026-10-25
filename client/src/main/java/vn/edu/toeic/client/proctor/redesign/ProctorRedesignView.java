@@ -464,8 +464,6 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
             CandidateSignalsController.Snapshot latest = pendingSignals.get();
             if (closed.get() || latest.revision() < signalsRevision) return;
             signalsRevision = latest.revision();
-            OverviewPane overview = pane(OverviewPane.class);
-            if (overview != null) overview.updateSignals(latest);
             candidateDrawer.updateSignals(latest);
         });
     }
@@ -583,8 +581,6 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         for(RoomPane pane:panes)if(pane instanceof MultiSignalTimelinePane timeline)timeline.close();
         try { feed.close(); } catch (RuntimeException ignored) { }
         if (signals != null) { try { signals.close(); } catch (RuntimeException ignored) { } }
-        OverviewPane overview = pane(OverviewPane.class);
-        if (overview != null) overview.updateSignals(CandidateSignalsController.Snapshot.empty());
         candidateDrawer.updateSignals(CandidateSignalsController.Snapshot.empty());
         try { progress.close(); } catch (RuntimeException ignored) { }
         try { dashboard.close(); } catch (RuntimeException ignored) { }

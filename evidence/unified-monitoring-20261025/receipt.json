@@ -1,0 +1,210 @@
+{
+  "schema": 1,
+  "baseCommit": "9c48a5c77bbe1d5a29419c26edbf4521871da642",
+  "sourceDirtyDuringTests": true,
+  "branch": "feat/usb-app-integration-20261024",
+  "date": "2026-10-25",
+  "runtime": {
+    "os": "Windows 11 x64",
+    "java": "21.0.10",
+    "javafx": "21.0.12"
+  },
+  "liveDiagnosis": {
+    "server8080SignalEnabled": true,
+    "bothClientJvmSignalAndUsbEnabled": true,
+    "candidateOnPortalManualProcessMonitoring": true,
+    "selectedAttempt": "DEMO-C3-A",
+    "nativeProbeStorageCount": 1
+  },
+  "checks": {
+    "focused": {
+      "passed": 50,
+      "failed": 0,
+      "skipped": 0,
+      "overlapsFullVerify": true
+    },
+    "fullVerify": {
+      "result": "PASS",
+      "modules": [
+        {
+          "module": "protocol",
+          "reports": 12,
+          "tests": 89,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "module": "windows-observer",
+          "reports": 2,
+          "tests": 21,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "module": "monitoring-spike",
+          "reports": 3,
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "module": "client",
+          "reports": 94,
+          "tests": 977,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 20
+        },
+        {
+          "module": "server",
+          "reports": 38,
+          "tests": 472,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 134
+        }
+      ],
+      "total": {
+        "tests": 1574,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 154,
+        "reports": 149,
+        "passed": 1420
+      }
+    },
+    "realPg": {
+      "uniqueMethods": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "runId": "usb-1845957b86d641a6",
+      "repeatForImageExport": true,
+      "runs": [
+        {
+          "hardwareHotplug": "NOT_RUN",
+          "examEntryReusesRun": true,
+          "manualPortalBaseline": true,
+          "usbSource": "REAL_CIM",
+          "activityOnlyAfterExamEntry": true,
+          "sharedCollector": true,
+          "stopWaitsForUsbWorkers": true,
+          "usbBaselineCount": 1,
+          "kind": "MANUAL_PROCESS_AND_SIGNALS",
+          "restartNewRun": true
+        },
+        {
+          "deliveryAcknowledged": 9,
+          "historyRows": 9,
+          "usbWorkersStopped": true,
+          "sharedCollectorIdentity": true,
+          "storageCount": 1,
+          "kind": "PRODUCTION_CANDIDATE_USB",
+          "source": "REAL_CIM",
+          "freshReconnectCapability": true,
+          "hardwareAcceptance": "Baseline only; no physical hotplug action in this automated test"
+        }
+      ]
+    },
+    "artifact": {
+      "path": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+      "bytes": 16799213,
+      "sha256": "c35b931a525fda5ac4d7221173785e83c8c978a1964605ff853090fcf919110d",
+      "byteEquivalentEntries": [
+        "vn/edu/toeic/client/ToeicClientApplication.class",
+        "vn/edu/toeic/client/CandidateHomePane.class",
+        "vn/edu/toeic/client/monitoring/CandidateExamSignalMonitoring.class",
+        "vn/edu/toeic/client/proctor/redesign/OverviewPane.class",
+        "vn/edu/toeic/client/proctor/redesign/Drawers$CandidateDrawer.class",
+        "vn/edu/toeic/client/proctor/redesign/SignalSummaryView.class",
+        "vn/edu/toeic/client/proctor/redesign/ProctorRedesignView.class",
+        "vn/edu/toeic/monitoring/usb/CimSnapshotSource.class",
+        "vn/edu/toeic/monitoring/usb/cim-snapshot.ps1",
+        "proctor-redesign/proctor-redesign.css"
+      ]
+    }
+  },
+  "cleanup": {
+    "ownedSchemasRemaining": 0,
+    "clusterStopExit": 0,
+    "postmasterPidAbsent": true
+  },
+  "sourceManifest": "source-manifest.json",
+  "rawHashes": [
+    {
+      "path": "target/unified-monitoring-20261025/focused.log",
+      "bytes": 6417,
+      "sha256": "20e2fc0ab54084d4d7831b1c764b8e3191c668b53254b6928a652dfe2f92094f"
+    },
+    {
+      "path": "target/unified-monitoring-20261025/verify-first-failed.log",
+      "bytes": 38930,
+      "sha256": "c44b76d678d6283eaa7e61e304eeeac5bbb3014fd3131d41091dfffeb464a5eb"
+    },
+    {
+      "path": "target/unified-monitoring-20261025/verify-final.log",
+      "bytes": 52149,
+      "sha256": "09edc4557b21addaec9810b81cf43118d32c8a4196a0ae36bf3548b3a97d7ca2"
+    },
+    {
+      "path": "target/unified-monitoring-20261025/verify-counts.json",
+      "bytes": 868,
+      "sha256": "88573baddaed249f051cfc4fd697cfdcd4dc37aaa19b3b85c0d576229223c4dc"
+    },
+    {
+      "path": "target/unified-monitoring-20261025/real-pg/result.json",
+      "bytes": 725,
+      "sha256": "8db85ec4330532a3f6838cb28eb0955a6f541081064c1200eb94bcbf38262ea2"
+    },
+    {
+      "path": "target/unified-monitoring-20261025/real-pg-2/result.json",
+      "bytes": 725,
+      "sha256": "f4eef4c7b44005724e03b3374bf0323ac6ecf74bb4973d2a15b550d1753ee567"
+    },
+    {
+      "path": "target/unified-monitoring-20261025/real-pg-3/result.json",
+      "bytes": 682,
+      "sha256": "7968726c917438c071435325ebe4665303cb72596ef7eb83e6e9fd367de70a10"
+    },
+    {
+      "path": "target/unified-monitoring-20261025/real-pg-3/demo-summary.json",
+      "bytes": 705,
+      "sha256": "8bc59defb417d547041bc60794cbcc1ef0b317b6bc3fddcea2d5d57fd521396d"
+    },
+    {
+      "path": "target/unified-monitoring-20261025/real-evidence/result.json",
+      "bytes": 682,
+      "sha256": "d26e1fd4fd70df9ffbccf0ce7cfbe6f3e337d459ec78e227fb0ee3581991ce50"
+    },
+    {
+      "path": "target/unified-monitoring-20261025/real-evidence/demo-summary.json",
+      "bytes": 705,
+      "sha256": "6470ac0acb15f78e391d732eb3f476529efbad353675abbd903114a0d5db50c2"
+    },
+    {
+      "path": "target/unified-monitoring-20261025/real-evidence/reports.private/TEST-vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest.xml",
+      "bytes": 29366,
+      "sha256": "34551f9a46afc7619f49267572768034d8954a916aba56223e888df5dfb82d7a"
+    }
+  ],
+  "images": [
+    {
+      "path": "shared-monitoring-REAL-USB.png",
+      "source": "Actual JavaFX common monitoring Node; REAL USB CIM baseline and Stage focus/window, MOCK accounts/exam and an owned controlled ProcessHandle workload (fixture chrome.exe, not user browser)"
+    },
+    {
+      "path": "overview-without-signal-column.png",
+      "source": "Actual JavaFX Scene on owned TEST server; TEST accounts/attempts/process fixture"
+    }
+  ],
+  "limitations": [
+    "No new physical unplug/replug action; baseline REAL USB count=1",
+    "No H01-H12/LAN/installer or policy approval",
+    "Live user client JVMs were inspected but not restarted or logged in through automation",
+    "Only test image-export helper changed after full verify; final REAL PG export run passed 2/2",
+    "No PR or merge; GitHub feat branch CI is not automatic"
+  ]
+}

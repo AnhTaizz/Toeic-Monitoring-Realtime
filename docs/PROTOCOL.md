@@ -1101,3 +1101,8 @@ Thêm GET `/api/v1/monitoring/attempts/{attemptId}/alert-summary[?cutoff=ISO_INS
 ## Tổng hợp đa tín hiệu cho giám thị — 25/10/2026
 
 Tổng quan và Chi tiết dùng thêm một read consumer cho typed history hiện hữu, không thêm endpoint/field/type hoặc push. Mỗi cycle xác minh lại scope PROCTOR, chỉ tổng hợp observation của collector hiện tại trong roster đã xác thực; fixed-through/page100/3page mỗi lượt, tối đa 2 request history chưa hoàn tất, 100 lượt/12s cycle. Snapshot UI giữ riêng attempt/run và đánh dấu thiếu/cũ/gap. READY không mang storageCount nên không suy USB=0; status READY sau gap không phục hồi giá trị trước gap. Các nút mở Timeline chỉ truyền lựa chọn attempt/source vào view hiện có. [Chi tiết](PROCTOR_SIGNAL_SUMMARY.md).
+
+
+## 25/10/2026 — Chung vòng đời process và USB/focus/window
+
+Không đổi message/endpoint/schema hoặc OS API. Candidate bật giám sát thủ công trên attempt ACTIVE có fresh scope nay tạo typed coordinator bằng chính collectorSessionId của process, thay vì chỉ tạo khi mở màn làm bài. Capability và heartbeat vẫn là gate trước gửi dữ liệu/khởi chạy USB. Focus/window đọc Stage ứng dụng thí sinh trong phiên được cấp quyền, giữ source keys JAVAFX_EXAM_FOCUS/JAVAFX_EXAM_WINDOW; UI ghi rõ cửa sổ thí sinh, không suy đang làm bài từ focus. EnterExamScene chỉ bật activity trong bài và không tạo run/sequence/baseline mới. Manual Stop đóng typed coordinator trước process, chờ dọn cả hai rồi cho Start lại; disconnect/revoke/logout giữ guard cũ. Chi tiết gom render process state và typed observations trong một khối; không giả tín hiệu thiết bị thành process/PID.

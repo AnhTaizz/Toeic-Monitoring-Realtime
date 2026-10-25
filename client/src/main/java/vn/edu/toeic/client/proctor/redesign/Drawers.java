@@ -166,12 +166,12 @@ final class Drawers {
                     Ui.infoBox(lastKnown ? "Dữ liệu hiển thị là thông tin cuối cùng server đã ghi nhận, không phải số liệu realtime."
                             : "Trạng thái theo heartbeat server nhận; tiến độ theo lần đọc gần nhất."));
 
-            VBox processes = section("Process đang quan sát", processState(room, row));
-            VBox extended = section("Giám sát mở rộng", SignalSummaryView.details(
+            VBox observations = section("Đang quan sát trên máy thí sinh", Ui.label("Tiến trình", "strong"), processState(room, row), SignalSummaryView.details(
                     SignalSummaryView.scoped(signals,room,row.attemptId()),signals!=null&&signals.stale(),
                     signals!=null&&signals.loading(),source->actions.showTimeline(row.attemptId(),source)));
+            observations.setId("candidate-monitoring-observations");
             VBox recent = section("Hoạt động gần đây", recent(room, row));
-            body.getChildren().addAll(identity, exam, connection, processes, extended, recent);
+            body.getChildren().addAll(identity, exam, connection, observations, recent);
         }
 
         /** Current state comes from DashboardController's selected attempt; it is separate from the history. */

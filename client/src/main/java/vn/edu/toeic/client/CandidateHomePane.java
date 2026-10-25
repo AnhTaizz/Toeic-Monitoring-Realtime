@@ -56,8 +56,9 @@ final class CandidateHomePane extends BorderPane {
         if (Boolean.getBoolean("toeic.monitoring.signal-experiment-enabled")
                 && Boolean.getBoolean("toeic.monitoring.usb-enabled")) {
             Label usbNotice = text("Giám sát USB lưu trữ đang được bật cho lượt thử nghiệm này: "
-                    + "khi vào phòng thi, ứng dụng quan sát USB có sẵn, cắm và rút để gửi cho giám thị. "
-                    + "Không đọc nội dung hay số serial USB; dừng khi rời phòng thi hoặc đăng xuất.", "home-availability");
+                    + "khi bắt đầu giám sát hoặc vào phòng thi, ứng dụng quan sát tiến trình, USB lưu trữ và "
+                    + "focus/trạng thái cửa sổ thí sinh để gửi cho giám thị. Không đọc nội dung hay số serial USB; "
+                    + "dừng khi dừng giám sát, rời phòng thi hoặc đăng xuất.", "home-availability");
             usbNotice.setId("candidate-usb-notice");
             content.getChildren().add(2, usbNotice);
         }

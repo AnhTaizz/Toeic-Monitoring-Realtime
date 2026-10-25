@@ -220,6 +220,7 @@ class ProctorV2SessionPaneGuiTest {
         await("catalog", () -> v2.controller().snapshot().catalog().size() == 2);
         int before = progressReadsOnFx.size();
         fxRun(() -> v2.controller().select("mock-a"));
+        await("create form attached after tab layout", () -> v2.lookup("#v2-candidates") != null);
         fxRun(() -> ((TextField) v2.lookup("#v2-candidates")).setText("2"));
         await("create enabled", () -> !v2.lookup("#v2-create").isDisabled());
         fxRun(() -> ((Button) v2.lookup("#v2-create")).fire());

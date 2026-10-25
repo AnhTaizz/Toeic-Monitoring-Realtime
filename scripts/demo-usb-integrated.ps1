@@ -93,7 +93,7 @@ try{
     }else{
     $methods=if($Mode -eq 'Real'){'realCimReadinessCommitAckAndHistory'}else{'mockCoordinatorTimelineCommitAckLossAndPagedHistory+actualRevokeCancelsPendingSourceAndCannotFlushNewEvents+businessDeadlineStopsCoordinatorUsingRealScopedHeartbeat+coordinatorStatusCommitFaultRollsBackThenRetriesSameMessage'}
     $tests='UsbIntegratedDemoPostgresTest#'+$methods
-    if($Timeline){$methods=if($AlertRules){'experimentalAlertsReachDashboard'}elseif($TimelineIdentityOnly){'candidateObserversReachAuthorizedLane'}elseif($Mode -eq 'Real'){'productionUsbObserverReachesDashboard'}else{'mixedMockDeliveryReachesTwoAttemptDashboard'};$tests='MonitoringTimelinePostgresTest#'+$methods}
+    if($Timeline){$methods=if($AlertRules){'experimentalAlertsReachDashboard'}elseif($TimelineIdentityOnly){'candidateObserversReachAuthorizedLane'}elseif($Mode -eq 'Real'){'productionUsbObserverReachesDashboard+manualMonitoringStartsUsbFocusWindowWithProcess'}else{'mixedMockDeliveryReachesTwoAttemptDashboard'};$tests='MonitoringTimelinePostgresTest#'+$methods}
     if($Integrated){$tests='MonitoringTimelinePostgresTest#allExistingSourcesShareRunAndReachHistoryTimelineAndAlerts+candidateObserversReachAuthorizedLane+productionObserversRetireOnTerminalAndRevoke+applicationControlsStopRestartLogoutAndSwitchAccount'}
     $mavenProcess=New-Object Diagnostics.Process;$mavenProcess.StartInfo.FileName=$env:ComSpec
     $mavenProcess.StartInfo.Arguments='/d /s /c ""'+$maven+'" --batch-mode --no-transfer-progress -Duser.timezone=UTC -Dmaven.repo.local="'+$MavenRepository+'" -pl server -am -Dtest='+$tests+' -Dsurefire.failIfNoSpecifiedTests=false test"'

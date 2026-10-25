@@ -17,7 +17,6 @@ import vn.edu.toeic.client.proctor.redesign.ProctorRedesignView.Section;
 import vn.edu.toeic.client.proctor.redesign.RoomModel.Alert;
 import vn.edu.toeic.client.proctor.redesign.RoomModel.CandidateRow;
 import vn.edu.toeic.client.proctor.redesign.RoomModel.HistoryEntry;
-import vn.edu.toeic.client.proctor.signals.CandidateSignalsController;
 
 /** Mockup 01. Every number comes from the derived room; nothing here is a constant from the mockup. */
 final class OverviewPane extends VBox implements ProctorRedesignView.RoomPane, ProctorRedesignView.CountdownAware {
@@ -27,8 +26,6 @@ final class OverviewPane extends VBox implements ProctorRedesignView.RoomPane, P
     private final Label totalCaption = Ui.label("", "muted"), onlineCaption = Ui.label("", "muted");
     private final Label offlineCaption = Ui.label("", "muted"), alertsCaption = Ui.label("", "muted");
     private final TableView<CandidateRow> table = new TableView<>();
-    private CandidateSignalsController.Snapshot signals;
-    private RoomModel.Room room;
     private final Label dataTime = Ui.label("", "muted");
     private final javafx.scene.layout.Region dataDot = Ui.dot("gray");
     private final Label banner = Ui.label("");
@@ -67,19 +64,8 @@ final class OverviewPane extends VBox implements ProctorRedesignView.RoomPane, P
         var heartbeatColumn=Ui.<CandidateRow>nodeColumn("Liên lạc cuối", 90, Cells::heartbeat);
         table.getColumns().add(heartbeatColumn);
         table.getColumns().add(Ui.nodeColumn("Cảnh báo", 100, Cells::alerts));
-        var signalColumn=Ui.<CandidateRow>nodeColumn("USB · Focus · Cửa sổ", 235, row -> SignalSummaryView.overview(
-                row.attemptId(), SignalSummaryView.scoped(signals,room,row.attemptId()), signals!=null&&signals.stale(),
-                signals!=null&&signals.loading(), ()->actions.openCandidate(row.attemptId())));
-        signalColumn.setMinWidth(215);
-        table.getColumns().add(signalColumn);
         table.getColumns().add(Ui.nodeColumn("", 75, row -> Cells.detailLink("overview-detail-" + row.attemptId(),
                 () -> actions.openCandidate(row.attemptId()))));
-        // Keep the signal indicators readable in the wide layout's narrower main column.
-        // Exam state and heartbeat remain available in the candidate drawer.
-        table.widthProperty().addListener((observable,old,width)->{
-            examColumn.setVisible(width.doubleValue()>=1020);
-            heartbeatColumn.setVisible(width.doubleValue()>=1020);
-        });
         Cells.candidateRows(table, row -> actions.openCandidate(row.attemptId()));
 
         Button refresh = new Button("Làm mới", Ui.icon(Ui.ICON_REFRESH, "top-icon"));
@@ -158,11 +144,6 @@ final class OverviewPane extends VBox implements ProctorRedesignView.RoomPane, P
 
     boolean twoColumns() { return Boolean.TRUE.equals(wide); }
 
-    void updateSignals(CandidateSignalsController.Snapshot value) {
-        signals=value;
-        table.refresh();
-    }
-
     private static VBox stat(String colour, String icon, String title, Label value, Label caption) {
         StackPane glyph = new StackPane(Ui.icon(icon, "glyph"));
         glyph.getStyleClass().addAll("stat-icon", colour);
@@ -196,7 +177,6 @@ final class OverviewPane extends VBox implements ProctorRedesignView.RoomPane, P
     }
 
     @Override public void update(RoomModel.Room room, ProctorSettings settings) {
-        this.room=room;
         RoomModel.Stats stats = room.stats();
         total.setText(Integer.toString(stats.monitored()));
         totalCaption.setText(room.rows().size() > stats.monitored() ? "+" + (room.rows().size() - stats.monitored()) + " lượt đã chốt" : "Lượt ACTIVE được phân công");

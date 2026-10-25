@@ -64,7 +64,7 @@ class SignalSummaryViewTest {
         Reading window=new Reading("EXAM_WINDOW_STATE",RUN,3,OBSERVED,RECEIVED,"COMPLETE","LIVE",null,null,true,false,"MOCK minimized");
         CandidateSignals value=summary(UNKNOWN,new Source(State.OBSERVED,"READY",focus,null,null),
                 new Source(State.OBSERVED,"READY",window,null,null),true,false);
-        assertThat(SignalSummaryView.badge(SignalSummaryView.Kind.FOCUS,value,false,false).text()).isEqualTo("Rời bài");
+        assertThat(SignalSummaryView.badge(SignalSummaryView.Kind.FOCUS,value,false,false).text()).isEqualTo("Mất focus");
         assertThat(SignalSummaryView.badge(SignalSummaryView.Kind.WINDOW,value,false,false).text()).isEqualTo("Thu nhỏ");
         assertThat(SignalSummaryView.badge(SignalSummaryView.Kind.FOCUS,value,false,false).colour()).isEqualTo("amber");
         assertThat(SignalSummaryView.badge(SignalSummaryView.Kind.FOCUS,value,true,false).text()).isEqualTo("Focus ?");

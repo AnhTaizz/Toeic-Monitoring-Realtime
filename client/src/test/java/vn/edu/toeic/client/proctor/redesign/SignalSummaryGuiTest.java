@@ -35,21 +35,21 @@ class SignalSummaryGuiTest {
     }
     static CandidateSignalsController.Snapshot snapshot(){return new CandidateSignalsController.Snapshot(Map.of(ATTEMPT,usbSummary(1)),false,false,false,"",1);}
 
-    @Test void compactOverviewIndicatorsFitAndOpenTheMatchingCandidate()throws Exception {
+    @Test void overviewHasNoSeparateSignalsColumnAndDetailsGroupThemWithProcesses()throws Exception {
         open();
-        fxRun(()->{view.pane(OverviewPane.class).updateSignals(snapshot());view.applyCss();view.layout();});
-        Button usb=fx(()->(Button)view.lookup("#overview-signal-usb-"+ATTEMPT));
-        assertThat(usb).isNotNull();
-        assertThat(fx(usb::getText)).isEqualTo("USB 1");
-        assertThat(fx(()->usb.getStyleClass().contains("amber"))).isTrue();
-        assertThat(fx(()->((Label)view.lookup("#overview-signal-time-"+ATTEMPT)).getText())).contains("một phần");
         TableView<?> table=fx(()->(TableView<?>)view.lookup("#overview-table"));
-        var tableBounds=fx(()->table.localToScene(table.getBoundsInLocal()));
-        var buttonBounds=fx(()->usb.localToScene(usb.getBoundsInLocal()));
-        assertThat(buttonBounds.getMaxX()).isLessThanOrEqualTo(tableBounds.getMaxX()+1);
-        assertThat(buttonBounds.getMinX()).isGreaterThanOrEqualTo(tableBounds.getMinX()-1);
-        fxRun(usb::fire);
+        assertThat(fx(()->table.getColumns().stream().map(javafx.scene.control.TableColumn::getText).toList()))
+                .noneMatch(title->title.contains("USB")||title.contains("Focus"));
+        await("overview detail button",()->view.lookup("#overview-detail-"+ATTEMPT)!=null);
+        fxRun(()->((Button)view.lookup("#overview-detail-"+ATTEMPT)).fire());
         assertThat(fx(()->view.candidateDrawer().attemptId())).isEqualTo(ATTEMPT);
+        fxRun(()->{view.candidateDrawer().updateSignals(snapshot());view.applyCss();view.layout();});
+        var grouped=fx(()->view.candidateDrawer().lookup("#candidate-monitoring-observations"));
+        assertThat(grouped).isNotNull();
+        assertThat(fx(()->grouped.lookup("#candidate-signal-usb-state"))).isNotNull();
+        assertThat(fx(()->grouped.lookup("#candidate-signal-focus-state"))).isNotNull();
+        assertThat(fx(()->grouped.lookup("#candidate-signal-window-state"))).isNotNull();
+        assertThat(fx(()->grouped.lookupAll(".label").stream().anyMatch(n->n instanceof Label l&&"Tiến trình".equals(l.getText())))).isTrue();
     }
 
     @Test void drawerKeepsBothTimesRoutesEachSourceAndClearsOnCandidateOrScopeChange()throws Exception {
@@ -100,6 +100,7 @@ class SignalSummaryGuiTest {
             await("drawer source button laid out",()->view.candidateDrawer().lookup("#candidate-signal-"+target[0]+"-history")!=null);
             fxRun(()->((Button)view.candidateDrawer().lookup("#candidate-signal-"+target[0]+"-history")).fire());
             assertThat(fx(view::section)).isEqualTo(ProctorRedesignView.Section.TIMELINE);
+            await("Timeline selectors attached after navigation",()->view.lookup("#multi-attempt")!=null&&view.lookup("#multi-source-filter")!=null);
             assertThat(fx(()->((ComboBox<?>)view.lookup("#multi-attempt")).getValue())).isEqualTo(ATTEMPT);
             assertThat(fx(()->((ComboBox<?>)view.lookup("#multi-source-filter")).getValue())).isEqualTo(target[1]);
         }

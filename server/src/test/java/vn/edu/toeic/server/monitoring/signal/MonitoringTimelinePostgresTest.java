@@ -94,6 +94,62 @@ class MonitoringTimelinePostgresTest {
         }finally{if(previous==null)System.clearProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,previous);}
     }
     @Test @EnabledIfEnvironmentVariable(named="TOEIC_USB_REAL_CIM",matches="true")
+    void manualMonitoringStartsUsbFocusWindowWithProcess()throws Exception {
+        String a=scope(180);
+        String signalBefore=System.getProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY),usbBefore=System.getProperty(CandidateExamSignalMonitoring.USB_ENABLE_PROPERTY);
+        System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,"true");System.setProperty(CandidateExamSignalMonitoring.USB_ENABLE_PROPERTY,"true");
+        try(var workload=new JointMonitoringRun.Workload(Path.of(required("TOEIC_USB_TEST_OUTPUT")));var api=new MonitoringApiClient(base,proctor)){
+            var probe=new vn.edu.toeic.client.MonitoringApplicationProbe(workload.child.pid());
+            Stage s=stage("REAL application manual monitoring + REAL USB; TEST accounts, owned process fixture");
+            fx(()->{probe.application.start(s);return null;});gui.add(()->fx(()->{probe.application.stop();s.close();return null;}));
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.login(s,base,"candidate1",required("TOEIC_SEED_PASSWORD"));return null;});
+            waitCandidateControls(s,a);
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Bắt đầu giám sát").fire();return null;});
+            waitFor("manual start creates the shared typed coordinator",()->{try{return fx(probe::signals)!=null;}catch(Exception e){throw new RuntimeException(e);}});
+            var first=fx(probe::signals);var process=probe.sessions.getFirst();
+            waitFor("manual start authorizes real USB scans without opening an exam",()->first.usbStatus()!=null&&first.usbStatus().scans()>=2);
+            assertThat(first.usbStatus().health()).isEqualTo(UsbSignalAdapter.Health.READY);
+            assertThat(fx(()->s.getScene().lookup("#candidate-attempts"))).isNotNull();
+            waitFor("manual process FULL and typed baseline committed together",()->process.fullStatus()!=null&&process.fullStatus().acknowledgedSequence()>0
+                    &&api.signals(a,0,null,100).join().items().stream().anyMatch(e->e.signal() instanceof WindowSignal)
+                    &&api.signals(a,0,null,100).join().items().stream().anyMatch(e->e.signal() instanceof FocusSignal));
+            var initial=api.signals(a,0,null,100).get(5,TimeUnit.SECONDS);
+            assertThat(initial.items()).allSatisfy(e->assertThat(e.signal().observerSessionId()).isEqualTo(process.collectorSessionId()));
+            assertThat(initial.items()).noneMatch(e->e.signal() instanceof vn.edu.toeic.protocol.monitoring.signal.ActivitySignal);
+            int count=first.usbStatus().storageCount();
+            if(count>0)waitFor("manual USB baseline committed",()->api.signals(a,0,null,100).join().items().stream().anyMatch(e->e.signal() instanceof UsbStorageSignal u&&u.storageCount()==count));
+            var dash=dashboard(a,"Manual Start process + USB/focus/window · REAL CIM/WS/HTTP/PG/JavaFX · TEST accounts");
+            openSummary(dash,a);
+            waitFor("manual USB observation visible with process in one section",()->{try{return fx(()->dash.view.lookup(count>0?"#candidate-signal-usb-received":"#candidate-signal-usb-health-received")!=null);}catch(Exception e){throw new RuntimeException(e);}});
+            screenshotSummary(dash,"manual-shared-signals");
+            fx(()->{s.setIconified(true);return null;});
+            waitFor("manual window transition committed",()->api.signals(a,0,null,100).join().items().stream().anyMatch(e->e.signal() instanceof WindowSignal w&&w.minimized()));
+            fx(()->{s.setIconified(false);return null;});
+            String firstCollector=process.collectorSessionId();
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Dừng giám sát").fire();return null;});
+            waitCandidateControls(s,a);
+            assertThat(first.awaitStopped(Duration.ofSeconds(8))).isTrue();
+            assertThat(first.usbStatus().scanWorkerStopped()).isTrue();assertThat(first.usbStatus().controlWorkerStopped()).isTrue();
+            assertThat(fx(probe::signals)).isNull();
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Bắt đầu giám sát").fire();return null;});
+            waitFor("restart gets a new typed run",()->{try{var m=fx(probe::signals);return m!=null&&m!=first&&m.deliveryStatus().acknowledged()>0;}catch(Exception e){throw new RuntimeException(e);}});
+            var restarted=fx(probe::signals);String collector=process.collectorSessionId();
+            assertThat(collector).isNotEqualTo(firstCollector);
+            fx(()->{((Button)s.getScene().lookup("#candidate-enter-exam")).fire();return null;});
+            waitFor("real exam entry succeeds after manual start",()->{try{return fx(()->s.getScene().getRoot() instanceof vn.edu.toeic.client.exam.CandidateExamView);}catch(Exception e){throw new RuntimeException(e);}});
+            assertThat(fx(probe::signals)).isSameAs(restarted);assertThat(process.collectorSessionId()).isEqualTo(collector);
+            waitFor("exam-only activity starts after entering the exam",()->api.signals(a,0,null,100).join().items().stream()
+                    .anyMatch(e->e.signal() instanceof vn.edu.toeic.protocol.monitoring.signal.ActivitySignal&&collector.equals(e.signal().observerSessionId())));
+            assertThat(api.signals(a,0,null,100).get(5,TimeUnit.SECONDS).items().stream().filter(e->collector.equals(e.signal().observerSessionId())&&e.signal() instanceof UsbStorageSignal u&&u.kind()==UsbStorageSignal.Kind.USB_STORAGE_PRESENT_AT_START).count()).isLessThanOrEqualTo(1);
+            fx(()->{probe.application.stop();return null;});assertThat(restarted.awaitStopped(Duration.ofSeconds(8))).isTrue();
+            process.stop().stopped().get(8,TimeUnit.SECONDS);
+            results.add(Map.of("kind","MANUAL_PROCESS_AND_SIGNALS","usbSource","REAL_CIM","usbBaselineCount",count,"manualPortalBaseline",true,"sharedCollector",true,"stopWaitsForUsbWorkers",true,"restartNewRun",true,"examEntryReusesRun",true,"activityOnlyAfterExamEntry",true,"hardwareHotplug","NOT_RUN"));
+        }finally{
+            if(signalBefore==null)System.clearProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,signalBefore);
+            if(usbBefore==null)System.clearProperty(CandidateExamSignalMonitoring.USB_ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.USB_ENABLE_PROPERTY,usbBefore);
+        }
+    }
+    @Test @EnabledIfEnvironmentVariable(named="TOEIC_USB_REAL_CIM",matches="true")
     void productionUsbObserverReachesDashboard()throws Exception {
         String a=scope(120),collector="USB-APP-"+UUID.randomUUID();
         var rt=realtime(candidate,Set.of(a));var lease=rt.monitoringHeartbeat(a,collector);owned.add(lease);
@@ -152,9 +208,9 @@ class MonitoringTimelinePostgresTest {
     @SuppressWarnings("unchecked") List<TimelineRows.Row> rows(Dashboard d)throws Exception{return fx(()->List.copyOf(((TableView<TimelineRows.Row>)d.view.lookup("#multi-timeline-table")).getItems()));}
     void openSummary(Dashboard d,String attempt)throws Exception{
         fx(()->{((ToggleButton)d.view.lookup("#nav-overview")).fire();return null;});
-        waitFor("overview signal button rendered for assigned attempt",()->{try{return fx(()->d.view.lookup("#overview-signal-usb-"+attempt)!=null);}catch(Exception e){throw new RuntimeException(e);}});
+        waitFor("overview detail button rendered for assigned attempt",()->{try{return fx(()->d.view.lookup("#overview-detail-"+attempt)!=null);}catch(Exception e){throw new RuntimeException(e);}});
         screenshot(d,"summary-overview");
-        fx(()->{((Button)d.view.lookup("#overview-signal-usb-"+attempt)).fire();return null;});
+        fx(()->{((Button)d.view.lookup("#overview-detail-"+attempt)).fire();return null;});
         waitFor("candidate summary drawer laid out",()->{try{return fx(()->d.view.lookup("#candidate-signal-summary")!=null);}catch(Exception e){throw new RuntimeException(e);}});
     }
     void summaryTimeline(Dashboard d,String attempt,String kind,String source)throws Exception{
@@ -166,12 +222,16 @@ class MonitoringTimelinePostgresTest {
     void screenshotSummary(Dashboard d,String name)throws Exception{
         waitFor("candidate drawer slide settled",()->{try{return fx(()->Math.abs(d.view.lookup("#candidate-drawer").getTranslateX())<0.01);}catch(Exception e){throw new RuntimeException(e);}});
         // Export the actual JavaFX summary node so all three cards are visible despite viewport clipping.
-        var data=fx(()->{
-            var root=d.stage.getScene().getRoot();root.applyCss();root.layout();
-            var node=d.view.lookup("#candidate-signal-summary");var img=node.snapshot(null,null);
-            int w=(int)img.getWidth(),h=(int)img.getHeight();int[] pixels=new int[w*h];
-            img.getPixelReader().getPixels(0,0,w,h,PixelFormat.getIntArgbInstance(),pixels,0,w);return new Object[]{w,h,pixels};
-        });
+        var captured=new java.util.concurrent.atomic.AtomicReference<Object[]>();
+        waitFor("summary attached after asynchronous drawer refresh",()->{try{
+            var frame=fx(()->{
+                var root=d.stage.getScene().getRoot();root.applyCss();root.layout();
+                var node=d.view.lookup("#candidate-monitoring-observations");if(node==null)return null;
+                var img=node.snapshot(null,null);int w=(int)img.getWidth(),h=(int)img.getHeight();int[] pixels=new int[w*h];
+                img.getPixelReader().getPixels(0,0,w,h,PixelFormat.getIntArgbInstance(),pixels,0,w);return new Object[]{w,h,pixels};
+            });captured.set(frame);return frame!=null;
+        }catch(Exception e){throw new RuntimeException(e);}});
+        var data=captured.get();
         var image=new BufferedImage((int)data[0],(int)data[1],BufferedImage.TYPE_INT_ARGB);
         image.setRGB(0,0,(int)data[0],(int)data[1],(int[])data[2],0,(int)data[0]);
         ImageIO.write(image,"png",Path.of(required("TOEIC_USB_TEST_OUTPUT"),name+".private.png").toFile());

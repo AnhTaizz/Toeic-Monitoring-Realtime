@@ -23,8 +23,8 @@ import vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
 /**
- * Opt-in exam-signal coordinator. It reuses the authorized process-monitoring heartbeat
- * and current WebSocket, confirms the scoped HTTP capability, and owns the exam observers.
+ * Opt-in candidate signal coordinator. It shares the process-monitoring lifetime and heartbeat.
+ * Exam interaction aggregation starts only after entering the exam scene.
  */
 public final class CandidateExamSignalMonitoring implements AutoCloseable {
     public static final String ENABLE_PROPERTY = "toeic.monitoring.signal-experiment-enabled";
@@ -50,6 +50,7 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
     private ActivitySignalAdapter activityAdapter;
     private FxActivityMonitor activityMonitor;
     private boolean activityRetired;
+    private boolean examScene;
     private final AutoCloseable messages;
     private final AutoCloseable connections;
     private final AutoCloseable accessRejections;
@@ -61,16 +62,36 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
     public static CandidateExamSignalMonitoring start(Stage examWindow, String serverUrl, String token,
             String attemptId, String collectorSessionId, RealtimeClient realtime) {
         if (!Boolean.getBoolean(ENABLE_PROPERTY)) return null;
-        return new CandidateExamSignalMonitoring(examWindow, serverUrl, token, attemptId, collectorSessionId, realtime);
+        return new CandidateExamSignalMonitoring(examWindow, serverUrl, token, attemptId, collectorSessionId, realtime, true);
+    }
+
+    public static CandidateExamSignalMonitoring startSession(Stage candidateWindow, String serverUrl, String token,
+            String attemptId, String collectorSessionId, RealtimeClient realtime) {
+        if (!Boolean.getBoolean(ENABLE_PROPERTY)) return null;
+        return new CandidateExamSignalMonitoring(candidateWindow, serverUrl, token, attemptId, collectorSessionId, realtime, false);
+    }
+
+    public boolean matchesRun(String attempt, String collector) {
+        return attemptId.equals(attempt) && collectorSessionId.equals(collector);
+    }
+
+    /** Scene changes keep the same typed run; exam-only activity is enabled once, after entry succeeds. */
+    public void enterExamScene() {
+        if (!Platform.isFxApplicationThread()) throw new IllegalStateException("Enter exam on JavaFX thread");
+        if (closed.get() || examScene) return;
+        examScene = true;
+        JsonObject value = capability;
+        if (value != null && capabilityGeneration == realtime.connectionGeneration()) configureActivity(supportsActivity(value));
     }
 
     private CandidateExamSignalMonitoring(Stage examWindow, String serverUrl, String token,
-            String attemptId, String collectorSessionId, RealtimeClient realtime) {
+            String attemptId, String collectorSessionId, RealtimeClient realtime, boolean examScene) {
         if (!Platform.isFxApplicationThread()) throw new IllegalStateException("Exam signal monitoring must start on JavaFX thread");
         this.attemptId = Objects.requireNonNull(attemptId);
         this.collectorSessionId = Objects.requireNonNull(collectorSessionId);
         this.examWindow = Objects.requireNonNull(examWindow);
         this.realtime = Objects.requireNonNull(realtime);
+        this.examScene = examScene;
         usbSettings=Boolean.getBoolean(USB_ENABLE_PROPERTY)?UsbScanCoordinator.Settings.configuredForExam():null;
         api = new SignalCapabilityApiClient(serverUrl, token);
         // The confirmed transport lane is bound to this collector lease. A second ID is rejected before socket IO.
@@ -152,7 +173,7 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
     }
 
     private void configureActivity(boolean supported) {
-        if (supported && activityMonitor == null && !activityRetired) {
+        if (supported && examScene && activityMonitor == null && !activityRetired) {
             activityAdapter = new ActivitySignalAdapter();
             long generation = activityAdapter.start(run, delivery);
             activityMonitor = FxActivityMonitor.attach(examWindow, activityAdapter, generation, Clock.systemUTC(),
