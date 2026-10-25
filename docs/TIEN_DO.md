@@ -8,7 +8,7 @@
 
 25/10/2026 — Mở rộng39tên process/6nhóm, nhận Teams mới ms-teams.exe; background chỉ state/history. Policyv2/256process, backwardreadv1/128 và helperPID-start loại trừ; không đổi OS query/DB. Full1458PASS/154SKIP/0lỗi, PGREAL2PASS có2Teamsnative/history/UI và cleanup sạch. [Runbook](PROCESS_GROUPS.md), [report](../evidence/process-groups-20261025/REPORT.md). Cần nâng cấp cảserver/client; phiên8080 giữ nguyên, khôngPR/merge/DONE hoặc E1/E2/LAN mới.
 
-25/10/2026 — Bản phát hành cuối: nhánh `integrate/final-toeic-release` (`05822d8`, chưa push) đã gộp ACCOUNT_PIN, USB/focus/window của C tới `9299075`, giao diện legacy ẩn sau cờ, launcher portable. Full `17f94c6` 1756 PASS/23 SKIP/0 lỗi; full trên commit cuối chưa có. **Tạm dừng chờ Công Lâm hoàn tất nhánh USB**; xem ghi chú làm dở trong NHAT_KY.
+25/10/2026 — Release candidate: nhánh `integrate/final-toeic-release`, code kiểm thử `f982aac` (ACCOUNT_PIN `ff6aacf` + monitoring/USB của C tới `e5c783f`), bundle `5a1af3e`. Full `-AllGui` 1791 PASS/23 SKIP/0 lỗi + windows-observer 22 PASS; runner USB/monitoring PASS trừ test retire chập chờn 3/17; EX-08 STUDY4_6854 1/1; portable Unicode/ASCII, nâng cấp V18→V21 PASS. PR vào main chờ owner review; LAN/nghe thật/USB vật lý trên commit tích hợp NOT TESTED. [Báo cáo](release/RELEASE-REPORT.md).
 
 25/10/2026 — Người dùng chốt danh sách chung chỉ có process, USB cắm/rút và thay đổi focus/window. Đã loại status/baseline typed khỏi các danh sách và số đếm; raw Timeline/trạng thái nguồn giữ. Clientpackage/GUI40PASS và PGREAL2PASS count0/window, cleanup sạch; JARdc91c420… mới cần mở lại app. [Report](../evidence/proctor-actions-only-20261025/REPORT.md). Không fullverify/hotplug/PR/merge/DONE mới.
 

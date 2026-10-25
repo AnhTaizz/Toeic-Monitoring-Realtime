@@ -818,3 +818,14 @@ User hỏi đã thêm chưa; lượt trước chỉ chẩn đoán. Đã khôi ph
 - PG REAL 2 method PASS: native ProcessHandle/policy4/snapshot46/Teams2 có history/feed; manual Start/Stop/restart/exam-entry/window recent widgets và production USB hook/reconnect. CIM0, không hotplug vật lý.
 - PG MOCK 1 method PASS: baseline/cắm/rút USB hiện shared lists, baseline giữ id/time/source, retry/reconnect/scope-revoke/queue-drop checks giữ; A19/B1/drop3 là số thực của fixture MOCK. Cleanup hai cluster 0 schema/stop0/PID absent.
 - SHA-256 13 file USB/hook/projection unchanged; client545/server167 entries khớp, embedded protocol byte-identical. [Receipt và ảnh](../evidence/process-nine-20261025/REPORT.md). Không H01–H12/LAN/installer/E1/E2/CI hoặc tracker DONE mới.
+
+## Release candidate 25/10/2026 — code `f982aac`, bundle `5a1af3e`
+
+Chi tiết, môi trường và SKIP: [release/RELEASE-REPORT.md](release/RELEASE-REPORT.md).
+
+- Full `verify-room-ux.ps1 -Mode Full -AllGui` trên `f982aac`: **1791 PASS / 0 FAIL / 0 ERROR / 23 SKIP**, cộng windows-observer 22 PASS cùng lượt Maven; PostgreSQL 18.1 cô lập, 0 schema còn lại.
+- E2E ACCOUNT_PIN 3/3 (READY 2/1/0, autosave, reconnect, Submit, cross-attempt 403, USB CIM thật không lặp event).
+- Runner USB/monitoring của C: Mock+Timeline 1/1, Mock+Timeline+AlertRules 1/1, Mock 4/4, Real CIM 1/1, Real CIM+Timeline 2/2; Integrated 4 ca có `productionObserversRetireOnTerminalAndRevoke` **chập chờn 3 FAIL/17 lượt** (owner C). `realCimStatusReachesDashboard` NOT RUN (không có chế độ runner).
+- EX-08 với STUDY4_6854 (payload `d47aad14…`): 1/1 PASS.
+- Portable `5a1af3e`: Client Unicode 9/9, ASCII 8/8; Server DB mới 14/14; nâng cấp DB do Server main V18 tạo → V21 + import STUDY4_6854 18/18.
+- NOT TESTED: LAN hai máy, nghe thật, cắm/rút USB vật lý trên commit tích hợp, installer, đo lại E1/E2.

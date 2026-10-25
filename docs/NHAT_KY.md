@@ -1197,3 +1197,9 @@ Chưa push/PR/merge. USB cắm/rút vật lý chỉ có bằng chứng của C t
 ### Ghi chú làm dở
 
 Đang chờ Công Lâm hoàn tất nhánh `feat/usb-app-integration-20261024`. Khi tiếp tục: fetch, review commit mới của C sau `9299075`, merge có chọn lọc; chạy lại full `-AllGui` trên commit code cuối, runner USB của C (Mock tích hợp/Mock/Real/Real+Timeline), EX-08 với STUDY4_6854, đóng gói portable, `verify-phase4-portable.ps1 -UnicodeCopy`, `verify-release-server.ps1` (kèm `-UpgradeFromServerJar` JAR server main V18 và `-ImportJson` STUDY4_6854); viết `docs/release/RELEASE-REPORT.md` rồi push/PR/merge/release. PR #107 (QA01) giữ riêng.
+
+## 25/10/2026 — Release candidate tích hợp cuối, PR vào main
+
+Tiếp tục sau khi Công Lâm hoàn tất nhánh USB: merge `e5c783f` (`f982aac`, policy process v4 chín tên; chỉ conflict tài liệu). Owner chốt phạm vi tại `f982aac`. Full `-AllGui` `f982aac` 1791 PASS/23 SKIP/0 lỗi + windows-observer 22 PASS. Runner USB/monitoring của C PASS ở mọi chế độ trừ `productionObserversRetireOnTerminalAndRevoke` chập chờn 3/17 (process dừng đúng do FORBIDDEN, observer typed đóng muộn qua FX); thêm chẩn đoán trong test `ba4725f`, không đổi assertion. EX-08 STUDY4_6854 1/1 (6853 bị adapter từ chối vì ảnh WebP đuôi .jpg, 6852 thiếu client_exam.json). Bundle `5a1af3e` (ZIP SHA-256 `0a8d5ab5…`): Client Unicode 9/9, ASCII 8/8, Server mới 14/14, nâng cấp V18→V21 + STUDY4 18/18. Sửa smoke script treo do capture `pg_ctl start` (`15384ed`) và launcher trả đúng exit code/lỗi một dòng (`5a1af3e`). Push nhánh và tạo PR; không merge main, không tag.
+
+LAN hai máy, nghe thật, cắm/rút USB vật lý trên commit tích hợp NOT TESTED; bằng chứng USB vật lý hiện có thuộc nhánh của C (`evidence/usb-hardware-20261024`, `evidence/usb-8080-fix-20261024`). Báo cáo: `docs/release/RELEASE-REPORT.md`.
