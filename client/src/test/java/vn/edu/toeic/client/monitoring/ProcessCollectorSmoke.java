@@ -47,7 +47,7 @@ public final class ProcessCollectorSmoke {
                     diagnostics.processesScanned(), diagnostics.unreadableProcesses(), diagnostics.missingCommand(),
                     diagnostics.missingStartInstant(), diagnostics.missingUser());
             System.out.println("OBSERVED restrictedExecutableFilenames=" + (filenames.isEmpty() ? "<NONE OBSERVED>" : filenames));
-            check(!firstSession.isBlank() && baseline.policyVersion().equals("process-policy-v1"), "Production snapshot contract");
+            check(!firstSession.isBlank() && baseline.policyVersion().equals("process-policy-v2"), "Production snapshot contract");
             System.out.println("PASS real ProcessHandle.allProcesses source + local polling snapshot; no network send");
 
             if (demoExecutable != null && Files.isRegularFile(demoExecutable)

@@ -1114,3 +1114,7 @@ Chỉ bổ sung consumer hiển thị ở client; không đổi DTO, endpoint, w
 ## 25/10/2026 — Bộ lọc danh sách chung theo thiết kế người dùng chốt lại
 
 Consumer RoomFeed/SignalFeedProjection chỉ chiếu typed USB CONNECTED/REMOVED, focus ngoài INITIAL/dialog nội bộ và window CHANGED vào danh sách chung; không đưa status/gap typed/PRESENT_AT_START/baseline vào đó. Process và luồng kết nối/gap legacy giữ nguyên. Đây chỉ là bộ lọc hiển thị: raw typed history, source health, collector, DTO, server retention và Timeline không thay đổi.
+
+## 25/10/2026 — Catalog process-policy-v2
+
+Theo yêu cầu người dùng, candidate mặc định policyv2 với39tên/6nhóm tại PROCESS_GROUPS.md (gồm ms-teams.exe). Full/delta/state nhận cảv1(8tên/128process) vàv2(39tên/256process), kiểm membership theo policy; schema field/endpoint/envelope và DB không đổi. Reducer không cho đổi policy trong epoch; full/delta/event cùng tập đã lọc. Đọc trace/replay v1 giữ nguyên ý nghĩa. Background được lưu lịch sử và hiện state, consumer Cảnh báo/MON08 không tự đưa background vào review. Nâng cấp đồng bộ server/client; clientv1 còn dùng được với server mới, clientv2 cần server mới. Registry helper USB chỉ loại PID/start do app sở hữu, không đổi OS query. [Review/runbook](PROCESS_GROUPS.md), [evidence](../evidence/process-groups-20261025/REPORT.md).

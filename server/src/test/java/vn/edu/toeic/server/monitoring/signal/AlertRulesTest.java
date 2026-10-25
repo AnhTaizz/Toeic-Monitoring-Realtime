@@ -41,4 +41,11 @@ class AlertRulesTest {
 
     @Test void validLegacyGapCountsCannotOverflowDerivedTotal(){var input=List.of(new AlertRules.Input("A","run","process-gap:A:g1","PROCESS_QUEUE","MONITORING_GAP",C.minusSeconds(1),"DATA_GAP",false,Long.MAX_VALUE),new AlertRules.Input("A","run","process-gap:A:g2","PROCESS_QUEUE","MONITORING_GAP",C.minusSeconds(1),"DATA_GAP",false,Long.MAX_VALUE));assertThat(engine.evaluate("A",input,policy,C).summaries().getFirst().json().get("droppedCount").getAsString()).isEqualTo("18446744073709551614");}
 
+    @org.junit.jupiter.api.Test void expandedWindowsBackgroundDoesNotBecomeAnExperimentalAlert(){
+        var policy=vn.edu.toeic.protocol.monitoring.ProcessCatalog.EXPANDED_POLICY;
+        assertThat(AlertService.process("A","run","MOCK-s",policy,"svchost.exe","COMPLETE",C)).isNull();
+        assertThat(AlertService.process("A","run","MOCK-t",policy,"ms-teams.exe","COMPLETE",C)).isNotNull();
+        assertThat(AlertService.process("A","run","MOCK-w",policy,"winword.exe","COMPLETE",C)).isNotNull();
+        assertThat(AlertService.process("A","run","MOCK-old","process-policy-v1","ms-teams.exe","COMPLETE",C)).isNull();
+    }
 }

@@ -426,3 +426,7 @@ Full verify source cuối1098PASS/6SKIP/0FAIL/ERROR,114case mới PASS; PostgreS
 20/10/2026: EX05 source05cc694 clean verify1127PASS/6SKIP (29case mới PASS), PG18.1/HTTP thật; [checkpoint/evidence](../EX05_AUTHENTICATED_IMAGES.md). EX07 tiếp tục branch stacked, chưa authority/FE integrated; V13/V14 MERGE BLOCKED, GUI/LAN/hearing NOT RUN.
 
 **EX-07 — Ghi chú làm dở (20/10/2026):** nhánh `feat/ex07-rich-session-lifecycle-20261019` HEAD có code + test PG/HTTP local PASS ([chi tiết](../EX07_SESSION_LIFECYCLE.md)). A/C review lock/transaction và thứ tự Flyway V13/V14/V15; B dùng §1 của tài liệu để làm EX-06. GUI/LAN/hearing NOT RUN; không merge/DONE.
+
+### 25/10/2026 — Bàn giao catalog process39tên/Teams mới
+
+Policyv2 mở rộng6nhóm/256process, đọc lại v1/8tên/128; review contract trước sửa ở [runbook](../PROCESS_GROUPS.md). Full/delta/event cùng policy, epoch không đổi; background chỉ state/history, helperCIM loại PID-start. Full1458PASS/154SKIP, PGREAL2PASS nativeTeams2/history/UI/cleanup sạch. [Report](../../evidence/process-groups-20261025/REPORT.md). Ghi chú bàn giao: nâng cấp đồng bộ server/client (script -ServerJar tên riêng), giữ phiên8080 đang mở; owner review A/C/B và benchmarkv2/LAN/installer vẫn chờ, không trackerDONE/humanapproval.

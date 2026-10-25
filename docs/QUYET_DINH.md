@@ -465,3 +465,7 @@ Theo phản hồi UI của người dùng, nối typed history đã commit vào 
 ### 25/10/2026 — Người dùng chốt lại ba nhóm hành vi trong danh sách chung
 
 Thay lựa chọn consumer trước đó đưa trạng thái kỹ thuật vào Nhật ký chung: chỉ process được quan sát, USB cắm/rút, thay đổi focus/thu nhỏ/toàn màn hình. READY/INITIAL/baseline USB/focus/window và gap/status typed giữ ở lịch sử gốc/Timeline/trạng thái nguồn, không thành dòng hành vi hoặc cộng số đếm. Không thay contract nguồn thu/wire/DB, không phân loại MON-08 hoặc thay chữ ký review owner B/C.
+
+### 25/10/2026 — Catalog process mở rộng theo yêu cầu người dùng
+
+Chốt triển khai policyv2 hữu hạn39tên thay vì đổi nghĩa policyv1 trong trace cũ. V1 vẫn8tên/128, V2 tối đa256; full/delta/event nhất quán và epoch không đổi policy. Background chỉ state/history, không tự cảnh báo; helper CIM loại bằng PID/start, không loại cả tên PowerShell. Review contract kỹ thuật trước sửa được ghi tại PROCESS_GROUPS.md, owner A/C/B signoff vẫn chờ, không thay MON08 rules/ngưỡng hoặc OS approach. Full1458PASS/154SKIP và PGREAL2PASS có2Teamsnative/history/UI; không E1/E2/hardwaregate mới.

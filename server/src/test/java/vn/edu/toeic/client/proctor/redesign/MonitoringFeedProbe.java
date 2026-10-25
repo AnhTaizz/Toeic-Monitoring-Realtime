@@ -28,4 +28,9 @@ public final class MonitoringFeedProbe {
         pane.kind(RoomModel.Kind.valueOf(kind));
         return pane.visibleAlerts().stream().anyMatch(a->a.attemptId().equals(attempt)&&a.kind().name().equals(kind));
     }
+    public static Set<String> reviewProcessNames(ProctorRedesignView view,String attempt){
+        if(view.room()==null)return Set.of();
+        return view.room().alerts().stream().filter(a->a.attemptId().equals(attempt)&&a.origin() instanceof vn.edu.toeic.client.dashboard.MonitoringData.Event)
+                .map(a->((vn.edu.toeic.client.dashboard.MonitoringData.Event)a.origin()).processName()).collect(Collectors.toSet());
+    }
 }

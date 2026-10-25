@@ -23,7 +23,7 @@ class ProcessCollectorTraceTest {
             default -> List.of(new ProcessReading(42,"msedge.exe",Instant.parse("2026-10-10T00:00:00Z"),true));
         };
         Path path=directory.resolve("collector.jsonl");var done=new CountDownLatch(1);
-        try(var recorder=new TraceRecorder(path,new TraceData.Header(TraceData.SCHEMA,"MOCK",10,"process-policy-v1","2026-10-10T00:00:00Z"),32);
+        try(var recorder=new TraceRecorder(path,new TraceData.Header(TraceData.SCHEMA,"MOCK",10,"process-policy-v2","2026-10-10T00:00:00Z"),32);
             var collector=new ProcessCollector(source,Duration.ofMillis(10),recorder)) {
             collector.start(new MonitoringSessionGate.Context(Role.CANDIDATE,true,"MOCK-A"),snapshot -> {if(scans.get()==3){collector.stop();done.countDown();}},ignored -> {});
             assertThat(done.await(3,TimeUnit.SECONDS)).isTrue();collector.stop().get(3,TimeUnit.SECONDS);

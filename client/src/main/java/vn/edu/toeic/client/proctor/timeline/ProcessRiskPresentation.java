@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.*;
 import vn.edu.toeic.client.dashboard.MonitoringData.Event;
 import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
+import vn.edu.toeic.protocol.monitoring.ProcessCatalog;
 
 /** Compact proctor read model. Raw process observations remain unchanged on the server. */
 public final class ProcessRiskPresentation {
@@ -16,16 +17,15 @@ public final class ProcessRiskPresentation {
 
     public static Risk risk(String executable) {
         String name = Objects.toString(executable, "").toLowerCase(Locale.ROOT);
-        return switch (name) {
-            case "anydesk.exe" -> new Risk("NGHIÊM TRỌNG", "Điều khiển từ xa", "AnyDesk", 0);
-            case "teamviewer.exe" -> new Risk("NGHIÊM TRỌNG", "Điều khiển từ xa", "TeamViewer", 0);
-            case "chrome.exe" -> new Risk("CAO", "Trình duyệt ngoài bài thi", "Google Chrome", 1);
-            case "msedge.exe" -> new Risk("CAO", "Trình duyệt ngoài bài thi", "Microsoft Edge", 1);
-            case "firefox.exe" -> new Risk("CAO", "Trình duyệt ngoài bài thi", "Mozilla Firefox", 1);
-            case "zalo.exe" -> new Risk("CAO", "Liên lạc/trao đổi", "Zalo", 2);
-            case "teams.exe" -> new Risk("CAO", "Liên lạc/trao đổi", "Microsoft Teams", 2);
-            case "discord.exe" -> new Risk("CAO", "Liên lạc/trao đổi", "Discord", 2);
-            default -> new Risk("CẦN XEM XÉT", "Tiến trình thuộc policy", name.isBlank() ? "Không xác định" : name, 3);
+        var entry=ProcessCatalog.entry(name);
+        if(entry==null)return new Risk("CẦN XEM XÉT","Tiến trình thuộc policy",name.isBlank()?"Không xác định":name,3);
+        return switch(entry.group()) {
+            case REMOTE->new Risk("NGHIÊM TRỌNG","Điều khiển từ xa",entry.application(),0);
+            case BROWSER->new Risk("CAO","Trình duyệt ngoài bài thi",entry.application(),1);
+            case COMMUNICATION->new Risk("CAO","Liên lạc/trao đổi",entry.application(),2);
+            case DOCUMENT->new Risk("CẦN XEM XÉT","Tài liệu/ghi chú",entry.application(),3);
+            case TERMINAL->new Risk("CẦN XEM XÉT","Terminal/script",entry.application(),4);
+            case SYSTEM->new Risk("THÔNG TIN","Windows/dịch vụ nền",entry.application(),5);
         };
     }
 
@@ -61,9 +61,9 @@ public final class ProcessRiskPresentation {
 
     private static TimelineRows.Row row(Event first, Event last, int count) {
         Risk risk = risk(first.processName());
-        String detail = risk.priority() + " · " + risk.category() + ": phát hiện " + risk.application();
+        String detail = risk.priority() + " · " + risk.category() + ": quan sát " + risk.application();
         if (count > 1) detail += " (" + count + " process con xuất hiện trong 30 giây, đã gộp)";
-        detail += ". Cần đối chiếu với thời điểm làm bài; không tự động kết luận gian lận.";
+        detail += ProcessCatalog.review(first.processName())?". Cần đối chiếu với thời điểm làm bài; không tự động kết luận gian lận.":". Tiến trình nền chỉ ghi nhận thông tin, không tự đưa vào cảnh báo.";
         String quality = risk.priority() + " / " + first.metadataQuality() + " / " + first.deliveryStatus();
         if (count > 1 && (!Objects.equals(first.metadataQuality(), last.metadataQuality())
                 || !Objects.equals(first.deliveryStatus(), last.deliveryStatus())))
@@ -84,7 +84,8 @@ public final class ProcessRiskPresentation {
                 .comparingInt((Map.Entry<String,Integer> entry) -> risk(entry.getKey()).order())
                 .thenComparing(entry -> risk(entry.getKey()).application())).toList();
         var lines = new ArrayList<String>();
-        lines.add(counts.size() + " ứng dụng cần xem xét · " + processes.size() + " process đang chạy (gộp theo ứng dụng)"
+        long reviewApps=counts.keySet().stream().filter(ProcessCatalog::review).count();
+        lines.add(counts.size() + " ứng dụng/tiến trình · " + reviewApps + " nhóm tên cần xem xét · " + processes.size() + " process đang chạy (gộp theo ứng dụng)"
                 + (receivedAt == null ? "" : " · server nhận " + receivedAt) + (stale ? " · DỮ LIỆU CŨ" : ""));
         String previous = null;
         var group = new ArrayList<String>();

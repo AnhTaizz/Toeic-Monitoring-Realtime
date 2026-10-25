@@ -22,7 +22,7 @@ class FullSnapshotPayloadTest {
     }
     @Test void pathsUnknownPolicyAndIncompleteMetadataCannotClaimComplete() {
         assertThatThrownBy(() -> new FullSnapshotPayload.Process(1,"C:/msedge.exe",null,"UNREADABLE")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> new FullSnapshotPayload.Process(1,"notepad.exe",null,"UNREADABLE")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> full(List.of(new FullSnapshotPayload.Process(1,"notepad.exe",null,"UNREADABLE")))).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> new FullSnapshotPayload.Process(1,"msedge.exe",null,"COMPLETE")).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> new FullSnapshotPayload("MOCK-c","MOCK-e",1,"other-policy",List.of())).isInstanceOf(IllegalArgumentException.class);
     }

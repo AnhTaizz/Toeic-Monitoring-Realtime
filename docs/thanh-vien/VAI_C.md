@@ -605,3 +605,7 @@ RoomFeed đọc typed history theo watermark reader có sẵn; Cảnh báo, Nh�
 ### 25/10/2026 — Bộ lọc hành vi theo chốt lại của người dùng
 
 Danh sách chung chỉ thêm USB cắm/rút, focus/window thay đổi bên cạnh process; baseline/status/gap typed giữ tại raw Timeline và trạng thái nguồn, không thành dòng/số đếm chung. Package/GUI40PASS, PGREAL2PASS count0/window/cleanup sạch; không hotplug/fullverify mới. [Report](../../evidence/proctor-actions-only-20261025/REPORT.md). B/C vẫn cần review cá nhân; mở lại client JARdc91c420…; không wire/DB/OSAPI/policy/trackerDONE.
+
+### 25/10/2026 — Bàn giao catalog process39tên/Teams mới
+
+Policyv2 mở rộng6nhóm/256process, đọc lại v1/8tên/128; review contract trước sửa ở [runbook](../PROCESS_GROUPS.md). Full/delta/event cùng policy, epoch không đổi; background chỉ state/history, helperCIM loại PID-start. Full1458PASS/154SKIP, PGREAL2PASS nativeTeams2/history/UI/cleanup sạch. [Report](../../evidence/process-groups-20261025/REPORT.md). Ghi chú bàn giao: nâng cấp đồng bộ server/client (script -ServerJar tên riêng), giữ phiên8080 đang mở; owner review A/C/B và benchmarkv2/LAN/installer vẫn chờ, không trackerDONE/humanapproval.
