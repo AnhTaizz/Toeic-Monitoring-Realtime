@@ -1,5 +1,8 @@
 param([Parameter(Mandatory=$true)][string]$Bundle,[Parameter(Mandatory=$true)][string]$PostgresBin,
- [string]$OutputDirectory,[string]$UpgradeFromServerJar,[string]$UpgradeJavaHome)
+ [string]$OutputDirectory,[string]$UpgradeFromServerJar,[string]$UpgradeJavaHome,
+ [string]$ImportJson,[string]$ImportAudioRoot,[string]$ImportImageRoot)
+# With -ImportJson the given rich-import payload (for example a STUDY4 adapter output) and its media
+# roots replace the MOCK fixture; the Proctor imports it and the catalog must list it as selectable.
 # Release smoke for the portable Server: Unicode copy of the bundle, server.env loading, fail-closed
 # configuration checks, real start on an owned PostgreSQL cluster, Admin bootstrap and V21.
 # With -UpgradeFromServerJar the owned database is first created and seeded by that older Server,
@@ -17,7 +20,12 @@ $unicode=Join-Path $out $unicodeName
 New-Item -ItemType Directory -Force $unicode|Out-Null
 $copy=Join-Path $unicode 'TOEIC Portable';Copy-Item -LiteralPath $Bundle -Destination $copy -Recurse
 $media=Join-Path $unicode ('Media '+[char]0x0111+[char]0x1EC1+' thi')
-foreach($type in @('audio','images')){Copy-Item -LiteralPath (Join-Path $repo ('docs\plan-v2\fixtures\ex02\assets\'+$type)) -Destination (Join-Path $media $type) -Recurse}
+if($ImportJson){
+ Copy-Item -LiteralPath $ImportAudioRoot -Destination (Join-Path $media 'audio') -Recurse
+ Copy-Item -LiteralPath $ImportImageRoot -Destination (Join-Path $media 'images') -Recurse
+}else{
+ foreach($type in @('audio','images')){Copy-Item -LiteralPath (Join-Path $repo ('docs\plan-v2\fixtures\ex02\assets\'+$type)) -Destination (Join-Path $media $type) -Recurse}
+}
 function Port { $l=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0);$l.Start();$n=$l.LocalEndpoint.Port;$l.Stop();return $n }
 $dbPort=Port;$httpPort=Port;$closedPort=Port
 $dbUser='release_smoke';$dbName='release_smoke'
@@ -125,6 +133,14 @@ try{
  $cases.Add(@{case='admin-account-list';status=if($page){'PASS'}else{'FAIL'}})
  $proctor=Login $base 'proctor1' $seed
  $cases.Add(@{case='seed-proctor-login';status=if($proctor.user.role -eq 'PROCTOR'){'PASS'}else{'FAIL'}})
+ if($ImportJson){
+  $examId=([IO.File]::ReadAllText($ImportJson,[Text.Encoding]::UTF8)|ConvertFrom-Json).exam.examId
+  $import=Invoke-WebRequest ($base+'/api/v2/exams/import') -Method Post -ContentType 'application/json; charset=utf-8' -InFile $ImportJson -Headers @{Authorization=('Bearer '+$proctor.token)} -UseBasicParsing -TimeoutSec 120
+  $cases.Add(@{case='proctor-imports-exam';status=if($import.StatusCode -eq 201){'PASS'}else{'FAIL'};examId=$examId})
+  $catalog=Invoke-RestMethod ($base+'/api/v2/exams') -Headers @{Authorization=('Bearer '+$proctor.token)} -TimeoutSec 30
+  $item=@($catalog.items|Where-Object {$_.examId -eq $examId})|Select-Object -First 1
+  $cases.Add(@{case='imported-exam-selectable-with-media-from-unicode-root';status=if($item -and $item.selectable -and $item.totalQuestions -eq 200){'PASS'}else{'FAIL'};mediaVerification=$item.mediaVerification;totalQuestions=$item.totalQuestions})
+ }
  if($UpgradeFromServerJar){
   $after=Sql ("SELECT md5(string_agg(id||':'||username||':'||role||':'||password_hash,'|' ORDER BY id)) FROM user_accounts WHERE id<="+$upgradeMaxId) 'upgraded-digest'
   $cases.Add(@{case='upgrade-preserves-existing-accounts';status=if($after -eq $upgradeDigest){'PASS'}else{'FAIL'};existingAccounts=[int]$upgradeUsers})
@@ -143,6 +159,7 @@ try{
  if($started){$stop=Native (Join-Path $PostgresBin 'pg_ctl.exe') ('-D "'+$data+'" -w stop -m fast') 'pg-stop'}
  foreach($secret in @($pw,(Join-Path $copy 'server.env'))){if(Test-Path -LiteralPath $secret){Remove-Item -LiteralPath $secret}}
 }
+if($server){$log=[IO.File]::ReadAllText((Join-Path $out 'server.private.log'));$cases.Add(@{case='launcher-prints-server-ready';status=if($log.Contains('Server READY on port '+$httpPort)){'PASS'}else{'FAIL'}})}
 $failedCases=@($cases|Where-Object {$_.status -ne 'PASS'}).Count
 $result=[ordered]@{bundle=$Bundle;unicodeCopy=$true;upgradeFrom=if($UpgradeFromServerJar){'previous Server JAR'}else{$null};cases=$cases;failed=$failedCases;errorType=$failure;clusterStopExit=$stop
  scope='Portable Server launcher + bundled runtime + owned PostgreSQL; config checks, startup, migrations, Admin bootstrap. Not an exam flow or LAN.'}

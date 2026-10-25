@@ -79,5 +79,19 @@ try{
  $application.StartInfo.FileName=$java
  $application.StartInfo.Arguments=($opts|ForEach-Object {'"'+$_+'"'}) -join ' '
  $application.StartInfo.WorkingDirectory=$root;$application.StartInfo.UseShellExecute=$false
- [void]$application.Start();$application.WaitForExit();exit $application.ExitCode
+ [void]$application.Start()
+ if($Role -eq 'Server'){
+  # 401 from the auth probe means Flyway finished, the web server is listening and authentication is active.
+  $probeHost=if($BindAddress -eq '0.0.0.0'){'127.0.0.1'}else{$BindAddress}
+  $until=[DateTime]::UtcNow.AddSeconds(180);$ready=$false
+  while(-not $application.HasExited -and -not $ready -and [DateTime]::UtcNow -lt $until){
+   try{[void](Invoke-WebRequest ('http://'+$probeHost+':'+$Port+'/api/v1/auth/me') -UseBasicParsing -TimeoutSec 2)}catch{if($_.Exception.Response -and [int]$_.Exception.Response.StatusCode -eq 401){$ready=$true}}
+   if(-not $ready){Start-Sleep -Milliseconds 500}
+  }
+  if($ready){
+   $lan=@([Net.Dns]::GetHostAddresses([Net.Dns]::GetHostName())|Where-Object {$_.AddressFamily -eq 'InterNetwork' -and -not[Net.IPAddress]::IsLoopback($_)}|ForEach-Object {'http://'+$_+':'+$Port})
+   Write-Output ('Server READY on port '+$Port+'. Clients: '+$(if($lan){$lan -join ' or '}else{'http://THIS_PC_LAN_IP:'+$Port})+' (same PC: http://127.0.0.1:'+$Port+').')
+  }elseif(-not $application.HasExited){Write-Output ('Server has not answered on port '+$Port+' within 180 s; check the messages above.')}
+ }
+ $application.WaitForExit();exit $application.ExitCode
 }finally{Pop-Location}
