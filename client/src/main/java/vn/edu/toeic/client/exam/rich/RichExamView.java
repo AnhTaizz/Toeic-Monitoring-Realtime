@@ -146,6 +146,9 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         return bar;
     }
 
+    void openReading() {
+        model.parts().stream().filter(p->p.part()>=5).findFirst().ifPresent(p->showUnit(p.units().getFirst(),null));
+    }
     private void createListeningBanner() {
         listeningStatus.setId("room-listening-status");
         listeningStatus.getStyleClass().add("room-banner-title");

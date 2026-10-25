@@ -1,0 +1,160 @@
+{
+  "fullRegressionBaseCommit": "88bf0345784177136781b20089e8ac876b335f62",
+  "releaseSourceCommit": "c767cf83848c1a78cc068b5e44a162162d4c2263",
+  "postfixSourceNote": "Narrow internal timeout patch and regression tested after full baseline, then committed unchanged; see implementation report.",
+  "fullBuildStatus": "All tests passed; original invocation exit1 at Windows spring-boot:repackage rename; isolated build recorded separately.",
+  "files": [
+    {
+      "path": "docs/account-pin/validation/artifact.json",
+      "bytes": 34546,
+      "sha256": "33bc684de4b7f3862cda4f942bf02bf8ccb3a0b7c8177916163015fae983d281"
+    },
+    {
+      "path": "docs/account-pin/validation/core-result.json",
+      "bytes": 27549,
+      "sha256": "dd2e29fd1b9cf802988e5116abad5259781012714d58f1e174a3aded86c0a839"
+    },
+    {
+      "path": "docs/account-pin/validation/e2e-ready-0.txt",
+      "bytes": 1000,
+      "sha256": "0e1183beb9d9cabf9e9244a8fb1c6607571e2e5f97246fa260fe2da0e60670f4"
+    },
+    {
+      "path": "docs/account-pin/validation/e2e-ready-1.txt",
+      "bytes": 1029,
+      "sha256": "e792aa7acd44e42f90177ef090418f9068c3555dc594ca6197eb80bc87dc5a1c"
+    },
+    {
+      "path": "docs/account-pin/validation/e2e-ready-2.txt",
+      "bytes": 1058,
+      "sha256": "9ef4f58ae580dda81d752e3f9e13748c752afc0d19962d3586bc7265f4dd34b4"
+    },
+    {
+      "path": "docs/account-pin/validation/full-result.json",
+      "bytes": 382897,
+      "sha256": "37ed70d91b2afe7e237ca976b141607b6bb3d7afcc50ec2be5f7da35622c2cde"
+    },
+    {
+      "path": "docs/account-pin/validation/gui-result.json",
+      "bytes": 2098,
+      "sha256": "295ea84f627ce73302938cf4cb82975747e531bf1687f5112ea2b3c0ef0509e8"
+    },
+    {
+      "path": "docs/account-pin/validation/isolated-build.json",
+      "bytes": 211,
+      "sha256": "d1e99b9acc78f997342ab0263cd56bf253a5324f7fce7e3f408b0b4033c5686d"
+    },
+    {
+      "path": "docs/account-pin/validation/portable-1-audio.txt",
+      "bytes": 599,
+      "sha256": "15773e7130eb53afbd9ff71b17579862d0656c5aeac729838ab7d45ae5a6b229"
+    },
+    {
+      "path": "docs/account-pin/validation/portable-1.json",
+      "bytes": 1602,
+      "sha256": "3fe1ca732a4889915f67b001575a076a3efe739c59a2886dabd4abe7f8b74374"
+    },
+    {
+      "path": "docs/account-pin/validation/portable-2-audio.txt",
+      "bytes": 599,
+      "sha256": "15773e7130eb53afbd9ff71b17579862d0656c5aeac729838ab7d45ae5a6b229"
+    },
+    {
+      "path": "docs/account-pin/validation/portable-2.json",
+      "bytes": 1573,
+      "sha256": "39fb358943a7b2a3813bebd7b5d5a4682f4fd39af5c61ab266a7fab9a4402a6b"
+    },
+    {
+      "path": "docs/account-pin/validation/portable-server-harness.json",
+      "bytes": 516,
+      "sha256": "e289c637f11d3b3ea48a83d947d7979ba0fd781f3e0e87281549809dcaa85b9f"
+    },
+    {
+      "path": "docs/account-pin/validation/portable-server.json",
+      "bytes": 626,
+      "sha256": "d49bf7e3f1e3b11b274199fb86eaa3272906b48059b4fe0e3d61c8571067a7cf"
+    },
+    {
+      "path": "docs/account-pin/validation/postfix-result.json",
+      "bytes": 26403,
+      "sha256": "4cb110111b04de9b17a535d3bdfe459895d7a47f093891850289a909e9d07f43"
+    },
+    {
+      "path": "docs/account-pin/validation/scope-result.json",
+      "bytes": 2753,
+      "sha256": "019ffc6b94a3b245bee0d2d85d1792534c5a5562ff7eec6d040ae1be44608c54"
+    },
+    {
+      "path": "docs/account-pin/validation/skipped-tests.json",
+      "bytes": 6220,
+      "sha256": "3357ecff2363dbb6d403565c843f5adc338b1172a9cf26189e01e6b01fc5a94a"
+    },
+    {
+      "path": "docs/account-pin/validation/timeout-result.json",
+      "bytes": 1602,
+      "sha256": "666b8807329bfb2ec628ad3fc80debdd984ecc7eb287a4986258dd5b0e271d61"
+    },
+    {
+      "path": "docs/account-pin/screenshots/account-pin-0-candidate-1-submitted.png",
+      "bytes": 62693,
+      "sha256": "636f5aa7dc08f4c0379fc692eaeecc6723383ba2c38c44c4615757bd2cc7e0e9"
+    },
+    {
+      "path": "docs/account-pin/screenshots/account-pin-2-candidate-0-submitted.png",
+      "bytes": 62693,
+      "sha256": "b0b9a8c2c380abce5fcee923e184c4c6641dacfe8fb9f5009b4a61f3150562e2"
+    },
+    {
+      "path": "docs/account-pin/screenshots/account-pin-ready-0-no-pin.png",
+      "bytes": 92326,
+      "sha256": "2019f3879c7fa0bd7c7fa2e0fbfb504bb56eb98a45abe1187c4f17b0df40b6e7"
+    },
+    {
+      "path": "docs/account-pin/screenshots/account-pin-ready-1-no-pin.png",
+      "bytes": 101931,
+      "sha256": "5292e1f8d0536f942c511a7bc702ff0716ebc9a5784281bdccbddfb3a411fd12"
+    },
+    {
+      "path": "docs/account-pin/screenshots/account-pin-ready-2-no-pin.png",
+      "bytes": 92050,
+      "sha256": "14e4157d30cf2797b424dd1bde22066848bf6e9d5e03725793ca2cf2958e18f7"
+    },
+    {
+      "path": "docs/account-pin/screenshots/admin-accounts.png",
+      "bytes": 44317,
+      "sha256": "e15f481f8c81588dc856ce5f10f7f39309fe199cf72971ddde6fe6ca091ec6c4"
+    },
+    {
+      "path": "docs/account-pin/benchmark/environment.json",
+      "bytes": 755,
+      "sha256": "f7ec7e239f19f805a2bf2009355c47195c107a6d8b47666d980fc331095734b7"
+    },
+    {
+      "path": "docs/account-pin/benchmark/operations.csv",
+      "bytes": 3722,
+      "sha256": "8601f3329dc98a48b2c805bc0fe2140448b59367573e0fa974ffef38d9a053ff"
+    },
+    {
+      "path": "docs/account-pin/benchmark/raw.csv",
+      "bytes": 1770550,
+      "sha256": "f407532d5f95986dd7a6ff0bac0d87efee04a083d5497ea48a91cc0540e322a9"
+    },
+    {
+      "path": "docs/account-pin/benchmark/resources.csv",
+      "bytes": 915,
+      "sha256": "2bfa4c22369e5ebd03046c2531112f9115376557e84a798e51e810bd6fb35c61"
+    },
+    {
+      "path": "docs/account-pin/benchmark/summary.csv",
+      "bytes": 978,
+      "sha256": "3ea4884a95b8a0b2531d43c8f562f1bb0891a33d4e1db41ff788e2e5916ce89c"
+    },
+    {
+      "path": "docs/account-pin/benchmark/summary.json",
+      "bytes": 6522,
+      "sha256": "49fdef783af4296c593f7e32b8a7647334fa95e49d0dfd7b247038c0b78567ac"
+    }
+  ],
+  "physicalLan": "NOT TESTED",
+  "humanHearing": "NOT TESTED"
+}

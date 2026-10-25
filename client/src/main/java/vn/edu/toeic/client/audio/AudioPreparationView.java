@@ -24,7 +24,7 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
     private AutoCloseable subscription;
     private MediaPlayer player;
     private final PauseTransition mediaTimeout = new PauseTransition(Duration.seconds(15));
-    private boolean connected, closed;
+    private boolean connected, closed, preserveConfirmedPreparation;
     private long sharedWriter;
 
     public AudioPreparationView(String serverUrl, String token, Collection<String> scope, RealtimeClient realtime) {
@@ -56,6 +56,13 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
     public void onChanged(Runnable listener) { changeListeners.add(Objects.requireNonNull(listener)); }
     public ListeningPlayback.Snapshot listeningSnapshot() { return playback.playback().snapshot(); }
     public AudioPreparation.Snapshot audioSnapshot() { return preparation.snapshot(); }
+    private boolean latePreparation;
+    public void preserveConfirmedPreparation(boolean preserve){preserveConfirmedPreparation=preserve;}
+    public void allowLatePreparation(boolean allowed){
+        if(allowed && !latePreparation && connected && attempts.getValue()!=null)
+            playback.playback().connected(List.of(attempts.getValue())); // status recovery never starts media
+        latePreparation=allowed;render();
+    }
     /** READY đã được server ACK cho đúng writer; rỗng nếu chưa READY hoặc đã mất. */
     public Optional<AudioPreparation.PlaybackContext> audioReady() { return preparation.playbackContext(); }
     AudioPreparationView(AudioApi api, Path cache, Collection<String> scope, MonitoringTransport realtime) {
@@ -83,7 +90,10 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
         subscription = realtime.onConnectionState(state -> Platform.runLater(() -> {
             if (closed) return;
             connected = state == ConnectionState.CONNECTED;
-            if (!connected) { disposePlayer(); preparation.disconnected(); }
+            if (!connected) {
+                disposePlayer();
+                if(!preserveConfirmedPreparation || preparation.playbackContext().isEmpty())preparation.disconnected();
+            }
             render();
         }));
         connected = realtime.connectionState() == ConnectionState.CONNECTED; render();
@@ -104,7 +114,7 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
         boolean playbackLocked=Set.of(ListeningPlayback.Phase.PREPARING,ListeningPlayback.Phase.READY_TO_PLAY,
                 ListeningPlayback.Phase.PLAYING,ListeningPlayback.Phase.COMPLETING,ListeningPlayback.Phase.COMPLETED,
                 ListeningPlayback.Phase.BLOCKED).contains(playback.playback().snapshot().phase());
-        boolean busy = playbackLocked||Set.of(AudioPreparation.Phase.PREPARING, AudioPreparation.Phase.REPORTING, AudioPreparation.Phase.TESTING).contains(phase);
+        boolean busy = (playbackLocked && !(latePreparation && playback.playback().snapshot().phase()==ListeningPlayback.Phase.BLOCKED))||Set.of(AudioPreparation.Phase.PREPARING, AudioPreparation.Phase.REPORTING, AudioPreparation.Phase.TESTING).contains(phase);
         attempts.setDisable(busy);
         prepare.setDisable(!connected || busy || attempts.getValue() == null);
         test.setDisable(!connected || !Set.of(AudioPreparation.Phase.FILES_READY, AudioPreparation.Phase.AWAITING_CONFIRMATION,

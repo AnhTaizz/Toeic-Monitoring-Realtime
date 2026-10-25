@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import vn.edu.toeic.client.proctor.ProctorSessionApiClient.Rejected;
 import vn.edu.toeic.protocol.audio.ListeningStartRequest;
 import vn.edu.toeic.protocol.exam.rich.CreateRichSessionRequest;
+import vn.edu.toeic.protocol.exam.rich.CreateCandidateRequest;
 
 /** REAL loopback HTTP with MOCK server bodies; says nothing about the real server's authorization. */
 class ProctorV2ApiClientTest {
@@ -50,6 +51,24 @@ class ProctorV2ApiClientTest {
         return "{\"examId\":\"" + id + "\",\"title\":\"MOCK " + id + "\",\"contentVersion\":2,\"profile\":\"TOEIC_200\",\"totalQuestions\":200,"
                 + "\"importStatus\":\"IMPORTED\",\"contentValidation\":\"VERIFIED\",\"mediaVerification\":\"VERIFIED_AT_IMPORT\","
                 + "\"selectable\":" + selectable + ",\"requiresMediaRecheck\":true,\"blockedReasons\":[" + reasons + "]}";
+    }
+
+    @Test void pinLifecycleUsesPostAndNoContentWithoutLeakingCredentials() throws Exception {
+        code=200;body="{\"userId\":2,\"username\":\"candidate2\",\"displayName\":\"MOCK\",\"attemptId\":\"A-2\",\"pin\":\"12345678\"}";
+        var pin=api.rotatePin("S-1",2);assertThat(method).isEqualTo("POST");
+        assertThat(target).isEqualTo("/api/v2/rooms/S-1/candidates/2/pin/rotate");
+        assertThat(pin.toString()).doesNotContain("12345678");
+        body=body.replace("A-2","../foreign");assertThatThrownBy(()->api.rotatePin("S-1",2)).isInstanceOf(IOException.class);
+        code=204;body="";api.revokePin("S-1",2);
+        assertThat(method).isEqualTo("POST");assertThat(target).isEqualTo("/api/v2/rooms/S-1/candidates/2/pin/revoke");
+    }
+    @Test void sharedPinRoomCreatesAnEmptyRosterAndRotatesOnlyAtTheRoomEndpoint() throws Exception {
+        code=201;body="{\"session\":{\"sessionId\":\"S-1\",\"examId\":\"mock-a\",\"contractVersion\":\"PROCTORED_V2\",\"state\":\"SCHEDULED\",\"attempts\":[]},\"pin\":\"58321\"}";
+        var room=api.createPinRoom(new vn.edu.toeic.protocol.exam.rich.CreatePinRoomRequest("mock-a",120));
+        assertThat(target).isEqualTo("/api/v2/pin-rooms");assertThat(requestBody).doesNotContain("candidateUserIds","proctorUserIds");
+        assertThat(room.session().attempts()).isEmpty();assertThat(room.toString()).doesNotContain("58321");
+        code=200;assertThat(api.rotateSharedPin("S-1").pin()).isEqualTo("58321");assertThat(target).isEqualTo("/api/v2/pin-rooms/S-1/pin/rotate");
+        body=body.replace("58321","123456");assertThatThrownBy(()->api.rotateSharedPin("S-1")).isInstanceOf(IOException.class);
     }
 
     @Test void catalogSendsLimitAndCursorAndChecksThePage() throws Exception {
@@ -135,5 +154,26 @@ class ProctorV2ApiClientTest {
     @Test void closedClientSendsNothing() {
         api.close();
         assertThatThrownBy(() -> api.catalog(null)).isInstanceOf(IOException.class);
+    }
+
+    @Test void candidateCatalogEncodesLiteralSearchAndRejectsInvalidCursors() throws Exception {
+        body="{\"schemaVersion\":2,\"items\":[{\"userId\":4,\"username\":\"B23\",\"displayName\":\"Nguyễn An\"}],\"nextAfterUserId\":4}";
+        assertThat(api.candidates("An_%",null).items()).hasSize(1);
+        assertThat(target).isEqualTo("/api/v2/candidates?limit=20&search=An_%25");
+        assertThat(authorization).isEqualTo("Bearer TEST-only-token");
+        body=body.replace("\"nextAfterUserId\":4","\"nextAfterUserId\":8");
+        assertThatThrownBy(()->api.candidates("",null)).isInstanceOf(IOException.class);
+    }
+
+    @Test void candidateCreateOnlySendsIdentityAndRejectsMismatchedConfirmationAndConflicts() throws Exception {
+        code=201;body="{\"userId\":4,\"username\":\"B23\",\"displayName\":\"Nguyễn An\"}";
+        var request=new CreateCandidateRequest("B23","Nguyễn An");
+        assertThat(api.createCandidate(request).userId()).isEqualTo(4);
+        assertThat(method).isEqualTo("POST");assertThat(target).isEqualTo("/api/v2/candidates");
+        assertThat(com.google.gson.JsonParser.parseString(requestBody).getAsJsonObject().keySet()).containsExactlyInAnyOrder("username","displayName");
+        body=body.replace("B23","DIFFERENT");
+        assertThatThrownBy(()->api.createCandidate(request)).isInstanceOf(IOException.class).hasMessageContaining("không khớp");
+        code=409;body="{\"error\":{\"code\":\"CONFLICT\"}}";
+        assertThatThrownBy(()->api.createCandidate(request)).isInstanceOf(Rejected.class);
     }
 }

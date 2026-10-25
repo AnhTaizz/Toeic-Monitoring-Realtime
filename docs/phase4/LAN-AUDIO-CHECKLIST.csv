@@ -1,0 +1,25 @@
+case_id,procedure_expected,status,machine_a,machine_b,operator,utc_timestamp,evidence_path,notes
+LAN-01,"Record two distinct physical Windows hosts, LAN IP/subnet and artifact SHA256; no credential screenshots",NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+LAN-02,Machine A server bind/listener 8080; Machine B Test-NetConnection and Client URL use Machine A LAN IP,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+LAN-03,Review private-subnet firewall rule manually; no Internet exposure; save redacted configuration,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+FLOW-01,Proctor login; add two candidates through GUI; both appear in catalog,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+FLOW-02,Create one room; exactly one assigned attempt per selected candidate; deadline absent before START,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+FLOW-03,Distribute private PINs; wrong PIN and non-roster candidate denied; no plaintext in logs,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+FLOW-04,Both candidates JOIN from real clients; repeated JOIN retains same attempts,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+PRES-01,JOINED before heartbeat differs from CONNECTED; no joined_at-derived online/ready,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+READY-01,Audio files/manifest match chosen exam; valid images visible; honest speaker-test confirmation,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+AUDIO-01,Human hears correct exam content on Machine B physical headphones/speaker; record listener/device/time,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+AUDIO-02,Human hears each client separately; starting/stopping one does not control the other client audio,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+START-01,Backend refuses START before READY; after both READY START commits one startId/deadline,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+FLOW-05,Answer Listening and Reading; autosave confirmed on both candidates,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+MON-01,A controlled permitted test process observation reaches assigned Proctor dashboard; record eventId,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+NET-01,Disconnect Machine B network; Proctor sees loss; historical JOIN remains,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+NET-02,"Reconnect same client; deadline/writer unchanged; interrupted Listening stays locked, completed never replays",NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+WRITER-01,Duplicate client takeover obeys existing writer contract; stale writer cannot save; no forbidden replay,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+AUTH-01,Candidate A token cannot read/write candidate B attempt; disabled candidate denied,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+FLOW-06,Submit both; answers/results retained; capture SUBMITTED with no secret,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+RECOVERY-01,"Before START discard create response; recover existing room from catalog and rotate PIN, no extra attempt",NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+PIN-01,Old PIN and issued token fail after rotation/revoke; IN_PROGRESS rotation rejected without state mutation,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+RESTART-01,Separate test room: restart Server; persisted deadline/answers retained and active Listening follows fail-closed contract,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+LEGACY-01,Separate non-room PROCTORED_V2 account login/READY/START/save/submit still works,NOT_RUN,,,,,,No second physical host / human hearing available at automated review
+PKG-01,Fresh second Windows host runs extracted portable bundle without Maven or development paths,NOT_RUN,,,,,,No second physical host / human hearing available at automated review

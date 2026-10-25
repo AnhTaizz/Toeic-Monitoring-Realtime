@@ -53,8 +53,10 @@ public final class ToeicClientApplication extends Application {
     private final LoginApiClient loginApiClient = new LoginApiClient();
     private RealtimeClient realtimeClient;
     private ExamApiClient examApiClient;
+    private vn.edu.toeic.client.proctor.redesign.AdminAccountView adminView;
     private AutoCloseable problemSubscription;
     private AutoCloseable connectionSubscription;
+    private AutoCloseable roomEntrySubscription;
     private long viewGeneration;
     private CandidateMonitoringSession monitoring;
     private String monitoringAttempt;
@@ -93,7 +95,8 @@ public final class ToeicClientApplication extends Application {
         Button loginButton = new Button("Đăng nhập");
         Label status = new Label(notice.isBlank() ? ClientSettings.notice() : notice);
         status.setWrapText(true);
-        LoginPane root = new LoginPane(serverField, usernameField, passwordField, loginButton, status);
+        LoginPane root = new LoginPane(serverField, usernameField, passwordField, loginButton, status,null,
+                ()->stage.setScene(roomEntryScene(stage)));
 
         Runnable submit = () -> {
             if (loginButton.isDisabled()) return;
@@ -115,7 +118,8 @@ public final class ToeicClientApplication extends Application {
                                 return;
                             }
                             try {
-                                showRoleScene(stage, serverUrl, response);
+                                if("CANDIDATE".equals(response.user().role()))showAccountPinScene(stage,serverUrl,response);
+                                else showRoleScene(stage, serverUrl, response);
                             } catch (IllegalArgumentException ignored) {
                                 status.setText("Phản hồi đăng nhập không hợp lệ. Hãy đăng nhập lại.");
                                 status.setStyle("-fx-text-fill: #b63f2d; -fx-font-weight: 600;");
@@ -133,12 +137,95 @@ public final class ToeicClientApplication extends Application {
         return applyStyles(new Scene(root, 1366, 820));
     }
 
+    private Scene roomEntryScene(Stage stage) {
+        TextField server=new TextField(ClientSettings.serverUrl()),room=new TextField(),candidate=new TextField();
+        PasswordField pin=new PasswordField();Button enter=new Button("Vào phòng chờ");
+        Label status=new Label(ClientSettings.notice());
+        LoginPane root=new LoginPane(server,candidate,pin,enter,status,room,()->stage.setScene(loginScene(stage)));
+        enter.setId("room-entry-submit");candidate.setId("room-entry-candidate");pin.setId("room-entry-pin");
+        Runnable submit=()->{
+            if(enter.isDisabled())return;
+            enter.setDisable(true);status.setText("Đang kiểm tra thông tin vào phòng…");
+            try {
+                long generation=viewGeneration;
+                loginApiClient.joinRoom(server.getText(),room.getText(),candidate.getText(),pin.getText())
+                        .whenComplete((joined,failure)->Platform.runLater(()->{
+                            if(generation!=viewGeneration)return;
+                            pin.clear();enter.setDisable(false);
+                            if(failure!=null){status.setText(userMessage(failure));return;}
+                            showRoleScene(stage,server.getText(),joined.login());
+                            long roomView=viewGeneration;
+                            Consumer<ConnectionState> enterWhenConnected=state->{
+                                if(state!=ConnectionState.CONNECTED)return;
+                                Platform.runLater(()->{
+                                    if(roomView!=viewGeneration || realtimeClient==null)return;
+                                    if(roomEntrySubscription!=null){try{roomEntrySubscription.close();}catch(Exception ignored){}roomEntrySubscription=null;}
+                                    javafx.scene.Node button=stage.getScene().lookup("#candidate-enter-exam");
+                                    if(button instanceof Button b)b.fire();
+                                });
+                            };
+                            roomEntrySubscription=realtimeClient.onConnectionState(enterWhenConnected);
+                            enterWhenConnected.accept(realtimeClient.connectionState());
+                        }));
+            }catch(IllegalArgumentException invalid){enter.setDisable(false);status.setText(invalid.getMessage());}
+        };
+        enter.setOnAction(event->submit.run());pin.setOnAction(event->submit.run());
+        return applyStyles(new Scene(root,1366,820));
+    }
+    private void showAccountPinScene(Stage stage,String serverUrl,LoginResponse account) {
+        releaseConnectionView();
+        if(realtimeClient!=null){realtimeClient.close();realtimeClient=null;}
+        if(examApiClient!=null){examApiClient.close();examApiClient=null;}
+        long generation=++viewGeneration;
+        PasswordField pin=new PasswordField();pin.setId("account-pin-input");pin.setPromptText("PIN 5 chữ số");
+        pin.setTextFormatter(new javafx.scene.control.TextFormatter<String>(change->change.getControlNewText().matches("[0-9]{0,5}")?change:null));
+        Button enter=new Button("Vào phòng");enter.setId("account-pin-enter");enter.getStyleClass().add("home-primary");
+        Label status=new Label("Nhập PIN do giám thị cung cấp.");status.setId("account-pin-status");status.setWrapText(true);
+        Button legacy=new Button("Ca thi được phân công trước đây");legacy.setOnAction(e->showRoleScene(stage,serverUrl,account));
+        VBox fields=new VBox(14,new Label("Tham gia phòng thi"),pin,enter,status,legacy);fields.setPadding(new javafx.geometry.Insets(24));
+        Tab tab=new Tab("Vào phòng",fields);tab.setClosable(false);TabPane tabs=new TabPane(tab);
+        Button logout=new Button("Đăng xuất");logout.setOnAction(e->{releaseConnectionView();stage.setScene(loginScene(stage));});
+        var root=new CandidateHomePane(account.user().displayName(),account.user().username(),new Label("Đã đăng nhập"),new Label("Nhập PIN → Chuẩn bị Audio/Ảnh → Chờ giám thị START"),tabs,logout);
+        stage.setScene(applyStyles(new Scene(root,1366,820)));
+        Runnable submit=()->{
+            if(enter.isDisabled())return;
+            try {
+                var pending=loginApiClient.joinAccountPin(serverUrl,account,pin.getText());enter.setDisable(true);pin.setDisable(true);status.setText("Đang vào phòng…");
+                pending.whenComplete((joined,failure)->Platform.runLater(()->{
+                    if(generation!=viewGeneration)return;
+                    pin.clear();pin.setDisable(false);enter.setDisable(false);
+                    if(failure!=null){status.setText(userMessage(failure));return;}
+                    showRoleScene(stage,serverUrl,joined.login());
+                    long roomView=viewGeneration;
+                    Consumer<ConnectionState> connected=state->{if(state==ConnectionState.CONNECTED)Platform.runLater(()->{
+                        if(roomView!=viewGeneration || realtimeClient==null)return;
+                        if(roomEntrySubscription!=null){try{roomEntrySubscription.close();}catch(Exception ignored){}roomEntrySubscription=null;}
+                        var button=stage.getScene().lookup("#candidate-enter-exam");if(button instanceof Button b)b.fire();
+                    });};
+                    roomEntrySubscription=realtimeClient.onConnectionState(connected);connected.accept(realtimeClient.connectionState());
+                }));
+            }catch(IllegalArgumentException bad){status.setText(bad.getMessage());}
+        };
+        enter.setOnAction(e->submit.run());pin.setOnAction(e->submit.run());
+    }
+
     private void showRoleScene(Stage stage, String serverUrl, LoginResponse response) {
         RoleViewModel viewModel = RoleViewModel.from(response);
         if (!"v0".equals(response.protocolVersion()) || !"Bearer".equalsIgnoreCase(response.tokenType())) {
             throw new IllegalArgumentException("Phiên đăng nhập không hợp lệ");
         }
         Set<String> scope = response.attemptScope() == null ? Set.of() : Set.copyOf(response.attemptScope());
+        if ("ADMIN".equals(response.user().role())) {
+            releaseConnectionView();
+            if (realtimeClient != null) { realtimeClient.close(); realtimeClient = null; }
+            if (examApiClient != null) { examApiClient.close(); examApiClient = null; }
+            long currentView = ++viewGeneration;
+            adminView = new vn.edu.toeic.client.proctor.redesign.AdminAccountView(serverUrl, response,
+                    () -> leaveDashboard(stage, currentView, ""),
+                    () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."));
+            stage.setScene(applyStyles(new Scene(adminView, 1366, 820)));
+            return;
+        }
         RealtimeClient.Session context = new RealtimeClient.Session(scope, null, null);
         RealtimeClient newClient = new RealtimeClient(serverUrl, response.token());
         releaseConnectionView();
@@ -574,6 +661,8 @@ public final class ToeicClientApplication extends Application {
     }
 
     private void releaseConnectionView() {
+        if (adminView != null) { adminView.close(); adminView = null; }
+        if(roomEntrySubscription!=null){try{roomEntrySubscription.close();}catch(Exception ignored){}roomEntrySubscription=null;}
         closeCandidatePreview();
         viewGeneration++;
         monitoringGeneration++;

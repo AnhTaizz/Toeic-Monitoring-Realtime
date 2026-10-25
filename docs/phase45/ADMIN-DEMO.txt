@@ -1,0 +1,68 @@
+PHASE 4.5 — ADMIN ACCOUNT MANAGEMENT MVP
+
+1. DÙNG ĐÚNG BUILD
+Maven/JDK 21: mvn --batch-mode --no-transfer-progress package
+Client mới (đã gồm dependencies): client/target/client-0.1.0-SNAPSHOT-all.jar
+Server mới: server/target/server-0.1.0-SNAPSHOT.jar
+Phải nâng cả Client và Server; portable Phase 4 cũ chưa có màn hình/role ADMIN.
+Dùng launcher hiện có với JAR mới và runtime Java 21; không cần installer mới.
+Không chép .env, credentials, DB hoặc log private vào bản bàn giao.
+
+2. ADMIN BAN ĐẦU — CHỈ OPERATOR KHỞI TẠO
+V20 chỉ mở rộng CHECK role; không tự tạo Admin hoặc mật khẩu mặc định.
+Trước lần chạy Server đầu tiên, đặt hai biến môi trường riêng:
+  TOEIC_ADMIN_BOOTSTRAP_USERNAME : username Admin, phân biệt hoa/thường.
+  TOEIC_ADMIN_BOOTSTRAP_PASSWORD : mật khẩu riêng ngẫu nhiên, ít nhất 20 ký tự, tối đa 72 byte UTF-8.
+Không dùng TOEIC_SEED_PASSWORD cho Admin. Không đặt password trong tham số CLI hoặc Git.
+Nhập password bằng Read-Host -AsSecureString rồi chỉ chuyển vào environment của tiến trình Server.
+Cấu hình DB_*, TOEIC_SEED_PASSWORD và media roots vẫn theo docs/phase4/DEMO-RUNBOOK.txt.
+Chạy Server, Flyway áp dụng V20. Đăng nhập Admin bằng account login hiện có.
+Ví dụ trong PowerShell tại thư mục portable mới, sau khi đã cấu hình DB/media theo runbook:
+  $adminCredential = Get-Credential -UserName 'admin' -Message 'Nhập mật khẩu Admin riêng, ngẫu nhiên, ít nhất 20 ký tự'
+  $env:TOEIC_ADMIN_BOOTSTRAP_USERNAME = $adminCredential.UserName
+  $env:TOEIC_ADMIN_BOOTSTRAP_PASSWORD = $adminCredential.GetNetworkCredential().Password
+  try { & .\Start-Server.bat }
+  finally {
+    Remove-Item Env:TOEIC_ADMIN_BOOTSTRAP_USERNAME -ErrorAction SilentlyContinue
+    Remove-Item Env:TOEIC_ADMIN_BOOTSTRAP_PASSWORD -ErrorAction SilentlyContinue
+    $adminCredential = $null
+  }
+Mẫu này không in secret hoặc đưa secret vào command line; việc xóa chỉ áp dụng hai biến tạm
+trong PowerShell của operator, không xóa account hoặc dữ liệu. Không lưu secret vào file script.
+Sau khi xác nhận đăng nhập thành công, bỏ cả hai biến bootstrap ở lần chạy tiếp theo.
+Khởi động lại với bootstrap không ghi đè password/role/enabled của account đã tồn tại.
+Nếu username trùng Proctor/Candidate, Server từ chối bootstrap thay vì nâng quyền tài khoản đó.
+Không có API/UI tạo hoặc khóa Admin. Lưu credential Admin trong nơi quản lý bí mật của operator.
+
+3. QUY TRÌNH DEMO
+Admin Login -> Quản lý tài khoản -> Thêm tài khoản.
+Nhập username, họ tên; chọn PROCTOR hoặc CANDIDATE -> Lưu.
+PROCTOR: mật khẩu ngẫu nhiên 256 bit hiện một lần trong hộp thoại. Bàn giao riêng trước khi đóng.
+CANDIDATE: không cấp password dùng chung; dùng Room Code + PIN theo ca thi như Phase 2–3.
+Không có chức năng đổi/reset/khôi phục password trong MVP. Nếu mất response tạo Proctor,
+tìm username trước, tránh tạo trùng. Không thể lấy lại plaintext từ database.
+Không tự sửa password hoặc role của account trùng username.
+
+Tìm theo username/họ tên; chọn lọc vai trò/trạng thái -> Tìm kiếm.
+Trang tiếp dùng cursor theo user ID; Trang đầu bắt đầu lại. Tối đa 20 dòng mỗi trang UI.
+Khóa/Mở khóa ở từng dòng -> dialog xác nhận -> chờ phản hồi Server.
+Khóa Candidate SCHEDULED: mọi account token/PIN token bị thu hồi; JOIN mới bị từ chối.
+Mở khóa: cần login/JOIN mới; token cũ vẫn bị từ chối. Chuẩn bị READY mới khi cần theo hợp đồng cũ.
+Không khóa Candidate có Attempt ACTIVE trong ca IN_PROGRESS hoặc legacy ACTIVE không có Session.
+Không khóa Proctor phụ trách ca SCHEDULED/IN_PROGRESS hoặc legacy ACTIVE không có Session.
+Hiện chưa có API/UI đóng hoặc bàn giao ca trong code hiện tại. Dù mọi Candidate đã Submit,
+Session còn IN_PROGRESS vẫn làm Proctor bị chặn khóa. Demo khóa/mở khóa bằng Proctor chưa có ca.
+Đây là giới hạn bảo thủ của MVP; không sửa DB, đóng/xóa ca hoặc đổi Attempt để vượt kiểm tra.
+
+Admin tạo Proctor -> Proctor Login -> Quản lý thí sinh/Thêm thí sinh -> chọn đề + Candidate
+-> Create Room -> bàn giao Room Code/PIN -> Candidate Tham gia phòng thi -> Audio/Visual READY
+-> Proctor START -> Listening/Reading -> autosave -> Submit. Xem thêm runbook Phase 4.
+
+4. GIỚI HẠN NGHIỆM THU
+Automation cùng máy Windows + PostgreSQL thực; chưa có máy thứ hai/người nghe vật lý.
+Checklist LAN/audio docs/phase4/LAN-AUDIO-CHECKLIST.csv giữ NOT_RUN.
+Không có public signup, email, OTP, analytics, sửa role/password, xóa tài khoản hoặc quản lý Admin đầy đủ.
+Khóa không hủy PIN invitation: khi mở khóa có thể JOIN lại bằng PIN còn hợp lệ; token cũ đã thu hồi.
+WebSocket revalidate khi nhận message và trước push có dữ liệu; idle socket có thể còn mở
+nhưng không được phép tiếp tục thao tác sau khi token đã thu hồi.
+Không chứng nhận production Internet/public exposure hoặc quản trị dữ liệu ngoài MVP.

@@ -68,6 +68,57 @@ class LoginSceneGuiTest {
         snapshot("login-compact.png");
     }
 
+    @Test void candidateCanEnterRoomCredentialsAndWrongPinDoesNotLeaveThemOnScreen() throws Exception {
+        var captured=new java.util.concurrent.atomic.AtomicReference<String>();
+        HttpServer server=HttpServer.create(new InetSocketAddress("127.0.0.1",0),0);
+        server.createContext("/api/v2/rooms/join",exchange->{
+            captured.set(new String(exchange.getRequestBody().readAllBytes(),StandardCharsets.UTF_8));
+            byte[] bytes="{}".getBytes(StandardCharsets.UTF_8);exchange.sendResponseHeaders(401,bytes.length);
+            try(var out=exchange.getResponseBody()){out.write(bytes);}
+        });server.start();
+        try {
+            fx(()->{((Button)stage.getScene().lookup("#login-switch-mode")).fire();return null;});
+            await(()->stage.getScene().lookup("#room-entry-code")!=null);
+            fx(()->{
+                ((TextField)stage.getScene().lookup("#login-server-url")).setText(serverUrl(server));
+                ((TextField)stage.getScene().lookup("#room-entry-code")).setText("TOEIC-123456");
+                ((TextField)stage.getScene().lookup("#room-entry-candidate")).setText("candidate1");
+                ((PasswordField)stage.getScene().lookup("#room-entry-pin")).setText("12345678");
+                ((Button)stage.getScene().lookup("#room-entry-submit")).fire();return null;
+            });
+            await(()->captured.get()!=null && !stage.getScene().lookup("#room-entry-submit").isDisabled());
+            assertThat(captured.get()).contains("TOEIC-123456","candidate1","12345678");
+            fx(()->{
+                assertThat(((PasswordField)stage.getScene().lookup("#room-entry-pin")).getText()).isEmpty();
+                assertThat(((Label)stage.getScene().lookup("#login-status")).getText()).contains("PIN");return null;
+            });
+            snapshot("room-entry.png");
+        }finally {server.stop(0);}
+    }
+
+    private static String serverUrl(HttpServer server) {return "http://127.0.0.1:"+server.getAddress().getPort();}
+    @Test void accountLoginOpensOnlySharedPinAndWrongPinKeepsTheAccountEntryUsable() throws Exception {
+        HttpServer server=HttpServer.create(new InetSocketAddress("127.0.0.1",0),0);var requests=new AtomicInteger();
+        server.createContext("/api/v1/auth/login",e->{
+            String body=new com.google.gson.Gson().toJson(new vn.edu.toeic.protocol.auth.LoginResponse("v0","MOCK","MOCK","MOCK-account","Bearer","2099-01-01T00:00:00Z",
+                new vn.edu.toeic.protocol.auth.LoginResponse.UserView(1,"candidate1","MOCK Candidate","CANDIDATE"),java.util.List.of()));
+            byte[] b=body.getBytes(StandardCharsets.UTF_8);e.getResponseHeaders().set("Content-Type","application/json");e.sendResponseHeaders(200,b.length);try(var out=e.getResponseBody()){out.write(b);}
+        });
+        server.createContext("/api/v2/pin-rooms/join",e->{requests.incrementAndGet();assertThat(e.getRequestHeaders().getFirst("Authorization")).isEqualTo("Bearer MOCK-account");
+            byte[] b="{}".getBytes(StandardCharsets.UTF_8);e.sendResponseHeaders(400,b.length);try(var out=e.getResponseBody()){out.write(b);}});server.start();
+        try {
+            fx(()->{((TextField)stage.getScene().lookup("#login-server-url")).setText(serverUrl(server));
+                ((TextField)stage.getScene().lookup("#login-username")).setText("candidate1");((PasswordField)stage.getScene().lookup("#login-password")).setText("MOCK-password");
+                ((Button)stage.getScene().lookup("#login-submit")).fire();return null;});
+            await(()->stage.getScene().lookup("#account-pin-input")!=null);
+            fx(()->{assertThat(stage.getScene().lookup("#room-entry-candidate")).isNull();assertThat(stage.getScene().lookup("#room-entry-code")).isNull();
+                ((TextField)stage.getScene().lookup("#account-pin-input")).setText("58321");((Button)stage.getScene().lookup("#account-pin-enter")).fire();return null;});
+            await(()->requests.get()==1&&!stage.getScene().lookup("#account-pin-enter").isDisabled());
+            fx(()->{assertThat(((TextField)stage.getScene().lookup("#account-pin-input")).getText()).isEmpty();
+                assertThat(((Label)stage.getScene().lookup("#account-pin-status")).getText()).contains("PIN").doesNotContain("hết hiệu lực");return null;});
+        } finally {server.stop(0);}
+    }
+
     @Test void passwordToggleSharesTheValueAndInvalidOriginNeverAuthenticates() throws Exception {
         fx(() -> {
             var server = (TextField) stage.getScene().lookup("#login-server-url");

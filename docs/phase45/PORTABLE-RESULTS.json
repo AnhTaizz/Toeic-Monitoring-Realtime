@@ -1,0 +1,40 @@
+{
+  "zip": "target/phase45/distribution/toeic-phase45-admin-20261023T174549Z-final.zip",
+  "zipSha256": "835cbd55f01b35b5b0042d6b9b221facbf1100e7aa656b3886bc3556ae1c37ff",
+  "sourceCommit": "273872c35c72596381fefc83ad435930247e93b4",
+  "manifestFilesVerified": 190,
+  "zipCrc": "PASS",
+  "bytecodeInventory": "PASS: packager compared own module classes and nested protocol JAR",
+  "sourceFilesVerified": 29,
+  "smoke": {
+    "ascii": {
+      "path": "target/phase45/runs/distribution/smoke-ascii/result.json",
+      "passed": 9,
+      "failed": 0,
+      "scope": "Same-host Windows production login window and launcher validation, not packaged exam flow",
+      "humanHearing": "NOT_RUN"
+    },
+    "unicode": {
+      "path": "target/phase45/runs/distribution/smoke-unicode/result.json",
+      "passed": 9,
+      "failed": 0,
+      "scope": "Same-host Windows production login window and launcher validation, not packaged exam flow",
+      "humanHearing": "NOT_RUN"
+    },
+    "server": {
+      "path": "target/phase45/runs/portable-server-161e76d76fd24185b207bd4e903a7637/result.json",
+      "passed": 15,
+      "failed": 0,
+      "scope": "Actual portable Server launcher + bundled runtime + owned PostgreSQL; V19/V20 bootstrap/Admin/account credential/disable/enable real HTTP, not an exam or physical LAN",
+      "cleanupClusterStopExit": 0
+    }
+  },
+  "physicalLanHearing": "NOT_RUN",
+  "finalArchiveExtraction": {
+    "scope": "actual final ZIP extraction and bundled Java21 launcher validation; no exam/LAN claim",
+    "zipSha256": "835cbd55f01b35b5b0042d6b9b221facbf1100e7aa656b3886bc3556ae1c37ff",
+    "clientValidateOnlyExit": 0,
+    "archive": "PASS"
+  },
+  "metadataOnlyCorrection": "source path strings normalized; all 190 payload SHA256 unchanged"
+}

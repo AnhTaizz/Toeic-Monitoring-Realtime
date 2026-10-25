@@ -1,0 +1,182 @@
+PHASE 4 — RELEASE VALIDATION REPORT / 23-10-2026
+READINESS: CONDITIONALLY READY cho demo trên một máy. CHƯA nghiệm thu LAN hai máy / nghe vật lý.
+Không triển khai Phase 5. Feature freeze được giữ.
+
+CHECKPOINT / SOURCE
+Phase 3: 8fd23e09f5b30167be4cad14d6c143b2358ee887; commit đúng 23 file đã review/kiểm thử.
+Branch: release/phase4-validation-20261023. Main: 90f1b387ab9401bec1f21dd85973ae29e8ec3316 (giữ nguyên).
+Không reset, rollback, merge, push hoặc đưa log/credential/runtime data vào checkpoint.
+Phase 4 chưa commit để người dùng review. Artifact ghi sourceCommit + productionWorkingTreePatches SHA256.
+Các thay đổi ngoài phạm vi như README.md, start-monitoring-server.ps1, RUN.bat/run-local, .local và data được giữ.
+
+ROOT CAUSE / THAY ĐỔI
+1. Race Listening: đoạn ngắn kết thúc trước STARTED HTTP ACK. UI chuyển sang READY_TO_PLAY nên trước đây không
+   lên lịch heartbeat; tick cũng bỏ qua khoảng chuyển đoạn. Server có thể khóa HEARTBEAT_TIMEOUT giữa playlist.
+   Sửa: duy trì heartbeat trong PLAYING hoặc READY_TO_PLAY khi playbackStarted khác null. Không heartbeat trước
+   lần phát đầu; không thay state machine, backend timeout, writer/deadline, startId, journal hoặc quyền replay.
+   Regression callback xác định: code cũ FAIL; code sửa PASS; Maven ListeningPlaybackTest 9 PASS.
+2. Test demo mới giả định catalog vẫn hiển thị mọi người sau khi tạo Candidate. UI thực tế lọc theo mã mới.
+   Test tìm lại catalog bằng UI, kiểm selection đúng hai người rồi mới Create; giữ assertion hai Attempt.
+3. Dưới tải regression song song, tải 54 file audio vượt 60s; ảnh cho thấy tiến độ khoảng 88%, không phải READY.
+   Chạy GUI tuần tự với timeout 60s đã PASS (59.651s / 14.521s). Sau đó tăng riêng ngân sách chờ lô file trong
+   test lên 120s để tránh flake; giữ nguyên checksum/READY và mọi timeout/invariant production.
+4. Benchmark đầu dùng chung REST/WS HttpClient; reconnect gặp Connection: upgrade, close và JDK từ chối.
+   Harness dùng HttpClient WebSocket riêng như AuthenticatedWebSocketOpener hiện có; không đổi Server.
+   Lượt lỗi được giữ nguyên; phép đo nghiệm thu chạy lại đủ ma trận.
+
+FILE THAY ĐỔI (PHASE 4)
+client/src/main/java/vn/edu/toeic/client/audio/ListeningPlayback.java — fix race heartbeat chuyển đoạn.
+client/src/test/java/vn/edu/toeic/client/audio/ListeningPlaybackTest.java — regression thứ tự callback/ACK, không replay.
+server/src/test/java/vn/edu/toeic/client/proctor/redesign/RoomFlowPostgresGuiTest.java — Proctor login production UI + tạo Candidate + hai người thi;
+   tìm lại catalog, ghi thời gian chuẩn bị và ảnh khi lỗi, ngân sách chờ file có cơ sở đo.
+server/src/test/java/vn/edu/toeic/server/exam/rich/Phase4RoomBenchmarkTest.java — opt-in load test, production Server JAR/JVM riêng, HTTP/WS/PG thật.
+scripts/verify-room-ux.ps1 — AllGui bật các GUI tự động liên quan và khôi phục env sau chạy.
+scripts/verify-phase4-benchmark.ps1 — PG/runner độc lập, lưu XML/private logs/result, không dùng DB hiện có.
+scripts/analyze-phase4-benchmark.py — p50/p95 nearest rank, thống kê theo mức/operation, không bù dữ liệu thiếu.
+scripts/start-release.ps1 — launcher relative path, Java21/URL/config validation, không nhúng credential.
+scripts/package-phase4-portable.ps1 — runtime jlink + JAR/BAT; kiểm bytecode/current classes và material cấm;
+   manifest SHA256 và fingerprint production patch chưa commit.
+scripts/verify-phase4-portable.ps1 — validation/production login window/runtime audio QA, Unicode path.
+docs/phase4/DEMO-RUNBOOK.txt — setup, thao tác demo, tìm lại phòng và PIN recovery.
+docs/phase4/LAN-AUDIO-CHECKLIST.csv — 24 mục NOT_RUN cho hai máy/thính giác/physical recovery.
+docs/phase4/VERIFICATION-METHOD.txt — lệnh, workload và giới hạn phép đo.
+docs/phase4/PHASE4-REPORT.txt — báo cáo này.
+client/src/test/java/vn/edu/toeic/client/audio/AudioPackageSmoke.java — fixture chờ nhả Windows file lock
+   trước khi xóa WAV để test missing-file; retry tối đa 10s, không skip và không đổi assertion bảo vệ READY.
+API/DTO mới: KHÔNG. Migration mới: KHÔNG; PostgreSQL integration dùng Flyway V1–V19 hiện có.
+Tái sử dụng AuthService/Authorization/SignalService, Candidate Management/Catalog, ExamRoomService,
+RichSessionService/Attempt, READY/START, monitoring/presence/WS, autosave/submit/result; không redesign.
+
+SECURITY / SESSION INVARIANTS
+PIN token vẫn khóa candidate/session/attempt; account token không vào room attempt trước/sau JOIN.
+Không thêm allowlist, signup, Admin module hoặc password API. Disabled account bị từ chối theo cơ chế cũ.
+JOIN không tạo Attempt, sửa writer/deadline/startId/READY. WebSocket reconnect không takeover hay replay.
+Audio/Visual READY vẫn bắt buộc; backend START là authority. PIN rotate/revoke chỉ SCHEDULED, không xóa Attempt.
+Backend auth/session/attempt/monitoring production không bị sửa trong Phase 4.
+
+TEST MATRIX — PASS / FAIL / ERROR / SKIP
+Full ban đầu: 1589 / 1 / 0 / 46 (total 1636, exit 1).
+  target/phase4/regression/room-ux-20261023T113900Z-3f4c938f/result.json
+Full sau sửa + mở rộng GUI: 1622 / 1 / 0 / 20 (total 1643, exit 1).
+  target/phase4/regression-fixed/room-ux-20261023T123813Z-1988a698/result.json
+Full cuối cùng: 1623 / 0 / 0 / 20 (total 1643, exit 0).
+  target/phase4/regression-final/room-ux-20261023T131513Z-53b3471f/result.json
+GUI JUnit độc lập sau sửa thao tác: 2 / 0 / 0 / 0; real HTTP/WS/PG, production UI và real MediaPlayer.
+  target/phase4/focused-gui/phase4-focused-gui-20261023T131112Z-284a79f9/result.json
+Chẩn đoán chạy GUI đồng thời full: hai lượt 1 PASS / 1 FAIL ở chờ file; giữ raw data và ảnh, không tính PASS.
+Một runner chẩn đoán từng lỗi repo-root trước khi test chạy; đã sửa đường dẫn, không tính vào PASS JUnit.
+Full cuối: mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC package (tests enabled).
+Command: scripts/verify-room-ux.ps1 -Mode Full -AllGui -PostgresBin <PG_BIN> -JavaHome <JDK21> -MavenCommand <MVN>
+PostgreSQL 18.1, Java 21.0.8, Maven 3.9.11; clusterStopExit=0 và ownedSchemasRemaining=0 ở các runner hoàn tất.
+BUILD SUCCESS đi kèm Room GUI E2E thực tế; không thay cho nghiệm thu physical LAN/audio.
+
+20 SKIP TRONG FULL CUỐI — KHÔNG TÍNH PASS
+2 symlink/cache hardening: Windows không tạo được link theo quyền hiện tại; các nhánh còn lại vẫn chạy.
+2 historical external-server GUI E2E: thiếu TOEIC_RICH_E2E_URL / TOEIC_INTEGRATION_E2E_URL.
+2 installed/app-image client integration: thiếu binary/path tương ứng; portable smoke riêng không phải MSI pass.
+1 benchmark opt-in: chạy riêng bên dưới, vẫn giữ SKIP trong thống kê full.
+1 reserved-V13-history migration fixture: không cung cấp script V13 đặc biệt; clean V1–V19 có chạy PG thật.
+7 MonitoringTimeline GUI: chưa bật TOEIC_MON09_GUI; Room monitoring dashboard/event và backend đã test.
+5 USB integrated demo: không có TOEIC_USB_TEST_RUN_ID/device setup; không chứng nhận USB physical.
+Portable Server startup/auth/catalog/V19 đã kiểm với bundled runtime (xem phần distribution).
+Ảnh hưởng: chưa thể READY vô điều kiện cho installed/physical/legacy-external/optional monitoring coverage.
+
+BENCHMARK THỰC TẾ — MỘT HOST / LOOPBACK
+Run: target/phase4/benchmark/phase4-benchmark-20261023T141707Z-d505df2e
+Fixture MOCK200 tự soạn CC0; 1 Proctor observer + N simulated candidate, mỗi mức 3 phòng độc lập.
+Production Server JAR chạy JVM riêng; generator JVM làm REST/WS. Không có playback/media đầy đủ trong phép đo.
+Monotonic System.nanoTime cùng generator cho request/send/receive; không trừ đồng hồ hai máy.
+Visual lease=60000ms cho protocol simulator; production default 6000ms + desktop renewals chưa được capacity-test.
+CPU 100%=một logical core; RAM Windows working-set snapshot cuối lượt, không phải peak; PostgreSQL không gộp.
+Client trong bảng tải là generator, KHÔNG phải N desktop JavaFX. Startup/warm-up clients=0 được loại khỏi bảng.
+Polling presence 20ms có thêm tải đo lường; disconnect là abort transport rồi chờ non-ONLINE, không phải blackhole.
+Không baseline/proposed comparison, không soak/capacity certification; background host load không kiểm soát.
+Server private logs thực tế có SQL DEBUG; giữ nguyên mức logging trong phép đo, không tối ưu để làm đẹp số.
+Hardware: 12th Gen Intel(R) Core(TM) i5-12450H / 16866684928
+OS/JDK/cores: Windows 11 10.0 / 21.0.8 / 12
+Server JAR SHA256: f33966259c68f9c07a1ef7c9a345fd8ec653bace894b864954b77cdb84f63969
+PASS/FAIL/ERROR/SKIP benchmark: {'failures': 0, 'passed': 1, 'errors': 0, 'tests': 1, 'skipped': 0}
+
+N | HTTP p50/p95 ms | event p50/p95 ms | HTTP error | JOIN | START | Submit
+1 | 15.143/53.913 | 15.256/48.052 | 0.00% | 3/3 | 3/3 | 3/3
+2 | 7.259/36.776 | 13.112/51.937 | 0.00% | 6/6 | 3/3 | 6/6
+5 | 7.380/45.883 | 12.846/38.655 | 0.00% | 15/15 | 3/3 | 15/15
+10 | 5.609/84.896 | 8.788/18.756 | 0.00% | 30/30 | 3/3 | 30/30
+20 | 4.487/86.288 | 55.937/133.256 | 0.00% | 60/60 | 3/3 | 60/60
+
+N | WS connect p95 | presence ONLINE p95 | disconnect detection p95 (ms)
+1 | 11.336 | 116.313 | 6556.137
+2 | 15.877 | 47.758 | 6135.548
+5 | 36.434 | 66.697 | 6353.947
+10 | 51.291 | 72.595 | 6512.587
+20 | 57.756 | 79.625 | 6602.912
+
+N | Server CPU % | generator CPU % | Server RAM MiB | generator RAM MiB (max snapshots)
+1 | 72.14 | 22.62 | 226.41 | 190.17
+2 | 71.50 | 22.03 | 248.54 | 194.92
+5 | 91.08 | 20.53 | 257.07 | 189.76
+10 | 104.97 | 20.13 | 264.52 | 206.09
+20 | 101.76 | 15.96 | 339.01 | 200.77
+Raw: raw.csv, resources.csv, environment.json; summary.json/summary.csv và operations.csv ở run directory.
+Các lượt benchmark lỗi trước được giữ trong target/phase4/benchmark; không trộn vào bảng lượt nghiệm thu.
+Command: scripts/verify-phase4-benchmark.ps1 -PostgresBin <PG_BIN> -JavaHome <JDK21> -MavenCommand <MVN>
+Command: python scripts/analyze-phase4-benchmark.py <RUN_DIRECTORY>
+
+WINDOWS DISTRIBUTION / SMOKE
+Native packaging invocation dùng Process.WaitForExit và PATHEXT chuẩn; log jlink ở ngoài bundle.
+Audio QA từng FAIL do fixture xóa WAV bị Windows khóa; fix bounded wait trong fixture, giữ lượt lỗi.
+Unicode native loader từng FAIL could not find java.dll. Reuse manifest UTF-8 từ package-t3b1.ps1
+cho java.exe trong runtime copy bằng SDK mt.exe; không sửa JDK cài sẵn. BAT gọi PowerShell theo SystemRoot.
+Portable ZIP CUỐI: E:\Project\Toeic-Monitoring-Realtime\target\phase4\distribution\toeic-phase4-20261023T144956Z-a6acfde9.zip
+ZIP integrity: CRC và toàn bộ file hashes theo manifest PASS; Windows Expand-Archive + runtime validation PASS.
+ZIP SHA256: 46ddbcf61f36cd8cbe342a02be4a1380376bb580deaefee641cc8866c663a256
+Java runtime + production client/server JAR + Start-Client.bat / Start-Server.bat / start-release.ps1.
+Explicit allowlist copy; JAR test/private material scan; packaged classes so bytecode với target/classes.
+Không nhúng IP cá nhân, credential, .env, log hoặc workspace path. Exam media/licensed content không ship.
+Existing package preflight: 11 checks PASS (parser/negative config/runtime source/prerequisites); MSI NOT RUN.
+Bundled Server: 5 PASS; real isolated PG/V19/auth/catalog, minimal PATH, target/phase4/portable-server-24bba0eae18c482a94af0946dfadc065/result.json
+Bundled Server: 5 PASS; real isolated PG/V19/auth/catalog, minimal PATH, target/phase4/portable-server-bf7cf31b6f634486aaae4f730dede51f/result.json
+smoke-ascii: PASS 7, FAIL 1; Same-host Windows production login window and launcher validation, not packaged exam flow
+  Desktop sample: {"scope": "production desktop login window, five-second post-open sample; not exam load", "cpuOneCorePercent": 8.077684317893194, "workingSetBytes": 548442112, "cpuMs": 406.25, "elapsedMs": 5029.2879}
+smoke-ascii-retry: PASS 9, FAIL 0; Same-host Windows production login window and launcher validation, not packaged exam flow
+  Desktop sample: {"scope": "production desktop login window, five-second post-open sample; not exam load", "cpuOneCorePercent": 4.359561919331264, "workingSetBytes": 553373696, "cpuMs": 218.75, "elapsedMs": 5017.706}
+smoke-final-ascii: PASS 9, FAIL 0; Same-host Windows production login window and launcher validation, not packaged exam flow
+  Desktop sample: {"scope": "production desktop login window, five-second post-open sample; not exam load", "cpuOneCorePercent": 1.8690369870158847, "workingSetBytes": 550326272, "cpuMs": 93.75, "elapsedMs": 5015.9521}
+smoke-final-unicode: PASS 9, FAIL 0; Same-host Windows production login window and launcher validation, not packaged exam flow
+  Desktop sample: {"scope": "production desktop login window, five-second post-open sample; not exam load", "cpuOneCorePercent": 6.225464696575034, "workingSetBytes": 552214528, "cpuMs": 312.5, "elapsedMs": 5019.7056}
+smoke-unicode: PASS 5, FAIL 4; Same-host Windows production login window and launcher validation, not packaged exam flow
+AudioPackageSmoke dùng production view/cache/JavaFX PCM WAV nhưng API MOCK và hearing confirmation tự động.
+Không ship QA test launcher/classes trong production ZIP. Portable login-window test không phải packaged exam E2E.
+Installer/fresh second Windows acceptance chưa chạy. Không thay đổi firewall, SDK/JDK cài sẵn hoặc system config.
+
+LUỒNG DEMO ĐÃ KIỂM THỬ
+Proctor production Login -> Candidate Management/Save -> chọn lại catalog và hai Candidate -> Create Room
+-> PIN entry hai app -> waiting/connected -> checksum audio + images + speaker MediaPlayer -> Audio/Visual READY
+-> START refusal trước READY / START thành công khi hợp lệ -> actual Listening completion -> Listening/Reading
+answers -> autosave -> monitoring event đến dashboard -> reconnect giữ writer/deadline/COMPLETED -> Submit/Result.
+Room recovery: catalog hiện có -> rotate PIN -> JOIN đúng Attempt -> revoke token -> authorization denied.
+Fixture bootstrap/Flyway trước ca; trong demo chỉ HTTP/WS ghi dữ liệu, SQL chỉ đọc assertion, không sửa DB bằng tay.
+Evidence mới: target/phase4/evidence/final-gui/ (12 file), lọc theo timestamp đúng lượt PASS; không dùng ảnh timeout cũ.
+
+LAN / AUDIO VẬT LÝ — NOT RUN
+Người dùng xác nhận chưa có máy Windows thứ hai và người nghe trực tiếp; chuẩn bị checklist thay cho tuyên bố PASS.
+Thực nghiệm: Windows host -> PostgreSQL loopback; generator JVM (N candidates + Proctor WS) -> Server JAR JVM.
+GUI acceptance: ba production app instances và Spring server trong JVM test, PostgreSQL process riêng.
+Machine A [PostgreSQL + Server + Proctor (+ Candidate 2)] -- trusted private LAN --> Machine B [Candidate 1].
+Thực tế đã chạy: một physical Windows host; server/client loopback. Bind/URL config được đọc và launcher kiểm tra.
+Chưa xác minh: firewall/subnet routing trên hai host, real packet loss/blackhole, actual speaker/headphones,
+full-length exam audio, simultaneous two-device playback, reboot/restart JVM across LAN, duplicate desktop takeover.
+API/context-restart/writer/replay regressions có chạy, nhưng không thay cho các thử nghiệm physical kể trên.
+Checklist: docs/phase4/LAN-AUDIO-CHECKLIST.csv — tất cả 24 mục giữ NOT_RUN để operator điền evidence/time/device.
+
+CÁCH CHẠY / GIỚI HẠN
+Xem docs/phase4/DEMO-RUNBOOK.txt và READ-ME.txt trong ZIP. Máy B không cần Maven/PostgreSQL; dùng bundled runtime.
+Máy A set DB_* / TOEIC_SEED_PASSWORD / TOEIC_AUDIO_ROOT / TOEIC_IMAGE_ROOT riêng rồi Start-Server.bat.
+Client: Start-Client.bat -ServerUrl http://SERVER_LAN_IP:8080; Proctor account login, Candidate chọn Tham gia phòng thi.
+PIN-only Candidate mới không có password được trả về; legacy mode dùng account credential đã quản lý sẵn.
+Tạo phòng chưa có idempotency xuyên client. Khi mất response, tìm catalog/createdAt/roster và rotate PIN trước START;
+không tự retry Create. UI catalog có giới hạn 500 room; không chứng nhận workload vượt giới hạn này.
+Observed GUI preparation 54 tiny files: focused run 59.651s/14.521s; final full 52.957s/13.220s.
+Đây không phải benchmark full-length audio/LAN. Không tối ưu/refactor download trong feature freeze.
+Kết luận: automation và portable demo được nghiệm thu theo số liệu trên; physical gates và SKIP còn lại cần operator
+kiểm tra trước khi chứng nhận triển khai thực tế. Dừng sau Phase 4.

@@ -1,0 +1,77 @@
+TOEIC PHASE 4 — PORTABLE DEMO / RUNBOOK
+
+Status: QA candidate, not physical-LAN accepted. No passwords, PINs or personal IPs are shipped.
+Windows x64. Extract entire ZIP, including runtime. If runtime is absent, install JDK 21 and set JAVA_HOME.
+The same Client is used by Proctor and Candidate. Server URL is a runtime input.
+
+MACHINE A — POSTGRESQL + SERVER + PROCTOR
+1. Install/start PostgreSQL using an existing reviewed deployment procedure. Provision a database/user
+   with the rights required for Flyway V1–V19. Back up an existing DB before deploying a release.
+2. In the launching PowerShell process, set DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD,
+   TOEIC_SEED_PASSWORD, TOEIC_AUDIO_ROOT, TOEIC_IMAGE_ROOT. Use private values; never paste them into reports.
+   Audio/image directories must contain the media referenced by the imported exam, under its exam ID.
+   On the first empty DB, seed accounts use the configured seed password; reuse your established account policy.
+3. Run .\start-release.ps1 -Role Server -BindAddress 0.0.0.0 -Port 8080
+   or Start-Server.bat from that configured process. Keep the console open. Do not start two servers on one port.
+4. On a trusted private LAN, confirm Server listens on 8080. Review any Windows Firewall rule manually:
+   allow inbound TCP 8080 only for the required private subnet. This package does not modify firewall rules.
+5. Run .\Start-Client.bat -ServerUrl http://SERVER_LAN_IP:8080
+   Replace SERVER_LAN_IP with Machine A's private IPv4 address. Use HTTPS on untrusted networks.
+6. Account login: Proctor credentials from your installation. Open session controls. Import/select an existing
+   TOEIC rich exam using the existing import API/tool; this bundle does not include licensed exam content.
+
+MACHINE B — CANDIDATE
+1. Copy/extract the same bundle. No PostgreSQL or Maven is needed for Client; a bundled runtime is included
+   when stated by artifact-manifest.json. If absent, provide JDK 21 via JAVA_HOME.
+2. Check Test-NetConnection SERVER_LAN_IP -Port 8080, then
+   .\Start-Client.bat -ServerUrl http://SERVER_LAN_IP:8080
+   Do not use localhost on Machine B: it points to Machine B, not the Server.
+3. Choose "Tham gia phòng thi". Enter Room Code, Candidate ID, and personal PIN. No account password needed.
+
+CLEAN DEMO (NO MANUAL DATABASE CHANGES DURING EXAM)
+A. Proctor logs in, chooses Quản lý thí sinh -> Thêm thí sinh. Enter unique candidate code and full name, Save.
+   Confirm the new candidate appears in the selection catalog. Create at least two candidates if needed.
+After Save the candidate catalog is filtered to the new code. Tick that candidate, clear/search the catalog
+   and click Find to select the next person; selections survive catalog changes.
+B. Select the TOEIC exam and candidates; leave Room mode on. Click Create once. Confirm one room and one
+   assigned attempt per candidate. Copy each PIN privately only to its candidate. Do not screenshot visible PINs.
+   PIN plaintext display expires in two minutes; clipboard clears after 30 seconds if unchanged.
+C. If creation response is lost, do not blindly click Create again. Refresh/find the existing room by code,
+   creation time and roster. Select it and rotate the affected candidate PIN before START. Test old PIN denial.
+   Cross-client create idempotency is not implemented; two independent creates can still create two sessions.
+D. Candidate joins. Proctor checks historical JOIN separately from current connection and Audio/Visual READY.
+   A JOIN alone is not ONLINE or READY. A candidate with no current heartbeat is not assumed present.
+E. Prepare audio, test speaker/headphones, visually confirm images, then acknowledge readiness honestly.
+   Before both candidates are READY, demonstrate START refusal. After both READY, Proctor confirms START.
+F. Confirm both enter the same server-authoritative exam session with fixed deadlines. Listen, answer Listening
+   and Reading questions, wait for autosave confirmation. Proctor observes monitoring/presence updates.
+G. Disconnect Machine B briefly on a trusted test LAN, reconnect the same client. Verify deadline/writer do not
+   change and Listening does not replay forbidden content. A second writer must follow the takeover contract.
+H. Submit both candidates, confirm SUBMITTED and saved answers/results. Do not close clients before confirmation.
+I. Before START, recovery PIN rotate/revoke must retain the assigned attempt. During IN_PROGRESS these operations
+   are rejected. Revoked PIN/token cannot reenter. Do not attempt PIN rotation as a live-exam recovery mechanism.
+
+DIAGNOSTICS
+- URL validation: .\start-release.ps1 -Role Client -ServerUrl http://SERVER_LAN_IP:8080 -ValidateOnly
+  This checks Java/JAR/URL only, not connectivity or authorization.
+- Connection refused: server process/bind/port/firewall/IP. Wrong endpoint: use an origin, not /api or a WS URL.
+- Authentication denied: verify room roster, candidate ID, current PIN, enabled account and lockout policy.
+- START blocked: read backend refusal; refresh audio/visual readiness. Do not edit DB or bypass readiness.
+- Preserve only redacted timestamps, IDs, state snapshots and artifact checksums as acceptance evidence.
+- Stop Server using its console Ctrl+C after candidates submit. Persist PostgreSQL and exam asset directories.
+
+LIMITS
+Unsigned portable bundle; MSI/clean-machine installer acceptance is pending. Physical two-machine LAN and human
+hearing require the separate LAN-AUDIO-CHECKLIST.csv. Automated loopback/MediaPlayer tests are separate evidence.
+Benchmark simulated clients do not play audio, download all media, or represent full desktop CPU/RAM load.
+
+EXISTING REPOSITORY DEMO FIXTURE (Machine A developer/operator setup only)
+For the self-authored CC0 MOCK200 fixture, before starting Server set:
+  TOEIC_AUDIO_ROOT=<REPO>\docs\plan-v2\fixtures\ex02\assets\audio
+  TOEIC_IMAGE_ROOT=<REPO>\docs\plan-v2\fixtures\ex02\assets\images
+From the repository PowerShell, after Server starts:
+  .\scripts\demo-ex06-v2.ps1 -ServerUrl http://SERVER_LAN_IP:8080 -ImportOnly
+Supply TOEIC_SEED_PASSWORD privately in that process. ImportOnly avoids creating a legacy Session/Attempt.
+Then create Candidate/Room through Proctor UI. MOCK clips are about 10ms; they verify MediaPlayer lifecycle
+but are NOT a meaningful human-hearing acceptance dataset. Use approved full-length content for listening tests.
+The repository fixture/import tool is not silently included in the portable production ZIP.

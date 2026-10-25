@@ -40,6 +40,11 @@ class ExamScopeRefreshGuiTest {
                 ((TextField)stage.getScene().lookup("#login-username")).setText("candidate1");
                 ((PasswordField)stage.getScene().lookup("#login-password")).setText("MOCK-password");
             button(stage,"Đăng nhập").fire();return null;});
+            // ACCOUNT_PIN is the default after account login; explicitly enter the retained legacy flow.
+            long entryDeadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(8);boolean pinEntry=false;
+            while(System.nanoTime()<entryDeadline){pinEntry=fx(()->stage.getScene().lookup("#account-pin-input")!=null);if(pinEntry)break;Thread.sleep(20);}
+            assertThat(pinEntry).isTrue();
+            fx(()->{button(stage,"Ca thi được phân công trước đây").fire();return null;});
             assertThat(arrived.await(8,TimeUnit.SECONDS)).isTrue();
             fx(()->{assertThat(((Button)stage.getScene().lookup("#candidate-refresh-attempts")).isDisable()).isTrue();
                 assertThat(button(stage,"Bắt đầu giám sát").isDisable()).as("Start cannot race initial captured selection").isTrue();

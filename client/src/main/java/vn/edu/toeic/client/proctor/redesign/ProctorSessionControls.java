@@ -10,10 +10,15 @@ import javafx.scene.control.TabPane;
  */
 final class ProctorSessionControls extends TabPane implements AutoCloseable {
     private final AutoCloseable v2, legacy;
+    private final ProctorV2SessionPane accountPin;
 
     <L extends Node & AutoCloseable> ProctorSessionControls(ProctorV2SessionPane v2, L legacy) {
+        this(null,v2,legacy);
+    }
+    <L extends Node & AutoCloseable> ProctorSessionControls(ProctorV2SessionPane accountPin,ProctorV2SessionPane v2,L legacy) {
         this.v2 = v2;
         this.legacy = legacy;
+        this.accountPin=accountPin;
         setId("session-controls-tabs");
         setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
         Tab rich = new Tab("Ca PROCTORED_V2 (200 câu)", v2);
@@ -21,10 +26,16 @@ final class ProctorSessionControls extends TabPane implements AutoCloseable {
         rich.selectedProperty().addListener((observable, was, selected) -> v2.tabSelected(selected));
         Tab old = new Tab("Ca V1 / công cụ cũ", legacy);
         old.setId("tab-v1");
+        if(accountPin!=null) {
+            Tab current=new Tab("Phòng thi TOEIC",accountPin);current.setId("tab-account-pin");
+            current.selectedProperty().addListener((observable,was,selected)->accountPin.tabSelected(selected));
+            getTabs().add(current);rich.setText("Phòng / ca V2 cũ");v2.tabSelected(false);
+        }
         getTabs().addAll(rich, old);
     }
 
     @Override public void close() {
+        if(accountPin!=null)accountPin.close();
         try { v2.close(); } catch (Exception ignored) { }
         try { legacy.close(); } catch (Exception ignored) { }
     }

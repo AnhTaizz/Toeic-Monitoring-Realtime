@@ -19,7 +19,8 @@ import vn.edu.toeic.server.monitoring.EventConflictException;
 @ConditionalOnProperty(name="toeic.monitoring.signal-experiment-enabled",havingValue="true")
 public class SignalService {
     private final JdbcClient jdbc;
-    public SignalService(JdbcClient jdbc){this.jdbc=jdbc;}
+    private final AuthorizationService authorization;
+    public SignalService(JdbcClient jdbc, AuthorizationService authorization){this.jdbc=jdbc;this.authorization=authorization;}
     @Transactional(timeout=10)
     public Stored store(AuthenticatedUser user,String tokenHash,SignalMessage message,String connection){
         String attempt=message.attemptId();lockAttempt(attempt);
@@ -74,10 +75,10 @@ public class SignalService {
     private void lockAttempt(String a){SignalJson.id(a);if(jdbc.sql("SELECT attempt_id FROM monitoring_attempts WHERE attempt_id=:a FOR SHARE").param("a",a).query(String.class).optional().isEmpty())throw AccessDeniedException.forbidden();}
     private void authorize(AuthenticatedUser user,String hash,String attempt,Role required){
         var identities=jdbc.sql("""
-            SELECT u.id,u.username,u.role,u.enabled,s.revoked_at,s.expires_at
+            SELECT u.id,u.username,u.role,u.enabled,s.revoked_at,s.expires_at,s.room_attempt_id
             FROM login_sessions s JOIN user_accounts u ON u.id=s.user_id WHERE s.token_hash=:hash FOR SHARE OF s,u
             """).param("hash",hash).query((r,n)->{
-                return new LockedSession(new AuthenticatedUser(r.getLong("id"),r.getString("username"),Role.valueOf(r.getString("role"))),
+                return new LockedSession(new AuthenticatedUser(r.getLong("id"),r.getString("username"),Role.valueOf(r.getString("role")),r.getString("room_attempt_id")),
                     r.getBoolean("enabled"),r.getTimestamp("revoked_at")!=null,r.getTimestamp("expires_at").toInstant());
             }).list();
         // SELECT target-list expressions can be evaluated BEFORE LockRows waits. Read the clock only AFTER the locks are held.
@@ -86,6 +87,7 @@ public class SignalService {
         LockedSession locked=identities.getFirst();
         if(!locked.user().equals(user)||!locked.enabled()||locked.revoked()||!locked.expiresAt().isAfter(checkedAt))throw AccessDeniedException.unauthorized();
         if(required!=null&&user.role()!=required)throw AccessDeniedException.forbidden();
+        authorization.requireAttempt(user,attempt);
         Long owner=jdbc.sql("SELECT candidate_user_id FROM monitoring_attempts WHERE attempt_id=:a AND state='ACTIVE'").param("a",attempt).query(Long.class).optional().orElse(null);
         if(owner==null)throw AccessDeniedException.forbidden();
         if(user.role()==Role.CANDIDATE){if(owner!=user.userId())throw AccessDeniedException.forbidden();}

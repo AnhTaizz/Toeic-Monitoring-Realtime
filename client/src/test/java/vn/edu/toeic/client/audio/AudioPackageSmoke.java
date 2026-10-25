@@ -122,7 +122,7 @@ public final class AudioPackageSmoke {
 
             fire("Tải / chuẩn bị lại audio"); waitFor("Thử loa");
             try (var paths = Files.list(output.resolve("Bộ nhớ audio có dấu và khoảng trắng 2/speaker"))) {
-                for (Path path : paths.toList()) Files.delete(path);
+                for (Path path : paths.toList()) deleteAfterRelease(path);
             }
             fire("Thử loa"); waitText("Thử loa thất bại");
             result.add("PASS missing speaker sample raises REAL media error; READY stays locked");
@@ -172,6 +172,17 @@ public final class AudioPackageSmoke {
         long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(15);
         while (System.nanoTime() < deadline) { if (fx(check)) return; Thread.sleep(20); }
         throw new IllegalStateException("UI timeout");
+    }
+    /** Fixture setup: native disposal/file scanners may release a Windows WAV handle asynchronously. */
+    private static void deleteAfterRelease(Path target) throws Exception {
+        long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(10);
+        while(true){
+            try{Files.delete(target);return;}
+            catch(java.nio.file.FileSystemException locked){
+                if(System.nanoTime()>=deadline)throw locked;
+                Thread.sleep(25);
+            }
+        }
     }
     private static void screenshot(Path target) throws Exception {
         WritableImage snapshot = fx(() -> stage.getScene().snapshot(null));

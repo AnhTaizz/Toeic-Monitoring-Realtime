@@ -34,6 +34,67 @@ class ProctorV2ControllerTest {
     @AfterEach void close() { if (controller != null) controller.close(); }
 
     private void advanceMillis(long millis) { clock.addAndGet(TimeUnit.MILLISECONDS.toNanos(millis)); }
+    @Test void accountPinNeedsNoPreselectedRosterAndUsesCanStartWithoutRedefiningAllReady() {
+        var c=direct();c.enableAccountPin();c.loadCatalog(false);c.select("mock-a");
+        api.readiness=()->new vn.edu.toeic.protocol.exam.rich.SessionReadiness(2,V2Fixtures.SESSION,java.time.Instant.now(),false,
+                List.of(V2Fixtures.attempt("MOCK-attempt-1",false,false)),"ACCOUNT_PIN",true);
+        c.createSelectedRoom("120",3,"");
+        assertThat(api.pinCreates).hasSize(1);assertThat(api.creates).isEmpty();assertThat(c.snapshot().created().attempts()).isEmpty();
+        assertThat(c.snapshot().readiness().allReady()).isFalse();assertThat(c.snapshot().canStart()).isTrue();
+        assertThat(c.snapshot().toString()).doesNotContain("58321");c.forgetPins();assertThat(c.snapshot().sharedPin()).isNull();
+        c.start();assertThat(api.starts).hasSize(1);
+    }
+    @Test void accountPinCreationTimeoutNeverAutomaticallyCreatesAnotherSession() {
+        var c=direct();c.enableAccountPin();c.loadCatalog(false);c.select("mock-a");
+        api.pinCreate=()->{throw new IOException("MOCK lost create response");};
+        c.createSelectedRoom("120",3,"");c.createSelectedRoom("120",3,"");
+        assertThat(api.pinCreates).hasSize(1);assertThat(c.snapshot().canCreate()).isFalse();
+        assertThat(c.snapshot().createError()).contains("Tìm lại phòng");assertThat(api.starts).isEmpty();
+    }
+
+    @Test void roomCreationTimeoutBlocksBlindRecreationUntilExistingRoomIsOpened() throws Exception {
+        var api=new V2Fixtures.FakeApi();var controller=new ProctorV2Controller(api,x->{},()->{},()->{},Runnable::run,null,null,3000,System::nanoTime);
+        controller.loadCatalog(false);controller.select("mock-a");controller.loadCandidates("",false);controller.toggleCandidate(2);
+        api.create=()->{throw new java.io.IOException("timeout");};
+        controller.createSelectedRoom("120",3,"");controller.createSelectedRoom("120",3,"");
+        assertThat(api.creates).hasSize(1);assertThat(controller.snapshot().canCreate()).isFalse();
+        assertThat(controller.snapshot().createError()).contains("kiểm tra dashboard");controller.close();
+    }
+
+    @Test void provisionedCandidateIsVisibleImmediatelyWithoutCreatingOrStartingAnExam() {
+        var c=direct();c.loadCandidates("",false);c.createCandidate(" B23NEW "," Nguyễn An ");
+        assertThat(c.snapshot().savedCandidate().username()).isEqualTo("B23NEW");
+        assertThat(c.snapshot().candidates()).containsExactly(c.snapshot().savedCandidate());
+        assertThat(c.snapshot().selectedCandidates()).isEmpty();
+        assertThat(api.creates).isEmpty();assertThat(api.starts).isEmpty();assertThat(scopeRefreshes.get()).isZero();
+        c.toggleCandidate(c.snapshot().savedCandidate().userId());c.loadCatalog(false);c.select("mock-a");
+        c.createSelectedSession("120",3,"");
+        assertThat(api.creates.getFirst().candidateUserIds()).containsExactly(c.snapshot().savedCandidate().userId());
+    }
+
+    @Test void duplicateAndUnknownOutcomeAreExplainedWithoutAutomaticResubmission() {
+        var c=direct();api.candidateCreate=()->{throw new Rejected(409,"CONFLICT");};
+        c.createCandidate("B23NEW","Nguyễn An");assertThat(c.snapshot().candidateSaveError()).contains("đã tồn tại");
+        assertThat(api.candidateCreates).hasSize(1);assertThat(c.snapshot().savedCandidate()).isNull();
+        api.candidateCreate=()->{throw new IOException("Lost response");};
+        c.createCandidate("B23NEW","Nguyễn An");assertThat(c.snapshot().candidateSaveError()).contains("tìm lại mã");
+        assertThat(api.candidateCreates).hasSize(2);assertThat(api.creates).isEmpty();
+    }
+
+    @Test void staleSearchCannotReplaceFreshCandidateResultsOrCreatedIdentity() {
+        var queue=new java.util.ArrayList<Runnable>();
+        controller=new ProctorV2Controller(api,last::set,expired::incrementAndGet,scopeRefreshes::incrementAndGet,
+                queue::add,null,null,3000,clock::get);
+        controller.loadCandidates("old",false);controller.loadCandidates("new",false);
+        var fresh=new vn.edu.toeic.protocol.exam.rich.CandidateCatalogItem(9,"NEW","MOCK new");
+        api.candidatePage=()->new vn.edu.toeic.protocol.exam.rich.CandidateCatalogPage(2,List.of(fresh),null);queue.get(1).run();
+        api.candidatePage=()->new vn.edu.toeic.protocol.exam.rich.CandidateCatalogPage(2,List.of(),null);queue.get(0).run();
+        assertThat(controller.snapshot().candidates()).containsExactly(fresh);
+        controller.createCandidate("B23NEW","Nguyễn An");controller.createCandidate("B23OTHER","MOCK duplicate click");
+        assertThat(queue).hasSize(3);queue.get(2).run();
+        assertThat(api.candidateCreates).hasSize(1);
+        assertThat(controller.snapshot().candidates()).containsExactly(controller.snapshot().savedCandidate());
+    }
 
     @Test void catalogUsesServerCursorAndBlockedExamsCannotCreateSessions() {
         var c = direct();
