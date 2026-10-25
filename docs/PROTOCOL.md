@@ -1085,3 +1085,22 @@ Không đổi endpoint/wire/auth/schema. Dashboard dùng API typed history ACTIV
 ## MON-08 — read model EXPERIMENTAL, 21/10/2026
 
 Thêm GET `/api/v1/monitoring/attempts/{attemptId}/alert-summary[?cutoff=ISO_INSTANT]`, chỉ khi cả signal-experiment-enabled và alert-experiment-enabled=true; mặc địnhOFF. Bearer header/assignedPROCTOR/ACTIVE-only, reuse auth locks trước query; không cache. REPEATABLE_READ committed snapshot, cutoff DB-clock được quản lý rõ; cap200/source (20–200),100summary/5evidence,512KiB. Response schema1 WINDOW_ONLY có policyVersion/experimental/from/cutoff/sourceLimited/summaryLimited/inputEvents/gapEvents/unavailableEvents/excludedProcessEvents/coverageNote/items; item gồm ID/run/source/type/rule/priority/count/window/evidence/explanation. droppedCount là decimal string exact (không JSON integer sum trànlong).4rules/ngưỡng/bounds/errors/exactfields tại [contract/runbook](MON08_EXPERIMENTAL_ALERTS.md). Read projection type LOST/RESTORED/MINIMIZED/OTHER không là signal wire type mới. Không đổi WS/original history/queue/COMMIT-ACK/state/migration. FULLdefault, experimentsOFF/policy/hardware/gatespending. Không verdict/đổi trạng thái thi.
+
+## Admin, phòng thi và ACCOUNT_PIN — endpoint hiện hành (bản phát hành 25/10/2026)
+
+Mục này ghi lại endpoint đã có từ nhánh ACCOUNT_PIN (`ff6aacf`) và được tích hợp vào bản phát hành; chi tiết bất biến và kiểm chứng ở [account-pin/IMPLEMENTATION-REPORT.md](account-pin/IMPLEMENTATION-REPORT.md). Mọi endpoint dùng `Authorization: Bearer`; role do server kiểm, response chứa credential một lần có `Cache-Control: no-store`.
+
+| Endpoint | Quyền | Ghi chú |
+|---|---|---|
+| GET `/api/v2/admin/accounts` | ADMIN | Tìm/lọc Proctor/Candidate theo trang; không trả hash, PIN, token |
+| POST `/api/v2/admin/accounts` | ADMIN | Tạo PROCTOR/CANDIDATE (không tạo ADMIN); `issueLoginPassword=true` trả mật khẩu ngẫu nhiên một lần |
+| PATCH `/api/v2/admin/accounts/{id}/enabled` | ADMIN | Khóa/mở khóa; khóa thu hồi token |
+| POST `/api/v2/admin/accounts/{id}/password/reset` | ADMIN | Chỉ Candidate không đang thi; mật khẩu một lần, thu hồi mọi token |
+| POST `/api/v2/pin-rooms` | PROCTOR | `{examId,durationMinutes?}` → Session SCHEDULED + PIN chung 5 số một lần |
+| GET `/api/v2/pin-rooms` | PROCTOR được giao | Trang cursor, không có credential |
+| POST `/api/v2/pin-rooms/join` | CANDIDATE (token tài khoản) | `{pin,requestId}`; tạo hoặc dùng lại đúng một Attempt, trả token có scope attempt |
+| POST `/api/v2/pin-rooms/{sessionId}/pin/rotate` | PROCTOR được giao | Chỉ trước START; PIN cũ và admission token cũ hết hiệu lực |
+| POST `/api/v2/rooms`, `/api/v2/rooms/join`, `/api/v2/rooms/{sessionId}/candidates/{candidateId}/pin/{rotate,revoke}`, GET `/api/v2/rooms`, `/api/v2/rooms/{sessionId}/presence` | PROCTOR / Candidate theo PIN cá nhân | Phòng legacy (V19), giữ backend và test; UI bị ẩn mặc định trong bản phát hành |
+| POST `/api/v2/candidates`, GET `/api/v2/candidates` | PROCTOR | Danh bạ Candidate (Phase 2) |
+
+START dùng endpoint PROCTORED_V2 sẵn có, cùng shape; policy chọn theo `admission_mode` lưu trong DB: phòng ACCOUNT_PIN cho START khi có ít nhất một người JOIN, người chưa READY bị ghi `NOT_READY_AT_START` trước COMMIT và chỉ làm Reading đến deadline chung. WebSocket không thêm type mới.

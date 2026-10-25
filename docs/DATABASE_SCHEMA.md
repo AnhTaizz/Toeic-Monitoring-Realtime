@@ -143,3 +143,13 @@ Không đưa phần giải thích/đáp án đúng vào DTO candidate. `correct_
 `V14__rich_import_contract.sql` thêm exams.content_version SMALLINT NOT NULL DEFAULT1 CHECK1/2; exam_sources.option_content_status DEFAULT UNVERIFIED CHECK UNVERIFIED/VERIFIED; exam_content_blocks.document_id/order/title nullable cùng CHECK pair và group owner. Block order toàn group vẫn unique xuyên documents; importer kiểm consistency ID↔order/title. Rich ghi content_version2, legacy giữ1; không sửa V1–V12 hoặc thêm session version/visual readiness persistence.
 
 V13 đang được dùng trong [PR74 MON07](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/pull/74), nên EX03 chọn số14 theo task. Nhánh này chỉ V1–V12,V14: fresh13 scripts, upgrade12→14 một script. Phải phối hợp A/C thứ tự merge/deploy trước khi tích hợp hai migration; chưa kiểm MON07 chung. [Luồng insert/FK/rollback, defaults và evidence](EX03_RICH_IMPORTER_VERIFICATION.md).
+
+## V19–V21 — phòng thi, Admin và ACCOUNT_PIN (bản phát hành 25/10/2026)
+
+| Migration | Thay đổi |
+|---|---|
+| `V19__exam_room_admission.sql` | Bảng `exam_rooms`, `exam_room_members`; `login_sessions.room_attempt_id` gắn token có scope với attempt của phòng |
+| `V20__admin_account_role.sql` | Mở rộng `user_accounts_role_check` thêm `ADMIN` |
+| `V21__account_pin_admission.sql` | `exam_rooms` thêm chế độ admission, hash và lookup HMAC của PIN chung (unique index); `exam_room_members.pin_hash` cho phép NULL ở chế độ mới; bảng `account_pin_join_limits` lưu hạn mức nhập sai PIN theo tài khoản |
+
+V1–V18 giữ nguyên. Phòng có sẵn trước V21 mặc định `LEGACY_PIN`. Nâng cấp kiểm bằng `AccountPinPostgresTest` (DB V20 có dữ liệu → V21) và `scripts/verify-release-server.ps1 -UpgradeFromServerJar` (DB do Server main V18 tạo → V21); kết quả ở [release/RELEASE-REPORT.md](release/RELEASE-REPORT.md).

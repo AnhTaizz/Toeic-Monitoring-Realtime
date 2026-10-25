@@ -1,5 +1,7 @@
 # ACCOUNT_PIN — chạy và demo
 
+> **Lưu trữ (checkpoint `ff6aacf`).** Hướng dẫn hiện hành cho bản phát hành tích hợp: [../DEMO-RUNBOOK.md](../DEMO-RUNBOOK.md). Trang này giữ lại cách chạy của nhánh ACCOUNT_PIN trước khi tích hợp.
+
 Luồng chính: **Admin cấp tài khoản → Proctor chọn đề, tạo phòng → Candidate đăng nhập, nhập PIN chung → READY → Proctor START → làm bài, autosave và Submit.** Không cần lập danh sách Candidate trước hoặc phát PIN riêng.
 
 ## Chuẩn bị Server

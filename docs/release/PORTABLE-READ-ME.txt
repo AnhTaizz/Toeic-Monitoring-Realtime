@@ -1,0 +1,100 @@
+TOEIC MONITOR - BẢN PORTABLE WINDOWS
+====================================
+
+Bộ này gồm Server và Client cùng một bản build, kèm Java 21 runtime riêng.
+Không cần cài JDK. Không chứa mật khẩu, PIN, khóa HMAC, token, đề thi hay media.
+
+Nội dung thư mục
+----------------
+  Start-Server.bat      Chạy Server (máy giám thị/máy chủ).
+  Start-Client.bat      Mở ứng dụng cho Admin, Giám thị hoặc Thí sinh.
+  server.env.example    Mẫu cấu hình Server (chép thành server.env rồi điền).
+  start-release.ps1     Launcher dùng chung cho hai file .bat.
+  server.jar, client.jar, runtime\   Ứng dụng và Java 21.
+  artifact-manifest.json   SHA-256 từng file và commit nguồn.
+
+Đường dẫn giải nén có thể chứa dấu tiếng Việt và khoảng trắng.
+
+
+1. CHUẨN BỊ SERVER (làm một lần)
+--------------------------------
+a) PostgreSQL 18 đã cài và đang chạy trên máy Server, có database và user
+   riêng cho ứng dụng. Không mở cổng PostgreSQL ra mạng LAN.
+   Server tự áp dụng migration Flyway (đến V21) khi khởi động. Sao lưu DB
+   trước khi nâng cấp từ bản cũ; không reset DB đang có dữ liệu.
+
+b) Media của đề: hai thư mục tuyệt đối chứa audio và ảnh, dạng
+   <root>\<examId>\<file>. Đề STUDY4 dùng đúng root do công cụ
+   tools/study4-adapter tạo ra; không thay bằng media MOCK. Thiếu file hoặc
+   sai checksum thì thí sinh không READY được.
+
+c) Chép server.env.example thành server.env (cùng thư mục) và điền:
+   DB_*, TOEIC_SEED_PASSWORD, TOEIC_AUDIO_ROOT, TOEIC_IMAGE_ROOT,
+   TOEIC_ROOM_PIN_KEY và lần đầu là TOEIC_ADMIN_BOOTSTRAP_USERNAME/PASSWORD
+   (mật khẩu Admin 20-72 ký tự, khác seed password).
+   server.env là bí mật cục bộ: không gửi kèm ZIP, không chụp màn hình.
+
+d) Tạo khóa PIN MỘT LẦN bằng PowerShell, dán dòng in ra vào server.env:
+
+   $b = New-Object byte[] 32
+   $r = [Security.Cryptography.RandomNumberGenerator]::Create()
+   try { $r.GetBytes($b) } finally { $r.Dispose() }
+   'TOEIC_ROOM_PIN_KEY=' + [Convert]::ToBase64String($b).TrimEnd('=').Replace('+','-').Replace('/','_')
+
+   Giữ nguyên khóa qua mọi lần khởi động lại. Đổi khóa làm PIN phòng hiện
+   có không dùng được nữa.
+
+e) Kiểm tra cấu hình mà chưa khởi động:  Start-Server.bat -ValidateOnly
+
+f) Windows Firewall: cho phép inbound TCP cổng 8080 (profile Private).
+
+
+2. CHẠY
+-------
+Server:  bấm Start-Server.bat. Launcher kiểm Java, cấu hình, khóa PIN, thư
+         mục media, PostgreSQL và cổng 8080 rồi mới chạy. Giữ cửa sổ mở;
+         Ctrl+C để dừng. Đổi cổng: Start-Server.bat -Port 8090
+
+Client:  bấm Start-Client.bat rồi nhập địa chỉ Server, ví dụ
+         http://192.168.1.10:8080  (IP lấy bằng ipconfig trên máy Server).
+         Có thể truyền sẵn:  Start-Client.bat -ServerUrl http://192.168.1.10:8080
+         Trên chính máy Server có thể dùng http://127.0.0.1:8080.
+         Mở Client nhiều lần để có cửa sổ Admin, Giám thị, Thí sinh riêng.
+
+
+3. LUỒNG DEMO
+-------------
+Admin      đăng nhập -> Quản lý tài khoản -> tạo Giám thị và Thí sinh.
+           Mỗi tài khoản nhận mật khẩu ngẫu nhiên chỉ hiển thị MỘT lần;
+           bàn giao riêng. "Cấp mật khẩu" để cấp lại khi bị mất.
+Giám thị   đăng nhập -> Điều khiển ca -> Phòng thi TOEIC -> chọn đề ->
+           Tạo phòng -> nhận PIN 5 số, đọc cho thí sinh. Theo dõi JOINED
+           và READY, rồi START. Nếu còn người chưa READY, phần mềm hỏi xác
+           nhận một lần: người đó mất phần Listening của lượt này.
+Thí sinh   đăng nhập -> nhập PIN -> phòng chờ: tải audio, thử loa, xác nhận
+           nghe được và sẵn sàng -> chờ START -> Listening (phát một lần)
+           -> Reading -> Nộp bài. Đáp án tự lưu.
+Giám sát   Giám thị xem Tổng quan, Cảnh báo, Timeline. Mất kết nối là
+           "UNKNOWN/quan sát thấy", không phải bằng chứng gian lận.
+
+
+4. LỖI THƯỜNG GẶP
+-----------------
+"Missing ..."                 Thiếu dòng trong server.env.
+"... must be an absolute ..."  Media root phải là đường dẫn đầy đủ (C:\...).
+"Cannot reach PostgreSQL"     PostgreSQL chưa chạy hoặc sai DB_HOST/DB_PORT.
+"Port 8080 is already in use" Server cũ còn chạy; dừng bằng Ctrl+C.
+Client không kết nối được     Sai IP/cổng, firewall chặn, hoặc hai máy
+                              không cùng mạng. Thử: Test-NetConnection IP -Port 8080
+Không READY được              Media thiếu/sai checksum, hoặc chưa xác nhận
+                              nghe được.
+
+
+5. GIỚI HẠN ĐÃ BIẾT
+-------------------
+- Chưa ký số; Windows SmartScreen có thể cảnh báo khi mở lần đầu.
+- Nghiệm thu LAN hai máy thật và nghe audio bằng người thật được ghi riêng
+  trong báo cáo phát hành; xem trạng thái ở README của repository.
+- Giao diện legacy (mã phòng + PIN cá nhân, ca V1) bị ẩn mặc định; chỉ dùng
+  cho kiểm thử hồi quy: đặt biến môi trường TOEIC_UI_LEGACY=true trước khi
+  mở Client.

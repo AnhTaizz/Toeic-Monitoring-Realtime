@@ -1,9 +1,9 @@
 param([Parameter(Mandatory=$true)][string]$JavaHome,[string]$OutputRoot,[switch]$WithoutRuntime,[string]$ManifestTool,
- [ValidatePattern('^[A-Za-z0-9_-]+$')][string]$ReleaseName='toeic-phase4',[string]$ReadMe)
+ [ValidatePattern('^[A-Za-z0-9_.-]+$')][string]$ReleaseName='toeic-monitor-portable',[string]$ReadMe)
 $ErrorActionPreference='Stop'
 $env:PATHEXT='.COM;.EXE;.BAT;.CMD'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-if(-not $OutputRoot){$OutputRoot=Join-Path $repo 'target\phase4\distribution'}
+if(-not $OutputRoot){$OutputRoot=Join-Path $repo 'target\release\distribution'}
 $run=$ReleaseName+'-'+[DateTime]::UtcNow.ToString('yyyyMMddTHHmmssZ')+'-'+[Guid]::NewGuid().ToString('N').Substring(0,8)
 $root=Join-Path $OutputRoot $run
 if(Test-Path -LiteralPath $root){throw 'Output already exists'}
@@ -12,7 +12,9 @@ New-Item -ItemType Directory -Force $root|Out-Null
 Copy-Item -LiteralPath (Join-Path $repo 'client\target\client-0.1.0-SNAPSHOT-all.jar') -Destination (Join-Path $root 'client.jar')
 Copy-Item -LiteralPath (Join-Path $repo 'server\target\server-0.1.0-SNAPSHOT.jar') -Destination (Join-Path $root 'server.jar')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'start-release.ps1') -Destination $root
-if(-not $ReadMe){$ReadMe=Join-Path $repo 'docs\phase4\DEMO-RUNBOOK.txt'}
+# Template only: every secret value is empty. The operator's filled server.env never enters the bundle.
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'release-server.env.example') -Destination (Join-Path $root 'server.env.example')
+if(-not $ReadMe){$ReadMe=Join-Path $repo 'docs\release\PORTABLE-READ-ME.txt'}
 Copy-Item -LiteralPath $ReadMe -Destination (Join-Path $root 'READ-ME.txt')
 $ascii=[Text.Encoding]::ASCII
 foreach($role in @('Client','Server')){
