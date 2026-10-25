@@ -7,7 +7,7 @@ Hệ thống thi TOEIC theo mô hình Client–Server, có giám sát máy thí 
 | Vai trò | Sau khi đăng nhập |
 |---|---|
 | **Admin** | Quản lý tài khoản: tạo Giám thị/Thí sinh, cấp mật khẩu một lần, khóa/mở khóa. |
-| **Giám thị** | Điều khiển ca → Phòng thi TOEIC: chọn đề → tạo phòng, nhận **PIN 5 số** → theo dõi JOINED/READY → **START**. Theo dõi cảnh báo và Timeline giám sát. |
+| **Giám thị** | Điều khiển ca → Phòng thi TOEIC: chọn đề → tạo phòng, nhận **PIN 5 số** → theo dõi JOINED/READY → **START**. Theo dõi tiến trình, USB, focus/cửa sổ của từng thí sinh trên Tổng quan, Chi tiết thí sinh và Timeline. |
 | **Thí sinh** | Nhập PIN → phòng chờ (tải audio, thử loa, xác nhận sẵn sàng) → Listening phát một lần → Reading → Nộp bài. Đáp án tự lưu. |
 
 START khi còn người chưa READY cần xác nhận một lần; người đó làm Reading trong thời gian còn lại, không được phát bù Listening. Deadline do Server quyết định chung cho phòng.
@@ -78,4 +78,5 @@ Kết quả của bản phát hành hiện tại: [docs/release/RELEASE-REPORT.m
 
 - Nghiệm thu LAN hai máy Windows thật và nghe audio bằng người thật: xem trạng thái trong [báo cáo phát hành](docs/release/RELEASE-REPORT.md); không suy ra từ test cùng máy.
 - Bản portable chưa ký số. Giao diện legacy (vào phòng bằng mã phòng + PIN cá nhân, ca V1) bị ẩn mặc định, backend và test vẫn giữ; bật lại cho kiểm thử hồi quy bằng `TOEIC_UI_LEGACY=true`.
-- Mất heartbeat được hiển thị là UNKNOWN/"quan sát thấy", không phải bằng chứng gian lận. Giám sát USB, focus, cửa sổ và màn hình ở chế độ thử nghiệm, mặc định tắt.
+- Mất heartbeat được hiển thị là UNKNOWN/"quan sát thấy", không phải bằng chứng gian lận.
+- Giám sát USB lưu trữ (có mặt/cắm/rút), focus, cửa sổ và màn hình được **bật bởi launcher phát hành** (`Start-*.bat`; tắt bằng `-NoSignalMonitoring`); chạy JAR trực tiếp thì mặc định tắt. Chỉ quan sát trên máy thí sinh đã được thông báo; không đọc nội dung hay serial USB, không chặn thiết bị. Polling có thể bỏ sót thao tác cắm/rút quá nhanh giữa hai lần quét.

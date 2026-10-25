@@ -80,7 +80,9 @@ class CandidateManagementGuiPostgresTest {
 
     private ProctorRedesignView view;private Stage stage;private RealtimeClient realtime;
     private String previousSettings;
-    @BeforeAll static void toolkit() {try{Platform.startup(()->{});}catch(IllegalStateException alreadyStarted){}Platform.setImplicitExit(false);}
+    // Phase 2 candidate management lives in the old V2 room tab, hidden in the release default; this regression opts in.
+    @BeforeAll static void toolkit() {try{Platform.startup(()->{});}catch(IllegalStateException alreadyStarted){}Platform.setImplicitExit(false);System.setProperty("toeic.ui.legacy","true");}
+    @AfterAll static void defaultUi() {System.clearProperty("toeic.ui.legacy");}
 
     @Test void productionProctorCreatesCandidateSelectsByNameAndExplicitlyAssignsExactlyOneAttempt() throws Exception {
         openUi();openForm("B23GUI-PG","Nguyễn Văn An");

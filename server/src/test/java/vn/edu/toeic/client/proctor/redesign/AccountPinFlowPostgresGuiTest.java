@@ -103,6 +103,10 @@ class AccountPinFlowPostgresGuiTest {
         props.put("toeic.admin.bootstrap.username","admin-e2e");props.put("toeic.admin.bootstrap.password",password+"-separate-admin");
         props.put("spring.flyway.schemas",schema);props.put("spring.flyway.default-schema",schema);props.put("toeic.seed.password",password);
         props.put("toeic.audio.root",temporary.resolve("audio").toString());props.put("toeic.image.root",temporary.resolve("images").toString());
+        // Release launchers enable process + USB/focus/window signals, so this E2E runs the same configuration.
+        // USB reads this machine's real Windows CIM provider: presence/status only, no device is changed here.
+        System.setProperty("toeic.monitoring.signal-experiment-enabled","true");System.setProperty("toeic.monitoring.usb-enabled","true");
+        props.put("toeic.monitoring.signal-experiment-enabled","true");
         props.put("toeic.room.pin-key",Base64.getUrlEncoder().withoutPadding().encodeToString("MOCK-32-byte-account-pin-test-key!".getBytes(StandardCharsets.US_ASCII)));props.put("toeic.visual.lease-ms","6000");props.put("toeic.listening.maintenance-enabled","true");props.put("logging.level.root","ERROR");
         var spring=new SpringApplication(vn.edu.toeic.server.ToeicServerApplication.class);spring.setBannerMode(Banner.Mode.OFF);
         // Logging initializes before context initializers; isolate this GUI fixture from earlier test contexts.
@@ -111,6 +115,7 @@ class AccountPinFlowPostgresGuiTest {
         server=spring.run();base="http://127.0.0.1:"+((WebServerApplicationContext)server).getWebServer().getPort();
     }
     @AfterAll void cleanup() throws Exception {
+        System.clearProperty("toeic.monitoring.signal-experiment-enabled");System.clearProperty("toeic.monitoring.usb-enabled");
         http.close();if(server!=null)server.close();
         if(previousAudioCache==null)System.clearProperty("toeic.audio.cacheDirectory");else System.setProperty("toeic.audio.cacheDirectory",previousAudioCache);
         if(database!=null){try(var s=database.createStatement()){s.execute("DROP SCHEMA "+schema+" CASCADE");}database.close();}
@@ -198,6 +203,18 @@ class AccountPinFlowPostgresGuiTest {
             for(int i=0;i<2;i++) {
                 Stage current=stages[i];String attempt=attempts.get(i),token=scoped.get(i).token();
                 await("personal exam access",()->FxSupport.fx(()->current.getScene().lookup("#room-pick-question")!=null),40);
+                // USB in the ACCOUNT_PIN exam: the real CIM observer reaches this attempt's server history, and an
+                // unchanged device state over further scans adds no new USB event (no repeated alerts).
+                String usbRows="SELECT count(*) FROM monitoring_signal_events WHERE attempt_id='"+attempt+"' AND source='WINDOWS_USB_STORAGE'";
+                await("USB observer committed for this attempt",()->count(usbRows)>0,60);
+                long usbEvents=count(usbRows+" AND event_type<>'OBSERVER_STATUS'");
+                var signalField=ToeicClientApplication.class.getDeclaredField("signalMonitoring");signalField.setAccessible(true);
+                var app=clients[i];
+                var signals=(vn.edu.toeic.client.monitoring.CandidateExamSignalMonitoring)FxSupport.fx(()->signalField.get(app));
+                assertThat(signals).as("ACCOUNT_PIN exam starts the shared signal run").isNotNull();
+                long scans=signals.usbStatus().scans();
+                await("three more real USB scans",()->signals.usbStatus().scans()>=scans+3,60);
+                assertThat(count(usbRows+" AND event_type<>'OBSERVER_STATUS'")).as("unchanged USB state is not re-reported").isEqualTo(usbEvents);
                 if(i<readyCount){awaitText(current,"Server đã xác nhận phát xong",150);pickQuestion(current,1);clickRadio(current,"option-q001-A");}
                 else assertThat(call("GET","/api/v1/attempts/"+attempt+"/listening/status",null,token,200).get("interruptionReason").getAsString()).isEqualTo("NOT_READY_AT_START");
                 pickQuestion(current,101);clickRadio(current,"option-q101-A");

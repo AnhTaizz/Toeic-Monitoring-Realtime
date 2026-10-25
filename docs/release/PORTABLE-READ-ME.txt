@@ -74,8 +74,12 @@ Giám thị   đăng nhập -> Điều khiển ca -> Phòng thi TOEIC -> chọn 
 Thí sinh   đăng nhập -> nhập PIN -> phòng chờ: tải audio, thử loa, xác nhận
            nghe được và sẵn sàng -> chờ START -> Listening (phát một lần)
            -> Reading -> Nộp bài. Đáp án tự lưu.
-Giám sát   Giám thị xem Tổng quan, Cảnh báo, Timeline. Mất kết nối là
-           "UNKNOWN/quan sát thấy", không phải bằng chứng gian lận.
+Giám sát   Giám thị xem Tổng quan, Cảnh báo, Chi tiết thí sinh, Timeline:
+           tiến trình, USB lưu trữ (cắm/rút), focus và cửa sổ. Mất kết nối
+           là "UNKNOWN/quan sát thấy", không phải bằng chứng gian lận.
+           Thí sinh được thông báo trước khi vào phòng. Không đọc nội dung
+           hay serial USB. Tắt giám sát USB/tín hiệu (chỉ khi được phép):
+           Start-Server.bat -NoSignalMonitoring  /  Start-Client.bat -NoSignalMonitoring
 
 
 4. LỖI THƯỜNG GẶP

@@ -65,7 +65,9 @@ Mở `Start-Client.bat` nhiều lần (mỗi vai một cửa sổ). Máy Thí si
    - Có người chưa READY: một hộp xác nhận; người đó **mất Listening** của lượt này và làm Reading trong thời gian còn lại, không cộng giờ.
    - Tất cả READY: START trực tiếp.
 5. Thí sinh READY nghe Listening **một lần** rồi làm Reading. Chọn đáp án, chờ tự lưu, *Nộp bài* và xác nhận.
-6. Giám thị xem *Tổng quan*, *Cảnh báo*, *Timeline đa tín hiệu*. Mất heartbeat hiển thị UNKNOWN — "quan sát thấy", không phải kết luận gian lận.
+6. Giám thị xem *Tổng quan*, *Cảnh báo*, *Chi tiết thí sinh* (khối "Đang quan sát trên máy thí sinh": tiến trình, USB, focus, cửa sổ) và *Timeline đa tín hiệu*. Mất heartbeat hiển thị UNKNOWN — "quan sát thấy", không phải kết luận gian lận.
+
+**Demo USB** (máy Thí sinh thật, đang ở màn làm bài): USB cắm sẵn hiện `USB_STORAGE_PRESENT_AT_START` một lần; rút USB và giữ khoảng 10 giây → `USB_STORAGE_REMOVED`; cắm lại, giữ khoảng 10 giây → `USB_STORAGE_CONNECTED`. Giám thị mở Timeline, chọn đúng lượt thi và nguồn `WINDOWS_USB_STORAGE` (hoặc Tất cả nguồn). Trạng thái không đổi thì không sinh event mới. Lỗi đọc USB hiện là nguồn UNKNOWN/ERROR, không được hiểu là "đã rút", và không làm gián đoạn bài thi. Chỉ quan sát USB lưu trữ; không đọc file hay serial, không chặn thiết bị. Thao tác cắm/rút nhanh hơn chu kỳ quét có thể không được ghi.
 
 Tình huống đáng demo:
 

@@ -5,8 +5,12 @@ param(
  [string]$BindAddress='0.0.0.0',
  [ValidateRange(1,65535)][int]$Port=8080,
  [string]$EnvFile,
+ [switch]$NoSignalMonitoring,
  [switch]$ValidateOnly
 )
+# Release default: process monitoring plus USB storage presence/connect/disconnect and focus/window/display
+# signals (required for the handover). Candidates see the observation notice before entering a room.
+$signals=(-not $NoSignalMonitoring.IsPresent).ToString().ToLowerInvariant()
 $ErrorActionPreference='Stop'
 $env:PATHEXT='.COM;.EXE;.BAT;.CMD'
 $root=$PSScriptRoot
@@ -25,7 +29,8 @@ if($Role -eq 'Client'){
  $uri=$null
  if(-not[Uri]::TryCreate($ServerUrl,[UriKind]::Absolute,[ref]$uri) -or $uri.Scheme -notin @('http','https') -or $uri.UserInfo -or $uri.Query -or $uri.Fragment -or $uri.AbsolutePath -notin @('','/')){throw 'Server URL must be an HTTP/HTTPS origin without credential, path, query or fragment.'}
  $jar=Join-Path $root 'client.jar'
- $opts=@('-Duser.timezone=UTC',('-Dtoeic.server.url='+$uri.GetLeftPart([UriPartial]::Authority)),'-Dtoeic.realtime.delta-experimental=false','-jar',$jar)
+ $opts=@('-Duser.timezone=UTC',('-Dtoeic.server.url='+$uri.GetLeftPart([UriPartial]::Authority)),'-Dtoeic.realtime.delta-experimental=false',
+  ('-Dtoeic.monitoring.signal-experiment-enabled='+$signals),('-Dtoeic.monitoring.usb-enabled='+$signals),'-jar',$jar)
 }else{
  $required=@('DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','TOEIC_SEED_PASSWORD','TOEIC_AUDIO_ROOT','TOEIC_IMAGE_ROOT','TOEIC_ROOM_PIN_KEY')
  $optional=@('TOEIC_ADMIN_BOOTSTRAP_USERNAME','TOEIC_ADMIN_BOOTSTRAP_PASSWORD')
@@ -54,7 +59,8 @@ if($Role -eq 'Client'){
  if(-not $key -or $key.Length -lt 32){throw 'TOEIC_ROOM_PIN_KEY must be base64url of at least 32 random bytes. Generate it once (READ-ME.txt) and keep it unchanged across restarts.'}
  if(-not $env:TOEIC_ADMIN_BOOTSTRAP_USERNAME -or -not $env:TOEIC_ADMIN_BOOTSTRAP_PASSWORD){Write-Output 'Note: TOEIC_ADMIN_BOOTSTRAP_USERNAME/PASSWORD not set. Admin login works only if this database already has an Admin account.'}
  $jar=Join-Path $root 'server.jar'
- $opts=@('-Duser.timezone=UTC','-jar',$jar,('--server.address='+$BindAddress),('--server.port='+$Port),'--toeic.state.delta-enabled=false')
+ $opts=@('-Duser.timezone=UTC','-jar',$jar,('--server.address='+$BindAddress),('--server.port='+$Port),'--toeic.state.delta-enabled=false',
+  ('--toeic.monitoring.signal-experiment-enabled='+$signals))
 }
 if(-not(Test-Path -LiteralPath $jar)){throw ('Missing '+$Role+' JAR')}
 if($ValidateOnly){Write-Output ($Role+' launcher validation PASS; no network connection or exam was started.');exit 0}

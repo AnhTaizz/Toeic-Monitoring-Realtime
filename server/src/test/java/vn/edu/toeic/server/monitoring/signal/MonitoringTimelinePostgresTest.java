@@ -61,9 +61,11 @@ class MonitoringTimelinePostgresTest {
     boolean cancelRequested(){return fixture.cancelRequested();}
     final List<AutoCloseable> gui=new ArrayList<>();
     final Set<Thread> initialThreads=Thread.getAllStackTraces().keySet();
-    @BeforeAll void toolkit(){try{Platform.startup(()->{});}catch(IllegalStateException started){ }Platform.setImplicitExit(false);}
+    // These cases drive the assigned-attempt candidate home ("Bắt đầu giám sát"); after ACCOUNT_PIN a candidate
+    // login opens the PIN page first and that home is the retained legacy entry, hidden in the release default.
+    @BeforeAll void toolkit(){try{Platform.startup(()->{});}catch(IllegalStateException started){ }Platform.setImplicitExit(false);System.setProperty("toeic.ui.legacy","true");}
     @AfterEach void closeGui()throws Exception{for(int n=gui.size()-1;n>=0;n--)gui.get(n).close();gui.clear();}
-    @AfterAll void teardown()throws Exception{try{closeGui();fixture.teardown();waitFor("owned toeic workers terminate after resource close",()->Thread.getAllStackTraces().keySet().stream().noneMatch(t->!initialThreads.contains(t)&&t.getName().startsWith("toeic-")&&t.isAlive()));}finally{Platform.exit();}}
+    @AfterAll void teardown()throws Exception{System.clearProperty("toeic.ui.legacy");try{closeGui();fixture.teardown();waitFor("owned toeic workers terminate after resource close",()->Thread.getAllStackTraces().keySet().stream().noneMatch(t->!initialThreads.contains(t)&&t.getName().startsWith("toeic-")&&t.isAlive()));}finally{Platform.exit();}}
     static <T>T fx(Callable<T> action)throws Exception{var f=new CompletableFuture<T>();Platform.runLater(()->{try{f.complete(action.call());}catch(Throwable t){f.completeExceptionally(t);}});return f.get(8,TimeUnit.SECONDS);}
     static void waitFor(String condition,BooleanSupplier ready)throws Exception{long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(10);while(System.nanoTime()<until){if(ready.getAsBoolean())return;Thread.sleep(25);}throw new AssertionError(condition);}
     Stage stage(String title)throws Exception{return fx(()->{var s=new Stage();s.setTitle(title);s.setScene(new Scene(new Label(title),640,400));s.show();gui.add(()->fx(()->{s.close();return null;}));return s;});}
@@ -572,6 +574,9 @@ class MonitoringTimelinePostgresTest {
     }
     void waitCandidateControls(Stage stage,String attempt)throws Exception {
         waitFor("candidate scope and start control ready",()->{try{return fx(()->{
+            if(stage.getScene().lookup("#account-pin-input")!=null){
+                vn.edu.toeic.client.MonitoringApplicationProbe.button(stage,"Ca thi được phân công trước đây").fire();return false;
+            }
             @SuppressWarnings("unchecked")var box=(ComboBox<String>)stage.getScene().lookup("#candidate-attempts");
             if(box==null||!box.getItems().contains(attempt)||vn.edu.toeic.client.MonitoringApplicationProbe.button(stage,"Bắt đầu giám sát").isDisabled())return false;
             box.setValue(attempt);return true;
