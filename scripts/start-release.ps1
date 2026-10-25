@@ -34,7 +34,8 @@ if($Role -eq 'Client'){
  $opts=@('-Duser.timezone=UTC',('-Dtoeic.server.url='+$uri.GetLeftPart([UriPartial]::Authority)),'-Dtoeic.realtime.delta-experimental=false',
   ('-Dtoeic.monitoring.signal-experiment-enabled='+$signals),('-Dtoeic.monitoring.usb-enabled='+$signals),'-jar',$jar)
 }else{
- $required=@('DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','TOEIC_SEED_PASSWORD','TOEIC_AUDIO_ROOT','TOEIC_IMAGE_ROOT','TOEIC_ROOM_PIN_KEY')
+ # No TOEIC_SEED_PASSWORD: a release never creates the development demo accounts.
+ $required=@('DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','TOEIC_AUDIO_ROOT','TOEIC_IMAGE_ROOT','TOEIC_ROOM_PIN_KEY')
  $optional=@('TOEIC_ADMIN_BOOTSTRAP_USERNAME','TOEIC_ADMIN_BOOTSTRAP_PASSWORD')
  # Operator settings live in server.env next to this launcher (copied from server.env.example).
  # Values already set in the process environment win; nothing from the file is printed.
@@ -59,10 +60,11 @@ if($Role -eq 'Client'){
  $key=$null
  try{$text=$env:TOEIC_ROOM_PIN_KEY.Replace('-','+').Replace('_','/');$text+='='*((4-$text.Length%4)%4);$key=[Convert]::FromBase64String($text)}catch{$key=$null}
  if(-not $key -or $key.Length -lt 32){throw 'TOEIC_ROOM_PIN_KEY must be base64url of at least 32 random bytes. Generate it once (READ-ME.txt) and keep it unchanged across restarts.'}
- if(-not $env:TOEIC_ADMIN_BOOTSTRAP_USERNAME -or -not $env:TOEIC_ADMIN_BOOTSTRAP_PASSWORD){Write-Output 'Note: TOEIC_ADMIN_BOOTSTRAP_USERNAME/PASSWORD not set. Admin login works only if this database already has an Admin account.'}
+ if(-not $env:TOEIC_ADMIN_BOOTSTRAP_USERNAME -or -not $env:TOEIC_ADMIN_BOOTSTRAP_PASSWORD){Write-Output 'Note: TOEIC_ADMIN_BOOTSTRAP_USERNAME/PASSWORD not set. Admin login works only if this database already has an Admin account; a new database has no accounts.'}
  $jar=Join-Path $root 'server.jar'
+ # Command-line value wins over any TOEIC_SEED_DEMO_ACCOUNTS left in the environment.
  $opts=@('-Duser.timezone=UTC','-jar',$jar,('--server.address='+$BindAddress),('--server.port='+$Port),'--toeic.state.delta-enabled=false',
-  ('--toeic.monitoring.signal-experiment-enabled='+$signals))
+  ('--toeic.monitoring.signal-experiment-enabled='+$signals),'--toeic.seed.demo-accounts=false')
 }
 if(-not(Test-Path -LiteralPath $jar)){throw ('Missing '+$Role+' JAR')}
 if($ValidateOnly){Write-Output ($Role+' launcher validation PASS; no network connection or exam was started.');exit 0}

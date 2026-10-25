@@ -72,8 +72,8 @@ try {
         if(-not $plainProcess.HasExited){Get-CimInstance Win32_Process -Filter "ParentProcessId=$($plainProcess.Id)" | Where-Object {$_.ExecutablePath -eq $plain.FileName} | ForEach-Object {Stop-Process -Id $_.ProcessId -ErrorAction SilentlyContinue};$plainProcess.Kill();$plainProcess.WaitForExit()}
         if($runtimeProcess){$runtimeProcess.Dispose()};$plainProcess.Dispose()
     }
-    foreach($key in @('JAVA_HOME','PATH','JAVA_TOOL_OPTIONS','TOEIC_PG_INTEGRATION','TOEIC_PROCTOR_GUI','TOEIC_INSTALLED_CLIENT','DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','TOEIC_SEED_PASSWORD')){$previous[$key]=[Environment]::GetEnvironmentVariable($key,'Process')}
-    if(Test-Path -LiteralPath '.env'){foreach($line in Get-Content -LiteralPath '.env' -Encoding UTF8){if($line -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD)\s*=(.*)$'){[Environment]::SetEnvironmentVariable($Matches[1],$Matches[2].Trim().Trim('"').Trim("'"),'Process')}}}
+    foreach($key in @('JAVA_HOME','PATH','JAVA_TOOL_OPTIONS','TOEIC_PG_INTEGRATION','TOEIC_PROCTOR_GUI','TOEIC_INSTALLED_CLIENT','DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','TOEIC_SEED_PASSWORD', 'TOEIC_SEED_DEMO_ACCOUNTS')){$previous[$key]=[Environment]::GetEnvironmentVariable($key,'Process')}
+    if(Test-Path -LiteralPath '.env'){foreach($line in Get-Content -LiteralPath '.env' -Encoding UTF8){if($line -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD|TOEIC_SEED_DEMO_ACCOUNTS)\s*=(.*)$'){[Environment]::SetEnvironmentVariable($Matches[1],$Matches[2].Trim().Trim('"').Trim("'"),'Process')}}}
     $defaults=@{DB_HOST='127.0.0.1';DB_PORT='5432';DB_NAME='toeic';DB_USER='toeic';TOEIC_SEED_PASSWORD='ChangeMe123!'}
     foreach($key in $defaults.Keys){if(-not[Environment]::GetEnvironmentVariable($key,'Process')){[Environment]::SetEnvironmentVariable($key,$defaults[$key],'Process')}}
     $env:JAVA_HOME=$JavaHome;$env:PATH=(Join-Path $JavaHome 'bin')+';'+$env:PATH

@@ -32,7 +32,7 @@ powershell -ExecutionPolicy Bypass -File scripts\package-phase4-portable.ps1 -Ja
 
 Script đóng gói kiểm bytecode trong JAR khớp source vừa build, tạo runtime Java 21 riêng, `artifact-manifest.json` (SHA-256 từng file) và ZIP trong `target\release\distribution\`. Cần Windows SDK `mt.exe` để runtime chạy được trong đường dẫn Unicode.
 
-Chạy từ source để phát triển: chép `.env.example` thành `.env` và điền, `docker compose up -d --wait`, `mvn package -DskipTests`, rồi `powershell -File scripts\start-monitoring-server.ps1` (tự đọc `.env`); Client: `mvn -pl client -am javafx:run`. Tài khoản `MOCK` `candidate1`, `candidate2`, `proctor1` dùng `TOEIC_SEED_PASSWORD`, chỉ cho môi trường phát triển.
+Chạy từ source để phát triển: chép `.env.example` thành `.env` và điền, `docker compose up -d --wait`, `mvn package -DskipTests`, rồi `powershell -File scripts\start-monitoring-server.ps1` (tự đọc `.env`); Client: `mvn -pl client -am javafx:run`. Tài khoản `MOCK` `candidate1`, `candidate2`, `proctor1` chỉ được tạo khi bật tường minh `TOEIC_SEED_DEMO_ACCOUNTS=true` kèm `TOEIC_SEED_PASSWORD` (đã có trong `.env.example`), chỉ cho phát triển/kiểm thử; Server không có mật khẩu demo mặc định, và launcher phát hành luôn tắt tài khoản demo. Test Maven của module `server` bật cờ này cho JVM test trong `server/pom.xml`.
 
 ## Kiểm thử
 

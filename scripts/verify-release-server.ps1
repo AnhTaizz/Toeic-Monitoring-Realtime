@@ -4,7 +4,8 @@ param([Parameter(Mandatory=$true)][string]$Bundle,[Parameter(Mandatory=$true)][s
 # With -ImportJson the given rich-import payload (for example a STUDY4 adapter output) and its media
 # roots replace the MOCK fixture; the Proctor imports it and the catalog must list it as selectable.
 # Release smoke for the portable Server: Unicode copy of the bundle, server.env loading, fail-closed
-# configuration checks, real start on an owned PostgreSQL cluster, Admin bootstrap and V21.
+# configuration checks, real start on an owned PostgreSQL cluster, Admin bootstrap and V21, and no demo
+# accounts in a release even when TOEIC_SEED_DEMO_ACCOUNTS=true is left in the environment.
 # With -UpgradeFromServerJar the owned database is first created and seeded by that older Server,
 # then upgraded by this bundle. Secrets are random per run, written only under the private output
 # folder and removed at the end. Not an exam flow, not LAN.
@@ -32,7 +33,8 @@ $dbUser='release_smoke';$dbName='release_smoke'
 $dbPassword=[Guid]::NewGuid().ToString('N');$seed=[Guid]::NewGuid().ToString('N');$adminPassword=[Guid]::NewGuid().ToString('N')
 $bytes=New-Object byte[] 32;$rng=[Security.Cryptography.RandomNumberGenerator]::Create();try{$rng.GetBytes($bytes)}finally{$rng.Dispose()}
 $pinKey=[Convert]::ToBase64String($bytes).TrimEnd('=').Replace('+','-').Replace('/','_')
-$settings=[ordered]@{DB_HOST='127.0.0.1';DB_PORT=[string]$dbPort;DB_NAME=$dbName;DB_USER=$dbUser;DB_PASSWORD=$dbPassword;TOEIC_SEED_PASSWORD=$seed
+# No TOEIC_SEED_PASSWORD in server.env: a release does not create demo accounts. $seed is only for the older Server.
+$settings=[ordered]@{DB_HOST='127.0.0.1';DB_PORT=[string]$dbPort;DB_NAME=$dbName;DB_USER=$dbUser;DB_PASSWORD=$dbPassword
  TOEIC_AUDIO_ROOT=(Join-Path $media 'audio');TOEIC_IMAGE_ROOT=(Join-Path $media 'images');TOEIC_ROOM_PIN_KEY=$pinKey
  TOEIC_ADMIN_BOOTSTRAP_USERNAME='release-admin';TOEIC_ADMIN_BOOTSTRAP_PASSWORD=$adminPassword}
 $names=@($settings.Keys)
@@ -46,7 +48,7 @@ function Launch([string]$file,[string]$arguments,[hashtable]$processEnv){
  $p=New-Object Diagnostics.Process;$p.StartInfo.FileName=$file;$p.StartInfo.Arguments=$arguments
  $p.StartInfo.WorkingDirectory=$copy;$p.StartInfo.UseShellExecute=$false;$p.StartInfo.RedirectStandardOutput=$true;$p.StartInfo.RedirectStandardError=$true
  $p.StartInfo.EnvironmentVariables['PATH']=$env:SystemRoot+'\System32;'+$env:SystemRoot
- foreach($n in $names+@('JAVA_HOME','JAVA_TOOL_OPTIONS','PGPASSWORD')){$p.StartInfo.EnvironmentVariables.Remove($n)}
+ foreach($n in $names+@('JAVA_HOME','JAVA_TOOL_OPTIONS','PGPASSWORD','TOEIC_SEED_PASSWORD','TOEIC_SEED_DEMO_ACCOUNTS')){$p.StartInfo.EnvironmentVariables.Remove($n)}
  if($processEnv){foreach($k in $processEnv.Keys){$p.StartInfo.EnvironmentVariables[$k]=$processEnv[$k]}}
  [void]$p.Start();return $p
 }
@@ -86,6 +88,9 @@ function Login([string]$base,[string]$user,[string]$password){
  $body=@{username=$user;password=$password;requestId=[Guid]::NewGuid().ToString()}|ConvertTo-Json -Compress
  return Invoke-RestMethod ($base+'/api/v1/auth/login') -Method Post -ContentType 'application/json; charset=utf-8' -Body $body -TimeoutSec 10
 }
+function LoginStatus([string]$base,[string]$user,[string]$password){
+ try{[void](Login $base $user $password);return 200}catch{if($_.Exception.Response){return [int]$_.Exception.Response.StatusCode};throw}
+}
 $data=Join-Path $out 'pgdata';$pw=Join-Path $out 'password.private';$started=$false;$server=$null;$old=$null;$failure=$null;$stop=$null
 try{
  # Fail-closed configuration checks (no network connection is made in -ValidateOnly).
@@ -107,7 +112,7 @@ try{
  if($UpgradeFromServerJar){
   # Previous release creates and seeds the schema first; this is the "existing database" being upgraded.
   $oldJava=Join-Path $UpgradeJavaHome 'bin\java.exe'
-  $oldEnv=@{};foreach($k in $names){$oldEnv[$k]=$settings[$k]};$oldEnv.Remove("TOEIC_ADMIN_BOOTSTRAP_USERNAME");$oldEnv.Remove("TOEIC_ADMIN_BOOTSTRAP_PASSWORD");$oldEnv.Remove("TOEIC_ROOM_PIN_KEY")
+  $oldEnv=@{};foreach($k in $names){$oldEnv[$k]=$settings[$k]};$oldEnv.Remove("TOEIC_ADMIN_BOOTSTRAP_USERNAME");$oldEnv.Remove("TOEIC_ADMIN_BOOTSTRAP_PASSWORD");$oldEnv.Remove("TOEIC_ROOM_PIN_KEY");$oldEnv['TOEIC_SEED_PASSWORD']=$seed
   $old=Launch $oldJava ('-Duser.timezone=UTC -jar "'+$UpgradeFromServerJar+'" --server.address=127.0.0.1 --server.port='+$httpPort) $oldEnv
   $oldOut=$old.StandardOutput.ReadToEndAsync();$oldErr=$old.StandardError.ReadToEndAsync()
   if(-not(AwaitHttp $base $old 120)){throw 'old server startup'}
@@ -120,7 +125,8 @@ try{
   $old.Kill();$old.WaitForExit();[IO.File]::WriteAllText((Join-Path $out 'old-server.private.log'),$oldOut.Result+$oldErr.Result)
   $cases.Add(@{case='previous-server-created-schema';status='PASS';schemaVersion=$upgradeFrom;users=[int]$upgradeUsers})
  }
- $server=Launch (Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe') ('-NoProfile -ExecutionPolicy Bypass -File "'+(Join-Path $copy 'start-release.ps1')+'" -Role Server -BindAddress 127.0.0.1 -Port '+$httpPort) $null
+ # A stray development opt-in in the operator's environment must not create demo accounts in a release.
+ $server=Launch (Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe') ('-NoProfile -ExecutionPolicy Bypass -File "'+(Join-Path $copy 'start-release.ps1')+'" -Role Server -BindAddress 127.0.0.1 -Port '+$httpPort) @{TOEIC_SEED_DEMO_ACCOUNTS='true';TOEIC_SEED_PASSWORD=$seed}
  $stdout=$server.StandardOutput.ReadToEndAsync();$stderr=$server.StandardError.ReadToEndAsync()
  if(-not(AwaitHttp $base $server 120)){throw 'Server HTTP startup'}
  $cases.Add(@{case='bundled-server-from-unicode-path-http-auth-guard';status='PASS'})
@@ -132,8 +138,20 @@ try{
  $headers=@{Authorization=('Bearer '+$admin.token)}
  $page=Invoke-RestMethod ($base+'/api/v2/admin/accounts') -Headers $headers -TimeoutSec 10
  $cases.Add(@{case='admin-account-list';status=if($page){'PASS'}else{'FAIL'}})
- $proctor=Login $base 'proctor1' $seed
- $cases.Add(@{case='seed-proctor-login';status=if($proctor.user.role -eq 'PROCTOR'){'PASS'}else{'FAIL'}})
+ $demoRows=Sql "SELECT count(*) FROM user_accounts WHERE username IN ('candidate1','candidate2','proctor1')" 'demo-accounts'
+ $demoLogin=LoginStatus $base 'proctor1' $seed
+ if($UpgradeFromServerJar){
+  # Accounts the older Server created stay usable (the digest check below compares every field).
+  $cases.Add(@{case='upgrade-keeps-existing-demo-accounts';status=if($demoRows -eq '3' -and $demoLogin -eq 200){'PASS'}else{'FAIL'};demoAccounts=[int]$demoRows;proctor1Login=$demoLogin})
+ }else{
+  $users=Sql "SELECT string_agg(username||':'||role,',' ORDER BY id) FROM user_accounts" 'fresh-users'
+  $cases.Add(@{case='fresh-release-database-has-no-demo-accounts';status=if($demoRows -eq '0' -and $demoLogin -eq 401 -and $users -eq 'release-admin:ADMIN'){'PASS'}else{'FAIL'};demoAccounts=[int]$demoRows;proctor1Login=$demoLogin})
+ }
+ # Release handover path: the bootstrapped Admin creates the Proctor; its one-time password is never written out.
+ $createdBody=@{username='release-proctor';displayName='Release Proctor';role='PROCTOR'}|ConvertTo-Json -Compress
+ $created=Invoke-RestMethod ($base+'/api/v2/admin/accounts') -Method Post -ContentType 'application/json; charset=utf-8' -Body $createdBody -Headers $headers -TimeoutSec 10
+ $proctor=Login $base 'release-proctor' $created.initialPassword
+ $cases.Add(@{case='admin-created-proctor-login';status=if($proctor.user.role -eq 'PROCTOR'){'PASS'}else{'FAIL'}})
  if($ImportJson){
   $examId=([IO.File]::ReadAllText($ImportJson,[Text.Encoding]::UTF8)|ConvertFrom-Json).exam.examId
   $import=Invoke-WebRequest ($base+'/api/v2/exams/import') -Method Post -ContentType 'application/json; charset=utf-8' -InFile $ImportJson -Headers @{Authorization=('Bearer '+$proctor.token)} -UseBasicParsing -TimeoutSec 120
@@ -163,7 +181,7 @@ try{
 if($server){$log=[IO.File]::ReadAllText((Join-Path $out 'server.private.log'));$cases.Add(@{case='launcher-prints-server-ready';status=if($log.Contains('Server READY on port '+$httpPort)){'PASS'}else{'FAIL'}})}
 $failedCases=@($cases|Where-Object {$_.status -ne 'PASS'}).Count
 $result=[ordered]@{bundle=$Bundle;unicodeCopy=$true;upgradeFrom=if($UpgradeFromServerJar){'previous Server JAR'}else{$null};cases=$cases;failed=$failedCases;errorType=$failure;clusterStopExit=$stop
- scope='Portable Server launcher + bundled runtime + owned PostgreSQL; config checks, startup, migrations, Admin bootstrap. Not an exam flow or LAN.'}
+ scope='Portable Server launcher + bundled runtime + owned PostgreSQL; config checks, startup, migrations, Admin bootstrap, no demo accounts. Not an exam flow or LAN.'}
 [IO.File]::WriteAllText((Join-Path $out 'result.json'),(($result|ConvertTo-Json -Depth 6).Replace("`r`n","`n")+"`n"),$utf8)
 Write-Output ('Release server smoke: '+$out);Write-Output ('PASS='+(@($cases|Where-Object {$_.status -eq 'PASS'}).Count)+' FAIL='+$failedCases+' error='+$failure)
 exit [int]($failedCases -ne 0 -or $failure -or $stop -ne 0)

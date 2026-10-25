@@ -165,4 +165,4 @@ jpackage --type app-image --dest jpackage-out --name ToeicMonitor --input client
 
 `scripts/reset-db.ps1 -Force` đóng gói đúng chuỗi `config --volumes` → `down -v` → `up -d --wait` thành một lệnh và từ chối chạy nếu compose có volume khác `toeic-pgdata`. Chuỗi lệnh Docker bên trên đã chạy thật; script wrapper chưa chạy riêng trong phiên này.
 
-Tài khoản phát triển `MOCK`: `candidate1`, `candidate2`, `proctor1`; mật khẩu mặc định `ChangeMe123!`, có thể đổi bằng `TOEIC_SEED_PASSWORD`. Không dùng các credential này ngoài môi trường phát triển.
+Tài khoản phát triển `MOCK`: `candidate1`, `candidate2`, `proctor1`; chỉ được tạo khi `TOEIC_SEED_DEMO_ACCOUNTS=true` và có `TOEIC_SEED_PASSWORD` (`.env.example` dùng `ChangeMe123!`; Server không còn mật khẩu mặc định). Test Maven module `server` bật cờ trong `server/pom.xml`; launcher phát hành luôn truyền `--toeic.seed.demo-accounts=false`. Không dùng các credential này ngoài môi trường phát triển.

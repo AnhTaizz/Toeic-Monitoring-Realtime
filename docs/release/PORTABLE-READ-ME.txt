@@ -29,9 +29,11 @@ b) Media của đề: hai thư mục tuyệt đối chứa audio và ảnh, dạ
    sai checksum thì thí sinh không READY được.
 
 c) Chép server.env.example thành server.env (cùng thư mục) và điền:
-   DB_*, TOEIC_SEED_PASSWORD, TOEIC_AUDIO_ROOT, TOEIC_IMAGE_ROOT,
-   TOEIC_ROOM_PIN_KEY và lần đầu là TOEIC_ADMIN_BOOTSTRAP_USERNAME/PASSWORD
-   (mật khẩu Admin 20-72 ký tự, khác seed password).
+   DB_*, TOEIC_AUDIO_ROOT, TOEIC_IMAGE_ROOT, TOEIC_ROOM_PIN_KEY và lần đầu
+   là TOEIC_ADMIN_BOOTSTRAP_USERNAME/PASSWORD (mật khẩu Admin 20-72 ký tự).
+   Bản phát hành không tạo tài khoản demo nào: với DB mới, Admin bootstrap là
+   tài khoản duy nhất; Admin tạo Giám thị và Thí sinh. Tài khoản đã có trong DB
+   cũ được giữ nguyên.
    server.env là bí mật cục bộ: không gửi kèm ZIP, không chụp màn hình.
 
 d) Tạo khóa PIN MỘT LẦN bằng PowerShell, dán dòng in ra vào server.env:

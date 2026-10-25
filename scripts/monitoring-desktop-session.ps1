@@ -64,7 +64,7 @@ try{
     foreach($jar in @($client,$serverJar)){$hashes[(Split-Path $jar -Leaf)]=(Get-FileHash -LiteralPath $jar -Algorithm SHA256).Hash.ToLowerInvariant()}
     WriteJson 'desktop-build-receipt.json' @{sourceSha=$SourceSha;dirty=$sourceDirty;sourceInventory='desktop-source-receipt.json';jarHashes=$hashes;format='production JAR; two independent JavaFX JVMs';repositoryDefaults='UNCHANGED';demoOverrides=@{signalExperiment=$true;alertExperiment=$true;delta=$false;candidateUsb=[bool]$ReadUsbStorage};hardware='PENDING_USER_CONFIRMATION'}
     $port=FreePort;$origin='http://127.0.0.1:'+$port
-    $dbEnv=@{DB_HOST=$env:DB_HOST;DB_PORT=$env:DB_PORT;DB_NAME=$env:DB_NAME;DB_USER=$env:DB_USER;DB_PASSWORD=$env:DB_PASSWORD;TOEIC_SEED_PASSWORD=$env:TOEIC_SEED_PASSWORD}
+    $dbEnv=@{DB_HOST=$env:DB_HOST;DB_PORT=$env:DB_PORT;DB_NAME=$env:DB_NAME;DB_USER=$env:DB_USER;DB_PASSWORD=$env:DB_PASSWORD;TOEIC_SEED_PASSWORD=$env:TOEIC_SEED_PASSWORD;TOEIC_SEED_DEMO_ACCOUNTS='true'}
     $server=StartOwned (Join-Path $JavaHome 'bin/java.exe') ('-jar "'+$serverJar+'" --server.address=127.0.0.1 --server.port='+$port+' --logging.level.root=WARN --toeic.monitoring.signal-experiment-enabled=true --toeic.monitoring.alert-experiment-enabled=true --toeic.state.delta-enabled=false') 'desktop-server' $dbEnv
     $limit=[DateTime]::UtcNow.AddSeconds(90);$proctor=$null
     while([DateTime]::UtcNow -lt $limit -and -not $server.process.HasExited){

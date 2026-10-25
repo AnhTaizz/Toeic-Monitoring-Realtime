@@ -24,7 +24,7 @@ Hướng dẫn duy nhất để cài, chạy và demo bản phát hành. Mọi b
    'TOEIC_ROOM_PIN_KEY=' + [Convert]::ToBase64String($b).TrimEnd('=').Replace('+','-').Replace('/','_')
    ```
 
-4. Lần đầu điền `TOEIC_ADMIN_BOOTSTRAP_USERNAME` và `TOEIC_ADMIN_BOOTSTRAP_PASSWORD` (20–72 ký tự, khác seed password). Không có đăng ký công khai.
+4. Lần đầu điền `TOEIC_ADMIN_BOOTSTRAP_USERNAME` và `TOEIC_ADMIN_BOOTSTRAP_PASSWORD` (20–72 ký tự). Không có đăng ký công khai. Bản phát hành không tạo tài khoản demo (`candidate1`, `candidate2`, `proctor1`): với DB mới, Admin bootstrap là tài khoản duy nhất; tài khoản đã có trong DB cũ được giữ nguyên.
 5. `Start-Server.bat -ValidateOnly` kiểm cấu hình mà không khởi động. Sau đó `Start-Server.bat`: launcher kiểm Java, biến bắt buộc, khóa PIN, thư mục media, kết nối PostgreSQL và cổng 8080, rồi mới chạy. Giữ cửa sổ mở; `Ctrl+C` để dừng.
 6. Windows Firewall: cho phép inbound TCP 8080, profile Private.
 

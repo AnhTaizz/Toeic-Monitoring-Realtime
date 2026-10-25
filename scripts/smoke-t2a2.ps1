@@ -7,7 +7,7 @@ Push-Location $projectRoot
 try {
     if (-not (Test-Path '.env')) { throw 'Local .env is required for PostgreSQL smoke.' }
     foreach ($line in Get-Content '.env') {
-        if ($line -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD)\s*=(.*)$') {
+        if ($line -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD|TOEIC_SEED_DEMO_ACCOUNTS)\s*=(.*)$') {
             $key = $Matches[1]
             $previousValues[$key] = [Environment]::GetEnvironmentVariable($key, 'Process')
             [Environment]::SetEnvironmentVariable($key, $Matches[2].Trim().Trim('"').Trim("'"), 'Process')

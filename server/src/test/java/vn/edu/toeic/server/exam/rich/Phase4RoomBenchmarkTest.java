@@ -97,6 +97,7 @@ class Phase4RoomBenchmarkTest {
                 base="http://127.0.0.1:"+port;
                 var command=new ProcessBuilder(Path.of(System.getProperty("java.home"),"bin","java.exe").toString(),"-Xmx768m","-Duser.timezone=UTC","-jar",jar.toString(),"--server.address=127.0.0.1","--server.port="+port,"--spring.flyway.schemas="+schema,"--spring.flyway.default-schema="+schema,"--toeic.visual.lease-ms=60000");
                 command.environment().put("SPRING_DATASOURCE_URL",url+"?currentSchema="+schema);
+                command.environment().put("TOEIC_SEED_DEMO_ACCOUNTS","true"); // MOCK proctor1/candidates for the benchmark only
                 command.environment().put("TOEIC_AUDIO_ROOT",root.resolve("audio").toString());command.environment().put("TOEIC_IMAGE_ROOT",root.resolve("images").toString());
                 command.environment().remove("TOEIC_ADMIN_BOOTSTRAP_USERNAME");command.environment().remove("TOEIC_ADMIN_BOOTSTRAP_PASSWORD");
                 if(accountPin) {

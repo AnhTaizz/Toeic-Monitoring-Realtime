@@ -51,4 +51,4 @@ Mạng, file, quét process không chạy trên JavaFX Application Thread; kết
 
 ## Cấu hình triển khai
 
-Server đọc biến môi trường (`DB_*`, `TOEIC_AUDIO_ROOT`, `TOEIC_IMAGE_ROOT`, `TOEIC_ROOM_PIN_KEY`, `TOEIC_SEED_PASSWORD`, `TOEIC_ADMIN_BOOTSTRAP_*`); bundle portable nạp chúng từ `server.env` và kiểm trước khi chạy. Client nhận địa chỉ Server từ `-ServerUrl`/`TOEIC_SERVER_URL` (launcher portable hỏi nếu chưa có) hoặc sửa ngay trên màn đăng nhập; giá trị `127.0.0.1` chỉ là mặc định khi chạy JAR trực tiếp, không phải cách chạy LAN. Xem [DEMO-RUNBOOK.md](DEMO-RUNBOOK.md).
+Server đọc biến môi trường (`DB_*`, `TOEIC_AUDIO_ROOT`, `TOEIC_IMAGE_ROOT`, `TOEIC_ROOM_PIN_KEY`, `TOEIC_ADMIN_BOOTSTRAP_*`; chỉ khi phát triển/kiểm thử: `TOEIC_SEED_DEMO_ACCOUNTS`, `TOEIC_SEED_PASSWORD`); bundle portable nạp chúng từ `server.env`, kiểm trước khi chạy và luôn tắt tài khoản demo. Client nhận địa chỉ Server từ `-ServerUrl`/`TOEIC_SERVER_URL` (launcher portable hỏi nếu chưa có) hoặc sửa ngay trên màn đăng nhập; giá trị `127.0.0.1` chỉ là mặc định khi chạy JAR trực tiếp, không phải cách chạy LAN. Xem [DEMO-RUNBOOK.md](DEMO-RUNBOOK.md).
