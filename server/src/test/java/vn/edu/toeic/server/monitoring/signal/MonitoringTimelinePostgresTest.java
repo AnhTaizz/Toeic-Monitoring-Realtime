@@ -540,7 +540,13 @@ class MonitoringTimelinePostgresTest {
                         var writer=post("/api/v1/attempts/"+a+"/takeover",token,new TakeoverWriterRequest(UUID.randomUUID().toString(),a,"MOCK-integrated-device"),200);
                         if(action.equals("SUBMIT"))post("/api/v1/attempts/"+a+"/submit",token,new SubmitExamRequest(UUID.randomUUID().toString(),a,writer.get("writerEpoch").getAsLong(),writer.get("savedRevision").getAsLong()+1,Map.of()),200);
                     }
-                    waitFor("server terminal/revoke retires collector and typed observers: "+action,()->!process.isActive()&&!monitor.deliveryStatus().active());
+                    try{waitFor("server terminal/revoke retires collector and typed observers: "+action,()->!process.isActive()&&!monitor.deliveryStatus().active());}
+                    catch(AssertionError timeout){
+                        String state=" | processActive="+process.isActive()+" process="+process.status()+" typed="+monitor.deliveryStatus()+" connection="+rt.connectionState();
+                        long late=System.nanoTime();boolean stoppedLater=false;
+                        while(System.nanoTime()-late<TimeUnit.SECONDS.toNanos(30)){if(!process.isActive()&&!monitor.deliveryStatus().active()){stoppedLater=true;break;}Thread.sleep(25);}
+                        throw new AssertionError(timeout.getMessage()+state+" | stoppedWithinExtra30s="+stoppedLater
+                                +" extraMillis="+TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-late),timeout);}
                     assertThat(monitor.awaitStopped(Duration.ofSeconds(3))).isTrue();
                     if(!action.equals("TOKEN_REVOKE")){
                         get("/api/v1/monitoring/attempts/"+a+"/signals",proctor,403);get("/api/v1/monitoring/attempts/"+a+"/alert-summary",proctor,403);
