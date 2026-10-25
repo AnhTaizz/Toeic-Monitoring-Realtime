@@ -78,11 +78,16 @@ public final class ExamSession implements AutoCloseable {
         }
     }
 
-    /** Ảnh chụp bất biến cho giao diện vẽ. */
+    /**
+     * Ảnh chụp bất biến cho giao diện vẽ. syncPending: đang đối chiếu với server (độc lập với kết nối và
+     * trạng thái lưu). listeningInterruptedConfirmed: server đã báo Listening gián đoạn. canContinueReading:
+     * gián đoạn đã xác nhận và phiên thực sự cho sửa câu Reading lúc này.
+     */
     public record View(Phase phase, SaveState saveState, Map<String, String> answers, long revision,
                        long confirmedRevision, long writerEpoch, Instant deadlineAt, boolean connectionOnline,
                        boolean editable, boolean canSubmit, boolean needsUserRetry, boolean sessionExpired,
-                       String message, Result result) {
+                       String message, Result result, boolean syncPending, boolean listeningInterruptedConfirmed,
+                       boolean canContinueReading) {
     }
 
     private enum Failure {
@@ -147,7 +152,8 @@ public final class ExamSession implements AutoCloseable {
     }
     /** Read-only reconciliation: never acquires a writer and never starts media. */
     public void refreshAuthority() {
-        if (!closed && phase == Phase.ACTIVE && !syncPending) startSync("Đang đối chiếu trạng thái lượt thi với server.");
+        // Routine re-check: the footer shows "Đang đồng bộ lại…" from syncPending, no extra notice.
+        if (!closed && phase == Phase.ACTIVE && !syncPending) startSync("");
     }
 
     private void applyListeningAuthority(CandidateAttemptStatusResponse status) {
@@ -293,7 +299,7 @@ public final class ExamSession implements AutoCloseable {
             case UNKNOWN_OUTCOME -> retrySaveOrGiveUp(request);
             case STALE -> {
                 saveInFlight = null;
-                startSync("Server từ chối bản lưu vì revision hoặc phiên ghi đã cũ. Đang đối chiếu với server.");
+                startSync("");
             }
             case CONFLICT -> enterConflict();
             case EXPIRED -> {
@@ -337,7 +343,7 @@ public final class ExamSession implements AutoCloseable {
             saveInFlight = null;
             saveUnresolved = request;
             saveFailed = true;
-            message = "Chưa lưu được sau " + saveAttempts + " lần gửi. Đáp án vẫn nằm trên máy này; bấm Thử lại khi mạng ổn.";
+            message = "Chưa lưu được bài làm. Đáp án đang ở trên máy này; bấm Thử lại khi mạng ổn và không đóng ứng dụng.";
             publish();
             return;
         }
@@ -539,7 +545,7 @@ public final class ExamSession implements AutoCloseable {
         if (closed || connectionOnline == online) return;
         connectionOnline = online;
         if (online && phase == Phase.ACTIVE) {
-            startSync("Đã kết nối lại. Đang đối chiếu đáp án với server.");
+            startSync("");
             return;
         }
         if (online && stalled) {
@@ -582,7 +588,7 @@ public final class ExamSession implements AutoCloseable {
             if (endedBy(failure)) return;
             if (syncAttempts > settings.maxRetries()) {
                 stalled = true;
-                message = "Chưa đối chiếu được với server. Chỉnh sửa tạm khóa; bấm Thử lại khi mạng ổn.";
+                message = "Chưa kiểm tra được bài làm với máy chủ. Tạm khóa chỉnh sửa; bấm Thử lại khi mạng ổn.";
                 publish();
                 return;
             }
@@ -606,7 +612,7 @@ public final class ExamSession implements AutoCloseable {
             // Server mới hơn: nạp bản server làm mốc trước khi sửa tiếp.
             boolean discarded = dirty;
             adopt(status.answers(), serverRevision);
-            message = "Server đang giữ bản mới hơn (revision " + serverRevision + "); đã nạp bản của server."
+            message = "Đã cập nhật bài làm mới nhất từ máy chủ."
                     + (discarded ? " Thay đổi chưa lưu trên máy này đã bị thay thế." : "");
         } else if (dirty && serverRevision == revision && !sameContent
                 || !dirty && !sameContent && serverRevision == confirmedRevision) {
@@ -617,15 +623,14 @@ public final class ExamSession implements AutoCloseable {
             dropPendingSaves();
             confirmedRevision = serverRevision;
             dirty = false;
-            message = "Server đã có đúng bản đang chờ (revision " + serverRevision + ").";
+            message = "";
         } else if (dirty) {
             // Máy này cao hơn server (ví dụ server 40, máy 42): giữ bản trên máy, không lùi revision.
-            message = "Server đang ở revision " + serverRevision + ", máy này ở revision " + revision
-                    + ". Giữ bản trên máy và gửi tiếp.";
+            message = "";
         } else if (!sameContent) {
             // Server giữ bản cũ hơn bản nó từng ACK cho máy này: gửi lại bản trên máy.
             dirty = true;
-            message = "Server đang giữ bản cũ hơn bản trên máy này; gửi lại bản trên máy.";
+            message = "";
         } else {
             confirmedRevision = Math.max(confirmedRevision, serverRevision);
             message = "";
@@ -676,7 +681,7 @@ public final class ExamSession implements AutoCloseable {
         if (closed || phase != Phase.WRITER_REPLACED || takeoverInFlight) return;
         takeoverInFlight = true;
         long mine = ++ticket;
-        message = "Đang xin server cấp lại quyền ghi cho máy này…";
+        message = "Đang chuyển bài thi về máy này…";
         publish();
         TakeoverWriterRequest request = new TakeoverWriterRequest(requestIds.get(), attemptId, clientSessionId);
         call(() -> gateway.takeoverWriter(attemptId, request), (response, failure) -> {
@@ -706,8 +711,8 @@ public final class ExamSession implements AutoCloseable {
         if (response.deadlineAt() != null) deadlineAt = response.deadlineAt();
         adopt(response.answers(), response.savedRevision());
         setPhase(Phase.ACTIVE);
-        message = "Máy này đã được cấp quyền ghi mới (writerEpoch " + writerEpoch + "). Đã nạp bản server đang lưu ở revision "
-                + response.savedRevision() + "." + (discarded ? " Thay đổi chưa lưu của phiên cũ không được gửi lại." : "");
+        message = "Đã chuyển bài thi về máy này và nạp bài làm đã lưu."
+                + (discarded ? " Thay đổi chưa lưu của phiên cũ không được gửi lại." : "");
         publish();
     }
 
@@ -715,13 +720,13 @@ public final class ExamSession implements AutoCloseable {
     public void reloadFromServer() {
         if (closed || phase != Phase.CONFLICT) return;
         long mine = ++ticket;
-        message = "Đang tải bản của server…";
+        message = "Đang tải bài làm đã lưu…";
         publish();
         call(() -> gateway.getAttemptStatus(attemptId), (status, failure) -> {
             if (mine != ticket) return;
             if (failure != null || !describesThisAttempt(status)) {
                 if (!endedBy(failure)) {
-                    message = "Chưa tải được bản của server. Bấm lại để thử.";
+                    message = "Chưa tải được bài làm đã lưu. Bấm lại để thử.";
                     publish();
                 }
                 return;
@@ -729,7 +734,7 @@ public final class ExamSession implements AutoCloseable {
             if (leftActive(status)) return;
             adopt(status.answers(), status.savedRevision());
             setPhase(Phase.ACTIVE);
-            message = "Đã nạp bản của server (revision " + status.savedRevision() + ").";
+            message = "Đã nạp bài làm đã lưu trên máy chủ.";
             publish();
         });
     }
@@ -737,8 +742,8 @@ public final class ExamSession implements AutoCloseable {
     private void enterConflict() {
         setPhase(Phase.CONFLICT);
         dropPendingSaves();
-        message = "Bản trên máy và bản trên server cùng revision nhưng khác nội dung. Đã dừng tự lưu; "
-                + "bấm \"Nạp bản của server\" để làm tiếp từ bản server.";
+        message = "Bài làm trên máy này khác với bản đã lưu trên máy chủ. Đã dừng tự lưu; "
+                + "bấm \"Nạp bài đã lưu\" để làm tiếp.";
         publish();
     }
 
@@ -762,8 +767,7 @@ public final class ExamSession implements AutoCloseable {
         if (status.writerEpoch() != writerEpoch) {
             setPhase(Phase.WRITER_REPLACED);
             dropPendingSaves();
-            message = "Lượt thi đang được ghi từ một phiên khác (writerEpoch trên server là " + status.writerEpoch()
-                    + ", máy này giữ " + writerEpoch + "). Máy này không gửi được đáp án nữa.";
+            message = "Bài thi đang được mở trên một máy hoặc cửa sổ khác. Máy này không gửi được đáp án nữa.";
             publish();
             return true;
         }
@@ -777,9 +781,9 @@ public final class ExamSession implements AutoCloseable {
         dropPendingSaves();
         result = finalResult;
         message = ("TIMED_OUT".equals(finalResult.state())
-                ? "Server đã chốt lượt thi do hết giờ và chấm trên bản đã lưu (revision " + finalResult.savedRevision() + ")."
-                : "Server đã ghi nhận bài nộp (revision " + finalResult.savedRevision() + ").")
-                + (unsaved ? " Thay đổi chưa được server xác nhận trên máy này không được tính." : "");
+                ? "Hết giờ — bài đã được chốt theo bài làm đã lưu."
+                : "Đã nộp bài.")
+                + (unsaved ? " Thay đổi chưa được lưu trên máy này không được tính." : "");
         publish();
     }
 
@@ -870,7 +874,8 @@ public final class ExamSession implements AutoCloseable {
     public View view() {
         boolean needsUserRetry = stalled || phase == Phase.ACTIVE && saveFailed && dirty && saveInFlight == null;
         return new View(phase, saveState(), Map.copyOf(answers), revision, confirmedRevision, writerEpoch, deadlineAt,
-                connectionOnline, editable(), canSubmit(), needsUserRetry, sessionExpired, message, result);
+                connectionOnline, editable(), canSubmit(), needsUserRetry, sessionExpired, message, result,
+                syncPending, listeningInterrupted, listeningInterrupted && editable());
     }
 
     private void publish() {

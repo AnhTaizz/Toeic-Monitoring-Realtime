@@ -50,15 +50,17 @@ final class CandidateHomePane extends BorderPane {
 
         availability.getStyleClass().add("home-availability");
         availability.setWrapText(true);
-        Label instruction = text("1  Chọn đúng ca thi     →     2  Kiểm tra âm thanh và ảnh     →     3  Chờ giám thị START", "home-instruction");
+        availability.managedProperty().bind(availability.textProperty().isNotEmpty());
+        availability.visibleProperty().bind(availability.textProperty().isNotEmpty());
+        Label instruction = text("1  Vào phòng thi     →     2  Chuẩn bị âm thanh     →     3  Chờ giám thị bắt đầu", "home-instruction");
         tabs.getStyleClass().add("home-tabs");
         VBox content = new VBox(12, availability, instruction, tabs);
         if (Boolean.getBoolean("toeic.monitoring.signal-experiment-enabled")
                 && Boolean.getBoolean("toeic.monitoring.usb-enabled")) {
-            Label usbNotice = text("Giám sát USB lưu trữ đang được bật cho bài thi này: "
-                    + "khi bắt đầu giám sát hoặc vào phòng thi, ứng dụng quan sát tiến trình, USB lưu trữ và "
-                    + "focus/trạng thái cửa sổ thí sinh để gửi cho giám thị. Không đọc nội dung hay số serial USB; "
-                    + "dừng khi dừng giám sát, rời phòng thi hoặc đăng xuất.", "home-availability");
+            // Required notice before observation starts: short, but it still says what is observed and when it stops.
+            Label usbNotice = text("ⓘ  Trong phiên thi, ứng dụng ghi nhận các ứng dụng đang mở, việc cắm/rút USB lưu trữ và việc "
+                    + "rời khỏi cửa sổ thi để báo cho giám thị. Không đọc nội dung hay số serial của USB; dừng khi bạn rời phòng "
+                    + "thi hoặc đăng xuất.", "home-availability");
             usbNotice.setId("candidate-usb-notice");
             content.getChildren().add(2, usbNotice);
         }

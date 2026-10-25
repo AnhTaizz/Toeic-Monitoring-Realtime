@@ -164,9 +164,11 @@ class AccountPinFlowPostgresGuiTest {
                     ((javafx.scene.control.PasswordField)stages[index].getScene().lookup("#login-password")).setText(initial);
                     ((Button)stages[index].getScene().lookup("#login-submit")).fire();});
                 await("account login opens PIN entry",()->FxSupport.fx(()->stages[index].getScene().lookup("#account-pin-input")!=null),30);
+                if(index==0)uiScreens(stages[index],"c1-pin");
                 FxSupport.fxRun(()->{((TextField)stages[index].getScene().lookup("#account-pin-input")).setText(pin);
                     ((Button)stages[index].getScene().lookup("#account-pin-enter")).fire();});
-                awaitText(stages[index],"Đã nhận quyền ghi",30);
+                awaitText(stages[index],"Bài thi đã sẵn sàng trên máy này",30);
+                if(index==0)uiScreens(stages[index],"c2-lobby-"+readyCount);
                 var joined=logins.joinAccountPin(base,account,pin).get(15,TimeUnit.SECONDS);
                 scoped.add(joined.login());attempts.add(joined.attemptId());
                 if(i<readyCount)prepare(stages[index]);
@@ -177,6 +179,7 @@ class AccountPinFlowPostgresGuiTest {
             await("expected individual READY count",()->FxSupport.fx(()->pane.controller().snapshot().readiness()!=null
                 && !pane.controller().snapshot().readyStale()
                 && pane.controller().snapshot().readiness().attempts().stream().filter(a->a.audioReady()&&a.visualReady()).count()==readyCount),30);
+            uiScreens(stages[0],"c3-lobby-waiting-start-"+readyCount);
             if(readyCount>0) {
                 String attempt=attempts.getFirst(),token=scoped.getFirst().token();
                 var before=call("GET","/api/v2/attempts/"+attempt+"/preparation",null,token,200).getAsJsonObject("visualManifest");
@@ -185,7 +188,7 @@ class AccountPinFlowPostgresGuiTest {
                 FxSupport.fxRun(()->{});
                 long connectedAt=count("SELECT (EXTRACT(EPOCH FROM clock_timestamp())*1000)::bigint");
                 await("READY lease renewed after transport reconnect",()->count("SELECT count(*) FROM attempt_visual_readiness WHERE attempt_id='"+attempt+"' AND EXTRACT(EPOCH FROM last_seen_at)*1000>"+connectedAt)==1,20);
-                awaitText(stages[0],"✓  Server: đã xác nhận Audio + Ảnh READY",30);
+                awaitText(stages[0],"✓  Sẵn sàng — đang chờ giám thị bắt đầu",30);
                 var after=call("GET","/api/v2/attempts/"+attempt+"/preparation",null,token,200).getAsJsonObject("visualManifest");
                 for(String key:List.of("writerEpoch","preparationEpoch","manifestId"))assertThat(after.get(key)).as("pre-START reconnect "+key).isEqualTo(before.get(key));
                 assertThat(count("SELECT count(*) FROM attempt_audio_readiness WHERE attempt_id='"+attempt+"'")).isEqualTo(1);
@@ -203,6 +206,7 @@ class AccountPinFlowPostgresGuiTest {
             for(int i=0;i<2;i++) {
                 Stage current=stages[i];String attempt=attempts.get(i),token=scoped.get(i).token();
                 await("personal exam access",()->FxSupport.fx(()->current.getScene().lookup("#room-pick-question")!=null),40);
+                uiScreens(current,"c4-exam-start-"+readyCount+"-"+(i<readyCount?"ready":"late"));
                 // USB in the ACCOUNT_PIN exam: the real CIM observer reaches this attempt's server history, and an
                 // unchanged device state over further scans adds no new USB event (no repeated alerts).
                 String usbRows="SELECT count(*) FROM monitoring_signal_events WHERE attempt_id='"+attempt+"' AND source='WINDOWS_USB_STORAGE'";
@@ -215,17 +219,28 @@ class AccountPinFlowPostgresGuiTest {
                 long scans=signals.usbStatus().scans();
                 await("three more real USB scans",()->signals.usbStatus().scans()>=scans+3,60);
                 assertThat(count(usbRows+" AND event_type<>'OBSERVER_STATUS'")).as("unchanged USB state is not re-reported").isEqualTo(usbEvents);
-                if(i<readyCount){awaitText(current,"Server đã xác nhận phát xong",150);pickQuestion(current,1);clickRadio(current,"option-q001-A");}
+                if(i<readyCount){awaitText(current,"Phần nghe đã kết thúc",150);pickQuestion(current,1);clickRadio(current,"option-q001-A");}
                 else assertThat(call("GET","/api/v1/attempts/"+attempt+"/listening/status",null,token,200).get("interruptionReason").getAsString()).isEqualTo("NOT_READY_AT_START");
                 pickQuestion(current,101);clickRadio(current,"option-q101-A");
                 await("Reading autosave",()->call("GET","/api/v1/attempts/"+attempt+"/status",null,token,200).getAsJsonObject("answers").has("q101"),25);
+                uiScreens(current,"c5-reading-"+readyCount+"-"+i);
+                if(ui()&&i==0) {
+                    // The OS close button raises WINDOW_CLOSE_REQUEST; the exam asks, and "Ở lại làm bài" keeps it open.
+                    Platform.runLater(()->current.fireEvent(new javafx.stage.WindowEvent(current,javafx.stage.WindowEvent.WINDOW_CLOSE_REQUEST)));
+                    awaitDialog();uiScreens(current,"c6-close-confirm-"+readyCount);pressDialog(ButtonType.NO,10);
+                    assertThat(FxSupport.fx(current::isShowing)).as("staying keeps the exam open").isTrue();
+                }
                 var before=call("GET","/api/v1/attempts/"+attempt+"/status",null,token,200);String deadline=before.get("deadlineAt").getAsString();
                 var field=ToeicClientApplication.class.getDeclaredField("realtimeClient");field.setAccessible(true);var rt=(RealtimeClient)field.get(clients[i]);
                 rt.disconnect();rt.connect(new RealtimeClient.Session(Set.of(attempt),null,null)).get(15,TimeUnit.SECONDS);
                 await("Submit available after transport reconnect",()->FxSupport.fx(()->{var b=(Button)current.getScene().lookup("#room-submit");return b!=null&&!b.isDisabled();}),25);
                 var after=call("GET","/api/v1/attempts/"+attempt+"/status",null,token,200);assertThat(after.get("deadlineAt").getAsString()).isEqualTo(deadline);assertThat(after.get("writerEpoch")).isEqualTo(before.get("writerEpoch"));
-                Platform.runLater(()->((Button)current.getScene().lookup("#room-submit")).fire());pressDialog(ButtonType.YES,10);
+                Platform.runLater(()->((Button)current.getScene().lookup("#room-submit")).fire());
+                if(ui()){awaitDialog();uiScreens(current,"c7-submit-confirm-"+readyCount+"-"+i);}
+                pressDialog(ButtonType.YES,10);
                 await("submitted",()->"SUBMITTED".equals(call("GET","/api/v1/attempts/"+attempt+"/status",null,token,200).get("state").getAsString()),25);
+                if(ui()){await("result dialog",()->FxSupport.fx(()->Window.getWindows().stream().anyMatch(w->w.isShowing()&&w instanceof Stage s&&"Kết Quả Bài Thi TOEIC".equals(s.getTitle()))),25);
+                    uiScreens(current,"c8-result-"+readyCount+"-"+i);}
                 screenshot(current,"account-pin-"+readyCount+"-candidate-"+i+"-submitted");closeDialogs();
             }
             log.add("PASS: production Admin/Proctor/two Candidate apps; ready="+readyCount+"/2; shared PIN; monitoring; actual media playback where authorized; late Reading; autosave/submit/reconnect. Physical hearing/LAN NOT TESTED.");
@@ -502,6 +517,43 @@ class AccountPinFlowPostgresGuiTest {
     private void screenshot(Stage stage, String name) throws Exception {
         WritableImage image = FxSupport.fx(() -> stage.getScene().snapshot(null));
         write(image, name);
+    }
+
+    /**
+     * UI review captures, only with TOEIC_UI_SCREENSHOTS=true: the candidate window at 1920x1080 and 1366x768,
+     * plus any dialog window that is showing. Regular runs never resize or capture here.
+     */
+    private void uiScreens(Stage stage, String name) throws Exception {
+        if (!"true".equals(System.getenv("TOEIC_UI_SCREENSHOTS"))) return;
+        Path dir = Files.createDirectories(OUT.resolve("ui-review"));
+        for (int[] size : new int[][]{{1920, 1080}, {1366, 768}}) {
+            FxSupport.fxRun(() -> { stage.setWidth(size[0]); stage.setHeight(size[1]); });
+            FxSupport.fxRun(() -> { stage.getScene().getRoot().applyCss(); stage.getScene().getRoot().layout(); });
+            Thread.sleep(400); // let wrapped labels and scroll panes settle after the resize
+            WritableImage image = FxSupport.fx(() -> stage.getScene().snapshot(null));
+            writeTo(dir, image, name + "-" + size[0] + "x" + size[1]);
+        }
+        List<WritableImage> dialogs = FxSupport.fx(() -> {
+            List<WritableImage> all = new ArrayList<>();
+            for (Window window : Window.getWindows())
+                if (window.isShowing() && window != stage && window.getScene() != null && window instanceof Stage s && s.getOwner() == stage)
+                    all.add(window.getScene().snapshot(null));
+            return all;
+        });
+        for (int i = 0; i < dialogs.size(); i++) writeTo(dir, dialogs.get(i), name + "-dialog-" + i);
+    }
+
+    private static boolean ui() { return "true".equals(System.getenv("TOEIC_UI_SCREENSHOTS")); }
+    private void awaitDialog() throws Exception {
+        await("dialog showing",()->FxSupport.fx(()->Window.getWindows().stream().anyMatch(w->w.isShowing()&&w.getScene()!=null&&w.getScene().getRoot() instanceof DialogPane)),10);
+    }
+
+    private static void writeTo(Path dir, WritableImage image, String name) throws Exception {
+        int width = (int) image.getWidth(), height = (int) image.getHeight();
+        BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        PixelReader pixels = image.getPixelReader();
+        for (int y = 0; y < height; y++) for (int x = 0; x < width; x++) out.setRGB(x, y, pixels.getArgb(x, y));
+        ImageIO.write(out, "png", dir.resolve(name + ".png").toFile());
     }
 
     /** Captures every showing window (the result dialog is its own window). */

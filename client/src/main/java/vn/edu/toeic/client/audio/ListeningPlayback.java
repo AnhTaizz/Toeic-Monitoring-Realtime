@@ -15,7 +15,8 @@ public final class ListeningPlayback implements AutoCloseable {
     public enum Phase { WAITING, RECOVERING, PREPARING, READY_TO_PLAY, PLAYING, COMPLETING, COMPLETED, BLOCKED, CLOSED }
     public record Question(String id,String prompt,List<CandidateOptionDto> options) { public Question{options=List.copyOf(options);} }
     public record Segment(String audioFile,Path localFile,List<Question> questions) { public Segment{questions=List.copyOf(questions);} }
-    public record Snapshot(long generation,Phase phase,String message,List<Segment> segments,int segmentIndex,Instant playbackStarted) {
+    /** readingOnly: server reported NOT_READY_AT_START, so this attempt never plays Listening and continues with Reading. */
+    public record Snapshot(long generation,Phase phase,String message,List<Segment> segments,int segmentIndex,Instant playbackStarted,boolean readingOnly) {
         public Snapshot{segments=List.copyOf(segments);}
         public Segment current(){return segmentIndex>=0&&segmentIndex<segments.size()?segments.get(segmentIndex):null;}
     }
@@ -26,7 +27,8 @@ public final class ListeningPlayback implements AutoCloseable {
     private final Consumer<Snapshot> listener;
     private final ScheduledExecutorService worker;
     private final Set<String> accepted=new HashSet<>();
-    private volatile Snapshot snapshot=new Snapshot(0,Phase.WAITING,"Chờ lệnh bắt đầu Listening từ server.",List.of(),-1,null);
+    private volatile Snapshot snapshot=new Snapshot(0,Phase.WAITING,"Chờ lệnh bắt đầu Listening từ server.",List.of(),-1,null,false);
+    private volatile boolean readingOnly;
     private long generation;
     private ListeningStartCommand command;
     private ScheduledFuture<?> heartbeat;
@@ -207,7 +209,7 @@ public final class ListeningPlayback implements AutoCloseable {
             }
             if(relevant==null){publish(run,Phase.WAITING,"Chờ lệnh bắt đầu Listening từ server.",List.of(),-1,null);return;}
             if("COMPLETED".equals(relevant.phase())){publish(run,Phase.COMPLETED,"Server xác nhận Listening đã hoàn tất; không phát lại.",List.of(),-1,relevant.playbackStartedAt());return;}
-            if(relevant.interrupted()||"INTERRUPTED".equals(relevant.phase())){publish(run,Phase.BLOCKED,interruptedMessage(relevant),List.of(),-1,relevant.playbackStartedAt());return;}
+            if(relevant.interrupted()||"INTERRUPTED".equals(relevant.phase())){readingOnly="NOT_READY_AT_START".equals(relevant.interruptionReason());publish(run,Phase.BLOCKED,interruptedMessage(relevant),List.of(),-1,relevant.playbackStartedAt());return;}
             if(Set.of("ARMED","PLAYING").contains(relevant.phase())){
                 ListeningStartCommand recovered=new ListeningStartCommand(relevant.startId(),relevant.sessionId(),relevant.attemptId(),relevant.manifestId(),relevant.writerEpoch(),
                         relevant.playbackStartedAt()==null?Instant.now():relevant.playbackStartedAt(),relevant.deadlineAt()==null?Instant.now().plusSeconds(1):relevant.deadlineAt());
@@ -229,11 +231,11 @@ public final class ListeningPlayback implements AutoCloseable {
     }
     private synchronized boolean current(long run){return run==generation&&snapshot.phase()!=Phase.CLOSED;}
     private synchronized void publish(long run,Phase phase,String message,List<Segment> segments,int index,Instant started){
-        if(!current(run))return;snapshot=new Snapshot(run,phase,message,segments,index,started);listener.accept(snapshot);
+        if(!current(run))return;snapshot=new Snapshot(run,phase,message,segments,index,started,phase==Phase.BLOCKED&&readingOnly);listener.accept(snapshot);
     }
     private synchronized void block(long run,String message){if(!current(run))return;cancelHeartbeat();publish(run,Phase.BLOCKED,message,snapshot.segments(),snapshot.segmentIndex(),snapshot.playbackStarted());}
     private void cancelHeartbeat(){if(heartbeat!=null){heartbeat.cancel(false);heartbeat=null;}}
     private static String key(ListeningStartCommand c){return c.attemptId()+"\0"+c.writerEpoch()+"\0"+c.startId();}
     private static String userMessage(Exception failure){return failure.getMessage()!=null&&!failure.getMessage().isBlank()?failure.getMessage():"Không chuẩn bị được phát Listening.";}
-    @Override public synchronized void close(){if(snapshot.phase()==Phase.CLOSED)return;cancelHeartbeat();snapshot=new Snapshot(++generation,Phase.CLOSED,"",List.of(),-1,null);api.close();worker.shutdownNow();}
+    @Override public synchronized void close(){if(snapshot.phase()==Phase.CLOSED)return;cancelHeartbeat();snapshot=new Snapshot(++generation,Phase.CLOSED,"",List.of(),-1,null,false);api.close();worker.shutdownNow();}
 }

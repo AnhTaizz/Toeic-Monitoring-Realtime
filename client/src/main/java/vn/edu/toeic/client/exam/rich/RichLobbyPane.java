@@ -37,9 +37,9 @@ final class RichLobbyPane extends VBox {
         identity.getStyleClass().add("room-instruction");
         identity.setWrapText(true);
         identity.setMinHeight(Region.USE_PREF_SIZE);
-        Label overline = new Label("BẠN ĐÃ ĐƯỢC PHÂN CÔNG BÀI THI");
+        Label overline = new Label("PHÒNG CHỜ");
         overline.getStyleClass().add("room-overline");
-        VBox checklist = new VBox(10, label("Kiểm tra trước khi bắt đầu", "room-card-title"), connectionRow, audioRow, visualRow, serverRow);
+        VBox checklist = new VBox(10, label("Chuẩn bị trước khi thi", "room-card-title"), connectionRow, audioRow, visualRow, serverRow);
         for (Label row : List.of(connectionRow, audioRow, visualRow, serverRow)) { row.setWrapText(true); row.setMinHeight(Region.USE_PREF_SIZE); }
         checklist.getStyleClass().add("room-card");
 
@@ -47,7 +47,7 @@ final class RichLobbyPane extends VBox {
         slots.setPrefTileWidth(56); slots.setPrefTileHeight(56);
         Region cover = new Region();
         cover.getStyleClass().add("room-visual-cover");
-        Label coverText = new Label("Ảnh Part 1 được chuẩn bị sẵn và che lại cho tới khi giám thị bắt đầu.");
+        Label coverText = new Label("Hình ảnh của đề đã được chuẩn bị và sẽ hiện khi bài thi bắt đầu.");
         coverText.getStyleClass().add("room-muted");
         coverText.setWrapText(true);
         StackPane stage = new StackPane(slots, cover, coverText);
@@ -59,11 +59,13 @@ final class RichLobbyPane extends VBox {
         // Màn che phủ toàn bộ ảnh; ảnh vẫn visible/opacity 1 trong scene để đo hiển thị thật.
         cover.setMouseTransparent(true);
 
-        waiting.getStyleClass().add("room-info");
+        waiting.getStyleClass().add("room-warning");
         waiting.setWrapText(true);
         waiting.setMaxWidth(Double.MAX_VALUE);
         waiting.setMinHeight(Region.USE_PREF_SIZE);
-        Label rules = new Label("ⓘ  Bài thi chỉ tính giờ khi giám thị bấm bắt đầu. Listening phát một lần, không tua và không phát lại.");
+        waiting.managedProperty().bind(waiting.textProperty().isNotEmpty());
+        waiting.visibleProperty().bind(waiting.textProperty().isNotEmpty());
+        Label rules = new Label("ⓘ  Đồng hồ chỉ chạy khi giám thị bắt đầu. Phần nghe chỉ phát một lần, không tua, không phát lại.");
         rules.getStyleClass().add("room-info");
         rules.setWrapText(true);
         rules.setMinHeight(Region.USE_PREF_SIZE);
@@ -77,20 +79,19 @@ final class RichLobbyPane extends VBox {
     void preparation(AttemptPreparation preparation) {
         if (preparation == null) return;
         title.setText(preparation.title());
-        identity.setText("Mã ca: " + preparation.sessionId() + "\nMã lượt thi: " + preparation.attemptId()
-                + "\nGiám thị cần theo dõi đúng mã ca này để thấy trạng thái READY.");
-        meta.setText("Thời gian làm bài: " + preparation.durationMinutes() + " phút · Trạng thái ca: "
-                + ("SCHEDULED".equals(preparation.sessionState()) ? "chờ giám thị bắt đầu" : preparation.sessionState())
-                + (preparation.visualManifest() == null ? "" : " · Ảnh Part 1 cần chuẩn bị: " + preparation.visualManifest().slots().size()));
+        // Only the session code: enough to tell the proctor which room; attempt ids are not for candidates.
+        identity.setText("Mã ca: " + preparation.sessionId());
+        meta.setText("Thời gian làm bài: " + preparation.durationMinutes() + " phút");
     }
 
     void connection(boolean online) {
-        row(connectionRow, online, false, online ? "Kết nối máy chủ: đã kết nối" : "Kết nối máy chủ: mất kết nối, trạng thái chưa xác minh");
+        row(connectionRow, online, false, online ? "Kết nối: đã kết nối" : "Kết nối: mất kết nối, đang thử lại…");
     }
 
     void audio(AudioPreparation.Snapshot state, boolean ready) {
         row(audioRow, ready, state.phase() == AudioPreparation.Phase.ERROR,
-                ready ? "Âm thanh: server đã xác nhận READY" : "Âm thanh: " + state.message());
+                ready ? "Âm thanh: đã sẵn sàng" : state.phase() == AudioPreparation.Phase.ERROR
+                        ? "Âm thanh: chưa chuẩn bị xong — làm lại các bước bên trái" : "Âm thanh: làm 3 bước bên trái");
     }
 
     void visual(VisualReadyCoordinator.Snapshot state) {
@@ -99,10 +100,10 @@ final class RichLobbyPane extends VBox {
         boolean bad = state.phase() == VisualReadyCoordinator.Phase.FAILED || state.phase() == VisualReadyCoordinator.Phase.UNVERIFIED;
         boolean imagesDone = Set.of(VisualReadyCoordinator.Phase.WAITING_AUDIO, VisualReadyCoordinator.Phase.REPORTING,
                 VisualReadyCoordinator.Phase.READY).contains(state.phase());
-        row(visualRow, imagesDone, bad, "Ảnh Part 1: " + (imagesDone ? "đã tải, kiểm SHA-256 và gắn vào màn hình" : state.message()));
-        row(serverRow, ready, bad, ready ? "Server: đã xác nhận Audio + Ảnh READY (lease tới " + state.leaseExpiresAt() + ")"
-                : "Server: chưa xác nhận READY");
-        waiting.setText(state.message());
+        row(visualRow, imagesDone, bad, "Hình ảnh: " + (imagesDone ? "đã tải" : bad ? "tải chưa được" : "đang tải…"));
+        row(serverRow, ready, bad, ready ? "Sẵn sàng — đang chờ giám thị bắt đầu" : "Chưa sẵn sàng");
+        // Only problems need the candidate's attention; routine progress is already in the rows above.
+        waiting.setText(bad ? "Chưa chuẩn bị được hình ảnh của đề. Hãy báo giám thị." : "");
     }
 
     /** Gắn ảnh đã decode vào vùng bị che; hoàn tất khi ảnh đầu hiển thị qua hai pulse layout thật. */

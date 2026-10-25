@@ -192,7 +192,7 @@ public final class ReadingListeningPostgresGuiSmoke {
         selectAttempt(reading); clickText(candidateStage,"Bắt đầu giám sát");
         until(()->state(reading).get("status").getAsString().equals("SYNCED"),"First FULL snapshot");
         until(()->fx(()->candidateStage.getScene().getRoot().lookupAll(".label").stream()
-                .filter(Label.class::isInstance).map(Label.class::cast).anyMatch(l->l.getText().contains("Chế độ FULL"))),"FULL GUI mode");
+                .filter(Label.class::isInstance).map(Label.class::cast).anyMatch(l->l.getText().contains("Đang giám sát máy"))),"FULL GUI mode");
         check(monitoringThreads().size()==3,"One collector/delivery/full worker");
         Path edge=Path.of(System.getenv("ProgramFiles(x86)"),"Microsoft/Edge/Application/msedge.exe");
         check(Files.isRegularFile(edge),"Owned Edge TEST executable available");
@@ -326,7 +326,7 @@ public final class ReadingListeningPostgresGuiSmoke {
         until(()->fx(()->{for(Window w:List.copyOf(Window.getWindows()))
             if(w instanceof Stage stage && stage!=candidateStage&&stage!=proctorStage&&stage.getScene()!=null) {
                 for(var node:stage.getScene().getRoot().lookupAll(".button"))if(node instanceof Button b
-                    && b.getText().equals("Hoàn Tất & Thoát")&&!b.isDisabled()){b.fire();return true;}
+                    && b.getText().equals("Hoàn tất")&&!b.isDisabled()){b.fire();return true;}
             }return false;}),"Result dialog closed");
     }
     private JsonObject state(String attempt)throws Exception {

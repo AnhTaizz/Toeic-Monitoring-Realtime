@@ -96,7 +96,7 @@ public final class AudioPackageSmoke {
             screenshot(output.resolve("corrupt-file.png"));
 
             fire("Tải / chuẩn bị lại audio"); waitFor("Thử loa"); fire("Thử loa"); waitFor("Tôi nghe được"); fire("Tôi nghe được");
-            fire("Xác nhận sẵn sàng"); waitText("Server đã xác nhận READY");
+            fire("Xác nhận sẵn sàng"); waitText("Đã sẵn sàng. Chờ giám thị bắt đầu.");
             result.add("PASS REAL JavaFX PCM WAV completed; automated hearing confirmation; MOCK correlated READY ACK");
             screenshot(output.resolve("ready.png"));
 
@@ -130,7 +130,7 @@ public final class AudioPackageSmoke {
             api.listeningPhase="NOT_STARTED";
             fx(()->{view.close();view=new AudioPreparationView(api,api,output.resolve("Bộ nhớ LT03"),List.of("MOCK-ATTEMPT"),transport);stage.getScene().setRoot(new VBox(12,view));return null;});
             fire("Tải / chuẩn bị lại audio");waitFor("Thử loa");fire("Thử loa");waitFor("Tôi nghe được");fire("Tôi nghe được");
-            fire("Xác nhận sẵn sàng");waitText("Server đã xác nhận READY");
+            fire("Xác nhận sẵn sàng");waitText("Đã sẵn sàng. Chờ giám thị bắt đầu.");
             long starts=api.listeningEvents.stream().filter(e->"STARTED".equals(e.event())).count();
             transport.emit(command);await(()->api.listeningEvents.stream().filter(e->"STARTED".equals(e.event())).count()>starts);
             transport.state(ConnectionState.DISCONNECTED);waitText("NETWORK_LOST");

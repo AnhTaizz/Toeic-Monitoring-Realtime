@@ -180,15 +180,16 @@ public final class ToeicClientApplication extends Application {
         PasswordField pin=new PasswordField();pin.setId("account-pin-input");pin.setPromptText("PIN 5 chữ số");
         pin.setTextFormatter(new javafx.scene.control.TextFormatter<String>(change->change.getControlNewText().matches("[0-9]{0,5}")?change:null));
         Button enter=new Button("Vào phòng");enter.setId("account-pin-enter");enter.getStyleClass().add("home-primary");
-        Label status=new Label("Nhập PIN do giám thị cung cấp.");status.setId("account-pin-status");status.setWrapText(true);
-        VBox fields=new VBox(14,new Label("Tham gia phòng thi"),pin,enter,status);fields.setPadding(new javafx.geometry.Insets(24));
+        Label status=new Label("Nhập PIN 5 số do giám thị cung cấp.");status.setId("account-pin-status");status.setWrapText(true);
+        Label joinTitle=new Label("Vào phòng thi");joinTitle.getStyleClass().add("home-section-title");
+        VBox fields=new VBox(14,joinTitle,pin,enter,status);fields.setPadding(new javafx.geometry.Insets(24));
         if(LegacyUi.enabled()) {
             Button legacy=new Button("Ca thi được phân công trước đây");legacy.setOnAction(e->showRoleScene(stage,serverUrl,account));
             fields.getChildren().add(legacy);
         }
         Tab tab=new Tab("Vào phòng",fields);tab.setClosable(false);TabPane tabs=new TabPane(tab);
         Button logout=new Button("Đăng xuất");logout.setOnAction(e->{releaseConnectionView();stage.setScene(loginScene(stage));});
-        var root=new CandidateHomePane(account.user().displayName(),account.user().username(),new Label("Đã đăng nhập"),new Label("Nhập PIN → Chuẩn bị Audio/Ảnh → Chờ giám thị START"),tabs,logout);
+        var root=new CandidateHomePane(account.user().displayName(),account.user().username(),new Label("Đã đăng nhập"),new Label(""),tabs,logout);
         stage.setScene(applyStyles(new Scene(root,1366,820)));
         Runnable submit=()->{
             if(enter.isDisabled())return;
@@ -258,12 +259,12 @@ public final class ToeicClientApplication extends Application {
         Consumer<ConnectionState> updateConnection = state -> {
             if (currentView != viewGeneration) return;
             ConnectionViewModel connection = ConnectionViewModel.from(state);
-            connectionStatus.setText("WS: " + connection.status());
+            connectionStatus.setText(connection.status());
             connectionStatus.getStyleClass().removeAll("home-online", "home-offline");
             connectionStatus.getStyleClass().add(state == ConnectionState.CONNECTED ? "home-online" : "home-offline");
             networkControls.setDisable(connection.networkLocked());
             availability.setText(state == ConnectionState.CONNECTED
-                    ? "Kết nối thời gian thực sẵn sàng."
+                    ? "Đã kết nối máy chủ."
                     : state == ConnectionState.FAILED ? "Kết nối thất bại. Hãy kiểm tra mạng hoặc đăng nhập lại."
                     : "Các thao tác cần mạng đang khóa.");
         };
@@ -273,7 +274,7 @@ public final class ToeicClientApplication extends Application {
             if ("ERROR".equals(message.type())) Platform.runLater(() -> {
                 if (currentView == viewGeneration) availability.setText(
                         "UNAUTHORIZED".equals(message.payload().get("code").getAsString())
-                                ? "Phiên hết hiệu lực. Hãy đăng nhập lại." : "Server từ chối message realtime.");
+                                ? "Phiên hết hiệu lực. Hãy đăng nhập lại." : "Máy chủ từ chối yêu cầu. Hãy thử lại hoặc đăng nhập lại.");
             });
         });
         updateConnection.accept(realtimeClient.connectionState());
@@ -350,13 +351,11 @@ public final class ToeicClientApplication extends Application {
                 MonitoringDelivery.Status state = monitoring.status();
                 if (state == null) return;
                 if (!monitoring.isActive()) closeSignalMonitoring();
-                status.setText("Giám sát: Chế độ " + monitoring.modeStatus().mode() + " · " + modeExplanation(monitoring.modeStatus().reason())
-                        + " · Chưa xác nhận: " + state.pendingEvents() + " · Đã xác nhận: " + state.acknowledged()
-                        + " · Bị mất do queue đầy: " + state.droppedCount() + (state.gapPending() ? " · Đang báo khoảng trống" : "")
-                        + (state.exhausted() > 0 ? " · Hết lượt tự thử lại" : "") + (state.failed() > 0 ? " · Có sự kiện bị từ chối" : "")
-                        + (!state.active() ? ("DELTA_CAPABILITY_LOST".equals(state.problem())
-                            ? " · Server không còn hỗ trợ delta; dừng rồi bật lại giám sát bằng FULL."
-                            : " · Mất quyền; dừng rồi kiểm tra lượt thi/đăng nhập lại") : ""));
+                // Delivery counters and mode stay in logs/diagnostics; the candidate only needs on/off and what to do.
+                status.setText(state.active() ? MONITORING_ON
+                        : "DELTA_CAPABILITY_LOST".equals(state.problem())
+                            ? "Giám sát đã dừng. Bấm Dừng giám sát rồi Bắt đầu giám sát lại."
+                            : "Giám sát đã dừng vì lượt thi không còn quyền. Hãy kiểm tra lượt thi hoặc đăng nhập lại.");
             });
         });
         monitoring = session;
@@ -421,7 +420,7 @@ public final class ToeicClientApplication extends Application {
                 try {
                     monitoringAttempt = startOrReuseMonitoring(session, monitoringAttempt, selected, scope, realtimeClient::updateScope);
                     startSignalMonitoring(stage, serverUrl, login.token(), selected, session, currentView, false);
-                    status.setText("Giám sát: Chế độ " + session.modeStatus().mode() + " · " + modeExplanation(session.modeStatus().reason()));
+                    status.setText(MONITORING_ON);
                     attempts.setDisable(true);
                     refreshScopeBtn.setDisable(true);
                     manualMonitoringStart.setDisable(true);
@@ -443,7 +442,7 @@ public final class ToeicClientApplication extends Application {
             manualMonitoringStop.setDisable(true);
             manualMonitoringStart.setDisable(true);
             startExamBtn.setDisable(true);
-            status.setText("Đang dừng giám sát; chưa xác nhận: " + result.discarded().unconfirmedEvents());
+            status.setText("Đang dừng giám sát…");
             var stopped = result.stopped();
             if (stoppedSignals != null) stopped = stopped.thenRunAsync(() -> {
                 try {
@@ -635,15 +634,7 @@ public final class ToeicClientApplication extends Application {
         session.start(freshScope.role(), selectedAttempt, freshScope.attemptScope());
         return selectedAttempt;
     }
-    private static String modeExplanation(String reason) {
-        return switch(reason) {
-            case "CAPABILITY_CONFIRMED" -> "Delta thử nghiệm; server đã xác nhận hỗ trợ.";
-            case "WAITING_CURRENT_SOCKET_CAPABILITY" -> "Đợi server xác nhận hỗ trợ trên kết nối mới.";
-            case "CAPABILITY_PENDING_FULL_FALLBACK" -> "Chưa xác nhận hỗ trợ delta; dùng full cho lần Start này.";
-            case "SERVER_OR_TRANSPORT_UNSUPPORTED_FULL_FALLBACK" -> "Server/kết nối chưa hỗ trợ delta; dùng full.";
-            default -> "Full mặc định.";
-        };
-    }
+    private static final String MONITORING_ON = "Đang giám sát máy trong phiên thi.";
 
     static String userMessage(Throwable failure) {
         Throwable cause = failure instanceof CompletionException && failure.getCause() != null

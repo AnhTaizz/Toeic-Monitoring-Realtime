@@ -35,3 +35,5 @@
 
 .candidate-home .home-connection.home-online { -fx-text-fill: #118b68; }
 .candidate-home .home-connection.home-offline { -fx-text-fill: #b14f2b; }
+.candidate-home .home-section-title { -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #102648; }
+.candidate-home #account-pin-input { -fx-font-size: 22px; -fx-max-width: 260; }

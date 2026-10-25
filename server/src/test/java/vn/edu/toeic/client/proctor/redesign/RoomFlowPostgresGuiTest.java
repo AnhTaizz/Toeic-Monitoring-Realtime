@@ -179,7 +179,7 @@ class RoomFlowPostgresGuiTest {
                     ((javafx.scene.control.PasswordField)stages[index].getScene().lookup("#room-entry-pin")).setText(ticket.pin());
                     ((Button)stages[index].getScene().lookup("#room-entry-submit")).fire();
                 });
-                awaitText(stages[i],"Đã nhận quyền ghi",30);
+                awaitText(stages[i],"Bài thi đã sẵn sàng trên máy này",30);
                 assertThat(FxSupport.fx(()->stages[index].getScene().lookup("#room-entry-pin"))).isNull();
                 var joined=logins.joinRoom(base,room.roomCode(),ticket.username(),ticket.pin()).get(15,TimeUnit.SECONDS);
                 assertThat(joined.attemptId()).isEqualTo(ticket.attemptId());assertions.add(joined.login());
@@ -188,7 +188,7 @@ class RoomFlowPostgresGuiTest {
                 clickWhenEnabled(stages[i],"Tải / chuẩn bị lại audio");clickWhenEnabled(stages[i],"Thử loa",120);
                 log.add("Actual prepare-to-speaker-action: files="+audioFiles+", milliseconds="+(System.nanoTime()-preparing)/1_000_000);
                 clickWhenEnabled(stages[i],"Tôi nghe được");clickWhenEnabled(stages[i],"Xác nhận sẵn sàng");
-                awaitText(stages[i],"✓  Server: đã xác nhận Audio + Ảnh READY",45);
+                awaitText(stages[i],"✓  Sẵn sàng — đang chờ giám thị bắt đầu",45);
                 screenshot(stages[i],"candidate-"+i+"-ready");
             }
             assertThat(count("SELECT count(*) FROM monitoring_attempts WHERE session_id='"+session+"'")).isEqualTo(2);
@@ -210,7 +210,7 @@ class RoomFlowPostgresGuiTest {
             }
             for(int i=0;i<2;i++) {
                 // Playback must actually complete. LOCKED is a failure, not a successful Listening run.
-                try{awaitText(stages[i],"Server đã xác nhận phát xong",150);}catch(AssertionError failure){
+                try{awaitText(stages[i],"Phần nghe đã kết thúc",150);}catch(AssertionError failure){
                     var failed=call("GET","/api/v1/attempts/"+room.candidates().get(i).attemptId()+"/listening/status",null,assertions.get(i).token(),200);
                     log.add("Listening failure: phase="+failed.get("phase")+", reason="+failed.get("interruptionReason"));
                     throw failure;

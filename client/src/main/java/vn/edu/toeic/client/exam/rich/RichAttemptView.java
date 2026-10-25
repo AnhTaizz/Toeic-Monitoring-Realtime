@@ -84,6 +84,8 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
         status.setId("room-attempt-status");
         status.getStyleClass().add("room-notice");
         status.setWrapText(true);
+        status.managedProperty().bind(status.textProperty().isNotEmpty());
+        status.visibleProperty().bind(status.textProperty().isNotEmpty());
         Button leave = new Button("Rời phòng chờ");
         leave.getStyleClass().add("room-button-secondary");
         leave.setOnAction(event -> leave());
@@ -93,7 +95,7 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
         scroll.setFitToWidth(true);
         scroll.getStyleClass().add("room-scroll");
         setCenter(scroll);
-        status.setText("Đang nhận quyền ghi cho lượt thi…");
+        status.setText("Đang mở bài thi…");
 
         connectionSubscription = realtime.onConnectionState(state -> Platform.runLater(() -> { if (!closed) connection(state); }));
         messageSubscription = realtime.onMessage(message -> {
@@ -115,9 +117,9 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
         TakeoverWriterRequest request = new TakeoverWriterRequest(UUID.randomUUID().toString(), attemptId, UUID.randomUUID().toString());
         gateway.takeoverWriter(attemptId, request).whenComplete((granted, failure) -> Platform.runLater(() -> {
             if (closed) return;
-            if (failure != null) { fail(failure, "Không nhận được quyền ghi"); return; }
+            if (failure != null) { fail(failure, "Chưa mở được bài thi"); return; }
             if (granted == null || !attemptId.equals(granted.attemptId()) || granted.writerEpoch() < 1 || !"ACTIVE".equals(granted.state())) {
-                status.setText("Server trả kết quả cấp quyền ghi không hợp lệ."); return;
+                status.setText("Chưa mở được bài thi. Hãy rời phòng chờ rồi vào lại."); return;
             }
             writer = granted.writerEpoch();
             audio = audioFactory.create(writer, source::listeningApi, this::awaitPlay);
@@ -129,7 +131,7 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
             setLeft(audioPanel);
             visual = new VisualReadyCoordinator<>(api, images, attemptId, writer, () -> audio.audioReady().filter(c -> c.writerEpoch() == writer).isPresent(),
                     lobby::prepareImages, Platform::runLater, this::visualChanged);
-            status.setText("Đã nhận quyền ghi trên máy này. Hãy tải âm thanh, thử loa và xác nhận sẵn sàng.");
+            status.setText("Bài thi đã sẵn sàng trên máy này. Hãy làm 3 bước chuẩn bị âm thanh ở cột bên trái.");
             visual.start();
         }));
     }
@@ -137,6 +139,8 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
     private void audioChanged() {
         if (closed || audio == null || exam != null) return;
         lobby.audio(audio.audioSnapshot(), audio.audioReady().isPresent());
+        // The three-step hint is done once audio is ready; the checklist then says what is left.
+        if (audio.audioReady().isPresent() && status.getText().startsWith("Bài thi đã sẵn sàng trên máy này")) status.setText("");
     }
 
     private void visualChanged(VisualReadyCoordinator.Snapshot state) {
@@ -148,7 +152,7 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
                 && Boolean.FALSE.equals(state.preparation().readyForExam())) {
             readingOnly=true;if(audio!=null)audio.allowLatePreparation(true);
             header.deadline(state.preparation().deadlineAt(),java.time.Instant.now());
-            status.setText("Phòng đã bắt đầu. Listening bị khóa vì chưa READY lúc START. Hoàn tất chuẩn bị để làm Reading; thời gian vẫn tính theo phòng.");
+            status.setText("Phòng đã bắt đầu. Bạn vào muộn nên không có phần nghe. Hoàn tất chuẩn bị để làm phần Reading; thời gian vẫn tính theo phòng.");
         }
         if (state.sessionExpired()) { close(); onSessionExpired.run(); return; }
         if (state.phase() == VisualReadyCoordinator.Phase.STARTED) enterExam();
@@ -192,10 +196,10 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
 
     private void open(RichExamModel model, CandidateAttemptStatusResponse state) {
         if (!attemptId.equals(state.attemptId()) || state.writerEpoch() != writer) {
-            status.setText("Lượt thi đã được mở ở máy khác (phiên ghi trên server đã đổi). Không vào làm bài trên máy này.");
+            status.setText("Bài thi đang được mở trên máy khác. Không vào làm bài trên máy này.");
             return;
         }
-        if (!"ACTIVE".equals(state.state())) { status.setText("Lượt thi đã kết thúc (" + state.state() + "). Xem kết quả trong lịch sử."); return; }
+        if (!"ACTIVE".equals(state.state())) { status.setText("Bài thi đã kết thúc. Xem kết quả trong lịch sử."); return; }
         if (visual != null) visual.close();
         lobby.close();
         ExamSession.Start start = new ExamSession.Start(attemptId, writer, state.savedRevision(), state.answers(), model.exam().deadlineAt());
