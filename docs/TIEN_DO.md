@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+25/10/2026 — Bản phát hành cuối: nhánh `integrate/final-toeic-release` (`05822d8`, chưa push) đã gộp ACCOUNT_PIN, USB/focus/window của C tới `9299075`, giao diện legacy ẩn sau cờ, launcher portable. Full `17f94c6` 1756 PASS/23 SKIP/0 lỗi; full trên commit cuối chưa có. **Tạm dừng chờ Công Lâm hoàn tất nhánh USB**; xem ghi chú làm dở trong NHAT_KY.
+
 25/10/2026 — Người dùng chốt danh sách chung chỉ có process, USB cắm/rút và thay đổi focus/window. Đã loại status/baseline typed khỏi các danh sách và số đếm; raw Timeline/trạng thái nguồn giữ. Clientpackage/GUI40PASS và PGREAL2PASS count0/window, cleanup sạch; JARdc91c420… mới cần mở lại app. [Report](../evidence/proctor-actions-only-20261025/REPORT.md). Không fullverify/hotplug/PR/merge/DONE mới.
 
 25/10/2026 — Nối USB/focus/cửa sổ vào Cảnh báo, Nhật ký giám sát và hai khối gần đây ở Tổng quan; bộ lọc/chi tiết gốc, đọc tăng dần theo watermark, không thêm cột riêng. Full1435PASS/154SKIP/0lỗi, PGREAL2PASS count0/window tự cập nhật, cleanup sạch. [Report](../evidence/proctor-feed-20261025/REPORT.md), [runbook](PROCTOR_SIGNAL_SUMMARY.md). Client cũ cần mở lại JAR mới; không wire/DB/OSAPI/policy/trackerDONE/PR/merge hoặc hotplug nghiệm thu mới.
