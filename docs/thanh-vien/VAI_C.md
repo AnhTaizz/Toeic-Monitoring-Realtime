@@ -609,3 +609,7 @@ Danh sách chung chỉ thêm USB cắm/rút, focus/window thay đổi bên cạn
 ### 25/10/2026 — Bàn giao catalog process39tên/Teams mới
 
 Policyv2 mở rộng6nhóm/256process, đọc lại v1/8tên/128; review contract trước sửa ở [runbook](../PROCESS_GROUPS.md). Full/delta/event cùng policy, epoch không đổi; background chỉ state/history, helperCIM loại PID-start. Full1458PASS/154SKIP, PGREAL2PASS nativeTeams2/history/UI/cleanup sạch. [Report](../../evidence/process-groups-20261025/REPORT.md). Ghi chú bàn giao: nâng cấp đồng bộ server/client (script -ServerJar tên riêng), giữ phiên8080 đang mở; owner review A/C/B và benchmarkv2/LAN/installer vẫn chờ, không trackerDONE/humanapproval.
+
+### 25/10/2026 — Bàn giao loại tám process dễ nhầm
+
+Policyv3/current31 loại8tên terminal/host tại [runbook](../PROCESS_GROUPS.md); v1/v2 raw/Timeline giữ, summary/commonlists/count ẩn các tên bỏ. Full1464PASS/154SKIP, PGREAL2PASS native61/Teams2/no8tên và cleanup sạch. [Report](../../evidence/process-filter-20261025/REPORT.md). Cần nâng cấpserverJARtênriêng và cả2client; ownerreviewA/C/B còn, không trackerDONE/benchmark/hardware/LAN/installer mới.

@@ -1118,3 +1118,7 @@ Consumer RoomFeed/SignalFeedProjection chỉ chiếu typed USB CONNECTED/REMOVED
 ## 25/10/2026 — Catalog process-policy-v2
 
 Theo yêu cầu người dùng, candidate mặc định policyv2 với39tên/6nhóm tại PROCESS_GROUPS.md (gồm ms-teams.exe). Full/delta/state nhận cảv1(8tên/128process) vàv2(39tên/256process), kiểm membership theo policy; schema field/endpoint/envelope và DB không đổi. Reducer không cho đổi policy trong epoch; full/delta/event cùng tập đã lọc. Đọc trace/replay v1 giữ nguyên ý nghĩa. Background được lưu lịch sử và hiện state, consumer Cảnh báo/MON08 không tự đưa background vào review. Nâng cấp đồng bộ server/client; clientv1 còn dùng được với server mới, clientv2 cần server mới. Registry helper USB chỉ loại PID/start do app sở hữu, không đổi OS query. [Review/runbook](PROCESS_GROUPS.md), [evidence](../evidence/process-groups-20261025/REPORT.md).
+
+## 25/10/2026 — Policyv3 bỏ tám tên dễ nhầm
+
+Candidate/trace mặc định process-policy-v3 với31tên, bỏ powershell.exe/pwsh.exe/cmd.exe/msedgewebview2.exe/conhost.exe/runtimebroker.exe/dllhost.exe/svchost.exe. Full/delta/event cùng tập; server/parser vẫn đọc v1(8)/v2(39) đúng membership cũ, V3 cap256 giốngV2, epoch không đổi policy. Không đổi field/endpoint/DB hoặc OSquery. Summary/danh sách chung/count/MON08 review bỏ8tên cả với dữ liệuV2; raw DB/API và Timeline gốc không xóa, dòng Timeline cũ ghi rõ tên đã loại. [Review/runbook](PROCESS_GROUPS.md).

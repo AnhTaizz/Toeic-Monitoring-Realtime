@@ -176,8 +176,8 @@ class MonitoringTimelinePostgresTest {
                 session.start(fresh.role(),a,fresh.attemptScope());
                 waitFor("expanded FULL committed",()->session.fullStatus()!=null&&session.fullStatus().acknowledgedSequence()>0);
                 var state=api.state(a).get(5,TimeUnit.SECONDS);
-                assertThat(state.policyVersion()).isEqualTo(ProcessCatalog.EXPANDED_POLICY);
-                assertThat(state.processes()).isNotEmpty().allMatch(p->ProcessCatalog.includes(ProcessCatalog.EXPANDED_POLICY,p.processName()));
+                assertThat(state.policyVersion()).isEqualTo(ProcessCatalog.CURRENT_POLICY);
+                assertThat(state.processes()).isNotEmpty().allMatch(p->ProcessCatalog.includes(ProcessCatalog.CURRENT_POLICY,p.processName()));
                 if(!teams.isEmpty())waitFor("native Teams observed through process history",()->api.events(a).join().stream().anyMatch(e->e.processName().equals("ms-teams.exe")));
                 var d=dashboard(a,"REAL ProcessHandle groups/Teams · MOCK accounts/exam · HTTP/WS/PG/JavaFX");
                 openSummary(d,a);

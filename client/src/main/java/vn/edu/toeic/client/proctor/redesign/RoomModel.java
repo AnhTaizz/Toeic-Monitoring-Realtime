@@ -433,7 +433,7 @@ final class RoomModel {
         for(var item:scoped.attempts()){
             String candidate=candidateNames.getOrDefault(item.attemptId(),item.attemptId());
             history.addAll(SignalFeedProjection.project(item.signals(),candidate).history());
-            var background=item.events().stream().filter(e->!vn.edu.toeic.protocol.monitoring.ProcessCatalog.review(e.processName()))
+            var background=item.events().stream().filter(e->vn.edu.toeic.protocol.monitoring.ProcessCatalog.visibleInLists(e.processName())&&!vn.edu.toeic.protocol.monitoring.ProcessCatalog.review(e.processName()))
                     .map(e->alert(e,candidate)).toList();
             history.addAll(timeline(background));
         }

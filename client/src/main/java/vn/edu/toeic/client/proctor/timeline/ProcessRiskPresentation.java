@@ -63,7 +63,7 @@ public final class ProcessRiskPresentation {
         Risk risk = risk(first.processName());
         String detail = risk.priority() + " · " + risk.category() + ": quan sát " + risk.application();
         if (count > 1) detail += " (" + count + " process con xuất hiện trong 30 giây, đã gộp)";
-        detail += ProcessCatalog.review(first.processName())?". Cần đối chiếu với thời điểm làm bài; không tự động kết luận gian lận.":". Tiến trình nền chỉ ghi nhận thông tin, không tự đưa vào cảnh báo.";
+        detail += !ProcessCatalog.visibleInLists(first.processName())?". Tên này đã được loại khỏi danh sách thu hiện hành; đây là lịch sử gốc.":ProcessCatalog.review(first.processName())?". Cần đối chiếu với thời điểm làm bài; không tự động kết luận gian lận.":". Tiến trình nền chỉ ghi nhận thông tin, không tự đưa vào cảnh báo.";
         String quality = risk.priority() + " / " + first.metadataQuality() + " / " + first.deliveryStatus();
         if (count > 1 && (!Objects.equals(first.metadataQuality(), last.metadataQuality())
                 || !Objects.equals(first.deliveryStatus(), last.deliveryStatus())))
@@ -73,10 +73,13 @@ public final class ProcessRiskPresentation {
     }
 
     public static String summarize(List<FullSnapshotPayload.Process> processes, String receivedAt, boolean stale) {
+        int hidden=processes==null?0:(int)processes.stream().filter(p->!ProcessCatalog.visibleInLists(p.processName())).count();
+        if(processes!=null)processes=processes.stream().filter(p->ProcessCatalog.visibleInLists(p.processName())).toList();
         if (processes == null || processes.isEmpty())
-            return "Không có tiến trình thuộc policy trong snapshot gần nhất"
+            return "Không có tiến trình thuộc danh sách hiện hành trong snapshot gần nhất"
                     + (receivedAt == null ? "" : " · server nhận " + receivedAt)
                     + (stale ? " · DỮ LIỆU CŨ" : "")
+                    + (hidden==0?"":" · đã ẩn "+hidden+" process đã loại khỏi danh sách")
                     + ". Điều này không chứng minh máy không có ứng dụng khác.";
         var counts = new HashMap<String,Integer>();
         for (var process : processes) counts.merge(process.processName(), 1, Integer::sum);
@@ -96,6 +99,7 @@ public final class ProcessRiskPresentation {
             previous = heading; group.add(risk.application() + " ×" + entry.getValue());
         }
         if (previous != null) lines.add(previous + ": " + String.join(", ", group));
+        if(hidden>0)lines.add("Đã ẩn "+hidden+" process đã loại khỏi danh sách hiện hành; dữ liệu gốc không bị xóa.");
         lines.add("Đây là tín hiệu để giám thị xem xét, không phải kết luận gian lận tự động.");
         return String.join("\n", lines);
     }

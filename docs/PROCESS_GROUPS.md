@@ -1,5 +1,7 @@
 # Mở rộng nhóm process — 25/10/2026
 
+**Bản hiện hành sau phản hồi người dùng: process-policy-v3,31tên.** Đã bỏ đúng8tên dễ nhầm ở mục review cuối; bảng39tên bên dưới là catalogv2 được giữ để đọc dữ liệu cũ. Chúng được ẩn khỏi summary/danh sách chung, raw DB/API/Timeline vẫn giữ để đối chiếu. Các process Windows khác còn trong catalog chỉ có trạng thái/nhật ký, không tự tăng cảnh báo.
+
 Theo yêu cầu người dùng: trình duyệt, chat/họp (cả teams.exe/ms-teams.exe), điều khiển từ xa, tài liệu/ghi chú/PDF, terminal/script và một danh sách cụ thể các process Windows/dịch vụ nền. Đây là catalog có tên rõ ràng, không phải mọi exe trên máy. Chỉ quan sát; không đọc nội dung/arguments, không chặn/kill process người dùng.
 
 ## Review kỹ thuật trước thay đổi contract
@@ -30,7 +32,7 @@ Tổng39tên, không là mọi process hoặc mọi biến thể tên/ứng dụ
 Cần cả server và client mới. Script không tự build; đóng/mở JVM không tự thay JAR server cũ. Sau mvn package mặc định dùng start-monitoring-server.ps1 -SignalExperiment như cũ. Nếu server cũ đang khóa JAR mặc định, bản verify được đóng gói riêng, có thể chọn bằng tham số mới khi tự khởi động lại server:
 
 ~~~powershell
-.\scripts\start-monitoring-server.ps1 -SignalExperiment -ServerJar .\server\target\server-process-groups-20261025.jar
+.\scripts\start-monitoring-server.ps1 -SignalExperiment -ServerJar .\server\target\server-process-filter-20261025.jar
 .\scripts\start-monitoring-client.ps1 -ServerUrl 'http://localhost:8080' -ReadUsbStorage
 ~~~
 
@@ -39,3 +41,11 @@ Thay địa chỉ bằng server LAN được cấu hình nếu chạy khác máy
 ## Giới hạn kiểm chứng
 
 Đây là mở rộng catalog hữu hạn, không bảo đảm nhận mọi ứng dụng/biến thể tên hoặc process không đọc được metadata. Giới hạn256 được kiểm ở DTO/frame/reducer, không là số process tối đa của Windows. Process sống ngắn hơn chu kỳ poll có thể bị bỏ lỡ. E1/E2 cũ với policyv1 không được gán lại cho catalog39tên; chưa đo lại hiệu năng/LAN nhiều máy cho policyv2. Không cần thư viện mới hoặc quyền admin để thêm tên vào catalog; không yêu cầu nâng quyền để đọc process bị hạn chế.
+
+## Review trước điều chỉnh theo phản hồi tiếp theo — 25/10/2026
+
+Người dùng muốn bỏ những tên dễ nhầm vừa được liệt kê. Bỏ đúng8tên: powershell.exe, pwsh.exe, cmd.exe, msedgewebview2.exe, conhost.exe, runtimebroker.exe, dllhost.exe, svchost.exe. Giữ các tên khác (gồm Teams) và nguồn USB/focus/window. Thêm process-policy-v3/current31tên, không đổi nghĩa v2/39 và v1/8; full/delta/event cùng policy, epoch không đổi policy, limit256 nhưv2. Không đổi DTO field/DB/OSquery. Consumer danh sách chung và summary bỏ8tên cả khi đọc snapshot/historyv2; raw DB/API/Timeline gốc không xóa. Đây là review kỹ thuật riêng trước đổi policy, không thay chữ ký owner A/C/B; người dùng đã cho phép triển khai, opt-outChatGPT giữ.
+
+Cấu hìnhv3 vẫn limit256 và đọc lại v1/v2 theo catalog cũ; không đổi nguồn USB/focus/window. Khi khởi động lại dùng server-process-filter-20261025.jar ở lệnh trên và mở lại cả2client mới.
+
+Việc loại theo tên áp dụng cả CMD/PowerShell do người dùng tự mở, không chỉ helper của app thi. Các tên này không được candidatev3 ghi nhận nữa; đây là hệ quả trực tiếp của danh sách loại người dùng yêu cầu.

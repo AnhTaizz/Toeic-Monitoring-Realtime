@@ -6,8 +6,8 @@ import vn.edu.toeic.protocol.monitoring.ProcessCatalog;
 import vn.edu.toeic.monitoring.usb.OwnedUsbProcesses;
 
 public final class ProcessPolicy implements ProcessSelection {
-    private static final Set<String> RESTRICTED = ProcessCatalog.executables(ProcessCatalog.EXPANDED_POLICY);
-    public String version() { return ProcessCatalog.EXPANDED_POLICY; }
+    private static final Set<String> RESTRICTED = ProcessCatalog.executables(ProcessCatalog.CURRENT_POLICY);
+    public String version() { return ProcessCatalog.CURRENT_POLICY; }
     public Set<String> restrictedExecutables() { return RESTRICTED; }
     public boolean matches(String executableName) {
         return executableName != null && RESTRICTED.contains(executableName.toLowerCase(Locale.ROOT));

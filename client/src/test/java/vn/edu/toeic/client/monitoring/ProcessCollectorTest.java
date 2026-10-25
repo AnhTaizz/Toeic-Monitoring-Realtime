@@ -46,7 +46,7 @@ class ProcessCollectorTest {
             String id = collector.start(ACTIVE, received::add, problem -> { throw new AssertionError(problem); });
             ProcessSnapshot snapshot = next(received);
             assertThat(snapshot.collectorSessionId()).isEqualTo(id);
-            assertThat(snapshot.policyVersion()).isEqualTo("process-policy-v2");
+            assertThat(snapshot.policyVersion()).isEqualTo("process-policy-v3");
             assertThat(snapshot.scanDurationNanos()).isEqualTo(5);
             assertThat(next(received).observationNanos()).isGreaterThan(snapshot.observationNanos());
             assertThat(snapshot.restrictedProcesses()).extracting(ObservedProcess::executableName)
