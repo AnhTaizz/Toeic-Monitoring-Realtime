@@ -3,6 +3,7 @@ package vn.edu.toeic.client.proctor.redesign;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -24,6 +25,9 @@ import vn.edu.toeic.protocol.exam.rich.CreateRichSessionRequest;
 import vn.edu.toeic.protocol.exam.rich.CreateRichSessionResponse;
 import vn.edu.toeic.protocol.exam.rich.ExamCatalogItem;
 import vn.edu.toeic.protocol.exam.rich.SessionReadiness;
+import vn.edu.toeic.protocol.exam.rich.CandidateCatalogItem;
+import vn.edu.toeic.protocol.exam.rich.CreateCandidateRequest;
+import vn.edu.toeic.protocol.exam.rich.*;
 
 /**
  * State of the PROCTORED_V2 panel: catalog → create session → READY → START.
@@ -48,10 +52,18 @@ final class ProctorV2Controller implements AutoCloseable {
     static final int MAX_CATALOG = 500;
 
     record Snapshot(List<ExamCatalogItem> catalog, boolean catalogLoading, boolean catalogHasMore, String catalogError,
+            List<CandidateCatalogItem> candidates, List<CandidateCatalogItem> selectedCandidates,
+            boolean candidatesLoading, boolean candidatesHasMore, String candidatesError,
+            boolean candidateSaving, CandidateCatalogItem savedCandidate, String candidateSaveError,
             String selectedExamId, boolean creating, CreateRichSessionResponse created, String createError,
             String session, SessionReadiness readiness, boolean readyLoading, boolean readyStale, String readyError,
             boolean polling, ListeningStartRequest pendingStart, ListeningStartResponse started, boolean starting,
-            String notice, boolean canCreate, boolean canStart) {}
+            String notice, boolean canCreate, boolean canStart,
+            CreatedRoom room, RoomPresence presence, List<RoomCatalogPage.Item> rooms, boolean roomsLoading,
+            String roomsError, boolean roomsHasMore, List<RoomCredentials> issuedPins, boolean pinBusy, String pinMessage,
+            boolean accountPin,String sharedPin) {
+        @Override public String toString(){return "ProctorV2Snapshot[session="+session+", credentials=<redacted>]";}
+    }
 
     private final ProctorV2Api api;
     private final Consumer<Snapshot> observer;
@@ -66,6 +78,26 @@ final class ProctorV2Controller implements AutoCloseable {
     private String nextAfter, catalogError = "", selectedExamId = "";
     private boolean catalogLoading, catalogHasMore;
     private long catalogGeneration;
+
+    private final List<CandidateCatalogItem> candidates=new ArrayList<>();
+    private final Map<Long,CandidateCatalogItem> selectedCandidates=new LinkedHashMap<>();
+    private String candidateSearch="", candidatesError="",candidateSaveError="";
+    private Long nextCandidate;
+    private long candidatesGeneration;
+    private boolean candidatesLoading,candidatesHasMore,candidateSaving;
+    private CandidateCatalogItem savedCandidate;
+
+    private CreatedRoom room;
+    private boolean accountPin;
+    private String sharedPin;
+    synchronized void enableAccountPin(){accountPin=true;}
+    synchronized boolean accountPin(){return accountPin;}
+    private RoomPresence presence;
+    private final List<RoomCatalogPage.Item> roomCatalog=new ArrayList<>();
+    private final java.util.Set<String> knownRooms=new java.util.HashSet<>();
+    private final List<RoomCredentials> issuedPins=new ArrayList<>();
+    private String nextRoom,roomsError="",pinMessage="";
+    private boolean roomsLoading,roomsHasMore,pinBusy,uncertainCreation;
 
     private boolean creating;
     private CreateRichSessionResponse created;
@@ -106,9 +138,12 @@ final class ProctorV2Controller implements AutoCloseable {
     }
 
     synchronized Snapshot snapshot() {
-        return new Snapshot(List.copyOf(catalog), catalogLoading, catalogHasMore, catalogError, selectedExamId, creating, created,
+        return new Snapshot(List.copyOf(catalog), catalogLoading, catalogHasMore, catalogError,
+                List.copyOf(candidates),List.copyOf(selectedCandidates.values()),candidatesLoading,candidatesHasMore,candidatesError,
+                candidateSaving,savedCandidate,candidateSaveError,selectedExamId, creating, created,
                 createError, session, readiness, readyLoading, readyStale, readyError, poll != null, pendingStarts.get(session),
-                started.get(session), starting, notice, canCreate(), canStart());
+                started.get(session), starting, notice, canCreate(), canStart(),
+                room,presence,List.copyOf(roomCatalog),roomsLoading,roomsError,roomsHasMore,List.copyOf(issuedPins),pinBusy,pinMessage,accountPin,sharedPin);
     }
 
     private ExamCatalogItem selected() {
@@ -118,15 +153,15 @@ final class ProctorV2Controller implements AutoCloseable {
 
     private boolean canCreate() {
         ExamCatalogItem item = selected();
-        return !closed && !creating && item != null && item.selectable() && item.blockedReasons().isEmpty();
+        return !closed && !creating && !uncertainCreation && item != null && item.selectable() && item.blockedReasons().isEmpty();
     }
 
     private boolean canStart() {
-        if (closed || starting || session.isEmpty() || started.containsKey(session)) return false;
+        if (closed || starting || pinBusy || session.isEmpty() || started.containsKey(session)) return false;
         // A retry settles the original request; it is not a new decision from a stale READY.
         if (pendingStarts.containsKey(session)) return true;
         long age = clockNanos.getAsLong() - readyReadNanos;
-        return !readyStale && readiness != null && session.equals(readiness.sessionId()) && readiness.allReady()
+        return !readyStale && readiness != null && session.equals(readiness.sessionId()) && (accountPin?Boolean.TRUE.equals(readiness.canStart()):readiness.allReady())
                 && age >= 0 && age < TimeUnit.MILLISECONDS.toNanos(READY_FRESH_MILLIS);
     }
 
@@ -199,7 +234,175 @@ final class ProctorV2Controller implements AutoCloseable {
 
     // ------------------------------------------------------------------ create
 
-    /** Parses "1, 2 3" into unique positive user IDs (no user-list API exists; IDs are entered by hand). */
+    synchronized void loadCandidates(String search, boolean more) {
+        if (closed || more && (candidatesLoading || !candidatesHasMore)) return;
+        String text = search == null ? "" : search.trim();
+        if (text.length() > 100 || text.chars().anyMatch(Character::isISOControl)) {
+            candidatesError = "Tìm theo tên hoặc tài khoản, tối đa 100 ký tự.";
+            publish();
+            return;
+        }
+        if (!more) {
+            candidateSearch = text;
+            candidates.clear();
+            nextCandidate = null;
+            candidatesHasMore = false;
+        }
+        String query = candidateSearch;
+        Long after = more ? nextCandidate : null;
+        long generation = ++candidatesGeneration;
+        candidatesLoading = true;
+        candidatesError = "";
+        publish();
+        execute(() -> api.candidates(query, after), (page, failure) -> {
+            if (generation != candidatesGeneration) return;
+            candidatesLoading = false;
+            if (failure != null) { candidatesError = error(failure); return; }
+            for (var item : page.items()) {
+                if (candidates.size() >= MAX_CATALOG) break;
+                candidates.removeIf(old -> old.userId() == item.userId());
+                candidates.add(item);
+            }
+            nextCandidate = page.nextAfterUserId();
+            candidatesHasMore = nextCandidate != null && candidates.size() < MAX_CATALOG;
+        });
+    }
+
+    synchronized void toggleCandidate(long id) {
+        if (closed || creating) return;
+        if (selectedCandidates.remove(id) == null) {
+            var item = candidates.stream().filter(row -> row.userId() == id).findFirst().orElse(null);
+            if (item == null) return;
+            if (selectedCandidates.size() >= 100) {
+                candidatesError = "Mỗi ca tối đa 100 thí sinh. Bỏ chọn một người để thêm người khác.";
+                publish();
+                return;
+            }
+            selectedCandidates.put(id, item);
+        }
+        publish();
+    }
+
+    synchronized void selectVisibleCandidates() {
+        if (closed || creating || candidatesLoading) return;
+        long extra = candidates.stream().filter(row -> !selectedCandidates.containsKey(row.userId())).count();
+        if (selectedCandidates.size() + extra > 100) {
+            candidatesError = "Mỗi ca tối đa 100 thí sinh. Hãy chọn từng người hoặc bỏ bớt lựa chọn.";
+        } else {
+            for (var item : candidates) selectedCandidates.put(item.userId(), item);
+        }
+        publish();
+    }
+
+    synchronized void clearCandidates() {
+        if (closed || creating) return;
+        selectedCandidates.clear();
+        publish();
+    }
+
+    synchronized void createSelectedSession(String duration, long selfId, String extraProctors) {
+        String ids = selectedCandidates.keySet().stream().map(Object::toString).collect(java.util.stream.Collectors.joining(","));
+        createSession(duration, ids, selfId, extraProctors);
+    }
+
+    synchronized void createSelectedRoom(String duration,long selfId,String extraProctors) {
+        if(accountPin){createPinSession();return;}
+        String ids=selectedCandidates.keySet().stream().map(Object::toString).collect(java.util.stream.Collectors.joining(","));
+        createSession(duration,ids,selfId,extraProctors,true);
+    }
+
+    synchronized void loadRooms(boolean more) {
+        if(closed || roomsLoading || more && !roomsHasMore)return;
+        String after=more?nextRoom:null;roomsLoading=true;roomsError="";publish();
+        execute(()->accountPin?api.pinRooms(after):api.rooms(after),(page,failure)->{
+            roomsLoading=false;if(failure!=null){roomsError=error(failure);return;}
+            if(!more)roomCatalog.clear();
+            for(var item:page.items()) {
+                knownRooms.add(item.sessionId());roomCatalog.removeIf(old->old.sessionId().equals(item.sessionId()));
+                if(roomCatalog.size()<MAX_CATALOG)roomCatalog.add(item);
+            }
+            nextRoom=page.nextAfterRoomCode();roomsHasMore=nextRoom!=null && roomCatalog.size()<MAX_CATALOG;
+        });
+    }
+
+    synchronized void forgetPins() {
+        issuedPins.clear();room=null;sharedPin=null;publish();
+    }
+    private void createPinSession() {
+        if(!canCreate())return;
+        creating=true;createError="";publish();
+        var request=new vn.edu.toeic.protocol.exam.rich.CreatePinRoomRequest(selectedExamId,120);
+        execute(()->api.createPinRoom(request),(value,failure)->{
+            creating=false;
+            if(failure!=null){int status=status(failure);if(status==0 || status>=500){uncertainCreation=true;loadRooms(false);}
+                createError=status==409?"Không tạo được phòng: đề hoặc media trên Server chưa hợp lệ. Kiểm tra cấu hình media.":error(failure);
+                if(uncertainCreation)createError+=" Tìm lại phòng trước khi tạo tiếp; không tự thử lại.";return;}
+            created=value.session();knownRooms.add(created.sessionId());watchLocked(created.sessionId());sharedPin=value.pin();
+            notice="Đã tạo phòng. Cung cấp PIN chung cho thí sinh.";loadRooms(false);refreshScope.run();
+        });
+    }
+    synchronized void rotateSharedPin() {
+        if(!accountPin || pinBusy || session.isEmpty() || presence==null || !"SCHEDULED".equals(presence.state()))return;
+        String id=session;long generation=readyGeneration;pinBusy=true;sharedPin=null;publish();
+        execute(()->api.rotateSharedPin(id),(value,failure)->{
+            pinBusy=false;if(generation!=readyGeneration)return;
+            if(failure!=null){pinMessage="Chưa xác nhận cấp PIN mới. "+error(failure);return;}
+            sharedPin=value.pin();pinMessage="Đã cấp PIN mới. Thí sinh cần nhập lại PIN; token cũ đã thu hồi.";readLocked();
+        });
+    }
+
+    synchronized void managePin(long candidateId,boolean rotate) {
+        if(closed || pinBusy || presence==null || !"SCHEDULED".equals(presence.state()))return;
+        final String id=session;final long generation=readyGeneration;
+        var member=presence.members().stream().filter(m->m.userId()==candidateId).findFirst().orElse(null);
+        if(member==null)return;
+        pinBusy=true;pinMessage="";
+        issuedPins.removeIf(p->p.userId()==candidateId);room=null;publish();
+        execute(()->{if(rotate)return api.rotatePin(id,candidateId);api.revokePin(id,candidateId);return null;},(pin,failure)->{
+            pinBusy=false;
+            if(generation!=readyGeneration)return;
+            if(failure!=null){pinMessage="Chưa xác nhận thay đổi PIN; không tự thử lại. "+error(failure);return;}
+            if(pin!=null)issuedPins.add(pin);
+            pinMessage=rotate?"PIN mới chỉ hiển thị tại đây. PIN/token cũ đã thu hồi.":"Đã thu hồi PIN và token của thí sinh. Có thể cấp PIN mới trước START.";
+            readLocked();
+        });
+    }
+
+    synchronized void beginCandidate() {
+        if(closed || candidateSaving)return;
+        savedCandidate=null;candidateSaveError="";publish();
+    }
+
+    synchronized void createCandidate(String code,String name) {
+        if(closed || candidateSaving)return;
+        savedCandidate=null;
+        String username=code==null?"":code.strip(),displayName=name==null?"":name.strip();
+        if(!username.matches("[A-Za-z0-9][A-Za-z0-9._-]{0,79}") || displayName.isBlank()
+                || displayName.codePointCount(0,displayName.length())>160
+                || displayName.codePoints().anyMatch(c->Character.isISOControl(c)||Character.getType(c)==Character.FORMAT||Character.getType(c)==Character.SURROGATE)) {
+            candidateSaveError="Nhập mã hợp lệ (tối đa 80 ký tự) và họ tên (tối đa 160 ký tự).";publish();return;
+        }
+        candidateSaving=true;candidateSaveError="";publish();
+        execute(()->api.createCandidate(new CreateCandidateRequest(username,displayName)),(value,failure)->{
+            candidateSaving=false;
+            if(failure!=null) {
+                int codeStatus=status(failure);
+                candidateSaveError=codeStatus==409?"Mã thí sinh đã tồn tại. Hãy tìm lại mã; thông tin cũ được giữ nguyên."
+                    :codeStatus==400?"Mã thí sinh hoặc họ tên không hợp lệ. Kiểm tra thông tin rồi lưu lại."
+                    :codeStatus==403?"Bạn không có quyền thêm thí sinh."
+                    :codeStatus==401?error(failure)
+                    :"Chưa nhận được xác nhận lưu. Hãy đóng form và tìm lại mã thí sinh trước khi gửi lại.";
+                return;
+            }
+            savedCandidate=value;
+            // Show the server-confirmed identity immediately, even when the previous catalog page was full.
+            candidatesGeneration++;candidatesLoading=false;candidatesError="";
+            candidateSearch=value.username();candidates.clear();candidates.add(value);
+            nextCandidate=null;candidatesHasMore=false;
+        });
+    }
+
+    /** Parses IDs used internally by the request builder and additional-proctor field. */
     static List<Long> userIds(String text, int max) {
         LinkedHashSet<Long> ids = new LinkedHashSet<>();
         for (String part : text == null ? new String[0] : text.trim().split("[\\s,;]+")) {
@@ -228,7 +431,11 @@ final class ProctorV2Controller implements AutoCloseable {
     }
 
     synchronized void createSession(String duration, String candidates, long selfId, String extraProctors) {
-        if (closed || creating) return;
+        createSession(duration,candidates,selfId,extraProctors,false);
+    }
+
+    private void createSession(String duration,String candidates,long selfId,String extraProctors,boolean roomMode) {
+        if (closed || creating || uncertainCreation) return;
         CreateRichSessionRequest request;
         try {
             if (!canCreate()) throw new IllegalArgumentException("Chọn một đề server báo dùng được (selectable) trước khi tạo ca.");
@@ -241,18 +448,26 @@ final class ProctorV2Controller implements AutoCloseable {
         creating = true;
         createError = "";
         publish();
-        execute(() -> api.create(request), (value, failure) -> {
+        record Result(CreateRichSessionResponse session,CreatedRoom room) { }
+        execute(() -> {if(!roomMode)return new Result(api.create(request),null);
+            var r=api.createRoom(request);return new Result(r.session(),r);}, (result, failure) -> {
             creating = false;
             if (failure != null) {
                 int status = status(failure);
                 // V2 create has no requestId: after a lost answer the session may exist, so never auto-retry.
+                if(roomMode && (status==0 || status>=500)){uncertainCreation=true;loadRooms(false);}
                 createError = error(failure) + (status == 0 || status >= 500
                         ? " Không rõ server đã tạo ca chưa; kiểm tra dashboard trước khi tạo lại." : "");
                 return;
             }
+            var value=result.session();
             created = value;
+            if(result.room()!=null){knownRooms.add(value.sessionId());}
+
             notice = "Server đã tạo ca " + value.sessionId() + " (" + value.attempts().size() + " lượt, SCHEDULED).";
             watchLocked(value.sessionId());
+            room=result.room();issuedPins.clear();if(room!=null)issuedPins.addAll(room.candidates());
+            if(roomMode)loadRooms(false);
             refreshScope.run();
         });
     }
@@ -277,6 +492,7 @@ final class ProctorV2Controller implements AutoCloseable {
             return;
         }
         if (!id.equals(session)) {
+            issuedPins.clear();room=null;sharedPin=null;pinMessage="";presence=null;
             session = id;
             readiness = null;
             readyGeneration++;
@@ -306,6 +522,7 @@ final class ProctorV2Controller implements AutoCloseable {
 
     /** The page is hidden (other section, other tab): stop polling, keep state. */
     synchronized void pause() {
+        issuedPins.clear();room=null;sharedPin=null;
         if (closed || paused) return;
         paused = true;
         stopPolling();
@@ -330,9 +547,11 @@ final class ProctorV2Controller implements AutoCloseable {
         if (readyLoading) return;
         final String id = session;
         final long generation = readyGeneration;
+        final boolean roomMode=knownRooms.contains(id);
         readyLoading = true;
         publish();
-        execute(() -> api.readiness(id), (value, failure) -> {
+        record Status(SessionReadiness ready,RoomPresence presence) { }
+        execute(() -> new Status(api.readiness(id),roomMode?api.roomPresence(id):null), (value, failure) -> {
             if (generation != readyGeneration) return;
             readyLoading = false;
             if (failure != null) {
@@ -343,7 +562,14 @@ final class ProctorV2Controller implements AutoCloseable {
                 return;
             }
             pollFailures = 0;
-            readiness = value;
+            var previousMembers=presence==null?java.util.Set.<String>of():presence.members().stream().map(RoomPresence.Member::attemptId).collect(java.util.stream.Collectors.toSet());
+            readiness = value.ready();presence=value.presence();
+            if(accountPin && presence!=null) {
+                int members=presence.members().size(),joined=(int)presence.members().stream().filter(m->m.joinedAt()!=null).count();
+                roomCatalog.replaceAll(r->r.sessionId().equals(id)?new RoomCatalogPage.Item(r.roomCode(),r.sessionId(),r.title(),presence.state(),members,joined,r.createdAt()):r);
+            }
+            if(accountPin && presence!=null && !previousMembers.equals(presence.members().stream().map(RoomPresence.Member::attemptId).collect(java.util.stream.Collectors.toSet())))refreshScope.run();
+            if(presence!=null && uncertainCreation){uncertainCreation=false;createError="";notice=accountPin?"Đã mở lại phòng. Cấp lại PIN chung trước START nếu bị mất.":"Đã mở lại phòng. PIN không lưu rõ; cấp lại cho từng thí sinh trước START nếu phiếu bị mất.";}
             readyReadNanos = clockNanos.getAsLong();
             readyStale = false;
             readyError = "";
@@ -363,7 +589,7 @@ final class ProctorV2Controller implements AutoCloseable {
         final String id = session;
         ListeningStartRequest pending = pendingStarts.get(id);
         if (pending == null && !canStart()) {
-            notice = "Chỉ START khi server vừa báo allReady=true cho đúng ca (dưới " + READY_FRESH_MILLIS / 1000 + " giây). Đọc lại READY.";
+            notice = accountPin?"Cần ít nhất một thí sinh JOIN và dữ liệu phòng mới từ Server.":"Chỉ START khi server vừa báo allReady=true cho đúng ca (dưới " + READY_FRESH_MILLIS / 1000 + " giây). Đọc lại READY.";
             publish();
             return;
         }
@@ -395,7 +621,7 @@ final class ProctorV2Controller implements AutoCloseable {
                 if (id.equals(session)) stopPolling();
                 notice = "Server xác nhận START: startId=" + value.startId() + " lúc " + Ui.clock(value.startedAt(), "?")
                         + ". Deadline do server tính; thí sinh nhận lệnh qua WebSocket.";
-                if (id.equals(session)) { readyStale = true; readLocked(); }
+                if (id.equals(session)) { issuedPins.clear();room=null;sharedPin=null;readyStale = true; readLocked(); }
                 return;
             }
             int status = status(failure);
@@ -418,12 +644,15 @@ final class ProctorV2Controller implements AutoCloseable {
         if (closed) return;
         closed = true;
         catalogGeneration++;
+        candidatesGeneration++;
         readyGeneration++;
         stopPolling();
         if (timer != null) timer.shutdownNow();
         if (ownedIo != null) ownedIo.shutdownNow();
         api.close();
         catalog.clear();
+        candidates.clear();selectedCandidates.clear();savedCandidate=null;
+        issuedPins.clear();room=null;presence=null;roomCatalog.clear();knownRooms.clear();
         pendingStarts.clear();
         started.clear();
         startedOrder.clear();

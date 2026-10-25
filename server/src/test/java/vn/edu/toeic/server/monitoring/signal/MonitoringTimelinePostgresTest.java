@@ -61,9 +61,11 @@ class MonitoringTimelinePostgresTest {
     boolean cancelRequested(){return fixture.cancelRequested();}
     final List<AutoCloseable> gui=new ArrayList<>();
     final Set<Thread> initialThreads=Thread.getAllStackTraces().keySet();
-    @BeforeAll void toolkit(){try{Platform.startup(()->{});}catch(IllegalStateException started){ }Platform.setImplicitExit(false);}
+    // These cases drive the assigned-attempt candidate home ("Bắt đầu giám sát"); after ACCOUNT_PIN a candidate
+    // login opens the PIN page first and that home is the retained legacy entry, hidden in the release default.
+    @BeforeAll void toolkit(){try{Platform.startup(()->{});}catch(IllegalStateException started){ }Platform.setImplicitExit(false);System.setProperty("toeic.ui.legacy","true");}
     @AfterEach void closeGui()throws Exception{for(int n=gui.size()-1;n>=0;n--)gui.get(n).close();gui.clear();}
-    @AfterAll void teardown()throws Exception{try{closeGui();fixture.teardown();waitFor("owned toeic workers terminate after resource close",()->Thread.getAllStackTraces().keySet().stream().noneMatch(t->!initialThreads.contains(t)&&t.getName().startsWith("toeic-")&&t.isAlive()));}finally{Platform.exit();}}
+    @AfterAll void teardown()throws Exception{System.clearProperty("toeic.ui.legacy");try{closeGui();fixture.teardown();waitFor("owned toeic workers terminate after resource close",()->Thread.getAllStackTraces().keySet().stream().noneMatch(t->!initialThreads.contains(t)&&t.getName().startsWith("toeic-")&&t.isAlive()));}finally{Platform.exit();}}
     static <T>T fx(Callable<T> action)throws Exception{var f=new CompletableFuture<T>();Platform.runLater(()->{try{f.complete(action.call());}catch(Throwable t){f.completeExceptionally(t);}});return f.get(8,TimeUnit.SECONDS);}
     static void waitFor(String condition,BooleanSupplier ready)throws Exception{long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(10);while(System.nanoTime()<until){if(ready.getAsBoolean())return;Thread.sleep(25);}throw new AssertionError(condition);}
     Stage stage(String title)throws Exception{return fx(()->{var s=new Stage();s.setTitle(title);s.setScene(new Scene(new Label(title),640,400));s.show();gui.add(()->fx(()->{s.close();return null;}));return s;});}
@@ -93,6 +95,147 @@ class MonitoringTimelinePostgresTest {
             results.add(Map.of("kind","REAL_JAVAFX","activation","Stage property API, not OS input","collectorIdentity","COMMIT_ACK_VERIFIED","committedTypes",committedTypes,"deliveryWorkerStopped",true,"acknowledged",monitor.deliveryStatus().acknowledged(),"discarded",monitor.deliveryStatus().discarded(),"dropped",monitor.deliveryStatus().dropped(),"hardware","NOT_RUN","freshReconnectCapability",true));
         }finally{if(previous==null)System.clearProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,previous);}
     }
+    @Test @EnabledIfEnvironmentVariable(named="TOEIC_USB_REAL_CIM",matches="true")
+    void manualMonitoringStartsUsbFocusWindowWithProcess()throws Exception {
+        String a=scope(180);
+        String signalBefore=System.getProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY),usbBefore=System.getProperty(CandidateExamSignalMonitoring.USB_ENABLE_PROPERTY);
+        System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,"true");System.setProperty(CandidateExamSignalMonitoring.USB_ENABLE_PROPERTY,"true");
+        try(var workload=new JointMonitoringRun.Workload(Path.of(required("TOEIC_USB_TEST_OUTPUT")));var api=new MonitoringApiClient(base,proctor)){
+            var probe=new vn.edu.toeic.client.MonitoringApplicationProbe(workload.child.pid());
+            Stage s=stage("REAL application manual monitoring + REAL USB; TEST accounts, owned process fixture");
+            fx(()->{probe.application.start(s);return null;});gui.add(()->fx(()->{probe.application.stop();s.close();return null;}));
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.login(s,base,"candidate1",required("TOEIC_SEED_PASSWORD"));return null;});
+            waitCandidateControls(s,a);
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Bắt đầu giám sát").fire();return null;});
+            waitFor("manual start creates the shared typed coordinator",()->{try{return fx(probe::signals)!=null;}catch(Exception e){throw new RuntimeException(e);}});
+            var first=fx(probe::signals);var process=probe.sessions.getFirst();
+            waitFor("manual start authorizes real USB scans without opening an exam",()->first.usbStatus()!=null&&first.usbStatus().scans()>=2);
+            assertThat(first.usbStatus().health()).isEqualTo(UsbSignalAdapter.Health.READY);
+            assertThat(fx(()->s.getScene().lookup("#candidate-attempts"))).isNotNull();
+            waitFor("manual process FULL and typed baseline committed together",()->process.fullStatus()!=null&&process.fullStatus().acknowledgedSequence()>0
+                    &&api.signals(a,0,null,100).join().items().stream().anyMatch(e->e.signal() instanceof WindowSignal)
+                    &&api.signals(a,0,null,100).join().items().stream().anyMatch(e->e.signal() instanceof FocusSignal));
+            var initial=api.signals(a,0,null,100).get(5,TimeUnit.SECONDS);
+            assertThat(initial.items()).allSatisfy(e->assertThat(e.signal().observerSessionId()).isEqualTo(process.collectorSessionId()));
+            assertThat(initial.items()).noneMatch(e->e.signal() instanceof vn.edu.toeic.protocol.monitoring.signal.ActivitySignal);
+            int count=first.usbStatus().storageCount();
+            if(count>0)waitFor("manual USB baseline committed",()->api.signals(a,0,null,100).join().items().stream().anyMatch(e->e.signal() instanceof UsbStorageSignal u&&u.storageCount()==count));
+            var dash=dashboard(a,"Manual Start process + USB/focus/window · REAL CIM/WS/HTTP/PG/JavaFX · TEST accounts");
+            openSummary(dash,a);
+            waitFor("manual USB observation visible with process in one section",()->{try{return fx(()->dash.view.lookup(count>0?"#candidate-signal-usb-received":"#candidate-signal-usb-health-received")!=null);}catch(Exception e){throw new RuntimeException(e);}});
+            screenshotSummary(dash,"manual-shared-signals");
+            fx(()->{s.setIconified(true);return null;});
+            waitFor("manual window transition committed",()->api.signals(a,0,null,100).join().items().stream().anyMatch(e->e.signal() instanceof WindowSignal w&&w.minimized()));
+            // No refresh button: the existing scoped signal reader advances the room feed.
+            try{waitFor("typed history reaches common room feed automatically",()->{try{return fx(()->
+                    vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.historyTypes(dash.view,a).contains("WINDOW")
+                    &&vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.alertTypes(dash.view,a).contains("WINDOW"));}catch(Exception e){throw new RuntimeException(e);}});}catch(AssertionError failed){throw new AssertionError(fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.diagnostic(dash.view,a)),failed);}
+            fx(()->{((ToggleButton)dash.view.lookup("#nav-overview")).fire();return null;});
+            waitFor("both overview widgets contain the latest window observation",()->{try{return fx(()->{
+                for(String id:List.of("#overview-recent-alerts","#overview-recent-events")){
+                    var node=dash.view.lookup(id);if(node==null)return false;
+                    String text=node.lookupAll(".label").stream().map(n->((Label)n).getText()).reduce("",(x,y)->x+" "+y);
+                    if(!text.contains("cửa sổ"))return false;
+                }return true;
+            });}catch(Exception e){throw new RuntimeException(e);}});
+            screenshot(dash,"feed-overview-real");
+            assertThat(fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.filterVisible(dash.view,a,"WINDOW"))).isTrue();
+            screenshot(dash,"feed-alerts-real");
+            fx(()->{s.setIconified(false);return null;});
+            String firstCollector=process.collectorSessionId();
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Dừng giám sát").fire();return null;});
+            waitCandidateControls(s,a);
+            assertThat(first.awaitStopped(Duration.ofSeconds(8))).isTrue();
+            assertThat(first.usbStatus().scanWorkerStopped()).isTrue();assertThat(first.usbStatus().controlWorkerStopped()).isTrue();
+            assertThat(fx(probe::signals)).isNull();
+            fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Bắt đầu giám sát").fire();return null;});
+            waitFor("restart gets a new typed run",()->{try{var m=fx(probe::signals);return m!=null&&m!=first&&m.deliveryStatus().acknowledged()>0;}catch(Exception e){throw new RuntimeException(e);}});
+            var restarted=fx(probe::signals);String collector=process.collectorSessionId();
+            assertThat(collector).isNotEqualTo(firstCollector);
+            fx(()->{((Button)s.getScene().lookup("#candidate-enter-exam")).fire();return null;});
+            waitFor("real exam entry succeeds after manual start",()->{try{return fx(()->s.getScene().getRoot() instanceof vn.edu.toeic.client.exam.CandidateExamView);}catch(Exception e){throw new RuntimeException(e);}});
+            assertThat(fx(probe::signals)).isSameAs(restarted);assertThat(process.collectorSessionId()).isEqualTo(collector);
+            waitFor("exam-only activity starts after entering the exam",()->api.signals(a,0,null,100).join().items().stream()
+                    .anyMatch(e->e.signal() instanceof vn.edu.toeic.protocol.monitoring.signal.ActivitySignal&&collector.equals(e.signal().observerSessionId())));
+            assertThat(api.signals(a,0,null,100).get(5,TimeUnit.SECONDS).items().stream().filter(e->collector.equals(e.signal().observerSessionId())&&e.signal() instanceof UsbStorageSignal u&&u.kind()==UsbStorageSignal.Kind.USB_STORAGE_PRESENT_AT_START).count()).isLessThanOrEqualTo(1);
+            fx(()->{probe.application.stop();return null;});assertThat(restarted.awaitStopped(Duration.ofSeconds(8))).isTrue();
+            process.stop().stopped().get(8,TimeUnit.SECONDS);
+            results.add(Map.of("kind","MANUAL_PROCESS_AND_SIGNALS","usbSource","REAL_CIM","usbBaselineCount",count,"manualPortalBaseline",true,"sharedCollector",true,"stopWaitsForUsbWorkers",true,"restartNewRun",true,"examEntryReusesRun",true,"activityOnlyAfterExamEntry",true,"hardwareHotplug","NOT_RUN"));
+            verifyExpandedProcessGroups();
+        }finally{
+            if(signalBefore==null)System.clearProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,signalBefore);
+            if(usbBefore==null)System.clearProperty(CandidateExamSignalMonitoring.USB_ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.USB_ENABLE_PROPERTY,usbBefore);
+        }
+    }
+    private void verifyExpandedProcessGroups()throws Exception {
+        String a=scope(180);
+        var source=new ProcessHandleSnapshotSource();var policy=new ProcessPolicy();
+        var teams=source.scan().stream().filter(policy::includes).filter(r->r.executableName().equalsIgnoreCase("ms-teams.exe")).map(ProcessReading::pid).toList();
+        try(var candidateApi=new MonitoringApiClient(base,candidate);var api=new MonitoringApiClient(base,proctor)){
+            var fresh=candidateApi.scope().get(5,TimeUnit.SECONDS);assertThat(fresh.attemptScope()).contains(a);
+            var rt=realtime(candidate,Set.of(a));rt.connect(new RealtimeClient.Session(fresh.attemptScope(),null,null)).get(8,TimeUnit.SECONDS);
+            try(var session=new CandidateMonitoringSession(rt,ignored->{})){
+                session.start(fresh.role(),a,fresh.attemptScope());
+                waitFor("expanded FULL committed",()->session.fullStatus()!=null&&session.fullStatus().acknowledgedSequence()>0);
+                var state=api.state(a).get(5,TimeUnit.SECONDS);
+                assertThat(state.policyVersion()).isEqualTo(ProcessCatalog.CURRENT_POLICY);
+                assertThat(state.processes()).isNotEmpty().allMatch(p->ProcessCatalog.includes(ProcessCatalog.CURRENT_POLICY,p.processName()));
+                if(!teams.isEmpty())waitFor("native Teams observed through process history",()->api.events(a).join().stream().anyMatch(e->e.processName().equals("ms-teams.exe")));
+                var d=dashboard(a,"REAL ProcessHandle groups/Teams · MOCK accounts/exam · HTTP/WS/PG/JavaFX");
+                openSummary(d,a);
+                waitFor("expanded process state in candidate detail",()->{try{return fx(()->d.view.lookup("#candidate-monitoring-observations")!=null);}catch(Exception e){throw new RuntimeException(e);}});
+                if(!teams.isEmpty())waitFor("Teams reaches common review feed",()->{try{return fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.reviewProcessNames(d.view,a).contains("ms-teams.exe"));}catch(Exception e){throw new RuntimeException(e);}});
+                assertThat(fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.reviewProcessNames(d.view,a))).allMatch(ProcessCatalog::review);
+                screenshotSummary(d,"expanded-groups-summary");
+                fx(()->{((ToggleButton)d.view.lookup("#nav-overview")).fire();return null;});screenshot(d,"expanded-groups-overview");
+                results.add(Map.of("kind","REAL_PROCESS_GROUPS","policy",state.policyVersion(),"snapshotProcesses",state.processes().size(),
+                        "nativeTeamsAtStart",teams.size(),"nativeTeamsInHistoryAndFeed",!teams.isEmpty(),"backgroundNotInReview",true,"source","REAL_ProcessHandle"));
+                session.stop().stopped().get(8,TimeUnit.SECONDS);
+            }
+        }
+    }
+    @Test @EnabledIfEnvironmentVariable(named="TOEIC_USB_REAL_CIM",matches="true")
+    void productionUsbObserverReachesDashboard()throws Exception {
+        String a=scope(120),collector="USB-APP-"+UUID.randomUUID();
+        var rt=realtime(candidate,Set.of(a));var lease=rt.monitoringHeartbeat(a,collector);owned.add(lease);
+        rt.connect(new RealtimeClient.Session(Set.of(a),null,null)).get(8,TimeUnit.SECONDS);
+        String signalBefore=System.getProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY),usbBefore=System.getProperty("toeic.monitoring.usb-enabled");
+        System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,"true");System.setProperty("toeic.monitoring.usb-enabled","true");
+        try{
+            var candidateStage=stage("Production candidate USB hook — REAL CIM, TEST accounts/session");
+            var monitor=fx(()->CandidateExamSignalMonitoring.start(candidateStage,base,candidate,a,collector,rt));
+            gui.add(()->fx(()->{monitor.close();return null;}));
+            waitFor("production USB scans only after fresh capability/heartbeat",()->monitor.usbStatus()!=null&&monitor.usbStatus().scans()>=2);
+            assertThat(monitor.usbStatus().health()).isEqualTo(UsbSignalAdapter.Health.READY);
+            int count=monitor.usbStatus().storageCount();
+            try(var api=new MonitoringApiClient(base,proctor)){
+                waitFor("production USB status committed to PostgreSQL",()->api.signals(a,0,null,100).join().items().stream().anyMatch(e->e.signal() instanceof ObserverStatusSignal s&&s.sensor()==ObserverStatusSignal.Source.WINDOWS_USB_STORAGE&&s.status()==ObserverStatusSignal.State.READY));
+                if(count>0)waitFor("real storage baseline committed from production candidate",()->api.signals(a,0,null,100).join().items().stream().anyMatch(e->e.signal() instanceof UsbStorageSignal));
+                var dash=dashboard(a,"REAL USB from production candidate → PostgreSQL → proctor timeline");
+                waitFor("production USB source visible in proctor timeline",()->{try{return rows(dash).stream().anyMatch(r->r.source().equals("WINDOWS_USB_STORAGE"));}catch(Exception e){throw new RuntimeException(e);}});
+                screenshot(dash,"production-usb-app");
+                openSummary(dash,a);
+                waitFor("real USB summary read from scoped committed history",()->{try{return fx(()->count>0
+                        ?((Label)dash.view.lookup("#candidate-signal-usb-state")).getText().equals("USB "+count)
+                        :dash.view.lookup("#candidate-signal-usb-health-received")!=null);}catch(Exception e){throw new RuntimeException(e);}});
+                assertThat(fx(()->((Label)dash.view.lookup("#candidate-signal-usb-state")).getText())).isEqualTo(count>0?"USB "+count:"USB ?");
+                screenshotSummary(dash,"production-usb-summary");
+                summaryTimeline(dash,a,"usb","WINDOWS_USB_STORAGE");
+                long scans=monitor.usbStatus().scans();
+                rt.disconnect();rt.connect(new RealtimeClient.Session(Set.of(a),null,null)).get(8,TimeUnit.SECONDS);
+                waitFor("USB resumes only after production fresh socket confirmation",()->rt.signalExperimentReady(a)&&monitor.usbStatus().active()&&monitor.usbStatus().scans()>scans);
+                var page=api.signals(a,0,null,100).get(8,TimeUnit.SECONDS);
+                assertThat(page.items()).allSatisfy(e->assertThat(e.signal().observerSessionId()).isEqualTo(collector));
+                assertThat(page.items().stream().filter(e->e.signal() instanceof UsbStorageSignal s&&s.kind()==UsbStorageSignal.Kind.USB_STORAGE_PRESENT_AT_START).count()).isLessThanOrEqualTo(1);
+                fx(()->{monitor.close();return null;});assertThat(monitor.awaitStopped(Duration.ofSeconds(8))).isTrue();
+                assertThat(monitor.usbStatus().scanWorkerStopped()).isTrue();assertThat(monitor.usbStatus().controlWorkerStopped()).isTrue();
+                results.add(Map.of("kind","PRODUCTION_CANDIDATE_USB","source","REAL_CIM","storageCount",count,"freshReconnectCapability",true,"sharedCollectorIdentity",true,"historyRows",page.items().size(),"deliveryAcknowledged",monitor.deliveryStatus().acknowledged(),"usbWorkersStopped",true,"hardwareAcceptance","Baseline only; no physical hotplug action in this automated test"));
+            }
+        }finally{
+            if(signalBefore==null)System.clearProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,signalBefore);
+            if(usbBefore==null)System.clearProperty("toeic.monitoring.usb-enabled");else System.setProperty("toeic.monitoring.usb-enabled",usbBefore);
+        }
+    }
     Map<String,String> twoScopes()throws Exception{
         var response=post("/api/v1/sessions",proctor,new CreateSessionRequest("MOCK-MON09-"+UUID.randomUUID(),exam,"MOCK MON09 TEST",180,List.of("proctor1"),List.of("candidate1","candidate2")),200);
         var map=new HashMap<String,String>();for(var e:response.getAsJsonArray("createdAttempts")){var p=e.getAsJsonObject();map.put(p.get("candidateUsername").getAsString(),p.get("attemptId").getAsString());}return map;
@@ -108,6 +251,36 @@ class MonitoringTimelinePostgresTest {
         fx(()->{ @SuppressWarnings("unchecked") var box=(ComboBox<String>)dash.view.lookup("#multi-attempt");box.setValue(selected);return null;});return dash;
     }
     @SuppressWarnings("unchecked") List<TimelineRows.Row> rows(Dashboard d)throws Exception{return fx(()->List.copyOf(((TableView<TimelineRows.Row>)d.view.lookup("#multi-timeline-table")).getItems()));}
+    void openSummary(Dashboard d,String attempt)throws Exception{
+        fx(()->{((ToggleButton)d.view.lookup("#nav-overview")).fire();return null;});
+        waitFor("overview detail button rendered for assigned attempt",()->{try{return fx(()->d.view.lookup("#overview-detail-"+attempt)!=null);}catch(Exception e){throw new RuntimeException(e);}});
+        screenshot(d,"summary-overview");
+        fx(()->{((Button)d.view.lookup("#overview-detail-"+attempt)).fire();return null;});
+        waitFor("candidate summary drawer laid out",()->{try{return fx(()->d.view.lookup("#candidate-signal-summary")!=null);}catch(Exception e){throw new RuntimeException(e);}});
+    }
+    void summaryTimeline(Dashboard d,String attempt,String kind,String source)throws Exception{
+        fx(()->{((Button)d.view.lookup("#candidate-signal-"+kind+"-history")).fire();return null;});
+        assertThat(fx(()->((ComboBox<?>)d.view.lookup("#multi-attempt")).getValue())).isEqualTo(attempt);
+        assertThat(fx(()->((ComboBox<?>)d.view.lookup("#multi-source-filter")).getValue())).isEqualTo(source);
+        fx(()->{@SuppressWarnings("unchecked")var filter=(ComboBox<String>)d.view.lookup("#multi-source-filter");filter.setValue("Tất cả nguồn");return null;});
+    }
+    void screenshotSummary(Dashboard d,String name)throws Exception{
+        waitFor("candidate drawer slide settled",()->{try{return fx(()->Math.abs(d.view.lookup("#candidate-drawer").getTranslateX())<0.01);}catch(Exception e){throw new RuntimeException(e);}});
+        // Export the actual JavaFX summary node so all three cards are visible despite viewport clipping.
+        var captured=new java.util.concurrent.atomic.AtomicReference<Object[]>();
+        waitFor("summary attached after asynchronous drawer refresh",()->{try{
+            var frame=fx(()->{
+                var root=d.stage.getScene().getRoot();root.applyCss();root.layout();
+                var node=d.view.lookup("#candidate-monitoring-observations");if(node==null)return null;
+                var img=node.snapshot(null,null);int w=(int)img.getWidth(),h=(int)img.getHeight();int[] pixels=new int[w*h];
+                img.getPixelReader().getPixels(0,0,w,h,PixelFormat.getIntArgbInstance(),pixels,0,w);return new Object[]{w,h,pixels};
+            });captured.set(frame);return frame!=null;
+        }catch(Exception e){throw new RuntimeException(e);}});
+        var data=captured.get();
+        var image=new BufferedImage((int)data[0],(int)data[1],BufferedImage.TYPE_INT_ARGB);
+        image.setRGB(0,0,(int)data[0],(int)data[1],(int[])data[2],0,(int)data[0]);
+        ImageIO.write(image,"png",Path.of(required("TOEIC_USB_TEST_OUTPUT"),name+".private.png").toFile());
+    }
     void awaitRows(Dashboard d,int minimum)throws Exception{waitFor("committed rows rendered in JavaFX dashboard",()->{try{return rows(d).size()>=minimum;}catch(Exception e){throw new RuntimeException(e);}});}
     void screenshot(Dashboard d,String name)throws Exception{
         var data=fx(()->{var scene=d.stage.getScene();scene.getRoot().applyCss();scene.getRoot().layout();var img=scene.snapshot(null);int w=(int)img.getWidth(),h=(int)img.getHeight();int[] pixels=new int[w*h];img.getPixelReader().getPixels(0,0,w,h,PixelFormat.getIntArgbInstance(),pixels,0,w);return new Object[]{w,h,pixels};});
@@ -142,7 +315,12 @@ class MonitoringTimelinePostgresTest {
             enqueueDisplay(other,7);waitFor("candidate B ACK",()->other.delivery.status().acknowledged()==1);
             var full=processFixture(lane);
             var dash=dashboard(a,"MOCK typed/process inputs/accounts · REAL WS/HTTP/PostgreSQL/JavaFX · desktop/hardware NOT_RUN");awaitRows(dash,18);
-            var shown=rows(dash);assertThat(shown).hasSize(18).allMatch(r->r.attempt().equals(a));assertThat(shown).anyMatch(TimelineRows.Row::gap).anyMatch(TimelineRows.Row::unavailable);assertThat(shown).extracting(TimelineRows.Row::type).contains("PROCESS_OBSERVED","USB_STORAGE_CONNECTED","USB_STORAGE_REMOVED","EXAM_FOCUS_CHANGED","EXAM_WINDOW_STATE","DISPLAY_COUNT_OBSERVED","OBSERVER_STATUS","SIGNAL_GAP");
+            var shown=rows(dash);assertThat(shown).hasSize(18).allMatch(r->r.attempt().equals(a));assertThat(shown).anyMatch(TimelineRows.Row::gap).anyMatch(TimelineRows.Row::unavailable);assertThat(shown).extracting(TimelineRows.Row::type).contains("PROCESS_OBSERVED","USB_STORAGE_PRESENT_AT_START","USB_STORAGE_CONNECTED","USB_STORAGE_REMOVED","EXAM_FOCUS_CHANGED","EXAM_WINDOW_STATE","DISPLAY_COUNT_OBSERVED","OBSERVER_STATUS","SIGNAL_GAP");
+            openSummary(dash,a);
+            waitFor("MOCK USB observation metadata visible in real summary scene",()->{try{return fx(()->dash.view.lookup("#candidate-signal-usb-received")!=null);}catch(Exception e){throw new RuntimeException(e);}});
+            waitFor("startup USB committed once in common alert and history",()->{try{return fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.startupUsbMatches(dash.view,a,time));}catch(Exception e){throw new RuntimeException(e);}});
+            screenshotSummary(dash,"mock-summary-detail");
+            summaryTimeline(dash,a,"usb","WINDOWS_USB_STORAGE");awaitRows(dash,18);
             assertThat(fx(()->((Label)dash.view.lookup("#multi-listening-state")).getText())).contains("NOT_STARTED","interrupted=false");
             var gap=get("/api/v1/monitoring/attempts/"+a+"/signals?limit=100",proctor,200).getAsJsonArray("items");assertThat(gap).anySatisfy(e->{var p=e.getAsJsonObject();assertThat(p.get("eventType").getAsString()).isEqualTo("SIGNAL_GAP");assertThat(p.getAsJsonObject("details").get("droppedCount").getAsInt()).isEqualTo(3);});
             fx(()->{@SuppressWarnings("unchecked")var filter=(ComboBox<String>)dash.view.lookup("#multi-source-filter");filter.setValue("JAVAFX_EXAM_FOCUS");return null;});assertThat(fx(()->((Label)dash.view.lookup("#multi-completeness")).getText())).contains("1 bản ghi gap","1 bản ghi nguồn");
@@ -158,6 +336,9 @@ class MonitoringTimelinePostgresTest {
                 fx(()->{@SuppressWarnings("unchecked")var filter=(ComboBox<String>)dash.view.lookup("#multi-source-filter");filter.setValue(sourceName);return null;});screenshot(dash,"mock-"+sourceName.toLowerCase());
             }
             fx(()->{@SuppressWarnings("unchecked")var filter=(ComboBox<String>)dash.view.lookup("#multi-source-filter");filter.setValue("Tất cả nguồn");return null;});
+            assertThat(fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.filterVisible(dash.view,a,"USB"))).isTrue();
+            screenshot(dash,"usb-startup-shared-alerts");
+            fx(()->{((ToggleButton)dash.view.lookup("#nav-timeline")).fire();return null;});
             fx(()->{@SuppressWarnings("unchecked")var selection=(ComboBox<String>)dash.view.lookup("#multi-attempt");selection.setValue(b);return null;});awaitRows(dash,1);assertThat(rows(dash)).hasSize(1).allMatch(r->r.attempt().equals(b));
             jdbc.sql("UPDATE login_sessions SET revoked_at=clock_timestamp() WHERE token_hash=:h").param("h",TokenHash.sha256(dash.credential)).update();
             fx(()->{((Button)dash.view.lookup("#multi-refresh")).fire();return null;});waitFor("actual proctor revocation expires and closes view",dash.expired::get);assertThat(rows(dash)).isEmpty();
@@ -352,21 +533,33 @@ class MonitoringTimelinePostgresTest {
                 rt.connect(new RealtimeClient.Session(Set.of(a),null,null)).get(8,TimeUnit.SECONDS);String id=process.start(Role.CANDIDATE,a,Set.of(a));
                 var candidateStage=stage("Production lifecycle hook TEST "+action+"; MOCK empty process source");
                 var monitor=fx(()->CandidateExamSignalMonitoring.start(candidateStage,base,token,a,id,rt));
+                var fxBusy=new CountDownLatch(1);
                 try{
                     waitFor("production opt-in observer baseline acknowledged before "+action,()->monitor.deliveryStatus().acknowledged()>0);
+                    // GUI load: the JavaFX thread stays blocked across the terminal action; retirement must not need it.
+                    var fxEntered=new CountDownLatch(1);
+                    Platform.runLater(()->{fxEntered.countDown();try{fxBusy.await(60,TimeUnit.SECONDS);}catch(InterruptedException stop){Thread.currentThread().interrupt();}});
+                    assertThat(fxEntered.await(8,TimeUnit.SECONDS)).isTrue();
                     if(action.equals("TOKEN_REVOKE"))jdbc.sql("UPDATE login_sessions SET revoked_at=clock_timestamp() WHERE token_hash=:h").param("h",TokenHash.sha256(token)).update();
                     else{
                         var writer=post("/api/v1/attempts/"+a+"/takeover",token,new TakeoverWriterRequest(UUID.randomUUID().toString(),a,"MOCK-integrated-device"),200);
                         if(action.equals("SUBMIT"))post("/api/v1/attempts/"+a+"/submit",token,new SubmitExamRequest(UUID.randomUUID().toString(),a,writer.get("writerEpoch").getAsLong(),writer.get("savedRevision").getAsLong()+1,Map.of()),200);
                     }
-                    waitFor("server terminal/revoke retires collector and typed observers: "+action,()->!process.isActive()&&!monitor.deliveryStatus().active());
+                    try{waitFor("server terminal/revoke retires collector and typed observers: "+action,()->!process.isActive()&&!monitor.deliveryStatus().active());}
+                    catch(AssertionError timeout){
+                        String state=" | processActive="+process.isActive()+" process="+process.status()+" typed="+monitor.deliveryStatus()+" connection="+rt.connectionState();
+                        long late=System.nanoTime();boolean stoppedLater=false;
+                        while(System.nanoTime()-late<TimeUnit.SECONDS.toNanos(30)){if(!process.isActive()&&!monitor.deliveryStatus().active()){stoppedLater=true;break;}Thread.sleep(25);}
+                        throw new AssertionError(timeout.getMessage()+state+" | stoppedWithinExtra30s="+stoppedLater
+                                +" extraMillis="+TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-late),timeout);}
                     assertThat(monitor.awaitStopped(Duration.ofSeconds(3))).isTrue();
+                    fxBusy.countDown();
                     if(!action.equals("TOKEN_REVOKE")){
                         get("/api/v1/monitoring/attempts/"+a+"/signals",proctor,403);get("/api/v1/monitoring/attempts/"+a+"/alert-summary",proctor,403);
                         assertThat(get("/api/v1/attempts/"+a+"/status",token,200).get("state").getAsString()).isEqualTo(action.equals("SUBMIT")?"SUBMITTED":"TIMED_OUT");
                     }
                     results.add(Map.of("kind","PRODUCTION_OPT_IN_LIFECYCLE","action",action,"actualServerDenial",true,"processSource","MOCK empty; real collector workers","typedWorkerStopped",true,"typedDiscardedUnconfirmed",monitor.deliveryStatus().discarded(),"typedAcknowledged",monitor.deliveryStatus().acknowledged(),"typedDropped",monitor.deliveryStatus().dropped(),"hardware","NOT_RUN"));
-                }finally{fx(()->{monitor.close();return null;});process.stop().stopped().get(8,TimeUnit.SECONDS);process.close();rt.close();}
+                }finally{fxBusy.countDown();fx(()->{monitor.close();return null;});process.stop().stopped().get(8,TimeUnit.SECONDS);process.close();rt.close();}
             }
         }finally{if(previous==null)System.clearProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,previous);}
     }
@@ -424,6 +617,9 @@ class MonitoringTimelinePostgresTest {
     }
     void waitCandidateControls(Stage stage,String attempt)throws Exception {
         waitFor("candidate scope and start control ready",()->{try{return fx(()->{
+            if(stage.getScene().lookup("#account-pin-input")!=null){
+                vn.edu.toeic.client.MonitoringApplicationProbe.button(stage,"Ca thi được phân công trước đây").fire();return false;
+            }
             @SuppressWarnings("unchecked")var box=(ComboBox<String>)stage.getScene().lookup("#candidate-attempts");
             if(box==null||!box.getItems().contains(attempt)||vn.edu.toeic.client.MonitoringApplicationProbe.button(stage,"Bắt đầu giám sát").isDisabled())return false;
             box.setValue(attempt);return true;

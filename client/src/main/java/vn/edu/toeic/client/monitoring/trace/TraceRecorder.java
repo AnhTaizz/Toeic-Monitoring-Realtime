@@ -47,7 +47,7 @@ public final class TraceRecorder implements ObservationTrace,AutoCloseable {
         if(!Boolean.getBoolean("toeic.trace.enabled"))return ObservationTrace.NONE;
         try {
             var recorder=new TraceRecorder(Path.of(System.getProperty("toeic.trace.directory","traces"),collector+".jsonl"),
-                    new TraceData.Header(TraceData.SCHEMA,realSource?"REAL":"MOCK",interval.toMillis(),FullSnapshotPayload.POLICY,Instant.now().toString()),
+                    new TraceData.Header(TraceData.SCHEMA,realSource?"REAL":"MOCK",interval.toMillis(),vn.edu.toeic.protocol.monitoring.ProcessCatalog.CURRENT_POLICY,Instant.now().toString()),
                     Integer.getInteger("toeic.trace.queueCapacity",256));
             recorder.finished().thenAccept(result -> {if(!result.complete())System.err.println("TRACE_INCOMPLETE "+result.error());});
             return recorder;

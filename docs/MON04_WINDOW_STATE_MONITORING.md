@@ -42,3 +42,8 @@ mvn --% -pl client -am -Dtest=FxWindowMonitorTest,WindowSignalAdapterTest,FxFocu
 6. Ghi SHA, Windows/JDK, attempt ID và observed/received sequence; không ghi token/mật khẩu.
 
 Kết quả desktop phải ghi ACTUAL hoặc NOT RUN. Property test MOCK không thay manual GUI.
+
+
+## Điều chỉnh điểm khởi chạy — 25/10/2026
+
+Nút Bắt đầu giám sát của candidate có fresh scope ACTIVE nay khởi động nguồn Stage cùng process; cũng tự bật khi mở bài. Stage được quan sát là cửa sổ ứng dụng thí sinh, kể cả khi chưa mở được bài; UI ghi đúng đối tượng này. Chuyển vào bài giữ collector/run, không tạo baseline mới; activity riêng trong bài chỉ bật sau khi vào bài. Dừng giám sát/rời phiên/logout/revoke đóng nguồn. API quan sát và source/wire cũ giữ nguyên. Xem [luồng dùng chung](PROCTOR_SIGNAL_SUMMARY.md) và [evidence](../evidence/unified-monitoring-20261025/REPORT.md).

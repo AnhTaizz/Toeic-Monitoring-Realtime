@@ -1,0 +1,122 @@
+{
+  "checkpoint": "273872c35c72596381fefc83ad435930247e93b4",
+  "branch": "feature/phase45-admin-mvp-20261023",
+  "files": [
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/Role.java",
+      "sha256": "d7415afe29a17e6c757851e030dc83fbfcb665099eb029359c9005b978f70e75"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/admin/AccountView.java",
+      "sha256": "eb13c5efb8c021c9fa13efbf5ecb273aceb678cd3ee703a5ea264b25bb97f5a7"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/admin/AccountPage.java",
+      "sha256": "6e4028532f16fca1cb48a7420dc46246922079d86fb76f510f73bdc36da86e0d"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/admin/CreatedAccount.java",
+      "sha256": "2df500afa981ef9094e8f015aea5cdf3368b1298472cbf38090024e0cd512d8a"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/RoleViewModel.java",
+      "sha256": "0b9965b78ddeb49fd2fde227b01bb95bbdbe12f3eb7e1c1a0b2bf734592539f9"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/ToeicClientApplication.java",
+      "sha256": "f0cc6de8ce8bbd745ae69d54f121b042f2b084ffc308801d478b06f097eba677"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/admin/AdminAccountApiClient.java",
+      "sha256": "3a99cd9ee25472d6bf8889762bb751f6c26315a0b05ae742d0b751c2f783ecec"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/AdminAccountView.java",
+      "sha256": "651f2a721e2f76f2d5a3b01da60b0619f14ef5a138518893e86c7a97acccf623"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/JdbcUserAccountStore.java",
+      "sha256": "35ffaabd90a02b0b6952e057e158f056dad1edb90755824851edefd1c09e27b3"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/AccountProvisioner.java",
+      "sha256": "3e623c846cc5594abcaedd798524d464a0d24bdf55950fcef7aba28f5e0df179"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/auth/AdminBootstrap.java",
+      "sha256": "17dd98f1fbd663ecd111dbb0a484dd2b5c0645e9aa36a0a40116cc60da65e855"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/admin/AdminAccountService.java",
+      "sha256": "8ffff11f046907115e79283b715a6fa5d356fcfc48a101e9aa21d7b7a50ad1cc"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/admin/AdminAccountController.java",
+      "sha256": "4c9e8c47040087b114d39fe574fe230eede83b01d8b78fc76f6c0c0ed685092a"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/exam/rich/CandidateManagementService.java",
+      "sha256": "8c63287d80c1bc8e77e471e6559cf44c7001273c48e9ba21705bc0ee462df0e5"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/exam/rich/ExamRoomService.java",
+      "sha256": "67f4cf943329f288a72b7ef1f9a0fad58cf842c61eb59b323357d24e9112de84"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/exam/rich/RichSessionService.java",
+      "sha256": "26a3607cd30d4d12e194c50bfdf4461985d8b1fb40ba92dc7b9a79ef9601c136"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/exam/ExamService.java",
+      "sha256": "96123e3ac940cba9af500f1484aa3379e3f8d52432894df12d7157edc22d2ba9"
+    },
+    {
+      "path": "server/src/main/resources/application.properties",
+      "sha256": "0e722c2fe1a7a13322fe91bf54fd52462208d52f71ad02e3ca9855550d09283a"
+    },
+    {
+      "path": "server/src/main/resources/db/migration/V20__admin_account_role.sql",
+      "sha256": "766b6a47cd3d99358a9ec4008ac757c3061763cc5c74f873efe4d296a2e3e750"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/admin/AdminAccountApiClientTest.java",
+      "sha256": "5ff474a20764c555775b1a6158be303cba5ee9acf58e7636f69827144c7ef4eb"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/LoginApiClientTest.java",
+      "sha256": "9dfdbf30d8c5d6f6d1253078eabf9e63e4c46d5a1e10ad4ccdbb7f7cd9382706"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/ScopeLookupTest.java",
+      "sha256": "e89f5a9604c493aee3675cd0c412ed17968aeb5253d9144e8e0d3a3f7fb6b80a"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/AdminAccountGuiTest.java",
+      "sha256": "ff97d9c8cbe89b2943f1550ef721d847fa839677602a17d22a192374ab310243"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/auth/AdminBootstrapTest.java",
+      "sha256": "4ea91288856d441e386fd88fa484f1e19a2d2b7bc125330980365d52681cf7bd"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/exam/rich/AdminAccountPostgresTest.java",
+      "sha256": "504cdc85ef1c00b078c1715047b1ee2c65c89dc4652d38241cc4d7e57920dfaa"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/client/proctor/redesign/RoomFlowPostgresGuiTest.java",
+      "sha256": "3c222687ee397520b8faa62cb8124352a7d9e02be072eb6eda2a61dcf6cd1247"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/exam/rich/RoomAdmissionPostgresTest.java",
+      "sha256": "0f84501e5718f35615c6bbd65be9b4135ce29f004cc36ca98ddb8a4019e93771"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/signal/SignalPipelinePostgresTest.java",
+      "sha256": "de4d465b0518aaee27bcb9104a27a11cdfede2e2c497a31ea45af28fbd2c4cdd"
+    },
+    {
+      "path": "scripts/verify-room-ux.ps1",
+      "sha256": "5f1368786beff8d680968baced91b76e4100cffdf0b83bf7dc2544e901ad3757"
+    }
+  ]
+}

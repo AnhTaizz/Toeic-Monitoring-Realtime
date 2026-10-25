@@ -26,10 +26,17 @@ public class V2SessionPolicy implements RichImageSessionAuthority {
     }
     public State lockForMutation(AuthenticatedUser user,String attemptId) {
         auth.requireRole(user,Role.CANDIDATE);
+        auth.requireExamRead(user,attemptId);
         return lock(attemptId,user.userId());
     }
     public State lockForSystem(String attemptId) {return lock(attemptId,null);}
+    /** Deadline finalization must also run for disabled ACCOUNT_PIN members; never used by client mutations. */
+    public State lockForTimeout(String attemptId) {return lock(attemptId,null,true);}
+    State lockForStartInspection(String attemptId) {return lock(attemptId,null,true);}
     private State lock(String attemptId,Long owner) {
+        return lock(attemptId,owner,false);
+    }
+    private State lock(String attemptId,Long owner,boolean inspect) {
         record Binding(String session,String version,long owner) {}
         var initial=jdbc.sql("""
                 SELECT a.session_id,s.contract_version,a.candidate_user_id FROM monitoring_attempts a
@@ -49,7 +56,7 @@ public class V2SessionPolicy implements RichImageSessionAuthority {
                 JOIN exams e ON e.exam_id=a.exam_id JOIN user_accounts u ON u.id=a.candidate_user_id
                 WHERE a.attempt_id=:a AND a.session_id=:s FOR UPDATE OF a
                 """).param("a",attemptId).param("s",binding.session()).query((rs,n)->{
-                    if(!rs.getBoolean("enabled"))throw AccessDeniedException.forbidden();
+                    if(!rs.getBoolean("enabled") && !(inspect && isAccountPin(binding.session())))throw AccessDeniedException.forbidden();
                     if(!"PROCTORED_V2".equals(rs.getString("contract_version")) || rs.getInt("content_version")!=2)throw invalid();
                     return new State(rs.getString("attempt_id"),rs.getString("session_id"),rs.getString("exam_id"),
                             rs.getString("session_state"),rs.getString("attempt_state"),rs.getLong("candidate_user_id"),
@@ -62,7 +69,27 @@ public class V2SessionPolicy implements RichImageSessionAuthority {
     }
     @Override public Context lockAndAuthorize(AuthenticatedUser user,String attemptId) {
         var state=lockForMutation(user,attemptId);if(state==null)throw invalid();
-        requireActiveContent(state);return state.imageContext();
+        requirePreparationContent(state);return state.imageContext();
+    }
+    public boolean isAccountPin(String session) {
+        return jdbc.sql("SELECT count(*) FROM exam_rooms WHERE session_id=:s AND admission_mode='ACCOUNT_PIN'").param("s",session).query(Long.class).single()==1;
+    }
+    public String roomMode(String session) {
+        return jdbc.sql("SELECT admission_mode FROM exam_rooms WHERE session_id=:s").param("s",session).query(String.class).optional().orElse(null);
+    }
+    public boolean latePreparation(State s) {
+        return s!=null && "ACTIVE".equals(s.attemptState()) && "IN_PROGRESS".equals(s.sessionState()) && s.committedManifest()==null
+                && isAccountPin(s.sessionId()) && jdbc.sql("SELECT count(*) FROM monitoring_attempts WHERE attempt_id=:a AND listening_interrupted AND listening_interruption_reason='NOT_READY_AT_START'")
+                .param("a",s.attemptId()).query(Long.class).single()==1;
+    }
+    public void requirePreparationContent(State s) {
+        if(latePreparation(s)) {
+            requireStarted(s);
+            if(!now().isBefore(s.deadline()))throw error(ErrorCode.EXPIRED,"Lượt thi đã hết thời gian");
+        }else requireActiveContent(s);
+    }
+    public void requirePersonalReadiness(State s) {
+        if(s!=null && isAccountPin(s.sessionId()) && s.committedManifest()==null)throw invalid();
     }
     public void requireActiveContent(State state) {
         if(!"ACTIVE".equals(state.attemptState()) || !List.of("SCHEDULED","IN_PROGRESS").contains(state.sessionState()))throw invalid();

@@ -1,0 +1,244 @@
+{
+  "checkpoint": "273872c35c72596381fefc83ad435930247e93b4",
+  "branch": "feature/phase45-admin-mvp-20261023",
+  "full": {
+    "runId": "room-ux-20261023T172804Z-061105b8",
+    "resultPath": "target/phase45/runs/full/room-ux-20261023T172804Z-061105b8/result.json",
+    "command": "mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC package",
+    "startUtc": "2026-10-23T17:28:32.9669170Z",
+    "endUtc": "2026-10-23T17:44:26.7140648Z",
+    "exitCode": 0,
+    "totals": {
+      "failures": 0,
+      "passed": 1658,
+      "errors": 0,
+      "tests": 1678,
+      "skipped": 20
+    },
+    "cleanup": {
+      "clusterStopExit": 0,
+      "ownedSchemasRemaining": 0
+    }
+  },
+  "requiredSuites": {
+    "AdminAccountPostgresTest": {
+      "PASS": 21,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIP": 0
+    },
+    "AdminBootstrapTest": {
+      "PASS": 4,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIP": 0
+    },
+    "AdminAccountApiClientTest": {
+      "PASS": 3,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIP": 0
+    },
+    "AdminAccountGuiTest": {
+      "PASS": 5,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIP": 0
+    },
+    "RoomFlowPostgresGuiTest": {
+      "PASS": 2,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIP": 0
+    },
+    "CandidateManagementPostgresTest": {
+      "PASS": 26,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIP": 0
+    },
+    "RoomAdmissionPostgresTest": {
+      "PASS": 20,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIP": 0
+    },
+    "RoomTokenAuthorizationTest": {
+      "PASS": 15,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIP": 0
+    },
+    "SignalPipelinePostgresTest": {
+      "PASS": 32,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIP": 0
+    },
+    "LoginApiClientTest": {
+      "PASS": 41,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIP": 0
+    },
+    "ScopeLookupTest": {
+      "PASS": 8,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIP": 0
+    }
+  },
+  "skippedCases": [
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "lockSidecarCannotRedirectOutsideCache",
+      "class": "vn.edu.toeic.client.audio.AudioFilesSharingTest",
+      "reason": "org.opentest4j.TestAbortedException: symlink privilege unavailable"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "symlinkInsideCacheRootIsRejectedWhereLinksCanBeCreated",
+      "class": "vn.edu.toeic.client.audio.AudioFilesTest",
+      "reason": "org.opentest4j.TestAbortedException: symlink creation needs privilege here: FileSystemException"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "candidateLobbyReadyStartThenRendersRealServerExamAndAutosaves",
+      "class": "vn.edu.toeic.client.exam.rich.RichAttemptE2eGuiTest",
+      "reason": "Environment variable [TOEIC_RICH_E2E_URL] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "proctorCreatesAndStartsInTheNewUiCandidateTakesAndSubmits",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2E2eGuiTest",
+      "reason": "Environment variable [TOEIC_INTEGRATION_E2E_URL] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle",
+      "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+      "reason": "Environment variable [TOEIC_INSTALLED_CLIENT] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "appImageProductionClientUsesUnifiedReadingListeningWithoutInstallerClaim",
+      "class": "vn.edu.toeic.server.audio.ListeningRuntimePostgresTest",
+      "reason": "Environment variable [TOEIC_PACKAGED_CLIENT] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "measureThreeRoundsAtFiveConcurrencyLevels",
+      "class": "vn.edu.toeic.server.exam.rich.Phase4RoomBenchmarkTest",
+      "reason": "Environment variable [TOEIC_PHASE4_BENCHMARK] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "realReservedV13CannotBeAddedAfterV14WithDefaultFlywayPolicy",
+      "class": "vn.edu.toeic.server.exam.rich.RichImagePostgresTest",
+      "reason": "Environment variable [TOEIC_RESERVED_V13_SCRIPT] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "applicationControlsStopRestartLogoutAndSwitchAccount",
+      "class": "vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest",
+      "reason": "Environment variable [TOEIC_MON09_GUI] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "candidateObserversReachAuthorizedLane",
+      "class": "vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest",
+      "reason": "Environment variable [TOEIC_MON09_GUI] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "allExistingSourcesShareRunAndReachHistoryTimelineAndAlerts",
+      "class": "vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest",
+      "reason": "Environment variable [TOEIC_MON09_GUI] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "experimentalAlertsReachDashboard",
+      "class": "vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest",
+      "reason": "Environment variable [TOEIC_MON09_GUI] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "realCimStatusReachesDashboard",
+      "class": "vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest",
+      "reason": "Environment variable [TOEIC_MON09_GUI] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "productionObserversRetireOnTerminalAndRevoke",
+      "class": "vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest",
+      "reason": "Environment variable [TOEIC_MON09_GUI] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "mixedMockDeliveryReachesTwoAttemptDashboard",
+      "class": "vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest",
+      "reason": "Environment variable [TOEIC_MON09_GUI] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "mockCoordinatorTimelineCommitAckLossAndPagedHistory",
+      "class": "vn.edu.toeic.server.monitoring.signal.UsbIntegratedDemoPostgresTest",
+      "reason": "Environment variable [TOEIC_USB_TEST_RUN_ID] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "realCimReadinessCommitAckAndHistory",
+      "class": "vn.edu.toeic.server.monitoring.signal.UsbIntegratedDemoPostgresTest",
+      "reason": "Environment variable [TOEIC_USB_TEST_RUN_ID] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "actualRevokeCancelsPendingSourceAndCannotFlushNewEvents",
+      "class": "vn.edu.toeic.server.monitoring.signal.UsbIntegratedDemoPostgresTest",
+      "reason": "Environment variable [TOEIC_USB_TEST_RUN_ID] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "businessDeadlineStopsCoordinatorUsingRealScopedHeartbeat",
+      "class": "vn.edu.toeic.server.monitoring.signal.UsbIntegratedDemoPostgresTest",
+      "reason": "Environment variable [TOEIC_USB_TEST_RUN_ID] does not exist"
+    },
+    {
+      "status": "SKIP",
+      "seconds": "0.0",
+      "name": "coordinatorStatusCommitFaultRollsBackThenRetriesSameMessage",
+      "class": "vn.edu.toeic.server.monitoring.signal.UsbIntegratedDemoPostgresTest",
+      "reason": "Environment variable [TOEIC_USB_TEST_RUN_ID] does not exist"
+    }
+  ],
+  "screenshots": [
+    "docs/phase45/screenshots/admin-accounts.png",
+    "docs/phase45/screenshots/admin-create-candidate-0.png",
+    "docs/phase45/screenshots/admin-create-candidate-1.png",
+    "docs/phase45/screenshots/admin-create-proctor-0.png",
+    "docs/phase45/screenshots/admin-create-proctor-1.png",
+    "docs/phase45/screenshots/admin-proctor-disabled.png",
+    "docs/phase45/screenshots/admin-proctor-enabled.png"
+  ],
+  "manualLanHearing": "NOT_RUN: user has no second Windows device or direct listener",
+  "sourceFilesVerified": 29
+}

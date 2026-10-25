@@ -27,16 +27,17 @@ class ListeningPlaybackTest {
         final List<String> events=new CopyOnWriteArrayList<>();
         final List<ListeningEventRequest> requests=new CopyOnWriteArrayList<>();
         CandidateExamDto exam=ListeningPlaybackTest.this.exam();boolean interrupted;String statusPhase="NOT_STARTED";
+        Runnable onStarted=()->{};String interruptionReason="HEARTBEAT_TIMEOUT";
         public CandidateExamDto exam(String attempt){return exam;}
         public ListeningStatusResponse status(String attempt){return response(null,attempt,statusPhase,"INTERRUPTED".equals(statusPhase));}
         public ListeningStatusResponse event(String attempt,ListeningEventRequest request){
-            events.add(request.event());requests.add(request);String phase=switch(request.event()){case "STARTED","HEARTBEAT"->"PLAYING";case "COMPLETED"->"COMPLETED";default->"INTERRUPTED";};
+            events.add(request.event());requests.add(request);if("STARTED".equals(request.event()))onStarted.run();String phase=switch(request.event()){case "STARTED","HEARTBEAT"->"PLAYING";case "COMPLETED"->"COMPLETED";default->"INTERRUPTED";};
             statusPhase=interrupted?"INTERRUPTED":phase;
             return response(request.requestId(),attempt,interrupted?"INTERRUPTED":phase,interrupted||"INTERRUPTED".equals(phase));
         }
         private ListeningStatusResponse response(String request,String attempt,String phase,boolean stopped){return new ListeningStatusResponse("v0",request,attempt,"SESSION","START",manifest.manifestId(),9007199254740993L,
                 phase,Instant.now().plusSeconds(100),"NOT_STARTED".equals(phase)||"ARMED".equals(phase)?null:Instant.now(),"COMPLETED".equals(phase)?Instant.now():null,
-                stopped,stopped?Instant.now():null,stopped?"HEARTBEAT_TIMEOUT":null);}
+                stopped,stopped?Instant.now():null,stopped?interruptionReason:null);}
         public void close(){}
     }
     @BeforeEach void setup()throws Exception{
@@ -49,6 +50,12 @@ class ListeningPlaybackTest {
         playback=new ListeningPlayback(api,files,new ListeningPlaybackJournal(directory.resolve("journal")),()->Optional.of(context),ignored->{});
     }
     @AfterEach void close(){playback.close();}
+    @Test void notReadyAtStartRecoveryExplainsReadingWithoutStartingPlayback() throws Exception {
+        api.statusPhase="INTERRUPTED";api.interruptionReason="NOT_READY_AT_START";
+        playback.connected(List.of("ATTEMPT"));await(()->playback.snapshot().phase()==ListeningPlayback.Phase.BLOCKED);
+        assertThat(playback.snapshot().message()).contains("Reading","chưa READY");
+        assertThat(playback.snapshot().segments()).isEmpty();assertThat(api.events).isEmpty();
+    }
 
     @Test void duplicateStartPlaysOneOrderedPlaylistAndReportsLifecycle()throws Exception{
         var command=start();playback.accept(command);await(()->playback.snapshot().phase()==ListeningPlayback.Phase.READY_TO_PLAY);
@@ -61,6 +68,23 @@ class ListeningPlaybackTest {
         assertThat(api.events).containsExactly("STARTED","COMPLETED");
         playback.accept(command);assertThat(playback.snapshot().phase()).isEqualTo(ListeningPlayback.Phase.COMPLETED);
         assertThat(Files.readString(Files.list(directory.resolve("journal")).findFirst().orElseThrow())).contains("\"playbackStarted\":true");
+    }
+
+    @Test void startedAckDuringSegmentHandoffStillSchedulesHeartbeatWithoutReplaying() throws Exception {
+        playback.accept(start());await(()->playback.snapshot().phase()==ListeningPlayback.Phase.READY_TO_PLAY);
+        long run=playback.snapshot().generation();
+        // A short segment ends before the STARTED HTTP response arrives: deterministic callback order.
+        api.onStarted=()->playback.mediaCompleted(run,0);
+        playback.mediaPlaying(run,0);
+        await(()->playback.snapshot().phase()==ListeningPlayback.Phase.READY_TO_PLAY && playback.snapshot().segmentIndex()==1);
+        await(()->api.events.contains("HEARTBEAT"));
+        assertThat(api.events).filteredOn("STARTED"::equals).hasSize(1);
+        assertThat(playback.snapshot().phase()).isEqualTo(ListeningPlayback.Phase.READY_TO_PLAY);
+        assertThat(playback.snapshot().segmentIndex()).isEqualTo(1);
+        playback.mediaPlaying(run,1);playback.mediaCompleted(run,1);
+        await(()->playback.snapshot().phase()==ListeningPlayback.Phase.COMPLETED);
+        assertThat(api.events).filteredOn("STARTED"::equals).hasSize(1);
+        assertThat(api.events).filteredOn("COMPLETED"::equals).hasSize(1);
     }
 
     @Test void corruptCacheAndMismatchedCommandNeverReachMediaOrStartedEvent()throws Exception{

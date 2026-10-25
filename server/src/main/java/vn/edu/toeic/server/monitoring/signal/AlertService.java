@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.*;
 import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
+import vn.edu.toeic.protocol.monitoring.ProcessCatalog;
 import vn.edu.toeic.protocol.monitoring.signal.*;
 import vn.edu.toeic.server.auth.AuthenticatedUser;
 
@@ -50,7 +51,7 @@ public class AlertService {
         var items=new JsonArray();result.summaries().forEach(s->items.add(s.json()));p.add("items",items);SignalJson.size(p,512*1024);return p;
     }
     static AlertRules.Input process(String attempt,String run,String id,String version,String name,String quality,Instant received){
-        if(!FullSnapshotPayload.POLICY.equals(version)||name==null||!FullSnapshotPayload.EXECUTABLES.contains(name.toLowerCase(Locale.ROOT)))return null;
+        if(!ProcessCatalog.includes(version,name)||!ProcessCatalog.review(name))return null;
         return new AlertRules.Input(attempt,run,"process:"+attempt+":"+id,"PROCESS","PROCESS_OBSERVED",received,"COMPLETE".equals(quality)?"OBSERVATION":"SOURCE_UNAVAILABLE",false,0);
     }
     static AlertRules.Input typed(SignalService.Stored row){Signal s=row.signal();String rule="OBSERVATION";long dropped=0;boolean repeat=false;

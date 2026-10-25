@@ -101,7 +101,7 @@ public final class FullSnapshotDelivery implements AutoCloseable {
         synchronized (lock) {
             if (closed || !authorized) return;
             bind(snapshot.collectorSessionId());
-            if (!FullSnapshotPayload.POLICY.equals(snapshot.policyVersion()) || snapshot.restrictedProcesses().size()>FullSnapshotPayload.MAX_PROCESSES) {
+            if (!vn.edu.toeic.protocol.monitoring.ProcessCatalog.supported(snapshot.policyVersion()) || snapshot.restrictedProcesses().size()>vn.edu.toeic.protocol.monitoring.ProcessCatalog.limit(snapshot.policyVersion())) {
                 if(reconciliationNanos>0) { observations.clear(); latest=null; }
                 problem="SNAPSHOT_LIMIT"; return;
             }

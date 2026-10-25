@@ -1,5 +1,17 @@
 # Protocol đang dùng
 
+24/10/2026 — Tương thích consumer cho monitoring-only legacy: HTTP Listening status
+NOT_STARTED/sessionId null/toàn bộ playback rỗng được dashboard chiếu thành không có
+Listening; playback parser và kiểm scope vẫn nghiêm ngặt. Không đổi DTO/wire/server.
+V1 ACTIVE totalQuestions0 là tổng chấm chưa có, preview dùng số câu chưa biết.
+[Bằng chứng và giới hạn](../evidence/usb-8080-fix-20261024/REPORT.md).
+
+24/10/2026 — Producer USB nối vào app thí sinh dưới hai gate signal/USB opt-in;
+dùng nguyên ba `USB_STORAGE_*` và `OBSERVER_STATUS`, không đổi DTO/endpoint/schema.
+Cùng collector lease/context/sequence/delivery; pause khi mất socket, chỉ resume sau
+capability + scoped heartbeat mới xác nhận. [Vòng đời/cấu hình](USB_APP_INTEGRATION.md).
+Mặc định OFF, chưa là phê duyệt policy hay nghiệm thu phần cứng đầy đủ.
+
 ## EX-03 — rich import đã tích hợp, cập nhật baseline 22/10/2026
 
 `POST /api/v2/exams/import` đã có code: Bearer PROCTOR, JSON strict schemaVersion2/profile TOEIC_200, đúng200 câu/7Part, source/group/options/media verified; trả201 sau DB commit với `RichExamImportResponse`. Duplicate/race409 CONFLICT; JSON/graph400 INVALID_INPUT; body>2MiB413; local media thiếu/hỏng409 INVALID_STATE; IO/DB tạm thời503 RETRYABLE_SERVER_ERROR, retryable=true. Auth/role trước body/filesystem. [DTO/transaction/errors/schema/evidence](EX03_RICH_IMPORTER_VERIFICATION.md), [chữ ký EX02](EX02_RICH_EXAM_CONTRACT_V1.md).
@@ -1085,3 +1097,57 @@ Không đổi endpoint/wire/auth/schema. Dashboard dùng API typed history ACTIV
 ## MON-08 — read model EXPERIMENTAL, 21/10/2026
 
 Thêm GET `/api/v1/monitoring/attempts/{attemptId}/alert-summary[?cutoff=ISO_INSTANT]`, chỉ khi cả signal-experiment-enabled và alert-experiment-enabled=true; mặc địnhOFF. Bearer header/assignedPROCTOR/ACTIVE-only, reuse auth locks trước query; không cache. REPEATABLE_READ committed snapshot, cutoff DB-clock được quản lý rõ; cap200/source (20–200),100summary/5evidence,512KiB. Response schema1 WINDOW_ONLY có policyVersion/experimental/from/cutoff/sourceLimited/summaryLimited/inputEvents/gapEvents/unavailableEvents/excludedProcessEvents/coverageNote/items; item gồm ID/run/source/type/rule/priority/count/window/evidence/explanation. droppedCount là decimal string exact (không JSON integer sum trànlong).4rules/ngưỡng/bounds/errors/exactfields tại [contract/runbook](MON08_EXPERIMENTAL_ALERTS.md). Read projection type LOST/RESTORED/MINIMIZED/OTHER không là signal wire type mới. Không đổi WS/original history/queue/COMMIT-ACK/state/migration. FULLdefault, experimentsOFF/policy/hardware/gatespending. Không verdict/đổi trạng thái thi.
+
+## Admin, phòng thi và ACCOUNT_PIN — endpoint hiện hành (bản phát hành 25/10/2026)
+
+Mục này ghi lại endpoint đã có từ nhánh ACCOUNT_PIN (`ff6aacf`) và được tích hợp vào bản phát hành; chi tiết bất biến và kiểm chứng ở [account-pin/IMPLEMENTATION-REPORT.md](account-pin/IMPLEMENTATION-REPORT.md). Mọi endpoint dùng `Authorization: Bearer`; role do server kiểm, response chứa credential một lần có `Cache-Control: no-store`.
+
+| Endpoint | Quyền | Ghi chú |
+|---|---|---|
+| GET `/api/v2/admin/accounts` | ADMIN | Tìm/lọc Proctor/Candidate theo trang; không trả hash, PIN, token |
+| POST `/api/v2/admin/accounts` | ADMIN | Tạo PROCTOR/CANDIDATE (không tạo ADMIN); `issueLoginPassword=true` trả mật khẩu ngẫu nhiên một lần |
+| PATCH `/api/v2/admin/accounts/{id}/enabled` | ADMIN | Khóa/mở khóa; khóa thu hồi token |
+| POST `/api/v2/admin/accounts/{id}/password/reset` | ADMIN | Chỉ Candidate không đang thi; mật khẩu một lần, thu hồi mọi token |
+| POST `/api/v2/pin-rooms` | PROCTOR | `{examId,durationMinutes?}` → Session SCHEDULED + PIN chung 5 số một lần |
+| GET `/api/v2/pin-rooms` | PROCTOR được giao | Trang cursor, không có credential |
+| POST `/api/v2/pin-rooms/join` | CANDIDATE (token tài khoản) | `{pin,requestId}`; tạo hoặc dùng lại đúng một Attempt, trả token có scope attempt |
+| POST `/api/v2/pin-rooms/{sessionId}/pin/rotate` | PROCTOR được giao | Chỉ trước START; PIN cũ và admission token cũ hết hiệu lực |
+| POST `/api/v2/rooms`, `/api/v2/rooms/join`, `/api/v2/rooms/{sessionId}/candidates/{candidateId}/pin/{rotate,revoke}`, GET `/api/v2/rooms`, `/api/v2/rooms/{sessionId}/presence` | PROCTOR / Candidate theo PIN cá nhân | Phòng legacy (V19), giữ backend và test; UI bị ẩn mặc định trong bản phát hành |
+| POST `/api/v2/candidates`, GET `/api/v2/candidates` | PROCTOR | Danh bạ Candidate (Phase 2) |
+
+START dùng endpoint PROCTORED_V2 sẵn có, cùng shape; policy chọn theo `admission_mode` lưu trong DB: phòng ACCOUNT_PIN cho START khi có ít nhất một người JOIN, người chưa READY bị ghi `NOT_READY_AT_START` trước COMMIT và chỉ làm Reading đến deadline chung. WebSocket không thêm type mới.
+
+## Tổng hợp đa tín hiệu cho giám thị — 25/10/2026
+
+Tổng quan và Chi tiết dùng thêm một read consumer cho typed history hiện hữu, không thêm endpoint/field/type hoặc push. Mỗi cycle xác minh lại scope PROCTOR, chỉ tổng hợp observation của collector hiện tại trong roster đã xác thực; fixed-through/page100/3page mỗi lượt, tối đa 2 request history chưa hoàn tất, 100 lượt/12s cycle. Snapshot UI giữ riêng attempt/run và đánh dấu thiếu/cũ/gap. READY không mang storageCount nên không suy USB=0; status READY sau gap không phục hồi giá trị trước gap. Các nút mở Timeline chỉ truyền lựa chọn attempt/source vào view hiện có. [Chi tiết](PROCTOR_SIGNAL_SUMMARY.md).
+
+
+## 25/10/2026 — Chung vòng đời process và USB/focus/window
+
+Không đổi message/endpoint/schema hoặc OS API. Candidate bật giám sát thủ công trên attempt ACTIVE có fresh scope nay tạo typed coordinator bằng chính collectorSessionId của process, thay vì chỉ tạo khi mở màn làm bài. Capability và heartbeat vẫn là gate trước gửi dữ liệu/khởi chạy USB. Focus/window đọc Stage ứng dụng thí sinh trong phiên được cấp quyền, giữ source keys JAVAFX_EXAM_FOCUS/JAVAFX_EXAM_WINDOW; UI ghi rõ cửa sổ thí sinh, không suy đang làm bài từ focus. EnterExamScene chỉ bật activity trong bài và không tạo run/sequence/baseline mới. Manual Stop đóng typed coordinator trước process, chờ dọn cả hai rồi cho Start lại; disconnect/revoke/logout giữ guard cũ. Chi tiết gom render process state và typed observations trong một khối; không giả tín hiệu thiết bị thành process/PID.
+
+## 25/10/2026 — Đọc typed history cho Cảnh báo/Nhật ký chung
+
+Chỉ bổ sung consumer hiển thị ở client; không đổi DTO, endpoint, wire, DB, OS observer hoặc MON-08 policy. RoomFeed nhận watermark sequence từ CandidateSignalsController sau fresh scoped read, tải tăng dần typed history bằng HTTP client hiện có của feed. Fixed-through/page100/3page mỗi lượt, tối đa hai attempt tải; giữ 500 dòng liên quan mới nhất với cảnh báo giới hạn. Phân loại hiển thị baseline/status vào nhật ký, thay đổi USB/focus/window và lỗi/gap vào các quan sát cần xem xét; eventId/raw thời điểm và delivery giữ từ server, không dựng sự kiện từ snapshot hiện tại.
+
+## 25/10/2026 — Bộ lọc danh sách chung theo thiết kế người dùng chốt lại
+
+Consumer RoomFeed/SignalFeedProjection chỉ chiếu typed USB CONNECTED/REMOVED, focus ngoài INITIAL/dialog nội bộ và window CHANGED vào danh sách chung; không đưa status/gap typed/PRESENT_AT_START/baseline vào đó. Process và luồng kết nối/gap legacy giữ nguyên. Đây chỉ là bộ lọc hiển thị: raw typed history, source health, collector, DTO, server retention và Timeline không thay đổi.
+
+## 25/10/2026 — Catalog process-policy-v2
+
+Theo yêu cầu người dùng, candidate mặc định policyv2 với39tên/6nhóm tại PROCESS_GROUPS.md (gồm ms-teams.exe). Full/delta/state nhận cảv1(8tên/128process) vàv2(39tên/256process), kiểm membership theo policy; schema field/endpoint/envelope và DB không đổi. Reducer không cho đổi policy trong epoch; full/delta/event cùng tập đã lọc. Đọc trace/replay v1 giữ nguyên ý nghĩa. Background được lưu lịch sử và hiện state, consumer Cảnh báo/MON08 không tự đưa background vào review. Nâng cấp đồng bộ server/client; clientv1 còn dùng được với server mới, clientv2 cần server mới. Registry helper USB chỉ loại PID/start do app sở hữu, không đổi OS query. [Review/runbook](PROCESS_GROUPS.md), [evidence](../evidence/process-groups-20261025/REPORT.md).
+
+## 25/10/2026 — Policyv3 bỏ tám tên dễ nhầm
+
+Candidate/trace mặc định process-policy-v3 với31tên, bỏ powershell.exe/pwsh.exe/cmd.exe/msedgewebview2.exe/conhost.exe/runtimebroker.exe/dllhost.exe/svchost.exe. Full/delta/event cùng tập; server/parser vẫn đọc v1(8)/v2(39) đúng membership cũ, V3 cap256 giốngV2, epoch không đổi policy. Không đổi field/endpoint/DB hoặc OSquery. Summary/danh sách chung/count/MON08 review bỏ8tên cả với dữ liệuV2; raw DB/API và Timeline gốc không xóa, dòng Timeline cũ ghi rõ tên đã loại. [Review/runbook](PROCESS_GROUPS.md).
+
+## 25/10/2026 — Khôi phục quan sát USB có sẵn ở danh sách chung
+
+Chỉ client read projection: PRESENT_AT_START được hiển thị là USB có sẵn khi bắt đầu giám sát, giữ số lượng/partial/id/client-server timestamps/delivery. Không thành CONNECTED và không suy count từ READY. Collector/wire/server/DB không đổi, các baseline/status kỹ thuật khác vẫn ẩn; sửa này chỉ cần mở lại proctor mới nếu baseline đã được server lưu.
+
+## 25/10/2026 — Process policy v4: đúng chín tên người dùng chọn
+
+Candidate và trace mới mặc định process-policy-v4: chrome.exe, msedge.exe, firefox.exe, zalo.exe, teams.exe, ms-teams.exe, discord.exe, anydesk.exe, teamviewer.exe (so tên không phân biệt hoa/thường). Full/delta/event dùng cùng tập; giới hạn 256 process và guard không đổi policy trong epoch giữ nguyên. Server/parser đọc đúng các tập lịch sử v1=8, v2=39, v3=31; tập v3 được đóng băng độc lập bộ lọc UI hiện tại. Không đổi field, endpoint, WS envelope, DB hoặc OS query. Trace/replay kiểm membership và cap theo từng phiên bản, không còn chỉ nhận v1; TEST trace vẫn không được đưa vào replay mạng.
+
+Summary, danh sách chung và số đếm chỉ hiện chín tên kể cả khi đọc dữ liệu cũ; raw DB/API/Timeline không xóa. Không thay nguồn hoặc projection USB, gồm PRESENT_AT_START/cắm/rút; focus/window cũng giữ nguyên. Cần nâng cấp server, candidate và proctor cùng bản build mới; client cũ vẫn thu theo policy cũ, server cũ không nhận v4. [Review/runbook](PROCESS_GROUPS.md).

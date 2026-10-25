@@ -71,11 +71,27 @@
         </dependency>
     </dependencies>
 
+    <properties>
+        <toeic.server.artifact-name>server-${project.version}</toeic.server.artifact-name>
+    </properties>
+
     <build>
+        <finalName>${toeic.server.artifact-name}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <!-- Test fixtures log in as candidate1/candidate2/proctor1 with TOEIC_SEED_PASSWORD.
+                             The packaged Server keeps demo accounts off; this applies only to the test JVM. -->
+                        <toeic.seed.demo-accounts>true</toeic.seed.demo-accounts>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
         </plugins>
     </build>

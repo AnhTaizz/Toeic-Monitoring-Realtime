@@ -89,8 +89,9 @@ public final class VisualReadyCoordinator<T> implements AutoCloseable {
         if (!attemptId.equals(preparation.attemptId()) || !"PROCTORED_V2".equals(preparation.contractVersion())) {
             stop(Phase.FAILED, "Server trả preparation không khớp lượt thi.", preparation, false, false); return;
         }
-        if ("IN_PROGRESS".equals(preparation.sessionState())) { stop(Phase.STARTED, "Giám thị đã bắt đầu bài thi.", preparation, false, false); return; }
-        if (!"SCHEDULED".equals(preparation.sessionState()) || !"ACTIVE".equals(preparation.attemptState())) {
+        boolean late="ACCOUNT_PIN".equals(preparation.roomMode()) && "IN_PROGRESS".equals(preparation.sessionState()) && Boolean.FALSE.equals(preparation.readyForExam());
+        if ("IN_PROGRESS".equals(preparation.sessionState()) && !late) { stop(Phase.STARTED, "Giám thị đã bắt đầu bài thi.", preparation, false, false); return; }
+        if ((!"SCHEDULED".equals(preparation.sessionState()) && !late) || !"ACTIVE".equals(preparation.attemptState())) {
             stop(Phase.FAILED, "Ca thi không còn ở bước chuẩn bị (" + preparation.sessionState() + ").", preparation, false, false); return;
         }
         VisualManifest manifest = preparation.visualManifest();
@@ -99,7 +100,7 @@ public final class VisualReadyCoordinator<T> implements AutoCloseable {
             stop(Phase.FAILED, "Lượt thi đã được mở ở máy khác (phiên ghi đã đổi).", preparation, true, false); return;
         }
         String key = manifest.manifestId() + "|" + manifest.preparationEpoch();
-        if (invalidateRequested && prepared != null) {
+        if (invalidateRequested && prepared != null && !late) {
             invalidateRequested = false;
             sendInvalidate(prepared);
             preparedKey = null; prepared = null;

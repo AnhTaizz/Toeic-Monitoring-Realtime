@@ -17,6 +17,12 @@ final class LoginPane extends HBox {
             LoginPane.class.getResource("/login/login-reference.png")).toExternalForm(), true);
 
     LoginPane(TextField server, TextField username, PasswordField password, Button submit, Label status) {
+        this(server,username,password,submit,status,null,null);
+    }
+
+    LoginPane(TextField server, TextField username, PasswordField password, Button submit, Label status,
+            TextField roomCode,Runnable switchMode) {
+        boolean room=roomCode!=null;
         getStyleClass().add("toeic-login");
         getStylesheets().add(Objects.requireNonNull(LoginPane.class.getResource("/login/login.css")).toExternalForm());
 
@@ -45,18 +51,18 @@ final class LoginPane extends HBox {
         HBox heading = new HBox(16, mascot, new VBox(5, brand, tagline));
         heading.setAlignment(Pos.CENTER_LEFT);
 
-        Label intro = label("Đăng nhập vào TOEIC Room", "login-intro-title");
-        Label description = label("Sử dụng tài khoản được cấp để tham gia hoặc giám sát kỳ thi.", "login-muted");
+        Label intro = label(room?"Vào phòng thi TOEIC":"Đăng nhập vào TOEIC Room", "login-intro-title");
+        Label description = label(room?"Nhập mã phòng và thông tin riêng do giám thị cấp.":"Sử dụng tài khoản được cấp để giám sát hoặc quản lý kỳ thi.", "login-muted");
         VBox banner = new VBox(5, intro, description);
         banner.getStyleClass().add("login-banner");
 
         server.setId("login-server-url");
         server.setAccessibleText("Địa chỉ máy chủ");
         username.setId("login-username");
-        username.setPromptText("Nhập tên đăng nhập của bạn");
+        username.setPromptText(room?"Mã thí sinh trên phiếu dự thi":"Nhập tên đăng nhập của bạn");
         username.setAccessibleText("Tên đăng nhập");
         password.setId("login-password");
-        password.setPromptText("Nhập mật khẩu");
+        password.setPromptText(room?"PIN riêng của bạn":"Nhập mật khẩu");
         password.setAccessibleText("Mật khẩu");
         submit.setId("login-submit");
         submit.getStyleClass().add("login-submit");
@@ -93,14 +99,26 @@ final class LoginPane extends HBox {
         revealed.setOnAction(event -> submit.fire());
         username.setOnAction(event -> password.requestFocus());
 
-        Label role = label("Thí sinh / Giám thị · Quyền truy cập được xác định sau khi đăng nhập.", "login-role");
+        Label role = label(room?"Chỉ thí sinh có trong danh sách phòng mới được tham gia.":"Quyền truy cập được xác định sau khi đăng nhập.", "login-role");
         TitledPane connection = new TitledPane("Kết nối máy chủ", server);
         connection.setId("login-connection-settings");
         connection.setExpanded(false);
         connection.getStyleClass().add("login-connection");
         Label help = label("Nếu có vấn đề đăng nhập, vui lòng liên hệ giám thị.", "login-help");
-        VBox form = new VBox(10, fieldLabel("Tên đăng nhập", username), userRow,
-                fieldLabel("Mật khẩu", password), passwordRow, role, submit, status, connection, help);
+        VBox form = new VBox(10, fieldLabel(room?"Mã thí sinh":"Tên đăng nhập", username), userRow,
+                fieldLabel(room?"PIN riêng":"Mật khẩu", password), passwordRow, role, submit, status, connection, help);
+        if(room) {
+            roomCode.setId("room-entry-code");roomCode.setPromptText("Ví dụ TOEIC-123456");
+            roomCode.disableProperty().bind(submit.disabledProperty());
+            form.getChildren().addAll(0,java.util.List.of(fieldLabel("Mã phòng",roomCode),
+                    inputRow(roomCode,"M3 3h18v18H3z M8 3v18 M3 10h18")));
+        }
+        if(switchMode!=null) {
+            Button mode=new Button(room?"Giám thị / đăng nhập bằng tài khoản":"Tham gia phòng thi");
+            mode.setId("login-switch-mode");mode.setMaxWidth(Double.MAX_VALUE);
+            mode.setOnAction(event->switchMode.run());mode.disableProperty().bind(submit.disabledProperty());
+            form.getChildren().add(0,mode);
+        }
         form.getStyleClass().add("login-form");
         VBox card = new VBox(24, heading, banner, form);
         card.setId("login-card");

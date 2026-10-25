@@ -20,7 +20,7 @@ class ScopeLookupTest {
             assertThat(scope.role()).isEqualTo(Role.CANDIDATE); assertThat(scope.attemptScope()).containsExactly("MOCK-A");
         } finally { server.stop(0); }
     }
-    @ParameterizedTest @ValueSource(strings = {"{}", "{", "{\"protocolVersion\":\"v1\"}", "{\"protocolVersion\":\"v0\",\"user\":{\"role\":\"ADMIN\"},\"attemptScope\":[]}", "{\"protocolVersion\":\"v0\",\"user\":{\"role\":\"CANDIDATE\"},\"attemptScope\":[1]}"})
+    @ParameterizedTest @ValueSource(strings = {"{}", "{", "{\"protocolVersion\":\"v1\"}", "{\"protocolVersion\":\"v0\",\"user\":{\"role\":\"ROOT\"},\"attemptScope\":[]}", "{\"protocolVersion\":\"v0\",\"user\":{\"role\":\"CANDIDATE\"},\"attemptScope\":[1]}"})
     void invalidScopeBodyCannotGrantPermission(String body) throws Exception {
         HttpServer server = server(200, body);
         try (LoginApiClient api = new LoginApiClient()) {
@@ -32,6 +32,13 @@ class ScopeLookupTest {
         try (LoginApiClient api = new LoginApiClient()) {
             assertThatThrownBy(() -> api.scope(origin(server), "MOCK-token").get(3, TimeUnit.SECONDS)).hasCauseInstanceOf(LoginFailedException.class);
         } finally { server.stop(0); }
+    }
+    @Test void adminScopeRefreshAcceptsTheNewRoleWithoutAnyExamAssignments() throws Exception {
+        var server=server(200,"{\"protocolVersion\":\"v0\",\"user\":{\"role\":\"ADMIN\"},\"attemptScope\":[]}");
+        try(var api=new LoginApiClient()) {
+            var result=api.scope(origin(server),"MOCK-token").get(3,TimeUnit.SECONDS);
+            assertThat(result.role()).isEqualTo(Role.ADMIN);assertThat(result.attemptScope()).isEmpty();
+        } finally {server.stop(0);}
     }
     private static HttpServer server(int status, String body) throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);

@@ -28,14 +28,20 @@ probe/kit và H01–H12 bên dưới vẫn là runbook độc lập cho lượt 
 
 ## Kit main tích hợp — 20/10/2026
 
+**Cập nhật lệnh 24/10/2026:** provider CIM được chuyển nguyên package sang module dùng
+chung `windows-observer`. Lệnh build/classpath dưới đây đã cập nhật cho source mới;
+SHA và receipt của lượt kit 20/10 bên dưới giữ nguyên ý nghĩa bằng chứng lịch sử.
+
 Ưu tiên mục này cho lượt mới; phần base/PR cũ bên dưới là lịch sử. Main đã tích hợp
 PR70–74 tại `a6fba31178a1694f42df4a682d4a0ed205d77e45`. Không build nhánh spike cũ.
 JDK21/Maven3.9/Windows PowerShell5.1 + CimCmdlets, token thường; không cần server/DB,
 installer hoặc quyền admin. [Receipt lượt kit](../evidence/c-integrated-kit-20261020/REPORT.md).
 
 Từ checkout sạch đúng SHA main đã chọn, PowerShell thường, chạy build **trước** khi tạo raw.
-Build hiện có chạy `clean verify` chỉ module monitoring-spike: lưu evidence ở root `target`,
-không để raw cần giữ trong `monitoring-spike/target`. Không chạy root clean.
+Ở kit 20/10, build chỉ chạy `clean verify` module monitoring-spike. Từ 24/10, wrapper
+clean riêng `windows-observer,monitoring-spike`, rồi verify spike và dependencies bằng
+`-am`; không clean root. Lưu evidence ở root `target`, không để raw cần giữ trong
+`monitoring-spike/target` hoặc `windows-observer/target`.
 
 ```powershell
 git status --short
@@ -46,6 +52,7 @@ mvn -version
 $receipt=Get-Content monitoring-spike/target/usb-probe-build.json -Raw | ConvertFrom-Json
 $receipt.sourceSha
 Get-FileHash monitoring-spike/target/monitoring-spike-0.1.0-SNAPSHOT.jar -Algorithm SHA256
+Get-FileHash windows-observer/target/windows-observer-0.1.0-SNAPSHOT.jar -Algorithm SHA256
 $raw=Join-Path (Get-Location) ('target/usb-'+[Guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $raw -ErrorAction Stop | Out-Null
 # Mỗi lệnh trong terminal riêng: wrapper exit bằng mã Java; giữ tên file mới.
@@ -129,14 +136,28 @@ Mở PowerShell **thường**, Java21/Maven đã có trên PATH, đứng tại r
 
 Có thể redirect JSONL vào file mới trong thư mục ignored, không ghi đè evidence cũ. Từ PowerShell wrapper exit bằng mã Java: 0 hoàn thành, 2 UNSUPPORTED, 3 ERROR/cleanup lỗi, 4 UNKNOWN classification, 5 output cap, 64 arguments sai. Trong watch, lỗi đã gặp giữ mã severity cao nhất dù có recovery; order ERROR > UNSUPPORTED > UNKNOWN > READY. Ctrl+C thường cho process exit130; FINISH exitCode130 là yêu cầu dừng, không phải test hardware fail. OS kill cưỡng bức/terminal đóng có thể không hoàn tất shutdown hook; không bảo đảm cleanup/evidence COMPLETE cho trường hợp ấy.
 
-Java CLI trực tiếp (hữu ích khi policy không cho `.ps1`, không sửa policy):
+Java CLI trực tiếp (lệnh cập nhật 24/10/2026; hữu ích khi policy không cho `.ps1`, không sửa policy):
 
 ```powershell
-java -cp monitoring-spike/target/classes vn.edu.toeic.monitoring.usb.UsbStorageProbe --help
-java -cp monitoring-spike/target/classes vn.edu.toeic.monitoring.usb.UsbStorageProbe --method msft-disk --duration-seconds 30 --interval-millis 1000 --query-timeout-millis 5000 --max-lines 1000 --machine-alias WIN-A --source-sha UNVERSIONED
+$probeClasspath = 'monitoring-spike/target/classes;windows-observer/target/classes'
+java -cp $probeClasspath vn.edu.toeic.monitoring.usb.UsbStorageProbe --help
+java -cp $probeClasspath vn.edu.toeic.monitoring.usb.UsbStorageProbe --method msft-disk --duration-seconds 30 --interval-millis 1000 --query-timeout-millis 5000 --max-lines 1000 --machine-alias WIN-A --source-sha UNVERSIONED
 ```
 
-CLI trực tiếp không tự xác minh source SHA; dùng UNVERSIONED cho khám phá, không dùng làm evidence đã pin. Wrapper kiểm receipt hash và source sạch rồi dùng SHA đã build. JAR spike chạy được bằng `java -cp monitoring-spike/target/monitoring-spike-0.1.0-SNAPSHOT.jar <main-class-tren> ...`; không có nghĩa installer production đã chứa/support probe. Không đổi Maven exec entry point ProcessHandle cũ.
+CLI trực tiếp không tự xác minh source SHA; dùng UNVERSIONED cho khám phá, không dùng
+làm evidence đã pin. Wrapper kiểm receipt hash và source sạch rồi dùng SHA đã build.
+Từ 24/10, chạy USB bằng JAR cần cả spike và observer trong classpath; spike JAR đơn lẻ
+không còn chứa provider. Ví dụ sau `mvn package`:
+
+```powershell
+$probeJars = 'monitoring-spike/target/monitoring-spike-0.1.0-SNAPSHOT.jar;windows-observer/target/windows-observer-0.1.0-SNAPSHOT.jar'
+java -cp $probeJars vn.edu.toeic.monitoring.usb.UsbStorageProbe --help
+```
+
+Entry point `ProcessHandleProbe` giữ nguyên; dùng lệnh Java trực tiếp trong README.
+Lệnh Maven exec chỉ chọn leaf module cần dependency observer được install vào Maven
+cache trước, trong khi `mvn package` chưa thực hiện bước install đó. Các lệnh probe
+riêng không phải bằng chứng đã kiểm USB qua installer hoặc giao diện giám thị.
 
 ## Luồng chính và phân loại
 

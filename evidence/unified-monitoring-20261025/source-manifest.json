@@ -1,0 +1,58 @@
+[
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/CandidateHomePane.java",
+    "sha256": "0ccfa93f9da6aaa9610dd2291add91c3748d8d044250c78d5fd884f2aa41740b"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/ToeicClientApplication.java",
+    "sha256": "a0af13d0d40303562be031d0ea4adccb7dac59a3fd45e76190b446093d145cfd"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/monitoring/CandidateExamSignalMonitoring.java",
+    "sha256": "25132b2c24341ec8e67a183e796f802a4fca175b7ff81e0fd369cbe4a1bdc614"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/Drawers.java",
+    "sha256": "c4cdc33e9042faf784b866dcaae5f43997c4180cf2f8afdbc7cdc80abd8764a9"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/OverviewPane.java",
+    "sha256": "9c6ea6d9e3a263528f598949432c6aeeb1e426cf22b942a9713195c5a2a6f8a9"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/ProctorRedesignView.java",
+    "sha256": "73d29990ba167ad4c47cea60b8844fa0b115a6876294de260736c321c93c8be8"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/SignalSummaryView.java",
+    "sha256": "3b61b0ad2dba29f7d7870f972b5c40f1d89d4b8a473ea9979a37e1cb4bd41eba"
+  },
+  {
+    "path": "client/src/main/resources/proctor-redesign/proctor-redesign.css",
+    "sha256": "12f6f8a8176774b8b82e102c59a41f1246b9ef8b237e26cefb82061ef36d53b1"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/ProctorV2SessionPaneGuiTest.java",
+    "sha256": "623fbcf47ca8214c3ae7bad24414d5c8026e9281061c0567becf557e04a20d23"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/SignalSummaryGuiTest.java",
+    "sha256": "1a8d06aa2dd7c8e3ed5c0aa7a07f46118e8055dfb3ceab25e42b6973fda2f033"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/SignalSummaryViewTest.java",
+    "sha256": "0841ada5874182a690f565e63adf766446876b2b2ed2d0bcad7e5805cc9be365"
+  },
+  {
+    "path": "scripts/demo-usb-integrated.ps1",
+    "sha256": "cfbd045a67833e5a2888ec96c1112b8398caad730ad73929b5c25552287dc1a4"
+  },
+  {
+    "path": "server/src/test/java/vn/edu/toeic/client/MonitoringApplicationProbe.java",
+    "sha256": "5d77c64d8fe9861d98464baadfaaec154f37deb502d01250074b56194118b1dc"
+  },
+  {
+    "path": "server/src/test/java/vn/edu/toeic/server/monitoring/signal/MonitoringTimelinePostgresTest.java",
+    "sha256": "e96288e4f24165062f0052906541b30ea068c57d40fde0a01640a82c92cb9384"
+  }
+]

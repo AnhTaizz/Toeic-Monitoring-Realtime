@@ -19,6 +19,7 @@
 
     <modules>
         <module>protocol</module>
+        <module>windows-observer</module>
         <module>server</module>
         <module>client</module>
         <module>monitoring-spike</module>
@@ -38,6 +39,11 @@
             <dependency>
                 <groupId>vn.edu.toeic</groupId>
                 <artifactId>protocol</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>vn.edu.toeic</groupId>
+                <artifactId>windows-observer</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

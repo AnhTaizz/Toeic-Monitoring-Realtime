@@ -1,5 +1,11 @@
 # Trạng thái kiểm thử
 
+24/10/2026 — [USB8080 regression và native desktop](../evidence/usb-8080-fix-20261024/REPORT.md): 68 parser/API/timeline +29 preview =97PASS/0FAIL/ERROR/SKIP; package client PASS (không fullverify mới). Hai launch script validate cả OFF/ON PASS, JAR guard có provider/resource. Native UI xác nhận preview ca hợp lệ không lỗi, old monitoring-only Timeline tải lại; người dùng xác nhận USB REMOVED→CONNECTED thật trên ca `USB-8080-20261024-511c18`. Raw API/test/hash tại receipt. Giữ nguyên old attempt và DB, không fullH01–12/LAN/installer/policy/DONE.
+
+24/10/2026 — [USB app integration](../evidence/usb-app-integration-20261024/REPORT.md): focused187PASS trước fix cuối; sau fix test phase1342PASS/169SKIP/0FAIL-ERROR,143XML/hash. Verify/package retry defaultJAR lỗi repackage do server cũ giữ file; desktop unique-artifact package PASS, không báo fullverifyPASS. REAL candidate-hook/PG/ACK/history/Timeline1PASS (READY0, reconnect/cleanup), rồi user desktop xác nhận USB thật CONNECTED→REMOVED→CONNECTED/count1→0→1. Source inventory/JAR/raw/frozen snapshot tại receipt; live cleanup chưa xác nhận khi app còn mở. Không đủH01–12/ADR/LAN/production approval/DONE.
+
+24/10/2026 — [USB vật lý qua pipeline TEST](../evidence/usb-hardware-20261024/REPORT.md), source `acc1f82`, run `usb-92ad0baf1e9d4dc4`: `UsbIntegratedDemoPostgresTest#realCimReadinessCommitAckAndHistory` **1 PASS/0 FAIL/ERROR/SKIP**. 86 scan READY (41 count0, 45 count1), một CONNECTED thật sau thao tác người dùng; status + USB = 2 COMMIT/ACK/readback, canonical equality, không duplicate/drop/pending. PG18.3/schema0/stop0/child0/readers+workers stopped. Lượt sandbox đầu lỗi local TCP10013, giữ raw; không phải lỗi USB. Chưa kiểm REMOVED/PRESENT_AT_START/GUI/đủ H01–H12; runner hardware label cố định được giải thích ở report, không sửa raw/tracker/DONE.
+
 21/10/2026 — MON-08 C+B: [rule/aggregation thử nghiệm](MON08_EXPERIMENTAL_ALERTS.md), [report/ảnh/receipt](../evidence/cb-mon08-alerts-20261021/REPORT.md).
 Base1507591; runtime1e4b1ca/build+TEST9e31d50.4rule EXPERIMENTAL, ngưỡng3/6 trên bucket60s/window300s; server committed/scoped/ACTIVE/capped read model → timeline hiện có, không cache/migration/observer/persistentpipeline. Baseline95/focused134PASS; fullverify1302PASS/155SKIP/0lỗi, GUI12PASS, JAR21checks. MON08MOCK→realWS/HTTP/PG/Scene1PASS(10initialinputs/focus6/USB1/actual3drops/sourcecap20TEST); OFFlegacy1PASS. GiữFAILoverflow/no-store/fixture và0schema/PGstop0. FULLdefault/cả2experimentOFF, USB0/12/physicaldisplay/OSdesktop/LAN NOT_RUN, owner/policy/ADR/gatespending, MON08chưaDONE; không approval thay B/backlog/E1/E2.
 
@@ -766,3 +772,72 @@ Theo ủy quyền người dùng: thêm -Desktop vào entrypoint demo hiện có
 Source `e6b43205cafffb19f4466a71969825e9224d19df`, Windows NT 10.0.26300.0, Java 21.0.12.1, PostgreSQL 18.1. Runner `ex08-20261023T023208Z-8e120bde`: `RichSessionLifecyclePostgresTest#study4RealTwoHundredQuestionAcceptance` **1 PASS, 0 FAIL/ERROR/SKIP**; cleanup 0 schema, cluster stop 0. Input là bộ `STUDY4_6852` người dùng xác nhận chỉ dùng nội bộ: 200 câu đúng phân bố 7 Part, 54 audio + 11 ảnh; cả 65 file được tải qua API xác thực và SHA-256 khớp. Luồng kiểm catalog/create/READY/START, client mapping 7 Part, không lộ key/source, autosave, deadline/idempotency, Listening interruption, takeover/stale writer và server score `200/200`.
 
 Windows app-image smoke mới PASS với bundled runtime 21.0.12.1, Unicode launcher và JavaFX Media thật; client JAR SHA-256 `df904fae9f0e808d0d3809f8b42ac62f7e95b797fa8a109099b96b6ada786847`. API/WS trong smoke package là MOCK; human hearing/MSI/clean-machine/LAN NOT RUN. Một full-reactor attempt trước đó FAIL ở client harness `ControlledProcessHarnessTest.realChildrenCreateGroundTruthEvenWhenCollectorAlwaysReportsEmpty` trước khi tới server; không tính lượt đó là EX-08 PASS. [Chi tiết](plan-v2/EX08_STUDY4_ACCEPTANCE_20261023.md).
+
+
+## 25/10/2026 — Chỉ báo USB/focus/window ở Tổng quan và Chi tiết
+
+Full Maven verify: 1396PASS/172SKIP/0FAIL/ERROR, 1568test/149suite; 7module buildPASS, STUDY4 không testsource. GUI thật bật, fixture MOCK; 22test mới gồm raw700rows/paging/run/gap/scope/fairness/global2request/unknown/stale/deeplink/render. Focused33PASS có overlap; PendingLimit1PASS trong full. PG MOCK1method PASS (lặp để xuất ảnh) và REAL CIM1method PASS, localcount0/8ACK, không hotplug mới. PackagefinalPASS/13JARentries byte-equal/cleanup0schema-stop0. Có lỗi PowerShellargument và fixturelayout trước đó đã giữlog/sửa/rerun. [Report/receipt](../evidence/proctor-signals-20261024/REPORT.md), không H01–H12/LAN/installer/policy/owner approval hoặc trackerDONE; CI feat không tự chạy, không PR/merge.
+
+
+## 25/10/2026 — Start/Stop chung process + USB/focus/window
+
+Rootcause thật: flagsON cảserver/client, CIMSTANDARD1USB, nhưng portalManualStart cũ chỉprocess. ĐãgomStart/Stop vàrunidentity; bỏcộtriêng, gomtrongchungkhốiChi tiết. Focused50PASS overlap; fullverify1420PASS/154SKIP/0FAIL-ERROR/1574test/149suite, GUI bật. PGREAL2methodPASS (manualapp+productionhook), baseline1USB, activitychỉsauentry, restartnewrun, enterexamreuse, cleanup0schema/stop0/PIDabsent. JARc35b931a…/10entriesbyteequal. Giữfailedfixturesloginplaceholder/photolayout/tablayout, sửaawait/stableIDvàrerun; khôngskipbug hoặchotplug/H01–H12/LAN/humanapproval/DONE. [Report](../evidence/unified-monitoring-20261025/REPORT.md).
+
+## Kiểm thử 25/10/2026 — USB/focus/cửa sổ trong Cảnh báo và Nhật ký chung
+
+RoomFeed trước chỉ đọc process/interruption/gap, nên các nguồn typed không có trong Cảnh báo và hai khối gần đây. Đã đọc typed history commit, cập nhật tăng dần theo watermark reader scoped hiện có, chống trùng/giữ fixed-through/tối đa500dòng liên quan/lượt và thông báo giới hạn. Thêm filter USB/Focus/Cửa sổ, chi tiết event gốc; baseline focus/window và READY chỉ vào Nhật ký, thay đổi vào các quan sát cần xem xét. Hai khối gần đây chỉ hiện3mục mới nhất, không suy USB0/vi phạm từ thiếu sự kiện. Không đổi wire/DB/OSAPI/defaultOFF/FULL.
+
+Fullverify1435PASS/154SKIP/0lỗi (1589test/152suite), GUI bật; bộ mới15PASS, PG REAL2PASS baselineCIM0, window Stage API tự cập nhật danh sách và filter. Owned PG cleanup0schema/stop0/PIDabsent; không đổi DBTEST8080. Giữ testCompile fixture sai constant và2PG kỳ vọngUSBalert khi count0; sửa fixture, không che lỗi. JAR72e124c4…/538entrymatch. [Report](../evidence/proctor-feed-20261025/REPORT.md). B/C cần owner review, không hardwarehotplug/H01–H12/LAN/policy/trackerDONE/CIclaim; pushnhánh hiện tại, khôngPR/merge, giữ opt-outChatGPT.
+
+## 25/10/2026 — Lọc danh sách chung theo ba nhóm người dùng chốt
+
+Chỉ giữ process, USB CONNECTED/REMOVED và thay đổi focus/window; loại READY/INITIAL/status/gap typed/PRESENT_AT_START/baseline/dialog nội bộ khỏi Cảnh báo/Nhật ký/hai khối gần đây và số đếm. Raw typed history/Timeline/trạng thái nguồn trong Chi tiết giữ nguyên; luồng kết nối/gap legacy không đổi. Không wire/DB/OSAPI/policy/defaultOFF/FULL changes.
+
+Client package+GUI40PASS/0lỗi/skip; PG REAL2PASS count0/Stagewindow tự cập nhật,0schema/stop0/PIDabsent. Cursor qua bản ghi ẩn và USB cắm/rút MOCK đã kiểm; không hotplug vật lý/fullverify mới. JARdc91c420…/538entrymatch. [Report](../evidence/proctor-actions-only-20261025/REPORT.md). B/C còn review cá nhân, không trackerDONE/policy/H01–H12/LAN/installer/CIclaim; opt-outChatGPT giữ, pushnhánh hiện tại khôngPR/merge.
+
+## 25/10/2026 — Mở rộng sáu nhóm process và Teams mới
+
+User yêu cầu triển khai nhóm browser/chat/remote/document/terminal/Windows. Probe Get-Process và Java thấy2ms-teams.exe; v1 chỉ teams.exe nên bịlọc. Thêm catalog39tên/policyv2, full/delta/state backwardreadv1, bound256v2/128v1, epochkhôngđổipolicy. Background chỉstate/history, không Cảnh báo/count/MON08review; loại appPID/helperCIMtheoPID-start, giữ external terminal. Không DTOfield/DB/OSquery/START changes, defaultFULL/flagsOFF. Review trước sửa ở PROCESS_GROUPS.md, owner signoff không giả.
+
+Fullverify1458PASS/154SKIP/0lỗi (1612test/155suite); giữ lượt đầu1assert8cũ rồi cập nhật39 + assertlegacy8. PGREAL2methodPASS, stage native139process/2Teams cóDB/UI, ảnhsnapshotkế140; cleanup0schema/stop0/PIDabsent, CIM0/nohotplug. JARclient94b3c138…544entries/servera666c2c4…168entriesmatch. ServerJarCLI2validationPASS. [Report](../evidence/process-groups-20261025/REPORT.md), [runbook](PROCESS_GROUPS.md). Giữ phiên8080; cần serverJARtênriêng và restart cả2client để dùngv2. Không trackerDONE/benchmark/LAN/installer/policy/humanapproval/CIclaim; opt-outChatGPT, pushnhánh hiện tại khôngPR/merge.
+
+## 25/10/2026 — Bỏ tám process dễ nhầm
+
+Theo user: bỏ powershell/pwsh/cmd/msedgewebview2/conhost/runtimebroker/dllhost/svchost.exe khỏi capture mới và danh sách chung/summary/count kể cả inputv2. Raw DB/API/Timeline giữ. Thêm policyv3/31tên, v1/v2 vẫn đọc đúng; full/delta/event/trace nhất quán, không đổi policy giữa epoch, cap256/fields/DB/OSquery giữ. Còn15tên Windows khác chỉ state/history. Review trước sửa trong PROCESS_GROUPS.md, B/C và tương thíchA/C cần review cá nhân.
+
+Focused81PASS overlap full; full1464PASS/154SKIP/0lỗi (1618test/155suite). PGREAL2methodPASS native61process/2Teams/policy3/no8tên,0schema/stop0/PIDabsent; CIM0/nohotplug. Client1da46078…/544entries, serverb7f73f3b…/168entriesmatch. [Report](../evidence/process-filter-20261025/REPORT.md). Giữ phiên8080, cần restartserverJARtênriêng và cả2client để áp dụng; không trackerDONE/benchmark/LAN/installer/policyhumanapproval/CIclaim. Pushnhánh hiện tại khôngPR/merge, opt-outChatGPT.
+
+## 25/10/2026 — Khôi phục dòng USB có sẵn trước giám sát
+
+User hỏi đã thêm chưa; lượt trước chỉ chẩn đoán. Đã khôi phục PRESENT_AT_START trong sharedprojection/title/sốUSB, màuinfoLIVE, giữREADY/focus-windowINITIALẩn. Không đổicollector/server/wire/DB/processpolicy3 hoặc nguồnWindows. Clientpackage48PASS/0skip và ownedPGMock1PASS/cleanup0schema/stop0/PIDabsent; rawbaseline1/sharedalert-history1, retry/reconnect/scopechecks giữ. JAR09b32ed9…/544entriesmatch. [Report](../evidence/usb-start-visible-20261025/REPORT.md), [runbook](PROCTOR_SIGNAL_SUMMARY.md). Không physicalUSB/fullverify/H01–H12/CIclaim mới; read-only query trước thấy0USB. Chỉ mở lại proctor mới để đọc baseline đã lưu. B/Creviewpending, khôngtrackerDONE/PR/merge, opt-outChatGPT giữ.
+
+## 25/10/2026 — Policy v4 đúng chín process và USB regression
+
+- Full verify bật GUI: 1.471 PASS / 154 SKIP / 0 FAIL-ERROR, 1.625 test/156 suite; focused142 PASS trùng phạm vi full. XML fresh được archive trước runner tích hợp.
+- Exact set9/case-insensitive; v3 vẫn31; v4 full/delta/state; trace MOCK full/delta replay cả v1–v4, cap256 và v1=128; GUI đọc raw v2 chứa30 tên ngoài tập chỉ hiển thị/count Teams và không xóa31 dòng raw.
+- PG REAL 2 method PASS: native ProcessHandle/policy4/snapshot46/Teams2 có history/feed; manual Start/Stop/restart/exam-entry/window recent widgets và production USB hook/reconnect. CIM0, không hotplug vật lý.
+- PG MOCK 1 method PASS: baseline/cắm/rút USB hiện shared lists, baseline giữ id/time/source, retry/reconnect/scope-revoke/queue-drop checks giữ; A19/B1/drop3 là số thực của fixture MOCK. Cleanup hai cluster 0 schema/stop0/PID absent.
+- SHA-256 13 file USB/hook/projection unchanged; client545/server167 entries khớp, embedded protocol byte-identical. [Receipt và ảnh](../evidence/process-nine-20261025/REPORT.md). Không H01–H12/LAN/installer/E1/E2/CI hoặc tracker DONE mới.
+
+## Release candidate 25/10/2026 — code `f982aac`, bundle `5a1af3e`
+
+Chi tiết, môi trường và SKIP: [release/RELEASE-REPORT.md](release/RELEASE-REPORT.md).
+
+- Full `verify-room-ux.ps1 -Mode Full -AllGui` trên `f982aac`: **1791 PASS / 0 FAIL / 0 ERROR / 23 SKIP**, cộng windows-observer 22 PASS cùng lượt Maven; PostgreSQL 18.1 cô lập, 0 schema còn lại.
+- E2E ACCOUNT_PIN 3/3 (READY 2/1/0, autosave, reconnect, Submit, cross-attempt 403, USB CIM thật không lặp event).
+- Runner USB/monitoring của C: Mock+Timeline 1/1, Mock+Timeline+AlertRules 1/1, Mock 4/4, Real CIM 1/1, Real CIM+Timeline 2/2; Integrated 4 ca có `productionObserversRetireOnTerminalAndRevoke` **chập chờn 3 FAIL/17 lượt** (owner C). `realCimStatusReachesDashboard` NOT RUN (không có chế độ runner).
+- EX-08 với STUDY4_6854 (payload `d47aad14…`): 1/1 PASS.
+- Portable `5a1af3e`: Client Unicode 9/9, ASCII 8/8; Server DB mới 14/14; nâng cấp DB do Server main V18 tạo → V21 + import STUDY4_6854 18/18.
+- NOT TESTED: LAN hai máy, nghe thật, cắm/rút USB vật lý trên commit tích hợp, installer, đo lại E1/E2.
+
+## Review cuối PR #108 — code `5173462`, bundle `5173462`
+
+Chi tiết, nguyên nhân và lượt FAIL: [release/RELEASE-REPORT.md](release/RELEASE-REPORT.md).
+
+- Full `verify-room-ux.ps1 -Mode Full -AllGui` trên `5173462` (run `room-ux-20261025T124324Z-b350da46`): **1797 PASS / 0 FAIL / 0 ERROR / 23 SKIP**, windows-observer 22 PASS; E2E ACCOUNT_PIN 3/3; 0 schema còn lại.
+- Dừng giám sát: `RealtimeClientTest` ca mới FAIL trên code cũ, PASS sau sửa; module client 414/414. `productionObserversRetireOnTerminalAndRevoke` (runner Integrated) 13/13 trên `8bea80e`, 20/20 trên `5173462` (6 lượt tải CPU nhân tạo); code cũ `5a93b6d` cùng tải FAIL 3/6. Dưới tải, ba ca Integrated khác lỗi 4/6 lượt ở cả code cũ lẫn mới (`fx` 8 s của harness); không tải 14/14 PASS. Lượt 13 vòng `8bea80e` có một lỗi cùng kiểu khi chạy trùng lượt Maven khác.
+- Tài khoản demo: `SeedDataInitializerTest` 3/3, `SeedAccountsPostgresTest` 1/1; fixture dùng tài khoản demo 110/110 (run `room-ux-20261025T114042Z-cc921bf0`).
+- Runner USB: Mock+Timeline 1/1, +AlertRules 1/1, Mock 4/4, Real CIM 1/1, Real CIM+Timeline 2/2 (0 USB, không hotplug).
+- EX-08 STUDY4_6854: 1 FAIL (409 import media, nguyên nhân chưa xác định) rồi 2/2 PASS, cùng payload `d47aad14…`.
+- Portable `5173462` (ZIP `cd2b6e2b…`): Client Unicode 9/9, ASCII 8/8; Server DB mới 15/15 (không có tài khoản demo dù môi trường bật cờ); nâng cấp V18→V21 + STUDY4 19/19; ZIP giải nén validate PASS.
+- NOT TESTED: LAN hai máy, nghe thật, cắm/rút USB vật lý trên commit tích hợp, installer, đo lại E1/E2.

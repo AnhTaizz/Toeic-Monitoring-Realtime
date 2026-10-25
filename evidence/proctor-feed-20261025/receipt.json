@@ -1,0 +1,85 @@
+{
+  "baseSha": "11252dc9910cc0ec13660d730ecbf4124f001397",
+  "sourceDirty": true,
+  "realRun": {
+    "sourceSha": "11252dc9910cc0ec13660d730ecbf4124f001397",
+    "identityOnly": false,
+    "exitCode": 0,
+    "startUtc": "2026-10-25T04:22:57.5770326Z",
+    "alertRules": false,
+    "cleanup": {
+      "ownedSchemasRemaining": 0,
+      "clusterStopExit": 0,
+      "postmasterPidAbsent": true
+    },
+    "sourceDirty": true,
+    "endUtc": "2026-10-25T04:23:36.1807279Z",
+    "integrated": false,
+    "desktop": false,
+    "summaryPresent": true,
+    "runId": "usb-6855e6d147f2413a",
+    "mode": "Real",
+    "runnerErrorType": null,
+    "hardware": "0/12 NOT_RUN",
+    "timeline": true
+  },
+  "realSummary": {
+    "runs": [
+      {
+        "sharedCollector": true,
+        "stopWaitsForUsbWorkers": true,
+        "usbBaselineCount": 0,
+        "kind": "MANUAL_PROCESS_AND_SIGNALS",
+        "restartNewRun": true,
+        "hardwareHotplug": "NOT_RUN",
+        "examEntryReusesRun": true,
+        "manualPortalBaseline": true,
+        "usbSource": "REAL_CIM",
+        "activityOnlyAfterExamEntry": true
+      },
+      {
+        "storageCount": 0,
+        "kind": "PRODUCTION_CANDIDATE_USB",
+        "source": "REAL_CIM",
+        "freshReconnectCapability": true,
+        "hardwareAcceptance": "Baseline only; no physical hotplug action in this automated test",
+        "deliveryAcknowledged": 8,
+        "historyRows": 8,
+        "usbWorkersStopped": true,
+        "sharedCollectorIdentity": true
+      }
+    ],
+    "hardware": "0/12 NOT_RUN",
+    "runId": "usb-6855e6d147f2413a",
+    "sourceSha": "11252dc9910cc0ec13660d730ecbf4124f001397",
+    "schemaDropped": true
+  },
+  "failedRuns": [
+    "target/proctor-feed-real-20261025",
+    "target/proctor-feed-real-20261025-2"
+  ],
+  "testCompileFailure": "target/signal-feed-testcompile-failed.log",
+  "source": "REAL CIM / JavaFX Stage properties / WS / HTTP / PostgreSQL",
+  "fixtures": "MOCK accounts and exam; owned ProcessHandle workload, no browser process claim",
+  "physicalHotplug": "NOT_RUN",
+  "ci": "NOT_RUN: feature branch has no push trigger",
+  "verify": {
+    "suites": 152,
+    "tests": 1589,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 154,
+    "passed": 1435
+  },
+  "clientJar": {
+    "path": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+    "sha256": "72e124c45dbf80a993289e0011d07fb8b7ca4d022701035e290ca8ed157d3d6a",
+    "entriesMatched": 538,
+    "modules": [
+      "client",
+      "protocol",
+      "windows-observer"
+    ]
+  },
+  "rawVerify": "target/proctor-feed-verify-20261025"
+}

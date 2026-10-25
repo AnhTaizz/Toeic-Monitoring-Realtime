@@ -6,11 +6,11 @@ $previous = @{}
 Push-Location $projectRoot
 try {
     if (-not (Test-Path -LiteralPath '.env')) { throw 'Local .env is required for T3-A4.' }
-    foreach ($key in @('DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','TOEIC_SEED_PASSWORD','JAVA_HOME','PATH','TOEIC_PG_INTEGRATION')) {
+    foreach ($key in @('DB_HOST','DB_PORT','DB_NAME','DB_USER','DB_PASSWORD','TOEIC_SEED_PASSWORD', 'TOEIC_SEED_DEMO_ACCOUNTS','JAVA_HOME','PATH','TOEIC_PG_INTEGRATION')) {
         $previous[$key] = [Environment]::GetEnvironmentVariable($key,'Process')
     }
     foreach ($line in Get-Content -LiteralPath '.env' -Encoding UTF8) {
-        if ($line -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD)\s*=(.*)$') {
+        if ($line -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD|TOEIC_SEED_DEMO_ACCOUNTS)\s*=(.*)$') {
             [Environment]::SetEnvironmentVariable($Matches[1],$Matches[2].Trim().Trim('"').Trim("'"),'Process')
         }
     }

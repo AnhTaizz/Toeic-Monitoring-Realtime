@@ -51,14 +51,31 @@ public final class ListeningMessages {
         return new ListeningStartCommand(start,string(p,"sessionId"),attempt,manifest,writer,started,deadline);
     }
     public static ListeningStatusResponse status(JsonObject p) {
-        fields(p,Set.of("protocolVersion","requestId","attemptId","sessionId","startId","manifestId","writerEpoch","phase","deadlineAt","playbackStartedAt","playbackCompletedAt","interrupted","interruptedAt","interruptionReason"));
+        return status(p,false);
+    }
+    /** A legacy monitoring-only attempt has no Listening session or playback state to project. */
+    public static ListeningStatusResponse statusForMonitoring(JsonObject p) {
+        return status(p,true);
+    }
+    private static ListeningStatusResponse status(JsonObject p,boolean monitoringOnlyAllowed) {
+        Set<String> allowed=Set.of("protocolVersion","requestId","attemptId","sessionId","startId","manifestId","writerEpoch","phase","deadlineAt","playbackStartedAt","playbackCompletedAt","interrupted","interruptedAt","interruptionReason");
+        fields(p,allowed);
         if(!"v0".equals(string(p,"protocolVersion")))throw new IllegalArgumentException();
-        String request=nullableString(p,"requestId"),attempt=string(p,"attemptId"),session=string(p,"sessionId");
+        String request=nullableString(p,"requestId"),attempt=string(p,"attemptId"),session=nullableString(p,"sessionId");
         String start=nullableString(p,"startId"),manifest=nullableString(p,"manifestId"),phase=string(p,"phase");
-        if(request!=null&&!identifier(request)||!identifier(attempt)||!identifier(session)||start!=null&&!identifier(start)
+        if(request!=null&&!identifier(request)||!identifier(attempt)||session!=null&&!identifier(session)||start!=null&&!identifier(start)
                 ||manifest!=null&&!manifest.matches("[0-9a-f]{64}")||!Set.of("NOT_STARTED","ARMED","PLAYING","COMPLETED","INTERRUPTED").contains(phase))throw new IllegalArgumentException();
-        return new ListeningStatusResponse("v0",request,attempt,session,start,manifest,longInteger(p,"writerEpoch"),phase,
-                instant(p,"deadlineAt"),instant(p,"playbackStartedAt"),instant(p,"playbackCompletedAt"),bool(p,"interrupted"),instant(p,"interruptedAt"),nullableString(p,"interruptionReason"));
+        long writer=longInteger(p,"writerEpoch");
+        Instant deadline=instant(p,"deadlineAt"),started=instant(p,"playbackStartedAt"),completed=instant(p,"playbackCompletedAt"),interruptedAt=instant(p,"interruptedAt");
+        boolean interrupted=bool(p,"interrupted");String reason=nullableString(p,"interruptionReason");
+        if(session==null){
+            if(!monitoringOnlyAllowed||!p.keySet().equals(allowed)||request!=null||!"NOT_STARTED".equals(phase)
+                    ||start!=null||manifest!=null||deadline!=null||started!=null||completed!=null
+                    ||interrupted||interruptedAt!=null||reason!=null)throw new IllegalArgumentException();
+            return null;
+        }
+        return new ListeningStatusResponse("v0",request,attempt,session,start,manifest,writer,phase,
+                deadline,started,completed,interrupted,interruptedAt,reason);
     }
     private static Instant instant(JsonObject body,String field){String value=nullableString(body,field);return value==null?null:Instant.parse(value);}
 }

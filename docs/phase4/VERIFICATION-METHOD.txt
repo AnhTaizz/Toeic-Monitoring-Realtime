@@ -1,0 +1,72 @@
+PHASE 4 — REPRODUCIBLE VERIFICATION
+
+SOURCE
+Phase 3 checkpoint: 8fd23e09f5b30167be4cad14d6c143b2358ee887
+Working branch: release/phase4-validation-20261023
+Main retained at 90f1b387ab9401bec1f21dd85973ae29e8ec3316.
+Phase 4 working-tree changes must be included in a source hash manifest for each accepted run.
+
+REGRESSION (PowerShell, from repository root; replace paths for installed tools)
+.\scripts\verify-room-ux.ps1 -Mode Full -AllGui -PostgresBin <PG_BIN> -JavaHome <JDK21_HOME> -MavenCommand <MAVEN_CMD> -OutputRoot <OUTPUT_ROOT>
+- Goal: full reactor package, tests enabled; real isolated loopback PostgreSQL, Flyway V1–V19, fresh XML only.
+- PIN/role/scope denial tests are acceptance requirements; success-only tests are insufficient.
+- GUI mode separately enables production Proctor/Candidate views. Installed/packaged hardware tests remain gated.
+- A test skipped because a GUI/device flag is absent is NOT PASS. Review each skip against the release gate.
+- Keep .private logs and owned pgdata local; XML system properties may contain ephemeral test credentials.
+- Record every failed run as well as the accepted run. A later success does not erase the earlier failure.
+
+BENCHMARK
+.\scripts\verify-phase4-benchmark.ps1 -PostgresBin <PG_BIN> -JavaHome <JDK21_HOME> -MavenCommand <MAVEN_CMD>
+python scripts/analyze-phase4-benchmark.py <RESULT_DIRECTORY>
+- Opt-in JUnit test forks the packaged production Server JAR into a separate JVM and creates an owned PG schema.
+- Same self-authored CC0 MOCK200 dataset for levels 1,2,5,10,20; three independent rooms per level.
+- Generator creates candidates through the real API, creates the room, concurrently JOINs/prepares candidates,
+  opens WS/heartbeats, STARTs, fetches the sealed exam, delivers three process events and three autosaves per candidate, drops WS, reconnects
+  with unchanged writer/deadline, Submits and verifies SUBMITTED. Heartbeats continue every two seconds during the workload. A final acknowledged heartbeat
+  and ONLINE precondition are required before each timed abort.
+- Setup/import and five HTTP auth warm-ups are marked clients=0/round=0 and excluded from level statistics.
+- Candidate setup and BCrypt room provisioning belong to the measured round; pooled HTTP latency includes
+  provisioning, preparation and presence polling, so use raw operation labels for a narrower comparison.
+- Audio/visual readiness is simulated from returned manifests. NO audio playback/full-media transfer or JavaFX
+  workload is claimed by this benchmark. CPU/RAM Client metric means generator JVM, not desktop Client.
+- All request/send/receive timestamps are taken with System.nanoTime in the same generator JVM.
+  Event delivery ends when assigned Proctor WS receives matching event ID. No cross-machine wall-clock subtraction.
+- Presence connect ends on proctor GET first ONLINE; disconnect ends on first non-ONLINE after WS abort.
+  Detection includes polling/network/DB overhead; abort tests clean transport loss, not silent packet blackhole.
+- CPU uses separate JVM ProcessHandle totalCpuDuration deltas over each round, excluding external PostgreSQL.
+  100% means one logical core. RAM is Windows Get-Process WorkingSet64 sampled at round end, not peak/high-water RAM.
+- Quantiles: nearest rank; p50/p95 pooled across the three repetitions at each level. Failures are retained as
+  failed rows and counted in error rates; missing observations are not imputed as zeros.
+- Closed/bounded workload with synchronized phases; not a sustained arrival-rate, multi-hour soak or capacity claim.
+- Levels run in ascending order; transport warm-up does not imply a fully warmed JVM/BCrypt/media cache.
+- One physical Windows host/loopback only. Background host workload is not controlled. No baseline/proposed claim.
+- Public raw.csv/resources.csv/environment.json/summary.json contain no request/response bodies, tokens, PINs or
+  passwords. Private server logs and runner XML are not distribution artifacts.
+
+DISTRIBUTION
+.\scripts\package-phase4-portable.ps1 -JavaHome <JDK21_HOME> -ManifestTool <SDK_MT_EXE>
+- Existing Maven-produced production client shaded JAR and server Spring Boot JAR, explicit allowlist copy.
+- jlink bundles Java SE + required JDK support/crypto/management/zip modules; no SDK/WiX/system installer required.
+- No app feature, server URL, credential, environment file or licensed exam dataset is embedded.
+- Start-Client.bat / Start-Server.bat invoke start-release.ps1 relative to their extracted directory.
+- Unsigned portable distribution. Human hearing, two physical hosts and fresh-host acceptance remain separate gates.
+
+EXISTING PACKAGING PREFLIGHT
+.\scripts\test-package-preflight.ps1 -JavaHome <JDK21_HOME> -WixHome <WIX3_BIN> -ManifestTool <SDK_MT_EXE>
+This checks prerequisites/negative validation only. Successful preflight does not mean MSI installation passed.
+SDK/WiX tools were located in a local backup tools directory; they are not embedded into the distribution.
+
+BENCHMARK CONFIGURATION DETAILS
+The protocol simulator uses a 60,000ms visual READY lease, recorded in environment.json, without desktop lease
+renewal/rendering. This does not certify 20 desktops with the production 6,000ms lease and real media playback.
+HTTP application round-trip samples include request construction/serialization and full-body JSON decoding.
+Startup readiness probes are excluded; transport warm-up rows use clients=0 and round=0.
+The packaged desktop smoke additionally records a five-second post-login-window CPU/RAM sample, not exam load.
+
+UNICODE DISTRIBUTION FIX
+A real smoke failed under a Vietnamese directory with "could not find java.dll". The packager reuses the
+package-t3b1.ps1 UTF-8 manifest policy for the bundled runtime copy's java.exe via Windows SDK mt.exe.
+Installed JDK/OS are unchanged. End users need no SDK. The generated BAT calls built-in PowerShell by
+SystemRoot; the smoke drives the BAT itself, checks the exact TOEIC Room window, and verifies clean exit.
+Audio QA fixture deletion waits at most ten seconds for native Windows WAV locks; missing-file/READY
+assertions remain unchanged. Old failed artifacts/runs are retained and must not be distributed as final.

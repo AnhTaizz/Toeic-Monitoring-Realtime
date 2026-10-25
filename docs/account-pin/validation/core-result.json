@@ -1,0 +1,806 @@
+{
+  "sourceSha": "185e1b3c5318062f41d94f9f7fb85e7cc77e8975",
+  "runId": "room-ux-20261024T105008Z-31149c7b",
+  "mode": "Gui",
+  "os": "Microsoft Windows NT 10.0.26200.0",
+  "java": "java version \"21.0.8\" 2025-07-15 LTS",
+  "maven": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)",
+  "postgres": "PostgreSQL 18.1 on x86_64-windows, compiled by msvc-19.44.35221, 64-bit",
+  "database": "toeic_room_admission_test",
+  "host": "127.0.0.1",
+  "port": 51085,
+  "fixture": "MOCK self-authored exam content; real PostgreSQL/Flyway/HTTP/WebSocket",
+  "command": "mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC -pl server -am -Dtest=AccountPinPostgresTest,RoomPinCodecTest,AdminAccountApiClientTest,ProctorV2ApiClientTest,ProctorV2ControllerTest,LoginApiClientTest,ListeningPlaybackTest,LoginSceneGuiTest,VisualReadyCoordinatorTest -Dsurefire.failIfNoSpecifiedTests=false test",
+  "startUtc": "2026-10-24T10:50:27.9164528Z",
+  "endUtc": "2026-10-24T10:55:26.6363128Z",
+  "exitCode": 0,
+  "runnerErrorType": null,
+  "totals": {
+    "failures": 0,
+    "passed": 121,
+    "errors": 0,
+    "tests": 121,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "status": "PASS",
+      "seconds": "0.849",
+      "name": "errorResponseIsMeaningfulAndCreateIsNeverRetried",
+      "class": "vn.edu.toeic.client.admin.AdminAccountApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.02",
+      "name": "urlAndTokenCannotInjectCredentialsOrSwitchApiOrigin",
+      "class": "vn.edu.toeic.client.admin.AdminAccountApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.036",
+      "name": "rejectsUnexpectedRoleFromServerAndNeverExposesInitialSecretInToString",
+      "class": "vn.edu.toeic.client.admin.AdminAccountApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.293",
+      "name": "questionAudioMismatchAndDurableReservationBlockPlayback",
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.167",
+      "name": "mediaErrorStopsLocksPersistsAndReportsInterruption",
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.181",
+      "name": "corruptCacheAndMismatchedCommandNeverReachMediaOrStartedEvent",
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "2.333",
+      "name": "startedAckDuringSegmentHandoffStillSchedulesHeartbeatWithoutReplaying",
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.399",
+      "name": "duplicateStartPlaysOneOrderedPlaylistAndReportsLifecycle",
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.211",
+      "name": "reopenQueriesServerAndNeverReplaysActiveOrInterruptedListening",
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.231",
+      "name": "serverInterruptionAfterStartedLocksPlayback",
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.185",
+      "name": "matchingServerInterruptionStopsPlaylistAndRejectsOldMediaCallbacks",
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.494",
+      "name": "networkLossDuringPlaybackReportsAndNeverResumes",
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.242",
+      "name": "notReadyAtStartRecoveryExplainsReadingWithoutStartingPlayback",
+      "class": "vn.edu.toeic.client.audio.ListeningPlaybackTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.134",
+      "name": "entryProbeSeparatesV2FromLegacyByServerAnswer",
+      "class": "vn.edu.toeic.client.exam.rich.VisualReadyCoordinatorTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.117",
+      "name": "uiThatCannotShowImageNeverAttests",
+      "class": "vn.edu.toeic.client.exam.rich.VisualReadyCoordinatorTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.026",
+      "name": "preStartPreparesImagesButNeverAttestsWithoutAudioReadyOrFetchesExam",
+      "class": "vn.edu.toeic.client.exam.rich.VisualReadyCoordinatorTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.057",
+      "name": "invalidateSendsInvalidateThenPreparesFreshContextAndCloseStopsWorker",
+      "class": "vn.edu.toeic.client.exam.rich.VisualReadyCoordinatorTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.02",
+      "name": "networkFailureIsShownAsUnverifiedNeverReady",
+      "class": "vn.edu.toeic.client.exam.rich.VisualReadyCoordinatorTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.056",
+      "name": "epochOrManifestChangeAfterAudioWithdrawReprepares",
+      "class": "vn.edu.toeic.client.exam.rich.VisualReadyCoordinatorTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.037",
+      "name": "startedWriterReplacedAndStaleStopWithoutReady",
+      "class": "vn.edu.toeic.client.exam.rich.VisualReadyCoordinatorTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.025",
+      "name": "conflictAndInvalidStateForcePreparationAgain",
+      "class": "vn.edu.toeic.client.exam.rich.VisualReadyCoordinatorTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.026",
+      "name": "attestsExactUniqueAssetsAndRenewsWithNewRequestIdOnEachTick",
+      "class": "vn.edu.toeic.client.exam.rich.VisualReadyCoordinatorTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.008",
+      "name": "serverRoleSelectsCandidateAndProctorViews",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.132",
+      "name": "rejectsMissingUserWithControlledFailure",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.057",
+      "name": "roomEntryUsesThreeCredentialsAndRejectsABroaderAccountSession",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.01",
+      "name": "rejectsMalformedJsonWithControlledFailure",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.028",
+      "name": "acceptsValidProctorResponseOverHttp",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.0",
+      "name": "rejectsAddressWithoutHttpScheme",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.035",
+      "name": "rejectsEmptyBodyWithControlledFailure",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.028",
+      "name": "rejectsUnknownRoleWithControlledFailure",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.046",
+      "name": "rejectsInvalidJsonStructure(String)[1]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.025",
+      "name": "rejectsInvalidJsonStructure(String)[2]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.011",
+      "name": "rejectsInvalidJsonStructure(String)[3]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.036",
+      "name": "rejectsInvalidJsonStructure(String)[4]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.006",
+      "name": "buildsLoginEndpointFromEditableLanAddress",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.047",
+      "name": "accountPinUsesAccountPrincipalAndDistinguishesWrongPinFromExpiredLogin",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.022",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[1]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.019",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[2]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.019",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[3]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.023",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[4]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.02",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[5]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.019",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[6]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.017",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[7]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.021",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[8]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.018",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[9]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.02",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[10]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.018",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[11]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.02",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[12]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.021",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[13]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.022",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[14]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.018",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[15]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.017",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[16]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.022",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[17]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.025",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[18]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.022",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[19]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.029",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[20]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.02",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[21]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.025",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[22]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.024",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[23]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.03",
+      "name": "rejectsMissingNullBlankOrWrongTypeFields(String, String, String)[24]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.018",
+      "name": "acceptsAdminLoginUsingTheExistingAccountEndpointAndAdminViewModel",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.024",
+      "name": "preservesNonSuccessHttpErrorHandling(String)[1]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.014",
+      "name": "preservesNonSuccessHttpErrorHandling(String)[2]",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.025",
+      "name": "slowHttpResponseDoesNotBlockCallingThread",
+      "class": "vn.edu.toeic.client.LoginApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "2.895",
+      "name": "passwordToggleSharesTheValueAndInvalidOriginNeverAuthenticates",
+      "class": "vn.edu.toeic.client.LoginSceneGuiTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.724",
+      "name": "formRemainsUsableOnCompactAndLargeWindows",
+      "class": "vn.edu.toeic.client.LoginSceneGuiTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.717",
+      "name": "candidateCanEnterRoomCredentialsAndWrongPinDoesNotLeaveThemOnScreen",
+      "class": "vn.edu.toeic.client.LoginSceneGuiTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.308",
+      "name": "inFlightLoginCannotBeDuplicatedAndFailureClearsBothPasswordViews",
+      "class": "vn.edu.toeic.client.LoginSceneGuiTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.656",
+      "name": "accountLoginOpensOnlySharedPinAndWrongPinKeepsTheAccountEntryUsable",
+      "class": "vn.edu.toeic.client.LoginSceneGuiTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.197",
+      "name": "catalogThatCallsABlockedExamSelectableOrBreaksTheCursorIsRejected",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.068",
+      "name": "errorsUseSafeMessagesAndNestedCode",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.025",
+      "name": "closedClientSendsNothing",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.093",
+      "name": "readinessMustMatchTheSessionAndItsOwnRows",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.066",
+      "name": "pinLifecycleUsesPostAndNoContentWithoutLeakingCredentials",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.098",
+      "name": "sharedPinRoomCreatesAnEmptyRosterAndRotatesOnlyAtTheRoomEndpoint",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.041",
+      "name": "createExpects201AndTheSameRoster",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.043",
+      "name": "candidateCatalogEncodesLiteralSearchAndRejectsInvalidCursors",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.074",
+      "name": "startGoesThroughTheV1ListeningEndpointWithTheSameRequest",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.032",
+      "name": "catalogSendsLimitAndCursorAndChecksThePage",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.042",
+      "name": "candidateCreateOnlySendsIdentityAndRejectsMismatchedConfirmationAndConflicts",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ApiClientTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.021",
+      "name": "staleSearchCannotReplaceFreshCandidateResultsOrCreatedIdentity",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.056",
+      "name": "roomCreationTimeoutBlocksBlindRecreationUntilExistingRoomIsOpened",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.006",
+      "name": "catalogFailureIsShownAndNothingIsSelectable",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.017",
+      "name": "pendingStartBlocksSwitchingToAnotherSession",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.005",
+      "name": "readyReadsAreNotDuplicatedWhileOneIsInFlight",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.007",
+      "name": "startNeedsAFreshAllReadySnapshotOfTheSameSession",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.007",
+      "name": "pauseStopsPollingAndResumeReadsOnceAndRestartsIt",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.004",
+      "name": "manifestFailureSendsNoStart",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.003",
+      "name": "createUsesServerIdsRefreshesScopeAndFollowsTheNewSession",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.005",
+      "name": "expiredTokenCallsTheSharedExpiryPathAndStopsPolling",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.007",
+      "name": "provisionedCandidateIsVisibleImmediatelyWithoutCreatingOrStartingAnExam",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.0",
+      "name": "lostCreateAnswerIsNotRetriedAutomatically",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.01",
+      "name": "accountPinCreationTimeoutNeverAutomaticallyCreatesAnotherSession",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.005",
+      "name": "duplicateAndUnknownOutcomeAreExplainedWithoutAutomaticResubmission",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.007",
+      "name": "closeDiscardsLateAnswers",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.006",
+      "name": "requestAlwaysContainsTheLoggedInProctorAndRejectsBadRosters",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.002",
+      "name": "catalogUsesServerCursorAndBlockedExamsCannotCreateSessions",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.007",
+      "name": "startConflictClearsTheRequestAndRereadsReadyReasons",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.04",
+      "name": "accountPinNeedsNoPreselectedRosterAndUsesCanStartWithoutRedefiningAllReady",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.0",
+      "name": "lostStartAnswerRetriesExactlyTheSameRequestAndNeverStartsTwice",
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "28.355",
+      "name": "accountRevocationRacingJoinNeverLeavesAUsableOldToken(String)[1]",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "12.194",
+      "name": "accountRevocationRacingJoinNeverLeavesAUsableOldToken(String)[2]",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "14.922",
+      "name": "concurrentJoinAndStartAreLinearizable",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "12.641",
+      "name": "latePreparationRejectsStaleWriterInvalidProofAndExpiredDeadline",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "18.439",
+      "name": "pinRotationAndAccountResetRevokeWithoutChangingExamState",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "17.901",
+      "name": "zeroReadyStartsButOnlyLateReadingCanBeSubmitted",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "13.845",
+      "name": "roomCapacityRejectsNewMemberButPreservesRepeatedAdmission",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "18.063",
+      "name": "pinCollisionRetriesWithoutDuplicatingSessionsOrAttempts",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "16.151",
+      "name": "creationAndRepeatedJoinPreserveScopeWriterAndClock(CapturedOutput)",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "16.788",
+      "name": "rotationRacingJoinAndAttestationRacingStartKeepCredentialAndSnapshotBoundaries",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "16.292",
+      "name": "failedPinLimitPersistsAcrossLoginAndRestart",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "18.187",
+      "name": "concurrentStartsReturnIdenticalContextAndDisabledReadyCandidateGetsNoPlayback",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "10.312",
+      "name": "missingKeyAndMissingMediaCannotCreatePartialRooms",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "24.134",
+      "name": "partialReadySnapshotNeverArmsLateCandidateOnRetry",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "14.187",
+      "name": "v20ToV21PreservesPopulatedLegacyDataAndEnforcesPinConstraints",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "16.162",
+      "name": "restartKeepsLatePreparationDeadlineWriterAndNoReplayState",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.002",
+      "name": "generationAlwaysHasFiveDigits",
+      "class": "vn.edu.toeic.server.exam.rich.RoomPinCodecTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.001",
+      "name": "stableLookupSurvivesRestartButDependsOnSecretKey",
+      "class": "vn.edu.toeic.server.exam.rich.RoomPinCodecTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.001",
+      "name": "credentialsAreRedacted",
+      "class": "vn.edu.toeic.server.exam.rich.RoomPinCodecTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.002",
+      "name": "weakOrMalformedKeyRejected",
+      "class": "vn.edu.toeic.server.exam.rich.RoomPinCodecTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.001",
+      "name": "missingKeyFailsClosedAndDoesNotInventTransientKey",
+      "class": "vn.edu.toeic.server.exam.rich.RoomPinCodecTest"
+    }
+  ],
+  "xmlHashes": [
+    {
+      "module": "client",
+      "sha256": "7f5c9ea741018e1341b90f71cea98aaa3cd74678fb23dfde19426c83ed784e02",
+      "file": "TEST-vn.edu.toeic.client.admin.AdminAccountApiClientTest.xml"
+    },
+    {
+      "module": "client",
+      "sha256": "ba8686430ba0821471e75f0e1ff65e1804d4c33e8b87ee5f9cecd6f4e030277a",
+      "file": "TEST-vn.edu.toeic.client.audio.ListeningPlaybackTest.xml"
+    },
+    {
+      "module": "client",
+      "sha256": "c21b5b47637b88576bb5364794517c8ff625ed03561a95b0f53bf557c9438eaf",
+      "file": "TEST-vn.edu.toeic.client.exam.rich.VisualReadyCoordinatorTest.xml"
+    },
+    {
+      "module": "client",
+      "sha256": "80429407f87a312826a636ec458d76b37c1aec8eee3ff89cd0cb834a23474ec9",
+      "file": "TEST-vn.edu.toeic.client.LoginApiClientTest.xml"
+    },
+    {
+      "module": "client",
+      "sha256": "ebb6e9afbc2912767808b619d0ddb81f2e6518b4be1844ffd30ae93feb244078",
+      "file": "TEST-vn.edu.toeic.client.LoginSceneGuiTest.xml"
+    },
+    {
+      "module": "client",
+      "sha256": "8b2d0fef8e1f4679a30bf460ab6fb8abbbb332e26ce10ddfa0d001ad8e6079c3",
+      "file": "TEST-vn.edu.toeic.client.proctor.redesign.ProctorV2ApiClientTest.xml"
+    },
+    {
+      "module": "client",
+      "sha256": "e50c23fcd83e7a4df9ef5f409ebcfc3c258fcc5f4137a74c5221bd944ef4c6a8",
+      "file": "TEST-vn.edu.toeic.client.proctor.redesign.ProctorV2ControllerTest.xml"
+    },
+    {
+      "module": "server",
+      "sha256": "613e260037f52ec251d4b3394420be66bd55b2035ab0042e3bdbb5528b90e3e3",
+      "file": "TEST-vn.edu.toeic.server.exam.rich.AccountPinPostgresTest.xml"
+    },
+    {
+      "module": "server",
+      "sha256": "41867e845c803f7aef1f8488a1e069e9bf07e8f7d338dbc40be8d92ce0659bc2",
+      "file": "TEST-vn.edu.toeic.server.exam.rich.RoomPinCodecTest.xml"
+    }
+  ],
+  "cleanup": {
+    "clusterStopExit": 0,
+    "ownedSchemasRemaining": 0
+  },
+  "guiEvidence": "Candidate GUI enabled; see individual cases",
+  "manualLanHearing": "NOT RUN"
+}

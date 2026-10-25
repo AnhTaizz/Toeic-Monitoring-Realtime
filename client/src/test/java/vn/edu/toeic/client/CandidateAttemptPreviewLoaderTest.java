@@ -55,6 +55,40 @@ class CandidateAttemptPreviewLoaderTest {
         }
     }
 
+    @Test void activeV1WithUngradedZeroTotalLoadsMetadataWithoutInventingQuestionCount() throws Exception {
+        try(Fixture f=new Fixture()){
+            f.preparationStatus=409;f.preparationError="INVALID_STATE";f.statusStatus=200;
+            f.status.addProperty("state","ACTIVE");f.status.addProperty("totalQuestions",0);
+            var details=f.load();
+            assertThat(details.attemptId()).isEqualTo(ATTEMPT);
+            assertThat(details.sessionId()).isEqualTo("MOCK-session");assertThat(details.title()).isEqualTo("MOCK-exam");
+            assertThat(details.sessionState()).isEqualTo("ACTIVE");assertThat(details.totalQuestions()).isNull();
+            assertThat(details.durationMinutes()).isNull();
+            assertThat(f.requests).containsExactly("GET "+PREPARATION,"GET "+STATUS);
+        }
+    }
+
+    @ParameterizedTest @CsvSource({"ACTIVE,-1","SUBMITTED,0","TIMED_OUT,0","CLOSED,0","UNKNOWN,0"})
+    void negativeOrNonActiveZeroTotalsRemainInvalid(String state,int total) throws Exception {
+        try(Fixture f=new Fixture()){
+            f.preparationStatus=409;f.preparationError="INVALID_STATE";f.statusStatus=200;
+            f.status.addProperty("state",state);f.status.addProperty("totalQuestions",total);
+            assertThatThrownBy(f::load).hasRootCauseInstanceOf(InvalidServerResponseException.class);
+            assertThat(f.requests).containsExactly("GET "+PREPARATION,"GET "+STATUS);
+        }
+    }
+
+    @ParameterizedTest @ValueSource(strings={"attemptId","sessionId","examId"})
+    void activeUnknownCountStillRejectsMismatchedOrBlankIdentifiers(String field) throws Exception {
+        try(Fixture f=new Fixture()){
+            f.preparationStatus=409;f.preparationError="INVALID_STATE";f.statusStatus=200;
+            f.status.addProperty("totalQuestions",0);
+            f.status.addProperty(field,field.equals("attemptId")?"MOCK-other-attempt":"");
+            assertThatThrownBy(f::load).hasRootCauseInstanceOf(InvalidServerResponseException.class);
+            assertThat(f.requests).containsExactly("GET "+PREPARATION,"GET "+STATUS);
+        }
+    }
+
     @ParameterizedTest
     @CsvSource({"401,UNAUTHORIZED", "403,FORBIDDEN", "404,NOT_FOUND", "409,STALE", "500,INVALID_STATE"})
     void authenticationScopeAndOtherErrorsNeverTriggerLegacyFallback(int code, String error) throws Exception {

@@ -23,6 +23,7 @@ import vn.edu.toeic.client.dashboard.MonitoringData.Gap;
 import vn.edu.toeic.client.dashboard.MonitoringData.Interruption;
 import vn.edu.toeic.client.dashboard.MonitoringData.Presence;
 import vn.edu.toeic.client.dashboard.MonitoringJson;
+import vn.edu.toeic.client.dashboard.SignalHistory;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
 import vn.edu.toeic.protocol.ws.MessageEnvelope;
 
@@ -30,25 +31,32 @@ import vn.edu.toeic.protocol.ws.MessageEnvelope;
  * Room-wide monitoring history for the Alerts and History screens.
  *
  * <p>The existing {@code DashboardController} loads events/interruptions/gaps for ONE selected attempt only,
- * but the mockups list every candidate. This thin adapter calls the same three read endpoints per attempt.
+ * but the mockups list every candidate. This adapter also reads committed USB/focus/window history.
  * It never invents an event store: what it shows is exactly what the server returned, plus MONITOR_WARNING
  * pushes from the already-open socket (a listener, not a new connection), merged by {@code eventId} so a
  * reconnect or a refresh can never duplicate a row.
  *
  * <p>Load is bounded: at most two attempts in flight, and loads only happen when an attempt joins the roster,
  * its presence status changes, the roster becomes synced again after a reconnect, or the proctor presses
- * "Làm mới". There is no periodic polling. All state is owned by one worker thread.
+ * "Làm mới". The existing scoped signal reader supplies watermarks for incremental typed reads;
+ * there is no second timer or socket. All state is owned by one worker thread.
  */
 final class RoomFeed implements AutoCloseable {
     /** What the screens need for one attempt. Lists are server data; flags say how complete it is. */
     record AttemptHistory(String attemptId, List<Event> events, List<Interruption> interruptions, List<Gap> gaps,
-            boolean loading, boolean loaded, String error, boolean limitExceeded) {
+            boolean loading, boolean loaded, String error, boolean limitExceeded,
+            List<SignalHistory.Entry> signals, boolean signalsMore, boolean signalsUnavailable,boolean signalsLimited) {
         AttemptHistory {
             events = List.copyOf(events);
             interruptions = List.copyOf(interruptions);
             gaps = List.copyOf(gaps);
+            signals = List.copyOf(signals);
         }
-        boolean complete() { return loaded && !loading && error.isEmpty() && !limitExceeded; }
+        AttemptHistory(String attemptId,List<Event> events,List<Interruption> interruptions,List<Gap> gaps,
+                boolean loading,boolean loaded,String error,boolean limitExceeded) {
+            this(attemptId,events,interruptions,gaps,loading,loaded,error,limitExceeded,List.of(),false,false,false);
+        }
+        boolean complete() { return loaded && !loading && error.isEmpty() && !limitExceeded && !signalsMore; }
     }
 
     record Snapshot(List<AttemptHistory> attempts) {
@@ -65,6 +73,7 @@ final class RoomFeed implements AutoCloseable {
     static final int PARALLEL_ATTEMPTS = 2;
     static final int MAX_ATTEMPTS = Integer.getInteger("toeic.proctor.feedMaxAttempts", 200);
     static final int MAX_EVENTS = 5000;
+    static final int MAX_SIGNALS = 500, SIGNAL_PAGE_SIZE = 100, SIGNAL_PAGES_PER_LOAD = 3;
 
     private static final class State {
         final String attempt;
@@ -72,13 +81,18 @@ final class RoomFeed implements AutoCloseable {
         final Set<String> pushedWhileLoading = new HashSet<>();
         List<Interruption> interruptions = List.of();
         List<Gap> gaps = List.of();
+        Map<String,SignalHistory.Entry> signals = new LinkedHashMap<>();
+        long signalAfter, signalTarget;
+        Long signalThrough;
+        boolean signalMore, signalUnavailable, signalLimited, reloadLegacy;
         boolean loading, loaded, dirty, limit;
         String error = "", presence;
         long generation;
         List<CompletableFuture<?>> pending = List.of();
         State(String attempt) { this.attempt = attempt; }
         AttemptHistory view() {
-            return new AttemptHistory(attempt, new ArrayList<>(events.values()), interruptions, gaps, loading, loaded, error, limit);
+            return new AttemptHistory(attempt, new ArrayList<>(events.values()), interruptions, gaps, loading, loaded, error,
+                    limit || signalLimited,new ArrayList<>(signals.values()),signalMore,signalUnavailable,signalLimited);
         }
     }
 
@@ -167,7 +181,29 @@ final class RoomFeed implements AutoCloseable {
         });
     }
 
+    /** Fresh scoped history watermarks, not client-side guessed events or observation values. */
+    void signalsAvailable(Map<String,Long> watermarks) {
+        var copy=Map.copyOf(watermarks);
+        dispatch(()->{
+            if(!synced)return;
+            boolean changed=false;
+            for(var item:copy.entrySet()){
+                State state=states.get(item.getKey());
+                if(state==null||state.signalUnavailable||item.getValue()<0)continue;
+                state.signalTarget=Math.max(state.signalTarget,item.getValue());
+                if(state.signalMore||state.signalTarget>state.signalAfter){enqueueSignals(state);changed=true;}
+            }
+            if(changed){pump();publish();}
+        });
+    }
+
     private void enqueue(State state) {
+        state.reloadLegacy=true;
+        state.signalUnavailable=false;
+        enqueueSignals(state);
+    }
+
+    private void enqueueSignals(State state) {
         if (state.loading) { state.dirty = true; return; }
         if (!queue.contains(state.attempt)) queue.add(state.attempt);
     }
@@ -185,32 +221,89 @@ final class RoomFeed implements AutoCloseable {
         state.dirty = false;
         state.pushedWhileLoading.clear();
         long generation = ++state.generation;
+        boolean legacy=state.reloadLegacy||!state.loaded;
+        state.reloadLegacy=false;
+        state.pending=new ArrayList<>();
         CompletableFuture<List<Event>> events;
         CompletableFuture<List<Interruption>> interruptions;
         CompletableFuture<List<Gap>> gaps;
         try {
-            events = api.events(state.attempt);
-            interruptions = api.interruptions(state.attempt);
-            gaps = api.gaps(state.attempt);
+            events = legacy?api.events(state.attempt):CompletableFuture.completedFuture(new ArrayList<>(state.events.values()));
+            interruptions = legacy?api.interruptions(state.attempt):CompletableFuture.completedFuture(state.interruptions);
+            gaps = legacy?api.gaps(state.attempt):CompletableFuture.completedFuture(state.gaps);
         } catch (RuntimeException invalid) {
             events = CompletableFuture.failedFuture(invalid);
             interruptions = CompletableFuture.failedFuture(invalid);
             gaps = CompletableFuture.failedFuture(invalid);
         }
-        state.pending = List.of(events, interruptions, gaps);
+        state.pending.addAll(List.of(events,interruptions,gaps));
+        var signals=new CompletableFuture<SignalRead>();
+        // Cancel actual requests, not this aggregate: a refused cancellation keeps its attempt slot
+        // until the old request really completes and resolves the aggregate below.
+        readSignals(state,generation,new LinkedHashMap<>(state.signals),state.signalAfter,state.signalThrough,
+                state.signalLimited,0,signals);
         CompletableFuture<List<Event>> e = events;
         CompletableFuture<List<Interruption>> i = interruptions;
         CompletableFuture<List<Gap>> g = gaps;
-        CompletableFuture.allOf(e, i, g).whenComplete((ignored, failure) -> dispatch(() -> finish(state, generation, e, i, g)));
+        CompletableFuture.allOf(e, i, g,signals).whenComplete((ignored, failure) -> dispatch(() -> finish(state, generation, e, i, g,signals)));
+    }
+
+    private record SignalRead(Map<String,SignalHistory.Entry> entries,long after,Long through,
+            boolean more,boolean limited,boolean unavailable) { }
+
+    private void readSignals(State state,long generation,LinkedHashMap<String,SignalHistory.Entry> entries,
+            long after,Long through,boolean limited,int pages,CompletableFuture<SignalRead> result){
+        if(states.get(state.attempt)!=state||state.generation!=generation){result.cancel(true);return;}
+        try{
+            var request=api.signals(state.attempt,after,through,SIGNAL_PAGE_SIZE);
+            state.pending.add(request);
+            request.whenComplete((page,error)->dispatch(()->{
+                if(states.get(state.attempt)!=state||state.generation!=generation){result.cancel(true);return;}
+                if(error!=null){
+                    Throwable cause=unwrap(error);
+                    if(cause instanceof UnsupportedOperationException||cause instanceof LoginFailedException denied&&denied.statusCode()==404)
+                        result.complete(new SignalRead(entries,after,through,false,limited,true));
+                    else result.completeExceptionally(cause);
+                    return;
+                }
+                try{
+                    validateSignalPage(page,state.attempt,after,through);
+                    for(var entry:page.items())if(SignalFeedProjection.relevant(entry.signal())){
+                        var old=entries.putIfAbsent(entry.signal().eventId(),entry);
+                        if(old!=null&&!old.equals(entry))throw new IllegalArgumentException("Conflicting signal identity");
+                    }
+                    boolean capped=limited;
+                    while(entries.size()>MAX_SIGNALS){entries.remove(entries.keySet().iterator().next());capped=true;}
+                    long next=page.more()?page.next():page.through();
+                    if(page.more()&&pages+1<SIGNAL_PAGES_PER_LOAD)
+                        readSignals(state,generation,entries,next,page.through(),capped,pages+1,result);
+                    else result.complete(new SignalRead(entries,next,page.more()?page.through():null,page.more(),capped,false));
+                }catch(RuntimeException invalid){result.completeExceptionally(invalid);}
+            }));
+        }catch(RuntimeException failure){
+            if(failure instanceof UnsupportedOperationException)
+                result.complete(new SignalRead(entries,after,through,false,limited,true));
+            else result.completeExceptionally(failure);
+        }
+    }
+
+    private static void validateSignalPage(SignalHistory.Page page,String attempt,long after,Long through){
+        if(page==null||page.after()!=after||page.through()<after||through!=null&&through!=page.through()
+                ||page.items().size()>SIGNAL_PAGE_SIZE)throw new IllegalArgumentException("Invalid signal page");
+        long sequence=after;
+        for(var entry:page.items())if(!attempt.equals(entry.attemptId())||entry.sequence()!=++sequence)
+            throw new IllegalArgumentException("Unscoped or noncontiguous signal history");
+        if(page.more()?(page.next()==null||page.next()!=sequence||sequence>=page.through()||page.items().size()!=SIGNAL_PAGE_SIZE)
+                :(page.next()!=null||sequence!=page.through()))throw new IllegalArgumentException("Invalid signal cursor");
     }
 
     private void finish(State state, long generation, CompletableFuture<List<Event>> e,
-            CompletableFuture<List<Interruption>> i, CompletableFuture<List<Gap>> g) {
+            CompletableFuture<List<Interruption>> i, CompletableFuture<List<Gap>> g,CompletableFuture<SignalRead> signals) {
         running--;
         if (states.get(state.attempt) != state || generation != state.generation) { pump(); publish(); return; }
         state.loading = false;
         state.pending = List.of();
-        Throwable failure = firstFailure(e, i, g);
+        Throwable failure = firstFailure(e, i, g,signals);
         if (failure != null) {
             if (failure instanceof LoginFailedException denied && denied.statusCode() == 401) { expire(); return; }
             if (failure instanceof LoginFailedException denied && denied.statusCode() == 403) {
@@ -240,9 +333,13 @@ final class RoomFeed implements AutoCloseable {
             state.loaded = true;
             state.limit = false;
             state.error = conflict;
+            var typed=signals.join();
+            state.signals=new LinkedHashMap<>(typed.entries());
+            state.signalAfter=typed.after();state.signalThrough=typed.through();state.signalMore=typed.more();
+            state.signalLimited=typed.limited();state.signalUnavailable=typed.unavailable();
         }
         state.pushedWhileLoading.clear();
-        if (state.dirty) enqueue(state);
+        if (state.dirty&&(state.reloadLegacy||state.signalMore||state.signalTarget>state.signalAfter)) enqueueSignals(state);
         pump();
         publish();
     }
@@ -258,6 +355,11 @@ final class RoomFeed implements AutoCloseable {
             }
         }
         return null;
+    }
+
+    private static Throwable unwrap(Throwable error){
+        while(error instanceof CompletionException&&error.getCause()!=null)error=error.getCause();
+        return error;
     }
 
     private void receive(MessageEnvelope<JsonObject> message) {

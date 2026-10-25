@@ -75,7 +75,10 @@ class ProctorV2E2eGuiTest {
     @BeforeAll void toolkit() throws Exception {
         FxSupport.start();
         Files.createDirectories(OUT);
+        // This E2E drives the retained PROCTORED_V2 tab, hidden in the release default.
+        System.setProperty("toeic.ui.legacy","true");
     }
+    @org.junit.jupiter.api.AfterAll void defaultUi() { System.clearProperty("toeic.ui.legacy"); }
 
     @Test void proctorCreatesAndStartsInTheNewUiCandidateTakesAndSubmits() throws Exception {
         LoginApiClient logins = new LoginApiClient();
@@ -101,16 +104,21 @@ class ProctorV2E2eGuiTest {
         try {
             // ---- Proctor: catalog → create in the V2 panel
             FxSupport.fxRun(() -> ((ToggleButton) proctorView[0].lookup("#nav-session-controls")).fire());
-            ProctorV2SessionPane pane = FxSupport.fx(() -> find(proctorView[0], ProctorV2SessionPane.class));
+            ProctorV2SessionPane pane = FxSupport.fx(() -> {
+                var tabs=(javafx.scene.control.TabPane)proctorView[0].lookup("#session-controls-tabs");
+                var tab=tabs.getTabs().stream().filter(t->"tab-v2".equals(t.getId())).findFirst().orElseThrow();
+                tabs.getSelectionModel().select(tab);return (ProctorV2SessionPane)tab.getContent();
+            });
             assertThat(pane).as("V2 panel inside 'Điều khiển ca'").isNotNull();
             @SuppressWarnings("unchecked")
             TableView<ExamCatalogItem> exams = FxSupport.fx(() -> (TableView<ExamCatalogItem>) pane.lookup("#v2-exams"));
             await("catalog shows " + EXAM, () -> FxSupport.fx(() -> exams.getItems().stream().anyMatch(i -> i.examId().equals(EXAM) && i.selectable())), 20);
             FxSupport.fxRun(() -> exams.getSelectionModel().select(exams.getItems().stream().filter(i -> i.examId().equals(EXAM)).findFirst().orElseThrow()));
+            FxSupport.await("candidate catalog",()->pane.controller().snapshot().candidates().stream().anyMatch(c->c.userId()==candidateId));
+            FxSupport.fxRun(()->pane.controller().toggleCandidate(candidateId));
             await("create enabled", () -> FxSupport.fx(() -> !pane.lookup("#v2-create").isDisabled()), 10);
-            FxSupport.fxRun(() -> ((TextField) pane.lookup("#v2-candidates")).setText(Long.toString(candidateId)));
             screenshot(proctorStage[0], "p1-catalog-create");
-            FxSupport.fxRun(() -> ((Button) pane.lookup("#v2-create")).fire());
+            FxSupport.fxRun(() -> {((javafx.scene.control.CheckBox)pane.lookup("#v2-room-mode")).setSelected(false);((Button) pane.lookup("#v2-create")).fire();});
             await("server created the session", () -> FxSupport.fx(() -> pane.controller().snapshot().created() != null), 20);
             var created = FxSupport.fx(() -> pane.controller().snapshot().created());
             String sessionId = created.sessionId();

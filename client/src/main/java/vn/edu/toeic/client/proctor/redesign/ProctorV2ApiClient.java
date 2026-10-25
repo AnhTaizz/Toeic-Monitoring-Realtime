@@ -36,6 +36,10 @@ import vn.edu.toeic.protocol.exam.rich.CreatedAttempt;
 import vn.edu.toeic.protocol.exam.rich.ExamCatalogItem;
 import vn.edu.toeic.protocol.exam.rich.ExamCatalogPage;
 import vn.edu.toeic.protocol.exam.rich.SessionReadiness;
+import vn.edu.toeic.protocol.exam.rich.CandidateCatalogPage;
+import vn.edu.toeic.protocol.exam.rich.CandidateCatalogItem;
+import vn.edu.toeic.protocol.exam.rich.CreateCandidateRequest;
+import vn.edu.toeic.protocol.exam.rich.*;
 
 /**
  * HTTP client for the PROCTORED_V2 panel. The v2 calls are validated here; the v1 audio manifest and START reuse
@@ -88,8 +92,42 @@ final class ProctorV2ApiClient implements ProctorV2Api {
         } catch (RuntimeException invalid) { throw new IOException("Danh sách đề từ server không hợp lệ."); }
     }
 
+    @Override public CandidateCatalogPage candidates(String search, Long afterUserId) throws Exception {
+        String text = search == null ? "" : search.trim();
+        if (text.length() > 100 || text.chars().anyMatch(Character::isISOControl)
+                || afterUserId != null && afterUserId <= 0) throw new IllegalArgumentException("Từ khóa hoặc trang thí sinh không hợp lệ.");
+        String query = "limit=" + PAGE_SIZE + "&search=" + URLEncoder.encode(text, StandardCharsets.UTF_8);
+        if (afterUserId != null) query += "&afterUserId=" + afterUserId;
+        CandidateCatalogPage page = parse(call("GET", "candidates?" + query, null, 200), CandidateCatalogPage.class);
+        try {
+            if (page.schemaVersion() != 2 || page.items() == null || page.items().size() > PAGE_SIZE) throw new IllegalArgumentException();
+            long previous = afterUserId == null ? 0 : afterUserId;
+            for (var item : page.items()) {
+                if (item == null || item.userId() <= previous || item.username() == null || item.username().isBlank()
+                        || item.displayName() == null || item.username().length() > 80 || item.displayName().codePointCount(0,item.displayName().length()) > 160)
+                    throw new IllegalArgumentException();
+                previous = item.userId();
+            }
+            if (page.nextAfterUserId() != null && (page.items().isEmpty() || page.nextAfterUserId() != previous))
+                throw new IllegalArgumentException();
+            return page;
+        } catch (RuntimeException invalid) { throw new IOException("Danh sách thí sinh từ server không hợp lệ."); }
+    }
+
+    @Override public CandidateCatalogItem createCandidate(CreateCandidateRequest request) throws Exception {
+        CandidateCatalogItem item=parse(call("POST","candidates",request,201),CandidateCatalogItem.class);
+        if(item.userId()<1 || !request.username().strip().equals(item.username())
+                || !request.displayName().strip().equals(item.displayName()))
+            throw new IOException("Xác nhận tạo thí sinh không khớp yêu cầu. Hãy tìm lại mã thí sinh.");
+        return item;
+    }
+
     @Override public CreateRichSessionResponse create(CreateRichSessionRequest request) throws Exception {
         CreateRichSessionResponse created = parse(call("POST", "sessions", request, 201), CreateRichSessionResponse.class);
+        return verifyCreated(request,created);
+    }
+
+    private CreateRichSessionResponse verifyCreated(CreateRichSessionRequest request,CreateRichSessionResponse created) throws IOException {
         try {
             if (!ListeningMessages.identifier(created.sessionId()) || !request.examId().equals(created.examId())
                     || !"PROCTORED_V2".equals(created.contractVersion()) || !"SCHEDULED".equals(created.state())
@@ -106,6 +144,86 @@ final class ProctorV2ApiClient implements ProctorV2Api {
             // The server may have committed; the panel must not offer a blind re-create.
             throw new IOException("Server trả xác nhận tạo ca không khớp yêu cầu. Kiểm tra lại trước khi tạo ca khác.");
         }
+    }
+
+    @Override public CreatedRoom createRoom(CreateRichSessionRequest request) throws Exception {
+        CreatedRoom room=parse(call("POST","rooms",request,201),CreatedRoom.class);
+        try {
+            verifyCreated(request,room.session());
+            if(room.roomCode()==null || !room.roomCode().matches("TOEIC-[0-9]{6}") || room.candidates()==null
+                    || room.candidates().size()!=request.candidateUserIds().size())throw new IllegalArgumentException();
+            Set<Long> users=new HashSet<>();
+            for(var member:room.candidates()) {
+                if(member==null || !users.add(member.userId()) || member.pin()==null || !member.pin().matches("[0-9]{8}")
+                        || member.username()==null || member.username().isBlank() || member.displayName()==null
+                        || room.session().attempts().stream().noneMatch(a->a.candidateUserId()==member.userId() && a.attemptId().equals(member.attemptId())))
+                    throw new IllegalArgumentException();
+            }
+            return room;
+        } catch(RuntimeException invalid) {throw new IOException("Xác nhận tạo phòng không hợp lệ. Kiểm tra dashboard trước khi tạo lại.");}
+    }
+    @Override public CreatedPinRoom createPinRoom(CreatePinRoomRequest request) throws Exception {
+        var room=parse(call("POST","pin-rooms",request,201),CreatedPinRoom.class);
+        verifyPinRoom(room);if(!request.examId().equals(room.session().examId()))throw new IOException("Đề xác nhận không khớp. Tìm lại phòng trước khi tạo tiếp.");return room;
+    }
+    @Override public CreatedPinRoom rotateSharedPin(String sessionId) throws Exception {
+        var room=parse(call("POST","pin-rooms/"+ProctorInputs.attempt(sessionId)+"/pin/rotate",null,200),CreatedPinRoom.class);
+        verifyPinRoom(room);if(!sessionId.equals(room.session().sessionId()))throw new IOException("Phòng xác nhận không khớp.");return room;
+    }
+    private void verifyPinRoom(CreatedPinRoom room) throws IOException {
+        if(room==null || room.session()==null || !ListeningMessages.identifier(room.session().sessionId())
+                || !"PROCTORED_V2".equals(room.session().contractVersion()) || !"SCHEDULED".equals(room.session().state())
+                || room.session().attempts()==null || !room.session().attempts().isEmpty() || room.session().examId()==null || !room.session().examId().matches(EXAM_ID)
+                || room.pin()==null || !room.pin().matches("[1-9][0-9]{4}"))throw new IOException("Xác nhận phòng không hợp lệ. Tìm lại phòng trước khi tạo tiếp.");
+    }
+    @Override public RoomCatalogPage pinRooms(String afterRoomCode) throws Exception {
+        if(afterRoomCode!=null && !afterRoomCode.matches("TOEIC-[0-9]{6}"))throw new IllegalArgumentException("Mã trang không hợp lệ.");
+        var page=parse(call("GET","pin-rooms"+(afterRoomCode==null?"":"?afterRoomCode="+afterRoomCode),null,200),RoomCatalogPage.class);
+        if(page==null || page.items()==null || page.items().size()>20)throw new IOException("Danh sách phòng không hợp lệ.");
+        for(var item:page.items())if(item==null || !ListeningMessages.identifier(item.sessionId()) || item.title()==null
+                || item.roomCode()==null || !item.roomCode().matches("TOEIC-[0-9]{6}") || !Set.of("SCHEDULED","IN_PROGRESS").contains(item.state()))throw new IOException("Danh sách phòng không hợp lệ.");
+        return page;
+    }
+
+    @Override public RoomPresence roomPresence(String sessionId) throws Exception {
+        RoomPresence room=parse(call("GET","rooms/"+ProctorInputs.attempt(sessionId)+"/presence",null,200),RoomPresence.class);
+        try {
+            if(!sessionId.equals(room.sessionId()) || room.roomCode()==null || !room.roomCode().matches("TOEIC-[0-9]{6}")
+                    || room.state()==null || room.members()==null || room.members().size()>100)throw new IllegalArgumentException();
+            Set<Long> ids=new HashSet<>();
+            for(var m:room.members())if(m==null || m.userId()<=0 || !ids.add(m.userId()) || m.username()==null
+                    || m.displayName()==null || !ListeningMessages.identifier(m.attemptId()))throw new IllegalArgumentException();
+            return room;
+        } catch(RuntimeException invalid) {throw new IOException("Danh sách vào phòng không hợp lệ.");}
+    }
+
+    @Override public RoomCatalogPage rooms(String afterRoomCode) throws Exception {
+        if(afterRoomCode!=null && !afterRoomCode.matches("TOEIC-[0-9]{6}"))throw new IllegalArgumentException("Mã trang phòng không hợp lệ.");
+        RoomCatalogPage page=parse(call("GET","rooms"+(afterRoomCode==null?"":"?afterRoomCode="+afterRoomCode),null,200),RoomCatalogPage.class);
+        try {
+            if(page.items()==null || page.items().size()>20)throw new IllegalArgumentException();
+            String previous=afterRoomCode==null?"":afterRoomCode;Set<String> ids=new HashSet<>();
+            for(var r:page.items()) {
+                if(r==null || r.roomCode()==null || !r.roomCode().matches("TOEIC-[0-9]{6}") || r.roomCode().compareTo(previous)<=0
+                        || !ListeningMessages.identifier(r.sessionId()) || !ids.add(r.sessionId()) || r.title()==null
+                        || !Set.of("SCHEDULED","IN_PROGRESS").contains(r.state()) || r.candidates()<1 || r.candidates()>100
+                        || r.joined()<0 || r.joined()>r.candidates())throw new IllegalArgumentException();
+                previous=r.roomCode();
+            }
+            if(page.nextAfterRoomCode()!=null && (page.items().isEmpty() || !page.nextAfterRoomCode().equals(previous)))throw new IllegalArgumentException();
+            return page;
+        }catch(RuntimeException invalid){throw new IOException("Danh sách phòng thi không hợp lệ.");}
+    }
+
+    @Override public RoomCredentials rotatePin(String sessionId,long candidateId) throws Exception {
+        RoomCredentials c=parse(call("POST","rooms/"+ProctorInputs.attempt(sessionId)+"/candidates/"+candidateId+"/pin/rotate",null,200),RoomCredentials.class);
+        if(c==null || c.userId()!=candidateId || c.pin()==null || !c.pin().matches("[0-9]{8}")
+                || !ListeningMessages.identifier(c.attemptId()) || c.username()==null || c.displayName()==null)
+            throw new IOException("Chưa xác nhận PIN mới. Hãy cấp lại trước START.");
+        return c;
+    }
+    @Override public void revokePin(String sessionId,long candidateId) throws Exception {
+        call("POST","rooms/"+ProctorInputs.attempt(sessionId)+"/candidates/"+candidateId+"/pin/revoke",null,204);
     }
 
     @Override public SessionReadiness readiness(String sessionId) throws Exception {
@@ -136,7 +254,8 @@ final class ProctorV2ApiClient implements ProctorV2Api {
         if (credential == null) throw new IOException("Phiên điều khiển đã đóng.");
         HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(base + "/api/v2/" + path)).timeout(timeout)
                 .header("Authorization", "Bearer " + credential).header("Accept", "application/json");
-        if (payload == null) builder.GET();
+        if ("GET".equals(method)) builder.GET();
+        else if(payload==null)builder.POST(HttpRequest.BodyPublishers.noBody());
         else builder.header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json.toJson(payload), StandardCharsets.UTF_8));
         CompletableFuture<HttpResponse<InputStream>> pending = http.sendAsync(builder.build(), HttpResponse.BodyHandlers.ofInputStream());
@@ -150,6 +269,7 @@ final class ProctorV2ApiClient implements ProctorV2Api {
         } catch (Exception failure) { pending.cancel(true); throw failure; }
         if (bytes.length > MAX_BODY) throw new IOException("Phản hồi quá lớn.");
         if (status != expected) throw new Rejected(status, errorCode(bytes));
+        if(expected==204)return new JsonObject();
         try {
             JsonObject body = json.fromJson(new String(bytes, StandardCharsets.UTF_8), JsonObject.class);
             if (body == null) throw new IllegalArgumentException();

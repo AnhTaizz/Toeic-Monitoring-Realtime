@@ -97,13 +97,21 @@ class UsbScanCoordinatorTest {
     }
     static final class FakeSource implements UsbScanCoordinator.Source{
         final BlockingQueue<UsbScanCoordinator.Reading> inputs=new LinkedBlockingQueue<>();final CountDownLatch entered=new CountDownLatch(1);final AtomicInteger active=new AtomicInteger(),maxActive=new AtomicInteger(),calls=new AtomicInteger();volatile boolean closed;
-        public UsbScanCoordinator.Reading scan(Duration timeout){calls.incrementAndGet();int n=active.incrementAndGet();maxActive.accumulateAndGet(n,Math::max);entered.countDown();try{return inputs.take();}catch(InterruptedException stopped){Thread.currentThread().interrupt();return ready(99L);}finally{active.decrementAndGet();}}
+        final BlockingQueue<Integer> enteredCalls=new LinkedBlockingQueue<>();
+        public UsbScanCoordinator.Reading scan(Duration timeout){int call=calls.incrementAndGet();int n=active.incrementAndGet();maxActive.accumulateAndGet(n,Math::max);entered.countDown();enteredCalls.add(call);try{return inputs.take();}catch(InterruptedException stopped){Thread.currentThread().interrupt();return ready(99L);}finally{active.decrementAndGet();}}
         public UsbScanCoordinator.SourceStatus status(){return new UsbScanCoordinator.SourceStatus(0,closed);}public void close(){closed=true;inputs.offer(ready(99L));}
     }
     static final class FakeTransport implements MonitoringTransport{
         volatile boolean ready=true;volatile long socket=1;ConnectionState state=ConnectionState.CONNECTED;
+        final AtomicBoolean denyNextScannerRead=new AtomicBoolean();
+        final CountDownLatch deniedReadEntered=new CountDownLatch(1),releaseDeniedRead=new CountDownLatch(1);
         final List<Consumer<MessageEnvelope<JsonObject>>> messages=new CopyOnWriteArrayList<>();final List<Consumer<ConnectionState>> states=new CopyOnWriteArrayList<>();
-        public boolean signalExperimentReady(String a){return ready&&state==ConnectionState.CONNECTED;}public long connectionGeneration(){return socket;}public boolean signalCreditAvailable(){return false;}public ConnectionState connectionState(){return state;}public CompletableFuture<Void> send(MessageEnvelope<JsonObject> m){return CompletableFuture.completedFuture(null);}
+        public boolean signalExperimentReady(String a){
+            if(Thread.currentThread().getName().equals("toeic-usb-scan")&&denyNextScannerRead.compareAndSet(true,false)){
+                deniedReadEntered.countDown();try{if(!releaseDeniedRead.await(3,TimeUnit.SECONDS))throw new AssertionError("Readiness gate not released");}catch(InterruptedException e){Thread.currentThread().interrupt();throw new AssertionError(e);}return false;
+            }
+            return ready&&state==ConnectionState.CONNECTED;
+        }public long connectionGeneration(){return socket;}public boolean signalCreditAvailable(){return false;}public ConnectionState connectionState(){return state;}public CompletableFuture<Void> send(MessageEnvelope<JsonObject> m){return CompletableFuture.completedFuture(null);}
         public AutoCloseable onMessage(Consumer<MessageEnvelope<JsonObject>> c){messages.add(c);return ()->messages.remove(c);}public AutoCloseable onConnectionState(Consumer<ConnectionState> c){states.add(c);return ()->states.remove(c);}void state(ConnectionState s){state=s;for(var c:states)c.accept(s);}
     }
     static final class Fixture implements AutoCloseable{

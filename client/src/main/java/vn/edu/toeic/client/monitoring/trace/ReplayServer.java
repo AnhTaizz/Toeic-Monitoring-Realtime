@@ -59,7 +59,7 @@ final class ReplayServer {
     private String event(ReplayFrame frame) {
         var body=frame.message().payload();FullSnapshotPayload.fields(body,Set.of("eventId","collectorSessionId","policyVersion","pid","processName","startInstant","metadataQuality","observedAt","observationContext","observationConnectionId"));
         String id=FullSnapshotPayload.id(FullSnapshotPayload.text(body,"eventId"));FullSnapshotPayload.id(FullSnapshotPayload.text(body,"collectorSessionId"));
-        if(!FullSnapshotPayload.POLICY.equals(FullSnapshotPayload.text(body,"policyVersion")))return "INVALID_INPUT";
+        if(!vn.edu.toeic.protocol.monitoring.ProcessCatalog.supported(FullSnapshotPayload.text(body,"policyVersion")))return "INVALID_INPUT";
         var process=new FullSnapshotPayload.Process(FullSnapshotPayload.number(body,"pid"),FullSnapshotPayload.text(body,"processName"),FullSnapshotPayload.nullable(body,"startInstant"),FullSnapshotPayload.text(body,"metadataQuality"));
         var eventOrigin=EventOrigin.parse(body);var normalized=body.deepCopy();normalized.addProperty("startInstant",process.startInstant());
         normalized.addProperty("observedAt",Instant.parse(FullSnapshotPayload.text(body,"observedAt")).truncatedTo(ChronoUnit.MICROS).toString());

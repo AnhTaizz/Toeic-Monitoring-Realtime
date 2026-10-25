@@ -1,0 +1,65 @@
+ACCOUNT_PIN checkpoint scope. README and Server launcher used scoped partial hunks;
+unrelated existing changes remain unstaged. Final tooling/evidence were verified separately.
+
+.gitattributes
+.env.example
+README.md
+client/src/main/java/vn/edu/toeic/client/LoginApiClient.java
+client/src/main/java/vn/edu/toeic/client/ToeicClientApplication.java
+client/src/main/java/vn/edu/toeic/client/admin/AdminAccountApiClient.java
+client/src/main/java/vn/edu/toeic/client/audio/AudioPreparationView.java
+client/src/main/java/vn/edu/toeic/client/audio/ListeningPlayback.java
+client/src/main/java/vn/edu/toeic/client/exam/rich/RichAttemptView.java
+client/src/main/java/vn/edu/toeic/client/exam/rich/RichExamView.java
+client/src/main/java/vn/edu/toeic/client/exam/rich/VisualReadyCoordinator.java
+client/src/main/java/vn/edu/toeic/client/proctor/redesign/AdminAccountView.java
+client/src/main/java/vn/edu/toeic/client/proctor/redesign/ProctorRedesignView.java
+client/src/main/java/vn/edu/toeic/client/proctor/redesign/ProctorSessionControls.java
+client/src/main/java/vn/edu/toeic/client/proctor/redesign/ProctorV2Api.java
+client/src/main/java/vn/edu/toeic/client/proctor/redesign/ProctorV2ApiClient.java
+client/src/main/java/vn/edu/toeic/client/proctor/redesign/ProctorV2Controller.java
+client/src/main/java/vn/edu/toeic/client/proctor/redesign/ProctorV2SessionPane.java
+client/src/test/java/vn/edu/toeic/client/ExamScopeRefreshGuiTest.java
+client/src/test/java/vn/edu/toeic/client/LoginApiClientTest.java
+client/src/test/java/vn/edu/toeic/client/LoginSceneGuiTest.java
+client/src/test/java/vn/edu/toeic/client/audio/ListeningPlaybackTest.java
+client/src/test/java/vn/edu/toeic/client/proctor/redesign/ProctorV2ApiClientTest.java
+client/src/test/java/vn/edu/toeic/client/proctor/redesign/ProctorV2ControllerTest.java
+client/src/test/java/vn/edu/toeic/client/proctor/redesign/ProctorV2E2eGuiTest.java
+client/src/test/java/vn/edu/toeic/client/proctor/redesign/V2Fixtures.java
+docs/account-pin/FILES.txt
+docs/account-pin/IMPLEMENTATION-REPORT.md
+docs/account-pin/RUNBOOK.md
+protocol/src/main/java/vn/edu/toeic/protocol/exam/rich/AttemptPreparation.java
+protocol/src/main/java/vn/edu/toeic/protocol/exam/rich/CreatePinRoomRequest.java
+protocol/src/main/java/vn/edu/toeic/protocol/exam/rich/CreatedPinRoom.java
+protocol/src/main/java/vn/edu/toeic/protocol/exam/rich/JoinPinRoomRequest.java
+protocol/src/main/java/vn/edu/toeic/protocol/exam/rich/SessionReadiness.java
+scripts/start-monitoring-server.ps1
+scripts/package-phase4-portable.ps1
+scripts/verify-phase4-benchmark.ps1
+scripts/verify-room-ux.ps1
+server/src/main/java/vn/edu/toeic/server/admin/AdminAccountController.java
+server/src/main/java/vn/edu/toeic/server/admin/AdminAccountService.java
+server/src/main/java/vn/edu/toeic/server/audio/AudioService.java
+server/src/main/java/vn/edu/toeic/server/auth/AccountProvisioner.java
+server/src/main/java/vn/edu/toeic/server/exam/ExamService.java
+server/src/main/java/vn/edu/toeic/server/exam/rich/ExamRoomController.java
+server/src/main/java/vn/edu/toeic/server/exam/rich/ExamRoomService.java
+server/src/main/java/vn/edu/toeic/server/exam/rich/RichImageService.java
+server/src/main/java/vn/edu/toeic/server/exam/rich/RichSessionService.java
+server/src/main/java/vn/edu/toeic/server/exam/rich/RoomPinCodec.java
+server/src/main/java/vn/edu/toeic/server/exam/rich/V2SessionPolicy.java
+server/src/main/java/vn/edu/toeic/server/exam/rich/VisualReadinessService.java
+server/src/main/resources/application.properties
+server/src/main/resources/db/migration/V21__account_pin_admission.sql
+server/src/test/java/vn/edu/toeic/client/proctor/redesign/AccountPinFlowPostgresGuiTest.java
+server/src/test/java/vn/edu/toeic/client/proctor/redesign/RoomFlowPostgresGuiTest.java
+server/src/test/java/vn/edu/toeic/server/exam/rich/AccountPinPostgresTest.java
+server/src/test/java/vn/edu/toeic/server/exam/rich/AdminAccountPostgresTest.java
+server/src/test/java/vn/edu/toeic/server/exam/rich/RoomPinCodecTest.java
+server/src/test/java/vn/edu/toeic/server/exam/rich/Phase4RoomBenchmarkTest.java
+
+docs/account-pin/validation/ — reviewed test cases, SKIP inventory, build/smoke/artifact records and evidence hashes
+docs/account-pin/benchmark/ — actual raw samples, environment metadata and derived summaries
+docs/account-pin/screenshots/ — actual GUI captures reviewed to exclude PIN/password/token

@@ -1,0 +1,149 @@
+{
+  "schema": "usb-app-integration-v1",
+  "branch": "codex/usb-app-integration-20261024",
+  "baseSha": "acc1f82ed64410ae3759c572813cb80dcc6de8f4",
+  "workingTree": true,
+  "desktopRun": "usb-c26aa31b588a43f2",
+  "testScope": "Owned loopback TEST PostgreSQL; two production JavaFX JAR JVMs; real CIM USB; user desktop actions",
+  "userConfirmation": "Đã thấy cả cắm và rút USB trên ứng dụng",
+  "currentProcessState": "SYNCED",
+  "typedCountAtConfirmation": 21,
+  "events": [
+    {
+      "eventType": "OBSERVER_STATUS",
+      "observedAt": "2026-10-24T14:35:01.783094Z",
+      "receivedAt": "2026-10-24T14:35:01.797799Z",
+      "metadataQuality": "COMPLETE",
+      "storageCount": null,
+      "status": "READY"
+    },
+    {
+      "eventType": "USB_STORAGE_CONNECTED",
+      "observedAt": "2026-10-24T14:35:58.056866Z",
+      "receivedAt": "2026-10-24T14:35:58.085854Z",
+      "metadataQuality": "PARTIAL",
+      "storageCount": 1,
+      "status": null
+    },
+    {
+      "eventType": "USB_STORAGE_REMOVED",
+      "observedAt": "2026-10-24T14:36:09.392931Z",
+      "receivedAt": "2026-10-24T14:36:09.41993Z",
+      "metadataQuality": "PARTIAL",
+      "storageCount": 0,
+      "status": null
+    },
+    {
+      "eventType": "USB_STORAGE_CONNECTED",
+      "observedAt": "2026-10-24T14:36:19.243767Z",
+      "receivedAt": "2026-10-24T14:36:19.253367Z",
+      "metadataQuality": "PARTIAL",
+      "storageCount": 1,
+      "status": null
+    }
+  ],
+  "removalMatchesFirstConnectedRef": true,
+  "jarHashes": {
+    "server-desktop-db2dad0d4c0a.jar": "a3b66e6f2e5d2e3ea79e8ca1fa5864309a345e8529580f2a42ac9f6ce50d0e85",
+    "client-0.1.0-SNAPSHOT-all.jar": "90dea2b1df6346832225ff6d5b33e337501a1b40249bd5c66bd33d45b96df3d1"
+  },
+  "fullRunModuleTests": [
+    {
+      "module": "protocol",
+      "tests": 89,
+      "passed": 89,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "windows-observer",
+      "tests": 21,
+      "passed": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "monitoring-spike",
+      "tests": 15,
+      "passed": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "client",
+      "tests": 915,
+      "passed": 879,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 36
+    },
+    {
+      "module": "server",
+      "tests": 471,
+      "passed": 338,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 133
+    }
+  ],
+  "testPhasePassed": 1342,
+  "testPhaseSkipped": 169,
+  "testPhaseFailures": 0,
+  "testPhaseErrors": 0,
+  "verifyOutcome": "Tests succeeded in five modules; verify stopped at server repackage because existing JVM held default JAR. Study4 test module not reached.",
+  "packageOutcome": "Desktop Maven package succeeded using unique server artifact; no old server stopped",
+  "automatedRealHookRun": "usb-300be357ef1749f4",
+  "automatedRealHook": "1 PASS, real CIM status -> production candidate hook -> WS/PG/ACK/history/UI + reconnect + cleanup; storageCount0, no physical transition in that run",
+  "cleanup": "Desktop is still open at confirmation; runner owns teardown when both apps close or finite 60 minute budget ends",
+  "limits": [
+    "No formal full H01-H12 acceptance, production policy approval, LAN or PnP comparison",
+    "No exact user action timestamp; no physical detection latency computed",
+    "USB source/event kinds unchanged; signal and USB opt-in defaults remain OFF",
+    "After this run was built, launcher flags were made symmetric for both login windows; authenticated CANDIDATE flow still solely creates the source. Application Java/JAR unchanged."
+  ],
+  "inputs": [
+    {
+      "path": "target/usb-app-verification-20261024/desktop-confirmed-observation.private.json",
+      "sha256": "d8cc728fdf340cbe59b07d4cfd04507d5280e80b24d9d46c035023cf92cd6ba4"
+    },
+    {
+      "path": "target/usb-app-verification-20261024/full-reports-manifest.json",
+      "sha256": "0acde36b414e5e9f8facdccd06bc628cc2e21656504f42536731ed7c0837831d"
+    },
+    {
+      "path": "target/usb-app-verification-20261024/full-verify.log",
+      "sha256": "740239c7e139977db077533bb9bb99b1556f7889fd4ca1d8cefb3cd4265d297e"
+    },
+    {
+      "path": "target/usb-app-verification-20261024/package-retry.log",
+      "sha256": "811fbb6ab225527f463b49246aa38a01dcd205d9ef48d179e63a5b5211eca735"
+    },
+    {
+      "path": "target/usb-app-verification-20261024/test-totals.json",
+      "sha256": "f6f41490b8401b00191fd3af0bd4235d31dbba8241114c31be8d779dd61483c9"
+    },
+    {
+      "path": "target/usb-integrated-usb-c26aa31b588a43f2/desktop-build-receipt.json",
+      "sha256": "97a04deb13f2f2e7a09090d898c8328b552bb2c0d26b182acb89dd86e2bc2256"
+    },
+    {
+      "path": "target/usb-integrated-usb-c26aa31b588a43f2/desktop-source-receipt.json",
+      "sha256": "be20ffa39a88fb0dfa62f5599a3cef7399f336cc38892f016c5312243e96b42a"
+    },
+    {
+      "path": "target/usb-integrated-usb-c26aa31b588a43f2/desktop-build.stdout.private.log",
+      "sha256": "2b1e7b22df0c2b804927e12f2da716d4c5bc78a69a03efcdd5627df0c1f762dd"
+    },
+    {
+      "path": "target/usb-integrated-usb-300be357ef1749f4/demo-summary.json",
+      "sha256": "2e0639db101fdb77132a4ae57a3a88d3f9b7767a420ff70fcfe1da0716314c14"
+    },
+    {
+      "path": "target/usb-integrated-usb-300be357ef1749f4/result.json",
+      "sha256": "df1c154540d3296c49b0c0d6583d0a0bf224133f6b8c3a4ff37821229f183d6c"
+    }
+  ]
+}

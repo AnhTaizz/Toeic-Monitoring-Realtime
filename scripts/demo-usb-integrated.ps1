@@ -20,11 +20,12 @@ param(
 $ErrorActionPreference='Stop'
 $repo=if($PSScriptRoot){[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))}else{[IO.Path]::GetFullPath((Get-Location).Path)}
 if(-not(Test-Path -LiteralPath (Join-Path $repo 'pom.xml'))){throw 'Run from repository root'}
-if($Desktop -and ($ReadUsbStorage -or $Mode -ne 'Mock' -or $Integrated -or $TimelineIdentityOnly)){throw 'Desktop uses real existing observers, no USB source or synthetic integrated fixture; use -Desktop alone'}
+if($Desktop -and ($Mode -ne 'Mock' -or $Integrated -or $TimelineIdentityOnly)){throw 'Desktop uses production app observers; use -Desktop with optional -ReadUsbStorage, not synthetic integrated fixture'}
+if($Desktop -and $ReadUsbStorage -and $Provider -ne 'MSFT_DISK'){throw 'Desktop candidate uses MSFT_DISK; another provider is not supported by this app binding'}
 if($AlertRules -and (($Mode -ne 'Mock' -and -not $Integrated) -or -not $Timeline)){throw 'Alert demo requires MOCK timeline or explicit integrated TEST'}
 if($Integrated -and (-not $AlertRules -or -not $Timeline -or $TimelineIdentityOnly)){throw 'Integrated TEST requires timeline and alert rules'}
 if($Mode -eq 'Real' -and -not $ReadUsbStorage){throw 'REAL source requires explicit -ReadUsbStorage'}
-if($Mode -eq 'Mock' -and $ReadUsbStorage){throw 'Do not mix REAL permission with MOCK mode'}
+if($Mode -eq 'Mock' -and $ReadUsbStorage -and -not $Desktop){throw 'Do not mix REAL permission with MOCK mode'}
 if(-not $MavenRepository){$MavenRepository=Join-Path ([Environment]::GetFolderPath('UserProfile')) '.m2\repository'}
 $runId='usb-'+[Guid]::NewGuid().ToString('N').Substring(0,16)
 $runMode=if($Desktop){'Desktop'}else{$Mode}
@@ -44,6 +45,9 @@ foreach($name in $names){$saved[$name]=[Environment]::GetEnvironmentVariable($na
 $env:JAVA_HOME=$JavaHome;$env:PATH=(Join-Path $JavaHome 'bin')+';'+$env:PATH
 $env:DB_HOST='127.0.0.1';$env:DB_PORT=[string](Get-Random -Minimum 30000 -Maximum 39000);$env:DB_NAME='toeic_usb_test_'+$runId.Substring(4);$env:DB_USER='usb_demo_test'
 $env:DB_PASSWORD=[Guid]::NewGuid().ToString('N');$env:PGPASSWORD=$env:DB_PASSWORD;$env:TOEIC_SEED_PASSWORD=[Guid]::NewGuid().ToString('N')
+# Public development-only MOCK credential for the owned loopback desktop test, never a shared DB.
+# The instruction file does not store passwords. Other automated runs keep random RAM-only credentials.
+if($Desktop){$env:TOEIC_SEED_PASSWORD='ChangeMe123!'}
 $env:TOEIC_PG_INTEGRATION='true';$env:TOEIC_USB_TEST_RUN_ID=$runId;$env:TOEIC_USB_TEST_OUTPUT=$out
 $env:TOEIC_USB_REAL_CIM=if($Mode -eq 'Real'){'true'}else{'false'};$env:TOEIC_USB_PROVIDER=$Provider
 $env:TOEIC_USB_DURATION_SECONDS=[string]$DurationSeconds;$env:TOEIC_USB_CADENCE_MILLIS=[string]$CadenceMillis;$env:TOEIC_USB_TIMEOUT_MILLIS=[string]$QueryTimeoutMillis
@@ -74,7 +78,7 @@ try{
     $source=(& git.exe rev-parse HEAD).Trim();if($LASTEXITCODE -ne 0){throw 'Cannot pin source'};$env:TOEIC_USB_TEST_SOURCE=$source
     $sourceDirty=[bool](& git.exe status --porcelain)
     Write-Output ($runMode+' monitoring TEST run='+$runId+' source='+$source+' output='+$out)
-    if($Mode -eq 'Real'){Write-Output ('EXPLICIT REAL CIM: provider='+$Provider+' duration='+$DurationSeconds+'s delay='+$CadenceMillis+'ms queryTimeout='+$QueryTimeoutMillis+'ms; only minimal storage classification, no files/serial; TEST server only.')}
+    if($Mode -eq 'Real' -or ($Desktop -and $ReadUsbStorage)){Write-Output ('EXPLICIT REAL CIM: provider='+$Provider+' delay='+$CadenceMillis+'ms queryTimeout='+$QueryTimeoutMillis+'ms; only minimal storage classification, no files/serial; TEST server only.')}
     [IO.File]::WriteAllText((Join-Path $out 'config.json'),(@{mode=$runMode;desktop=[bool]$Desktop;provider=$Provider;durationSeconds=$DurationSeconds;cadenceDelayMillis=$CadenceMillis;queryTimeoutMillis=$QueryTimeoutMillis;dbPort=[int]$env:DB_PORT;sourceSha=$source;sourceDirty=$sourceDirty;timeline=[bool]$Timeline;alertRules=[bool]$AlertRules;integrated=[bool]$Integrated;identityOnly=[bool]$TimelineIdentityOnly;viewSeconds=$ViewSeconds}|ConvertTo-Json),$utf8)
     # Offline bootstrap has no listening socket. Password travels only over process stdin.
     if((Native (Join-Path $PostgresBin 'initdb.exe') ('-D "'+$pgdata+'" -U usb_demo_test --auth=trust --no-locale -E UTF8') 'initdb' '') -ne 0){throw 'Owned initdb failed'}
@@ -84,12 +88,12 @@ try{
     if((Native (Join-Path $PostgresBin 'pg_ctl.exe') ('-D "'+$pgdata+'" -l "'+$out+'\postgres.private.log" -o "-h 127.0.0.1 -p '+$env:DB_PORT+'" -w start') 'pg-start' '' -NoCapture) -ne 0){throw 'Owned cluster start failed'};$started=$true
     if((Native (Join-Path $PostgresBin 'createdb.exe') ('-h 127.0.0.1 -p '+$env:DB_PORT+' -U usb_demo_test -T template0 -E UTF8 '+$env:DB_NAME) 'createdb' '') -ne 0){throw 'Owned TEST database creation failed'}
     if($Desktop){
-        & (Join-Path $PSScriptRoot 'monitoring-desktop-session.ps1') -Repository $repo -OutputDirectory $out -JavaHome $JavaHome -MavenCommand $maven -MavenRepository $MavenRepository -SourceSha $source
+        & (Join-Path $PSScriptRoot 'monitoring-desktop-session.ps1') -Repository $repo -OutputDirectory $out -JavaHome $JavaHome -MavenCommand $maven -MavenRepository $MavenRepository -SourceSha $source -ReadUsbStorage:$ReadUsbStorage -CadenceMillis $CadenceMillis -QueryTimeoutMillis $QueryTimeoutMillis
         $exitCode=0
     }else{
     $methods=if($Mode -eq 'Real'){'realCimReadinessCommitAckAndHistory'}else{'mockCoordinatorTimelineCommitAckLossAndPagedHistory+actualRevokeCancelsPendingSourceAndCannotFlushNewEvents+businessDeadlineStopsCoordinatorUsingRealScopedHeartbeat+coordinatorStatusCommitFaultRollsBackThenRetriesSameMessage'}
     $tests='UsbIntegratedDemoPostgresTest#'+$methods
-    if($Timeline){$methods=if($AlertRules){'experimentalAlertsReachDashboard'}elseif($TimelineIdentityOnly){'candidateObserversReachAuthorizedLane'}elseif($Mode -eq 'Real'){'realCimStatusReachesDashboard'}else{'mixedMockDeliveryReachesTwoAttemptDashboard'};$tests='MonitoringTimelinePostgresTest#'+$methods}
+    if($Timeline){$methods=if($AlertRules){'experimentalAlertsReachDashboard'}elseif($TimelineIdentityOnly){'candidateObserversReachAuthorizedLane'}elseif($Mode -eq 'Real'){'productionUsbObserverReachesDashboard+manualMonitoringStartsUsbFocusWindowWithProcess'}else{'mixedMockDeliveryReachesTwoAttemptDashboard'};$tests='MonitoringTimelinePostgresTest#'+$methods}
     if($Integrated){$tests='MonitoringTimelinePostgresTest#allExistingSourcesShareRunAndReachHistoryTimelineAndAlerts+candidateObserversReachAuthorizedLane+productionObserversRetireOnTerminalAndRevoke+applicationControlsStopRestartLogoutAndSwitchAccount'}
     $mavenProcess=New-Object Diagnostics.Process;$mavenProcess.StartInfo.FileName=$env:ComSpec
     $mavenProcess.StartInfo.Arguments='/d /s /c ""'+$maven+'" --batch-mode --no-transfer-progress -Duser.timezone=UTC -Dmaven.repo.local="'+$MavenRepository+'" -pl server -am -Dtest='+$tests+' -Dsurefire.failIfNoSpecifiedTests=false test"'

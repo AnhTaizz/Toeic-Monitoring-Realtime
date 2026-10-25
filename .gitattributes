@@ -117,3 +117,7 @@ docs/EX02_RICH_EXAM_CONTRACT_V1.md text eol=lf
 
 # Legacy journal is stored with CRLF; do not report its line terminators as trailing whitespace.
 docs/NHAT_KY.md whitespace=cr-at-eol
+
+# ACCOUNT_PIN curated test/benchmark evidence keeps exact bytes for published SHA-256.
+docs/account-pin/validation/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+docs/account-pin/benchmark/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol

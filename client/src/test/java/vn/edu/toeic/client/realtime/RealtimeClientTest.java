@@ -849,6 +849,31 @@ class RealtimeClientTest {
             }
         }
     }
+    @Test void processFullDenialOfCurrentCollectorIsMonitoringRejectionButOldCollectorIsNot()throws Exception{
+        try(Fixture f=new Fixture()){
+            f.connect();var denials=new ArrayList<MonitoringTransport.MonitoringAccessRejection>();
+            JsonObject denial=new JsonObject();denial.addProperty("code","FORBIDDEN");denial.addProperty("message","MOCK");denial.addProperty("retryable",false);
+            try(var listener=f.client.onMonitoringAccessRejected(denials::add)){
+                try(var lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-current-run")){
+                    // FULL of an older collector on the same attempt cannot end the current run.
+                    f.client.send(new MessageEnvelope<>("v0","MONITORING_FULL","MOCK-old-full","MOCK-old-full","mock-attempt-A","MOCK-old-trace",full("MOCK-old-run"))).join();
+                    f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ERROR","MOCK-e1","MOCK-old-full","mock-attempt-A","MOCK-old-trace",denial)),true);
+                    assertThat(denials).isEmpty();
+                    // Server denies the current FULL before any heartbeat reply (submit/timeout race): one rejection.
+                    f.client.send(new MessageEnvelope<>("v0","MONITORING_FULL","MOCK-full","MOCK-full","mock-attempt-A","MOCK-full-trace",full("MOCK-current-run"))).join();
+                    f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ERROR","MOCK-e2","MOCK-full","mock-attempt-A","MOCK-full-trace",denial)),true);
+                    assertThat(denials).singleElement().satisfies(r->{
+                        assertThat(r.collectorSessionId()).isEqualTo("MOCK-current-run");assertThat(r.code()).isEqualTo("FORBIDDEN");
+                        assertThat(r.connectionGeneration()).isEqualTo(f.client.connectionGeneration());});
+                    f.client.send(new MessageEnvelope<>("v0","MONITORING_FULL","MOCK-late-full","MOCK-late-full","mock-attempt-A","MOCK-late-trace",full("MOCK-current-run"))).join();
+                }
+                // Released lease: a late denial of its FULL is not a rejection of anything still running.
+                f.socket().text(GSON.toJson(new MessageEnvelope<>("v0","ERROR","MOCK-e3","MOCK-late-full","mock-attempt-A","MOCK-late-trace",denial)),true);
+                assertThat(denials).hasSize(1);
+            }
+        }
+    }
+    private static JsonObject full(String collector){var full=new JsonObject();full.addProperty("collectorSessionId",collector);full.addProperty("syncEpoch","MOCK-epoch");full.addProperty("sequence",1);full.addProperty("policyVersion","process-policy-v1");full.add("processes",new com.google.gson.JsonArray());return full;}
     @Test void typedCapabilitySubsetBoundsDispatchAndSharesTwoWriteCredits()throws Exception{
         try(Fixture f=new Fixture()){
             f.connect();try(var lease=f.client.monitoringHeartbeat("mock-attempt-A","MOCK-signal-run")){

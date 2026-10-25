@@ -112,13 +112,13 @@ public final class MonitoringStateService implements AutoCloseable {
             entry.requiresFull=true;
             boolean changed=!entry.view.status().equals("UNSYNCED");
             if(changed)entry.view=new MonitoringStateView(attempt,instance,entry.epoch,entry.collector,++revision,entry.reducer.sequence(),
-                    "UNSYNCED",FullSnapshotPayload.POLICY,entry.reducer.processes(),entry.view.receivedAt());
+                    "UNSYNCED",entry.view.policyVersion(),entry.reducer.processes(),entry.view.receivedAt());
             return new Accepted(entry.view,changed,true);
         }
         entry.requiresFull=false;
         entry.touched=ticker.getAsLong();
         entry.view=new MonitoringStateView(attempt,instance,entry.epoch,entry.collector,++revision,entry.reducer.sequence(),"SYNCED",
-                FullSnapshotPayload.POLICY,entry.reducer.processes(),Instant.now().toString());
+                entry.view.policyVersion(),entry.reducer.processes(),Instant.now().toString());
         return new Accepted(entry.view,true);
     }
     private Entry active(AuthenticatedUser user,String attempt,String socket,String collector,String epoch) {

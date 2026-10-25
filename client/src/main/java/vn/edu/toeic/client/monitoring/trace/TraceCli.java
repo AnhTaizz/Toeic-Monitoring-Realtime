@@ -60,7 +60,7 @@ public final class TraceCli {
     private static int record(Map<String,String> options,PrintStream output) throws Exception {
         requireKnown(options,Set.of("--output","--scans","--poll-ms"));int scans=integer(options,"--scans",10),poll=integer(options,"--poll-ms",1000);
         if(scans<1||scans>9998||poll<1||poll>60000)throw new IllegalArgumentException();
-        var header=new TraceData.Header(TraceData.SCHEMA,"REAL",poll,FullSnapshotPayload.POLICY,Instant.now().toString());
+        var header=new TraceData.Header(TraceData.SCHEMA,"REAL",poll,vn.edu.toeic.protocol.monitoring.ProcessCatalog.CURRENT_POLICY,Instant.now().toString());
         try(var recorder=new TraceRecorder(Path.of(required(options,"--output")),header,256);
             var collector=new ProcessCollector(new ProcessHandleSnapshotSource(),Duration.ofMillis(poll),recorder)) {
             var done=new CountDownLatch(1);var attempts=new AtomicInteger();

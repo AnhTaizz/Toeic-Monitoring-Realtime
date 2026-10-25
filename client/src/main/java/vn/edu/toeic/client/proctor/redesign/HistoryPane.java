@@ -56,6 +56,7 @@ final class HistoryPane extends VBox implements ProctorRedesignView.RoomPane {
 
         candidate.getItems().setAll(List.of(new Choice<>("Tất cả thí sinh", null)));
         kind.getItems().setAll(List.of(new Choice<>("Tất cả loại sự kiện", null), new Choice<>("Quan sát process", Kind.PROCESS),
+                new Choice<>("USB lưu trữ",Kind.USB),new Choice<>("Focus",Kind.FOCUS),new Choice<>("Cửa sổ",Kind.WINDOW),
                 new Choice<>("Gián đoạn kết nối", Kind.INTERRUPTION), new Choice<>("Khoảng trống dữ liệu", Kind.GAP)));
         window.getItems().setAll(List.of(new Choice<>("Toàn bộ thời gian", null),
                 new Choice<>("15 phút gần nhất", Duration.ofMinutes(15)), new Choice<>("60 phút gần nhất", Duration.ofMinutes(60))));

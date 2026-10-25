@@ -121,7 +121,7 @@ final class RedesignFixtures {
 
         static FakeApi room() {
             FakeApi api = new FakeApi();
-            api.events.put(attempt(6), List.of(event(6, "MOCK-EVT-006", "obs64.exe", "LIVE", 9)));
+            api.events.put(attempt(6), List.of(event(6, "MOCK-EVT-006", "discord.exe", "LIVE", 9)));
             api.events.put(attempt(2), List.of(event(2, "MOCK-EVT-002", "msedge.exe", "BUFFERED_OFFLINE", 5)));
             api.interruptions.put(attempt(4), List.of(interruption(4, "MOCK-GAP-004", null)));
             api.gaps.put(attempt(5), List.of(gap(5, "MOCK-OVF-005", 3)));

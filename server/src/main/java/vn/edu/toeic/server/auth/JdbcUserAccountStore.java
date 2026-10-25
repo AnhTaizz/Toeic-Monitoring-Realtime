@@ -20,7 +20,7 @@ public class JdbcUserAccountStore implements UserAccountStore {
             UserAccount account = jdbcClient.sql("""
                             SELECT id, username, display_name, role, password_hash, enabled
                             FROM user_accounts
-                            WHERE username = :username
+                            WHERE username = :username FOR SHARE
                             """)
                     .param("username", username)
                     .query((rs, rowNum) -> new UserAccount(

@@ -1,0 +1,26 @@
+{
+  "baseSha": "4b52cdce00ad0f868ed4f5ad350ae6b3418586ce",
+  "sourceDirty": true,
+  "files": [
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/SignalFeedProjection.java",
+      "sha256": "82a27355699ab7a1a05707b561e298477284624ff451e4261d7117572dc955a6"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/RoomFeedSignalsTest.java",
+      "sha256": "13533bb38d5117ffd01c9c1d272f72b69d3c043b373b0fac4ca971da9e564262"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/SignalFeedProjectionTest.java",
+      "sha256": "87c6b98b58ed306d8597fb7012c0c257f07ae4ff4b2b7a7826d1b9e7753938cb"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/SignalFeedGuiTest.java",
+      "sha256": "0cc889356a628a7010c016a7aaaf2964c2207f9eeed754f85e63bf3e7d7929cd"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/signal/MonitoringTimelinePostgresTest.java",
+      "sha256": "b4be27d752c5aaf16353ff9ea9abf15d905dc514b3aecda4972a4991ea80dce8"
+    }
+  ]
+}

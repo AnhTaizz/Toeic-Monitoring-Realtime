@@ -1,0 +1,19 @@
+reset revokes previous Candidate token -> HTTP 401
+reset rejects old Candidate password -> HTTP 401
+revoked Proctor token -> HTTP 401
+disabled login -> HTTP 401
+old token stays revoked -> HTTP 401
+PASS: production Admin login -> create Proctor/Candidate -> disable/enable idle Proctor -> real login revocation; one-time secret not captured
+import MOCK fixture -> HTTP 409
+cross-attempt denied -> HTTP 403
+candidate clicked Tải / chuẩn bị lại audio
+candidate clicked Thử loa
+candidate clicked Tôi nghe được
+candidate clicked Xác nhận sẵn sàng
+candidate clicked Tải / chuẩn bị lại audio
+candidate clicked Thử loa
+candidate clicked Tôi nghe được
+candidate clicked Xác nhận sẵn sàng
+candidate picked question 101
+candidate picked question 101
+PASS: production Admin/Proctor/two Candidate apps; ready=0/2; shared PIN; monitoring; actual media playback where authorized; late Reading; autosave/submit/reconnect. Physical hearing/LAN NOT TESTED.
