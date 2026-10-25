@@ -829,3 +829,15 @@ Chi tiết, môi trường và SKIP: [release/RELEASE-REPORT.md](release/RELEASE
 - EX-08 với STUDY4_6854 (payload `d47aad14…`): 1/1 PASS.
 - Portable `5a1af3e`: Client Unicode 9/9, ASCII 8/8; Server DB mới 14/14; nâng cấp DB do Server main V18 tạo → V21 + import STUDY4_6854 18/18.
 - NOT TESTED: LAN hai máy, nghe thật, cắm/rút USB vật lý trên commit tích hợp, installer, đo lại E1/E2.
+
+## Review cuối PR #108 — code `5173462`, bundle `5173462`
+
+Chi tiết, nguyên nhân và lượt FAIL: [release/RELEASE-REPORT.md](release/RELEASE-REPORT.md).
+
+- Full `verify-room-ux.ps1 -Mode Full -AllGui` trên `5173462` (run `room-ux-20261025T124324Z-b350da46`): **1797 PASS / 0 FAIL / 0 ERROR / 23 SKIP**, windows-observer 22 PASS; E2E ACCOUNT_PIN 3/3; 0 schema còn lại.
+- Dừng giám sát: `RealtimeClientTest` ca mới FAIL trên code cũ, PASS sau sửa; module client 414/414. `productionObserversRetireOnTerminalAndRevoke` (runner Integrated) 13/13 trên `8bea80e`, 20/20 trên `5173462` (6 lượt tải CPU nhân tạo); code cũ `5a93b6d` cùng tải FAIL 3/6. Dưới tải, ba ca Integrated khác lỗi 4/6 lượt ở cả code cũ lẫn mới (`fx` 8 s của harness); không tải 14/14 PASS. Lượt 13 vòng `8bea80e` có một lỗi cùng kiểu khi chạy trùng lượt Maven khác.
+- Tài khoản demo: `SeedDataInitializerTest` 3/3, `SeedAccountsPostgresTest` 1/1; fixture dùng tài khoản demo 110/110 (run `room-ux-20261025T114042Z-cc921bf0`).
+- Runner USB: Mock+Timeline 1/1, +AlertRules 1/1, Mock 4/4, Real CIM 1/1, Real CIM+Timeline 2/2 (0 USB, không hotplug).
+- EX-08 STUDY4_6854: 1 FAIL (409 import media, nguyên nhân chưa xác định) rồi 2/2 PASS, cùng payload `d47aad14…`.
+- Portable `5173462` (ZIP `cd2b6e2b…`): Client Unicode 9/9, ASCII 8/8; Server DB mới 15/15 (không có tài khoản demo dù môi trường bật cờ); nâng cấp V18→V21 + STUDY4 19/19; ZIP giải nén validate PASS.
+- NOT TESTED: LAN hai máy, nghe thật, cắm/rút USB vật lý trên commit tích hợp, installer, đo lại E1/E2.

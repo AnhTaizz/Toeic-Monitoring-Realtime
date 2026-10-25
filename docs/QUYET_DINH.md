@@ -483,3 +483,8 @@ Theo phản hồi tiếp của user, không gộp PRESENT_AT_START với status 
 Theo yêu cầu mới nhất, chỉ thu tám tên ban đầu cộng ms-teams.exe. Dùng process-policy-v4 để không đổi nghĩa v1/v2/v3 trong lịch sử và trace; v3 lấy tập 31 tên riêng, không phụ thuộc bộ lọc hiển thị chín tên hiện hành. Giữ giới hạn 256 và các bất biến epoch/sequence/dedup/FULL mặc định. Dữ liệu raw cũ giữ; consumer chung chỉ hiện chín tên. Sửa kiểm policy trong TraceData để trace production của cả bốn phiên bản dùng đúng membership/cap; không đổi schema trace hoặc TEST gate.
 
 USB có sẵn khi bắt đầu, cắm/rút, focus/window và cách quan sát Windows giữ nguyên. Chạm shared catalog A/C, collector/trace C và cách trình bày B; review kỹ thuật trước sửa ở [PROCESS_GROUPS.md](PROCESS_GROUPS.md), không thay chữ ký review cá nhân A/C/B. Không đổi DB, API field, đề/START/deadline hoặc tracker.
+
+### 25/10/2026 — Review cuối PR #108: dừng giám sát và tài khoản demo
+
+- Từ chối FORBIDDEN/UNAUTHORIZED cho request làn process của đúng collector đang bind là access rejection, như heartbeat bị từ chối; collector cũ/lease đã nhả không dừng được phiên mới. Không đổi wire. `CandidateExamSignalMonitoring.close()` an toàn trên mọi luồng, chỉ gỡ listener JavaFX trên luồng FX; không khóa đối tượng để tránh deadlock với `configureUsb`. Chạm B/C (client adapter, coordinator); cần owner review.
+- Tài khoản demo `candidate1/candidate2/proctor1` chỉ tạo khi `TOEIC_SEED_DEMO_ACCOUNTS=true` kèm `TOEIC_SEED_PASSWORD`; không còn mật khẩu mặc định. Launcher phát hành luôn truyền `--toeic.seed.demo-accounts=false`; test fixture bật cờ tường minh (surefire `server/pom.xml`, `.env` dev). Tài khoản đã có không bị đổi/xóa. Chạm A (seed/auth) và B (launcher); cần owner review.

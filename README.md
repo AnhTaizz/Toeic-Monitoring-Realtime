@@ -14,9 +14,9 @@ START khi còn người chưa READY cần xác nhận một lần; người đó
 
 ## Chạy bản phát hành (Windows portable)
 
-Bản phát hành chính thức là một ZIP Windows portable kèm file SHA-256, đăng ở trang [Releases](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/releases) sau khi PR phát hành được merge. Bản release candidate hiện tại, `toeic-monitor-portable-5a1af3e.zip` (SHA-256 `0a8d5ab55467a6a25fdfe16768f1889aeb5c4c46f9ae9b2fdafe47b8cbd2313d`), và kết quả kiểm thử của nó nằm trong [báo cáo phát hành](docs/release/RELEASE-REPORT.md). Giải nén (đường dẫn có dấu được hỗ trợ), rồi:
+Bản phát hành chính thức là một ZIP Windows portable kèm file SHA-256, đăng ở trang [Releases](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/releases) sau khi PR phát hành được merge. Bản release candidate hiện tại, `toeic-monitor-portable-5173462.zip` (SHA-256 `cd2b6e2bbd95c771b122cd05d6443bdbe279ea6111630c2f9fd64acac1adc1f8`), và kết quả kiểm thử của nó nằm trong [báo cáo phát hành](docs/release/RELEASE-REPORT.md). Giải nén (đường dẫn có dấu được hỗ trợ), rồi:
 
-1. Máy Server: chép `server.env.example` thành `server.env`, điền DB, media root và khóa PIN theo `READ-ME.txt`, bấm `Start-Server.bat`.
+1. Máy Server: chép `server.env.example` thành `server.env`, điền DB, media root, khóa PIN và (lần đầu) tài khoản Admin bootstrap theo `READ-ME.txt`, bấm `Start-Server.bat`. Bản phát hành không tạo tài khoản demo; Admin tạo Giám thị và Thí sinh.
 2. Mỗi máy dùng: bấm `Start-Client.bat`, nhập `http://IP_MAY_SERVER:8080`.
 
 Bundle có sẵn Java 21; cần PostgreSQL 18 trên máy Server và media của đề đã import. Hướng dẫn đầy đủ, kể cả nạp đề STUDY4 và checklist LAN: **[docs/DEMO-RUNBOOK.md](docs/DEMO-RUNBOOK.md)**.
