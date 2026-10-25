@@ -67,6 +67,8 @@ Mở `Start-Client.bat` nhiều lần (mỗi vai một cửa sổ). Máy Thí si
 5. Thí sinh READY nghe Listening **một lần** rồi làm Reading. Chọn đáp án, chờ tự lưu, *Nộp bài* và xác nhận.
 6. Giám thị xem *Tổng quan*, *Cảnh báo*, *Chi tiết thí sinh* (khối "Đang quan sát trên máy thí sinh": tiến trình, USB, focus, cửa sổ) và *Timeline đa tín hiệu*. Mất heartbeat hiển thị UNKNOWN — "quan sát thấy", không phải kết luận gian lận.
 
+**Demo tiến trình**: trên máy Thí sinh đang làm bài, mở một trong 9 ứng dụng được quan sát (ví dụ Chrome, Edge, Zalo, Teams, Discord, AnyDesk, TeamViewer); Giám thị thấy tiến trình trong *Chi tiết thí sinh* và một event khi tiến trình xuất hiện (không lặp ở mỗi lần quét). Ứng dụng ngoài danh sách (Notepad, PowerShell…) không được quan sát — đó là chính sách `process-policy-v4`, không phải lỗi.
+
 **Demo USB** (máy Thí sinh thật, đang ở màn làm bài): USB cắm sẵn hiện `USB_STORAGE_PRESENT_AT_START` một lần; rút USB và giữ khoảng 10 giây → `USB_STORAGE_REMOVED`; cắm lại, giữ khoảng 10 giây → `USB_STORAGE_CONNECTED`. Giám thị mở Timeline, chọn đúng lượt thi và nguồn `WINDOWS_USB_STORAGE` (hoặc Tất cả nguồn). Trạng thái không đổi thì không sinh event mới. Lỗi đọc USB hiện là nguồn UNKNOWN/ERROR, không được hiểu là "đã rút", và không làm gián đoạn bài thi. Chỉ quan sát USB lưu trữ; không đọc file hay serial, không chặn thiết bị. Thao tác cắm/rút nhanh hơn chu kỳ quét có thể không được ghi.
 
 Tình huống đáng demo:
