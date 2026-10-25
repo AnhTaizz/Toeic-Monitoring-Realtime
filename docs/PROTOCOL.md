@@ -1122,3 +1122,7 @@ Theo yêu cầu người dùng, candidate mặc định policyv2 với39tên/6nh
 ## 25/10/2026 — Policyv3 bỏ tám tên dễ nhầm
 
 Candidate/trace mặc định process-policy-v3 với31tên, bỏ powershell.exe/pwsh.exe/cmd.exe/msedgewebview2.exe/conhost.exe/runtimebroker.exe/dllhost.exe/svchost.exe. Full/delta/event cùng tập; server/parser vẫn đọc v1(8)/v2(39) đúng membership cũ, V3 cap256 giốngV2, epoch không đổi policy. Không đổi field/endpoint/DB hoặc OSquery. Summary/danh sách chung/count/MON08 review bỏ8tên cả với dữ liệuV2; raw DB/API và Timeline gốc không xóa, dòng Timeline cũ ghi rõ tên đã loại. [Review/runbook](PROCESS_GROUPS.md).
+
+## 25/10/2026 — Khôi phục quan sát USB có sẵn ở danh sách chung
+
+Chỉ client read projection: PRESENT_AT_START được hiển thị là USB có sẵn khi bắt đầu giám sát, giữ số lượng/partial/id/client-server timestamps/delivery. Không thành CONNECTED và không suy count từ READY. Collector/wire/server/DB không đổi, các baseline/status kỹ thuật khác vẫn ẩn; sửa này chỉ cần mở lại proctor mới nếu baseline đã được server lưu.

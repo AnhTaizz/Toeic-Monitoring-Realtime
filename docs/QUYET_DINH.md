@@ -473,3 +473,7 @@ Chốt triển khai policyv2 hữu hạn39tên thay vì đổi nghĩa policyv1 t
 ### 25/10/2026 — Loại tám process dễ nhầm theo yêu cầu người dùng
 
 Bỏ đúng8tên đã liệt kê ở PROCESS_GROUPS.md khỏi nguồn thu mới và consumer danh sách chung; giữ các tên khác, gồm Teams và15process nền khác chỉ state/history. Thêm policyv3/31tên để không đổi nghĩa v2/39 trong trace cũ. Raw lịch sử giữ nguyên; UI không lấy các tên đã loại để đếm cảnh báo. Không thay sourceUSB/focus/window, DB, schema field hoặc policy giữa epoch. Review kỹ thuật trước sửa đã ghi trong runbook; ownerA/C/B vẫn cần review cá nhân.
+
+### 25/10/2026 — USB có sẵn là quan sát cần hiển thị
+
+Theo phản hồi tiếp của user, không gộp PRESENT_AT_START với status READY để ẩn. Khôi phục dòng USB có sẵn khi bắt đầu giám sát vào shared lists/count, màu thông tin khiLIVE; giữ nguồn/timestamps/metadata, không gọi là cắm mới. Phần khác đã chốt giữ nguyên; không đổi producer/contract. Owner B/C review vẫn còn.

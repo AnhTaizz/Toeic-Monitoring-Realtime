@@ -49,11 +49,9 @@ class SignalFeedGuiTest {
     @Test void technicalAndInitialRecordsDoNotAppearInCommonListsOrCounts()throws Exception{
         var f=new FocusSignal("MOCK-baseline",RUN,1,CLIENT,ORIGIN,true,"INITIAL",null);
         var w=new WindowSignal("MOCK-window-baseline",RUN,2,CLIENT,ORIGIN,false,false,"INITIAL");
-        var present=new UsbStorageSignal("MOCK-present",RUN,3,CLIENT,ORIGIN,
-                UsbStorageSignal.Kind.USB_STORAGE_PRESENT_AT_START,UsbStorageSignal.Quality.PARTIAL,1,null);
-        var ready=new ObserverStatusSignal("MOCK-ready",RUN,4,CLIENT,ORIGIN,
+        var ready=new ObserverStatusSignal("MOCK-ready",RUN,3,CLIENT,ORIGIN,
                 ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,ObserverStatusSignal.State.READY,ObserverStatusSignal.Reason.INITIAL);
-        open(List.of(entry(1,f),entry(2,w),entry(3,present),entry(4,ready)));
+        open(List.of(entry(1,f),entry(2,w),entry(3,ready)));
         assertThat(fx(()->view.room().alerts())).isEmpty();
         assertThat(fx(()->view.room().timeline())).isEmpty();
         assertThat(fx(()->view.room().row(A).alertCount())).isZero();
@@ -64,6 +62,25 @@ class SignalFeedGuiTest {
         assertThat(fx(()->view.pane(AlertsPane.class).visibleAlerts())).isEmpty();
         fxRun(()->view.show(ProctorRedesignView.Section.HISTORY));
         assertThat(fx(()->view.pane(HistoryPane.class).visibleEntries())).isEmpty();
+    }
+    @Test void startupUsbPresenceAppearsInBothRecentWidgetsAlertsAndHistory()throws Exception{
+        var ready=new ObserverStatusSignal("MOCK-ready",RUN,1,CLIENT,ORIGIN,
+                ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,ObserverStatusSignal.State.READY,ObserverStatusSignal.Reason.INITIAL);
+        var present=new UsbStorageSignal("MOCK-present",RUN,2,CLIENT,ORIGIN,
+                UsbStorageSignal.Kind.USB_STORAGE_PRESENT_AT_START,UsbStorageSignal.Quality.PARTIAL,2,null);
+        open(List.of(entry(1,ready),entry(2,present)));
+        await("recent widgets attached",()->view.lookup("#overview-recent-alerts")!=null&&view.lookup("#overview-recent-events")!=null);
+        for(String id:List.of("#overview-recent-alerts","#overview-recent-events"))
+            assertThat(fx(()->text((Parent)view.lookup(id)))).contains("USB có sẵn khi bắt đầu giám sát").doesNotContain("Nguồn USB sẵn sàng");
+        assertThat(fx(()->view.room().row(A).alertCount())).isEqualTo(1);
+        fxRun(()->view.show(ProctorRedesignView.Section.ALERTS));
+        var alerts=fx(()->view.pane(AlertsPane.class).visibleAlerts());
+        assertThat(alerts).hasSize(1).allMatch(a->a.typeCode().equals("USB_STORAGE_PRESENT_AT_START")&&a.description().contains("2 USB"));
+        fxRun(()->view.openAlert(alerts.getFirst()));
+        await("startup details attached",()->view.alertDrawer().lookup("#field-nguon")!=null);
+        assertThat(fx(()->text(view.alertDrawer()))).contains("USB có sẵn khi bắt đầu giám sát","2 USB lưu trữ");
+        fxRun(()->view.show(ProctorRedesignView.Section.HISTORY));
+        assertThat(fx(()->view.pane(HistoryPane.class).visibleEntries())).hasSize(1).allMatch(e->e.alert().typeCode().equals("USB_STORAGE_PRESENT_AT_START"));
     }
     static final class Api extends RedesignFixtures.FakeApi {
         private final List<SignalHistory.Entry> rows;

@@ -613,3 +613,7 @@ Policyv2 mở rộng6nhóm/256process, đọc lại v1/8tên/128; review contrac
 ### 25/10/2026 — Bàn giao loại tám process dễ nhầm
 
 Policyv3/current31 loại8tên terminal/host tại [runbook](../PROCESS_GROUPS.md); v1/v2 raw/Timeline giữ, summary/commonlists/count ẩn các tên bỏ. Full1464PASS/154SKIP, PGREAL2PASS native61/Teams2/no8tên và cleanup sạch. [Report](../../evidence/process-filter-20261025/REPORT.md). Cần nâng cấpserverJARtênriêng và cả2client; ownerreviewA/C/B còn, không trackerDONE/benchmark/hardware/LAN/installer mới.
+
+### 25/10/2026 — USB có sẵn khi bắt đầu
+
+Khôi phục PRESENT_AT_START vào sharedlists/count với sốUSB, source/timestamps/partial giữ; READY/focus-windowINITIAL vẫnẩn. Package48PASS, PGMock1PASS/cleanup sạch; không physicalUSB/fullverify mới. [Report](../../evidence/usb-start-visible-20261025/REPORT.md). UI-only: mở lại proctor, không restartserver/candidate nếu baseline đã lưu; owner B/C review còn, khôngtrackerDONE.

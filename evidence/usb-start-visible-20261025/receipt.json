@@ -1,0 +1,69 @@
+{
+  "baseSha": "30c79857fc096ae73dd324d507e36107010ed5aa",
+  "sourceDirty": true,
+  "focused": {
+    "tests": 48,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": 6,
+    "passed": 48
+  },
+  "clientJar": {
+    "path": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+    "sha256": "09b32ed9b8f8224852d62337dce4978d7fafdcbb744d2fbb62f3f7851214a8dc",
+    "matchedEntries": 544
+  },
+  "postgres": {
+    "result": {
+      "sourceSha": "30c79857fc096ae73dd324d507e36107010ed5aa",
+      "identityOnly": false,
+      "exitCode": 0,
+      "startUtc": "2026-10-25T08:25:02.8748145Z",
+      "alertRules": false,
+      "cleanup": {
+        "ownedSchemasRemaining": 0,
+        "clusterStopExit": 0,
+        "postmasterPidAbsent": true
+      },
+      "sourceDirty": true,
+      "endUtc": "2026-10-25T08:26:05.0657007Z",
+      "integrated": false,
+      "desktop": false,
+      "summaryPresent": true,
+      "runId": "usb-71c2ccca1771485c",
+      "mode": "Mock",
+      "runnerErrorType": null,
+      "hardware": "0/12 NOT_RUN",
+      "timeline": true
+    },
+    "summary": {
+      "runs": [
+        {
+          "kind": "MOCK_TYPED",
+          "ackLoss": "SIMULATED",
+          "B_rows": 1,
+          "reconnect": "REAL disconnect/connect and fresh scope/history",
+          "A_rows": 19,
+          "JavaFX": "Scene controls/snapshot; not OS input",
+          "actualQueueDrops": 3
+        }
+      ],
+      "hardware": "0/12 NOT_RUN",
+      "runId": "usb-71c2ccca1771485c",
+      "sourceSha": "30c79857fc096ae73dd324d507e36107010ed5aa",
+      "schemaDropped": true
+    },
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "input": "MOCK USB startup/change/status inputs and accounts/exam; REAL delivery/WebSocket/HTTP/PostgreSQL/JavaFX",
+  "hardware": "NOT_RUN: last separate read-only MSFT_Disk check returned USB0; not proof of physical USB recognition",
+  "fullVerify": "NOT_RERUN for this client presentation fix; earlier1464/154 belongs to base",
+  "ci": "NOT_RUN feature branch push has no workflow trigger",
+  "raw": [
+    "target/usb-start-visible-20261025",
+    "target/usb-start-visible-pg-20261025"
+  ]
+}

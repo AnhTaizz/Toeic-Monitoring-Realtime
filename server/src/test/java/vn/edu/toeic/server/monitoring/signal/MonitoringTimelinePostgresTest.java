@@ -313,9 +313,10 @@ class MonitoringTimelinePostgresTest {
             enqueueDisplay(other,7);waitFor("candidate B ACK",()->other.delivery.status().acknowledged()==1);
             var full=processFixture(lane);
             var dash=dashboard(a,"MOCK typed/process inputs/accounts · REAL WS/HTTP/PostgreSQL/JavaFX · desktop/hardware NOT_RUN");awaitRows(dash,18);
-            var shown=rows(dash);assertThat(shown).hasSize(18).allMatch(r->r.attempt().equals(a));assertThat(shown).anyMatch(TimelineRows.Row::gap).anyMatch(TimelineRows.Row::unavailable);assertThat(shown).extracting(TimelineRows.Row::type).contains("PROCESS_OBSERVED","USB_STORAGE_CONNECTED","USB_STORAGE_REMOVED","EXAM_FOCUS_CHANGED","EXAM_WINDOW_STATE","DISPLAY_COUNT_OBSERVED","OBSERVER_STATUS","SIGNAL_GAP");
+            var shown=rows(dash);assertThat(shown).hasSize(18).allMatch(r->r.attempt().equals(a));assertThat(shown).anyMatch(TimelineRows.Row::gap).anyMatch(TimelineRows.Row::unavailable);assertThat(shown).extracting(TimelineRows.Row::type).contains("PROCESS_OBSERVED","USB_STORAGE_PRESENT_AT_START","USB_STORAGE_CONNECTED","USB_STORAGE_REMOVED","EXAM_FOCUS_CHANGED","EXAM_WINDOW_STATE","DISPLAY_COUNT_OBSERVED","OBSERVER_STATUS","SIGNAL_GAP");
             openSummary(dash,a);
             waitFor("MOCK USB observation metadata visible in real summary scene",()->{try{return fx(()->dash.view.lookup("#candidate-signal-usb-received")!=null);}catch(Exception e){throw new RuntimeException(e);}});
+            waitFor("startup USB committed once in common alert and history",()->{try{return fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.startupUsbMatches(dash.view,a,time));}catch(Exception e){throw new RuntimeException(e);}});
             screenshotSummary(dash,"mock-summary-detail");
             summaryTimeline(dash,a,"usb","WINDOWS_USB_STORAGE");awaitRows(dash,18);
             assertThat(fx(()->((Label)dash.view.lookup("#multi-listening-state")).getText())).contains("NOT_STARTED","interrupted=false");
@@ -333,6 +334,9 @@ class MonitoringTimelinePostgresTest {
                 fx(()->{@SuppressWarnings("unchecked")var filter=(ComboBox<String>)dash.view.lookup("#multi-source-filter");filter.setValue(sourceName);return null;});screenshot(dash,"mock-"+sourceName.toLowerCase());
             }
             fx(()->{@SuppressWarnings("unchecked")var filter=(ComboBox<String>)dash.view.lookup("#multi-source-filter");filter.setValue("Tất cả nguồn");return null;});
+            assertThat(fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.filterVisible(dash.view,a,"USB"))).isTrue();
+            screenshot(dash,"usb-startup-shared-alerts");
+            fx(()->{((ToggleButton)dash.view.lookup("#nav-timeline")).fire();return null;});
             fx(()->{@SuppressWarnings("unchecked")var selection=(ComboBox<String>)dash.view.lookup("#multi-attempt");selection.setValue(b);return null;});awaitRows(dash,1);assertThat(rows(dash)).hasSize(1).allMatch(r->r.attempt().equals(b));
             jdbc.sql("UPDATE login_sessions SET revoked_at=clock_timestamp() WHERE token_hash=:h").param("h",TokenHash.sha256(dash.credential)).update();
             fx(()->{((Button)dash.view.lookup("#multi-refresh")).fire();return null;});waitFor("actual proctor revocation expires and closes view",dash.expired::get);assertThat(rows(dash)).isEmpty();
