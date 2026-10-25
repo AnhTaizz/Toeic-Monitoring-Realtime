@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+25/10/2026 — Chuẩn bị PR gộp cảnh báo process (Djicz) trên nền #108, nhánh local `prep/dedup-on-108-20261025`: sửa giới hạn 5000 trên raw, 6 test PostgreSQL/WS mới, cập nhật test restart của C theo quyết định owner, sửa race đăng nhập trong smoke. Full 1805 PASS/0 FAIL; runner Integrated 3/3; bundle thử Client/Server PASS. Chờ #108 merge rồi mở PR riêng; chưa phát hành ZIP final. EX-08 còn lỗi ngắt quãng 2/9 chưa rõ nguyên nhân.
+
 25/10/2026 — Review cuối PR #108: sửa dừng giám sát khi quyền chấm dứt (`8bea80e`) và tài khoản demo chỉ tạo khi bật tường minh (`5173462`). Trên `5173462`: full `-AllGui` 1797 PASS/0 FAIL/23 SKIP, runner USB mọi chế độ PASS, retire 20/20 (cả lượt tải CPU), EX-08 1 FAIL tạm thời rồi 2/2 PASS, portable Client 9/9·8/8, Server 15/15, nâng cấp V18+STUDY4 19/19. Đề xuất READY FOR MERGE, chờ owner review; không tự merge. LAN/nghe thật/USB vật lý trên commit tích hợp NOT TESTED. [Báo cáo](release/RELEASE-REPORT.md).
 
 25/10/2026 — Thu gọn đúng chín tên process, gồm teams.exe/ms-teams.exe; current policy v4, giữ v1/v2/v3 và toàn bộ USB/focus/window. Sửa tương thích trace theo từng policy. Full verify 1.471 PASS / 154 SKIP; PG REAL 2 PASS có 2 Teams thật, PG MOCK USB 1 PASS, cleanup sạch. [Runbook](PROCESS_GROUPS.md), [report](../evidence/process-nine-20261025/REPORT.md). Cần server-process-nine-20261025.jar và mở lại cả hai client; không tự ngắt 8080, PR/merge hoặc tracker DONE.

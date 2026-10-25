@@ -1219,3 +1219,19 @@ Reviewer chấp nhận kiến trúc/phạm vi tại `5a93b6d`, yêu cầu sửa 
 - Sửa `MonitoringEventService`: giữ toàn bộ raw row và ACK như cũ, nhưng chỉ đánh dấu event đầu trong một đợt cùng tên process (case-insensitive, khoảng cách liên tiếp tối đa 30 giây) là `publishable`; khóa row attempt bằng `FOR UPDATE` để quyết định ổn định khi nhiều socket gửi đồng thời.
 - REST `/api/v1/monitoring/attempts/{attemptId}/events` dùng window function PostgreSQL để trả đúng cùng projection; sau hơn 30 giây yên lặng, process xuất hiện lại được coi là thay đổi mới. Không migration, không đổi DTO/wire.
 - Thêm regression PostgreSQL cho nhiều PID Chrome cùng đợt, Zalo riêng, Chrome xuất hiện lại sau khoảng yên lặng và cờ push realtime. Server compile PASS. Regression đã PASS một lượt trước khi bổ sung case push; lượt cuối chưa chạy vì Docker daemon local không phản hồi sau khi dọn ổ C. Full suite trước đó bị lỗi môi trường Mockito attach/CIM Unicode, không ghi PASS giả.
+
+## 25/10/2026 — Chuẩn bị tích hợp gộp cảnh báo process của Djicz trên nền PR #108
+
+Owner quyết định chức năng gộp cảnh báo phải có trong bản phát hành cuối, nhưng qua PR riêng sau khi #108 được merge. Chuẩn bị trong worktree riêng, nhánh local `prep/dedup-on-108-20261025` từ `77963cc`, không push.
+
+- Cherry-pick giữ tác giả Djicz: `eae9c0a` (code), `f47f3d5` (tài liệu; conflict chỉ ở NHAT_KY/TIEN_DO, giữ cả hai phía).
+- Review: push và REST cùng quy tắc "dòng cùng tên trước đó cách hơn 30 s"; `FOR UPDATE` + `received_at` = `clock_timestamp()` sau khóa bảo đảm hai socket không cùng push PID đầu; ACK/`eventId` không đổi; không đổi DTO/migration/WS schema (protocol JAR giống từng entry).
+- Lỗi tìm thấy, sửa ở `e75f817`: giới hạn 5000 bị chuyển sang số mục sau gộp và truy vấn quét toàn bộ raw; 5001 dòng `chrome.exe` trả 200 thay vì 409. Giữ giới hạn/409 trên dòng raw, chỉ đọc tối đa 5001 dòng. `ProcessAlertDedupPostgresTest` 6 ca (WS thật: 12 PID → 1 cảnh báo = REST, raw đủ; retry/conflict; 6 socket đồng thời → đúng PID commit đầu; Chrome/Zalo; yên lặng > 30 s; hai attempt; giới hạn raw — FAIL trên code Djicz, PASS sau sửa).
+- `applicationControlsStopRestartLogoutAndSwitchAccount` (C) FAIL 3/3 do gộp: bật lại giám sát trong 30 s ghi thêm dòng raw nhưng REST hiện 1. Owner chọn gộp chung qua các run; test kiểm raw = 2 và REST theo khoảng cách thật (`7235a87`). Integrated sau sửa 3/3 PASS.
+- Smoke nâng cấp lỗi 401 một lần ở lần đăng nhập đầu của Server cũ: web server nhận request trước khi ApplicationRunner tạo tài khoản xong (nguyên nhân khả dĩ nhất, chưa chứng minh). `c946370`: chỉ đăng nhập dương tính chờ tối đa 60 s; thêm ca `launcher-forces-demo-accounts-off`; giữ log Server cũ khi lỗi.
+- Kết quả: full `-AllGui` trên `e75f817` 1805 PASS/0 FAIL/23 SKIP; runner USB mọi chế độ PASS; bundle thử `7235a87` Client 9/9, 8/8, Server mới 15/15 (16/16 trên `c946370`), nâng cấp V18 + STUDY4 20/20 hai lần trên `c946370`. Client JAR giống #108 từng entry.
+- EX-08 STUDY4 có 2 FAIL/9 lượt (409 import media) trên cả `5173462` lẫn bản dedup; log chẩn đoán tạm + theo dõi thuộc tính file 4 lượt đều PASS, không thấy file đổi. Chưa rõ nguyên nhân; patch chẩn đoán giữ ngoài repo.
+
+### Ghi chú làm dở
+
+Chờ owner merge #108. Sau đó: tạo nhánh từ `main`, cherry-pick `eae9c0a`, `f47f3d5`, `e75f817`, `7235a87`, `c946370` (so tree hash với nhánh chuẩn bị), chạy full `-AllGui` + runner Integrated trên commit cuối, mở PR riêng (owner C/Djicz review đổi contract gộp và test). Chỉ build ZIP phát hành chính thức từ `main` sau khi cả hai PR được merge; ZIP `5173462` không phải bản final.
