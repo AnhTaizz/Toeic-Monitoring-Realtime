@@ -1,0 +1,123 @@
+{
+  "baseSha": "4b52cdce00ad0f868ed4f5ad350ae6b3418586ce",
+  "sourceDirty": true,
+  "focused": {
+    "tests": 40,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "name": "ProctorRedesignGuiTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "RoomFeedSignalsTest",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "RoomModelTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "SignalFeedGuiTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "SignalFeedProjectionTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "SignalSummaryGuiTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "passed": 40
+  },
+  "jar": {
+    "path": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+    "sha256": "dc91c420cb057b8f9169da934456aacafd531c9f9b974c2f240d4705f916569f",
+    "entriesMatched": 538
+  },
+  "fullVerify": "NOT_RERUN for this presentation-only filter; previous result belongs to 4b52cdc",
+  "raw": "target/proctor-actions-only-20261025",
+  "integration": {
+    "result": {
+      "sourceSha": "4b52cdce00ad0f868ed4f5ad350ae6b3418586ce",
+      "identityOnly": false,
+      "exitCode": 0,
+      "startUtc": "2026-10-25T05:09:04.6622458Z",
+      "alertRules": false,
+      "cleanup": {
+        "ownedSchemasRemaining": 0,
+        "clusterStopExit": 0,
+        "postmasterPidAbsent": true
+      },
+      "sourceDirty": true,
+      "endUtc": "2026-10-25T05:10:46.5612426Z",
+      "integrated": false,
+      "desktop": false,
+      "summaryPresent": true,
+      "runId": "usb-f6860f9929f646c6",
+      "mode": "Real",
+      "runnerErrorType": null,
+      "hardware": "0/12 NOT_RUN",
+      "timeline": true
+    },
+    "summary": {
+      "schemaDropped": true,
+      "sourceSha": "4b52cdce00ad0f868ed4f5ad350ae6b3418586ce",
+      "runId": "usb-f6860f9929f646c6",
+      "hardware": "0/12 NOT_RUN",
+      "runs": [
+        {
+          "activityOnlyAfterExamEntry": true,
+          "usbSource": "REAL_CIM",
+          "manualPortalBaseline": true,
+          "examEntryReusesRun": true,
+          "hardwareHotplug": "NOT_RUN",
+          "restartNewRun": true,
+          "kind": "MANUAL_PROCESS_AND_SIGNALS",
+          "usbBaselineCount": 0,
+          "stopWaitsForUsbWorkers": true,
+          "sharedCollector": true
+        },
+        {
+          "sharedCollectorIdentity": true,
+          "usbWorkersStopped": true,
+          "historyRows": 8,
+          "deliveryAcknowledged": 9,
+          "hardwareAcceptance": "Baseline only; no physical hotplug action in this automated test",
+          "freshReconnectCapability": true,
+          "source": "REAL_CIM",
+          "kind": "PRODUCTION_CANDIDATE_USB",
+          "storageCount": 0
+        }
+      ]
+    },
+    "tests": 2,
+    "passed": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "raw": "target/proctor-actions-real-20261025"
+  }
+}

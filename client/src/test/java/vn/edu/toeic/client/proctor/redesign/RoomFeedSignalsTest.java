@@ -25,6 +25,21 @@ class RoomFeedSignalsTest {
         feed.refresh();assertThat(latest.get().of(A).signals()).hasSize(2);assertThat(api.eventCalls(A)).isEqualTo(2);
         feed.close();
     }
+    @Test void hiddenStartupRecordsStillAdvanceTheCursorBeforeARealUsbChange(){
+        var api=new Api();
+        var ready=new vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal("MOCK-ready",RUN,1,CLIENT,ORIGIN,
+                vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,
+                vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal.State.READY,
+                vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal.Reason.INITIAL);
+        var focus=new vn.edu.toeic.protocol.monitoring.signal.FocusSignal("MOCK-initial",RUN,2,CLIENT,ORIGIN,true,"INITIAL",null);
+        api.rows.addAll(List.of(entry(1,ready),entry(2,focus)));
+        var feed=feed(api);start(feed);
+        assertThat(latest.get().of(A).signals()).isEmpty();assertThat(latest.get().of(A).complete()).isTrue();
+        api.rows.add(entry(3,usb(3)));feed.signalsAvailable(Map.of(A,3L));
+        assertThat(api.requests).extracting(Request::after).containsExactly(0L,2L);
+        assertThat(latest.get().of(A).signals()).hasSize(1).allMatch(e->e.sequence()==3);
+        feed.close();
+    }
     @Test void pagesUseOneCutoffAndRetainOnlyTheLatestBoundedWindowWithCoverageWarning(){
         var api=new Api();for(int n=1;n<=700;n++)api.rows.add(entry(n,usb(n)));var feed=feed(api);start(feed);
         assertThat(latest.get().of(A).signalsMore()).isTrue();assertThat(api.requests).hasSize(3);
