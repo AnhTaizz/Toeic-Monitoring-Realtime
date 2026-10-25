@@ -12,6 +12,7 @@ import java.net.http.HttpResponse;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,7 +28,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import vn.edu.toeic.protocol.Role;
 import vn.edu.toeic.server.ToeicServerApplication;
+import vn.edu.toeic.server.auth.AuthenticatedUser;
 
 /** Functional boundary checks on REAL PostgreSQL/HTTP using one owned temporary schema. */
 @EnabledIfEnvironmentVariable(named = "TOEIC_PG_INTEGRATION", matches = "true")
@@ -42,6 +45,8 @@ class MonitoringHistoryBoundsPostgresTest {
     private static final String GAP = "TEST-C-HISTORY-GAP";
     private static final String GAP_OTHER = "TEST-C-HISTORY-GAP-OTHER";
     private static final String EMPTY = "TEST-C-HISTORY-EMPTY";
+    private static final String PROCESS_BURST = "TEST-C-HISTORY-PROCESS-BURST";
+    private static final String PROCESS_PUSH = "TEST-C-HISTORY-PROCESS-PUSH";
     private final String schema = "c_history_" + UUID.randomUUID().toString().replace("-", "");
     private Connection admin;
     private ConfigurableApplicationContext context;
@@ -165,6 +170,49 @@ class MonitoringHistoryBoundsPostgresTest {
         assertThat(json(expect(get(path(EMPTY, "gaps"), proctorToken), 200)).getAsJsonArray("gaps")).hasSize(1);
     }
 
+    @Test void processTimelineReturnsOneExecutablePerBurstAndKeepsLaterChange() throws Exception {
+        jdbc.sql("""
+                INSERT INTO monitoring_events(attempt_id,event_id,collector_session_id,policy_version,pid,process_name,
+                    process_start_instant,metadata_quality,observed_at,received_at)
+                VALUES
+                    (:attempt,'TEST-chrome-parent','TEST-collector','process-policy-v1',1001,'Chrome.EXE',
+                        '2026-10-17 00:00:00Z','COMPLETE','2026-10-17 00:00:00Z','2026-10-17 00:00:01Z'),
+                    (:attempt,'TEST-chrome-child','TEST-collector','process-policy-v1',1002,'chrome.exe',
+                        '2026-10-17 00:00:02Z','COMPLETE','2026-10-17 00:00:02Z','2026-10-17 00:00:07Z'),
+                    (:attempt,'TEST-zalo','TEST-collector','process-policy-v1',2001,'Zalo.exe',
+                        '2026-10-17 00:00:03Z','COMPLETE','2026-10-17 00:00:03Z','2026-10-17 00:00:08Z'),
+                    (:attempt,'TEST-chrome-later','TEST-collector','process-policy-v1',1003,'chrome.exe',
+                        '2026-10-17 00:01:00Z','COMPLETE','2026-10-17 00:01:00Z','2026-10-17 00:01:00Z')
+                """).param("attempt", PROCESS_BURST).update();
+
+        JsonArray events = json(expect(get(path(PROCESS_BURST, "events"), proctorToken), 200)).getAsJsonArray("events");
+        assertThat(events).hasSize(3);
+        assertThat(events.asList().stream().map(value -> value.getAsJsonObject().get("eventId").getAsString()).toList())
+                .containsExactly("TEST-chrome-parent", "TEST-zalo", "TEST-chrome-later");
+    }
+
+    @Test void storeMarksOnlyFirstChildPidInBurstAsPublishable() {
+        long candidateId = jdbc.sql("SELECT id FROM user_accounts WHERE username='TEST-c-history-candidate'")
+                .query(Long.class).single();
+        AuthenticatedUser candidate = new AuthenticatedUser(candidateId, "TEST-c-history-candidate", Role.CANDIDATE);
+        MonitoringEventService service = context.getBean(MonitoringEventService.class);
+        Instant observed = Instant.parse("2026-10-17T00:00:00Z");
+        var parent = new ProcessEvent("TEST-store-parent", "TEST-collector", "process-policy-v1", 3001,
+                "Chrome.exe", observed, "COMPLETE", observed);
+        var child = new ProcessEvent("TEST-store-child", "TEST-collector", "process-policy-v1", 3002,
+                "chrome.exe", observed.plusSeconds(1), "COMPLETE", observed.plusSeconds(1));
+
+        MonitoringEventService.StoreResult first = service.store(candidate, PROCESS_PUSH, parent);
+        MonitoringEventService.StoreResult second = service.store(candidate, PROCESS_PUSH, child);
+
+        assertThat(first.created()).isTrue();
+        assertThat(first.publishable()).isTrue();
+        assertThat(second.created()).isTrue();
+        assertThat(second.publishable()).isFalse();
+        assertThat(jdbc.sql("SELECT count(*) FROM monitoring_events WHERE attempt_id=:attempt")
+                .param("attempt", PROCESS_PUSH).query(Long.class).single()).isEqualTo(2);
+    }
+
     private void insertGaps(String attempt, String label, int first, int last) {
         jdbc.sql("""
                 INSERT INTO monitoring_gaps(attempt_id,gap_id,collector_session_id,reason,dropped_count,
@@ -183,7 +231,8 @@ class MonitoringHistoryBoundsPostgresTest {
                     .param("u", name).param("r", name.contains("candidate") ? "CANDIDATE" : "PROCTOR")
                     .param("p", encoder.encode(PASSWORD)).update();
         }
-        for (String attempt : new String[]{EVENT, EVENT_OTHER, INTERRUPTION, INTERRUPTION_OTHER, GAP, GAP_OTHER, EMPTY}) {
+        for (String attempt : new String[]{EVENT, EVENT_OTHER, INTERRUPTION, INTERRUPTION_OTHER, GAP, GAP_OTHER, EMPTY,
+                PROCESS_BURST, PROCESS_PUSH}) {
             jdbc.sql("INSERT INTO monitoring_attempts(attempt_id,candidate_user_id,state) SELECT :a,id,'ACTIVE' FROM user_accounts WHERE username='TEST-c-history-candidate'")
                     .param("a", attempt).update();
         }
@@ -191,6 +240,8 @@ class MonitoringHistoryBoundsPostgresTest {
         assign(INTERRUPTION, "TEST-c-history-proctor");
         assign(GAP, "TEST-c-history-proctor");
         assign(EMPTY, "TEST-c-history-proctor");
+        assign(PROCESS_BURST, "TEST-c-history-proctor");
+        assign(PROCESS_PUSH, "TEST-c-history-proctor");
         assign(GAP_OTHER, "TEST-c-history-foreign");
         assign(EVENT_OTHER, "TEST-c-history-foreign");
         assign(INTERRUPTION_OTHER, "TEST-c-history-foreign");
@@ -206,7 +257,7 @@ class MonitoringHistoryBoundsPostgresTest {
                 INSERT INTO monitoring_events(attempt_id,event_id,collector_session_id,policy_version,pid,process_name,
                     process_start_instant,metadata_quality,observed_at,received_at)
                 SELECT :attempt,'TEST-event-' || :label || '-' || lpad(n::text,5,'0'),'TEST-collector','process-policy-v1',
-                    n,'notepad.exe',TIMESTAMPTZ '2026-10-17 00:00:00Z' + n * INTERVAL '1 microsecond','COMPLETE',
+                    n,'process-' || lpad(n::text,5,'0') || '.exe',TIMESTAMPTZ '2026-10-17 00:00:00Z' + n * INTERVAL '1 microsecond','COMPLETE',
                     TIMESTAMPTZ '2026-10-17 00:00:01Z' + n * INTERVAL '1 microsecond',
                     TIMESTAMPTZ '2026-10-17 00:00:02Z' + n * INTERVAL '1 microsecond'
                 FROM generate_series(:first,:last) AS n
