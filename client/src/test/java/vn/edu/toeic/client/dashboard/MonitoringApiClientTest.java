@@ -34,6 +34,23 @@ class MonitoringApiClientTest {
             assertThatThrownBy(()->f.api.listeningStatus("MOCK-B").join()).hasCauseInstanceOf(InvalidServerResponseException.class);
         }
     }
+    @Test void legacyMonitoringOnlyListeningStatusIsAbsentButStillChecksAttemptScope() throws Exception {
+        try(Fixture f=new Fixture()){
+            var body=com.google.gson.JsonParser.parseString("""
+                    {"protocolVersion":"v0","requestId":null,"attemptId":"MOCK-A","sessionId":null,
+                     "startId":null,"manifestId":null,"writerEpoch":1,"phase":"NOT_STARTED","deadlineAt":null,
+                     "playbackStartedAt":null,"playbackCompletedAt":null,"interrupted":false,
+                     "interruptedAt":null,"interruptionReason":null}
+                    """).getAsJsonObject();
+            f.body.set(body.toString());
+            assertThat(f.api.listeningStatus("MOCK-A").get(3,TimeUnit.SECONDS)).isNull();
+            assertThat(f.path.get()).isEqualTo("/api/v1/attempts/MOCK-A/listening/status");
+            assertThat(f.authorization.get()).isEqualTo("Bearer MOCK-token-only");
+            assertThatThrownBy(()->f.api.listeningStatus("MOCK-B").join()).hasCauseInstanceOf(InvalidServerResponseException.class);
+            body.addProperty("phase","PLAYING");f.body.set(body.toString());
+            assertThatThrownBy(()->f.api.listeningStatus("MOCK-A").join()).hasCauseInstanceOf(InvalidServerResponseException.class);
+        }
+    }
     @Test void typedHistoryUsesHeaderAndFixedThroughAndTighterBodyCap() throws Exception {
         try(Fixture f=new Fixture()){
             JsonObject body=response();body.addProperty("schemaVersion",1);body.addProperty("attemptId","MOCK-A");body.addProperty("afterSequence",0);body.addProperty("throughSequence",0);body.addProperty("hasMore",false);body.add("nextAfterSequence",com.google.gson.JsonNull.INSTANCE);body.add("items",new JsonArray());

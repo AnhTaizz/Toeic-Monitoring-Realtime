@@ -1,0 +1,189 @@
+{
+  "schema": "usb-8080-fix-v1",
+  "branch": "feat/usb-app-integration-20261024",
+  "baseSha": "acc1f82ed64410ae3759c572813cb80dcc6de8f4",
+  "workingTree": true,
+  "server": "http://localhost:8080",
+  "serverPid": 57776,
+  "fixture": "MOCK one Reading question; valid exam/session created through API; old DEMO-C3-A retained",
+  "attempt": "USB-8080-20261024-511c18-candidate1",
+  "userAuthorizedRestart": true,
+  "userConfirmed": "Đã thấy rút và cắm USB",
+  "initialCause": [
+    "Both old client JVMs started without signal/USB system properties",
+    "DEMO-C3-A is monitoring-only and lacks session/exam",
+    "Listening HTTP200 with sessionId:null made Timeline allOf fail",
+    "ACTIVE legacy status totalQuestions0 is grading metadata, not an invalid exam"
+  ],
+  "fixes": [
+    "Explicit opt-in flags in normal client/server launch scripts and USB JAR entry guard",
+    "Narrow dashboard-only empty legacy Listening projection; strict playback and attempt scope retained",
+    "ACTIVE0 preview becomes unknown count without paper fetch/takeover",
+    "Proper MOCK session chosen in both apps; native UI navigation confirmed"
+  ],
+  "tests": [
+    {
+      "name": "vn.edu.toeic.client.audio.ListeningApiClientTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "path": "target/usb-8080-restart-20261024/reports/TEST-vn.edu.toeic.client.audio.ListeningApiClientTest.xml",
+      "sha256": "1da9bc0f2755810517aae59121be3a63e422212b491d3dd65765e1ae9cc7130c"
+    },
+    {
+      "name": "vn.edu.toeic.client.audio.ListeningMessagesMonitoringTest",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "path": "target/usb-8080-restart-20261024/reports/TEST-vn.edu.toeic.client.audio.ListeningMessagesMonitoringTest.xml",
+      "sha256": "b1794165e662b5633cd86a721bf6ebb918539712d2e7217565268d840c1e7970"
+    },
+    {
+      "name": "vn.edu.toeic.client.audio.ListeningPlaybackTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "path": "target/usb-8080-restart-20261024/reports/TEST-vn.edu.toeic.client.audio.ListeningPlaybackTest.xml",
+      "sha256": "2f7efdba5fab7d432838c70810c1359c794330b90a00be1b5a9901aeca56e59a"
+    },
+    {
+      "name": "vn.edu.toeic.client.CandidateAttemptPreviewLoaderTest",
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "path": "target/usb-8080-restart-20261024/reports/TEST-vn.edu.toeic.client.CandidateAttemptPreviewLoaderTest.xml",
+      "sha256": "8936c025b7df4f2f89abb9e14568c9dad97a9fb79f07f1c6026ad3bcd7db22a2"
+    },
+    {
+      "name": "vn.edu.toeic.client.dashboard.MonitoringApiClientTest",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "path": "target/usb-8080-restart-20261024/reports/TEST-vn.edu.toeic.client.dashboard.MonitoringApiClientTest.xml",
+      "sha256": "89750ead375512df4fdfafc7851d4385ff705c0a9ce2774b4d396c7fc9694d79"
+    },
+    {
+      "name": "vn.edu.toeic.client.proctor.timeline.TimelineControllerTest",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "path": "target/usb-8080-restart-20261024/reports/TEST-vn.edu.toeic.client.proctor.timeline.TimelineControllerTest.xml",
+      "sha256": "f9488a8a6e78269ddc984fd581f65da7e4fc852f949490617fdb67b82c05ef91"
+    }
+  ],
+  "totalTests": 97,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "typedCount": 30,
+  "hasMore": false,
+  "usb": [
+    {
+      "eventType": "USB_STORAGE_PRESENT_AT_START",
+      "observedAt": "2026-10-24T15:17:03.42393Z",
+      "receivedAt": "2026-10-24T15:17:03.45604Z",
+      "metadataQuality": "PARTIAL",
+      "storageCount": 1,
+      "status": null
+    },
+    {
+      "eventType": "OBSERVER_STATUS",
+      "observedAt": "2026-10-24T15:17:03.42393Z",
+      "receivedAt": "2026-10-24T15:17:03.473246Z",
+      "metadataQuality": "COMPLETE",
+      "storageCount": null,
+      "status": "READY"
+    },
+    {
+      "eventType": "USB_STORAGE_PRESENT_AT_START",
+      "observedAt": "2026-10-24T15:23:03.914534Z",
+      "receivedAt": "2026-10-24T15:23:03.942814Z",
+      "metadataQuality": "PARTIAL",
+      "storageCount": 1,
+      "status": null
+    },
+    {
+      "eventType": "OBSERVER_STATUS",
+      "observedAt": "2026-10-24T15:23:03.914534Z",
+      "receivedAt": "2026-10-24T15:23:03.955556Z",
+      "metadataQuality": "COMPLETE",
+      "storageCount": null,
+      "status": "READY"
+    },
+    {
+      "eventType": "USB_STORAGE_REMOVED",
+      "observedAt": "2026-10-24T15:25:23.057301Z",
+      "receivedAt": "2026-10-24T15:25:23.079313Z",
+      "metadataQuality": "PARTIAL",
+      "storageCount": 0,
+      "status": null
+    },
+    {
+      "eventType": "USB_STORAGE_CONNECTED",
+      "observedAt": "2026-10-24T15:25:34.612962Z",
+      "receivedAt": "2026-10-24T15:25:34.625698Z",
+      "metadataQuality": "PARTIAL",
+      "storageCount": 1,
+      "status": null
+    }
+  ],
+  "runtime": "Server and two clients intentionally left open for the user; no DB reset, no old attempt deletion, no auto-submit/deadline reset",
+  "limitations": [
+    "97 related tests, not a new full reactor verify",
+    "MOCK exam content; USB observations and server/DB/native desktop are real",
+    "No complete H01-H12/LAN/installer/production-policy approval",
+    "Temporary source-runner could not call package-private preview due classloader IllegalAccessError; actual public API, regression and native app established root cause instead"
+  ],
+  "inputs": [
+    {
+      "path": "target/usb-8080-restart-20261024/signals-confirmed.private.json",
+      "sha256": "3c1199281ecc7d790f38327ce4651ed7fa17bb66cecbca1da5ca332c8d800f10"
+    },
+    {
+      "path": "target/usb-8080-restart-20261024/scope.json",
+      "sha256": "0cbb83e9962e9dfb73d9ebef8f3bc2397a61bac85a81d67ff4f9d96f2103fd7d"
+    },
+    {
+      "path": "target/usb-8080-restart-20261024/focused-parser-test.log",
+      "sha256": "18d6d999304bc2ad4b48cebcc9c6be7ad8193ca5df1be80b641c993de082d6a4"
+    },
+    {
+      "path": "target/usb-8080-restart-20261024/preview-test-package.log",
+      "sha256": "290b0cf73720d83db79a400b59e7feb7a692bf54e533963f1f1565e7c6c40cb0"
+    },
+    {
+      "path": "target/usb-8080-restart-20261024/client-diagnostic.log",
+      "sha256": "02e346cdbff819da1a68e64caeb58844854a7a0f471158f4771d7ee59bf8b779"
+    },
+    {
+      "path": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+      "sha256": "16815b39de988fcc958162e143ba8c22409ebc23cb67a4f445f004f6c127ffc4"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/ToeicClientApplication.java",
+      "sha256": "9bc67d1a9b9c6dc716089151709a210eeaf41dc7fe79122eab239fd77f912aec"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/audio/ListeningMessages.java",
+      "sha256": "1d3342caa2a0645e6e902eb6aa856e0753b0189a9c844ebcb140b22a3fb66819"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/dashboard/MonitoringApiClient.java",
+      "sha256": "7c5b3b77d6ec36b74d7f8c298c94baf0094da8c86d2a2f2028d9233572ededb9"
+    },
+    {
+      "path": "scripts/start-monitoring-client.ps1",
+      "sha256": "be9d656fc219a289d6295334677a23d8899857cd702b50dd582707ddf502dee2"
+    },
+    {
+      "path": "scripts/start-monitoring-server.ps1",
+      "sha256": "e1f40f402e1532cf0ae3417745677cd8296768e26918d99a6c91fb16b777d298"
+    }
+  ]
+}

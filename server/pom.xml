@@ -71,7 +71,12 @@
         </dependency>
     </dependencies>
 
+    <properties>
+        <toeic.server.artifact-name>server-${project.version}</toeic.server.artifact-name>
+    </properties>
+
     <build>
+        <finalName>${toeic.server.artifact-name}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

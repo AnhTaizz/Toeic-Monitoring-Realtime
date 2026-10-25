@@ -13,7 +13,7 @@ try {
     $output=Join-Path (Get-Location) ('target/t3-b4/'+[Guid]::NewGuid().ToString('N'));New-Item -ItemType Directory -Force $output | Out-Null
     # Clean module outputs to avoid executing stale classes left by another branch.
     # The root target/ keeps this task's local transcripts.
-    $arguments=@('-B','-o',"-Dmaven.repo.local=$env:USERPROFILE/.m2/repository",'-pl','protocol,client,server,monitoring-spike','clean','package')
+    $arguments=@('-B','-o',"-Dmaven.repo.local=$env:USERPROFILE/.m2/repository",'-pl','protocol,windows-observer,client,monitoring-spike,server','clean','package')
     if($Focused){$arguments+=@('-Dtest=ProctorSessionControllerTest,ProctorSessionApiClientTest,ListeningRuntimePostgresTest','-Dsurefire.failIfNoSpecifiedTests=false')}
     $ErrorActionPreference='Continue'
     & mvn @arguments *> (Join-Path $output 'package.txt');$result=$LASTEXITCODE

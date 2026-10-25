@@ -1,5 +1,32 @@
 # Sổ quyết định kỹ thuật
 
+## 24/10/2026 — Tương thích lượt monitoring-only và preview V1
+
+Qua phản hồi thật của phiên TEST8080, dashboard dùng projection riêng cho Listening
+NOT_STARTED/sessionId null với toàn bộ playback rỗng; strict parser phục vụ playback
+giữ nguyên, kiểm attempt trước nhánh nullable. Không nới decoder chung để nuốt response
+mâu thuẫn và không đổi wire/server. Review kỹ thuật riêng đã kiểm các giới hạn này.
+V1 status totalQuestions là tổng chấm, có thể0 khi ACTIVE: preview hiển thị số câu chưa
+biết, không tải đề hoặc takeover để bổ sung metadata. Script thường hỗ trợ opt-in rõ
+ràng ở cả server/client, mặc định giữ OFF. [Bằng chứng](../evidence/usb-8080-fix-20261024/REPORT.md).
+
+## 24/10/2026 — USB app integration: review kỹ thuật OS trước code
+
+Theo yêu cầu người dùng, dùng lại CIM bounded fallback đã phát hiện USB thật; tách
+module nội bộ `windows-observer`, giữ parser/classification/resource, không copy
+scanner hoặc đưa harness vào app. Review riêng Codex trước code chỉ ra giới hạn
+TEST120s và single USB claim khi reconnect. Composition mới giữ một adapter/run,
+pause/invalidate generation và chỉ resume sau fresh capability/scoped heartbeat;
+shared status/sequence/queue, cleanup ngoài FX. Review sau code yêu cầu chặn cả
+side effect của callback query cũ khi resume. Đây là lựa chọn nhánh thử nghiệm opt-in,
+không chữ ký C/B hoặc chốt ADR-V2-05/PnP/retention; FULL/default gate giữ nguyên.
+[Runbook](USB_APP_INTEGRATION.md). Thay đổi chạm C/B, cần owner review trước dùng rộng.
+
+Đóng gói server (phần A): thêm `toeic.server.artifact-name`, default vẫn
+`server-${project.version}`. Desktop dùng tên nonce riêng vì một JVM cũ đang giữ JAR
+mặc định; không dừng tiến trình không thuộc lượt demo. Giữ log verify/retry lỗi và
+package riêng thành công. Không đổi runtime/API server hoặc credential DB chung.
+
 Ghi lại lựa chọn đã chốt để sau này không phải tranh luận lại, và để viết phần "các quyết định thiết kế" trong báo cáo. Các quyết định nền (stack, hợp đồng lưu/nộp, monitoring, Listening) đã có ở `docs/plan-v1/02_HOP_DONG.md`; file này chỉ ghi những gì hợp đồng để ngỏ hoặc phát sinh khi làm.
 
 ## Mẫu
@@ -421,3 +448,16 @@ Reuse nguồn/process policy và scoped transactional auth/parser; không persis
 ### 21/10/2026 — MON01–09 TEST composition và fresh-scope controls
 
 Theo user authorization100e8713, USB TEST có thể mượn owner status đã start nếu exact context/delivery/generation khớp; stop không retire owner mượn, owner hết lifetime thì hủy USB source. Không nới one-owner guard hoặc gắn provider production. Candidate Start/chọn lượt khóa trong khi /auth/me đang chụp selection, mở lại từ fresh outcome; không đổi auth/ACK/DB/wire. Fixture ProcessHandle giới hạn owned handle trước metadata bằng seam hiện có; không thay production enumeration hay kết luận nguyên nhân historical latency/ACK fail chưa rõ. [Report](../evidence/monitoring-integrated-20261021/REPORT.md). Đây là lựa chọn implementation/kiểm kỹ thuật, không phê duyệt threshold/ADR/offline/retention/gate hoặc human owner signoff. FULLdefault/experimentsOFF và tracker giữ nguyên.
+
+### 25/10/2026 — Tổng hợp observation trong ba mức giao diện giám thị
+
+Theo thiết kế người dùng chốt: Tổng quan nhìn nhanh → Chi tiết đầy đủ ba nguồn → Timeline lịch sử. Giữ Process và luồng dữ liệu cũ. Chọn reader chung Tổng quan/Chi tiết, HTTP client riêng, xác thực scope mỗi cycle; dùng raw typed history có run identity thay vì projection Timeline giới hạn 500 dòng. Bản tổng hợp bộ nhớ cố định/lượt giữ ba observation, ba status, lần USB change và mốc gap; chỉ xác nhận sau khi đọc hết fixed-through. Poll3s/budget12s/cap100lượt/2requesthistory/3trang×100/lượt; drawer ưu tiên và các lượt khác luân phiên, future từ chối hủy vẫn giữ permit. Dữ liệu quá15s không đọc lại được, nguồn thiếu/run chưa xác nhận/gap hoặc lỗi đều không được coi là bình thường. Không đổi wire/DB/nguồn thu/policy; owner B/C review kỹ thuật vẫn tách khỏi phê duyệt cá nhân. [Runbook](PROCTOR_SIGNAL_SUMMARY.md).
+
+
+### 25/10/2026 — Giám sát chung qua cùng thao tác Start/Stop
+
+Theo phản hồi người dùng, bỏ thiết kế cột tín hiệu riêng và khối Giám sát mở rộng tách biệt. Chọn một khối Đang quan sát trên máy thí sinh, tiến trình và ba nguồn typed giữ nguyên schema/data semantics. Root cause app cũ: Start thủ công chỉ gọi process, typed coordinator chỉ tạo sau ExamEntry thành công; DEMO-C3-A không có session/đề nên không tới hook. Gắn startSession vào đường process start, dùng cùng collector, gate scoped capability/heartbeat và notice; giữ một coordinator khi chuyển portal→exam, activity chỉ bật sau exam entry. Stop chờ worker USB/collector ngoài FX trước mở lại nút. Không thay queryCIM/classification/provider hoặc nới auth, không phát hiện cửa sổ OS khác, không đọc nội dungUSB. Đây là review kỹ thuật điểm gắn/lifecycle B+C theo ủy quyền, không chữ ký owner/policy/hardware approval.
+
+### 25/10/2026 — Ghi chú triển khai: danh sách giám sát chung
+
+Theo phản hồi UI của người dùng, nối typed history đã commit vào RoomFeed để Cảnh báo/Nhật ký/Tổng quan dùng chung với process. Watermark từ reader scoped đang có kích hoạt đọc tăng dần; không thêm vòng polling hoặc socket. Giữ baseline focus/window và READY trong nhật ký, thay đổi và lỗi/gap vào các quan sát cần xem xét; không phân loại MON-08 hay kết luận vi phạm. Giới hạn 500 dòng liên quan/lượt phải nêu rõ thiếu lịch sử. Đây là lựa chọn consumer UI B/C, không thay schema/OS approach/policy, không thay thế chữ ký review của owner. Xem PROCTOR_SIGNAL_SUMMARY.md và evidence/proctor-feed-20261025/REPORT.md.

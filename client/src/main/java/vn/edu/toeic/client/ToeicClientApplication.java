@@ -349,6 +349,7 @@ public final class ToeicClientApplication extends Application {
                 if (currentView != viewGeneration || monitoring == null) return;
                 MonitoringDelivery.Status state = monitoring.status();
                 if (state == null) return;
+                if (!monitoring.isActive()) closeSignalMonitoring();
                 status.setText("Giám sát: Chế độ " + monitoring.modeStatus().mode() + " · " + modeExplanation(monitoring.modeStatus().reason())
                         + " · Chưa xác nhận: " + state.pendingEvents() + " · Đã xác nhận: " + state.acknowledged()
                         + " · Bị mất do queue đầy: " + state.droppedCount() + (state.gapPending() ? " · Đang báo khoảng trống" : "")
@@ -419,6 +420,7 @@ public final class ToeicClientApplication extends Application {
                 if (outcome.next() != AttemptRefresh.Next.START_MONITORING) return;
                 try {
                     monitoringAttempt = startOrReuseMonitoring(session, monitoringAttempt, selected, scope, realtimeClient::updateScope);
+                    startSignalMonitoring(stage, serverUrl, login.token(), selected, session, currentView, false);
                     status.setText("Giám sát: Chế độ " + session.modeStatus().mode() + " · " + modeExplanation(session.modeStatus().reason()));
                     attempts.setDisable(true);
                     refreshScopeBtn.setDisable(true);
@@ -435,12 +437,24 @@ public final class ToeicClientApplication extends Application {
         manualMonitoringStart.setOnAction(e -> checkScope.accept(true));
         manualMonitoringStop.setOnAction(e -> {
             monitoringGeneration++;
+            CandidateExamSignalMonitoring stoppedSignals = signalMonitoring;
+            closeSignalMonitoring();
             CandidateMonitoringSession.StopResult result = session.stop();
             manualMonitoringStop.setDisable(true);
             manualMonitoringStart.setDisable(true);
             startExamBtn.setDisable(true);
             status.setText("Đang dừng giám sát; chưa xác nhận: " + result.discarded().unconfirmedEvents());
-            result.stopped().whenComplete((unused, failure) -> Platform.runLater(() -> {
+            var stopped = result.stopped();
+            if (stoppedSignals != null) stopped = stopped.thenRunAsync(() -> {
+                try {
+                    if (!stoppedSignals.awaitStopped(java.time.Duration.ofSeconds(8)))
+                        throw new IllegalStateException("Nguồn giám sát chưa dừng xong");
+                } catch (InterruptedException interrupted) {
+                    Thread.currentThread().interrupt();
+                    throw new CompletionException(interrupted);
+                }
+            });
+            stopped.whenComplete((unused, failure) -> Platform.runLater(() -> {
                 if (currentView != viewGeneration || monitoring != session) return;
                 monitoringAttempt = null;
                 attempts.setDisable(false);
@@ -478,6 +492,7 @@ public final class ToeicClientApplication extends Application {
                 try {
                     monitoringAttempt = startOrReuseMonitoring(session, monitoringAttempt, selectedAttempt,
                             freshScope, realtimeClient::updateScope);
+                    startSignalMonitoring(stage, serverUrl, login.token(), selectedAttempt, session, currentView, false);
                 } catch (RuntimeException refused) {
                     startExamBtn.setDisable(false);
                     manualMonitoringStart.setDisable(session.isActive());
@@ -504,7 +519,7 @@ public final class ToeicClientApplication extends Application {
                             () -> { activeRichView = null; showRoleScene(stage, serverUrl, login); },
                             () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."));
                     stage.setScene(applyStyles(new Scene(activeRichView, 1440, 900)));
-                    startExamSignalMonitoring(stage, serverUrl, login.token(), selectedAttempt, session, currentView);
+                    startSignalMonitoring(stage, serverUrl, login.token(), selectedAttempt, session, currentView, true);
                     return;
                 }
                 // Đọc trạng thái, tải đề rồi xin server cấp quyền ghi cho lần mở này; tất cả chạy trên worker HTTP.
@@ -537,7 +552,7 @@ public final class ToeicClientApplication extends Application {
                             serverUrl, login.token(), selectedAttempt, writer, realtimeClient));
                     Scene examScene = applyStyles(new Scene(activeExamView, 1380, 850));
                     stage.setScene(examScene);
-                    startExamSignalMonitoring(stage, serverUrl, login.token(), selectedAttempt, session, currentView);
+                    startSignalMonitoring(stage, serverUrl, login.token(), selectedAttempt, session, currentView, true);
                 }));
                 }));
             }));
@@ -586,11 +601,15 @@ public final class ToeicClientApplication extends Application {
         }).thenCompose(details -> details != null
                 ? java.util.concurrent.CompletableFuture.completedFuture(details)
                 : api.getAttemptStatus(attemptId).thenApply(state -> {
-                    if (!attemptId.equals(state.attemptId()) || state.sessionId() == null
+                    if (state == null || !attemptId.equals(state.attemptId()) || state.sessionId() == null
                             || state.sessionId().isBlank() || state.examId() == null || state.examId().isBlank()
-                            || state.totalQuestions() < 1) throw new InvalidServerResponseException();
+                            || state.totalQuestions() < 0
+                            || state.totalQuestions() == 0 && !"ACTIVE".equals(state.state())) throw new InvalidServerResponseException();
+                    // V1 status reads the grading total, which stays 0 until an ACTIVE attempt is finalized.
+                    // Preview metadata must not fetch the paper or claim a writer to discover its question count.
+                    Integer knownTotal=state.totalQuestions()==0?null:state.totalQuestions();
                     return new CandidateAttemptPreview.Details(attemptId, state.sessionId(), state.examId(),
-                            state.state(), state.totalQuestions(), null);
+                            state.state(), knownTotal, null);
                 }));
     }
 
@@ -636,17 +655,32 @@ public final class ToeicClientApplication extends Application {
         return "Không kết nối được tới server. Hãy kiểm tra địa chỉ và mạng.";
     }
 
-    private void startExamSignalMonitoring(Stage stage, String serverUrl, String token, String attemptId,
-            CandidateMonitoringSession processSession, long currentView) {
+    private void startSignalMonitoring(Stage stage, String serverUrl, String token, String attemptId,
+            CandidateMonitoringSession processSession, long currentView, boolean examScene) {
         if (!Boolean.getBoolean(CandidateExamSignalMonitoring.ENABLE_PROPERTY)) return;
         Platform.runLater(() -> {
-            if (currentView != viewGeneration || monitoring != processSession || !processSession.isActive()) return;
+            if (currentView != viewGeneration || monitoring != processSession || !processSession.isActive()
+                    || !attemptId.equals(monitoringAttempt)) return;
             String collector = processSession.collectorSessionId();
             if (collector == null) return;
-            if (signalMonitoring != null) signalMonitoring.close();
-            signalMonitoring = CandidateExamSignalMonitoring.start(stage, serverUrl, token, attemptId, collector, realtimeClient);
+            // Portal -> exam keeps one collector/run/sequence; restarting it would duplicate the baseline.
+            if (signalMonitoring != null && signalMonitoring.matchesRun(attemptId, collector)) {
+                if (examScene) signalMonitoring.enterExamScene();
+                return;
+            }
+            closeSignalMonitoring();
+            signalMonitoring = examScene
+                    ? CandidateExamSignalMonitoring.start(stage, serverUrl, token, attemptId, collector, realtimeClient)
+                    : CandidateExamSignalMonitoring.startSession(stage, serverUrl, token, attemptId, collector, realtimeClient);
         });
     }
+
+    private void closeSignalMonitoring() {
+        if (signalMonitoring != null) { signalMonitoring.close(); signalMonitoring = null; }
+    }
+
+    /** Read-only lifecycle seam for the owned application integration probe. FX thread only. */
+    CandidateExamSignalMonitoring signalMonitoring() { return signalMonitoring; }
 
     @Override
     public void stop() {
@@ -673,7 +707,7 @@ public final class ToeicClientApplication extends Application {
         if (activeRichView != null) { activeRichView.close(); activeRichView = null; }
         if (historyView != null) { historyView.close(); historyView = null; }
         if (dashboard != null) { dashboard.close(); dashboard = null; }
-        if (signalMonitoring != null) { signalMonitoring.close(); signalMonitoring = null; }
+        closeSignalMonitoring();
         if (monitoring != null) { monitoring.close(); monitoring = null; }
         monitoringAttempt = null;
         if (problemSubscription != null) {

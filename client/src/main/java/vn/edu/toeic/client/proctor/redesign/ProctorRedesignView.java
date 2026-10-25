@@ -43,6 +43,7 @@ import vn.edu.toeic.client.dashboard.MonitoringApiClient;
 import vn.edu.toeic.client.dashboard.ProctorProgressController;
 import vn.edu.toeic.client.exam.ExamApiClient;
 import vn.edu.toeic.client.proctor.ProctorSessionView;
+import vn.edu.toeic.client.proctor.signals.CandidateSignalsController;
 import vn.edu.toeic.client.realtime.ConnectionState;
 import vn.edu.toeic.client.realtime.MonitoringTransport;
 import vn.edu.toeic.client.realtime.RealtimeClient;
@@ -69,12 +70,17 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
     record Wiring(String proctorName, DashboardApi dashboardApi, DashboardApi feedApi, MonitoringTransport transport,
             Consumer<Set<String>> applyScope, Set<String> initialScope, ProctorProgressController.Gateway progress,
             BiFunction<Runnable, Runnable, Node> sessionControls, ProctorSettings.Store settingsStore, long progressPollMillis,
-            List<AutoCloseable> resources, DashboardApi timelineApi) {
+            List<AutoCloseable> resources, DashboardApi timelineApi, DashboardApi signalsApi) {
         Wiring { initialScope = Set.copyOf(initialScope); resources = List.copyOf(resources); }
         Wiring(String name,DashboardApi api,DashboardApi feed,MonitoringTransport transport,Consumer<Set<String>> scope,
                 Set<String> initial,ProctorProgressController.Gateway progress,BiFunction<Runnable,Runnable,Node> controls,
+                ProctorSettings.Store store,long interval,List<AutoCloseable> resources,DashboardApi timeline) {
+            this(name,api,feed,transport,scope,initial,progress,controls,store,interval,resources,timeline,null);
+        }
+        Wiring(String name,DashboardApi api,DashboardApi feed,MonitoringTransport transport,Consumer<Set<String>> scope,
+                Set<String> initial,ProctorProgressController.Gateway progress,BiFunction<Runnable,Runnable,Node> controls,
                 ProctorSettings.Store store,long interval,List<AutoCloseable> resources) {
-            this(name,api,feed,transport,scope,initial,progress,controls,store,interval,resources,null);
+            this(name,api,feed,transport,scope,initial,progress,controls,store,interval,resources,null,null);
         }
     }
 
@@ -100,7 +106,8 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
                         ProctorV2SessionPane.forAccountPinServer(serverUrl, login.token(), login.user().id(), expired, refreshScope),
                         ProctorV2SessionPane.forServer(serverUrl, login.token(), login.user().id(), expired, refreshScope),
                         new ProctorSessionView(serverUrl, login.token(), expired, refreshScope)),
-                ProctorSettings.FileStore.standard(), poll < 500 || poll > 60000 ? 3000L : poll, List.of(exam::close),new MonitoringApiClient(serverUrl,login.token()));
+                ProctorSettings.FileStore.standard(), poll < 500 || poll > 60000 ? 3000L : poll, List.of(exam::close),
+                new MonitoringApiClient(serverUrl,login.token()),new MonitoringApiClient(serverUrl,login.token()));
         return new ProctorRedesignView(wiring, onLogout, onExpired);
     }
 
@@ -109,19 +116,22 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
     private final DashboardController dashboard;
     private final ProctorProgressController progress;
     private final RoomFeed feed;
+    private final CandidateSignalsController signals;
     private final ScheduledExecutorService poller;
     private final javafx.animation.Timeline ticker;
     private final AtomicBoolean closed = new AtomicBoolean(), expiredOnce = new AtomicBoolean();
     private final Runnable onExpired;
     private final AtomicReference<DashboardModel.Snapshot> pendingDashboard = new AtomicReference<>();
     private final AtomicReference<RoomFeed.Snapshot> pendingFeed = new AtomicReference<>();
-    private final AtomicBoolean dashboardQueued = new AtomicBoolean(), feedQueued = new AtomicBoolean();
+    private final AtomicReference<CandidateSignalsController.Snapshot> pendingSignals = new AtomicReference<>();
+    private final AtomicBoolean dashboardQueued = new AtomicBoolean(), feedQueued = new AtomicBoolean(), signalsQueued = new AtomicBoolean();
 
     // FX-thread state
     private DashboardModel.Snapshot dashboardSnapshot;
     private ProctorProgressController.Snapshot progressSnapshot;
     private long progressReceivedNanos;
     private RoomFeed.Snapshot feedSnapshot = RoomFeed.Snapshot.EMPTY;
+    private long signalsRevision = -1;
     private RoomModel.Room room;
     private ProctorSettings settings = ProctorSettings.DEFAULTS;
     private Set<String> knownAlertIds;
@@ -152,6 +162,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         void openCandidate(String attemptId);
         void openAlert(RoomModel.Alert alert);
         void showHistory(String attemptId);
+        default void showTimeline(String attemptId,String source) { show(Section.TIMELINE); }
         /** Committed progress is paged by the server (50 rows); true = next page, false = first page. */
         void progressPage(boolean next);
     }
@@ -191,6 +202,8 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
                 wiring.initialScope(), this::acceptDashboard, this::expired);
         progress = new ProctorProgressController(wiring.progress(), Platform::runLater, this::acceptProgress, this::expired);
         feed = new RoomFeed(wiring.feedApi(), wiring.transport(), this::acceptFeed, this::expired);
+        signals = wiring.signalsApi() == null ? null : new CandidateSignalsController(
+                wiring.signalsApi(), wiring.transport(), this::acceptSignals, this::expired);
         poller = Executors.newSingleThreadScheduledExecutor(task -> {
             Thread thread = new Thread(task, "toeic-proctor-progress-poll");
             thread.setDaemon(true);
@@ -335,6 +348,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         @Override public void openCandidate(String attemptId) { ProctorRedesignView.this.openCandidate(attemptId); }
         @Override public void openAlert(RoomModel.Alert alert) { ProctorRedesignView.this.openAlert(alert); }
         @Override public void showHistory(String attemptId) { ProctorRedesignView.this.showHistory(attemptId); }
+        @Override public void showTimeline(String attemptId,String source) { ProctorRedesignView.this.showTimeline(attemptId,source); }
         @Override public void progressPage(boolean next) {
             if (closed.get()) return;
             if (next) progress.nextPage(); else progress.firstPage();
@@ -348,6 +362,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         dashboard.refresh();
         progress.refresh();
         feed.refresh();
+        if (signals != null) signals.refresh();
     }
 
     /** Only attempts in the current server roster/progress can be opened; anything else is ignored. */
@@ -356,6 +371,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         // Loads this attempt's current process state through the existing controller (one selection at a time).
         if (room.dashboard().attempts().stream().anyMatch(presence -> presence.attemptId().equals(attemptId))) dashboard.select(attemptId);
         candidateDrawer.show(attemptId, room);
+        if (signals != null) signals.focus(attemptId);
         alertDrawer.show(null, room);
         openDrawer(candidateDrawer, 620);
     }
@@ -363,6 +379,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
     void openAlert(RoomModel.Alert alert) {
         if (closed.get() || room == null || alert == null || room.row(alert.attemptId()) == null) return;
         alertDrawer.show(alert, room);
+        if (signals != null) signals.focus(null);
         openDrawer(alertDrawer, 660);
     }
 
@@ -371,6 +388,14 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         HistoryPane history = pane(HistoryPane.class);
         if (history != null) history.focus(attemptId);
         show(Section.HISTORY);
+    }
+
+    void showTimeline(String attemptId,String source) {
+        if (closed.get() || room == null || attemptId == null || room.dashboard().attempts().stream()
+                .noneMatch(p -> attemptId.equals(p.attemptId()))) return;
+        show(Section.TIMELINE);
+        MultiSignalTimelinePane timeline = pane(MultiSignalTimelinePane.class);
+        if (timeline != null) timeline.focus(attemptId,source);
     }
 
     /** Shows {@code drawer} sliding in from the right over a dimmed page. Closing keeps all loaded data. */
@@ -391,6 +416,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
     void closeDrawer() {
         drawerHost.getChildren().clear();
         scrim.setVisible(false);
+        if (signals != null) signals.focus(null);
     }
 
     Node openDrawer() { return drawerHost.getChildren().isEmpty() ? null : drawerHost.getChildren().getFirst(); }
@@ -410,6 +436,7 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
             boolean synced = dashboardSnapshot.connection() == ConnectionState.CONNECTED && !dashboardSnapshot.rosterStale()
                     && !dashboardSnapshot.rosterLoading();
             feed.roster(dashboardSnapshot.attempts(), synced);
+            if (signals != null) signals.roster(dashboardSnapshot.attempts(), synced);
             rebuild();
         });
     }
@@ -430,6 +457,23 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
             if (closed.get()) return;
             feedSnapshot = pendingFeed.get();
             rebuild();
+        });
+    }
+
+    private void acceptSignals(CandidateSignalsController.Snapshot value) {
+        if (closed.get()) return;
+        pendingSignals.set(value);
+        if (signalsQueued.compareAndSet(false, true)) Platform.runLater(() -> {
+            signalsQueued.set(false);
+            CandidateSignalsController.Snapshot latest = pendingSignals.get();
+            if (closed.get() || latest.revision() < signalsRevision) return;
+            signalsRevision = latest.revision();
+            if(!latest.stale()){
+                Map<String,Long> watermarks=new java.util.LinkedHashMap<>();
+                latest.candidates().forEach((attempt,observations)->watermarks.put(attempt,observations.after()));
+                feed.signalsAvailable(watermarks);
+            }
+            candidateDrawer.updateSignals(latest);
         });
     }
 
@@ -545,6 +589,8 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         poller.shutdownNow();
         for(RoomPane pane:panes)if(pane instanceof MultiSignalTimelinePane timeline)timeline.close();
         try { feed.close(); } catch (RuntimeException ignored) { }
+        if (signals != null) { try { signals.close(); } catch (RuntimeException ignored) { } }
+        candidateDrawer.updateSignals(CandidateSignalsController.Snapshot.empty());
         try { progress.close(); } catch (RuntimeException ignored) { }
         try { dashboard.close(); } catch (RuntimeException ignored) { }
         if (sessionControls instanceof AutoCloseable closeable) {

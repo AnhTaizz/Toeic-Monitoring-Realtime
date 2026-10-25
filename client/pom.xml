@@ -17,6 +17,10 @@
             <artifactId>protocol</artifactId>
         </dependency>
         <dependency>
+            <groupId>vn.edu.toeic</groupId>
+            <artifactId>windows-observer</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>

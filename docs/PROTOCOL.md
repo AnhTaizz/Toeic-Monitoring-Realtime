@@ -1,5 +1,17 @@
 # Protocol đang dùng
 
+24/10/2026 — Tương thích consumer cho monitoring-only legacy: HTTP Listening status
+NOT_STARTED/sessionId null/toàn bộ playback rỗng được dashboard chiếu thành không có
+Listening; playback parser và kiểm scope vẫn nghiêm ngặt. Không đổi DTO/wire/server.
+V1 ACTIVE totalQuestions0 là tổng chấm chưa có, preview dùng số câu chưa biết.
+[Bằng chứng và giới hạn](../evidence/usb-8080-fix-20261024/REPORT.md).
+
+24/10/2026 — Producer USB nối vào app thí sinh dưới hai gate signal/USB opt-in;
+dùng nguyên ba `USB_STORAGE_*` và `OBSERVER_STATUS`, không đổi DTO/endpoint/schema.
+Cùng collector lease/context/sequence/delivery; pause khi mất socket, chỉ resume sau
+capability + scoped heartbeat mới xác nhận. [Vòng đời/cấu hình](USB_APP_INTEGRATION.md).
+Mặc định OFF, chưa là phê duyệt policy hay nghiệm thu phần cứng đầy đủ.
+
 ## EX-03 — rich import đã tích hợp, cập nhật baseline 22/10/2026
 
 `POST /api/v2/exams/import` đã có code: Bearer PROCTOR, JSON strict schemaVersion2/profile TOEIC_200, đúng200 câu/7Part, source/group/options/media verified; trả201 sau DB commit với `RichExamImportResponse`. Duplicate/race409 CONFLICT; JSON/graph400 INVALID_INPUT; body>2MiB413; local media thiếu/hỏng409 INVALID_STATE; IO/DB tạm thời503 RETRYABLE_SERVER_ERROR, retryable=true. Auth/role trước body/filesystem. [DTO/transaction/errors/schema/evidence](EX03_RICH_IMPORTER_VERIFICATION.md), [chữ ký EX02](EX02_RICH_EXAM_CONTRACT_V1.md).
@@ -1104,3 +1116,16 @@ Mục này ghi lại endpoint đã có từ nhánh ACCOUNT_PIN (`ff6aacf`) và �
 | POST `/api/v2/candidates`, GET `/api/v2/candidates` | PROCTOR | Danh bạ Candidate (Phase 2) |
 
 START dùng endpoint PROCTORED_V2 sẵn có, cùng shape; policy chọn theo `admission_mode` lưu trong DB: phòng ACCOUNT_PIN cho START khi có ít nhất một người JOIN, người chưa READY bị ghi `NOT_READY_AT_START` trước COMMIT và chỉ làm Reading đến deadline chung. WebSocket không thêm type mới.
+
+## Tổng hợp đa tín hiệu cho giám thị — 25/10/2026
+
+Tổng quan và Chi tiết dùng thêm một read consumer cho typed history hiện hữu, không thêm endpoint/field/type hoặc push. Mỗi cycle xác minh lại scope PROCTOR, chỉ tổng hợp observation của collector hiện tại trong roster đã xác thực; fixed-through/page100/3page mỗi lượt, tối đa 2 request history chưa hoàn tất, 100 lượt/12s cycle. Snapshot UI giữ riêng attempt/run và đánh dấu thiếu/cũ/gap. READY không mang storageCount nên không suy USB=0; status READY sau gap không phục hồi giá trị trước gap. Các nút mở Timeline chỉ truyền lựa chọn attempt/source vào view hiện có. [Chi tiết](PROCTOR_SIGNAL_SUMMARY.md).
+
+
+## 25/10/2026 — Chung vòng đời process và USB/focus/window
+
+Không đổi message/endpoint/schema hoặc OS API. Candidate bật giám sát thủ công trên attempt ACTIVE có fresh scope nay tạo typed coordinator bằng chính collectorSessionId của process, thay vì chỉ tạo khi mở màn làm bài. Capability và heartbeat vẫn là gate trước gửi dữ liệu/khởi chạy USB. Focus/window đọc Stage ứng dụng thí sinh trong phiên được cấp quyền, giữ source keys JAVAFX_EXAM_FOCUS/JAVAFX_EXAM_WINDOW; UI ghi rõ cửa sổ thí sinh, không suy đang làm bài từ focus. EnterExamScene chỉ bật activity trong bài và không tạo run/sequence/baseline mới. Manual Stop đóng typed coordinator trước process, chờ dọn cả hai rồi cho Start lại; disconnect/revoke/logout giữ guard cũ. Chi tiết gom render process state và typed observations trong một khối; không giả tín hiệu thiết bị thành process/PID.
+
+## 25/10/2026 — Đọc typed history cho Cảnh báo/Nhật ký chung
+
+Chỉ bổ sung consumer hiển thị ở client; không đổi DTO, endpoint, wire, DB, OS observer hoặc MON-08 policy. RoomFeed nhận watermark sequence từ CandidateSignalsController sau fresh scoped read, tải tăng dần typed history bằng HTTP client hiện có của feed. Fixed-through/page100/3page mỗi lượt, tối đa hai attempt tải; giữ 500 dòng liên quan mới nhất với cảnh báo giới hạn. Phân loại hiển thị baseline/status vào nhật ký, thay đổi USB/focus/window và lỗi/gap vào các quan sát cần xem xét; eventId/raw thời điểm và delivery giữ từ server, không dựng sự kiện từ snapshot hiện tại.

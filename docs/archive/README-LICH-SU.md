@@ -27,6 +27,12 @@ T3-A1 có API audio/manifest/READY và gate start: [docs/AUDIO_RESOURCES.md](doc
 
 ## Chạy nhanh
 
+USB thật trong ứng dụng (nhánh tích hợp thử nghiệm):
+`.\scripts\demo-usb-integrated.ps1 -Desktop -ReadUsbStorage` mở app thí sinh/giám thị
+với PostgreSQL TEST riêng. Xem USB tại **Timeline đa tín hiệu**;
+[cách chạy, cấu hình và giới hạn](docs/USB_APP_INTEGRATION.md). Module nội bộ
+`windows-observer` dùng chung CIM giữa app và probe, không thêm thư viện ngoài.
+
 USB TEST end-to-end (Windows/JDK21/Maven/PostgreSQL18 tools, **không cần USB hoặc DB dev**):
 `.\scripts\demo-usb-integrated.ps1 -Mode Real -ReadUsbStorage` tự dựng TEST cluster,
 seeder/API scope, đọc CIM tối thiểu hữu hạn, gửi status/USB qua WS/COMMIT/ACK, kiểm HTTP
@@ -54,7 +60,7 @@ Tài khoản mẫu (`MOCK`, chỉ dùng phát triển) dùng `TOEIC_SEED_PASSWOR
 - Build + unit test: `mvn test`
 - Đóng gói toàn bộ: `mvn package`
 - Reset DB phát triển: `powershell -ExecutionPolicy Bypass -File scripts/reset-db.ps1 -Force`
-- Chạy probe: `mvn -q -pl monitoring-spike exec:java -Dexec.args="--limit=200"`
+- Chạy process probe sau `mvn package`: `java -cp "monitoring-spike/target/classes;windows-observer/target/classes" vn.edu.toeic.monitoring.ProcessHandleProbe --limit=200`
 
 Lệnh reset xóa volume `toeic-pgdata`, vì vậy toàn bộ dữ liệu phát triển hiện có sẽ mất. Flyway tự dựng schema khi server khởi động lại.
 
@@ -399,3 +405,7 @@ Windows + JDK21/Maven/PostgreSQL binaries: `.\scripts\demo-mon09-timeline.ps1 -M
 ### QA-05/E1 — kết quả đo mới
 
 [Báo cáo12lượt Windows21/10/2026](evidence/qa05-e1-20261021/REPORT.md) và [hướng dẫn](docs/E1_T4C1_MEASUREMENT.md). Acquisition/rejoin/analyzer dùng Java/stdlib Python như cũ. Thư viện bổ sung **Matplotlib3.11.2** (NumPy2.5.4 là dependency) chỉ để xuất biểu đồ offline qua scripts/benchmarks/e1/report.py, không dependency ứng dụng/measurement. Renderer dùng Python ổn định3.13.2 local, versions plotting pinned trong evidence/qa05-e1-20261021/plot-requirements.txt; không thay runtime đo Temurin21.0.10. FULL mặc định, experiments OFF; E2/hardware/gates/approval còn riêng.
+
+### USB, focus và cửa sổ trên màn giám thị
+
+Trong **Chi tiết thí sinh**, khối **Đang quan sát trên máy thí sinh** gom tiến trình, USB, focus và cửa sổ cùng hai mốc client/server và nút Timeline. **Bắt đầu/Dừng giám sát** quản lý chung các nguồn; Tổng quan dùng nút Chi tiết thay cho cột tín hiệu riêng. [Cách đọc và chạy demo](docs/PROCTOR_SIGNAL_SUMMARY.md). Thiếu hoặc cũ thì hiện chưa xác định, không tự suy USB bằng 0. USB cần candidate bật `-ReadUsbStorage`, server bật `-SignalExperiment`, và khởi động giám sát trong app. Dùng module nội bộ `windows-observer`, không thêm thư viện bên ngoài.

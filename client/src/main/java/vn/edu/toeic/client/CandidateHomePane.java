@@ -53,6 +53,15 @@ final class CandidateHomePane extends BorderPane {
         Label instruction = text("1  Chọn đúng ca thi     →     2  Kiểm tra âm thanh và ảnh     →     3  Chờ giám thị START", "home-instruction");
         tabs.getStyleClass().add("home-tabs");
         VBox content = new VBox(12, availability, instruction, tabs);
+        if (Boolean.getBoolean("toeic.monitoring.signal-experiment-enabled")
+                && Boolean.getBoolean("toeic.monitoring.usb-enabled")) {
+            Label usbNotice = text("Giám sát USB lưu trữ đang được bật cho lượt thử nghiệm này: "
+                    + "khi bắt đầu giám sát hoặc vào phòng thi, ứng dụng quan sát tiến trình, USB lưu trữ và "
+                    + "focus/trạng thái cửa sổ thí sinh để gửi cho giám thị. Không đọc nội dung hay số serial USB; "
+                    + "dừng khi dừng giám sát, rời phòng thi hoặc đăng xuất.", "home-availability");
+            usbNotice.setId("candidate-usb-notice");
+            content.getChildren().add(2, usbNotice);
+        }
         content.setPadding(new Insets(24));
         VBox.setVgrow(tabs, Priority.ALWAYS);
         content.setMinWidth(0);

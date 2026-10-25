@@ -248,6 +248,9 @@
 .proctor-redesign .table-row-cell.row-attention { -fx-background-color: #fffdf8; }
 .proctor-redesign .table-cell { -fx-text-fill: #13254a; -fx-padding: 0 6 0 12; -fx-alignment: center-left; -fx-font-size: 0.96em; }
 .proctor-redesign .table-row-cell:selected .table-cell { -fx-text-fill: #13254a; }
+
+/* Last recorded typed observations; unknown/partial never inherit a healthy green badge. */
+.proctor-redesign .signal-source-card { -fx-padding: 10; -fx-background-color: #f8fafc; -fx-background-radius: 7; }
 .proctor-redesign .table-view .placeholder .label { -fx-text-fill: #6b7a90; }
 .proctor-redesign .table-view .scroll-bar:vertical, .proctor-redesign .table-view .scroll-bar:horizontal { -fx-background-color: transparent; }
 .proctor-redesign .scroll-bar .thumb { -fx-background-color: #cfd7e2; -fx-background-radius: 4; }
