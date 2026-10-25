@@ -12,6 +12,8 @@ import vn.edu.toeic.client.realtime.*;
 
 /** MON-09 slice inside the existing dashboard. No candidate observer or hardware source here. */
 final class MultiSignalTimelinePane extends VBox implements ProctorRedesignView.RoomPane,AutoCloseable {
+    private static final String ALL_SOURCES="Tất cả nguồn";
+    private static final Set<String> SUMMARY_SOURCES=Set.of("WINDOWS_USB_STORAGE","JAVAFX_EXAM_FOCUS","JAVAFX_EXAM_WINDOW");
     private final TableView<AlertSummary.Item> alerts=new TableView<>();
     private final Label alertCoverage=Ui.wrapping("MON-08 chưa tải; không suy rằng toàn khoảng bình thường.","muted"),alertDetails=Ui.wrapping("Chọn nhóm để xem rule, count và evidence.","muted");
     private final ComboBox<String> attempt=new ComboBox<>(),source=new ComboBox<>();
@@ -23,14 +25,15 @@ final class MultiSignalTimelinePane extends VBox implements ProctorRedesignView.
     private final Map<String,String> attemptLabels=new HashMap<>();
     private final TimelineController controller;private final AtomicBoolean closed=new AtomicBoolean();
     private TimelineController.Snapshot snapshot;private boolean active,changing;private long revision=-1;
+    private String requestedSource;
     MultiSignalTimelinePane(DashboardApi api,MonitoringTransport transport,Runnable expired){
         getStyleClass().add("page");setId("multi-signal-timeline");setSpacing(14);
         controller=api==null?null:new TimelineController(api,transport,this::accept,expired);
         attempt.setId("multi-attempt");attempt.setPromptText("Chọn lượt thi");attempt.setPrefWidth(400);
         attempt.setCellFactory(list->attemptCell());attempt.setButtonCell(attemptCell());
         source.getItems().add("Tất cả nguồn");source.setValue("Tất cả nguồn");source.setId("multi-source-filter");
-        attempt.valueProperty().addListener((o,b,a)->{if(!changing){clearVisible();if(controller!=null)controller.select(active?a:null);}});
-        source.valueProperty().addListener((o,b,a)->render());refresh.setId("multi-refresh");more.setId("multi-more");
+        attempt.valueProperty().addListener((o,b,a)->{if(!changing){requestedSource=null;resetSource();clearVisible();if(controller!=null)controller.select(active?a:null);}});
+        source.valueProperty().addListener((o,b,a)->{if(!changing){requestedSource=a!=null&&SUMMARY_SOURCES.contains(a)?a:null;render();}});refresh.setId("multi-refresh");more.setId("multi-more");
         refresh.setOnAction(e->{if(controller!=null)controller.refresh();});more.setOnAction(e->{if(controller!=null)controller.refresh();});
         alerts.setId("multi-alert-table");alertCoverage.setId("multi-alert-coverage");alertDetails.setId("multi-alert-details");
         alerts.setPrefHeight(170);alerts.setPlaceholder(new Label("Chưa có nhóm trong cửa sổ; không chứng minh bình thường."));
@@ -54,12 +57,27 @@ final class MultiSignalTimelinePane extends VBox implements ProctorRedesignView.
     }
     private ListCell<String> attemptCell(){return new ListCell<>(){@Override protected void updateItem(String id,boolean empty){super.updateItem(id,empty);setText(empty||id==null?null:attemptLabels.getOrDefault(id,id));}};}
     void active(boolean value){active=value;if(controller!=null)controller.select(value?attempt.getValue():null);if(!value)clearVisible();}
+    /** The source remains selected even before its first history page has arrived. */
+    void focus(String attemptId,String sourceName){
+        if(closed.get()||!attempt.getItems().contains(attemptId)||sourceName==null||!SUMMARY_SOURCES.contains(sourceName))return;
+        requestedSource=sourceName;
+        changing=true;
+        boolean switched=!Objects.equals(attempt.getValue(),attemptId);
+        attempt.setValue(attemptId);
+        if(!source.getItems().contains(sourceName))source.getItems().add(sourceName);
+        source.setValue(sourceName);
+        changing=false;
+        if(switched)clearVisible();
+        if(controller!=null)controller.select(active?attemptId:null);
+        render();
+    }
+    private void resetSource(){changing=true;source.getItems().setAll(ALL_SOURCES);source.setValue(ALL_SOURCES);changing=false;}
     @Override public void update(RoomModel.Room room,ProctorSettings settings){
         attemptLabels.clear();for(var p:room.dashboard().attempts())attemptLabels.put(p.attemptId(),p.candidateDisplayName()+" · "+p.attemptId());
         var ids=room.dashboard().attempts().stream().map(p->p.attemptId()).toList();String keep=attempt.getValue();
         if(!attempt.getItems().equals(ids)){
             changing=true;attempt.getItems().setAll(ids);attempt.setValue(ids.contains(keep)?keep:ids.isEmpty()?null:ids.getFirst());changing=false;
-            if(!Objects.equals(keep,attempt.getValue())){clearVisible();if(controller!=null)controller.select(active?attempt.getValue():null);}
+            if(!Objects.equals(keep,attempt.getValue())){requestedSource=null;resetSource();clearVisible();if(controller!=null)controller.select(active?attempt.getValue():null);}
         }
         if(controller!=null)controller.roster(Set.copyOf(ids),room.connected()&&!room.rosterStale()&&!room.dashboard().rosterLoading());
     }
@@ -69,8 +87,12 @@ final class MultiSignalTimelinePane extends VBox implements ProctorRedesignView.
         if(snapshot==null)return;
         status.setText((snapshot.stale()?"DỮ LIỆU CÓ THỂ CŨ · ":"")+(snapshot.loading()?"ĐANG TẢI · ":"")+snapshot.message());
         more.setDisable(snapshot.loading()||!snapshot.more());refresh.setDisable(snapshot.loading());
-        var names=new TreeSet<String>();snapshot.rows().forEach(r->names.add(r.source()));var choices=new ArrayList<String>();choices.add("Tất cả nguồn");choices.addAll(names);
-        String selected=source.getValue();if(!source.getItems().equals(choices)){source.getItems().setAll(choices);source.setValue(choices.contains(selected)?selected:"Tất cả nguồn");}
+        var names=new TreeSet<String>();snapshot.rows().forEach(r->names.add(r.source()));if(requestedSource!=null)names.add(requestedSource);
+        var choices=new ArrayList<String>();choices.add(ALL_SOURCES);choices.addAll(names);
+        String selected=requestedSource!=null?requestedSource:source.getValue();
+        if(!source.getItems().equals(choices)||!Objects.equals(source.getValue(),selected)){
+            changing=true;source.getItems().setAll(choices);source.setValue(choices.contains(selected)?selected:ALL_SOURCES);changing=false;
+        }
         long gaps=snapshot.rows().stream().filter(TimelineRows.Row::gap).count(),unknown=snapshot.rows().stream().filter(TimelineRows.Row::unavailable).count();
         completeness.setText("Trên "+snapshot.rows().size()+" dòng thay đổi trước bộ lọc: "+gaps+" bản ghi gap; "+unknown+" bản ghi nguồn/liên lạc chưa xác định. "
                 +(snapshot.limited()?"GIỚI HẠN: chỉ hiển thị tối đa 500 dòng mới nhất; lịch sử ngoài vùng này chưa được hiển thị, không suy là đầy đủ. ":"")

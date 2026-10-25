@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "baseCommit": "acc1f82ed64410ae3759c572813cb80dcc6de8f4",
+  "sourceDirtyDuringTests": true,
+  "branch": "feat/usb-app-integration-20261024",
+  "workingSourceManifest": "source-manifest.json",
+  "dateRange": "2026-10-24/2026-10-25",
+  "environment": {
+    "os": "Windows 11 x64",
+    "java": "Temurin 21.0.10+7",
+    "javafx": "21.0.12",
+    "database": "Owned PostgreSQL TEST cluster; details in raw reports"
+  },
+  "verification": {
+    "mavenVerify": {
+      "result": "PASS",
+      "tests": 1568,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 172,
+      "reports": 149,
+      "passed": 1396,
+      "modules": [
+        {
+          "module": "protocol",
+          "reports": 12,
+          "tests": 89,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "module": "windows-observer",
+          "reports": 2,
+          "tests": 21,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "module": "monitoring-spike",
+          "reports": 3,
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "module": "client",
+          "reports": 94,
+          "tests": 972,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 39
+        },
+        {
+          "module": "server",
+          "reports": 38,
+          "tests": 471,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 133
+        }
+      ],
+      "guiEnabled": true,
+      "study4": "Compile/package succeeded; no test sources in this module"
+    },
+    "focusedBeforePendingLimitPatch": {
+      "passed": 33,
+      "failed": 0,
+      "skipped": 0,
+      "overlapsVerify": true
+    },
+    "newPendingLimitTest": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "includedInVerify": true
+    },
+    "postgresMock": {
+      "uniqueTestMethods": 1,
+      "result": "PASS",
+      "repeatedForImageExport": true,
+      "runIds": [
+        "usb-2c1ba6c3a26d4145",
+        "usb-e13692bf199f4781",
+        "usb-e4d71adb90034dae"
+      ]
+    },
+    "postgresReal": {
+      "uniqueTestMethods": 1,
+      "result": "PASS",
+      "runId": "usb-dd2d229540044c4b",
+      "usbBaselineCount": 0,
+      "physicalHotplugTested": false
+    },
+    "packageFinal": {
+      "result": "PASS",
+      "skipTests": true
+    },
+    "artifact": {
+      "path": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+      "bytes": 16800582,
+      "sha256": "9b929c508a4df4d5ac25a47796d9707df5d387fae5aa71a6fdfecf703d289f39",
+      "equivalentEntries": [
+        "vn/edu/toeic/client/proctor/signals/CandidateSignals.class",
+        "vn/edu/toeic/client/proctor/signals/CandidateSignalAccumulator.class",
+        "vn/edu/toeic/client/proctor/signals/CandidateSignalsController.class",
+        "vn/edu/toeic/client/proctor/redesign/SignalSummaryView.class",
+        "vn/edu/toeic/client/proctor/redesign/OverviewPane.class",
+        "vn/edu/toeic/client/proctor/redesign/ProctorRedesignView.class",
+        "vn/edu/toeic/client/proctor/redesign/Drawers$CandidateDrawer.class",
+        "vn/edu/toeic/client/proctor/redesign/MultiSignalTimelinePane.class",
+        "vn/edu/toeic/client/monitoring/CandidateExamSignalMonitoring.class",
+        "vn/edu/toeic/client/monitoring/usb/CimUsbScanSource.class",
+        "vn/edu/toeic/monitoring/usb/CimSnapshotSource.class",
+        "vn/edu/toeic/monitoring/usb/cim-snapshot.ps1",
+        "proctor-redesign/proctor-redesign.css"
+      ]
+    }
+  },
+  "cleanup": {
+    "allOwnedPgClustersStopped": true,
+    "ownedSchemasRemaining": 0,
+    "postmasterPidAbsent": true
+  },
+  "images": [
+    {
+      "path": "overview-MOCK.png",
+      "source": "REAL JavaFX Scene; MOCK observations via real WS/HTTP/PostgreSQL"
+    },
+    {
+      "path": "detail-signals-MOCK.png",
+      "source": "Actual JavaFX summary Node snapshot, exported without ancestor viewport clipping; MOCK observations"
+    }
+  ],
+  "rawHashes": [
+    {
+      "path": "target/proctor-signals-20261024/verify.log",
+      "bytes": 52001,
+      "sha256": "6b94b8a12f8e0d8c2f85c20bb2aa2bc3bbdb57e5647cba308e76e8aecabec95a"
+    },
+    {
+      "path": "target/proctor-signals-20261024/verify-counts.json",
+      "bytes": 941,
+      "sha256": "a968001f7dbd9440a0ae248763bc69cb8bbb31b7ce5be249c2cc1c304db49f38"
+    },
+    {
+      "path": "target/proctor-signals-20261024/focused-final.log",
+      "bytes": 6867,
+      "sha256": "8a1e468e490c618ca68c844e01f510b797d2bb70b075f461f6c064a05f48ec35"
+    },
+    {
+      "path": "target/proctor-signals-20261024/package-final.log",
+      "bytes": 11207,
+      "sha256": "f3d764d654a157947b749628a7f3db5399213700aac96a55386f1cb5b07b5080"
+    },
+    {
+      "path": "target/proctor-signals-20261024/mock-pg/result.json",
+      "bytes": 569,
+      "sha256": "bb1c8d3260a6e46cd5c2b87d3af29d1c031c191b638461230fdf4c34235e00a5"
+    },
+    {
+      "path": "target/proctor-signals-20261024/real-pg/result.json",
+      "bytes": 569,
+      "sha256": "7fb932dc0d0de8d3ca294ca778c38ae63e086cde81ca96547fe8cdd617026239"
+    },
+    {
+      "path": "target/proctor-signals-20261024/real-pg/demo-summary.json",
+      "bytes": 433,
+      "sha256": "9351b297ac8f0721cae6adef4dfb6b70cb8637ecc41fbd1f1ede0c8fee4cb638"
+    },
+    {
+      "path": "target/proctor-signals-20261024/mock-images/result.json",
+      "bytes": 682,
+      "sha256": "301fd30726de25efcdb2975123901238f8f6669c45b941fb0814863ab1739849"
+    },
+    {
+      "path": "target/proctor-signals-20261024/mock-images/demo-summary.json",
+      "bytes": 342,
+      "sha256": "e08739fa7349ef941019239479ce630f9d183b5ebcd9a0c4536b2929b407b607"
+    },
+    {
+      "path": "target/proctor-signals-20261024/mock-images/reports.private/TEST-vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest.xml",
+      "bytes": 29075,
+      "sha256": "76e6c557ac5411967c02c247cb16c4332eca0b722256cdf17b00f7657bf3831e"
+    },
+    {
+      "path": "target/proctor-signals-20261024/real-pg/reports.private/TEST-vn.edu.toeic.server.monitoring.signal.MonitoringTimelinePostgresTest.xml",
+      "bytes": 29155,
+      "sha256": "7ed126768b5371e1afdc44647942a8bd2ef5a99303880d1f05c72530af8b7e8a"
+    },
+    {
+      "path": "target/signal-summary-compile.log",
+      "bytes": 2637,
+      "sha256": "dc3d67d2d81b3f438c8e8f4079d18db994f84134c83ad512c7d2e26b3beff3ad"
+    },
+    {
+      "path": "target/signal-summary-gui-1.log",
+      "bytes": 9441,
+      "sha256": "00ab6a721f2debb5d72873db3d83de74e8c78ace05c1e44610a70cc3578eba46"
+    },
+    {
+      "path": "target/proctor-signals-20261024/focused.log",
+      "bytes": 9791,
+      "sha256": "48b350c609669656382685a4099254cae8586f6d6c1c22eb571c310cfc25c838"
+    }
+  ],
+  "limits": [
+    "No new physical hotplug action or H01-H12/LAN/installer/policy acceptance",
+    "Existing feature gates remain OFF/FULL by default",
+    "GitHub CI does not trigger on feat/**; no PR or merge requested",
+    "User AGENTS.md excluded from commit"
+  ]
+}

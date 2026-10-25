@@ -29,6 +29,7 @@ public final class CimSnapshotSource implements AutoCloseable {
     private volatile boolean closed;
     private Process active;
     private final List<ProcessHandle> owned = new ArrayList<>();
+    private int childrenStarted;
 
     public CimSnapshotSource(Method method, Duration timeout) throws IOException {
         this(windowsCommand(method), timeout);
@@ -61,7 +62,9 @@ public final class CimSnapshotSource implements AutoCloseable {
                 if (closed) return failure("STOPPED", start);
                 if (command.isEmpty()) return UsbSnapshot.failed(UsbSnapshot.Status.UNSUPPORTED, "WINDOWS_REQUIRED", elapsed(start));
                 active = process = new ProcessBuilder(command).start();
+                owned.removeIf(handle -> !handle.isAlive());
                 owned.add(process.toHandle());
+                childrenStarted++;
                 process.getOutputStream().close();
                 Process child = process;
                 output = readers.submit(() -> readLimited(child.getInputStream()));
@@ -83,7 +86,12 @@ public final class CimSnapshotSource implements AutoCloseable {
             if (process != null) terminate(process);
             if (output != null) output.cancel(true);
             if (errors != null) errors.cancel(true);
-            synchronized (lifecycle) { if (active == process) active = null; }
+            synchronized (lifecycle) {
+                if (active == process) active = null;
+                // An exam can poll for hours. Keep handles only while a child is live;
+                // the scalar counter below retains cumulative diagnostics separately.
+                owned.removeIf(handle -> !handle.isAlive());
+            }
             scanning.set(false);
         }
     }
@@ -146,9 +154,13 @@ public final class CimSnapshotSource implements AutoCloseable {
         } catch (InterruptedException interrupted) { Thread.currentThread().interrupt(); }
     }
     public int aliveChildren() {
-        synchronized (lifecycle) { return (int) owned.stream().filter(ProcessHandle::isAlive).count(); }
+        synchronized (lifecycle) {
+            owned.removeIf(handle -> !handle.isAlive());
+            return owned.size();
+        }
     }
-    public int childrenStarted() { synchronized (lifecycle) { return owned.size(); } }
+    public int childrenStarted() { synchronized (lifecycle) { return childrenStarted; } }
+    int retainedChildHandles() { synchronized (lifecycle) { return owned.size(); } }
     public boolean readersTerminated() { return readers.isTerminated(); }
     @Override public void close() {
         boolean interrupted = Thread.interrupted();

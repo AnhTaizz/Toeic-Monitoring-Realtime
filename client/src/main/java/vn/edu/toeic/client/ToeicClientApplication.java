@@ -496,11 +496,15 @@ public final class ToeicClientApplication extends Application {
         }).thenCompose(details -> details != null
                 ? java.util.concurrent.CompletableFuture.completedFuture(details)
                 : api.getAttemptStatus(attemptId).thenApply(state -> {
-                    if (!attemptId.equals(state.attemptId()) || state.sessionId() == null
+                    if (state == null || !attemptId.equals(state.attemptId()) || state.sessionId() == null
                             || state.sessionId().isBlank() || state.examId() == null || state.examId().isBlank()
-                            || state.totalQuestions() < 1) throw new InvalidServerResponseException();
+                            || state.totalQuestions() < 0
+                            || state.totalQuestions() == 0 && !"ACTIVE".equals(state.state())) throw new InvalidServerResponseException();
+                    // V1 status reads the grading total, which stays 0 until an ACTIVE attempt is finalized.
+                    // Preview metadata must not fetch the paper or claim a writer to discover its question count.
+                    Integer knownTotal=state.totalQuestions()==0?null:state.totalQuestions();
                     return new CandidateAttemptPreview.Details(attemptId, state.sessionId(), state.examId(),
-                            state.state(), state.totalQuestions(), null);
+                            state.state(), knownTotal, null);
                 }));
     }
 

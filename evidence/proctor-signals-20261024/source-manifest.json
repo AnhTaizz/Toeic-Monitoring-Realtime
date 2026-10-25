@@ -1,0 +1,287 @@
+[
+  {
+    "path": "client/pom.xml",
+    "bytes": 4012,
+    "sha256": "9b81de8a02bae8b7147e45304f33df40f67f2f907c5b6ce1c7cb43463355b784"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/CandidateHomePane.java",
+    "bytes": 4383,
+    "sha256": "c0048341937ab29cb0268c9a22477964b4bf506442d425a6e94dd640bcbf09cf"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/ToeicClientApplication.java",
+    "bytes": 36721,
+    "sha256": "9bc67d1a9b9c6dc716089151709a210eeaf41dc7fe79122eab239fd77f912aec"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/audio/ListeningMessages.java",
+    "bytes": 6004,
+    "sha256": "1d3342caa2a0645e6e902eb6aa856e0753b0189a9c844ebcb140b22a3fb66819"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/dashboard/MonitoringApiClient.java",
+    "bytes": 9829,
+    "sha256": "7c5b3b77d6ec36b74d7f8c298c94baf0094da8c86d2a2f2028d9233572ededb9"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/monitoring/CandidateExamSignalMonitoring.java",
+    "bytes": 13244,
+    "sha256": "861614cd989688d9f5e7ff450d7b13d33342db11565e902d58397e5722d42fce"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/monitoring/usb/CimUsbScanSource.java",
+    "bytes": 3760,
+    "sha256": "8e5ae52d131b0a6c0a3d6baa5ad5d10bb1766afb298a5949e5f50fbb8e6c9119"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/monitoring/usb/UsbScanCoordinator.java",
+    "bytes": 15124,
+    "sha256": "7ccbc3eaf58c427f92e2ffa6201506e5fdd595b4eef5b5f33105a299294cb144"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/monitoring/usb/UsbSnapshotProjection.java",
+    "bytes": 1374,
+    "sha256": "7f172e6a6e32978acb4329756e254560f89d50a72e4c700a8e06b0755cd948ea"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/Drawers.java",
+    "bytes": 18311,
+    "sha256": "1becfb59a0dd64be354bc194304e7bce8fbf899eef4ebbf062f2f1cdb7188588"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/MultiSignalTimelinePane.java",
+    "bytes": 14461,
+    "sha256": "86eb8ed0e587ad156cf4291a9fac400367f39a3d8ceb1d27736bc1bd5a5b289d"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/OverviewPane.java",
+    "bytes": 15973,
+    "sha256": "0499e80c371cf1ac669e8d01bcd02684e43d9742f8795e6ed4abcc1a149645d6"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/ProctorRedesignView.java",
+    "bytes": 31670,
+    "sha256": "1c3e9ed2cae08d408a0270fef4eac6730acac5205234e799b507036b623eb7c7"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/SignalSummaryView.java",
+    "bytes": 11308,
+    "sha256": "7e051a468acfb9d1ecf51339a00de837f7b94c20772e8bc0eae4e71dacc80d94"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/proctor/signals/CandidateSignalAccumulator.java",
+    "bytes": 4810,
+    "sha256": "567e4263582c9086a5520a83adea8118e6baa8c3bb74a41114d457e80ca09310"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/proctor/signals/CandidateSignals.java",
+    "bytes": 873,
+    "sha256": "bd881386681aa265cecc0c7deba6eb1e6b6697618dab4f9a054a547e2775fece"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/proctor/signals/CandidateSignalsController.java",
+    "bytes": 17558,
+    "sha256": "5730dcbfb0a1d070904ef16af24dc889c97be5a468b21a26a01479ccf4660f31"
+  },
+  {
+    "path": "client/src/main/resources/proctor-redesign/proctor-redesign.css",
+    "bytes": 21006,
+    "sha256": "a10a7acf6b6771c7dd99b0c4588877f690657b2c35789c5f0c51dfd4d125ce21"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/CandidateAttemptPreviewLoaderTest.java",
+    "bytes": 10003,
+    "sha256": "dbbd36f5862cce2cc3d9973fa42f10b45976db69ac1c5f2691a16cfee12b9f3b"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/audio/ListeningMessagesMonitoringTest.java",
+    "bytes": 4601,
+    "sha256": "46fba4ccf7a03a28b371f9f40fa9ff374709f8a01fc96fac4f2426987e236312"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/dashboard/MonitoringApiClientTest.java",
+    "bytes": 12247,
+    "sha256": "56289f772517765215eb6ff71afa3e4d8ae0b0c17154df14051ff158abd51dc1"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/monitoring/CandidateExamUsbCapabilityTest.java",
+    "bytes": 852,
+    "sha256": "4613a8c64b5dfe0072462dd1d108c9fa14dac111174fba47b32abcadeefde5b4"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/monitoring/usb/CimUsbScanSourceTest.java",
+    "bytes": 4096,
+    "sha256": "e0bce3bf365be388d1ab74b379461c84337f4cf2d6a5d6be35796df55f2f5de0"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/monitoring/usb/UsbControlWorkerLifecycleTest.java",
+    "bytes": 3056,
+    "sha256": "5a32706ef2ec973f3a748c3ca482c0070b9443da011de2bab14e24e9a1d89ac1"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/monitoring/usb/UsbExamSessionTest.java",
+    "bytes": 5501,
+    "sha256": "42fdfaa793d56664af56233da7a000d8ef7a292faa7a09cc89c9830beb67cd81"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/monitoring/usb/UsbScanCoordinatorTest.java",
+    "bytes": 15095,
+    "sha256": "ce5891f5447f0b0679937cc13f0b6c0e1b8898b8a6ed884df2e988b89007a8ab"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/ProctorRedesignGuiTest.java",
+    "bytes": 24637,
+    "sha256": "3dd480938806454bdc3cd1ab8b92d1c905fc139aeb1c3e93db53e497ad7248aa"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/SignalSummaryGuiTest.java",
+    "bytes": 7583,
+    "sha256": "d89b4a8ee9af2207d3ae9b3b64319a544fd43e30c64e379b2095f36c498dae85"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/SignalSummaryViewTest.java",
+    "bytes": 4694,
+    "sha256": "c394eb2008e33af2db6a99f90948904d550b40aae0a68e26d2cd67b258edd259"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/proctor/signals/CandidateSignalAccumulatorTest.java",
+    "bytes": 5929,
+    "sha256": "fbf94b27b6f7ed7e778b370bd608329c45a5997a638a8169b181b14aabd36cd2"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/proctor/signals/CandidateSignalsControllerTest.java",
+    "bytes": 14890,
+    "sha256": "88e8ad1eeefd8519cecdbfb2c6acb13cd0d7fb3a1b20a284230362d9bf4e1306"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/proctor/signals/CandidateSignalsPendingLimitTest.java",
+    "bytes": 1920,
+    "sha256": "ecae7aadc622e9b765537b65f8d5e7e7a8d9d204e2acce0bf6ddff93e8cfbafd"
+  },
+  {
+    "path": "monitoring-spike/pom.xml",
+    "bytes": 1570,
+    "sha256": "60abe0db930c5fbbb7e947f9294c706275c6a628d7b92449f4596bf116197976"
+  },
+  {
+    "path": "monitoring-spike/src/main/java/vn/edu/toeic/monitoring/usb/CimSnapshotSource.java",
+    "deleted": true
+  },
+  {
+    "path": "monitoring-spike/src/main/java/vn/edu/toeic/monitoring/usb/UsbSnapshot.java",
+    "deleted": true
+  },
+  {
+    "path": "monitoring-spike/src/main/resources/vn/edu/toeic/monitoring/usb/cim-snapshot.ps1",
+    "deleted": true
+  },
+  {
+    "path": "monitoring-spike/src/test/java/vn/edu/toeic/monitoring/usb/CimClassificationScriptTest.java",
+    "deleted": true
+  },
+  {
+    "path": "monitoring-spike/src/test/java/vn/edu/toeic/monitoring/usb/CimSnapshotSourceTest.java",
+    "deleted": true
+  },
+  {
+    "path": "pom.xml",
+    "bytes": 2305,
+    "sha256": "ce1dd0b1411e85ee37c8e24914644d3c2a68e351222ddd5fd2ada318b1f08ae9"
+  },
+  {
+    "path": "scripts/build-usb-probe.ps1",
+    "bytes": 2553,
+    "sha256": "afbe146b1198b38fe2d2368a0595f7c29de18d32259349860a5aaa0ca64f3f63"
+  },
+  {
+    "path": "scripts/demo-usb-integrated.ps1",
+    "bytes": 14809,
+    "sha256": "2ab45c2db8f2ba6df89a4fd5c5fc3e7dc7dd59842da10f1f179c95ebbc775380"
+  },
+  {
+    "path": "scripts/monitoring-desktop-session.ps1",
+    "bytes": 13478,
+    "sha256": "19079f5110e5d4e7e3cf9c9f425b2dad574789a3aeb63691a09a93e19fc68971"
+  },
+  {
+    "path": "scripts/package-windows.ps1",
+    "bytes": 7345,
+    "sha256": "aca91f879e50261dcd62ed8ddcf9c54d6979728f62384e2b52ecc9e66b2731ca"
+  },
+  {
+    "path": "scripts/probe-usb-storage.ps1",
+    "bytes": 3605,
+    "sha256": "2ae2c5835daf08e266cba008f6f51bb04df49cf0defeb6072d2b9653ebd60004"
+  },
+  {
+    "path": "scripts/smoke-windows-installer.ps1",
+    "bytes": 10358,
+    "sha256": "e87fa63f11543613d249ef7b08f26245d9569132709347a15b4463d0d3e56ace"
+  },
+  {
+    "path": "scripts/start-monitoring-client.ps1",
+    "bytes": 2070,
+    "sha256": "be9d656fc219a289d6295334677a23d8899857cd702b50dd582707ddf502dee2"
+  },
+  {
+    "path": "scripts/start-monitoring-server.ps1",
+    "bytes": 1855,
+    "sha256": "e1f40f402e1532cf0ae3417745677cd8296768e26918d99a6c91fb16b777d298"
+  },
+  {
+    "path": "scripts/verify-t3b4.ps1",
+    "bytes": 2470,
+    "sha256": "b420479935d9e1ddd4911724f0649f239aa0e8370567666338a51b7ae3796719"
+  },
+  {
+    "path": "server/pom.xml",
+    "bytes": 3385,
+    "sha256": "697e3aa00b9413e1cb2330b80e781f654751b7ecc3c8372390d4e1ee532db4fb"
+  },
+  {
+    "path": "server/src/test/java/vn/edu/toeic/server/monitoring/signal/CimUsbScanSource.java",
+    "bytes": 1065,
+    "sha256": "e3faac8a0c12154b6a0a4018526286623a9fea1d0dd0c80f6e2768804330ab69"
+  },
+  {
+    "path": "server/src/test/java/vn/edu/toeic/server/monitoring/signal/MonitoringTimelinePostgresTest.java",
+    "bytes": 65956,
+    "sha256": "2b53ebcd34f30b8f685a69e231fab4e658f31eb1bff1e73c5327cbce364c48b5"
+  },
+  {
+    "path": "server/src/test/java/vn/edu/toeic/server/monitoring/signal/UsbSnapshotProjection.java",
+    "bytes": 689,
+    "sha256": "e1b0a05491c49aa6a127699a3758fec8fe5f9a04724e90c929e030b43215e98a"
+  },
+  {
+    "path": "windows-observer/pom.xml",
+    "bytes": 958,
+    "sha256": "4897e8c51100afa1fff526ab4c63efe27c0c606ad914857f8c7d132d114d9d3f"
+  },
+  {
+    "path": "windows-observer/src/main/java/vn/edu/toeic/monitoring/usb/CimSnapshotSource.java",
+    "bytes": 10434,
+    "sha256": "e74061db2fe234f7aab7e8cad87da2f9608e1cac999f2cd8705516cc8d5ca452"
+  },
+  {
+    "path": "windows-observer/src/main/java/vn/edu/toeic/monitoring/usb/UsbSnapshot.java",
+    "bytes": 1470,
+    "sha256": "74cabf3d05ff33c508f6f9d8536a1344ee9b646ef8acb0d1cbdd06e086650ef2"
+  },
+  {
+    "path": "windows-observer/src/main/resources/vn/edu/toeic/monitoring/usb/cim-snapshot.ps1",
+    "bytes": 2931,
+    "sha256": "d5c9ac60642e19abba72bd86117e55ac49ae8bddca1acbbda7394d1986e5f077"
+  },
+  {
+    "path": "windows-observer/src/test/java/vn/edu/toeic/monitoring/usb/CimClassificationScriptTest.java",
+    "bytes": 5070,
+    "sha256": "89c01540fcac38fbe080b53f5b007548f8288d36c8424bcda28eebb059406856"
+  },
+  {
+    "path": "windows-observer/src/test/java/vn/edu/toeic/monitoring/usb/CimSnapshotSourceTest.java",
+    "bytes": 7029,
+    "sha256": "07785bb3bd1177ea6fbfc2ca143926aa36ba2ffb87ee1b10b48c0aeb607b2bad"
+  }
+]

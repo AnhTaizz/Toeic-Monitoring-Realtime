@@ -21,6 +21,7 @@ import vn.edu.toeic.client.proctor.redesign.RoomModel.Alert;
 import vn.edu.toeic.client.proctor.redesign.RoomModel.CandidateRow;
 import vn.edu.toeic.client.proctor.redesign.RoomModel.HistoryEntry;
 import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
+import vn.edu.toeic.client.proctor.signals.CandidateSignalsController;
 
 /**
  * Right-side panels of mockups 05 and 06. They only render the shared room; closing one never clears data,
@@ -89,6 +90,8 @@ final class Drawers {
     static final class CandidateDrawer extends Drawer {
         private final Actions actions;
         private String attemptId;
+        private RoomModel.Room room;
+        private CandidateSignalsController.Snapshot signals;
 
         CandidateDrawer(Actions actions, Runnable close) {
             super("candidate-drawer", "Chi tiết thí sinh", close);
@@ -105,12 +108,18 @@ final class Drawers {
 
         String attemptId() { return attemptId; }
 
+        void updateSignals(CandidateSignalsController.Snapshot value) {
+            signals=value;
+            if(room!=null)update(room);
+        }
+
         void show(String attempt, RoomModel.Room room) {
             attemptId = attempt;
             update(room);
         }
 
         @Override void update(RoomModel.Room room) {
+            this.room=room;
             CandidateRow row = attemptId == null ? null : room.row(attemptId);
             body.getChildren().clear();
             if (row == null) {
@@ -158,8 +167,11 @@ final class Drawers {
                             : "Trạng thái theo heartbeat server nhận; tiến độ theo lần đọc gần nhất."));
 
             VBox processes = section("Process đang quan sát", processState(room, row));
+            VBox extended = section("Giám sát mở rộng", SignalSummaryView.details(
+                    SignalSummaryView.scoped(signals,room,row.attemptId()),signals!=null&&signals.stale(),
+                    signals!=null&&signals.loading(),source->actions.showTimeline(row.attemptId(),source)));
             VBox recent = section("Hoạt động gần đây", recent(room, row));
-            body.getChildren().addAll(identity, exam, connection, processes, recent);
+            body.getChildren().addAll(identity, exam, connection, processes, extended, recent);
         }
 
         /** Current state comes from DashboardController's selected attempt; it is separate from the history. */

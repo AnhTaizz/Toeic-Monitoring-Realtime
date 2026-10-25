@@ -1,5 +1,17 @@
 # Protocol đang dùng
 
+24/10/2026 — Tương thích consumer cho monitoring-only legacy: HTTP Listening status
+NOT_STARTED/sessionId null/toàn bộ playback rỗng được dashboard chiếu thành không có
+Listening; playback parser và kiểm scope vẫn nghiêm ngặt. Không đổi DTO/wire/server.
+V1 ACTIVE totalQuestions0 là tổng chấm chưa có, preview dùng số câu chưa biết.
+[Bằng chứng và giới hạn](../evidence/usb-8080-fix-20261024/REPORT.md).
+
+24/10/2026 — Producer USB nối vào app thí sinh dưới hai gate signal/USB opt-in;
+dùng nguyên ba `USB_STORAGE_*` và `OBSERVER_STATUS`, không đổi DTO/endpoint/schema.
+Cùng collector lease/context/sequence/delivery; pause khi mất socket, chỉ resume sau
+capability + scoped heartbeat mới xác nhận. [Vòng đời/cấu hình](USB_APP_INTEGRATION.md).
+Mặc định OFF, chưa là phê duyệt policy hay nghiệm thu phần cứng đầy đủ.
+
 ## EX-03 — rich import đã tích hợp, cập nhật baseline 22/10/2026
 
 `POST /api/v2/exams/import` đã có code: Bearer PROCTOR, JSON strict schemaVersion2/profile TOEIC_200, đúng200 câu/7Part, source/group/options/media verified; trả201 sau DB commit với `RichExamImportResponse`. Duplicate/race409 CONFLICT; JSON/graph400 INVALID_INPUT; body>2MiB413; local media thiếu/hỏng409 INVALID_STATE; IO/DB tạm thời503 RETRYABLE_SERVER_ERROR, retryable=true. Auth/role trước body/filesystem. [DTO/transaction/errors/schema/evidence](EX03_RICH_IMPORTER_VERIFICATION.md), [chữ ký EX02](EX02_RICH_EXAM_CONTRACT_V1.md).
@@ -1085,3 +1097,7 @@ Không đổi endpoint/wire/auth/schema. Dashboard dùng API typed history ACTIV
 ## MON-08 — read model EXPERIMENTAL, 21/10/2026
 
 Thêm GET `/api/v1/monitoring/attempts/{attemptId}/alert-summary[?cutoff=ISO_INSTANT]`, chỉ khi cả signal-experiment-enabled và alert-experiment-enabled=true; mặc địnhOFF. Bearer header/assignedPROCTOR/ACTIVE-only, reuse auth locks trước query; không cache. REPEATABLE_READ committed snapshot, cutoff DB-clock được quản lý rõ; cap200/source (20–200),100summary/5evidence,512KiB. Response schema1 WINDOW_ONLY có policyVersion/experimental/from/cutoff/sourceLimited/summaryLimited/inputEvents/gapEvents/unavailableEvents/excludedProcessEvents/coverageNote/items; item gồm ID/run/source/type/rule/priority/count/window/evidence/explanation. droppedCount là decimal string exact (không JSON integer sum trànlong).4rules/ngưỡng/bounds/errors/exactfields tại [contract/runbook](MON08_EXPERIMENTAL_ALERTS.md). Read projection type LOST/RESTORED/MINIMIZED/OTHER không là signal wire type mới. Không đổi WS/original history/queue/COMMIT-ACK/state/migration. FULLdefault, experimentsOFF/policy/hardware/gatespending. Không verdict/đổi trạng thái thi.
+
+## Tổng hợp đa tín hiệu cho giám thị — 25/10/2026
+
+Tổng quan và Chi tiết dùng thêm một read consumer cho typed history hiện hữu, không thêm endpoint/field/type hoặc push. Mỗi cycle xác minh lại scope PROCTOR, chỉ tổng hợp observation của collector hiện tại trong roster đã xác thực; fixed-through/page100/3page mỗi lượt, tối đa 2 request history chưa hoàn tất, 100 lượt/12s cycle. Snapshot UI giữ riêng attempt/run và đánh dấu thiếu/cũ/gap. READY không mang storageCount nên không suy USB=0; status READY sau gap không phục hồi giá trị trước gap. Các nút mở Timeline chỉ truyền lựa chọn attempt/source vào view hiện có. [Chi tiết](PROCTOR_SIGNAL_SUMMARY.md).

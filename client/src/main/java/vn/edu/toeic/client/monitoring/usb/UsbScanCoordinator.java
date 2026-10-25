@@ -8,18 +8,29 @@ import java.util.function.*;
 import javafx.application.Platform;
 import vn.edu.toeic.client.monitoring.signal.*;
 import vn.edu.toeic.client.realtime.*;
+import vn.edu.toeic.protocol.monitoring.EventOrigin;
 import vn.edu.toeic.protocol.monitoring.signal.*;
 import vn.edu.toeic.protocol.monitoring.signal.ObserverStatusSignal.*;
 
-/** Explicit TEST composition. Owns source/workers/USB adapters; borrows the authorized signal lane. */
+/** Owns one USB source/adapter and two workers; borrows the authorized signal lane. */
 public final class UsbScanCoordinator implements AutoCloseable {
-    public record Settings(Duration cadence, Duration queryTimeout, Duration duration) {
+    public record Settings(Duration cadence, Duration queryTimeout, Duration duration, boolean examSession) {
+        public Settings(Duration cadence, Duration queryTimeout, Duration duration) {
+            this(cadence, queryTimeout, duration, false);
+        }
         public Settings {
             Objects.requireNonNull(cadence); Objects.requireNonNull(queryTimeout); Objects.requireNonNull(duration);
             if (cadence.toMillis()<250 || cadence.toMillis()>10000 || queryTimeout.toMillis()<100 || queryTimeout.toMillis()>10000
-                    || duration.toMillis()<1000 || duration.toMillis()>120000) throw new IllegalArgumentException("Invalid finite USB settings");
+                    || (examSession ? !duration.isZero() : duration.toMillis()<1000 || duration.toMillis()>120000))
+                throw new IllegalArgumentException("Invalid USB settings");
         }
         public static Settings defaults(){return new Settings(Duration.ofSeconds(1),Duration.ofSeconds(5),Duration.ofSeconds(15));}
+        /** Session owner supplies the end: stop, terminal attempt, revoke, logout, or app close. */
+        public static Settings forExam(Duration cadence, Duration queryTimeout){return new Settings(cadence,queryTimeout,Duration.ZERO,true);}
+        public static Settings configuredForExam(){
+            return forExam(Duration.ofMillis(Long.parseLong(System.getProperty("toeic.monitoring.usb-cadence-millis","1000"))),
+                    Duration.ofMillis(Long.parseLong(System.getProperty("toeic.monitoring.usb-query-timeout-millis","5000"))));
+        }
     }
     public record Reading(UsbSignalAdapter.Snapshot snapshot, Reason failureReason, long queryMillis) {
         public Reading { Objects.requireNonNull(snapshot); if(queryMillis<0 || !Set.of(Reason.NO_DATA,Reason.API_UNAVAILABLE,Reason.PERMISSION_DENIED,Reason.SCAN_FAILED).contains(failureReason))throw new IllegalArgumentException(); }
@@ -39,9 +50,12 @@ public final class UsbScanCoordinator implements AutoCloseable {
     private final SignalDelivery delivery;private final MonitoringTransport transport;private final Clock clock;private final Audit audit;
     private final UsbSignalAdapter adapter=new UsbSignalAdapter();private final ObserverStatusEmitter statuses;
     private final boolean ownsStatuses;
-    private final ScheduledThreadPoolExecutor scanner=executor("toeic-usb-test-scan"),control=executor("toeic-usb-test-control");
+    // A non-daemon control worker keeps the JVM alive until bounded owned-source cleanup completes.
+    private final ScheduledThreadPoolExecutor scanner=executor("toeic-usb-scan",true),control=executor("toeic-usb-control",false);
     private final AutoCloseable connections;
-    private boolean started,active,cleanupScheduled;private long generation,scanGeneration,statusGeneration,socket,scans;
+    private boolean started,active,cleanupScheduled;private long generation,scanGeneration,statusGeneration,scans;
+    private volatile long socket;
+    private ScheduledFuture<?> scanTask,controlTask;
     private UsbSignalAdapter.Health health=UsbSignalAdapter.Health.STOPPED;private Integer count;private long queryMillis;
     private String stoppedReason="NOT_STARTED";private State previous;private Reason readyReason=Reason.INITIAL;
     public UsbScanCoordinator(Source source,Settings settings,SignalRunContext run,SignalDelivery delivery,MonitoringTransport transport,Audit audit){
@@ -50,7 +64,7 @@ public final class UsbScanCoordinator implements AutoCloseable {
     public UsbScanCoordinator(Source source,Settings settings,SignalRunContext run,SignalDelivery delivery,MonitoringTransport transport,Clock clock,LongSupplier ticker,Audit audit){
         this(source,settings,run,delivery,transport,clock,audit,new ObserverStatusEmitter(ticker),0,true);
     }
-    /** TEST composition: borrow the single status owner already shared with display; do not stop it. */
+    /** Borrow the single status owner already shared with display; do not stop it. */
     public UsbScanCoordinator(Source source,Settings settings,SignalRunContext run,SignalDelivery delivery,MonitoringTransport transport,Audit audit,ObserverStatusEmitter statuses,long statusGeneration){
         this(source,settings,run,delivery,transport,Clock.systemUTC(),audit,statuses,statusGeneration,false);
     }
@@ -60,31 +74,51 @@ public final class UsbScanCoordinator implements AutoCloseable {
         this.statuses=Objects.requireNonNull(statuses);this.statusGeneration=statusGeneration;this.ownsStatuses=ownsStatuses;
         if(!delivery.usesContext(run))throw new IllegalArgumentException("Shared context delivery required");
         if(!ownsStatuses&&!statuses.usesContext(run,delivery,statusGeneration))throw new IllegalArgumentException("Fresh shared status owner required");
-        connections=transport.onConnectionState(state->{if(state!=ConnectionState.CONNECTED)requestStop("CONNECTION_CHANGED");});
+        connections=transport.onConnectionState(state->{if(state!=ConnectionState.CONNECTED){
+            if(settings.examSession())pause("CONNECTION_CHANGED");else requestStop("CONNECTION_CHANGED");
+        }});
     }
-    private static ScheduledThreadPoolExecutor executor(String name){var e=new ScheduledThreadPoolExecutor(1,r->{var t=new Thread(r,name);t.setDaemon(true);return t;});e.setRemoveOnCancelPolicy(true);e.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);return e;}
+    private static ScheduledThreadPoolExecutor executor(String name,boolean daemon){var e=new ScheduledThreadPoolExecutor(1,r->{var t=new Thread(r,name);t.setDaemon(daemon);return t;});e.setRemoveOnCancelPolicy(true);e.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);return e;}
     public long start(){
         boolean ready=transport.signalExperimentReady(run.attemptId());long current=transport.connectionGeneration();
         synchronized(lock){
             if(started||cleanupScheduled||!ready||!run.active()||!delivery.status().active())throw new IllegalStateException("Fresh authorized lane required");
             if(!ownsStatuses&&!statuses.usesContext(run,delivery,statusGeneration))throw new IllegalStateException("Shared status owner stopped");
-            started=true;socket=current;scanGeneration=adapter.start(run,delivery);if(ownsStatuses)statusGeneration=statuses.start(run,delivery);
-            active=true;stoppedReason="NONE";generation++;long expected=generation;
-            scanner.scheduleWithFixedDelay(()->scan(expected),0,settings.cadence().toMillis(),TimeUnit.MILLISECONDS);
-            control.scheduleWithFixedDelay(()->flush(expected),100,100,TimeUnit.MILLISECONDS);
-            control.schedule(()->requestStop("DURATION"),settings.duration().toMillis(),TimeUnit.MILLISECONDS);
+            started=true;scanGeneration=adapter.start(run,delivery);if(ownsStatuses)statusGeneration=statuses.start(run,delivery);
+            activate(current);
+            if(!settings.examSession())control.schedule(()->requestStop("DURATION"),settings.duration().toMillis(),TimeUnit.MILLISECONDS);
             return generation;
         }
     }
+    /** Owner calls only after refreshing and confirming this socket's capability and heartbeat. */
+    public void resume(){
+        boolean ready=transport.signalExperimentReady(run.attemptId());long current=transport.connectionGeneration();
+        synchronized(lock){
+            if(!settings.examSession()||!started||cleanupScheduled||!ready||!run.active()||!delivery.status().active()
+                    ||!ownsStatuses&&!statuses.usesContext(run,delivery,statusGeneration))throw new IllegalStateException("Current authorized exam lane required");
+            if(active&&socket==current)return;
+            cancelSchedules();activate(current);
+        }
+    }
+    private void activate(long current){
+        socket=current;active=true;stoppedReason="NONE";generation++;long expected=generation;
+        scanTask=scanner.scheduleWithFixedDelay(()->scan(expected),0,settings.cadence().toMillis(),TimeUnit.MILLISECONDS);
+        controlTask=control.scheduleWithFixedDelay(()->flush(expected),100,100,TimeUnit.MILLISECONDS);
+    }
     private boolean laneReady(){return transport.signalExperimentReady(run.attemptId())&&transport.connectionGeneration()==socket&&run.active()&&delivery.status().active()
             &&(ownsStatuses||statuses.usesContext(run,delivery,statusGeneration));}
+    private void laneLost(long expected){
+        if(settings.examSession()&&run.active()&&delivery.status().active()
+                &&(ownsStatuses||statuses.usesContext(run,delivery,statusGeneration)))pause("LANE_NOT_READY",expected);
+        else requestStop("LANE_NOT_READY",expected);
+    }
     private void scan(long expected){
-        if(!laneReady()){requestStop("LANE_NOT_READY");return;}
+        if(!laneReady()){laneLost(expected);return;}
         synchronized(lock){if(!active||generation!=expected)return;}
         Reading reading;
         try{reading=Objects.requireNonNull(source.scan(settings.queryTimeout()));}
         catch(RuntimeException unavailable){reading=new Reading(new UsbSignalAdapter.Snapshot(UsbSignalAdapter.SourceState.ERROR,List.of()),Reason.SCAN_FAILED,0);}
-        if(!laneReady()){requestStop("LANE_NOT_READY");return;}
+        if(!laneReady()){laneLost(expected);return;}
         var origin=transport.observationOrigin();Instant time=clock.instant().truncatedTo(ChronoUnit.MICROS);
         List<UsbSignalAdapter.Emission> usb;List<ObserverStatusEmitter.Emission> status;
         synchronized(lock){
@@ -98,20 +132,37 @@ public final class UsbScanCoordinator implements AutoCloseable {
             previous=state;usb=result.emissions();status=statuses.observe(statusGeneration,ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,state,reason,time,origin);
         }
         try{for(var e:usb)audit.emission(e.message(),e.queued());for(var e:status)audit.emission(e.message(),e.queued());audit.observed(status());}
-        catch(RuntimeException failed){requestStop("AUDIT_LIMIT_OR_FAILURE");}
+        catch(RuntimeException failed){requestStop("AUDIT_LIMIT_OR_FAILURE",expected);}
     }
     private void flush(long expected){
-        if(!laneReady()){requestStop("LANE_NOT_READY");return;}
+        if(!laneReady()){laneLost(expected);return;}
         List<ObserverStatusEmitter.Emission> emitted;
         synchronized(lock){if(!active||generation!=expected)return;emitted=statuses.flush(statusGeneration);}
+        try{for(var e:emitted)audit.emission(e.message(),e.queued());}catch(RuntimeException failed){requestStop("AUDIT_LIMIT_OR_FAILURE",expected);}
+    }
+    /** Invalidate query callbacks without releasing/reclaiming the one adapter binding or baseline. */
+    public void pause(String reason){pause(reason,-1);}
+    private void pause(String reason,long expected){
+        if(!settings.examSession()||!Set.of("CONNECTION_CHANGED","LANE_NOT_READY").contains(reason))throw new IllegalArgumentException("Exam pause code required");
+        List<ObserverStatusEmitter.Emission> emitted;
+        synchronized(lock){
+            if(!started||cleanupScheduled||!active||expected>=0&&generation!=expected)return;
+            active=false;generation++;stoppedReason=reason;cancelSchedules();health=UsbSignalAdapter.Health.UNKNOWN;count=null;
+            Instant time=clock.instant().truncatedTo(ChronoUnit.MICROS);
+            adapter.accept(scanGeneration,new UsbSignalAdapter.Snapshot(UsbSignalAdapter.SourceState.UNKNOWN,List.of()),time,EventOrigin.OFFLINE);
+            previous=State.UNKNOWN;
+            emitted=statuses.observe(statusGeneration,ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,State.UNKNOWN,Reason.NO_DATA,time,EventOrigin.OFFLINE);
+        }
         try{for(var e:emitted)audit.emission(e.message(),e.queued());}catch(RuntimeException failed){requestStop("AUDIT_LIMIT_OR_FAILURE");}
     }
-    public void requestStop(String reason){
+    private void cancelSchedules(){if(scanTask!=null)scanTask.cancel(false);if(controlTask!=null)controlTask.cancel(false);}
+    public void requestStop(String reason){requestStop(reason,-1);}
+    private void requestStop(String reason,long expected){
         if(!Set.of("STOP","DURATION","CONNECTION_CHANGED","LANE_NOT_READY","AUDIT_LIMIT_OR_FAILURE","CANCELLED").contains(reason))throw new IllegalArgumentException("Safe stop code required");
         synchronized(lock){
-            if(cleanupScheduled)return;
+            if(cleanupScheduled||expected>=0&&(!active||generation!=expected))return;
             if(!started && reason.equals("CONNECTION_CHANGED"))return;
-            active=false;generation++;stoppedReason=reason;cleanupScheduled=true;adapter.stop();if(ownsStatuses)statuses.stop();scanner.shutdown();
+            active=false;generation++;stoppedReason=reason;cleanupScheduled=true;cancelSchedules();adapter.stop();if(ownsStatuses)statuses.stop();scanner.shutdown();
             control.execute(this::cleanup);
         }
     }

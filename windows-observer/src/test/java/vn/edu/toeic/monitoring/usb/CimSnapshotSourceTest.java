@@ -67,6 +67,23 @@ class CimSnapshotSourceTest {
         source.close();
         assertThat(Duration.ofNanos(System.nanoTime() - start)).isLessThan(Duration.ofSeconds(5));
         assertThat(source.aliveChildren()).isZero();
+        assertThat(source.retainedChildHandles()).isZero();
+        assertThat(source.readersTerminated()).isTrue();
+    }
+    @Test void completedQueriesReleaseHandlesWhileTheStartedCountRemainsCumulative() {
+        var source = child("ready", 5000);
+        try {
+            for (int completed = 1; completed <= 8; completed++) {
+                assertThat(source.scan().status()).isEqualTo(UsbSnapshot.Status.READY);
+                assertThat(source.childrenStarted()).isEqualTo(completed);
+                // Check retained metadata before aliveChildren() can prune it.
+                assertThat(source.retainedChildHandles()).isZero();
+                assertThat(source.aliveChildren()).isZero();
+            }
+        } finally {
+            source.close();
+        }
+        assertThat(source.childrenStarted()).isEqualTo(8);
         assertThat(source.readersTerminated()).isTrue();
     }
     @Test void outputFloodIsBoundedAndDoesNotLeakRawText() {

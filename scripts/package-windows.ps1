@@ -45,7 +45,7 @@ try {
     # Packaging must not inherit agents, secret JVM arguments or experimental DELTA settings.
     foreach ($key in @('JAVA_TOOL_OPTIONS','JDK_JAVA_OPTIONS','_JAVA_OPTIONS')) { [Environment]::SetEnvironmentVariable($key,$null,'Process') }
     # List modules explicitly: -am also selects the root POM and would clean target/ tooling/logs.
-    $arguments = @('-B',"-Dmaven.repo.local=$env:USERPROFILE/.m2/repository",'-pl','protocol,client','clean','package','-DskipTests')
+    $arguments = @('-B',"-Dmaven.repo.local=$env:USERPROFILE/.m2/repository",'-pl','protocol,windows-observer,client','clean','package','-DskipTests')
     if ($Offline) { $arguments += '-o' }
     & mvn @arguments *> (Join-Path $run 'build.log')
     if ($LASTEXITCODE -ne 0) { throw "Maven build failed: $run/build.log" }

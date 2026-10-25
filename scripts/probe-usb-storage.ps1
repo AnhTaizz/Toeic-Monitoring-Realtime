@@ -11,20 +11,25 @@ param(
 $ErrorActionPreference = 'Stop'
 $repo = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $classes = Join-Path $repo 'monitoring-spike\target\classes'
+$observerClasses = Join-Path $repo 'windows-observer\target\classes'
 if (-not (Test-Path -LiteralPath (Join-Path $classes 'vn\edu\toeic\monitoring\usb\UsbStorageProbe.class'))) {
     throw 'Build the isolated monitoring-spike module first; see docs/USB_STORAGE_PROBE.md.'
+}
+if (-not (Test-Path -LiteralPath (Join-Path $observerClasses 'vn\edu\toeic\monitoring\usb\CimSnapshotSource.class'))) {
+    throw 'Build the shared Windows observer with scripts/build-usb-probe.ps1 first.'
 }
 $receiptPath = Join-Path $repo 'monitoring-spike/target/usb-probe-build.json'
 if (-not (Test-Path -LiteralPath $receiptPath)) { throw 'Run scripts/build-usb-probe.ps1 to build/test and issue a source receipt first.' }
 $receipt = Get-Content -LiteralPath $receiptPath -Raw -Encoding UTF8 | ConvertFrom-Json
 if ($receipt.schema -ne 'usb-probe-build-local-v1' -or $receipt.sourceSha -notmatch '^[a-f0-9]{40}$') { throw 'Invalid build receipt' }
 $sourceSha = $receipt.sourceSha
-$sourcePaths = @('monitoring-spike/src','scripts/build-usb-probe.ps1','scripts/probe-usb-storage.ps1')
+$sourcePaths = @('pom.xml','windows-observer/pom.xml','windows-observer/src','monitoring-spike/pom.xml',
+    'monitoring-spike/src','scripts/build-usb-probe.ps1','scripts/probe-usb-storage.ps1')
 $dirty = @(& git -C $repo status --porcelain --untracked-files=all -- $sourcePaths)
 if ($LASTEXITCODE -ne 0 -or $dirty.Count -ne 0) { throw 'Probe source changed. Commit and rebuild before evidence capture.' }
 $expectedPaths = @($receipt.sourceFiles + $receipt.runtimeFiles | ForEach-Object { $_.path } | Sort-Object)
 $actualPaths = @()
-foreach ($relative in @($sourcePaths + @('monitoring-spike/target/classes'))) {
+foreach ($relative in @($sourcePaths + @('monitoring-spike/target/classes','windows-observer/target/classes'))) {
     foreach ($file in @(Get-ChildItem -LiteralPath (Join-Path $repo $relative) -File -Recurse)) {
         $actualPaths += $file.FullName.Substring($repo.Length + 1).Replace('\','/')
     }
@@ -36,7 +41,8 @@ foreach ($entry in @($receipt.sourceFiles + $receipt.runtimeFiles)) {
     if (-not $path.StartsWith($repo + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw 'Invalid build receipt path' }
     if ((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.sha256) { throw 'Build/source hash mismatch; rebuild.' }
 }
-$probeArgs = @('-cp',$classes,'vn.edu.toeic.monitoring.usb.UsbStorageProbe','--method',$Method,
+$classpath = $classes + [IO.Path]::PathSeparator + $observerClasses
+$probeArgs = @('-cp',$classpath,'vn.edu.toeic.monitoring.usb.UsbStorageProbe','--method',$Method,
     '--duration-seconds',"$DurationSeconds",'--interval-millis',"$IntervalMillis",'--query-timeout-millis',"$QueryTimeoutMillis",
     '--max-lines',"$MaxLines",'--machine-alias',$MachineAlias,'--source-sha',$sourceSha)
 if ($OutputFile) { $probeArgs += @('--output-file',$OutputFile) }
