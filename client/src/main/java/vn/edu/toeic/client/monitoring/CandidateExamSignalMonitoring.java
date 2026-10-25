@@ -114,9 +114,8 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
         messages = realtime.onMessage(this::message);
         connections = realtime.onConnectionState(this::connection);
         accessRejections = realtime.onMonitoringAccessRejected(rejection -> {
-            if (attemptId.equals(rejection.attemptId()) && collectorSessionId.equals(rejection.collectorSessionId())) {
-                Platform.runLater(this::close);
-            }
+            // Monitoring permission ended: stop on this socket thread, not after queued JavaFX work.
+            if (attemptId.equals(rejection.attemptId()) && collectorSessionId.equals(rejection.collectorSessionId())) close();
         });
         if (realtime.connectionState() == ConnectionState.CONNECTED) refreshCapability();
     }
@@ -128,7 +127,7 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
             capabilityGeneration = -1;
             refreshCapability();
         } else if (state == ConnectionState.FAILED) {
-            Platform.runLater(this::close);
+            close();
         }
     }
 
@@ -174,8 +173,11 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
 
     private void configureActivity(boolean supported) {
         if (supported && examScene && activityMonitor == null && !activityRetired) {
-            activityAdapter = new ActivitySignalAdapter();
-            long generation = activityAdapter.start(run, delivery);
+            var adapter = new ActivitySignalAdapter();
+            long generation;
+            try { generation = adapter.start(run, delivery); }
+            catch (IllegalArgumentException runClosed) { activityRetired = true; return; } // close() on another thread
+            activityAdapter = adapter;
             activityMonitor = FxActivityMonitor.attach(examWindow, activityAdapter, generation, Clock.systemUTC(),
                     System::nanoTime, realtime::observationOrigin);
         } else if (!supported && activityMonitor != null) {
@@ -223,6 +225,8 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
             usb=new UsbScanCoordinator(new CimUsbScanSource(CimSnapshotSource.Method.MSFT_DISK,usbSettings.queryTimeout()),
                     usbSettings,run,delivery,realtime,(message,queued)->{},statusEmitter,statusGeneration);
             try{usb.start();}catch(IllegalStateException changed){usb.requestStop("STOP");usbRetired=true;}
+            // close() does not take this lock; it sets closed before reading usb, so one of the two sides stops it.
+            if(closed.get())usb.requestStop("STOP");
         }else{
             try{usb.resume();}catch(IllegalStateException retired){usbRetired=true;}
         }
@@ -248,20 +252,31 @@ public final class CandidateExamSignalMonitoring implements AutoCloseable {
         return delivery.awaitStopped(java.time.Duration.ofNanos(Math.max(0,deadline-System.nanoTime())));
     }
 
+    /**
+     * Safe on any thread. Collection and sending stop before this returns; only removing JavaFX listeners and
+     * timelines waits for the FX thread, and until then the adapters see the closed run and drop input.
+     * No lock on this object: socket callbacks hold the transport lock, while configureUsb holds this lock and
+     * then asks the transport, so locking here could deadlock.
+     */
     @Override public void close() {
         if (!closed.compareAndSet(false, true)) return;
-        // Source cleanup may wait for a child process, so only schedule it from the FX thread.
-        synchronized(this){var current=usb;if(current!=null)current.requestStop("STOP");}
-        if (activityMonitor != null) activityMonitor.close();
-        displayMonitor.close();
-        statusEmitter.close();
-        windowMonitor.close();
-        focusMonitor.close();
+        var current = usb;
+        if (current != null) current.requestStop("STOP"); // Schedules source cleanup on the USB worker; never waits.
         run.close();
         delivery.close();
+        statusEmitter.close();
         api.close();
         for (AutoCloseable subscription : List.of(messages, connections, accessRejections)) {
             try { subscription.close(); } catch (Exception ignored) { }
         }
+        if (Platform.isFxApplicationThread()) detachFxObservers();
+        else Platform.runLater(this::detachFxObservers);
+    }
+
+    private void detachFxObservers() {
+        if (activityMonitor != null) activityMonitor.close();
+        displayMonitor.close();
+        windowMonitor.close();
+        focusMonitor.close();
     }
 }

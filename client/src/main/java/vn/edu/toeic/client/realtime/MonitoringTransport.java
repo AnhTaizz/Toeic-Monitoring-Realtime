@@ -20,7 +20,8 @@ public interface MonitoringTransport {
     /** Requires local experimental opt-in as well as confirmed server capability. */
     default boolean supportsMonitoringDelta() { return false; }
     record MonitoringAccessRejection(String attemptId,String collectorSessionId,String code,long connectionGeneration) { }
-    /** Only a validated denial of this run's scoped heartbeat; old request/collector cannot revoke a new run. */
+    /** Only a validated denial of this run's scoped heartbeat or of a process-lane request of the current collector;
+     *  old request/collector cannot revoke a new run. */
     default AutoCloseable onMonitoringAccessRejected(Consumer<MonitoringAccessRejection> listener) { return ()->{ }; }
     /** Explicit experiment capability on THIS socket/attempt; no production coordinator enables it. */
     default boolean signalExperimentReady(String attemptId) { return false; }

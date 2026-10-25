@@ -533,8 +533,13 @@ class MonitoringTimelinePostgresTest {
                 rt.connect(new RealtimeClient.Session(Set.of(a),null,null)).get(8,TimeUnit.SECONDS);String id=process.start(Role.CANDIDATE,a,Set.of(a));
                 var candidateStage=stage("Production lifecycle hook TEST "+action+"; MOCK empty process source");
                 var monitor=fx(()->CandidateExamSignalMonitoring.start(candidateStage,base,token,a,id,rt));
+                var fxBusy=new CountDownLatch(1);
                 try{
                     waitFor("production opt-in observer baseline acknowledged before "+action,()->monitor.deliveryStatus().acknowledged()>0);
+                    // GUI load: the JavaFX thread stays blocked across the terminal action; retirement must not need it.
+                    var fxEntered=new CountDownLatch(1);
+                    Platform.runLater(()->{fxEntered.countDown();try{fxBusy.await(60,TimeUnit.SECONDS);}catch(InterruptedException stop){Thread.currentThread().interrupt();}});
+                    assertThat(fxEntered.await(8,TimeUnit.SECONDS)).isTrue();
                     if(action.equals("TOKEN_REVOKE"))jdbc.sql("UPDATE login_sessions SET revoked_at=clock_timestamp() WHERE token_hash=:h").param("h",TokenHash.sha256(token)).update();
                     else{
                         var writer=post("/api/v1/attempts/"+a+"/takeover",token,new TakeoverWriterRequest(UUID.randomUUID().toString(),a,"MOCK-integrated-device"),200);
@@ -548,12 +553,13 @@ class MonitoringTimelinePostgresTest {
                         throw new AssertionError(timeout.getMessage()+state+" | stoppedWithinExtra30s="+stoppedLater
                                 +" extraMillis="+TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-late),timeout);}
                     assertThat(monitor.awaitStopped(Duration.ofSeconds(3))).isTrue();
+                    fxBusy.countDown();
                     if(!action.equals("TOKEN_REVOKE")){
                         get("/api/v1/monitoring/attempts/"+a+"/signals",proctor,403);get("/api/v1/monitoring/attempts/"+a+"/alert-summary",proctor,403);
                         assertThat(get("/api/v1/attempts/"+a+"/status",token,200).get("state").getAsString()).isEqualTo(action.equals("SUBMIT")?"SUBMITTED":"TIMED_OUT");
                     }
                     results.add(Map.of("kind","PRODUCTION_OPT_IN_LIFECYCLE","action",action,"actualServerDenial",true,"processSource","MOCK empty; real collector workers","typedWorkerStopped",true,"typedDiscardedUnconfirmed",monitor.deliveryStatus().discarded(),"typedAcknowledged",monitor.deliveryStatus().acknowledged(),"typedDropped",monitor.deliveryStatus().dropped(),"hardware","NOT_RUN"));
-                }finally{fx(()->{monitor.close();return null;});process.stop().stopped().get(8,TimeUnit.SECONDS);process.close();rt.close();}
+                }finally{fxBusy.countDown();fx(()->{monitor.close();return null;});process.stop().stopped().get(8,TimeUnit.SECONDS);process.close();rt.close();}
             }
         }finally{if(previous==null)System.clearProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,previous);}
     }

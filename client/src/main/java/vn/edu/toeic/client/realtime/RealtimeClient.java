@@ -171,6 +171,8 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
     private ScheduledFuture<?> heartbeatTask;
     private ScheduledFuture<?> retryTask;
     private record HeartbeatBinding(String attempt, String collector) { }
+    private static final Set<String> COLLECTOR_REQUEST_TYPES=Set.of("PROCESS_OBSERVED","MONITORING_GAP","MONITORING_SYNC_OPEN",
+            "MONITORING_FULL","MONITORING_DELTA","MONITORING_SYNC_CLOSE");
     private final AtomicReference<HeartbeatBinding> monitoringBinding = new AtomicReference<>();
     private volatile boolean explicitHeartbeatLifecycle;
 
@@ -598,10 +600,15 @@ public final class RealtimeClient implements MonitoringTransport, AutoCloseable 
                     vn.edu.toeic.protocol.monitoring.signal.SignalJson.fields(strict,Set.of("protocolVersion","type","messageId","requestId","attemptId","traceId","payload"),Set.of());
                     vn.edu.toeic.protocol.monitoring.signal.SignalJson.fields(strict.getAsJsonObject("payload"),Set.of("code","message","retryable"),Set.of());
                 }
-                if((code.equals("FORBIDDEN")||code.equals("UNAUTHORIZED"))&&rejected!=null&&rejected.type().equals("HEARTBEAT")
+                HeartbeatBinding currentBinding=monitoringBinding.get();
+                // The process lane may be denied on FULL/event before the next heartbeat; then the heartbeat binding is
+                // released and no heartbeat denial ever arrives. Only the current explicit collector can end the run.
+                boolean collectorRequestDenied=rejected!=null&&COLLECTOR_REQUEST_TYPES.contains(rejected.type())&&currentBinding!=null
+                        &&currentBinding.attempt.equals(rejected.attemptId())&&currentBinding.collector.equals(optionalIdentifier(rejected.payload(),"collectorSessionId"));
+                if((code.equals("FORBIDDEN")||code.equals("UNAUTHORIZED"))&&rejected!=null&&(rejected.type().equals("HEARTBEAT")||collectorRequestDenied)
                         &&rejected.attemptId()!=null&&rejected.payload().has("collectorSessionId")
                         &&Objects.equals(rejected.attemptId(),message.attemptId())&&rejected.traceId().equals(message.traceId())
-                        &&(!signalHeartbeatRequests.containsKey(message.requestId())||signalHeartbeatRequests.get(message.requestId())==monitoringBinding.get())) {
+                        &&(!signalHeartbeatRequests.containsKey(message.requestId())||signalHeartbeatRequests.get(message.requestId())==currentBinding)) {
                     var rejection=new MonitoringAccessRejection(rejected.attemptId(),requiredString(rejected.payload(),"collectorSessionId"),code,current);
                     for(var listener:monitoringRejections)notifySafely(listener,rejection);
                 }
