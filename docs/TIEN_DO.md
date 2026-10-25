@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+25/10/2026 — Người dùng chốt danh sách chung chỉ có process, USB cắm/rút và thay đổi focus/window. Đã loại status/baseline typed khỏi các danh sách và số đếm; raw Timeline/trạng thái nguồn giữ. Clientpackage/GUI40PASS và PGREAL2PASS count0/window, cleanup sạch; JARdc91c420… mới cần mở lại app. [Report](../evidence/proctor-actions-only-20261025/REPORT.md). Không fullverify/hotplug/PR/merge/DONE mới.
+
 25/10/2026 — Nối USB/focus/cửa sổ vào Cảnh báo, Nhật ký giám sát và hai khối gần đây ở Tổng quan; bộ lọc/chi tiết gốc, đọc tăng dần theo watermark, không thêm cột riêng. Full1435PASS/154SKIP/0lỗi, PGREAL2PASS count0/window tự cập nhật, cleanup sạch. [Report](../evidence/proctor-feed-20261025/REPORT.md), [runbook](PROCTOR_SIGNAL_SUMMARY.md). Client cũ cần mở lại JAR mới; không wire/DB/OSAPI/policy/trackerDONE/PR/merge hoặc hotplug nghiệm thu mới.
 
 25/10/2026 — Điều chỉnh theo phản hồi người dùng: bỏ cột USB/focus/cửa sổ riêng; gom vào cùng khối tiến trình trong Chi tiết thí sinh. Sửa nút Bắt đầu/Dừng giám sát quản lý chung process + các nguồn opt-in; vào bài giữ nguyên run và chỉ bật activity trong bài. Kiểm tra client thực tế flagsON/portalDEMO chỉprocess; CIM thật thấy1USB. Focused50PASS, fullverify1420PASS/154SKIP/0lỗi; regression REAL app controls + CIM/WS/PG 2PASS, cleanup sạch. [Runbook](PROCTOR_SIGNAL_SUMMARY.md), [evidence](../evidence/unified-monitoring-20261025/REPORT.md). Giữ OFF/FULL, không PR/merge/trackerDONE hoặc nghiệm thu hotplug/H01–H12 mới.

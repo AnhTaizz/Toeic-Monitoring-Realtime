@@ -128,8 +128,8 @@ class MonitoringTimelinePostgresTest {
             waitFor("manual window transition committed",()->api.signals(a,0,null,100).join().items().stream().anyMatch(e->e.signal() instanceof WindowSignal w&&w.minimized()));
             // No refresh button: the existing scoped signal reader advances the room feed.
             try{waitFor("typed history reaches common room feed automatically",()->{try{return fx(()->
-                    vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.historyTypes(dash.view,a).containsAll(Set.of("USB","FOCUS","WINDOW"))
-                    &&vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.alertTypes(dash.view,a).containsAll(count>0?Set.of("USB","WINDOW"):Set.of("WINDOW")));}catch(Exception e){throw new RuntimeException(e);}});}catch(AssertionError failed){throw new AssertionError(fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.diagnostic(dash.view,a)),failed);}
+                    vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.historyTypes(dash.view,a).contains("WINDOW")
+                    &&vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.alertTypes(dash.view,a).contains("WINDOW"));}catch(Exception e){throw new RuntimeException(e);}});}catch(AssertionError failed){throw new AssertionError(fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.diagnostic(dash.view,a)),failed);}
             fx(()->{((ToggleButton)dash.view.lookup("#nav-overview")).fire();return null;});
             waitFor("both overview widgets contain the latest window observation",()->{try{return fx(()->{
                 for(String id:List.of("#overview-recent-alerts","#overview-recent-events")){
@@ -139,7 +139,6 @@ class MonitoringTimelinePostgresTest {
                 }return true;
             });}catch(Exception e){throw new RuntimeException(e);}});
             screenshot(dash,"feed-overview-real");
-            if(count>0)assertThat(fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.filterVisible(dash.view,a,"USB"))).isTrue();
             assertThat(fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.filterVisible(dash.view,a,"WINDOW"))).isTrue();
             screenshot(dash,"feed-alerts-real");
             fx(()->{s.setIconified(false);return null;});

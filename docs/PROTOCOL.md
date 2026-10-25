@@ -1129,3 +1129,7 @@ Không đổi message/endpoint/schema hoặc OS API. Candidate bật giám sát 
 ## 25/10/2026 — Đọc typed history cho Cảnh báo/Nhật ký chung
 
 Chỉ bổ sung consumer hiển thị ở client; không đổi DTO, endpoint, wire, DB, OS observer hoặc MON-08 policy. RoomFeed nhận watermark sequence từ CandidateSignalsController sau fresh scoped read, tải tăng dần typed history bằng HTTP client hiện có của feed. Fixed-through/page100/3page mỗi lượt, tối đa hai attempt tải; giữ 500 dòng liên quan mới nhất với cảnh báo giới hạn. Phân loại hiển thị baseline/status vào nhật ký, thay đổi USB/focus/window và lỗi/gap vào các quan sát cần xem xét; eventId/raw thời điểm và delivery giữ từ server, không dựng sự kiện từ snapshot hiện tại.
+
+## 25/10/2026 — Bộ lọc danh sách chung theo thiết kế người dùng chốt lại
+
+Consumer RoomFeed/SignalFeedProjection chỉ chiếu typed USB CONNECTED/REMOVED, focus ngoài INITIAL/dialog nội bộ và window CHANGED vào danh sách chung; không đưa status/gap typed/PRESENT_AT_START/baseline vào đó. Process và luồng kết nối/gap legacy giữ nguyên. Đây chỉ là bộ lọc hiển thị: raw typed history, source health, collector, DTO, server retention và Timeline không thay đổi.

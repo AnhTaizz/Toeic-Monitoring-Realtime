@@ -461,3 +461,7 @@ Theo phản hồi người dùng, bỏ thiết kế cột tín hiệu riêng và
 ### 25/10/2026 — Ghi chú triển khai: danh sách giám sát chung
 
 Theo phản hồi UI của người dùng, nối typed history đã commit vào RoomFeed để Cảnh báo/Nhật ký/Tổng quan dùng chung với process. Watermark từ reader scoped đang có kích hoạt đọc tăng dần; không thêm vòng polling hoặc socket. Giữ baseline focus/window và READY trong nhật ký, thay đổi và lỗi/gap vào các quan sát cần xem xét; không phân loại MON-08 hay kết luận vi phạm. Giới hạn 500 dòng liên quan/lượt phải nêu rõ thiếu lịch sử. Đây là lựa chọn consumer UI B/C, không thay schema/OS approach/policy, không thay thế chữ ký review của owner. Xem PROCTOR_SIGNAL_SUMMARY.md và evidence/proctor-feed-20261025/REPORT.md.
+
+### 25/10/2026 — Người dùng chốt lại ba nhóm hành vi trong danh sách chung
+
+Thay lựa chọn consumer trước đó đưa trạng thái kỹ thuật vào Nhật ký chung: chỉ process được quan sát, USB cắm/rút, thay đổi focus/thu nhỏ/toàn màn hình. READY/INITIAL/baseline USB/focus/window và gap/status typed giữ ở lịch sử gốc/Timeline/trạng thái nguồn, không thành dòng hành vi hoặc cộng số đếm. Không thay contract nguồn thu/wire/DB, không phân loại MON-08 hoặc thay chữ ký review owner B/C.

@@ -514,3 +514,7 @@ Bỏ cột riêng; Chi tiết có một khối process+USB/focus/window. Start t
 ### 25/10/2026 — Bàn giao Cảnh báo/Nhật ký đa tín hiệu
 
 RoomFeed đọc typed history theo watermark reader có sẵn; Cảnh báo, Nhật ký và hai khối gần đây dùng chung USB/focus/window/process, có filter và chi tiết nguồn/thời điểm. Baseline/status chỉ Nhật ký; thiếu/giới hạn không coi bình thường. Full1435PASS/154SKIP, PGREAL2PASS count0/Stagewindow; không hotplug vật lý mới. [Report](../../evidence/proctor-feed-20261025/REPORT.md), [runbook](../PROCTOR_SIGNAL_SUMMARY.md). Ghi chú bàn giao: đóng/mở JVM client cũ; B/C còn review cá nhân, không wire/DB/OSAPI/trackerDONE/policy/H01–H12/LAN/installer acceptance.
+
+### 25/10/2026 — Bộ lọc hành vi theo chốt lại của người dùng
+
+Danh sách chung chỉ thêm USB cắm/rút, focus/window thay đổi bên cạnh process; baseline/status/gap typed giữ tại raw Timeline và trạng thái nguồn, không thành dòng/số đếm chung. Package/GUI40PASS, PGREAL2PASS count0/window/cleanup sạch; không hotplug/fullverify mới. [Report](../../evidence/proctor-actions-only-20261025/REPORT.md). B/C vẫn cần review cá nhân; mở lại client JARdc91c420…; không wire/DB/OSAPI/policy/trackerDONE.

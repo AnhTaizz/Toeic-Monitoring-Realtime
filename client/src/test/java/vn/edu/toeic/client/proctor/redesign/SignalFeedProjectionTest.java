@@ -17,13 +17,15 @@ class SignalFeedProjectionTest {
             UsbStorageSignal.Kind.USB_STORAGE_CONNECTED,UsbStorageSignal.Quality.PARTIAL,1,null);}
     static SignalHistory.Entry entry(long n,Signal s){return new SignalHistory.Entry(A,n,SERVER.plusMillis(n),"LIVE",s);}
 
-    @Test void startupFocusAndNonFullscreenGoToHistoryButDoNotCreateAlerts(){
+    @Test void startupBaselinesDoNotAppearInTheCommonLists(){
         var f=new FocusSignal("MOCK-focus",RUN,1,CLIENT,ORIGIN,true,"INITIAL",null);
         var w=new WindowSignal("MOCK-window",RUN,2,CLIENT,ORIGIN,false,false,"INITIAL");
-        var projected=SignalFeedProjection.project(List.of(entry(1,f),entry(2,w),entry(3,usb(3))),"MOCK candidate");
-        assertThat(projected.history()).hasSize(3);
+        var present=new UsbStorageSignal("MOCK-present",RUN,3,CLIENT,ORIGIN,
+                UsbStorageSignal.Kind.USB_STORAGE_PRESENT_AT_START,UsbStorageSignal.Quality.PARTIAL,1,null);
+        var projected=SignalFeedProjection.project(List.of(entry(1,f),entry(2,w),entry(3,present),entry(4,usb(4))),"MOCK candidate");
+        assertThat(projected.history()).hasSize(1);
         assertThat(projected.alerts()).hasSize(1).allMatch(a->a.kind()==RoomModel.Kind.USB);
-        assertThat(projected.history().get(1).content()).contains("baseline","không suy");
+        assertThat(projected.history().getFirst().alert().typeCode()).isEqualTo("USB_STORAGE_CONNECTED");
     }
     @Test void changedSourcesKeepBothTimesAndDoNotInventAHandledState(){
         var f=new FocusSignal("MOCK-focus",RUN,2,CLIENT,ORIGIN,false,"OTHER_OR_UNKNOWN",null);
@@ -33,19 +35,29 @@ class SignalFeedProjectionTest {
         assertThat(result.alerts()).allSatisfy(a->{assertThat(a.clientTime()).isEqualTo(CLIENT);assertThat(a.serverTime()).isAfter(CLIENT);assertThat(a.open()).isFalse();assertThat(a.status()).doesNotContain("xử lý");});
         assertThat(result.alerts().getFirst().description()).contains("Metadata một phần");
     }
-    @Test void internalDialogIsRecordedWithoutAFocusAlert(){
+    @Test void internalDialogDoesNotAppearInTheCommonLists(){
         var f=new FocusSignal("MOCK-dialog",RUN,1,CLIENT,ORIGIN,false,"EXAM_INTERNAL_DIALOG",null);
         var result=SignalFeedProjection.project(List.of(entry(1,f)),"MOCK candidate");
-        assertThat(result.alerts()).isEmpty();assertThat(result.history()).hasSize(1);
+        assertThat(result.alerts()).isEmpty();assertThat(result.history()).isEmpty();
     }
-    @Test void readyIsOnlyAnAvailabilityRecordAndGapIsExplicit(){
+    @Test void technicalHealthAndGapStayOutOfTheCommonActionLists(){
         var ready=new ObserverStatusSignal("MOCK-ready",RUN,1,CLIENT,ORIGIN,
                 ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,ObserverStatusSignal.State.READY,ObserverStatusSignal.Reason.INITIAL);
         var gap=new SignalGap("MOCK-gap",RUN,2,CLIENT,ORIGIN,3,CLIENT,CLIENT);
-        var result=SignalFeedProjection.project(List.of(entry(1,ready),entry(2,gap)),"MOCK candidate");
-        assertThat(result.alerts()).hasSize(1).allMatch(a->a.kind()==RoomModel.Kind.GAP);
-        assertThat(result.history().getFirst().content()).contains("không phải số lượng USB").doesNotContain("0 USB");
-        assertThat(result.alerts().getFirst().description()).contains("3","không đầy đủ");
+        var error=new ObserverStatusSignal("MOCK-error",RUN,3,CLIENT,ORIGIN,
+                ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,ObserverStatusSignal.State.ERROR,ObserverStatusSignal.Reason.SCAN_FAILED);
+        var result=SignalFeedProjection.project(List.of(entry(1,ready),entry(2,gap),entry(3,error)),"MOCK candidate");
+        assertThat(result.alerts()).isEmpty();assertThat(result.history()).isEmpty();
+    }
+    @Test void removalFocusRestoreAndFullscreenChangesRemainVisible(){
+        var removed=new UsbStorageSignal("MOCK-removed",RUN,1,CLIENT,ORIGIN,
+                UsbStorageSignal.Kind.USB_STORAGE_REMOVED,UsbStorageSignal.Quality.PARTIAL,0,null);
+        var restored=new FocusSignal("MOCK-restored",RUN,2,CLIENT,ORIGIN,true,"OTHER_OR_UNKNOWN",1000L);
+        var fullscreen=new WindowSignal("MOCK-fullscreen",RUN,3,CLIENT,ORIGIN,false,true,"CHANGED");
+        var result=SignalFeedProjection.project(List.of(entry(1,removed),entry(2,restored),entry(3,fullscreen)),"MOCK candidate");
+        assertThat(result.alerts()).extracting(RoomModel.Alert::title).containsExactly("Quan sát rút USB","Cửa sổ thí sinh nhận focus","Trạng thái cửa sổ thay đổi");
+        assertThat(result.history()).hasSize(3);
+        assertThat(result.alerts().getLast().description()).contains("Thu nhỏ: không","Toàn màn hình: có");
     }
     @Test void equalWireEventIdsOnDifferentAttemptsStillHaveDifferentRowIdentities(){
         var signal=usb(1);var one=entry(1,signal);

@@ -46,13 +46,24 @@ class SignalFeedGuiTest {
         fxRun(()->view.show(ProctorRedesignView.Section.HISTORY));
         assertThat(fx(()->view.room().timeline().stream().filter(e->e.alert().origin() instanceof SignalHistory.Entry).count())).isEqualTo(3);
     }
-    @Test void baselineHistoryCanOpenItsDetailsEvenThoughItIsNotAnAlert()throws Exception{
+    @Test void technicalAndInitialRecordsDoNotAppearInCommonListsOrCounts()throws Exception{
         var f=new FocusSignal("MOCK-baseline",RUN,1,CLIENT,ORIGIN,true,"INITIAL",null);
-        open(List.of(entry(1,f)));
+        var w=new WindowSignal("MOCK-window-baseline",RUN,2,CLIENT,ORIGIN,false,false,"INITIAL");
+        var present=new UsbStorageSignal("MOCK-present",RUN,3,CLIENT,ORIGIN,
+                UsbStorageSignal.Kind.USB_STORAGE_PRESENT_AT_START,UsbStorageSignal.Quality.PARTIAL,1,null);
+        var ready=new ObserverStatusSignal("MOCK-ready",RUN,4,CLIENT,ORIGIN,
+                ObserverStatusSignal.Source.WINDOWS_USB_STORAGE,ObserverStatusSignal.State.READY,ObserverStatusSignal.Reason.INITIAL);
+        open(List.of(entry(1,f),entry(2,w),entry(3,present),entry(4,ready)));
         assertThat(fx(()->view.room().alerts())).isEmpty();
-        fxRun(()->view.openAlert(view.room().timeline().getFirst().alert()));
-        await("baseline detail attached",()->view.alertDrawer().lookup("#alert-drawer-title")!=null);
-        assertThat(fx(()->((Label)view.alertDrawer().lookup("#alert-drawer-title")).getText())).isEqualTo("Focus ban đầu");
+        assertThat(fx(()->view.room().timeline())).isEmpty();
+        assertThat(fx(()->view.room().row(A).alertCount())).isZero();
+        await("recent widgets attached",()->view.lookup("#overview-recent-alerts")!=null&&view.lookup("#overview-recent-events")!=null);
+        for(String id:List.of("#overview-recent-alerts","#overview-recent-events"))
+            assertThat(fx(()->text((Parent)view.lookup(id)))).doesNotContain("Nguồn USB","Focus ban đầu","cửa sổ ban đầu","USB có sẵn");
+        fxRun(()->view.show(ProctorRedesignView.Section.ALERTS));
+        assertThat(fx(()->view.pane(AlertsPane.class).visibleAlerts())).isEmpty();
+        fxRun(()->view.show(ProctorRedesignView.Section.HISTORY));
+        assertThat(fx(()->view.pane(HistoryPane.class).visibleEntries())).isEmpty();
     }
     static final class Api extends RedesignFixtures.FakeApi {
         private final List<SignalHistory.Entry> rows;
