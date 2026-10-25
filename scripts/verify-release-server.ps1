@@ -58,11 +58,12 @@ function Validate([string]$name,[hashtable]$override,[hashtable]$processEnv,[boo
  $ok=(($p.ExitCode -eq 0) -eq $expectOk) -and (-not $expectText -or $text.Contains($expectText)) -and -not ($text.Contains($dbPassword) -or $text.Contains($pinKey) -or $text.Contains($adminPassword))
  $cases.Add(@{case=$name;status=if($ok){'PASS'}else{'FAIL'};exitCode=$p.ExitCode})
 }
-function Native([string]$exe,[string]$arguments,[string]$name){
+function Native([string]$exe,[string]$arguments,[string]$name,[switch]$NoCapture){
+ # pg_ctl start leaves postgres holding inherited pipes; capturing them would wait forever.
  $p=New-Object Diagnostics.Process;$p.StartInfo.FileName=$exe;$p.StartInfo.Arguments=$arguments;$p.StartInfo.UseShellExecute=$false
- $p.StartInfo.RedirectStandardOutput=$true;$p.StartInfo.RedirectStandardError=$true;$p.StartInfo.EnvironmentVariables['PGPASSWORD']=$dbPassword
- [void]$p.Start();$a=$p.StandardOutput.ReadToEndAsync();$b=$p.StandardError.ReadToEndAsync();$p.WaitForExit()
- [IO.File]::WriteAllText((Join-Path $out ($name+'.private.log')),$a.Result+$b.Result);return $p.ExitCode
+ $p.StartInfo.RedirectStandardOutput=-not $NoCapture;$p.StartInfo.RedirectStandardError=-not $NoCapture;$p.StartInfo.EnvironmentVariables['PGPASSWORD']=$dbPassword
+ [void]$p.Start();if(-not $NoCapture){$a=$p.StandardOutput.ReadToEndAsync();$b=$p.StandardError.ReadToEndAsync()};$p.WaitForExit()
+ if(-not $NoCapture){[IO.File]::WriteAllText((Join-Path $out ($name+'.private.log')),$a.Result+$b.Result)};return $p.ExitCode
 }
 function Sql([string]$query,[string]$name){
  if((Native (Join-Path $PostgresBin 'psql.exe') ('-h 127.0.0.1 -p '+$dbPort+' -U '+$dbUser+' -d '+$dbName+' -At -c "'+$query+'"') $name) -ne 0){throw ('psql '+$name)}
@@ -98,7 +99,7 @@ try{
  [IO.File]::WriteAllText($pw,$dbPassword,[Text.Encoding]::ASCII)
  if((Native (Join-Path $PostgresBin 'initdb.exe') ('-D "'+$data+'" -U '+$dbUser+' --auth=scram-sha-256 --pwfile="'+$pw+'" --no-locale -E UTF8') 'initdb') -ne 0){throw 'initdb'}
  Remove-Item -LiteralPath $pw
- if((Native (Join-Path $PostgresBin 'pg_ctl.exe') ('-D "'+$data+'" -l "'+$out+'\postgres.private.log" -o "-h 127.0.0.1 -p '+$dbPort+'" -w start') 'pg-start') -ne 0){throw 'pg start'}
+ if((Native (Join-Path $PostgresBin 'pg_ctl.exe') ('-D "'+$data+'" -l "'+$out+'\postgres.private.log" -o "-h 127.0.0.1 -p '+$dbPort+'" -w start') 'pg-start' -NoCapture) -ne 0){throw 'pg start'}
  $started=$true
  if((Native (Join-Path $PostgresBin 'createdb.exe') ('-h 127.0.0.1 -p '+$dbPort+' -U '+$dbUser+' -T template0 -E UTF8 '+$dbName) 'createdb') -ne 0){throw 'createdb'}
  $base='http://127.0.0.1:'+$httpPort
