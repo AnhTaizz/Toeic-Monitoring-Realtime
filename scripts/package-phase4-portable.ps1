@@ -18,7 +18,8 @@ if(-not $ReadMe){$ReadMe=Join-Path $repo 'docs\release\PORTABLE-READ-ME.txt'}
 Copy-Item -LiteralPath $ReadMe -Destination (Join-Path $root 'READ-ME.txt')
 $ascii=[Text.Encoding]::ASCII
 foreach($role in @('Client','Server')){
- $bat='@echo off'+"`r`n"+'"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File "%~dp0start-release.ps1" -Role '+$role+' %*'+"`r`n"+'if errorlevel 1 pause'+"`r`n"
+ # Keep the window open on failure, but still return the launcher's exit code (pause resets ERRORLEVEL).
+ $bat='@echo off'+"`r`n"+'setlocal'+"`r`n"+'"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File "%~dp0start-release.ps1" -Role '+$role+' %*'+"`r`n"+'set "TOEIC_EXIT=%ERRORLEVEL%"'+"`r`n"+'if not "%TOEIC_EXIT%"=="0" pause'+"`r`n"+'exit /b %TOEIC_EXIT%'+"`r`n"
  [IO.File]::WriteAllText((Join-Path $root ('Start-'+$role+'.bat')),$bat,$ascii)
 }
 Add-Type -AssemblyName System.IO.Compression.FileSystem

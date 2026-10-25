@@ -12,6 +12,8 @@ param(
 # signals (required for the handover). Candidates see the observation notice before entering a room.
 $signals=(-not $NoSignalMonitoring.IsPresent).ToString().ToLowerInvariant()
 $ErrorActionPreference='Stop'
+# Show one readable line instead of a PowerShell stack for configuration and prerequisite errors.
+trap { Write-Host ('ERROR: '+$_.Exception.Message) -ForegroundColor Red; exit 1 }
 $env:PATHEXT='.COM;.EXE;.BAT;.CMD'
 $root=$PSScriptRoot
 $bundled=Join-Path $root 'runtime\bin\java.exe'
