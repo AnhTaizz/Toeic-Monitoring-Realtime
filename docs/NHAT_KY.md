@@ -1105,3 +1105,10 @@ Theo ủy quyền người dùng: thêm -Desktop vào entrypoint demo hiện có
 - Thêm runner `verify-ex08-postgres.ps1` dựng cluster PostgreSQL riêng, chỉ chạy case EX-08, lưu receipt và luôn dọn schema/cluster. Lượt chốt trên source `e6b4320`, PostgreSQL 18.1: `1/1 PASS`, `0 FAIL/ERROR/SKIP`, 0 schema còn lại, stop exit 0.
 - Case thật kiểm catalog/create/READY/START, retry không đổi deadline, production client model đủ 7 Part/200 câu, tải và hash đủ 65 media, DTO không lộ key/source, autosave, takeover làm Listening `INTERRUPTED`, stale writer bị từ chối, submit và server score `200/200`.
 - Dựng app-image mới và chạy smoke Windows trong đường dẫn Unicode: bundled Java 21.0.12.1, JavaFX Media lifecycle PASS; API/WS riêng của smoke này là MOCK. Human hearing, MSI, clean-machine, LAN và reviewer B cá nhân NOT RUN/không được giả mạo. Chi tiết: [EX-08 closeout](plan-v2/EX08_STUDY4_ACCEPTANCE_20261023.md).
+
+## 25/10/2026 — Server gộp cảnh báo process cho UI
+
+- Nguyên nhân: mỗi PID con của Chrome có `eventId` riêng nên chống retry theo `(attemptId,eventId)` không ngăn nhiều dòng cùng `chrome.exe`.
+- Sửa `MonitoringEventService`: giữ toàn bộ raw row và ACK như cũ, nhưng chỉ đánh dấu event đầu trong một đợt cùng tên process (case-insensitive, khoảng cách liên tiếp tối đa 30 giây) là `publishable`; khóa row attempt bằng `FOR UPDATE` để quyết định ổn định khi nhiều socket gửi đồng thời.
+- REST `/api/v1/monitoring/attempts/{attemptId}/events` dùng window function PostgreSQL để trả đúng cùng projection; sau hơn 30 giây yên lặng, process xuất hiện lại được coi là thay đổi mới. Không migration, không đổi DTO/wire.
+- Thêm regression PostgreSQL cho nhiều PID Chrome cùng đợt, Zalo riêng, Chrome xuất hiện lại sau khoảng yên lặng và cờ push realtime. Server compile PASS. Regression đã PASS một lượt trước khi bổ sung case push; lượt cuối chưa chạy vì Docker daemon local không phản hồi sau khi dọn ổ C. Full suite trước đó bị lỗi môi trường Mockito attach/CIM Unicode, không ghi PASS giả.
