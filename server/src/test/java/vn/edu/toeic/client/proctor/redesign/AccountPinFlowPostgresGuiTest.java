@@ -137,6 +137,7 @@ class AccountPinFlowPostgresGuiTest {
             var pane=FxSupport.fx(()->{
                 var tabs=(javafx.scene.control.TabPane)pv.lookup("#session-controls-tabs");
                 assertThat(tabs.getSelectionModel().getSelectedItem().getId()).isEqualTo("tab-account-pin");
+                assertThat(tabs.getTabs()).as("release default hides old V2/V1 tabs").hasSize(1);
                 return (ProctorV2SessionPane)tabs.getSelectionModel().getSelectedItem().getContent();
             });assertThat(pane.controller().accountPin()).isTrue();
             await("exam catalog",()->pane.controller().snapshot().catalog().stream().anyMatch(e->e.examId().equals(EXAM)),20);

@@ -34,6 +34,8 @@ class ExamScopeRefreshGuiTest {
             byte[] bytes=body.getBytes(StandardCharsets.UTF_8);try{exchange.sendResponseHeaders(code,bytes.length);exchange.getResponseBody().write(bytes);}finally{exchange.close();}
         });http.start();
         var app=new ToeicClientApplication();var stage=fx(Stage::new);
+        // The retained legacy entry is hidden in the release default; this regression opts in.
+        System.setProperty("toeic.ui.legacy","true");
         try{
             fx(()->{app.start(stage);
                 ((TextField)stage.getScene().lookup("#login-server-url")).setText("http://127.0.0.1:"+http.getAddress().getPort());
@@ -57,6 +59,6 @@ class ExamScopeRefreshGuiTest {
             assertThat(loaded).isTrue();
             fx(()->{assertThat(stage.getScene().lookup("#candidate-attempts").isDisabled()).as("MOCK WebSocket outage still locks the ancestor").isTrue();return null;});
             fx(()->{@SuppressWarnings("unchecked")var box=(ComboBox<String>)stage.getScene().lookup("#candidate-attempts");assertThat(box.getValue()).as("multiple attempts require explicit selection").isNull();assertThat(button(stage,"Bắt đầu giám sát").isDisable()).isTrue();box.setValue("MOCK-A");assertThat(box.getValue()).isEqualTo("MOCK-A");assertThat(button(stage,"Bắt đầu giám sát").isDisabled()).as("Selecting an attempt never bypasses the MOCK WebSocket outage").isTrue();return null;});
-        }finally{release.countDown();fx(()->{app.stop();stage.close();return null;});http.stop(0);pool.shutdownNow();assertThat(pool.awaitTermination(3,TimeUnit.SECONDS)).isTrue();}
+        }finally{System.clearProperty("toeic.ui.legacy");release.countDown();fx(()->{app.stop();stage.close();return null;});http.stop(0);pool.shutdownNow();assertThat(pool.awaitTermination(3,TimeUnit.SECONDS)).isTrue();}
     }
 }

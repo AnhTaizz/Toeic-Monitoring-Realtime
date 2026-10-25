@@ -82,6 +82,8 @@ class RoomFlowPostgresGuiTest {
 
     @BeforeAll void setup() throws Exception {
         FxSupport.start();Files.createDirectories(OUT);
+        // Room-code entry and the old V2 room tab are hidden in the release default; this regression opts in.
+        System.setProperty("toeic.ui.legacy","true");
         previousSettings=System.getProperty("toeic.proctor.settingsFile");
         previousAudioCache=System.getProperty("toeic.audio.cacheDirectory");
         System.setProperty("toeic.audio.cacheDirectory",temporary.resolve("client-audio-cache").toString());
@@ -110,6 +112,7 @@ class RoomFlowPostgresGuiTest {
         server=spring.run();base="http://127.0.0.1:"+((WebServerApplicationContext)server).getWebServer().getPort();
     }
     @AfterAll void cleanup() throws Exception {
+        System.clearProperty("toeic.ui.legacy");
         http.close();if(server!=null)server.close();
         if(previousAudioCache==null)System.clearProperty("toeic.audio.cacheDirectory");else System.setProperty("toeic.audio.cacheDirectory",previousAudioCache);
         if(database!=null){try(var s=database.createStatement()){s.execute("DROP SCHEMA "+schema+" CASCADE");}database.close();}

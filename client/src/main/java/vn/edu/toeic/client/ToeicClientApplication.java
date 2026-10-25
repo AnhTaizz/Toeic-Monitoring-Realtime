@@ -96,7 +96,7 @@ public final class ToeicClientApplication extends Application {
         Label status = new Label(notice.isBlank() ? ClientSettings.notice() : notice);
         status.setWrapText(true);
         LoginPane root = new LoginPane(serverField, usernameField, passwordField, loginButton, status,null,
-                ()->stage.setScene(roomEntryScene(stage)));
+                LegacyUi.enabled() ? ()->stage.setScene(roomEntryScene(stage)) : null);
 
         Runnable submit = () -> {
             if (loginButton.isDisabled()) return;
@@ -181,8 +181,11 @@ public final class ToeicClientApplication extends Application {
         pin.setTextFormatter(new javafx.scene.control.TextFormatter<String>(change->change.getControlNewText().matches("[0-9]{0,5}")?change:null));
         Button enter=new Button("Vào phòng");enter.setId("account-pin-enter");enter.getStyleClass().add("home-primary");
         Label status=new Label("Nhập PIN do giám thị cung cấp.");status.setId("account-pin-status");status.setWrapText(true);
-        Button legacy=new Button("Ca thi được phân công trước đây");legacy.setOnAction(e->showRoleScene(stage,serverUrl,account));
-        VBox fields=new VBox(14,new Label("Tham gia phòng thi"),pin,enter,status,legacy);fields.setPadding(new javafx.geometry.Insets(24));
+        VBox fields=new VBox(14,new Label("Tham gia phòng thi"),pin,enter,status);fields.setPadding(new javafx.geometry.Insets(24));
+        if(LegacyUi.enabled()) {
+            Button legacy=new Button("Ca thi được phân công trước đây");legacy.setOnAction(e->showRoleScene(stage,serverUrl,account));
+            fields.getChildren().add(legacy);
+        }
         Tab tab=new Tab("Vào phòng",fields);tab.setClosable(false);TabPane tabs=new TabPane(tab);
         Button logout=new Button("Đăng xuất");logout.setOnAction(e->{releaseConnectionView();stage.setScene(loginScene(stage));});
         var root=new CandidateHomePane(account.user().displayName(),account.user().username(),new Label("Đã đăng nhập"),new Label("Nhập PIN → Chuẩn bị Audio/Ảnh → Chờ giám thị START"),tabs,logout);

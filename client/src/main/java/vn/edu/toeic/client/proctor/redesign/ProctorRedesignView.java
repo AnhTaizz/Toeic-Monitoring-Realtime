@@ -93,7 +93,10 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
         Wiring wiring = new Wiring(login.user().displayName(), new MonitoringApiClient(serverUrl, login.token()),
                 new MonitoringApiClient(serverUrl, login.token()), transport, transport::updateScope,
                 login.attemptScope() == null ? Set.of() : Set.copyOf(login.attemptScope()), exam::getProctorProgress,
-                (refreshScope, expired) -> new ProctorSessionControls(
+                (refreshScope, expired) -> !vn.edu.toeic.client.LegacyUi.enabled()
+                        ? new ProctorSessionControls(
+                                ProctorV2SessionPane.forAccountPinServer(serverUrl, login.token(), login.user().id(), expired, refreshScope))
+                        : new ProctorSessionControls(
                         ProctorV2SessionPane.forAccountPinServer(serverUrl, login.token(), login.user().id(), expired, refreshScope),
                         ProctorV2SessionPane.forServer(serverUrl, login.token(), login.user().id(), expired, refreshScope),
                         new ProctorSessionView(serverUrl, login.token(), expired, refreshScope)),

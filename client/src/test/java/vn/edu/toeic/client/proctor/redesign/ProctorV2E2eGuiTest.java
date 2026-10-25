@@ -75,7 +75,10 @@ class ProctorV2E2eGuiTest {
     @BeforeAll void toolkit() throws Exception {
         FxSupport.start();
         Files.createDirectories(OUT);
+        // This E2E drives the retained PROCTORED_V2 tab, hidden in the release default.
+        System.setProperty("toeic.ui.legacy","true");
     }
+    @org.junit.jupiter.api.AfterAll void defaultUi() { System.clearProperty("toeic.ui.legacy"); }
 
     @Test void proctorCreatesAndStartsInTheNewUiCandidateTakesAndSubmits() throws Exception {
         LoginApiClient logins = new LoginApiClient();

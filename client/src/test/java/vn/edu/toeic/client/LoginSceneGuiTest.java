@@ -76,7 +76,10 @@ class LoginSceneGuiTest {
             byte[] bytes="{}".getBytes(StandardCharsets.UTF_8);exchange.sendResponseHeaders(401,bytes.length);
             try(var out=exchange.getResponseBody()){out.write(bytes);}
         });server.start();
+        // Legacy room-code entry is opt-in; reopen the login scene with it enabled.
+        System.setProperty("toeic.ui.legacy","true");
         try {
+            close();open();
             fx(()->{((Button)stage.getScene().lookup("#login-switch-mode")).fire();return null;});
             await(()->stage.getScene().lookup("#room-entry-code")!=null);
             fx(()->{
@@ -93,7 +96,7 @@ class LoginSceneGuiTest {
                 assertThat(((Label)stage.getScene().lookup("#login-status")).getText()).contains("PIN");return null;
             });
             snapshot("room-entry.png");
-        }finally {server.stop(0);}
+        }finally {server.stop(0);System.clearProperty("toeic.ui.legacy");}
     }
 
     private static String serverUrl(HttpServer server) {return "http://127.0.0.1:"+server.getAddress().getPort();}
@@ -107,10 +110,14 @@ class LoginSceneGuiTest {
         server.createContext("/api/v2/pin-rooms/join",e->{requests.incrementAndGet();assertThat(e.getRequestHeaders().getFirst("Authorization")).isEqualTo("Bearer MOCK-account");
             byte[] b="{}".getBytes(StandardCharsets.UTF_8);e.sendResponseHeaders(400,b.length);try(var out=e.getResponseBody()){out.write(b);}});server.start();
         try {
+            // Release default: no legacy room-code switch on login, no legacy session button after login.
+            fx(()->{assertThat(stage.getScene().lookup("#login-switch-mode")).isNull();return null;});
             fx(()->{((TextField)stage.getScene().lookup("#login-server-url")).setText(serverUrl(server));
                 ((TextField)stage.getScene().lookup("#login-username")).setText("candidate1");((PasswordField)stage.getScene().lookup("#login-password")).setText("MOCK-password");
                 ((Button)stage.getScene().lookup("#login-submit")).fire();return null;});
             await(()->stage.getScene().lookup("#account-pin-input")!=null);
+            fx(()->{assertThat(stage.getScene().getRoot().lookupAll(".button").stream()
+                        .noneMatch(n->n instanceof Button b&&"Ca thi được phân công trước đây".equals(b.getText()))).isTrue();return null;});
             fx(()->{assertThat(stage.getScene().lookup("#room-entry-candidate")).isNull();assertThat(stage.getScene().lookup("#room-entry-code")).isNull();
                 ((TextField)stage.getScene().lookup("#account-pin-input")).setText("58321");((Button)stage.getScene().lookup("#account-pin-enter")).fire();return null;});
             await(()->requests.get()==1&&!stage.getScene().lookup("#account-pin-enter").isDisabled());

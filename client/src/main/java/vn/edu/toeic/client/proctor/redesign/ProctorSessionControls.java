@@ -6,7 +6,8 @@ import javafx.scene.control.TabPane;
 
 /**
  * "Điều khiển ca" page body: the PROCTORED_V2 panel first, the existing V1 controls (B4) unchanged in a second tab.
- * Closing the page closes both, so their timers and HTTP workers stop on logout.
+ * Release default (see {@link vn.edu.toeic.client.LegacyUi}) shows only the ACCOUNT_PIN room tab.
+ * Closing the page closes every pane it holds, so their timers and HTTP workers stop on logout.
  */
 final class ProctorSessionControls extends TabPane implements AutoCloseable {
     private final AutoCloseable v2, legacy;
@@ -14,6 +15,13 @@ final class ProctorSessionControls extends TabPane implements AutoCloseable {
 
     <L extends Node & AutoCloseable> ProctorSessionControls(ProctorV2SessionPane v2, L legacy) {
         this(null,v2,legacy);
+    }
+    /** ACCOUNT_PIN only: the old V2 room and V1 panes are not created, so none of their timers start. */
+    ProctorSessionControls(ProctorV2SessionPane accountPin) {
+        this.v2=null;this.legacy=null;this.accountPin=accountPin;
+        setId("session-controls-tabs");
+        setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
+        getTabs().add(accountPinTab(accountPin));
     }
     <L extends Node & AutoCloseable> ProctorSessionControls(ProctorV2SessionPane accountPin,ProctorV2SessionPane v2,L legacy) {
         this.v2 = v2;
@@ -27,16 +35,20 @@ final class ProctorSessionControls extends TabPane implements AutoCloseable {
         Tab old = new Tab("Ca V1 / công cụ cũ", legacy);
         old.setId("tab-v1");
         if(accountPin!=null) {
-            Tab current=new Tab("Phòng thi TOEIC",accountPin);current.setId("tab-account-pin");
-            current.selectedProperty().addListener((observable,was,selected)->accountPin.tabSelected(selected));
-            getTabs().add(current);rich.setText("Phòng / ca V2 cũ");v2.tabSelected(false);
+            getTabs().add(accountPinTab(accountPin));rich.setText("Phòng / ca V2 cũ");v2.tabSelected(false);
         }
         getTabs().addAll(rich, old);
     }
 
+    private static Tab accountPinTab(ProctorV2SessionPane accountPin) {
+        Tab current=new Tab("Phòng thi TOEIC",accountPin);current.setId("tab-account-pin");
+        current.selectedProperty().addListener((observable,was,selected)->accountPin.tabSelected(selected));
+        return current;
+    }
+
     @Override public void close() {
         if(accountPin!=null)accountPin.close();
-        try { v2.close(); } catch (Exception ignored) { }
-        try { legacy.close(); } catch (Exception ignored) { }
+        if(v2!=null)try { v2.close(); } catch (Exception ignored) { }
+        if(legacy!=null)try { legacy.close(); } catch (Exception ignored) { }
     }
 }
