@@ -44,6 +44,8 @@ final class OverviewPane extends VBox implements ProctorRedesignView.RoomPane, P
         getStyleClass().add("page");
         total.setId("stat-total"); online.setId("stat-online"); offline.setId("stat-offline"); alerts.setId("stat-alerts");
         table.setId("overview-table");
+        recentAlerts.setId("overview-recent-alerts");
+        logRows.setId("overview-recent-events");
         remaining.setId("overview-remaining");
 
         HBox stats = new HBox(14,

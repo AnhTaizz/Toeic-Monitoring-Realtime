@@ -249,6 +249,8 @@ final class Drawers {
         @Override void update(RoomModel.Room room) {
             Alert current = alert == null ? null : room.alerts().stream().filter(item -> item.id().equals(alert.id())
                     && item.attemptId().equals(alert.attemptId())).findFirst().orElse(null);
+            if(current==null&&alert!=null)current=room.timeline().stream().map(HistoryEntry::alert)
+                    .filter(item->item.id().equals(alert.id())&&item.attemptId().equals(alert.attemptId())).findFirst().orElse(null);
             body.getChildren().clear();
             if (current == null) {
                 eyebrow.setText("KHÔNG CÒN TRONG PHẠM VI");
@@ -279,6 +281,11 @@ final class Drawers {
         private static String[][] details(Alert alert) {
             String server = Ui.dateClock(alert.serverTime(), "—");
             String client = alert.clientTime() == null ? "Không áp dụng" : Ui.dateClock(alert.clientTime(), "—");
+            if(alert.origin() instanceof vn.edu.toeic.client.dashboard.SignalHistory.Entry entry)return new String[][]{
+                    {"Mã sự kiện",entry.signal().eventId()},{"Server nhận",server},{"Client báo quan sát",client},
+                    {"Loại",alert.typeCode()},{"Thí sinh",alert.candidate()+" · "+alert.attemptId()},
+                    {"Nguồn",entry.signal().source()},{"Metadata",entry.signal().metadataQuality()},
+                    {"Kênh nhận",ProctorDashboardView.deliveryLabel(entry.delivery())}};
             if (alert.origin() instanceof Event event) return new String[][] {
                     {"Mã sự kiện", alert.id()}, {"Server nhận", server}, {"Client báo quan sát", client},
                     {"Loại", alert.typeCode()}, {"Thí sinh", alert.candidate() + " · " + alert.attemptId()},

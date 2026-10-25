@@ -54,3 +54,13 @@ Hai script chỉ mở app/cấu hình cờ; đăng nhập xong vẫn cần bật
 Nếu server là JAR được triển khai trực tiếp, phải cấu hình `toeic.monitoring.signal-experiment-enabled=true`; app candidate cần cả signal experiment và `toeic.monitoring.usb-enabled=true`. Script client `-ReadUsbStorage` thiết lập hai cờ này và hiện thông báo quan sát. Cần chạy đúng bản build chứa `windows-observer` và resource CIM. Mặc định repository vẫn OFF/FULL; đây không là phê duyệt policy/ADR/retention, USB H01–H12 hoặc nghiệm thu LAN.
 
 Kiểm thử tự động dùng fixture **MOCK** cho account/đề và thao tác window bằng JavaFX khi được ghi rõ; test CIM thật chỉ chứng minh baseline trên máy chạy, không thay lần rút/cắm vật lý của người dùng. Bằng chứng UI cũ tại `evidence/proctor-signals-20261024/`; sửa luồng giám sát chung và bỏ cột riêng tại `evidence/unified-monitoring-20261025/`.
+
+## Cảnh báo và Nhật ký chung — 25/10/2026
+
+Các màn Cảnh báo, Nhật ký giám sát và hai khối Nhật ký sự kiện gần đây / Cảnh báo gần đây ở Tổng quan đọc thêm typed history đã được server commit. USB/focus/cửa sổ dùng cùng danh sách với process, không có cột riêng trên bảng thí sinh. Màn Cảnh báo có bộ lọc USB, Focus và Cửa sổ; bấm một dòng xem nguồn, mã event, hai thời điểm client/server và kênh nhận. Backend chưa có trạng thái xử lý nên không giả nút đã xử lý.
+
+Nhật ký giữ baseline focus/cửa sổ và thông báo nguồn READY. Cảnh báo chỉ thêm USB có sẵn/cắm/rút, thay đổi focus bên ngoài dialog nội bộ, thay đổi cửa sổ và tình trạng nguồn cần xem xét. Baseline cửa sổ không toàn màn hình không có nghĩa vừa thoát toàn màn hình; READY không chứng minh có USB hay USB bằng 0. Các dòng là quan sát để giám thị xem xét, không là kết luận vi phạm hoặc phân loại MON-08.
+
+Hai khối gần đây chỉ hiển thị **ba mục mới nhất**, sắp theo giờ server nhận; sự kiện cũ có thể đã rời khối này. Dùng Xem tất cả / Xem nhật ký, bộ lọc tương ứng hoặc Timeline để xem tiếp.
+
+RoomFeed dùng mốc sequence từ reader có sẵn để đọc tăng dần, không tạo timer/socket thứ hai và không tải lại lịch sử process mỗi lần có tín hiệu. Mỗi lượt tối đa ba trang × 100 event/lần, hai attempt đang tải; fixed-through và chống trùng eventId. Giữ tối đa 500 dòng liên quan mới nhất mỗi lượt, có thông báo chưa đầy đủ khi vượt giới hạn/đang phân trang/lỗi/nguồn chưa bật. Mất scope xóa dữ liệu, phản hồi cũ không khôi phục lượt đã bị loại. Lịch sử toàn bộ vẫn ở endpoint/Timeline hiện hữu theo giới hạn riêng.

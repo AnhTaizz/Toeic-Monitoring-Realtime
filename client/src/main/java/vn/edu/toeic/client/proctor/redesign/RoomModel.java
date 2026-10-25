@@ -129,7 +129,8 @@ final class RoomModel {
     private static int alertCount(RoomFeed.Snapshot feed, String attempt) {
         RoomFeed.AttemptHistory history = feed.of(attempt);
         if (history == null) return 0;
-        return history.events().size() + history.interruptions().size() + history.gaps().size();
+        return history.events().size() + history.interruptions().size() + history.gaps().size()
+                +SignalFeedProjection.project(history.signals(),attempt).alerts().size();
     }
 
     private static boolean alertsKnown(RoomFeed.Snapshot feed, String attempt) {
@@ -184,7 +185,7 @@ final class RoomModel {
 
     // ------------------------------------------------------------------ alerts / timeline
 
-    enum Kind { PROCESS, INTERRUPTION, GAP }
+    enum Kind { PROCESS, INTERRUPTION, GAP, USB, FOCUS, WINDOW }
 
     /**
      * One monitoring item the proctor may want to review. {@code status} only uses states the backend really
@@ -201,6 +202,7 @@ final class RoomModel {
             for (Event event : history.events()) result.add(alert(event, name));
             for (Interruption interruption : history.interruptions()) result.add(alert(interruption, name));
             for (Gap gap : history.gaps()) result.add(alert(gap, name));
+            result.addAll(SignalFeedProjection.project(history.signals(),name).alerts());
         }
         result.sort(Comparator.comparing(Alert::serverTime, Comparator.nullsLast(Comparator.reverseOrder()))
                 .thenComparing(Alert::id));
@@ -262,7 +264,8 @@ final class RoomModel {
             case OPEN -> alert.open();
             case RECOVERED -> alert.kind() == Kind.INTERRUPTION && !alert.open();
             case LATE -> alert.late();
-            case LIVE -> alert.kind() == Kind.PROCESS && "Nhận trực tiếp".equals(alert.status());
+            case LIVE -> alert.origin() instanceof vn.edu.toeic.client.dashboard.SignalHistory.Entry entry
+                    ?"LIVE".equals(entry.delivery()):alert.kind() == Kind.PROCESS && "Nhận trực tiếp".equals(alert.status());
         };
     }
 
@@ -273,6 +276,7 @@ final class RoomModel {
     static List<HistoryEntry> timeline(List<Alert> alerts) {
         List<HistoryEntry> entries = new ArrayList<>();
         for (Alert alert : alerts) {
+            if(alert.origin() instanceof vn.edu.toeic.client.dashboard.SignalHistory.Entry){entries.add(SignalFeedProjection.history(alert));continue;}
             switch (alert.kind()) {
                 case PROCESS -> entries.add(new HistoryEntry(alert.id(), alert.attemptId(), alert.candidate(), alert.serverTime(),
                         alert.clientTime(), "Quan sát tiến trình", "Ghi nhận tiến trình", alert.description(), alert.id(),
@@ -289,6 +293,7 @@ final class RoomModel {
                 case GAP -> entries.add(new HistoryEntry(alert.id(), alert.attemptId(), alert.candidate(), alert.serverTime(),
                         alert.clientTime(), "Hàng đợi client", "Khoảng trống dữ liệu", alert.description(), alert.id(),
                         "Thiếu dữ liệu", "amber", alert));
+                default -> throw new IllegalArgumentException("Typed observation missing its history origin");
             }
         }
         entries.sort(Comparator.comparing(HistoryEntry::serverTime, Comparator.nullsLast(Comparator.reverseOrder()))
@@ -422,9 +427,13 @@ final class RoomModel {
         List<CandidateRow> rows = candidates(dashboard.attempts(), rosterStale, progress.rows(), progress.readAt(),
                 progress.stale(), scoped);
         List<Alert> alerts = alerts(scoped, names(rows));
+        var history=new ArrayList<>(timeline(alerts.stream().filter(a->!(a.origin() instanceof vn.edu.toeic.client.dashboard.SignalHistory.Entry)).toList()));
+        var candidateNames=names(rows);
+        for(var item:scoped.attempts())history.addAll(SignalFeedProjection.project(item.signals(),candidateNames.getOrDefault(item.attemptId(),item.attemptId())).history());
+        history.sort(Comparator.comparing(HistoryEntry::serverTime,Comparator.nullsLast(Comparator.reverseOrder())).thenComparing(HistoryEntry::key));
         Instant reference = progress.readAt();
         if (reference == null && !alerts.isEmpty()) reference = alerts.getFirst().serverTime();
-        return new Room(rows, alerts, timeline(alerts), stats(rows, alerts, scoped), scoped, dashboard, progress,
+        return new Room(rows, alerts, List.copyOf(history), stats(rows, alerts, scoped), scoped, dashboard, progress,
                 sessions(rows), examState(rows), roomProgress(rows), reference);
     }
 

@@ -1106,3 +1106,7 @@ Tổng quan và Chi tiết dùng thêm một read consumer cho typed history hi�
 ## 25/10/2026 — Chung vòng đời process và USB/focus/window
 
 Không đổi message/endpoint/schema hoặc OS API. Candidate bật giám sát thủ công trên attempt ACTIVE có fresh scope nay tạo typed coordinator bằng chính collectorSessionId của process, thay vì chỉ tạo khi mở màn làm bài. Capability và heartbeat vẫn là gate trước gửi dữ liệu/khởi chạy USB. Focus/window đọc Stage ứng dụng thí sinh trong phiên được cấp quyền, giữ source keys JAVAFX_EXAM_FOCUS/JAVAFX_EXAM_WINDOW; UI ghi rõ cửa sổ thí sinh, không suy đang làm bài từ focus. EnterExamScene chỉ bật activity trong bài và không tạo run/sequence/baseline mới. Manual Stop đóng typed coordinator trước process, chờ dọn cả hai rồi cho Start lại; disconnect/revoke/logout giữ guard cũ. Chi tiết gom render process state và typed observations trong một khối; không giả tín hiệu thiết bị thành process/PID.
+
+## 25/10/2026 — Đọc typed history cho Cảnh báo/Nhật ký chung
+
+Chỉ bổ sung consumer hiển thị ở client; không đổi DTO, endpoint, wire, DB, OS observer hoặc MON-08 policy. RoomFeed nhận watermark sequence từ CandidateSignalsController sau fresh scoped read, tải tăng dần typed history bằng HTTP client hiện có của feed. Fixed-through/page100/3page mỗi lượt, tối đa hai attempt tải; giữ 500 dòng liên quan mới nhất với cảnh báo giới hạn. Phân loại hiển thị baseline/status vào nhật ký, thay đổi USB/focus/window và lỗi/gap vào các quan sát cần xem xét; eventId/raw thời điểm và delivery giữ từ server, không dựng sự kiện từ snapshot hiện tại.

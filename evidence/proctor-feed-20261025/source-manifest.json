@@ -1,0 +1,58 @@
+{
+  "baseSha": "11252dc9910cc0ec13660d730ecbf4124f001397",
+  "dirty": true,
+  "files": [
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/AlertsPane.java",
+      "sha256": "bfbf820485af96b5ab317ec2ac4ef24ef3565e949fbe153d5e83870a63ecbc5c"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/Drawers.java",
+      "sha256": "5d9d9761587f41a0515515ae41b13e4e940496ab3c68f35c1166edcf4fb4578a"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/HistoryPane.java",
+      "sha256": "737c9416893ce685a7d3443b74d4a7845b5dd0f75dc2772862c4200ee97a8183"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/OverviewPane.java",
+      "sha256": "73bad27322ef066d42c9c0a8e21e18d06778d064beb9b098cfd8753405ecced4"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/ProctorRedesignView.java",
+      "sha256": "c01b4bc5cd19e5cdd498729268b5f15596924e49ba2505e835dba456a14cd13f"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/RoomFeed.java",
+      "sha256": "f4fd633143dd817ed48e4965b44a66048306d95872ae265aed660166f192c141"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/RoomModel.java",
+      "sha256": "25f583d66fe5955c683a4ca02ba6811ccba08be0dd27e161e024320f1d3cae23"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/SignalFeedProjection.java",
+      "sha256": "dcfd4c07feff7869c6631eef67452066104b4686c0685dcf62fd25d6cf5f218e"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/RoomFeedSignalsTest.java",
+      "sha256": "e664fdd4933e3f04fd3cf2dd6e2b3f3c330fedbb617c41a104aeea62d0e86e01"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/SignalFeedGuiTest.java",
+      "sha256": "9c6eb24e698b389d3008eec564c5cad7cdb28faa84547374553987aab4dea644"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/SignalFeedProjectionTest.java",
+      "sha256": "7e549393f11b46c9bc3967e19c4359000f4b3ae371a249d83d0ad2ff8fcb18b0"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/client/proctor/redesign/MonitoringFeedProbe.java",
+      "sha256": "2c3cdb1588e907e9139603e767a42940f6c5b5a239f4c08c4116adf0855a607f"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/signal/MonitoringTimelinePostgresTest.java",
+      "sha256": "bf43711c2f6fea8349da667257e89c4bcc6aca5006018f92c7c485ded215f2c3"
+    }
+  ]
+}

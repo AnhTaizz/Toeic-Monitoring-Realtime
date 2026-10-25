@@ -782,3 +782,9 @@ Full Maven verify: 1396PASS/172SKIP/0FAIL/ERROR, 1568test/149suite; 7module buil
 ## 25/10/2026 — Start/Stop chung process + USB/focus/window
 
 Rootcause thật: flagsON cảserver/client, CIMSTANDARD1USB, nhưng portalManualStart cũ chỉprocess. ĐãgomStart/Stop vàrunidentity; bỏcộtriêng, gomtrongchungkhốiChi tiết. Focused50PASS overlap; fullverify1420PASS/154SKIP/0FAIL-ERROR/1574test/149suite, GUI bật. PGREAL2methodPASS (manualapp+productionhook), baseline1USB, activitychỉsauentry, restartnewrun, enterexamreuse, cleanup0schema/stop0/PIDabsent. JARc35b931a…/10entriesbyteequal. Giữfailedfixturesloginplaceholder/photolayout/tablayout, sửaawait/stableIDvàrerun; khôngskipbug hoặchotplug/H01–H12/LAN/humanapproval/DONE. [Report](../evidence/unified-monitoring-20261025/REPORT.md).
+
+## Kiểm thử 25/10/2026 — USB/focus/cửa sổ trong Cảnh báo và Nhật ký chung
+
+RoomFeed trước chỉ đọc process/interruption/gap, nên các nguồn typed không có trong Cảnh báo và hai khối gần đây. Đã đọc typed history commit, cập nhật tăng dần theo watermark reader scoped hiện có, chống trùng/giữ fixed-through/tối đa500dòng liên quan/lượt và thông báo giới hạn. Thêm filter USB/Focus/Cửa sổ, chi tiết event gốc; baseline focus/window và READY chỉ vào Nhật ký, thay đổi vào các quan sát cần xem xét. Hai khối gần đây chỉ hiện3mục mới nhất, không suy USB0/vi phạm từ thiếu sự kiện. Không đổi wire/DB/OSAPI/defaultOFF/FULL.
+
+Fullverify1435PASS/154SKIP/0lỗi (1589test/152suite), GUI bật; bộ mới15PASS, PG REAL2PASS baselineCIM0, window Stage API tự cập nhật danh sách và filter. Owned PG cleanup0schema/stop0/PIDabsent; không đổi DBTEST8080. Giữ testCompile fixture sai constant và2PG kỳ vọngUSBalert khi count0; sửa fixture, không che lỗi. JAR72e124c4…/538entrymatch. [Report](../evidence/proctor-feed-20261025/REPORT.md). B/C cần owner review, không hardwarehotplug/H01–H12/LAN/policy/trackerDONE/CIclaim; pushnhánh hiện tại, khôngPR/merge, giữ opt-outChatGPT.

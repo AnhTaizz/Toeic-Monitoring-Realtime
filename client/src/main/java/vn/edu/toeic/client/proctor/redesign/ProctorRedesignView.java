@@ -464,6 +464,11 @@ public final class ProctorRedesignView extends BorderPane implements AutoCloseab
             CandidateSignalsController.Snapshot latest = pendingSignals.get();
             if (closed.get() || latest.revision() < signalsRevision) return;
             signalsRevision = latest.revision();
+            if(!latest.stale()){
+                Map<String,Long> watermarks=new java.util.LinkedHashMap<>();
+                latest.candidates().forEach((attempt,observations)->watermarks.put(attempt,observations.after()));
+                feed.signalsAvailable(watermarks);
+            }
             candidateDrawer.updateSignals(latest);
         });
     }

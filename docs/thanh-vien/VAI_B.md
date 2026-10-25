@@ -510,3 +510,7 @@ Theo yêu cầu triển khai và push của người dùng, đã nối reader sc
 ### 25/10/2026 — Điều chỉnh giám sát chung
 
 Bỏ cột riêng; Chi tiết có một khối process+USB/focus/window. Start thủ công nay khởi tạo typed sources cùng process sau fresh scope, giữ run khi vào bài; activity chỉ sau exam entry; Stop chờ cả USB workers. [Report](../../evidence/unified-monitoring-20261025/REPORT.md), full1420PASS/154SKIP, PGREAL2PASS baselineUSB1, không hotplug/H01–H12 mới. JVM client cũ cần đóng/mở JAR mới; server có signalON giữ được. Không API/wire/DB/OSapproach/trackerDONE hoặc chữ ký owner.
+
+### 25/10/2026 — Bàn giao Cảnh báo/Nhật ký đa tín hiệu
+
+RoomFeed đọc typed history theo watermark reader có sẵn; Cảnh báo, Nhật ký và hai khối gần đây dùng chung USB/focus/window/process, có filter và chi tiết nguồn/thời điểm. Baseline/status chỉ Nhật ký; thiếu/giới hạn không coi bình thường. Full1435PASS/154SKIP, PGREAL2PASS count0/Stagewindow; không hotplug vật lý mới. [Report](../../evidence/proctor-feed-20261025/REPORT.md), [runbook](../PROCTOR_SIGNAL_SUMMARY.md). Ghi chú bàn giao: đóng/mở JVM client cũ; B/C còn review cá nhân, không wire/DB/OSAPI/trackerDONE/policy/H01–H12/LAN/installer acceptance.
