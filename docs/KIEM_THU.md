@@ -810,3 +810,11 @@ Focused81PASS overlap full; full1464PASS/154SKIP/0lỗi (1618test/155suite). PGR
 ## 25/10/2026 — Khôi phục dòng USB có sẵn trước giám sát
 
 User hỏi đã thêm chưa; lượt trước chỉ chẩn đoán. Đã khôi phục PRESENT_AT_START trong sharedprojection/title/sốUSB, màuinfoLIVE, giữREADY/focus-windowINITIALẩn. Không đổicollector/server/wire/DB/processpolicy3 hoặc nguồnWindows. Clientpackage48PASS/0skip và ownedPGMock1PASS/cleanup0schema/stop0/PIDabsent; rawbaseline1/sharedalert-history1, retry/reconnect/scopechecks giữ. JAR09b32ed9…/544entriesmatch. [Report](../evidence/usb-start-visible-20261025/REPORT.md), [runbook](PROCTOR_SIGNAL_SUMMARY.md). Không physicalUSB/fullverify/H01–H12/CIclaim mới; read-only query trước thấy0USB. Chỉ mở lại proctor mới để đọc baseline đã lưu. B/Creviewpending, khôngtrackerDONE/PR/merge, opt-outChatGPT giữ.
+
+## 25/10/2026 — Policy v4 đúng chín process và USB regression
+
+- Full verify bật GUI: 1.471 PASS / 154 SKIP / 0 FAIL-ERROR, 1.625 test/156 suite; focused142 PASS trùng phạm vi full. XML fresh được archive trước runner tích hợp.
+- Exact set9/case-insensitive; v3 vẫn31; v4 full/delta/state; trace MOCK full/delta replay cả v1–v4, cap256 và v1=128; GUI đọc raw v2 chứa30 tên ngoài tập chỉ hiển thị/count Teams và không xóa31 dòng raw.
+- PG REAL 2 method PASS: native ProcessHandle/policy4/snapshot46/Teams2 có history/feed; manual Start/Stop/restart/exam-entry/window recent widgets và production USB hook/reconnect. CIM0, không hotplug vật lý.
+- PG MOCK 1 method PASS: baseline/cắm/rút USB hiện shared lists, baseline giữ id/time/source, retry/reconnect/scope-revoke/queue-drop checks giữ; A19/B1/drop3 là số thực của fixture MOCK. Cleanup hai cluster 0 schema/stop0/PID absent.
+- SHA-256 13 file USB/hook/projection unchanged; client545/server167 entries khớp, embedded protocol byte-identical. [Receipt và ảnh](../evidence/process-nine-20261025/REPORT.md). Không H01–H12/LAN/installer/E1/E2/CI hoặc tracker DONE mới.

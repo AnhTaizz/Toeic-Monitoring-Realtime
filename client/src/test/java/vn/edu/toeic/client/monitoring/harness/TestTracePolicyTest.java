@@ -23,7 +23,7 @@ class TestTracePolicyTest {
         assertThatThrownBy(() -> ReplayEngine.replay(read,FaultSchedule.Config.none())).hasMessageContaining("TEST_POLICY_NOT_NETWORK_REPLAY");
     }
     @Test void productionTraceAndFullNetworkPolicyStillRejectJavaAndSchemaPolicyMismatch() {
-        assertThat(new ProcessPolicy().matches("java.exe")).isFalse();assertThat(new ProcessPolicy().restrictedExecutables()).hasSize(31);
+        assertThat(new ProcessPolicy().matches("java.exe")).isFalse();assertThat(new ProcessPolicy().restrictedExecutables()).hasSize(9);
         assertThat(FullSnapshotPayload.EXECUTABLES).hasSize(8);
         assertThatThrownBy(() -> new FullSnapshotPayload.Process(42,"java.exe",HarnessFixtures.START,"COMPLETE")).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> new TraceData.Sample(1,"OBSERVATION",0,"MOCK",FullSnapshotPayload.POLICY,0,List.of(HarnessFixtures.process(HarnessFixtures.START,"java.exe")))).isInstanceOf(IllegalArgumentException.class);

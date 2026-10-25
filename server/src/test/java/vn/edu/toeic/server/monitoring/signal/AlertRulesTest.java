@@ -45,7 +45,7 @@ class AlertRulesTest {
         var policy=vn.edu.toeic.protocol.monitoring.ProcessCatalog.EXPANDED_POLICY;
         assertThat(AlertService.process("A","run","MOCK-s",policy,"svchost.exe","COMPLETE",C)).isNull();
         assertThat(AlertService.process("A","run","MOCK-t",policy,"ms-teams.exe","COMPLETE",C)).isNotNull();
-        assertThat(AlertService.process("A","run","MOCK-w",policy,"winword.exe","COMPLETE",C)).isNotNull();
+        assertThat(AlertService.process("A","run","MOCK-w",policy,"winword.exe","COMPLETE",C)).isNull();
         assertThat(AlertService.process("A","run","MOCK-old","process-policy-v1","ms-teams.exe","COMPLETE",C)).isNull();
     }
 }

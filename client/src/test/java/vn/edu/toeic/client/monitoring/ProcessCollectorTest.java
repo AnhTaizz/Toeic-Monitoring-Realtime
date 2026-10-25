@@ -46,11 +46,11 @@ class ProcessCollectorTest {
             String id = collector.start(ACTIVE, received::add, problem -> { throw new AssertionError(problem); });
             ProcessSnapshot snapshot = next(received);
             assertThat(snapshot.collectorSessionId()).isEqualTo(id);
-            assertThat(snapshot.policyVersion()).isEqualTo("process-policy-v3");
+            assertThat(snapshot.policyVersion()).isEqualTo("process-policy-v4");
             assertThat(snapshot.scanDurationNanos()).isEqualTo(5);
             assertThat(next(received).observationNanos()).isGreaterThan(snapshot.observationNanos());
             assertThat(snapshot.restrictedProcesses()).extracting(ObservedProcess::executableName)
-                    .containsExactlyInAnyOrder("Chrome.EXE", "notepad.exe", "zalo.exe", "teams.exe");
+                    .containsExactlyInAnyOrder("Chrome.EXE", "zalo.exe", "teams.exe");
             assertThat(snapshot.diagnostics()).isEqualTo(new ProcessSnapshot.Diagnostics(5, 3, 1, 2, 2));
             assertThat(snapshot.restrictedProcesses()).filteredOn(p -> p.identity().pid() == 13)
                     .allMatch(p -> p.identity().startInstant() == null && p.metadataQuality() == MetadataQuality.UNREADABLE);

@@ -60,26 +60,38 @@ class ProcessCatalogTest {
         assertThatThrownBy(()->r.delta("MOCK-overflow",d)).isInstanceOf(MonitoringStateReducer.Rejected.class);
         assertThat(r.sequence()).isEqualTo(1);assertThat(r.processes()).hasSize(256);
     }
-    @Test void currentPolicyRemovesExactlyTheEightNamesWhileOldSnapshotsStillParse(){
+    @Test void filteredV3RetainsItsThirtyOneNamesWhileOldSnapshotsStillParse(){
         var omitted=List.of("powershell.exe","pwsh.exe","cmd.exe","msedgewebview2.exe","conhost.exe","runtimebroker.exe","dllhost.exe","svchost.exe");
-        assertThat(ProcessCatalog.executables(ProcessCatalog.CURRENT_POLICY)).hasSize(31);
+        assertThat(ProcessCatalog.executables(ProcessCatalog.FILTERED_POLICY)).hasSize(31);
         for(String name:omitted){
-            assertThat(ProcessCatalog.includes(ProcessCatalog.CURRENT_POLICY,name.toUpperCase(java.util.Locale.ROOT))).isFalse();
+            assertThat(ProcessCatalog.includes(ProcessCatalog.FILTERED_POLICY,name.toUpperCase(java.util.Locale.ROOT))).isFalse();
             assertThat(ProcessCatalog.includes(ProcessCatalog.EXPANDED_POLICY,name)).isTrue();
             assertThat(ProcessCatalog.visibleInLists(name)).isFalse();assertThat(ProcessCatalog.review(name)).isFalse();
             var old=full(ProcessCatalog.EXPANDED_POLICY,1,List.of(process(1,name)));
             assertThat(FullSnapshotPayload.parse(new Gson().toJsonTree(old).getAsJsonObject())).isEqualTo(old);
-            assertThatThrownBy(()->full(ProcessCatalog.CURRENT_POLICY,1,List.of(process(1,name)))).isInstanceOf(IllegalArgumentException.class);
+            assertThatThrownBy(()->full(ProcessCatalog.FILTERED_POLICY,1,List.of(process(1,name)))).isInstanceOf(IllegalArgumentException.class);
         }
-        assertThat(ProcessCatalog.executables(ProcessCatalog.CURRENT_POLICY)).contains("ms-teams.exe","teams.exe","chrome.exe","winword.exe","dwm.exe");
+        assertThat(ProcessCatalog.executables(ProcessCatalog.FILTERED_POLICY)).contains("ms-teams.exe","teams.exe","chrome.exe","winword.exe","dwm.exe");
     }
     @Test void currentPolicyFullDeltaAndStateKeepTheSameScopeAndRejectPolicyChanges(){
         var f=full(ProcessCatalog.CURRENT_POLICY,1,List.of(process(1,"ms-teams.exe")));var r=new MonitoringStateReducer();r.full("MOCK-f3",f);
-        var d=new DeltaSnapshotPayload("MOCK-collector","MOCK-epoch",1,2,ProcessCatalog.CURRENT_POLICY,List.of(process(2,"notepad.exe")),List.of());
+        var d=new DeltaSnapshotPayload("MOCK-collector","MOCK-epoch",1,2,ProcessCatalog.CURRENT_POLICY,List.of(process(2,"discord.exe")),List.of());
         assertThat(r.delta("MOCK-d3",DeltaSnapshotPayload.parse(new Gson().toJsonTree(d).getAsJsonObject()))).isEqualTo(MonitoringStateReducer.Outcome.APPLIED);
         var state=new MonitoringStateView("MOCK-A","MOCK-server","MOCK-epoch","MOCK-collector",1,2,"SYNCED",ProcessCatalog.CURRENT_POLICY,r.processes(),"2026-10-25T05:00:00Z");
         assertThat(MonitoringStateView.parse(new Gson().toJsonTree(state).getAsJsonObject())).isEqualTo(state);
         assertThatThrownBy(()->r.full("MOCK-switch-back",full(ProcessCatalog.EXPANDED_POLICY,3,r.processes()))).isInstanceOf(MonitoringStateReducer.Rejected.class);
         assertThat(r.sequence()).isEqualTo(2);
+    }
+    @Test void currentPolicyContainsExactlyTheNineRequestedExecutables(){
+        var expected=Set.of("chrome.exe","msedge.exe","firefox.exe","zalo.exe","teams.exe","ms-teams.exe","discord.exe","anydesk.exe","teamviewer.exe");
+        assertThat(ProcessCatalog.executables(ProcessCatalog.CURRENT_POLICY)).isEqualTo(expected);
+        assertThat(ProcessCatalog.executables(ProcessCatalog.FILTERED_POLICY)).hasSize(31).contains("winword.exe","dwm.exe");
+        for(String name:ProcessCatalog.executables(ProcessCatalog.EXPANDED_POLICY)){
+            assertThat(ProcessCatalog.includes(ProcessCatalog.CURRENT_POLICY,name.toUpperCase(java.util.Locale.ROOT))).isEqualTo(expected.contains(name));
+            assertThat(ProcessCatalog.visibleInLists(name)).isEqualTo(expected.contains(name));
+            assertThat(ProcessCatalog.review(name)).isEqualTo(expected.contains(name));
+            if(!expected.contains(name))assertThatThrownBy(()->full(ProcessCatalog.CURRENT_POLICY,1,List.of(process(1,name)))).isInstanceOf(IllegalArgumentException.class);
+        }
+        assertThat(ProcessCatalog.visibleInLists("unknown.exe")).isFalse();
     }
 }

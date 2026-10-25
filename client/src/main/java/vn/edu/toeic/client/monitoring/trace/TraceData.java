@@ -46,12 +46,12 @@ public final class TraceData {
             var identities=new HashSet<String>();
             for(var process:processes)if(process==null||!identities.add(process.pid()+":"+process.startInstant()))throw new IllegalArgumentException();
             processes=processes.stream().sorted(Comparator.comparingLong(Process::pid).thenComparing(p -> p.startInstant()==null?"":p.startInstant())).toList();
-            if(FullSnapshotPayload.POLICY.equals(policyVersion))processes.forEach(Process::production);
+            if(ProcessCatalog.supported(policyVersion))FullSnapshotPayload.forPolicy(processes.stream().map(Process::production).toList(),policyVersion);
             if(!type.equals("OBSERVATION")&&(!processes.isEmpty()||scanDurationNanos!=0)) throw new IllegalArgumentException();
         }
         public List<FullSnapshotPayload.Process> productionProcesses() {
-            if(!FullSnapshotPayload.POLICY.equals(policyVersion))throw new IllegalArgumentException("TEST_POLICY_NOT_NETWORK_REPLAY");
-            return processes.stream().map(Process::production).toList();
+            if(!ProcessCatalog.supported(policyVersion))throw new IllegalArgumentException("TEST_POLICY_NOT_NETWORK_REPLAY");
+            return FullSnapshotPayload.forPolicy(processes.stream().map(Process::production).toList(),policyVersion);
         }
         public ProcessSnapshot snapshot() {
             Set<ObservedProcess> values=processes.stream().map(p -> new ObservedProcess(new ProcessIdentity(collectorSessionId,p.pid(),

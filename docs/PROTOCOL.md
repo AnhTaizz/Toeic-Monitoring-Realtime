@@ -1126,3 +1126,9 @@ Candidate/trace mặc định process-policy-v3 với31tên, bỏ powershell.exe
 ## 25/10/2026 — Khôi phục quan sát USB có sẵn ở danh sách chung
 
 Chỉ client read projection: PRESENT_AT_START được hiển thị là USB có sẵn khi bắt đầu giám sát, giữ số lượng/partial/id/client-server timestamps/delivery. Không thành CONNECTED và không suy count từ READY. Collector/wire/server/DB không đổi, các baseline/status kỹ thuật khác vẫn ẩn; sửa này chỉ cần mở lại proctor mới nếu baseline đã được server lưu.
+
+## 25/10/2026 — Process policy v4: đúng chín tên người dùng chọn
+
+Candidate và trace mới mặc định process-policy-v4: chrome.exe, msedge.exe, firefox.exe, zalo.exe, teams.exe, ms-teams.exe, discord.exe, anydesk.exe, teamviewer.exe (so tên không phân biệt hoa/thường). Full/delta/event dùng cùng tập; giới hạn 256 process và guard không đổi policy trong epoch giữ nguyên. Server/parser đọc đúng các tập lịch sử v1=8, v2=39, v3=31; tập v3 được đóng băng độc lập bộ lọc UI hiện tại. Không đổi field, endpoint, WS envelope, DB hoặc OS query. Trace/replay kiểm membership và cap theo từng phiên bản, không còn chỉ nhận v1; TEST trace vẫn không được đưa vào replay mạng.
+
+Summary, danh sách chung và số đếm chỉ hiện chín tên kể cả khi đọc dữ liệu cũ; raw DB/API/Timeline không xóa. Không thay nguồn hoặc projection USB, gồm PRESENT_AT_START/cắm/rút; focus/window cũng giữ nguyên. Cần nâng cấp server, candidate và proctor cùng bản build mới; client cũ vẫn thu theo policy cũ, server cũ không nhận v4. [Review/runbook](PROCESS_GROUPS.md).

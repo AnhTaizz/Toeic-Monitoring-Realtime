@@ -7,13 +7,14 @@ import java.util.Set;
 
 /** Finite, versioned executable catalog shared by collection, wire validation and presentation. */
 public final class ProcessCatalog {
-    public static final String LEGACY_POLICY="process-policy-v1", EXPANDED_POLICY="process-policy-v2", CURRENT_POLICY="process-policy-v3";
+    public static final String LEGACY_POLICY="process-policy-v1", EXPANDED_POLICY="process-policy-v2", FILTERED_POLICY="process-policy-v3", CURRENT_POLICY="process-policy-v4";
     public enum Group { BROWSER, COMMUNICATION, REMOTE, DOCUMENT, TERMINAL, SYSTEM }
     public record Entry(Group group,String application) { public boolean review(){return group!=Group.SYSTEM;} }
     private static final Set<String> LEGACY=Set.of("chrome.exe","msedge.exe","firefox.exe","zalo.exe","teams.exe","discord.exe","anydesk.exe","teamviewer.exe");
     private static final Map<String,Entry> ENTRIES=catalog();
     private static final Set<String> OMITTED=Set.of("powershell.exe","pwsh.exe","cmd.exe","msedgewebview2.exe","conhost.exe","runtimebroker.exe","dllhost.exe","svchost.exe");
-    private static final Set<String> CURRENT=ENTRIES.keySet().stream().filter(ProcessCatalog::visibleInLists).collect(java.util.stream.Collectors.toUnmodifiableSet());
+    private static final Set<String> FILTERED=ENTRIES.keySet().stream().filter(name->!OMITTED.contains(name)).collect(java.util.stream.Collectors.toUnmodifiableSet());
+    private static final Set<String> CURRENT=Set.of("chrome.exe","msedge.exe","firefox.exe","zalo.exe","teams.exe","ms-teams.exe","discord.exe","anydesk.exe","teamviewer.exe");
     private ProcessCatalog() { }
     private static Map<String,Entry> catalog(){
         var m=new LinkedHashMap<String,Entry>();
@@ -31,15 +32,16 @@ public final class ProcessCatalog {
     }
     private static void add(Map<String,Entry> map,Group group,String name,String application){map.put(name,new Entry(group,application));}
     public static Entry entry(String name){return name==null?null:ENTRIES.get(name.toLowerCase(Locale.ROOT));}
-    public static boolean supported(String policy){return LEGACY_POLICY.equals(policy)||EXPANDED_POLICY.equals(policy)||CURRENT_POLICY.equals(policy);}
+    public static boolean supported(String policy){return LEGACY_POLICY.equals(policy)||EXPANDED_POLICY.equals(policy)||FILTERED_POLICY.equals(policy)||CURRENT_POLICY.equals(policy);}
     public static Set<String> executables(String policy){
         if(LEGACY_POLICY.equals(policy))return LEGACY;
         if(EXPANDED_POLICY.equals(policy))return ENTRIES.keySet();
+        if(FILTERED_POLICY.equals(policy))return FILTERED;
         if(CURRENT_POLICY.equals(policy))return CURRENT;
         throw new IllegalArgumentException("Unsupported process policy");
     }
     public static boolean includes(String policy,String name){return supported(policy)&&name!=null&&executables(policy).contains(name.toLowerCase(Locale.ROOT));}
-    public static boolean visibleInLists(String name){return name==null||!OMITTED.contains(name.toLowerCase(Locale.ROOT));}
+    public static boolean visibleInLists(String name){return name!=null&&CURRENT.contains(name.toLowerCase(Locale.ROOT));}
     public static boolean review(String name){var e=entry(name);return visibleInLists(name)&&(e==null||e.review());}
     public static int limit(String policy){if(!supported(policy))throw new IllegalArgumentException("Unsupported process policy");return LEGACY_POLICY.equals(policy)?128:256;}
 }

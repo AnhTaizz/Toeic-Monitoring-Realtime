@@ -477,3 +477,9 @@ Bỏ đúng8tên đã liệt kê ở PROCESS_GROUPS.md khỏi nguồn thu mới 
 ### 25/10/2026 — USB có sẵn là quan sát cần hiển thị
 
 Theo phản hồi tiếp của user, không gộp PRESENT_AT_START với status READY để ẩn. Khôi phục dòng USB có sẵn khi bắt đầu giám sát vào shared lists/count, màu thông tin khiLIVE; giữ nguồn/timestamps/metadata, không gọi là cắm mới. Phần khác đã chốt giữ nguyên; không đổi producer/contract. Owner B/C review vẫn còn.
+
+### 25/10/2026 — Thu gọn về đúng chín process, giữ USB
+
+Theo yêu cầu mới nhất, chỉ thu tám tên ban đầu cộng ms-teams.exe. Dùng process-policy-v4 để không đổi nghĩa v1/v2/v3 trong lịch sử và trace; v3 lấy tập 31 tên riêng, không phụ thuộc bộ lọc hiển thị chín tên hiện hành. Giữ giới hạn 256 và các bất biến epoch/sequence/dedup/FULL mặc định. Dữ liệu raw cũ giữ; consumer chung chỉ hiện chín tên. Sửa kiểm policy trong TraceData để trace production của cả bốn phiên bản dùng đúng membership/cap; không đổi schema trace hoặc TEST gate.
+
+USB có sẵn khi bắt đầu, cắm/rút, focus/window và cách quan sát Windows giữ nguyên. Chạm shared catalog A/C, collector/trace C và cách trình bày B; review kỹ thuật trước sửa ở [PROCESS_GROUPS.md](PROCESS_GROUPS.md), không thay chữ ký review cá nhân A/C/B. Không đổi DB, API field, đề/START/deadline hoặc tracker.

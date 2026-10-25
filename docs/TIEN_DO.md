@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+25/10/2026 — Thu gọn đúng chín tên process, gồm teams.exe/ms-teams.exe; current policy v4, giữ v1/v2/v3 và toàn bộ USB/focus/window. Sửa tương thích trace theo từng policy. Full verify 1.471 PASS / 154 SKIP; PG REAL 2 PASS có 2 Teams thật, PG MOCK USB 1 PASS, cleanup sạch. [Runbook](PROCESS_GROUPS.md), [report](../evidence/process-nine-20261025/REPORT.md). Cần server-process-nine-20261025.jar và mở lại cả hai client; không tự ngắt 8080, PR/merge hoặc tracker DONE.
+
 25/10/2026 — Đã thêm lại dòng USB có sẵn khi bắt đầu giám sát (PRESENT_AT_START), giữREADY/INITIALkỹthuậtẩn; clientconsumer-only. Package48PASS và PGMock1PASS/cleanup sạch, khôngphysicalUSB/fullverify mới. [Report](../evidence/usb-start-visible-20261025/REPORT.md). Chỉ mở lại proctor mới để xem baseline đã lưu, server/candidate/processpolicy3 giữ nguyên.
 
 25/10/2026 — Bỏ đúng8tên terminal/host dễ nhầm, currentpolicyv3/31tên; ẩn cả legacyv2 khỏi commonlists/summary/count nhưng raw giữ. Full1464PASS/154SKIP, PGREAL2PASS native61process/2Teams/no8tên/cleanup sạch. [Runbook](PROCESS_GROUPS.md), [report](../evidence/process-filter-20261025/REPORT.md). Cần server-process-filter-20261025.jar và mở lại cả2client; không tự ngắt phiên8080/PR/merge/DONE.

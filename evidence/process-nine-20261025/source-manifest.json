@@ -1,0 +1,50 @@
+[
+  {
+    "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/ProcessCatalog.java",
+    "sha256": "070a42884928c17c769b7d2b52f37266073a04f8aa44996e64bda5e6cad47572"
+  },
+  {
+    "path": "protocol/src/test/java/vn/edu/toeic/protocol/monitoring/ProcessCatalogTest.java",
+    "sha256": "77fc2331b91fa1d738dbcd1f6101314e50c2c956d895dcd29bea51be38dda478"
+  },
+  {
+    "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/TraceData.java",
+    "sha256": "46318fcb157cc6059ce5bd9bc09861889e3e9556136ac99d328b9dd0ba5a7325"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/monitoring/trace/ProcessTracePolicyCompatibilityTest.java",
+    "sha256": "1405403e8b02e03ab0202977d641a2159687164e24e352e855683dbfd2278e32"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessCollectorSmoke.java",
+    "sha256": "965ca2cbea63166883018a541a9ce32e8d9350b1aa3e61e95d7ebb12cfbac823"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessCollectorTest.java",
+    "sha256": "9f3d0441571e6f9e69bf7e74b9a8e1eef691145b782435312d622295b56e3297"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessCollectorTraceTest.java",
+    "sha256": "f9f01a792daff14ac1d64f67767b3b100b0d308ed3d71a2d2cfb46cd66ed8f55"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessPolicyAndSourceTest.java",
+    "sha256": "14eeab39a573879ddd72cf9eaff2297a938597181c3a8d84e01617883f9e7055"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/monitoring/harness/TestTracePolicyTest.java",
+    "sha256": "2ef4ce796c7ab6de0c7c9c67d89c1d3fa3db0ac07d3b314286e39c561ebe476d"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/ProcessGroupsGuiTest.java",
+    "sha256": "07147866132c9b0bd4c5e7c030b84d02657bc557159912c6f55a4862d114b598"
+  },
+  {
+    "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/RedesignFixtures.java",
+    "sha256": "3c3e68fb596a237cc1e12beccd28ae054efcaef1af093b276c3352a14f3502e5"
+  },
+  {
+    "path": "server/src/test/java/vn/edu/toeic/server/monitoring/signal/AlertRulesTest.java",
+    "sha256": "ed520b63e74d6432639f6918f2329fd7d72a10dc2e17ab49fc5904480edac92d"
+  }
+]

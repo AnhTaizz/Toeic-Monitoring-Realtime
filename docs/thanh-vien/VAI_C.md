@@ -617,3 +617,7 @@ Policyv3/current31 loại8tên terminal/host tại [runbook](../PROCESS_GROUPS.m
 ### 25/10/2026 — USB có sẵn khi bắt đầu
 
 Khôi phục PRESENT_AT_START vào sharedlists/count với sốUSB, source/timestamps/partial giữ; READY/focus-windowINITIAL vẫnẩn. Package48PASS, PGMock1PASS/cleanup sạch; không physicalUSB/fullverify mới. [Report](../../evidence/usb-start-visible-20261025/REPORT.md). UI-only: mở lại proctor, không restartserver/candidate nếu baseline đã lưu; owner B/C review còn, khôngtrackerDONE.
+
+### 25/10/2026 — Bàn giao policy v4 đúng chín process
+
+Collector/full/delta/event/trace mặc định v4/chín tên; v3 giữ31 tên riêng. TraceData kiểm membership/cap theo từng policy và full/delta replay cả bốn phiên bản, TEST gate giữ. USB source/hook/projection hash khớp; không đổi OS query hoặc FULL/default flags. Full verify 1.471 PASS/154 SKIP; PG REAL2 PASS có Teams2 thật, PG MOCK USB1 PASS; cleanup sạch. [Report](../../evidence/process-nine-20261025/REPORT.md), [runbook](../PROCESS_GROUPS.md). Ghi chú còn lại: owner A/C/B review cá nhân, H01–H12/LAN/benchmark/installer chưa nghiệm thu; không tracker DONE, PR hoặc merge.

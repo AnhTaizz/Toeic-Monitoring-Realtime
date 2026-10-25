@@ -1,20 +1,30 @@
-# Mở rộng nhóm process — 25/10/2026
+# Danh sách process hiện hành và lịch sử policy — 25/10/2026
 
-**Bản hiện hành sau phản hồi người dùng: process-policy-v3,31tên.** Đã bỏ đúng8tên dễ nhầm ở mục review cuối; bảng39tên bên dưới là catalogv2 được giữ để đọc dữ liệu cũ. Chúng được ẩn khỏi summary/danh sách chung, raw DB/API/Timeline vẫn giữ để đối chiếu. Các process Windows khác còn trong catalog chỉ có trạng thái/nhật ký, không tự tăng cảnh báo.
+**Bản hiện hành: `process-policy-v4`, đúng 9 tên theo yêu cầu người dùng.** Candidate chỉ thu các tên trong bảng dưới, không phân biệt hoa/thường:
 
-Theo yêu cầu người dùng: trình duyệt, chat/họp (cả teams.exe/ms-teams.exe), điều khiển từ xa, tài liệu/ghi chú/PDF, terminal/script và một danh sách cụ thể các process Windows/dịch vụ nền. Đây là catalog có tên rõ ràng, không phải mọi exe trên máy. Chỉ quan sát; không đọc nội dung/arguments, không chặn/kill process người dùng.
+| Nhóm | Tên executable hiện hành |
+|---|---|
+| Trình duyệt | chrome.exe, msedge.exe, firefox.exe |
+| Chat/họp | zalo.exe, teams.exe, ms-teams.exe, discord.exe |
+| Điều khiển từ xa | anydesk.exe, teamviewer.exe |
 
-## Review kỹ thuật trước thay đổi contract
+V4 là 8 tên gốc của v1 cộng `ms-teams.exe`. Notepad, ứng dụng tài liệu/PDF, terminal và process Windows nằm ngoài danh sách hiện hành. Danh sách chung, số đếm, summary và MON-08 review chỉ xét 9 tên này, kể cả khi đọc dữ liệu cũ. Raw DB/API/Timeline gốc vẫn được giữ để đối chiếu.
 
-- Giữ schema field/endpoint/WS envelope; thêm policy process-policy-v2 cho catalog mở rộng, server/client đọc được v1 cũ. V1 giữ8tên/128process, V2 tối đa256process và tập tên hữu hạn. Không gán catalog mới cho trace v1. Cần nâng cấp server cùng client.
-- Full/delta/event cùng ProcessPolicy, epoch không đổi policy giữa run; reducer giữ nguyên quy tắc sequence/dedup/resync. Frame tối đa256 process tên catalog ngắn phải được test dưới64KiB; quá hạn mức báo SNAPSHOT_LIMIT/từ chối dữ liệu mới, không cắt snapshot rồi báo sạch; state cuối hết độ mới theo cơ chế STALE hiện có. FULL vẫn mặc định; delta vẫn opt-in.
-- Phân loại hiển thị dùng chung catalog. Background có trong state/nhật ký nhưng không vào Cảnh báo/count/recent-alerts/MON08 review. Events raw vẫn lưu đủ; MON08 rules/ngưỡng không thay.
-- Loại PID app hiện tại và PowerShell helper CIM do ứng dụng tạo bằng PID/start, không loại cả tên powershell/java. Không đổi câu truy vấn CIM/observer approach; chỉ theo dõi danh tính child đã được app sở hữu. Bounded128 child identities gần nhất tránh race giữa đọc snapshot và child vừa thoát; thiếu start chỉ dùng child còn sống để tránh bỏ nhầm PID reuse.
-- Trace/replay chấp nhận policyv1/v2, kiểm membership theo đúng policy. Nguồn thiếu metadata vẫn ghi UNREADABLE, không suy bình thường. Process hệ thống không đọc được tên không được bịa tên.
+USB giữ nguyên nguồn quan sát, wire và cách hiển thị: `USB_STORAGE_PRESENT_AT_START` vẫn có trong feed chung dưới dạng thông tin; cắm/rút USB, focus và cửa sổ không thay đổi. Chỉ quan sát process; không đọc nội dung/arguments, không chặn/kill process người dùng.
+
+## Lịch sử review mở rộng v2
+
+- Giữ schema field/endpoint/WS envelope; thêm `process-policy-v2` cho catalog mở rộng, server/client đọc được v1 cũ. V1 giữ 8 tên/128 process, v2 tối đa 256 process và tập tên hữu hạn. Không gán catalog mới cho trace v1. Cần nâng cấp server cùng client.
+- Full/delta/event cùng ProcessPolicy, epoch không đổi policy giữa run; reducer giữ nguyên quy tắc sequence/dedup/resync. Frame tối đa 256 process tên catalog ngắn phải được test dưới 64 KiB; quá hạn mức báo SNAPSHOT_LIMIT/từ chối dữ liệu mới, không cắt snapshot rồi báo sạch; state cuối hết độ mới theo cơ chế STALE hiện có. FULL vẫn mặc định; delta vẫn opt-in.
+- Ở v2, background có trong state/nhật ký nhưng không vào Cảnh báo/count/recent-alerts/MON-08 review. Events raw vẫn lưu đủ; MON-08 rules/ngưỡng không thay. Bộ lọc hiển thị hiện hành v4 ở đầu tài liệu thay thế cách hiển thị này.
+- Loại PID app hiện tại và PowerShell helper CIM do ứng dụng tạo bằng PID/start; không đổi câu truy vấn CIM/observer approach. Bounded 128 child identities gần nhất tránh race giữa đọc snapshot và child vừa thoát; thiếu start chỉ dùng child còn sống để tránh bỏ nhầm PID reuse. V4 không thu tên PowerShell, kể cả process do người dùng tự mở.
+- Trace/replay được khai báo hỗ trợ v1/v2 ở lần mở rộng này; mỗi policy phải giữ membership riêng. Nguồn thiếu metadata vẫn ghi UNREADABLE, không suy bình thường. Process hệ thống không đọc được tên không được bịa tên.
 
 Review này là tự rà kỹ thuật trước sửa code, không là chữ ký owner A/C/B. Người dùng đã yêu cầu triển khai; opt-out codex-with-chatgpt tiếp tục. Không đổi exam/START/deadline/DB schema/OS API/policy gian lận.
 
-## Danh sách triển khai
+## Catalog lịch sử v2 — 39 tên
+
+Lần mở rộng v2 từng nhận trình duyệt, chat/họp, điều khiển từ xa, tài liệu/ghi chú/PDF, terminal/script và danh sách cụ thể các process Windows/dịch vụ nền. Bảng này giữ để đọc dữ liệu cũ, không phải danh sách thu hiện hành.
 
 | Nhóm | Tên executable được nhận (không phân biệt hoa/thường) |
 |---|---|
@@ -25,27 +35,33 @@ Review này là tự rà kỹ thuật trước sửa code, không là chữ ký 
 | Terminal | cmd.exe, powershell.exe, pwsh.exe |
 | Nền Windows | svchost.exe, runtimebroker.exe, dwm.exe, explorer.exe, csrss.exe, lsass.exe, services.exe, wininit.exe, winlogon.exe, smss.exe, dllhost.exe, conhost.exe, taskhostw.exe, sihost.exe, searchhost.exe, searchindexer.exe, shellexperiencehost.exe, startmenuexperiencehost.exe, applicationframehost.exe, msedgewebview2.exe |
 
-Tổng39tên, không là mọi process hoặc mọi biến thể tên/ứng dụng. App Teams mới dùng ms-teams.exe đã được kiểm thấy bằng cả Get-Process và ProcessHandle trên máy này trước sửa. Tên process không chứng minh nội dung đang đọc/chia sẻ; WebView2 chỉ là nền, không suy thí sinh mở trình duyệt.
+Tổng 39 tên, không là mọi process hoặc mọi biến thể tên/ứng dụng. App Teams mới dùng `ms-teams.exe` đã được kiểm thấy bằng cả Get-Process và ProcessHandle trên máy này trước lần mở rộng. Tên process không chứng minh nội dung đang đọc/chia sẻ; WebView2 chỉ là nền, không suy thí sinh mở trình duyệt.
 
 ## Nâng cấp và chạy
 
-Cần cả server và client mới. Script không tự build; đóng/mở JVM không tự thay JAR server cũ. Sau mvn package mặc định dùng start-monitoring-server.ps1 -SignalExperiment như cũ. Nếu server cũ đang khóa JAR mặc định, bản verify được đóng gói riêng, có thể chọn bằng tham số mới khi tự khởi động lại server:
+Cần nâng cấp đủ **server, candidate và proctor** để dùng policy v4 cùng bộ lọc hiển thị mới. Script khởi động không tự build; chuẩn bị JAR từ source mới trước. Sau `mvn package`, có thể dùng JAR mặc định với `start-monitoring-server.ps1 -SignalExperiment`. Bản đóng gói riêng cho thay đổi này dùng tên `server-process-nine-20261025.jar`; chọn rõ bằng `-ServerJar` khi chủ động khởi động server:
 
 ~~~powershell
-.\scripts\start-monitoring-server.ps1 -SignalExperiment -ServerJar .\server\target\server-process-filter-20261025.jar
+.\scripts\start-monitoring-server.ps1 -SignalExperiment -ServerJar .\server\target\server-process-nine-20261025.jar
 .\scripts\start-monitoring-client.ps1 -ServerUrl 'http://localhost:8080' -ReadUsbStorage
 ~~~
 
-Thay địa chỉ bằng server LAN được cấu hình nếu chạy khác máy. Mở lại app giám thị bằng client mới, đăng nhập/chọn đúng lượt; candidate bật Bắt đầu giám sát hoặc vào bài. Không tự reset DB/lượt/deadline. Chỉ mở lại proctor không bổ sung process chưa từng được candidate gửi; client cũ policyv1 vẫn chỉ thu8tên. Server cũ không chấp nhận full policyv2 nên phải nâng cấp đồng bộ.
+Lệnh client có `-ReadUsbStorage` dành cho candidate cần quan sát USB như cấu hình cũ; mở proctor bằng cùng JAR client mới và URL server. Thay địa chỉ bằng server LAN được cấu hình nếu chạy khác máy. Candidate đăng nhập/chọn đúng lượt rồi bật **Bắt đầu giám sát** hoặc vào bài; proctor chọn cùng lượt được phân công.
+
+Lệnh trên không tự reset DB/lượt/deadline hoặc dừng JVM đang chạy. Chỉ nâng cấp và khởi động lại khi đã chủ động sắp xếp phiên làm việc; thay JAR không tự nạp code vào JVM cũ. Chỉ mở lại proctor không bổ sung process chưa từng được candidate gửi. Client cũ vẫn thu theo policy của nó (v1: 8 tên, v2: 39 tên, v3: 31 tên); server cũ không hiểu v4, nên cần nâng cấp đồng bộ cả ba thành phần. Không đổi policy giữa một epoch; phiên giám sát mới bắt đầu bằng full baseline như cũ.
 
 ## Giới hạn kiểm chứng
 
-Đây là mở rộng catalog hữu hạn, không bảo đảm nhận mọi ứng dụng/biến thể tên hoặc process không đọc được metadata. Giới hạn256 được kiểm ở DTO/frame/reducer, không là số process tối đa của Windows. Process sống ngắn hơn chu kỳ poll có thể bị bỏ lỡ. E1/E2 cũ với policyv1 không được gán lại cho catalog39tên; chưa đo lại hiệu năng/LAN nhiều máy cho policyv2. Không cần thư viện mới hoặc quyền admin để thêm tên vào catalog; không yêu cầu nâng quyền để đọc process bị hạn chế.
+Đây là danh sách hữu hạn, không bảo đảm nhận mọi ứng dụng/biến thể tên hoặc process không đọc được metadata. Hạn mức là 128 process cho v1 và 256 process cho v2/v3/v4, không phải số process tối đa của Windows; quá hạn mức phải báo lỗi, không cắt snapshot. Process sống ngắn hơn chu kỳ poll có thể bị bỏ lỡ. E1/E2 cũ với policy v1 không được gán lại cho các policy sau; chưa đo lại hiệu năng/LAN nhiều máy cho v4. Không cần thư viện mới hoặc quyền admin để thêm tên vào catalog; không yêu cầu nâng quyền để đọc process bị hạn chế. Tài liệu này không xác nhận test mới hoặc owner signoff.
 
-## Review trước điều chỉnh theo phản hồi tiếp theo — 25/10/2026
+## Lịch sử review thu gọn v3 — 25/10/2026
 
-Người dùng muốn bỏ những tên dễ nhầm vừa được liệt kê. Bỏ đúng8tên: powershell.exe, pwsh.exe, cmd.exe, msedgewebview2.exe, conhost.exe, runtimebroker.exe, dllhost.exe, svchost.exe. Giữ các tên khác (gồm Teams) và nguồn USB/focus/window. Thêm process-policy-v3/current31tên, không đổi nghĩa v2/39 và v1/8; full/delta/event cùng policy, epoch không đổi policy, limit256 nhưv2. Không đổi DTO field/DB/OSquery. Consumer danh sách chung và summary bỏ8tên cả khi đọc snapshot/historyv2; raw DB/API/Timeline gốc không xóa. Đây là review kỹ thuật riêng trước đổi policy, không thay chữ ký owner A/C/B; người dùng đã cho phép triển khai, opt-outChatGPT giữ.
+Ở lần phản hồi tiếp theo, người dùng muốn bỏ đúng 8 tên dễ nhầm: powershell.exe, pwsh.exe, cmd.exe, msedgewebview2.exe, conhost.exe, runtimebroker.exe, dllhost.exe, svchost.exe. V3 giữ 31 tên còn lại của v2 và nguồn USB/focus/window. `process-policy-v3` giữ membership riêng, không đổi nghĩa v2 (39 tên) và v1 (8 tên); full/delta/event cùng policy, epoch không đổi policy, hạn mức 256 như v2. Không đổi DTO field/DB/OS query. Khi v3 là bản hiện hành, danh sách chung và summary bỏ 8 tên này cả khi đọc snapshot/history v2; raw DB/API/Timeline gốc không xóa. Đây là review kỹ thuật trước đổi policy, không thay chữ ký owner A/C/B; người dùng đã cho phép triển khai và giữ opt-out ChatGPT.
 
-Cấu hìnhv3 vẫn limit256 và đọc lại v1/v2 theo catalog cũ; không đổi nguồn USB/focus/window. Khi khởi động lại dùng server-process-filter-20261025.jar ở lệnh trên và mở lại cả2client mới.
+Cấu hình v3 vẫn có hạn mức 256 và đọc lại v1/v2 theo catalog cũ; không đổi nguồn USB/focus/window. JAR riêng ở lần này mang tên `server-process-filter-20261025.jar`; lệnh nâng cấp hiện hành phía trên đã chuyển sang bản v4.
 
-Việc loại theo tên áp dụng cả CMD/PowerShell do người dùng tự mở, không chỉ helper của app thi. Các tên này không được candidatev3 ghi nhận nữa; đây là hệ quả trực tiếp của danh sách loại người dùng yêu cầu.
+Việc loại theo tên áp dụng cả CMD/PowerShell do người dùng tự mở, không chỉ helper của app thi. Các tên này không được candidate v3 ghi nhận nữa; đây là hệ quả trực tiếp của danh sách loại người dùng yêu cầu.
+
+## Review trước thu gọn đúng chín process — 25/10/2026
+
+Người dùng chốt đúng 9 tên ở đầu tài liệu và giữ nguyên USB. Thêm `process-policy-v4` làm policy hiện hành, bảo toàn membership v1 = 8, v2 = 39, v3 = 31. Tập v3 tách khỏi bộ lọc UI để không đổi nghĩa raw/trace cũ; summary, danh sách chung và số đếm chỉ hiện 9 tên, kể cả khi đọc dữ liệu cũ. Không xóa raw DB/API/Timeline, không đổi field/endpoint/DB/OS observer. Full/delta/event/trace mới dùng cùng tập 9 tên, epoch không đổi policy; hạn mức 256 giữ nguyên. Trace/replay kiểm membership và hạn mức theo từng policy v1/v2/v3/v4. USB source/wire/projection, `USB_STORAGE_PRESENT_AT_START`, cắm/rút, focus và cửa sổ giữ nguyên. Review kỹ thuật trước sửa không thay owner signoff A/C/B; người dùng đã ủy quyền code/push và giữ opt-out ChatGPT.

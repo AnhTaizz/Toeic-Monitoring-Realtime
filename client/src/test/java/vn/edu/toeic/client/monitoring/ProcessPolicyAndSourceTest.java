@@ -14,17 +14,17 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class ProcessPolicyAndSourceTest {
     @ParameterizedTest @ValueSource(strings = {"chrome.exe", "Chrome.EXE", "msedge.exe", "FIREFOX.EXE",
-            "zalo.exe", "teams.exe", "discord.exe", "anydesk.exe", "teamviewer.exe", "ms-teams.exe", "winword.exe", "excel.exe", "notepad.exe", "acrobat.exe", "dwm.exe"})
+            "zalo.exe", "teams.exe", "discord.exe", "anydesk.exe", "teamviewer.exe", "ms-teams.exe"})
     void matchesExpandedCatalogCaseInsensitive(String name) { assertThat(new ProcessPolicy().matches(name)).isTrue(); }
 
-    @ParameterizedTest @ValueSource(strings = {"powershell.exe", "pwsh.exe", "cmd.exe", "svchost.exe", "runtimebroker.exe", "dllhost.exe", "conhost.exe", "msedgewebview2.exe", "unknown.exe", "java.exe", "chrome", "chrome.exe.bak", "MOCK/chrome.exe"})
+    @ParameterizedTest @ValueSource(strings = {"winword.exe", "excel.exe", "notepad.exe", "acrobat.exe", "dwm.exe", "powershell.exe", "pwsh.exe", "cmd.exe", "svchost.exe", "runtimebroker.exe", "dllhost.exe", "conhost.exe", "msedgewebview2.exe", "unknown.exe", "java.exe", "chrome", "chrome.exe.bak", "MOCK/chrome.exe"})
     void doesNotCaptureUnknownNamesOrCompareFullPath(String name) { assertThat(new ProcessPolicy().matches(name)).isFalse(); }
 
     @Test void policyVersionAndListAreFixedAndImmutable() {
         ProcessPolicy policy = new ProcessPolicy();
-        assertThat(policy.version()).isEqualTo("process-policy-v3");
+        assertThat(policy.version()).isEqualTo("process-policy-v4");
         assertThat(policy.matches(null)).isFalse();
-        assertThat(policy.restrictedExecutables()).hasSize(31);
+        assertThat(policy.restrictedExecutables()).hasSize(9);
         assertThatThrownBy(() -> policy.restrictedExecutables().add("unknown.exe"))
                 .isInstanceOf(UnsupportedOperationException.class);
     }
