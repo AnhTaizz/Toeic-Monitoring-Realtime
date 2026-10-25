@@ -340,7 +340,7 @@ Request và ACK dùng đúng mẫu v0 phía trên. `attemptId` bắt buộc. `me
 
 Các Instant được chuẩn hóa UTC và cắt phần nhỏ hơn microsecond trước khi lưu/so sánh, theo độ chính xác PostgreSQL. `observedAt` do client khai, không phải bằng chứng đồng bộ đồng hồ. `receivedAt` lấy bằng PostgreSQL `clock_timestamp()` khi insert, không sửa khi retry.
 
-Luồng: xác thực lại → role CANDIDATE → scope → validation → service transaction → COMMIT → ACK → push nếu row mới. Unique `(attempt_id,event_id)`. So sánh record đã chuẩn hóa, không so chuỗi JSON hay envelope. Cùng payload dù thứ tự key khác: ACK lại, một row, một warning. Khác bất kỳ trường payload đã chuẩn hóa: ERROR CONFLICT, không overwrite/ACK/push. ID event thuộc attempt; không unique toàn hệ thống.
+Luồng: xác thực lại → role CANDIDATE → scope → validation → service transaction → COMMIT → ACK. Unique `(attempt_id,event_id)`. So sánh record đã chuẩn hóa, không so chuỗi JSON hay envelope. Cùng payload dù thứ tự key khác: ACK lại và chỉ một row. Khác bất kỳ trường payload đã chuẩn hóa: ERROR CONFLICT, không overwrite/ACK/push. ID event thuộc attempt; không unique toàn hệ thống.
 
 Lỗi WS dùng `{code,message,retryable}` trong `payload`: INVALID_INPUT/FORBIDDEN/CONFLICT/UNAUTHORIZED đều `retryable:false`; lỗi DB/commit là RETRYABLE_SERVER_ERROR `retryable:true`, không ACK success hoặc warning. UNAUTHORIZED đóng socket1008. Error không phản chiếu payload, path hoặc stack trace.
 
@@ -354,15 +354,15 @@ Ví dụ minh họa schema (ID/thời gian TEST, không credential):
 {"protocolVersion":"v0","type":"MONITOR_WARNING","messageId":"server-generated-id","requestId":null,"attemptId":"TEST-attempt-A","traceId":"TEST-trace","payload":{"eventId":"TEST-event-1","attemptId":"TEST-attempt-A","processName":"notepad.exe","metadataQuality":"COMPLETE","policyVersion":"process-policy-v1","observedAt":"2026-10-04T00:00:01Z","receivedAt":"2026-10-04T00:00:02Z"}}
 ```
 
-Push chỉ tới session proctor còn hợp lệ và có assignment tại thời điểm kiểm quyền; candidate/proctor khác không nhận. Mọi ACK/ERROR/warning đi qua cùng ConcurrentWebSocketSessionDecorator. Giao nhận push best effort: offline/socket lỗi không làm mất event đã commit, không biến ACK thành lỗi. Không đảm bảo thứ tự warning giữa các connection gửi đồng thời; REST là nguồn lịch sử ổn định.
+Push chỉ tới session proctor còn hợp lệ và có assignment tại thời điểm kiểm quyền; candidate/proctor khác không nhận. Server gộp các PID con có cùng `processName` (không phân biệt hoa/thường) thành một đợt quan sát: event đầu được push, các event kế tiếp cách event trước không quá 30 giây vẫn được commit/ACK nhưng không push thêm. Sau khoảng yên lặng trên 30 giây, lần xuất hiện tiếp theo được xem là thay đổi mới và được push. Khóa row attempt bảo đảm hai socket gửi đồng thời không cùng phát warning đầu đợt. Mọi ACK/ERROR/warning đi qua cùng ConcurrentWebSocketSessionDecorator. Giao nhận push best effort: offline/socket lỗi không làm mất event đã commit, không biến ACK thành lỗi. REST là nguồn lịch sử ổn định.
 
-`GET /api/v1/monitoring/attempts/{attemptId}/events` với Bearer header, chỉ PROCTOR có scope ACTIVE. Không phân trang: trả đủ tối đa5000 dòng, hoặc 409 `INVALID_STATE` `retryable:false` cho cả response khi vượt (xem mục ổn định hóa17/10). Response200:
+`GET /api/v1/monitoring/attempts/{attemptId}/events` với Bearer header, chỉ PROCTOR có scope ACTIVE. Server áp dụng cùng quy tắc đợt 30 giây và trả event đầu mỗi đợt; dữ liệu PID gốc vẫn giữ trong `monitoring_events` để audit. Không phân trang: trả đủ tối đa5000 mục đã gộp, hoặc 409 `INVALID_STATE` `retryable:false` cho cả response khi vượt (xem mục ổn định hóa17/10). Response200:
 
 ```json
 {"protocolVersion":"v0","traceId":"server-generated-id","attemptId":"TEST-attempt-A","events":[{"eventId":"TEST-event-1","attemptId":"TEST-attempt-A","processName":"notepad.exe","metadataQuality":"COMPLETE","policyVersion":"process-policy-v1","observedAt":"2026-10-04T00:00:01Z","receivedAt":"2026-10-04T00:00:02Z"}]}
 ```
 
-`events` có thể rỗng. Item timeline và payload warning cùng schema. Order `received_at ASC,id ASC`; không theo observedAt. Không có password/token/OS username/full path/command line. B3 hiển thị “Quan sát thấy …”, không kết luận gian lận. Dedupe bằng `(attemptId,eventId)`.
+`events` có thể rỗng. Item timeline và payload warning cùng schema. Order `received_at ASC,id ASC`; không theo observedAt. Không có password/token/OS username/full path/command line. B3 hiển thị “Quan sát thấy …”, không kết luận gian lận. Client vẫn gộp HTTP/WS bằng `(attemptId,eventId)`; server chịu trách nhiệm không phát nhiều eventId của các PID con trong cùng đợt lên UI.
 
 **B3 reconnect:** đọc timeline → render → mở/live WS, rồi đọc timeline đối chiếu lần nữa và gộp theo dedupe key để bù khoảng trống giữa HTTP và handshake. Có thể mở WS/buffer trước rồi đọc timeline. Chưa có subscription message riêng; server dùng assignment để lọc các socket proctor. A3 chưa viết dashboard.
 
