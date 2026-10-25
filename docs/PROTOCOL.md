@@ -1133,3 +1133,21 @@ Chỉ bổ sung consumer hiển thị ở client; không đổi DTO, endpoint, w
 ## 25/10/2026 — Bộ lọc danh sách chung theo thiết kế người dùng chốt lại
 
 Consumer RoomFeed/SignalFeedProjection chỉ chiếu typed USB CONNECTED/REMOVED, focus ngoài INITIAL/dialog nội bộ và window CHANGED vào danh sách chung; không đưa status/gap typed/PRESENT_AT_START/baseline vào đó. Process và luồng kết nối/gap legacy giữ nguyên. Đây chỉ là bộ lọc hiển thị: raw typed history, source health, collector, DTO, server retention và Timeline không thay đổi.
+
+## 25/10/2026 — Catalog process-policy-v2
+
+Theo yêu cầu người dùng, candidate mặc định policyv2 với39tên/6nhóm tại PROCESS_GROUPS.md (gồm ms-teams.exe). Full/delta/state nhận cảv1(8tên/128process) vàv2(39tên/256process), kiểm membership theo policy; schema field/endpoint/envelope và DB không đổi. Reducer không cho đổi policy trong epoch; full/delta/event cùng tập đã lọc. Đọc trace/replay v1 giữ nguyên ý nghĩa. Background được lưu lịch sử và hiện state, consumer Cảnh báo/MON08 không tự đưa background vào review. Nâng cấp đồng bộ server/client; clientv1 còn dùng được với server mới, clientv2 cần server mới. Registry helper USB chỉ loại PID/start do app sở hữu, không đổi OS query. [Review/runbook](PROCESS_GROUPS.md), [evidence](../evidence/process-groups-20261025/REPORT.md).
+
+## 25/10/2026 — Policyv3 bỏ tám tên dễ nhầm
+
+Candidate/trace mặc định process-policy-v3 với31tên, bỏ powershell.exe/pwsh.exe/cmd.exe/msedgewebview2.exe/conhost.exe/runtimebroker.exe/dllhost.exe/svchost.exe. Full/delta/event cùng tập; server/parser vẫn đọc v1(8)/v2(39) đúng membership cũ, V3 cap256 giốngV2, epoch không đổi policy. Không đổi field/endpoint/DB hoặc OSquery. Summary/danh sách chung/count/MON08 review bỏ8tên cả với dữ liệuV2; raw DB/API và Timeline gốc không xóa, dòng Timeline cũ ghi rõ tên đã loại. [Review/runbook](PROCESS_GROUPS.md).
+
+## 25/10/2026 — Khôi phục quan sát USB có sẵn ở danh sách chung
+
+Chỉ client read projection: PRESENT_AT_START được hiển thị là USB có sẵn khi bắt đầu giám sát, giữ số lượng/partial/id/client-server timestamps/delivery. Không thành CONNECTED và không suy count từ READY. Collector/wire/server/DB không đổi, các baseline/status kỹ thuật khác vẫn ẩn; sửa này chỉ cần mở lại proctor mới nếu baseline đã được server lưu.
+
+## 25/10/2026 — Process policy v4: đúng chín tên người dùng chọn
+
+Candidate và trace mới mặc định process-policy-v4: chrome.exe, msedge.exe, firefox.exe, zalo.exe, teams.exe, ms-teams.exe, discord.exe, anydesk.exe, teamviewer.exe (so tên không phân biệt hoa/thường). Full/delta/event dùng cùng tập; giới hạn 256 process và guard không đổi policy trong epoch giữ nguyên. Server/parser đọc đúng các tập lịch sử v1=8, v2=39, v3=31; tập v3 được đóng băng độc lập bộ lọc UI hiện tại. Không đổi field, endpoint, WS envelope, DB hoặc OS query. Trace/replay kiểm membership và cap theo từng phiên bản, không còn chỉ nhận v1; TEST trace vẫn không được đưa vào replay mạng.
+
+Summary, danh sách chung và số đếm chỉ hiện chín tên kể cả khi đọc dữ liệu cũ; raw DB/API/Timeline không xóa. Không thay nguồn hoặc projection USB, gồm PRESENT_AT_START/cắm/rút; focus/window cũng giữ nguyên. Cần nâng cấp server, candidate và proctor cùng bản build mới; client cũ vẫn thu theo policy cũ, server cũ không nhận v4. [Review/runbook](PROCESS_GROUPS.md).

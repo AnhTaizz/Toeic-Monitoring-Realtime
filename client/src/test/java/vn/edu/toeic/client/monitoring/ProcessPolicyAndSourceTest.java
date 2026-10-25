@@ -14,19 +14,25 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class ProcessPolicyAndSourceTest {
     @ParameterizedTest @ValueSource(strings = {"chrome.exe", "Chrome.EXE", "msedge.exe", "FIREFOX.EXE",
-            "zalo.exe", "teams.exe", "discord.exe", "anydesk.exe", "teamviewer.exe"})
-    void matchesExactlyPolicyV1CaseInsensitive(String name) { assertThat(new ProcessPolicy().matches(name)).isTrue(); }
+            "zalo.exe", "teams.exe", "discord.exe", "anydesk.exe", "teamviewer.exe", "ms-teams.exe"})
+    void matchesExpandedCatalogCaseInsensitive(String name) { assertThat(new ProcessPolicy().matches(name)).isTrue(); }
 
-    @ParameterizedTest @ValueSource(strings = {"notepad.exe", "java.exe", "chrome", "chrome.exe.bak", "MOCK/chrome.exe"})
-    void doesNotExpandPolicyOrCompareFullPath(String name) { assertThat(new ProcessPolicy().matches(name)).isFalse(); }
+    @ParameterizedTest @ValueSource(strings = {"winword.exe", "excel.exe", "notepad.exe", "acrobat.exe", "dwm.exe", "powershell.exe", "pwsh.exe", "cmd.exe", "svchost.exe", "runtimebroker.exe", "dllhost.exe", "conhost.exe", "msedgewebview2.exe", "unknown.exe", "java.exe", "chrome", "chrome.exe.bak", "MOCK/chrome.exe"})
+    void doesNotCaptureUnknownNamesOrCompareFullPath(String name) { assertThat(new ProcessPolicy().matches(name)).isFalse(); }
 
     @Test void policyVersionAndListAreFixedAndImmutable() {
         ProcessPolicy policy = new ProcessPolicy();
-        assertThat(policy.version()).isEqualTo("process-policy-v1");
+        assertThat(policy.version()).isEqualTo("process-policy-v4");
         assertThat(policy.matches(null)).isFalse();
-        assertThat(policy.restrictedExecutables()).hasSize(8);
-        assertThatThrownBy(() -> policy.restrictedExecutables().add("notepad.exe"))
+        assertThat(policy.restrictedExecutables()).hasSize(9);
+        assertThatThrownBy(() -> policy.restrictedExecutables().add("unknown.exe"))
                 .isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test void excludesThisApplicationWithoutSuppressingOtherApplications(){
+        var policy=new ProcessPolicy();var start=Instant.parse("2026-10-25T05:00:00Z");
+        assertThat(policy.includes(new ProcessReading(ProcessHandle.current().pid(),"ms-teams.exe",start,true))).isFalse();
+        assertThat(policy.includes(new ProcessReading(Long.MAX_VALUE,"ms-teams.exe",start,true))).isTrue();
     }
 
     @Test void sourceKeepsOnlyFilenameAndUserAvailabilityAndClosesStream() {

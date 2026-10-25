@@ -17,15 +17,20 @@ class SignalFeedProjectionTest {
             UsbStorageSignal.Kind.USB_STORAGE_CONNECTED,UsbStorageSignal.Quality.PARTIAL,1,null);}
     static SignalHistory.Entry entry(long n,Signal s){return new SignalHistory.Entry(A,n,SERVER.plusMillis(n),"LIVE",s);}
 
-    @Test void startupBaselinesDoNotAppearInTheCommonLists(){
+    @Test void usbPresenceAtStartupAppearsWithoutTechnicalOrWindowBaselines(){
         var f=new FocusSignal("MOCK-focus",RUN,1,CLIENT,ORIGIN,true,"INITIAL",null);
         var w=new WindowSignal("MOCK-window",RUN,2,CLIENT,ORIGIN,false,false,"INITIAL");
         var present=new UsbStorageSignal("MOCK-present",RUN,3,CLIENT,ORIGIN,
                 UsbStorageSignal.Kind.USB_STORAGE_PRESENT_AT_START,UsbStorageSignal.Quality.PARTIAL,1,null);
         var projected=SignalFeedProjection.project(List.of(entry(1,f),entry(2,w),entry(3,present),entry(4,usb(4))),"MOCK candidate");
-        assertThat(projected.history()).hasSize(1);
-        assertThat(projected.alerts()).hasSize(1).allMatch(a->a.kind()==RoomModel.Kind.USB);
-        assertThat(projected.history().getFirst().alert().typeCode()).isEqualTo("USB_STORAGE_CONNECTED");
+        assertThat(projected.history()).hasSize(2);
+        assertThat(projected.alerts()).hasSize(2).allMatch(a->a.kind()==RoomModel.Kind.USB);
+        assertThat(projected.alerts()).extracting(RoomModel.Alert::typeCode).containsExactly("USB_STORAGE_PRESENT_AT_START","USB_STORAGE_CONNECTED");
+        var baseline=projected.alerts().getFirst();
+        assertThat(baseline.title()).isEqualTo("USB có sẵn khi bắt đầu giám sát");
+        assertThat(baseline.description()).contains("1 USB lưu trữ khi bắt đầu giám sát","Metadata một phần");
+        assertThat(baseline.statusColour()).isEqualTo("blue");
+        assertThat(baseline.serverTime()).isEqualTo(SERVER.plusMillis(3));
     }
     @Test void changedSourcesKeepBothTimesAndDoNotInventAHandledState(){
         var f=new FocusSignal("MOCK-focus",RUN,2,CLIENT,ORIGIN,false,"OTHER_OR_UNKNOWN",null);

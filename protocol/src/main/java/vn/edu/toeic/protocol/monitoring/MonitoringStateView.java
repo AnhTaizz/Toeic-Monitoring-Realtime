@@ -14,8 +14,8 @@ public record MonitoringStateView(String attemptId, String serverInstanceId, Str
         if (syncEpoch != null) FullSnapshotPayload.id(syncEpoch);
         if (collectorSessionId != null) FullSnapshotPayload.id(collectorSessionId);
         if (revision < 0 || sequence < 0 || !Set.of("UNSYNCED","SYNCED","STALE").contains(status)
-                || !FullSnapshotPayload.POLICY.equals(policyVersion) || (syncEpoch == null) != (collectorSessionId == null)) throw new IllegalArgumentException();
-        processes = FullSnapshotPayload.canonical(processes);
+                || !ProcessCatalog.supported(policyVersion) || (syncEpoch == null) != (collectorSessionId == null)) throw new IllegalArgumentException();
+        processes = FullSnapshotPayload.forPolicy(processes,policyVersion);
         if (receivedAt != null) receivedAt = Instant.parse(receivedAt).toString();
         if (status.equals("SYNCED") && (sequence < 1 || syncEpoch == null || receivedAt == null)) throw new IllegalArgumentException();
         if (sequence == 0 && (!processes.isEmpty() || receivedAt != null)) throw new IllegalArgumentException();

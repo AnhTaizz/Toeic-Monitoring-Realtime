@@ -2,14 +2,16 @@ package vn.edu.toeic.client.monitoring;
 
 import java.util.Locale;
 import java.util.Set;
-import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
+import vn.edu.toeic.protocol.monitoring.ProcessCatalog;
+import vn.edu.toeic.monitoring.usb.OwnedUsbProcesses;
 
 public final class ProcessPolicy implements ProcessSelection {
-    private static final Set<String> RESTRICTED = FullSnapshotPayload.EXECUTABLES;
-    public String version() { return "process-policy-v1"; }
+    private static final Set<String> RESTRICTED = ProcessCatalog.executables(ProcessCatalog.CURRENT_POLICY);
+    public String version() { return ProcessCatalog.CURRENT_POLICY; }
     public Set<String> restrictedExecutables() { return RESTRICTED; }
     public boolean matches(String executableName) {
         return executableName != null && RESTRICTED.contains(executableName.toLowerCase(Locale.ROOT));
     }
-    @Override public boolean includes(ProcessReading reading) { return matches(reading.executableName()); }
+    @Override public boolean includes(ProcessReading reading) { return reading.pid()!=ProcessHandle.current().pid()&&matches(reading.executableName())
+            &&!OwnedUsbProcesses.contains(reading.pid(),reading.startInstant()); }
 }

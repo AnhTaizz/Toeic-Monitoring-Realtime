@@ -1,0 +1,126 @@
+{
+  "baseSha": "9299075f302c047cd65f7853e1fb2e4cd535ce2d",
+  "sourceDirty": true,
+  "files": [
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/FullSnapshotDelivery.java",
+      "sha256": "0c10d20049df8190e269143cda0fb10d27f077444821613f65353701b4ee1620"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessPolicy.java",
+      "sha256": "82d34bc772971930989e632b5df5103dcb070398f7a2cdfe3336afa4a8bfb625"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/ReplayServer.java",
+      "sha256": "710e4c0d95fe831c8e28b61cd2edda036ca2578515cea0f8771d9b6642454c48"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/TraceCli.java",
+      "sha256": "d7839a133f3e4937355af015885ca071fe90c86e218d664dda24d08ca126a96b"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/TraceData.java",
+      "sha256": "6da1130e14038fd40f52a988f818e38dd71a9955e04ae7e66b415d20adfb3cff"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/TraceRecorder.java",
+      "sha256": "73532e00968080b876981bce3d9904810501c6e0e73296a8734fac41272354c9"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/RoomModel.java",
+      "sha256": "475bd79de632ac74517f6e4565f8f68b375835608084e10023de6f8bd2e1c1c4"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/proctor/timeline/ProcessRiskPresentation.java",
+      "sha256": "3ba64bf720951695c3ccc84feb9fc2dba78bdac1c4041b942f2c281023bd9db2"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessCollectorSmoke.java",
+      "sha256": "6108fde1d0e077f63decca289bacb619f386aa2f72443a64b12abdac76962060"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessCollectorTest.java",
+      "sha256": "1c753b452b1ade5ee2b3ae81d72a3d3a02cd355376bd0c33f4c0a211ea983b14"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessCollectorTraceTest.java",
+      "sha256": "7dc701ed98903796042825ddea8df02e20d513e540c8b5d455fdb325008c3dce"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessPolicyAndSourceTest.java",
+      "sha256": "8623ad18327bab335bc5a881b5a0f59deb889bf04f01432ae1b5f9787a25dbe7"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/harness/TestTracePolicyTest.java",
+      "sha256": "0bb8b4db9b443a660f21a2aaa4be2b6bc46dfd40da3f2843b86ba63e386fdaad"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/DeltaSnapshotPayload.java",
+      "sha256": "3ad74ae1a51f14bfdff80d9a5137abf5f78ddd940cf0a31490db8a3a66a49ede"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/FullSnapshotPayload.java",
+      "sha256": "c7afd145d1f0c8db4011cdec2e666aa5af5ec1ce314289ecaf389bf973de1f85"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/MonitoringStateReducer.java",
+      "sha256": "c67300b9b96382d2d9d5ea296193693a641674c0c306d27faeaff851ab16f47e"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/MonitoringStateView.java",
+      "sha256": "9c15daf933c5c9245d40d8623f1e28cd930d1b2cf360f0b31c1c374cbcc440ed"
+    },
+    {
+      "path": "protocol/src/test/java/vn/edu/toeic/protocol/monitoring/FullSnapshotPayloadTest.java",
+      "sha256": "ff9ca22a490268f508ebeb570f7d06a5db6776f31427a7766e50646efee3269b"
+    },
+    {
+      "path": "scripts/start-monitoring-server.ps1",
+      "sha256": "ffff6cfc71a6fd7ff3a7f0f77208d6ac57a773ff9080f69f53c097de193b8257"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/MonitoringStateService.java",
+      "sha256": "210a2e43e261c98f231e05cb848c5d7c9aca98adfc01ecefe4605bcf9e2b8cc7"
+    },
+    {
+      "path": "server/src/main/java/vn/edu/toeic/server/monitoring/signal/AlertService.java",
+      "sha256": "365ab3546e5d890cd5416fbd98a10b77458d89c097db7a902f7d30d6e3424cd6"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/client/proctor/redesign/MonitoringFeedProbe.java",
+      "sha256": "4d47285d7af3e16eda29ff555ea3fa73c35806060aa49b5f6198c47e9960c665"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/signal/AlertRulesTest.java",
+      "sha256": "35c55b192db247a33324e07586add516933dbb8de1569af1039ebcbbddf383f3"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/signal/MonitoringTimelinePostgresTest.java",
+      "sha256": "b501f66caeb80559f199e56136e75c3dd35048ccbe8a3954ef24758d79707979"
+    },
+    {
+      "path": "windows-observer/src/main/java/vn/edu/toeic/monitoring/usb/CimSnapshotSource.java",
+      "sha256": "4385c845d6bac50e20079cb5e899e933b42364eb88c6ba73e9383d11659c5daf"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/ProcessCatalog.java",
+      "sha256": "08f98ccbd2482d56e6c851b2696b7422105fe215a7485240dc15e404359adf22"
+    },
+    {
+      "path": "protocol/src/test/java/vn/edu/toeic/protocol/monitoring/ProcessCatalogTest.java",
+      "sha256": "3a4b4d49bcd585e67c34d55cea0b2f871e22f033289fcbaea852e39f9e1b3040"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/ProcessGroupsGuiTest.java",
+      "sha256": "cd77440c1578d473c929244b415802a9583ac5c8bbe1c4d8b31e867b69c4a2c6"
+    },
+    {
+      "path": "windows-observer/src/main/java/vn/edu/toeic/monitoring/usb/OwnedUsbProcesses.java",
+      "sha256": "0ce60e9c8b1d95c5691af121d9d05d82c3f542394c5f96eb99c4fed4df20507e"
+    },
+    {
+      "path": "windows-observer/src/test/java/vn/edu/toeic/monitoring/usb/OwnedUsbProcessesTest.java",
+      "sha256": "14a7551429918768d8a67fb1d240ef3e93bebd8eb0665ecc22f9e983290fc9ad"
+    }
+  ]
+}

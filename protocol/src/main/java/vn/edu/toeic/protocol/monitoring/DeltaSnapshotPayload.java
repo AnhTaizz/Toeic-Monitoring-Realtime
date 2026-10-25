@@ -23,9 +23,9 @@ public record DeltaSnapshotPayload(String collectorSessionId, String syncEpoch, 
     public DeltaSnapshotPayload {
         id(collectorSessionId); id(syncEpoch);
         if (baseSequence < 1 || baseSequence == Long.MAX_VALUE || sequence != baseSequence + 1
-                || !POLICY.equals(policyVersion)) throw new IllegalArgumentException();
-        added = canonical(added);
-        if (removed == null || removed.size() > MAX_PROCESSES) throw new IllegalArgumentException();
+                || !ProcessCatalog.supported(policyVersion)) throw new IllegalArgumentException();
+        added = forPolicy(added,policyVersion);
+        if (removed == null || removed.size() > ProcessCatalog.limit(policyVersion)) throw new IllegalArgumentException();
         var unique = new HashSet<Identity>();
         for (var value : removed) if (value == null || !unique.add(value)) throw new IllegalArgumentException();
         for (var value : added) if (unique.contains(Identity.of(value))) throw new IllegalArgumentException();

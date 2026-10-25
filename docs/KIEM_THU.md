@@ -794,3 +794,27 @@ Fullverify1435PASS/154SKIP/0lỗi (1589test/152suite), GUI bật; bộ mới15PA
 Chỉ giữ process, USB CONNECTED/REMOVED và thay đổi focus/window; loại READY/INITIAL/status/gap typed/PRESENT_AT_START/baseline/dialog nội bộ khỏi Cảnh báo/Nhật ký/hai khối gần đây và số đếm. Raw typed history/Timeline/trạng thái nguồn trong Chi tiết giữ nguyên; luồng kết nối/gap legacy không đổi. Không wire/DB/OSAPI/policy/defaultOFF/FULL changes.
 
 Client package+GUI40PASS/0lỗi/skip; PG REAL2PASS count0/Stagewindow tự cập nhật,0schema/stop0/PIDabsent. Cursor qua bản ghi ẩn và USB cắm/rút MOCK đã kiểm; không hotplug vật lý/fullverify mới. JARdc91c420…/538entrymatch. [Report](../evidence/proctor-actions-only-20261025/REPORT.md). B/C còn review cá nhân, không trackerDONE/policy/H01–H12/LAN/installer/CIclaim; opt-outChatGPT giữ, pushnhánh hiện tại khôngPR/merge.
+
+## 25/10/2026 — Mở rộng sáu nhóm process và Teams mới
+
+User yêu cầu triển khai nhóm browser/chat/remote/document/terminal/Windows. Probe Get-Process và Java thấy2ms-teams.exe; v1 chỉ teams.exe nên bịlọc. Thêm catalog39tên/policyv2, full/delta/state backwardreadv1, bound256v2/128v1, epochkhôngđổipolicy. Background chỉstate/history, không Cảnh báo/count/MON08review; loại appPID/helperCIMtheoPID-start, giữ external terminal. Không DTOfield/DB/OSquery/START changes, defaultFULL/flagsOFF. Review trước sửa ở PROCESS_GROUPS.md, owner signoff không giả.
+
+Fullverify1458PASS/154SKIP/0lỗi (1612test/155suite); giữ lượt đầu1assert8cũ rồi cập nhật39 + assertlegacy8. PGREAL2methodPASS, stage native139process/2Teams cóDB/UI, ảnhsnapshotkế140; cleanup0schema/stop0/PIDabsent, CIM0/nohotplug. JARclient94b3c138…544entries/servera666c2c4…168entriesmatch. ServerJarCLI2validationPASS. [Report](../evidence/process-groups-20261025/REPORT.md), [runbook](PROCESS_GROUPS.md). Giữ phiên8080; cần serverJARtênriêng và restart cả2client để dùngv2. Không trackerDONE/benchmark/LAN/installer/policy/humanapproval/CIclaim; opt-outChatGPT, pushnhánh hiện tại khôngPR/merge.
+
+## 25/10/2026 — Bỏ tám process dễ nhầm
+
+Theo user: bỏ powershell/pwsh/cmd/msedgewebview2/conhost/runtimebroker/dllhost/svchost.exe khỏi capture mới và danh sách chung/summary/count kể cả inputv2. Raw DB/API/Timeline giữ. Thêm policyv3/31tên, v1/v2 vẫn đọc đúng; full/delta/event/trace nhất quán, không đổi policy giữa epoch, cap256/fields/DB/OSquery giữ. Còn15tên Windows khác chỉ state/history. Review trước sửa trong PROCESS_GROUPS.md, B/C và tương thíchA/C cần review cá nhân.
+
+Focused81PASS overlap full; full1464PASS/154SKIP/0lỗi (1618test/155suite). PGREAL2methodPASS native61process/2Teams/policy3/no8tên,0schema/stop0/PIDabsent; CIM0/nohotplug. Client1da46078…/544entries, serverb7f73f3b…/168entriesmatch. [Report](../evidence/process-filter-20261025/REPORT.md). Giữ phiên8080, cần restartserverJARtênriêng và cả2client để áp dụng; không trackerDONE/benchmark/LAN/installer/policyhumanapproval/CIclaim. Pushnhánh hiện tại khôngPR/merge, opt-outChatGPT.
+
+## 25/10/2026 — Khôi phục dòng USB có sẵn trước giám sát
+
+User hỏi đã thêm chưa; lượt trước chỉ chẩn đoán. Đã khôi phục PRESENT_AT_START trong sharedprojection/title/sốUSB, màuinfoLIVE, giữREADY/focus-windowINITIALẩn. Không đổicollector/server/wire/DB/processpolicy3 hoặc nguồnWindows. Clientpackage48PASS/0skip và ownedPGMock1PASS/cleanup0schema/stop0/PIDabsent; rawbaseline1/sharedalert-history1, retry/reconnect/scopechecks giữ. JAR09b32ed9…/544entriesmatch. [Report](../evidence/usb-start-visible-20261025/REPORT.md), [runbook](PROCTOR_SIGNAL_SUMMARY.md). Không physicalUSB/fullverify/H01–H12/CIclaim mới; read-only query trước thấy0USB. Chỉ mở lại proctor mới để đọc baseline đã lưu. B/Creviewpending, khôngtrackerDONE/PR/merge, opt-outChatGPT giữ.
+
+## 25/10/2026 — Policy v4 đúng chín process và USB regression
+
+- Full verify bật GUI: 1.471 PASS / 154 SKIP / 0 FAIL-ERROR, 1.625 test/156 suite; focused142 PASS trùng phạm vi full. XML fresh được archive trước runner tích hợp.
+- Exact set9/case-insensitive; v3 vẫn31; v4 full/delta/state; trace MOCK full/delta replay cả v1–v4, cap256 và v1=128; GUI đọc raw v2 chứa30 tên ngoài tập chỉ hiển thị/count Teams và không xóa31 dòng raw.
+- PG REAL 2 method PASS: native ProcessHandle/policy4/snapshot46/Teams2 có history/feed; manual Start/Stop/restart/exam-entry/window recent widgets và production USB hook/reconnect. CIM0, không hotplug vật lý.
+- PG MOCK 1 method PASS: baseline/cắm/rút USB hiện shared lists, baseline giữ id/time/source, retry/reconnect/scope-revoke/queue-drop checks giữ; A19/B1/drop3 là số thực của fixture MOCK. Cleanup hai cluster 0 schema/stop0/PID absent.
+- SHA-256 13 file USB/hook/projection unchanged; client545/server167 entries khớp, embedded protocol byte-identical. [Receipt và ảnh](../evidence/process-nine-20261025/REPORT.md). Không H01–H12/LAN/installer/E1/E2/CI hoặc tracker DONE mới.

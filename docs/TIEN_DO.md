@@ -1,5 +1,12 @@
 # Tiến độ hiện tại
 
+25/10/2026 — Thu gọn đúng chín tên process, gồm teams.exe/ms-teams.exe; current policy v4, giữ v1/v2/v3 và toàn bộ USB/focus/window. Sửa tương thích trace theo từng policy. Full verify 1.471 PASS / 154 SKIP; PG REAL 2 PASS có 2 Teams thật, PG MOCK USB 1 PASS, cleanup sạch. [Runbook](PROCESS_GROUPS.md), [report](../evidence/process-nine-20261025/REPORT.md). Cần server-process-nine-20261025.jar và mở lại cả hai client; không tự ngắt 8080, PR/merge hoặc tracker DONE.
+
+25/10/2026 — Đã thêm lại dòng USB có sẵn khi bắt đầu giám sát (PRESENT_AT_START), giữREADY/INITIALkỹthuậtẩn; clientconsumer-only. Package48PASS và PGMock1PASS/cleanup sạch, khôngphysicalUSB/fullverify mới. [Report](../evidence/usb-start-visible-20261025/REPORT.md). Chỉ mở lại proctor mới để xem baseline đã lưu, server/candidate/processpolicy3 giữ nguyên.
+
+25/10/2026 — Bỏ đúng8tên terminal/host dễ nhầm, currentpolicyv3/31tên; ẩn cả legacyv2 khỏi commonlists/summary/count nhưng raw giữ. Full1464PASS/154SKIP, PGREAL2PASS native61process/2Teams/no8tên/cleanup sạch. [Runbook](PROCESS_GROUPS.md), [report](../evidence/process-filter-20261025/REPORT.md). Cần server-process-filter-20261025.jar và mở lại cả2client; không tự ngắt phiên8080/PR/merge/DONE.
+
+25/10/2026 — Mở rộng39tên process/6nhóm, nhận Teams mới ms-teams.exe; background chỉ state/history. Policyv2/256process, backwardreadv1/128 và helperPID-start loại trừ; không đổi OS query/DB. Full1458PASS/154SKIP/0lỗi, PGREAL2PASS có2Teamsnative/history/UI và cleanup sạch. [Runbook](PROCESS_GROUPS.md), [report](../evidence/process-groups-20261025/REPORT.md). Cần nâng cấp cảserver/client; phiên8080 giữ nguyên, khôngPR/merge/DONE hoặc E1/E2/LAN mới.
 25/10/2026 — Bản phát hành cuối: nhánh `integrate/final-toeic-release` (`05822d8`, chưa push) đã gộp ACCOUNT_PIN, USB/focus/window của C tới `9299075`, giao diện legacy ẩn sau cờ, launcher portable. Full `17f94c6` 1756 PASS/23 SKIP/0 lỗi; full trên commit cuối chưa có. **Tạm dừng chờ Công Lâm hoàn tất nhánh USB**; xem ghi chú làm dở trong NHAT_KY.
 
 25/10/2026 — Người dùng chốt danh sách chung chỉ có process, USB cắm/rút và thay đổi focus/window. Đã loại status/baseline typed khỏi các danh sách và số đếm; raw Timeline/trạng thái nguồn giữ. Clientpackage/GUI40PASS và PGREAL2PASS count0/window, cleanup sạch; JARdc91c420… mới cần mở lại app. [Report](../evidence/proctor-actions-only-20261025/REPORT.md). Không fullverify/hotplug/PR/merge/DONE mới.

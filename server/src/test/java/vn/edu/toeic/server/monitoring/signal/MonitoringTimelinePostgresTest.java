@@ -161,9 +161,37 @@ class MonitoringTimelinePostgresTest {
             fx(()->{probe.application.stop();return null;});assertThat(restarted.awaitStopped(Duration.ofSeconds(8))).isTrue();
             process.stop().stopped().get(8,TimeUnit.SECONDS);
             results.add(Map.of("kind","MANUAL_PROCESS_AND_SIGNALS","usbSource","REAL_CIM","usbBaselineCount",count,"manualPortalBaseline",true,"sharedCollector",true,"stopWaitsForUsbWorkers",true,"restartNewRun",true,"examEntryReusesRun",true,"activityOnlyAfterExamEntry",true,"hardwareHotplug","NOT_RUN"));
+            verifyExpandedProcessGroups();
         }finally{
             if(signalBefore==null)System.clearProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.ENABLE_PROPERTY,signalBefore);
             if(usbBefore==null)System.clearProperty(CandidateExamSignalMonitoring.USB_ENABLE_PROPERTY);else System.setProperty(CandidateExamSignalMonitoring.USB_ENABLE_PROPERTY,usbBefore);
+        }
+    }
+    private void verifyExpandedProcessGroups()throws Exception {
+        String a=scope(180);
+        var source=new ProcessHandleSnapshotSource();var policy=new ProcessPolicy();
+        var teams=source.scan().stream().filter(policy::includes).filter(r->r.executableName().equalsIgnoreCase("ms-teams.exe")).map(ProcessReading::pid).toList();
+        try(var candidateApi=new MonitoringApiClient(base,candidate);var api=new MonitoringApiClient(base,proctor)){
+            var fresh=candidateApi.scope().get(5,TimeUnit.SECONDS);assertThat(fresh.attemptScope()).contains(a);
+            var rt=realtime(candidate,Set.of(a));rt.connect(new RealtimeClient.Session(fresh.attemptScope(),null,null)).get(8,TimeUnit.SECONDS);
+            try(var session=new CandidateMonitoringSession(rt,ignored->{})){
+                session.start(fresh.role(),a,fresh.attemptScope());
+                waitFor("expanded FULL committed",()->session.fullStatus()!=null&&session.fullStatus().acknowledgedSequence()>0);
+                var state=api.state(a).get(5,TimeUnit.SECONDS);
+                assertThat(state.policyVersion()).isEqualTo(ProcessCatalog.CURRENT_POLICY);
+                assertThat(state.processes()).isNotEmpty().allMatch(p->ProcessCatalog.includes(ProcessCatalog.CURRENT_POLICY,p.processName()));
+                if(!teams.isEmpty())waitFor("native Teams observed through process history",()->api.events(a).join().stream().anyMatch(e->e.processName().equals("ms-teams.exe")));
+                var d=dashboard(a,"REAL ProcessHandle groups/Teams · MOCK accounts/exam · HTTP/WS/PG/JavaFX");
+                openSummary(d,a);
+                waitFor("expanded process state in candidate detail",()->{try{return fx(()->d.view.lookup("#candidate-monitoring-observations")!=null);}catch(Exception e){throw new RuntimeException(e);}});
+                if(!teams.isEmpty())waitFor("Teams reaches common review feed",()->{try{return fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.reviewProcessNames(d.view,a).contains("ms-teams.exe"));}catch(Exception e){throw new RuntimeException(e);}});
+                assertThat(fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.reviewProcessNames(d.view,a))).allMatch(ProcessCatalog::review);
+                screenshotSummary(d,"expanded-groups-summary");
+                fx(()->{((ToggleButton)d.view.lookup("#nav-overview")).fire();return null;});screenshot(d,"expanded-groups-overview");
+                results.add(Map.of("kind","REAL_PROCESS_GROUPS","policy",state.policyVersion(),"snapshotProcesses",state.processes().size(),
+                        "nativeTeamsAtStart",teams.size(),"nativeTeamsInHistoryAndFeed",!teams.isEmpty(),"backgroundNotInReview",true,"source","REAL_ProcessHandle"));
+                session.stop().stopped().get(8,TimeUnit.SECONDS);
+            }
         }
     }
     @Test @EnabledIfEnvironmentVariable(named="TOEIC_USB_REAL_CIM",matches="true")
@@ -287,9 +315,10 @@ class MonitoringTimelinePostgresTest {
             enqueueDisplay(other,7);waitFor("candidate B ACK",()->other.delivery.status().acknowledged()==1);
             var full=processFixture(lane);
             var dash=dashboard(a,"MOCK typed/process inputs/accounts · REAL WS/HTTP/PostgreSQL/JavaFX · desktop/hardware NOT_RUN");awaitRows(dash,18);
-            var shown=rows(dash);assertThat(shown).hasSize(18).allMatch(r->r.attempt().equals(a));assertThat(shown).anyMatch(TimelineRows.Row::gap).anyMatch(TimelineRows.Row::unavailable);assertThat(shown).extracting(TimelineRows.Row::type).contains("PROCESS_OBSERVED","USB_STORAGE_CONNECTED","USB_STORAGE_REMOVED","EXAM_FOCUS_CHANGED","EXAM_WINDOW_STATE","DISPLAY_COUNT_OBSERVED","OBSERVER_STATUS","SIGNAL_GAP");
+            var shown=rows(dash);assertThat(shown).hasSize(18).allMatch(r->r.attempt().equals(a));assertThat(shown).anyMatch(TimelineRows.Row::gap).anyMatch(TimelineRows.Row::unavailable);assertThat(shown).extracting(TimelineRows.Row::type).contains("PROCESS_OBSERVED","USB_STORAGE_PRESENT_AT_START","USB_STORAGE_CONNECTED","USB_STORAGE_REMOVED","EXAM_FOCUS_CHANGED","EXAM_WINDOW_STATE","DISPLAY_COUNT_OBSERVED","OBSERVER_STATUS","SIGNAL_GAP");
             openSummary(dash,a);
             waitFor("MOCK USB observation metadata visible in real summary scene",()->{try{return fx(()->dash.view.lookup("#candidate-signal-usb-received")!=null);}catch(Exception e){throw new RuntimeException(e);}});
+            waitFor("startup USB committed once in common alert and history",()->{try{return fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.startupUsbMatches(dash.view,a,time));}catch(Exception e){throw new RuntimeException(e);}});
             screenshotSummary(dash,"mock-summary-detail");
             summaryTimeline(dash,a,"usb","WINDOWS_USB_STORAGE");awaitRows(dash,18);
             assertThat(fx(()->((Label)dash.view.lookup("#multi-listening-state")).getText())).contains("NOT_STARTED","interrupted=false");
@@ -307,6 +336,9 @@ class MonitoringTimelinePostgresTest {
                 fx(()->{@SuppressWarnings("unchecked")var filter=(ComboBox<String>)dash.view.lookup("#multi-source-filter");filter.setValue(sourceName);return null;});screenshot(dash,"mock-"+sourceName.toLowerCase());
             }
             fx(()->{@SuppressWarnings("unchecked")var filter=(ComboBox<String>)dash.view.lookup("#multi-source-filter");filter.setValue("Tất cả nguồn");return null;});
+            assertThat(fx(()->vn.edu.toeic.client.proctor.redesign.MonitoringFeedProbe.filterVisible(dash.view,a,"USB"))).isTrue();
+            screenshot(dash,"usb-startup-shared-alerts");
+            fx(()->{((ToggleButton)dash.view.lookup("#nav-timeline")).fire();return null;});
             fx(()->{@SuppressWarnings("unchecked")var selection=(ComboBox<String>)dash.view.lookup("#multi-attempt");selection.setValue(b);return null;});awaitRows(dash,1);assertThat(rows(dash)).hasSize(1).allMatch(r->r.attempt().equals(b));
             jdbc.sql("UPDATE login_sessions SET revoked_at=clock_timestamp() WHERE token_hash=:h").param("h",TokenHash.sha256(dash.credential)).update();
             fx(()->{((Button)dash.view.lookup("#multi-refresh")).fire();return null;});waitFor("actual proctor revocation expires and closes view",dash.expired::get);assertThat(rows(dash)).isEmpty();

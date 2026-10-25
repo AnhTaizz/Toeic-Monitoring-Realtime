@@ -61,7 +61,7 @@ public final class CimSnapshotSource implements AutoCloseable {
             synchronized (lifecycle) {
                 if (closed) return failure("STOPPED", start);
                 if (command.isEmpty()) return UsbSnapshot.failed(UsbSnapshot.Status.UNSUPPORTED, "WINDOWS_REQUIRED", elapsed(start));
-                active = process = new ProcessBuilder(command).start();
+                active = process = OwnedUsbProcesses.start(command);
                 owned.removeIf(handle -> !handle.isAlive());
                 owned.add(process.toHandle());
                 childrenStarted++;

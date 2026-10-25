@@ -13,15 +13,14 @@ import java.util.Set;
 /** One canonical observation set, shared by full encoding and the server reducer. */
 public record FullSnapshotPayload(String collectorSessionId, String syncEpoch, long sequence,
         String policyVersion, List<Process> processes) {
-    public static final int MAX_PROCESSES = 128;
-    public static final String POLICY = "process-policy-v1";
-    public static final Set<String> EXECUTABLES = Set.of("chrome.exe", "msedge.exe", "firefox.exe",
-            "zalo.exe", "teams.exe", "discord.exe", "anydesk.exe", "teamviewer.exe");
+    public static final int MAX_PROCESSES = 256;
+    public static final String POLICY = ProcessCatalog.LEGACY_POLICY;
+    public static final Set<String> EXECUTABLES = ProcessCatalog.executables(POLICY);
     public record Process(long pid, String processName, String startInstant, String metadataQuality) {
         public Process {
             if (pid < 1 || processName == null || metadataQuality == null) throw new IllegalArgumentException();
             processName = processName.toLowerCase(Locale.ROOT);
-            if (!EXECUTABLES.contains(processName) || !Set.of("COMPLETE", "UNREADABLE").contains(metadataQuality))
+            if (!ProcessCatalog.includes(ProcessCatalog.EXPANDED_POLICY,processName) || !Set.of("COMPLETE", "UNREADABLE").contains(metadataQuality))
                 throw new IllegalArgumentException();
             if (startInstant != null) startInstant = Instant.parse(startInstant).toString();
             if (startInstant == null && metadataQuality.equals("COMPLETE")) throw new IllegalArgumentException();
@@ -29,8 +28,14 @@ public record FullSnapshotPayload(String collectorSessionId, String syncEpoch, l
     }
     public FullSnapshotPayload {
         id(collectorSessionId); id(syncEpoch);
-        if (sequence < 1 || !POLICY.equals(policyVersion)) throw new IllegalArgumentException();
-        processes = canonical(processes);
+        if (sequence < 1 || !ProcessCatalog.supported(policyVersion)) throw new IllegalArgumentException();
+        processes = forPolicy(processes,policyVersion);
+    }
+    public static List<Process> forPolicy(List<Process> values,String policy) {
+        if(values==null||values.size()>ProcessCatalog.limit(policy))throw new IllegalArgumentException();
+        var result=canonical(values);
+        if(result.stream().anyMatch(p->!ProcessCatalog.includes(policy,p.processName())))throw new IllegalArgumentException();
+        return result;
     }
     public static List<Process> canonical(List<Process> values) {
         if (values == null || values.size() > MAX_PROCESSES) throw new IllegalArgumentException();

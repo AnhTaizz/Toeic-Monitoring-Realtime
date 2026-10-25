@@ -518,3 +518,19 @@ RoomFeed đọc typed history theo watermark reader có sẵn; Cảnh báo, Nh�
 ### 25/10/2026 — Bộ lọc hành vi theo chốt lại của người dùng
 
 Danh sách chung chỉ thêm USB cắm/rút, focus/window thay đổi bên cạnh process; baseline/status/gap typed giữ tại raw Timeline và trạng thái nguồn, không thành dòng/số đếm chung. Package/GUI40PASS, PGREAL2PASS count0/window/cleanup sạch; không hotplug/fullverify mới. [Report](../../evidence/proctor-actions-only-20261025/REPORT.md). B/C vẫn cần review cá nhân; mở lại client JARdc91c420…; không wire/DB/OSAPI/policy/trackerDONE.
+
+### 25/10/2026 — Bàn giao catalog process39tên/Teams mới
+
+Policyv2 mở rộng6nhóm/256process, đọc lại v1/8tên/128; review contract trước sửa ở [runbook](../PROCESS_GROUPS.md). Full/delta/event cùng policy, epoch không đổi; background chỉ state/history, helperCIM loại PID-start. Full1458PASS/154SKIP, PGREAL2PASS nativeTeams2/history/UI/cleanup sạch. [Report](../../evidence/process-groups-20261025/REPORT.md). Ghi chú bàn giao: nâng cấp đồng bộ server/client (script -ServerJar tên riêng), giữ phiên8080 đang mở; owner review A/C/B và benchmarkv2/LAN/installer vẫn chờ, không trackerDONE/humanapproval.
+
+### 25/10/2026 — Bàn giao loại tám process dễ nhầm
+
+Policyv3/current31 loại8tên terminal/host tại [runbook](../PROCESS_GROUPS.md); v1/v2 raw/Timeline giữ, summary/commonlists/count ẩn các tên bỏ. Full1464PASS/154SKIP, PGREAL2PASS native61/Teams2/no8tên và cleanup sạch. [Report](../../evidence/process-filter-20261025/REPORT.md). Cần nâng cấpserverJARtênriêng và cả2client; ownerreviewA/C/B còn, không trackerDONE/benchmark/hardware/LAN/installer mới.
+
+### 25/10/2026 — USB có sẵn khi bắt đầu
+
+Khôi phục PRESENT_AT_START vào sharedlists/count với sốUSB, source/timestamps/partial giữ; READY/focus-windowINITIAL vẫnẩn. Package48PASS, PGMock1PASS/cleanup sạch; không physicalUSB/fullverify mới. [Report](../../evidence/usb-start-visible-20261025/REPORT.md). UI-only: mở lại proctor, không restartserver/candidate nếu baseline đã lưu; owner B/C review còn, khôngtrackerDONE.
+
+### 25/10/2026 — Bàn giao policy v4 đúng chín process
+
+Candidate mới chỉ thu chín tên; summary/common lists/count cũng lọc chín tên khi đọc dữ liệu cũ, raw/Timeline giữ. USB baseline/cắm/rút và focus/window nguyên trạng. Mở lại cả candidate/proctor bằng JAR mới sau nâng cấp server; không tự ngắt phiên8080. Full verify 1.471 PASS/154 SKIP; PG REAL2 PASS có Teams2 thật, PG MOCK USB1 PASS; cleanup sạch. [Report](../../evidence/process-nine-20261025/REPORT.md), [runbook](../PROCESS_GROUPS.md). Ghi chú còn lại: owner A/C/B review cá nhân, H01–H12/LAN/benchmark/installer chưa nghiệm thu; không tracker DONE, PR hoặc merge.

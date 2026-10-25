@@ -465,3 +465,21 @@ Theo phản hồi UI của người dùng, nối typed history đã commit vào 
 ### 25/10/2026 — Người dùng chốt lại ba nhóm hành vi trong danh sách chung
 
 Thay lựa chọn consumer trước đó đưa trạng thái kỹ thuật vào Nhật ký chung: chỉ process được quan sát, USB cắm/rút, thay đổi focus/thu nhỏ/toàn màn hình. READY/INITIAL/baseline USB/focus/window và gap/status typed giữ ở lịch sử gốc/Timeline/trạng thái nguồn, không thành dòng hành vi hoặc cộng số đếm. Không thay contract nguồn thu/wire/DB, không phân loại MON-08 hoặc thay chữ ký review owner B/C.
+
+### 25/10/2026 — Catalog process mở rộng theo yêu cầu người dùng
+
+Chốt triển khai policyv2 hữu hạn39tên thay vì đổi nghĩa policyv1 trong trace cũ. V1 vẫn8tên/128, V2 tối đa256; full/delta/event nhất quán và epoch không đổi policy. Background chỉ state/history, không tự cảnh báo; helper CIM loại bằng PID/start, không loại cả tên PowerShell. Review contract kỹ thuật trước sửa được ghi tại PROCESS_GROUPS.md, owner A/C/B signoff vẫn chờ, không thay MON08 rules/ngưỡng hoặc OS approach. Full1458PASS/154SKIP và PGREAL2PASS có2Teamsnative/history/UI; không E1/E2/hardwaregate mới.
+
+### 25/10/2026 — Loại tám process dễ nhầm theo yêu cầu người dùng
+
+Bỏ đúng8tên đã liệt kê ở PROCESS_GROUPS.md khỏi nguồn thu mới và consumer danh sách chung; giữ các tên khác, gồm Teams và15process nền khác chỉ state/history. Thêm policyv3/31tên để không đổi nghĩa v2/39 trong trace cũ. Raw lịch sử giữ nguyên; UI không lấy các tên đã loại để đếm cảnh báo. Không thay sourceUSB/focus/window, DB, schema field hoặc policy giữa epoch. Review kỹ thuật trước sửa đã ghi trong runbook; ownerA/C/B vẫn cần review cá nhân.
+
+### 25/10/2026 — USB có sẵn là quan sát cần hiển thị
+
+Theo phản hồi tiếp của user, không gộp PRESENT_AT_START với status READY để ẩn. Khôi phục dòng USB có sẵn khi bắt đầu giám sát vào shared lists/count, màu thông tin khiLIVE; giữ nguồn/timestamps/metadata, không gọi là cắm mới. Phần khác đã chốt giữ nguyên; không đổi producer/contract. Owner B/C review vẫn còn.
+
+### 25/10/2026 — Thu gọn về đúng chín process, giữ USB
+
+Theo yêu cầu mới nhất, chỉ thu tám tên ban đầu cộng ms-teams.exe. Dùng process-policy-v4 để không đổi nghĩa v1/v2/v3 trong lịch sử và trace; v3 lấy tập 31 tên riêng, không phụ thuộc bộ lọc hiển thị chín tên hiện hành. Giữ giới hạn 256 và các bất biến epoch/sequence/dedup/FULL mặc định. Dữ liệu raw cũ giữ; consumer chung chỉ hiện chín tên. Sửa kiểm policy trong TraceData để trace production của cả bốn phiên bản dùng đúng membership/cap; không đổi schema trace hoặc TEST gate.
+
+USB có sẵn khi bắt đầu, cắm/rút, focus/window và cách quan sát Windows giữ nguyên. Chạm shared catalog A/C, collector/trace C và cách trình bày B; review kỹ thuật trước sửa ở [PROCESS_GROUPS.md](PROCESS_GROUPS.md), không thay chữ ký review cá nhân A/C/B. Không đổi DB, API field, đề/START/deadline hoặc tracker.

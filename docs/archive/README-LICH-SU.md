@@ -152,7 +152,7 @@ Script đọc DB/seed variables từ `.env` vào process, không in credential, 
 
 Gate chỉ cho CANDIDATE + monitoringActive=true. C3 lấy attempt từ server và chỉ bật khi người dùng chọn/bắt đầu; login đơn lẻ không đủ. Context active trong smoke C2 vẫn là MOCK rõ nhãn; smoke C3 dùng assignment TEST thật ở schema riêng.
 
-Source production gọi ProcessHandle.allProcesses, đọc command/startInstant và availability của user. Chỉ giữ executable filename, không command line/arguments/full path/username; policy QD-08 so filename case-insensitive với đúng 8 tên v1. Thiếu command/start/user → UNREADABLE, unknown command chỉ vào diagnostic count, không diễn giải sạch. PID0 idle của Windows được tính UNREADABLE khi metadata thiếu thay vì làm fail enumeration.
+Source production gọi ProcessHandle.allProcesses, đọc command/startInstant và availability của user. Chỉ giữ executable filename, không command line/arguments/full path/username. Policy hiện hành `process-policy-v4` so filename không phân biệt hoa/thường với đúng 9 tên: `chrome.exe`, `msedge.exe`, `firefox.exe`, `zalo.exe`, `teams.exe`, `ms-teams.exe`, `discord.exe`, `anydesk.exe`, `teamviewer.exe`. Các policy cũ giữ nguyên tập tên để đọc dữ liệu/trace cũ: v1 có 8 tên, v2 có 39 tên, v3 có 31 tên. Danh sách chung, số đếm và summary chỉ hiện 9 tên hiện hành, kể cả khi đọc dữ liệu cũ; raw DB/API/Timeline gốc được giữ. USB, focus và cửa sổ giữ nguyên. Xem [danh sách và cách nâng cấp server, candidate, proctor](docs/PROCESS_GROUPS.md). Thiếu command/start/user → UNREADABLE, unknown command chỉ vào diagnostic count, không diễn giải sạch. PID 0 idle của Windows được tính UNREADABLE khi metadata thiếu thay vì làm fail enumeration.
 
 Snapshot immutable chứa collectorSessionId, policyVersion, observationNanos/scanDurationNanos, restrictedProcesses và diagnostic counts. ProcessIdentity = collectorSessionId + pid + startInstant nullable; thiếu startInstant vẫn có giới hạn PID reuse. Monotonic nanoTime chỉ dùng trong JVM này, không chứng minh clock sync. Poll lỗi không publish snapshot sạch: clear latestSnapshot và báo SOURCE_FAILURE; poll sau vẫn chạy. Listener lỗi báo LISTENER_FAILURE, không kill scheduler.
 
@@ -179,7 +179,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/demo-c3.ps1 -Action 
 java '-Dtoeic.monitoring.pollMillis=500' -jar client\target\client-0.1.0-SNAPSHOT-all.jar
 ```
 
-Đăng nhập candidate1 bằng mật khẩu seed cấu hình local, kiểm tra lượt thi, chọn DEMO-C3-A, bắt đầu. Mở Microsoft Edge (`msedge.exe`, thuộc policy v1), chờ vài poll. Mong đợi số “Đã xác nhận” tăng rồi giữ nguyên khi process vẫn tồn tại. Đóng/mở lại có thể tăng số event; Edge tạo nhiều process nên không mặc định mỗi cửa sổ chỉ một event. Notepad không nằm trong policy v1. Đăng nhập proctor1 trên client thứ hai, chọn DEMO-C3-A để xem dashboard B3 (server cần V4). Sau demo dừng giám sát, rồi cleanup chủ động (xóa lịch sử chỉ của DEMO-C3-A, giữ tài khoản/lượt khác):
+Đăng nhập candidate1 bằng mật khẩu seed cấu hình local, kiểm tra lượt thi, chọn DEMO-C3-A, bắt đầu. Mở Microsoft Edge (`msedge.exe`, thuộc cả policy v1 và v4), chờ vài poll. Mong đợi số “Đã xác nhận” tăng rồi giữ nguyên khi process vẫn tồn tại. Đóng/mở lại có thể tăng số event; Edge tạo nhiều process nên không mặc định mỗi cửa sổ chỉ một event. Notepad từng được nhận ở policy v2/v3 nhưng không thuộc policy v4 hiện hành; Teams mới `ms-teams.exe` vẫn thuộc v4. Đăng nhập proctor1 trên client thứ hai, chọn DEMO-C3-A để xem dashboard B3 (server cần V4). Sau demo dừng giám sát, rồi cleanup chủ động (xóa lịch sử chỉ của DEMO-C3-A, giữ tài khoản/lượt khác):
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/demo-c3.ps1 -Action Cleanup
@@ -288,7 +288,7 @@ Queue log mặc định1024/drop-new, flush2000ms, writer daemon; I/O lỗi khô
 
 ## Full snapshot T2-C1
 
-Candidate bấm **Bắt đầu giám sát** sẽ OPEN để lấy syncEpoch, rồi gửi toàn bộ tập process theo policy v1 sau mỗi lần quét thành công. Full đầu sequence1; ACK có epoch/sequence sau khi server chấp nhận RAM. Event cảnh báo vẫn lưu riêng trong DB. Proctor chọn lượt được phân công, tab **Process hiện tại** cho thấy filename/PID/startInstant/metadataQuality; tab cảnh báo và gián đoạn giữ lịch sử khi process đóng.
+Candidate bấm **Bắt đầu giám sát** sẽ OPEN để lấy syncEpoch, rồi gửi toàn bộ tập process thuộc đúng 9 tên của policy hiện hành v4 sau mỗi lần quét thành công; server mới vẫn đọc v1/v2/v3 theo tập tên cũ. Full đầu sequence 1; ACK có epoch/sequence sau khi server chấp nhận RAM. Event cảnh báo vẫn lưu riêng trong DB. Proctor chọn lượt được phân công, tab **Process hiện tại** cho thấy filename/PID/startInstant/metadataQuality; tab cảnh báo và gián đoạn giữ lịch sử khi process đóng.
 
 Kiểm tự động với DB theo `.env`, schema TEST/port riêng, Windows Edge do test tự mở và dọn:
 
@@ -312,9 +312,9 @@ foreach ($line in Get-Content -Encoding UTF8 .env) {
 java "-Duser.timezone=UTC" -jar server/target/server-0.1.0-SNAPSHOT.jar
 ```
 
-Ở hai terminal khác, mỗi terminal chạy `java -jar client/target/client-0.1.0-SNAPSHOT-all.jar`. Nếu đã có DEMO-C3-A thì dùng lại; nếu chưa có, chạy `scripts/demo-c3.ps1 -Action Create` như mục demo C3. Candidate1 chọn lượt/bắt đầu; proctor1 chọn cùng lượt. Mở Edge, chờ vài poll: bảng hiện tại có một hoặc nhiều PID Edge. Đóng **tất cả process Edge đó**: chúng biến mất khỏi bảng hiện tại; cảnh báo lịch sử vẫn còn. Edge có thể giữ process nền sau đóng cửa sổ nên phải đối chiếu PID. Notepad không thuộc policy v1.
+Ở hai terminal khác, mỗi terminal chạy `java -jar client/target/client-0.1.0-SNAPSHOT-all.jar`. Nếu đã có DEMO-C3-A thì dùng lại; nếu chưa có, chạy `scripts/demo-c3.ps1 -Action Create` như mục demo C3. Candidate1 chọn lượt/bắt đầu; proctor1 chọn cùng lượt. Mở Edge, chờ vài poll: bảng hiện tại có một hoặc nhiều PID Edge. Đóng **tất cả process Edge đó**: chúng biến mất khỏi bảng hiện tại; cảnh báo lịch sử vẫn còn. Edge có thể giữ process nền sau đóng cửa sổ nên phải đối chiếu PID. Notepad không thuộc policy v4 hiện hành. Xem [đúng 9 tên và cách nâng cấp](docs/PROCESS_GROUPS.md); chỉ mở lại proctor không bổ sung process mà candidate chưa gửi.
 
-Dừng giám sát: state STALE giữ tập cuối với nhãn dữ liệu cũ. Kết nối lại: OPEN mới, UNSYNCED cho tới full1. Lỗi scan không gửi full rỗng; full rỗng chỉ từ scan thành công không có process phù hợp. Default server stale6s, TTL5phút,4096attempt; client full queue16+1pending, snapshot128process, retry5. Quá giới hạn báo lỗi, không cắt tập. Restart server mất state RAM; lịch sử PostgreSQL không mất. Không hỗ trợ nhiều server cùng giữ full state. [Contract](docs/PROTOCOL.md#t2-c1--contract-full-snapshot-baseline-v1), [QD-12](docs/QUYET_DINH.md), [evidence](evidence/t2-c1/2026-10-10-verification.md).
+Dừng giám sát: state STALE giữ tập cuối với nhãn dữ liệu cũ. Kết nối lại: OPEN mới, UNSYNCED cho tới full 1. Lỗi scan không gửi full rỗng; full rỗng chỉ từ scan thành công không có process phù hợp. Mặc định server stale 6 giây, TTL 5 phút, 4096 attempt; client full queue 16 + 1 pending, snapshot tối đa 128 process (v1) hoặc 256 process (v2/v3/v4), retry 5 lần. Quá giới hạn báo lỗi, không cắt tập. Restart server mất state RAM; lịch sử PostgreSQL không mất. Không hỗ trợ nhiều server cùng giữ full state. [Contract](docs/PROTOCOL.md#t2-c1--contract-full-snapshot-baseline-v1), [QD-12](docs/QUYET_DINH.md), [evidence](evidence/t2-c1/2026-10-10-verification.md).
 
 ## Heartbeat, event muộn và gap T2-C2
 

@@ -1,0 +1,95 @@
+{
+  "baseSha": "ee20a2737ffe622564728ef0b801f68a803f4da2",
+  "sourceDirty": true,
+  "verify": {
+    "suites": 155,
+    "tests": 1618,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 154,
+    "passed": 1464
+  },
+  "jars": [
+    {
+      "path": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+      "sha256": "1da46078eaaa3d9e6454bafcf910ee5f9fd4f38aa7080f83bbb74dfd00e6fef8",
+      "matchedEntries": 544
+    },
+    {
+      "path": "server/target/server-process-filter-20261025.jar",
+      "sha256": "b7f73f3bed65dd267fc5882f79a2f0fed0d6a7fc53cb33a2a7e108328be66a18",
+      "matchedEntries": 168
+    }
+  ],
+  "integration": {
+    "result": {
+      "sourceSha": "ee20a2737ffe622564728ef0b801f68a803f4da2",
+      "identityOnly": false,
+      "exitCode": 0,
+      "startUtc": "2026-10-25T07:51:57.8265259Z",
+      "alertRules": false,
+      "cleanup": {
+        "ownedSchemasRemaining": 0,
+        "clusterStopExit": 0,
+        "postmasterPidAbsent": true
+      },
+      "sourceDirty": true,
+      "endUtc": "2026-10-25T07:53:06.3652753Z",
+      "integrated": false,
+      "desktop": false,
+      "summaryPresent": true,
+      "runId": "usb-3a87b1bc48e14992",
+      "mode": "Real",
+      "runnerErrorType": null,
+      "hardware": "0/12 NOT_RUN",
+      "timeline": true
+    },
+    "summary": {
+      "runs": [
+        {
+          "sharedCollector": true,
+          "stopWaitsForUsbWorkers": true,
+          "usbBaselineCount": 0,
+          "kind": "MANUAL_PROCESS_AND_SIGNALS",
+          "restartNewRun": true,
+          "hardwareHotplug": "NOT_RUN",
+          "examEntryReusesRun": true,
+          "manualPortalBaseline": true,
+          "usbSource": "REAL_CIM",
+          "activityOnlyAfterExamEntry": true
+        },
+        {
+          "nativeTeamsAtStart": 2,
+          "nativeTeamsInHistoryAndFeed": true,
+          "policy": "process-policy-v3",
+          "kind": "REAL_PROCESS_GROUPS",
+          "source": "REAL_ProcessHandle",
+          "backgroundNotInReview": true,
+          "snapshotProcesses": 61
+        },
+        {
+          "sharedCollectorIdentity": true,
+          "storageCount": 0,
+          "kind": "PRODUCTION_CANDIDATE_USB",
+          "source": "REAL_CIM",
+          "freshReconnectCapability": true,
+          "hardwareAcceptance": "Baseline only; no physical hotplug action in this automated test",
+          "deliveryAcknowledged": 8,
+          "historyRows": 8,
+          "usbWorkersStopped": true
+        }
+      ],
+      "hardware": "0/12 NOT_RUN",
+      "runId": "usb-3a87b1bc48e14992",
+      "sourceSha": "ee20a2737ffe622564728ef0b801f68a803f4da2",
+      "schemaDropped": true
+    },
+    "tests": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0
+  },
+  "rawVerify": "target/process-filter-verify-20261025",
+  "rawIntegration": "target/process-filter-real-20261025",
+  "ci": "NOT_RUN feature branch push has no workflow trigger"
+}

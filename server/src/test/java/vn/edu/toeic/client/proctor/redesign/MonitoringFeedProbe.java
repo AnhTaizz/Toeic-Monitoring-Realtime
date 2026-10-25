@@ -28,4 +28,18 @@ public final class MonitoringFeedProbe {
         pane.kind(RoomModel.Kind.valueOf(kind));
         return pane.visibleAlerts().stream().anyMatch(a->a.attemptId().equals(attempt)&&a.kind().name().equals(kind));
     }
+    public static Set<String> reviewProcessNames(ProctorRedesignView view,String attempt){
+        if(view.room()==null)return Set.of();
+        return view.room().alerts().stream().filter(a->a.attemptId().equals(attempt)&&a.origin() instanceof vn.edu.toeic.client.dashboard.MonitoringData.Event)
+                .map(a->((vn.edu.toeic.client.dashboard.MonitoringData.Event)a.origin()).processName()).collect(Collectors.toSet());
+    }
+    public static boolean startupUsbMatches(ProctorRedesignView view,String attempt,java.time.Instant observedAt){
+        if(view.room()==null)return false;
+        var alerts=view.room().alerts().stream().filter(a->a.attemptId().equals(attempt)&&a.typeCode().equals("USB_STORAGE_PRESENT_AT_START")).toList();
+        var history=view.room().timeline().stream().filter(e->e.attemptId().equals(attempt)&&e.alert().typeCode().equals("USB_STORAGE_PRESENT_AT_START")).toList();
+        if(alerts.size()!=1||history.size()!=1)return false;
+        var a=alerts.getFirst();var raw=(vn.edu.toeic.client.dashboard.SignalHistory.Entry)a.origin();
+        return a.title().equals("USB có sẵn khi bắt đầu giám sát")&&a.clientTime().equals(observedAt)&&a.serverTime()!=null
+                &&a.source().equals("WINDOWS_USB_STORAGE")&&history.getFirst().relatedId().equals(raw.signal().eventId());
+    }
 }

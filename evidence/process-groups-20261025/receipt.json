@@ -1,0 +1,91 @@
+{
+  "baseSha": "9299075f302c047cd65f7853e1fb2e4cd535ce2d",
+  "sourceDirty": true,
+  "verify": {
+    "suites": 155,
+    "tests": 1612,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 154,
+    "passed": 1458
+  },
+  "jars": [
+    {
+      "path": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+      "sha256": "94b3c138d60c94655d27da45bc4f5e0f82910316f082344bb96609539267f827",
+      "matchedEntries": 544
+    },
+    {
+      "path": "server/target/server-process-groups-20261025.jar",
+      "sha256": "a666c2c4dd4615460696a0c1411b67e34ff4d0572c2f3618143dc5750ca42d57",
+      "matchedEntries": 168
+    }
+  ],
+  "realResult": {
+    "sourceSha": "9299075f302c047cd65f7853e1fb2e4cd535ce2d",
+    "identityOnly": false,
+    "exitCode": 0,
+    "startUtc": "2026-10-25T05:56:37.6959484Z",
+    "alertRules": false,
+    "cleanup": {
+      "ownedSchemasRemaining": 0,
+      "clusterStopExit": 0,
+      "postmasterPidAbsent": true
+    },
+    "sourceDirty": true,
+    "endUtc": "2026-10-25T05:58:05.1430553Z",
+    "integrated": false,
+    "desktop": false,
+    "summaryPresent": true,
+    "runId": "usb-40e4867ba1464ba5",
+    "mode": "Real",
+    "runnerErrorType": null,
+    "hardware": "0/12 NOT_RUN",
+    "timeline": true
+  },
+  "realSummary": {
+    "sourceSha": "9299075f302c047cd65f7853e1fb2e4cd535ce2d",
+    "schemaDropped": true,
+    "runs": [
+      {
+        "restartNewRun": true,
+        "hardwareHotplug": "NOT_RUN",
+        "examEntryReusesRun": true,
+        "manualPortalBaseline": true,
+        "usbSource": "REAL_CIM",
+        "activityOnlyAfterExamEntry": true,
+        "sharedCollector": true,
+        "stopWaitsForUsbWorkers": true,
+        "usbBaselineCount": 0,
+        "kind": "MANUAL_PROCESS_AND_SIGNALS"
+      },
+      {
+        "backgroundNotInReview": true,
+        "snapshotProcesses": 139,
+        "nativeTeamsAtStart": 2,
+        "nativeTeamsInHistoryAndFeed": true,
+        "policy": "process-policy-v2",
+        "kind": "REAL_PROCESS_GROUPS",
+        "source": "REAL_ProcessHandle"
+      },
+      {
+        "freshReconnectCapability": true,
+        "hardwareAcceptance": "Baseline only; no physical hotplug action in this automated test",
+        "deliveryAcknowledged": 9,
+        "historyRows": 8,
+        "usbWorkersStopped": true,
+        "sharedCollectorIdentity": true,
+        "storageCount": 0,
+        "kind": "PRODUCTION_CANDIDATE_USB",
+        "source": "REAL_CIM"
+      }
+    ],
+    "hardware": "0/12 NOT_RUN",
+    "runId": "usb-40e4867ba1464ba5"
+  },
+  "physicalUsbHotplug": "NOT_RUN",
+  "ci": "NOT_RUN feature push has no workflow trigger",
+  "rawVerify": "target/process-groups-verify-20261025-2",
+  "rawIntegration": "target/process-groups-real-20261025",
+  "failedVerify": "target/process-groups-verify-20261025: one old test expected exactly eight default names; production v1 remains eight, expanded default is39"
+}

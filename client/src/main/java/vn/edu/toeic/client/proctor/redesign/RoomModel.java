@@ -129,7 +129,7 @@ final class RoomModel {
     private static int alertCount(RoomFeed.Snapshot feed, String attempt) {
         RoomFeed.AttemptHistory history = feed.of(attempt);
         if (history == null) return 0;
-        return history.events().size() + history.interruptions().size() + history.gaps().size()
+        return (int)history.events().stream().filter(e->vn.edu.toeic.protocol.monitoring.ProcessCatalog.review(e.processName())).count() + history.interruptions().size() + history.gaps().size()
                 +SignalFeedProjection.project(history.signals(),attempt).alerts().size();
     }
 
@@ -199,7 +199,7 @@ final class RoomModel {
         List<Alert> result = new ArrayList<>();
         for (RoomFeed.AttemptHistory history : feed.attempts()) {
             String name = names.getOrDefault(history.attemptId(), history.attemptId());
-            for (Event event : history.events()) result.add(alert(event, name));
+            for (Event event : history.events()) if(vn.edu.toeic.protocol.monitoring.ProcessCatalog.review(event.processName()))result.add(alert(event, name));
             for (Interruption interruption : history.interruptions()) result.add(alert(interruption, name));
             for (Gap gap : history.gaps()) result.add(alert(gap, name));
             result.addAll(SignalFeedProjection.project(history.signals(),name).alerts());
@@ -219,7 +219,8 @@ final class RoomModel {
         };
         String detail = event.metadataQuality().equals("COMPLETE") ? "" : " Metadata không đọc được đầy đủ (UNREADABLE).";
         return new Alert(event.eventId(), event.attemptId(), candidate, Kind.PROCESS, "PROCESS_OBSERVED",
-                "Quan sát tiến trình", "Quan sát thấy tiến trình " + event.processName() + " thuộc danh sách cần theo dõi." + detail,
+                "Quan sát tiến trình", "Quan sát thấy tiến trình " + event.processName() + " · "
+                        +vn.edu.toeic.client.proctor.timeline.ProcessRiskPresentation.risk(event.processName()).category()+"." + detail,
                 "Quan sát tại client", event.observedAt(), event.receivedAt(), status,
                 late ? "amber" : event.deliveryStatus().equals("LIVE") ? "blue" : "gray", late, false, event);
     }
@@ -429,7 +430,13 @@ final class RoomModel {
         List<Alert> alerts = alerts(scoped, names(rows));
         var history=new ArrayList<>(timeline(alerts.stream().filter(a->!(a.origin() instanceof vn.edu.toeic.client.dashboard.SignalHistory.Entry)).toList()));
         var candidateNames=names(rows);
-        for(var item:scoped.attempts())history.addAll(SignalFeedProjection.project(item.signals(),candidateNames.getOrDefault(item.attemptId(),item.attemptId())).history());
+        for(var item:scoped.attempts()){
+            String candidate=candidateNames.getOrDefault(item.attemptId(),item.attemptId());
+            history.addAll(SignalFeedProjection.project(item.signals(),candidate).history());
+            var background=item.events().stream().filter(e->vn.edu.toeic.protocol.monitoring.ProcessCatalog.visibleInLists(e.processName())&&!vn.edu.toeic.protocol.monitoring.ProcessCatalog.review(e.processName()))
+                    .map(e->alert(e,candidate)).toList();
+            history.addAll(timeline(background));
+        }
         history.sort(Comparator.comparing(HistoryEntry::serverTime,Comparator.nullsLast(Comparator.reverseOrder())).thenComparing(HistoryEntry::key));
         Instant reference = progress.readAt();
         if (reference == null && !alerts.isEmpty()) reference = alerts.getFirst().serverTime();
