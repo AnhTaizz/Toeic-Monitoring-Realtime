@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -13,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import vn.edu.toeic.client.audio.AudioPreparationView;
 import vn.edu.toeic.client.audio.ListeningPlayback;
@@ -52,7 +54,6 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
     private final ProgressBar listeningProgress = new ProgressBar(0);
     private final StackPane content = new StackPane();
     private final Label saveLabel = new Label();
-    private final Label positionLabel = new Label();
     private final Label progressLabel = new Label();
     private final Label noticeLabel = new Label();
     private final Button retryButton = new Button("Thử lưu lại");
@@ -101,6 +102,16 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         });
         applyConnection(realtime.connectionState());
         if (audio != null) audio.onChanged(this::followListening);
+
+        // Confirm before the window closes while the attempt is still open; the guard follows the scene's window.
+        sceneProperty().addListener((obs, oldScene, scene) -> {
+            if (oldScene != null && oldScene.getWindow() != null) oldScene.getWindow().removeEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, closeGuard);
+            if (scene != null) scene.windowProperty().addListener((o, oldWindow, window) -> {
+                if (oldWindow != null) oldWindow.removeEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, closeGuard);
+                if (window != null && !closed) window.addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, closeGuard);
+            });
+            if (scene != null && scene.getWindow() != null && !closed) scene.getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, closeGuard);
+        });
 
         clock = new Timeline(new KeyFrame(Duration.seconds(1), event -> tick()));
         clock.setCycleCount(Timeline.INDEFINITE);
@@ -155,22 +166,17 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         listeningStatus.setWrapText(true);
         listeningProgress.setMaxWidth(Double.MAX_VALUE);
         listeningProgress.getStyleClass().add("room-progress");
-        Label policy = new Label("Không tua · Không phát lại");
-        policy.getStyleClass().add("room-muted");
-        HBox row = new HBox(16, listeningProgress, policy);
-        row.setAlignment(Pos.CENTER_LEFT);
-        HBox.setHgrow(listeningProgress, Priority.ALWAYS);
-        listeningBanner.getChildren().addAll(listeningStatus, row);
+        listeningProgress.managedProperty().bind(listeningProgress.visibleProperty());
+        listeningProgress.setVisible(false); // shown only while audio is actually playing
+        listeningBanner.getChildren().addAll(listeningStatus, listeningProgress);
         listeningBanner.getStyleClass().add("room-banner");
-        listeningStatus.setText("Chưa có trạng thái Listening từ player; audio đang khóa.");
+        listeningStatus.setText("Phần nghe sẽ bắt đầu khi giám thị bấm bắt đầu.");
         listeningBanner.managedProperty().bind(listeningBanner.visibleProperty());
     }
 
     private Node createFooter() {
         saveLabel.setId("room-save-status");
-        saveLabel.getStyleClass().add("room-muted");
-        positionLabel.setId("room-position");
-        positionLabel.getStyleClass().add("room-muted");
+        saveLabel.getStyleClass().add("room-save");
         previousButton.setId("room-previous");
         nextButton.setId("room-next");
         submitButton.setId("room-submit");
@@ -184,7 +190,8 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         HBox.setHgrow(left, Priority.ALWAYS); HBox.setHgrow(right, Priority.ALWAYS);
         progressLabel.setId("room-progress-count");
         progressLabel.getStyleClass().add("room-strong");
-        HBox footer = new HBox(14, saveLabel, left, positionLabel, progressLabel, right, previousButton, nextButton, submitButton);
+        // Position is already shown by the question title; the footer keeps only status, progress and actions.
+        HBox footer = new HBox(14, saveLabel, left, progressLabel, right, previousButton, nextButton, submitButton);
         footer.setAlignment(Pos.CENTER_LEFT);
         footer.getStyleClass().add("room-footer");
         return footer;
@@ -210,9 +217,6 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         sectionLabel.setText(part.section() == Section.LISTENING ? "🎧  LISTENING" : "📖  READING");
         listeningBanner.setVisible(part.section() == Section.LISTENING);
         buildStepper(part);
-        positionLabel.setText("Part " + next.part() + " · " + (next.questions().size() == 1
-                ? "Câu " + next.firstNumber() : "Câu " + next.firstNumber() + "–" + next.lastNumber())
-                + " · Tổng " + model.totalQuestions() + " câu");
         refreshAnswers();
     }
 
@@ -269,7 +273,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
             title.getStyleClass().add("room-overline");
             parts.getChildren().addAll(title, numbers);
         }
-        Label legend = new Label("Cam: đang xem · Xanh: đã chọn (chờ server xác nhận lưu) · Trắng: chưa chọn");
+        Label legend = new Label("Cam: đang xem · Xanh: đã làm · Trắng: chưa làm");
         legend.getStyleClass().add("room-muted");
         ScrollPane scroll = new ScrollPane(new VBox(12, legend, parts));
         scroll.setFitToWidth(true);
@@ -294,13 +298,11 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
             imageArea.getChildren().add(RichContent.blocks(imageBlocks, model, this::loadImage, 640, boxes, "room-passage"));
         }
         questionImages.put(q.id(), boxes);
-        Label caption = new Label("Nhìn vào bức ảnh và chọn câu mô tả phù hợp nhất.");
-        caption.getStyleClass().add("room-muted");
-        VBox left = card(title("Part 1 · Photographs"), imageArea, caption);
+        VBox left = card(title("Part 1 · Photographs"), imageArea);
         HBox.setHgrow(left, Priority.ALWAYS);
         VBox right = card(overline("LISTENING · PART 1"), questionNumber(q, model.listeningQuestionIds().size()),
-                promptText(q, "room-instruction"), instruction("Nghe bốn câu mô tả và chọn một đáp án phù hợp với bức ảnh."),
-                options(q), info("Các lựa chọn chỉ được phát qua audio."));
+                listeningPrompt(q), instruction("Nghe bốn câu mô tả và chọn một đáp án phù hợp với bức ảnh."),
+                options(q));
         right.setPrefWidth(460); right.setMinWidth(340);
         HBox row = new HBox(16, left, right);
         return row;
@@ -309,8 +311,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
     private Node singleListening(RichExamModel.Unit u) {
         RichExamModel.Question q = u.questions().getFirst();
         VBox card = card(overline("PART 2 · QUESTION-RESPONSE"), questionNumber(q, model.listeningQuestionIds().size()),
-                promptText(q, "room-instruction"), instruction("Nghe câu hỏi và chọn câu trả lời phù hợp nhất."), options(q),
-                info("Câu hỏi và các lựa chọn chỉ được phát qua audio. Hãy tập trung lắng nghe."));
+                listeningPrompt(q), instruction("Nghe câu hỏi và chọn câu trả lời phù hợp nhất."), options(q));
         card.setMaxWidth(980);
         VBox box = new VBox(16, neighbourChips(u), card);
         box.setAlignment(Pos.TOP_CENTER);
@@ -335,8 +336,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
                 title(conversation ? "Nghe hội thoại" : "Nghe bài nói"),
                 instruction(conversation ? "Nghe một hội thoại và trả lời các câu hỏi tương ứng. Chỉ được nghe một lần."
                         : "Nghe một đoạn thông báo hoặc bài nói ngắn, sau đó trả lời các câu hỏi."),
-                new Separator(), label("Nhóm câu", "room-strong"), groupScroll,
-                info("Không hiển thị transcript. Audio tự chuyển sang nhóm tiếp theo."));
+                new Separator(), label("Nhóm câu", "room-strong"), groupScroll);
         left.setPrefWidth(300); left.setMinWidth(240);
         VBox questions = new VBox(14, title("Questions " + u.firstNumber() + "–" + u.lastNumber()));
         // Figure/biểu đồ tùy chọn của group (Part 3/4) nằm trên các câu hỏi.
@@ -502,7 +502,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
             statusRefreshers.add(() -> {
                 chip.getStyleClass().removeAll("room-chip", "room-chip-active", "room-chip-done");
                 chip.getStyleClass().add(other == unit ? "room-chip-active" : answered(q) ? "room-chip-done" : "room-chip");
-                chip.setText("Câu " + q.number() + (other == unit ? " · Đang xem" : answered(q) ? " · Đã chọn" : ""));
+                chip.setText("Câu " + q.number() + (other == unit ? " · Đang xem" : answered(q) ? " · Đã làm" : ""));
             });
             chip.setOnAction(event -> navigate(other, null));
             chips.getChildren().add(chip);
@@ -514,7 +514,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         ListeningPlayback.Segment segment = audio == null ? null : audio.listeningSnapshot().current();
         if (segment != null && Objects.equals(segment.audioFile(), u.questions().getFirst().audioFile())) return "Đang nghe";
         long done = u.questions().stream().filter(this::answered).count();
-        return done == 0 ? "Chưa chọn" : "Đã chọn " + done + "/" + u.questions().size();
+        return done == 0 ? "Chưa làm" : "Đã làm " + done + "/" + u.questions().size();
     }
 
     private boolean answered(RichExamModel.Question q) { return current != null && current.answers().containsKey(q.id()); }
@@ -522,6 +522,16 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
     private Label questionNumber(RichExamModel.Question q, int total) {
         Label label = new Label("Câu " + q.number() + "  / " + total);
         label.getStyleClass().add("room-question-title");
+        return label;
+    }
+
+    /**
+     * Part 1/2 prompt. Imported data often carries only the option letters ("A. B. C. D.") as text; that line
+     * adds nothing on screen because the options are heard, so it is hidden. Any other text is shown as given.
+     */
+    private Label listeningPrompt(RichExamModel.Question q) {
+        Label label = promptText(q, "room-instruction");
+        if (label.getText().replaceAll("[\\sA-Da-d.,;:()/-]", "").isEmpty()) label.setText("");
         return label;
     }
 
@@ -575,13 +585,9 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         if (closed) return;
         current = view;
         refreshAnswers();
-        saveLabel.setText(switch (view.saveState()) {
-            case SAVED -> view.confirmedRevision() > 0 ? "Đã lưu · server xác nhận revision " + view.confirmedRevision() : "Chưa có thay đổi cần lưu";
-            case PENDING -> "Có thay đổi chưa gửi";
-            case SAVING -> "Đang lưu…";
-            case RETRYING -> "Chưa xác nhận lưu · đang thử lại";
-            case ERROR -> "Chưa xác nhận lưu từ server";
-        });
+        saveLabel.setText(CandidateText.saveStatus(view));
+        saveLabel.getStyleClass().removeAll("room-save-ok", "room-save-idle", "room-save-warn");
+        saveLabel.getStyleClass().add(CandidateText.saved(view) ? "room-save-ok" : CandidateText.idle(view) ? "room-save-idle" : "room-save-warn");
         noticeLabel.setText(view.message() == null ? "" : view.message());
         retryButton.setVisible(view.needsUserRetry()); retryButton.setManaged(view.needsUserRetry());
         boolean replaced = view.phase() == ExamSession.Phase.WRITER_REPLACED;
@@ -589,7 +595,8 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         boolean conflict = view.phase() == ExamSession.Phase.CONFLICT;
         reloadButton.setVisible(conflict); reloadButton.setManaged(conflict);
         submitButton.setDisable(!view.canSubmit());
-        progressLabel.setText("Đã chọn " + view.answers().size() + "/" + model.totalQuestions());
+        progressLabel.setText("Đã làm " + view.answers().size() + "/" + model.totalQuestions());
+        followListening();
         header.deadline(view.deadlineAt(), Instant.now());
         if (unit != null) buildStepper(model.part(unit.part()));
         showOutcomeOnce(view);
@@ -606,8 +613,10 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
     private void followListening() {
         if (closed || audio == null) return;
         ListeningPlayback.Snapshot state = audio.listeningSnapshot();
-        listeningStatus.setText(state.message());
+        listeningStatus.setText(CandidateText.listening(state, current));
         int total = state.segments().size();
+        listeningProgress.setVisible(Set.of(ListeningPlayback.Phase.READY_TO_PLAY, ListeningPlayback.Phase.PLAYING,
+                ListeningPlayback.Phase.COMPLETING).contains(state.phase()));
         listeningProgress.setProgress(total == 0 ? 0 : (state.segmentIndex() + 1) / (double) total);
         ListeningPlayback.Segment segment = state.current();
         if (segment != null && !Objects.equals(segment.audioFile(), followedAudio)
@@ -658,12 +667,10 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
     private void confirmSubmit() {
         if (current == null || !current.canSubmit()) return;
         int unanswered = model.totalQuestions() - current.answers().size();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, unanswered > 0
-                ? "Bạn còn " + unanswered + " câu chưa trả lời. Nộp bài ngay?"
-                : "Bạn đã chọn đáp án cho toàn bộ " + model.totalQuestions() + " câu. Nộp bài?", ButtonType.YES, ButtonType.NO);
-        alert.setTitle("Xác nhận nộp bài");
-        alert.setHeaderText("Sau khi nộp, đáp án bị khóa và không sửa được nữa.");
-        alert.showAndWait().ifPresent(choice -> { if (choice == ButtonType.YES && !closed) session.submit(); });
+        boolean confirmed = RoomDialogs.confirm(getScene() == null ? null : getScene().getWindow(), "Nộp bài",
+                unanswered > 0 ? "Bạn còn " + unanswered + " câu chưa làm." : "Bạn đã làm đủ " + model.totalQuestions() + " câu.",
+                "Sau khi nộp, bạn không sửa được đáp án nữa.", "Nộp bài", "Làm tiếp");
+        if (confirmed && !closed) session.submit();
     }
 
     private void showOutcomeOnce(ExamSession.View view) {
@@ -683,6 +690,19 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
 
     private void leave() { if (!closed) { close(); onExit.run(); } }
 
+    /** The attempt is not finished and this screen still owns it; lobby and result screens never ask. */
+    boolean needsCloseConfirmation() {
+        return !closed && current != null && CandidateText.closeNeedsConfirmation(current.phase());
+    }
+
+    private final EventHandler<WindowEvent> closeGuard = event -> {
+        if (!needsCloseConfirmation()) return;
+        boolean leaveApp = RoomDialogs.confirm(getScene() == null ? null : getScene().getWindow(), "Đóng ứng dụng",
+                "Bạn đang làm bài.", "Đóng ứng dụng có thể làm mất câu chưa lưu và không dừng đồng hồ làm bài.",
+                "Đóng ứng dụng", "Ở lại làm bài");
+        if (!leaveApp) event.consume();
+    };
+
     // Cho test giao diện.
     RichExamModel model() { return model; }
     RichExamModel.Unit currentUnit() { return unit; }
@@ -693,6 +713,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         if (closed) return;
         closed = true;
         clock.stop();
+        if (getScene() != null && getScene().getWindow() != null) getScene().getWindow().removeEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, closeGuard);
         if (pendingGate != null) pendingGate.cancel();
         session.close();
         for (AutoCloseable subscription : List.of(connectionSubscription, statusSubscription)) {

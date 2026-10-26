@@ -515,6 +515,9 @@ class MonitoringTimelinePostgresTest {
             }
         }finally{if(oldReport==null)System.clearProperty("toeic.monitoring.activityReportMillis");else System.setProperty("toeic.monitoring.activityReportMillis",oldReport);}
     }
+    long rawProcessRows(String attempt){return jdbc.sql("SELECT count(*) FROM monitoring_events WHERE attempt_id=:a").param("a",attempt).query(Long.class).single();}
+    /** Seconds between the first and last raw process row of the attempt (server received time). */
+    double processRowsGapSeconds(String attempt){return jdbc.sql("SELECT EXTRACT(EPOCH FROM max(received_at)-min(received_at)) FROM monitoring_events WHERE attempt_id=:a").param("a",attempt).query(Double.class).single();}
     List<SignalHistory.Entry> signalPages(MonitoringApiClient api,String attempt)throws Exception {
         var result=new ArrayList<SignalHistory.Entry>();long after=0;Long through=null;
         for(int pageNumber=0;pageNumber<50;pageNumber++){
@@ -599,10 +602,14 @@ class MonitoringTimelinePostgresTest {
             fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Bắt đầu giám sát").fire();return null;});
             waitFor("restart control opens a fresh FULL epoch",()->first.isActive()&&first.fullStatus()!=null&&first.fullStatus().acknowledgedSequence()>0);
             assertThat(first.collectorSessionId()).isNotEqualTo(oldRun);assertThat(first.fullStatus().syncEpoch()).isNotEqualTo(oldEpoch);
-            waitFor("process observed in restarted run",()->api.events(a).join().size()==2);
+            // The restarted run commits the same process again as a raw row. The proctor projection groups it with
+            // the first run's row when both fall in one 30 s burst (process alert grouping); raw history keeps both.
+            waitFor("process observed in restarted run",()->rawProcessRows(a)==2);
+            int visible=processRowsGapSeconds(a)<=30?1:2;
+            assertThat(api.events(a).get(5,TimeUnit.SECONDS)).hasSize(visible);
             workload.close();
             waitFor("owned process exit changes current FULL but preserves history",()->api.state(a).join().status().equals("SYNCED")&&api.state(a).join().processes().isEmpty());
-            assertThat(api.events(a).get(5,TimeUnit.SECONDS)).hasSize(2);
+            assertThat(rawProcessRows(a)).isEqualTo(2);assertThat(api.events(a).get(5,TimeUnit.SECONDS)).hasSize(visible);
             fx(()->{vn.edu.toeic.client.MonitoringApplicationProbe.logout(s);return null;});
             first.stop().stopped().get(8,TimeUnit.SECONDS);assertThat(probe.stops).hasValue(2);assertThat(first.isActive()).isFalse();
             int oldPolls=probe.polls.get();
@@ -610,7 +617,7 @@ class MonitoringTimelinePostgresTest {
             waitCandidateControls(s,b);assertThat(probe.sessions).hasSize(2);
             fx(()->{ @SuppressWarnings("unchecked")var box=(ComboBox<String>)s.getScene().lookup("#candidate-attempts");assertThat(box.getItems()).doesNotContain(a);vn.edu.toeic.client.MonitoringApplicationProbe.button(s,"Bắt đầu giám sát").fire();return null;});
             var second=probe.sessions.getLast();waitFor("candidate B starts with separate scope",()->second.isActive()&&second.fullStatus()!=null&&second.fullStatus().acknowledgedSequence()>0);
-            assertThat(first.isActive()).isFalse();assertThat(probe.polls.get()).isGreaterThan(oldPolls);assertThat(api.events(a).get(5,TimeUnit.SECONDS)).hasSize(2);
+            assertThat(first.isActive()).isFalse();assertThat(probe.polls.get()).isGreaterThan(oldPolls);assertThat(rawProcessRows(a)).isEqualTo(2);assertThat(api.events(a).get(5,TimeUnit.SECONDS)).hasSize(visible);
             fx(()->{probe.application.stop();return null;});second.stop().stopped().get(8,TimeUnit.SECONDS);assertThat(probe.stops).hasValue(3);
             results.add(Map.of("kind","REAL_APPLICATION_CONTROLS","activation","Button/MenuItem.fire, Application.stop; NOT OS/human acceptance","proctorCollectorFactories",0,"candidateRuns",3,"collectorTerminations",3,"logoutAccountIsolation",true,"processHistoryAfterExit",2,"currentProcessCountAfterExit",0));
         }

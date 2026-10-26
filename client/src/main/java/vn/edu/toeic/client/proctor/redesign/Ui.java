@@ -24,7 +24,7 @@ final class Ui {
     private Ui() { }
 
     /** Same zone property as the legacy dashboard so both views show identical clock text. */
-    static final ZoneId ZONE = ZoneId.of(System.getProperty("toeic.dashboard.timezone", ZoneId.systemDefault().getId()));
+    static final ZoneId ZONE = vn.edu.toeic.client.ui.TimeText.ZONE;
     private static final DateTimeFormatter CLOCK = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZONE);
     private static final DateTimeFormatter DATE_CLOCK = DateTimeFormatter.ofPattern("HH:mm:ss · dd/MM/yyyy").withZone(ZONE);
 

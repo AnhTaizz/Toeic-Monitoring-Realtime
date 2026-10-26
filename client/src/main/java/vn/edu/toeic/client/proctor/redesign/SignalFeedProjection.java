@@ -27,22 +27,27 @@ final class SignalFeedProjection {
             if(s instanceof UsbStorageSignal usb){
                 kind=Kind.USB;
                 title=switch(usb.kind()){
-                    case USB_STORAGE_PRESENT_AT_START->"USB có sẵn khi bắt đầu giám sát";
-                    case USB_STORAGE_CONNECTED->"Quan sát cắm USB";
-                    case USB_STORAGE_REMOVED->"Quan sát rút USB";
+                    case USB_STORAGE_PRESENT_AT_START->"Có USB khi bắt đầu thi";
+                    case USB_STORAGE_CONNECTED->"Cắm USB";
+                    case USB_STORAGE_REMOVED->"Rút USB";
                 };
-                description="Quan sát được "+usb.storageCount()+" USB lưu trữ"
-                        +(usb.kind()==UsbStorageSignal.Kind.USB_STORAGE_PRESENT_AT_START?" khi bắt đầu giám sát.":" tại lần ghi nhận này.")
-                        +(s.metadataQuality().equals("PARTIAL")?" Metadata một phần; không khẳng định định danh thiết bị.":"");
+                description=switch(usb.kind()){
+                    case USB_STORAGE_PRESENT_AT_START->"Máy thí sinh đang cắm "+usb.storageCount()+" USB lưu trữ lúc bắt đầu giám sát.";
+                    case USB_STORAGE_CONNECTED->"Quan sát thấy một USB lưu trữ được cắm vào (đang có "+usb.storageCount()+").";
+                    case USB_STORAGE_REMOVED->"Quan sát thấy một USB lưu trữ được rút ra (còn "+usb.storageCount()+").";
+                }+(s.metadataQuality().equals("PARTIAL")?" Không đọc được đầy đủ thông tin thiết bị.":"");
             }else if(s instanceof FocusSignal focus){
                 kind=Kind.FOCUS;
-                title=focus.focused()?"Cửa sổ thí sinh nhận focus":"Cửa sổ thí sinh mất focus";
-                description="Quan sát cửa sổ ứng dụng thí sinh "+(focus.focused()?"có focus.":"mất focus.")
-                        +(focus.lostDurationMillis()==null?"":" Khoảng mất focus đo trong cùng run: "+focus.lostDurationMillis()+" ms.");
+                title=focus.focused()?"Quay lại bài thi":"Rời cửa sổ bài thi";
+                description=focus.focused()
+                        ?"Thí sinh quay lại cửa sổ bài thi"+(focus.lostDurationMillis()==null?".":" sau "+duration(focus.lostDurationMillis())+".")
+                        :"Cửa sổ bài thi không còn được chọn: thí sinh đã bấm sang cửa sổ hoặc ứng dụng khác.";
             }else{
                 var window=(WindowSignal)s;
-                kind=Kind.WINDOW;title="Trạng thái cửa sổ thay đổi";
-                description="Thu nhỏ: "+(window.minimized()?"có":"không")+" · Toàn màn hình: "+(window.fullscreen()?"có":"không")+".";
+                kind=Kind.WINDOW;
+                title=window.minimized()?"Thu nhỏ bài thi":window.fullscreen()?"Bài thi toàn màn hình":"Bài thi trở lại cửa sổ thường";
+                description=window.minimized()?"Cửa sổ bài thi bị thu nhỏ xuống thanh tác vụ."
+                        :window.fullscreen()?"Cửa sổ bài thi chuyển sang toàn màn hình.":"Cửa sổ bài thi trở lại kích thước thường.";
             }
             boolean late=!entry.delivery().equals("LIVE");
             String channel=switch(entry.delivery()){case "LIVE"->"Nhận trực tiếp";case "BUFFERED_OFFLINE"->"Đến muộn · offline";case "PREVIOUS_CONNECTION"->"Đến muộn · kết nối cũ";default->"Chưa rõ kênh nhận";};
@@ -54,6 +59,17 @@ final class SignalFeedProjection {
             history.add(history(alert));
         }
         return new Projection(List.copyOf(alerts),List.copyOf(history));
+    }
+
+    /** "dưới 1 giây", "1,4 giây", "2 phút 5 giây": how long the exam window was left. */
+    static String duration(long millis){
+        if(millis<1000)return "dưới 1 giây";
+        if(millis<60_000){
+            long tenths=Math.round(millis/100.0);
+            return tenths/10+(tenths%10==0?"":","+tenths%10)+" giây";
+        }
+        long seconds=Math.round(millis/1000.0);
+        return seconds/60+" phút"+(seconds%60==0?"":" "+seconds%60+" giây");
     }
 
     static HistoryEntry history(Alert alert){

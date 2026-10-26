@@ -487,7 +487,8 @@ final class ProctorV2Controller implements AutoCloseable {
 
     private void watchLocked(String id) {
         if (!id.equals(session) && pendingStarts.containsKey(session)) {
-            notice = "START ca " + session + " chưa rõ kết quả; thử lại đúng yêu cầu cũ trước khi đổi ca.";
+            notice = accountPin ? "Lệnh bắt đầu của phòng hiện tại chưa rõ kết quả. Bấm \"Thử lại bắt đầu\" trước khi đổi phòng."
+                    : "START ca " + session + " chưa rõ kết quả; thử lại đúng yêu cầu cũ trước khi đổi ca.";
             publish();
             return;
         }
@@ -589,7 +590,7 @@ final class ProctorV2Controller implements AutoCloseable {
         final String id = session;
         ListeningStartRequest pending = pendingStarts.get(id);
         if (pending == null && !canStart()) {
-            notice = accountPin?"Cần ít nhất một thí sinh JOIN và dữ liệu phòng mới từ Server.":"Chỉ START khi server vừa báo allReady=true cho đúng ca (dưới " + READY_FRESH_MILLIS / 1000 + " giây). Đọc lại READY.";
+            notice = accountPin?"Cần ít nhất một thí sinh vào phòng và trạng thái phòng vừa đọc từ Server.":"Chỉ START khi server vừa báo allReady=true cho đúng ca (dưới " + READY_FRESH_MILLIS / 1000 + " giây). Đọc lại READY.";
             publish();
             return;
         }
@@ -599,7 +600,8 @@ final class ProctorV2Controller implements AutoCloseable {
             return;
         }
         starting = true;
-        notice = pending == null ? "Đang lấy manifest audio và gửi START…" : "Đang gửi lại START với requestId cũ…";
+        notice = accountPin ? (pending == null ? "Đang gửi lệnh bắt đầu…" : "Đang gửi lại đúng lệnh bắt đầu cũ…")
+                : pending == null ? "Đang lấy manifest audio và gửi START…" : "Đang gửi lại START với requestId cũ…";
         publish();
         execute(() -> {
             ListeningStartRequest request = pending;
@@ -619,7 +621,8 @@ final class ProctorV2Controller implements AutoCloseable {
                 startedOrder.add(id);
                 if (startedOrder.size() > 64) started.remove(startedOrder.removeFirst());
                 if (id.equals(session)) stopPolling();
-                notice = "Server xác nhận START: startId=" + value.startId() + " lúc " + Ui.clock(value.startedAt(), "?")
+                notice = accountPin ? "Đã bắt đầu phòng thi lúc " + Ui.clock(value.startedAt(), "?") + ". Giờ kết thúc do Server tính."
+                        : "Server xác nhận START: startId=" + value.startId() + " lúc " + Ui.clock(value.startedAt(), "?")
                         + ". Deadline do server tính; thí sinh nhận lệnh qua WebSocket.";
                 if (id.equals(session)) { issuedPins.clear();room=null;sharedPin=null;readyStale = true; readLocked(); }
                 return;
@@ -628,11 +631,14 @@ final class ProctorV2Controller implements AutoCloseable {
             if (sent != null && status >= 400 && status < 500) pendingStarts.remove(id);
             if (!id.equals(session)) return;
             if (status == 409) {
-                notice = error(failure) + " Đã đọc lại READY để xem lý do từng lượt.";
+                notice = error(failure) + (accountPin ? " Đã đọc lại trạng thái phòng." : " Đã đọc lại READY để xem lý do từng lượt.");
                 readyStale = true;
                 readLocked();
             } else if (sent != null && pendingStarts.containsKey(id)) {
-                notice = error(failure) + " START có thể đã tới server: bấm \"Thử lại START\" để gửi lại đúng requestId "
+                // The retry resends the same request; the server answers it without starting a second time.
+                notice = accountPin ? error(failure) + " Lệnh bắt đầu có thể đã tới Server. Bấm \"Thử lại bắt đầu\" để gửi lại "
+                        + "đúng lệnh cũ; Server không bắt đầu lần thứ hai."
+                        : error(failure) + " START có thể đã tới server: bấm \"Thử lại START\" để gửi lại đúng requestId "
                         + sent.requestId() + "; server trả lại startId cũ nếu đã start.";
             } else {
                 notice = error(failure);

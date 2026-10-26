@@ -111,3 +111,9 @@ $RECYCLE.BIN/
 
 # HTML nguon duoc dong goi rieng; khong commit lai file HTML sau khi giai nen
 /data/seedingTest/*.html
+
+# ===== Cloudflare Tunnel =====
+# Token/credentials của tunnel chỉ nằm trên máy chủ, mặc định %LOCALAPPDATA%\TOEIC Monitor\cloudflare-tunnel.token
+*.token
+.cloudflared/
+cloudflared-credentials*.json

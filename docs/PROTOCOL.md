@@ -356,7 +356,7 @@ Ví dụ minh họa schema (ID/thời gian TEST, không credential):
 
 Push chỉ tới session proctor còn hợp lệ và có assignment tại thời điểm kiểm quyền; candidate/proctor khác không nhận. Server gộp các PID con có cùng `processName` (không phân biệt hoa/thường) thành một đợt quan sát: event đầu được push, các event kế tiếp cách event trước không quá 30 giây vẫn được commit/ACK nhưng không push thêm. Sau khoảng yên lặng trên 30 giây, lần xuất hiện tiếp theo được xem là thay đổi mới và được push. Khóa row attempt bảo đảm hai socket gửi đồng thời không cùng phát warning đầu đợt. Mọi ACK/ERROR/warning đi qua cùng ConcurrentWebSocketSessionDecorator. Giao nhận push best effort: offline/socket lỗi không làm mất event đã commit, không biến ACK thành lỗi. REST là nguồn lịch sử ổn định.
 
-`GET /api/v1/monitoring/attempts/{attemptId}/events` với Bearer header, chỉ PROCTOR có scope ACTIVE. Server áp dụng cùng quy tắc đợt 30 giây và trả event đầu mỗi đợt; dữ liệu PID gốc vẫn giữ trong `monitoring_events` để audit. Không phân trang: trả đủ tối đa5000 mục đã gộp, hoặc 409 `INVALID_STATE` `retryable:false` cho cả response khi vượt (xem mục ổn định hóa17/10). Response200:
+`GET /api/v1/monitoring/attempts/{attemptId}/events` với Bearer header, chỉ PROCTOR có scope ACTIVE. Server áp dụng cùng quy tắc đợt 30 giây và trả event đầu mỗi đợt; dữ liệu PID gốc vẫn giữ trong `monitoring_events` để audit. Không phân trang. Giới hạn 5000 vẫn tính trên **dòng PID gốc** như trước khi gộp: tối đa 5000 dòng gốc thì trả đủ các mục đã gộp từ chúng; vượt 5000 dòng gốc thì 409 `INVALID_STATE` `retryable:false` cho cả response, kể cả khi số mục sau gộp nhỏ (xem mục ổn định hóa17/10). Server chỉ đọc tối đa 5001 dòng gốc cho một lần tải. Response200:
 
 ```json
 {"protocolVersion":"v0","traceId":"server-generated-id","attemptId":"TEST-attempt-A","events":[{"eventId":"TEST-event-1","attemptId":"TEST-attempt-A","processName":"notepad.exe","metadataQuality":"COMPLETE","policyVersion":"process-policy-v1","observedAt":"2026-10-04T00:00:01Z","receivedAt":"2026-10-04T00:00:02Z"}]}
@@ -1105,9 +1105,9 @@ Mục này ghi lại endpoint đã có từ nhánh ACCOUNT_PIN (`ff6aacf`) và �
 | Endpoint | Quyền | Ghi chú |
 |---|---|---|
 | GET `/api/v2/admin/accounts` | ADMIN | Tìm/lọc Proctor/Candidate theo trang; không trả hash, PIN, token |
-| POST `/api/v2/admin/accounts` | ADMIN | Tạo PROCTOR/CANDIDATE (không tạo ADMIN); `issueLoginPassword=true` trả mật khẩu ngẫu nhiên một lần |
+| POST `/api/v2/admin/accounts` | ADMIN | Tạo PROCTOR/CANDIDATE (không tạo ADMIN). Có `password` (8–128 ký tự, không ký tự điều khiển; từ 26/10/2026): dùng mật khẩu Admin nhập, chỉ lưu hash, response `initialPassword=null`. Không có `password`: như cũ, `issueLoginPassword=true` (hoặc PROCTOR) trả mật khẩu ngẫu nhiên một lần |
 | PATCH `/api/v2/admin/accounts/{id}/enabled` | ADMIN | Khóa/mở khóa; khóa thu hồi token |
-| POST `/api/v2/admin/accounts/{id}/password/reset` | ADMIN | Chỉ Candidate không đang thi; mật khẩu một lần, thu hồi mọi token |
+| POST `/api/v2/admin/accounts/{id}/password/reset` | ADMIN | Chỉ Candidate không đang thi; thu hồi mọi token. Body `{"password":"..."}` (từ 26/10/2026): mật khẩu Admin nhập, response `initialPassword=null`; body rỗng/`{}`: mật khẩu ngẫu nhiên một lần như cũ |
 | POST `/api/v2/pin-rooms` | PROCTOR | `{examId,durationMinutes?}` → Session SCHEDULED + PIN chung 5 số một lần |
 | GET `/api/v2/pin-rooms` | PROCTOR được giao | Trang cursor, không có credential |
 | POST `/api/v2/pin-rooms/join` | CANDIDATE (token tài khoản) | `{pin,requestId}`; tạo hoặc dùng lại đúng một Attempt, trả token có scope attempt |

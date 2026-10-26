@@ -88,6 +88,15 @@ function Login([string]$base,[string]$user,[string]$password){
  $body=@{username=$user;password=$password;requestId=[Guid]::NewGuid().ToString()}|ConvertTo-Json -Compress
  return Invoke-RestMethod ($base+'/api/v1/auth/login') -Method Post -ContentType 'application/json; charset=utf-8' -Body $body -TimeoutSec 10
 }
+# The web server accepts requests before Spring ApplicationRunners (seed accounts, Admin bootstrap) finish,
+# so the first login of an account those runners create may see 401 for a moment. Positive logins only.
+function LoginWhenReady([string]$base,[string]$user,[string]$password){
+ $until=[DateTime]::UtcNow.AddSeconds(60)
+ while($true){
+  try{return Login $base $user $password}
+  catch{if(-not $_.Exception.Response -or [int]$_.Exception.Response.StatusCode -ne 401 -or [DateTime]::UtcNow -ge $until){throw};Start-Sleep -Milliseconds 500}
+ }
+}
 function LoginStatus([string]$base,[string]$user,[string]$password){
  try{[void](Login $base $user $password);return 200}catch{if($_.Exception.Response){return [int]$_.Exception.Response.StatusCode};throw}
 }
@@ -116,7 +125,7 @@ try{
   $old=Launch $oldJava ('-Duser.timezone=UTC -jar "'+$UpgradeFromServerJar+'" --server.address=127.0.0.1 --server.port='+$httpPort) $oldEnv
   $oldOut=$old.StandardOutput.ReadToEndAsync();$oldErr=$old.StandardError.ReadToEndAsync()
   if(-not(AwaitHttp $base $old 120)){throw 'old server startup'}
-  $proctor=Login $base 'proctor1' $seed;if($proctor.user.role -ne 'PROCTOR'){throw 'old proctor login'}
+  $proctor=LoginWhenReady $base 'proctor1' $seed;if($proctor.user.role -ne 'PROCTOR'){throw 'old proctor login'}
   $upgradeFrom=Sql "SELECT max(version::int) FROM flyway_schema_history WHERE success" 'old-version'
   $upgradeMaxId=Sql "SELECT max(id) FROM user_accounts" 'old-max-id'
   $upgradeUsers=Sql "SELECT count(*) FROM user_accounts" 'old-users'
@@ -130,10 +139,13 @@ try{
  $stdout=$server.StandardOutput.ReadToEndAsync();$stderr=$server.StandardError.ReadToEndAsync()
  if(-not(AwaitHttp $base $server 120)){throw 'Server HTTP startup'}
  $cases.Add(@{case='bundled-server-from-unicode-path-http-auth-guard';status='PASS'})
+ # Deterministic launcher contract: the Java process it started forces demo accounts off on its command line.
+ $javaLines=@(Get-CimInstance Win32_Process -Filter ("ParentProcessId="+$server.Id+" AND Name='java.exe'")|ForEach-Object{$_.CommandLine})
+ $cases.Add(@{case='launcher-forces-demo-accounts-off';status=if($javaLines.Count -eq 1 -and $javaLines[0].Contains('"--toeic.seed.demo-accounts=false"')){'PASS'}else{'FAIL'};javaProcesses=$javaLines.Count})
  $versions=Sql "SELECT string_agg(version,',' ORDER BY installed_rank) FROM flyway_schema_history WHERE success AND version IN ('19','20','21')" 'migrations'
  $failed=Sql "SELECT count(*) FROM flyway_schema_history WHERE NOT success" 'migration-failures'
  $cases.Add(@{case='flyway-v19-v20-v21-applied';status=if($versions -eq '19,20,21' -and $failed -eq '0'){'PASS'}else{'FAIL'};applied=$versions})
- $admin=Login $base 'release-admin' $adminPassword
+ $admin=LoginWhenReady $base 'release-admin' $adminPassword
  $cases.Add(@{case='admin-bootstrap-login';status=if($admin.user.role -eq 'ADMIN'){'PASS'}else{'FAIL'}})
  $headers=@{Authorization=('Bearer '+$admin.token)}
  $page=Invoke-RestMethod ($base+'/api/v2/admin/accounts') -Headers $headers -TimeoutSec 10
@@ -173,7 +185,7 @@ try{
  $text=$third.StandardOutput.ReadToEnd()+$third.StandardError.ReadToEnd();$thirdExited=$third.WaitForExit(30000);if(-not $thirdExited){StopTree $third}
  $cases.Add(@{case='reject-unreachable-postgres';status=if($thirdExited -and $third.ExitCode -ne 0 -and $text.Contains('Cannot reach PostgreSQL')){'PASS'}else{'FAIL'}})
 }catch{$failure=$_.Exception.GetType().FullName;[IO.File]::WriteAllText((Join-Path $out 'failure.private.txt'),[string]$_)}finally{
- if($old -and -not $old.HasExited){$old.Kill();$old.WaitForExit()}
+ if($old -and -not $old.HasExited){$old.Kill();$old.WaitForExit();if($oldOut){[IO.File]::WriteAllText((Join-Path $out 'old-server.private.log'),$oldOut.Result+$oldErr.Result)}}
  if($server){StopTree $server;[IO.File]::WriteAllText((Join-Path $out 'server.private.log'),$stdout.Result+$stderr.Result)}
  if($started){$stop=Native (Join-Path $PostgresBin 'pg_ctl.exe') ('-D "'+$data+'" -w stop -m fast') 'pg-stop'}
  foreach($secret in @($pw,(Join-Path $copy 'server.env'))){if(Test-Path -LiteralPath $secret){Remove-Item -LiteralPath $secret}}

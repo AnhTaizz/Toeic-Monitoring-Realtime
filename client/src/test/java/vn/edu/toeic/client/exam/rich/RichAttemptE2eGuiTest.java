@@ -98,7 +98,7 @@ class RichAttemptE2eGuiTest {
             clickWhenEnabled(stage[0], "Thử loa");
             clickWhenEnabled(stage[0], "Tôi nghe được");
             clickWhenEnabled(stage[0], "Xác nhận sẵn sàng");
-            awaitText(stage[0], "✓  Server: đã xác nhận Audio + Ảnh READY", 40);
+            awaitText(stage[0], "✓  Sẵn sàng — đang chờ giám thị bắt đầu", 40);
             screenshot(stage[0], "e2e-lobby-ready");
 
             JsonObject readiness = call("GET", "/api/v2/sessions/" + sessionId + "/readiness", null, proctor, 200);
@@ -120,7 +120,7 @@ class RichAttemptE2eGuiTest {
             // Listening tự chuyển màn theo đoạn đang phát; chờ player duy nhất báo hoàn tất hoặc khóa (không phát lại).
             await(() -> fx(() -> {
                 String text = ((Labeled) stage[0].getScene().getRoot().lookup("#room-listening-status")).getText();
-                return text.startsWith("Server đã xác nhận phát xong") || text.contains("khóa");
+                return text.startsWith("Phần nghe đã kết thúc") || text.startsWith("Phần nghe đã dừng");
             }), 150);
             log.add("listening ended: " + fx(() -> ((Labeled) stage[0].getScene().getRoot().lookup("#room-listening-status")).getText()));
             screenshot(stage[0], "e2e-exam-listening-done");

@@ -95,7 +95,7 @@ class RichExamViewGuiTest {
             lobby.preparation(new AttemptPreparation(1, "MOCK-attempt", "MOCK-session", "MOCK-exam", "MOCK title",
                     "PROCTORED_V2", "SCHEDULED", "ACTIVE", 120, null, null, true, null, null));
             Label identity = (Label) lobby.lookup("#room-preparation-identity");
-            assertThat(identity.getText()).contains("Mã ca: MOCK-session", "Mã lượt thi: MOCK-attempt");
+            assertThat(identity.getText()).contains("Mã ca: MOCK-session").doesNotContain("MOCK-attempt");
             lobby.close();
             return null;
         });

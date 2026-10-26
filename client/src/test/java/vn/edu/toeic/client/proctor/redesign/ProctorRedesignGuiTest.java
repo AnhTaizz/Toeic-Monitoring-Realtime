@@ -140,7 +140,7 @@ class ProctorRedesignGuiTest {
         var drawer = fx(view::alertDrawer);
         assertThat((Object) fx(view::openDrawer)).isSameAs(drawer);
         assertThat(fx(() -> drawer.alert().id())).isEqualTo("MOCK-EVT-002");
-        assertThat(fx(() -> text(drawer, "#alert-drawer-title"))).isEqualTo("Quan sát tiến trình");
+        assertThat(fx(() -> text(drawer, "#alert-drawer-title"))).isEqualTo("Ứng dụng đang mở");
         assertThat(fx(() -> text(drawer, "#field-tien-trinh"))).isEqualTo("msedge.exe");
         assertThat(fx(() -> text(drawer, "#field-kenh-nhan"))).startsWith("Đến muộn");
         assertThat(fx(drawer::noteEditable)).isFalse();

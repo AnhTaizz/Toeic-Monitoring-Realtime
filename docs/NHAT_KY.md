@@ -959,8 +959,7 @@ Source05cc694 clean verify1127PASS/6SKIP/0FAIL/0ERROR, PG18.1/HTTP thật, đề
 ## 2026-10-20 · Release Integration Engineer · Hoàn tất nghiệm thu chuỗi V2 & tích hợp main
 
 - Worktree riêng \E:\Project\toeic-v2-release-integration\, branch elease/v2-main-integration-20261020\ (HEAD aa830b\).
-- Hợp nhất hoàn chỉnh nhánh QA Windows \qa/windows-v2-mon07-20261020\ (commit 8006f\) với \origin/main\ mới nhất (bbeaf2\ và sync 
-9954b\ PR #81).
+- Hợp nhất hoàn chỉnh nhánh QA Windows \qa/windows-v2-mon07-20261020\ (commit 8006f\) với \origin/main\ mới nhất (bbeaf2\ và sync 9954b\ PR #81).
 - Flyway V1–V15 áp dụng tuần tự không lỗi, 0 out-of-order, 0 checksum mismatch trên PostgreSQL 18.6 độc lập (cổng 55434).
 - Maven build & test: \mvn test\ BUILD SUCCESS 1264 tests (0 failures, 0 errors).
 - PostgreSQL 18.6 Integration: 159/159 tests PASS 100% (gồm 43/43 Flyway migration scenarios, 28/28 V2 rich/image/session, 70/70 runtime/audio/history bounds, 18/18 MON-07 signal pipeline & disabled check).
@@ -1107,12 +1106,6 @@ Theo ủy quyền người dùng: thêm -Desktop vào entrypoint demo hiện có
 - Case thật kiểm catalog/create/READY/START, retry không đổi deadline, production client model đủ 7 Part/200 câu, tải và hash đủ 65 media, DTO không lộ key/source, autosave, takeover làm Listening `INTERRUPTED`, stale writer bị từ chối, submit và server score `200/200`.
 - Dựng app-image mới và chạy smoke Windows trong đường dẫn Unicode: bundled Java 21.0.12.1, JavaFX Media lifecycle PASS; API/WS riêng của smoke này là MOCK. Human hearing, MSI, clean-machine, LAN và reviewer B cá nhân NOT RUN/không được giả mạo. Chi tiết: [EX-08 closeout](plan-v2/EX08_STUDY4_ACCEPTANCE_20261023.md).
 
-## 25/10/2026 — Server gộp cảnh báo process cho UI
-
-- Nguyên nhân: mỗi PID con của Chrome có `eventId` riêng nên chống retry theo `(attemptId,eventId)` không ngăn nhiều dòng cùng `chrome.exe`.
-- Sửa `MonitoringEventService`: giữ toàn bộ raw row và ACK như cũ, nhưng chỉ đánh dấu event đầu trong một đợt cùng tên process (case-insensitive, khoảng cách liên tiếp tối đa 30 giây) là `publishable`; khóa row attempt bằng `FOR UPDATE` để quyết định ổn định khi nhiều socket gửi đồng thời.
-- REST `/api/v1/monitoring/attempts/{attemptId}/events` dùng window function PostgreSQL để trả đúng cùng projection; sau hơn 30 giây yên lặng, process xuất hiện lại được coi là thay đổi mới. Không migration, không đổi DTO/wire.
-- Thêm regression PostgreSQL cho nhiều PID Chrome cùng đợt, Zalo riêng, Chrome xuất hiện lại sau khoảng yên lặng và cờ push realtime. Server compile PASS. Regression đã PASS một lượt trước khi bổ sung case push; lượt cuối chưa chạy vì Docker daemon local không phản hồi sau khi dọn ổ C. Full suite trước đó bị lỗi môi trường Mockito attach/CIM Unicode, không ghi PASS giả.
 ## 24/10/2026 — Codex: test phát hiện USB vật lý theo yêu cầu người dùng
 
 - Không dùng codex-with-chatgpt theo opt-out, không sửa code. Đọc runbook/contract/ghi chú C; đối chiếu source/resource, không thấy baseline che USB. App candidate production chưa gắn nguồn USB.
@@ -1220,3 +1213,47 @@ Reviewer chấp nhận kiến trúc/phạm vi tại `5a93b6d`, yêu cầu sửa 
 - Kết quả trên `5173462`: full `-AllGui` 1797 PASS/0 FAIL/0 ERROR/23 SKIP + windows-observer 22; runner USB mọi chế độ PASS; EX-08 1 FAIL tạm thời (409 import media, chưa rõ nguyên nhân) rồi 2/2 PASS; portable Client 9/9, 8/8, Server 15/15, nâng cấp V18 + STUDY4 19/19. Dưới tải CPU nhân tạo ba ca Integrated khác lỗi ở cả code cũ lẫn mới (harness `fx` 8 s); ghi là hạn chế, không nâng timeout.
 - Lỗi gặp khi chạy: máy thiếu Windows SDK ở chỗ mặc định → dùng `mt.exe` 10.0.26100.0 có chữ ký Microsoft trong backup; script lặp của agent lỗi stderr/biến, đã sửa, không ảnh hưởng kết quả.
 - Artifact `toeic-monitor-portable-5173462.zip` (`cd2b6e2b…`) đặt ở `E:\Project\TOEIC-Release\`, bản `5a1af3e` chuyển vào `superseded\`. Push PR #108, không merge. LAN/nghe thật/USB vật lý trên commit tích hợp vẫn NOT TESTED. [Báo cáo](release/RELEASE-REPORT.md).
+## 25/10/2026 — Server gộp cảnh báo process cho UI
+
+- Nguyên nhân: mỗi PID con của Chrome có `eventId` riêng nên chống retry theo `(attemptId,eventId)` không ngăn nhiều dòng cùng `chrome.exe`.
+- Sửa `MonitoringEventService`: giữ toàn bộ raw row và ACK như cũ, nhưng chỉ đánh dấu event đầu trong một đợt cùng tên process (case-insensitive, khoảng cách liên tiếp tối đa 30 giây) là `publishable`; khóa row attempt bằng `FOR UPDATE` để quyết định ổn định khi nhiều socket gửi đồng thời.
+- REST `/api/v1/monitoring/attempts/{attemptId}/events` dùng window function PostgreSQL để trả đúng cùng projection; sau hơn 30 giây yên lặng, process xuất hiện lại được coi là thay đổi mới. Không migration, không đổi DTO/wire.
+- Thêm regression PostgreSQL cho nhiều PID Chrome cùng đợt, Zalo riêng, Chrome xuất hiện lại sau khoảng yên lặng và cờ push realtime. Server compile PASS. Regression đã PASS một lượt trước khi bổ sung case push; lượt cuối chưa chạy vì Docker daemon local không phản hồi sau khi dọn ổ C. Full suite trước đó bị lỗi môi trường Mockito attach/CIM Unicode, không ghi PASS giả.
+
+## 25/10/2026 — Chuẩn bị tích hợp gộp cảnh báo process của Djicz trên nền PR #108
+
+Owner quyết định chức năng gộp cảnh báo phải có trong bản phát hành cuối, nhưng qua PR riêng sau khi #108 được merge. Chuẩn bị trong worktree riêng, nhánh local `prep/dedup-on-108-20261025` từ `77963cc`, không push.
+
+- Cherry-pick giữ tác giả Djicz: `eae9c0a` (code), `f47f3d5` (tài liệu; conflict chỉ ở NHAT_KY/TIEN_DO, giữ cả hai phía).
+- Review: push và REST cùng quy tắc "dòng cùng tên trước đó cách hơn 30 s"; `FOR UPDATE` + `received_at` = `clock_timestamp()` sau khóa bảo đảm hai socket không cùng push PID đầu; ACK/`eventId` không đổi; không đổi DTO/migration/WS schema (protocol JAR giống từng entry).
+- Lỗi tìm thấy, sửa ở `e75f817`: giới hạn 5000 bị chuyển sang số mục sau gộp và truy vấn quét toàn bộ raw; 5001 dòng `chrome.exe` trả 200 thay vì 409. Giữ giới hạn/409 trên dòng raw, chỉ đọc tối đa 5001 dòng. `ProcessAlertDedupPostgresTest` 6 ca (WS thật: 12 PID → 1 cảnh báo = REST, raw đủ; retry/conflict; 6 socket đồng thời → đúng PID commit đầu; Chrome/Zalo; yên lặng > 30 s; hai attempt; giới hạn raw — FAIL trên code Djicz, PASS sau sửa).
+- `applicationControlsStopRestartLogoutAndSwitchAccount` (C) FAIL 3/3 do gộp: bật lại giám sát trong 30 s ghi thêm dòng raw nhưng REST hiện 1. Owner chọn gộp chung qua các run; test kiểm raw = 2 và REST theo khoảng cách thật (`7235a87`). Integrated sau sửa 3/3 PASS.
+- Smoke nâng cấp lỗi 401 một lần ở lần đăng nhập đầu của Server cũ: web server nhận request trước khi ApplicationRunner tạo tài khoản xong (nguyên nhân khả dĩ nhất, chưa chứng minh). `c946370`: chỉ đăng nhập dương tính chờ tối đa 60 s; thêm ca `launcher-forces-demo-accounts-off`; giữ log Server cũ khi lỗi.
+- Kết quả: full `-AllGui` trên `e75f817` 1805 PASS/0 FAIL/23 SKIP; runner USB mọi chế độ PASS; bundle thử `7235a87` Client 9/9, 8/8, Server mới 15/15 (16/16 trên `c946370`), nâng cấp V18 + STUDY4 20/20 hai lần trên `c946370`. Client JAR giống #108 từng entry.
+- EX-08 STUDY4 có 2 FAIL/9 lượt (409 import media) trên cả `5173462` lẫn bản dedup; log chẩn đoán tạm + theo dõi thuộc tính file 4 lượt đều PASS, không thấy file đổi. Chưa rõ nguyên nhân; patch chẩn đoán giữ ngoài repo.
+
+### Ghi chú làm dở
+
+Chờ owner merge #108. Sau đó: tạo nhánh từ `main`, cherry-pick `eae9c0a`, `f47f3d5`, `e75f817`, `7235a87`, `c946370` (so tree hash với nhánh chuẩn bị), chạy full `-AllGui` + runner Integrated trên commit cuối, mở PR riêng (owner C/Djicz review đổi contract gộp và test). Chỉ build ZIP phát hành chính thức từ `main` sau khi cả hai PR được merge; ZIP `5173462` không phải bản final.
+
+## 26/10/2026 — UI/UX: màn thí sinh, màn "Phòng thi" của giám thị, mật khẩu do Admin nhập
+
+Nhánh local `feat/ui-ux-simplify-20261026` (trên nhánh gộp cảnh báo PR #109; chưa push, chưa PR). Chỉ client JavaFX, trừ hai thay đổi Server ghi dưới đây.
+
+- Thí sinh: màn PIN một cột ở giữa; phòng chờ đặt 3 bước âm thanh cạnh danh sách chuẩn bị, trạng thái và nút "Rời phòng chờ" trong thẻ. Bỏ dòng thông báo giám sát trên màn PIN theo quyết định của đại diện nhóm (giám thị thông báo trực tiếp, xem QUYET_DINH).
+- Giám thị: `ProctorRoomView` thay 7 trang. Dữ liệu mới thuần (`RoomProgressReader` đọc tiến độ theo trang đến khi đủ lượt của phòng; `ListeningStatusReader` tối đa 2 request song song + `LISTENING_STATUS`; `ProctorRoomModel` lọc mọi nguồn theo attempt của phòng). Panel thí sinh có heartbeat, phần nghe, USB/focus/cửa sổ, ứng dụng đang mở, cảnh báo, tổng hợp cảnh báo (nếu Server bật) và lịch sử đầy đủ. PIN tự ẩn 2 phút, clipboard xoá sau 30 s nếu chưa đổi, START thử lại cùng request. Trang cũ chỉ mở qua "Công cụ cũ" khi `toeic.ui.legacy=true` (test giám sát của C và luồng cũ chạy nguyên).
+- Sau buổi chạy tay: mọi màn giữ đúng cỡ cửa sổ; giờ hiển thị theo `Asia/Ho_Chi_Minh`; câu cảnh báo viết lại ("Rời cửa sổ bài thi", "Quay lại bài thi sau 1,4 giây", "Cắm USB"); "Lịch sử đầy đủ" mở được và giữ vị trí cuộn.
+- Server (cần A review): danh sách `pin-rooms`/`rooms` bỏ phòng đã bắt đầu mà không còn lượt `ACTIVE` chưa quá hạn; Admin có thể gửi `password` khi tạo tài khoản và đổi mật khẩu Candidate (chỉ lưu hash, không trả lại; không gửi thì giữ mật khẩu ngẫu nhiên một lần như cũ).
+- Kết quả đã chạy: client đầy đủ 1078 test, lỗi còn lại đều chờ quá giờ khi máy bận và PASS khi chạy riêng (`CandidateHomeGuiTest`, `LoginSceneGuiTest`, `LoginApiClientTest`, `ExamHistoryReadTest`, `ExamScopeRefreshGuiTest`, `CandidateSignalsPendingLimitTest` đã biết). PostgreSQL: `AdminAccountPostgresTest` + `AccountPinPostgresTest` 40/40 PASS; `CandidateManagementGuiPostgresTest` 2/2 PASS. `AccountPinFlowPostgresGuiTest` 3/3 PASS trên `6d48adb`; trên `4b7b4db` FAIL 3/3 và `RoomFlowPostgresGuiTest` FAIL 1/2 ở các bước chờ JavaFX khác nhau khi máy còn 2,3 GB RAM trống (tác vụ MiniRAG, Edge, Zalo chạy song song) — chưa có kết luận, cần chạy lại khi máy rảnh.
+
+### Ghi chú làm dở
+
+Chạy lại `AccountPinFlowPostgresGuiTest` + `RoomFlowPostgresGuiTest` khi máy rảnh. Chờ người dùng duyệt ảnh giám thị trong `evidence/ui-ux-20261026/proctor/`. Còn: chặng Admin/đăng nhập (rút chú thích), tài liệu DEMO-RUNBOOK/PORTABLE-READ-ME/README, full regression + runner USB + đóng gói, rồi gộp một PR duy nhất cùng #109. Docker engine trên máy đã tự tắt; dữ liệu DB dev còn trong volume.
+
+## 26/10/2026 — Chạy qua Internet bằng Cloudflare Tunnel
+
+- Khảo sát code: không có địa chỉ cố định trong Client; WebSocket đổi `https`→`wss`; Server không cần sửa (xem QUYET_DINH).
+- Thêm `scripts/start-cloudflare.ps1` (Start/Status/Stop) và `START-CLOUDFLARE-SERVER.bat`, `STATUS-CLOUDFLARE.bat`, `STOP-CLOUDFLARE-SERVER.bat`, `START-CLIENT-CLOUDFLARE.bat`, `START-CLIENT-LAN.bat`; `start-release.ps1` nhận `-ServerJar/-ClientJar`; bản portable có thêm `Start-Client-Internet.bat`. Hướng dẫn: [CLOUDFLARE-TUNNEL.md](deploy/CLOUDFLARE-TUNNEL.md).
+- Đã chạy thật trên máy Windows với DB dev: Start mở Server và chờ READY, dùng lại Server đang chạy, từ chối cổng bị chương trình khác giữ, báo thiếu `.env`/`cloudflared`/token/token sai; Status báo đúng "DNS chưa có bản ghi"; Stop chỉ dừng Server do script mở. Launcher Client (repo và bundle) PASS `-ValidateOnly` với `https://toeic.anhtaizz.id.vn`. `AuthenticatedWebSocketOpenerTest` + `ClientSettingsTest` 23/23 PASS.
+- Chưa chạy qua Internet: máy chưa cài `cloudflared`, chưa có token, hostname chưa có bản ghi DNS (hỏi 1.1.1.1; DNS nhà mạng trả IP giả 125.235.4.59 cho tên chưa tồn tại).
+- Cập nhật cùng ngày: người dùng cài `cloudflared` dạng Windows service và thêm Public Hostname (CNAME tới tunnel). `STATUS` OK; HTTPS `/api/v1/auth/me` 401 qua Cloudflare; bắt tay `wss://…/ws/v1/realtime` không token 401 như local. Luồng thi đầy đủ từ máy khác mạng chưa chạy.

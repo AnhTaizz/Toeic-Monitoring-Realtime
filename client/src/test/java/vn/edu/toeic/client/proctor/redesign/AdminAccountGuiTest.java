@@ -19,14 +19,15 @@ import vn.edu.toeic.protocol.auth.LoginResponse;
 @EnabledIfEnvironmentVariable(named="TOEIC_CANDIDATE_GUI",matches="true")
 class AdminAccountGuiTest {
     private HttpServer server; private Stage stage; private AdminAccountView view;
-    private final List<String> requests=new CopyOnWriteArrayList<>();
+    private final List<String> requests=new CopyOnWriteArrayList<>(), bodies=new CopyOnWriteArrayList<>();
     private final AtomicInteger postStatus=new AtomicInteger(409),getStatus=new AtomicInteger(200),expired=new AtomicInteger();
     private final AtomicBoolean dropped=new AtomicBoolean();
     @BeforeAll static void toolkit(){FxSupport.start();}
     @BeforeEach void open() throws Exception {
         server=HttpServer.create(new InetSocketAddress("127.0.0.1",0),0);
         server.createContext("/api/v2/admin/accounts",e->{
-            requests.add(e.getRequestMethod()+" "+e.getRequestURI());int code="GET".equals(e.getRequestMethod())?getStatus.get():postStatus.get();
+            requests.add(e.getRequestMethod()+" "+e.getRequestURI());
+            if(!"GET".equals(e.getRequestMethod()))bodies.add(new String(e.getRequestBody().readAllBytes(),StandardCharsets.UTF_8));int code="GET".equals(e.getRequestMethod())?getStatus.get():postStatus.get();
             if(dropped.get()){e.close();return;}
             String text=code==200?"{\"items\":[{\"userId\":10,\"username\":\"P-GUI\",\"displayName\":\"Nguyễn An\",\"role\":\"PROCTOR\",\"enabled\":true}],\"nextAfterUserId\":10}"
                 :"{\"error\":{\"message\":\"Mã đã tồn tại\"}}";
@@ -58,10 +59,24 @@ class AdminAccountGuiTest {
         form();fxRun(()->((Button)dialog("admin-create-save")).fire());
         assertThat(fx(()->((Label)dialog("admin-create-status")).getText())).contains("Nhập mã hợp lệ");
         fxRun(()->{((TextField)dialog("admin-create-code")).setText("DUPLICATE");((TextField)dialog("admin-create-name")).setText("Nguyễn An");
+            ((PasswordField)dialog("admin-create-password")).setText("MOCK-pass-123");((PasswordField)dialog("admin-create-password-confirm")).setText("MOCK-pass-123");
             ((Button)dialog("admin-create-save")).fire();});
         await("duplicate error",()->((Label)dialog("admin-create-status")).getText().contains("đã tồn tại"));
         assertThat(fx(()->((TextField)dialog("admin-create-name")).getText())).isEqualTo("Nguyễn An");
         assertThat(requests.stream().filter(x->x.startsWith("POST")).count()).isEqualTo(1);
+        assertThat(bodies.getLast()).contains("\"password\":\"MOCK-pass-123\"");
+    }
+    @Test void adminTypesThePasswordTwiceAndShortOrDifferentOnesAreNotSent() throws Exception {
+        form();
+        fxRun(()->{((TextField)dialog("admin-create-code")).setText("NEW-CAND");((TextField)dialog("admin-create-name")).setText("Nguyễn An");
+            ((PasswordField)dialog("admin-create-password")).setText("short");((PasswordField)dialog("admin-create-password-confirm")).setText("short");
+            ((Button)dialog("admin-create-save")).fire();});
+        assertThat(fx(()->((Label)dialog("admin-create-status")).getText())).contains("từ 8 đến 128 ký tự");
+        fxRun(()->{((PasswordField)dialog("admin-create-password")).setText("MOCK-pass-123");((PasswordField)dialog("admin-create-password-confirm")).setText("MOCK-pass-124");
+            ((Button)dialog("admin-create-save")).fire();});
+        assertThat(fx(()->((Label)dialog("admin-create-status")).getText())).contains("không khớp");
+        assertThat(requests.stream().filter(x->x.startsWith("POST"))).isEmpty();
+        assertThat(AdminAccountView.passwordProblem("MOCK-pass-123","MOCK-pass-123")).isNull();
     }
     @Test void networkFailureAndSessionExpiryDoNotBecomeSuccess() throws Exception {
         dropped.set(true);fxRun(()->((Button)view.lookup("#admin-find")).fire());

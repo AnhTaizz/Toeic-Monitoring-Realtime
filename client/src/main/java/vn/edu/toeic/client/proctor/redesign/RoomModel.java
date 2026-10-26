@@ -217,27 +217,27 @@ final class RoomModel {
             case "PREVIOUS_CONNECTION" -> "Đến muộn · kết nối cũ";
             default -> "Chưa rõ kênh nhận";
         };
-        String detail = event.metadataQuality().equals("COMPLETE") ? "" : " Metadata không đọc được đầy đủ (UNREADABLE).";
+        String detail = event.metadataQuality().equals("COMPLETE") ? "" : " Không đọc được đầy đủ thông tin ứng dụng.";
         return new Alert(event.eventId(), event.attemptId(), candidate, Kind.PROCESS, "PROCESS_OBSERVED",
-                "Quan sát tiến trình", "Quan sát thấy tiến trình " + event.processName() + " · "
-                        +vn.edu.toeic.client.proctor.timeline.ProcessRiskPresentation.risk(event.processName()).category()+"." + detail,
+                "Ứng dụng đang mở", "Quan sát thấy " + event.processName() + " đang chạy trên máy thí sinh ("
+                        +vn.edu.toeic.client.proctor.timeline.ProcessRiskPresentation.risk(event.processName()).category()+")." + detail,
                 "Quan sát tại client", event.observedAt(), event.receivedAt(), status,
                 late ? "amber" : event.deliveryStatus().equals("LIVE") ? "blue" : "gray", late, false, event);
     }
 
     static Alert alert(Interruption interruption, String candidate) {
         boolean open = interruption.recoveredAt() == null;
-        String description = "Server không nhận heartbeat từ client. Liên lạc cuối " + Ui.clock(interruption.lastSeenAt(), "—")
-                + (open ? "; chưa phục hồi." : "; phục hồi lúc " + Ui.clock(interruption.recoveredAt(), "—") + ".");
+        String description = "Máy thí sinh mất liên lạc với máy chủ sau " + Ui.clock(interruption.lastSeenAt(), "—")
+                + (open ? "; chưa kết nối lại." : "; đã kết nối lại lúc " + Ui.clock(interruption.recoveredAt(), "—") + ".");
         return new Alert(interruption.gapId(), interruption.attemptId(), candidate, Kind.INTERRUPTION, "HEARTBEAT_TIMEOUT",
                 "Mất kết nối", description, "Server phát hiện", null, interruption.timeoutDetectedAt(),
                 open ? "Đang gián đoạn" : "Đã phục hồi", open ? "red" : "green", false, open, interruption);
     }
 
     static Alert alert(Gap gap, String candidate) {
-        return new Alert(gap.gapId(), gap.attemptId(), candidate, Kind.GAP, "QUEUE_OVERFLOW", "Khoảng trống dữ liệu",
-                "Client báo đã bỏ " + gap.droppedCount() + " event do tràn hàng đợi ("
-                        + Ui.clock(gap.firstDroppedAt(), "—") + "–" + Ui.clock(gap.lastDroppedAt(), "—") + "). Dữ liệu trong khoảng này không đầy đủ.",
+        return new Alert(gap.gapId(), gap.attemptId(), candidate, Kind.GAP, "QUEUE_OVERFLOW", "Thiếu dữ liệu giám sát",
+                "Máy thí sinh bỏ qua " + gap.droppedCount() + " ghi nhận vì quá tải ("
+                        + Ui.clock(gap.firstDroppedAt(), "—") + "–" + Ui.clock(gap.lastDroppedAt(), "—") + "). Khoảng thời gian này có thể thiếu thông tin.",
                 "Client báo cáo", gap.firstDroppedAt(), gap.receivedAt(), "Thiếu dữ liệu", "amber", false, false, gap);
     }
 
@@ -280,23 +280,38 @@ final class RoomModel {
             if(alert.origin() instanceof vn.edu.toeic.client.dashboard.SignalHistory.Entry){entries.add(SignalFeedProjection.history(alert));continue;}
             switch (alert.kind()) {
                 case PROCESS -> entries.add(new HistoryEntry(alert.id(), alert.attemptId(), alert.candidate(), alert.serverTime(),
-                        alert.clientTime(), "Quan sát tiến trình", "Ghi nhận tiến trình", alert.description(), alert.id(),
+                        alert.clientTime(), "Quan sát tiến trình", "Ứng dụng đang mở", alert.description(), alert.id(),
                         alert.late() ? "Đến muộn" : "Quan sát", alert.late() ? "amber" : "blue", alert));
                 case INTERRUPTION -> {
                     Interruption origin = (Interruption) alert.origin();
                     entries.add(new HistoryEntry(alert.id(), alert.attemptId(), alert.candidate(), origin.timeoutDetectedAt(),
-                            null, "Kết nối client", "Mất kết nối", "Server không nhận heartbeat; liên lạc cuối "
+                            null, "Kết nối client", "Mất kết nối", "Máy thí sinh mất liên lạc với máy chủ sau "
                             + Ui.clock(origin.lastSeenAt(), "—") + ".", alert.id(), "Gián đoạn", "red", alert));
                     if (origin.recoveredAt() != null) entries.add(new HistoryEntry(alert.id() + "#recovered", alert.attemptId(),
-                            alert.candidate(), origin.recoveredAt(), null, "Kết nối client", "Phục hồi kết nối",
-                            "Heartbeat hợp lệ trở lại sau gián đoạn.", alert.id(), "Kỹ thuật", "blue", alert));
+                            alert.candidate(), origin.recoveredAt(), null, "Kết nối client", "Kết nối lại",
+                            "Máy thí sinh kết nối lại với máy chủ.", alert.id(), "Kỹ thuật", "blue", alert));
                 }
                 case GAP -> entries.add(new HistoryEntry(alert.id(), alert.attemptId(), alert.candidate(), alert.serverTime(),
-                        alert.clientTime(), "Hàng đợi client", "Khoảng trống dữ liệu", alert.description(), alert.id(),
+                        alert.clientTime(), "Hàng đợi client", "Thiếu dữ liệu giám sát", alert.description(), alert.id(),
                         "Thiếu dữ liệu", "amber", alert));
                 default -> throw new IllegalArgumentException("Typed observation missing its history origin");
             }
         }
+        entries.sort(Comparator.comparing(HistoryEntry::serverTime, Comparator.nullsLast(Comparator.reverseOrder()))
+                .thenComparing(HistoryEntry::key));
+        return List.copyOf(entries);
+    }
+
+    /** Full history of one attempt, newest first: alerts, typed signal history and background processes. */
+    static List<HistoryEntry> history(RoomFeed.AttemptHistory item, String candidate) {
+        List<Alert> alerts = alerts(new RoomFeed.Snapshot(List.of(item)), Map.of(item.attemptId(), candidate));
+        List<HistoryEntry> entries = new ArrayList<>(timeline(alerts.stream()
+                .filter(alert -> !(alert.origin() instanceof vn.edu.toeic.client.dashboard.SignalHistory.Entry)).toList()));
+        entries.addAll(SignalFeedProjection.project(item.signals(), candidate).history());
+        entries.addAll(timeline(item.events().stream()
+                .filter(event -> vn.edu.toeic.protocol.monitoring.ProcessCatalog.visibleInLists(event.processName())
+                        && !vn.edu.toeic.protocol.monitoring.ProcessCatalog.review(event.processName()))
+                .map(event -> alert(event, candidate)).toList()));
         entries.sort(Comparator.comparing(HistoryEntry::serverTime, Comparator.nullsLast(Comparator.reverseOrder()))
                 .thenComparing(HistoryEntry::key));
         return List.copyOf(entries);

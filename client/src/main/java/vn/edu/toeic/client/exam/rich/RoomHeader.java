@@ -24,7 +24,7 @@ final class RoomHeader extends HBox {
         setAlignment(Pos.CENTER_LEFT);
         Label logo = new Label("TOEIC Room");
         logo.getStyleClass().add("room-logo");
-        Label subtitle = new Label("Bài thi đang diễn ra");
+        Label subtitle = new Label("Phòng thi");
         subtitle.getStyleClass().add("room-muted");
         Label mark = new Label("TR");
         mark.getStyleClass().add("room-logo-mark");
@@ -59,7 +59,7 @@ final class RoomHeader extends HBox {
         switch (state) {
             case CONNECTED -> { connection.setText("● Đã kết nối"); connection.getStyleClass().add("room-connection-ok"); }
             case CONNECTING, RECONNECTING -> { connection.setText("● Đang kết nối lại…"); connection.getStyleClass().add("room-connection-wait"); }
-            default -> { connection.setText("● Mất kết nối (trạng thái chưa xác minh)"); connection.getStyleClass().add("room-connection-bad"); }
+            default -> { connection.setText("● Mất kết nối — đang thử lại"); connection.getStyleClass().add("room-connection-bad"); }
         }
     }
 

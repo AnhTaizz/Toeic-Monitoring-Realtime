@@ -25,6 +25,12 @@ final class ClientSettings {
         return environment!=null&&!environment.isBlank()?environment:userConfig.serverUrl();
     }
     static String notice(){return userConfig.notice();}
+    /** True when the launcher or a config file already chose the Server; the login screen then hides the address field. */
+    static boolean serverUrlConfigured(){
+        String property=System.getProperty("toeic.server.url"),environment=System.getenv("TOEIC_SERVER_URL");
+        return property!=null&&!property.isBlank()||environment!=null&&!environment.isBlank()
+                ||!DEFAULT_SERVER_URL.equals(userConfig.serverUrl())&&userConfig.notice().isEmpty();
+    }
     static Configuration readConfiguration(String property,String environment,Path file){
         if(property!=null&&!property.isBlank())return new Configuration(property,"");
         if(environment!=null&&!environment.isBlank())return new Configuration(environment,"");

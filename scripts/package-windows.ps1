@@ -6,7 +6,10 @@ param(
     [ValidatePattern('^\d{1,3}\.\d{1,3}\.\d{1,5}$')][string]$AppVersion = '0.3.5',
     [switch]$Offline,
     [switch]$AllowDirty,
-    [switch]$PreflightOnly
+    [switch]$PreflightOnly,
+    # Server the installed app opens by default, e.g. https://toeic.anhtaizz.id.vn (Cloudflare Tunnel).
+    # Without it the app uses TOEIC_SERVER_URL, %LOCALAPPDATA%\TOEIC Monitor\server-url.txt or 127.0.0.1.
+    [ValidatePattern('^(https?://[A-Za-z0-9.-]+(:\d{1,5})?)?$')][string]$ServerUrl = ''
 )
 $ErrorActionPreference = 'Stop'
 $previous = @{}
@@ -49,7 +52,11 @@ try {
     if ($Offline) { $arguments += '-o' }
     & mvn @arguments *> (Join-Path $run 'build.log')
     if ($LASTEXITCODE -ne 0) { throw "Maven build failed: $run/build.log" }
-    $image = & "$PSScriptRoot/package-t3b1.ps1" -JavaHome $JavaHome -ManifestTool $ManifestTool -AppVersion $AppVersion -PlainImage
+    # Same JVM options as start-release.ps1 for the Client: release monitoring (process, USB, focus/window) on, DELTA off.
+    $javaOptions = @('-Duser.timezone=UTC','-Dtoeic.realtime.delta-experimental=false',
+        '-Dtoeic.monitoring.signal-experiment-enabled=true','-Dtoeic.monitoring.usb-enabled=true')
+    if ($ServerUrl) { $javaOptions += ('-Dtoeic.server.url=' + $ServerUrl) }
+    $image = & "$PSScriptRoot/package-t3b1.ps1" -JavaHome $JavaHome -ManifestTool $ManifestTool -AppVersion $AppVersion -PlainImage -JavaOptions $javaOptions
     $jar = Join-Path $image 'app/client-0.1.0-SNAPSHOT-all.jar'
     $entries = & (Join-Path $JavaHome 'bin/jar.exe') tf $jar
     if ($LASTEXITCODE -ne 0 -or ($entries -match '(^|/)\.env$|^vn/edu/toeic/.*(Test.class|Smoke.*|InstalledClientAgent.*)$')) { throw 'Unexpected test/config content in production JAR.' }
@@ -58,6 +65,7 @@ try {
     }
     $metadata = [ordered]@{
         runtimeServerConfig='GUI override; JVM property > process TOEIC_SERVER_URL > bounded user server-url.txt > default; no credentials';
+        defaultServerUrl=$(if ($ServerUrl) { $ServerUrl } else { 'not set' }); javaOptions=$javaOptions
         application='ToeicMonitor'; version=$AppVersion; sourceCommit=$sha; dirty=$dirty
         builtUtc=[DateTime]::UtcNow.ToString('o'); monitoringDefault='FULL'
         java=(Select-String -InputObject $release -Pattern 'JAVA_VERSION="([^"]+)"').Matches.Groups[1].Value
@@ -72,7 +80,7 @@ try {
     & (Join-Path $JavaHome 'bin/jpackage.exe') --type msi --app-image $image --dest $run `
         --name ToeicMonitor --app-version $AppVersion --vendor 'TOEIC Monitor Team' `
         --description 'TOEIC desktop client (server and PostgreSQL installed separately)' `
-        --win-per-user-install --win-dir-chooser --win-menu --win-menu-group 'TOEIC Monitor' `
+        --win-per-user-install --win-dir-chooser --win-menu --win-menu-group 'TOEIC Monitor' --win-shortcut `
         --win-upgrade-uuid '617462c2-b3e4-4b50-9a52-63f1f4b3a535' *> (Join-Path $run 'jpackage.log')
     if ($LASTEXITCODE -ne 0) { throw "MSI packaging failed: $run/jpackage.log" }
     if ((& git rev-parse HEAD).Trim() -ne $sha -or (-not $dirty -and [bool](& git status --porcelain --untracked-files=normal))) {

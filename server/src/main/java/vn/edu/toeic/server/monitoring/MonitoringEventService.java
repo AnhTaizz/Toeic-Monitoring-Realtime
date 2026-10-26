@@ -68,6 +68,12 @@ public class MonitoringEventService {
     public List<TimelineItem> timeline(AuthenticatedUser user, String attemptId) {
         authorization.requireRole(user, Role.PROCTOR);
         lockAndAuthorize(user, attemptId, false);
+        // The 5000 limit and its 409 stay on raw PID rows, as before grouping: grouping never makes a
+        // longer raw history readable, and the projection below reads at most that many raw rows.
+        // The share lock above keeps writers out, so both statements see the same rows.
+        MonitoringHistoryLimit.requireComplete(jdbc.sql(
+                "SELECT id FROM monitoring_events WHERE attempt_id=:attempt ORDER BY received_at,id LIMIT " + MonitoringHistoryLimit.QUERY_LIMIT)
+                .param("attempt", attemptId).query(Long.class).list());
         // Keep every PID row as audit evidence, but project one UI item for consecutive observations
         // of the same executable. A quiet period starts a new visible change.
         List<TimelineItem> result = jdbc.sql("""
@@ -75,7 +81,8 @@ public class MonitoringEventService {
                     SELECT e.*,lag(received_at) OVER (
                         PARTITION BY lower(process_name) ORDER BY received_at,id
                     ) AS previous_received_at
-                    FROM monitoring_events e WHERE attempt_id=:attempt
+                    FROM (SELECT * FROM monitoring_events WHERE attempt_id=:attempt
+                          ORDER BY received_at,id LIMIT :raw_limit) e
                 ), grouped AS (
                     SELECT ordered.*,sum(CASE
                         WHEN previous_received_at IS NULL
@@ -93,6 +100,7 @@ public class MonitoringEventService {
                 ORDER BY received_at ASC,id ASC
                 """ + "LIMIT " + MonitoringHistoryLimit.QUERY_LIMIT)
                 .param("attempt", attemptId).param("burst_seconds", PROCESS_BURST_SECONDS)
+                .param("raw_limit", MonitoringHistoryLimit.MAX_ROWS)
                 .query((row, index) -> read(row, index).item()).list();
         return MonitoringHistoryLimit.requireComplete(result);
     }

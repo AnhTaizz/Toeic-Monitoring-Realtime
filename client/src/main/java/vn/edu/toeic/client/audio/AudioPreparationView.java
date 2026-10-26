@@ -50,6 +50,8 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
         attempts.setVisible(false); attempts.setManaged(false);
         playback.playGate(gate);
         playback.showQuestions(false);
+        // The exam screen's banner shows Listening state; the player keeps running without its own status block.
+        playback.setVisible(false); playback.setManaged(false);
     }
     private final List<Runnable> changeListeners = new ArrayList<>();
     /** Gọi trên JavaFX thread mỗi khi trạng thái audio hoặc Listening đổi. */
@@ -77,12 +79,24 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
         setSpacing(8);
         attempts.getItems().setAll(scope.stream().sorted().toList()); attempts.getSelectionModel().selectFirst();
         status.setWrapText(true); connection.setWrapText(true); progress.setMaxWidth(Double.MAX_VALUE);
+        progress.managedProperty().bind(progress.visibleProperty());
+        connection.managedProperty().bind(connection.textProperty().isNotEmpty());
         AudioFiles audioFiles=new AudioFiles(cache.resolve("files"));
         preparation = new AudioPreparation(api, audioFiles, cache.resolve("speaker"), ignored -> queueRender());
         playback=new ListeningPlaybackPane(listeningApi,audioFiles,new ListeningPlaybackJournal(cache.resolve("playback-started")),preparation,scope,realtime);
         playback.onStateChanged(this::queueRender);
-        getChildren().addAll(new Label("Chuẩn bị Listening"), attempts, prepare, progress,
-                new HBox(8, test, heard), ready, connection, status,playback);
+        Label title = new Label("Chuẩn bị phần nghe");
+        title.getStyleClass().add("room-card-title");
+        Label rule = new Label("Phần nghe chỉ phát một lần, không tua, không phát lại.");
+        rule.getStyleClass().add("room-muted"); rule.setWrapText(true);
+        for (Button button : List.of(prepare, test, heard, ready)) button.setMaxWidth(Double.MAX_VALUE);
+        prepare.getStyleClass().add("room-button-secondary"); test.getStyleClass().add("room-button-secondary");
+        heard.getStyleClass().add("room-button-secondary"); ready.getStyleClass().add("room-button-primary");
+        HBox speaker = new HBox(8, test, heard);
+        HBox.setHgrow(test, Priority.ALWAYS); HBox.setHgrow(heard, Priority.ALWAYS);
+        status.getStyleClass().add("room-instruction"); connection.getStyleClass().add("room-warning");
+        getChildren().addAll(title, rule, attempts, step("1", "Tải âm thanh"), prepare, progress,
+                step("2", "Thử loa"), speaker, step("3", "Xác nhận sẵn sàng"), ready, connection, status, playback);
         attempts.setOnAction(event -> { disposePlayer(); preparation.selectionChanged(); render(); });
         prepare.setOnAction(event -> { disposePlayer(); preparation.prepare(attempts.getValue(), sharedWriter); });
         test.setOnAction(event -> playSample());
@@ -121,9 +135,32 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
                 AudioPreparation.Phase.SPEAKER_CONFIRMED).contains(phase));
         heard.setDisable(!connected || phase != AudioPreparation.Phase.AWAITING_CONFIRMATION);
         ready.setDisable(!connected || phase != AudioPreparation.Phase.SPEAKER_CONFIRMED);
-        progress.setProgress(state.progress()); status.setText(state.message());
-        connection.setText(connected ? "" : "Đang chờ kết nối thời gian thực. Các thao tác audio cần mạng đang khóa.");
+        progress.setProgress(state.progress()); status.setText(audioText(state));
+        progress.setVisible(phase == AudioPreparation.Phase.PREPARING); // an empty or full bar says nothing
+        connection.setText(connected ? "" : "Mất kết nối. Đang thử kết nối lại; các bước chuẩn bị tạm khóa.");
         for (Runnable listener : List.copyOf(changeListeners)) listener.run();
+    }
+    /** Candidate wording for each preparation phase; the engine message stays technical for logs and tests. */
+    public static String audioText(AudioPreparation.Snapshot state) {
+        return switch (state.phase()) {
+            case IDLE -> "Bấm \"Tải / chuẩn bị lại audio\" để bắt đầu.";
+            case PREPARING -> "Đang tải âm thanh…";
+            case FILES_READY -> "Đã tải xong. Bấm \"Thử loa\" để nghe âm mẫu.";
+            case TESTING -> "Đang phát âm mẫu…";
+            case AWAITING_CONFIRMATION -> "Nếu đã nghe rõ âm mẫu, bấm \"Tôi nghe được\". Chưa nghe được thì thử lại.";
+            case SPEAKER_CONFIRMED -> "Bấm \"Xác nhận sẵn sàng\".";
+            case REPORTING -> "Đang xác nhận sẵn sàng…";
+            case READY -> "✓ Đã sẵn sàng. Chờ giám thị bắt đầu.";
+            // The detail names the failure (missing file, checksum, speaker) for the proctor; it never carries secrets.
+            case ERROR -> "Chưa chuẩn bị xong âm thanh. Bấm \"Tải / chuẩn bị lại audio\" để thử lại; nếu vẫn lỗi, báo giám thị."
+                    + (state.message() == null || state.message().isBlank() ? "" : "\nChi tiết: " + state.message());
+            case CLOSED -> "";
+        };
+    }
+    private static Label step(String number, String text) {
+        Label label = new Label(number + "  " + text);
+        label.getStyleClass().add("room-step-title");
+        return label;
     }
     private void playSample() {
         disposePlayer(); long run = preparation.testSpeaker(); if (run < 0) return;

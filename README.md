@@ -18,6 +18,7 @@ Bản phát hành chính thức là một ZIP Windows portable kèm file SHA-256
 
 1. Máy Server: chép `server.env.example` thành `server.env`, điền DB, media root, khóa PIN và (lần đầu) tài khoản Admin bootstrap theo `READ-ME.txt`, bấm `Start-Server.bat`. Bản phát hành không tạo tài khoản demo; Admin tạo Giám thị và Thí sinh.
 2. Mỗi máy dùng: bấm `Start-Client.bat`, nhập `http://IP_MAY_SERVER:8080`.
+3. Qua Internet (máy Client ở mạng khác): máy chủ chạy Cloudflare Tunnel, Client bấm `Start-Client-Internet.bat` (`https://toeic.anhtaizz.id.vn`). Cài đặt, script và chẩn đoán: **[docs/deploy/CLOUDFLARE-TUNNEL.md](docs/deploy/CLOUDFLARE-TUNNEL.md)**.
 
 Bundle có sẵn Java 21; cần PostgreSQL 18 trên máy Server và media của đề đã import. Hướng dẫn đầy đủ, kể cả nạp đề STUDY4 và checklist LAN: **[docs/DEMO-RUNBOOK.md](docs/DEMO-RUNBOOK.md)**.
 

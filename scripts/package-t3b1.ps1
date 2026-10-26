@@ -1,6 +1,6 @@
 ﻿# Build a fresh app-image. The optional TEST launcher exercises B1 inside the bundled runtime.
 param([string]$JavaHome = $env:JAVA_HOME, [switch]$WithAudioSmoke, [string]$ManifestTool,
-    [string]$AppVersion = '0.1.0', [switch]$PlainImage)
+    [string]$AppVersion = '0.1.0', [switch]$PlainImage, [string[]]$JavaOptions = @())
 $ErrorActionPreference = 'Stop'
 Push-Location (Split-Path -Parent $PSScriptRoot)
 try {
@@ -16,6 +16,8 @@ try {
     $arguments = @('--type','app-image','--dest',$destination,'--name','ToeicMonitor','--input',$staging,
         '--main-jar',$jarName,'--main-class','vn.edu.toeic.client.Launcher','--app-version',$AppVersion,
         '--add-modules','java.net.http,java.desktop,java.logging,jdk.unsupported,jdk.crypto.ec,java.instrument')
+    # Written to the launcher's .cfg, so the installed app starts with them; never credentials.
+    foreach ($option in $JavaOptions) { $arguments += @('--java-options', $option) }
     if ($WithAudioSmoke) {
         $classes = Join-Path (Split-Path -Parent $staging) 'test-classes'
         $testPackage = Join-Path $classes 'vn/edu/toeic/client/audio'

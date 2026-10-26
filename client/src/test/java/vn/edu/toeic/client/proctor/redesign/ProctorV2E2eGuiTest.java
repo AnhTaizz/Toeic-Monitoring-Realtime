@@ -164,7 +164,7 @@ class ProctorV2E2eGuiTest {
             clickWhenEnabled(roomStage[0], "Thử loa");
             clickWhenEnabled(roomStage[0], "Tôi nghe được");
             clickWhenEnabled(roomStage[0], "Xác nhận sẵn sàng");
-            awaitText(roomStage[0], "✓  Server: đã xác nhận Audio + Ảnh READY", 45);
+            awaitText(roomStage[0], "✓  Sẵn sàng — đang chờ giám thị bắt đầu", 45);
             screenshot(roomStage[0], "c1-lobby-ready");
 
             // ---- Proctor sees READY (polling) and STARTs through the button + real confirmation dialog
@@ -197,7 +197,7 @@ class ProctorV2E2eGuiTest {
             screenshot(roomStage[0], "c2-exam-part1");
             await("listening finished or locked", () -> FxSupport.fx(() -> {
                 String text = ((Labeled) roomStage[0].getScene().getRoot().lookup("#room-listening-status")).getText();
-                return text.startsWith("Server đã xác nhận phát xong") || text.contains("khóa");
+                return text.startsWith("Phần nghe đã kết thúc") || text.startsWith("Phần nghe đã dừng");
             }), 150);
             log.add("listening: " + FxSupport.fx(() -> ((Labeled) roomStage[0].getScene().getRoot().lookup("#room-listening-status")).getText()));
             pickQuestion(roomStage[0], 101);

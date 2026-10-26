@@ -11,8 +11,9 @@ import javafx.scene.layout.*;
 
 /** Candidate portal presentation. Session data and entry actions still come from the server adapters. */
 final class CandidateHomePane extends BorderPane {
+    /** body is the role-specific content: the legacy tab pane, or the centred PIN card of the ACCOUNT_PIN entry. */
     CandidateHomePane(String displayName, String username, Label connection, Label availability,
-                      TabPane tabs, Button logout) {
+                      javafx.scene.Node body, Button logout) {
         getStyleClass().add("candidate-home");
         getStylesheets().add(Objects.requireNonNull(getClass().getResource("/login/home.css")).toExternalForm());
         Label brand = text("TOEIC Room", "home-brand");
@@ -50,20 +51,25 @@ final class CandidateHomePane extends BorderPane {
 
         availability.getStyleClass().add("home-availability");
         availability.setWrapText(true);
-        Label instruction = text("1  Chọn đúng ca thi     →     2  Kiểm tra âm thanh và ảnh     →     3  Chờ giám thị START", "home-instruction");
-        tabs.getStyleClass().add("home-tabs");
-        VBox content = new VBox(12, availability, instruction, tabs);
-        if (Boolean.getBoolean("toeic.monitoring.signal-experiment-enabled")
-                && Boolean.getBoolean("toeic.monitoring.usb-enabled")) {
-            Label usbNotice = text("Giám sát USB lưu trữ đang được bật cho bài thi này: "
-                    + "khi bắt đầu giám sát hoặc vào phòng thi, ứng dụng quan sát tiến trình, USB lưu trữ và "
-                    + "focus/trạng thái cửa sổ thí sinh để gửi cho giám thị. Không đọc nội dung hay số serial USB; "
-                    + "dừng khi dừng giám sát, rời phòng thi hoặc đăng xuất.", "home-availability");
-            usbNotice.setId("candidate-usb-notice");
-            content.getChildren().add(2, usbNotice);
+        availability.managedProperty().bind(availability.textProperty().isNotEmpty());
+        availability.visibleProperty().bind(availability.textProperty().isNotEmpty());
+        Label instruction = text("1  Vào phòng thi     →     2  Chuẩn bị âm thanh     →     3  Chờ giám thị bắt đầu", "home-instruction");
+        // Decision 26/10/2026 (team representative): the observation notice is given by the proctor in the room,
+        // not as text on this screen. See docs/QUYET_DINH.md.
+        VBox content;
+        if (body instanceof TabPane tabs) {
+            tabs.getStyleClass().add("home-tabs");
+            content = new VBox(12, availability, instruction, body);
+            VBox.setVgrow(body, Priority.ALWAYS);
+        } else {
+            // PIN entry: one column in the middle of the screen, the steps above the card.
+            content = new VBox(18, availability, instruction, body);
+            availability.setMaxWidth(520); availability.setPrefWidth(520);
+            availability.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+            content.setAlignment(javafx.geometry.Pos.CENTER);
+            content.setFillWidth(false);
         }
         content.setPadding(new Insets(24));
-        VBox.setVgrow(tabs, Priority.ALWAYS);
         content.setMinWidth(0);
         HBox.setHgrow(content, Priority.ALWAYS);
         setCenter(new HBox(hero, content));

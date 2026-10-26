@@ -99,14 +99,19 @@ final class LoginPane extends HBox {
         revealed.setOnAction(event -> submit.fire());
         username.setOnAction(event -> password.requestFocus());
 
-        Label role = label(room?"Chỉ thí sinh có trong danh sách phòng mới được tham gia.":"Quyền truy cập được xác định sau khi đăng nhập.", "login-role");
+        Label role = label(room?"Chỉ thí sinh có trong danh sách phòng mới được tham gia.":"", "login-role");
+        role.managedProperty().bind(role.textProperty().isNotEmpty());
+        role.visibleProperty().bind(role.textProperty().isNotEmpty());
         TitledPane connection = new TitledPane("Kết nối máy chủ", server);
         connection.setId("login-connection-settings");
         connection.setExpanded(false);
         connection.getStyleClass().add("login-connection");
-        Label help = label("Nếu có vấn đề đăng nhập, vui lòng liên hệ giám thị.", "login-help");
+        // The launcher already chose the Server: the field stays in the scene but is not shown to the user.
+        boolean configured = ClientSettings.serverUrlConfigured();
+        connection.setVisible(!configured);
+        connection.setManaged(!configured);
         VBox form = new VBox(10, fieldLabel(room?"Mã thí sinh":"Tên đăng nhập", username), userRow,
-                fieldLabel(room?"PIN riêng":"Mật khẩu", password), passwordRow, role, submit, status, connection, help);
+                fieldLabel(room?"PIN riêng":"Mật khẩu", password), passwordRow, role, submit, status, connection);
         if(room) {
             roomCode.setId("room-entry-code");roomCode.setPromptText("Ví dụ TOEIC-123456");
             roomCode.disableProperty().bind(submit.disabledProperty());

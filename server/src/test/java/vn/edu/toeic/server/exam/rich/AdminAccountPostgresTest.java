@@ -85,6 +85,32 @@ class AdminAccountPostgresTest {
         assertThat(created.toString()).doesNotContain(hash);
     }
 
+    /** The Admin types the password: only its hash is stored, nothing secret comes back, old logins end on change. */
+    @Test void adminChosenPasswordsAreStoredHashedNeverEchoedAndReplaceOldLogins(CapturedOutput output) throws Exception {
+        String chosen="MOCK-chosen-Pass1", changed="MOCK-changed-Pass2";
+        for(String role:List.of("PROCTOR","CANDIDATE")) {
+            String code="CHOSEN-"+role;
+            var created=json(check(post(ACCOUNTS,RichExamFixtures.JSON.toJson(Map.of("username",code,"displayName","MOCK","role",role,"password",chosen)),adminToken),201,null));
+            assertThat(created.has("initialPassword") && !created.get("initialPassword").isJsonNull()).as(role+" response has no secret").isFalse();
+            assertThat(app.getBean(PasswordEncoder.class).matches(chosen,text("SELECT password_hash FROM user_accounts WHERE username='"+code+"'"))).isTrue();
+            assertThat(loginWith(code,chosen)).isNotBlank();
+        }
+        for(String weak:List.of("short","        ","bad\u0007password"))
+            check(post(ACCOUNTS,RichExamFixtures.JSON.toJson(Map.of("username","WEAK-"+weak.length(),"displayName","MOCK","role","CANDIDATE","password",weak)),adminToken),400,"INVALID_INPUT");
+        assertThat(number("SELECT count(*) FROM user_accounts WHERE username LIKE 'WEAK-%'")).isZero();
+
+        String session=loginWith("CHOSEN-CANDIDATE",chosen);
+        long id=number("SELECT id FROM user_accounts WHERE username='CHOSEN-CANDIDATE'");
+        var reset=json(check(post(ACCOUNTS+"/"+id+"/password/reset",RichExamFixtures.JSON.toJson(Map.of("password",changed)),adminToken),200,null));
+        assertThat(reset.has("initialPassword") && !reset.get("initialPassword").isJsonNull()).isFalse();
+        check(get("/api/v1/auth/me",session),401,"UNAUTHORIZED");
+        check(post("/api/v1/auth/login",loginBody("CHOSEN-CANDIDATE",chosen),null),401,"UNAUTHORIZED");
+        assertThat(loginWith("CHOSEN-CANDIDATE",changed)).isNotBlank();
+        check(post(ACCOUNTS+"/"+id+"/password/reset",RichExamFixtures.JSON.toJson(Map.of("password","short")),adminToken),400,"INVALID_INPUT");
+        check(post(ACCOUNTS+"/"+id+"/password/reset",RichExamFixtures.JSON.toJson(Map.of("password",changed,"role","ADMIN")),adminToken),400,"INVALID_INPUT");
+        assertThat(output.getAll()).doesNotContain(chosen,changed);
+    }
+
     @Test void roleAndMassAssignmentCannotEscalateOrReplaceExistingCredentials() throws Exception {
         for(String role:List.of("ADMIN","admin","ROOT","", "PROCTOR "))
             check(post(ACCOUNTS,body("ESCALATE","MOCK",role),adminToken),400,"INVALID_INPUT");

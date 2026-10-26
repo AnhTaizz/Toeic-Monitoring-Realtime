@@ -308,3 +308,17 @@
 .proctor-redesign #session-controls-tabs .tab:selected .tab-label { -fx-text-fill: #f26b1d; -fx-font-weight: bold; }
 .proctor-redesign #session-controls-tabs .tab:selected .focus-indicator { -fx-border-color: transparent; }
 .proctor-redesign #session-controls-tabs > .tab-content-area { -fx-background-color: transparent; -fx-padding: 10 0 0 0; }
+
+/* "Phòng thi": the proctor's single screen (ProctorRoomView). */
+.proctor-redesign.proctor-room { -fx-background-color: #f4f6fa; }
+.proctor-redesign.proctor-room .room-list { -fx-background-color: #ffffff; -fx-border-color: transparent #e3e8ef transparent transparent; }
+.proctor-redesign.proctor-room .room-list .list-view { -fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 0; -fx-border-color: transparent; }
+.proctor-redesign.proctor-room .room-list .list-cell { -fx-background-color: transparent; -fx-padding: 10 12 10 12; -fx-background-radius: 8; -fx-text-fill: #13254a; }
+.proctor-redesign.proctor-room .room-list .list-cell:filled:hover { -fx-background-color: #f5f7fb; }
+.proctor-redesign.proctor-room .room-list .list-cell:filled:selected { -fx-background-color: #fff1e4; -fx-border-color: transparent transparent transparent #f26b1d; -fx-border-width: 0 0 0 3; }
+.proctor-redesign.proctor-room .room-list .list-cell .label { -fx-text-fill: #13254a; }
+.proctor-redesign.proctor-room .room-list .list-cell .muted { -fx-text-fill: #6b7a90; }
+.proctor-redesign.proctor-room .room-pin { -fx-font-size: 30px; -fx-font-weight: bold; -fx-alignment: center; -fx-pref-width: 180; -fx-max-width: 180; -fx-text-fill: #13254a; }
+.proctor-redesign.proctor-room .titled-pane > .title { -fx-background-color: #f4f6fa; -fx-background-radius: 6; }
+.proctor-redesign.proctor-room .titled-pane > .title > .text { -fx-fill: #13254a; }
+.proctor-redesign.proctor-room .titled-pane > .content { -fx-background-color: #ffffff; -fx-border-color: #e3e8ef; -fx-padding: 10; }

@@ -79,6 +79,9 @@ public class ExamRoomService {
                        (SELECT count(*) FROM exam_room_members m WHERE m.session_id=r.session_id AND m.joined_at IS NOT NULL) AS joined,r.created_at
                 FROM exam_rooms r JOIN exam_sessions s ON s.session_id=r.session_id
                 WHERE s.state IN ('SCHEDULED','IN_PROGRESS') AND r.room_code > :after AND r.admission_mode=:mode
+                -- Sessions are never closed by the server: a started room stays "open" only while one attempt can still be worked on.
+                AND (s.state='SCHEDULED' OR EXISTS (SELECT 1 FROM monitoring_attempts a WHERE a.session_id=r.session_id
+                     AND a.state='ACTIVE' AND (a.deadline_at IS NULL OR a.deadline_at > clock_timestamp())))
                 AND EXISTS (SELECT 1 FROM exam_session_proctors p WHERE p.session_id=r.session_id AND p.proctor_user_id=:u)
                 ORDER BY r.room_code LIMIT 21
                 """).param("after",after==null?"":after).param("mode",mode).param("u",proctor.userId()).query((r,n)->new RoomCatalogPage.Item(

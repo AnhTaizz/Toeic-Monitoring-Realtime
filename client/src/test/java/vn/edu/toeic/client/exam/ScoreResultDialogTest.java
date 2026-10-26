@@ -53,7 +53,7 @@ class ScoreResultDialogTest {
                     if (interrupted) {
                         assertThat(warning).isNotNull();
                         assertThat(warning.isVisible()).isTrue();
-                        assertThat(warning.getText()).contains("Phần Listening đã bị gián đoạn", "do server xác nhận");
+                        assertThat(warning.getText()).contains("Phần Listening đã bị gián đoạn", "do máy chủ xác nhận");
                         assertThat(warning.getHeight()).as("warning text must fit").isGreaterThan(45);
                     } else {
                         assertThat(warning).isNull();
@@ -61,8 +61,10 @@ class ScoreResultDialogTest {
                     List<String> labels = root.lookupAll(".label").stream().map(n -> ((Label) n).getText()).toList();
                     assertThat(labels).contains("7 / 10", "3 câu đúng", "4 câu đúng", "Ghi chú TEST từ server");
                     assertThat(labels).contains(state.equals("TIMED_OUT")
-                            ? "HẾT GIỜ — SERVER ĐÃ CHỐT BÀI" : "SERVER ĐÃ GHI NHẬN BÀI NỘP");
-                    assertThat(labels).contains(interrupted ? "🎧 LISTENING — GIÁN ĐOẠN" : "🎧 LISTENING");
+                            ? "Hết giờ — bài đã được chốt" : "Đã nộp bài");
+                    assertThat(labels).contains(interrupted ? "Listening (gián đoạn)" : "Listening");
+                    // Correct-answer counts only: the scaled score (735 here) is not shown or called "điểm".
+                    assertThat(labels).doesNotContain("735").noneMatch(text -> text.contains("Điểm") || text.contains("ĐIỂM"));
                     Path output = Files.createDirectories(Path.of("target", "f01-dialog"));
                     var pixels = root.snapshot(null, null);
                     var image = new BufferedImage((int) pixels.getWidth(), (int) pixels.getHeight(), BufferedImage.TYPE_INT_ARGB);

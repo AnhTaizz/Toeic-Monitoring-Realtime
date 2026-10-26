@@ -35,7 +35,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
@@ -134,26 +133,27 @@ class AccountPinFlowPostgresGuiTest {
             ((TextField)ps.getScene().lookup("#login-username")).setText(proctorCode);
             ((javafx.scene.control.PasswordField)ps.getScene().lookup("#login-password")).setText(proctorPassword);
             ((Button)ps.getScene().lookup("#login-submit")).fire();});
-        await("production Proctor login",()->FxSupport.fx(()->find(ps.getScene().getRoot(),ProctorRedesignView.class)!=null),30);
-        var pv=FxSupport.fx(()->find(ps.getScene().getRoot(),ProctorRedesignView.class));
+        await("production Proctor login",()->FxSupport.fx(()->find(ps.getScene().getRoot(),ProctorRoomView.class)!=null),30);
+        var pv=FxSupport.fx(()->find(ps.getScene().getRoot(),ProctorRoomView.class));
         ToeicClientApplication[] clients=new ToeicClientApplication[2];Stage[] stages=new Stage[2];
         try {
-            FxSupport.fxRun(()->{ps.setWidth(1366);ps.setHeight(1000);((ToggleButton)pv.lookup("#nav-session-controls")).fire();});
-            var pane=FxSupport.fx(()->{
-                var tabs=(javafx.scene.control.TabPane)pv.lookup("#session-controls-tabs");
-                assertThat(tabs.getSelectionModel().getSelectedItem().getId()).isEqualTo("tab-account-pin");
-                assertThat(tabs.getTabs()).as("release default hides old V2/V1 tabs").hasSize(1);
-                return (ProctorV2SessionPane)tabs.getSelectionModel().getSelectedItem().getContent();
-            });assertThat(pane.controller().accountPin()).isTrue();
-            await("exam catalog",()->pane.controller().snapshot().catalog().stream().anyMatch(e->e.examId().equals(EXAM)),20);
-            FxSupport.fxRun(()->pane.controller().select(EXAM));
-            await("Create enabled after exam selection",()->FxSupport.fx(()->!pane.lookup("#v2-create").isDisabled()),10);
-            FxSupport.fxRun(()->((Button)pane.lookup("#v2-create")).fire());
-            await("empty room created",()->pane.controller().snapshot().sharedPin()!=null,20);
-            String pin=pane.controller().snapshot().sharedPin(),session=pane.controller().snapshot().session();
+            assertThat(pv.controller().accountPin()).isTrue();
+            assertThat(FxSupport.fx(()->pv.lookup("#proctor-legacy-tools"))).as("release default hides the old tools").isNull();
+            FxSupport.fxRun(()->{ps.setWidth(1366);ps.setHeight(1000);((Button)pv.lookup("#proctor-room-create")).fire();});
+            await("exam catalog",()->pv.controller().snapshot().catalog().stream().anyMatch(e->e.examId().equals(EXAM)),20);
+            FxSupport.fxRun(()->pv.controller().select(EXAM));
+            await("Create enabled after exam selection",()->FxSupport.fx(()->{var b=pv.lookup("#proctor-room-create-confirm");return b!=null&&!b.isDisabled();}),10);
+            FxSupport.fxRun(()->((Button)pv.lookup("#proctor-room-create-confirm")).fire());
+            await("empty room created",()->FxSupport.fx(()->pv.lookup("#account-pin-value") instanceof TextField f&&!f.getText().isBlank()),20);
+            String pin=pv.controller().snapshot().sharedPin(),session=pv.controller().snapshot().session();
+            assertThat(FxSupport.fx(()->((TextField)pv.lookup("#account-pin-value")).getText())).isEqualTo(pin);
             assertThat(count("SELECT count(*) FROM monitoring_attempts WHERE session_id='"+session+"'")).isZero();
-            assertThat(FxSupport.fx(()->pane.lookup("#v2-start").isDisabled())).isTrue();
-            FxSupport.fxRun(()->pane.controller().forgetPins());
+            assertThat(FxSupport.fx(()->pv.lookup("#proctor-room-start").isDisabled())).isTrue();
+            assertThat(FxSupport.fx(()->((javafx.scene.control.Label)pv.lookup("#proctor-room-empty")).getText()))
+                    .isEqualTo("Chưa có thí sinh vào phòng. Đưa PIN cho thí sinh.");
+            uiScreens(ps,"p1-room-created-"+readyCount);
+            FxSupport.fxRun(()->((Button)pv.lookup("#account-pin-hide")).fire());
+            await("PIN hidden",()->FxSupport.fx(()->pv.lookup("#account-pin-value")==null&&pv.controller().snapshot().sharedPin()==null),10);
             List<LoginResponse> scoped=new ArrayList<>();List<String> attempts=new ArrayList<>();
             for(int i=0;i<2;i++) {
                 final int index=i;String code=i==0?candidateCode:candidateCode+"-2";String initial=candidatePasswords.get(code);
@@ -164,19 +164,24 @@ class AccountPinFlowPostgresGuiTest {
                     ((javafx.scene.control.PasswordField)stages[index].getScene().lookup("#login-password")).setText(initial);
                     ((Button)stages[index].getScene().lookup("#login-submit")).fire();});
                 await("account login opens PIN entry",()->FxSupport.fx(()->stages[index].getScene().lookup("#account-pin-input")!=null),30);
+                if(index==0)uiScreens(stages[index],"c1-pin");
                 FxSupport.fxRun(()->{((TextField)stages[index].getScene().lookup("#account-pin-input")).setText(pin);
                     ((Button)stages[index].getScene().lookup("#account-pin-enter")).fire();});
-                awaitText(stages[index],"Đã nhận quyền ghi",30);
+                awaitText(stages[index],"Bài thi đã sẵn sàng trên máy này",30);
+                if(index==0)uiScreens(stages[index],"c2-lobby-"+readyCount);
                 var joined=logins.joinAccountPin(base,account,pin).get(15,TimeUnit.SECONDS);
                 scoped.add(joined.login());attempts.add(joined.attemptId());
                 if(i<readyCount)prepare(stages[index]);
             }
             assertThat(count("SELECT count(*) FROM monitoring_attempts WHERE session_id='"+session+"'")).isEqualTo(2);
-            await("joined roster and START available",()->FxSupport.fx(()->pane.controller().snapshot().presence()!=null
-                && pane.controller().snapshot().presence().members().size()==2 && !pane.lookup("#v2-start").isDisabled()),30);
-            await("expected individual READY count",()->FxSupport.fx(()->pane.controller().snapshot().readiness()!=null
-                && !pane.controller().snapshot().readyStale()
-                && pane.controller().snapshot().readiness().attempts().stream().filter(a->a.audioReady()&&a.visualReady()).count()==readyCount),30);
+            await("joined roster and START available",()->FxSupport.fx(()->pv.controller().snapshot().presence()!=null
+                && pv.controller().snapshot().presence().members().size()==2 && !pv.lookup("#proctor-room-start").isDisabled()),30);
+            await("expected individual READY count",()->FxSupport.fx(()->pv.controller().snapshot().readiness()!=null
+                && !pv.controller().snapshot().readyStale()
+                && pv.controller().snapshot().readiness().attempts().stream().filter(a->a.audioReady()&&a.visualReady()).count()==readyCount),30);
+            await("room table shows both candidates with READY",()->FxSupport.fx(()->pv.model().rows().size()==2&&pv.model().ready()==readyCount),30);
+            assertThat(FxSupport.fx(()->pv.model().rows().stream().map(r->r.attemptId()).toList())).containsExactlyInAnyOrderElementsOf(attempts);
+            uiScreens(stages[0],"c3-lobby-waiting-start-"+readyCount);
             if(readyCount>0) {
                 String attempt=attempts.getFirst(),token=scoped.getFirst().token();
                 var before=call("GET","/api/v2/attempts/"+attempt+"/preparation",null,token,200).getAsJsonObject("visualManifest");
@@ -185,24 +190,29 @@ class AccountPinFlowPostgresGuiTest {
                 FxSupport.fxRun(()->{});
                 long connectedAt=count("SELECT (EXTRACT(EPOCH FROM clock_timestamp())*1000)::bigint");
                 await("READY lease renewed after transport reconnect",()->count("SELECT count(*) FROM attempt_visual_readiness WHERE attempt_id='"+attempt+"' AND EXTRACT(EPOCH FROM last_seen_at)*1000>"+connectedAt)==1,20);
-                awaitText(stages[0],"✓  Server: đã xác nhận Audio + Ảnh READY",30);
+                awaitText(stages[0],"✓  Sẵn sàng — đang chờ giám thị bắt đầu",30);
                 var after=call("GET","/api/v2/attempts/"+attempt+"/preparation",null,token,200).getAsJsonObject("visualManifest");
                 for(String key:List.of("writerEpoch","preparationEpoch","manifestId"))assertThat(after.get(key)).as("pre-START reconnect "+key).isEqualTo(before.get(key));
                 assertThat(count("SELECT count(*) FROM attempt_audio_readiness WHERE attempt_id='"+attempt+"'")).isEqualTo(1);
                 assertThat(count("SELECT count(*) FROM attempt_visual_readiness WHERE attempt_id='"+attempt+"'")).isEqualTo(1);
             }
             injectMonitoring(scoped.getFirst().token(),attempts.getFirst());
-            await("dynamic monitoring scope",()->FxSupport.fx(()->pv.room()!=null&&pv.room().alerts().stream().anyMatch(e->"MOCK-room-e2e-event".equals(e.id()))),25);
+            await("dynamic monitoring scope",()->FxSupport.fx(()->pv.alerts(attempts.getFirst()).stream().anyMatch(e->"MOCK-room-e2e-event".equals(e.id()))),25);
+            assertThat(FxSupport.fx(()->pv.alerts(attempts.get(1)).stream().noneMatch(e->"MOCK-room-e2e-event".equals(e.id())))).isTrue();
             assertStatus("cross-attempt denied",send("GET","/api/v2/attempts/"+attempts.get(1)+"/preparation",null,scoped.getFirst().token()),403);
-            FxSupport.fxRun(()->pane.setVvalue(1));screenshot(ps,"account-pin-ready-"+readyCount+"-no-pin");
-            Platform.runLater(()->((Button)pane.lookup("#v2-start")).fire());if(readyCount<2)pressDialog(ButtonType.OK,10);
-            await("START committed",()->pane.controller().snapshot().started()!=null,25);
+            uiScreens(ps,"p2-room-ready-"+readyCount);screenshot(ps,"account-pin-ready-"+readyCount+"-no-pin");
+            Platform.runLater(()->((Button)pv.lookup("#proctor-room-start")).fire());
+            if(ui()){awaitDialog();uiScreens(ps,"p3-start-confirm-"+readyCount);}
+            pressDialog(ButtonType.OK,10); // START is irreversible: the room view always asks
+            await("START committed",()->pv.controller().snapshot().started()!=null,25);
+            await("room shows the running exam",()->FxSupport.fx(()->pv.model().started()&&pv.lookup("#account-pin-value")==null),25);
             for(int i=readyCount;i<2;i++) {
                 awaitText(stages[i],"Phòng đã bắt đầu.",30);prepare(stages[i]);
             }
             for(int i=0;i<2;i++) {
                 Stage current=stages[i];String attempt=attempts.get(i),token=scoped.get(i).token();
                 await("personal exam access",()->FxSupport.fx(()->current.getScene().lookup("#room-pick-question")!=null),40);
+                uiScreens(current,"c4-exam-start-"+readyCount+"-"+(i<readyCount?"ready":"late"));
                 // USB in the ACCOUNT_PIN exam: the real CIM observer reaches this attempt's server history, and an
                 // unchanged device state over further scans adds no new USB event (no repeated alerts).
                 String usbRows="SELECT count(*) FROM monitoring_signal_events WHERE attempt_id='"+attempt+"' AND source='WINDOWS_USB_STORAGE'";
@@ -215,19 +225,35 @@ class AccountPinFlowPostgresGuiTest {
                 long scans=signals.usbStatus().scans();
                 await("three more real USB scans",()->signals.usbStatus().scans()>=scans+3,60);
                 assertThat(count(usbRows+" AND event_type<>'OBSERVER_STATUS'")).as("unchanged USB state is not re-reported").isEqualTo(usbEvents);
-                if(i<readyCount){awaitText(current,"Server đã xác nhận phát xong",150);pickQuestion(current,1);clickRadio(current,"option-q001-A");}
+                if(i<readyCount){awaitText(current,"Phần nghe đã kết thúc",150);pickQuestion(current,1);clickRadio(current,"option-q001-A");}
                 else assertThat(call("GET","/api/v1/attempts/"+attempt+"/listening/status",null,token,200).get("interruptionReason").getAsString()).isEqualTo("NOT_READY_AT_START");
                 pickQuestion(current,101);clickRadio(current,"option-q101-A");
                 await("Reading autosave",()->call("GET","/api/v1/attempts/"+attempt+"/status",null,token,200).getAsJsonObject("answers").has("q101"),25);
+                uiScreens(current,"c5-reading-"+readyCount+"-"+i);
+                if(ui()&&i==0) {
+                    // The OS close button raises WINDOW_CLOSE_REQUEST; the exam asks, and "Ở lại làm bài" keeps it open.
+                    Platform.runLater(()->current.fireEvent(new javafx.stage.WindowEvent(current,javafx.stage.WindowEvent.WINDOW_CLOSE_REQUEST)));
+                    awaitDialog();uiScreens(current,"c6-close-confirm-"+readyCount);pressDialog(ButtonType.NO,10);
+                    assertThat(FxSupport.fx(current::isShowing)).as("staying keeps the exam open").isTrue();
+                }
                 var before=call("GET","/api/v1/attempts/"+attempt+"/status",null,token,200);String deadline=before.get("deadlineAt").getAsString();
                 var field=ToeicClientApplication.class.getDeclaredField("realtimeClient");field.setAccessible(true);var rt=(RealtimeClient)field.get(clients[i]);
                 rt.disconnect();rt.connect(new RealtimeClient.Session(Set.of(attempt),null,null)).get(15,TimeUnit.SECONDS);
                 await("Submit available after transport reconnect",()->FxSupport.fx(()->{var b=(Button)current.getScene().lookup("#room-submit");return b!=null&&!b.isDisabled();}),25);
                 var after=call("GET","/api/v1/attempts/"+attempt+"/status",null,token,200);assertThat(after.get("deadlineAt").getAsString()).isEqualTo(deadline);assertThat(after.get("writerEpoch")).isEqualTo(before.get("writerEpoch"));
-                Platform.runLater(()->((Button)current.getScene().lookup("#room-submit")).fire());pressDialog(ButtonType.YES,10);
+                Platform.runLater(()->((Button)current.getScene().lookup("#room-submit")).fire());
+                if(ui()){awaitDialog();uiScreens(current,"c7-submit-confirm-"+readyCount+"-"+i);}
+                pressDialog(ButtonType.YES,10);
                 await("submitted",()->"SUBMITTED".equals(call("GET","/api/v1/attempts/"+attempt+"/status",null,token,200).get("state").getAsString()),25);
+                if(ui()){await("result dialog",()->FxSupport.fx(()->Window.getWindows().stream().anyMatch(w->w.isShowing()&&w instanceof Stage s&&"Kết Quả Bài Thi TOEIC".equals(s.getTitle()))),25);
+                    uiScreens(current,"c8-result-"+readyCount+"-"+i);}
                 screenshot(current,"account-pin-"+readyCount+"-candidate-"+i+"-submitted");closeDialogs();
             }
+            await("room reports every candidate finished with correct counts",()->FxSupport.fx(()->pv.model().allFinished()
+                    &&pv.model().rows().stream().allMatch(r->r.status().text().startsWith("Đã nộp · đúng "))),30);
+            if(readyCount<2)await("late candidate shown as Reading only",()->FxSupport.fx(()->pv.model().rows().stream()
+                    .filter(r->"Chỉ làm Reading".equals(r.listening().text())).count()==2-readyCount),30);
+            uiScreens(ps,"p4-room-finished-"+readyCount);
             log.add("PASS: production Admin/Proctor/two Candidate apps; ready="+readyCount+"/2; shared PIN; monitoring; actual media playback where authorized; late Reading; autosave/submit/reconnect. Physical hearing/LAN NOT TESTED.");
         } finally {
             closeDialogs();FxSupport.fxRun(()->{for(int i=0;i<2;i++){if(clients[i]!=null)clients[i].stop();if(stages[i]!=null)stages[i].close();}proctorApp.stop();ps.close();});
@@ -249,31 +275,27 @@ class AccountPinFlowPostgresGuiTest {
             await("Admin production navigation",()->FxSupport.fx(()->stage.getScene().lookup("#admin-accounts")!=null),30);
             await("Admin accounts loaded",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-find").isDisabled()),20);
             assertThat(FxSupport.fx(()->stage.getScene().lookup("#proctor-redesign"))).isNull();screenshot(stage,"admin-accounts");
-            adminForm(stage,proctorCode,"MOCK Giám thị Phase 4.5","PROCTOR");
-            await("one-time Proctor credential",()->FxSupport.fx(()->dialogNode("admin-initial-password")!=null),20);
-            String initial=FxSupport.fx(()->((TextField)dialogNode("admin-initial-password")).getText());
-            assertThat(initial).matches("[A-Za-z0-9_-]{43}");
-            // Do not photograph the one-time credential dialog.
-            FxSupport.fxRun(()->{for(Window w:new ArrayList<>(Window.getWindows()))if(w.getScene()!=null&&w.getScene().getRoot() instanceof DialogPane d&&d.lookupButton(ButtonType.CLOSE)!=null)((Button)d.lookupButton(ButtonType.CLOSE)).fire();});
-            await("Admin list refreshed",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-find").isDisabled()),20);
-            adminForm(stage,candidateCode,"MOCK Thí sinh Admin","CANDIDATE");
-            await("one-time Candidate credential",()->FxSupport.fx(()->dialogNode("admin-initial-password")!=null),20);
-            String candidatePassword=FxSupport.fx(()->((TextField)dialogNode("admin-initial-password")).getText());
+            String initial=chosenPassword(proctorCode);
+            adminForm(stage,proctorCode,"MOCK Giám thị Phase 4.5","PROCTOR",initial);
+            String candidatePassword=chosenPassword(candidateCode);
+            adminForm(stage,candidateCode,"MOCK Thí sinh Admin","CANDIDATE",candidatePassword);
             var candidateLogin=logins.login(base,candidateCode,candidatePassword).get(15,TimeUnit.SECONDS);
             assertThat(candidateLogin.user().role()).isEqualTo("CANDIDATE");
-            candidatePasswords.put(candidateCode,candidatePassword);pressDialog(ButtonType.CLOSE,10);
-            adminForm(stage,candidateCode+"-2","MOCK Candidate two","CANDIDATE");
-            await("second Candidate password",()->FxSupport.fx(()->dialogNode("admin-initial-password")!=null),20);
-            candidatePasswords.put(candidateCode+"-2",FxSupport.fx(()->((TextField)dialogNode("admin-initial-password")).getText()));pressDialog(ButtonType.CLOSE,10);
-            await("Candidate form saved",()->FxSupport.fx(()->dialogNode("admin-create-code")==null&&!stage.getScene().lookup("#admin-find").isDisabled()),20);
+            candidatePasswords.put(candidateCode,candidatePassword);
+            adminForm(stage,candidateCode+"-2","MOCK Candidate two","CANDIDATE",chosenPassword(candidateCode+"-2"));
+            candidatePasswords.put(candidateCode+"-2",chosenPassword(candidateCode+"-2"));
             long candidateId=count("SELECT id FROM user_accounts WHERE username='"+candidateCode+"'");
             assertThat(count("SELECT count(*) FROM monitoring_attempts WHERE candidate_user_id="+candidateId)).isZero();
             FxSupport.fxRun(()->{((TextField)stage.getScene().lookup("#admin-search")).setText(candidateCode);((Button)stage.getScene().lookup("#admin-find")).fire();});
             await("Candidate reset action",()->FxSupport.fx(()->stage.getScene().lookup("#admin-reset-"+candidateId)!=null&&!stage.getScene().lookup("#admin-find").isDisabled()),20);
-            FxSupport.fxRun(()->((Button)stage.getScene().lookup("#admin-reset-"+candidateId)).fire());pressDialog(ButtonType.OK,10);
-            await("reset one-time password",()->FxSupport.fx(()->dialogNode("admin-initial-password")!=null),20);
-            String reset=FxSupport.fx(()->((TextField)dialogNode("admin-initial-password")).getText());
-            assertThat(reset).isNotEqualTo(candidatePassword);candidatePasswords.put(candidateCode,reset);pressDialog(ButtonType.CLOSE,10);
+            FxSupport.fxRun(()->((Button)stage.getScene().lookup("#admin-reset-"+candidateId)).fire());
+            await("password change form",()->FxSupport.fx(()->dialogNode("admin-reset-password")!=null),10);
+            String reset=chosenPassword(candidateCode)+"-changed";
+            FxSupport.fxRun(()->{((javafx.scene.control.PasswordField)dialogNode("admin-reset-password")).setText(reset);
+                ((javafx.scene.control.PasswordField)dialogNode("admin-reset-password-confirm")).setText(reset);
+                ((Button)dialogNode("admin-reset-save")).fire();});
+            await("password changed",()->FxSupport.fx(()->dialogNode("admin-reset-password")==null),20);
+            candidatePasswords.put(candidateCode,reset);
             assertStatus("reset revokes previous Candidate token",send("GET","/api/v1/auth/me",null,candidateLogin.token()),401);
             assertStatus("reset rejects old Candidate password",send("POST","/api/v1/auth/login",new com.google.gson.Gson().toJson(Map.of("username",candidateCode,"password",candidatePassword,"requestId",UUID.randomUUID().toString())),null),401);
             assertThat(logins.login(base,candidateCode,reset).get(15,TimeUnit.SECONDS).user().role()).isEqualTo("CANDIDATE");
@@ -293,25 +315,25 @@ class AccountPinFlowPostgresGuiTest {
             assertStatus("old token stays revoked",send("GET","/api/v1/auth/me",null,credential.token()),401);
             assertThat(logins.login(base,proctorCode,initial).get(15,TimeUnit.SECONDS).user().role()).isEqualTo("PROCTOR");
             await("Admin enable refresh",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-find").isDisabled()),20);screenshot(stage,"admin-proctor-enabled");
-            log.add("PASS: production Admin login -> create Proctor/Candidate -> disable/enable idle Proctor -> real login revocation; one-time secret not captured");
+            log.add("PASS: production Admin login -> create Proctor/Candidate with Admin-typed passwords -> password change -> disable/enable idle Proctor -> real login revocation");
             return initial;
         } finally {closeDialogs();FxSupport.fxRun(()->{app.stop();stage.close();});}
     }
-    private void adminForm(Stage stage,String code,String name,String role) throws Exception {
+    /** The Admin types the password twice; the form closes once the server stored it. */
+    private void adminForm(Stage stage,String code,String name,String role,String chosen) throws Exception {
         await("Admin add enabled",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-add").isDisabled()),20);
         FxSupport.fxRun(()->((Button)stage.getScene().lookup("#admin-add")).fire());
         await("Admin form open",()->FxSupport.fx(()->dialogNode("admin-create-code")!=null),10);
         FxSupport.fxRun(()->{((TextField)dialogNode("admin-create-code")).setText(code);((TextField)dialogNode("admin-create-name")).setText(name);
             @SuppressWarnings("unchecked") var roles=(javafx.scene.control.ComboBox<String>)dialogNode("admin-create-role");roles.setValue(role);});
-        // No credential exists yet: capture the real form/dialog as well as the parent window.
+        // Captured before the password is typed; the fields are masked anyway.
         screenshotAll("admin-create-"+role.toLowerCase());
-        FxSupport.fxRun(()->((Button)dialogNode("admin-create-save")).fire());
+        FxSupport.fxRun(()->{((javafx.scene.control.PasswordField)dialogNode("admin-create-password")).setText(chosen);
+            ((javafx.scene.control.PasswordField)dialogNode("admin-create-password-confirm")).setText(chosen);
+            ((Button)dialogNode("admin-create-save")).fire();});
+        await("Admin form saved",()->FxSupport.fx(()->dialogNode("admin-create-code")==null&&!stage.getScene().lookup("#admin-find").isDisabled()),20);
     }
-    private ProctorV2SessionPane legacyPane(Parent root) throws Exception {
-        return FxSupport.fx(()->{var tabs=(javafx.scene.control.TabPane)root.lookup("#session-controls-tabs");
-            var tab=tabs.getTabs().stream().filter(t->"tab-v2".equals(t.getId())).findFirst().orElseThrow();
-            tabs.getSelectionModel().select(tab);return (ProctorV2SessionPane)tab.getContent();});
-    }
+    private static String chosenPassword(String code) { return "MOCK-pass-"+code; }
     private long count(String sql) throws Exception {try(var s=database.createStatement();var r=s.executeQuery(sql)){r.next();return r.getLong(1);}}
     private void injectMonitoring(String token,String attempt) throws Exception {
         String payload=new com.google.gson.Gson().toJson(Map.of("eventId","MOCK-room-e2e-event","collectorSessionId","MOCK-room-e2e-collector","policyVersion","process-policy-v1","pid",123,"processName","chrome.exe","startInstant","2026-10-23T00:00:00Z","metadataQuality","COMPLETE","observedAt","2026-10-23T00:00:00Z"));
@@ -502,6 +524,43 @@ class AccountPinFlowPostgresGuiTest {
     private void screenshot(Stage stage, String name) throws Exception {
         WritableImage image = FxSupport.fx(() -> stage.getScene().snapshot(null));
         write(image, name);
+    }
+
+    /**
+     * UI review captures, only with TOEIC_UI_SCREENSHOTS=true: the candidate window at 1920x1080 and 1366x768,
+     * plus any dialog window that is showing. Regular runs never resize or capture here.
+     */
+    private void uiScreens(Stage stage, String name) throws Exception {
+        if (!"true".equals(System.getenv("TOEIC_UI_SCREENSHOTS"))) return;
+        Path dir = Files.createDirectories(OUT.resolve("ui-review"));
+        for (int[] size : new int[][]{{1920, 1080}, {1366, 768}}) {
+            FxSupport.fxRun(() -> { stage.setWidth(size[0]); stage.setHeight(size[1]); });
+            FxSupport.fxRun(() -> { stage.getScene().getRoot().applyCss(); stage.getScene().getRoot().layout(); });
+            Thread.sleep(400); // let wrapped labels and scroll panes settle after the resize
+            WritableImage image = FxSupport.fx(() -> stage.getScene().snapshot(null));
+            writeTo(dir, image, name + "-" + size[0] + "x" + size[1]);
+        }
+        List<WritableImage> dialogs = FxSupport.fx(() -> {
+            List<WritableImage> all = new ArrayList<>();
+            for (Window window : Window.getWindows())
+                if (window.isShowing() && window != stage && window.getScene() != null && window instanceof Stage s && s.getOwner() == stage)
+                    all.add(window.getScene().snapshot(null));
+            return all;
+        });
+        for (int i = 0; i < dialogs.size(); i++) writeTo(dir, dialogs.get(i), name + "-dialog-" + i);
+    }
+
+    private static boolean ui() { return "true".equals(System.getenv("TOEIC_UI_SCREENSHOTS")); }
+    private void awaitDialog() throws Exception {
+        await("dialog showing",()->FxSupport.fx(()->Window.getWindows().stream().anyMatch(w->w.isShowing()&&w.getScene()!=null&&w.getScene().getRoot() instanceof DialogPane)),10);
+    }
+
+    private static void writeTo(Path dir, WritableImage image, String name) throws Exception {
+        int width = (int) image.getWidth(), height = (int) image.getHeight();
+        BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        PixelReader pixels = image.getPixelReader();
+        for (int y = 0; y < height; y++) for (int x = 0; x < width; x++) out.setRGB(x, y, pixels.getArgb(x, y));
+        ImageIO.write(out, "png", dir.resolve(name + ".png").toFile());
     }
 
     /** Captures every showing window (the result dialog is its own window). */

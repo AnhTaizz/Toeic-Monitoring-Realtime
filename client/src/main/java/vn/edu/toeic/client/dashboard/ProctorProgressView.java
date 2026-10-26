@@ -36,7 +36,7 @@ public final class ProctorProgressView extends BorderPane implements AutoCloseab
     private static String text(Object value){
         if(value==null)return "—";
         if(value instanceof java.time.Instant instant)return java.time.format.DateTimeFormatter.ofPattern("dd/MM HH:mm:ss")
-                .withZone(java.time.ZoneId.of(System.getProperty("toeic.dashboard.timezone",java.time.ZoneId.systemDefault().getId()))).format(instant);
+                .withZone(vn.edu.toeic.client.ui.TimeText.ZONE).format(instant);
         return value.toString();
     }
     private void column(String title,int width,java.util.function.Function<ProctorProgressRow,String> value){var c=new TableColumn<ProctorProgressRow,String>(title);c.setPrefWidth(width);c.setCellValueFactory(d->new ReadOnlyStringWrapper(value.apply(d.getValue())));table.getColumns().add(c);}

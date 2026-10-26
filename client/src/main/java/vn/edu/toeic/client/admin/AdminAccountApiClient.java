@@ -51,6 +51,25 @@ public final class AdminAccountApiClient implements AutoCloseable {
                 || !result.initialPassword().matches("[A-Za-z0-9_-]{43}"))throw new IllegalStateException("Phản hồi cấp mật khẩu không hợp lệ.");
         return result;
     }
+    /** The Admin chose the password: the server keeps only its hash and sends no secret back. */
+    public CreatedAccount create(String code,String name,String role,String password) throws Exception {
+        var body=new java.util.LinkedHashMap<String,Object>();body.put("username",code);body.put("displayName",name);body.put("role",role);
+        body.put("password",password);
+        var result=json.fromJson(call("POST","",json.toJson(body),201),CreatedAccount.class);
+        if(result==null)throw new IllegalStateException("Phản hồi tạo tài khoản không hợp lệ.");
+        valid(result.account());
+        if(!role.equals(result.account().role()) || !code.strip().equals(result.account().username()) || result.initialPassword()!=null)
+            throw new IllegalStateException("Phản hồi tạo tài khoản không hợp lệ.");
+        return result;
+    }
+    /** New password chosen by the Admin; old sessions are revoked by the server. */
+    public CreatedAccount resetPassword(long id,String password) throws Exception {
+        var result=json.fromJson(call("POST","/"+id+"/password/reset",json.toJson(Map.of("password",password)),200),CreatedAccount.class);
+        if(result==null)throw new IllegalStateException("Phản hồi cấp mật khẩu không hợp lệ.");valid(result.account());
+        if(result.account().userId()!=id || !"CANDIDATE".equals(result.account().role()) || result.initialPassword()!=null)
+            throw new IllegalStateException("Phản hồi cấp mật khẩu không hợp lệ.");
+        return result;
+    }
     public AccountView enabled(long id,boolean enabled) throws Exception {
         var result=json.fromJson(call("PATCH","/"+id+"/enabled",json.toJson(Map.of("enabled",enabled)),200),AccountView.class);
         valid(result);

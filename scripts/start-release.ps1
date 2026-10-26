@@ -6,7 +6,10 @@ param(
  [ValidateRange(1,65535)][int]$Port=8080,
  [string]$EnvFile,
  [switch]$NoSignalMonitoring,
- [switch]$ValidateOnly
+ [switch]$ValidateOnly,
+ # Running from the repository instead of the portable folder: point at the Maven-built JARs.
+ [string]$ServerJar,
+ [string]$ClientJar
 )
 # Release default: process monitoring plus USB storage presence/connect/disconnect and focus/window/display
 # signals (required for the handover). Candidates see the observation notice before entering a room.
@@ -30,7 +33,7 @@ if($Role -eq 'Client'){
  if(-not $ServerUrl){if($ValidateOnly){throw 'ServerUrl required'};$ServerUrl=Read-Host 'Server URL (http://SERVER_LAN_IP:8080)'}
  $uri=$null
  if(-not[Uri]::TryCreate($ServerUrl,[UriKind]::Absolute,[ref]$uri) -or $uri.Scheme -notin @('http','https') -or $uri.UserInfo -or $uri.Query -or $uri.Fragment -or $uri.AbsolutePath -notin @('','/')){throw 'Server URL must be an HTTP/HTTPS origin without credential, path, query or fragment.'}
- $jar=Join-Path $root 'client.jar'
+ $jar=if($ClientJar){$ClientJar}else{Join-Path $root 'client.jar'}
  $opts=@('-Duser.timezone=UTC',('-Dtoeic.server.url='+$uri.GetLeftPart([UriPartial]::Authority)),'-Dtoeic.realtime.delta-experimental=false',
   ('-Dtoeic.monitoring.signal-experiment-enabled='+$signals),('-Dtoeic.monitoring.usb-enabled='+$signals),'-jar',$jar)
 }else{
@@ -61,7 +64,7 @@ if($Role -eq 'Client'){
  try{$text=$env:TOEIC_ROOM_PIN_KEY.Replace('-','+').Replace('_','/');$text+='='*((4-$text.Length%4)%4);$key=[Convert]::FromBase64String($text)}catch{$key=$null}
  if(-not $key -or $key.Length -lt 32){throw 'TOEIC_ROOM_PIN_KEY must be base64url of at least 32 random bytes. Generate it once (READ-ME.txt) and keep it unchanged across restarts.'}
  if(-not $env:TOEIC_ADMIN_BOOTSTRAP_USERNAME -or -not $env:TOEIC_ADMIN_BOOTSTRAP_PASSWORD){Write-Output 'Note: TOEIC_ADMIN_BOOTSTRAP_USERNAME/PASSWORD not set. Admin login works only if this database already has an Admin account; a new database has no accounts.'}
- $jar=Join-Path $root 'server.jar'
+ $jar=if($ServerJar){$ServerJar}else{Join-Path $root 'server.jar'}
  # Command-line value wins over any TOEIC_SEED_DEMO_ACCOUNTS left in the environment.
  $opts=@('-Duser.timezone=UTC','-jar',$jar,('--server.address='+$BindAddress),('--server.port='+$Port),'--toeic.state.delta-enabled=false',
   ('--toeic.monitoring.signal-experiment-enabled='+$signals),'--toeic.seed.demo-accounts=false')
