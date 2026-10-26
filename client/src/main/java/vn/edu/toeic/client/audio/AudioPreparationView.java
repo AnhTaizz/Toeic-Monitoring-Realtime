@@ -79,6 +79,8 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
         setSpacing(8);
         attempts.getItems().setAll(scope.stream().sorted().toList()); attempts.getSelectionModel().selectFirst();
         status.setWrapText(true); connection.setWrapText(true); progress.setMaxWidth(Double.MAX_VALUE);
+        progress.managedProperty().bind(progress.visibleProperty());
+        connection.managedProperty().bind(connection.textProperty().isNotEmpty());
         AudioFiles audioFiles=new AudioFiles(cache.resolve("files"));
         preparation = new AudioPreparation(api, audioFiles, cache.resolve("speaker"), ignored -> queueRender());
         playback=new ListeningPlaybackPane(listeningApi,audioFiles,new ListeningPlaybackJournal(cache.resolve("playback-started")),preparation,scope,realtime);
@@ -134,6 +136,7 @@ public final class AudioPreparationView extends VBox implements AutoCloseable {
         heard.setDisable(!connected || phase != AudioPreparation.Phase.AWAITING_CONFIRMATION);
         ready.setDisable(!connected || phase != AudioPreparation.Phase.SPEAKER_CONFIRMED);
         progress.setProgress(state.progress()); status.setText(audioText(state));
+        progress.setVisible(phase == AudioPreparation.Phase.PREPARING); // an empty or full bar says nothing
         connection.setText(connected ? "" : "Mất kết nối. Đang thử kết nối lại; các bước chuẩn bị tạm khóa.");
         for (Runnable listener : List.copyOf(changeListeners)) listener.run();
     }

@@ -161,12 +161,10 @@
 .toeic-room .room-check-wait { -fx-text-fill: #d97706; -fx-font-weight: 700; }
 .toeic-room .room-check-bad { -fx-text-fill: #dc2626; -fx-font-weight: 700; }
 .toeic-room .room-visual-cover { -fx-background-color: #f6f7f9; -fx-background-radius: 0; }
-.toeic-room .room-audio-panel { -fx-background-color: #ffffff; -fx-padding: 12; -fx-border-color: transparent #eee7df transparent transparent; }
-/* The app-wide dark stylesheet must not leak into the light room: viewport, buttons and progress stay light. */
-.toeic-room .room-audio-panel > .viewport, .toeic-room .room-audio-panel .vbox { -fx-background-color: #ffffff; }
-.toeic-room .room-audio-panel .button { -fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 10; -fx-text-fill: #1f2937; }
-.toeic-room .room-audio-panel .button.room-button-primary { -fx-background-color: #f26b1d; -fx-border-color: #f26b1d; -fx-text-fill: white; }
-.toeic-room .room-audio-panel .button:disabled { -fx-opacity: 0.45; }
-.toeic-room .room-audio-panel .progress-bar > .bar { -fx-background-color: #f26b1d; -fx-background-insets: 0; -fx-background-radius: 4; }
-.toeic-room .room-audio-panel .progress-bar > .track { -fx-background-color: #eceff3; -fx-background-radius: 4; }
+/* Audio preparation card inside the lobby; the app-wide dark stylesheet must not leak into it. */
+.toeic-room .room-audio-card .button { -fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 10; -fx-text-fill: #1f2937; -fx-pref-height: 38; }
+.toeic-room .room-audio-card .button.room-button-primary { -fx-background-color: #f26b1d; -fx-border-color: #f26b1d; -fx-text-fill: white; }
+.toeic-room .room-audio-card .button:disabled { -fx-opacity: 0.45; }
+.toeic-room .room-audio-card .progress-bar > .bar { -fx-background-color: #f26b1d; -fx-background-insets: 0; -fx-background-radius: 4; }
+.toeic-room .room-audio-card .progress-bar > .track { -fx-background-color: #eceff3; -fx-background-radius: 4; }
 .toeic-room .room-step-title { -fx-font-weight: 800; -fx-font-size: 13px; -fx-text-fill: #c2410c; -fx-padding: 8 0 0 0; }

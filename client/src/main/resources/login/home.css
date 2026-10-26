@@ -36,4 +36,10 @@
 .candidate-home .home-connection.home-online { -fx-text-fill: #118b68; }
 .candidate-home .home-connection.home-offline { -fx-text-fill: #b14f2b; }
 .candidate-home .home-section-title { -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #102648; }
-.candidate-home #account-pin-input { -fx-font-size: 22px; -fx-max-width: 260; }
+.candidate-home .home-pin-card {
+    -fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #e3e7ee; -fx-border-radius: 16;
+    -fx-padding: 32 36; -fx-effect: dropshadow(gaussian, rgba(16,38,72,0.08), 18, 0, 0, 4);
+}
+.candidate-home #account-pin-input { -fx-font-size: 28px; -fx-alignment: center; -fx-pref-height: 56; }
+.candidate-home #account-pin-enter { -fx-pref-height: 46; -fx-font-size: 16px; }
+.candidate-home .home-pin-status { -fx-text-fill: #607495; -fx-text-alignment: center; }

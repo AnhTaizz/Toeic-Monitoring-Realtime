@@ -89,10 +89,14 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
         Button leave = new Button("Rời phòng chờ");
         leave.getStyleClass().add("room-button-secondary");
         leave.setOnAction(event -> leave());
-        VBox center = new VBox(12, status, lobby, leave);
+        lobby.chrome(status, leave);
+        VBox center = new VBox(lobby);
+        center.setAlignment(javafx.geometry.Pos.CENTER);
         center.setPadding(new Insets(12, 24, 12, 24));
         ScrollPane scroll = new ScrollPane(center);
         scroll.setFitToWidth(true);
+        // Fills the viewport so the lobby card sits in the middle; a taller lobby still scrolls.
+        scroll.setFitToHeight(true);
         scroll.getStyleClass().add("room-scroll");
         setCenter(scroll);
         status.setText("Đang mở bài thi…");
@@ -124,14 +128,10 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
             writer = granted.writerEpoch();
             audio = audioFactory.create(writer, source::listeningApi, this::awaitPlay);
             audio.onChanged(this::audioChanged);
-            ScrollPane audioPanel = new ScrollPane(audio);
-            audioPanel.setFitToWidth(true);
-            audioPanel.setPrefWidth(360);
-            audioPanel.getStyleClass().add("room-audio-panel");
-            setLeft(audioPanel);
+            lobby.audio(audio);
             visual = new VisualReadyCoordinator<>(api, images, attemptId, writer, () -> audio.audioReady().filter(c -> c.writerEpoch() == writer).isPresent(),
                     lobby::prepareImages, Platform::runLater, this::visualChanged);
-            status.setText("Bài thi đã sẵn sàng trên máy này. Hãy làm 3 bước chuẩn bị âm thanh ở cột bên trái.");
+            status.setText("Bài thi đã sẵn sàng trên máy này. Hãy làm 3 bước chuẩn bị âm thanh bên dưới.");
             visual.start();
         }));
     }

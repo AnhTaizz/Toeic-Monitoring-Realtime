@@ -181,15 +181,19 @@ public final class ToeicClientApplication extends Application {
         pin.setTextFormatter(new javafx.scene.control.TextFormatter<String>(change->change.getControlNewText().matches("[0-9]{0,5}")?change:null));
         Button enter=new Button("Vào phòng");enter.setId("account-pin-enter");enter.getStyleClass().add("home-primary");
         Label status=new Label("Nhập PIN 5 số do giám thị cung cấp.");status.setId("account-pin-status");status.setWrapText(true);
+        status.getStyleClass().add("home-pin-status");
         Label joinTitle=new Label("Vào phòng thi");joinTitle.getStyleClass().add("home-section-title");
-        VBox fields=new VBox(14,joinTitle,pin,enter,status);fields.setPadding(new javafx.geometry.Insets(24));
+        pin.setMaxWidth(Double.MAX_VALUE);enter.setMaxWidth(Double.MAX_VALUE);
+        // One small card in the middle of the content area: the only thing to do here is type the PIN.
+        VBox card=new VBox(16,joinTitle,pin,enter,status);card.getStyleClass().add("home-pin-card");
+        card.setAlignment(javafx.geometry.Pos.CENTER);card.setMaxWidth(420);card.setMaxHeight(javafx.scene.layout.Region.USE_PREF_SIZE);
         if(LegacyUi.enabled()) {
             Button legacy=new Button("Ca thi được phân công trước đây");legacy.setOnAction(e->showRoleScene(stage,serverUrl,account));
-            fields.getChildren().add(legacy);
+            card.getChildren().add(legacy);
         }
-        Tab tab=new Tab("Vào phòng",fields);tab.setClosable(false);TabPane tabs=new TabPane(tab);
+        javafx.scene.layout.StackPane centred=new javafx.scene.layout.StackPane(card);
         Button logout=new Button("Đăng xuất");logout.setOnAction(e->{releaseConnectionView();stage.setScene(loginScene(stage));});
-        var root=new CandidateHomePane(account.user().displayName(),account.user().username(),new Label("Đã đăng nhập"),new Label(""),tabs,logout);
+        var root=new CandidateHomePane(account.user().displayName(),account.user().username(),new Label("Đã đăng nhập"),new Label(""),centred,logout);
         stage.setScene(applyStyles(new Scene(root,1366,820)));
         Runnable submit=()->{
             if(enter.isDisabled())return;

@@ -11,8 +11,9 @@ import javafx.scene.layout.*;
 
 /** Candidate portal presentation. Session data and entry actions still come from the server adapters. */
 final class CandidateHomePane extends BorderPane {
+    /** body is the role-specific content: the legacy tab pane, or the centred PIN card of the ACCOUNT_PIN entry. */
     CandidateHomePane(String displayName, String username, Label connection, Label availability,
-                      TabPane tabs, Button logout) {
+                      javafx.scene.Node body, Button logout) {
         getStyleClass().add("candidate-home");
         getStylesheets().add(Objects.requireNonNull(getClass().getResource("/login/home.css")).toExternalForm());
         Label brand = text("TOEIC Room", "home-brand");
@@ -53,19 +54,34 @@ final class CandidateHomePane extends BorderPane {
         availability.managedProperty().bind(availability.textProperty().isNotEmpty());
         availability.visibleProperty().bind(availability.textProperty().isNotEmpty());
         Label instruction = text("1  Vào phòng thi     →     2  Chuẩn bị âm thanh     →     3  Chờ giám thị bắt đầu", "home-instruction");
-        tabs.getStyleClass().add("home-tabs");
-        VBox content = new VBox(12, availability, instruction, tabs);
+        Label usbNotice = null;
         if (Boolean.getBoolean("toeic.monitoring.signal-experiment-enabled")
                 && Boolean.getBoolean("toeic.monitoring.usb-enabled")) {
             // Required notice before observation starts: short, but it still says what is observed and when it stops.
-            Label usbNotice = text("ⓘ  Trong phiên thi, ứng dụng ghi nhận các ứng dụng đang mở, việc cắm/rút USB lưu trữ và việc "
+            usbNotice = text("ⓘ  Trong phiên thi, ứng dụng ghi nhận các ứng dụng đang mở, việc cắm/rút USB lưu trữ và việc "
                     + "rời khỏi cửa sổ thi để báo cho giám thị. Không đọc nội dung hay số serial của USB; dừng khi bạn rời phòng "
                     + "thi hoặc đăng xuất.", "home-availability");
             usbNotice.setId("candidate-usb-notice");
-            content.getChildren().add(2, usbNotice);
+        }
+        VBox content;
+        if (body instanceof TabPane tabs) {
+            tabs.getStyleClass().add("home-tabs");
+            content = new VBox(12, availability, instruction, body);
+            if (usbNotice != null) content.getChildren().add(2, usbNotice);
+            VBox.setVgrow(body, Priority.ALWAYS);
+        } else {
+            // PIN entry: one column in the middle of the screen, the steps above the card and the notice under it.
+            content = new VBox(18, availability, instruction, body);
+            if (usbNotice != null) content.getChildren().add(usbNotice);
+            for (Label line : java.util.Arrays.asList(availability, usbNotice)) {
+                if (line == null) continue;
+                line.setMaxWidth(520); line.setPrefWidth(520);
+                line.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+            }
+            content.setAlignment(javafx.geometry.Pos.CENTER);
+            content.setFillWidth(false);
         }
         content.setPadding(new Insets(24));
-        VBox.setVgrow(tabs, Priority.ALWAYS);
         content.setMinWidth(0);
         HBox.setHgrow(content, Priority.ALWAYS);
         setCenter(new HBox(hero, content));

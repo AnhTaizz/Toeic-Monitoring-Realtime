@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,6 +26,9 @@ final class RichLobbyPane extends VBox {
     private final Label audioRow = new Label(), visualRow = new Label(), serverRow = new Label(), connectionRow = new Label();
     private final Label waiting = new Label();
     private final TilePane slots = new TilePane(6, 6);
+    private final VBox audioSlot = new VBox(8);
+    private final VBox card = new VBox(14);
+    private final HBox footer = new HBox(12);
     private VisiblePulseGate gate;
 
     RichLobbyPane() {
@@ -34,14 +38,13 @@ final class RichLobbyPane extends VBox {
         title.setWrapText(true);
         meta.getStyleClass().add("room-instruction");
         identity.setId("room-preparation-identity");
-        identity.getStyleClass().add("room-instruction");
+        identity.getStyleClass().add("room-muted");
         identity.setWrapText(true);
         identity.setMinHeight(Region.USE_PREF_SIZE);
         Label overline = new Label("PHÒNG CHỜ");
         overline.getStyleClass().add("room-overline");
         VBox checklist = new VBox(10, label("Chuẩn bị trước khi thi", "room-card-title"), connectionRow, audioRow, visualRow, serverRow);
         for (Label row : List.of(connectionRow, audioRow, visualRow, serverRow)) { row.setWrapText(true); row.setMinHeight(Region.USE_PREF_SIZE); }
-        checklist.getStyleClass().add("room-card");
 
         slots.setPrefColumns(6);
         slots.setPrefTileWidth(56); slots.setPrefTileHeight(56);
@@ -52,12 +55,16 @@ final class RichLobbyPane extends VBox {
         coverText.setWrapText(true);
         StackPane stage = new StackPane(slots, cover, coverText);
         stage.setId("room-visual-stage");
-        stage.setMinSize(380, 72); stage.setMaxSize(380, 72);
+        stage.setMinSize(380, 72); stage.setMaxSize(Double.MAX_VALUE, 72);
         // Cắt mọi thứ ngoài khung để không pixel ảnh nào lọt ra ngoài màn che (kể cả ở góc).
         javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle(380, 72);
+        clip.widthProperty().bind(stage.widthProperty());
+        clip.heightProperty().bind(stage.heightProperty());
         stage.setClip(clip);
         // Màn che phủ toàn bộ ảnh; ảnh vẫn visible/opacity 1 trong scene để đo hiển thị thật.
         cover.setMouseTransparent(true);
+        // Overhang by 1px so pixel snapping at fractional scales cannot leave an image edge showing; the clip trims it.
+        StackPane.setMargin(cover, new Insets(-1));
 
         waiting.getStyleClass().add("room-warning");
         waiting.setWrapText(true);
@@ -65,15 +72,41 @@ final class RichLobbyPane extends VBox {
         waiting.setMinHeight(Region.USE_PREF_SIZE);
         waiting.managedProperty().bind(waiting.textProperty().isNotEmpty());
         waiting.visibleProperty().bind(waiting.textProperty().isNotEmpty());
-        Label rules = new Label("ⓘ  Đồng hồ chỉ chạy khi giám thị bắt đầu. Phần nghe chỉ phát một lần, không tua, không phát lại.");
+        // The listening rule is already at the top of the audio card; here only the clock rule.
+        Label rules = new Label("ⓘ  Đồng hồ chỉ chạy khi giám thị bắt đầu.");
         rules.getStyleClass().add("room-info");
         rules.setWrapText(true);
         rules.setMinHeight(Region.USE_PREF_SIZE);
-        VBox card = new VBox(14, overline, title, meta, identity, checklist, stage, waiting, rules);
+        // Two equal cards side by side: what the candidate does (audio steps) and what is ready (checklist).
+        audioSlot.getChildren().add(label("Đang mở bài thi…", "room-muted"));
+        audioSlot.getStyleClass().addAll("room-card", "room-audio-card");
+        checklist.getChildren().addAll(stage, waiting);
+        checklist.getStyleClass().add("room-card");
+        HBox steps = new HBox(16, audioSlot, checklist);
+        for (VBox half : List.of(audioSlot, checklist)) { HBox.setHgrow(half, Priority.ALWAYS); half.setPrefWidth(480); half.setMaxWidth(Double.MAX_VALUE); }
+        HBox facts = new HBox(20, meta, identity);
+        facts.setAlignment(Pos.BASELINE_LEFT);
+        Region gap = new Region();
+        HBox.setHgrow(gap, Priority.ALWAYS);
+        footer.getChildren().addAll(rules, gap);
+        footer.setAlignment(Pos.CENTER_LEFT);
+        card.getChildren().addAll(overline, title, facts, steps, footer);
         card.getStyleClass().add("room-card");
-        card.setMaxWidth(900);
-        setAlignment(Pos.TOP_CENTER);
+        card.setMaxWidth(1040);
+        setAlignment(Pos.CENTER);
         getChildren().add(card);
+    }
+
+    /** The attempt's status line goes under the title and its leave button at the card's bottom-right. */
+    void chrome(Node status, Node leave) {
+        card.getChildren().add(3, status);
+        footer.getChildren().add(leave);
+    }
+
+    /** Puts the one audio preparation view inside the lobby; it keeps running after START when the lobby is gone. */
+    void audio(Node view) {
+        audioSlot.getChildren().setAll(view);
+        VBox.setVgrow(view, Priority.ALWAYS);
     }
 
     void preparation(AttemptPreparation preparation) {
@@ -91,7 +124,7 @@ final class RichLobbyPane extends VBox {
     void audio(AudioPreparation.Snapshot state, boolean ready) {
         row(audioRow, ready, state.phase() == AudioPreparation.Phase.ERROR,
                 ready ? "Âm thanh: đã sẵn sàng" : state.phase() == AudioPreparation.Phase.ERROR
-                        ? "Âm thanh: chưa chuẩn bị xong — làm lại các bước bên trái" : "Âm thanh: làm 3 bước bên trái");
+                        ? "Âm thanh: chưa chuẩn bị xong — làm lại các bước bên cạnh" : "Âm thanh: làm 3 bước bên cạnh");
     }
 
     void visual(VisualReadyCoordinator.Snapshot state) {
