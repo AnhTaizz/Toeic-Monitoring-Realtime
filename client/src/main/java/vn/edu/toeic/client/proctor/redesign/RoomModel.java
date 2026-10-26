@@ -302,6 +302,21 @@ final class RoomModel {
         return List.copyOf(entries);
     }
 
+    /** Full history of one attempt, newest first: alerts, typed signal history and background processes. */
+    static List<HistoryEntry> history(RoomFeed.AttemptHistory item, String candidate) {
+        List<Alert> alerts = alerts(new RoomFeed.Snapshot(List.of(item)), Map.of(item.attemptId(), candidate));
+        List<HistoryEntry> entries = new ArrayList<>(timeline(alerts.stream()
+                .filter(alert -> !(alert.origin() instanceof vn.edu.toeic.client.dashboard.SignalHistory.Entry)).toList()));
+        entries.addAll(SignalFeedProjection.project(item.signals(), candidate).history());
+        entries.addAll(timeline(item.events().stream()
+                .filter(event -> vn.edu.toeic.protocol.monitoring.ProcessCatalog.visibleInLists(event.processName())
+                        && !vn.edu.toeic.protocol.monitoring.ProcessCatalog.review(event.processName()))
+                .map(event -> alert(event, candidate)).toList()));
+        entries.sort(Comparator.comparing(HistoryEntry::serverTime, Comparator.nullsLast(Comparator.reverseOrder()))
+                .thenComparing(HistoryEntry::key));
+        return List.copyOf(entries);
+    }
+
     static List<HistoryEntry> filterTimeline(List<HistoryEntry> entries, String attempt, Kind kind, String query,
             Duration window, Instant reference) {
         String needle = fold(query);

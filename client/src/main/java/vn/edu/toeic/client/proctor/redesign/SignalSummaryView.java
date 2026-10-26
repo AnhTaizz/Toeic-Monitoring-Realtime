@@ -52,8 +52,9 @@ final class SignalSummaryView {
         Badge value=badge(kind,summary,stale,loading);
         Label state=Ui.badge(value.text(),value.colour());
         state.setId("candidate-signal-"+kind.id+"-state");
-        Button history=OverviewPane.linkButton("Xem Timeline →","candidate-signal-"+kind.id+"-history",()->timeline.accept(kind.source));
-        HBox heading=new HBox(8,Ui.label(kind.title,"strong"),Ui.grow(),history);
+        HBox heading=new HBox(8,Ui.label(kind.title,"strong"),Ui.grow());
+        // The room screen shows the full history in the same panel, so it passes no timeline link.
+        if(timeline!=null)heading.getChildren().add(OverviewPane.linkButton("Xem Timeline →","candidate-signal-"+kind.id+"-history",()->timeline.accept(kind.source)));
         heading.setAlignment(Pos.CENTER_LEFT);
         VBox card=new VBox(5,heading,state,Ui.wrapping(value.explanation(),"muted","small"));
         card.getStyleClass().add("signal-source-card");

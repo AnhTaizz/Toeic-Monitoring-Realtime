@@ -47,7 +47,7 @@ final class V2Fixtures {
     }
 
     /** Scripted fake: every field may be replaced by a test; calls are recorded. */
-    static final class FakeApi implements ProctorV2Api {
+    static class FakeApi implements ProctorV2Api {
         final java.util.List<vn.edu.toeic.protocol.exam.rich.CreatePinRoomRequest> pinCreates=new CopyOnWriteArrayList<>();
         volatile Call<vn.edu.toeic.protocol.exam.rich.CreatedPinRoom> pinCreate=()->new vn.edu.toeic.protocol.exam.rich.CreatedPinRoom(
                 new CreateRichSessionResponse(SESSION,"mock-a","PROCTORED_V2","SCHEDULED",List.of()),"58321");
