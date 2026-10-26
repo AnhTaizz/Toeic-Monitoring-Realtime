@@ -494,3 +494,43 @@ Ghi chú làm dở: owner review và hardware/desktop/LAN/policy pending; produc
 Theo ủy quyền người dùng: thêm -Desktop vào entrypoint demo hiện có, hai production JAR/JVM riêng, TEST DB/API và thao tác desktop do người dùng thực hiện. Signal/alert bật theo process demo, FULL/defaults giữ nguyên. Hướng dẫn: docs/MONITORING_DESKTOP_DEMO.md. Trạng thái: PENDING_USER_ACTION, chưa nghiệm thu desktop/USB/LAN, chưa DONE/gate/policy/approval. Computer Use lỗi khởi tạo kernel assets. Kiểm chứng và cleanup sẽ ghi theo lượt thực tế.
 
 21/10/2026 — Chốt demo desktop từ main2a596de: user thao tác hai production JVM thật, xác nhận proctor thấy Chrome/focus/window tại Timeline đa tín hiệu, Thoát màn thi làm Dừng mờ rồi logout/close. Build/package4aacab4, source Java không đổi; after-exit0 monitoring workers, sequence1810/typed113 giữ nguyên; user đóng cả2trước teardown, apps/server/workload0, schema0/dropDB0/PGstop0/PIDabsent. Raw local ignored, không desktop programmatic/MOCK acceptance. CI4aacab4:1307PASS/157SKIP/0lỗi, Python27PASS; CI final/merge ghi tại PR96. Hướng dẫn docs/MONITORING_DESKTOP_DEMO.md; report/receipt evidence/monitoring-desktop-20261021. FULL default/experiments repository OFF; hardware/LAN/ADR/policy/gates/human approval pending, không MON DONE.
+
+### Ghi chú làm dở — USB app integration 24/10/2026
+
+[Report/receipt](../../evidence/usb-app-integration-20261024/REPORT.md), nhánh codex/usb-app-integration-20261024: user đã thấy CONNECTED→REMOVED→CONNECTED thật trên app; shared provider/authorized run + fresh-auth resume + cleanup ngoàiFX. Test phase1342PASS/169SKIP, REALhook1PASS; package unique server artifact PASS sau defaultJARlock (không fullverifyPASS). Live demo cleanup chờ haiappđóng; còn H01–12/PnP/ADR/retention/LAN/owner review, không DONE. Java/JAR đã xem được pin bằng inventory/hash; launcher flag cả2login windows vẫn chỉ roleCANDIDATE tạo nguồn. Không wire/schema changes, FULL/defaultgatesOFF; xemrunbookUSB_APP_INTEGRATION.
+### Ghi chú làm dở — USB8080 24/10/2026
+
+[Report](../../evidence/usb-8080-fix-20261024/REPORT.md): normalstartscripts cóoptin, demoC3chỉprocess khôngexam; tạoMOCKcaAPIhợplệvàđăngnhậplạiscope. SửadashboardListeningemptyLegacygiữstrictplayback vàpreviewACTIVE0unknowncount; 97PASS/packagePASS, userthấy rút/cắmthật trênTimeline8080. App/servergiữmở, khôngresetDB/deadline/DONE; cònH01–12/ADR/LAN/installer/ownerreview.
+
+## 25/10/2026 — Tổng quan/Chi tiết: USB, focus và cửa sổ
+
+Theo yêu cầu triển khai và push của người dùng, đã nối reader scoped typed history vào hai màn hình, giữ Process; chi tiết có thời điểm client/server và nút Timeline đúng lượt/nguồn. Xem [runbook](../PROCTOR_SIGNAL_SUMMARY.md) và [bằng chứng](../../evidence/proctor-signals-20261024/REPORT.md). Chạm giao diện B và cách đọc monitoring C, không wire/schema hoặc tracker DONE. Ghi chú bàn giao: nguồn USB vẫn cần opt-in ở candidate và server; bản đang mở từ trước cần dùng bản build mới để có UI mới. Policy/ADR/hardware H01–H12/LAN/chữ ký owner chưa được nghiệm thu qua lượt tự động này.
+
+
+### 25/10/2026 — Điều chỉnh giám sát chung
+
+Bỏ cột riêng; Chi tiết có một khối process+USB/focus/window. Start thủ công nay khởi tạo typed sources cùng process sau fresh scope, giữ run khi vào bài; activity chỉ sau exam entry; Stop chờ cả USB workers. [Report](../../evidence/unified-monitoring-20261025/REPORT.md), full1420PASS/154SKIP, PGREAL2PASS baselineUSB1, không hotplug/H01–H12 mới. JVM client cũ cần đóng/mở JAR mới; server có signalON giữ được. Không API/wire/DB/OSapproach/trackerDONE hoặc chữ ký owner.
+
+### 25/10/2026 — Bàn giao Cảnh báo/Nhật ký đa tín hiệu
+
+RoomFeed đọc typed history theo watermark reader có sẵn; Cảnh báo, Nhật ký và hai khối gần đây dùng chung USB/focus/window/process, có filter và chi tiết nguồn/thời điểm. Baseline/status chỉ Nhật ký; thiếu/giới hạn không coi bình thường. Full1435PASS/154SKIP, PGREAL2PASS count0/Stagewindow; không hotplug vật lý mới. [Report](../../evidence/proctor-feed-20261025/REPORT.md), [runbook](../PROCTOR_SIGNAL_SUMMARY.md). Ghi chú bàn giao: đóng/mở JVM client cũ; B/C còn review cá nhân, không wire/DB/OSAPI/trackerDONE/policy/H01–H12/LAN/installer acceptance.
+
+### 25/10/2026 — Bộ lọc hành vi theo chốt lại của người dùng
+
+Danh sách chung chỉ thêm USB cắm/rút, focus/window thay đổi bên cạnh process; baseline/status/gap typed giữ tại raw Timeline và trạng thái nguồn, không thành dòng/số đếm chung. Package/GUI40PASS, PGREAL2PASS count0/window/cleanup sạch; không hotplug/fullverify mới. [Report](../../evidence/proctor-actions-only-20261025/REPORT.md). B/C vẫn cần review cá nhân; mở lại client JARdc91c420…; không wire/DB/OSAPI/policy/trackerDONE.
+
+### 25/10/2026 — Bàn giao catalog process39tên/Teams mới
+
+Policyv2 mở rộng6nhóm/256process, đọc lại v1/8tên/128; review contract trước sửa ở [runbook](../PROCESS_GROUPS.md). Full/delta/event cùng policy, epoch không đổi; background chỉ state/history, helperCIM loại PID-start. Full1458PASS/154SKIP, PGREAL2PASS nativeTeams2/history/UI/cleanup sạch. [Report](../../evidence/process-groups-20261025/REPORT.md). Ghi chú bàn giao: nâng cấp đồng bộ server/client (script -ServerJar tên riêng), giữ phiên8080 đang mở; owner review A/C/B và benchmarkv2/LAN/installer vẫn chờ, không trackerDONE/humanapproval.
+
+### 25/10/2026 — Bàn giao loại tám process dễ nhầm
+
+Policyv3/current31 loại8tên terminal/host tại [runbook](../PROCESS_GROUPS.md); v1/v2 raw/Timeline giữ, summary/commonlists/count ẩn các tên bỏ. Full1464PASS/154SKIP, PGREAL2PASS native61/Teams2/no8tên và cleanup sạch. [Report](../../evidence/process-filter-20261025/REPORT.md). Cần nâng cấpserverJARtênriêng và cả2client; ownerreviewA/C/B còn, không trackerDONE/benchmark/hardware/LAN/installer mới.
+
+### 25/10/2026 — USB có sẵn khi bắt đầu
+
+Khôi phục PRESENT_AT_START vào sharedlists/count với sốUSB, source/timestamps/partial giữ; READY/focus-windowINITIAL vẫnẩn. Package48PASS, PGMock1PASS/cleanup sạch; không physicalUSB/fullverify mới. [Report](../../evidence/usb-start-visible-20261025/REPORT.md). UI-only: mở lại proctor, không restartserver/candidate nếu baseline đã lưu; owner B/C review còn, khôngtrackerDONE.
+
+### 25/10/2026 — Bàn giao policy v4 đúng chín process
+
+Candidate mới chỉ thu chín tên; summary/common lists/count cũng lọc chín tên khi đọc dữ liệu cũ, raw/Timeline giữ. USB baseline/cắm/rút và focus/window nguyên trạng. Mở lại cả candidate/proctor bằng JAR mới sau nâng cấp server; không tự ngắt phiên8080. Full verify 1.471 PASS/154 SKIP; PG REAL2 PASS có Teams2 thật, PG MOCK USB1 PASS; cleanup sạch. [Report](../../evidence/process-nine-20261025/REPORT.md), [runbook](../PROCESS_GROUPS.md). Ghi chú còn lại: owner A/C/B review cá nhân, H01–H12/LAN/benchmark/installer chưa nghiệm thu; không tracker DONE, PR hoặc merge.

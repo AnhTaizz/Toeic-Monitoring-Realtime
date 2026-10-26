@@ -51,3 +51,8 @@ duplicate, queue overflow, callback sau close và dọn collector identity.
    focus observer/event phía proctor.
 
 Phải ghi kết quả thủ công là ACTUAL hoặc NOT RUN; unit test không thay thế demo desktop.
+
+
+## Điều chỉnh điểm khởi chạy — 25/10/2026
+
+Nút Bắt đầu giám sát của candidate có fresh scope ACTIVE nay khởi động nguồn Stage cùng process; cũng tự bật khi mở bài. Stage được quan sát là cửa sổ ứng dụng thí sinh, kể cả khi chưa mở được bài; UI ghi đúng đối tượng này. Chuyển vào bài giữ collector/run, không tạo baseline mới; activity riêng trong bài chỉ bật sau khi vào bài. Dừng giám sát/rời phiên/logout/revoke đóng nguồn. API quan sát và source/wire cũ giữ nguyên. Xem [luồng dùng chung](PROCTOR_SIGNAL_SUMMARY.md) và [evidence](../evidence/unified-monitoring-20261025/REPORT.md).

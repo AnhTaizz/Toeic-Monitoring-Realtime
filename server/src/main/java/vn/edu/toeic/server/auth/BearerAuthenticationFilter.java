@@ -23,7 +23,8 @@ public final class BearerAuthenticationFilter extends OncePerRequestFilter {
     public BearerAuthenticationFilter(SessionAuthenticationService authentication) { this.authentication = authentication; }
     @Override protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return !path.startsWith("/api/") || ("POST".equals(request.getMethod()) && "/api/v1/auth/login".equals(path));
+        return !path.startsWith("/api/") || ("POST".equals(request.getMethod())
+                && ("/api/v1/auth/login".equals(path) || "/api/v2/rooms/join".equals(path)));
     }
     @Override protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                                FilterChain chain) throws ServletException, IOException {
@@ -44,10 +45,23 @@ public final class BearerAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         request.setAttribute(AuthenticatedUser.ATTRIBUTE, user);
+        if (user.roomAttemptId() != null && !roomRoute(request, user.roomAttemptId())) {
+            reject(response, ErrorCode.FORBIDDEN, "Phiên vào phòng chỉ được truy cập lượt thi của phòng này", false, 403);
+            return;
+        }
         chain.doFilter(new HttpServletRequestWrapper(request) {
             @Override public Principal getUserPrincipal() { return user; }
             @Override public boolean isUserInRole(String role) { return user.role().name().equals(role); }
         }, response);
+    }
+    private static boolean roomRoute(HttpServletRequest request, String attempt) {
+        String path = request.getServletPath();
+        return path.equals("/api/v1/auth/me")
+                || path.startsWith("/api/v1/attempts/" + attempt + "/")
+                || path.startsWith("/api/v2/attempts/" + attempt + "/")
+                || "GET".equals(request.getMethod())
+                    && path.equals("/api/v1/monitoring/attempts/" + attempt + "/signal-capabilities")
+                || path.equals("/api/v1/attempts/status") && attempt.equals(request.getParameter("attemptId"));
     }
     private void reject(HttpServletResponse response, ErrorCode code, String message, boolean retryable, int status) throws IOException {
         response.setStatus(status);

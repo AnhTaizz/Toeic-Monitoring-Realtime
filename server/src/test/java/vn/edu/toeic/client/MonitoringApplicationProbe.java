@@ -28,15 +28,16 @@ public final class MonitoringApplicationProbe {
         stage.getScene().getRoot().applyCss();
         return stage.getScene().getRoot().lookupAll(".button").stream().filter(n->n instanceof Button b&&text.equals(b.getText())).map(n->(Button)n).findFirst().orElseThrow(()->new AssertionError("Missing TEST control: "+text));
     }
+    public CandidateExamSignalMonitoring signals(){return application.signalMonitoring();}
     public static void login(Stage stage,String base,String name,String password){
         stage.getScene().getRoot().applyCss();
-        for(var node:stage.getScene().getRoot().lookupAll(".text-field")){
-            var field=(TextField)node;
-            if(field instanceof PasswordField)field.setText(password);
-            else if("http://localhost:8080".equals(field.getPromptText()))field.setText(base);
-            else if(field.getPromptText()!=null&&field.getPromptText().contains("candidate1"))field.setText(name);
-        }
-        button(stage,"Đăng nhập").fire();
+        var root=stage.getScene().getRoot();
+        // The presentation changed its placeholders; stable IDs keep this TEST on its owned server.
+        var connection=(TitledPane)root.lookup("#login-connection-settings");
+        ((TextField)connection.getContent()).setText(base);
+        ((TextField)root.lookup("#login-username")).setText(name);
+        ((PasswordField)root.lookup("#login-password")).setText(password);
+        ((Button)root.lookup("#login-submit")).fire();
     }
     public static void logout(Stage stage){
         var menu=(MenuButton)stage.getScene().lookup("#proctor-account");

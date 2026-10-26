@@ -103,9 +103,9 @@ public final class MonitoringApiClient implements DashboardApi {
     @Override public CompletableFuture<vn.edu.toeic.protocol.audio.ListeningStatusResponse> listeningStatus(String attempt) {
         attemptPath(attempt);
         return get("attempts/"+attempt+"/listening/status",body -> {
-            var status=vn.edu.toeic.client.audio.ListeningMessages.status(body);
-            if(!attempt.equals(status.attemptId()))throw new IllegalArgumentException();
-            return status;
+            // Validate the requested scope even when the legacy monitoring-only projection is absent.
+            if(!attempt.equals(MonitoringJson.id(body,"attemptId")))throw new IllegalArgumentException();
+            return vn.edu.toeic.client.audio.ListeningMessages.statusForMonitoring(body);
         },512*1024);
     }
     @Override public CompletableFuture<MonitoringStateView> state(String attempt) {

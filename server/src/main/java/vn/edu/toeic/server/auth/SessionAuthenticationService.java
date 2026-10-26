@@ -24,6 +24,7 @@ public final class SessionAuthenticationService {
         return sessions.findByTokenHash(hash)
                 .filter(session -> session.revokedAt() == null && session.enabled()
                         && session.expiresAt().isAfter(clock.instant()))
+                .filter(session -> session.user().roomAttemptId() == null || session.user().role() == vn.edu.toeic.protocol.Role.CANDIDATE)
                 .map(StoredSession::user)
                 .orElseThrow(AccessDeniedException::unauthorized);
     }

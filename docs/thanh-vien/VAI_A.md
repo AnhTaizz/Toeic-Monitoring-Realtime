@@ -426,3 +426,15 @@ Full verify source cuối1098PASS/6SKIP/0FAIL/ERROR,114case mới PASS; PostgreS
 20/10/2026: EX05 source05cc694 clean verify1127PASS/6SKIP (29case mới PASS), PG18.1/HTTP thật; [checkpoint/evidence](../EX05_AUTHENTICATED_IMAGES.md). EX07 tiếp tục branch stacked, chưa authority/FE integrated; V13/V14 MERGE BLOCKED, GUI/LAN/hearing NOT RUN.
 
 **EX-07 — Ghi chú làm dở (20/10/2026):** nhánh `feat/ex07-rich-session-lifecycle-20261019` HEAD có code + test PG/HTTP local PASS ([chi tiết](../EX07_SESSION_LIFECYCLE.md)). A/C review lock/transaction và thứ tự Flyway V13/V14/V15; B dùng §1 của tài liệu để làm EX-06. GUI/LAN/hearing NOT RUN; không merge/DONE.
+
+### 25/10/2026 — Bàn giao catalog process39tên/Teams mới
+
+Policyv2 mở rộng6nhóm/256process, đọc lại v1/8tên/128; review contract trước sửa ở [runbook](../PROCESS_GROUPS.md). Full/delta/event cùng policy, epoch không đổi; background chỉ state/history, helperCIM loại PID-start. Full1458PASS/154SKIP, PGREAL2PASS nativeTeams2/history/UI/cleanup sạch. [Report](../../evidence/process-groups-20261025/REPORT.md). Ghi chú bàn giao: nâng cấp đồng bộ server/client (script -ServerJar tên riêng), giữ phiên8080 đang mở; owner review A/C/B và benchmarkv2/LAN/installer vẫn chờ, không trackerDONE/humanapproval.
+
+### 25/10/2026 — Bàn giao loại tám process dễ nhầm
+
+Policyv3/current31 loại8tên terminal/host tại [runbook](../PROCESS_GROUPS.md); v1/v2 raw/Timeline giữ, summary/commonlists/count ẩn các tên bỏ. Full1464PASS/154SKIP, PGREAL2PASS native61/Teams2/no8tên và cleanup sạch. [Report](../../evidence/process-filter-20261025/REPORT.md). Cần nâng cấpserverJARtênriêng và cả2client; ownerreviewA/C/B còn, không trackerDONE/benchmark/hardware/LAN/installer mới.
+
+### 25/10/2026 — Bàn giao policy v4 đúng chín process
+
+Shared catalog thêm policy v4/chín tên, vẫn nhận đúng v1=8/v2=39/v3=31; không đổi field/DB/epoch guard. Cần server JAR mới và cả hai client để áp dụng. Tương thích A/C và UI B cần review cá nhân. Full verify 1.471 PASS/154 SKIP; PG REAL2 PASS có Teams2 thật, PG MOCK USB1 PASS; cleanup sạch. [Report](../../evidence/process-nine-20261025/REPORT.md), [runbook](../PROCESS_GROUPS.md). Ghi chú còn lại: owner A/C/B review cá nhân, H01–H12/LAN/benchmark/installer chưa nghiệm thu; không tracker DONE, PR hoặc merge.

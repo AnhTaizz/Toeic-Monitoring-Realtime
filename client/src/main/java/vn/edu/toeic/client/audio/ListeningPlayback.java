@@ -68,7 +68,7 @@ public final class ListeningPlayback implements AutoCloseable {
                 || !status.interrupted()) return;
         cancelHeartbeat();
         long run = ++generation;
-        publish(run, Phase.BLOCKED, "Server xác nhận Listening đã gián đoạn; chờ giám thị xử lý.",
+        publish(run, Phase.BLOCKED, interruptedMessage(status),
                 snapshot.segments(), snapshot.segmentIndex(), snapshot.playbackStarted());
     }
     public synchronized void accept(MessageEnvelope<JsonObject> envelope){
@@ -141,11 +141,16 @@ public final class ListeningPlayback implements AutoCloseable {
             journal.started(started,localStarted);
             ListeningStatusResponse ack=send(started,"STARTED",null,"PLAYING");
             if(!current(run)||ack.interrupted())throw new IllegalStateException("Server đã khóa Listening.");
-            synchronized(this){if(current(run)&&snapshot.phase()==Phase.PLAYING)heartbeat=worker.scheduleWithFixedDelay(()->heartbeat(run,started),2,2,TimeUnit.SECONDS);}
+            // A short segment may finish before STARTED is acknowledged. Keep the listening
+            // lease alive while the next segment is prepared, without starting or replaying media.
+            synchronized(this){if(current(run)&&heartbeatPhase())heartbeat=worker.scheduleWithFixedDelay(()->heartbeat(run,started),2,2,TimeUnit.SECONDS);}
         }catch(Exception failure){networkFailure(run,started,userMessage(failure));}
     }
+    private boolean heartbeatPhase(){
+        return snapshot.playbackStarted()!=null && (snapshot.phase()==Phase.PLAYING || snapshot.phase()==Phase.READY_TO_PLAY);
+    }
     private void heartbeat(long run,ListeningStartCommand started){
-        if(!current(run)||snapshot.phase()!=Phase.PLAYING)return;
+        if(!current(run)||!heartbeatPhase())return;
         try{ListeningStatusResponse ack=send(started,"HEARTBEAT",null,"PLAYING");if(ack.interrupted())block(run,"Server đã ghi Listening gián đoạn; đã khóa phát.");}
         catch(Exception failure){networkFailure(run,started,userMessage(failure));}
     }
@@ -202,7 +207,7 @@ public final class ListeningPlayback implements AutoCloseable {
             }
             if(relevant==null){publish(run,Phase.WAITING,"Chờ lệnh bắt đầu Listening từ server.",List.of(),-1,null);return;}
             if("COMPLETED".equals(relevant.phase())){publish(run,Phase.COMPLETED,"Server xác nhận Listening đã hoàn tất; không phát lại.",List.of(),-1,relevant.playbackStartedAt());return;}
-            if(relevant.interrupted()||"INTERRUPTED".equals(relevant.phase())){publish(run,Phase.BLOCKED,"Server xác nhận Listening đã gián đoạn; chờ giám thị xử lý.",List.of(),-1,relevant.playbackStartedAt());return;}
+            if(relevant.interrupted()||"INTERRUPTED".equals(relevant.phase())){publish(run,Phase.BLOCKED,interruptedMessage(relevant),List.of(),-1,relevant.playbackStartedAt());return;}
             if(Set.of("ARMED","PLAYING").contains(relevant.phase())){
                 ListeningStartCommand recovered=new ListeningStartCommand(relevant.startId(),relevant.sessionId(),relevant.attemptId(),relevant.manifestId(),relevant.writerEpoch(),
                         relevant.playbackStartedAt()==null?Instant.now():relevant.playbackStartedAt(),relevant.deadlineAt()==null?Instant.now().plusSeconds(1):relevant.deadlineAt());
@@ -210,6 +215,11 @@ public final class ListeningPlayback implements AutoCloseable {
                 interrupt(run,recovered,"NETWORK_LOST","Phát hiện phiên Listening đang dang dở; đã khóa và báo mất kết nối.");
             }
         }catch(Exception failure){block(run,"Không xác minh được trạng thái Listening; audio tiếp tục bị khóa. "+userMessage(failure));}
+    }
+    private static String interruptedMessage(ListeningStatusResponse status) {
+        return "NOT_READY_AT_START".equals(status.interruptionReason())
+                ? "Listening bị khóa vì chưa READY lúc START. Bạn có thể làm Reading trong thời gian còn lại."
+                : "Server xác nhận Listening đã gián đoạn; chờ giám thị xử lý.";
     }
     private ListeningStatusResponse send(ListeningStartCommand c,String event,String reason,String expected)throws Exception{
         ListeningEventRequest request=new ListeningEventRequest(UUID.randomUUID().toString(),c.startId(),c.writerEpoch(),event,reason);

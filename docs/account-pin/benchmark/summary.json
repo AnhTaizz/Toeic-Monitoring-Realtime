@@ -1,0 +1,237 @@
+{
+  "method": "nearest-rank p50/p95 over actual successful samples; failed samples retained in counts/raw; per-level pooled three repetitions; CPU 100%=one logical core; RAM endpoint working-set snapshots, not peak",
+  "network": "loopback on one physical host; simulated protocol candidates; not physical LAN or desktop client sizing",
+  "levels": [
+    {
+      "clients": 1,
+      "rounds": [
+        1,
+        2,
+        3
+      ],
+      "http_count": 567,
+      "http_error_rate": 0.0,
+      "http_success": 567,
+      "http_p50_ms": 9.1827,
+      "http_p95_ms": 69.0035,
+      "event_count": 9,
+      "event_success": 9,
+      "event_p50_ms": 15.9603,
+      "event_p95_ms": 51.8209,
+      "ws_connect_count": 3,
+      "ws_connect_success": 3,
+      "ws_connect_p50_ms": 13.616,
+      "ws_connect_p95_ms": 15.9297,
+      "connected_count": 3,
+      "connected_success": 3,
+      "connected_p50_ms": 38.7655,
+      "connected_p95_ms": 129.8298,
+      "disconnected_count": 3,
+      "disconnected_success": 3,
+      "disconnected_p50_ms": 6474.9399,
+      "disconnected_p95_ms": 6539.5894,
+      "join": {
+        "success": 3,
+        "total": 3
+      },
+      "start": {
+        "success": 3,
+        "total": 3
+      },
+      "submit": {
+        "success": 3,
+        "total": 3
+      },
+      "server_cpu_one_core_percent_mean": 75.17581491880404,
+      "server_working_set_snapshot_mib_max": 223.87109375,
+      "generator_cpu_one_core_percent_mean": 14.855307993652781,
+      "generator_working_set_snapshot_mib_max": 195.4296875,
+      "complete": true
+    },
+    {
+      "clients": 2,
+      "rounds": [
+        1,
+        2,
+        3
+      ],
+      "http_count": 1142,
+      "http_error_rate": 0.0,
+      "http_success": 1142,
+      "http_p50_ms": 8.1614,
+      "http_p95_ms": 41.8482,
+      "event_count": 18,
+      "event_success": 18,
+      "event_p50_ms": 12.7211,
+      "event_p95_ms": 18.3527,
+      "ws_connect_count": 6,
+      "ws_connect_success": 6,
+      "ws_connect_p50_ms": 6.7026,
+      "ws_connect_p95_ms": 15.7581,
+      "connected_count": 6,
+      "connected_success": 6,
+      "connected_p50_ms": 26.3621,
+      "connected_p95_ms": 68.4501,
+      "disconnected_count": 6,
+      "disconnected_success": 6,
+      "disconnected_p50_ms": 6449.0244,
+      "disconnected_p95_ms": 6540.1356,
+      "join": {
+        "success": 6,
+        "total": 6
+      },
+      "start": {
+        "success": 3,
+        "total": 3
+      },
+      "submit": {
+        "success": 6,
+        "total": 6
+      },
+      "server_cpu_one_core_percent_mean": 87.26797331889736,
+      "server_working_set_snapshot_mib_max": 253.15625,
+      "generator_cpu_one_core_percent_mean": 19.433974717815847,
+      "generator_working_set_snapshot_mib_max": 178.87890625,
+      "complete": true
+    },
+    {
+      "clients": 5,
+      "rounds": [
+        1,
+        2,
+        3
+      ],
+      "http_count": 2777,
+      "http_error_rate": 0.0,
+      "http_success": 2777,
+      "http_p50_ms": 7.8289,
+      "http_p95_ms": 70.4335,
+      "event_count": 45,
+      "event_success": 45,
+      "event_p50_ms": 11.4215,
+      "event_p95_ms": 59.0508,
+      "ws_connect_count": 15,
+      "ws_connect_success": 15,
+      "ws_connect_p50_ms": 17.2949,
+      "ws_connect_p95_ms": 49.4894,
+      "connected_count": 15,
+      "connected_success": 15,
+      "connected_p50_ms": 55.9136,
+      "connected_p95_ms": 84.9929,
+      "disconnected_count": 15,
+      "disconnected_success": 15,
+      "disconnected_p50_ms": 6336.9081,
+      "disconnected_p95_ms": 6461.547,
+      "join": {
+        "success": 15,
+        "total": 15
+      },
+      "start": {
+        "success": 3,
+        "total": 3
+      },
+      "submit": {
+        "success": 15,
+        "total": 15
+      },
+      "server_cpu_one_core_percent_mean": 97.80022763861476,
+      "server_working_set_snapshot_mib_max": 259.5390625,
+      "generator_cpu_one_core_percent_mean": 16.775872497607008,
+      "generator_working_set_snapshot_mib_max": 201.6484375,
+      "complete": true
+    },
+    {
+      "clients": 10,
+      "rounds": [
+        1,
+        2,
+        3
+      ],
+      "http_count": 5819,
+      "http_error_rate": 0.0,
+      "http_success": 5819,
+      "http_p50_ms": 6.2103,
+      "http_p95_ms": 96.8032,
+      "event_count": 90,
+      "event_success": 90,
+      "event_p50_ms": 10.0708,
+      "event_p95_ms": 32.3862,
+      "ws_connect_count": 30,
+      "ws_connect_success": 30,
+      "ws_connect_p50_ms": 24.072,
+      "ws_connect_p95_ms": 89.0428,
+      "connected_count": 30,
+      "connected_success": 30,
+      "connected_p50_ms": 81.4368,
+      "connected_p95_ms": 125.383,
+      "disconnected_count": 30,
+      "disconnected_success": 30,
+      "disconnected_p50_ms": 6383.9543,
+      "disconnected_p95_ms": 6563.4157,
+      "join": {
+        "success": 30,
+        "total": 30
+      },
+      "start": {
+        "success": 3,
+        "total": 3
+      },
+      "submit": {
+        "success": 30,
+        "total": 30
+      },
+      "server_cpu_one_core_percent_mean": 115.07365572529129,
+      "server_working_set_snapshot_mib_max": 267.92578125,
+      "generator_cpu_one_core_percent_mean": 18.852994366107918,
+      "generator_working_set_snapshot_mib_max": 207.6015625,
+      "complete": true
+    },
+    {
+      "clients": 20,
+      "rounds": [
+        1,
+        2,
+        3
+      ],
+      "http_count": 10927,
+      "http_error_rate": 0.0,
+      "http_success": 10927,
+      "http_p50_ms": 6.5815,
+      "http_p95_ms": 137.5496,
+      "event_count": 180,
+      "event_success": 180,
+      "event_p50_ms": 69.3863,
+      "event_p95_ms": 171.2587,
+      "ws_connect_count": 60,
+      "ws_connect_success": 60,
+      "ws_connect_p50_ms": 20.4849,
+      "ws_connect_p95_ms": 78.7277,
+      "connected_count": 60,
+      "connected_success": 60,
+      "connected_p50_ms": 77.1054,
+      "connected_p95_ms": 188.6156,
+      "disconnected_count": 60,
+      "disconnected_success": 60,
+      "disconnected_p50_ms": 6181.5809,
+      "disconnected_p95_ms": 6688.3422,
+      "join": {
+        "success": 60,
+        "total": 60
+      },
+      "start": {
+        "success": 3,
+        "total": 3
+      },
+      "submit": {
+        "success": 60,
+        "total": 60
+      },
+      "server_cpu_one_core_percent_mean": 102.87488500103338,
+      "server_working_set_snapshot_mib_max": 349.80859375,
+      "generator_cpu_one_core_percent_mean": 6.891931748260128,
+      "generator_working_set_snapshot_mib_max": 194.48828125,
+      "complete": true
+    }
+  ],
+  "complete": true
+}

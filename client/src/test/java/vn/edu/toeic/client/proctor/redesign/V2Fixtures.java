@@ -14,6 +14,9 @@ import vn.edu.toeic.protocol.exam.rich.CreatedAttempt;
 import vn.edu.toeic.protocol.exam.rich.ExamCatalogItem;
 import vn.edu.toeic.protocol.exam.rich.ExamCatalogPage;
 import vn.edu.toeic.protocol.exam.rich.SessionReadiness;
+import vn.edu.toeic.protocol.exam.rich.CandidateCatalogPage;
+import vn.edu.toeic.protocol.exam.rich.CandidateCatalogItem;
+import vn.edu.toeic.protocol.exam.rich.CreateCandidateRequest;
 
 /** MOCK data for the PROCTORED_V2 panel tests; never evidence of a real server integration. */
 final class V2Fixtures {
@@ -45,10 +48,38 @@ final class V2Fixtures {
 
     /** Scripted fake: every field may be replaced by a test; calls are recorded. */
     static final class FakeApi implements ProctorV2Api {
+        final java.util.List<vn.edu.toeic.protocol.exam.rich.CreatePinRoomRequest> pinCreates=new CopyOnWriteArrayList<>();
+        volatile Call<vn.edu.toeic.protocol.exam.rich.CreatedPinRoom> pinCreate=()->new vn.edu.toeic.protocol.exam.rich.CreatedPinRoom(
+                new CreateRichSessionResponse(SESSION,"mock-a","PROCTORED_V2","SCHEDULED",List.of()),"58321");
+        @Override public vn.edu.toeic.protocol.exam.rich.CreatedPinRoom createPinRoom(vn.edu.toeic.protocol.exam.rich.CreatePinRoomRequest request) throws Exception {pinCreates.add(request);return pinCreate.get();}
+        @Override public vn.edu.toeic.protocol.exam.rich.RoomCatalogPage pinRooms(String after) {return new vn.edu.toeic.protocol.exam.rich.RoomCatalogPage(List.of(),null);}
+        @Override public vn.edu.toeic.protocol.exam.rich.CreatedRoom createRoom(CreateRichSessionRequest r) throws Exception {
+            var s=create(r);return new vn.edu.toeic.protocol.exam.rich.CreatedRoom("TOEIC-123456",s,
+                s.attempts().stream().map(a->new vn.edu.toeic.protocol.exam.rich.RoomCredentials(a.candidateUserId(),"candidate"+a.candidateUserId(),"MOCK",a.attemptId(),"12345678")).toList());
+        }
+        @Override public vn.edu.toeic.protocol.exam.rich.RoomPresence roomPresence(String id) {
+            return new vn.edu.toeic.protocol.exam.rich.RoomPresence("TOEIC-123456",id,"SCHEDULED",List.of(
+                new vn.edu.toeic.protocol.exam.rich.RoomPresence.Member(2,"candidate2","MOCK","MOCK-attempt-1",Instant.now())));
+        }
+        @Override public vn.edu.toeic.protocol.exam.rich.RoomCatalogPage rooms(String after) {
+            return new vn.edu.toeic.protocol.exam.rich.RoomCatalogPage(List.of(),null);
+        }
+        @Override public vn.edu.toeic.protocol.exam.rich.RoomCredentials rotatePin(String id,long candidate) {return new vn.edu.toeic.protocol.exam.rich.RoomCredentials(candidate,"candidate"+candidate,"MOCK","MOCK-attempt-"+candidate,"87654321");}
+        @Override public void revokePin(String id,long candidate) {throw new UnsupportedOperationException();}
         interface Call<T> { T get() throws Exception; }
 
         volatile Call<ExamCatalogPage> firstPage = () -> new ExamCatalogPage(2, List.of(selectable("mock-a"), blocked("mock-b")), "mock-b");
         volatile Call<ExamCatalogPage> nextPage = () -> new ExamCatalogPage(2, List.of(selectable("mock-c")), null);
+        final List<CandidateCatalogItem> candidateRows=new CopyOnWriteArrayList<>(List.of(new CandidateCatalogItem(2,"candidate2","MOCK Thí sinh 2")));
+        final List<CreateCandidateRequest> candidateCreates=new CopyOnWriteArrayList<>();
+        volatile Call<CandidateCatalogPage> candidatePage=()->new CandidateCatalogPage(2,List.copyOf(candidateRows),null);
+        volatile Call<CandidateCatalogItem> candidateCreate=()->{
+            var request=candidateCreates.getLast();
+            if(candidateRows.stream().anyMatch(c->c.username().equals(request.username())))throw new vn.edu.toeic.client.proctor.ProctorSessionApiClient.Rejected(409,"CONFLICT");
+            var item=new CandidateCatalogItem(100+candidateCreates.size(),request.username(),request.displayName());candidateRows.add(item);return item;
+        };
+        @Override public CandidateCatalogPage candidates(String search,Long after) throws Exception {return candidatePage.get();}
+        @Override public CandidateCatalogItem createCandidate(CreateCandidateRequest request) throws Exception {candidateCreates.add(request);return candidateCreate.get();}
         volatile Call<CreateRichSessionResponse> create;
         volatile Call<SessionReadiness> readiness = () -> ready(SESSION, attempt("MOCK-attempt-1", true, true));
         volatile Call<String> manifest = () -> MANIFEST;

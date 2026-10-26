@@ -1,0 +1,66 @@
+package vn.edu.toeic.server.exam.rich;
+
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import vn.edu.toeic.protocol.Role;
+import vn.edu.toeic.protocol.exam.rich.*;
+import vn.edu.toeic.server.auth.AuthenticatedUser;
+import vn.edu.toeic.server.auth.AuthorizationService;
+
+@RestController
+public final class ExamRoomController {
+    private final ExamRoomService rooms;
+    private final AuthorizationService authorization;
+    public ExamRoomController(ExamRoomService rooms,AuthorizationService authorization) {this.rooms=rooms;this.authorization=authorization;}
+
+    @PostMapping("/api/v2/rooms")
+    public ResponseEntity<CreatedRoom> create(HttpServletRequest http,@RequestBody CreateRichSessionRequest request) {
+        var user=(AuthenticatedUser)http.getUserPrincipal();authorization.requireRole(user,Role.PROCTOR);
+        return ResponseEntity.status(HttpStatus.CREATED).cacheControl(CacheControl.noStore()).body(rooms.create(user,request));
+    }
+    @PostMapping("/api/v2/pin-rooms")
+    public ResponseEntity<CreatedPinRoom> createPin(HttpServletRequest http,@RequestBody CreatePinRoomRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).cacheControl(CacheControl.noStore()).body(rooms.createPinRoom((AuthenticatedUser)http.getUserPrincipal(),request));
+    }
+    @GetMapping("/api/v2/pin-rooms")
+    public ResponseEntity<RoomCatalogPage> pinCatalog(HttpServletRequest http) {
+        for(var entry:http.getParameterMap().entrySet())if(!"afterRoomCode".equals(entry.getKey()) || entry.getValue().length!=1)
+            throw vn.edu.toeic.server.exam.ExamApiException.invalidInput("Tham số danh sách phòng không hợp lệ");
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(rooms.pinCatalog((AuthenticatedUser)http.getUserPrincipal(),http.getParameter("afterRoomCode")));
+    }
+    @PostMapping("/api/v2/pin-rooms/join")
+    public ResponseEntity<JoinedRoom> joinPin(HttpServletRequest http,@RequestBody JoinPinRoomRequest request) {
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(rooms.joinPinRoom((AuthenticatedUser)http.getUserPrincipal(),request));
+    }
+    @PostMapping("/api/v2/pin-rooms/{sessionId}/pin/rotate")
+    public ResponseEntity<CreatedPinRoom> rotatePinRoom(HttpServletRequest http,@PathVariable String sessionId) {
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(rooms.rotateSharedPin((AuthenticatedUser)http.getUserPrincipal(),sessionId));
+    }
+    @PostMapping("/api/v2/rooms/join")
+    public ResponseEntity<JoinedRoom> join(@RequestBody JoinRoomRequest request) {
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(rooms.join(request));
+    }
+    @PostMapping("/api/v2/rooms/{sessionId}/candidates/{candidateId}/pin/rotate")
+    public ResponseEntity<RoomCredentials> rotate(HttpServletRequest http,@PathVariable String sessionId,@PathVariable long candidateId) {
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(
+                rooms.rotatePin((AuthenticatedUser)http.getUserPrincipal(),sessionId,candidateId));
+    }
+    @PostMapping("/api/v2/rooms/{sessionId}/candidates/{candidateId}/pin/revoke")
+    public ResponseEntity<Void> revoke(HttpServletRequest http,@PathVariable String sessionId,@PathVariable long candidateId) {
+        rooms.revokePin((AuthenticatedUser)http.getUserPrincipal(),sessionId,candidateId);
+        return ResponseEntity.noContent().cacheControl(CacheControl.noStore()).build();
+    }
+    @GetMapping("/api/v2/rooms/{sessionId}/presence")
+    public ResponseEntity<RoomPresence> presence(HttpServletRequest http,@PathVariable String sessionId) {
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(rooms.presence((AuthenticatedUser)http.getUserPrincipal(),sessionId));
+    }
+    @GetMapping("/api/v2/rooms")
+    public ResponseEntity<RoomCatalogPage> catalog(HttpServletRequest http) {
+        for(var entry:http.getParameterMap().entrySet())if(!"afterRoomCode".equals(entry.getKey()) || entry.getValue().length!=1)
+            throw vn.edu.toeic.server.exam.ExamApiException.invalidInput("Tham số danh sách phòng không hợp lệ");
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(rooms.catalog((AuthenticatedUser)http.getUserPrincipal(),http.getParameter("afterRoomCode")));
+    }
+}

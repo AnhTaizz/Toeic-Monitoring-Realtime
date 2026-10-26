@@ -1,0 +1,62 @@
+{
+  "baseSha": "ee20a2737ffe622564728ef0b801f68a803f4da2",
+  "sourceDirty": true,
+  "files": [
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/ProcessPolicy.java",
+      "sha256": "8fee30ede8401ad9ae199d4f5d388e119ee29eb6f3b3ead0e84d2ac8a564de67"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/TraceCli.java",
+      "sha256": "2c50aab0509def5abbf093895915ed5e30368cb922f54cc4e0be49c1e1343c8a"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/monitoring/trace/TraceRecorder.java",
+      "sha256": "f5597a970973f26d1e5704bc8430995df1168cf86e97cf37cb2fc5739f726c7d"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/proctor/redesign/RoomModel.java",
+      "sha256": "58eb848807d87868b5b0d41126a0e179729002b0c92cc6846819fa2e7aea8d72"
+    },
+    {
+      "path": "client/src/main/java/vn/edu/toeic/client/proctor/timeline/ProcessRiskPresentation.java",
+      "sha256": "79f76e95692c85cf26c492fb4d8465eebb9d9b62bf3cfbcee2f122b4666599a0"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessCollectorSmoke.java",
+      "sha256": "d44b0403e2ef48d9beb84a2b18bf6e4d5203ab27786de126a558f4b5d8ea566d"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessCollectorTest.java",
+      "sha256": "5e7b6176333399984a2a5d0b4fb1b890f3dacee4e228cb7947603ee7472d033a"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessCollectorTraceTest.java",
+      "sha256": "b79c0eba42305bddbae0a5f2aa94345178c475495a38e0d85f38db598eac9fd0"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/ProcessPolicyAndSourceTest.java",
+      "sha256": "abbf2539301951966feae7af47c7df9380f0a6dc8cc79baeaaa1927272471a74"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/monitoring/harness/TestTracePolicyTest.java",
+      "sha256": "e568a1ede5411159cd34457783da301a9aeb423065a8d525ba1409b16eea563d"
+    },
+    {
+      "path": "client/src/test/java/vn/edu/toeic/client/proctor/redesign/ProcessGroupsGuiTest.java",
+      "sha256": "512d81a1bfc20d447a9ecd0f84c438a02add528743387cfc159f7cda3e99de99"
+    },
+    {
+      "path": "protocol/src/main/java/vn/edu/toeic/protocol/monitoring/ProcessCatalog.java",
+      "sha256": "7bb257f6701b8b3b3a19f55b8595b54f77d34de7e4dd9a7f180d0087e1022322"
+    },
+    {
+      "path": "protocol/src/test/java/vn/edu/toeic/protocol/monitoring/ProcessCatalogTest.java",
+      "sha256": "55121b58f4c63663a2c8ac92742f2fe3293e0ec695e550add6a0ff64ed1e09b6"
+    },
+    {
+      "path": "server/src/test/java/vn/edu/toeic/server/monitoring/signal/MonitoringTimelinePostgresTest.java",
+      "sha256": "bfe7387b1800a14a3fa180c5d0924ead66dfe06c1a93f2d8827f01ec2e2e7146"
+    }
+  ]
+}

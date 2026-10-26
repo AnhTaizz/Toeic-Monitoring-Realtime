@@ -1,0 +1,7 @@
+{
+  "source": "Existing target/phase4/verify-portable-server.ps1 smoke reused in isolated worktree; V19 probe updated to V21 only",
+  "sha256": "e7c6ff9e88b2b62093333b20165615cf972f03bfc5310f4a43562e34d720cc4b",
+  "migrationProbeVersion": 21,
+  "caseIdNote": "Historical bundled-server-real-postgres-v19 case identifier retained; executed SQL and scope check V21, not V19.",
+  "scope": "Owned empty PostgreSQL, actual portable Server launcher/bundled runtime; startup/auth/catalog/migration, not exam flow or LAN"
+}

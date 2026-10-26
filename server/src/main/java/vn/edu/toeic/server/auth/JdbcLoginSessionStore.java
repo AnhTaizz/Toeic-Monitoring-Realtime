@@ -19,7 +19,7 @@ public class JdbcLoginSessionStore implements LoginSessionStore {
     @Override
     public Optional<StoredSession> findByTokenHash(String tokenHash) {
         return jdbcClient.sql("""
-                SELECT u.id, u.username, u.role, u.enabled, s.expires_at, s.revoked_at
+                SELECT u.id, u.username, u.role, u.enabled, s.expires_at, s.revoked_at, s.room_attempt_id
                 FROM login_sessions s JOIN user_accounts u ON u.id = s.user_id
                 WHERE s.token_hash = :tokenHash
                 """)
@@ -27,7 +27,7 @@ public class JdbcLoginSessionStore implements LoginSessionStore {
                 .query((rs, row) -> {
                     OffsetDateTime revokedAt = rs.getObject("revoked_at", OffsetDateTime.class);
                     return new StoredSession(new AuthenticatedUser(rs.getLong("id"), rs.getString("username"),
-                            Role.valueOf(rs.getString("role"))), rs.getObject("expires_at", OffsetDateTime.class).toInstant(),
+                            Role.valueOf(rs.getString("role")), rs.getString("room_attempt_id")), rs.getObject("expires_at", OffsetDateTime.class).toInstant(),
                             revokedAt == null ? null : revokedAt.toInstant(), rs.getBoolean("enabled"));
                 }).optional();
     }

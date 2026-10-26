@@ -52,7 +52,7 @@ public final class RichImageService {
                     rs.getString("local_file"),rs.getString("mime_type"),rs.getLong("size_bytes"),rs.getString("sha256"),
                     (Integer)rs.getObject("width_px"),(Integer)rs.getObject("height_px"),null,null)).optional()
                     .orElseThrow(AccessDeniedException::forbidden);
-            if("SCHEDULED".equals(c.sessionState())) {
+            if("SCHEDULED".equals(c.sessionState()) || "IN_PROGRESS".equals(c.sessionState()) && c.committedVisualManifestId()==null) {
                 var manifest=manifests.build(c);
                 if(manifest.slots().stream().noneMatch(s->s.mediaId().equals(mediaId))) throw AccessDeniedException.forbidden();
                 if(manifestQuery==null) throw ExamApiException.invalidInput("Thiếu visualManifestId");

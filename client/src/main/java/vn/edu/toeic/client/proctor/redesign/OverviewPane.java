@@ -44,6 +44,8 @@ final class OverviewPane extends VBox implements ProctorRedesignView.RoomPane, P
         getStyleClass().add("page");
         total.setId("stat-total"); online.setId("stat-online"); offline.setId("stat-offline"); alerts.setId("stat-alerts");
         table.setId("overview-table");
+        recentAlerts.setId("overview-recent-alerts");
+        logRows.setId("overview-recent-events");
         remaining.setId("overview-remaining");
 
         HBox stats = new HBox(14,
@@ -55,15 +57,16 @@ final class OverviewPane extends VBox implements ProctorRedesignView.RoomPane, P
         stats.getChildren().forEach(card -> { HBox.setHgrow(card, Priority.ALWAYS); ((Region) card).setPrefWidth(1); });
 
         Ui.plainTable(table, "Chưa có lượt ACTIVE được phân công cho giám thị này.");
-        table.getColumns().add(Ui.nodeColumn("Mã TS", 95, row -> Ui.label(Cells.code(row), "strong")));
-        table.getColumns().add(Ui.nodeColumn("Họ và tên", 150, row -> Ui.label(row.displayName(), "strong")));
-        table.getColumns().add(Ui.nodeColumn("Kết nối", 130, Cells::connection));
-        table.getColumns().add(Ui.nodeColumn("Bài thi", 95, row -> Ui.label(row.progress() == null ? "—"
-                : RoomModel.attemptState(row.progress().state()), "label")));
-        table.getColumns().add(Ui.nodeColumn("Đã trả lời", 130, Cells::progress));
-        table.getColumns().add(Ui.nodeColumn("Liên lạc cuối", 90, Cells::heartbeat));
-        table.getColumns().add(Ui.nodeColumn("Cảnh báo", 120, Cells::alerts));
-        table.getColumns().add(Ui.nodeColumn("", 95, row -> Cells.detailLink("overview-detail-" + row.attemptId(),
+        table.getColumns().add(Ui.nodeColumn("Thí sinh", 175, row -> Ui.twoLines(row.displayName(), Cells.code(row), "strong")));
+        table.getColumns().add(Ui.nodeColumn("Kết nối", 120, Cells::connection));
+        var examColumn=Ui.<CandidateRow>nodeColumn("Bài thi", 90, row -> Ui.label(row.progress() == null ? "—"
+                : RoomModel.attemptState(row.progress().state()), "label"));
+        table.getColumns().add(examColumn);
+        table.getColumns().add(Ui.nodeColumn("Đã trả lời", 115, Cells::progress));
+        var heartbeatColumn=Ui.<CandidateRow>nodeColumn("Liên lạc cuối", 90, Cells::heartbeat);
+        table.getColumns().add(heartbeatColumn);
+        table.getColumns().add(Ui.nodeColumn("Cảnh báo", 100, Cells::alerts));
+        table.getColumns().add(Ui.nodeColumn("", 75, row -> Cells.detailLink("overview-detail-" + row.attemptId(),
                 () -> actions.openCandidate(row.attemptId()))));
         Cells.candidateRows(table, row -> actions.openCandidate(row.attemptId()));
 

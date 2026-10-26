@@ -5,11 +5,11 @@ $previousValues = @{}
 Push-Location (Split-Path -Parent $PSScriptRoot)
 try {
     if (-not (Test-Path -LiteralPath '.env')) { throw 'Local .env is required for PostgreSQL history smoke.' }
-    foreach ($key in @('DB_HOST', 'DB_PORT', 'DB_NAME', 'DB_USER', 'DB_PASSWORD', 'TOEIC_SEED_PASSWORD', 'JAVA_HOME', 'PATH', 'JAVA_TOOL_OPTIONS', 'TOEIC_PG_INTEGRATION')) {
+    foreach ($key in @('DB_HOST', 'DB_PORT', 'DB_NAME', 'DB_USER', 'DB_PASSWORD', 'TOEIC_SEED_PASSWORD', 'TOEIC_SEED_DEMO_ACCOUNTS', 'JAVA_HOME', 'PATH', 'JAVA_TOOL_OPTIONS', 'TOEIC_PG_INTEGRATION')) {
         $previousValues[$key] = [Environment]::GetEnvironmentVariable($key, 'Process')
     }
     foreach ($line in Get-Content -LiteralPath '.env' -Encoding UTF8) {
-        if ($line -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD)\s*=(.*)$') {
+        if ($line -match '^\s*(DB_HOST|DB_PORT|DB_NAME|DB_USER|DB_PASSWORD|TOEIC_SEED_PASSWORD|TOEIC_SEED_DEMO_ACCOUNTS)\s*=(.*)$') {
             [Environment]::SetEnvironmentVariable($Matches[1], $Matches[2].Trim().Trim('"').Trim("'"), 'Process')
         }
     }

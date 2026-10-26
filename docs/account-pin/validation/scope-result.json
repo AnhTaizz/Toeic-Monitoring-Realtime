@@ -1,0 +1,81 @@
+{
+  "sourceSha": "9f6316bb17e51711bf38011bdcd41e153ed20afe",
+  "runId": "room-ux-20261024T110934Z-dadd0710",
+  "mode": "Gui",
+  "os": "Microsoft Windows NT 10.0.26200.0",
+  "java": "java version \"21.0.8\" 2025-07-15 LTS",
+  "maven": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)",
+  "postgres": "PostgreSQL 18.1 on x86_64-windows, compiled by msvc-19.44.35221, 64-bit",
+  "database": "toeic_room_admission_test",
+  "host": "127.0.0.1",
+  "port": 54958,
+  "fixture": "MOCK self-authored exam content; real PostgreSQL/Flyway/HTTP/WebSocket",
+  "command": "mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC -pl server -am -Dtest=ExamScopeRefreshGuiTest,LoginSceneGuiTest -Dsurefire.failIfNoSpecifiedTests=false test",
+  "startUtc": "2026-10-24T11:09:53.2142797Z",
+  "endUtc": "2026-10-24T11:10:23.7702756Z",
+  "exitCode": 0,
+  "runnerErrorType": null,
+  "totals": {
+    "failures": 0,
+    "passed": 6,
+    "errors": 0,
+    "tests": 6,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "status": "PASS",
+      "seconds": "6.086",
+      "name": "initialScopeReadLocksSelectionAndStartUntilFreshResponse",
+      "class": "vn.edu.toeic.client.ExamScopeRefreshGuiTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.378",
+      "name": "passwordToggleSharesTheValueAndInvalidOriginNeverAuthenticates",
+      "class": "vn.edu.toeic.client.LoginSceneGuiTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.821",
+      "name": "formRemainsUsableOnCompactAndLargeWindows",
+      "class": "vn.edu.toeic.client.LoginSceneGuiTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.694",
+      "name": "candidateCanEnterRoomCredentialsAndWrongPinDoesNotLeaveThemOnScreen",
+      "class": "vn.edu.toeic.client.LoginSceneGuiTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.257",
+      "name": "inFlightLoginCannotBeDuplicatedAndFailureClearsBothPasswordViews",
+      "class": "vn.edu.toeic.client.LoginSceneGuiTest"
+    },
+    {
+      "status": "PASS",
+      "seconds": "0.334",
+      "name": "accountLoginOpensOnlySharedPinAndWrongPinKeepsTheAccountEntryUsable",
+      "class": "vn.edu.toeic.client.LoginSceneGuiTest"
+    }
+  ],
+  "xmlHashes": [
+    {
+      "module": "client",
+      "sha256": "6358e7a25e7bbf81b53003479c5d78c6150c55af8c1ea8b0ea72e960ce3034ee",
+      "file": "TEST-vn.edu.toeic.client.ExamScopeRefreshGuiTest.xml"
+    },
+    {
+      "module": "client",
+      "sha256": "85d35ec665a00c9ceacfc46e6a52c01de59b1e50b2f62b822dc79cb1fdcdb59a",
+      "file": "TEST-vn.edu.toeic.client.LoginSceneGuiTest.xml"
+    }
+  ],
+  "cleanup": {
+    "clusterStopExit": 0,
+    "ownedSchemasRemaining": 0
+  },
+  "guiEvidence": "Candidate GUI enabled; see individual cases",
+  "manualLanHearing": "NOT RUN"
+}

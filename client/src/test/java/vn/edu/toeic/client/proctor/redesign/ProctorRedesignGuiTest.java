@@ -87,6 +87,9 @@ class ProctorRedesignGuiTest {
     }
 
     private static String text(javafx.scene.Node root, String id) {
+        // A controller callback may have rebuilt ScrollPane content since the previous FX pulse.
+        root.applyCss();
+        if (root instanceof javafx.scene.Parent parent) parent.layout();
         return ((javafx.scene.control.Labeled) root.lookup(id)).getText();
     }
 

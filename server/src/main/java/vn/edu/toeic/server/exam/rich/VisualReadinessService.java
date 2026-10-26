@@ -45,11 +45,14 @@ public class VisualReadinessService {
     }
     private record Login(Instant expires,boolean revoked,boolean enabled,long user) {}
     private Login lockLogin(String token) {
+        var login=lockLoginIfPresent(token);if(login==null)throw AccessDeniedException.unauthorized();return login;
+    }
+    private Login lockLoginIfPresent(String token) {
         if(token==null || !token.matches("[a-f0-9]{64}"))throw AccessDeniedException.unauthorized();
         return jdbc.sql("SELECT l.expires_at,l.revoked_at IS NOT NULL AS revoked,u.enabled,l.user_id FROM login_sessions l JOIN user_accounts u ON u.id=l.user_id WHERE l.token_hash=:t FOR SHARE OF l,u")
-                .param("t",token).query((r,n)->new Login(r.getTimestamp(1).toInstant(),r.getBoolean(2),r.getBoolean(3),r.getLong(4))).optional().orElseThrow(AccessDeniedException::unauthorized);
+                .param("t",token).query((r,n)->new Login(r.getTimestamp(1).toInstant(),r.getBoolean(2),r.getBoolean(3),r.getLong(4))).optional().orElse(null);
     }
-    private static boolean valid(Login login,long owner,Instant now) {return login.user()==owner&&!login.revoked()&&login.enabled()&&now.isBefore(login.expires());}
+    private static boolean valid(Login login,long owner,Instant now) {return login!=null&&login.user()==owner&&!login.revoked()&&login.enabled()&&now.isBefore(login.expires());}
     public void revalidateToken(String tokenHash,long userId) {
         if(!valid(lockLogin(tokenHash),userId,policy.now()))throw AccessDeniedException.unauthorized();
     }
@@ -61,7 +64,11 @@ public class VisualReadinessService {
     public VisualReadyResponse ready(AuthenticatedUser user,String tokenHash,String attempt,VisualReadyRequest request) {
         auth.requireRole(user,Role.CANDIDATE);auth.requireExamRead(user,attempt);
         var s=policy.lockForMutation(user,attempt);if(s==null)throw V2SessionPolicy.invalid();
-        policy.requireActiveContent(s);if(!"SCHEDULED".equals(s.sessionState()))throw V2SessionPolicy.invalid();
+        boolean late=policy.latePreparation(s);
+        boolean completedLate="IN_PROGRESS".equals(s.sessionState()) && s.committedManifest()!=null && policy.isAccountPin(s.sessionId())
+                && jdbc.sql("SELECT count(*) FROM monitoring_attempts WHERE attempt_id=:a AND listening_interruption_reason='NOT_READY_AT_START'")
+                .param("a",attempt).query(Long.class).single()==1;
+        policy.requirePreparationContent(s);if(!"SCHEDULED".equals(s.sessionState()) && !late && !completedLate)throw V2SessionPolicy.invalid();
         if(request==null || request.requestId()==null || (request.requestId().isBlank() || request.requestId().length()>128)
                 || !attempt.equals(request.attemptId()) || request.action()==null || request.verifiedAssets()==null
                 || request.verifiedAssets().size()>6)throw ExamApiException.invalidInput("Payload Visual READY không hợp lệ");
@@ -83,11 +90,14 @@ public class VisualReadinessService {
                     && at.isBefore(response.leaseExpiresAt()) && audioReady(s,audioManifest(s).manifestId()))return response;
             throw V2SessionPolicy.invalid();
         }
+        // A lost successful late-attestation response may be retried; no new attestation after admission.
+        if(completedLate)throw V2SessionPolicy.invalid();
         var manifest=manifests.build(s.imageContext());
         if(!s.epoch().equals(request.preparationEpoch()) || !manifest.manifestId().equals(request.manifestId()))
             throw V2SessionPolicy.error(ErrorCode.CONFLICT,"Preparation context đã thay đổi");
         VisualReadyResponse response;
         if(request.action()==VisualReadyAction.INVALIDATE) {
+            if(late)throw V2SessionPolicy.invalid();
             if(request.firstSlotId()!=null || !request.verifiedAssets().isEmpty())throw ExamApiException.invalidInput("Payload INVALIDATE không hợp lệ");
             var login=lockLogin(tokenHash);if(!valid(login,user.userId(),policy.now()))throw AccessDeniedException.unauthorized();
             String epoch=policy.invalidate(s);
@@ -105,7 +115,7 @@ public class VisualReadinessService {
             var audioManifest=audioManifest(s);if(!audioReady(s,audioManifest.manifestId()))throw V2SessionPolicy.invalid();
             sessions.verifiedResources(s.examId());
             var login=lockLogin(tokenHash);Instant at=policy.now();if(!valid(login,user.userId(),at))throw AccessDeniedException.unauthorized();
-            if(current!=null && (!current.epoch().equals(s.epoch()) || !at.isBefore(current.lease())))throw V2SessionPolicy.invalid();
+            if(current!=null && (!current.epoch().equals(s.epoch()) || !at.isBefore(current.lease())) && !late)throw V2SessionPolicy.invalid();
             Instant readyAt=current==null?at:current.at(),lease=at.plusMillis(leaseMillis);
             jdbc.sql("""
                     INSERT INTO attempt_visual_readiness(attempt_id,writer_epoch,preparation_epoch,manifest_id,attested_token_hash,asset_digest,ready_at,last_seen_at,lease_expires_at)
@@ -116,6 +126,8 @@ public class VisualReadinessService {
                     """).param("a",attempt).param("w",s.writerEpoch()).param("e",s.epoch()).param("m",manifest.manifestId()).param("t",tokenHash)
                     .param("d",sha(JSON.toJson(claims))).param("ready",java.sql.Timestamp.from(readyAt)).param("at",java.sql.Timestamp.from(at)).param("lease",java.sql.Timestamp.from(lease)).update();
             response=new VisualReadyResponse(2,request.requestId(),attempt,s.writerEpoch(),s.epoch(),manifest.manifestId(),"READY",readyAt,lease);
+            if(late)jdbc.sql("UPDATE monitoring_attempts SET committed_visual_manifest_id=:m WHERE attempt_id=:a AND committed_visual_manifest_id IS NULL")
+                    .param("m",manifest.manifestId()).param("a",attempt).update();
         }
         jdbc.sql("INSERT INTO visual_ready_requests(attempt_id,request_id,payload_digest,response_json) VALUES(:a,:r,:d,:response)")
                 .param("a",attempt).param("r",request.requestId()).param("d",digest).param("response",JSON.toJson(response)).update();
@@ -140,12 +152,19 @@ public class VisualReadinessService {
         var ids=jdbc.sql("SELECT attempt_id FROM monitoring_attempts WHERE session_id=:s ORDER BY attempt_id COLLATE \"C\"")
                 .param("s",session).query(String.class).list();
         var states=new ArrayList<V2SessionPolicy.State>();
-        for(String id:ids){var state=policy.lockForSystem(id);if(state==null || !state.sessionId().equals(session))throw V2SessionPolicy.invalid();states.add(state);}
+        for(String id:ids){var state=policy.isAccountPin(session)?policy.lockForStartInspection(id):policy.lockForSystem(id);if(state==null || !state.sessionId().equals(session))throw V2SessionPolicy.invalid();states.add(state);}
         return states;
     }
-    public record StartVerification(Map<String,String> committedManifests,Instant decisionAt) {}
+    public record StartVerification(Map<String,String> committedManifests,Instant decisionAt,Set<String> interruptedAttempts) {
+        public StartVerification(Map<String,String> committedManifests,Instant decisionAt){this(committedManifests,decisionAt,Set.of());}
+    }
     public StartVerification verifyStart(AuthenticatedUser proctor,String tokenHash,String session,String expectedAudio) {
-        assigned(proctor,session);var states=lockRoster(session);if(states.isEmpty())throw V2SessionPolicy.invalid();
+        if(policy.isAccountPin(session))return verifyAccountPinStart(proctor,tokenHash,session,expectedAudio);
+        assigned(proctor,session);
+        List<V2SessionPolicy.State> states;
+        try { states=lockRoster(session); }
+        catch(AccessDeniedException disabledRoster) { throw V2SessionPolicy.invalid(); }
+        if(states.isEmpty())throw V2SessionPolicy.invalid();
         var rows=new LinkedHashMap<String,Ready>();
         // Khóa mọi attempt trước readiness, rồi mọi readiness trước auth rows.
         for(var s:states)rows.put(s.attemptId(),row(s.attemptId()));
@@ -165,6 +184,38 @@ public class VisualReadinessService {
         for(var s:states){var r=rows.get(s.attemptId());if(!valid(logins.get(r.token()),s.candidateId(),at) || !at.isBefore(r.lease()))throw V2SessionPolicy.invalid();}
         return new StartVerification(Map.copyOf(visualIds),at);
     }
+    private StartVerification verifyAccountPinStart(AuthenticatedUser proctor,String tokenHash,String session,String expectedAudio) {
+        assigned(proctor,session);var states=lockRoster(session);
+        if(states.isEmpty())throw V2SessionPolicy.error(ErrorCode.INVALID_STATE,"Chưa có thí sinh JOIN phòng.");
+        long members=jdbc.sql("SELECT count(*) FROM exam_room_members WHERE session_id=:s AND joined_at IS NOT NULL")
+                .param("s",session).query(Long.class).single();
+        if(members!=states.size())throw V2SessionPolicy.invalid();
+        var rows=new LinkedHashMap<String,Ready>();
+        for(var s:states) {
+            if(!"ACTIVE".equals(s.attemptState()) || !"SCHEDULED".equals(s.sessionState()) || s.deadline()!=null
+                    || jdbc.sql("SELECT count(*) FROM exam_room_members WHERE session_id=:s AND attempt_id=:a AND candidate_user_id=:u AND joined_at IS NOT NULL")
+                    .param("s",session).param("a",s.attemptId()).param("u",s.candidateId()).query(Long.class).single()!=1)throw V2SessionPolicy.invalid();
+            rows.put(s.attemptId(),row(s.attemptId()));
+        }
+        sessions.verifiedResources(states.getFirst().examId());
+        var visualIds=new LinkedHashMap<String,String>();var shaped=new HashSet<String>();
+        for(var s:states) {
+            var manifest=manifests.build(s.imageContext());visualIds.put(s.attemptId(),manifest.manifestId());var r=rows.get(s.attemptId());
+            if(r!=null && r.writer()==s.writerEpoch() && r.epoch().equals(s.epoch()) && r.manifest().equals(manifest.manifestId())
+                    && audioReady(s,expectedAudio) && jdbc.sql("SELECT count(*) FROM login_sessions WHERE token_hash=:t AND room_attempt_id=:a")
+                    .param("t",r.token()).param("a",s.attemptId()).query(Long.class).single()==1)shaped.add(s.attemptId());
+        }
+        var tokens=new TreeSet<String>();tokens.add(tokenHash);for(var r:rows.values())if(r!=null)tokens.add(r.token());
+        var logins=new TreeMap<String,Login>();for(String token:tokens)logins.put(token,lockLoginIfPresent(token));
+        Instant at=policy.now();if(!valid(logins.get(tokenHash),proctor.userId(),at))throw AccessDeniedException.unauthorized();
+        var committed=new LinkedHashMap<String,String>();var blocked=new LinkedHashSet<String>();
+        for(var s:states) {
+            var r=rows.get(s.attemptId());
+            boolean ready=shaped.contains(s.attemptId()) && valid(logins.get(r.token()),s.candidateId(),at) && at.isBefore(r.lease());
+            if(ready)committed.put(s.attemptId(),visualIds.get(s.attemptId()));else blocked.add(s.attemptId());
+        }
+        return new StartVerification(Map.copyOf(committed),at,Set.copyOf(blocked));
+    }
     @Transactional
     public SessionReadiness readiness(AuthenticatedUser proctor,String session) {
         assigned(proctor,session);
@@ -173,7 +224,10 @@ public class VisualReadinessService {
         Instant at=policy.now();var attempts=new ArrayList<AttemptReadiness>();
         for(var s:states) {
             var reasons=new ArrayList<String>();String visual=null;boolean audioReady=false,visualReady=false;var r=rows.get(s.attemptId());
-            if(!"SCHEDULED".equals(s.sessionState()))reasons.add("SESSION_NOT_SCHEDULED");
+            if("IN_PROGRESS".equals(s.sessionState()) && policy.isAccountPin(session) && s.committedManifest()!=null) {
+                audioReady=true;visualReady=true;visual=s.committedManifest();
+            }
+            else if(!"SCHEDULED".equals(s.sessionState()))reasons.add("SESSION_NOT_SCHEDULED");
             else if(!"ACTIVE".equals(s.attemptState()))reasons.add("INACTIVE_ATTEMPT");
             else {
                 var m=manifests.build(s.imageContext());visual=m.manifestId();audioReady=audioReady(s,audioManifest(s).manifestId());
@@ -190,6 +244,9 @@ public class VisualReadinessService {
             }
             attempts.add(new AttemptReadiness(s.attemptId(),s.writerEpoch(),s.epoch(),audioReady,visualReady,visual,r==null?null:r.lease(),reasons));
         }
-        return new SessionReadiness(2,session,at,!attempts.isEmpty()&&attempts.stream().allMatch(a->a.audioReady()&&a.visualReady()),attempts);
+        boolean accountPin=policy.isAccountPin(session);
+        boolean scheduled=jdbc.sql("SELECT state FROM exam_sessions WHERE session_id=:s").param("s",session).query(String.class).single().equals("SCHEDULED");
+        boolean all=!attempts.isEmpty()&&attempts.stream().allMatch(a->a.audioReady()&&a.visualReady());
+        return new SessionReadiness(2,session,at,all,attempts,policy.roomMode(session),accountPin?scheduled&&!attempts.isEmpty():scheduled&&all);
     }
 }

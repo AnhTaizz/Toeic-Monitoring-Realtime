@@ -1,0 +1,170 @@
+{
+  "baseSha": "d89734275c339b692e850b6b8d2fa2a45bb8c712",
+  "sourceDirty": true,
+  "sourceManifest": "source-manifest.json",
+  "sourceHashKind": "Local working-tree byte SHA-256 before commit",
+  "currentPolicy": "process-policy-v4",
+  "executables": [
+    "chrome.exe",
+    "msedge.exe",
+    "firefox.exe",
+    "zalo.exe",
+    "teams.exe",
+    "ms-teams.exe",
+    "discord.exe",
+    "anydesk.exe",
+    "teamviewer.exe"
+  ],
+  "historicalPolicySizes": {
+    "v1": 8,
+    "v2": 39,
+    "v3": 31
+  },
+  "verify": {
+    "suites": 156,
+    "tests": 1625,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 154,
+    "passed": 1471
+  },
+  "focused": {
+    "passed": 142,
+    "overlapsFullVerify": true
+  },
+  "jars": [
+    {
+      "path": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+      "sha256": "453320f135268063a341601bd64072bb7ee2dbf07b3f250bf3fed1350384256c",
+      "matchedEntries": 545
+    },
+    {
+      "path": "server/target/server-process-nine-20261025.jar",
+      "sha256": "d4f286fbb89751fc9d0fefe466c6fd7ec6e3290e3eb0dbc9e8a7bc1f99b329d5",
+      "matchedEntries": 167,
+      "embeddedProtocolByteIdentical": true
+    }
+  ],
+  "usbFilesUnchanged": 13,
+  "usbSourceHashes": "usb-unchanged.json",
+  "realIntegration": {
+    "rawDirectory": "target/process-nine-real-20261025",
+    "result": {
+      "sourceSha": "d89734275c339b692e850b6b8d2fa2a45bb8c712",
+      "identityOnly": false,
+      "exitCode": 0,
+      "startUtc": "2026-10-25T08:54:00.0979732Z",
+      "alertRules": false,
+      "cleanup": {
+        "ownedSchemasRemaining": 0,
+        "clusterStopExit": 0,
+        "postmasterPidAbsent": true
+      },
+      "sourceDirty": true,
+      "endUtc": "2026-10-25T08:55:18.8415594Z",
+      "integrated": false,
+      "desktop": false,
+      "summaryPresent": true,
+      "runId": "usb-e73c295cc08f4263",
+      "mode": "Real",
+      "runnerErrorType": null,
+      "hardware": "0/12 NOT_RUN",
+      "timeline": true
+    },
+    "summary": {
+      "schemaDropped": true,
+      "runs": [
+        {
+          "hardwareHotplug": "NOT_RUN",
+          "examEntryReusesRun": true,
+          "manualPortalBaseline": true,
+          "usbSource": "REAL_CIM",
+          "activityOnlyAfterExamEntry": true,
+          "sharedCollector": true,
+          "stopWaitsForUsbWorkers": true,
+          "usbBaselineCount": 0,
+          "kind": "MANUAL_PROCESS_AND_SIGNALS",
+          "restartNewRun": true
+        },
+        {
+          "nativeTeamsAtStart": 2,
+          "nativeTeamsInHistoryAndFeed": true,
+          "policy": "process-policy-v4",
+          "kind": "REAL_PROCESS_GROUPS",
+          "source": "REAL_ProcessHandle",
+          "backgroundNotInReview": true,
+          "snapshotProcesses": 46
+        },
+        {
+          "deliveryAcknowledged": 8,
+          "historyRows": 8,
+          "usbWorkersStopped": true,
+          "sharedCollectorIdentity": true,
+          "storageCount": 0,
+          "kind": "PRODUCTION_CANDIDATE_USB",
+          "source": "REAL_CIM",
+          "freshReconnectCapability": true,
+          "hardwareAcceptance": "Baseline only; no physical hotplug action in this automated test"
+        }
+      ],
+      "hardware": "0/12 NOT_RUN",
+      "runId": "usb-e73c295cc08f4263",
+      "sourceSha": "d89734275c339b692e850b6b8d2fa2a45bb8c712"
+    },
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 2
+  },
+  "mockIntegration": {
+    "rawDirectory": "target/process-nine-usb-mock-20261025",
+    "result": {
+      "sourceSha": "d89734275c339b692e850b6b8d2fa2a45bb8c712",
+      "identityOnly": false,
+      "exitCode": 0,
+      "startUtc": "2026-10-25T08:55:31.0329359Z",
+      "alertRules": false,
+      "cleanup": {
+        "ownedSchemasRemaining": 0,
+        "clusterStopExit": 0,
+        "postmasterPidAbsent": true
+      },
+      "sourceDirty": true,
+      "endUtc": "2026-10-25T08:56:42.8750182Z",
+      "integrated": false,
+      "desktop": false,
+      "summaryPresent": true,
+      "runId": "usb-f80ace0a44cd4085",
+      "mode": "Mock",
+      "runnerErrorType": null,
+      "hardware": "0/12 NOT_RUN",
+      "timeline": true
+    },
+    "summary": {
+      "schemaDropped": true,
+      "sourceSha": "d89734275c339b692e850b6b8d2fa2a45bb8c712",
+      "runId": "usb-f80ace0a44cd4085",
+      "hardware": "0/12 NOT_RUN",
+      "runs": [
+        {
+          "B_rows": 1,
+          "ackLoss": "SIMULATED",
+          "kind": "MOCK_TYPED",
+          "actualQueueDrops": 3,
+          "JavaFX": "Scene controls/snapshot; not OS input",
+          "A_rows": 19,
+          "reconnect": "REAL disconnect/connect and fresh scope/history"
+        }
+      ]
+    },
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 1
+  },
+  "rawVerify": "target/process-nine-verify-20261025",
+  "ci": "NOT_RUN; feature-branch push has no workflow trigger",
+  "hardware": "No physical USB hotplug action; H01-H12 NOT_RUN"
+}

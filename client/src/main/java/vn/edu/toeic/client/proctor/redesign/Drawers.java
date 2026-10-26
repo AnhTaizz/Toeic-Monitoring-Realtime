@@ -21,6 +21,7 @@ import vn.edu.toeic.client.proctor.redesign.RoomModel.Alert;
 import vn.edu.toeic.client.proctor.redesign.RoomModel.CandidateRow;
 import vn.edu.toeic.client.proctor.redesign.RoomModel.HistoryEntry;
 import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
+import vn.edu.toeic.client.proctor.signals.CandidateSignalsController;
 
 /**
  * Right-side panels of mockups 05 and 06. They only render the shared room; closing one never clears data,
@@ -89,6 +90,8 @@ final class Drawers {
     static final class CandidateDrawer extends Drawer {
         private final Actions actions;
         private String attemptId;
+        private RoomModel.Room room;
+        private CandidateSignalsController.Snapshot signals;
 
         CandidateDrawer(Actions actions, Runnable close) {
             super("candidate-drawer", "Chi tiết thí sinh", close);
@@ -105,12 +108,18 @@ final class Drawers {
 
         String attemptId() { return attemptId; }
 
+        void updateSignals(CandidateSignalsController.Snapshot value) {
+            signals=value;
+            if(room!=null)update(room);
+        }
+
         void show(String attempt, RoomModel.Room room) {
             attemptId = attempt;
             update(room);
         }
 
         @Override void update(RoomModel.Room room) {
+            this.room=room;
             CandidateRow row = attemptId == null ? null : room.row(attemptId);
             body.getChildren().clear();
             if (row == null) {
@@ -157,9 +166,12 @@ final class Drawers {
                     Ui.infoBox(lastKnown ? "Dữ liệu hiển thị là thông tin cuối cùng server đã ghi nhận, không phải số liệu realtime."
                             : "Trạng thái theo heartbeat server nhận; tiến độ theo lần đọc gần nhất."));
 
-            VBox processes = section("Process đang quan sát", processState(room, row));
+            VBox observations = section("Đang quan sát trên máy thí sinh", Ui.label("Tiến trình", "strong"), processState(room, row), SignalSummaryView.details(
+                    SignalSummaryView.scoped(signals,room,row.attemptId()),signals!=null&&signals.stale(),
+                    signals!=null&&signals.loading(),source->actions.showTimeline(row.attemptId(),source)));
+            observations.setId("candidate-monitoring-observations");
             VBox recent = section("Hoạt động gần đây", recent(room, row));
-            body.getChildren().addAll(identity, exam, connection, processes, recent);
+            body.getChildren().addAll(identity, exam, connection, observations, recent);
         }
 
         /** Current state comes from DashboardController's selected attempt; it is separate from the history. */
@@ -237,6 +249,8 @@ final class Drawers {
         @Override void update(RoomModel.Room room) {
             Alert current = alert == null ? null : room.alerts().stream().filter(item -> item.id().equals(alert.id())
                     && item.attemptId().equals(alert.attemptId())).findFirst().orElse(null);
+            if(current==null&&alert!=null)current=room.timeline().stream().map(HistoryEntry::alert)
+                    .filter(item->item.id().equals(alert.id())&&item.attemptId().equals(alert.attemptId())).findFirst().orElse(null);
             body.getChildren().clear();
             if (current == null) {
                 eyebrow.setText("KHÔNG CÒN TRONG PHẠM VI");
@@ -267,6 +281,11 @@ final class Drawers {
         private static String[][] details(Alert alert) {
             String server = Ui.dateClock(alert.serverTime(), "—");
             String client = alert.clientTime() == null ? "Không áp dụng" : Ui.dateClock(alert.clientTime(), "—");
+            if(alert.origin() instanceof vn.edu.toeic.client.dashboard.SignalHistory.Entry entry)return new String[][]{
+                    {"Mã sự kiện",entry.signal().eventId()},{"Server nhận",server},{"Client báo quan sát",client},
+                    {"Loại",alert.typeCode()},{"Thí sinh",alert.candidate()+" · "+alert.attemptId()},
+                    {"Nguồn",entry.signal().source()},{"Metadata",entry.signal().metadataQuality()},
+                    {"Kênh nhận",ProctorDashboardView.deliveryLabel(entry.delivery())}};
             if (alert.origin() instanceof Event event) return new String[][] {
                     {"Mã sự kiện", alert.id()}, {"Server nhận", server}, {"Client báo quan sát", client},
                     {"Loại", alert.typeCode()}, {"Thí sinh", alert.candidate() + " · " + alert.attemptId()},

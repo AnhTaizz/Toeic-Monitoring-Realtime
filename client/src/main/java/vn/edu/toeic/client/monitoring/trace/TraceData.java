@@ -12,6 +12,7 @@ import vn.edu.toeic.client.monitoring.ObservedProcess;
 import vn.edu.toeic.client.monitoring.ProcessIdentity;
 import vn.edu.toeic.client.monitoring.ProcessSnapshot;
 import vn.edu.toeic.protocol.monitoring.FullSnapshotPayload;
+import vn.edu.toeic.protocol.monitoring.ProcessCatalog;
 
 public final class TraceData {
     public static final String SCHEMA="monitoring-observation-trace-v1";
@@ -19,7 +20,7 @@ public final class TraceData {
     private TraceData() { }
     public record Header(String schemaVersion,String sourceLabel,long pollMillis,String policyVersion,String wallOrigin) {
         public Header {
-            if(!(SCHEMA.equals(schemaVersion)&&FullSnapshotPayload.POLICY.equals(policyVersion)
+            if(!(SCHEMA.equals(schemaVersion)&&ProcessCatalog.supported(policyVersion)
                     ||TEST_SCHEMA.equals(schemaVersion)&&TEST_POLICY.equals(policyVersion))||!Set.of("REAL","MOCK").contains(sourceLabel)
                     ||pollMillis<1||pollMillis>60000) throw new IllegalArgumentException();
             wallOrigin=Instant.parse(wallOrigin).toString();
@@ -39,18 +40,18 @@ public final class TraceData {
             long scanDurationNanos,List<Process> processes) {
         public Sample {
             if(index<1||elapsedNanos<0||scanDurationNanos<0||!Set.of("START","OBSERVATION","SOURCE_FAILURE","STOP").contains(type)
-                    ||!Set.of(FullSnapshotPayload.POLICY,TEST_POLICY).contains(policyVersion)) throw new IllegalArgumentException();
+                    ||!(ProcessCatalog.supported(policyVersion)||TEST_POLICY.equals(policyVersion))) throw new IllegalArgumentException();
             FullSnapshotPayload.id(collectorSessionId);
             if(processes==null||processes.size()>FullSnapshotPayload.MAX_PROCESSES)throw new IllegalArgumentException();
             var identities=new HashSet<String>();
             for(var process:processes)if(process==null||!identities.add(process.pid()+":"+process.startInstant()))throw new IllegalArgumentException();
             processes=processes.stream().sorted(Comparator.comparingLong(Process::pid).thenComparing(p -> p.startInstant()==null?"":p.startInstant())).toList();
-            if(FullSnapshotPayload.POLICY.equals(policyVersion))processes.forEach(Process::production);
+            if(ProcessCatalog.supported(policyVersion))FullSnapshotPayload.forPolicy(processes.stream().map(Process::production).toList(),policyVersion);
             if(!type.equals("OBSERVATION")&&(!processes.isEmpty()||scanDurationNanos!=0)) throw new IllegalArgumentException();
         }
         public List<FullSnapshotPayload.Process> productionProcesses() {
-            if(!FullSnapshotPayload.POLICY.equals(policyVersion))throw new IllegalArgumentException("TEST_POLICY_NOT_NETWORK_REPLAY");
-            return processes.stream().map(Process::production).toList();
+            if(!ProcessCatalog.supported(policyVersion))throw new IllegalArgumentException("TEST_POLICY_NOT_NETWORK_REPLAY");
+            return FullSnapshotPayload.forPolicy(processes.stream().map(Process::production).toList(),policyVersion);
         }
         public ProcessSnapshot snapshot() {
             Set<ObservedProcess> values=processes.stream().map(p -> new ObservedProcess(new ProcessIdentity(collectorSessionId,p.pid(),

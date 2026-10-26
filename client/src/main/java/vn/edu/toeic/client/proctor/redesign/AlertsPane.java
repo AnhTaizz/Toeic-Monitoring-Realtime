@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -38,6 +39,7 @@ final class AlertsPane extends VBox implements ProctorRedesignView.RoomPane {
     private final ToggleGroup tabs = new ToggleGroup();
     private final ToggleButton all = tab("Tất cả", null), process = tab("Quan sát process", Kind.PROCESS);
     private final ToggleButton interruption = tab("Gián đoạn kết nối", Kind.INTERRUPTION), gap = tab("Khoảng trống dữ liệu", Kind.GAP);
+    private final ToggleButton usb=tab("USB",Kind.USB),focus=tab("Focus",Kind.FOCUS),windowState=tab("Cửa sổ",Kind.WINDOW);
     private final TextField search = new TextField();
     private final ComboBox<Choice<AlertStatusFilter>> status = new ComboBox<>();
     private final ComboBox<Choice<Duration>> window = new ComboBox<>();
@@ -73,7 +75,7 @@ final class AlertsPane extends VBox implements ProctorRedesignView.RoomPane {
             page = 0;
             render();
         });
-        HBox tabRow = new HBox(all, process, interruption, gap);
+        FlowPane tabRow = new FlowPane(8,8,all,process,usb,focus,windowState,interruption,gap);
         tabRow.getStyleClass().add("tabs");
 
         search.setPromptText("Tìm thí sinh, mã lượt, mã sự kiện hoặc loại…");
@@ -186,6 +188,9 @@ final class AlertsPane extends VBox implements ProctorRedesignView.RoomPane {
         process.setText("Quan sát process  " + alerts.stream().filter(alert -> alert.kind() == Kind.PROCESS).count());
         interruption.setText("Gián đoạn kết nối  " + alerts.stream().filter(alert -> alert.kind() == Kind.INTERRUPTION).count());
         gap.setText("Khoảng trống dữ liệu  " + alerts.stream().filter(alert -> alert.kind() == Kind.GAP).count());
+        usb.setText("USB  "+alerts.stream().filter(alert->alert.kind()==Kind.USB).count());
+        focus.setText("Focus  "+alerts.stream().filter(alert->alert.kind()==Kind.FOCUS).count());
+        windowState.setText("Cửa sổ  "+alerts.stream().filter(alert->alert.kind()==Kind.WINDOW).count());
         open.setText(Long.toString(alerts.stream().filter(Alert::open).count()));
         incomplete.setText(Long.toString(alerts.stream().filter(alert -> alert.late() || alert.kind() == Kind.GAP).count()));
         total.setText(Integer.toString(alerts.size()));
@@ -215,22 +220,30 @@ final class AlertsPane extends VBox implements ProctorRedesignView.RoomPane {
 
     /** Never presents a partial result as complete: limit, errors and loading are spelled out. */
     static String completeness(RoomFeed.Snapshot feed) {
-        List<RoomFeed.AttemptHistory> limited = feed.limited();
-        if (!limited.isEmpty()) return "Lịch sử CHƯA ĐẦY ĐỦ: " + limited.stream().map(RoomFeed.AttemptHistory::attemptId)
+        String typed="";
+        if(feed.attempts().stream().anyMatch(RoomFeed.AttemptHistory::signalsLimited))
+            typed="Chỉ giữ tối đa "+RoomFeed.MAX_SIGNALS+" tín hiệu USB/focus/cửa sổ mới nhất mỗi lượt; không phải toàn bộ lịch sử. ";
+        if(feed.attempts().stream().anyMatch(RoomFeed.AttemptHistory::signalsMore))
+            typed+="Đang đọc tiếp lịch sử USB/focus/cửa sổ; dữ liệu chưa đầy đủ. ";
+        if(feed.attempts().stream().anyMatch(RoomFeed.AttemptHistory::signalsUnavailable))
+            typed+="Nguồn lịch sử USB/focus/cửa sổ chưa bật hoặc không khả dụng; không suy rằng máy không có thiết bị/sự kiện. ";
+        List<RoomFeed.AttemptHistory> limited = feed.limited().stream().filter(item->!item.signalsLimited()
+                ||item.error().equals(vn.edu.toeic.client.dashboard.MonitoringApiClient.HISTORY_LIMIT_MESSAGE)).toList();
+        if (!limited.isEmpty()) return typed+"Lịch sử CHƯA ĐẦY ĐỦ: " + limited.stream().map(RoomFeed.AttemptHistory::attemptId)
                 .collect(Collectors.joining(", ")) + " vượt giới hạn 5000 bản ghi/lần tải nên server từ chối trả. "
                 + "Cần xuất lịch sử theo cách khác hoặc nhờ quản trị tăng giới hạn; làm mới sẽ không thay đổi kết quả.";
         List<RoomFeed.AttemptHistory> failed = feed.attempts().stream().filter(item -> !item.error().isEmpty()).toList();
-        if (!failed.isEmpty()) return "Chưa tải được đầy đủ lịch sử của " + failed.size() + " lượt (" + failed.getFirst().error()
+        if (!failed.isEmpty()) return typed+"Chưa tải được đầy đủ lịch sử của " + failed.size() + " lượt (" + failed.getFirst().error()
                 + "). Dữ liệu đang hiển thị có thể thiếu; bấm Làm mới ở Tổng quan.";
-        if (feed.loading()) return "Đang tải lịch sử giám sát… Danh sách có thể chưa đầy đủ.";
+        if (feed.loading()) return typed+"Đang tải lịch sử giám sát… Danh sách có thể chưa đầy đủ.";
         long pending = feed.attempts().stream().filter(item -> !item.loaded()).count();
-        if (pending > 0) return pending + " lượt chưa tải lịch sử (đang chờ kết nối/đồng bộ).";
-        return "";
+        if (pending > 0) return typed+pending + " lượt chưa tải lịch sử (đang chờ kết nối/đồng bộ).";
+        return typed;
     }
 
     void search(String text) { search.setText(text); }
     void kind(Kind kind) {
-        for (ToggleButton button : List.of(all, process, interruption, gap)) if (button.getUserData() == kind) button.setSelected(true);
+        for (ToggleButton button : List.of(all, process, usb,focus,windowState,interruption, gap)) if (button.getUserData() == kind) button.setSelected(true);
     }
     void status(AlertStatusFilter value) {
         status.getItems().stream().filter(choice -> choice.value() == value).findFirst().ifPresent(status::setValue);

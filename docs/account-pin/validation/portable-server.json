@@ -1,0 +1,28 @@
+{
+  "scope": "Actual portable Server launcher + bundled runtime + owned PostgreSQL; startup/auth/catalog/V21, not an exam or LAN",
+  "clusterStopExit": 0,
+  "passed": true,
+  "cases": [
+    {
+      "case": "bundled-server-http-auth-guard",
+      "status": "PASS"
+    },
+    {
+      "case": "bundled-server-proctor-login",
+      "status": "PASS"
+    },
+    {
+      "case": "bundled-server-auth-me",
+      "status": "PASS"
+    },
+    {
+      "case": "bundled-server-candidate-catalog",
+      "status": "PASS"
+    },
+    {
+      "case": "bundled-server-real-postgres-v19",
+      "status": "PASS"
+    }
+  ],
+  "errorType": null
+}

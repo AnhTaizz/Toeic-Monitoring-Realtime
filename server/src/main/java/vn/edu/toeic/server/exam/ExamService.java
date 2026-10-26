@@ -95,6 +95,7 @@ public class ExamService {
                 JOIN exam_sessions s ON s.session_id = a.session_id
                 JOIN exams e ON e.exam_id = a.exam_id AND e.exam_id = s.exam_id
                 WHERE a.candidate_user_id = :candidateUserId
+                """ + vn.edu.toeic.server.monitoring.JdbcAttemptScopeStore.ADMISSION_SCOPE + """
                   AND a.state IN ('ACTIVE', 'SUBMITTED', 'TIMED_OUT')
                   AND (a.state = 'ACTIVE' OR a.submitted_at IS NOT NULL)
                 """ + cursorClause + """
@@ -102,6 +103,7 @@ public class ExamService {
                 LIMIT :fetchLimit
                 """)
                 .param("candidateUserId", candidate.userId())
+                .param("user", candidate.userId()).param("role", candidate.role().name()).param("bound", candidate.roomAttemptId())
                 .param("fetchLimit", limit + 1);
         if (afterAttemptId != null) {
             historyQuery = historyQuery.param("afterAttemptId", afterAttemptId);
@@ -165,6 +167,7 @@ public class ExamService {
         if(v2State!=null) {
             v2.requireWriter(v2State,request.writerEpoch());
             v2.requireStarted(v2State);
+            v2.requirePersonalReadiness(v2State);
         }
 
         record AttemptLockRow(
@@ -575,6 +578,23 @@ public class ExamService {
                     vn.edu.toeic.protocol.ErrorCode.INVALID_STATE, "Đề rich cần ca thi V2", null);
         }
 
+        // Account disable must serialize with legacy roster issuance too, before any new session FK.
+        var rosterRoles = new java.util.TreeMap<String, String>();
+        rosterRoles.put(proctor.username(), "PROCTOR");
+        for (String name : request.proctorUsernames()) {
+            if (name == null || name.isBlank()) throw ExamApiException.invalidInput("Giám thị không hợp lệ");
+            rosterRoles.put(name, "PROCTOR");
+        }
+        for (String name : request.candidateUsernames()) {
+            if (rosterRoles.putIfAbsent(name, "CANDIDATE") != null)
+                throw ExamApiException.invalidInput("Roster trùng role");
+        }
+        for (var entry : rosterRoles.entrySet()) {
+            if (jdbc.sql("SELECT id FROM user_accounts WHERE username=:u AND role=:r AND enabled FOR SHARE")
+                    .param("u", entry.getKey()).param("r", entry.getValue()).query(Long.class).optional().isEmpty())
+                throw ExamApiException.invalidInput("Tài khoản roster không tồn tại hoặc đã khóa");
+        }
+
         // A concurrent request with the same sessionId passes the count check above too; the loser
         // waits on the winner's key here and then gets 0 rows instead of a unique-violation 500.
         int sessionInserted = jdbc.sql("""
@@ -825,7 +845,7 @@ public class ExamService {
             }
         }
 
-        if(v2State!=null)v2.requireStarted(v2State);
+        if(v2State!=null){v2.requireStarted(v2State);v2.requirePersonalReadiness(v2State);}
 
         if (!"ACTIVE".equalsIgnoreCase(attempt.state())) {
             throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.INVALID_STATE, "Lượt thi đã kết thúc hoặc đã nộp (state=" + attempt.state() + ")", request.requestId());
@@ -963,7 +983,7 @@ public class ExamService {
 
     @Transactional
     public boolean timeoutAttempt(String attemptId) {
-        var v2State=v2==null?null:v2.lockForSystem(attemptId);
+        var v2State=v2==null?null:v2.lockForTimeout(attemptId);
         // V2 has no deadline before START; after START a CLOSED session still finalizes once like legacy.
         if(v2State!=null && "SCHEDULED".equals(v2State.sessionState()))return false;
         record TimeoutAttemptLock(
@@ -1078,7 +1098,7 @@ public class ExamService {
         }
 
         var v2State=v2==null?null:v2.lockForMutation(user,request.attemptId());
-        if(v2State!=null)v2.requireActiveContent(v2State);
+        if(v2State!=null)v2.requirePreparationContent(v2State);
 
         record AttemptLockRow(
                 String attemptId,
