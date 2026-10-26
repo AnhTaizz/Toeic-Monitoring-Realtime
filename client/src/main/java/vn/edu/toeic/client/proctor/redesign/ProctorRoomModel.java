@@ -191,7 +191,7 @@ final class ProctorRoomModel {
                     : reading.storageCount() > 0 ? new Cell("Quan sát thấy " + reading.storageCount() + " USB", "amber")
                     : new Cell("Không có USB", "green");
             case FOCUS -> reading.focused() == null ? new Cell("Chưa có dữ liệu", "gray")
-                    : reading.focused() ? new Cell("Đang ở cửa sổ thi", "green") : new Cell("Quan sát thấy rời cửa sổ thi", "amber");
+                    : reading.focused() ? new Cell("Đang ở cửa sổ thi", "green") : new Cell("Quan sát thấy rời cửa sổ", "amber");
             case WINDOW -> Boolean.TRUE.equals(reading.minimized()) ? new Cell("Quan sát thấy thu nhỏ", "amber")
                     : Boolean.TRUE.equals(reading.fullscreen()) ? new Cell("Toàn màn hình", "green")
                     : Boolean.FALSE.equals(reading.minimized()) ? new Cell("Bình thường", "green")

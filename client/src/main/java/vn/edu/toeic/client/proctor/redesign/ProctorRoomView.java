@@ -132,7 +132,7 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
     private final AtomicReference<CandidateSignalsController.Snapshot> pendingSignals = new AtomicReference<>();
     private final AtomicBoolean roomQueued = new AtomicBoolean(), dashboardQueued = new AtomicBoolean(),
             feedQueued = new AtomicBoolean(), signalsQueued = new AtomicBoolean(), pollQueued = new AtomicBoolean();
-    private Predicate<String> confirm = ProctorRoomView::confirmDialog;
+    private Predicate<String> confirm = this::confirmDialog;
 
     /** The system clipboard in production; tests pass a private one so they never touch the machine's clipboard. */
     interface ClipboardAccess {
@@ -397,7 +397,7 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
         members.getColumns().add(Ui.nodeColumn("Kết nối", 130, row -> badge(row.connection())));
         members.getColumns().add(Ui.nodeColumn("Phần nghe", 150, row -> badge(row.listening())));
         members.getColumns().add(Ui.nodeColumn("USB", 150, row -> badge(row.usb())));
-        members.getColumns().add(Ui.nodeColumn("Focus", 170, row -> badge(row.focus())));
+        members.getColumns().add(Ui.nodeColumn("Focus", 190, row -> badge(row.focus())));
         members.getColumns().add(Ui.nodeColumn("Cửa sổ", 160, row -> badge(row.window())));
         members.getColumns().add(Ui.nodeColumn("Cảnh báo", 110, this::alertCell));
         members.setRowFactory(table -> {
@@ -844,8 +844,9 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
         remaining.setText(countdown.confirmed() ? "Còn " + countdown.text() : model.allFinished() ? "" : countdown.text());
     }
 
-    private static boolean confirmDialog(String message) {
+    private boolean confirmDialog(String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK, ButtonType.CANCEL);
+        if (getScene() != null) alert.initOwner(getScene().getWindow());
         alert.setHeaderText("Xác nhận");
         ((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setText("Đồng ý");
         ((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).setText("Huỷ");
@@ -859,6 +860,7 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
     ProctorV2Controller controller() { return room; }
     ProctorRoomModel.Room model() { return model; }
     RoomCandidatePanel panel() { return panel; }
+    List<RoomModel.Alert> alerts(String attempt) { return ProctorRoomModel.alerts(feedSnapshot.of(attempt), attempt); }
 
     // ------------------------------------------------------------------ lifecycle
 

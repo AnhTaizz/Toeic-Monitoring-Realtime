@@ -35,7 +35,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
@@ -134,26 +133,27 @@ class AccountPinFlowPostgresGuiTest {
             ((TextField)ps.getScene().lookup("#login-username")).setText(proctorCode);
             ((javafx.scene.control.PasswordField)ps.getScene().lookup("#login-password")).setText(proctorPassword);
             ((Button)ps.getScene().lookup("#login-submit")).fire();});
-        await("production Proctor login",()->FxSupport.fx(()->find(ps.getScene().getRoot(),ProctorRedesignView.class)!=null),30);
-        var pv=FxSupport.fx(()->find(ps.getScene().getRoot(),ProctorRedesignView.class));
+        await("production Proctor login",()->FxSupport.fx(()->find(ps.getScene().getRoot(),ProctorRoomView.class)!=null),30);
+        var pv=FxSupport.fx(()->find(ps.getScene().getRoot(),ProctorRoomView.class));
         ToeicClientApplication[] clients=new ToeicClientApplication[2];Stage[] stages=new Stage[2];
         try {
-            FxSupport.fxRun(()->{ps.setWidth(1366);ps.setHeight(1000);((ToggleButton)pv.lookup("#nav-session-controls")).fire();});
-            var pane=FxSupport.fx(()->{
-                var tabs=(javafx.scene.control.TabPane)pv.lookup("#session-controls-tabs");
-                assertThat(tabs.getSelectionModel().getSelectedItem().getId()).isEqualTo("tab-account-pin");
-                assertThat(tabs.getTabs()).as("release default hides old V2/V1 tabs").hasSize(1);
-                return (ProctorV2SessionPane)tabs.getSelectionModel().getSelectedItem().getContent();
-            });assertThat(pane.controller().accountPin()).isTrue();
-            await("exam catalog",()->pane.controller().snapshot().catalog().stream().anyMatch(e->e.examId().equals(EXAM)),20);
-            FxSupport.fxRun(()->pane.controller().select(EXAM));
-            await("Create enabled after exam selection",()->FxSupport.fx(()->!pane.lookup("#v2-create").isDisabled()),10);
-            FxSupport.fxRun(()->((Button)pane.lookup("#v2-create")).fire());
-            await("empty room created",()->pane.controller().snapshot().sharedPin()!=null,20);
-            String pin=pane.controller().snapshot().sharedPin(),session=pane.controller().snapshot().session();
+            assertThat(pv.controller().accountPin()).isTrue();
+            assertThat(FxSupport.fx(()->pv.lookup("#proctor-legacy-tools"))).as("release default hides the old tools").isNull();
+            FxSupport.fxRun(()->{ps.setWidth(1366);ps.setHeight(1000);((Button)pv.lookup("#proctor-room-create")).fire();});
+            await("exam catalog",()->pv.controller().snapshot().catalog().stream().anyMatch(e->e.examId().equals(EXAM)),20);
+            FxSupport.fxRun(()->pv.controller().select(EXAM));
+            await("Create enabled after exam selection",()->FxSupport.fx(()->{var b=pv.lookup("#proctor-room-create-confirm");return b!=null&&!b.isDisabled();}),10);
+            FxSupport.fxRun(()->((Button)pv.lookup("#proctor-room-create-confirm")).fire());
+            await("empty room created",()->FxSupport.fx(()->pv.lookup("#account-pin-value") instanceof TextField f&&!f.getText().isBlank()),20);
+            String pin=pv.controller().snapshot().sharedPin(),session=pv.controller().snapshot().session();
+            assertThat(FxSupport.fx(()->((TextField)pv.lookup("#account-pin-value")).getText())).isEqualTo(pin);
             assertThat(count("SELECT count(*) FROM monitoring_attempts WHERE session_id='"+session+"'")).isZero();
-            assertThat(FxSupport.fx(()->pane.lookup("#v2-start").isDisabled())).isTrue();
-            FxSupport.fxRun(()->pane.controller().forgetPins());
+            assertThat(FxSupport.fx(()->pv.lookup("#proctor-room-start").isDisabled())).isTrue();
+            assertThat(FxSupport.fx(()->((javafx.scene.control.Label)pv.lookup("#proctor-room-empty")).getText()))
+                    .isEqualTo("Chưa có thí sinh vào phòng. Đưa PIN cho thí sinh.");
+            uiScreens(ps,"p1-room-created-"+readyCount);
+            FxSupport.fxRun(()->((Button)pv.lookup("#account-pin-hide")).fire());
+            await("PIN hidden",()->FxSupport.fx(()->pv.lookup("#account-pin-value")==null&&pv.controller().snapshot().sharedPin()==null),10);
             List<LoginResponse> scoped=new ArrayList<>();List<String> attempts=new ArrayList<>();
             for(int i=0;i<2;i++) {
                 final int index=i;String code=i==0?candidateCode:candidateCode+"-2";String initial=candidatePasswords.get(code);
@@ -174,11 +174,13 @@ class AccountPinFlowPostgresGuiTest {
                 if(i<readyCount)prepare(stages[index]);
             }
             assertThat(count("SELECT count(*) FROM monitoring_attempts WHERE session_id='"+session+"'")).isEqualTo(2);
-            await("joined roster and START available",()->FxSupport.fx(()->pane.controller().snapshot().presence()!=null
-                && pane.controller().snapshot().presence().members().size()==2 && !pane.lookup("#v2-start").isDisabled()),30);
-            await("expected individual READY count",()->FxSupport.fx(()->pane.controller().snapshot().readiness()!=null
-                && !pane.controller().snapshot().readyStale()
-                && pane.controller().snapshot().readiness().attempts().stream().filter(a->a.audioReady()&&a.visualReady()).count()==readyCount),30);
+            await("joined roster and START available",()->FxSupport.fx(()->pv.controller().snapshot().presence()!=null
+                && pv.controller().snapshot().presence().members().size()==2 && !pv.lookup("#proctor-room-start").isDisabled()),30);
+            await("expected individual READY count",()->FxSupport.fx(()->pv.controller().snapshot().readiness()!=null
+                && !pv.controller().snapshot().readyStale()
+                && pv.controller().snapshot().readiness().attempts().stream().filter(a->a.audioReady()&&a.visualReady()).count()==readyCount),30);
+            await("room table shows both candidates with READY",()->FxSupport.fx(()->pv.model().rows().size()==2&&pv.model().ready()==readyCount),30);
+            assertThat(FxSupport.fx(()->pv.model().rows().stream().map(r->r.attemptId()).toList())).containsExactlyInAnyOrderElementsOf(attempts);
             uiScreens(stages[0],"c3-lobby-waiting-start-"+readyCount);
             if(readyCount>0) {
                 String attempt=attempts.getFirst(),token=scoped.getFirst().token();
@@ -195,11 +197,15 @@ class AccountPinFlowPostgresGuiTest {
                 assertThat(count("SELECT count(*) FROM attempt_visual_readiness WHERE attempt_id='"+attempt+"'")).isEqualTo(1);
             }
             injectMonitoring(scoped.getFirst().token(),attempts.getFirst());
-            await("dynamic monitoring scope",()->FxSupport.fx(()->pv.room()!=null&&pv.room().alerts().stream().anyMatch(e->"MOCK-room-e2e-event".equals(e.id()))),25);
+            await("dynamic monitoring scope",()->FxSupport.fx(()->pv.alerts(attempts.getFirst()).stream().anyMatch(e->"MOCK-room-e2e-event".equals(e.id()))),25);
+            assertThat(FxSupport.fx(()->pv.alerts(attempts.get(1)).stream().noneMatch(e->"MOCK-room-e2e-event".equals(e.id())))).isTrue();
             assertStatus("cross-attempt denied",send("GET","/api/v2/attempts/"+attempts.get(1)+"/preparation",null,scoped.getFirst().token()),403);
-            FxSupport.fxRun(()->pane.setVvalue(1));screenshot(ps,"account-pin-ready-"+readyCount+"-no-pin");
-            Platform.runLater(()->((Button)pane.lookup("#v2-start")).fire());if(readyCount<2)pressDialog(ButtonType.OK,10);
-            await("START committed",()->pane.controller().snapshot().started()!=null,25);
+            uiScreens(ps,"p2-room-ready-"+readyCount);screenshot(ps,"account-pin-ready-"+readyCount+"-no-pin");
+            Platform.runLater(()->((Button)pv.lookup("#proctor-room-start")).fire());
+            if(ui()){awaitDialog();uiScreens(ps,"p3-start-confirm-"+readyCount);}
+            pressDialog(ButtonType.OK,10); // START is irreversible: the room view always asks
+            await("START committed",()->pv.controller().snapshot().started()!=null,25);
+            await("room shows the running exam",()->FxSupport.fx(()->pv.model().started()&&pv.lookup("#account-pin-value")==null),25);
             for(int i=readyCount;i<2;i++) {
                 awaitText(stages[i],"Phòng đã bắt đầu.",30);prepare(stages[i]);
             }
@@ -243,6 +249,11 @@ class AccountPinFlowPostgresGuiTest {
                     uiScreens(current,"c8-result-"+readyCount+"-"+i);}
                 screenshot(current,"account-pin-"+readyCount+"-candidate-"+i+"-submitted");closeDialogs();
             }
+            await("room reports every candidate finished with correct counts",()->FxSupport.fx(()->pv.model().allFinished()
+                    &&pv.model().rows().stream().allMatch(r->r.status().text().startsWith("Đã nộp · đúng "))),30);
+            if(readyCount<2)await("late candidate shown as Reading only",()->FxSupport.fx(()->pv.model().rows().stream()
+                    .filter(r->"Chỉ làm Reading".equals(r.listening().text())).count()==2-readyCount),30);
+            uiScreens(ps,"p4-room-finished-"+readyCount);
             log.add("PASS: production Admin/Proctor/two Candidate apps; ready="+readyCount+"/2; shared PIN; monitoring; actual media playback where authorized; late Reading; autosave/submit/reconnect. Physical hearing/LAN NOT TESTED.");
         } finally {
             closeDialogs();FxSupport.fxRun(()->{for(int i=0;i<2;i++){if(clients[i]!=null)clients[i].stop();if(stages[i]!=null)stages[i].close();}proctorApp.stop();ps.close();});
@@ -321,11 +332,6 @@ class AccountPinFlowPostgresGuiTest {
         // No credential exists yet: capture the real form/dialog as well as the parent window.
         screenshotAll("admin-create-"+role.toLowerCase());
         FxSupport.fxRun(()->((Button)dialogNode("admin-create-save")).fire());
-    }
-    private ProctorV2SessionPane legacyPane(Parent root) throws Exception {
-        return FxSupport.fx(()->{var tabs=(javafx.scene.control.TabPane)root.lookup("#session-controls-tabs");
-            var tab=tabs.getTabs().stream().filter(t->"tab-v2".equals(t.getId())).findFirst().orElseThrow();
-            tabs.getSelectionModel().select(tab);return (ProctorV2SessionPane)tab.getContent();});
     }
     private long count(String sql) throws Exception {try(var s=database.createStatement();var r=s.executeQuery(sql)){r.next();return r.getLong(1);}}
     private void injectMonitoring(String token,String attempt) throws Exception {
