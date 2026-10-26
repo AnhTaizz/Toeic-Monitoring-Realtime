@@ -207,6 +207,12 @@ class ProctorRoomDataTest {
         assertThat(ProctorRoomModel.listening(true, last.of(a(1))).text()).isEqualTo("Đang nghe");
         assertThat(ProctorRoomModel.listening(true, last.of(a(2))).text()).isEqualTo("Chỉ làm Reading");
         assertThat(ProctorRoomModel.listening(true, last.of(a(3))).text()).isEqualTo("Chưa có dữ liệu");
+        var submitted=new ProctorProgressRow(a(1),"MOCK-session","candidate1","Candidate 1","SUBMITTED",0L,1,1,
+                null,NOW,NOW,1);
+        var timedOut=new ProctorProgressRow(a(1),"MOCK-session","candidate1","Candidate 1","TIMED_OUT",0L,1,1,
+                null,NOW,NOW,1);
+        assertThat(ProctorRoomModel.listening(true,last.of(a(1)),submitted).text()).isEqualTo("Đã nộp");
+        assertThat(ProctorRoomModel.listening(true,last.of(a(1)),timedOut).text()).isEqualTo("Đã hết giờ");
 
         transport.push(push(status(a(1), ROOM_A, "INTERRUPTED", true, "CONNECTION_LOST")));
         transport.push(push(status(b(9), ROOM_B, "PLAYING", false, null)));

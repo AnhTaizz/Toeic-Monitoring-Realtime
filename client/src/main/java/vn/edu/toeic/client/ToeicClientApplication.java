@@ -75,6 +75,7 @@ public final class ToeicClientApplication extends Application {
         stage.setMinWidth(720);
         stage.setMinHeight(520);
         stage.show();
+        stage.setFullScreen(true);
     }
 
     /** Every screen keeps the window's current size, so switching screens never makes the window jump. */
@@ -183,6 +184,7 @@ public final class ToeicClientApplication extends Application {
         if(realtimeClient!=null){realtimeClient.close();realtimeClient=null;}
         if(examApiClient!=null){examApiClient.close();examApiClient=null;}
         long generation=++viewGeneration;
+        examApiClient=new ExamApiClient(serverUrl,account.token());
         PasswordField pin=new PasswordField();pin.setId("account-pin-input");pin.setPromptText("PIN 5 chữ số");
         pin.setTextFormatter(new javafx.scene.control.TextFormatter<String>(change->change.getControlNewText().matches("[0-9]{0,5}")?change:null));
         Button enter=new Button("Vào phòng");enter.setId("account-pin-enter");enter.getStyleClass().add("home-primary");
@@ -198,8 +200,15 @@ public final class ToeicClientApplication extends Application {
             card.getChildren().add(legacy);
         }
         javafx.scene.layout.StackPane centred=new javafx.scene.layout.StackPane(card);
+        historyView=new CandidateExamHistoryView(examApiClient,()->generation==viewGeneration,
+                ()->leaveDashboard(stage,generation,"Phiên hết hiệu lực. Hãy đăng nhập lại."),
+                result->ScoreResultDialog.show(stage,result,
+                        "Trạng thái kết thúc: "+result.state()+" · Điểm server: "+result.score(),null));
+        Tab joinTab=new Tab("Vào phòng thi",centred);joinTab.setClosable(false);
+        Tab historyTab=new Tab("Lịch sử / kết quả thi",historyView);historyTab.setClosable(false);
+        TabPane candidateTabs=new TabPane(joinTab,historyTab);candidateTabs.setId("account-pin-tabs");
         Button logout=new Button("Đăng xuất");logout.setOnAction(e->{releaseConnectionView();stage.setScene(loginScene(stage));});
-        var root=new CandidateHomePane(account.user().displayName(),account.user().username(),new Label("Đã đăng nhập"),new Label(""),centred,logout);
+        var root=new CandidateHomePane(account.user().displayName(),account.user().username(),new Label("Đã đăng nhập"),new Label(""),candidateTabs,logout);
         stage.setScene(sized(stage, root));
         Runnable submit=()->{
             if(enter.isDisabled())return;
@@ -209,7 +218,7 @@ public final class ToeicClientApplication extends Application {
                     if(generation!=viewGeneration)return;
                     pin.clear();pin.setDisable(false);enter.setDisable(false);
                     if(failure!=null){status.setText(userMessage(failure));return;}
-                    showRoleScene(stage,serverUrl,joined.login());
+                    showRoleScene(stage,serverUrl,joined.login(),account);
                     long roomView=viewGeneration;
                     Consumer<ConnectionState> connected=state->{if(state==ConnectionState.CONNECTED)Platform.runLater(()->{
                         if(roomView!=viewGeneration || realtimeClient==null)return;
@@ -224,6 +233,10 @@ public final class ToeicClientApplication extends Application {
     }
 
     private void showRoleScene(Stage stage, String serverUrl, LoginResponse response) {
+        showRoleScene(stage,serverUrl,response,null);
+    }
+
+    private void showRoleScene(Stage stage, String serverUrl, LoginResponse response,LoginResponse accountHome) {
         RoleViewModel viewModel = RoleViewModel.from(response);
         if (!"v0".equals(response.protocolVersion()) || !"Bearer".equalsIgnoreCase(response.tokenType())) {
             throw new IllegalArgumentException("Phiên đăng nhập không hợp lệ");
@@ -298,7 +311,7 @@ public final class ToeicClientApplication extends Application {
             stage.setScene(loginScene(stage));
         });
 
-        VBox candidateControls = candidateMonitoringControls(stage, serverUrl, response, currentView);
+        VBox candidateControls = candidateMonitoringControls(stage, serverUrl, response, currentView,accountHome);
         historyView = new CandidateExamHistoryView(examApiClient, () -> currentView == viewGeneration && activeExamView == null,
                 () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."),
                 result -> ScoreResultDialog.show(stage, result,
@@ -319,7 +332,8 @@ public final class ToeicClientApplication extends Application {
         realtimeClient.connect(context);
     }
 
-    private VBox candidateMonitoringControls(Stage stage, String serverUrl, LoginResponse login, long currentView) {
+    private VBox candidateMonitoringControls(Stage stage, String serverUrl, LoginResponse login, long currentView,
+            LoginResponse accountHome) {
         Label sectionTitle = new Label("BÀI THI ĐƯỢC PHÂN CÔNG");
         sectionTitle.getStyleClass().add("home-section");
 
@@ -525,7 +539,7 @@ public final class ToeicClientApplication extends Application {
                     closeCandidatePreview();
                     activeRichView = new vn.edu.toeic.client.exam.rich.RichAttemptView(serverUrl, login.token(),
                             login.user().displayName(), login.user().username(), selectedAttempt, realtimeClient, examApiClient,
-                            () -> { activeRichView = null; showRoleScene(stage, serverUrl, login); },
+                            () -> { activeRichView = null; returnFromExam(stage,serverUrl,login,accountHome); },
                             () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."));
                     stage.setScene(sized(stage, activeRichView));
                     startSignalMonitoring(stage, serverUrl, login.token(), selectedAttempt, session, currentView, true);
@@ -554,7 +568,7 @@ public final class ToeicClientApplication extends Application {
                     closeCandidatePreview();
                     activeExamView = new CandidateExamView(selectedAttempt, login.user().username(), ready.paper(),
                             ready.start(), examApiClient, realtimeClient,
-                            () -> showRoleScene(stage, serverUrl, login),
+                            () -> returnFromExam(stage,serverUrl,login,accountHome),
                             () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."));
 
                     activeExamView.enableListening(writer -> new AudioPreparationView(
@@ -580,6 +594,11 @@ public final class ToeicClientApplication extends Application {
         container.setPadding(new Insets(16));
         container.getStyleClass().add("card-accent");
         return container;
+    }
+
+    private void returnFromExam(Stage stage,String serverUrl,LoginResponse roomLogin,LoginResponse accountHome) {
+        if(accountHome!=null)showAccountPinScene(stage,serverUrl,accountHome);
+        else showRoleScene(stage,serverUrl,roomLogin);
     }
 
     private void closeCandidatePreview() {
