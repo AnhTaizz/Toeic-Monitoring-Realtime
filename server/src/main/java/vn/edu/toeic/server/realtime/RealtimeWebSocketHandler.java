@@ -180,7 +180,7 @@ public final class RealtimeWebSocketHandler extends TextWebSocketHandler {
                 accepted.addProperty("acknowledgedType", "PROCESS_OBSERVED");
                 send(session, new MessageEnvelope<>(Protocol.VERSION, "ACK", UUID.randomUUID().toString(), requestId,
                         attemptId, traceId, accepted));
-                if (result.created()) sessions.warnAssignedProctors(result.stored(), traceId);
+                if (result.publishable()) sessions.warnAssignedProctors(result.stored(), traceId);
                 return;
             }
             if (!"HEARTBEAT".equals(type)) {

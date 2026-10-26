@@ -959,7 +959,8 @@ Source05cc694 clean verify1127PASS/6SKIP/0FAIL/0ERROR, PG18.1/HTTP thật, đề
 ## 2026-10-20 · Release Integration Engineer · Hoàn tất nghiệm thu chuỗi V2 & tích hợp main
 
 - Worktree riêng \E:\Project\toeic-v2-release-integration\, branch elease/v2-main-integration-20261020\ (HEAD aa830b\).
-- Hợp nhất hoàn chỉnh nhánh QA Windows \qa/windows-v2-mon07-20261020\ (commit 8006f\) với \origin/main\ mới nhất (bbeaf2\ và sync 9954b\ PR #81).
+- Hợp nhất hoàn chỉnh nhánh QA Windows \qa/windows-v2-mon07-20261020\ (commit 8006f\) với \origin/main\ mới nhất (bbeaf2\ và sync 
+9954b\ PR #81).
 - Flyway V1–V15 áp dụng tuần tự không lỗi, 0 out-of-order, 0 checksum mismatch trên PostgreSQL 18.6 độc lập (cổng 55434).
 - Maven build & test: \mvn test\ BUILD SUCCESS 1264 tests (0 failures, 0 errors).
 - PostgreSQL 18.6 Integration: 159/159 tests PASS 100% (gồm 43/43 Flyway migration scenarios, 28/28 V2 rich/image/session, 70/70 runtime/audio/history bounds, 18/18 MON-07 signal pipeline & disabled check).
@@ -1106,6 +1107,12 @@ Theo ủy quyền người dùng: thêm -Desktop vào entrypoint demo hiện có
 - Case thật kiểm catalog/create/READY/START, retry không đổi deadline, production client model đủ 7 Part/200 câu, tải và hash đủ 65 media, DTO không lộ key/source, autosave, takeover làm Listening `INTERRUPTED`, stale writer bị từ chối, submit và server score `200/200`.
 - Dựng app-image mới và chạy smoke Windows trong đường dẫn Unicode: bundled Java 21.0.12.1, JavaFX Media lifecycle PASS; API/WS riêng của smoke này là MOCK. Human hearing, MSI, clean-machine, LAN và reviewer B cá nhân NOT RUN/không được giả mạo. Chi tiết: [EX-08 closeout](plan-v2/EX08_STUDY4_ACCEPTANCE_20261023.md).
 
+## 25/10/2026 — Server gộp cảnh báo process cho UI
+
+- Nguyên nhân: mỗi PID con của Chrome có `eventId` riêng nên chống retry theo `(attemptId,eventId)` không ngăn nhiều dòng cùng `chrome.exe`.
+- Sửa `MonitoringEventService`: giữ toàn bộ raw row và ACK như cũ, nhưng chỉ đánh dấu event đầu trong một đợt cùng tên process (case-insensitive, khoảng cách liên tiếp tối đa 30 giây) là `publishable`; khóa row attempt bằng `FOR UPDATE` để quyết định ổn định khi nhiều socket gửi đồng thời.
+- REST `/api/v1/monitoring/attempts/{attemptId}/events` dùng window function PostgreSQL để trả đúng cùng projection; sau hơn 30 giây yên lặng, process xuất hiện lại được coi là thay đổi mới. Không migration, không đổi DTO/wire.
+- Thêm regression PostgreSQL cho nhiều PID Chrome cùng đợt, Zalo riêng, Chrome xuất hiện lại sau khoảng yên lặng và cờ push realtime. Server compile PASS. Regression đã PASS một lượt trước khi bổ sung case push; lượt cuối chưa chạy vì Docker daemon local không phản hồi sau khi dọn ổ C. Full suite trước đó bị lỗi môi trường Mockito attach/CIM Unicode, không ghi PASS giả.
 ## 24/10/2026 — Codex: test phát hiện USB vật lý theo yêu cầu người dùng
 
 - Không dùng codex-with-chatgpt theo opt-out, không sửa code. Đọc runbook/contract/ghi chú C; đối chiếu source/resource, không thấy baseline che USB. App candidate production chưa gắn nguồn USB.
