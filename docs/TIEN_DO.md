@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+26/10/2026 — UI/UX trên nhánh local `feat/ui-ux-simplify-20261026` (chưa push/PR): màn thí sinh gọn, giám thị một màn "Phòng thi" (trang cũ chỉ sau "Công cụ cũ"), giờ GMT+7, cửa sổ giữ cỡ, Admin tự nhập mật khẩu. Server: lọc phòng đã xong khỏi danh sách và trường `password` tuỳ chọn cho Admin — cần A review. Test Server 40/40 PASS; GUI thật cần chạy lại khi máy rảnh. Còn chặng Admin/đăng nhập, tài liệu, full regression, đóng gói; gộp một PR cùng #109.
+
 25/10/2026 — Chuẩn bị PR gộp cảnh báo process (Djicz) trên nền #108, nhánh local `prep/dedup-on-108-20261025`: sửa giới hạn 5000 trên raw, 6 test PostgreSQL/WS mới, cập nhật test restart của C theo quyết định owner, sửa race đăng nhập trong smoke. Full 1805 PASS/0 FAIL; runner Integrated 3/3; bundle thử Client/Server PASS. Chờ #108 merge rồi mở PR riêng; chưa phát hành ZIP final. EX-08 còn lỗi ngắt quãng 2/9 chưa rõ nguyên nhân.
 
 25/10/2026 — Review cuối PR #108: sửa dừng giám sát khi quyền chấm dứt (`8bea80e`) và tài khoản demo chỉ tạo khi bật tường minh (`5173462`). Trên `5173462`: full `-AllGui` 1797 PASS/0 FAIL/23 SKIP, runner USB mọi chế độ PASS, retire 20/20 (cả lượt tải CPU), EX-08 1 FAIL tạm thời rồi 2/2 PASS, portable Client 9/9·8/8, Server 15/15, nâng cấp V18+STUDY4 19/19. Đề xuất READY FOR MERGE, chờ owner review; không tự merge. LAN/nghe thật/USB vật lý trên commit tích hợp NOT TESTED. [Báo cáo](release/RELEASE-REPORT.md).
