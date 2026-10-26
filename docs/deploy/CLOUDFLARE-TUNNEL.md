@@ -132,8 +132,13 @@ hoặc `START-CLOUDFLARE-SERVER.bat -AllowLan`, Client chọn chế độ LAN nh
   thiếu `cloudflared`, thiếu token, token dán sai; `STATUS` báo đúng DNS chưa có bản ghi; `STOP` chỉ dừng Server do script mở.
 - Launcher Client chấp nhận `https://toeic.anhtaizz.id.vn` và địa chỉ LAN; test đơn vị `https` → `wss` cho đúng hostname.
 
-**Chưa** chạy được qua Internet: máy chưa cài `cloudflared`, chưa có token, và `toeic.anhtaizz.id.vn` chưa có bản ghi DNS
-(kiểm qua 1.1.1.1). Kết quả end-to-end chỉ có sau khi làm các bước "một lần" ở trên.
+Sau khi cài `cloudflared` dạng Windows service (`Cloudflared`, Automatic) và thêm Public Hostname (CNAME tới `*.cfargotunnel.com`):
+`STATUS` báo "Qua Cloudflare tới Server TOEIC: OK"; `GET https://toeic.anhtaizz.id.vn/api/v1/auth/me` trả 401 JSON của Server
+qua `server: cloudflare`; bắt tay `wss://toeic.anhtaizz.id.vn/ws/v1/realtime` không token trả 401 giống hệt khi gọi `127.0.0.1`.
+**Chưa** chạy luồng thi đầy đủ (đăng nhập, PIN, audio, lưu, nộp, mất mạng) từ máy ở mạng khác: làm theo checklist dưới đây.
+
+Lưu ý: service `Cloudflared` tự chạy cùng Windows, nhưng Server thì không. Sau khi bật máy, chạy `docker compose up -d --wait`
+rồi `START-CLOUDFLARE-SERVER.bat`; script thấy service và không mở connector thứ hai.
 
 ## Checklist thử hai máy khác mạng (một máy Client dùng 4G)
 
