@@ -1235,3 +1235,17 @@ Owner quyết định chức năng gộp cảnh báo phải có trong bản phá
 ### Ghi chú làm dở
 
 Chờ owner merge #108. Sau đó: tạo nhánh từ `main`, cherry-pick `eae9c0a`, `f47f3d5`, `e75f817`, `7235a87`, `c946370` (so tree hash với nhánh chuẩn bị), chạy full `-AllGui` + runner Integrated trên commit cuối, mở PR riêng (owner C/Djicz review đổi contract gộp và test). Chỉ build ZIP phát hành chính thức từ `main` sau khi cả hai PR được merge; ZIP `5173462` không phải bản final.
+
+## 26/10/2026 — UI/UX: màn thí sinh, màn "Phòng thi" của giám thị, mật khẩu do Admin nhập
+
+Nhánh local `feat/ui-ux-simplify-20261026` (trên nhánh gộp cảnh báo PR #109; chưa push, chưa PR). Chỉ client JavaFX, trừ hai thay đổi Server ghi dưới đây.
+
+- Thí sinh: màn PIN một cột ở giữa; phòng chờ đặt 3 bước âm thanh cạnh danh sách chuẩn bị, trạng thái và nút "Rời phòng chờ" trong thẻ. Bỏ dòng thông báo giám sát trên màn PIN theo quyết định của đại diện nhóm (giám thị thông báo trực tiếp, xem QUYET_DINH).
+- Giám thị: `ProctorRoomView` thay 7 trang. Dữ liệu mới thuần (`RoomProgressReader` đọc tiến độ theo trang đến khi đủ lượt của phòng; `ListeningStatusReader` tối đa 2 request song song + `LISTENING_STATUS`; `ProctorRoomModel` lọc mọi nguồn theo attempt của phòng). Panel thí sinh có heartbeat, phần nghe, USB/focus/cửa sổ, ứng dụng đang mở, cảnh báo, tổng hợp cảnh báo (nếu Server bật) và lịch sử đầy đủ. PIN tự ẩn 2 phút, clipboard xoá sau 30 s nếu chưa đổi, START thử lại cùng request. Trang cũ chỉ mở qua "Công cụ cũ" khi `toeic.ui.legacy=true` (test giám sát của C và luồng cũ chạy nguyên).
+- Sau buổi chạy tay: mọi màn giữ đúng cỡ cửa sổ; giờ hiển thị theo `Asia/Ho_Chi_Minh`; câu cảnh báo viết lại ("Rời cửa sổ bài thi", "Quay lại bài thi sau 1,4 giây", "Cắm USB"); "Lịch sử đầy đủ" mở được và giữ vị trí cuộn.
+- Server (cần A review): danh sách `pin-rooms`/`rooms` bỏ phòng đã bắt đầu mà không còn lượt `ACTIVE` chưa quá hạn; Admin có thể gửi `password` khi tạo tài khoản và đổi mật khẩu Candidate (chỉ lưu hash, không trả lại; không gửi thì giữ mật khẩu ngẫu nhiên một lần như cũ).
+- Kết quả đã chạy: client đầy đủ 1078 test, lỗi còn lại đều chờ quá giờ khi máy bận và PASS khi chạy riêng (`CandidateHomeGuiTest`, `LoginSceneGuiTest`, `LoginApiClientTest`, `ExamHistoryReadTest`, `ExamScopeRefreshGuiTest`, `CandidateSignalsPendingLimitTest` đã biết). PostgreSQL: `AdminAccountPostgresTest` + `AccountPinPostgresTest` 40/40 PASS; `CandidateManagementGuiPostgresTest` 2/2 PASS. `AccountPinFlowPostgresGuiTest` 3/3 PASS trên `6d48adb`; trên `4b7b4db` FAIL 3/3 và `RoomFlowPostgresGuiTest` FAIL 1/2 ở các bước chờ JavaFX khác nhau khi máy còn 2,3 GB RAM trống (tác vụ MiniRAG, Edge, Zalo chạy song song) — chưa có kết luận, cần chạy lại khi máy rảnh.
+
+### Ghi chú làm dở
+
+Chạy lại `AccountPinFlowPostgresGuiTest` + `RoomFlowPostgresGuiTest` khi máy rảnh. Chờ người dùng duyệt ảnh giám thị trong `evidence/ui-ux-20261026/proctor/`. Còn: chặng Admin/đăng nhập (rút chú thích), tài liệu DEMO-RUNBOOK/PORTABLE-READ-ME/README, full regression + runner USB + đóng gói, rồi gộp một PR duy nhất cùng #109. Docker engine trên máy đã tự tắt; dữ liệu DB dev còn trong volume.
