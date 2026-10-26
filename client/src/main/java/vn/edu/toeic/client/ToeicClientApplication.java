@@ -77,6 +77,12 @@ public final class ToeicClientApplication extends Application {
         stage.show();
     }
 
+    /** Every screen keeps the window's current size, so switching screens never makes the window jump. */
+    private Scene sized(Stage stage, javafx.scene.Parent root) {
+        Scene current = stage.getScene();
+        return applyStyles(new Scene(root, current == null ? 1366 : current.getWidth(), current == null ? 820 : current.getHeight()));
+    }
+
     private Scene applyStyles(Scene scene) {
         if (ToeicClientApplication.class.getResource("/styles.css") != null) {
             scene.getStylesheets().add(ToeicClientApplication.class.getResource("/styles.css").toExternalForm());
@@ -134,7 +140,7 @@ public final class ToeicClientApplication extends Application {
         loginButton.setOnAction(event -> submit.run());
         passwordField.setOnAction(event -> submit.run());
 
-        return applyStyles(new Scene(root, 1366, 820));
+        return sized(stage, root);
     }
 
     private Scene roomEntryScene(Stage stage) {
@@ -170,7 +176,7 @@ public final class ToeicClientApplication extends Application {
             }catch(IllegalArgumentException invalid){enter.setDisable(false);status.setText(invalid.getMessage());}
         };
         enter.setOnAction(event->submit.run());pin.setOnAction(event->submit.run());
-        return applyStyles(new Scene(root,1366,820));
+        return sized(stage, root);
     }
     private void showAccountPinScene(Stage stage,String serverUrl,LoginResponse account) {
         releaseConnectionView();
@@ -194,7 +200,7 @@ public final class ToeicClientApplication extends Application {
         javafx.scene.layout.StackPane centred=new javafx.scene.layout.StackPane(card);
         Button logout=new Button("Đăng xuất");logout.setOnAction(e->{releaseConnectionView();stage.setScene(loginScene(stage));});
         var root=new CandidateHomePane(account.user().displayName(),account.user().username(),new Label("Đã đăng nhập"),new Label(""),centred,logout);
-        stage.setScene(applyStyles(new Scene(root,1366,820)));
+        stage.setScene(sized(stage, root));
         Runnable submit=()->{
             if(enter.isDisabled())return;
             try {
@@ -231,7 +237,7 @@ public final class ToeicClientApplication extends Application {
             adminView = new vn.edu.toeic.client.proctor.redesign.AdminAccountView(serverUrl, response,
                     () -> leaveDashboard(stage, currentView, ""),
                     () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."));
-            stage.setScene(applyStyles(new Scene(adminView, 1366, 820)));
+            stage.setScene(sized(stage, adminView));
             return;
         }
         RealtimeClient.Session context = new RealtimeClient.Session(scope, null, null);
@@ -248,7 +254,7 @@ public final class ToeicClientApplication extends Application {
             dashboard = ProctorRoomView.forLogin(serverUrl, response, newClient,
                     () -> leaveDashboard(stage, currentView, ""),
                     () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."));
-            Scene proctorScene = applyStyles(new Scene(dashboard, 1366, 768));
+            Scene proctorScene = sized(stage, dashboard);
             stage.setScene(proctorScene);
             newClient.connect(context);
             return;
@@ -309,7 +315,7 @@ public final class ToeicClientApplication extends Application {
 
         CandidateHomePane root = new CandidateHomePane(response.user().displayName(), response.user().username(),
                 connectionStatus, availability, candidateTabs, logout);
-        stage.setScene(applyStyles(new Scene(root, 1366, 820)));
+        stage.setScene(sized(stage, root));
         realtimeClient.connect(context);
     }
 
@@ -521,7 +527,7 @@ public final class ToeicClientApplication extends Application {
                             login.user().displayName(), login.user().username(), selectedAttempt, realtimeClient, examApiClient,
                             () -> { activeRichView = null; showRoleScene(stage, serverUrl, login); },
                             () -> leaveDashboard(stage, currentView, "Phiên hết hiệu lực. Hãy đăng nhập lại."));
-                    stage.setScene(applyStyles(new Scene(activeRichView, 1440, 900)));
+                    stage.setScene(sized(stage, activeRichView));
                     startSignalMonitoring(stage, serverUrl, login.token(), selectedAttempt, session, currentView, true);
                     return;
                 }
@@ -553,7 +559,7 @@ public final class ToeicClientApplication extends Application {
 
                     activeExamView.enableListening(writer -> new AudioPreparationView(
                             serverUrl, login.token(), selectedAttempt, writer, realtimeClient));
-                    Scene examScene = applyStyles(new Scene(activeExamView, 1380, 850));
+                    Scene examScene = sized(stage, activeExamView);
                     stage.setScene(examScene);
                     startSignalMonitoring(stage, serverUrl, login.token(), selectedAttempt, session, currentView, true);
                 }));

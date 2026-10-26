@@ -210,6 +210,13 @@ final class ProctorRoomModel {
         return RoomModel.alerts(new RoomFeed.Snapshot(List.of(history)), Map.of(history.attemptId(), name));
     }
 
+    /** One readable line per alert; how it was delivered is said only when it arrived late. */
+    static String alertLine(RoomModel.Alert alert) {
+        String late = !alert.late() ? "" : alert.status().contains("offline")
+                ? " (gửi muộn: lúc đó máy thí sinh mất mạng)" : " (gửi muộn từ lần kết nối trước)";
+        return alert.title() + " · " + alert.description() + late;
+    }
+
     /** Room headline for the proctor. Totals only once every member's progress is confirmed. */
     static String summary(Room room) {
         if (room.sessionId() == null) return "";

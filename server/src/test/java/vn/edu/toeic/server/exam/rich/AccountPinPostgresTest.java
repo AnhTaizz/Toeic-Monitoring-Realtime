@@ -104,6 +104,22 @@ class AccountPinPostgresTest {
         assertThat(json(check(get("/api/v2/pin-rooms",proctor),200,null)).toString()).doesNotContain("shared_pin_hash","shared_pin_lookup","\"pin\"");
         assertThat(output.getAll()).doesNotContain(pin,token,stored);
     }
+    /** The proctor's "open rooms" list drops a started room once no attempt can still be worked on. */
+    @Test void finishedRoomsLeaveTheOpenRoomList() throws Exception {
+        var room=pinRoom();String session=sid(room);
+        assertThat(listed(session)).as("scheduled room without members").isTrue();
+        var a=pinJoin(room,owner);var b=pinJoin(room,other);takeover(aid(a),scoped(a));takeover(aid(b),scoped(b));
+        check(startRoom(room),200,null);
+        assertThat(listed(session)).as("running room").isTrue();
+        sql("UPDATE monitoring_attempts SET deadline_at=clock_timestamp()-INTERVAL '1 second' WHERE attempt_id='"+aid(a)+"'");
+        assertThat(listed(session)).as("one attempt still running").isTrue();
+        sql("UPDATE monitoring_attempts SET deadline_at=clock_timestamp()-INTERVAL '1 second' WHERE attempt_id='"+aid(b)+"'");
+        assertThat(listed(session)).as("every attempt past its deadline").isFalse();
+        assertThat(text("SELECT state FROM exam_sessions WHERE session_id='"+session+"'")).as("the list filter changes no state").isEqualTo("IN_PROGRESS");
+    }
+    private boolean listed(String session) throws Exception {
+        return json(check(get("/api/v2/pin-rooms",proctor),200,null)).toString().contains(session);
+    }
     @Test void zeroReadyStartsButOnlyLateReadingCanBeSubmitted() throws Exception {
         var room=pinRoom();var a=pinJoin(room,owner);var b=pinJoin(room,other);String attempt=aid(a),token=scoped(a),session=sid(room);
         long writer=takeover(attempt,token);takeover(aid(b),scoped(b));

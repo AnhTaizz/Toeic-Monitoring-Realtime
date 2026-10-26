@@ -32,7 +32,7 @@ class SignalFeedGuiTest {
         open(List.of(entry(1,usb(1)),entry(2,f),entry(3,w)));
         await("recent widgets attached",()->view.lookup("#overview-recent-alerts")!=null&&view.lookup("#overview-recent-events")!=null);
         for(String id:List.of("#overview-recent-alerts","#overview-recent-events"))
-            assertThat(fx(()->text((Parent)view.lookup(id)))).contains("USB","focus","cửa sổ");
+            assertThat(fx(()->text((Parent)view.lookup(id)))).contains("USB","Rời cửa sổ bài thi","cửa sổ");
         assertThat(fx(()->view.room().row(A).alertCount())).isEqualTo(3);
         fxRun(()->view.show(ProctorRedesignView.Section.ALERTS));
         var pane=fx(()->view.pane(AlertsPane.class));
@@ -57,7 +57,7 @@ class SignalFeedGuiTest {
         assertThat(fx(()->view.room().row(A).alertCount())).isZero();
         await("recent widgets attached",()->view.lookup("#overview-recent-alerts")!=null&&view.lookup("#overview-recent-events")!=null);
         for(String id:List.of("#overview-recent-alerts","#overview-recent-events"))
-            assertThat(fx(()->text((Parent)view.lookup(id)))).doesNotContain("Nguồn USB","Focus ban đầu","cửa sổ ban đầu","USB có sẵn");
+            assertThat(fx(()->text((Parent)view.lookup(id)))).doesNotContain("Nguồn USB","Focus ban đầu","cửa sổ ban đầu","Có USB khi bắt đầu thi");
         fxRun(()->view.show(ProctorRedesignView.Section.ALERTS));
         assertThat(fx(()->view.pane(AlertsPane.class).visibleAlerts())).isEmpty();
         fxRun(()->view.show(ProctorRedesignView.Section.HISTORY));
@@ -71,14 +71,14 @@ class SignalFeedGuiTest {
         open(List.of(entry(1,ready),entry(2,present)));
         await("recent widgets attached",()->view.lookup("#overview-recent-alerts")!=null&&view.lookup("#overview-recent-events")!=null);
         for(String id:List.of("#overview-recent-alerts","#overview-recent-events"))
-            assertThat(fx(()->text((Parent)view.lookup(id)))).contains("USB có sẵn khi bắt đầu giám sát").doesNotContain("Nguồn USB sẵn sàng");
+            assertThat(fx(()->text((Parent)view.lookup(id)))).contains("Có USB khi bắt đầu thi").doesNotContain("Nguồn USB sẵn sàng");
         assertThat(fx(()->view.room().row(A).alertCount())).isEqualTo(1);
         fxRun(()->view.show(ProctorRedesignView.Section.ALERTS));
         var alerts=fx(()->view.pane(AlertsPane.class).visibleAlerts());
         assertThat(alerts).hasSize(1).allMatch(a->a.typeCode().equals("USB_STORAGE_PRESENT_AT_START")&&a.description().contains("2 USB"));
         fxRun(()->view.openAlert(alerts.getFirst()));
         await("startup details attached",()->view.alertDrawer().lookup("#field-nguon")!=null);
-        assertThat(fx(()->text(view.alertDrawer()))).contains("USB có sẵn khi bắt đầu giám sát","2 USB lưu trữ");
+        assertThat(fx(()->text(view.alertDrawer()))).contains("Có USB khi bắt đầu thi","2 USB lưu trữ");
         fxRun(()->view.show(ProctorRedesignView.Section.HISTORY));
         assertThat(fx(()->view.pane(HistoryPane.class).visibleEntries())).hasSize(1).allMatch(e->e.alert().typeCode().equals("USB_STORAGE_PRESENT_AT_START"));
     }

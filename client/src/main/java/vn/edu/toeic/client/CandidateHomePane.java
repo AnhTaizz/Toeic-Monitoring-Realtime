@@ -54,30 +54,18 @@ final class CandidateHomePane extends BorderPane {
         availability.managedProperty().bind(availability.textProperty().isNotEmpty());
         availability.visibleProperty().bind(availability.textProperty().isNotEmpty());
         Label instruction = text("1  Vào phòng thi     →     2  Chuẩn bị âm thanh     →     3  Chờ giám thị bắt đầu", "home-instruction");
-        Label usbNotice = null;
-        if (Boolean.getBoolean("toeic.monitoring.signal-experiment-enabled")
-                && Boolean.getBoolean("toeic.monitoring.usb-enabled")) {
-            // Required notice before observation starts: short, but it still says what is observed and when it stops.
-            usbNotice = text("ⓘ  Trong phiên thi, ứng dụng ghi nhận các ứng dụng đang mở, việc cắm/rút USB lưu trữ và việc "
-                    + "rời khỏi cửa sổ thi để báo cho giám thị. Không đọc nội dung hay số serial của USB; dừng khi bạn rời phòng "
-                    + "thi hoặc đăng xuất.", "home-availability");
-            usbNotice.setId("candidate-usb-notice");
-        }
+        // Decision 26/10/2026 (team representative): the observation notice is given by the proctor in the room,
+        // not as text on this screen. See docs/QUYET_DINH.md.
         VBox content;
         if (body instanceof TabPane tabs) {
             tabs.getStyleClass().add("home-tabs");
             content = new VBox(12, availability, instruction, body);
-            if (usbNotice != null) content.getChildren().add(2, usbNotice);
             VBox.setVgrow(body, Priority.ALWAYS);
         } else {
-            // PIN entry: one column in the middle of the screen, the steps above the card and the notice under it.
+            // PIN entry: one column in the middle of the screen, the steps above the card.
             content = new VBox(18, availability, instruction, body);
-            if (usbNotice != null) content.getChildren().add(usbNotice);
-            for (Label line : java.util.Arrays.asList(availability, usbNotice)) {
-                if (line == null) continue;
-                line.setMaxWidth(520); line.setPrefWidth(520);
-                line.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-            }
+            availability.setMaxWidth(520); availability.setPrefWidth(520);
+            availability.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
             content.setAlignment(javafx.geometry.Pos.CENTER);
             content.setFillWidth(false);
         }

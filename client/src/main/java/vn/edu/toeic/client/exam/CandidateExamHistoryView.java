@@ -21,7 +21,7 @@ import javafx.scene.layout.VBox;
 public final class CandidateExamHistoryView extends VBox implements AutoCloseable {
     private static final int MAX_ROWS = 1000;
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-            .withZone(ZoneId.systemDefault());
+            .withZone(vn.edu.toeic.client.ui.TimeText.ZONE);
     private final ExamHistoryGateway gateway;
     private final BooleanSupplier currentView;
     private final Runnable unauthorized;

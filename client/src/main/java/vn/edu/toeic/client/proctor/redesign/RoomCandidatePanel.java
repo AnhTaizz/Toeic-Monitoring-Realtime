@@ -31,7 +31,11 @@ final class RoomCandidatePanel extends VBox {
     private final Label title = Ui.label("", "drawer-title");
     private final Label subtitle = Ui.label("", "drawer-eyebrow");
     private final VBox body = new VBox();
+    private final ScrollPane scroll = new ScrollPane(body);
+    private Data shown;
     private String attemptId;
+    /** The panel is rebuilt on every room update; the open/closed history must survive that. */
+    private boolean historyOpen;
 
     RoomCandidatePanel(Runnable close) {
         setId("proctor-room-drawer");
@@ -46,7 +50,6 @@ final class RoomCandidatePanel extends VBox {
         header.setAlignment(Pos.TOP_LEFT);
         header.getStyleClass().add("drawer-header");
         body.getStyleClass().add("drawer-body");
-        ScrollPane scroll = new ScrollPane(body);
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.getStyleClass().add("drawer-scroll");
@@ -56,9 +59,17 @@ final class RoomCandidatePanel extends VBox {
 
     String attemptId() { return attemptId; }
 
-    void show(String attempt) { attemptId = attempt; }
+    void show(String attempt) {
+        if (!java.util.Objects.equals(attemptId, attempt)) { historyOpen = false; shown = null; scroll.setVvalue(0); }
+        attemptId = attempt;
+    }
 
+    /** Rebuilt only when something it shows changed; the scroll position stays where the proctor left it. */
     void update(Data data) {
+        if (data != null && data.equals(shown)) return;
+        shown = data;
+        double position = scroll.getVvalue();
+        javafx.application.Platform.runLater(() -> scroll.setVvalue(position));
         body.getChildren().clear();
         ProctorRoomModel.Row row = data == null ? null : data.row();
         if (row == null || !row.attemptId().equals(attemptId)) {
@@ -82,9 +93,9 @@ final class RoomCandidatePanel extends VBox {
                 Ui.wrapping("Kết nối theo heartbeat Server nhận. Mất tín hiệu không phải bằng chứng gian lận.", "muted", "small"));
         now.setId("proctor-room-drawer-now");
 
-        VBox sources = section("Nguồn tín hiệu", data.signalsWatched()
-                ? SignalSummaryView.details(data.signals(), data.signalsStale(), data.signalsLoading(), null)
-                : Ui.wrapping("Không theo dõi USB, focus và cửa sổ trong phiên này.", "muted"));
+        VBox sources = section("USB và cửa sổ bài thi", data.signalsWatched()
+                ? signalLines(row, data.signals())
+                : Ui.wrapping("Không theo dõi USB và cửa sổ bài thi trong phiên này.", "muted"));
         VBox processes = section("Ứng dụng đang mở", processState(data.dashboard(), row.attemptId()));
 
         String name = row.displayName();
@@ -92,7 +103,7 @@ final class RoomCandidatePanel extends VBox {
         VBox recent = new VBox(8);
         recent.setId("proctor-room-drawer-alerts");
         for (RoomModel.Alert alert : alerts.stream().limit(5).toList()) recent.getChildren().add(line(
-                Ui.clock(alert.serverTime(), "—"), alert.title() + " · " + alert.description() + " (" + alert.status() + ")"));
+                Ui.clock(alert.serverTime(), "—"), ProctorRoomModel.alertLine(alert)));
         if (alerts.isEmpty()) recent.getChildren().add(Ui.label(loaded(data.history())
                 ? "Chưa quan sát thấy sự kiện cần xem xét." : "Đang tải lịch sử…", "muted"));
 
@@ -107,7 +118,9 @@ final class RoomCandidatePanel extends VBox {
             all.getChildren().addFirst(Ui.wrapping(data.history().error(), "muted", "small"));
         TitledPane full = new TitledPane("Lịch sử đầy đủ (" + history.size() + ")", all);
         full.setId("proctor-room-drawer-history-pane");
-        full.setExpanded(false);
+        full.setExpanded(historyOpen);
+        full.expandedProperty().addListener((observable, was, open) -> historyOpen = open);
+        full.setAnimated(false);
 
         body.getChildren().addAll(now, sources, processes,
                 section("Cảnh báo gần đây", recent, Ui.wrapping("Sự kiện được ghi nhận để giám thị xem xét theo bối cảnh, "
@@ -135,6 +148,32 @@ final class RoomCandidatePanel extends VBox {
             case "INFO" -> "Tham khảo";
             default -> String.valueOf(value);
         };
+    }
+
+    /** One line per source: the same state as the table cell, plus when the source last changed. */
+    private static VBox signalLines(ProctorRoomModel.Row row, CandidateSignals signals) {
+        VBox lines = new VBox(8);
+        lines.setId("proctor-room-drawer-signals");
+        lines.getChildren().addAll(
+                signalLine("USB", row.usb(), signals == null ? null : changedAt(signals.usb())),
+                signalLine("Focus", row.focus(), signals == null ? null : changedAt(signals.focus())),
+                signalLine("Cửa sổ", row.window(), signals == null ? null : changedAt(signals.window())));
+        return lines;
+    }
+
+    private static java.time.Instant changedAt(CandidateSignals.Source source) {
+        if (source == null) return null;
+        CandidateSignals.Reading reading = source.lastChange() != null ? source.lastChange() : source.observation();
+        return reading == null ? null : reading.observedAt();
+    }
+
+    private static HBox signalLine(String name, ProctorRoomModel.Cell cell, java.time.Instant changed) {
+        Label title = Ui.label(name, "field-label");
+        title.setMinWidth(70);
+        HBox line = new HBox(12, title, Ui.badge(cell.text(), cell.colour()));
+        if (changed != null) line.getChildren().add(Ui.label("thay đổi lúc " + Ui.clock(changed, "—"), "muted", "small"));
+        line.setAlignment(Pos.CENTER_LEFT);
+        return line;
     }
 
     private static boolean loaded(RoomFeed.AttemptHistory history) { return history != null && history.loaded(); }

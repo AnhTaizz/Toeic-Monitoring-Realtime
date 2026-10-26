@@ -27,8 +27,8 @@ class SignalFeedProjectionTest {
         assertThat(projected.alerts()).hasSize(2).allMatch(a->a.kind()==RoomModel.Kind.USB);
         assertThat(projected.alerts()).extracting(RoomModel.Alert::typeCode).containsExactly("USB_STORAGE_PRESENT_AT_START","USB_STORAGE_CONNECTED");
         var baseline=projected.alerts().getFirst();
-        assertThat(baseline.title()).isEqualTo("USB có sẵn khi bắt đầu giám sát");
-        assertThat(baseline.description()).contains("1 USB lưu trữ khi bắt đầu giám sát","Metadata một phần");
+        assertThat(baseline.title()).isEqualTo("Có USB khi bắt đầu thi");
+        assertThat(baseline.description()).contains("1 USB lưu trữ lúc bắt đầu giám sát","Không đọc được đầy đủ thông tin thiết bị");
         assertThat(baseline.statusColour()).isEqualTo("blue");
         assertThat(baseline.serverTime()).isEqualTo(SERVER.plusMillis(3));
     }
@@ -38,7 +38,7 @@ class SignalFeedProjectionTest {
         var result=SignalFeedProjection.project(List.of(entry(1,usb(1)),entry(2,f),entry(3,w)),"MOCK candidate");
         assertThat(result.alerts()).extracting(RoomModel.Alert::kind).containsExactly(RoomModel.Kind.USB,RoomModel.Kind.FOCUS,RoomModel.Kind.WINDOW);
         assertThat(result.alerts()).allSatisfy(a->{assertThat(a.clientTime()).isEqualTo(CLIENT);assertThat(a.serverTime()).isAfter(CLIENT);assertThat(a.open()).isFalse();assertThat(a.status()).doesNotContain("xử lý");});
-        assertThat(result.alerts().getFirst().description()).contains("Metadata một phần");
+        assertThat(result.alerts().getFirst().description()).contains("Không đọc được đầy đủ thông tin thiết bị");
     }
     @Test void internalDialogDoesNotAppearInTheCommonLists(){
         var f=new FocusSignal("MOCK-dialog",RUN,1,CLIENT,ORIGIN,false,"EXAM_INTERNAL_DIALOG",null);
@@ -60,9 +60,16 @@ class SignalFeedProjectionTest {
         var restored=new FocusSignal("MOCK-restored",RUN,2,CLIENT,ORIGIN,true,"OTHER_OR_UNKNOWN",1000L);
         var fullscreen=new WindowSignal("MOCK-fullscreen",RUN,3,CLIENT,ORIGIN,false,true,"CHANGED");
         var result=SignalFeedProjection.project(List.of(entry(1,removed),entry(2,restored),entry(3,fullscreen)),"MOCK candidate");
-        assertThat(result.alerts()).extracting(RoomModel.Alert::title).containsExactly("Quan sát rút USB","Cửa sổ thí sinh nhận focus","Trạng thái cửa sổ thay đổi");
+        assertThat(result.alerts()).extracting(RoomModel.Alert::title).containsExactly("Rút USB","Quay lại bài thi","Bài thi toàn màn hình");
         assertThat(result.history()).hasSize(3);
-        assertThat(result.alerts().getLast().description()).contains("Thu nhỏ: không","Toàn màn hình: có");
+        assertThat(result.alerts().getLast().description()).isEqualTo("Cửa sổ bài thi chuyển sang toàn màn hình.");
+        assertThat(result.alerts().get(1).description()).isEqualTo("Thí sinh quay lại cửa sổ bài thi sau 1 giây.");
+    }
+    @Test void timeAwayFromTheExamReadsInSecondsAndMinutes(){
+        assertThat(SignalFeedProjection.duration(877)).isEqualTo("dưới 1 giây");
+        assertThat(SignalFeedProjection.duration(1416)).isEqualTo("1,4 giây");
+        assertThat(SignalFeedProjection.duration(96120)).isEqualTo("1 phút 36 giây");
+        assertThat(SignalFeedProjection.duration(120000)).isEqualTo("2 phút");
     }
     @Test void equalWireEventIdsOnDifferentAttemptsStillHaveDifferentRowIdentities(){
         var signal=usb(1);var one=entry(1,signal);

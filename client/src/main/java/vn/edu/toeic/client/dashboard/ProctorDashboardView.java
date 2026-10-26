@@ -54,7 +54,7 @@ public final class ProctorDashboardView extends BorderPane implements AutoClosea
     private final ExamApiClient examApi;
     public ProctorDashboardView(String serverUrl, LoginResponse login, RealtimeClient transport, Runnable onLogout, Runnable onExpired) {
         if (!"PROCTOR".equals(login.user().role())) throw new IllegalArgumentException("Dashboard chỉ dành cho giám thị");
-        ZoneId zone=ZoneId.of(System.getProperty("toeic.dashboard.timezone",ZoneId.systemDefault().getId()));
+        ZoneId zone=vn.edu.toeic.client.ui.TimeText.ZONE;
         times=DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss.SSS").withZone(zone);
         setPadding(new Insets(20));
         Label title=new Label("Hệ Thống Giám Sát Ca Thi TOEIC"); title.getStyleClass().add("title-large");

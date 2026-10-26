@@ -159,6 +159,7 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
     private String session = "", roomState, createdSession, shownPin, copiedText;
     private Set<String> attempts = Set.of();
     private boolean creatingView;
+    private String finishedRoom = "";
     /** Alert ids per attempt seen at the first complete load; anything newer gets the "Mới" mark until opened. */
     private Map<String, Set<String>> knownAlerts;
     private final Set<String> freshAttempts = new HashSet<>();
@@ -802,9 +803,12 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
                 : s.catalog().stream().filter(exam -> exam.examId().equals(s.created().examId())).map(ExamCatalogItem::title).findFirst().orElse(null);
         title.setText(item != null ? item.title() : examTitle != null ? examTitle : "Phòng thi");
         String current = s.presence() != null && session.equals(s.presence().sessionId()) ? s.presence().state() : null;
-        state.setText(current == null ? "Đang đọc…" : roomState(current));
+        boolean finished = model.allFinished();
+        state.setText(current == null ? "Đang đọc…" : finished ? "Đã kết thúc" : roomState(current));
         state.getStyleClass().removeAll("green", "amber", "blue", "gray", "red");
-        state.getStyleClass().add("IN_PROGRESS".equals(current) ? "blue" : "SCHEDULED".equals(current) ? "amber" : "gray");
+        state.getStyleClass().add(finished ? "gray" : "IN_PROGRESS".equals(current) ? "blue" : "SCHEDULED".equals(current) ? "amber" : "gray");
+        // The server stops listing a room once every attempt is final; read the list again so it disappears.
+        if (finished && !finishedRoom.equals(session)) { finishedRoom = session; room.loadRooms(false); }
         summary.setText(current == null ? (s.readyLoading() ? "Đang đọc trạng thái phòng…" : s.readyError())
                 : ProctorRoomModel.summary(model));
         renderPin(s);
@@ -839,7 +843,7 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
             Label time = Ui.label(Ui.clock(alert.serverTime(), "—"), "strong");
             time.setMinWidth(70);
             HBox line = new HBox(14, time, Ui.label(alert.candidate(), "strong"),
-                    Ui.wrapping(alert.title() + " · " + alert.description() + " (" + alert.status() + ")", "label"));
+                    Ui.wrapping(ProctorRoomModel.alertLine(alert), "label"));
             line.getStyleClass().add("room-alert-line");
             line.setOnMouseClicked(event -> openCandidate(alert.attemptId()));
             roomAlerts.getChildren().add(line);

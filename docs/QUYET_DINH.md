@@ -488,3 +488,9 @@ USB có sẵn khi bắt đầu, cắm/rút, focus/window và cách quan sát Win
 
 - Từ chối FORBIDDEN/UNAUTHORIZED cho request làn process của đúng collector đang bind là access rejection, như heartbeat bị từ chối; collector cũ/lease đã nhả không dừng được phiên mới. Không đổi wire. `CandidateExamSignalMonitoring.close()` an toàn trên mọi luồng, chỉ gỡ listener JavaFX trên luồng FX; không khóa đối tượng để tránh deadlock với `configureUsb`. Chạm B/C (client adapter, coordinator); cần owner review.
 - Tài khoản demo `candidate1/candidate2/proctor1` chỉ tạo khi `TOEIC_SEED_DEMO_ACCOUNTS=true` kèm `TOEIC_SEED_PASSWORD`; không còn mật khẩu mặc định. Launcher phát hành luôn truyền `--toeic.seed.demo-accounts=false`; test fixture bật cờ tường minh (surefire `server/pom.xml`, `.env` dev). Tài khoản đã có không bị đổi/xóa. Chạm A (seed/auth) và B (launcher); cần owner review.
+
+### 26/10/2026 — Giao diện "Phòng thi" (UI/UX), quyết định của đại diện nhóm
+
+- **Thông báo giám sát:** đại diện nhóm yêu cầu ẩn dòng thông báo giám sát (ứng dụng đang mở, USB, rời cửa sổ thi) khỏi màn nhập PIN của thí sinh. Phạm vi V2 vẫn yêu cầu thí sinh **được thông báo**; việc thông báo chuyển sang giám thị nói trực tiếp trong phòng thi (ghi vào hướng dẫn giám thị). Không đổi phạm vi quan sát.
+- **Danh sách "Phòng đang mở":** Server không có API đóng phòng, nên `GET /api/v2/pin-rooms` (và danh sách Room Code cũ) chỉ liệt kê phòng `SCHEDULED` hoặc phòng đã bắt đầu còn ít nhất một lượt `ACTIVE` chưa quá `deadline_at` (so với `clock_timestamp()`). Không đổi trạng thái phiên, API, DTO hay schema; chỉ lọc khi đọc. Chạm `ExamRoomService` của A — cần A review. Test: `AccountPinPostgresTest.finishedRoomsLeaveTheOpenRoomList`.
+- **Giờ hiển thị:** mọi giờ trên giao diện theo giờ Việt Nam (`Asia/Ho_Chi_Minh`, GMT+7) vì launcher chạy Java với `user.timezone=UTC`; đổi được bằng `-Dtoeic.dashboard.timezone`. Server và dữ liệu vẫn dùng UTC.
