@@ -1267,3 +1267,9 @@ Chạy lại `AccountPinFlowPostgresGuiTest` + `RoomFlowPostgresGuiTest` khi má
 ### Ghi chú làm dở
 
 `docs/DEMO-RUNBOOK.md` mục 3 vẫn tả giao diện Giám thị cũ (Tổng quan/Cảnh báo/Timeline) và mật khẩu ngẫu nhiên; chưa sửa. File `.msi` chưa đăng lên GitHub Releases.
+
+## 26/10/2026 — DEMO-RUNBOOK theo cách chạy mới, MSI lên Releases
+
+- Viết lại `docs/DEMO-RUNBOOK.md`: máy chủ chạy từ repo (`.env`, `docker compose`, `START-CLOUDFLARE-SERVER.bat [-AllowLan]`), Thí sinh/Giám thị cài MSI; luồng demo theo màn "Phòng thi" (PIN chung, "Đang chuẩn bị"/"Sẵn sàng", "Bắt đầu phòng thi", cột USB/Focus/Cửa sổ ghim vi phạm, "Lịch sử đầy đủ"), Admin tự đặt mật khẩu; bảng sự cố theo thông báo của `start-cloudflare.ps1`. Bỏ hướng dẫn bundle portable (`Start-Server.bat`, `server.env`). Nhãn nút đã đối chiếu với code.
+- README trỏ bước tải MSI tới trang Releases.
+- Đăng `ToeicMonitor-0.4.2.msi` (SHA-256 `52062a60b4a07e5112550ee69f1306dfba9291f2c1b5cfc5f3df8ca336cacea4`) lên GitHub Releases, tag `v0.4.2`. MSI build từ `b46f501`; `client/`, `protocol/` và script đóng gói không đổi từ đó tới `main`. Không chạy test trong phiên này (chỉ tài liệu và phát hành).

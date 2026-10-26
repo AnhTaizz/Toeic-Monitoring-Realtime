@@ -55,7 +55,7 @@ Máy chủ phải luôn bật, có mạng và không sleep trong giờ thi. Lỗ
 
 ### Thí sinh và Giám thị: cài MSI (khuyên dùng)
 
-1. Nhận file `ToeicMonitor-<phiên bản>.msi` từ người tổ chức. File cài không nằm trong Git (`.gitignore` chặn `*.msi`).
+1. Tải `ToeicMonitor-<phiên bản>.msi` ở [bản phát hành mới nhất](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/releases/latest) (kèm file `.sha256` để đối chiếu). File cài không nằm trong Git.
 2. Bấm đúp để cài cho riêng tài khoản Windows của mình (không cần quyền Admin). SmartScreen báo "Windows protected your PC" thì chọn *More info* → *Run anyway* (bộ cài chưa ký số).
 3. Mở **ToeicMonitor** ở Desktop hoặc Start menu → đăng nhập.
 

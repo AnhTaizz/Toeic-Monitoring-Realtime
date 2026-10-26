@@ -1,21 +1,21 @@
 # DEMO RUNBOOK — TOEIC Monitor
 
-Hướng dẫn duy nhất để cài, chạy và demo bản phát hành. Mọi bước dùng bundle Windows portable (`Start-Server.bat`, `Start-Client.bat`). Kết quả kiểm thử của bản này: [release/RELEASE-REPORT.md](release/RELEASE-REPORT.md).
+Hướng dẫn cài, chạy và demo. Máy chủ chạy Server từ repo (PostgreSQL trong Docker). Thí sinh và Giám thị cài bộ cài MSI, hoặc chạy Client từ repo bằng `START-CLIENT-*.bat`. Tóm tắt nhanh ở [README](../README.md#cách-chạy); chạy qua Internet và chẩn đoán tunnel ở [deploy/CLOUDFLARE-TUNNEL.md](deploy/CLOUDFLARE-TUNNEL.md).
 
 ## 0. Cần chuẩn bị
 
 | Thứ | Ghi chú |
 |---|---|
-| Máy Server Windows 11 | Chạy Server + PostgreSQL 18. Có thể kiêm luôn cửa sổ Admin/Giám thị. |
-| Máy Thí sinh | Cùng mạng LAN với Server; chỉ cần bundle (có Java 21 sẵn). |
+| Máy chủ Windows 11 | JDK 21, Maven 3.9+, Docker Desktop; qua Internet thì thêm `cloudflared` và token tunnel. Có thể kiêm luôn cửa sổ Admin/Giám thị. |
+| Máy Thí sinh, Giám thị | Bộ cài `ToeicMonitor-<phiên bản>.msi` ở trang [Releases](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/releases) (có sẵn Java 21). Qua Internet: mạng nào cũng được. Qua LAN: cùng mạng với máy chủ. |
 | Đề thi đã chuyển sang định dạng V2 | Đề STUDY4 nội bộ: dùng `tools/study4-adapter` (mục 2). Không phát hành lại nội dung bên thứ ba. |
 | Loa/tai nghe | Cho phần thử loa và Listening. |
 
-## 1. Cấu hình Server (một lần)
+## 1. Cấu hình máy chủ (một lần)
 
-1. Tạo database và user riêng trong PostgreSQL 18 (ví dụ `toeic`/`toeic`). Không mở cổng 5432 ra LAN. Nâng cấp từ bản cũ: **sao lưu DB trước**; Flyway tự áp dụng V19–V21 khi khởi động, không reset dữ liệu cũ.
-2. Giải nén bundle, chép `server.env.example` thành `server.env` cùng thư mục, điền mọi dòng. Media root là **đường dẫn tuyệt đối** tới thư mục `audio` và `images` của đề đã chuyển (mục 2).
-3. Tạo khóa PIN một lần (PowerShell), dán dòng in ra vào `server.env`; giữ nguyên qua mọi lần khởi động:
+1. Chép `.env.example` ở gốc repo thành `.env`, điền DB (`DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_PORT`). `docker compose up -d --wait` dựng PostgreSQL 18 chỉ mở trên `127.0.0.1`. Nâng cấp từ bản cũ: **sao lưu DB trước**; Flyway tự áp dụng migration mới khi khởi động, không reset dữ liệu cũ.
+2. `TOEIC_AUDIO_ROOT`, `TOEIC_IMAGE_ROOT`: thư mục `audio` và `images` của đề đã chuyển (mục 2). Đường dẫn tương đối tính theo thư mục chứa `.env`.
+3. Tạo khóa PIN một lần (PowerShell), dán dòng in ra vào `.env`; giữ nguyên qua mọi lần khởi động:
 
    ```powershell
    $b = New-Object byte[] 32
@@ -24,11 +24,20 @@ Hướng dẫn duy nhất để cài, chạy và demo bản phát hành. Mọi b
    'TOEIC_ROOM_PIN_KEY=' + [Convert]::ToBase64String($b).TrimEnd('=').Replace('+','-').Replace('/','_')
    ```
 
-4. Lần đầu điền `TOEIC_ADMIN_BOOTSTRAP_USERNAME` và `TOEIC_ADMIN_BOOTSTRAP_PASSWORD` (20–72 ký tự). Không có đăng ký công khai. Bản phát hành không tạo tài khoản demo (`candidate1`, `candidate2`, `proctor1`): với DB mới, Admin bootstrap là tài khoản duy nhất; tài khoản đã có trong DB cũ được giữ nguyên.
-5. `Start-Server.bat -ValidateOnly` kiểm cấu hình mà không khởi động. Sau đó `Start-Server.bat`: launcher kiểm Java, biến bắt buộc, khóa PIN, thư mục media, kết nối PostgreSQL và cổng 8080, rồi mới chạy. Giữ cửa sổ mở; `Ctrl+C` để dừng.
-6. Windows Firewall: cho phép inbound TCP 8080, profile Private.
+4. Lần đầu với DB mới, điền `TOEIC_ADMIN_BOOTSTRAP_USERNAME` và `TOEIC_ADMIN_BOOTSTRAP_PASSWORD` (20–72 ký tự). Không có đăng ký công khai. Launcher không tạo tài khoản demo (`candidate1`, `candidate2`, `proctor1`): với DB mới, Admin bootstrap là tài khoản duy nhất; tài khoản đã có trong DB cũ được giữ nguyên.
+5. Qua Internet: cài `cloudflared`, lưu token tunnel và khai báo Public Hostname theo [CLOUDFLARE-TUNNEL.md](deploy/CLOUDFLARE-TUNNEL.md), mục "Làm một lần trên máy chủ".
+6. Qua LAN: Windows Firewall cho phép inbound TCP 8080, profile Private.
 
-`server.env` chứa bí mật cục bộ: không đưa vào ZIP, Git, ảnh chụp hay báo cáo.
+`.env` và file token chứa bí mật cục bộ: không đưa vào Git, ảnh chụp hay báo cáo.
+
+**Mỗi lần chạy:**
+
+```powershell
+mvn -q package -DskipTests        # sau mỗi lần đổi code
+docker compose up -d --wait
+```
+
+Rồi bấm `START-CLOUDFLARE-SERVER.bat` (thêm `-AllowLan` để máy cùng mạng vào được bằng `http://IP_MAY_CHU:8080`). Script mở Server trong cửa sổ riêng với giám sát bật như bản phát hành, chờ Server sẵn sàng, mở connector Cloudflare nếu chưa có, rồi kiểm tra qua Internet. `STATUS-CLOUDFLARE.bat` xem nhanh; `STOP-CLOUDFLARE-SERVER.bat` chỉ dừng Server và connector do script mở.
 
 ## 2. Nạp đề STUDY4 (một lần cho mỗi đề)
 
@@ -40,7 +49,7 @@ java -cp "tools/study4-adapter/target/classes;protocol/target/classes;$env:USERP
   vn.edu.toeic.tools.study4.Study4Adapter --input D:\du-lieu\STUDY4_6852 --output D:\du-lieu\study4-v2 --permission-date 2026-10-22
 ```
 
-Đặt `TOEIC_AUDIO_ROOT=D:\du-lieu\study4-v2\audio` và `TOEIC_IMAGE_ROOT=D:\du-lieu\study4-v2\images` trong `server.env`, khởi động Server, rồi import bằng tài khoản Giám thị (mật khẩu được hỏi, không ghi vào lịch sử lệnh):
+Đặt `TOEIC_AUDIO_ROOT=D:\du-lieu\study4-v2\audio` và `TOEIC_IMAGE_ROOT=D:\du-lieu\study4-v2\images` trong `.env`, khởi động Server, rồi import bằng tài khoản Giám thị (mật khẩu được hỏi, không ghi vào lịch sử lệnh):
 
 ```powershell
 $server = 'http://127.0.0.1:8080'
@@ -55,50 +64,55 @@ Thành công trả HTTP 201. Import lại cùng `examId` trả **409 CONFLICT** 
 
 ## 3. Luồng demo (một Giám thị, hai Thí sinh)
 
-Mở `Start-Client.bat` nhiều lần (mỗi vai một cửa sổ). Máy Thí sinh nhập `http://IP_SERVER:8080` (IP lấy bằng `ipconfig` trên máy Server), không dùng `localhost` của máy Thí sinh.
+Mỗi người mở **ToeicMonitor** đã cài từ MSI (Server `https://toeic.anhtaizz.id.vn` được đặt sẵn). Thử trên một máy: bấm `START-CLIENT-CLOUDFLARE.bat` hoặc `START-CLIENT-LAN.bat` nhiều lần, mỗi vai một cửa sổ. Qua LAN, máy Thí sinh dùng `http://IP_MAY_CHU:8080` (IP lấy bằng `ipconfig` trên máy chủ), không dùng `localhost` của máy Thí sinh.
 
-1. **Admin** đăng nhập → *Quản lý tài khoản* → tạo một Giám thị và hai Thí sinh. Mỗi mật khẩu ngẫu nhiên chỉ hiện **một lần**; bàn giao riêng. Mất mật khẩu: *Cấp mật khẩu* (không cấp khi người đó đang thi; token cũ bị thu hồi).
-2. **Giám thị** đăng nhập → *Điều khiển ca* → *Phòng thi TOEIC* → chọn đề → *Tạo phòng* → nhận PIN 5 số. PIN tự ẩn sau hai phút; nút Copy xóa clipboard sau 30 giây.
-3. **Thí sinh** (mỗi máy) đăng nhập bằng tài khoản được cấp → nhập PIN → *Vào phòng*. Tải/chuẩn bị audio, *Thử loa*, *Tôi nghe được*, *Xác nhận sẵn sàng*; ảnh Part 1 được kiểm tự động. JOIN lặp không tạo lượt thi mới.
-4. Giám thị theo dõi JOINED, kết nối và READY rồi bấm **START**.
-   - Phòng chưa ai JOIN: START bị từ chối.
-   - Có người chưa READY: một hộp xác nhận; người đó **mất Listening** của lượt này và làm Reading trong thời gian còn lại, không cộng giờ.
-   - Tất cả READY: START trực tiếp.
-5. Thí sinh READY nghe Listening **một lần** rồi làm Reading. Chọn đáp án, chờ tự lưu, *Nộp bài* và xác nhận.
-6. Giám thị xem *Tổng quan*, *Cảnh báo*, *Chi tiết thí sinh* (khối "Đang quan sát trên máy thí sinh": tiến trình, USB, focus, cửa sổ) và *Timeline đa tín hiệu*. Mất heartbeat hiển thị UNKNOWN — "quan sát thấy", không phải kết luận gian lận.
+1. **Admin** đăng nhập → *Thêm tài khoản* → tạo một Giám thị và hai Thí sinh, tự đặt mật khẩu (8–128 ký tự, nhập hai lần) rồi bàn giao riêng. Thí sinh quên mật khẩu: *Đổi mật khẩu* (không đổi khi người đó đang thi; phiên đăng nhập cũ bị thu hồi). *Khóa*/*Mở khóa* để tạm chặn đăng nhập.
+2. **Giám thị** đăng nhập → màn **Phòng thi** → *+ Tạo phòng* → chọn đề → *Tạo phòng* → nhận **PIN 5 số** chung cho cả phòng. PIN tự ẩn sau hai phút (*Ẩn PIN* để ẩn ngay); *Sao chép* xóa clipboard sau 30 giây nếu chưa bị thay.
+3. **Thí sinh** (mỗi máy) đăng nhập → nhập PIN → *Vào phòng*. Ở phòng chờ: *Tải âm thanh* → *Thử loa* → *Tôi nghe được* → *Xác nhận sẵn sàng*; ảnh Part 1 được kiểm tự động. Vào lại phòng không tạo lượt thi mới.
+4. Giám thị thấy từng thí sinh xuất hiện trong bảng của phòng: "Đang chuẩn bị" → "Sẵn sàng", cùng trạng thái kết nối. Bấm **Bắt đầu phòng thi** và xác nhận.
+   - Phòng chưa ai vào: không bắt đầu được.
+   - Có người chưa sẵn sàng: hộp xác nhận nêu "Sẵn sàng a / đã vào b"; người chưa sẵn sàng **mất Listening** của lượt này ("Chỉ làm Reading") và làm Reading trong thời gian còn lại, không cộng giờ.
+   - Kết quả bắt đầu chưa rõ (mạng chập chờn): *Thử lại bắt đầu* gửi lại đúng yêu cầu cũ.
+5. Thí sinh đã sẵn sàng nghe Listening **một lần** rồi làm Reading. Chọn đáp án, chân trang hiện "✓ Đã lưu"; *Nộp bài* và xác nhận → hộp kết quả (số câu đúng, giờ Việt Nam).
+6. Giám thị theo dõi trên cùng bảng: "Đang thi · x/y" → "Đã nộp · đúng x/y" hoặc "Hết giờ · đúng x/y"; cột phần nghe, USB, Focus, Cửa sổ và cảnh báo (nhãn "Mới" cho cảnh báo chưa xem). Bấm một hàng để mở chi tiết: trạng thái hiện tại, nguồn tín hiệu, cảnh báo gần đây và *Lịch sử đầy đủ*. Mất heartbeat hiện "Không có tín hiệu" — đó là "quan sát thấy", không phải kết luận gian lận.
 
-**Demo tiến trình**: trên máy Thí sinh đang làm bài, mở một trong 9 ứng dụng được quan sát (ví dụ Chrome, Edge, Zalo, Teams, Discord, AnyDesk, TeamViewer); Giám thị thấy tiến trình trong *Chi tiết thí sinh* và một event khi tiến trình xuất hiện (không lặp ở mỗi lần quét). Ứng dụng ngoài danh sách (Notepad, PowerShell…) không được quan sát — đó là chính sách `process-policy-v4`, không phải lỗi.
+Phòng mà mọi lượt đã nộp hoặc hết giờ tự biến khỏi danh sách "Phòng đang mở".
 
-**Demo USB** (máy Thí sinh thật, đang ở màn làm bài): USB cắm sẵn hiện `USB_STORAGE_PRESENT_AT_START` một lần; rút USB và giữ khoảng 10 giây → `USB_STORAGE_REMOVED`; cắm lại, giữ khoảng 10 giây → `USB_STORAGE_CONNECTED`. Giám thị mở Timeline, chọn đúng lượt thi và nguồn `WINDOWS_USB_STORAGE` (hoặc Tất cả nguồn). Trạng thái không đổi thì không sinh event mới. Lỗi đọc USB hiện là nguồn UNKNOWN/ERROR, không được hiểu là "đã rút", và không làm gián đoạn bài thi. Chỉ quan sát USB lưu trữ; không đọc file hay serial, không chặn thiết bị. Thao tác cắm/rút nhanh hơn chu kỳ quét có thể không được ghi.
+**Demo tiến trình**: trên máy Thí sinh đang làm bài, mở một trong 9 ứng dụng được quan sát (ví dụ Chrome, Edge, Zalo, Teams, Discord, AnyDesk, TeamViewer); Giám thị thấy cảnh báo trên hàng của thí sinh và trong chi tiết, một lần khi tiến trình xuất hiện (không lặp ở mỗi lần quét). Ứng dụng ngoài danh sách (Notepad, PowerShell…) không được quan sát — đó là chính sách `process-policy-v4`, không phải lỗi.
+
+**Demo USB, Focus, Cửa sổ** (máy Thí sinh thật, đang ở màn làm bài): cắm USB và giữ khoảng 10 giây → cột USB hiện "Đã cắm USB · giờ"; USB cắm sẵn từ đầu hiện "Có USB từ đầu · giờ". Chuyển sang cửa sổ khác → "Rời cửa sổ N lần"; thu nhỏ app → "Thu nhỏ N lần". Vi phạm đã quan sát được giữ trên hàng, kể cả khi USB đã rút hay thí sinh đã quay lại app; diễn biến từng lần nằm trong *Lịch sử đầy đủ*. Lỗi đọc USB không được hiểu là "đã rút" và không làm gián đoạn bài thi. Chỉ quan sát USB lưu trữ; không đọc file hay serial, không chặn thiết bị. Thao tác cắm/rút nhanh hơn chu kỳ quét có thể không được ghi.
 
 Tình huống đáng demo:
 
-- **Rớt mạng/reconnect**: Thí sinh mất kết nối giữa Listening → audio dừng, bị khóa, ghi cờ gián đoạn; kết nối lại **không phát lại** và không reset deadline.
+- **Rớt mạng/reconnect**: Thí sinh mất kết nối giữa Listening → audio dừng, bị khóa, ghi cờ gián đoạn; kết nối lại **không phát lại** và không reset deadline. Giám thị thấy cột phần nghe "Phần nghe bị gián đoạn".
 - **Mở bài ở Client khác** (takeover): Client cũ mất quyền ghi; đáp án đã lưu giữ nguyên.
-- **Mất response tạo phòng**: không tạo lại; tải danh sách phòng, chọn phòng vừa tạo, *Cấp lại PIN* (chỉ trước START).
-- Nhập sai PIN 5 lần trong 5 phút khóa JOIN 5 phút.
+- **Mất phản hồi khi tạo phòng**: không bấm tạo lại; *Làm mới* danh sách, chọn phòng vừa tạo, *Cấp lại PIN* (chỉ trước khi bắt đầu; PIN cũ bị thu hồi).
+- Nhập sai PIN 5 lần trong 5 phút khóa vào phòng 5 phút.
 
-## 4. Checklist LAN hai máy và nghe thật
+## 4. Checklist hai máy thật và nghe thật
 
-Kết quả của bản hiện tại ghi trong [báo cáo phát hành](release/RELEASE-REPORT.md). Test JavaFX/HTTP/WS cùng một máy không thay thế các bước này.
+Test JavaFX/HTTP/WS cùng một máy không thay thế các bước này. Qua Internet (một máy dùng 4G): làm theo checklist 10 bước ở cuối [CLOUDFLARE-TUNNEL.md](deploy/CLOUDFLARE-TUNNEL.md). Qua LAN:
 
-- [ ] Hai máy cùng LAN; `Test-NetConnection IP_SERVER -Port 8080` thành công từ máy Thí sinh.
-- [ ] Đăng nhập qua HTTP; WebSocket kết nối, dashboard Giám thị thấy Thí sinh.
-- [ ] Audio và ảnh tải qua cùng Server URL, không lỗi thiếu file/checksum.
+- [ ] Hai máy cùng LAN; máy chủ chạy `START-CLOUDFLARE-SERVER.bat -AllowLan`; `Test-NetConnection IP_MAY_CHU -Port 8080` thành công từ máy Thí sinh.
+- [ ] Đăng nhập; WebSocket kết nối, Giám thị thấy Thí sinh vào phòng.
+- [ ] Audio và ảnh tải qua cùng địa chỉ Server, không lỗi thiếu file/checksum.
 - [ ] Người thật nghe sample bằng loa/tai nghe; không coi sự kiện MediaPlayer hoàn thành là bằng chứng nghe được.
-- [ ] Hai Thí sinh READY → START → nghe hết Listening không phát lại → Reading → tự lưu → Nộp. Ghi phiên bản, giờ, máy, kết quả thật.
+- [ ] Hai Thí sinh sẵn sàng → bắt đầu → nghe hết Listening không phát lại → Reading → tự lưu → Nộp. Ghi phiên bản, giờ, máy, kết quả thật.
 
 ## 5. Sự cố thường gặp
 
 | Hiện tượng | Xử lý |
 |---|---|
-| `Missing ...` khi chạy Server | Thiếu dòng trong `server.env`. |
-| `Cannot reach PostgreSQL` | PostgreSQL chưa chạy hoặc sai `DB_HOST`/`DB_PORT`. |
-| `Port 8080 is already in use` | Server cũ còn chạy; dừng bằng `Ctrl+C` hoặc `Start-Server.bat -Port 8090`. |
+| "Thiếu file cấu hình" / "Thiếu trong .env: …" | Chép `.env.example` thành `.env` và điền các dòng được nêu. |
+| "TOEIC_AUDIO_ROOT trỏ tới thư mục không tồn tại" | Sửa đường dẫn media trong `.env` (tương đối thì tính theo thư mục chứa `.env`). |
+| "Chưa có server JAR" | `mvn -q package -DskipTests`. |
+| "Server dừng khi khởi động" | Xem cửa sổ Server: thường là PostgreSQL chưa chạy (`docker compose up -d --wait`), sai DB hoặc khóa PIN không hợp lệ. |
+| "Cổng 8080 đang bị chương trình khác dùng" | Script không dừng chương trình đó; giải phóng cổng hoặc chạy với `-Port`. |
 | Tạo/vào phòng bị từ chối "PIN key" | `TOEIC_ROOM_PIN_KEY` thiếu hoặc đã đổi; dùng lại khóa cũ. |
-| Thí sinh không READY | Media thiếu/sai checksum hoặc chưa xác nhận nghe được. |
-| Client không kết nối | Sai IP/cổng, firewall, hai máy khác mạng. |
+| Thí sinh không "Sẵn sàng" | Media thiếu/sai checksum hoặc chưa xác nhận nghe được. |
+| Client không kết nối | Qua Internet: chạy `STATUS-CLOUDFLARE.bat` và xem mục chẩn đoán trong [CLOUDFLARE-TUNNEL.md](deploy/CLOUDFLARE-TUNNEL.md). Qua LAN: sai IP/cổng, firewall, hai máy khác mạng, hoặc Server chưa chạy với `-AllowLan`. |
+| Windows "protected your PC" khi cài MSI | Bộ cài chưa ký số: *More info* → *Run anyway*. |
 
 ## 6. Giao diện legacy
 
-Vào phòng bằng mã phòng + PIN cá nhân, ca V1 và tab phòng V2 cũ vẫn có backend và test nhưng **bị ẩn** trong bản phát hành. Chỉ bật để kiểm thử hồi quy: đặt `TOEIC_UI_LEGACY=true` trước khi mở Client (hoặc `-Dtoeic.ui.legacy=true`). Đây không phải ranh giới phân quyền; quyền vẫn do Server kiểm.
+Vào phòng bằng mã phòng + PIN cá nhân, ca V1 và các trang Giám thị cũ vẫn có backend và test nhưng **bị ẩn** mặc định. Chỉ bật để kiểm thử hồi quy: đặt `TOEIC_UI_LEGACY=true` trước khi mở Client (hoặc `-Dtoeic.ui.legacy=true`); khi đó màn Phòng thi có thêm nút *Công cụ cũ*. Đây không phải ranh giới phân quyền; quyền vẫn do Server kiểm.
