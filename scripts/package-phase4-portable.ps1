@@ -1,5 +1,7 @@
 param([Parameter(Mandatory=$true)][string]$JavaHome,[string]$OutputRoot,[switch]$WithoutRuntime,[string]$ManifestTool,
- [ValidatePattern('^[A-Za-z0-9_.-]+$')][string]$ReleaseName='toeic-monitor-portable',[string]$ReadMe)
+ [ValidatePattern('^[A-Za-z0-9_.-]+$')][string]$ReleaseName='toeic-monitor-portable',[string]$ReadMe,
+ # Public HTTPS hostname of the Cloudflare Tunnel; Start-Client-Internet.bat opens the Client on it.
+ [ValidatePattern('^https://[A-Za-z0-9.-]+$')][string]$PublicServerUrl='https://toeic.anhtaizz.id.vn')
 $ErrorActionPreference='Stop'
 $env:PATHEXT='.COM;.EXE;.BAT;.CMD'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -22,6 +24,8 @@ foreach($role in @('Client','Server')){
  $bat='@echo off'+"`r`n"+'setlocal'+"`r`n"+'"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File "%~dp0start-release.ps1" -Role '+$role+' %*'+"`r`n"+'set "TOEIC_EXIT=%ERRORLEVEL%"'+"`r`n"+'if not "%TOEIC_EXIT%"=="0" pause'+"`r`n"+'exit /b %TOEIC_EXIT%'+"`r`n"
  [IO.File]::WriteAllText((Join-Path $root ('Start-'+$role+'.bat')),$bat,$ascii)
 }
+$internet='@echo off'+"`r`n"+'setlocal'+"`r`n"+'"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File "%~dp0start-release.ps1" -Role Client -ServerUrl '+$PublicServerUrl+' %*'+"`r`n"+'set "TOEIC_EXIT=%ERRORLEVEL%"'+"`r`n"+'if not "%TOEIC_EXIT%"=="0" pause'+"`r`n"+'exit /b %TOEIC_EXIT%'+"`r`n"
+[IO.File]::WriteAllText((Join-Path $root 'Start-Client-Internet.bat'),$internet,$ascii)
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 foreach($module in @('client','server')){
  $archive=[IO.Compression.ZipFile]::OpenRead((Join-Path $root ($module+'.jar')))

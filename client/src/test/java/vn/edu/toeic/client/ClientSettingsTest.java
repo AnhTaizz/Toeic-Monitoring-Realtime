@@ -30,6 +30,11 @@ class ClientSettingsTest {
         assertThat(cfg.notice()).isEmpty();
         assertThat(Files.readString(file)).isEqualTo(original);
     }
+    @Test void cloudflareHostnameFromUserFileIsUsedAsIs()throws Exception{
+        Path file=folder.resolve("server-url.txt");Files.writeString(file,"https://toeic.anhtaizz.id.vn\r\n");
+        var cfg=ClientSettings.readConfiguration(null,null,file);
+        assertThat(cfg.serverUrl()).isEqualTo("https://toeic.anhtaizz.id.vn");assertThat(cfg.notice()).isEmpty();
+    }
     @Test void missingFileRetainsDefaultWithoutCreatingUserState(){
         Path file=folder.resolve("missing.txt");var cfg=ClientSettings.readConfiguration(null,null,file);
         assertThat(cfg.serverUrl()).isEqualTo("http://127.0.0.1:8080");assertThat(cfg.notice()).isEmpty();assertThat(file).doesNotExist();

@@ -1249,3 +1249,10 @@ Nhánh local `feat/ui-ux-simplify-20261026` (trên nhánh gộp cảnh báo PR #
 ### Ghi chú làm dở
 
 Chạy lại `AccountPinFlowPostgresGuiTest` + `RoomFlowPostgresGuiTest` khi máy rảnh. Chờ người dùng duyệt ảnh giám thị trong `evidence/ui-ux-20261026/proctor/`. Còn: chặng Admin/đăng nhập (rút chú thích), tài liệu DEMO-RUNBOOK/PORTABLE-READ-ME/README, full regression + runner USB + đóng gói, rồi gộp một PR duy nhất cùng #109. Docker engine trên máy đã tự tắt; dữ liệu DB dev còn trong volume.
+
+## 26/10/2026 — Chạy qua Internet bằng Cloudflare Tunnel
+
+- Khảo sát code: không có địa chỉ cố định trong Client; WebSocket đổi `https`→`wss`; Server không cần sửa (xem QUYET_DINH).
+- Thêm `scripts/start-cloudflare.ps1` (Start/Status/Stop) và `START-CLOUDFLARE-SERVER.bat`, `STATUS-CLOUDFLARE.bat`, `STOP-CLOUDFLARE-SERVER.bat`, `START-CLIENT-CLOUDFLARE.bat`, `START-CLIENT-LAN.bat`; `start-release.ps1` nhận `-ServerJar/-ClientJar`; bản portable có thêm `Start-Client-Internet.bat`. Hướng dẫn: [CLOUDFLARE-TUNNEL.md](deploy/CLOUDFLARE-TUNNEL.md).
+- Đã chạy thật trên máy Windows với DB dev: Start mở Server và chờ READY, dùng lại Server đang chạy, từ chối cổng bị chương trình khác giữ, báo thiếu `.env`/`cloudflared`/token/token sai; Status báo đúng "DNS chưa có bản ghi"; Stop chỉ dừng Server do script mở. Launcher Client (repo và bundle) PASS `-ValidateOnly` với `https://toeic.anhtaizz.id.vn`. `AuthenticatedWebSocketOpenerTest` + `ClientSettingsTest` 23/23 PASS.
+- Chưa chạy qua Internet: máy chưa cài `cloudflared`, chưa có token, hostname chưa có bản ghi DNS (hỏi 1.1.1.1; DNS nhà mạng trả IP giả 125.235.4.59 cho tên chưa tồn tại).

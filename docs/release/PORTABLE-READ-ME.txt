@@ -63,13 +63,18 @@ Client:  bấm Start-Client.bat rồi nhập địa chỉ Server, ví dụ
          Trên chính máy Server có thể dùng http://127.0.0.1:8080.
          Mở Client nhiều lần để có cửa sổ Admin, Giám thị, Thí sinh riêng.
 
+Internet: máy Client ở mạng khác bấm Start-Client-Internet.bat (dùng
+         https://toeic.anhtaizz.id.vn). Máy chủ phải chạy Cloudflare Tunnel;
+         xem docs/deploy/CLOUDFLARE-TUNNEL.md trong repo. Máy Client không
+         cần cài thêm gì.
+
 
 3. LUỒNG DEMO
 -------------
-Admin      đăng nhập -> Quản lý tài khoản -> tạo Giám thị và Thí sinh.
-           Mỗi tài khoản nhận mật khẩu ngẫu nhiên chỉ hiển thị MỘT lần;
-           bàn giao riêng. "Cấp mật khẩu" để cấp lại khi bị mất.
-Giám thị   đăng nhập -> Điều khiển ca -> Phòng thi TOEIC -> chọn đề ->
+Admin      đăng nhập -> Quản lý tài khoản -> tạo Giám thị và Thí sinh,
+           tự nhập mật khẩu (từ 8 ký tự, nhập hai lần) rồi bàn giao riêng.
+           "Đổi mật khẩu" để đặt mật khẩu mới cho thí sinh.
+Giám thị   đăng nhập -> màn "Phòng thi" -> "+ Tạo phòng" -> chọn đề ->
            Tạo phòng -> nhận PIN 5 số, đọc cho thí sinh. Theo dõi JOINED
            và READY, rồi START. Nếu còn người chưa READY, phần mềm hỏi xác
            nhận một lần: người đó mất phần Listening của lượt này.

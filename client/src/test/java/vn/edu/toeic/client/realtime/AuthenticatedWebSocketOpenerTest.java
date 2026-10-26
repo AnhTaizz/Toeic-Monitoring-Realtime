@@ -17,7 +17,10 @@ class AuthenticatedWebSocketOpenerTest {
     @ParameterizedTest @CsvSource({
             "http://example.test:8080,ws://example.test:8080/ws/v1/realtime",
             "https://example.test/,wss://example.test/ws/v1/realtime",
-            "http://[::1]:8080,ws://[::1]:8080/ws/v1/realtime"})
+            "http://[::1]:8080,ws://[::1]:8080/ws/v1/realtime",
+            // Cloudflare Tunnel hostname (TLS ends at Cloudflare) and a LAN address keep the same endpoint.
+            "https://toeic.anhtaizz.id.vn,wss://toeic.anhtaizz.id.vn/ws/v1/realtime",
+            "http://192.168.1.20:8080,ws://192.168.1.20:8080/ws/v1/realtime"})
     void mapsParsedOriginToFixedEndpoint(String origin, String expected) {
         URI endpoint = AuthenticatedWebSocketOpener.websocketEndpoint(origin);
         assertThat(endpoint).isEqualTo(URI.create(expected));
