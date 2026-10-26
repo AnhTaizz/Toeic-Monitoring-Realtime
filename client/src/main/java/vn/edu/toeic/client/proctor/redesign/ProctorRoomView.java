@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
@@ -53,7 +52,6 @@ import vn.edu.toeic.client.dashboard.MonitoringApiClient;
 import vn.edu.toeic.client.dashboard.MonitoringData.Presence;
 import vn.edu.toeic.client.dashboard.ProctorProgressController;
 import vn.edu.toeic.client.exam.ExamApiClient;
-import vn.edu.toeic.client.proctor.ProctorSessionView;
 import vn.edu.toeic.client.proctor.signals.CandidateSignals;
 import vn.edu.toeic.client.proctor.signals.CandidateSignalsController;
 import vn.edu.toeic.client.realtime.ConnectionState;
@@ -88,7 +86,7 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
             DashboardApi signalsApi, DashboardApi listeningApi, MonitoringTransport transport,
             Consumer<Set<String>> applyScope, Set<String> initialScope, ProctorProgressController.Gateway progress,
             long progressPollMillis, long readyPollMillis, List<AutoCloseable> resources,
-            Supplier<? extends Node> legacyTools) {
+            java.util.function.Function<Runnable, ? extends Node> legacyTools) {
         Wiring { initialScope = Set.copyOf(initialScope); resources = List.copyOf(resources); }
     }
 
@@ -101,10 +99,9 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
         ExamApiClient exam = new ExamApiClient(serverUrl, login.token());
         long poll = Long.getLong("toeic.progress.pollMillis", 3000L);
         String token = login.token();
-        long self = login.user().id();
-        Supplier<Node> legacy = !vn.edu.toeic.client.LegacyUi.enabled() ? null : () -> new ProctorSessionControls(
-                ProctorV2SessionPane.forServer(serverUrl, token, self, onExpired, () -> { }),
-                new ProctorSessionView(serverUrl, token, onExpired, () -> { }));
+        // Old monitoring pages and old session tools, only with -Dtoeic.ui.legacy=true; its logout only closes that window.
+        java.util.function.Function<Runnable, Node> legacy = !vn.edu.toeic.client.LegacyUi.enabled() ? null
+                : closeWindow -> ProctorRedesignView.forLogin(serverUrl, login, transport, closeWindow, onExpired);
         Wiring wiring = new Wiring(login.user().displayName(), new ProctorV2ApiClient(serverUrl, token),
                 new MonitoringApiClient(serverUrl, token), new MonitoringApiClient(serverUrl, token),
                 new MonitoringApiClient(serverUrl, token), new MonitoringApiClient(serverUrl, token), transport,
@@ -166,6 +163,10 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
     private Map<String, Set<String>> knownAlerts;
     private final Set<String> freshAttempts = new HashSet<>();
     private Stage legacyStage;
+    /** Rule-based summary of the candidate whose panel is open; one request at a time, null when unavailable. */
+    private vn.edu.toeic.client.dashboard.AlertSummary panelSummary;
+    private boolean summaryLoading;
+    private int summaryForAlerts = -1;
 
     // Nodes
     private final Label connection = Ui.label("Đang kết nối…", "server-wait");
@@ -190,6 +191,8 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
     private final Label startStatus = Ui.wrapping("", "muted"), notice = Ui.wrapping("", "label");
     private final TableView<ProctorRoomModel.Row> members = new TableView<>();
     private final Label empty = Ui.wrapping("", "muted");
+    private final VBox roomAlerts = new VBox(8);
+    private final javafx.scene.control.TitledPane roomAlertsPane = new javafx.scene.control.TitledPane("", roomAlerts);
 
     ProctorRoomView(Wiring wiring, Runnable onLogout, Runnable onExpired) {
         this.wiring = wiring;
@@ -412,7 +415,12 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
         table.setSpacing(10);
         table.setPadding(new Insets(18));
         VBox.setVgrow(table, Priority.ALWAYS);
-        detail.getChildren().addAll(headerCard, table);
+        roomAlerts.setId("proctor-room-alerts");
+        roomAlertsPane.setId("proctor-room-alerts-pane");
+        roomAlertsPane.setExpanded(false);
+        VBox alertsCard = Ui.card(roomAlertsPane);
+        alertsCard.setPadding(new Insets(12, 18, 12, 18));
+        detail.getChildren().addAll(headerCard, table, alertsCard);
     }
 
     private Node alertCell(ProctorRoomModel.Row row) {
@@ -482,6 +490,8 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
     void openCandidate(String attemptId) {
         if (closed.get() || model.row(attemptId) == null) return;
         panel.show(attemptId);
+        panelSummary = null;
+        summaryForAlerts = -1;
         freshAttempts.remove(attemptId);
         dashboard.select(attemptId);
         if (signals != null) signals.focus(attemptId);
@@ -507,15 +517,14 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
     private void openLegacyTools() {
         if (closed.get() || wiring.legacyTools() == null) return;
         if (legacyStage != null) { legacyStage.toFront(); return; }
-        Node tools = wiring.legacyTools().get();
         Stage stage = new Stage();
+        Node tools = wiring.legacyTools().apply(stage::close);
         stage.setTitle("Công cụ cũ");
         VBox root = new VBox(tools);
-        root.getStyleClass().add("proctor-redesign");
-        var css = ProctorRoomView.class.getResource(ProctorRedesignView.STYLESHEET);
-        if (css != null) root.getStylesheets().add(css.toExternalForm());
         VBox.setVgrow(tools, Priority.ALWAYS);
-        stage.setScene(new Scene(root, 1200, 760));
+        Scene scene = new Scene(root, 1366, 800);
+        if (getScene() != null) scene.getStylesheets().addAll(getScene().getStylesheets());
+        stage.setScene(scene);
         if (getScene() != null) stage.initOwner(getScene().getWindow());
         stage.setOnHidden(event -> {
             if (tools instanceof AutoCloseable closeable) try { closeable.close(); } catch (Exception ignored) { }
@@ -815,7 +824,32 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
         tick();
     }
 
+    /** Every alert of the room, newest first; a click opens that candidate. Shown collapsed, never as popups. */
+    private void renderRoomAlerts() {
+        List<RoomModel.Alert> all = new java.util.ArrayList<>();
+        for (ProctorRoomModel.Row row : model.rows())
+            all.addAll(ProctorRoomModel.alerts(feedSnapshot.of(row.attemptId()), row.displayName()));
+        all.sort(java.util.Comparator.comparing(RoomModel.Alert::serverTime, java.util.Comparator.nullsLast(java.util.Comparator.reverseOrder())));
+        roomAlertsPane.setText("Cảnh báo trong phòng (" + all.size() + ")");
+        String key = all.stream().limit(50).map(alert -> alert.attemptId() + "/" + alert.id()).toList().toString();
+        if (key.equals(roomAlerts.getUserData())) return;
+        roomAlerts.setUserData(key);
+        roomAlerts.getChildren().clear();
+        for (RoomModel.Alert alert : all.stream().limit(50).toList()) {
+            Label time = Ui.label(Ui.clock(alert.serverTime(), "—"), "strong");
+            time.setMinWidth(70);
+            HBox line = new HBox(14, time, Ui.label(alert.candidate(), "strong"),
+                    Ui.wrapping(alert.title() + " · " + alert.description() + " (" + alert.status() + ")", "label"));
+            line.getStyleClass().add("room-alert-line");
+            line.setOnMouseClicked(event -> openCandidate(alert.attemptId()));
+            roomAlerts.getChildren().add(line);
+        }
+        if (all.isEmpty()) roomAlerts.getChildren().add(Ui.label("Chưa quan sát thấy sự kiện cần xem xét.", "muted"));
+        else if (all.size() > 50) roomAlerts.getChildren().add(Ui.label("Đang hiện 50 cảnh báo mới nhất.", "muted", "small"));
+    }
+
     private void renderTable() {
+        renderRoomAlerts();
         empty.setText(session.isEmpty() ? "" : model.sessionId() != null ? ProctorRoomModel.summary(model) : "Đang tải danh sách thí sinh…");
         if (!members.getItems().equals(model.rows())) members.getItems().setAll(model.rows());
         else members.refresh();
@@ -832,8 +866,29 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
                     .anyMatch(item -> attempt.equals(item.attemptId()) && Objects.equals(item.collectorSessionId(), value.collectorSessionId()));
             scoped = current ? value : null;
         }
+        Presence presence = row == null || dashboardSnapshot == null ? null : dashboardSnapshot.attempts().stream()
+                .filter(item -> attempt.equals(item.attemptId())).findFirst().orElse(null);
+        if (row != null && row.alertsKnown() && row.alerts() != summaryForAlerts) loadSummary(attempt, row.alerts());
         panel.update(row == null ? null : new RoomCandidatePanel.Data(row, feedSnapshot.of(attempt), scoped,
-                signalsSnapshot.stale(), signalsSnapshot.loading(), signals != null, dashboardSnapshot));
+                signalsSnapshot.stale(), signalsSnapshot.loading(), signals != null, dashboardSnapshot, presence, panelSummary));
+    }
+
+    /** Reads the open candidate's rule summary again only when their alert count changed; never polled. */
+    private void loadSummary(String attempt, int alerts) {
+        if (summaryLoading || closed.get()) return;
+        summaryLoading = true;
+        summaryForAlerts = alerts;
+        java.util.concurrent.CompletableFuture<vn.edu.toeic.client.dashboard.AlertSummary> request;
+        try { request = wiring.dashboardApi().alerts(attempt); }
+        catch (RuntimeException failure) { request = java.util.concurrent.CompletableFuture.failedFuture(failure); }
+        request.whenComplete((value, failure) -> Platform.runLater(() -> {
+            summaryLoading = false;
+            if (closed.get() || !drawerOpen()) return;
+            if (!attempt.equals(panel.attemptId())) { renderPanel(); return; } // another candidate was opened meanwhile
+            // Not enabled on the server (404) or failed: the section is simply not shown.
+            panelSummary = failure == null ? value : null;
+            renderPanel();
+        }));
     }
 
     private void tick() {

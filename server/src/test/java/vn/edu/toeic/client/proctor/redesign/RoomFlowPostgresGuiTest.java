@@ -132,8 +132,11 @@ class RoomFlowPostgresGuiTest {
             ((javafx.scene.control.PasswordField)ps.getScene().lookup("#login-password")).setText(proctorPassword);
             ((Button)ps.getScene().lookup("#login-submit")).fire();
         });
-        await("production Proctor account login",()->FxSupport.fx(()->find(ps.getScene().getRoot(),ProctorRedesignView.class)!=null),30);
-        var pv=FxSupport.fx(()->find(ps.getScene().getRoot(),ProctorRedesignView.class));
+        // Old room-code/PIN tools live behind "Công cụ cũ" (toeic.ui.legacy=true); the default screen is the room view.
+        await("production Proctor account login",()->FxSupport.fx(()->find(ps.getScene().getRoot(),ProctorRoomView.class)!=null),30);
+        FxSupport.fxRun(()->((Button)ps.getScene().lookup("#proctor-legacy-tools")).fire());
+        await("legacy tools window",()->FxSupport.fx(()->legacyView()!=null),30);
+        var pv=FxSupport.fx(this::legacyView);
         FxSupport.fxRun(()->{ps.setWidth(1366);ps.setHeight(1000);});
         log.add("PASS: Proctor login through production application and real HTTP authentication");
         ToeicClientApplication[] clients=new ToeicClientApplication[2];Stage[] stages=new Stage[2];
@@ -344,6 +347,10 @@ class RoomFlowPostgresGuiTest {
         return FxSupport.fx(()->{var tabs=(javafx.scene.control.TabPane)root.lookup("#session-controls-tabs");
             var tab=tabs.getTabs().stream().filter(t->"tab-v2".equals(t.getId())).findFirst().orElseThrow();
             tabs.getSelectionModel().select(tab);return (ProctorV2SessionPane)tab.getContent();});
+    }
+    private ProctorRedesignView legacyView() {
+        for(Window w:Window.getWindows())if(w.isShowing()&&w.getScene()!=null){var v=find(w.getScene().getRoot(),ProctorRedesignView.class);if(v!=null)return v;}
+        return null;
     }
     private long count(String sql) throws Exception {try(var s=database.createStatement();var r=s.executeQuery(sql)){r.next();return r.getLong(1);}}
     private void injectMonitoring(String token,String attempt) throws Exception {

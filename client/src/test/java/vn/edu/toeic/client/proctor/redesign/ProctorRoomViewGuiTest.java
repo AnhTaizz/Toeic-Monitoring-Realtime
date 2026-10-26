@@ -245,6 +245,17 @@ class ProctorRoomViewGuiTest {
         open(1366, 768);
         select(ROOM_B);
         await("progress", () -> view.model().progressComplete());
+        await("room alerts", () -> view.lookup("#proctor-room-alerts-pane") instanceof javafx.scene.control.TitledPane pane
+                && pane.getText().equals("Cảnh báo trong phòng (3)"));
+        // Room A's attempts are not part of room B's list; a click on a line opens that candidate.
+        fxRun(() -> ((javafx.scene.control.TitledPane) view.lookup("#proctor-room-alerts-pane")).setExpanded(true));
+        fxRun(() -> {
+            var lines = ((javafx.scene.layout.VBox) view.lookup("#proctor-room-alerts")).getChildren();
+            assertThat(lines).hasSize(3);
+            lines.getFirst().getOnMouseClicked().handle(null);
+        });
+        assertThat(fx(view::drawerOpen)).isTrue();
+        fxRun(() -> view.closeDrawer());
         fxRun(() -> view.openCandidate(attempt(5)));
         assertThat(fx(() -> ((Label) view.lookup("#proctor-room-drawer-name")).getText())).isEqualTo("MOCK Thí sinh 5");
         assertThat(fx(() -> view.lookup("#proctor-room-drawer-history-pane"))).isNotNull();

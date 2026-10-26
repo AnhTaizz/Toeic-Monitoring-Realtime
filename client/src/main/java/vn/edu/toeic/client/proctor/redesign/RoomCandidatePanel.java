@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import vn.edu.toeic.client.dashboard.AlertSummary;
 import vn.edu.toeic.client.dashboard.DashboardModel;
 import vn.edu.toeic.client.proctor.signals.CandidateSignals;
 import vn.edu.toeic.protocol.exam.ProctorProgressRow;
@@ -24,7 +25,8 @@ import vn.edu.toeic.protocol.monitoring.MonitoringStateView;
 final class RoomCandidatePanel extends VBox {
     /** Everything the panel shows for one attempt, already scoped to the selected room. */
     record Data(ProctorRoomModel.Row row, RoomFeed.AttemptHistory history, CandidateSignals signals, boolean signalsStale,
-            boolean signalsLoading, boolean signalsWatched, DashboardModel.Snapshot dashboard) { }
+            boolean signalsLoading, boolean signalsWatched, DashboardModel.Snapshot dashboard,
+            vn.edu.toeic.client.dashboard.MonitoringData.Presence presence, AlertSummary summary) { }
 
     private final Label title = Ui.label("", "drawer-title");
     private final Label subtitle = Ui.label("", "drawer-eyebrow");
@@ -72,6 +74,8 @@ final class RoomCandidatePanel extends VBox {
         VBox now = section("Hiện tại", fields(new String[][] {
                 {"Trạng thái", row.status().text()},
                 {"Kết nối", row.connection().text()},
+                {"Heartbeat cuối", data.presence() == null ? "Chưa nhận" : Ui.clock(data.presence().lastSeenAt(), "Chưa nhận")},
+                {"Mất kết nối lúc", data.presence() == null ? "Không" : Ui.clock(data.presence().timeoutDetectedAt(), "Không")},
                 {"Phần nghe", row.listening().text()},
                 {"Lưu gần nhất", progress == null ? "Chưa có dữ liệu" : Ui.clock(progress.lastSavedAt(), "Chưa có lần lưu")},
                 {"Giờ hết bài", progress == null ? "Chưa có dữ liệu" : Ui.dateClock(progress.deadlineAt(), "Chưa bắt đầu")}}),
@@ -88,7 +92,7 @@ final class RoomCandidatePanel extends VBox {
         VBox recent = new VBox(8);
         recent.setId("proctor-room-drawer-alerts");
         for (RoomModel.Alert alert : alerts.stream().limit(5).toList()) recent.getChildren().add(line(
-                Ui.clock(alert.serverTime(), "—"), alert.title() + " · " + alert.description()));
+                Ui.clock(alert.serverTime(), "—"), alert.title() + " · " + alert.description() + " (" + alert.status() + ")"));
         if (alerts.isEmpty()) recent.getChildren().add(Ui.label(loaded(data.history())
                 ? "Chưa quan sát thấy sự kiện cần xem xét." : "Đang tải lịch sử…", "muted"));
 
@@ -107,7 +111,30 @@ final class RoomCandidatePanel extends VBox {
 
         body.getChildren().addAll(now, sources, processes,
                 section("Cảnh báo gần đây", recent, Ui.wrapping("Sự kiện được ghi nhận để giám thị xem xét theo bối cảnh, "
-                        + "không đồng nghĩa xác nhận gian lận.", "muted", "small")), full);
+                        + "không đồng nghĩa xác nhận gian lận.", "muted", "small")));
+        // Rule-based summary exists only when the server enables it; otherwise the section is not shown at all.
+        if (data.summary() != null) body.getChildren().add(summary(data.summary()));
+        body.getChildren().add(full);
+    }
+
+    private static VBox summary(AlertSummary summary) {
+        VBox items = new VBox(8);
+        items.setId("proctor-room-drawer-summary");
+        for (AlertSummary.Item item : summary.items()) items.getChildren().add(line(Ui.clock(item.start(), "—"),
+                priority(item.priority()) + " · " + item.explanation() + " · " + item.count() + " lần"
+                        + (item.end() == null ? "" : " (đến " + Ui.clock(item.end(), "—") + ")")));
+        if (summary.items().isEmpty()) items.getChildren().add(Ui.label("Chưa có nhóm cảnh báo nào.", "muted"));
+        if (!summary.coverageNote().isBlank()) items.getChildren().add(Ui.wrapping(summary.coverageNote(), "muted", "small"));
+        return section("Tổng hợp cảnh báo (thử nghiệm)", items);
+    }
+
+    private static String priority(String value) {
+        return switch (String.valueOf(value)) {
+            case "HIGH_ATTENTION" -> "Cần chú ý";
+            case "REVIEW" -> "Cần xem xét";
+            case "INFO" -> "Tham khảo";
+            default -> String.valueOf(value);
+        };
     }
 
     private static boolean loaded(RoomFeed.AttemptHistory history) { return history != null && history.loaded(); }
