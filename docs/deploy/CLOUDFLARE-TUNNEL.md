@@ -99,6 +99,21 @@ Tham số (thêm sau tên file `.bat` hoặc dùng `scripts\start-cloudflare.ps1
 Máy chủ phải **luôn bật, có Internet và không sleep** trong giờ thi (Settings → System → Power: Sleep = Never khi cắm điện),
 không để Windows Update tự khởi động lại.
 
+## Bộ cài cho thí sinh và giám thị (khuyên dùng)
+
+Build một lần trên máy có JDK 21, WiX 3 và `mt.exe` (đường dẫn công cụ của máy dự án ở `docs/NHAT_KY.md`):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\package-windows.ps1 -JavaHome <JDK21> -WixHome <WiX3> -ManifestTool <mt.exe> `
+  -AppVersion 0.4.0 -ServerUrl https://toeic.anhtaizz.id.vn
+```
+
+Kết quả là `ToeicMonitor-<phiên bản>.msi` (có sẵn Java 21, giám sát bản phát hành bật, Server mặc định là hostname trên).
+Người dùng tải file về → bấm đúp → cài cho riêng tài khoản Windows của mình (không cần quyền Admin) → mở icon
+**ToeicMonitor** ở Desktop hoặc Start menu → đăng nhập. Không cần Java, không cần nhập địa chỉ Server.
+Bộ cài chưa ký số: Windows SmartScreen có thể hiện "Windows protected your PC" → *More info* → *Run anyway*.
+Cài bản mới hơn sẽ thay bản cũ (cùng upgrade code).
+
 ## Chạy Client
 
 | Chế độ | Cách chạy |
