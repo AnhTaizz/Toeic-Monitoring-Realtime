@@ -329,6 +329,23 @@ class ProctorRoomDataTest {
         assertThat(ProctorRoomModel.connection(timeout, member).text()).isEqualTo("Mất kết nối");
     }
 
+    @Test void roomRosterKeepsFinishedMembersAfterTheyLeaveTheActiveMonitoringRoster() {
+        RoomPresence room = new RoomPresence(null, ROOM_A, "IN_PROGRESS", List.of(
+                new RoomPresence.Member(1, "candidate1", "Candidate 1", a(1), NOW,
+                        "ONLINE", "HEARTBEAT", NOW),
+                new RoomPresence.Member(2, "candidate2", "Candidate 2", a(2), NOW,
+                        "UNKNOWN", "HEARTBEAT_TIMEOUT", NOW.minusSeconds(80))));
+        Presence active = new Presence(a(1), 1, "Candidate 1", "ONLINE", "HEARTBEAT", 7,
+                "collector-1", NOW, null);
+
+        List<Presence> scoped = ProctorRoomView.roomRoster(room, List.of(active));
+
+        assertThat(scoped).extracting(Presence::attemptId).containsExactly(a(1), a(2));
+        assertThat(scoped.getFirst()).isSameAs(active);
+        assertThat(scoped.get(1).status()).isEqualTo("UNKNOWN");
+        assertThat(scoped.get(1).reason()).isEqualTo("HEARTBEAT_TIMEOUT");
+    }
+
     private static final vn.edu.toeic.protocol.monitoring.EventOrigin ORIGIN =
             new vn.edu.toeic.protocol.monitoring.EventOrigin("CONNECTED", "MOCK-connection");
 

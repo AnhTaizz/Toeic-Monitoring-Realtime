@@ -316,7 +316,9 @@ public final class LateEventsAndGapsSmoke {
         for(String ended:List.of("CLOSED","SUBMITTED","TIMED_OUT")) {
             jdbc().sql("UPDATE monitoring_attempts SET state=:s WHERE attempt_id=:a").param("s",ended).param("a",A).update();
             error(exchange(client,message("PROCESS_OBSERVED",event("TEST-legacy",null))),"FORBIDDEN");
-            check(get(http,p.token(),path).statusCode()==403,"ended attempt forbids duplicate and gap read");
+            int expectedRead = "CLOSED".equals(ended) ? 403 : 200;
+            check(get(http,p.token(),path).statusCode()==expectedRead,
+                    "ended attempt forbids writes while assigned proctor keeps submitted/timed-out history");
         }
         jdbc().sql("UPDATE monitoring_attempts SET state='ACTIVE' WHERE attempt_id=:a").param("a",A).update();
         jdbc().sql("DELETE FROM monitoring_proctor_assignments WHERE attempt_id=:a").param("a",A).update();

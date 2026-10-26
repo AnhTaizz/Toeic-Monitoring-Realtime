@@ -121,7 +121,7 @@ class LoginSceneGuiTest {
                 ((TextField)stage.getScene().lookup("#login-username")).setText("candidate1");((PasswordField)stage.getScene().lookup("#login-password")).setText("MOCK-password");
                 ((Button)stage.getScene().lookup("#login-submit")).fire();return null;});
             await(()->stage.getScene().lookup("#account-pin-input")!=null);
-            fx(()->{assertThat(stage.getScene().lookup("#account-pin-tabs")).isNotNull();
+            fx(()->{assertThat(stage.getScene().lookup("#candidate-exam-tabs")).isNotNull();
                 assertThat(stage.getScene().lookup("#candidate-history")).isNotNull();
                 assertThat(stage.getScene().getRoot().lookupAll(".button").stream()
                         .noneMatch(n->n instanceof Button b&&"Ca thi được phân công trước đây".equals(b.getText()))).isTrue();return null;});

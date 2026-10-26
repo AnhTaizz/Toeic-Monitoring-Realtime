@@ -125,7 +125,7 @@ public final class ToeicClientApplication extends Application {
                                 return;
                             }
                             try {
-                                if("CANDIDATE".equals(response.user().role()))showAccountPinScene(stage,serverUrl,response);
+                                if("CANDIDATE".equals(response.user().role()))showCandidateHomeScene(stage,serverUrl,response);
                                 else showRoleScene(stage, serverUrl, response);
                             } catch (IllegalArgumentException ignored) {
                                 status.setText("Phản hồi đăng nhập không hợp lệ. Hãy đăng nhập lại.");
@@ -179,7 +179,8 @@ public final class ToeicClientApplication extends Application {
         enter.setOnAction(event->submit.run());pin.setOnAction(event->submit.run());
         return sized(stage, root);
     }
-    private void showAccountPinScene(Stage stage,String serverUrl,LoginResponse account) {
+    /** Candidate account home: the room PIN and server-backed history are sibling tabs. */
+    private void showCandidateHomeScene(Stage stage,String serverUrl,LoginResponse account) {
         releaseConnectionView();
         if(realtimeClient!=null){realtimeClient.close();realtimeClient=null;}
         if(examApiClient!=null){examApiClient.close();examApiClient=null;}
@@ -204,9 +205,9 @@ public final class ToeicClientApplication extends Application {
                 ()->leaveDashboard(stage,generation,"Phiên hết hiệu lực. Hãy đăng nhập lại."),
                 result->ScoreResultDialog.show(stage,result,
                         "Trạng thái kết thúc: "+result.state()+" · Điểm server: "+result.score(),null));
-        Tab joinTab=new Tab("Vào phòng thi",centred);joinTab.setClosable(false);
+        Tab joinTab=new Tab("Ca thi của tôi",centred);joinTab.setClosable(false);
         Tab historyTab=new Tab("Lịch sử / kết quả thi",historyView);historyTab.setClosable(false);
-        TabPane candidateTabs=new TabPane(joinTab,historyTab);candidateTabs.setId("account-pin-tabs");
+        TabPane candidateTabs=new TabPane(joinTab,historyTab);candidateTabs.setId("candidate-exam-tabs");
         Button logout=new Button("Đăng xuất");logout.setOnAction(e->{releaseConnectionView();stage.setScene(loginScene(stage));});
         var root=new CandidateHomePane(account.user().displayName(),account.user().username(),new Label("Đã đăng nhập"),new Label(""),candidateTabs,logout);
         stage.setScene(sized(stage, root));
@@ -597,7 +598,7 @@ public final class ToeicClientApplication extends Application {
     }
 
     private void returnFromExam(Stage stage,String serverUrl,LoginResponse roomLogin,LoginResponse accountHome) {
-        if(accountHome!=null)showAccountPinScene(stage,serverUrl,accountHome);
+        if(accountHome!=null)showCandidateHomeScene(stage,serverUrl,accountHome);
         else showRoleScene(stage,serverUrl,roomLogin);
     }
 

@@ -87,8 +87,12 @@ public class SignalService {
         LockedSession locked=identities.getFirst();
         if(!locked.user().equals(user)||!locked.enabled()||locked.revoked()||!locked.expiresAt().isAfter(checkedAt))throw AccessDeniedException.unauthorized();
         if(required!=null&&user.role()!=required)throw AccessDeniedException.forbidden();
-        authorization.requireAttempt(user,attempt);
-        Long owner=jdbc.sql("SELECT candidate_user_id FROM monitoring_attempts WHERE attempt_id=:a AND state='ACTIVE'").param("a",attempt).query(Long.class).optional().orElse(null);
+        boolean historicalRead = required == Role.PROCTOR;
+        if (historicalRead) authorization.requireExamRead(user,attempt);
+        else authorization.requireAttempt(user,attempt);
+        String states = historicalRead ? "('ACTIVE','SUBMITTED','TIMED_OUT')" : "('ACTIVE')";
+        Long owner=jdbc.sql("SELECT candidate_user_id FROM monitoring_attempts WHERE attempt_id=:a AND state IN " + states)
+                .param("a",attempt).query(Long.class).optional().orElse(null);
         if(owner==null)throw AccessDeniedException.forbidden();
         if(user.role()==Role.CANDIDATE){if(owner!=user.userId())throw AccessDeniedException.forbidden();}
         else if(user.role()==Role.PROCTOR){if(jdbc.sql("SELECT proctor_user_id FROM monitoring_proctor_assignments WHERE attempt_id=:a AND proctor_user_id=:u FOR SHARE")

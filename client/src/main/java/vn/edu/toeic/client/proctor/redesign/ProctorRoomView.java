@@ -1,6 +1,7 @@
 package vn.edu.toeic.client.proctor.redesign;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -646,11 +647,32 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
     /** RoomFeed and the signal reader only ever see this room's attempts. */
     private void pushRoster() {
         if (dashboardSnapshot == null) return;
-        List<Presence> scoped = dashboardSnapshot.attempts().stream().filter(item -> attempts.contains(item.attemptId())).toList();
+        RoomPresence presence = roomSnapshot == null ? null : roomSnapshot.presence();
+        if (presence != null && !session.equals(presence.sessionId())) presence = null;
+        List<Presence> scoped = roomRoster(presence, dashboardSnapshot.attempts());
         boolean synced = dashboardSnapshot.connection() == ConnectionState.CONNECTED && !dashboardSnapshot.rosterStale()
                 && !dashboardSnapshot.rosterLoading();
         feed.roster(scoped, synced);
         if (signals != null) signals.roster(scoped, synced);
+    }
+
+    /**
+     * The monitoring roster intentionally contains ACTIVE attempts only. Room membership is the authoritative
+     * scope for this screen, so keep submitted/timed-out members in the feed and use their last room presence
+     * when no live monitoring row remains.
+     */
+    static List<Presence> roomRoster(RoomPresence room, List<Presence> live) {
+        if (room == null || room.members() == null) return List.of();
+        Map<String, Presence> byAttempt = new HashMap<>();
+        for (Presence item : live) byAttempt.put(item.attemptId(), item);
+        List<Presence> scoped = new ArrayList<>();
+        for (RoomPresence.Member member : room.members()) {
+            if (member.attemptId() == null) continue;
+            Presence item = byAttempt.get(member.attemptId());
+            scoped.add(item != null ? item : new Presence(member.attemptId(), member.userId(), member.displayName(),
+                    member.connectionStatus(), member.connectionReason(), 0, null, member.lastSeenAt(), null));
+        }
+        return List.copyOf(scoped);
     }
 
     private void acceptDashboard(DashboardModel.Snapshot value) {

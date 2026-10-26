@@ -95,6 +95,9 @@ class ProctorRoomViewGuiTest {
             ListeningApi api = new ListeningApi();
             RedesignFixtures.FakeApi base = RedesignFixtures.FakeApi.room();
             api.events.putAll(base.events); api.interruptions.putAll(base.interruptions); api.gaps.putAll(base.gaps);
+            // Production monitoring roster is ACTIVE-only; submitted/timed-out members remain in room presence.
+            api.roster = base.roster.stream().filter(item -> !item.attemptId().equals(attempt(5))
+                    && !item.attemptId().equals(attempt(6))).toList();
             return api;
         }
         @Override public CompletableFuture<ListeningStatusResponse> listeningStatus(String attempt) {
@@ -176,7 +179,7 @@ class ProctorRoomViewGuiTest {
                 .containsExactly(attempt(4), attempt(5), attempt(6));
         assertThat(fx(() -> view.model().row(attempt(5)).status().text())).isEqualTo("Đã nộp · đúng 118/150");
         assertThat(fx(() -> view.model().row(attempt(6)).status().text())).isEqualTo("Hết giờ · đúng 61/150");
-        await("listening", () -> "Chỉ làm Reading".equals(view.model().row(attempt(5)).listening().text()));
+        await("listening", () -> "Đã nộp".equals(view.model().row(attempt(5)).listening().text()));
         // The old room's monitoring was dropped: room A's alerts never show in room B.
         await("alerts of B", () -> view.model().rows().stream().allMatch(ProctorRoomModel.Row::alertsKnown));
         assertThat(fx(() -> view.model().row(attempt(1)))).isNull();
