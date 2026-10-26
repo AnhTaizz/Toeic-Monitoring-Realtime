@@ -1257,3 +1257,13 @@ Chạy lại `AccountPinFlowPostgresGuiTest` + `RoomFlowPostgresGuiTest` khi má
 - Đã chạy thật trên máy Windows với DB dev: Start mở Server và chờ READY, dùng lại Server đang chạy, từ chối cổng bị chương trình khác giữ, báo thiếu `.env`/`cloudflared`/token/token sai; Status báo đúng "DNS chưa có bản ghi"; Stop chỉ dừng Server do script mở. Launcher Client (repo và bundle) PASS `-ValidateOnly` với `https://toeic.anhtaizz.id.vn`. `AuthenticatedWebSocketOpenerTest` + `ClientSettingsTest` 23/23 PASS.
 - Chưa chạy qua Internet: máy chưa cài `cloudflared`, chưa có token, hostname chưa có bản ghi DNS (hỏi 1.1.1.1; DNS nhà mạng trả IP giả 125.235.4.59 cho tên chưa tồn tại).
 - Cập nhật cùng ngày: người dùng cài `cloudflared` dạng Windows service và thêm Public Hostname (CNAME tới tunnel). `STATUS` OK; HTTPS `/api/v1/auth/me` 401 qua Cloudflare; bắt tay `wss://…/ws/v1/realtime` không token 401 như local. Luồng thi đầy đủ từ máy khác mạng chưa chạy.
+
+
+## 26/10/2026 — README: cách chạy dự án
+
+- Viết lại phần chạy trong `README.md`: bảng địa chỉ Server theo mạng (Internet/LAN/cùng máy); máy chủ từ repo (`.env`, khóa PIN, Admin bootstrap, `docker compose`, `START/STATUS/STOP-CLOUDFLARE*.bat`, `-AllowLan`); Thí sinh/Giám thị cài MSI và lệnh tạo MSI; Client từ repo (`START-CLIENT-CLOUDFLARE.bat`, `START-CLIENT-LAN.bat`); luồng thử nhanh 5 bước. Mô tả Giám thị/Admin theo giao diện mới (màn "Phòng thi", mật khẩu Admin tự nhập). Bỏ khỏi README cách chạy cũ: bản ZIP portable `5173462`, `Start-Server.bat`, `start-monitoring-server.ps1`/`javafx:run`, các lệnh verify bundle portable và link báo cáo phát hành cũ. Theo yêu cầu người dùng, commit thẳng lên `main`.
+- Chỉ đổi tài liệu, không chạy test. Nhãn nút và giới hạn mật khẩu đã đối chiếu với code trên `main` (`2e7f403`).
+
+### Ghi chú làm dở
+
+`docs/DEMO-RUNBOOK.md` mục 3 vẫn tả giao diện Giám thị cũ (Tổng quan/Cảnh báo/Timeline) và mật khẩu ngẫu nhiên; chưa sửa. File `.msi` chưa đăng lên GitHub Releases.
