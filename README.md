@@ -6,13 +6,90 @@ Hệ thống thi TOEIC theo mô hình Client–Server, có giám sát máy thí 
 
 | Vai trò | Sau khi đăng nhập |
 |---|---|
-| **Admin** | Quản lý tài khoản: tạo Giám thị/Thí sinh, cấp mật khẩu một lần, khóa/mở khóa. |
-| **Giám thị** | Điều khiển ca → Phòng thi TOEIC: chọn đề → tạo phòng, nhận **PIN 5 số** → theo dõi JOINED/READY → **START**. Theo dõi tiến trình, USB, focus/cửa sổ của từng thí sinh trên Tổng quan, Chi tiết thí sinh và Timeline. |
-| **Thí sinh** | Nhập PIN → phòng chờ (tải audio, thử loa, xác nhận sẵn sàng) → Listening phát một lần → Reading → Nộp bài. Đáp án tự lưu. |
+| **Admin** | Quản lý tài khoản: tạo Giám thị/Thí sinh với mật khẩu Admin tự nhập (8–128 ký tự, nhập hai lần), đổi mật khẩu thí sinh, khóa/mở khóa. |
+| **Giám thị** | Một màn **Phòng thi**: "+ Tạo phòng" → chọn đề → nhận **PIN 5 số** chung cho phòng → theo dõi thí sinh vào phòng và "Sẵn sàng" → **Bắt đầu phòng thi**. Bảng thí sinh của phòng đang chọn hiện trạng thái, kết nối, phần nghe, USB/Focus/Cửa sổ và cảnh báo; bấm một hàng để xem chi tiết và lịch sử đầy đủ. |
+| **Thí sinh** | Nhập PIN → phòng chờ (tải âm thanh, thử loa, xác nhận sẵn sàng) → Listening phát một lần → Reading → Nộp bài. Đáp án tự lưu. |
 
-START khi còn người chưa READY cần xác nhận một lần; người đó làm Reading trong thời gian còn lại, không được phát bù Listening. Deadline do Server quyết định chung cho phòng.
+Bắt đầu khi còn người chưa sẵn sàng cần xác nhận một lần; người đó làm Reading trong thời gian còn lại, không được phát bù Listening. Deadline do Server quyết định chung cho phòng. Giờ hiển thị theo giờ Việt Nam (GMT+7).
 
-## Chạy bản phát hành (Windows portable)
+## Cách chạy
+
+Có hai phía: **một máy chủ** (Server + PostgreSQL) và **mỗi người dùng một máy Client** (Admin, Giám thị, Thí sinh dùng chung một app). Client nói chuyện với Server qua một địa chỉ duy nhất:
+
+| Mạng | Địa chỉ Server Client dùng |
+|---|---|
+| Internet (Cloudflare Tunnel) | `https://toeic.anhtaizz.id.vn` |
+| Cùng mạng LAN | `http://IP_MAY_CHU:8080` (IP lấy bằng `ipconfig` trên máy chủ) |
+| Cùng một máy | `http://127.0.0.1:8080` |
+
+### Máy chủ (từ repo)
+
+Cần Windows 11 x64, JDK 21, Maven 3.9+, Docker Desktop. Qua Internet thì cần thêm `cloudflared` và token tunnel.
+
+**Làm một lần:**
+
+1. Chép `.env.example` thành `.env` rồi điền:
+   - DB (`DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_PORT`);
+   - thư mục media của đề đã nạp: `TOEIC_AUDIO_ROOT`, `TOEIC_IMAGE_ROOT` (đường dẫn tương đối tính theo thư mục chứa `.env`);
+   - `TOEIC_ROOM_PIN_KEY`: tạo một lần theo lệnh trong [docs/DEMO-RUNBOOK.md](docs/DEMO-RUNBOOK.md) mục 1, giữ nguyên qua các lần khởi động;
+   - lần đầu với DB mới: `TOEIC_ADMIN_BOOTSTRAP_USERNAME`, `TOEIC_ADMIN_BOOTSTRAP_PASSWORD` (20–72 ký tự). Launcher bên dưới không tạo tài khoản demo, nên Admin này là tài khoản đầu tiên.
+2. Nạp đề: [docs/DEMO-RUNBOOK.md](docs/DEMO-RUNBOOK.md) mục 2.
+3. Chạy qua Internet: cài `cloudflared`, lưu token tunnel và khai báo hostname theo [docs/deploy/CLOUDFLARE-TUNNEL.md](docs/deploy/CLOUDFLARE-TUNNEL.md) ("Làm một lần trên máy chủ").
+
+**Mỗi lần chạy:**
+
+```powershell
+mvn -q package -DskipTests        # sau mỗi lần đổi code
+docker compose up -d --wait       # PostgreSQL, chỉ mở 127.0.0.1
+```
+
+Rồi bấm đúp ở gốc repo:
+
+| File | Việc làm |
+|---|---|
+| `START-CLOUDFLARE-SERVER.bat` | Mở Server (bật giám sát như bản phát hành) và connector Cloudflare, rồi kiểm tra qua Internet. Server đang chạy thì dùng lại. Thêm `-AllowLan` để máy cùng mạng vào được bằng `http://IP:8080`. |
+| `STATUS-CLOUDFLARE.bat` | Xem nhanh Server, connector, đường Internet. |
+| `STOP-CLOUDFLARE-SERVER.bat` | Chỉ dừng Server và connector do script mở. |
+
+Máy chủ phải luôn bật, có mạng và không sleep trong giờ thi. Lỗi thường gặp và cách xử lý: [docs/deploy/CLOUDFLARE-TUNNEL.md](docs/deploy/CLOUDFLARE-TUNNEL.md), mục "Chẩn đoán lỗi".
+
+### Thí sinh và Giám thị: cài MSI (khuyên dùng)
+
+1. Nhận file `ToeicMonitor-<phiên bản>.msi` từ người tổ chức. File cài không nằm trong Git (`.gitignore` chặn `*.msi`).
+2. Bấm đúp để cài cho riêng tài khoản Windows của mình (không cần quyền Admin). SmartScreen báo "Windows protected your PC" thì chọn *More info* → *Run anyway* (bộ cài chưa ký số).
+3. Mở **ToeicMonitor** ở Desktop hoặc Start menu → đăng nhập.
+
+Bộ cài có sẵn Java 21, đã bật giám sát và đặt sẵn Server `https://toeic.anhtaizz.id.vn`: không cần Java, không cần nhập địa chỉ. Cài bản mới hơn sẽ thay bản cũ.
+
+Muốn một máy dùng Server khác (ví dụ LAN), ghi một dòng địa chỉ vào `%LOCALAPPDATA%\TOEIC Monitor\server-url.txt`.
+
+Tạo MSI (máy có JDK 21, WiX 3 và Windows SDK `mt.exe`):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\package-windows.ps1 -JavaHome <JDK21> -WixHome <WiX3> -ManifestTool <mt.exe> `
+  -AppVersion <phiên bản> -ServerUrl https://toeic.anhtaizz.id.vn
+```
+
+### Client chạy từ repo (máy có JDK 21, đã `mvn package`)
+
+| File | Server |
+|---|---|
+| `START-CLIENT-CLOUDFLARE.bat` | `https://toeic.anhtaizz.id.vn` |
+| `START-CLIENT-LAN.bat` | Hỏi địa chỉ; nhập `http://IP_MAY_CHU:8080` hoặc `http://127.0.0.1:8080` |
+
+Mở nhiều lần để có nhiều cửa sổ (mỗi vai một cửa sổ) khi thử trên một máy.
+
+### Luồng thử nhanh
+
+1. **Admin** đăng nhập → tạo một Giám thị và một Thí sinh, tự đặt mật khẩu.
+2. **Giám thị** đăng nhập → "+ Tạo phòng" → chọn đề → đọc PIN cho thí sinh.
+3. **Thí sinh** đăng nhập → nhập PIN → làm 3 bước âm thanh → hàng của thí sinh bên Giám thị chuyển "Sẵn sàng".
+4. Giám thị bấm **Bắt đầu phòng thi** → thí sinh nghe Listening, làm bài, chân trang hiện "✓ Đã lưu" → *Nộp bài*.
+5. Trong lúc thi, mở Chrome/Zalo, rời cửa sổ hoặc cắm/rút USB trên máy thí sinh → Giám thị thấy cảnh báo và cột USB/Focus/Cửa sổ đổi.
+
+Checklist đầy đủ cho hai máy khác mạng: [docs/deploy/CLOUDFLARE-TUNNEL.md](docs/deploy/CLOUDFLARE-TUNNEL.md), mục cuối.
+
+## Bản phát hành Windows portable (ZIP)
 
 Bản phát hành chính thức là một ZIP Windows portable kèm file SHA-256, đăng ở trang [Releases](https://github.com/AnhTaizz/Toeic-Monitoring-Realtime/releases) sau khi PR phát hành được merge. Bản release candidate hiện tại, `toeic-monitor-portable-5173462.zip` (SHA-256 `cd2b6e2bbd95c771b122cd05d6443bdbe279ea6111630c2f9fd64acac1adc1f8`), và kết quả kiểm thử của nó nằm trong [báo cáo phát hành](docs/release/RELEASE-REPORT.md). Giải nén (đường dẫn có dấu được hỗ trợ), rồi:
 
@@ -33,7 +110,7 @@ powershell -ExecutionPolicy Bypass -File scripts\package-phase4-portable.ps1 -Ja
 
 Script đóng gói kiểm bytecode trong JAR khớp source vừa build, tạo runtime Java 21 riêng, `artifact-manifest.json` (SHA-256 từng file) và ZIP trong `target\release\distribution\`. Cần Windows SDK `mt.exe` để runtime chạy được trong đường dẫn Unicode.
 
-Chạy từ source để phát triển: chép `.env.example` thành `.env` và điền, `docker compose up -d --wait`, `mvn package -DskipTests`, rồi `powershell -File scripts\start-monitoring-server.ps1` (tự đọc `.env`); Client: `mvn -pl client -am javafx:run`. Tài khoản `MOCK` `candidate1`, `candidate2`, `proctor1` chỉ được tạo khi bật tường minh `TOEIC_SEED_DEMO_ACCOUNTS=true` kèm `TOEIC_SEED_PASSWORD` (đã có trong `.env.example`), chỉ cho phát triển/kiểm thử; Server không có mật khẩu demo mặc định, và launcher phát hành luôn tắt tài khoản demo. Test Maven của module `server` bật cờ này cho JVM test trong `server/pom.xml`.
+Chạy Server kiểu phát triển (không qua launcher phát hành): sau khi có `.env`, `docker compose up -d --wait`, `mvn package -DskipTests`, chạy `powershell -File scripts\start-monitoring-server.ps1` (tự đọc `.env`, nghe `0.0.0.0:8080`); Client: `mvn -pl client -am javafx:run`. Tài khoản `MOCK` `candidate1`, `candidate2`, `proctor1` chỉ được tạo khi bật tường minh `TOEIC_SEED_DEMO_ACCOUNTS=true` kèm `TOEIC_SEED_PASSWORD` (đã có trong `.env.example`), chỉ cho phát triển/kiểm thử; Server không có mật khẩu demo mặc định, và launcher phát hành luôn tắt tài khoản demo. Test Maven của module `server` bật cờ này cho JVM test trong `server/pom.xml`.
 
 ## Kiểm thử
 
