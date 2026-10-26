@@ -323,27 +323,58 @@ class ProctorRoomDataTest {
         assertThat(ProctorRoomModel.connection(timeout, member).text()).isEqualTo("Mất kết nối");
     }
 
+    private static final vn.edu.toeic.protocol.monitoring.EventOrigin ORIGIN =
+            new vn.edu.toeic.protocol.monitoring.EventOrigin("CONNECTED", "MOCK-connection");
+
+    private static vn.edu.toeic.client.dashboard.SignalHistory.Entry entry(long sequence,
+            vn.edu.toeic.protocol.monitoring.signal.Signal signal) {
+        return new vn.edu.toeic.client.dashboard.SignalHistory.Entry(a(1), sequence, NOW.plusSeconds(sequence), "LIVE", signal);
+    }
+
+    private static vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal usb(long sequence,
+            vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal.Kind kind) {
+        return new vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal("MOCK-usb-" + sequence, "collector", sequence, NOW, ORIGIN,
+                kind, vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal.Quality.PARTIAL, 1, null);
+    }
+
+    private static vn.edu.toeic.protocol.monitoring.signal.FocusSignal focus(long sequence, boolean focused) {
+        return new vn.edu.toeic.protocol.monitoring.signal.FocusSignal("MOCK-focus-" + sequence, "collector", sequence, NOW, ORIGIN,
+                focused, "OTHER_OR_UNKNOWN", focused ? 1000L : null);
+    }
+
+    private static RoomFeed.AttemptHistory history(boolean loaded, vn.edu.toeic.client.dashboard.SignalHistory.Entry... signals) {
+        return new RoomFeed.AttemptHistory(a(1), List.of(), List.of(), List.of(), false, loaded, "", false, List.of(signals),
+                false, false, false);
+    }
+
     @Test void signalCellsKeepThreeSeparateEmptyStates() {
         SignalSummaryView.Kind usb = SignalSummaryView.Kind.USB;
-        assertThat(ProctorRoomModel.signal(usb, false, null, false, false).text()).isEqualTo("Không theo dõi");
-        assertThat(ProctorRoomModel.signal(usb, true, null, true, false).text()).isEqualTo("Chưa có dữ liệu");
-
-        CandidateSignals.Source observedNothing = new CandidateSignals.Source(CandidateSignals.State.OBSERVED, null, null, null, null);
-        CandidateSignals quiet = signals(observedNothing, false);
-        assertThat(ProctorRoomModel.signal(usb, true, quiet, false, false).text()).isEqualTo("Chưa quan sát thấy");
-
+        assertThat(ProctorRoomModel.sticky(usb, false, null, history(true)).text()).isEqualTo("Không theo dõi");
+        assertThat(ProctorRoomModel.sticky(usb, true, null, null).text()).isEqualTo("—");
+        assertThat(ProctorRoomModel.sticky(usb, true, null, history(true)).text()).isEqualTo("Chưa quan sát thấy");
         CandidateSignals unsupported = signals(new CandidateSignals.Source(CandidateSignals.State.UNSUPPORTED, null, null, null, null), false);
-        assertThat(ProctorRoomModel.signal(usb, true, unsupported, false, false).text()).isEqualTo("Không theo dõi");
+        assertThat(ProctorRoomModel.sticky(usb, true, unsupported, history(true)).text()).isEqualTo("Không theo dõi");
+    }
 
-        CandidateSignals failed = signals(new CandidateSignals.Source(CandidateSignals.State.ERROR, "MOCK", null, null, null), false);
-        assertThat(ProctorRoomModel.signal(usb, true, failed, false, false).text()).isEqualTo("Chưa có dữ liệu");
+    @Test void aViolationStaysOnTheRowWhateverTheLiveReadingSays() {
+        var plugged = history(true, entry(3, usb(3, vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal.Kind.USB_STORAGE_CONNECTED)),
+                entry(4, usb(4, vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal.Kind.USB_STORAGE_REMOVED)));
+        CandidateSignals staleLive = signals(new CandidateSignals.Source(CandidateSignals.State.ERROR, "MOCK", null, null, null), true);
+        for (CandidateSignals live : java.util.Arrays.asList(null, staleLive)) {
+            ProctorRoomModel.Cell cell = ProctorRoomModel.sticky(SignalSummaryView.Kind.USB, true, live, plugged);
+            assertThat(cell.text()).isEqualTo("Đã cắm USB · " + Ui.clock(NOW.plusSeconds(3), "—"));
+            assertThat(cell.colour()).isEqualTo("amber");
+        }
+        var twice = history(true, entry(1, usb(1, vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal.Kind.USB_STORAGE_PRESENT_AT_START)),
+                entry(5, usb(5, vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal.Kind.USB_STORAGE_CONNECTED)));
+        assertThat(ProctorRoomModel.sticky(SignalSummaryView.Kind.USB, true, null, twice).text())
+                .isEqualTo("Cắm USB 2 lần · gần nhất " + Ui.clock(NOW.plusSeconds(5), "—"));
+        var removedOnly = history(true, entry(2, usb(2, vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal.Kind.USB_STORAGE_REMOVED)));
+        assertThat(ProctorRoomModel.sticky(SignalSummaryView.Kind.USB, true, null, removedOnly).text()).isEqualTo("Chưa quan sát thấy");
 
-        CandidateSignals.Reading plugged = new CandidateSignals.Reading("USB_STORAGE_CONNECTED", "obs", 3, NOW, NOW, "COMPLETE",
-                "LIVE", 1, null, null, null, "");
-        CandidateSignals withUsb = signals(new CandidateSignals.Source(CandidateSignals.State.OBSERVED, null, plugged, plugged, null), false);
-        ProctorRoomModel.Cell cell = ProctorRoomModel.signal(usb, true, withUsb, false, false);
-        assertThat(cell.text()).isEqualTo("Quan sát thấy 1 USB");
-        assertThat(cell.colour()).isEqualTo("amber");
+        var leftTwice = history(true, entry(1, focus(1, false)), entry(2, focus(2, true)), entry(3, focus(3, false)), entry(4, focus(4, true)));
+        assertThat(ProctorRoomModel.sticky(SignalSummaryView.Kind.FOCUS, true, null, leftTwice).text()).isEqualTo("Rời cửa sổ 2 lần");
+        assertThat(ProctorRoomModel.sticky(SignalSummaryView.Kind.WINDOW, true, null, leftTwice).text()).isEqualTo("Chưa quan sát thấy");
     }
 
     private static CandidateSignals signals(CandidateSignals.Source usb, boolean stale) {

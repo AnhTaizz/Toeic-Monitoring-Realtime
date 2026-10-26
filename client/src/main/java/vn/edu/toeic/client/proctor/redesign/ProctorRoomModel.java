@@ -102,14 +102,12 @@ final class ProctorRoomModel {
             }
             RoomFeed.AttemptHistory history = in.feed() == null ? null : in.feed().of(attempt);
             CandidateSignals signals = in.signals() == null ? null : in.signals().of(attempt);
-            boolean signalsStale = in.signals() == null || in.signals().stale();
-            boolean signalsLoading = in.signals() != null && in.signals().loading();
             rows.add(new Row(attempt, member.displayName(), member.username(),
                     status(member, started, isReady, row, progress.paginationComplete()),
                     connection(connections.get(attempt), member), listening(started, listening.of(attempt)),
-                    signal(SignalSummaryView.Kind.USB, in.signalsWatched(), signals, signalsStale, signalsLoading),
-                    signal(SignalSummaryView.Kind.FOCUS, in.signalsWatched(), signals, signalsStale, signalsLoading),
-                    signal(SignalSummaryView.Kind.WINDOW, in.signalsWatched(), signals, signalsStale, signalsLoading),
+                    sticky(SignalSummaryView.Kind.USB, in.signalsWatched(), signals, history),
+                    sticky(SignalSummaryView.Kind.FOCUS, in.signalsWatched(), signals, history),
+                    sticky(SignalSummaryView.Kind.WINDOW, in.signalsWatched(), signals, history),
                     alertCount(history, attempt), history != null && history.loaded(), row));
         }
         boolean complete = progress.paginationComplete() && withProgress == rows.size();
@@ -168,35 +166,45 @@ final class ProctorRoomModel {
     }
 
     /**
-     * Three separate "nothing to show" states, so a technical gap never reads as "0" or "off":
-     * not watched (source off or unsupported), no data yet (loading, failed, stale, incomplete),
-     * and watched with nothing observed.
+     * A violation, once observed, stays on the row: the cell counts the committed history the Server stored
+     * (which only grows), not the live reading, so it never falls back to "loading" or "no data".
+     * Without a violation: "Không theo dõi" when the source is off or unsupported, "Chưa quan sát thấy" once the
+     * history is loaded, "—" before that.
      */
-    static Cell signal(SignalSummaryView.Kind kind, boolean watched, CandidateSignals summary, boolean stale, boolean loading) {
-        if (!watched) return new Cell("Không theo dõi", "gray");
-        CandidateSignals.Source source = summary == null ? null : switch (kind) {
-            case USB -> summary.usb();
-            case FOCUS -> summary.focus();
-            case WINDOW -> summary.window();
+    static Cell sticky(SignalSummaryView.Kind kind, boolean watched, CandidateSignals live, RoomFeed.AttemptHistory history) {
+        int count = 0;
+        java.time.Instant last = null;
+        boolean fromStart = false;
+        if (history != null) {
+            for (var entry : history.signals()) {
+                if (!SignalFeedProjection.relevant(entry.signal())) continue;
+                boolean violation = switch (kind) {
+                    case USB -> entry.signal() instanceof vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal usb
+                            && usb.kind() != vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal.Kind.USB_STORAGE_REMOVED;
+                    case FOCUS -> entry.signal() instanceof vn.edu.toeic.protocol.monitoring.signal.FocusSignal focus && !focus.focused();
+                    case WINDOW -> entry.signal() instanceof vn.edu.toeic.protocol.monitoring.signal.WindowSignal window && window.minimized();
+                };
+                if (!violation) continue;
+                count++;
+                if (last == null || entry.receivedAt().isAfter(last)) last = entry.receivedAt();
+                if (entry.signal() instanceof vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal usb
+                        && usb.kind() == vn.edu.toeic.protocol.monitoring.signal.UsbStorageSignal.Kind.USB_STORAGE_PRESENT_AT_START) fromStart = true;
+            }
+        }
+        if (count > 0) return switch (kind) {
+            case USB -> count == 1 ? new Cell((fromStart ? "Có USB từ đầu · " : "Đã cắm USB · ") + Ui.clock(last, "—"), "amber")
+                    : new Cell("Cắm USB " + count + " lần · gần nhất " + Ui.clock(last, "—"), "amber");
+            case FOCUS -> new Cell("Rời cửa sổ " + count + " lần", "amber");
+            case WINDOW -> new Cell("Thu nhỏ " + count + " lần", "amber");
         };
-        if (summary != null && (summary.unsupported() || source != null && source.state() == CandidateSignals.State.UNSUPPORTED))
+        CandidateSignals.Source source = live == null ? null : switch (kind) {
+            case USB -> live.usb();
+            case FOCUS -> live.focus();
+            case WINDOW -> live.window();
+        };
+        if (!watched || live != null && (live.unsupported() || source != null && source.state() == CandidateSignals.State.UNSUPPORTED))
             return new Cell("Không theo dõi", "gray");
-        if (summary == null || stale || summary.stale() || !summary.complete() || source == null
-                || source.state() != CandidateSignals.State.OBSERVED)
-            return new Cell(loading && summary == null ? "Đang tải…" : "Chưa có dữ liệu", "gray");
-        CandidateSignals.Reading reading = source.observation();
-        if (reading == null) return new Cell("Chưa quan sát thấy", "gray");
-        return switch (kind) {
-            case USB -> reading.storageCount() == null ? new Cell("Chưa có dữ liệu", "gray")
-                    : reading.storageCount() > 0 ? new Cell("Quan sát thấy " + reading.storageCount() + " USB", "amber")
-                    : new Cell("Không có USB", "green");
-            case FOCUS -> reading.focused() == null ? new Cell("Chưa có dữ liệu", "gray")
-                    : reading.focused() ? new Cell("Đang ở cửa sổ thi", "green") : new Cell("Quan sát thấy rời cửa sổ", "amber");
-            case WINDOW -> Boolean.TRUE.equals(reading.minimized()) ? new Cell("Quan sát thấy thu nhỏ", "amber")
-                    : Boolean.TRUE.equals(reading.fullscreen()) ? new Cell("Toàn màn hình", "green")
-                    : Boolean.FALSE.equals(reading.minimized()) ? new Cell("Bình thường", "green")
-                    : new Cell("Chưa có dữ liệu", "gray");
-        };
+        return history != null && history.loaded() ? new Cell("Chưa quan sát thấy", "gray") : new Cell("—", "gray");
     }
 
     /** Same items the old alert list counted: review processes, interruptions, data gaps and signal alerts. */
