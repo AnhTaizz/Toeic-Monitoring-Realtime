@@ -65,10 +65,24 @@ public class AdminAccountService {
             throw ExamApiException.invalidInput("Chỉ được tạo PROCTOR hoặc CANDIDATE.");
         return accounts.create(username,displayName,Role.valueOf(role),issueLoginPassword);
     }
+    @Transactional
+    public CreatedAccount create(AuthenticatedUser admin,String username,String displayName,String role,boolean issueLoginPassword,String password) {
+        authorization.requireRole(admin,Role.ADMIN);
+        if (!Set.of("PROCTOR","CANDIDATE").contains(role==null?"":role))
+            throw ExamApiException.invalidInput("Chỉ được tạo PROCTOR hoặc CANDIDATE.");
+        return accounts.create(username,displayName,Role.valueOf(role),issueLoginPassword,password);
+    }
 
     @Transactional
     public CreatedAccount resetCandidatePassword(AuthenticatedUser admin,long id) {
+        return resetCandidatePassword(admin,id,null);
+    }
+
+    /** {@code chosen} null: a random password returned once, as before; otherwise the Admin's password, not returned. */
+    @Transactional
+    public CreatedAccount resetCandidatePassword(AuthenticatedUser admin,long id,String chosen) {
         authorization.requireRole(admin,Role.ADMIN);
+        if(chosen!=null)vn.edu.toeic.server.auth.AccountProvisioner.validatePassword(chosen);
         var observed=sessions(id);
         for(String session:observed)jdbc.sql("SELECT session_id FROM exam_sessions WHERE session_id=:s FOR UPDATE").param("s",session).query(String.class).single();
         var account=jdbc.sql("SELECT id,username,display_name,role,enabled FROM user_accounts WHERE id=:u FOR UPDATE")
@@ -80,12 +94,12 @@ public class AdminAccountService {
                 SELECT EXISTS(SELECT 1 FROM monitoring_attempts a LEFT JOIN exam_sessions s ON s.session_id=a.session_id
                 WHERE a.candidate_user_id=:u AND a.state='ACTIVE' AND (s.session_id IS NULL OR s.state='IN_PROGRESS'))
                 """).param("u",id).query(Boolean.class).single())throw conflict("Không thể cấp lại mật khẩu cho thí sinh đang thi.");
-        byte[] bytes=new byte[32];random.nextBytes(bytes);
-        String password=java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+        String password=chosen;
+        if(password==null){byte[] bytes=new byte[32];random.nextBytes(bytes);password=java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);}
         jdbc.sql("UPDATE user_accounts SET password_hash=:h WHERE id=:u").param("u",id)
                 .param("h",passwords.encode(password)).update();
         jdbc.sql("UPDATE login_sessions SET revoked_at=COALESCE(revoked_at,clock_timestamp()) WHERE user_id=:u").param("u",id).update();
-        return new CreatedAccount(account,password);
+        return new CreatedAccount(account,chosen==null?password:null);
     }
 
     @Transactional

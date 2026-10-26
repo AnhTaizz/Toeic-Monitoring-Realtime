@@ -25,18 +25,27 @@ public final class AdminAccountController {
     @PostMapping
     public ResponseEntity<CreatedAccount> create(HttpServletRequest request,@RequestBody Map<String,Object> body) {
         var admin=user(request); authorization.requireRole(admin,Role.ADMIN);
-        if (body==null || !(body.keySet().equals(Set.of("username","displayName","role")) || body.keySet().equals(Set.of("username","displayName","role","issueLoginPassword")))
+        // Optional "password": chosen by the Admin; without it the server issues a random one as before.
+        if (body==null || !Set.of("username","displayName","role","issueLoginPassword","password").containsAll(body.keySet())
+                || !body.keySet().containsAll(Set.of("username","displayName","role"))
                 || !(body.get("username") instanceof String code) || !(body.get("displayName") instanceof String name)
-                || !(body.get("role") instanceof String role) || body.containsKey("issueLoginPassword") && !(body.get("issueLoginPassword") instanceof Boolean)) throw ExamApiException.invalidInput("Dữ liệu tạo tài khoản không hợp lệ.");
-        return ResponseEntity.status(HttpStatus.CREATED).cacheControl(CacheControl.noStore()).body(accounts.create(admin,code,name,role,Boolean.TRUE.equals(body.get("issueLoginPassword"))));
+                || !(body.get("role") instanceof String role) || body.containsKey("issueLoginPassword") && !(body.get("issueLoginPassword") instanceof Boolean)
+                || body.containsKey("password") && !(body.get("password") instanceof String)) throw ExamApiException.invalidInput("Dữ liệu tạo tài khoản không hợp lệ.");
+        return ResponseEntity.status(HttpStatus.CREATED).cacheControl(CacheControl.noStore()).body(accounts.create(admin,code,name,role,
+                Boolean.TRUE.equals(body.get("issueLoginPassword")),(String)body.get("password")));
     }
     @PostMapping("/{id}/password/reset")
-    public ResponseEntity<CreatedAccount> resetPassword(HttpServletRequest request,@PathVariable("id") String rawId) {
+    public ResponseEntity<CreatedAccount> resetPassword(HttpServletRequest request,@PathVariable("id") String rawId,
+            @RequestBody(required=false) Map<String,Object> body) {
         authorization.requireRole(user(request),Role.ADMIN);
         long id;
         try {if(!rawId.matches("[1-9][0-9]{0,18}"))throw new NumberFormatException();id=Long.parseLong(rawId);}
         catch(NumberFormatException bad){throw ExamApiException.invalidInput("Mã tài khoản không hợp lệ.");}
-        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(accounts.resetCandidatePassword(user(request),id));
+        // Optional body {"password": "..."}: the Admin's new password; without it a random one is issued as before.
+        if(body!=null && (!Set.of("password").containsAll(body.keySet()) || body.containsKey("password") && !(body.get("password") instanceof String)))
+            throw ExamApiException.invalidInput("Dữ liệu cấp lại mật khẩu không hợp lệ.");
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(accounts.resetCandidatePassword(user(request),id,
+                body==null?null:(String)body.get("password")));
     }
     @PatchMapping("/{id}/enabled")
     public ResponseEntity<AccountView> enabled(HttpServletRequest request,@PathVariable("id") String rawId,@RequestBody Map<String,Object> body) {

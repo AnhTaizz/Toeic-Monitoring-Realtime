@@ -1105,9 +1105,9 @@ Mục này ghi lại endpoint đã có từ nhánh ACCOUNT_PIN (`ff6aacf`) và �
 | Endpoint | Quyền | Ghi chú |
 |---|---|---|
 | GET `/api/v2/admin/accounts` | ADMIN | Tìm/lọc Proctor/Candidate theo trang; không trả hash, PIN, token |
-| POST `/api/v2/admin/accounts` | ADMIN | Tạo PROCTOR/CANDIDATE (không tạo ADMIN); `issueLoginPassword=true` trả mật khẩu ngẫu nhiên một lần |
+| POST `/api/v2/admin/accounts` | ADMIN | Tạo PROCTOR/CANDIDATE (không tạo ADMIN). Có `password` (8–128 ký tự, không ký tự điều khiển; từ 26/10/2026): dùng mật khẩu Admin nhập, chỉ lưu hash, response `initialPassword=null`. Không có `password`: như cũ, `issueLoginPassword=true` (hoặc PROCTOR) trả mật khẩu ngẫu nhiên một lần |
 | PATCH `/api/v2/admin/accounts/{id}/enabled` | ADMIN | Khóa/mở khóa; khóa thu hồi token |
-| POST `/api/v2/admin/accounts/{id}/password/reset` | ADMIN | Chỉ Candidate không đang thi; mật khẩu một lần, thu hồi mọi token |
+| POST `/api/v2/admin/accounts/{id}/password/reset` | ADMIN | Chỉ Candidate không đang thi; thu hồi mọi token. Body `{"password":"..."}` (từ 26/10/2026): mật khẩu Admin nhập, response `initialPassword=null`; body rỗng/`{}`: mật khẩu ngẫu nhiên một lần như cũ |
 | POST `/api/v2/pin-rooms` | PROCTOR | `{examId,durationMinutes?}` → Session SCHEDULED + PIN chung 5 số một lần |
 | GET `/api/v2/pin-rooms` | PROCTOR được giao | Trang cursor, không có credential |
 | POST `/api/v2/pin-rooms/join` | CANDIDATE (token tài khoản) | `{pin,requestId}`; tạo hoặc dùng lại đúng một Attempt, trả token có scope attempt |

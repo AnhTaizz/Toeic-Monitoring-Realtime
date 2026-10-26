@@ -275,31 +275,27 @@ class AccountPinFlowPostgresGuiTest {
             await("Admin production navigation",()->FxSupport.fx(()->stage.getScene().lookup("#admin-accounts")!=null),30);
             await("Admin accounts loaded",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-find").isDisabled()),20);
             assertThat(FxSupport.fx(()->stage.getScene().lookup("#proctor-redesign"))).isNull();screenshot(stage,"admin-accounts");
-            adminForm(stage,proctorCode,"MOCK Giám thị Phase 4.5","PROCTOR");
-            await("one-time Proctor credential",()->FxSupport.fx(()->dialogNode("admin-initial-password")!=null),20);
-            String initial=FxSupport.fx(()->((TextField)dialogNode("admin-initial-password")).getText());
-            assertThat(initial).matches("[A-Za-z0-9_-]{43}");
-            // Do not photograph the one-time credential dialog.
-            FxSupport.fxRun(()->{for(Window w:new ArrayList<>(Window.getWindows()))if(w.getScene()!=null&&w.getScene().getRoot() instanceof DialogPane d&&d.lookupButton(ButtonType.CLOSE)!=null)((Button)d.lookupButton(ButtonType.CLOSE)).fire();});
-            await("Admin list refreshed",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-find").isDisabled()),20);
-            adminForm(stage,candidateCode,"MOCK Thí sinh Admin","CANDIDATE");
-            await("one-time Candidate credential",()->FxSupport.fx(()->dialogNode("admin-initial-password")!=null),20);
-            String candidatePassword=FxSupport.fx(()->((TextField)dialogNode("admin-initial-password")).getText());
+            String initial=chosenPassword(proctorCode);
+            adminForm(stage,proctorCode,"MOCK Giám thị Phase 4.5","PROCTOR",initial);
+            String candidatePassword=chosenPassword(candidateCode);
+            adminForm(stage,candidateCode,"MOCK Thí sinh Admin","CANDIDATE",candidatePassword);
             var candidateLogin=logins.login(base,candidateCode,candidatePassword).get(15,TimeUnit.SECONDS);
             assertThat(candidateLogin.user().role()).isEqualTo("CANDIDATE");
-            candidatePasswords.put(candidateCode,candidatePassword);pressDialog(ButtonType.CLOSE,10);
-            adminForm(stage,candidateCode+"-2","MOCK Candidate two","CANDIDATE");
-            await("second Candidate password",()->FxSupport.fx(()->dialogNode("admin-initial-password")!=null),20);
-            candidatePasswords.put(candidateCode+"-2",FxSupport.fx(()->((TextField)dialogNode("admin-initial-password")).getText()));pressDialog(ButtonType.CLOSE,10);
-            await("Candidate form saved",()->FxSupport.fx(()->dialogNode("admin-create-code")==null&&!stage.getScene().lookup("#admin-find").isDisabled()),20);
+            candidatePasswords.put(candidateCode,candidatePassword);
+            adminForm(stage,candidateCode+"-2","MOCK Candidate two","CANDIDATE",chosenPassword(candidateCode+"-2"));
+            candidatePasswords.put(candidateCode+"-2",chosenPassword(candidateCode+"-2"));
             long candidateId=count("SELECT id FROM user_accounts WHERE username='"+candidateCode+"'");
             assertThat(count("SELECT count(*) FROM monitoring_attempts WHERE candidate_user_id="+candidateId)).isZero();
             FxSupport.fxRun(()->{((TextField)stage.getScene().lookup("#admin-search")).setText(candidateCode);((Button)stage.getScene().lookup("#admin-find")).fire();});
             await("Candidate reset action",()->FxSupport.fx(()->stage.getScene().lookup("#admin-reset-"+candidateId)!=null&&!stage.getScene().lookup("#admin-find").isDisabled()),20);
-            FxSupport.fxRun(()->((Button)stage.getScene().lookup("#admin-reset-"+candidateId)).fire());pressDialog(ButtonType.OK,10);
-            await("reset one-time password",()->FxSupport.fx(()->dialogNode("admin-initial-password")!=null),20);
-            String reset=FxSupport.fx(()->((TextField)dialogNode("admin-initial-password")).getText());
-            assertThat(reset).isNotEqualTo(candidatePassword);candidatePasswords.put(candidateCode,reset);pressDialog(ButtonType.CLOSE,10);
+            FxSupport.fxRun(()->((Button)stage.getScene().lookup("#admin-reset-"+candidateId)).fire());
+            await("password change form",()->FxSupport.fx(()->dialogNode("admin-reset-password")!=null),10);
+            String reset=chosenPassword(candidateCode)+"-changed";
+            FxSupport.fxRun(()->{((javafx.scene.control.PasswordField)dialogNode("admin-reset-password")).setText(reset);
+                ((javafx.scene.control.PasswordField)dialogNode("admin-reset-password-confirm")).setText(reset);
+                ((Button)dialogNode("admin-reset-save")).fire();});
+            await("password changed",()->FxSupport.fx(()->dialogNode("admin-reset-password")==null),20);
+            candidatePasswords.put(candidateCode,reset);
             assertStatus("reset revokes previous Candidate token",send("GET","/api/v1/auth/me",null,candidateLogin.token()),401);
             assertStatus("reset rejects old Candidate password",send("POST","/api/v1/auth/login",new com.google.gson.Gson().toJson(Map.of("username",candidateCode,"password",candidatePassword,"requestId",UUID.randomUUID().toString())),null),401);
             assertThat(logins.login(base,candidateCode,reset).get(15,TimeUnit.SECONDS).user().role()).isEqualTo("CANDIDATE");
@@ -319,20 +315,25 @@ class AccountPinFlowPostgresGuiTest {
             assertStatus("old token stays revoked",send("GET","/api/v1/auth/me",null,credential.token()),401);
             assertThat(logins.login(base,proctorCode,initial).get(15,TimeUnit.SECONDS).user().role()).isEqualTo("PROCTOR");
             await("Admin enable refresh",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-find").isDisabled()),20);screenshot(stage,"admin-proctor-enabled");
-            log.add("PASS: production Admin login -> create Proctor/Candidate -> disable/enable idle Proctor -> real login revocation; one-time secret not captured");
+            log.add("PASS: production Admin login -> create Proctor/Candidate with Admin-typed passwords -> password change -> disable/enable idle Proctor -> real login revocation");
             return initial;
         } finally {closeDialogs();FxSupport.fxRun(()->{app.stop();stage.close();});}
     }
-    private void adminForm(Stage stage,String code,String name,String role) throws Exception {
+    /** The Admin types the password twice; the form closes once the server stored it. */
+    private void adminForm(Stage stage,String code,String name,String role,String chosen) throws Exception {
         await("Admin add enabled",()->FxSupport.fx(()->!stage.getScene().lookup("#admin-add").isDisabled()),20);
         FxSupport.fxRun(()->((Button)stage.getScene().lookup("#admin-add")).fire());
         await("Admin form open",()->FxSupport.fx(()->dialogNode("admin-create-code")!=null),10);
         FxSupport.fxRun(()->{((TextField)dialogNode("admin-create-code")).setText(code);((TextField)dialogNode("admin-create-name")).setText(name);
             @SuppressWarnings("unchecked") var roles=(javafx.scene.control.ComboBox<String>)dialogNode("admin-create-role");roles.setValue(role);});
-        // No credential exists yet: capture the real form/dialog as well as the parent window.
+        // Captured before the password is typed; the fields are masked anyway.
         screenshotAll("admin-create-"+role.toLowerCase());
-        FxSupport.fxRun(()->((Button)dialogNode("admin-create-save")).fire());
+        FxSupport.fxRun(()->{((javafx.scene.control.PasswordField)dialogNode("admin-create-password")).setText(chosen);
+            ((javafx.scene.control.PasswordField)dialogNode("admin-create-password-confirm")).setText(chosen);
+            ((Button)dialogNode("admin-create-save")).fire();});
+        await("Admin form saved",()->FxSupport.fx(()->dialogNode("admin-create-code")==null&&!stage.getScene().lookup("#admin-find").isDisabled()),20);
     }
+    private static String chosenPassword(String code) { return "MOCK-pass-"+code; }
     private long count(String sql) throws Exception {try(var s=database.createStatement();var r=s.executeQuery(sql)){r.next();return r.getLong(1);}}
     private void injectMonitoring(String token,String attempt) throws Exception {
         String payload=new com.google.gson.Gson().toJson(Map.of("eventId","MOCK-room-e2e-event","collectorSessionId","MOCK-room-e2e-collector","policyVersion","process-policy-v1","pid",123,"processName","chrome.exe","startInstant","2026-10-23T00:00:00Z","metadataQuality","COMPLETE","observedAt","2026-10-23T00:00:00Z"));

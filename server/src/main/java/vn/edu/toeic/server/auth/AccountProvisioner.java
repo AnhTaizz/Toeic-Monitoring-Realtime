@@ -35,17 +35,37 @@ public class AccountProvisioner {
             throw ExamApiException.invalidInput("Họ tên từ 1 đến 160 ký tự, không chứa ký tự điều khiển.");
     }
 
+    /** A password chosen by the Admin: 8–128 characters, no control characters. Never logged or returned. */
+    public static void validatePassword(String password) {
+        if (password == null || password.codePointCount(0, password.length()) < 8 || password.codePointCount(0, password.length()) > 128
+                || password.isBlank() || password.codePoints().anyMatch(Character::isISOControl))
+            throw ExamApiException.invalidInput("Mật khẩu từ 8 đến 128 ký tự, không chứa ký tự điều khiển.");
+    }
+
     @Transactional
     public CreatedAccount create(String username, String name, Role role) {
         return create(username,name,role,false);
     }
     @Transactional
     public CreatedAccount create(String username, String name, Role role,boolean issueLoginPassword) {
+        return create(username, name, role, issueLoginPassword, null);
+    }
+
+    /**
+     * {@code chosenPassword} null: a random one-time password as before. Otherwise the Admin's own password is
+     * stored (hashed) and the account can log in with it; it is not sent back, the Admin already knows it.
+     */
+    @Transactional
+    public CreatedAccount create(String username, String name, Role role,boolean issueLoginPassword,String chosenPassword) {
         if (role != Role.CANDIDATE && role != Role.PROCTOR)
             throw ExamApiException.invalidInput("Chỉ được tạo PROCTOR hoặc CANDIDATE.");
         validate(username, name);
-        byte[] secret = new byte[32]; random.nextBytes(secret);
-        String credential = Base64.getUrlEncoder().withoutPadding().encodeToString(secret);
+        if (chosenPassword != null) validatePassword(chosenPassword);
+        String credential = chosenPassword;
+        if (credential == null) {
+            byte[] secret = new byte[32]; random.nextBytes(secret);
+            credential = Base64.getUrlEncoder().withoutPadding().encodeToString(secret);
+        }
         var account = jdbc.sql("""
                 INSERT INTO user_accounts(username,display_name,role,password_hash,enabled)
                 VALUES(:code,:name,:role,:hash,TRUE) ON CONFLICT(username) DO NOTHING
@@ -57,6 +77,7 @@ public class AccountProvisioner {
                 .optional().orElseThrow(() -> new ExamApiException(HttpStatus.CONFLICT, ErrorCode.CONFLICT,
                         "Mã tài khoản đã tồn tại. Thông tin tài khoản hiện có được giữ nguyên.", null));
         // PIN-only Candidate secret stays unreturned, exactly as in Phase 2.
+        if (chosenPassword != null) return new CreatedAccount(account, null);
         return new CreatedAccount(account, role == Role.PROCTOR || issueLoginPassword ? credential : null);
     }
 }

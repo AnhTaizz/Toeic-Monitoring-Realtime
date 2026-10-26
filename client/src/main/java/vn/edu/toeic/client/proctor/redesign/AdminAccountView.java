@@ -55,7 +55,7 @@ public final class AdminAccountView extends BorderPane implements AutoCloseable 
             Button button=new Button(a.enabled()?"Khóa":"Mở khóa");button.setId("admin-toggle-"+a.userId());
             button.setDisable(busy);button.setOnAction(e->confirmEnabled(a));
             if(!"CANDIDATE".equals(a.role()))return button;
-            Button reset=new Button("Cấp mật khẩu");reset.setId("admin-reset-"+a.userId());reset.setDisable(busy);reset.setOnAction(e->confirmPassword(a));
+            Button reset=new Button("Đổi mật khẩu");reset.setId("admin-reset-"+a.userId());reset.setDisable(busy);reset.setOnAction(e->passwordForm(a));
             return new HBox(6,button,reset);
         }));
         VBox card=Ui.card(filters,actions,table,status);card.setSpacing(16);card.setPadding(new Insets(20));VBox.setVgrow(table,Priority.ALWAYS);
@@ -79,11 +79,14 @@ public final class AdminAccountView extends BorderPane implements AutoCloseable 
         var form=new Dialog<Void>();dialog=form;form.initOwner(getScene().getWindow());style(form);
         form.setTitle("Thêm tài khoản");form.setHeaderText("Thêm Proctor hoặc Candidate");
         TextField code=new TextField(), name=new TextField();code.setId("admin-create-code");name.setId("admin-create-name");
+        PasswordField secret=new PasswordField(), again=new PasswordField();
+        secret.setId("admin-create-password");again.setId("admin-create-password-confirm");
         ComboBox<String> selectedRole=new ComboBox<>();selectedRole.setId("admin-create-role");selectedRole.getItems().setAll("CANDIDATE","PROCTOR");selectedRole.getSelectionModel().selectFirst();
         Label error=Ui.wrapping("");error.setId("admin-create-status");
         VBox fields=new VBox(10,field("Username / mã thí sinh",code),field("Họ và tên",name),field("Vai trò",selectedRole),
-                Ui.wrapping("Mã phân biệt hoa/thường, tối đa 80 ký tự: chữ, số, . _ -.","muted","small"),
-                Ui.wrapping("Tài khoản nhận mật khẩu riêng hiển thị một lần. Candidate đăng nhập rồi nhập PIN chung của phòng.","muted","small"),error);
+                field("Mật khẩu",secret),field("Nhập lại mật khẩu",again),
+                Ui.wrapping("Mã phân biệt hoa/thường, tối đa 80 ký tự: chữ, số, . _ -. Mật khẩu từ 8 ký tự.","muted","small"),
+                Ui.wrapping("Người dùng đăng nhập bằng mã và mật khẩu này. Thí sinh nhập thêm PIN chung của phòng.","muted","small"),error);
         fields.setPrefWidth(440);form.getDialogPane().setContent(fields);
         var saveType=new ButtonType("Lưu",ButtonBar.ButtonData.OK_DONE);form.getDialogPane().getButtonTypes().setAll(saveType,ButtonType.CANCEL);
         Button save=(Button)form.getDialogPane().lookupButton(saveType);save.setId("admin-create-save");save.getStyleClass().add("primary");
@@ -92,24 +95,26 @@ public final class AdminAccountView extends BorderPane implements AutoCloseable 
             if(!code.getText().strip().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,79}") || name.getText().isBlank()) {
                 error.setText("Nhập mã hợp lệ và họ tên.");return;
             }
-            String c=code.getText(),n=name.getText(),r=selectedRole.getValue();
+            String problem=passwordProblem(secret.getText(),again.getText());
+            if(problem!=null){error.setText(problem);return;}
+            String c=code.getText(),n=name.getText(),r=selectedRole.getValue(),chosen=secret.getText();
             fields.setDisable(true);save.setDisable(true);form.getDialogPane().lookupButton(ButtonType.CANCEL).setDisable(true);
             error.setText("Đang lưu…");
-            submit(()->api.create(c,n,r,true),created->{form.close();status.setText("Đã tạo "+created.account().username()+".");
-                if(created.initialPassword()!=null)credential(created);load(null);},failure->{
+            submit(()->api.create(c,n,r,chosen),created->{secret.clear();again.clear();form.close();
+                status.setText("Đã tạo "+created.account().username()+" với mật khẩu bạn vừa nhập.");load(null);},failure->{
                     fields.setDisable(false);save.setDisable(false);form.getDialogPane().lookupButton(ButtonType.CANCEL).setDisable(false);error.setText(failure);
                 },true);
         });
-        form.setOnCloseRequest(e->{if(busy && !closed)e.consume();});form.setOnHidden(e->{if(dialog==form)dialog=null;});form.show();
+        form.setOnCloseRequest(e->{if(busy && !closed)e.consume();});
+        form.setOnHidden(e->{secret.clear();again.clear();if(dialog==form)dialog=null;});form.show();
     }
 
-    private void credential(CreatedAccount created) {
-        var prompt=new Dialog<Void>();dialog=prompt;prompt.initOwner(getScene().getWindow());style(prompt);
-        prompt.setTitle("Thông tin đăng nhập");prompt.setHeaderText(created.account().username());
-        TextField secret=new TextField(created.initialPassword());secret.setId("admin-initial-password");secret.setEditable(false);
-        prompt.getDialogPane().setContent(new VBox(12,Ui.wrapping("Mật khẩu chỉ hiển thị lần này. Bàn giao qua kênh riêng trước khi đóng. Không thể xem lại mật khẩu.","muted"),secret));
-        prompt.getDialogPane().setPrefWidth(500);prompt.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        prompt.setOnHidden(e->{secret.clear();if(dialog==prompt)dialog=null;});prompt.show();secret.selectAll();
+    /** Same rule as the server: 8–128 characters, no control characters, typed the same twice. */
+    static String passwordProblem(String password,String again) {
+        int length=password.codePointCount(0,password.length());
+        if(length<8 || length>128 || password.isBlank() || password.codePoints().anyMatch(Character::isISOControl))
+            return "Mật khẩu từ 8 đến 128 ký tự, không chứa ký tự điều khiển.";
+        return password.equals(again)?null:"Hai lần nhập mật khẩu không khớp.";
     }
 
     private void confirmEnabled(AccountView account) {
@@ -122,13 +127,33 @@ public final class AdminAccountView extends BorderPane implements AutoCloseable 
             submit(()->api.enabled(account.userId(),!account.enabled()),updated->{status.setText("Đã cập nhật "+updated.username()+".");load(null);},null,false);});
         confirm.show();
     }
-    private void confirmPassword(AccountView account) {
+    /** The Admin types the new password; existing logins of this candidate are signed out by the server. */
+    private void passwordForm(AccountView account) {
         if(busy || closed || dialog!=null)return;
-        var confirm=new Alert(Alert.AlertType.CONFIRMATION,"Cấp mật khẩu mới cho "+account.username()+"? Các phiên đăng nhập sẽ bị thu hồi. Không thực hiện được khi thí sinh đang thi.",ButtonType.OK,ButtonType.CANCEL);
-        dialog=confirm;confirm.initOwner(getScene().getWindow());style(confirm);confirm.setHeaderText("Cấp lại mật khẩu Candidate");
-        confirm.setOnHidden(e->{dialog=null;if(confirm.getResult()==ButtonType.OK && !closed)
-            submit(()->api.resetPassword(account.userId()),created->{credential(created);status.setText("Đã cấp mật khẩu mới; token cũ đã thu hồi.");},null,true);});
-        confirm.show();
+        var form=new Dialog<Void>();dialog=form;form.initOwner(getScene().getWindow());style(form);
+        form.setTitle("Đổi mật khẩu");form.setHeaderText("Đổi mật khẩu cho "+account.username());
+        PasswordField secret=new PasswordField(), again=new PasswordField();
+        secret.setId("admin-reset-password");again.setId("admin-reset-password-confirm");
+        Label error=Ui.wrapping("");error.setId("admin-reset-status");
+        VBox fields=new VBox(10,field("Mật khẩu mới",secret),field("Nhập lại mật khẩu mới",again),
+                Ui.wrapping("Thí sinh đang đăng nhập sẽ bị đăng xuất. Không đổi được khi thí sinh đang thi.","muted","small"),error);
+        fields.setPrefWidth(420);form.getDialogPane().setContent(fields);
+        var saveType=new ButtonType("Lưu",ButtonBar.ButtonData.OK_DONE);form.getDialogPane().getButtonTypes().setAll(saveType,ButtonType.CANCEL);
+        Button save=(Button)form.getDialogPane().lookupButton(saveType);save.setId("admin-reset-save");save.getStyleClass().add("primary");
+        save.addEventFilter(javafx.event.ActionEvent.ACTION,e->{
+            e.consume();if(busy)return;
+            String problem=passwordProblem(secret.getText(),again.getText());
+            if(problem!=null){error.setText(problem);return;}
+            String chosen=secret.getText();
+            fields.setDisable(true);save.setDisable(true);form.getDialogPane().lookupButton(ButtonType.CANCEL).setDisable(true);
+            error.setText("Đang lưu…");
+            submit(()->api.resetPassword(account.userId(),chosen),updated->{form.close();
+                status.setText("Đã đổi mật khẩu cho "+updated.account().username()+"; các phiên đăng nhập cũ đã bị thu hồi.");},failure->{
+                    fields.setDisable(false);save.setDisable(false);form.getDialogPane().lookupButton(ButtonType.CANCEL).setDisable(false);error.setText(failure);
+                },false);
+        });
+        form.setOnCloseRequest(e->{if(busy && !closed)e.consume();});
+        form.setOnHidden(e->{secret.clear();again.clear();if(dialog==form)dialog=null;});form.show();
     }
     private <T> void submit(Callable<T> work,Consumer<T> success,Consumer<String> failure,boolean create) {
         busy=true;controls();
@@ -138,7 +163,7 @@ public final class AdminAccountView extends BorderPane implements AutoCloseable 
                 if(closed)return;busy=false;controls();
                 if(problem instanceof AdminAccountApiClient.Rejected rejection && rejection.status()==401){expired.run();return;}
                 String message=problem instanceof AdminAccountApiClient.Rejected?problem.getMessage():create
-                    ?"Mất kết nối hoặc phản hồi không hợp lệ. Tìm lại username trước khi thử lại; mật khẩu Proctor chỉ được cấp trong phản hồi tạo thành công."
+                    ?"Mất kết nối hoặc phản hồi không hợp lệ. Tìm lại username trước khi thử lại: tài khoản có thể đã được tạo."
                     :"Không kết nối được server hoặc phản hồi không hợp lệ. Hãy kiểm tra mạng và tải lại.";
                 if(failure!=null)failure.accept(message);else status.setText(message);
             });}
