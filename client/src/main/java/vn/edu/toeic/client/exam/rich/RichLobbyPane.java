@@ -30,6 +30,10 @@ final class RichLobbyPane extends VBox {
     private final VBox card = new VBox(14);
     private final HBox footer = new HBox(12);
     private VisiblePulseGate gate;
+    /** How long the Server may stay unconfirmed before the candidate is asked to check the network. */
+    static final java.time.Duration UNCONFIRMED_ALERT = java.time.Duration.ofSeconds(30);
+    private boolean imagesPrepared;
+    private long unconfirmedSince = -1;
 
     RichLobbyPane() {
         super(16);
@@ -128,15 +132,34 @@ final class RichLobbyPane extends VBox {
     }
 
     void visual(VisualReadyCoordinator.Snapshot state) {
+        visual(state, System.nanoTime());
+    }
+
+    /**
+     * UNVERIFIED means the Server has not confirmed READY yet (a slow or failed request, audio not READY);
+     * the coordinator retries on its next tick. The images stay "đã tải" once they were prepared, and only a real
+     * failure or {@link #UNCONFIRMED_ALERT} without confirmation asks the candidate to tell the proctor.
+     */
+    void visual(VisualReadyCoordinator.Snapshot state, long nowNanos) {
         preparation(state.preparation());
-        boolean ready = state.phase() == VisualReadyCoordinator.Phase.READY;
-        boolean bad = state.phase() == VisualReadyCoordinator.Phase.FAILED || state.phase() == VisualReadyCoordinator.Phase.UNVERIFIED;
-        boolean imagesDone = Set.of(VisualReadyCoordinator.Phase.WAITING_AUDIO, VisualReadyCoordinator.Phase.REPORTING,
-                VisualReadyCoordinator.Phase.READY).contains(state.phase());
-        row(visualRow, imagesDone, bad, "Hình ảnh: " + (imagesDone ? "đã tải" : bad ? "tải chưa được" : "đang tải…"));
-        row(serverRow, ready, bad, ready ? "Sẵn sàng — đang chờ giám thị bắt đầu" : "Chưa sẵn sàng");
+        VisualReadyCoordinator.Phase phase = state.phase();
+        boolean ready = phase == VisualReadyCoordinator.Phase.READY;
+        boolean failed = phase == VisualReadyCoordinator.Phase.FAILED;
+        boolean unconfirmed = phase == VisualReadyCoordinator.Phase.UNVERIFIED;
+        if (Set.of(VisualReadyCoordinator.Phase.WAITING_AUDIO, VisualReadyCoordinator.Phase.REPORTING,
+                VisualReadyCoordinator.Phase.READY).contains(phase)) imagesPrepared = true;
+        else if (!unconfirmed) imagesPrepared = false; // downloading again, not prepared or failed
+        if (!unconfirmed) unconfirmedSince = -1;
+        else if (unconfirmedSince < 0) unconfirmedSince = nowNanos;
+        boolean stuck = unconfirmed && nowNanos - unconfirmedSince >= UNCONFIRMED_ALERT.toNanos();
+
+        row(visualRow, imagesPrepared, failed && !imagesPrepared,
+                "Hình ảnh: " + (imagesPrepared ? "đã tải" : failed ? "tải chưa được" : "đang tải…"));
+        row(serverRow, ready, failed || stuck, ready ? "Sẵn sàng — đang chờ giám thị bắt đầu"
+                : unconfirmed ? "Đang xác nhận lại với máy chủ…" : "Chưa sẵn sàng");
         // Only problems need the candidate's attention; routine progress is already in the rows above.
-        waiting.setText(bad ? "Chưa chuẩn bị được hình ảnh của đề. Hãy báo giám thị." : "");
+        waiting.setText(failed ? "Chưa chuẩn bị được hình ảnh của đề. Hãy báo giám thị."
+                : stuck ? "Chưa xác nhận được với máy chủ. Kiểm tra kết nối mạng; nếu vẫn vậy, hãy báo giám thị." : "");
     }
 
     /** Gắn ảnh đã decode vào vùng bị che; hoàn tất khi ảnh đầu hiển thị qua hai pulse layout thật. */
