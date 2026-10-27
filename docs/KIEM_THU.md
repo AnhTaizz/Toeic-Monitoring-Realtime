@@ -841,3 +841,13 @@ Chi tiết, nguyên nhân và lượt FAIL: [release/RELEASE-REPORT.md](release/
 - EX-08 STUDY4_6854: 1 FAIL (409 import media, nguyên nhân chưa xác định) rồi 2/2 PASS, cùng payload `d47aad14…`.
 - Portable `5173462` (ZIP `cd2b6e2b…`): Client Unicode 9/9, ASCII 8/8; Server DB mới 15/15 (không có tài khoản demo dù môi trường bật cờ); nâng cấp V18→V21 + STUDY4 19/19; ZIP giải nén validate PASS.
 - NOT TESTED: LAN hai máy, nghe thật, cắm/rút USB vật lý trên commit tích hợp, installer, đo lại E1/E2.
+
+## 27/10/2026 — UI phòng thi, lịch sử sau nộp và fullscreen
+
+[Báo cáo/ảnh/receipt](../evidence/room-ui-fixes-20261027/REPORT.md), nhánh `codex/fix-room-ui-history-fullscreen` từ `1187f0d`; kiểm working tree chứa bản sửa, chưa gán tracker DONE.
+
+- Client focused: 72 PASS / 1 SKIP / 0 FAIL-ERROR, 73 ca; SKIP là lượt chụp thêm nhiều màn proctor cần flag riêng. Kiểm palette nền sáng khi có CSS cũ, điều hướng câu, login/PIN, history HTTP và scope/monitoring integration. Log local `target/room-ui-fixes-20261027/client-tests-final.log`.
+- Kết quả cuối PG/GUI gồm 79 PASS server/legacy từ `room-ux-20261027T102535Z-4a4796ee` và 3 PASS E2E PIN chạy riêng từ `room-ux-20261027T103213Z-facf1bab`: tổng 82 ca không trùng suite, không phải một invocation. `AccountPinPostgresTest` 20; `ExamRuntimePostgresTest` 38; `RoomTokenAuthorizationTest` 15; `ExamReadAuthorizationTest` 4; `RoomFlowPostgresGuiTest` 2; `AccountPinFlowPostgresGuiTest` 3. Cluster test 0 schema còn lại, stop exit 0.
+- PIN E2E: 2/2, 1/2, 0/2 READY; giữ cùng Scene và fullscreen ở lobby/sau Hoàn tất, không dựng màn chọn ca cũ; lịch sử có đúng bài vừa nộp; proctor confirmation nền trắng/cam, Hủy mặc định. Giữ reconnect, media, autosave/submit, scope chéo và CIM/USB status. Đề/tài khoản/media MOCK, backend/JavaFX thật; không nghiệm thu LAN hai máy, nghe bằng tai, USB vật lý hoặc MSI.
+- Giữ bằng chứng các lượt FAIL: PG đầu 74 PASS/8 FAIL, lượt hai 80 PASS/2 FAIL. Đã sửa điều kiện trạng thái cho result fallback; test cũ được cập nhật theo lịch sử proctor/gộp Chrome/nhãn sau nộp của nhánh nền. Chi tiết và từng case cuối ở báo cáo; không cộng lặp các lượt chạy.
+- Đóng gói cuối Client/Server PASS; renderer `RichExamViewGuiTest` chạy lại 9/9 PASS sau chỉnh listener (trùng suite, không cộng thêm vào 72). Server JAR tên riêng `server-ui-fixes-20261027.jar`; không restart Server, không build MSI. Hash và đường dẫn ở báo cáo.

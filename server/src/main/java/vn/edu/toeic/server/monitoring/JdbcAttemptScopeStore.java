@@ -19,6 +19,15 @@ public final class JdbcAttemptScopeStore implements AttemptScopeAuthorizer {
                     WHERE m.session_id = a.session_id AND m.attempt_id = a.attempt_id
                       AND m.candidate_user_id = :user AND m.attempt_id = :bound AND m.joined_at IS NOT NULL))
             """;
+    // Only status/history use this predicate. Paper, media, writers and monitoring keep ADMISSION_SCOPE.
+    public static final String RESULT_SCOPE = "AND ((1=1 " + ADMISSION_SCOPE + """
+            ) OR (:role = 'CANDIDATE' AND CAST(:bound AS VARCHAR) IS NULL
+                AND a.candidate_user_id = :user AND a.state IN ('SUBMITTED', 'TIMED_OUT')
+                AND a.submitted_at IS NOT NULL
+                AND EXISTS (SELECT 1 FROM exam_room_members m
+                    WHERE m.session_id = a.session_id AND m.attempt_id = a.attempt_id
+                      AND m.candidate_user_id = :user AND m.joined_at IS NOT NULL)))
+            """;
     private final JdbcClient jdbc;
     public JdbcAttemptScopeStore(JdbcClient jdbc) { this.jdbc = jdbc; }
 
@@ -59,5 +68,15 @@ public final class JdbcAttemptScopeStore implements AttemptScopeAuthorizer {
     }
     private static boolean invalidScope(AuthenticatedUser user) {
         return user.roomAttemptId() != null && user.role() != Role.CANDIDATE;
+    }
+    @Override public boolean canReadResult(AuthenticatedUser user, String attemptId) {
+        if (canReadExam(user, attemptId)) return true;
+        if (user == null || user.role() != Role.CANDIDATE || user.roomAttemptId() != null || attemptId == null) return false;
+        return jdbc.sql("""
+                SELECT count(*) FROM monitoring_attempts a WHERE a.attempt_id=:attempt
+                AND a.candidate_user_id=:user AND a.state IN ('SUBMITTED','TIMED_OUT') AND a.submitted_at IS NOT NULL
+                """ + RESULT_SCOPE)
+                .param("attempt", attemptId).param("bound", user.roomAttemptId()).param("role", user.role().name()).param("user", user.userId())
+                .query(Long.class).single() == 1;
     }
 }

@@ -105,11 +105,11 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
 
         // Confirm before the window closes while the attempt is still open; the guard follows the scene's window.
         sceneProperty().addListener((obs, oldScene, scene) -> {
-            if (oldScene != null && oldScene.getWindow() != null) oldScene.getWindow().removeEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, closeGuard);
-            if (scene != null) scene.windowProperty().addListener((o, oldWindow, window) -> {
-                if (oldWindow != null) oldWindow.removeEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, closeGuard);
-                if (window != null && !closed) window.addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, closeGuard);
-            });
+            if (oldScene != null) {
+                oldScene.windowProperty().removeListener(guardWindowListener);
+                if (oldScene.getWindow() != null) oldScene.getWindow().removeEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, closeGuard);
+            }
+            if (scene != null && !closed) scene.windowProperty().addListener(guardWindowListener);
             if (scene != null && scene.getWindow() != null && !closed) scene.getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, closeGuard);
         });
 
@@ -254,10 +254,12 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
     private void openPalette() {
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Chọn câu");
+        dialog.setHeaderText("Chọn câu hỏi");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        dialog.getDialogPane().getStyleClass().add("toeic-room");
-        dialog.getDialogPane().getStylesheets().addAll(getScene() == null ? List.of() : getScene().getStylesheets());
-        dialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(RichExamView.class.getResource("/toeic-room.css")).toExternalForm());
+        RoomDialogs.style(dialog.getDialogPane());
+        dialog.getDialogPane().setId("question-palette");
+        Button close=(Button)dialog.getDialogPane().lookupButton(ButtonType.CLOSE);
+        close.setText("Đóng");close.getStyleClass().add("room-button-secondary");
         VBox parts = new VBox(12);
         Map<String, String> answers = current == null ? Map.of() : current.answers();
         for (RichExamModel.PartInfo part : model.parts()) {
@@ -265,6 +267,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
             for (RichExamModel.Unit u : part.units()) for (RichExamModel.Question q : u.questions()) {
                 Button number = new Button(String.valueOf(q.number()));
                 number.setId("palette-" + q.number());
+                number.getStyleClass().add("room-palette-number");
                 number.getStyleClass().add(u == unit ? "room-chip-active" : answers.containsKey(q.id()) ? "room-chip-done" : "room-chip");
                 number.setOnAction(event -> { dialog.close(); goToQuestion(q.id()); });
                 numbers.getChildren().add(number);
@@ -276,8 +279,14 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         Label legend = new Label("Cam: đang xem · Xanh: đã làm · Trắng: chưa làm");
         legend.getStyleClass().add("room-muted");
         ScrollPane scroll = new ScrollPane(new VBox(12, legend, parts));
+        scroll.getStyleClass().add("room-scroll");
         scroll.setFitToWidth(true);
-        scroll.setPrefSize(720, 520);
+        scroll.setPrefSize(720, 480);
+        if(getScene()!=null) {
+            scroll.setPrefWidth(Math.max(320,Math.min(720,getScene().getWidth()-100)));
+            scroll.setPrefHeight(Math.max(220,Math.min(480,getScene().getHeight()-220)));
+        }
+        ((VBox)scroll.getContent()).setPadding(new Insets(12));
         dialog.getDialogPane().setContent(scroll);
         if (getScene() != null) dialog.initOwner(getScene().getWindow());
         dialog.show();
@@ -703,6 +712,11 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         if (!leaveApp) event.consume();
     };
 
+    private final javafx.beans.value.ChangeListener<javafx.stage.Window> guardWindowListener = (observable, oldWindow, window) -> {
+        if (oldWindow != null) oldWindow.removeEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, closeGuard);
+        if (window != null && !closed) window.addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, closeGuard);
+    };
+
     // Cho test giao diện.
     RichExamModel model() { return model; }
     RichExamModel.Unit currentUnit() { return unit; }
@@ -713,6 +727,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         if (closed) return;
         closed = true;
         clock.stop();
+        if (getScene() != null) getScene().windowProperty().removeListener(guardWindowListener);
         if (getScene() != null && getScene().getWindow() != null) getScene().getWindow().removeEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, closeGuard);
         if (pendingGate != null) pendingGate.cancel();
         session.close();

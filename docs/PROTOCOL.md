@@ -1117,6 +1117,8 @@ Mục này ghi lại endpoint đã có từ nhánh ACCOUNT_PIN (`ff6aacf`) và �
 
 START dùng endpoint PROCTORED_V2 sẵn có, cùng shape; policy chọn theo `admission_mode` lưu trong DB: phòng ACCOUNT_PIN cho START khi có ít nhất một người JOIN, người chưa READY bị ghi `NOT_READY_AT_START` trước COMMIT và chỉ làm Reading đến deadline chung. WebSocket không thêm type mới.
 
+**Sửa lịch sử ngày 27/10/2026:** GET `/api/v1/candidate/attempts` và GET `/api/v1/attempts/{attemptId}/status` (cùng dạng query `status?attemptId=…`) cho phép token tài khoản Candidate đọc lượt thi phòng đã chốt của chính mình: `SUBMITTED`/`TIMED_OUT`, có `submitted_at`, member khớp session/attempt/candidate và `joined_at` khác NULL. Token phòng vẫn bị giới hạn đúng attempt. Các route đề/media, chuẩn bị, takeover, save/submit và monitoring giữ nguyên admission; lịch sử không cấp quyền làm bài. Không đổi request/response hoặc cursor. Phần server A cần owner review.
+
 ## Tổng hợp đa tín hiệu cho giám thị — 25/10/2026
 
 Tổng quan và Chi tiết dùng thêm một read consumer cho typed history hiện hữu, không thêm endpoint/field/type hoặc push. Mỗi cycle xác minh lại scope PROCTOR, chỉ tổng hợp observation của collector hiện tại trong roster đã xác thực; fixed-through/page100/3page mỗi lượt, tối đa 2 request history chưa hoàn tất, 100 lượt/12s cycle. Snapshot UI giữ riêng attempt/run và đánh dấu thiếu/cũ/gap. READY không mang storageCount nên không suy USB=0; status READY sau gap không phục hồi giá trị trước gap. Các nút mở Timeline chỉ truyền lựa chọn attempt/source vào view hiện có. [Chi tiết](PROCTOR_SIGNAL_SUMMARY.md).

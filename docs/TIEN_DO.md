@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+27/10/2026 — Sửa UI chọn câu/xác nhận START, lịch sử bài vừa nộp, bỏ màn chọn ca cũ sau PIN và giữ fullscreen khi chuyển màn trên nhánh local `codex/fix-room-ui-history-fullscreen` từ `1187f0d`. Client 72 PASS/1 SKIP; server/legacy 79 PASS + E2E PIN 3 PASS trong các lượt cuối không trùng suite; cluster test cleanup sạch. Quyền đọc kết quả tài khoản tách riêng khỏi admission làm bài — cần A review. [Báo cáo và ảnh](../evidence/room-ui-fixes-20261027/REPORT.md). Chỉ commit local theo yêu cầu; không đổi tracker, chưa build MSI.
+
 26/10/2026 — UI/UX trên nhánh local `feat/ui-ux-simplify-20261026` (chưa push/PR): màn thí sinh gọn, giám thị một màn "Phòng thi" (trang cũ chỉ sau "Công cụ cũ"), giờ GMT+7, cửa sổ giữ cỡ, Admin tự nhập mật khẩu. Server: lọc phòng đã xong khỏi danh sách và trường `password` tuỳ chọn cho Admin — cần A review. Test Server 40/40 PASS; GUI thật cần chạy lại khi máy rảnh. Còn chặng Admin/đăng nhập, tài liệu, full regression, đóng gói; gộp một PR cùng #109.
 
 25/10/2026 — Chuẩn bị PR gộp cảnh báo process (Djicz) trên nền #108, nhánh local `prep/dedup-on-108-20261025`: sửa giới hạn 5000 trên raw, 6 test PostgreSQL/WS mới, cập nhật test restart của C theo quyết định owner, sửa race đăng nhập trong smoke. Full 1805 PASS/0 FAIL; runner Integrated 3/3; bundle thử Client/Server PASS. Chờ #108 merge rồi mở PR riêng; chưa phát hành ZIP final. EX-08 còn lỗi ngắt quãng 2/9 chưa rõ nguyên nhân.

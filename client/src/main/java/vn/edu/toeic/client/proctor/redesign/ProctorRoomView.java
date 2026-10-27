@@ -926,13 +926,19 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
     }
 
     private boolean confirmDialog(String message) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK, ButtonType.CANCEL);
+        Alert alert = new Alert(Alert.AlertType.NONE, message, ButtonType.OK, ButtonType.CANCEL);
+        alert.setTitle("Xác nhận phòng thi");
         if (getScene() != null) alert.initOwner(getScene().getWindow());
-        alert.setHeaderText("Xác nhận");
+        alert.setHeaderText("Xác nhận thao tác");
+        vn.edu.toeic.client.exam.rich.RoomDialogs.style(alert.getDialogPane());
+        alert.getDialogPane().setId("proctor-room-confirm");
         ((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setText("Đồng ý");
         ((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).setText("Huỷ");
+        ((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).getStyleClass().add("room-button-primary");
+        ((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).getStyleClass().add("room-button-secondary");
         // Irreversible actions: Enter must not confirm by accident.
         ((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setDefaultButton(false);
+        ((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).setDefaultButton(true);
         return alert.showAndWait().filter(ButtonType.OK::equals).isPresent();
     }
 

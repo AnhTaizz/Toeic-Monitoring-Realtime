@@ -95,7 +95,7 @@ public class ExamService {
                 JOIN exam_sessions s ON s.session_id = a.session_id
                 JOIN exams e ON e.exam_id = a.exam_id AND e.exam_id = s.exam_id
                 WHERE a.candidate_user_id = :candidateUserId
-                """ + vn.edu.toeic.server.monitoring.JdbcAttemptScopeStore.ADMISSION_SCOPE + """
+                """ + vn.edu.toeic.server.monitoring.JdbcAttemptScopeStore.RESULT_SCOPE + """
                   AND a.state IN ('ACTIVE', 'SUBMITTED', 'TIMED_OUT')
                   AND (a.state = 'ACTIVE' OR a.submitted_at IS NOT NULL)
                 """ + cursorClause + """
@@ -1201,7 +1201,7 @@ public class ExamService {
 
     @Transactional(readOnly = true)
     public CandidateAttemptStatusResponse getAttemptStatus(AuthenticatedUser user, String attemptId) {
-        authorizationService.requireExamRead(user, attemptId);
+        authorizationService.requireResultRead(user, attemptId);
         if(v2!=null)v2.gateStatus(attemptId);
 
         record StatusRow(

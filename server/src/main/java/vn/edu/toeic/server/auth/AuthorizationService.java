@@ -25,4 +25,11 @@ public final class AuthorizationService {
             throw AccessDeniedException.forbidden();
         }
     }
+    public void requireResultRead(AuthenticatedUser user, String attemptId) {
+        if (user == null) throw AccessDeniedException.unauthorized();
+        if (attemptId == null || attemptId.isBlank() || user.roomAttemptId() != null && !user.roomAttemptId().equals(attemptId)
+                || !scopes.canReadResult(user, attemptId)) {
+            throw AccessDeniedException.forbidden();
+        }
+    }
 }

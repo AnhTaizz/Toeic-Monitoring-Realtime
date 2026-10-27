@@ -52,13 +52,17 @@ class RoomTokenAuthorizationTest {
         AttemptScopeAuthorizer scopes = mock(AttemptScopeAuthorizer.class);
         when(scopes.canAccess(USER, ATTEMPT)).thenReturn(true);
         when(scopes.canReadExam(USER, ATTEMPT)).thenReturn(true);
+        when(scopes.canReadResult(USER, ATTEMPT)).thenReturn(true);
         var authorization = new AuthorizationService(scopes);
         authorization.requireAttempt(USER, ATTEMPT);
         authorization.requireExamRead(USER, ATTEMPT);
+        authorization.requireResultRead(USER, ATTEMPT);
         assertThatThrownBy(() -> authorization.requireAttempt(USER, "MOCK-room-B")).isInstanceOf(AccessDeniedException.class);
         assertThatThrownBy(() -> authorization.requireExamRead(USER, "MOCK-room-B")).isInstanceOf(AccessDeniedException.class);
+        assertThatThrownBy(() -> authorization.requireResultRead(USER, "MOCK-room-B")).isInstanceOf(AccessDeniedException.class);
         verify(scopes, never()).canAccess(USER, "MOCK-room-B");
         verify(scopes, never()).canReadExam(USER, "MOCK-room-B");
+        verify(scopes, never()).canReadResult(USER, "MOCK-room-B");
     }
 
     @Test void roomTokenCannotAcquireProctorRoleAndStillHonorsRevocationAndDisabledAccount() {

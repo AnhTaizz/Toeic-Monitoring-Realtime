@@ -1,0 +1,58 @@
+{
+  "sourceSha": "1187f0decb62de69c8745e046c92a6862cfbc848",
+  "runId": "room-ux-20261027T103213Z-facf1bab",
+  "mode": "Gui",
+  "os": "Microsoft Windows NT 10.0.26200.0",
+  "java": "openjdk version \"21.0.10\" 2026-01-20 LTS",
+  "maven": "Apache Maven 3.9.15 (98b2cdbfdb5f1ac8781f537ea9acccaed7922349)",
+  "postgres": "PostgreSQL 18.3 on x86_64-windows, compiled by msvc-19.44.35223, 64-bit",
+  "database": "toeic_room_admission_test",
+  "host": "127.0.0.1",
+  "port": 51794,
+  "fixture": "MOCK self-authored exam content; real PostgreSQL/Flyway/HTTP/WebSocket",
+  "command": "mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC -pl server -am -Dtest=AccountPinFlowPostgresGuiTest -Dsurefire.failIfNoSpecifiedTests=false test",
+  "startUtc": "2026-10-27T10:32:19.8025738Z",
+  "endUtc": "2026-10-27T10:35:04.5416389Z",
+  "exitCode": 0,
+  "runnerErrorType": null,
+  "totals": {
+    "tests": 3,
+    "passed": 3,
+    "skipped": 0,
+    "errors": 0,
+    "failures": 0
+  },
+  "cases": [
+    {
+      "status": "PASS",
+      "name": "accountLoginSharedPinReadySnapshotListeningReadingAndSubmit(int)[1]",
+      "class": "vn.edu.toeic.client.proctor.redesign.AccountPinFlowPostgresGuiTest",
+      "seconds": "59.844"
+    },
+    {
+      "status": "PASS",
+      "name": "accountLoginSharedPinReadySnapshotListeningReadingAndSubmit(int)[2]",
+      "class": "vn.edu.toeic.client.proctor.redesign.AccountPinFlowPostgresGuiTest",
+      "seconds": "46.042"
+    },
+    {
+      "status": "PASS",
+      "name": "accountLoginSharedPinReadySnapshotListeningReadingAndSubmit(int)[3]",
+      "class": "vn.edu.toeic.client.proctor.redesign.AccountPinFlowPostgresGuiTest",
+      "seconds": "42.825"
+    }
+  ],
+  "xmlHashes": [
+    {
+      "sha256": "2ac0e6a1b6458471dd40c5a43d6a4fded521d52de9c345d5120049309f8d453e",
+      "file": "TEST-vn.edu.toeic.client.proctor.redesign.AccountPinFlowPostgresGuiTest.xml",
+      "module": "server"
+    }
+  ],
+  "cleanup": {
+    "clusterStopExit": 0,
+    "ownedSchemasRemaining": 0
+  },
+  "guiEvidence": "Candidate GUI enabled; see individual cases",
+  "manualLanHearing": "NOT RUN"
+}

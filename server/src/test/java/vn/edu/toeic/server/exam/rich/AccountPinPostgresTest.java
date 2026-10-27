@@ -120,6 +120,33 @@ class AccountPinPostgresTest {
     private boolean listed(String session) throws Exception {
         return json(check(get("/api/v2/pin-rooms",proctor),200,null)).toString().contains(session);
     }
+    @ParameterizedTest @ValueSource(strings={"SUBMITTED","TIMED_OUT"})
+    void accountHistoryReadsOnlyOwnedJoinedFinalResults(String state) throws Exception {
+        var room=pinRoom();var a=pinJoin(room,owner);var b=pinJoin(room,other);
+        String attempt=aid(a),token=scoped(a);
+        check(get("/api/v1/attempts/"+attempt+"/status",owner),403,"FORBIDDEN");
+        assertThat(json(check(get("/api/v1/candidate/attempts",owner),200,null)).toString()).doesNotContain(attempt);
+        takeover(attempt,token);takeover(aid(b),scoped(b));check(startRoom(room),200,null);
+        // MOCK terminal fixture: this test targets read authorization, not grading/timeout correctness.
+        sql("UPDATE monitoring_attempts SET state='"+state+"',submitted_at=clock_timestamp() WHERE attempt_id='"+attempt+"'");
+        var fresh=login("candidate1");
+        for(String account:List.of(owner,fresh)) {
+            assertThat(json(check(get("/api/v1/candidate/attempts",account),200,null)).toString()).contains(attempt).doesNotContain(aid(b));
+            assertThat(json(check(get("/api/v1/attempts/"+attempt+"/status",account),200,null)).get("state").getAsString()).isEqualTo(state);
+            check(get("/api/v2/attempts/"+attempt+"/exam",account),403,"FORBIDDEN");
+            check(get("/api/v2/attempts/"+attempt+"/preparation",account),403,"FORBIDDEN");
+            check(get("/api/v1/monitoring/attempts/"+attempt+"/signal-capabilities",account),403,"FORBIDDEN");
+            check(post("/api/v1/attempts/"+attempt+"/takeover",RichExamFixtures.JSON.toJson(Map.of("requestId","MOCK-final-read","attemptId",attempt,"clientInstanceId","MOCK-client")),account),403,"FORBIDDEN");
+            check(post("/api/v1/attempts/"+attempt+"/answers",answers(attempt,1,1,Map.of()),account),403,"FORBIDDEN");
+            check(post("/api/v1/attempts/"+attempt+"/submit",answers(attempt,1,1,Map.of()),account),403,"FORBIDDEN");
+        }
+        check(get("/api/v1/attempts/"+attempt+"/status",other),403,"FORBIDDEN");
+        check(get("/api/v1/attempts/"+attempt+"/status",scoped(b)),403,"FORBIDDEN");
+        assertThat(json(check(get("/api/v1/candidate/attempts",other),200,null)).toString()).doesNotContain(attempt);
+        sql("UPDATE exam_room_members SET joined_at=NULL WHERE attempt_id='"+attempt+"'");
+        check(get("/api/v1/attempts/"+attempt+"/status",owner),403,"FORBIDDEN");
+        assertThat(json(check(get("/api/v1/candidate/attempts",owner),200,null)).toString()).doesNotContain(attempt);
+    }
     @Test void zeroReadyStartsButOnlyLateReadingCanBeSubmitted() throws Exception {
         var room=pinRoom();var a=pinJoin(room,owner);var b=pinJoin(room,other);String attempt=aid(a),token=scoped(a),session=sid(room);
         long writer=takeover(attempt,token);takeover(aid(b),scoped(b));
@@ -142,6 +169,8 @@ class AccountPinPostgresTest {
         check(post("/api/v1/attempts/"+attempt+"/answers",answers(attempt,writer,1,Map.of("q101","A")),token),200,null);
         check(post("/api/v1/attempts/"+attempt+"/submit",answers(attempt,writer,1,Map.of("q101","A")),token),200,null);
         assertThat(text("SELECT state FROM monitoring_attempts WHERE attempt_id='"+attempt+"'")).isEqualTo("SUBMITTED");
+        assertThat(json(check(get("/api/v1/candidate/attempts",owner),200,null)).toString()).contains(attempt);
+        assertThat(json(check(get("/api/v1/attempts/"+attempt+"/status",owner),200,null)).get("state").getAsString()).isEqualTo("SUBMITTED");
         assertThat(text("SELECT deadline_at::text FROM monitoring_attempts WHERE attempt_id='"+attempt+"'")).isEqualTo(deadline);
         assertThat(json(check(startRoom(room),200,null)).get("startId")).isEqualTo(started.get("startId"));
         assertThat(app.getBean(vn.edu.toeic.server.audio.ListeningService.class).committedCommands(session,started.get("startId").getAsString())).isEmpty();

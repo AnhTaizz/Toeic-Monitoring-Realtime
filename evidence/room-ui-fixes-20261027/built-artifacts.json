@@ -1,0 +1,12 @@
+[
+  {
+    "path": "client/target/client-0.1.0-SNAPSHOT-all.jar",
+    "bytes": 16988587,
+    "sha256": "fbf878652c545033a92de239b3b32f435870c184fbdc3228924f960d27325697"
+  },
+  {
+    "path": "server/target/server-ui-fixes-20261027.jar",
+    "bytes": 25575345,
+    "sha256": "807ad92742d3651481bc7301c46feac1335eb5ad83c00b69890e2988890c1e83"
+  }
+]

@@ -8,5 +8,7 @@ public interface AttemptScopeAuthorizer {
     boolean canAccess(AuthenticatedUser user, String attemptId);
     /** Exam reads only; implementations must explicitly opt in. Monitoring stays ACTIVE-only. */
     default boolean canReadExam(AuthenticatedUser user, String attemptId) { return false; }
+    /** Result/status reads may include the account owner's completed room attempts. */
+    default boolean canReadResult(AuthenticatedUser user, String attemptId) { return canReadExam(user, attemptId); }
     default List<String> activeAttempts(AuthenticatedUser user) { return List.of(); }
 }

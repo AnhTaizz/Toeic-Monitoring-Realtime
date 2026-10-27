@@ -101,6 +101,33 @@ class RichExamViewGuiTest {
         });
     }
 
+    @Test void questionPaletteUsesLightRoomStyleAndNavigatesToSelectedQuestion() throws Exception {
+        fx(()->{
+            stage.getScene().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles.css")).toExternalForm());
+            ((javafx.scene.control.Button)view.lookup("#room-pick-question")).fire();return null;
+        });
+        javafx.scene.control.DialogPane pane=fx(()->javafx.stage.Window.getWindows().stream()
+                .filter(w->w.isShowing()&&w.getScene()!=null)
+                .map(w->w.getScene().getRoot()).filter(n->"question-palette".equals(n.getId()))
+                .map(javafx.scene.control.DialogPane.class::cast).findFirst().orElseThrow());
+        Stage paletteStage=fx(()->(Stage)pane.getScene().getWindow());
+        try {
+            fx(()->{
+                pane.applyCss();pane.layout();
+                assertThat(pane.getStyleClass()).contains("room-dialog");
+                var scroll=(javafx.scene.control.ScrollPane)pane.getContent();
+                var viewport=(javafx.scene.layout.Region)scroll.lookup(".viewport");
+                assertThat(viewport.getBackground().getFills().getFirst().getFill()).isEqualTo(javafx.scene.paint.Color.TRANSPARENT);
+                assertThat(pane.getBackground().getFills().getFirst().getFill()).isEqualTo(javafx.scene.paint.Color.WHITE);
+                assertThat(((javafx.scene.control.Button)pane.lookupButton(javafx.scene.control.ButtonType.CLOSE)).getText()).isEqualTo("Đóng");
+                assertThat(pane.lookup("#palette-200")).isNotNull();return null;
+            });
+            snapshot("question-palette",pane.getScene());
+            fx(()->{((javafx.scene.control.Button)pane.lookup("#palette-101")).fire();return null;});
+            await(()->fx(()->view.currentUnit().questions().getFirst().number()==101));
+        } finally {fx(()->{paletteStage.close();return null;});}
+    }
+
     @Test void rendersEverySevenPartLayoutWithServerContentAndCapturesScreens() throws Exception {
         Map<Integer, String> firstQuestion = Map.of(1, "q001", 2, "q007", 3, "q032", 4, "q071", 5, "q101", 6, "q131", 7, "q147");
         for (int part = 1; part <= 7; part++) {
@@ -237,7 +264,11 @@ class RichExamViewGuiTest {
     }
 
     private void snapshot(String name) throws Exception {
-        WritableImage image = fx(() -> stage.getScene().snapshot(null));
+        snapshot(name,stage.getScene());
+    }
+
+    private void snapshot(String name,Scene scene) throws Exception {
+        WritableImage image = fx(() -> scene.snapshot(null));
         BufferedImage out = new BufferedImage((int) image.getWidth(), (int) image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         var reader = image.getPixelReader();
         for (int y = 0; y < out.getHeight(); y++) for (int x = 0; x < out.getWidth(); x++) out.setRGB(x, y, reader.getArgb(x, y));

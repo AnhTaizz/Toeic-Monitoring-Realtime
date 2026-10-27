@@ -1,0 +1,361 @@
+{
+  "baseSha": "1187f0decb62de69c8745e046c92a6862cfbc848",
+  "note": "Final results of six disjoint suites; RichExamViewGuiTest rerun during final Client package",
+  "tests": 73.0,
+  "passed": 72.0,
+  "skipped": 1.0,
+  "suites": [
+    {
+      "class": "vn.edu.toeic.client.LoginSceneGuiTest",
+      "tests": 6,
+      "passed": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "passwordToggleSharesTheValueAndInvalidOriginNeverAuthenticates",
+          "status": "PASS"
+        },
+        {
+          "name": "applicationOpensInFullScreen",
+          "status": "PASS"
+        },
+        {
+          "name": "formRemainsUsableOnCompactAndLargeWindows",
+          "status": "PASS"
+        },
+        {
+          "name": "candidateCanEnterRoomCredentialsAndWrongPinDoesNotLeaveThemOnScreen",
+          "status": "PASS"
+        },
+        {
+          "name": "inFlightLoginCannotBeDuplicatedAndFailureClearsBothPasswordViews",
+          "status": "PASS"
+        },
+        {
+          "name": "accountLoginOpensOnlySharedPinAndWrongPinKeepsTheAccountEntryUsable",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "class": "vn.edu.toeic.client.exam.rich.RichExamViewGuiTest",
+      "tests": 9,
+      "passed": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "questionPaletteUsesLightRoomStyleAndNavigatesToSelectedQuestion",
+          "status": "PASS"
+        },
+        {
+          "name": "deniedPart1ImageFailsTheGateInsteadOfPlaying",
+          "status": "PASS"
+        },
+        {
+          "name": "deniedImageShowsHonestErrorAndRetryLoadsAfterAccessReturns",
+          "status": "PASS"
+        },
+        {
+          "name": "rendersEverySevenPartLayoutWithServerContentAndCapturesScreens",
+          "status": "PASS"
+        },
+        {
+          "name": "pulseGateTraceFollowsContractOrder",
+          "status": "PASS"
+        },
+        {
+          "name": "part1PlayGateOpensOnlyAfterTwoRealPulsesWithVisibleImage",
+          "status": "PASS"
+        },
+        {
+          "name": "answersSurviveNavigationAcrossPartsAndAutosaveCarriesFullMap",
+          "status": "PASS"
+        },
+        {
+          "name": "lobbyIdentifiesTheExactSessionAndAttemptForReadiness",
+          "status": "PASS"
+        },
+        {
+          "name": "acceptedNavigationAndAnswerEmitOnlyPrivacyMinimalKinds",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "class": "vn.edu.toeic.client.proctor.redesign.ProctorRoomViewGuiTest",
+      "tests": 7,
+      "passed": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1,
+      "cases": [
+        {
+          "name": "closeStopsEveryListenerOnTheSharedSocket",
+          "status": "PASS"
+        },
+        {
+          "name": "emptyRoomAsksForThePinAndHasNoFakeRows",
+          "status": "PASS"
+        },
+        {
+          "name": "reviewScreenshots",
+          "status": "SKIP"
+        },
+        {
+          "name": "lostStartAnswerIsRetriedWithTheSameRequestAndConfirmationNamesReadyCounts",
+          "status": "PASS"
+        },
+        {
+          "name": "createdRoomShowsPinThatCanBeCopiedAndHiddenAndClipboardIsCleared",
+          "status": "PASS"
+        },
+        {
+          "name": "candidatePanelShowsDetailsAndClosesWithoutChangingTheRoom",
+          "status": "PASS"
+        },
+        {
+          "name": "eachRoomShowsOnlyItsOwnCandidatesProgressAndAlerts",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "class": "vn.edu.toeic.client.exam.ExamHistoryReadTest",
+      "tests": 43,
+      "passed": 43,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "finalResultsReadStatusOnlyWithoutPaperWriterOrMonitoring(String, boolean)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "finalResultsReadStatusOnlyWithoutPaperWriterOrMonitoring(String, boolean)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "finalResultsReadStatusOnlyWithoutPaperWriterOrMonitoring(String, boolean)[3]",
+          "status": "PASS"
+        },
+        {
+          "name": "finalResultsReadStatusOnlyWithoutPaperWriterOrMonitoring(String, boolean)[4]",
+          "status": "PASS"
+        },
+        {
+          "name": "discoveryPropagatesHttpErrorsWithoutInventingAnEmptySuccessfulHistory(int)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "discoveryPropagatesHttpErrorsWithoutInventingAnEmptySuccessfulHistory(int)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "discoveryPropagatesHttpErrorsWithoutInventingAnEmptySuccessfulHistory(int)[3]",
+          "status": "PASS"
+        },
+        {
+          "name": "discoveryPropagatesHttpErrorsWithoutInventingAnEmptySuccessfulHistory(int)[4]",
+          "status": "PASS"
+        },
+        {
+          "name": "invalidDatabaseCursorIsRejectedBeforeHttp(String)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "invalidDatabaseCursorIsRejectedBeforeHttp(String)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "invalidDatabaseCursorIsRejectedBeforeHttp(String)[3]",
+          "status": "PASS"
+        },
+        {
+          "name": "invalidDatabaseCursorIsRejectedBeforeHttp(String)[4]",
+          "status": "PASS"
+        },
+        {
+          "name": "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[3]",
+          "status": "PASS"
+        },
+        {
+          "name": "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[4]",
+          "status": "PASS"
+        },
+        {
+          "name": "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[5]",
+          "status": "PASS"
+        },
+        {
+          "name": "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[6]",
+          "status": "PASS"
+        },
+        {
+          "name": "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[7]",
+          "status": "PASS"
+        },
+        {
+          "name": "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[8]",
+          "status": "PASS"
+        },
+        {
+          "name": "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[9]",
+          "status": "PASS"
+        },
+        {
+          "name": "malformedUnboundedOrAmbiguousPagesDoNotBecomeHistory(String)[10]",
+          "status": "PASS"
+        },
+        {
+          "name": "deniedFreshStatusDoesNotReuseAnEarlierSuccessfulResult",
+          "status": "PASS"
+        },
+        {
+          "name": "codePointLimitAndUnicodeIntegrityRemainValidated",
+          "status": "PASS"
+        },
+        {
+          "name": "activeResultNeverFallsThroughIntoExamEntry",
+          "status": "PASS"
+        },
+        {
+          "name": "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[3]",
+          "status": "PASS"
+        },
+        {
+          "name": "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[4]",
+          "status": "PASS"
+        },
+        {
+          "name": "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[5]",
+          "status": "PASS"
+        },
+        {
+          "name": "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[6]",
+          "status": "PASS"
+        },
+        {
+          "name": "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[7]",
+          "status": "PASS"
+        },
+        {
+          "name": "cursorIsEncodedAsOneQueryValueAndFinalResultAsOneSegment(String)[8]",
+          "status": "PASS"
+        },
+        {
+          "name": "nextPageCannotRewindBeforeRequestedCursor",
+          "status": "PASS"
+        },
+        {
+          "name": "paginationUsesPostgresOrderWithinAndAcrossPages",
+          "status": "PASS"
+        },
+        {
+          "name": "discoveryUsesBearerAndOnlyBoundedOwnerlessQueryOnEveryNewClient",
+          "status": "PASS"
+        },
+        {
+          "name": "invalidStatusCannotBeDisplayedAsConfirmedResult(String)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "invalidStatusCannotBeDisplayedAsConfirmedResult(String)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "invalidStatusCannotBeDisplayedAsConfirmedResult(String)[3]",
+          "status": "PASS"
+        },
+        {
+          "name": "invalidStatusCannotBeDisplayedAsConfirmedResult(String)[4]",
+          "status": "PASS"
+        },
+        {
+          "name": "invalidStatusCannotBeDisplayedAsConfirmedResult(String)[5]",
+          "status": "PASS"
+        },
+        {
+          "name": "invalidStatusCannotBeDisplayedAsConfirmedResult(String)[6]",
+          "status": "PASS"
+        },
+        {
+          "name": "paginationUsesValidatedServerCursorAndDoesNotPromoteItToScope",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "class": "vn.edu.toeic.client.ExamScopeRefreshGuiTest",
+      "tests": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "initialScopeReadLocksSelectionAndStartUntilFreshResponse",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "class": "vn.edu.toeic.client.ExamMonitoringIntegrationTest",
+      "tests": 7,
+      "passed": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "aProctorCannotStartTheCandidateCollector",
+          "status": "PASS"
+        },
+        {
+          "name": "startupUsesTheWholeFreshServerScopeAndBindsTheSelectedAttempt",
+          "status": "PASS"
+        },
+        {
+          "name": "sameExamKeepsC1FullDeliveryAndCollectorWithoutReplacingTheirScope",
+          "status": "PASS"
+        },
+        {
+          "name": "revokedFreshScopeCannotBeBypassedByTheAlreadyRunningCollector",
+          "status": "PASS"
+        },
+        {
+          "name": "failureToStartMonitoringPropagatesInsteadOfAllowingUnmonitoredExamEntry",
+          "status": "PASS"
+        },
+        {
+          "name": "aDifferentExamCannotReuseAnActiveCollector",
+          "status": "PASS"
+        },
+        {
+          "name": "unsupportedActiveIdNeverStartsAnUnmonitoredExamOrChangesCollectorScope",
+          "status": "PASS"
+        }
+      ]
+    }
+  ]
+}
