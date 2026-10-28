@@ -24,6 +24,7 @@ public final class AdminAccountView extends BorderPane implements AutoCloseable 
     private Long cursor;
     private boolean busy,closed;
     private Dialog<?> dialog;
+    private AdminExamView exams;
 
     public AdminAccountView(String url,LoginResponse login,Runnable logout,Runnable expired) {
         if(login==null || login.user()==null || !"ADMIN".equals(login.user().role()))
@@ -36,8 +37,10 @@ public final class AdminAccountView extends BorderPane implements AutoCloseable 
                 new VBox(2,Ui.label("TOEIC Admin","brand-title"),Ui.label(login.user().displayName(),"brand-subtitle")),Ui.grow(),leave);
         top.setAlignment(Pos.CENTER_LEFT);top.getStyleClass().add("topbar");setTop(top);
         ToggleButton nav=new ToggleButton("Quản lý tài khoản");nav.getStyleClass().add("nav-item");
-        nav.setSelected(true);nav.setMaxWidth(Double.MAX_VALUE);nav.setOnAction(e->nav.setSelected(true));
-        VBox sidebar=new VBox(12,nav,Ui.grow(),Ui.wrapping("PROCTOR · CANDIDATE","muted","small"));sidebar.getStyleClass().add("sidebar");setLeft(sidebar);
+        ToggleButton examNav=new ToggleButton("Quản lý đề thi");examNav.setId("admin-exam-nav");examNav.getStyleClass().add("nav-item");
+        ToggleGroup navigation=new ToggleGroup();nav.setToggleGroup(navigation);examNav.setToggleGroup(navigation);
+        nav.setSelected(true);nav.setMaxWidth(Double.MAX_VALUE);examNav.setMaxWidth(Double.MAX_VALUE);
+        VBox sidebar=new VBox(12,nav,examNav,Ui.grow(),Ui.wrapping("PROCTOR · CANDIDATE","muted","small"));sidebar.getStyleClass().add("sidebar");setLeft(sidebar);
         search.setId("admin-search");search.setPromptText("Username hoặc họ tên");search.setPrefColumnCount(22);
         role.setId("admin-role-filter");role.getItems().setAll("Tất cả vai trò","PROCTOR","CANDIDATE");role.getSelectionModel().selectFirst();
         enabled.setId("admin-enabled-filter");enabled.getItems().setAll("Tất cả trạng thái","Đang hoạt động","Đã khóa");enabled.getSelectionModel().selectFirst();
@@ -62,6 +65,8 @@ public final class AdminAccountView extends BorderPane implements AutoCloseable 
         status.setId("admin-status");status.setMinHeight(32);
         VBox page=new VBox(20,Ui.pageHeader("Quản lý tài khoản","Tạo và quản lý giám thị, thí sinh dùng hệ thống thi TOEIC."),card);
         page.setPadding(new Insets(24));VBox.setVgrow(card,Priority.ALWAYS);setCenter(page);
+        nav.setOnAction(e->{nav.setSelected(true);setCenter(page);});
+        examNav.setOnAction(e->{examNav.setSelected(true);if(exams==null)exams=new AdminExamView(url,login.token(),expired);setCenter(exams);});
         load(null);
     }
 
@@ -174,5 +179,5 @@ public final class AdminAccountView extends BorderPane implements AutoCloseable 
     private static VBox field(String title,Node node){return new VBox(5,Ui.label(title,"field-label"),node);}
     private static void style(Dialog<?> dialog){dialog.getDialogPane().getStyleClass().add("proctor-redesign");
         dialog.getDialogPane().getStylesheets().add(AdminAccountView.class.getResource(ProctorRedesignView.STYLESHEET).toExternalForm());}
-    @Override public void close(){closed=true;if(dialog!=null){dialog.setOnCloseRequest(null);dialog.close();dialog=null;}worker.shutdownNow();api.close();}
+    @Override public void close(){closed=true;if(exams!=null)exams.close();if(dialog!=null){dialog.setOnCloseRequest(null);dialog.close();dialog=null;}worker.shutdownNow();api.close();}
 }

@@ -362,6 +362,16 @@ public class ExamService {
     @Transactional
     public ExamImportResponse importExam(AuthenticatedUser proctor, ExamImportRequest request) {
         authorizationService.requireRole(proctor, Role.PROCTOR);
+        return storeExam(proctor, request);
+    }
+
+    @Transactional
+    public ExamImportResponse importAdminExam(AuthenticatedUser admin, ExamImportRequest request) {
+        authorizationService.requireRole(admin, Role.ADMIN);
+        return storeExam(admin, request);
+    }
+
+    private ExamImportResponse storeExam(AuthenticatedUser proctor, ExamImportRequest request) {
         validationService.validate(request);
 
         boolean exists = jdbc.sql("SELECT count(*) FROM exams WHERE exam_id = :examId")
@@ -370,6 +380,9 @@ public class ExamService {
                 .single() > 0;
 
         if (exists) {
+            if (proctor.role() == Role.ADMIN) {
+                throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.CONFLICT, "Mã đề đã tồn tại.", null);
+            }
             throw new InvalidExamException("Đề thi với mã '" + request.examId() + "' đã tồn tại");
         }
 
