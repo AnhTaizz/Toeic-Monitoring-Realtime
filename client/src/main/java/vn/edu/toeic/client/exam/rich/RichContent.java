@@ -151,7 +151,10 @@ final class RichContent {
                 radio.setId("option-" + question.id() + "-" + option.optionId());
                 Label letter = new Label(option.optionId());
                 letter.getStyleClass().add("room-option-letter");
-                Label text = new Label(option.text() == null || option.text().isBlank() ? "Đáp án " + option.optionId() : option.text());
+                Label text = new Label(QuestionDisplay.optionText(question.dto(), option));
+                text.setManaged(!text.getText().isEmpty());
+                text.setVisible(!text.getText().isEmpty());
+                radio.setAccessibleText("Đáp án " + option.optionId() + (text.getText().isEmpty() ? "" : ": " + text.getText()));
                 text.setWrapText(true);
                 text.getStyleClass().add("room-option-text");
                 HBox.setHgrow(text, Priority.ALWAYS);

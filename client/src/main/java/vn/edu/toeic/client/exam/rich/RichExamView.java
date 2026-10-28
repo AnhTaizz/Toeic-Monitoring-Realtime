@@ -238,7 +238,7 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         for (RichExamModel.PartInfo part : model.parts()) {
             if (part.section() != active.section()) continue;
             boolean done = part.units().stream().allMatch(u -> u.questions().stream().allMatch(q -> answers.containsKey(q.id())));
-            Button step = new Button((done && part != active ? "✓" : String.valueOf(part.part())) + "  Part " + part.part());
+            Button step = new Button("Part " + part.part());
             step.setId("room-step-part-" + part.part());
             step.getStyleClass().add(part == active ? "room-step-active" : done ? "room-step-done" : "room-step");
             step.setOnAction(event -> navigate(part.units().getFirst(), null));
@@ -534,19 +534,14 @@ public final class RichExamView extends BorderPane implements AutoCloseable {
         return label;
     }
 
-    /**
-     * Part 1/2 prompt. Imported data often carries only the option letters ("A. B. C. D.") as text; that line
-     * adds nothing on screen because the options are heard, so it is hidden. Any other text is shown as given.
-     */
+    /** Part 1/2 have no written option transcript; repeated letter placeholders are hidden by the formatter. */
     private Label listeningPrompt(RichExamModel.Question q) {
-        Label label = promptText(q, "room-instruction");
-        if (label.getText().replaceAll("[\\sA-Da-d.,;:()/-]", "").isEmpty()) label.setText("");
-        return label;
+        return promptText(q, "room-instruction");
     }
 
     /** TEXT blocks do server cấp; trống thì không bịa nội dung (Part 1/2 thường không có transcript). */
     private Label promptText(RichExamModel.Question q, String style) {
-        Label label = new Label(RichExamModel.text(q.dto().blocks()));
+        Label label = new Label(QuestionDisplay.prompt(q.dto()));
         label.setWrapText(true);
         label.getStyleClass().add(style);
         label.managedProperty().bind(label.textProperty().isNotEmpty());
