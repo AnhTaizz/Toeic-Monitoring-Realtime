@@ -17,6 +17,9 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.io.TempDir;
 import vn.edu.toeic.protocol.auth.LoginResponse;
+import vn.edu.toeic.client.admin.AdminExamImport;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 @EnabledIfEnvironmentVariable(named="TOEIC_CANDIDATE_GUI",matches="true")
 class AdminExamGuiTest {
@@ -61,6 +64,7 @@ class AdminExamGuiTest {
         fxRun(()->((AdminExamView)view.getCenter()).importFile(file));await("JSON preview",()->dialog("admin-exam-code")!=null);
         assertThat(fx(()->((TextField)dialog("admin-exam-code")).getText())).isEqualTo("NEW-01");
         assertThat(fx(()->dialog("admin-exam-compose"))).isNull();
+        assertThat(fx(()->((TextArea)dialog("admin-exam-content")).isEditable())).isFalse();
         screenshot(fx(()->dialog("admin-exam-code").getScene().getRoot()),"admin-exam-import.png");
         fxRun(()->{((TextField)dialog("admin-exam-code")).clear();((TextField)dialog("admin-exam-title")).clear();});
         assertThat(fx(()->dialog("admin-exam-save").isDisabled())).isTrue();
@@ -92,6 +96,33 @@ class AdminExamGuiTest {
         assertThat(fx(()->view.lookup("#admin-exam-add").isDisabled())).isTrue();
         status.set(200);fxRun(()->((Button)view.lookup("#admin-exam-find")).fire());await("restored",()->!view.lookup("#admin-exam-add").isDisabled());
         status.set(401);fxRun(()->((Button)view.lookup("#admin-exam-find")).fire());await("expired",()->expired.get()==1);
+    }
+    @ParameterizedTest @ValueSource(strings={"STUDY4_6852","STUDY4_6853","STUDY4_6854","STUDY4_6855"})
+    @EnabledIfEnvironmentVariable(named="TOEIC_STUDY4_SOURCE",matches=".+")
+    void actualCrawlOpensAValidImportPreviewWithoutEditingAnything(String exam) throws Exception {
+        Path source=Path.of(System.getenv("TOEIC_STUDY4_SOURCE")).getParent().getParent().resolve(exam).resolve("server_exam.json");
+        fxRun(()->((AdminExamView)view.getCenter()).importFile(source));await("actual JSON preview",()->dialog("admin-exam-code")!=null);
+        String displayed=fx(()->((TextArea)dialog("admin-exam-content")).getText());
+        try(var original=AdminExamImport.load(source)) {
+            if(!displayed.equals(original.json)) {
+                Files.writeString(Path.of("target","preview-original-"+exam+".json"),original.json);
+                Files.writeString(Path.of("target","preview-displayed-"+exam+".json"),displayed);
+            }
+            try{AdminExamImport.parse(displayed);}
+            catch(RuntimeException failure){throw new AssertionError("Invalid preview for "+exam+"; original length="+original.json.length()+"; displayed length="+displayed.length(),failure);}
+        }
+        assertThat(fx(()->dialog("admin-exam-save").isDisabled())).as(fx(()->((Label)dialog("admin-exam-form-status")).getText())).isFalse();
+        fxRun(()->{
+            ((TextField)dialog("admin-exam-code")).setText("oicaidjt");
+            ((TextField)dialog("admin-exam-title")).setText("oicaidjt");
+            // Import must be built from the parsed source, never from the preview control's text state.
+            ((TextArea)dialog("admin-exam-content")).setText("incomplete preview");
+            ((Button)dialog("admin-exam-save")).fire();
+        });
+        await("actual crawl uploaded or rejected",()->dialog("admin-exam-content")==null || !dialog("admin-exam-save").isDisabled());
+        String failure=fx(()->dialog("admin-exam-form-status")==null?"":((Label)dialog("admin-exam-form-status")).getText());
+        assertThat(failure).isEmpty();
+        assertThat(calls).anyMatch(c->c.startsWith("POST /api/v2/admin/exams/bundle"));
     }
     private static Node dialog(String id){for(Window w:Window.getWindows())if(w.isShowing()&&w.getScene()!=null){var n=w.getScene().lookup("#"+id);if(n!=null)return n;}return null;}
     private static void screenshot(Node node,String filename) throws Exception {
