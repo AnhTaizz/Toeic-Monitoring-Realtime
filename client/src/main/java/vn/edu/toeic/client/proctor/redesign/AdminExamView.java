@@ -66,6 +66,8 @@ public final class AdminExamView extends VBox implements AutoCloseable {
     private void editor(ExamSummary exam,String content,AdminExamImport prepared) {
         if(closed || dialog!=null){if(prepared!=null)prepared.close();return;}
         imported=prepared;boolean metadataOnly=exam!=null && exam.inUse();
+        // Import keeps the parsed document as its source of truth. The preview is never read back as input.
+        JsonObject[] document={AdminExamImport.parse(content)};
         var form=new Dialog<Void>();dialog=form;form.initOwner(getScene().getWindow());style(form);form.setResizable(true);
         form.setTitle(exam==null?"Import đề thi từ JSON":"Sửa đề thi");
         form.setHeaderText(exam==null?"Kiểm tra đề trước khi import":exam.title());
@@ -73,7 +75,7 @@ public final class AdminExamView extends VBox implements AutoCloseable {
         code.setId("admin-exam-code");title.setId("admin-exam-title");description.setId("admin-exam-description");
         code.setEditable(exam==null);code.setPrefColumnCount(22);title.setPrefColumnCount(38);
         TextArea body=new TextArea(content);body.setId("admin-exam-content");body.setPrefRowCount(14);body.setWrapText(false);
-        body.setEditable(!metadataOnly);body.setStyle("-fx-font-family: monospace; -fx-font-size: 12px;");
+        body.setEditable(exam!=null&&!metadataOnly);body.setStyle("-fx-font-family: monospace; -fx-font-size: 12px;");
         Label summary=Ui.wrapping("","muted"),error=Ui.wrapping("");error.setId("admin-exam-form-status");
         var saveType=new ButtonType(exam==null?"Import đề thi":"Lưu thay đổi",ButtonBar.ButtonData.OK_DONE);
         var cancelType=new ButtonType("Hủy",ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -83,7 +85,7 @@ public final class AdminExamView extends VBox implements AutoCloseable {
         Runnable read=()->{
             if(syncing[0])return;syncing[0]=true;
             try {
-                var tree=AdminExamImport.parse(body.getText());var meta=metadata(tree);
+                var tree=exam==null?document[0]:AdminExamImport.parse(body.getText());var meta=metadata(tree);
                 String id=meta.get("examId").getAsString();
                 if(exam!=null && !exam.examId().equals(id))throw new IllegalArgumentException("Mã đề trong JSON phải giữ nguyên: "+exam.examId());
                 code.setText(id);title.setText(meta.get("title").getAsString());
@@ -96,15 +98,16 @@ public final class AdminExamView extends VBox implements AutoCloseable {
         };
         Runnable write=()->{
             if(syncing[0] || metadataOnly)return;
-            try{var tree=JSON.fromJson(body.getText(),JsonObject.class);var meta=metadata(tree);
-                if(exam==null)meta.addProperty("examId",code.getText().strip());
-                meta.addProperty("title",title.getText());
-                if(description.getText().isBlank())meta.add("description",JsonNull.INSTANCE);else meta.addProperty("description",description.getText());
-                syncing[0]=true;body.setText(JSON.toJson(tree));AdminExamImport.parse(body.getText());save.setDisable(false);error.setText("");
-            }catch(RuntimeException bad){save.setDisable(true);error.setText("Nhập mã đề, tên đề và JSON hợp lệ trước khi lưu.");}
+            try{var tree=exam==null?importDocument(document[0],code.getText(),title.getText(),description.getText()):JSON.fromJson(body.getText(),JsonObject.class);
+                if(exam!=null){var meta=metadata(tree);meta.addProperty("title",title.getText());
+                    if(description.getText().isBlank())meta.add("description",JsonNull.INSTANCE);else meta.addProperty("description",description.getText());}
+                String rendered=JSON.toJson(tree);AdminExamImport.parse(rendered);
+                syncing[0]=true;body.setText(rendered);save.setDisable(false);error.setText("");
+            }catch(RuntimeException bad){save.setDisable(true);error.setText(bad.getMessage()==null?"Nhập mã đề, tên đề và JSON hợp lệ trước khi lưu.":bad.getMessage());}
             finally{syncing[0]=false;}
         };
-        body.textProperty().addListener((o,a,b)->read.run());code.textProperty().addListener((o,a,b)->write.run());title.textProperty().addListener((o,a,b)->write.run());description.textProperty().addListener((o,a,b)->write.run());
+        if(exam!=null)body.textProperty().addListener((o,a,b)->read.run());
+        code.textProperty().addListener((o,a,b)->write.run());title.textProperty().addListener((o,a,b)->write.run());description.textProperty().addListener((o,a,b)->write.run());
         read.run();
         Button replace=new Button("Chọn JSON thay thế");replace.setId("admin-exam-import");replace.setDisable(metadataOnly);
         replace.setOnAction(e->{Path file=chooseFile(form.getDialogPane().getScene().getWindow());if(file==null)return;
@@ -113,10 +116,10 @@ public final class AdminExamView extends VBox implements AutoCloseable {
                 if(exam!=null && !exam.examId().equals(metadata(AdminExamImport.parse(replacement.json)).get("examId").getAsString())) {
                     replacement.close();form.getDialogPane().setDisable(false);error.setText("Mã đề thay thế phải là "+exam.examId());return;
                 }
-                if(imported!=null)imported.close();imported=replacement;body.setText(replacement.json);read.run();form.getDialogPane().setDisable(false);
+                if(imported!=null)imported.close();imported=replacement;document[0]=AdminExamImport.parse(replacement.json);body.setText(replacement.json);read.run();form.getDialogPane().setDisable(false);
             },message->{form.getDialogPane().setDisable(false);error.setText(message);});
         });
-        var details=new TitledPane("Nội dung đề (JSON)",body);details.setExpanded(exam!=null&&!metadataOnly);
+        var details=new TitledPane(exam==null?"Xem trước nội dung đề (chỉ đọc)":"Nội dung đề (JSON)",body);details.setExpanded(exam!=null&&!metadataOnly);
         VBox fields=new VBox(12,new HBox(12,field("Mã đề",code),field("Tên đề thi",title)),field("Mô tả",description),summary);
         if(metadataOnly)fields.getChildren().add(Ui.wrapping("Đề đã dùng trong ca thi: bạn có thể sửa tên và mô tả. Nội dung câu hỏi, đáp án được giữ nguyên để bảo toàn kết quả.","muted"));
         else fields.getChildren().addAll(replace,details);
@@ -125,8 +128,10 @@ public final class AdminExamView extends VBox implements AutoCloseable {
         form.getDialogPane().setContent(scroll);
         save.addEventFilter(javafx.event.ActionEvent.ACTION,e->{
             e.consume();if(busy)return;
-            String payload=body.getText(),name=title.getText().strip(),desc=description.getText();
-            try{if(name.isEmpty())throw new IllegalArgumentException("Nhập tên đề thi.");if(!metadataOnly)AdminExamImport.parse(payload);}
+            String payload,name=title.getText().strip(),desc=description.getText();
+            try{if(name.isEmpty())throw new IllegalArgumentException("Nhập tên đề thi.");
+                payload=exam==null?JSON.toJson(importDocument(document[0],code.getText(),name,desc)):body.getText();
+                if(!metadataOnly)AdminExamImport.parse(payload);}
             catch(RuntimeException bad){error.setText(bad.getMessage());return;}
             fields.setDisable(true);save.setDisable(true);form.getDialogPane().lookupButton(cancelType).setDisable(true);error.setText("Đang gửi đề và media lên server…");
             AdminExamImport source=imported;
@@ -155,6 +160,15 @@ public final class AdminExamView extends VBox implements AutoCloseable {
     }
     private void controls(){find.setDisable(busy);search.setDisable(busy);first.setDisable(busy);next.setDisable(busy||cursor==null);add.setDisable(busy||!available);table.setDisable(busy);}
     private static JsonObject metadata(JsonObject tree){return tree.has("exam")?tree.getAsJsonObject("exam"):tree;}
+    private static JsonObject importDocument(JsonObject source,String code,String title,String description) {
+        if(code==null||code.isBlank())throw new IllegalArgumentException("Nhập mã đề thi.");
+        if(title==null||title.isBlank())throw new IllegalArgumentException("Nhập tên đề thi.");
+        if(source.has("exam")&&!code.strip().matches("[A-Za-z0-9][A-Za-z0-9_-]{0,127}"))
+            throw new IllegalArgumentException("Mã đề chỉ gồm chữ, số, dấu gạch ngang hoặc gạch dưới, tối đa 128 ký tự.");
+        var copy=source.deepCopy();var meta=metadata(copy);meta.addProperty("examId",code.strip());meta.addProperty("title",title.strip());
+        if(description==null||description.isBlank())meta.add("description",JsonNull.INSTANCE);else meta.addProperty("description",description);
+        return copy;
+    }
     private static VBox field(String label,javafx.scene.Node node){return new VBox(5,Ui.label(label,"field-label"),node);}
     private static void style(Dialog<?> dialog){dialog.getDialogPane().getStyleClass().add("proctor-redesign");dialog.getDialogPane().getStylesheets().add(AdminExamView.class.getResource(ProctorRedesignView.STYLESHEET).toExternalForm());}
     @Override public void close(){closed=true;if(dialog!=null){dialog.setOnCloseRequest(null);dialog.close();dialog=null;}worker.shutdownNow();api.close();}

@@ -13,6 +13,8 @@
 
 ![Xem trước thông tin đề trước khi import](admin-exam-import.png)
 
+Khi import, phần JSON là bản xem trước chỉ đọc. Dữ liệu gửi được dựng trực tiếp từ đề đã đọc và các ô mã/tên/mô tả tại thời điểm bấm Import, không đọc ngược từ ô xem trước. Muốn thay nội dung đề nguồn, chọn JSON thay thế. Màn hình Sửa đề có sẵn vẫn cho chỉnh JSON.
+
 Chức năng không tải đường dẫn web. Nếu chỉ có URL trong JSON, cần crawl/tải media về đúng các đường dẫn tương đối trước. Không thay nội dung tệp crawl gốc.
 
 Ảnh WebP (kể cả được lưu với đuôi `.jpg`) được tự chuyển thành PNG trong gói gửi lên server. Không cần tự đổi định dạng ảnh trước khi import.
@@ -28,6 +30,8 @@ JSON nội bộ v1/v2 vẫn được hỗ trợ. Nếu chọn `rich-import.json`
 ## Giải thích lỗi và cấu trúc dữ liệu
 
 `Không tìm thấy tài nguyên API` là phản hồi 404 khi server chưa có route quản lý đề, không phải lỗi ràng buộc DB. Phải cập nhật **cả server và client** của nhánh này hoặc chọn đúng địa chỉ server. Client mới hiển thị hướng dẫn cập nhật server và khóa Import khi chưa tải được danh sách.
+
+Lỗi cú pháp JSON có dòng/cột nếu bộ đọc cung cấp vị trí; thiếu mã, tên hoặc danh sách câu hỏi được báo riêng. Lỗi trả từ API có tiền tố `Server (HTTP ...)` để phân biệt với lỗi đọc tệp/form trên client.
 
 DB lưu nhiều đề theo `exam_id`; nội dung không bị gắn cứng vào một đề mẫu. Tuy nhiên bộ đọc TOEIC v2 yêu cầu đủ 200 câu, đúng phân bố Part 1–7 (6/25/39/30/30/16/54), nhóm câu, đáp án và media hợp lệ. Có đủ 200 câu trong JSON crawl chưa có nghĩa JSON đó đã là schema import nội bộ. Bộ chuyển STUDY4 xử lý bước này; v1 dành cho đề ngắn vẫn dùng schema v1.
 

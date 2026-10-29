@@ -52,13 +52,24 @@ public final class AdminExamImport implements AutoCloseable {
             if(json.has("items")) {
                 if(!json.has("id") || !json.has("title"))throw new IllegalArgumentException("JSON crawl thiếu id hoặc title.");return json;
             }
+            if(json.has("exam")&&!json.get("exam").isJsonObject())throw new IllegalArgumentException("Trường exam phải là một đối tượng JSON.");
             var metadata=json.has("exam")?json.getAsJsonObject("exam"):json;
-            if(!metadata.has("examId") || metadata.get("examId").getAsString().isBlank() || !metadata.has("title")
-                    || metadata.get("title").getAsString().isBlank() || !json.has("questions") || json.getAsJsonArray("questions").isEmpty())throw new IllegalArgumentException("JSON thiếu mã đề, tên đề hoặc danh sách câu hỏi.");
+            if(!string(metadata,"examId"))throw new IllegalArgumentException("JSON thiếu mã đề hợp lệ (examId).");
+            if(!string(metadata,"title"))throw new IllegalArgumentException("JSON thiếu tên đề hợp lệ (title).");
+            if(!json.has("questions")||!json.get("questions").isJsonArray()||json.getAsJsonArray("questions").isEmpty())
+                throw new IllegalArgumentException("Trường questions phải là danh sách câu hỏi không rỗng.");
             if(json.has("schemaVersion") && (!json.get("schemaVersion").toString().equals("2") || !json.has("exam")))
                 throw new IllegalArgumentException("JSON này chưa phải định dạng import v2. Chọn server_exam.json hoặc rich-import.json.");
             return json;
-        }catch(JsonParseException|IllegalStateException|NullPointerException failure){throw new IllegalArgumentException("JSON không hợp lệ hoặc thiếu mã đề, tên đề, câu hỏi.",failure);}
+        }catch(JsonParseException failure){
+            String details=String.valueOf(failure.getMessage());
+            var position=java.util.regex.Pattern.compile("line (\\d+) column (\\d+)").matcher(details);
+            String message=position.find()?"JSON sai cú pháp ở dòng "+position.group(1)+", cột "+position.group(2)+".":"JSON sai cú pháp: kiểm tra dấu ngoặc, dấu phẩy và dấu nháy.";
+            throw new IllegalArgumentException(message,failure);
+        }catch(IllegalStateException|NullPointerException failure){throw new IllegalArgumentException("Cấu trúc JSON không đúng: cần đối tượng đề và danh sách questions.",failure);}
+    }
+    private static boolean string(JsonObject object,String field) {
+        var value=object.get(field);return value!=null&&value.isJsonPrimitive()&&value.getAsJsonPrimitive().isString()&&!value.getAsString().isBlank();
     }
     public Path bundle(String payload) throws IOException {
         if(bundle==null)return null;

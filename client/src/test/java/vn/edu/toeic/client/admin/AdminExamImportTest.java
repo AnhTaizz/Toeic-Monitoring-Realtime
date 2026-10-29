@@ -53,6 +53,14 @@ class AdminExamImportTest {
             assertThatThrownBy(()->prepared.bundle(graph.toString())).hasMessageContaining("missing-audio.wav").hasMessageContaining("chọn lại");
         }
     }
+    @Test void malformedJsonAndMissingFieldsHaveDifferentMessages() {
+        assertThatThrownBy(()->AdminExamImport.parse("{\n \"title\":\"test\",\n broken\n}"))
+                .hasMessageContaining("sai cú pháp").hasMessageContaining("dòng");
+        assertThatThrownBy(()->AdminExamImport.parse("{\"examId\":\"id\",\"questions\":[{}]}"))
+                .hasMessageContaining("title");
+        assertThatThrownBy(()->AdminExamImport.parse("{\"examId\":\"id\",\"title\":\"Title\",\"questions\":null}"))
+                .hasMessageContaining("questions");
+    }
     public static Path mockCrawl(Path root) throws Exception {
         Path assets=Path.of("..","docs","plan-v2","fixtures","ex02","assets");
         Path wave=assets.resolve("audio/mock-ex02-200/001-g001.wav"),image=assets.resolve("images/mock-ex02-200/mock-grid.png");

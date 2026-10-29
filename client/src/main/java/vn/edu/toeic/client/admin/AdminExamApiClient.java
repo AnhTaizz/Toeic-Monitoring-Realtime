@@ -58,13 +58,13 @@ public final class AdminExamApiClient implements AutoCloseable {
             if(bytes.length>MAX_BYTES)throw new IllegalStateException("Phản hồi server quá lớn.");
             String text=new String(bytes,StandardCharsets.UTF_8);
             if(response.statusCode()!=expected) {
-                String message="Server từ chối thao tác (HTTP "+response.statusCode()+").";
+                String message="Không thực hiện được thao tác.";
                 try {var error=JsonParser.parseString(text).getAsJsonObject().getAsJsonObject("error");
                     if(error!=null && error.has("message"))message=error.get("message").getAsString();
                 }catch(RuntimeException ignored){}
                 if(response.statusCode()==404 && (!path.startsWith("/item") || message.contains("tài nguyên API")))
                     message="Server đang kết nối chưa có API quản lý đề thi. Hãy cập nhật server cùng phiên bản với client hoặc kiểm tra địa chỉ server; thay đổi JSON/DB không sửa được lỗi này.";
-                throw new AdminAccountApiClient.Rejected(response.statusCode(),message);
+                throw new AdminAccountApiClient.Rejected(response.statusCode(),"Server (HTTP "+response.statusCode()+"): "+message);
             }
             if(expected!=204 && !response.headers().firstValue("Content-Type").orElse("").contains("application/json"))
                 throw new IllegalStateException("Phản hồi server không phải JSON.");

@@ -172,6 +172,46 @@ class AdminExamPostgresTest {
             assertThat(number("SELECT count(*) FROM exam_questions WHERE exam_id='oicaidjt'")).isEqualTo(200);
         }
     }
+    @Test
+    @EnabledIfEnvironmentVariable(named="TOEIC_STUDY4_SOURCE",matches=".+")
+    @EnabledIfEnvironmentVariable(named="TOEIC_CANDIDATE_GUI",matches="true")
+    void actualAdminFormCanRenameAndImportTheCrawlIntoTheRealServer() throws Exception {
+        try{javafx.application.Platform.startup(()->{});}catch(IllegalStateException alreadyStarted){}
+        javafx.application.Platform.setImplicitExit(false);
+        var login=new vn.edu.toeic.protocol.auth.LoginResponse("v0","TEST","TEST",admin,"Bearer","2099-01-01T00:00:00Z",
+                new vn.edu.toeic.protocol.auth.LoginResponse.UserView(1,"admin-exam-test","Admin test","ADMIN"),List.of());
+        var root=adminFx(()->new vn.edu.toeic.client.proctor.redesign.AdminAccountView(base,login,()->{},()->{}));
+        var stage=adminFx(()->{var window=new javafx.stage.Stage();window.setScene(new javafx.scene.Scene(root,1366,820));window.show();
+            ((javafx.scene.control.ToggleButton)root.lookup("#admin-exam-nav")).fire();return window;});
+        try {
+            awaitAdmin(()->root.lookup("#admin-exam-add")!=null&&!root.lookup("#admin-exam-add").isDisabled());
+            adminFx(()->{var page=root.getCenter();var method=page.getClass().getDeclaredMethod("importFile",Path.class);method.setAccessible(true);
+                method.invoke(page,Path.of(env("TOEIC_STUDY4_SOURCE")));return null;});
+            awaitAdmin(()->adminControl("admin-exam-code")!=null);
+            adminFx(()->{
+                ((javafx.scene.control.TextField)adminControl("admin-exam-code")).setText("oicaidjt");
+                ((javafx.scene.control.TextField)adminControl("admin-exam-title")).setText("oicaidjt");
+                ((javafx.scene.control.Button)adminControl("admin-exam-save")).fire();return null;
+            });
+            awaitAdmin(()->adminControl("admin-exam-save")==null || !adminControl("admin-exam-save").isDisabled());
+            String error=adminFx(()->adminControl("admin-exam-form-status")==null?"":((javafx.scene.control.Label)adminControl("admin-exam-form-status")).getText());
+            assertThat(error).isEmpty();
+            assertThat(number("SELECT count(*) FROM exam_questions WHERE exam_id='oicaidjt'")).isEqualTo(200);
+            assertThat(number("SELECT count(*) FROM exam_media_assets WHERE exam_id='oicaidjt'")).isEqualTo(65);
+            assertThat(tree(check(call("GET",item("oicaidjt"),null,admin),200)).getAsJsonObject("exam").get("title").getAsString()).isEqualTo("oicaidjt");
+        } finally {adminFx(()->{root.close();stage.close();return null;});}
+    }
+    private static javafx.scene.Node adminControl(String id) {
+        for(var window:javafx.stage.Window.getWindows())if(window.isShowing()&&window.getScene()!=null){var node=window.getScene().lookup("#"+id);if(node!=null)return node;}return null;
+    }
+    private static <T> T adminFx(java.util.concurrent.Callable<T> action) throws Exception {
+        var future=new java.util.concurrent.CompletableFuture<T>();javafx.application.Platform.runLater(()->{try{future.complete(action.call());}catch(Throwable failure){future.completeExceptionally(failure);}});
+        return future.get(20,java.util.concurrent.TimeUnit.SECONDS);
+    }
+    private static void awaitAdmin(java.util.concurrent.Callable<Boolean> condition) throws Exception {
+        long until=System.nanoTime()+java.util.concurrent.TimeUnit.SECONDS.toNanos(40);
+        while(System.nanoTime()<until){if(adminFx(condition))return;Thread.sleep(50);}fail("Admin form did not complete its operation");
+    }
     private Path fixtureBundle(JsonObject graph,boolean corrupt) throws Exception {
         Path file=temporary.resolve("bundle-"+UUID.randomUUID()+".zip");
         try(var zip=new ZipOutputStream(Files.newOutputStream(file))) {
