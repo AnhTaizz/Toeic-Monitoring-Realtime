@@ -7,6 +7,8 @@ import java.net.http.*;
 import java.nio.file.*;
 import java.sql.*;
 import java.util.*;
+import java.util.zip.*;
+import vn.edu.toeic.client.admin.AdminExamImport;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.io.TempDir;
@@ -119,6 +121,69 @@ class AdminExamPostgresTest {
         assertThat(number("SELECT count(*) FROM exams WHERE exam_id='same-id'")).isEqualTo(1);
         assertThat(number("SELECT count(*) FROM exam_questions WHERE exam_id='same-id'")).isEqualTo(1);
     }
+    @Test void bundleUploadsMediaAndRollsBackBothFilesAndDatabaseOnBadReplacement() throws Exception {
+        var graph=RichExamFixtures.tree();String id=graph.getAsJsonObject("exam").get("examId").getAsString();
+        var request=RichExamFixtures.request();
+        for(var media:request.media())Files.delete(temporary.resolve(media.mediaType().name().equals("AUDIO")?"audio":"images").resolve(id).resolve(media.localFile()));
+        check(upload("POST",API+"/bundle",fixtureBundle(graph,false),admin),201);
+        var saved=tree(check(call("GET",item(id),null,admin),200));
+        var first=request.media().getFirst();Path firstFile=temporary.resolve(first.mediaType().name().equals("AUDIO")?"audio":"images").resolve(id).resolve(first.localFile());
+        byte[] original=Files.readAllBytes(firstFile);
+        graph.getAsJsonObject("exam").addProperty("title","Changed upload");
+        check(upload("PUT",API+"/bundle?examId="+id,fixtureBundle(graph,true),admin),409);
+        assertThat(Files.readAllBytes(firstFile)).isEqualTo(original);
+        sameGraph(tree(check(call("GET",item(id),null,admin),200)),saved);
+        check(upload("PUT",API+"/bundle?examId="+id,fixtureBundle(graph,false),admin),200);
+        assertThat(tree(check(call("GET",item(id),null,admin),200)).getAsJsonObject("exam").get("title").getAsString()).isEqualTo("Changed upload");
+        check(upload("POST",API+"/bundle",fixtureBundle(graph,false),admin),409);
+    }
+    @Test void bundleRejectsTraversalAndNonAdminBeforeWritingAnyMedia() throws Exception {
+        Path malicious=temporary.resolve("unsafe.zip");try(var zip=new ZipOutputStream(Files.newOutputStream(malicious))) {
+            zip.putNextEntry(new ZipEntry("../outside.txt"));zip.write(new byte[]{1});zip.closeEntry();
+        }
+        check(upload("POST",API+"/bundle",malicious,proctor),403);
+        check(upload("POST",API+"/bundle",malicious,candidate),403);
+        check(upload("POST",API+"/bundle",malicious,admin),400);
+        assertThat(Files.exists(temporary.resolve("outside.txt"))).isFalse();assertThat(number("SELECT count(*) FROM exams")).isZero();
+    }
+    @Test void usedExamMetadataCanBeEditedWhileItsQuestionGraphRemainsProtected() throws Exception {
+        check(call("POST",API+"?version=1",legacy("metadata").toString(),admin),201);
+        var originalQuestions=tree(check(call("GET",item("metadata"),null,admin),200)).getAsJsonArray("questions");
+        try(var s=db.createStatement()){s.execute("INSERT INTO exam_sessions(session_id,exam_id,title,duration_seconds,created_by) SELECT 'metadata-session','metadata','Ca thi',60,id FROM user_accounts WHERE username='proctor1'");}
+        check(call("PATCH",item("metadata"),"{\"title\":\"Renamed\",\"description\":\"Updated description\"}",admin),200);
+        var actual=tree(check(call("GET",item("metadata"),null,admin),200));assertThat(actual.get("title").getAsString()).isEqualTo("Renamed");
+        assertThat(actual.getAsJsonArray("questions")).isEqualTo(originalQuestions);
+        check(call("PATCH",item("metadata"),"{\"title\":\"Bad\",\"description\":\"\",\"questions\":[]}",admin),400);
+        check(call("PUT",item("metadata")+"&version=1",legacy("metadata").toString(),admin),409);
+        check(call("PATCH",item("metadata"),"{\"title\":\"Bad\",\"description\":\"\"}",candidate),403);
+    }
+    @Test @EnabledIfEnvironmentVariable(named="TOEIC_STUDY4_SOURCE",matches=".+")
+    void actualStudy4JsonAndDesktopMediaReachTheServerThroughTheUploadEndpoint() throws Exception {
+        try(var prepared=AdminExamImport.load(Path.of(env("TOEIC_STUDY4_SOURCE")))) {
+            var graph=AdminExamImport.parse(prepared.json);String id=graph.getAsJsonObject("exam").get("examId").getAsString();
+            check(upload("POST",API+"/bundle",prepared.bundle(prepared.json),admin),201);
+            var actual=tree(check(call("GET",item(id),null,admin),200));sameGraph(actual,graph);
+            assertThat(number("SELECT count(*) FROM exam_questions")).isEqualTo(200);
+        }
+    }
+    private Path fixtureBundle(JsonObject graph,boolean corrupt) throws Exception {
+        Path file=temporary.resolve("bundle-"+UUID.randomUUID()+".zip");
+        try(var zip=new ZipOutputStream(Files.newOutputStream(file))) {
+            zip.putNextEntry(new ZipEntry("rich-import.json"));zip.write(graph.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));zip.closeEntry();
+            int index=0;
+            for(var media:RichExamFixtures.request().media()) {
+                String folder=media.mediaType().name().equals("AUDIO")?"audio":"images";
+                byte[] bytes=Files.readAllBytes(RichExamFixtures.ROOT.resolve("assets").resolve(folder).resolve("mock-ex02-200").resolve(media.localFile()));
+                if(corrupt && index++==0)bytes[bytes.length-1]^=1;
+                zip.putNextEntry(new ZipEntry(folder+"/mock-ex02-200/"+media.localFile()));zip.write(bytes);zip.closeEntry();
+            }
+        }
+        return file;
+    }
+    private HttpResponse<String> upload(String method,String path,Path zip,String token) throws Exception {
+        return http.send(HttpRequest.newBuilder(URI.create(base+path)).timeout(java.time.Duration.ofSeconds(60))
+                .header("Authorization","Bearer "+token).header("Content-Type","application/zip").method(method,HttpRequest.BodyPublishers.ofFile(zip)).build(),HttpResponse.BodyHandlers.ofString());
+    }
     static JsonObject legacy(String id) {
         var tree=JsonParser.parseString("""
                 {"examId":"placeholder","title":"Đề mẫu","description":"Mô tả","questions":[{
@@ -133,6 +198,11 @@ class AdminExamPostgresTest {
     }
     private static JsonElement normalize(JsonObject graph) {
         var copy=graph.deepCopy();var aliases=new HashMap<String,String>();
+        if(copy.has("media")) {
+            var sorted=new ArrayList<JsonElement>();copy.getAsJsonArray("media").forEach(sorted::add);
+            sorted.sort(Comparator.comparing(m->m.getAsJsonObject().get("mediaId").getAsString()));
+            var array=new JsonArray();sorted.forEach(array::add);copy.add("media",array);
+        }
         if(copy.has("sources")){var sources=copy.getAsJsonArray("sources");for(int i=0;i<sources.size();i++)
             aliases.put(sources.get(i).getAsJsonObject().get("sourceRef").getAsString(),"source-"+i);}
         normalizeFields(copy,aliases);return copy;

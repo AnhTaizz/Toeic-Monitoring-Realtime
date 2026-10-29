@@ -22,8 +22,9 @@ public class AdminExamController {
     private final AdminExamService service;
     private final AuthorizationService authorization;
     private final RichExamJson json;
-    public AdminExamController(AdminExamService service,AuthorizationService authorization,RichExamJson json) {
-        this.service=service;this.authorization=authorization;this.json=json;
+    private final AdminExamBundleService bundles;
+    public AdminExamController(AdminExamService service,AuthorizationService authorization,RichExamJson json,AdminExamBundleService bundles) {
+        this.service=service;this.authorization=authorization;this.json=json;this.bundles=bundles;
     }
     @GetMapping
     public ResponseEntity<ExamPage> list(HttpServletRequest request,@RequestParam(defaultValue="") String search,
@@ -48,6 +49,22 @@ public class AdminExamController {
     @DeleteMapping("/item")
     public ResponseEntity<Void> delete(HttpServletRequest request,@RequestParam String examId) {
         service.delete(user(request),examId);return ResponseEntity.noContent().cacheControl(CacheControl.noStore()).build();
+    }
+    @PatchMapping("/item")
+    public ResponseEntity<Map<String,String>> metadata(HttpServletRequest request,@RequestParam String examId,@RequestBody Map<String,Object> body) {
+        var admin=user(request);
+        if(body==null || !body.keySet().equals(java.util.Set.of("title","description")) || !(body.get("title") instanceof String title)
+                || body.get("description")!=null && !(body.get("description") instanceof String))throw ExamApiException.invalidInput("Chỉ cập nhật tên đề và mô tả.");
+        service.metadata(admin,examId,title,(String)body.get("description"));
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(Map.of("status","UPDATED"));
+    }
+    @RequestMapping(value="/bundle",method={RequestMethod.POST,RequestMethod.PUT},consumes="application/zip")
+    public ResponseEntity<Map<String,String>> bundle(HttpServletRequest request,@RequestParam(required=false) String examId) throws IOException {
+        var admin=user(request);
+        if("PUT".equals(request.getMethod()) && examId==null || "POST".equals(request.getMethod()) && examId!=null)
+            throw ExamApiException.invalidInput("Chọn Import để thêm đề hoặc Sửa để thay nội dung đề.");
+        bundles.upload(admin,examId,request.getInputStream());
+        return ResponseEntity.status(examId==null?HttpStatus.CREATED:HttpStatus.OK).cacheControl(CacheControl.noStore()).body(Map.of("status",examId==null?"CREATED":"UPDATED"));
     }
     @ExceptionHandler(org.springframework.dao.DuplicateKeyException.class)
     ResponseEntity<ApiErrorResponse> duplicate() {

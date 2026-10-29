@@ -13,4 +13,4 @@ java -cp "tools/study4-adapter/target/classes;protocol/target/classes;$env:USERP
 
 Output gồm `rich-import.json`, `manifest.json`, `audio/<examId>/` và `images/<examId>/`. `target/` đã bị Git ignore. Chỉ dùng cho nội bộ theo xác nhận của người cung cấp; không phát hành lại nội dung bên thứ ba.
 
-Không thêm thư viện mới: module dùng Gson, JUnit và AssertJ đã có trong dependency management của dự án.
+Desktop Admin dùng `convertServerFile` để đọc riêng `server_exam.json`, không cần client export. Các ảnh WebP (kể cả mang đuôi `.jpg`) được đọc bằng [TwelveMonkeys ImageIO](https://github.com/haraldk/TwelveMonkeys) rồi chuyển sang PNG trong thư mục staging; ảnh crawl gốc không thay đổi. Client shaded JAR cần `ServicesResourceTransformer` để giữ đăng ký ImageIO SPI.
