@@ -78,7 +78,7 @@ try {
     foreach($key in $defaults.Keys){if(-not[Environment]::GetEnvironmentVariable($key,'Process')){[Environment]::SetEnvironmentVariable($key,$defaults[$key],'Process')}}
     $env:JAVA_HOME=$JavaHome;$env:PATH=(Join-Path $JavaHome 'bin')+';'+$env:PATH
     $env:JAVA_TOOL_OPTIONS='-Duser.timezone=UTC';$env:TOEIC_PG_INTEGRATION='true';$env:TOEIC_PROCTOR_GUI='true';$env:TOEIC_INSTALLED_CLIENT=$installRoot
-    $arguments=@('-B','-o',"-Dmaven.repo.local=$env:USERPROFILE/.m2/repository",'-pl','protocol,windows-observer,client,monitoring-spike,server','clean','package')
+    $arguments=@('-B','-o',"-Dmaven.repo.local=$env:USERPROFILE/.m2/repository",'-pl','protocol,windows-observer,tools/study4-adapter,client,monitoring-spike,server','clean','package')
     if(-not $FullSuite){$arguments+=@('-Dtest=ListeningRuntimePostgresTest#installedProductionClientUsesBundledRuntimeAndRealAudioLifecycle','-Dsurefire.failIfNoSpecifiedTests=false')}
     $ErrorActionPreference='Continue'
     & mvn @arguments *> (Join-Path $run 'tests.log');$testResult=$LASTEXITCODE

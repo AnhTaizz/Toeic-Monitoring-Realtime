@@ -1,36 +1,57 @@
-# Quản lý đề thi cho Admin
+# Quản lý đề thi: Import JSON và Sửa
 
-Nhánh gốc: `feat/fix-room-ui-history-fullscreen` (`073cbf0`).
+Đăng nhập ADMIN → **Quản lý đề thi** dưới **Quản lý tài khoản**. Màn hình chỉ có **Import JSON** và **Sửa**; không có form tạo đề thủ công hoặc nút xóa.
 
-Đăng nhập bằng tài khoản ADMIN, chọn **Quản lý đề thi** ngay dưới **Quản lý tài khoản**.
+![Danh sách quản lý đề thi](admin-exam-management.png)
 
-![Giao diện quản lý đề thi với dữ liệu minh họa](admin-exam-management.png)
+## Import từ STUDY4
 
-- Tìm theo mã hoặc tên đề, xem danh sách phân trang 20 đề.
-- **Thêm đề thi**: nhập mã, tên, mô tả. Dùng **Biên soạn câu hỏi** để thêm/sửa/xóa câu hỏi v1, nhập Part, đoạn văn, tên tệp nghe, lựa chọn và đáp án; bấm **Lưu câu hỏi**, **Áp dụng**, sau đó **Lưu đề thi**.
-- **Nhập tệp JSON** hỗ trợ cả định dạng import v1 và v2 TOEIC 200 câu. Đề v2 giữ nguyên cấu trúc nhóm, nguồn, hình ảnh, âm thanh và đáp án; có thể sửa nội dung JSON trước khi lưu.
-- **Sửa** tải toàn bộ nội dung đề; mã đề không đổi. **Xóa** yêu cầu xác nhận.
-- Đề đã gắn với bất kỳ ca thi hoặc lượt thi nào chỉ được **Xem**. Muốn sửa nội dung, tạo đề mới với mã khác. Không xóa bài làm hoặc lịch sử kết quả.
-- Tệp âm thanh/hình ảnh phải có sẵn trên server theo cơ chế import hiện tại; chức năng này không tải tệp media từ máy admin lên server.
+1. Giữ nguyên `server_exam.json` và thư mục `media` đã crawl trong cùng thư mục đề. Những đường dẫn như `media\audio\...mp3` và `media\images\...jpg` trong JSON phải trỏ tới các tệp có thật.
+2. Bấm **Import JSON**, chọn `server_exam.json`. Không chọn `client_exam.json` vì tệp này không có đáp án đúng. Không cần có bản client export cạnh JSON.
+3. Ứng dụng chuyển cấu trúc STUDY4 sang đề thi, chuẩn bị media và hiển thị mã đề, tên, số câu, số tệp sẽ gửi. Có thể đổi tên/mô tả trước khi import. Mã đề lấy từ JSON để thống nhất đường dẫn media.
+4. Bấm **Import đề thi**. Client gửi JSON cùng âm thanh/hình ảnh lên server; bạn không cần tự sao chép media sang máy server. Server kiểm tra toàn bộ đề/media trước khi xác nhận thành công.
 
-## API
+![Xem trước thông tin đề trước khi import](admin-exam-import.png)
 
-Tất cả endpoint yêu cầu Bearer token có role ADMIN, phản hồi không được cache.
+Chức năng không tải đường dẫn web. Nếu chỉ có URL trong JSON, cần crawl/tải media về đúng các đường dẫn tương đối trước. Không thay nội dung tệp crawl gốc.
+
+Ảnh WebP (kể cả được lưu với đuôi `.jpg`) được tự chuyển thành PNG trong gói gửi lên server. Không cần tự đổi định dạng ảnh trước khi import.
+
+JSON nội bộ v1/v2 vẫn được hỗ trợ. Nếu chọn `rich-import.json`, media phải đã được provision trên server theo cơ chế cũ; chuyển cả bộ crawl bằng `server_exam.json` là luồng tự gửi media.
+
+## Sửa đề có sẵn
+
+- **Đề chưa sử dụng:** sửa tên, mô tả và nội dung JSON hoặc chọn JSON thay thế. Thay bằng `server_exam.json` sẽ gửi cả media mới; mã đề phải trùng đề đang sửa.
+- **Đề đã dùng trong ca thi:** sửa tên/mô tả; câu hỏi và đáp án giữ nguyên để bảo toàn bài làm và kết quả. Muốn thay nội dung cho ca thi mới, import một đề có mã khác.
+- Chỉnh tên/mô tả và chỉnh JSON được đồng bộ; không có hai bản thông tin cạnh tranh khi lưu. Import lỗi giữ lại form để sửa/thử lại. Không tự gửi lại yêu cầu ghi khi mất mạng.
+
+## Giải thích lỗi và cấu trúc dữ liệu
+
+`Không tìm thấy tài nguyên API` là phản hồi 404 khi server chưa có route quản lý đề, không phải lỗi ràng buộc DB. Phải cập nhật **cả server và client** của nhánh này hoặc chọn đúng địa chỉ server. Client mới hiển thị hướng dẫn cập nhật server và khóa Import khi chưa tải được danh sách.
+
+DB lưu nhiều đề theo `exam_id`; nội dung không bị gắn cứng vào một đề mẫu. Tuy nhiên bộ đọc TOEIC v2 yêu cầu đủ 200 câu, đúng phân bố Part 1–7 (6/25/39/30/30/16/54), nhóm câu, đáp án và media hợp lệ. Có đủ 200 câu trong JSON crawl chưa có nghĩa JSON đó đã là schema import nội bộ. Bộ chuyển STUDY4 xử lý bước này; v1 dành cho đề ngắn vẫn dùng schema v1.
+
+Không cần đổi schema DB, reset DB hoặc xóa lịch sử thi để dùng chức năng mới.
+
+## API và tính nhất quán
+
+Các route dùng Bearer token ADMIN, phản hồi `no-store`:
 
 | Phương thức | Đường dẫn | Công dụng |
 | --- | --- | --- |
-| GET | `/api/v2/admin/exams?search=...&afterExamId=...` | Danh sách, tối đa 20 đề, cursor `nextAfterExamId` |
-| GET | `/api/v2/admin/exams/item?examId=...` | Đọc đề có đáp án, chỉ admin |
-| POST | `/api/v2/admin/exams?version=1` hoặc `version=2` | Thêm đề, HTTP 201 |
-| PUT | `/api/v2/admin/exams/item?examId=...&version=1` hoặc `version=2` | Thay nội dung đề, HTTP 200 |
-| DELETE | `/api/v2/admin/exams/item?examId=...` | Xóa đề chưa sử dụng, HTTP 204 |
+| GET | `/api/v2/admin/exams?search=...&afterExamId=...` | Danh sách tối đa 20 đề |
+| GET | `/api/v2/admin/exams/item?examId=...` | Đọc đề để sửa |
+| POST | `/api/v2/admin/exams?version=1` hoặc `version=2` | Import JSON nội bộ |
+| PUT | `/api/v2/admin/exams/item?examId=...&version=1` hoặc `version=2` | Thay nội dung đề chưa sử dụng |
+| POST/PUT | `/api/v2/admin/exams/bundle` (PUT có `examId`) | Gói JSON + media, `application/zip` |
+| PATCH | `/api/v2/admin/exams/item?examId=...` | Sửa `{title, description}`, kể cả đề đã dùng |
 
-Body dùng schema import tương ứng, tối đa 2 MiB, từ chối trường lạ/trùng, kiểu sai. Version mặc định là 2. Mã đề trong query phải URL-encode.
+Client tự tạo ZIP từ crawl, người dùng chỉ chọn JSON. Server chỉ nhận `rich-import.json` và media được JSON tham chiếu; kiểm đường dẫn, số lượng, dung lượng, hash và định dạng. Giới hạn giải nén: JSON 2 MiB, mỗi audio 64 MiB, mỗi ảnh 8 MiB, tổng 322 MiB, tối đa 200 media. Proxy/tunnel phía trước server cũng cần cho phép dung lượng gói thực tế.
 
-Sửa/xóa khóa hàng `exams` bằng `FOR UPDATE`, kiểm tra tham chiếu ca thi/lượt thi trong cùng transaction. Thay nội dung và kiểm tra dữ liệu/media cùng transaction; lỗi phải rollback về đề cũ. Không đổi phân quyền endpoint import của giám thị và không thêm migration.
+Import media và ghi đề được điều phối dưới khóa theo mã đề; lỗi ghi DB/kiểm media khôi phục lại các tệp cũ và rollback đề. Đề đã dùng bị kiểm tra lại trên server trước khi đổi bất kỳ media nào.
 
 ## Kiểm thử
 
-`AdminExamPostgresTest` chạy HTTP với PostgreSQL thật khi `TOEIC_PG_INTEGRATION=true` và các biến `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `TOEIC_SEED_PASSWORD` được thiết lập. Mỗi test dùng schema riêng và xóa schema sau khi chạy.
+`AdminExamImportTest` kiểm chuyển JSON STUDY4 200 câu với media cạnh tệp, thiếu media, JSON sai và không phụ thuộc client export. `AdminExamGuiTest` kiểm hai thao tác trên giao diện, đồng bộ metadata/JSON, sửa đề đã dùng và thông báo server thiếu API.
 
-`AdminExamGuiTest` dùng JavaFX thật và HTTP stub khi `TOEIC_CANDIDATE_GUI=true`: điều hướng, khóa thao tác trên đề đã dùng, thêm/sửa, giữ form khi server từ chối, xác nhận xóa, hết phiên và biên soạn câu hỏi. Ảnh kiểm tra giao diện được lưu tại `client/target/admin-exams.png`.
+`AdminExamPostgresTest` chạy với `TOEIC_PG_INTEGRATION=true` cùng các biến `DB_*`, `TOEIC_SEED_PASSWORD`; dùng schema/media tạm riêng. Kiểm upload, rollback tệp + DB, đường dẫn không hợp lệ, phân quyền và sửa metadata. Khi `TOEIC_STUDY4_SOURCE` trỏ tới `server_exam.json` thực tế, chạy thêm toàn bộ luồng chuyển và upload bộ crawl đó. Các tệp crawl thật không được commit vào Git.

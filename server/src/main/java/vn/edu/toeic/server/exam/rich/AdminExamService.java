@@ -74,6 +74,7 @@ public class AdminExamService {
         if(request instanceof RichExamImportRequest rich)validator.validate(rich);
         String id=request instanceof RichExamImportRequest rich?rich.exam().examId():((ExamImportRequest)request).examId();
         validId(id);
+        prepareWrite(admin,replaceId,id);
         String title=request instanceof RichExamImportRequest rich?rich.exam().title():((ExamImportRequest)request).title();
         if(title==null || title.isBlank() || title.length()>255)throw ExamApiException.invalidInput("Tên đề từ 1 đến 255 ký tự.");
         Creation creation=null;
@@ -92,6 +93,28 @@ public class AdminExamService {
         } else legacy.importAdminExam(admin,(ExamImportRequest)request);
         if(creation!=null)jdbc.sql("UPDATE exams SET created_by=:author,created_at=:time WHERE exam_id=:id")
                 .param("author",creation.author()).param("time",creation.time()).param("id",id).update();
+    }
+
+    /** Also held while an uploaded bundle publishes media; all admin writers share this transaction lock. */
+    @Transactional
+    public void prepareWrite(AuthenticatedUser admin,String replaceId,String id) {
+        authorization.requireRole(admin,Role.ADMIN);validId(id);
+        jdbc.sql("SELECT pg_advisory_xact_lock(hashtextextended(:id,0))").param("id",id).query((r,n)->true).single();
+        if(replaceId!=null) {
+            if(!replaceId.equals(id))throw ExamApiException.invalidInput("Không được đổi mã đề khi sửa.");
+            version(id,true);requireUnused(id);
+        }else if(jdbc.sql("SELECT EXISTS(SELECT 1 FROM exams WHERE exam_id=:id)").param("id",id).query(Boolean.class).single())
+            throw new ExamApiException(HttpStatus.CONFLICT,ErrorCode.CONFLICT,"Mã đề đã tồn tại. Chọn Sửa ở đề có sẵn để cập nhật.",null);
+    }
+
+    @Transactional
+    public void metadata(AuthenticatedUser admin,String id,String title,String description) {
+        authorization.requireRole(admin,Role.ADMIN);
+        if(title==null || title.isBlank() || title.length()>255 || description!=null && description.length()>4000)
+            throw ExamApiException.invalidInput("Tên đề từ 1–255 ký tự, mô tả tối đa 4000 ký tự.");
+        version(id,true);
+        jdbc.sql("UPDATE exams SET title=:title,description=:description WHERE exam_id=:id")
+                .param("title",title.strip()).param("description",description).param("id",id).update();
     }
 
     @Transactional

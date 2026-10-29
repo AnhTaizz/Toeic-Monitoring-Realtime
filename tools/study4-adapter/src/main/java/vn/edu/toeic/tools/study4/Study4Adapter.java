@@ -35,14 +35,28 @@ public final class Study4Adapter {
     }
 
     public Result convert(Path input, Path output, LocalDate permissionDate) throws Exception {
+        return convert(input.resolve("server_exam.json"), output, permissionDate, true);
+    }
+
+    /** Desktop import: the server export contains the answer key; a companion client export is optional. */
+    public Result convertServerFile(Path serverFile, Path output, LocalDate permissionDate) throws Exception {
+        return convert(serverFile, output, permissionDate, false);
+    }
+
+    private Result convert(Path serverFile, Path output, LocalDate permissionDate, boolean requireClient) throws Exception {
+        serverFile=serverFile.toAbsolutePath().normalize();Path input=serverFile.getParent();
         input=input.toAbsolutePath().normalize(); output=output.toAbsolutePath().normalize();
-        Path serverFile=input.resolve("server_exam.json"), clientFile=input.resolve("client_exam.json");
-        require(Files.isRegularFile(serverFile)&&Files.isRegularFile(clientFile),"missing server/client JSON");
+        Path clientFile=input.resolve("client_exam.json");
+        require(Files.isRegularFile(serverFile)&&(!requireClient||Files.isRegularFile(clientFile)),"missing server/client JSON");
         require(!Files.exists(output)||isEmpty(output),"output must not exist or must be empty");
-        JsonObject server=read(serverFile),client=read(clientFile);
-        require(!Files.readString(clientFile,StandardCharsets.UTF_8).contains("\"correctAnswer\""),"client JSON exposes correctAnswer");
+        JsonObject server=read(serverFile);
         String examId=text(server,"id"); require(examId.matches("[A-Za-z0-9][A-Za-z0-9_-]{0,127}"),"invalid exam id");
-        List<Row> serverRows=rows(server),clientRows=rows(client); comparePublic(serverRows,clientRows);
+        List<Row> serverRows=rows(server);
+        if(requireClient) {
+            JsonObject client=read(clientFile);
+            require(!Files.readString(clientFile,StandardCharsets.UTF_8).contains("\"correctAnswer\""),"client JSON exposes correctAnswer");
+            comparePublic(serverRows,rows(client));
+        }
         int[] counts=new int[7];serverRows.forEach(r->counts[r.part()-1]++);
         require(Arrays.equals(counts,EXPECTED),"part distribution "+Arrays.toString(counts));
         require(serverRows.size()==200&&integer(server,"totalQuestions")==200,"expected 200 questions");
@@ -119,14 +133,35 @@ public final class Study4Adapter {
             List<MediaImport> media,Map<String,String> mediaIds,int[] counts)throws Exception {
         String normalized=rawPath.replace('\\','/'); Path source=input.resolve(normalized).normalize();
         require(source.startsWith(input)&&Files.isRegularFile(source),"unsafe or missing media: "+rawPath);
+        require(source.toRealPath().startsWith(input.toRealPath()),"media is outside the selected exam folder: "+rawPath);
+        require(Files.size(source)>0 && Files.size(source)<=(type==MediaType.AUDIO?64L:8L)*1024*1024,"media too large or empty: "+rawPath);
         String key=source.toString().toLowerCase(Locale.ROOT);if(mediaIds.containsKey(key))return mediaIds.get(key);
         int index=++counts[type==MediaType.AUDIO?0:1];String extension=extension(source.getFileName().toString());
         String id=(type==MediaType.AUDIO?"aud-":"img-")+String.format(Locale.ROOT,"%03d",index);
         String file=type==MediaType.AUDIO?String.format(Locale.ROOT,"%03d-%s.%s",firstOrder,id,extension):id+"."+extension;
         Files.createDirectories(destinationRoot);Path destination=destinationRoot.resolve(file);Files.copy(source,destination,StandardCopyOption.COPY_ATTRIBUTES);
-        long size=Files.size(destination);String hash=sha256(destination);Integer width=null,height=null;String mime;
-        if(type==MediaType.IMAGE){BufferedImage image=ImageIO.read(destination.toFile());require(image!=null,"image decode failed");width=image.getWidth();height=image.getHeight();mime=extension.equals("png")?"image/png":"image/jpeg";}
+        Integer width=null,height=null;String mime;
+        if(type==MediaType.IMAGE){
+            BufferedImage converted=null;
+            try(var stream=ImageIO.createImageInputStream(destination.toFile())) {
+                require(stream!=null,"image decode failed: "+rawPath);var readers=ImageIO.getImageReaders(stream);require(readers.hasNext(),"image decode failed: "+rawPath);
+                var reader=readers.next();try{reader.setInput(stream);width=reader.getWidth(0);height=reader.getHeight(0);
+                    require(width>0&&height>0&&width<=8192&&height<=8192&&(long)width*height<=16000000,"image dimensions too large");
+                    String format=reader.getFormatName().toLowerCase(Locale.ROOT);
+                    require(Set.of("webp","jpeg","png").contains(format),"unsupported image format: "+rawPath);
+                    if(format.equals("webp") || format.equals("png")&&!extension.equals("png") || format.equals("jpeg")&&extension.equals("png"))converted=reader.read(0);
+                }finally{reader.dispose();}
+            }
+            if(converted!=null){Path old=destination;file=id+".png";destination=destinationRoot.resolve(file);
+                if(destination.equals(old))Files.delete(old);
+                require(ImageIO.write(converted,"png",destination.toFile()),"PNG conversion failed: "+rawPath);
+                if(!destination.equals(old))Files.delete(old);extension="png";
+                require(Files.size(destination)<=8L*1024*1024,"converted image too large: "+rawPath);
+            }
+            mime=extension.equals("png")?"image/png":"image/jpeg";
+        }
         else mime=extension.equals("mp3")?"audio/mpeg":extension.equals("wav")?"audio/wav":"audio/mp4";
+        long size=Files.size(destination);String hash=sha256(destination);
         media.add(new MediaImport(id,type,SOURCE,null,StorageStatus.LOCAL_VERIFIED,file,mime,size,hash,width,height,null,null));mediaIds.put(key,id);return id;
     }
 

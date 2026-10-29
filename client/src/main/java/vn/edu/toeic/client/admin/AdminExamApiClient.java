@@ -5,6 +5,7 @@ import java.net.*;
 import java.net.http.*;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.nio.file.Path;
 import vn.edu.toeic.protocol.admin.*;
 
 public final class AdminExamApiClient implements AutoCloseable {
@@ -31,18 +32,26 @@ public final class AdminExamApiClient implements AutoCloseable {
     }
     public String read(String id) throws Exception {return json.toJson(JsonParser.parseString(call("GET","/item?examId="+encode(id),null,200)));}
     public void save(String id,String body) throws Exception {
-        var tree=json.fromJson(body,JsonObject.class);
+        var tree=AdminExamImport.parse(body);
         if(tree==null)throw new IllegalArgumentException("Nội dung đề phải là một đối tượng JSON.");
         int version=tree.has("schemaVersion")?tree.get("schemaVersion").getAsInt():1;
         call(id==null?"POST":"PUT",(id==null?"?":"/item?examId="+encode(id)+"&")+"version="+version,body,id==null?201:200);
     }
-    public void delete(String id) throws Exception {call("DELETE","/item?examId="+encode(id),null,204);}
+    public void upload(String id,Path zip) throws Exception {
+        exchange(id==null?"POST":"PUT","/bundle"+(id==null?"":"?examId="+encode(id)),HttpRequest.BodyPublishers.ofFile(zip),"application/zip",id==null?201:200);
+    }
+    public void metadata(String id,String title,String description) throws Exception {
+        call("PATCH","/item?examId="+encode(id),json.toJson(java.util.Map.of("title",title,"description",description)),200);
+    }
     private String call(String method,String path,String body,int expected) throws Exception {
         if(body!=null && body.getBytes(StandardCharsets.UTF_8).length>MAX_BYTES)throw new IllegalArgumentException("Đề thi vượt quá 2 MiB.");
-        var request=HttpRequest.newBuilder(URI.create(base+path)).timeout(Duration.ofSeconds(30))
+        return exchange(method,path,body==null?HttpRequest.BodyPublishers.noBody():HttpRequest.BodyPublishers.ofString(body,StandardCharsets.UTF_8),body==null?null:"application/json",expected);
+    }
+    private String exchange(String method,String path,HttpRequest.BodyPublisher body,String type,int expected) throws Exception {
+        var request=HttpRequest.newBuilder(URI.create(base+path)).timeout(Duration.ofSeconds(180))
                 .header("Authorization","Bearer "+token).header("Accept","application/json");
-        request.method(method,body==null?HttpRequest.BodyPublishers.noBody():HttpRequest.BodyPublishers.ofString(body,StandardCharsets.UTF_8));
-        if(body!=null)request.header("Content-Type","application/json");
+        request.method(method,body);
+        if(type!=null)request.header("Content-Type",type);
         var response=http.send(request.build(),HttpResponse.BodyHandlers.ofInputStream());
         try(var input=response.body()) {
             byte[] bytes=input.readNBytes(MAX_BYTES+1);
@@ -53,6 +62,8 @@ public final class AdminExamApiClient implements AutoCloseable {
                 try {var error=JsonParser.parseString(text).getAsJsonObject().getAsJsonObject("error");
                     if(error!=null && error.has("message"))message=error.get("message").getAsString();
                 }catch(RuntimeException ignored){}
+                if(response.statusCode()==404 && (!path.startsWith("/item") || message.contains("tài nguyên API")))
+                    message="Server đang kết nối chưa có API quản lý đề thi. Hãy cập nhật server cùng phiên bản với client hoặc kiểm tra địa chỉ server; thay đổi JSON/DB không sửa được lỗi này.";
                 throw new AdminAccountApiClient.Rejected(response.statusCode(),message);
             }
             if(expected!=204 && !response.headers().firstValue("Content-Type").orElse("").contains("application/json"))
