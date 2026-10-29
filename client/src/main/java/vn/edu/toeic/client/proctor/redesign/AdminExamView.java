@@ -71,7 +71,7 @@ public final class AdminExamView extends VBox implements AutoCloseable {
         form.setHeaderText(exam==null?"Kiểm tra đề trước khi import":exam.title());
         TextField code=new TextField(),title=new TextField();TextArea description=new TextArea();description.setPrefRowCount(2);
         code.setId("admin-exam-code");title.setId("admin-exam-title");description.setId("admin-exam-description");
-        code.setEditable(false);code.setPrefColumnCount(22);title.setPrefColumnCount(38);
+        code.setEditable(exam==null);code.setPrefColumnCount(22);title.setPrefColumnCount(38);
         TextArea body=new TextArea(content);body.setId("admin-exam-content");body.setPrefRowCount(14);body.setWrapText(false);
         body.setEditable(!metadataOnly);body.setStyle("-fx-font-family: monospace; -fx-font-size: 12px;");
         Label summary=Ui.wrapping("","muted"),error=Ui.wrapping("");error.setId("admin-exam-form-status");
@@ -96,13 +96,15 @@ public final class AdminExamView extends VBox implements AutoCloseable {
         };
         Runnable write=()->{
             if(syncing[0] || metadataOnly)return;
-            try{var tree=AdminExamImport.parse(body.getText());var meta=metadata(tree);meta.addProperty("title",title.getText());
+            try{var tree=JSON.fromJson(body.getText(),JsonObject.class);var meta=metadata(tree);
+                if(exam==null)meta.addProperty("examId",code.getText().strip());
+                meta.addProperty("title",title.getText());
                 if(description.getText().isBlank())meta.add("description",JsonNull.INSTANCE);else meta.addProperty("description",description.getText());
-                syncing[0]=true;body.setText(JSON.toJson(tree));save.setDisable(title.getText().isBlank());error.setText("");
-            }catch(RuntimeException bad){error.setText("Sửa JSON hợp lệ trước khi cập nhật thông tin đề.");}
+                syncing[0]=true;body.setText(JSON.toJson(tree));AdminExamImport.parse(body.getText());save.setDisable(false);error.setText("");
+            }catch(RuntimeException bad){save.setDisable(true);error.setText("Nhập mã đề, tên đề và JSON hợp lệ trước khi lưu.");}
             finally{syncing[0]=false;}
         };
-        body.textProperty().addListener((o,a,b)->read.run());title.textProperty().addListener((o,a,b)->write.run());description.textProperty().addListener((o,a,b)->write.run());
+        body.textProperty().addListener((o,a,b)->read.run());code.textProperty().addListener((o,a,b)->write.run());title.textProperty().addListener((o,a,b)->write.run());description.textProperty().addListener((o,a,b)->write.run());
         read.run();
         Button replace=new Button("Chọn JSON thay thế");replace.setId("admin-exam-import");replace.setDisable(metadataOnly);
         replace.setOnAction(e->{Path file=chooseFile(form.getDialogPane().getScene().getWindow());if(file==null)return;

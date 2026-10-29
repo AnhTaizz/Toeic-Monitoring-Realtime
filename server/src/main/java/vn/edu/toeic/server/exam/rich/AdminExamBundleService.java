@@ -43,7 +43,12 @@ public class AdminExamBundleService {
             validator.validate(request);
             Set<String> expected=new HashSet<>(Set.of("rich-import.json"));
             for(var media:request.media())expected.add(entry(request.exam().examId(),media));
-            if(!expected.equals(entries))throw ExamApiException.invalidInput("Gói import thiếu media hoặc chứa tệp không thuộc đề.");
+            if(!expected.equals(entries)) {
+                var missing=new TreeSet<>(expected);missing.removeAll(entries);
+                var extra=new TreeSet<>(entries);extra.removeAll(expected);
+                throw ExamApiException.invalidInput("Media trong gói không khớp JSON của mã đề '"+request.exam().examId()+"'. Thiếu "+missing.size()+" tệp "+missing.stream().limit(2).toList()
+                        +"; thừa "+extra.size()+" tệp "+extra.stream().limit(2).toList()+". Nếu vừa đổi mã đề, hãy cập nhật client để đóng gói lại đường dẫn media theo mã mới.");
+            }
             try {
                 transaction.executeWithoutResult(status->{
                     exams.prepareWrite(admin,replaceId,request.exam().examId());

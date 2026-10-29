@@ -62,9 +62,12 @@ class AdminExamGuiTest {
         assertThat(fx(()->((TextField)dialog("admin-exam-code")).getText())).isEqualTo("NEW-01");
         assertThat(fx(()->dialog("admin-exam-compose"))).isNull();
         screenshot(fx(()->dialog("admin-exam-code").getScene().getRoot()),"admin-exam-import.png");
-        fxRun(()->{((TextField)dialog("admin-exam-title")).setText("Đề vừa import");((Button)dialog("admin-exam-save")).fire();});
+        fxRun(()->{((TextField)dialog("admin-exam-code")).clear();((TextField)dialog("admin-exam-title")).clear();});
+        assertThat(fx(()->dialog("admin-exam-save").isDisabled())).isTrue();
+        fxRun(()->{((TextField)dialog("admin-exam-code")).setText("oicaidjt");((TextField)dialog("admin-exam-title")).setText("Đề vừa import");((Button)dialog("admin-exam-save")).fire();});
         await("created",()->dialog("admin-exam-code")==null && calls.stream().anyMatch(c->c.startsWith("POST")));
         assertThat(JsonParser.parseString(bodies.getFirst()).getAsJsonObject().get("title").getAsString()).isEqualTo("Đề vừa import");
+        assertThat(JsonParser.parseString(bodies.getFirst()).getAsJsonObject().get("examId").getAsString()).isEqualTo("oicaidjt");
     }
     @Test void editingJsonUpdatesMetadataAndKeepsFormOnServerRejection() throws Exception {
         fxRun(()->((Button)view.lookup("#admin-exam-edit-MOCK-01")).fire());await("edit form",()->dialog("admin-exam-code")!=null);
