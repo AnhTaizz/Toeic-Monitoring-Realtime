@@ -6,6 +6,8 @@ import java.nio.charset.*;
 import java.nio.file.*;
 import java.time.*;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.zip.*;
 import vn.edu.toeic.tools.study4.Study4Adapter;
 
@@ -60,14 +62,32 @@ public final class AdminExamImport implements AutoCloseable {
     }
     public Path bundle(String payload) throws IOException {
         if(bundle==null)return null;
+        var document=parse(payload);
+        String originalId=parse(json).getAsJsonObject("exam").get("examId").getAsString();
+        String targetId=document.getAsJsonObject("exam").get("examId").getAsString();
+        if(!targetId.matches("[A-Za-z0-9][A-Za-z0-9_-]{0,127}"))
+            throw new IllegalArgumentException("Mã đề chỉ gồm chữ, số, dấu gạch ngang hoặc gạch dưới, tối đa 128 ký tự.");
+        Set<String> expected=new HashSet<>(),written=new HashSet<>();expected.add("rich-import.json");
+        for(var value:document.getAsJsonArray("media")) {
+            var media=value.getAsJsonObject();String folder=media.get("mediaType").getAsString().equals("AUDIO")?"audio":"images";
+            expected.add(folder+"/"+targetId+"/"+media.get("localFile").getAsString());
+        }
         Path updated=temporary.resolve("upload-edited.zip");
         try(var input=new ZipInputStream(Files.newInputStream(bundle));var output=new ZipOutputStream(Files.newOutputStream(updated))) {
             for(ZipEntry entry;(entry=input.getNextEntry())!=null;) {
-                output.putNextEntry(new ZipEntry(entry.getName()));
-                if(entry.getName().equals("rich-import.json"))output.write(payload.getBytes(StandardCharsets.UTF_8));
+                String name=entry.getName();
+                for(String folder:new String[]{"audio/","images/"}) {
+                    String prefix=folder+originalId+"/";
+                    if(name.startsWith(prefix))name=folder+targetId+"/"+name.substring(prefix.length());
+                }
+                if(!expected.contains(name))continue;
+                output.putNextEntry(new ZipEntry(name));written.add(name);
+                if(name.equals("rich-import.json"))output.write(payload.getBytes(StandardCharsets.UTF_8));
                 else input.transferTo(output);output.closeEntry();
             }
         }
+        expected.removeAll(written);
+        if(!expected.isEmpty())throw new IllegalArgumentException("JSON tham chiếu media không có trong bộ đã chọn: "+expected.stream().sorted().limit(3).toList()+". Hãy chọn lại server_exam.json cùng thư mục media; không tự đổi localFile trong JSON.");
         return updated;
     }
     @Override public void close(){if(temporary!=null)cleanup(temporary);}

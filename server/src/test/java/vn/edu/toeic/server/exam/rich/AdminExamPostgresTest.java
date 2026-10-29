@@ -123,6 +123,8 @@ class AdminExamPostgresTest {
     }
     @Test void bundleUploadsMediaAndRollsBackBothFilesAndDatabaseOnBadReplacement() throws Exception {
         var graph=RichExamFixtures.tree();String id=graph.getAsJsonObject("exam").get("examId").getAsString();
+        var mismatched=graph.deepCopy();mismatched.getAsJsonObject("exam").addProperty("examId","oicaidjt");
+        assertThat(check(upload("POST",API+"/bundle",fixtureBundle(mismatched,false),admin),400)).contains("oicaidjt","Thiếu");
         var request=RichExamFixtures.request();
         for(var media:request.media())Files.delete(temporary.resolve(media.mediaType().name().equals("AUDIO")?"audio":"images").resolve(id).resolve(media.localFile()));
         check(upload("POST",API+"/bundle",fixtureBundle(graph,false),admin),201);
@@ -164,6 +166,10 @@ class AdminExamPostgresTest {
             check(upload("POST",API+"/bundle",prepared.bundle(prepared.json),admin),201);
             var actual=tree(check(call("GET",item(id),null,admin),200));sameGraph(actual,graph);
             assertThat(number("SELECT count(*) FROM exam_questions")).isEqualTo(200);
+            graph.getAsJsonObject("exam").addProperty("examId","oicaidjt");
+            check(upload("POST",API+"/bundle",prepared.bundle(graph.toString()),admin),201);
+            sameGraph(tree(check(call("GET",item("oicaidjt"),null,admin),200)),graph);
+            assertThat(number("SELECT count(*) FROM exam_questions WHERE exam_id='oicaidjt'")).isEqualTo(200);
         }
     }
     private Path fixtureBundle(JsonObject graph,boolean corrupt) throws Exception {

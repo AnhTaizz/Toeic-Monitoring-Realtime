@@ -8,7 +8,7 @@
 
 1. Giữ nguyên `server_exam.json` và thư mục `media` đã crawl trong cùng thư mục đề. Những đường dẫn như `media\audio\...mp3` và `media\images\...jpg` trong JSON phải trỏ tới các tệp có thật.
 2. Bấm **Import JSON**, chọn `server_exam.json`. Không chọn `client_exam.json` vì tệp này không có đáp án đúng. Không cần có bản client export cạnh JSON.
-3. Ứng dụng chuyển cấu trúc STUDY4 sang đề thi, chuẩn bị media và hiển thị mã đề, tên, số câu, số tệp sẽ gửi. Có thể đổi tên/mô tả trước khi import. Mã đề lấy từ JSON để thống nhất đường dẫn media.
+3. Ứng dụng chuyển cấu trúc STUDY4 sang đề thi, chuẩn bị media và hiển thị mã đề, tên, số câu, số tệp sẽ gửi. Có thể đổi mã đề, tên/mô tả trước khi import. Khi đổi mã đề mới, ứng dụng tự đổi thư mục media trong gói gửi lên cho khớp mã mới; không thay đổi tệp crawl gốc. Mã đề của một đề đang sửa vẫn giữ nguyên.
 4. Bấm **Import đề thi**. Client gửi JSON cùng âm thanh/hình ảnh lên server; bạn không cần tự sao chép media sang máy server. Server kiểm tra toàn bộ đề/media trước khi xác nhận thành công.
 
 ![Xem trước thông tin đề trước khi import](admin-exam-import.png)

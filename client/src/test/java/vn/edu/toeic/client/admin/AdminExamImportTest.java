@@ -31,6 +31,28 @@ class AdminExamImportTest {
         assertThatThrownBy(()->AdminExamImport.load(file)).hasMessageContaining("media").hasMessageContaining("200");
         assertThatThrownBy(()->AdminExamImport.parse("{bad json")).isInstanceOf(IllegalArgumentException.class);
     }
+    @Test void renamedExamRepackagesEveryMediaUnderTheNewIdWithoutChangingItsBytes() throws Exception {
+        try(var prepared=AdminExamImport.load(mockCrawl(temporary));var original=new ZipFile(prepared.bundle.toFile())) {
+            var graph=AdminExamImport.parse(prepared.json);graph.getAsJsonObject("exam").addProperty("examId","oicaidjt");
+            Path file=prepared.bundle(graph.toString());
+            try(var renamed=new ZipFile(file.toFile())) {
+                for(var media:graph.getAsJsonArray("media")) {
+                    var item=media.getAsJsonObject();String folder=item.get("mediaType").getAsString().equals("AUDIO")?"audio/":"images/";
+                    String suffix="/"+item.get("localFile").getAsString();
+                    var old=original.getEntry(folder+"MOCK-CRAWL"+suffix);var updated=renamed.getEntry(folder+"oicaidjt"+suffix);
+                    assertThat(updated).isNotNull();
+                    assertThat(renamed.getInputStream(updated).readAllBytes()).isEqualTo(original.getInputStream(old).readAllBytes());
+                    assertThat(renamed.getEntry(folder+"MOCK-CRAWL"+suffix)).isNull();
+                }
+            }
+        }
+    }
+    @Test void changingAMediaFilenameFailsBeforeUploadingWithTheMissingName() throws Exception {
+        try(var prepared=AdminExamImport.load(mockCrawl(temporary))) {
+            var graph=AdminExamImport.parse(prepared.json);graph.getAsJsonArray("media").get(0).getAsJsonObject().addProperty("localFile","missing-audio.wav");
+            assertThatThrownBy(()->prepared.bundle(graph.toString())).hasMessageContaining("missing-audio.wav").hasMessageContaining("chọn lại");
+        }
+    }
     public static Path mockCrawl(Path root) throws Exception {
         Path assets=Path.of("..","docs","plan-v2","fixtures","ex02","assets");
         Path wave=assets.resolve("audio/mock-ex02-200/001-g001.wav"),image=assets.resolve("images/mock-ex02-200/mock-grid.png");
