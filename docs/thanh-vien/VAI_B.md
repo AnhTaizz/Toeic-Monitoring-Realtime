@@ -534,3 +534,7 @@ Khôi phục PRESENT_AT_START vào sharedlists/count với sốUSB, source/times
 ### 25/10/2026 — Bàn giao policy v4 đúng chín process
 
 Candidate mới chỉ thu chín tên; summary/common lists/count cũng lọc chín tên khi đọc dữ liệu cũ, raw/Timeline giữ. USB baseline/cắm/rút và focus/window nguyên trạng. Mở lại cả candidate/proctor bằng JAR mới sau nâng cấp server; không tự ngắt phiên8080. Full verify 1.471 PASS/154 SKIP; PG REAL2 PASS có Teams2 thật, PG MOCK USB1 PASS; cleanup sạch. [Report](../../evidence/process-nine-20261025/REPORT.md), [runbook](../PROCESS_GROUPS.md). Ghi chú còn lại: owner A/C/B review cá nhân, H01–H12/LAN/benchmark/installer chưa nghiệm thu; không tracker DONE, PR hoặc merge.
+
+### 27/10/2026 — Bàn giao sửa UI, lịch sử sau nộp và fullscreen
+
+Nhánh local `codex/fix-room-ui-history-fullscreen` từ `1187f0d`, chỉ commit theo yêu cầu, bỏ qua `codex-with-chatgpt`. Palette và xác nhận START theo style sáng; JOIN dùng đúng attempt để mở lobby V2 trực tiếp sau kiểm scope; giữ một Scene khi điều hướng, gỡ listener màn thi đã đóng. Lịch sử tự làm mới và đọc được bài phòng PIN đã chốt bằng token tài khoản. Xem [báo cáo/ảnh/kết quả test](../../evidence/room-ui-fixes-20261027/REPORT.md). Cần A review phần quyền đọc status/history, B/C review hook collector; không thay wire/DB/START/deadline/observer. Bản MSI và Server/Client đang chạy từ trước không tự cập nhật; chưa phát hành bộ cài mới hoặc nghiệm thu nghe thật/LAN/USB.

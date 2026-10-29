@@ -1,0 +1,557 @@
+{
+  "sourceSha": "1187f0decb62de69c8745e046c92a6862cfbc848",
+  "runId": "room-ux-20261027T102004Z-4e8e5c18",
+  "mode": "Gui",
+  "os": "Microsoft Windows NT 10.0.26200.0",
+  "java": "openjdk version \"21.0.10\" 2026-01-20 LTS",
+  "maven": "Apache Maven 3.9.15 (98b2cdbfdb5f1ac8781f537ea9acccaed7922349)",
+  "postgres": "PostgreSQL 18.3 on x86_64-windows, compiled by msvc-19.44.35223, 64-bit",
+  "database": "toeic_room_admission_test",
+  "host": "127.0.0.1",
+  "port": 52218,
+  "fixture": "MOCK self-authored exam content; real PostgreSQL/Flyway/HTTP/WebSocket",
+  "command": "mvn --batch-mode --no-transfer-progress -Duser.timezone=UTC -pl server -am -Dtest=AccountPinPostgresTest,AccountPinFlowPostgresGuiTest,RoomFlowPostgresGuiTest,ExamRuntimePostgresTest,ExamReadAuthorizationTest,RoomTokenAuthorizationTest -Dsurefire.failIfNoSpecifiedTests=false test",
+  "startUtc": "2026-10-27T10:20:12.8614595Z",
+  "endUtc": "2026-10-27T10:25:11.6319314Z",
+  "exitCode": 1,
+  "runnerErrorType": null,
+  "totals": {
+    "skipped": 0,
+    "failures": 8,
+    "errors": 0,
+    "passed": 74,
+    "tests": 82
+  },
+  "cases": [
+    {
+      "seconds": "60.226",
+      "class": "vn.edu.toeic.client.proctor.redesign.AccountPinFlowPostgresGuiTest",
+      "status": "FAIL",
+      "name": "accountLoginSharedPinReadySnapshotListeningReadingAndSubmit(int)[1]"
+    },
+    {
+      "seconds": "48.125",
+      "class": "vn.edu.toeic.client.proctor.redesign.AccountPinFlowPostgresGuiTest",
+      "status": "FAIL",
+      "name": "accountLoginSharedPinReadySnapshotListeningReadingAndSubmit(int)[2]"
+    },
+    {
+      "seconds": "33.044",
+      "class": "vn.edu.toeic.client.proctor.redesign.AccountPinFlowPostgresGuiTest",
+      "status": "FAIL",
+      "name": "accountLoginSharedPinReadySnapshotListeningReadingAndSubmit(int)[3]"
+    },
+    {
+      "seconds": "55.841",
+      "class": "vn.edu.toeic.client.proctor.redesign.RoomFlowPostgresGuiTest",
+      "status": "FAIL",
+      "name": "proctorCreatesRoomTwoCandidatesEnterPrepareListenAnswerAutosaveAndSubmit"
+    },
+    {
+      "seconds": "2.483",
+      "class": "vn.edu.toeic.client.proctor.redesign.RoomFlowPostgresGuiTest",
+      "status": "PASS",
+      "name": "proctorRecoversExistingRoomAndRotatesThenRevokesPinFromRealUi"
+    },
+    {
+      "seconds": "0.002",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "pinDtosDoNotExposeCredentialsThroughToString"
+    },
+    {
+      "seconds": "0.914",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "roomTokenCannotAcquireProctorRoleAndStillHonorsRevocationAndDisabledAccount"
+    },
+    {
+      "seconds": "0.055",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "roomTokenHasOnlyNarrowHttpRoutes(String, String, boolean)[1]"
+    },
+    {
+      "seconds": "0.007",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "roomTokenHasOnlyNarrowHttpRoutes(String, String, boolean)[2]"
+    },
+    {
+      "seconds": "0.007",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "roomTokenHasOnlyNarrowHttpRoutes(String, String, boolean)[3]"
+    },
+    {
+      "seconds": "0.005",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "roomTokenHasOnlyNarrowHttpRoutes(String, String, boolean)[4]"
+    },
+    {
+      "seconds": "0.004",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "roomTokenHasOnlyNarrowHttpRoutes(String, String, boolean)[5]"
+    },
+    {
+      "seconds": "0.004",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "roomTokenHasOnlyNarrowHttpRoutes(String, String, boolean)[6]"
+    },
+    {
+      "seconds": "0.005",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "roomTokenHasOnlyNarrowHttpRoutes(String, String, boolean)[7]"
+    },
+    {
+      "seconds": "0.004",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "roomTokenHasOnlyNarrowHttpRoutes(String, String, boolean)[8]"
+    },
+    {
+      "seconds": "0.003",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "roomTokenHasOnlyNarrowHttpRoutes(String, String, boolean)[9]"
+    },
+    {
+      "seconds": "0.003",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "roomTokenHasOnlyNarrowHttpRoutes(String, String, boolean)[10]"
+    },
+    {
+      "seconds": "0.002",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "roomTokenHasOnlyNarrowHttpRoutes(String, String, boolean)[11]"
+    },
+    {
+      "seconds": "0.004",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "roomTokenHasOnlyNarrowHttpRoutes(String, String, boolean)[12]"
+    },
+    {
+      "seconds": "0.132",
+      "class": "vn.edu.toeic.server.auth.RoomTokenAuthorizationTest",
+      "status": "PASS",
+      "name": "scopeSurvivesAuthenticationAndCannotBeDiscardedForExamOrMonitoring"
+    },
+    {
+      "seconds": "0.007",
+      "class": "vn.edu.toeic.server.exam.ExamReadAuthorizationTest",
+      "status": "PASS",
+      "name": "unauthenticatedWritesFailBeforeRequestOrDatabaseAccess"
+    },
+    {
+      "seconds": "0.016",
+      "class": "vn.edu.toeic.server.exam.ExamReadAuthorizationTest",
+      "status": "PASS",
+      "name": "unauthenticatedReadsFailBeforeAnyLookup"
+    },
+    {
+      "seconds": "0.004",
+      "class": "vn.edu.toeic.server.exam.ExamReadAuthorizationTest",
+      "status": "PASS",
+      "name": "activeAccessDoesNotImplicitlyGrantExamHistory"
+    },
+    {
+      "seconds": "0.007",
+      "class": "vn.edu.toeic.server.exam.ExamReadAuthorizationTest",
+      "status": "PASS",
+      "name": "forbiddenReadsFailBeforeAnyDataBranchIncludingFinalResults"
+    },
+    {
+      "seconds": "0.013",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "unknownApiRouteReturnsStructured404InsteadOf500"
+    },
+    {
+      "seconds": "1.188",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "saveSubmitAndTimeoutContendOnPostgresRowAcrossDeadline"
+    },
+    {
+      "seconds": "0.125",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "candidateAttemptHistoryUsesBoundedDeterministicKeysetPagination"
+    },
+    {
+      "seconds": "0.042",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "qd29GeneratedIdBoundaryUnicodeAndRoleAreCheckedBeforeAnyMutation"
+    },
+    {
+      "seconds": "0.145",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "candidateAttemptHistoryIsOwnedRoleProtectedAndFieldWhitelisted"
+    },
+    {
+      "seconds": "0.027",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "qd29LegacyFinalKeepsReadsAndReplacementUsesSafeNewAttempt"
+    },
+    {
+      "seconds": "0.093",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "concurrentFirstEntriesReconnectAndTakeoverKeepOneDeadline"
+    },
+    {
+      "seconds": "0.014",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "wrongMethodIsStructured405WithAllowAndMalformedJsonRemains400"
+    },
+    {
+      "seconds": "0.017",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "queryStatusRejectsMissingEmptyAndOversizedIds"
+    },
+    {
+      "seconds": "0.111",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "qd29LegacyActiveIsReadableButCannotBeEnteredSavedSubmittedOrMarkedReady"
+    },
+    {
+      "seconds": "0.128",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "activeIssuanceRejectsEntireBatchAndPreservesCollidingFinalAttempt"
+    },
+    {
+      "seconds": "0.315",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "submitRetryAuthorizationAndIdempotencyKeepFinalResultImmutable"
+    },
+    {
+      "seconds": "0.107",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "candidateAttemptHistoryRejectsEmptyAndNulButBindsOtherCursorTextLiterally"
+    },
+    {
+      "seconds": "0.018",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[1]"
+    },
+    {
+      "seconds": "0.025",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[2]"
+    },
+    {
+      "seconds": "0.022",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[3]"
+    },
+    {
+      "seconds": "0.019",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[4]"
+    },
+    {
+      "seconds": "0.02",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[5]"
+    },
+    {
+      "seconds": "0.015",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[6]"
+    },
+    {
+      "seconds": "0.016",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[7]"
+    },
+    {
+      "seconds": "0.019",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[8]"
+    },
+    {
+      "seconds": "0.017",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "queryStatusReadsRawIdsWithoutRelaxingPathRoutingAndChecksOwner(String)[9]"
+    },
+    {
+      "seconds": "0.1",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "candidateAttemptHistoryCursorLengthMatchesPostgresVarcharCharacters"
+    },
+    {
+      "seconds": "0.166",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "candidateAttemptHistoryRoundTripsMixedServerCursorsWithoutChangingIds"
+    },
+    {
+      "seconds": "0.034",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "FAIL",
+      "name": "otherInactiveStatesFailClosed(String)[1]"
+    },
+    {
+      "seconds": "0.01",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "FAIL",
+      "name": "otherInactiveStatesFailClosed(String)[2]"
+    },
+    {
+      "seconds": "1.101",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "unansweredAttemptTimesOutByAutonomousRuntimeScheduler"
+    },
+    {
+      "seconds": "0.051",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "candidateAttemptHistoryOrdersByAsciiAndHandlesPageBoundaries"
+    },
+    {
+      "seconds": "0.068",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "progressIgnoresUncommittedWriterAndDoesNotInventAutosaveTimeForSubmitOnly"
+    },
+    {
+      "seconds": "0.056",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "qd29ConcurrentSameSessionCreatesOneSessionAndLoserGetsStable400"
+    },
+    {
+      "seconds": "0.25",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "proctorProgressReadsOnlyCommittedAssignedDataAndKeepsFinals"
+    },
+    {
+      "seconds": "0.055",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "readsRequireOwnershipOrAssignmentForEveryState(String)[1]"
+    },
+    {
+      "seconds": "0.039",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "FAIL",
+      "name": "readsRequireOwnershipOrAssignmentForEveryState(String)[2]"
+    },
+    {
+      "seconds": "0.046",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "FAIL",
+      "name": "readsRequireOwnershipOrAssignmentForEveryState(String)[3]"
+    },
+    {
+      "seconds": "0.022",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "legacyAutosaveWithoutTakeoverStartsDeadlineWithoutReset"
+    },
+    {
+      "seconds": "0.039",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "takeoverReplayAfterLostAckAdvancesEpochButNeverLosesAnswersDeadlineOrFinal"
+    },
+    {
+      "seconds": "2.348",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "timeoutScoresOnlyServerAcknowledgedAnswersAndNeverScoresAgain"
+    },
+    {
+      "seconds": "0.082",
+      "class": "vn.edu.toeic.server.exam.ExamRuntimePostgresTest",
+      "status": "PASS",
+      "name": "candidateAttemptHistoryHidesNonExamRowsAndRejectsRevokedSessions"
+    },
+    {
+      "seconds": "3.139",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "accountRevocationRacingJoinNeverLeavesAUsableOldToken(String)[1]"
+    },
+    {
+      "seconds": "3.071",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "accountRevocationRacingJoinNeverLeavesAUsableOldToken(String)[2]"
+    },
+    {
+      "seconds": "3.469",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "concurrentJoinAndStartAreLinearizable"
+    },
+    {
+      "seconds": "3.415",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "accountHistoryReadsOnlyOwnedJoinedFinalResults(String)[1]"
+    },
+    {
+      "seconds": "3.262",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "accountHistoryReadsOnlyOwnedJoinedFinalResults(String)[2]"
+    },
+    {
+      "seconds": "3.651",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "latePreparationRejectsStaleWriterInvalidProofAndExpiredDeadline"
+    },
+    {
+      "seconds": "4.122",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "pinRotationAndAccountResetRevokeWithoutChangingExamState"
+    },
+    {
+      "seconds": "4.319",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "zeroReadyStartsButOnlyLateReadingCanBeSubmitted"
+    },
+    {
+      "seconds": "2.719",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "roomCapacityRejectsNewMemberButPreservesRepeatedAdmission"
+    },
+    {
+      "seconds": "3.411",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "pinCollisionRetriesWithoutDuplicatingSessionsOrAttempts"
+    },
+    {
+      "seconds": "3.668",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "creationAndRepeatedJoinPreserveScopeWriterAndClock(CapturedOutput)"
+    },
+    {
+      "seconds": "3.084",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "disabledJoinedCandidateStillFinalizesOnceAtDeadline"
+    },
+    {
+      "seconds": "3.671",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "rotationRacingJoinAndAttestationRacingStartKeepCredentialAndSnapshotBoundaries"
+    },
+    {
+      "seconds": "3.374",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "failedPinLimitPersistsAcrossLoginAndRestart"
+    },
+    {
+      "seconds": "3.772",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "concurrentStartsReturnIdenticalContextAndDisabledReadyCandidateGetsNoPlayback"
+    },
+    {
+      "seconds": "3.135",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "finishedRoomsLeaveTheOpenRoomList"
+    },
+    {
+      "seconds": "1.964",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "missingKeyAndMissingMediaCannotCreatePartialRooms"
+    },
+    {
+      "seconds": "5.002",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "partialReadySnapshotNeverArmsLateCandidateOnRetry"
+    },
+    {
+      "seconds": "2.401",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "v20ToV21PreservesPopulatedLegacyDataAndEnforcesPinConstraints"
+    },
+    {
+      "seconds": "4.643",
+      "class": "vn.edu.toeic.server.exam.rich.AccountPinPostgresTest",
+      "status": "PASS",
+      "name": "restartKeepsLatePreparationDeadlineWriterAndNoReplayState"
+    }
+  ],
+  "xmlHashes": [
+    {
+      "module": "server",
+      "file": "TEST-vn.edu.toeic.client.proctor.redesign.AccountPinFlowPostgresGuiTest.xml",
+      "sha256": "02949243e5db364e1cd7a62867b4f612a7b65687f0bb351663403bd06896a725"
+    },
+    {
+      "module": "server",
+      "file": "TEST-vn.edu.toeic.client.proctor.redesign.RoomFlowPostgresGuiTest.xml",
+      "sha256": "2011dd5b096a29e285ccf5436581eaf6647be5c1b31d577e5fc27a9bf8950587"
+    },
+    {
+      "module": "server",
+      "file": "TEST-vn.edu.toeic.server.auth.RoomTokenAuthorizationTest.xml",
+      "sha256": "066a3bc214fb36f7bb8d0a1eb5d63ac5170d7c5479a4473b9730acbc78b39d8b"
+    },
+    {
+      "module": "server",
+      "file": "TEST-vn.edu.toeic.server.exam.ExamReadAuthorizationTest.xml",
+      "sha256": "d66447ed52afd725fcfdc7dff28d497c19646cf8a090d1943a718ce2266073fa"
+    },
+    {
+      "module": "server",
+      "file": "TEST-vn.edu.toeic.server.exam.ExamRuntimePostgresTest.xml",
+      "sha256": "cb7ea38cb446b6387fd7d9924f6b7d34f4a1dc1020a3b88ec1d6065bfc7e797d"
+    },
+    {
+      "module": "server",
+      "file": "TEST-vn.edu.toeic.server.exam.rich.AccountPinPostgresTest.xml",
+      "sha256": "a913ad1b6d91f79d435cf5f540a3d7bb7d9c344198be4697291219faff1b7e49"
+    }
+  ],
+  "cleanup": {
+    "ownedSchemasRemaining": 0,
+    "clusterStopExit": 0
+  },
+  "guiEvidence": "Candidate GUI enabled; see individual cases",
+  "manualLanHearing": "NOT RUN"
+}

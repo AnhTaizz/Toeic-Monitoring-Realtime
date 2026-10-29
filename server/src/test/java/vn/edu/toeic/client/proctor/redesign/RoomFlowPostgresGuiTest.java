@@ -202,7 +202,11 @@ class RoomFlowPostgresGuiTest {
                 && !pane.lookup("#v2-start").isDisabled()),25);
             // Deterministic process observation over a separate real socket; dashboard must receive the warning.
             injectMonitoring(assertions.getFirst().token(),a);
-            await("monitoring reaches dashboard",()->FxSupport.fx(()->pv.room()!=null && pv.room().alerts().stream().anyMatch(e->"MOCK-room-e2e-event".equals(e.id()))),20);
+            assertThat(count("SELECT count(*) FROM monitoring_events WHERE attempt_id='"+a+"' AND event_id='MOCK-room-e2e-event'")).isEqualTo(1);
+            var events=call("GET","/api/v1/monitoring/attempts/"+a+"/events",null,proctor.token(),200).getAsJsonArray("events");
+            String projectedId=java.util.stream.StreamSupport.stream(events.spliterator(),false).map(e->e.getAsJsonObject())
+                    .filter(e->"chrome.exe".equalsIgnoreCase(e.get("processName").getAsString())).findFirst().orElseThrow().get("eventId").getAsString();
+            await("monitoring reaches dashboard",()->FxSupport.fx(()->pv.room()!=null && pv.room().alerts().stream().anyMatch(e->projectedId.equals(e.id()))),20);
             screenshot(ps,"proctor-two-ready");
             Platform.runLater(()->((Button)pane.lookup("#v2-start")).fire());pressDialog(ButtonType.OK,10);
             await("START committed",()->pane.controller().snapshot().started()!=null,20);

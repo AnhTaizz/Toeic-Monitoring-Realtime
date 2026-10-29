@@ -70,7 +70,7 @@ public class JdbcPresenceStore implements PresenceStore {
                 .param("u", user.userId()).query(JdbcPresenceStore::read).list();
     }
     @Override @Transactional public List<Interruption> interruptions(AuthenticatedUser user, String attempt) {
-        authorization.requireRole(user, Role.PROCTOR); lock(attempt); authorization.requireAttempt(user, attempt);
+        authorization.requireRole(user, Role.PROCTOR); lock(attempt); authorization.requireExamRead(user, attempt);
         List<Interruption> result = jdbc.sql("SELECT * FROM monitoring_interruptions WHERE attempt_id=:a ORDER BY presence_revision LIMIT " + MonitoringHistoryLimit.QUERY_LIMIT)
                 .param("a", attempt).query((r, i) -> new Interruption(r.getString("gap_id"), attempt, r.getString("collector_session_id"),
                         r.getString("reason"), time(r, "last_seen_at"), time(r, "timeout_detected_at"), time(r, "recovered_at"))).list();

@@ -22,7 +22,7 @@ public class MonitoringGapService {
         authorization.requireRole(user,Role.PROCTOR);
         if (jdbc.sql("SELECT attempt_id FROM monitoring_attempts WHERE attempt_id=:a FOR SHARE").param("a",attempt)
                 .query(String.class).optional().isEmpty()) throw AccessDeniedException.forbidden();
-        authorization.requireAttempt(user,attempt);
+        authorization.requireExamRead(user,attempt);
         List<GapItem> result=jdbc.sql("SELECT * FROM monitoring_gaps WHERE attempt_id=:a ORDER BY received_at,id LIMIT "+MonitoringHistoryLimit.QUERY_LIMIT)
                 .param("a",attempt).query((row,index) -> new GapItem(row.getString("gap_id"),attempt,
                         row.getString("collector_session_id"),row.getString("reason"),row.getLong("dropped_count"),

@@ -95,7 +95,7 @@ public class ExamService {
                 JOIN exam_sessions s ON s.session_id = a.session_id
                 JOIN exams e ON e.exam_id = a.exam_id AND e.exam_id = s.exam_id
                 WHERE a.candidate_user_id = :candidateUserId
-                """ + vn.edu.toeic.server.monitoring.JdbcAttemptScopeStore.ADMISSION_SCOPE + """
+                """ + vn.edu.toeic.server.monitoring.JdbcAttemptScopeStore.RESULT_SCOPE + """
                   AND a.state IN ('ACTIVE', 'SUBMITTED', 'TIMED_OUT')
                   AND (a.state = 'ACTIVE' OR a.submitted_at IS NOT NULL)
                 """ + cursorClause + """
@@ -362,6 +362,16 @@ public class ExamService {
     @Transactional
     public ExamImportResponse importExam(AuthenticatedUser proctor, ExamImportRequest request) {
         authorizationService.requireRole(proctor, Role.PROCTOR);
+        return storeExam(proctor, request);
+    }
+
+    @Transactional
+    public ExamImportResponse importAdminExam(AuthenticatedUser admin, ExamImportRequest request) {
+        authorizationService.requireRole(admin, Role.ADMIN);
+        return storeExam(admin, request);
+    }
+
+    private ExamImportResponse storeExam(AuthenticatedUser proctor, ExamImportRequest request) {
         validationService.validate(request);
 
         boolean exists = jdbc.sql("SELECT count(*) FROM exams WHERE exam_id = :examId")
@@ -370,6 +380,9 @@ public class ExamService {
                 .single() > 0;
 
         if (exists) {
+            if (proctor.role() == Role.ADMIN) {
+                throw new ExamApiException(HttpStatus.CONFLICT, ErrorCode.CONFLICT, "Mã đề đã tồn tại.", null);
+            }
             throw new InvalidExamException("Đề thi với mã '" + request.examId() + "' đã tồn tại");
         }
 
@@ -1201,7 +1214,7 @@ public class ExamService {
 
     @Transactional(readOnly = true)
     public CandidateAttemptStatusResponse getAttemptStatus(AuthenticatedUser user, String attemptId) {
-        authorizationService.requireExamRead(user, attemptId);
+        authorizationService.requireResultRead(user, attemptId);
         if(v2!=null)v2.gateStatus(attemptId);
 
         record StatusRow(

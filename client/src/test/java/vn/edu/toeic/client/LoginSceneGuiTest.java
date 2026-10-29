@@ -38,6 +38,10 @@ class LoginSceneGuiTest {
         fx(() -> { application.stop(); stage.close(); return null; });
     }
 
+    @Test void applicationOpensInFullScreen() throws Exception {
+        fx(()->{assertThat(stage.isFullScreen()).isTrue();return null;});
+    }
+
     @Test void formRemainsUsableOnCompactAndLargeWindows() throws Exception {
         await(() -> ((javafx.scene.image.ImageView) stage.getScene().lookup("#login-illustration")).getImage().getProgress() == 1);
         fx(() -> {
@@ -52,6 +56,7 @@ class LoginSceneGuiTest {
         });
         snapshot("login-wide.png");
         fx(() -> {
+            stage.setFullScreen(false);
             stage.setWidth(740); stage.setHeight(560);
             return null;
         });
@@ -116,7 +121,9 @@ class LoginSceneGuiTest {
                 ((TextField)stage.getScene().lookup("#login-username")).setText("candidate1");((PasswordField)stage.getScene().lookup("#login-password")).setText("MOCK-password");
                 ((Button)stage.getScene().lookup("#login-submit")).fire();return null;});
             await(()->stage.getScene().lookup("#account-pin-input")!=null);
-            fx(()->{assertThat(stage.getScene().getRoot().lookupAll(".button").stream()
+            fx(()->{assertThat(stage.getScene().lookup("#candidate-exam-tabs")).isNotNull();
+                assertThat(stage.getScene().lookup("#candidate-history")).isNotNull();
+                assertThat(stage.getScene().getRoot().lookupAll(".button").stream()
                         .noneMatch(n->n instanceof Button b&&"Ca thi được phân công trước đây".equals(b.getText()))).isTrue();return null;});
             fx(()->{assertThat(stage.getScene().lookup("#room-entry-candidate")).isNull();assertThat(stage.getScene().lookup("#room-entry-code")).isNull();
                 ((TextField)stage.getScene().lookup("#account-pin-input")).setText("58321");((Button)stage.getScene().lookup("#account-pin-enter")).fire();return null;});

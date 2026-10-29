@@ -110,7 +110,8 @@ public class MonitoringEventService {
         String lock = writer ? "FOR UPDATE" : "FOR SHARE";
         if (jdbc.sql("SELECT attempt_id FROM monitoring_attempts WHERE attempt_id=:attempt " + lock)
                 .param("attempt", attempt).query(String.class).optional().isEmpty()) throw AccessDeniedException.forbidden();
-        authorization.requireAttempt(user, attempt);
+        if (writer) authorization.requireAttempt(user, attempt);
+        else authorization.requireExamRead(user, attempt);
     }
 
     private static StoredEvent read(ResultSet row, int index) throws SQLException {

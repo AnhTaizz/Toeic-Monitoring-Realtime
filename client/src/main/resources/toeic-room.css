@@ -1,5 +1,6 @@
 /* TOEIC Room - giao diện sáng trắng/cam cho ca PROCTORED_V2. Chỉ áp dụng dưới .toeic-room. */
 .toeic-room {
+    -fx-base: #ffffff;
     -fx-background-color: #faf7f4;
     -fx-font-family: "Segoe UI", "Inter", "Noto Sans", Arial, sans-serif;
     -fx-font-size: 14px;
@@ -137,6 +138,10 @@
 
 /* Hộp thoại (xác nhận nộp bài, đóng ứng dụng) */
 .toeic-room.room-dialog { -fx-background-color: #ffffff; -fx-padding: 4 8 8 8; }
+.toeic-room.room-dialog > .content { -fx-background-color: #ffffff; }
+.toeic-room.room-dialog .room-palette-number { -fx-min-width: 48; -fx-pref-width: 48; -fx-min-height: 36; -fx-padding: 6 8; }
+.toeic-room.room-dialog .scroll-bar { -fx-background-color: #f7f5f2; }
+.toeic-room.room-dialog .scroll-bar .thumb { -fx-background-color: #d5d9df; -fx-background-radius: 8; }
 .toeic-room.room-dialog > .header-panel { -fx-background-color: #ffffff; -fx-padding: 16 16 4 16; }
 .toeic-room.room-dialog > .header-panel .label { -fx-font-size: 17px; -fx-font-weight: 800; -fx-text-fill: #111827; }
 .toeic-room.room-dialog > .content.label { -fx-font-size: 14px; -fx-text-fill: #4b5563; -fx-padding: 4 16 12 16; }

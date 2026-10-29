@@ -164,10 +164,20 @@ class AccountPinFlowPostgresGuiTest {
                     ((javafx.scene.control.PasswordField)stages[index].getScene().lookup("#login-password")).setText(initial);
                     ((Button)stages[index].getScene().lookup("#login-submit")).fire();});
                 await("account login opens PIN entry",()->FxSupport.fx(()->stages[index].getScene().lookup("#account-pin-input")!=null),30);
+                Scene accountScene=FxSupport.fx(()->stages[index].getScene());
+                var legacyShown=new java.util.concurrent.atomic.AtomicBoolean();
+                FxSupport.fxRun(()->accountScene.rootProperty().addListener((o,old,root)->{
+                    if(root.lookup("#candidate-attempts")!=null)legacyShown.set(true);
+                }));
                 if(index==0)uiScreens(stages[index],"c1-pin");
                 FxSupport.fxRun(()->{((TextField)stages[index].getScene().lookup("#account-pin-input")).setText(pin);
                     ((Button)stages[index].getScene().lookup("#account-pin-enter")).fire();});
                 awaitText(stages[index],"Bài thi đã sẵn sàng trên máy này",30);
+                FxSupport.fxRun(()->{
+                    assertThat(stages[index].getScene()).isSameAs(accountScene);
+                    assertThat(stages[index].isFullScreen()).isTrue();
+                    assertThat(legacyShown).isFalse();
+                });
                 if(index==0)uiScreens(stages[index],"c2-lobby-"+readyCount);
                 var joined=logins.joinAccountPin(base,account,pin).get(15,TimeUnit.SECONDS);
                 scoped.add(joined.login());attempts.add(joined.attemptId());
@@ -197,18 +207,33 @@ class AccountPinFlowPostgresGuiTest {
                 assertThat(count("SELECT count(*) FROM attempt_visual_readiness WHERE attempt_id='"+attempt+"'")).isEqualTo(1);
             }
             injectMonitoring(scoped.getFirst().token(),attempts.getFirst());
-            await("dynamic monitoring scope",()->FxSupport.fx(()->pv.alerts(attempts.getFirst()).stream().anyMatch(e->"MOCK-room-e2e-event".equals(e.id()))),25);
-            assertThat(FxSupport.fx(()->pv.alerts(attempts.get(1)).stream().noneMatch(e->"MOCK-room-e2e-event".equals(e.id())))).isTrue();
+            assertThat(count("SELECT count(*) FROM monitoring_events WHERE attempt_id='"+attempts.getFirst()+"' AND event_id='MOCK-room-e2e-event'")).isEqualTo(1);
+            // Native Chrome may already be present: the 30-second server projection keeps the first event id.
+            var events=call("GET","/api/v1/monitoring/attempts/"+attempts.getFirst()+"/events",null,proctor.token(),200).getAsJsonArray("events");
+            String projectedId=java.util.stream.StreamSupport.stream(events.spliterator(),false).map(e->e.getAsJsonObject())
+                    .filter(e->"chrome.exe".equalsIgnoreCase(e.get("processName").getAsString())).findFirst().orElseThrow().get("eventId").getAsString();
+            await("dynamic monitoring scope",()->FxSupport.fx(()->pv.alerts(attempts.getFirst()).stream().anyMatch(e->projectedId.equals(e.id()))),25);
+            assertThat(FxSupport.fx(()->pv.alerts(attempts.get(1)).stream().noneMatch(e->projectedId.equals(e.id())))).isTrue();
             assertStatus("cross-attempt denied",send("GET","/api/v2/attempts/"+attempts.get(1)+"/preparation",null,scoped.getFirst().token()),403);
             uiScreens(ps,"p2-room-ready-"+readyCount);screenshot(ps,"account-pin-ready-"+readyCount+"-no-pin");
             Platform.runLater(()->((Button)pv.lookup("#proctor-room-start")).fire());
             if(ui()){awaitDialog();uiScreens(ps,"p3-start-confirm-"+readyCount);}
+            await("styled START confirmation",()->FxSupport.fx(()->dialogNode("proctor-room-confirm")!=null),10);
+            FxSupport.fxRun(()->{
+                var pane=(DialogPane)dialogNode("proctor-room-confirm");pane.applyCss();
+                assertThat(pane.getBackground().getFills().getFirst().getFill()).isEqualTo(javafx.scene.paint.Color.WHITE);
+                assertThat(((Button)pane.lookupButton(ButtonType.OK)).getStyleClass()).contains("room-button-primary");
+                assertThat(((Button)pane.lookupButton(ButtonType.CANCEL)).isDefaultButton()).isTrue();
+            });
+            write(FxSupport.fx(()->dialogNode("proctor-room-confirm").getScene().snapshot(null)),"proctor-start-confirm-"+readyCount);
             pressDialog(ButtonType.OK,10); // START is irreversible: the room view always asks
             await("START committed",()->pv.controller().snapshot().started()!=null,25);
             await("room shows the running exam",()->FxSupport.fx(()->pv.model().started()&&pv.lookup("#account-pin-value")==null),25);
             for(int i=readyCount;i<2;i++) {
                 awaitText(stages[i],"Phòng đã bắt đầu.",30);prepare(stages[i]);
             }
+            if(readyCount<2)await("late candidate shown as Reading only while active",()->FxSupport.fx(()->pv.model().rows().stream()
+                    .filter(r->"Chỉ làm Reading".equals(r.listening().text())).count()==2-readyCount),30);
             for(int i=0;i<2;i++) {
                 Stage current=stages[i];String attempt=attempts.get(i),token=scoped.get(i).token();
                 await("personal exam access",()->FxSupport.fx(()->current.getScene().lookup("#room-pick-question")!=null),40);
@@ -247,12 +272,25 @@ class AccountPinFlowPostgresGuiTest {
                 await("submitted",()->"SUBMITTED".equals(call("GET","/api/v1/attempts/"+attempt+"/status",null,token,200).get("state").getAsString()),25);
                 if(ui()){await("result dialog",()->FxSupport.fx(()->Window.getWindows().stream().anyMatch(w->w.isShowing()&&w instanceof Stage s&&"Kết Quả Bài Thi TOEIC".equals(s.getTitle()))),25);
                     uiScreens(current,"c8-result-"+readyCount+"-"+i);}
-                screenshot(current,"account-pin-"+readyCount+"-candidate-"+i+"-submitted");closeDialogs();
+                screenshot(current,"account-pin-"+readyCount+"-candidate-"+i+"-submitted");
+                await("result done button",()->FxSupport.fx(()->dialogNode("result-done")!=null),25);
+                FxSupport.fxRun(()->((Button)dialogNode("result-done")).fire());
+                await("back to account home",()->FxSupport.fx(()->current.getScene().lookup("#account-pin-input")!=null),20);
+                FxSupport.fxRun(()->{
+                    assertThat(current.isFullScreen()).isTrue();
+                    var tabs=(javafx.scene.control.TabPane)current.getScene().lookup("#candidate-exam-tabs");
+                    tabs.getSelectionModel().select(1);
+                });
+                await("just submitted attempt in server-backed history",()->FxSupport.fx(()->{
+                    var table=(TableView<vn.edu.toeic.client.exam.CandidateAttemptSummary>)current.getScene().lookup("#candidate-history");
+                    return table!=null && table.getItems().stream().anyMatch(r->r.attemptId().equals(attempt)&&r.state().equals("SUBMITTED"));
+                }),20);
+                screenshot(current,"candidate-history-"+readyCount+"-"+i);
+                uiScreens(current,"c9-history-"+readyCount+"-"+i);
             }
             await("room reports every candidate finished with correct counts",()->FxSupport.fx(()->pv.model().allFinished()
                     &&pv.model().rows().stream().allMatch(r->r.status().text().startsWith("Đã nộp · đúng "))),30);
-            if(readyCount<2)await("late candidate shown as Reading only",()->FxSupport.fx(()->pv.model().rows().stream()
-                    .filter(r->"Chỉ làm Reading".equals(r.listening().text())).count()==2-readyCount),30);
+            assertThat(FxSupport.fx(()->pv.model().rows().stream().allMatch(r->"Đã nộp".equals(r.listening().text())))).isTrue();
             uiScreens(ps,"p4-room-finished-"+readyCount);
             log.add("PASS: production Admin/Proctor/two Candidate apps; ready="+readyCount+"/2; shared PIN; monitoring; actual media playback where authorized; late Reading; autosave/submit/reconnect. Physical hearing/LAN NOT TESTED.");
         } finally {

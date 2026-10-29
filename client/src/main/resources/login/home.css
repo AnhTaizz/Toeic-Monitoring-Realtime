@@ -30,6 +30,12 @@
 .candidate-home .table-view, .candidate-home .table-row-cell, .candidate-home .table-cell { -fx-background-color: white; -fx-text-fill: #263957; }
 .candidate-home .table-row-cell:selected, .candidate-home .table-row-cell:selected .table-cell { -fx-background-color: #fff0e4; -fx-text-fill: #263957; }
 .candidate-home .column-header, .candidate-home .column-header-background { -fx-background-color: #f2f5fa; }
+.candidate-home .table-view { -fx-base: white; -fx-border-color: #e3e7ee; -fx-border-radius: 8; -fx-background-radius: 8; }
+.candidate-home .table-view .filler { -fx-background-color: #f2f5fa; }
+.candidate-home .table-view .column-header, .candidate-home .table-view .table-cell { -fx-border-color: transparent transparent #e9edf2 transparent; -fx-padding: 10 12; }
+.candidate-home .table-view .column-header .label { -fx-text-fill: #607495; -fx-font-weight: bold; }
+.candidate-home .table-row-cell:empty { -fx-background-color: white; }
+.candidate-home .table-row-cell:empty .table-cell { -fx-border-color: transparent; }
 .candidate-home .titled-pane > .title { -fx-background-color: #f2f5fa; -fx-padding: 9; }
 .candidate-home .titled-pane > .content { -fx-background-color: white; -fx-border-color: #e2e7ef; }
 

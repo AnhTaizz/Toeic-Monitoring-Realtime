@@ -1,6 +1,5 @@
 package vn.edu.toeic.client.exam;
 
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
@@ -48,6 +47,7 @@ public final class CandidateExamHistoryView extends VBox implements AutoCloseabl
         setPadding(new Insets(16));
         table.setId("candidate-history");
         table.setPrefHeight(220);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         table.setPlaceholder(new Label("Chưa có kết quả trong các trang đã tải."));
         column("Ca thi", value -> value.sessionTitle(), 180);
         column("Đề thi", value -> value.examTitle(), 180);
@@ -102,12 +102,16 @@ public final class CandidateExamHistoryView extends VBox implements AutoCloseabl
             page.attempts().forEach(item -> seen.add(item.attemptId()));
             loaded += page.attempts().size();
             page.attempts().stream().filter(CandidateAttemptSummary::finished).forEach(table.getItems()::add);
+            table.getItems().sort(java.util.Comparator.comparing(CandidateAttemptSummary::submittedAt).reversed());
             cursor = page.nextAfterAttemptId();
             status.setText("Đã tải " + table.getItems().size() + " kết quả do server liệt kê."
                     + (loaded >= MAX_ROWS ? " Đã đạt giới hạn tải; làm mới để tải lại." : ""));
             updateButtons();
         }));
     }
+
+    /** Refresh on entering the history tab, including after returning from a completed exam. */
+    public void refresh() { load(true); }
 
     private void openSelected() {
         CandidateAttemptSummary selected = table.getSelectionModel().getSelectedItem();

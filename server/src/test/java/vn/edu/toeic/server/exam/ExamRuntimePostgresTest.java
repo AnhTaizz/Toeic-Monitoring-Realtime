@@ -127,8 +127,10 @@ class ExamRuntimePostgresTest {
         assertThat(scope.canReadExam(owner, attempt)).isTrue();
         assertThat(scope.canAccess(owner, attempt)).isEqualTo("ACTIVE".equals(state));
         assertThat(scope.activeAttempts(owner).contains(attempt)).isEqualTo("ACTIVE".equals(state));
-        expect(get("/api/v1/monitoring/attempts/" + attempt + "/events", proctorToken), "ACTIVE".equals(state) ? 200 : 403);
+        // The base branch deliberately retains assigned proctor history after submit/timeout.
+        expect(get("/api/v1/monitoring/attempts/" + attempt + "/events", proctorToken), 200);
         jdbc.sql("DELETE FROM monitoring_proctor_assignments WHERE attempt_id = :a").param("a", attempt).update();
+        expect(get("/api/v1/monitoring/attempts/" + attempt + "/events", proctorToken), 403);
         expect(get(path(attempt, "status"), proctorToken), 403);
         expect(get(path(attempt, "exam"), proctorToken), 403);
         System.out.println("PASS read gates " + state + ": owner/assigned allowed; foreign/unauth/revoked denied; ACTIVE scope preserved");

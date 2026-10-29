@@ -104,7 +104,7 @@ final class ProctorRoomModel {
             CandidateSignals signals = in.signals() == null ? null : in.signals().of(attempt);
             rows.add(new Row(attempt, member.displayName(), member.username(),
                     status(member, started, isReady, row, progress.paginationComplete()),
-                    connection(connections.get(attempt), member), listening(started, listening.of(attempt)),
+                    connection(connections.get(attempt), member), listening(started, listening.of(attempt),row),
                     sticky(SignalSummaryView.Kind.USB, in.signalsWatched(), signals, history),
                     sticky(SignalSummaryView.Kind.FOCUS, in.signalsWatched(), signals, history),
                     sticky(SignalSummaryView.Kind.WINDOW, in.signalsWatched(), signals, history),
@@ -148,7 +148,13 @@ final class ProctorRoomModel {
 
     /** From the attempt's own listening status; room readiness says nothing after START. */
     static Cell listening(boolean started, ListeningStatusReader.Entry entry) {
+        return listening(started,entry,null);
+    }
+
+    static Cell listening(boolean started, ListeningStatusReader.Entry entry,ProctorProgressRow progress) {
         if (!started) return new Cell("Chưa bắt đầu", "gray");
+        if(progress!=null&&"SUBMITTED".equals(progress.state()))return new Cell("Đã nộp","green");
+        if(progress!=null&&"TIMED_OUT".equals(progress.state()))return new Cell("Đã hết giờ","green");
         ListeningStatusResponse status = entry == null ? null : entry.status();
         if (status == null) {
             return entry != null && entry.load() == ListeningStatusReader.Load.LOADING

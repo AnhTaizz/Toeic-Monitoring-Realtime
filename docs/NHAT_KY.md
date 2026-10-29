@@ -1273,3 +1273,11 @@ Chạy lại `AccountPinFlowPostgresGuiTest` + `RoomFlowPostgresGuiTest` khi má
 - Viết lại `docs/DEMO-RUNBOOK.md`: máy chủ chạy từ repo (`.env`, `docker compose`, `START-CLOUDFLARE-SERVER.bat [-AllowLan]`), Thí sinh/Giám thị cài MSI; luồng demo theo màn "Phòng thi" (PIN chung, "Đang chuẩn bị"/"Sẵn sàng", "Bắt đầu phòng thi", cột USB/Focus/Cửa sổ ghim vi phạm, "Lịch sử đầy đủ"), Admin tự đặt mật khẩu; bảng sự cố theo thông báo của `start-cloudflare.ps1`. Bỏ hướng dẫn bundle portable (`Start-Server.bat`, `server.env`). Nhãn nút đã đối chiếu với code.
 - README trỏ bước tải MSI tới trang Releases.
 - Đăng `ToeicMonitor-0.4.2.msi` (SHA-256 `52062a60b4a07e5112550ee69f1306dfba9291f2c1b5cfc5f3df8ca336cacea4`) lên GitHub Releases, tag `v0.4.2`. MSI build từ `b46f501`; `client/`, `protocol/` và script đóng gói không đổi từ đó tới `main`. Không chạy test trong phiên này (chỉ tài liệu và phát hành).
+
+## 27/10/2026 · B/A · UI phòng thi, lịch sử sau nộp và fullscreen
+
+- Nhánh mới `codex/fix-room-ui-history-fullscreen` từ `origin/fix/candidate-post-submit-history-fullscreen` (`1187f0d`). Người dùng yêu cầu chỉ commit local, không PR/merge và không dùng `codex-with-chatgpt`; làm đúng phạm vi này.
+- Đã làm: sửa palette chọn câu và xác nhận giám thị theo style trắng/cam; lịch sử tự làm mới, bảng co cột và xếp các hàng đã tải theo giờ kết thúc. Token tài khoản được đọc kết quả phòng PIN đã chốt của đúng candidate/member đã JOIN, qua quyền đọc riêng cho history/status; đề/media, takeover, save/submit và monitoring vẫn theo admission.
+- PIN vào lobby V2 trực tiếp qua thẻ trạng thái kết nối, xác minh scope trước collector/takeover; bỏ dựng màn chọn ca cũ rồi tự bấm nút. Dùng một Scene và đổi root để giữ fullscreen trên Windows; tháo listener close guard khi rời màn thi.
+- Đã kiểm: compile PASS; client focused 72 PASS/1 SKIP; server/legacy 79 PASS. Kết quả và lượt chạy lại E2E PIN ghi trong [báo cáo](../evidence/room-ui-fixes-20261027/REPORT.md), kèm ảnh JavaFX thật với đề/tài khoản/media MOCK. Giữ các kết quả FAIL ban đầu, không cộng dồn suite trùng nhau.
+- Cần người khác: A review quyền đọc kết quả; B/C review luồng khởi động hook collector. Cần chạy lại Server và Client mới; chưa build/phát hành MSI, chưa nghiệm thu LAN hai máy/nghe bằng tai/USB vật lý. Không sửa tracker/DONE/giờ công.
