@@ -25,6 +25,11 @@ public final class RichExamJson {
     public RichExamImportRequest read(InputStream input) throws IOException {
         return read(input, RichExamImportRequest.class);
     }
+    byte[] write(RichExamImportRequest request) {
+        return new GsonBuilder().registerTypeAdapter(LocalDate.class,
+                (JsonSerializer<LocalDate>)(date,type,context)->new JsonPrimitive(date.toString()))
+                .create().toJson(request).getBytes(StandardCharsets.UTF_8);
+    }
 
     public <T> T read(InputStream input, Class<T> type) throws IOException {
         byte[] bytes = input.readNBytes(MAX_BYTES + 1);

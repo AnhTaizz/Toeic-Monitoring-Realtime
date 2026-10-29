@@ -73,22 +73,65 @@ class AdminExamGuiTest {
         assertThat(JsonParser.parseString(bodies.getFirst()).getAsJsonObject().get("title").getAsString()).isEqualTo("Đề vừa import");
         assertThat(JsonParser.parseString(bodies.getFirst()).getAsJsonObject().get("examId").getAsString()).isEqualTo("oicaidjt");
     }
-    @Test void editingJsonUpdatesMetadataAndKeepsFormOnServerRejection() throws Exception {
+    @Test void editingQuestionFieldsKeepsAllEditsOnServerRejection() throws Exception {
         fxRun(()->((Button)view.lookup("#admin-exam-edit-MOCK-01")).fire());await("edit form",()->dialog("admin-exam-code")!=null);
-        fxRun(()->{((TextArea)dialog("admin-exam-content")).setText(sample("MOCK-01").replace("Đề mẫu","Tên sửa từ JSON"));});
-        assertThat(fx(()->((TextField)dialog("admin-exam-title")).getText())).isEqualTo("Tên sửa từ JSON");
+        fxRun(()->{((TextField)dialog("admin-exam-title")).setText("Tên đã sửa");
+            ((TextArea)dialog("exam-question-prompt")).setText("Nội dung câu đã sửa");
+            ((TextArea)dialog("exam-question-option-B")).setText("Lựa chọn mới");
+            ((ComboBox<String>)dialog("exam-question-correct")).setValue("B");});
+        screenshot(fx(()->dialog("admin-exam-code").getScene().getRoot()),"admin-question-editor.png");
         status.set(409);fxRun(()->((Button)dialog("admin-exam-save")).fire());
         await("error",()->((Label)dialog("admin-exam-form-status")).getText().contains("đã tồn tại"));
-        assertThat(fx(()->((TextField)dialog("admin-exam-title")).getText())).isEqualTo("Tên sửa từ JSON");
-        fxRun(()->((TextArea)dialog("admin-exam-content")).setText(sample("DIFFERENT-ID")));
-        assertThat(fx(()->dialog("admin-exam-save").isDisabled())).isTrue();
+        assertThat(fx(()->((TextArea)dialog("exam-question-prompt")).getText())).isEqualTo("Nội dung câu đã sửa");
+        var saved=JsonParser.parseString(bodies.getFirst()).getAsJsonObject().getAsJsonArray("questions").get(0).getAsJsonObject();
+        assertThat(saved.get("prompt").getAsString()).isEqualTo("Nội dung câu đã sửa");
+        assertThat(saved.get("correctOption").getAsString()).isEqualTo("B");
+        assertThat(saved.getAsJsonArray("options").get(1).getAsJsonObject().get("optionText").getAsString()).isEqualTo("Lựa chọn mới");
+        assertThat(fx(()->((TextField)dialog("admin-exam-code")).isEditable())).isFalse();
     }
     @Test void usedExamsAllowMetadataEditsWithoutChangingTheirQuestions() throws Exception {
         fxRun(()->((Button)view.lookup("#admin-exam-edit-MOCK-02")).fire());await("edit used",()->dialog("admin-exam-title")!=null);
-        assertThat(fx(()->dialog("admin-exam-content"))).isNull();
+        fxRun(()->((CheckBox)dialog("admin-exam-revision")).setSelected(false));
+        assertThat(fx(()->dialog("exam-question-editor").isDisabled())).isTrue();
         fxRun(()->{((TextField)dialog("admin-exam-title")).setText("Đổi tên đề đã thi");((Button)dialog("admin-exam-save")).fire();});
         await("patched",()->calls.stream().anyMatch(c->c.startsWith("PATCH")) && dialog("admin-exam-title")==null);
         assertThat(bodies.getFirst()).contains("Đổi tên đề đã thi").doesNotContain("questions");
+    }
+    @Test void usedExamCanSaveEditedQuestionsAndAnswerAsANewExam() throws Exception {
+        fxRun(()->((Button)view.lookup("#admin-exam-edit-MOCK-02")).fire());await("revision form",()->dialog("exam-question-prompt")!=null);
+        fxRun(()->{((TextField)dialog("admin-exam-code")).setText("NEW-REVISION");
+            ((TextArea)dialog("exam-question-prompt")).setText("Revised prompt");
+            ((ComboBox<String>)dialog("exam-question-correct")).setValue("B");((Button)dialog("admin-exam-save")).fire();});
+        await("revision saved",()->dialog("admin-exam-code")==null);
+        assertThat(calls).contains("POST /api/v2/admin/exams/revision?examId=MOCK-02&version=1");
+        var saved=JsonParser.parseString(bodies.getFirst()).getAsJsonObject();
+        assertThat(saved.get("examId").getAsString()).isEqualTo("NEW-REVISION");
+        assertThat(saved.getAsJsonArray("questions").get(0).getAsJsonObject().get("correctOption").getAsString()).isEqualTo("B");
+    }
+    @Test void richEditorSharesPassageEditsAndPreservesMediaIdsAndOriginalDocument() throws Exception {
+        var source=JsonParser.parseString("""
+            {"exam":{"examId":"rich","title":"Rich"},"groups":[{"groupId":"g1","blocks":[],"documents":[
+              {"documentId":"d1","title":"Email","blocks":[{"blockId":"p1","type":"TEXT","orderIndex":1,"text":"Old passage"}]}]}],
+             "questions":[{"questionId":"q1","orderIndex":131,"part":6,"groupId":"g1","scoring":{"correctOption":"A"},
+              "blocks":[{"blockId":"b1","type":"TEXT","orderIndex":1,"text":"Blank 131 A. one B. two"},{"blockId":"img1","type":"IMAGE","orderIndex":2,"mediaId":"m1"}],
+              "options":[{"optionId":"A","text":"one"},{"optionId":"B","text":"two"}]},
+              {"questionId":"q2","orderIndex":132,"part":6,"groupId":"g1","scoring":{"correctOption":"A"},
+              "blocks":[{"blockId":"b2","type":"TEXT","orderIndex":1,"text":"A. one B. two"}],"options":[{"optionId":"A","text":"one"},{"optionId":"B","text":"two"}]}]}
+            """).getAsJsonObject();
+        var original=source.deepCopy();var editor=fx(()->new ExamQuestionEditor(source));
+        fxRun(()->{
+            stage.getScene().setRoot(editor);editor.applyCss();editor.layout();
+            assertThat(((TextArea)editor.lookup("#exam-question-prompt")).getText()).isEqualTo("Blank 131");
+            ((TextArea)editor.lookup("#exam-document-d1-text-p1")).setText("Updated shared passage");
+            ((ComboBox<String>)editor.lookup("#exam-question-correct")).setValue("B");
+            ((ListView<?>)editor.lookup("#exam-question-list")).getSelectionModel().select(1);
+            editor.applyCss();editor.layout();
+        });
+        assertThat(fx(()->((TextArea)editor.lookup("#exam-document-d1-text-p1")).getText())).isEqualTo("Updated shared passage");
+        assertThat(fx(()->((TextArea)editor.lookup("#exam-question-prompt")).getText())).isEqualTo("Chọn đáp án phù hợp cho chỗ trống 132.");
+        var saved=fx(editor::document);assertThat(saved.getAsJsonArray("questions").get(0).getAsJsonObject().getAsJsonObject("scoring").get("correctOption").getAsString()).isEqualTo("B");
+        assertThat(saved.getAsJsonArray("questions").get(0).getAsJsonObject().getAsJsonArray("blocks").get(1)).isEqualTo(original.getAsJsonArray("questions").get(0).getAsJsonObject().getAsJsonArray("blocks").get(1));
+        assertThat(source).isEqualTo(original);fxRun(editor::validate);
     }
     @Test void missingServerApiIsExplainedAndImportIsDisabledUntilReloadSucceeds() throws Exception {
         status.set(404);fxRun(()->((Button)view.lookup("#admin-exam-find")).fire());

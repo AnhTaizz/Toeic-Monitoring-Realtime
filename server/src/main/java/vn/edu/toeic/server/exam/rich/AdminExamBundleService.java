@@ -24,13 +24,44 @@ public class AdminExamBundleService {
     private final RichExamJson json;
     private final RichExamValidator validator;
     private final TransactionTemplate transaction;
+    private final RichMediaValidator mediaValidator;
     private record Published(Path target,Path backup) {}
     public AdminExamBundleService(@Value("${toeic.audio.root:audio-resources}") String audio,
             @Value("${toeic.image.root:image-resources}") String images,AuthorizationService authorization,
-            AdminExamService exams,RichExamJson json,RichExamValidator validator,PlatformTransactionManager manager) {
+            AdminExamService exams,RichExamJson json,RichExamValidator validator,PlatformTransactionManager manager,RichMediaValidator mediaValidator) {
         audioRoot=Path.of(audio).toAbsolutePath().normalize();imageRoot=Path.of(images).toAbsolutePath().normalize();
         this.authorization=authorization;this.exams=exams;this.json=json;this.validator=validator;
         transaction=new TransactionTemplate(manager);
+        this.mediaValidator=mediaValidator;
+    }
+    /** Publish edited content under a new ID, copying media on the server, never overwriting the source. */
+    public void revise(AuthenticatedUser admin,String sourceId,Object edited) throws IOException {
+        authorization.requireRole(admin,Role.ADMIN);
+        Object original=exams.read(admin,sourceId);
+        if(edited instanceof vn.edu.toeic.protocol.exam.ExamImportRequest legacy) {
+            if(!(original instanceof vn.edu.toeic.protocol.exam.ExamImportRequest)||sourceId.equals(legacy.examId()))
+                throw ExamApiException.invalidInput("Bản chỉnh sửa phải cùng định dạng và có mã khác đề gốc.");
+            exams.save(admin,null,legacy);return;
+        }
+        if(!(edited instanceof RichExamImportRequest request)||!(original instanceof RichExamImportRequest source))
+            throw ExamApiException.invalidInput("Bản chỉnh sửa phải cùng định dạng với đề gốc.");
+        validator.validate(request);
+        if(sourceId.equals(request.exam().examId()))throw ExamApiException.invalidInput("Nhập mã khác đề gốc.");
+        if(!source.media().equals(request.media()))throw ExamApiException.invalidInput("Bản chỉnh sửa giữ nguyên media của đề gốc. Import JSON để thay bộ media.");
+        Path zip=Files.createTempFile("toeic-exam-revision-",".zip");
+        try {
+            try(var out=new ZipOutputStream(Files.newOutputStream(zip))) {
+                byte[] manifest=json.write(request);long total=manifest.length;
+                if(total>RichExamJson.MAX_BYTES)throw ExamApiException.invalidInput("JSON vượt giới hạn dung lượng.");
+                out.putNextEntry(new ZipEntry("rich-import.json"));out.write(manifest);out.closeEntry();
+                for(var media:source.media()) {
+                    total+=media.sizeBytes();if(total>MAX_TOTAL)throw ExamApiException.invalidInput("Media vượt giới hạn dung lượng.");
+                    byte[] bytes=mediaValidator.readAsset(sourceId,media);
+                    out.putNextEntry(new ZipEntry(entry(request.exam().examId(),media)));out.write(bytes);out.closeEntry();
+                }
+            }
+            try(var in=Files.newInputStream(zip)){upload(admin,null,in);}
+        }finally{Files.deleteIfExists(zip);}
     }
     public void upload(AuthenticatedUser admin,String replaceId,InputStream input) throws IOException {
         authorization.requireRole(admin,Role.ADMIN);

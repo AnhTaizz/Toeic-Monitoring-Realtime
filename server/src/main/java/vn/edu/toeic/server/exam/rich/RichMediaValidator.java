@@ -51,6 +51,8 @@ public final class RichMediaValidator {
         validateImageMetadata(media);
         return verified(examId, media).bytes();
     }
+    /** Admin revisions copy only an asset whose bytes still match its stored metadata. */
+    byte[] readAsset(String examId,MediaImport media) {return verified(examId,media).bytes();}
 
     static void validateImageMetadata(MediaImport media) {
         if (media == null || media.mediaType() != MediaType.IMAGE
