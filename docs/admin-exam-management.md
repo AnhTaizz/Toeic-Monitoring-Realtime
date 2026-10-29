@@ -13,7 +13,7 @@
 
 ![Xem trước thông tin đề trước khi import](admin-exam-import.png)
 
-Khi import, phần JSON là bản xem trước chỉ đọc. Dữ liệu gửi được dựng trực tiếp từ đề đã đọc và các ô mã/tên/mô tả tại thời điểm bấm Import, không đọc ngược từ ô xem trước. Muốn thay nội dung đề nguồn, chọn JSON thay thế. Màn hình Sửa đề có sẵn vẫn cho chỉnh JSON.
+Khi import, phần JSON là bản xem trước chỉ đọc. Dữ liệu gửi được dựng trực tiếp từ đề đã đọc và các ô mã/tên/mô tả tại thời điểm bấm Import, không đọc ngược từ ô xem trước. Muốn thay nội dung đề nguồn, chọn JSON thay thế. Sau khi import, chọn **Sửa** để chỉnh từng câu bằng các ô nhập.
 
 Chức năng không tải đường dẫn web. Nếu chỉ có URL trong JSON, cần crawl/tải media về đúng các đường dẫn tương đối trước. Không thay nội dung tệp crawl gốc.
 
@@ -23,9 +23,16 @@ JSON nội bộ v1/v2 vẫn được hỗ trợ. Nếu chọn `rich-import.json`
 
 ## Sửa đề có sẵn
 
-- **Đề chưa sử dụng:** sửa tên, mô tả và nội dung JSON hoặc chọn JSON thay thế. Thay bằng `server_exam.json` sẽ gửi cả media mới; mã đề phải trùng đề đang sửa.
-- **Đề đã dùng trong ca thi:** sửa tên/mô tả; câu hỏi và đáp án giữ nguyên để bảo toàn bài làm và kết quả. Muốn thay nội dung cho ca thi mới, import một đề có mã khác.
-- Chỉnh tên/mô tả và chỉnh JSON được đồng bộ; không có hai bản thông tin cạnh tranh khi lưu. Import lỗi giữ lại form để sửa/thử lại. Không tự gửi lại yêu cầu ghi khi mất mạng.
+1. Chọn **Sửa** tại đề cần sửa. Lọc theo Part hoặc tìm số/nội dung câu hỏi ở bên trái.
+2. Sửa **Nội dung câu hỏi**, **Lựa chọn A/B/C/D** (Part 2 chỉ có A/B/C) và chọn **Đáp án đúng**. Các ô cập nhật ngay vào bản nháp; chuyển câu rồi quay lại vẫn giữ nội dung vừa nhập.
+3. Với Part 6/7, có thể sửa tiêu đề và nội dung đoạn văn chung. Thay đổi đoạn văn áp dụng cho mọi câu thuộc cùng nhóm; ID câu/nhóm và tham chiếu media được giữ nguyên.
+4. **Đề chưa sử dụng:** bấm **Lưu thay đổi** để cập nhật cùng mã đề.
+5. **Đề đã dùng trong ca thi:** mặc định **Lưu thành đề mới**. Nhập mã đề mới rồi lưu; server sao chép media đã kiểm chứng sang đề mới. Không cần tải lại JSON hoặc media từ máy cá nhân. Đề gốc, các ca thi và kết quả cũ giữ nguyên. Khi tạo ca thi sau đó, chọn mã đề mới.
+6. Nếu chỉ đổi tên/mô tả của đề đã dùng, bỏ chọn **Lưu thành đề mới…** rồi bấm **Lưu tên và mô tả**; phần câu hỏi bị khóa trong chế độ này.
+
+![Biên tập nội dung câu hỏi và đáp án](admin-question-editor.png)
+
+Màn hình sửa không yêu cầu sửa JSON. Media hiện có được giữ nguyên; thay toàn bộ bộ media bằng một lần import JSON với mã đề mới. Lỗi lưu giữ lại bản nháp để sửa/thử lại. Không tự gửi lại yêu cầu ghi khi mất mạng. Bộ lọc trùng lựa chọn ở cuối câu hỏi cũng được áp dụng trước khi sửa để lựa chọn cũ không xuất hiện lại sau khi thay nội dung A/B/C/D.
 
 ## Giải thích lỗi và cấu trúc dữ liệu
 
@@ -49,10 +56,13 @@ Các route dùng Bearer token ADMIN, phản hồi `no-store`:
 | PUT | `/api/v2/admin/exams/item?examId=...&version=1` hoặc `version=2` | Thay nội dung đề chưa sử dụng |
 | POST/PUT | `/api/v2/admin/exams/bundle` (PUT có `examId`) | Gói JSON + media, `application/zip` |
 | PATCH | `/api/v2/admin/exams/item?examId=...` | Sửa `{title, description}`, kể cả đề đã dùng |
+| POST | `/api/v2/admin/exams/revision?examId=...&version=1/2` | Tạo đề mới từ bản chỉnh sửa, sao chép media trên server |
 
 Client tự tạo ZIP từ crawl, người dùng chỉ chọn JSON. Server chỉ nhận `rich-import.json` và media được JSON tham chiếu; kiểm đường dẫn, số lượng, dung lượng, hash và định dạng. Giới hạn giải nén: JSON 2 MiB, mỗi audio 64 MiB, mỗi ảnh 8 MiB, tổng 322 MiB, tối đa 200 media. Proxy/tunnel phía trước server cũng cần cho phép dung lượng gói thực tế.
 
 Import media và ghi đề được điều phối dưới khóa theo mã đề; lỗi ghi DB/kiểm media khôi phục lại các tệp cũ và rollback đề. Đề đã dùng bị kiểm tra lại trên server trước khi đổi bất kỳ media nào.
+
+API revision chỉ dành cho ADMIN, yêu cầu mã đề khác nguồn và cùng phiên bản nội dung. Với v2, metadata media phải trùng đề nguồn; server đọc và kiểm tra hash/định dạng từng tệp trước khi đóng gói, rồi dùng lại luồng upload có rollback. Client và server phải cùng được cập nhật để dùng **Lưu thành đề mới**; server cũ vẫn hỗ trợ lưu câu hỏi của đề chưa sử dụng.
 
 ## Kiểm thử
 

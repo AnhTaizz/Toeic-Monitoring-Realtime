@@ -159,6 +159,29 @@ class AdminExamPostgresTest {
         check(call("PUT",item("metadata")+"&version=1",legacy("metadata").toString(),admin),409);
         check(call("PATCH",item("metadata"),"{\"title\":\"Bad\",\"description\":\"\"}",candidate),403);
     }
+    @Test void revisionCopiesVerifiedMediaAndEditsWithoutTouchingUsedSource() throws Exception {
+        var original=RichExamFixtures.tree();String id="mock-ex02-200";
+        check(call("POST",API,original.toString(),admin),201);
+        try(var s=db.createStatement()){s.execute("INSERT INTO exam_sessions(session_id,exam_id,title,duration_seconds,created_by) SELECT 'revision-session','mock-ex02-200','Ca thi',60,id FROM user_accounts WHERE username='proctor1'");}
+        var before=tree(check(call("GET",item(id),null,admin),200));var changed=before.deepCopy();
+        changed.getAsJsonObject("exam").addProperty("examId","revision-01");
+        RichExamFixtures.question(changed,105).getAsJsonObject("scoring").addProperty("correctOption","B");
+        RichExamFixtures.question(changed,105).getAsJsonArray("options").get(1).getAsJsonObject().addProperty("text","Revised choice");
+        for(String token:List.of(candidate,proctor))check(call("POST",API+"/revision?examId="+id,changed.toString(),token),403);
+        var bad=changed.deepCopy();RichExamFixtures.media(bad,0).addProperty("sha256","0".repeat(64));
+        check(call("POST",API+"/revision?examId="+id,bad.toString(),admin),400);
+        assertThat(Files.exists(temporary.resolve("audio/revision-01"))).isFalse();
+        check(call("POST",API+"/revision?examId="+id,changed.toString(),admin),201);
+        sameGraph(tree(check(call("GET",item("revision-01"),null,admin),200)),changed);
+        sameGraph(tree(check(call("GET",item(id),null,admin),200)),before);
+        for(var media:RichExamFixtures.request().media()) {
+            Path root=temporary.resolve(media.mediaType().name().equals("AUDIO")?"audio":"images");
+            assertThat(Files.readAllBytes(root.resolve("revision-01").resolve(media.localFile())))
+                    .isEqualTo(Files.readAllBytes(root.resolve(id).resolve(media.localFile())));
+        }
+        check(call("POST",API+"/revision?examId="+id,changed.toString(),admin),409);
+        sameGraph(tree(check(call("GET",item(id),null,admin),200)),before);
+    }
     @Test @EnabledIfEnvironmentVariable(named="TOEIC_STUDY4_SOURCE",matches=".+")
     void actualStudy4JsonAndDesktopMediaReachTheServerThroughTheUploadEndpoint() throws Exception {
         try(var prepared=AdminExamImport.load(Path.of(env("TOEIC_STUDY4_SOURCE")))) {
@@ -199,6 +222,28 @@ class AdminExamPostgresTest {
             assertThat(number("SELECT count(*) FROM exam_questions WHERE exam_id='oicaidjt'")).isEqualTo(200);
             assertThat(number("SELECT count(*) FROM exam_media_assets WHERE exam_id='oicaidjt'")).isEqualTo(65);
             assertThat(tree(check(call("GET",item("oicaidjt"),null,admin),200)).getAsJsonObject("exam").get("title").getAsString()).isEqualTo("oicaidjt");
+            awaitAdmin(()->root.lookup("#admin-exam-edit-oicaidjt")!=null&&!root.lookup("#admin-exam-find").isDisabled());
+            adminFx(()->{((javafx.scene.control.Button)root.lookup("#admin-exam-edit-oicaidjt")).fire();return null;});
+            awaitAdmin(()->adminControl("exam-question-list")!=null);
+            adminFx(()->{
+                ((javafx.scene.control.ListView<?>)adminControl("exam-question-list")).getSelectionModel().select(105);
+                ((javafx.scene.control.TextArea)adminControl("exam-question-prompt")).setText("The library ____ its doors last week.");
+                ((javafx.scene.control.TextArea)adminControl("exam-question-option-B")).setText("reopened");
+                ((javafx.scene.control.ComboBox<String>)adminControl("exam-question-correct")).setValue("B");
+                // Switch away and back: edits must survive navigation before saving.
+                ((javafx.scene.control.ListView<?>)adminControl("exam-question-list")).getSelectionModel().select(106);
+                ((javafx.scene.control.ListView<?>)adminControl("exam-question-list")).getSelectionModel().select(105);
+                assertThat(((javafx.scene.control.TextArea)adminControl("exam-question-option-B")).getText()).isEqualTo("reopened");
+                ((javafx.scene.control.Button)adminControl("admin-exam-save")).fire();return null;
+            });
+            awaitAdmin(()->adminControl("admin-exam-save")==null || !adminControl("admin-exam-save").isDisabled());
+            assertThat(adminFx(()->adminControl("admin-exam-form-status")==null?"":((javafx.scene.control.Label)adminControl("admin-exam-form-status")).getText())).isEmpty();
+            var edited=tree(check(call("GET",item("oicaidjt"),null,admin),200));var q=RichExamFixtures.question(edited,105);
+            assertThat(q.getAsJsonObject("scoring").get("correctOption").getAsString()).isEqualTo("B");
+            assertThat(q.getAsJsonArray("options").get(1).getAsJsonObject().get("text").getAsString()).isEqualTo("reopened");
+            assertThat(q.getAsJsonArray("blocks").get(0).getAsJsonObject().get("text").getAsString()).isEqualTo("The library ____ its doors last week.");
+            assertThat(edited.getAsJsonArray("questions").size()).isEqualTo(200);
+            assertThat(edited.getAsJsonArray("media").size()).isEqualTo(65);
         } finally {adminFx(()->{root.close();stage.close();return null;});}
     }
     private static javafx.scene.Node adminControl(String id) {

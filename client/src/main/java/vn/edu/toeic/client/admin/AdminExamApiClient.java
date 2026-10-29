@@ -40,6 +40,10 @@ public final class AdminExamApiClient implements AutoCloseable {
     public void upload(String id,Path zip) throws Exception {
         exchange(id==null?"POST":"PUT","/bundle"+(id==null?"":"?examId="+encode(id)),HttpRequest.BodyPublishers.ofFile(zip),"application/zip",id==null?201:200);
     }
+    public void revise(String sourceId,String body) throws Exception {
+        var tree=AdminExamImport.parse(body);int version=tree.has("schemaVersion")?tree.get("schemaVersion").getAsInt():1;
+        call("POST","/revision?examId="+encode(sourceId)+"&version="+version,body,201);
+    }
     public void metadata(String id,String title,String description) throws Exception {
         call("PATCH","/item?examId="+encode(id),json.toJson(java.util.Map.of("title",title,"description",description)),200);
     }

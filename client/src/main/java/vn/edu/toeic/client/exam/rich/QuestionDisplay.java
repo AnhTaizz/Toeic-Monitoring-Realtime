@@ -6,10 +6,10 @@ import vn.edu.toeic.protocol.exam.rich.CandidateQuestion;
 import vn.edu.toeic.protocol.exam.rich.OptionContent;
 
 /** Presentation only: keep imported question data intact while hiding a repeated option suffix. */
-final class QuestionDisplay {
+public final class QuestionDisplay {
     private QuestionDisplay() {}
 
-    static String prompt(CandidateQuestion question) {
+    public static String prompt(CandidateQuestion question) {
         String text=RichExamModel.text(question.blocks());
         var options=question.options().stream().sorted(Comparator.comparingInt(OptionContent::orderIndex)).toList();
         if(options.size()<2)return text;

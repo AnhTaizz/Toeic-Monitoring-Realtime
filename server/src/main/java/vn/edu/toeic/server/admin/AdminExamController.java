@@ -50,6 +50,12 @@ public class AdminExamController {
     public ResponseEntity<Void> delete(HttpServletRequest request,@RequestParam String examId) {
         service.delete(user(request),examId);return ResponseEntity.noContent().cacheControl(CacheControl.noStore()).build();
     }
+    @PostMapping("/revision")
+    public ResponseEntity<Map<String,String>> revise(HttpServletRequest request,@RequestParam String examId,
+            @RequestParam(defaultValue="2") int version) throws IOException {
+        var admin=user(request);bundles.revise(admin,examId,readBody(request,version));
+        return ResponseEntity.status(HttpStatus.CREATED).cacheControl(CacheControl.noStore()).body(Map.of("status","CREATED"));
+    }
     @PatchMapping("/item")
     public ResponseEntity<Map<String,String>> metadata(HttpServletRequest request,@RequestParam String examId,@RequestBody Map<String,Object> body) {
         var admin=user(request);

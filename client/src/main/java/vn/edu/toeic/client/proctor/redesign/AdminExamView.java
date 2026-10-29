@@ -43,7 +43,7 @@ public final class AdminExamView extends VBox implements AutoCloseable {
         table.getColumns().add(Ui.nodeColumn("Trạng thái",160,e->Ui.badge(e.inUse()?"Đã dùng trong ca thi":"Chưa sử dụng",e.inUse()?"gray":"green")));
         table.getColumns().add(Ui.nodeColumn("Thao tác",100,exam->{
             Button edit=new Button("Sửa");edit.setId("admin-exam-edit-"+exam.examId());
-            edit.setOnAction(e->submit(()->api.read(exam.examId()),text->editor(exam,text,null),null));return edit;
+            edit.setOnAction(e->submit(()->api.read(exam.examId()),text->editQuestions(exam,text),null));return edit;
         }));
         status.setId("admin-exam-status");status.setMinHeight(36);
         VBox card=Ui.card(filters,actions,table,status);card.setSpacing(16);card.setPadding(new Insets(20));
@@ -62,6 +62,47 @@ public final class AdminExamView extends VBox implements AutoCloseable {
         if(busy || closed || dialog!=null || !available)return;
         status.setText("Đang đọc JSON và chuẩn bị âm thanh, hình ảnh…");
         submit(()->AdminExamImport.load(file),prepared->editor(null,prepared.json,prepared),null);
+    }
+    private void editQuestions(ExamSummary exam,String content) {
+        if(closed||dialog!=null)return;
+        var source=AdminExamImport.parse(content);var meta=metadata(source);
+        var form=new Dialog<Void>();dialog=form;form.initOwner(getScene().getWindow());style(form);form.setResizable(true);
+        form.setTitle("Sửa câu hỏi và đáp án");form.setHeaderText(exam.title());
+        var code=new TextField(exam.examId());code.setId("admin-exam-code");code.setEditable(exam.inUse());
+        var title=new TextField(meta.get("title").getAsString());title.setId("admin-exam-title");
+        var description=new TextArea(meta.has("description")&&!meta.get("description").isJsonNull()?meta.get("description").getAsString():"");
+        description.setId("admin-exam-description");description.setPrefRowCount(2);
+        var questions=new ExamQuestionEditor(source);
+        var revision=new CheckBox("Lưu thành đề mới để giữ nguyên bài làm và kết quả của đề cũ");
+        revision.setId("admin-exam-revision");revision.setSelected(exam.inUse());revision.setVisible(exam.inUse());revision.setManaged(exam.inUse());
+        if(exam.inUse())code.setText(exam.examId().substring(0,Math.min(100,exam.examId().length()))+"-edit-"+java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("MMddHHmmss")));
+        var message=Ui.wrapping(exam.inUse()?"Đề đã dùng trong ca thi. Chỉnh sửa câu hỏi sẽ tạo một đề mới, kèm media hiện có trên server. Bỏ chọn bên dưới nếu chỉ muốn đổi tên/mô tả của đề cũ.":"Chọn câu bên trái, sửa nội dung và đáp án đúng rồi bấm Lưu thay đổi.","muted");
+        var error=Ui.wrapping("");error.setId("admin-exam-form-status");
+        var saveType=new ButtonType(exam.inUse()?"Lưu thành đề mới":"Lưu thay đổi",ButtonBar.ButtonData.OK_DONE);
+        var cancelType=new ButtonType("Hủy",ButtonBar.ButtonData.CANCEL_CLOSE);form.getDialogPane().getButtonTypes().setAll(saveType,cancelType);
+        var save=(Button)form.getDialogPane().lookupButton(saveType);save.setId("admin-exam-save");save.getStyleClass().add("primary");
+        revision.selectedProperty().addListener((o,a,b)->{questions.setDisable(!b);code.setDisable(!b);save.setText(b?"Lưu thành đề mới":"Lưu tên và mô tả");});
+        var header=new VBox(10,new HBox(12,field("Mã đề",code),field("Tên đề thi",title)),field("Mô tả",description),message,revision);
+        HBox.setHgrow(title.getParent(),Priority.ALWAYS);title.setMaxWidth(Double.MAX_VALUE);
+        var fields=new VBox(12,header,questions,error);fields.setPadding(new Insets(8));VBox.setVgrow(questions,Priority.ALWAYS);
+        fields.setPrefSize(980,660);form.getDialogPane().setContent(fields);
+        save.addEventFilter(javafx.event.ActionEvent.ACTION,e->{
+            e.consume();if(busy)return;
+            boolean copy=exam.inUse()&&revision.isSelected(),metadataOnly=exam.inUse()&&!copy;
+            String payload;
+            String name=title.getText(),desc=description.getText();
+            try {
+                if(!metadataOnly)questions.validate();
+                var tree=importDocument(questions.document(),copy?code.getText():exam.examId(),name,desc);
+                if(copy&&metadata(tree).get("examId").getAsString().equals(exam.examId()))throw new IllegalArgumentException("Nhập mã khác đề cũ để lưu bản chỉnh sửa.");
+                payload=JSON.toJson(tree);AdminExamImport.parse(payload);
+            }catch(RuntimeException bad){error.setText(bad.getMessage());return;}
+            fields.setDisable(true);save.setDisable(true);form.getDialogPane().lookupButton(cancelType).setDisable(true);error.setText("Đang lưu đề thi…");
+            submit(()->{if(metadataOnly)api.metadata(exam.examId(),name,desc);
+                else if(copy)api.revise(exam.examId(),payload);else api.save(exam.examId(),payload);return true;
+            },ok->{form.close();load(null);},failure->{fields.setDisable(false);save.setDisable(false);form.getDialogPane().lookupButton(cancelType).setDisable(false);error.setText(failure);});
+        });
+        form.setOnCloseRequest(e->{if(busy&&!closed)e.consume();});form.setOnHidden(e->{if(dialog==form)dialog=null;});form.show();
     }
     private void editor(ExamSummary exam,String content,AdminExamImport prepared) {
         if(closed || dialog!=null){if(prepared!=null)prepared.close();return;}
