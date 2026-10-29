@@ -60,6 +60,17 @@ class RichExamViewGuiTest {
     @BeforeEach void open() throws Exception {
         JsonObject tree = JsonParser.parseString(RichExamModelTest.fixtureJson()).getAsJsonObject();
         tree.addProperty("deadlineAt", Instant.now().plusSeconds(7200).toString());
+        // Reproduce imported documents that also include the options at the end of the prompt.
+        for(int index:List.of(105,134)) {
+            var question=tree.getAsJsonArray("questions").get(index).getAsJsonObject();
+            var block=question.getAsJsonArray("blocks").get(0).getAsJsonObject();
+            StringBuilder repeated=new StringBuilder(index==105?"The library _____ reopened last week. ":"");
+            for(var item:question.getAsJsonArray("options")) {
+                var option=item.getAsJsonObject();repeated.append(option.get("optionId").getAsString()).append(". ")
+                        .append(option.get("text").getAsString()).append(' ');
+            }
+            block.addProperty("text",repeated.toString().stripTrailing());
+        }
         RichExamModel model = RichExamModel.from(RichExamModelTest.parse(tree.toString()));
         byte[] grid = RichImageStoreTest.grid();
         api = new RichImageStoreTest.FakeApi(grid) {
@@ -88,6 +99,29 @@ class RichExamViewGuiTest {
     }
 
     @AfterEach void close() throws Exception { fx(() -> { view.close(); stage.close(); return null; }); denied.clear(); }
+
+    @Test void partsHavePlainLabelsAndRepeatedChoicesStayOnlyInAnswerRows() throws Exception {
+        fx(()->{
+            for(var part:view.model().parts()) {
+                view.showUnit(part.units().getFirst(),null);
+                var step=(javafx.scene.control.Button)view.lookup("#room-step-part-"+part.part());
+                assertThat(step.getText()).isEqualTo("Part "+part.part());
+            }
+            view.showUnit(view.model().unitOf("q106"),null);
+            view.applyCss();view.layout();
+            assertThat(((Label)view.lookup(".room-sentence")).getText()).isEqualTo("The library _____ reopened last week.");
+            assertThat(view.lookupAll(".room-option-text")).hasSize(4);
+            return null;
+        });
+        snapshot("part5-clean-prompt");
+        fx(()->{
+            view.showUnit(view.model().unitOf("q135"),null);
+            view.applyCss();view.layout();
+            assertThat(view.lookupAll(".room-question-prompt").stream().map(Label.class::cast).filter(l->l.getText().isEmpty()).count()).isGreaterThanOrEqualTo(1);
+            assertThat(view.lookup("#option-q135-A")).isNotNull();return null;
+        });
+        snapshot("part6-clean-prompt");
+    }
 
     @Test void lobbyIdentifiesTheExactSessionAndAttemptForReadiness() throws Exception {
         fx(() -> {
