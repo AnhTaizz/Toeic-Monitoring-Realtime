@@ -10,6 +10,7 @@ import vn.edu.toeic.protocol.Protocol;
 import vn.edu.toeic.protocol.ErrorCode;
 import vn.edu.toeic.protocol.error.ApiErrorResponse;
 import vn.edu.toeic.protocol.admin.ExamPage;
+import vn.edu.toeic.protocol.admin.ManualExamDraft;
 import vn.edu.toeic.protocol.exam.ExamImportRequest;
 import vn.edu.toeic.protocol.exam.rich.RichExamImportRequest;
 import vn.edu.toeic.server.auth.*;
@@ -23,8 +24,41 @@ public class AdminExamController {
     private final AuthorizationService authorization;
     private final RichExamJson json;
     private final AdminExamBundleService bundles;
-    public AdminExamController(AdminExamService service,AuthorizationService authorization,RichExamJson json,AdminExamBundleService bundles) {
-        this.service=service;this.authorization=authorization;this.json=json;this.bundles=bundles;
+    private final ManualExamService manual;
+    private final ManualExamBundleService manualBundles;
+    public AdminExamController(AdminExamService service,AuthorizationService authorization,RichExamJson json,AdminExamBundleService bundles,ManualExamService manual,ManualExamBundleService manualBundles) {
+        this.service=service;this.authorization=authorization;this.json=json;this.bundles=bundles;this.manual=manual;this.manualBundles=manualBundles;
+    }
+    @RequestMapping(value="/manual/bundle",method={RequestMethod.POST,RequestMethod.PUT},consumes="application/zip")
+    public ResponseEntity<ManualExamDraft> manualBundle(HttpServletRequest request,@RequestParam(required=false) String examId) throws IOException {
+        var admin=user(request);
+        if("PUT".equals(request.getMethod())&&examId==null||"POST".equals(request.getMethod())&&examId!=null)
+            throw ExamApiException.invalidInput("Chọn tạo mới hoặc sửa đề soạn tay.");
+        var saved=manualBundles.upload(admin,examId,request.getInputStream());
+        return ResponseEntity.status(examId==null?HttpStatus.CREATED:HttpStatus.OK).cacheControl(CacheControl.noStore()).body(saved);
+    }
+    @GetMapping("/manual")
+    public ResponseEntity<ManualExamDraft> readManual(HttpServletRequest request,@RequestParam String examId) {
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(manual.read(user(request),examId));
+    }
+    @GetMapping("/manual/capabilities")
+    public ResponseEntity<Map<String,Object>> authoringCapabilities(HttpServletRequest request) {
+        user(request);
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(Map.of("authoringVersion",2,"images",true));
+    }
+    @GetMapping("/manual/image")
+    public ResponseEntity<byte[]> manualImage(HttpServletRequest request,@RequestParam String examId,@RequestParam String file) {
+        var image=manual.image(user(request),examId,file);
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).contentType(MediaType.parseMediaType(image.mimeType()))
+            .header("X-Content-Type-Options","nosniff").body(image.bytes());
+    }
+    @RequestMapping(value="/manual",method={RequestMethod.POST,RequestMethod.PUT})
+    public ResponseEntity<ManualExamDraft> saveManual(HttpServletRequest request,@RequestParam(required=false) String examId) throws IOException {
+        var admin=user(request);
+        if("PUT".equals(request.getMethod())&&examId==null || "POST".equals(request.getMethod())&&examId!=null)
+            throw ExamApiException.invalidInput("Chọn tạo mới hoặc sửa đề soạn tay.");
+        var saved=manual.save(admin,examId,json.read(request.getInputStream(),ManualExamDraft.class));
+        return ResponseEntity.status(examId==null?HttpStatus.CREATED:HttpStatus.OK).cacheControl(CacheControl.noStore()).body(saved);
     }
     @GetMapping
     public ResponseEntity<ExamPage> list(HttpServletRequest request,@RequestParam(defaultValue="") String search,

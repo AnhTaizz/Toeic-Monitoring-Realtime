@@ -1,0 +1,28 @@
+# Optional server overlay for the repository's PostgreSQL compose file.
+# Build server/target/server-0.1.0-SNAPSHOT.jar first; retain the existing .env and database volume.
+services:
+  server:
+    build:
+      context: ./server
+    image: toeic-authoring:local
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-toeic}
+      DB_USER: ${DB_USER:-toeic}
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD must match the existing database}
+      TOEIC_ROOM_PIN_KEY: ${TOEIC_ROOM_PIN_KEY:?Retain the existing room PIN key}
+      TOEIC_AUDIO_ROOT: /media/audio
+      TOEIC_IMAGE_ROOT: /media/images
+      SERVER_ADDRESS: 0.0.0.0
+      SERVER_PORT: 8080
+    ports:
+      - "${SERVER_HOST_PORT:-8080}:8080"
+    # Uploads require writable mounts, using the same host directories as the existing server.
+    volumes:
+      - ${TOEIC_AUDIO_ROOT:-./target/study4-v2/audio}:/media/audio
+      - ${TOEIC_IMAGE_ROOT:-./target/study4-v2/images}:/media/images

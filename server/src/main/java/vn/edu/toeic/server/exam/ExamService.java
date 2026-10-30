@@ -584,6 +584,9 @@ public class ExamService {
             throw new InvalidExamException("Không tìm thấy đề thi với mã: " + request.examId());
         }
 
+        String authoringStatus=jdbc.sql("SELECT authoring_status FROM exams WHERE exam_id=:examId FOR SHARE")
+                .param("examId",request.examId()).query(String.class).single();
+        if(!"READY".equals(authoringStatus))throw ExamApiException.invalidInput("Đề đang pending, chưa hoàn thiện đủ 200 câu.");
         int contentVersion = jdbc.sql("SELECT content_version FROM exams WHERE exam_id = :examId")
                 .param("examId", request.examId()).query(Integer.class).single();
         if (contentVersion != 1) {

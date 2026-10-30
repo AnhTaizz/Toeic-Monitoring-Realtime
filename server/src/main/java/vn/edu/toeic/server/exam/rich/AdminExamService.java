@@ -36,15 +36,16 @@ public class AdminExamService {
         if(search==null || search.length()>255 || after!=null && after.length()>128)
             throw ExamApiException.invalidInput("Bộ lọc đề thi không hợp lệ.");
         var rows=jdbc.sql("""
-                SELECT e.*, EXISTS(SELECT 1 FROM exam_sessions s WHERE s.exam_id=e.exam_id)
+                SELECT e.*, d.completed_questions, d.exam_id IS NOT NULL AS manual, EXISTS(SELECT 1 FROM exam_sessions s WHERE s.exam_id=e.exam_id)
                     OR EXISTS(SELECT 1 FROM monitoring_attempts a WHERE a.exam_id=e.exam_id) AS in_use
-                FROM exams e
+                FROM exams e LEFT JOIN exam_manual_drafts d ON d.exam_id=e.exam_id
                 WHERE (strpos(lower(e.exam_id),lower(:search))>0 OR strpos(lower(e.title),lower(:search))>0)
                   AND (:after IS NULL OR e.exam_id COLLATE "C" > CAST(:after AS varchar) COLLATE "C")
                 ORDER BY e.exam_id COLLATE "C" LIMIT 21
                 """).param("search",search).param("after",after,java.sql.Types.VARCHAR)
                 .query((r,n)->new ExamSummary(r.getString("exam_id"),r.getString("title"),r.getString("description"),
-                        r.getInt("total_questions"),r.getInt("content_version"),r.getBoolean("in_use"))).list();
+                        r.getInt("total_questions"),r.getInt("content_version"),r.getBoolean("in_use"),r.getString("authoring_status"),
+                        (Integer)r.getObject("completed_questions"),r.getBoolean("manual"))).list();
         boolean more=rows.size()>20;
         var page=List.copyOf(more?rows.subList(0,20):rows);
         return new ExamPage(page,more?page.getLast().examId():null);
