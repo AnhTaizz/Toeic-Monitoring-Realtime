@@ -75,7 +75,7 @@ public class ManualExamService {
                 if(option==null || !Objects.equals(option.optionId(),""+(char)('A'+o)) || option.orderIndex()!=o+1)
                     throw ExamApiException.invalidInput("Lựa chọn câu "+n+" không hợp lệ.");
             }
-            if(q.audioFile()!=null&&!q.audioFile().isBlank() && !q.audioFile().matches("[A-Za-z0-9][A-Za-z0-9_.-]{0,254}"))
+            if(q.audioFile()!=null&&!q.audioFile().isBlank() && (part>4 || !RichExamValidator.safeFile(q.audioFile()) || !q.audioFile().matches("(?i).*\\.(mp3|wav|m4a)")))
                 throw ExamApiException.invalidInput("Tên tệp âm thanh câu "+n+" không hợp lệ.");
         }
     }

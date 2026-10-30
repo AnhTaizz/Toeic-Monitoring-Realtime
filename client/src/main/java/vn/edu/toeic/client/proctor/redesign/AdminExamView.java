@@ -22,6 +22,7 @@ public final class AdminExamView extends VBox implements AutoCloseable {
     private final Label status=Ui.wrapping("","muted");
     private final Button find=new Button("Tìm kiếm"),first=new Button("Trang đầu"),next=new Button("Trang tiếp"),add=new Button("Import JSON");
     private final Button manualAdd=new Button("Tạo đề bằng tay");
+    private final Button openDraft=new Button("Mở nháp từ máy…");
     private String cursor;
     private boolean busy,closed,available;
     private Dialog<?> dialog;
@@ -38,7 +39,16 @@ public final class AdminExamView extends VBox implements AutoCloseable {
         HBox filters=new HBox(10,search,find);filters.setAlignment(Pos.CENTER_LEFT);
         manualAdd.setId("admin-exam-manual-add");manualAdd.getStyleClass().add("primary");
         manualAdd.setOnAction(e->manualEditor(null,JSON.toJsonTree(ManualExamDraft.empty()).getAsJsonObject()));
-        HBox actions=new HBox(10,manualAdd,add,Ui.grow(),first,next);actions.setAlignment(Pos.CENTER_LEFT);
+        openDraft.setId("admin-exam-open-draft");openDraft.setOnAction(e->{
+            var picker=new FileChooser();picker.setTitle("Mở bản nháp TOEIC");picker.getExtensionFilters().add(new FileChooser.ExtensionFilter("Bản nháp TOEIC","*.zip"));
+            var file=picker.showOpenDialog(getScene().getWindow());if(file==null)return;
+            submit(()->{var files=new ManualExamFiles();try{return new Object[]{files,files.open(file.toPath())};}catch(Exception bad){files.close();throw bad;}},loaded->{
+                var tree=(JsonObject)loaded[1];var draft=JSON.fromJson(tree,ManualExamDraft.class);
+                var summary=draft.revision()==0?null:new ExamSummary(draft.examId(),draft.title(),draft.description(),200,1,false,"PENDING",draft.completedQuestions(),true);
+                manualEditor(summary,tree,(ManualExamFiles)loaded[0]);
+            },null);
+        });
+        HBox actions=new HBox(10,manualAdd,openDraft,add,Ui.grow(),first,next);actions.setAlignment(Pos.CENTER_LEFT);
         table.setId("admin-exam-table");Ui.plainTable(table,"Chưa có đề thi. Chọn Import JSON để thêm đề.");
         table.getColumns().add(Ui.textColumn("Mã đề",180,ExamSummary::examId));
         table.getColumns().add(Ui.textColumn("Tên đề thi",300,ExamSummary::title));
@@ -68,7 +78,10 @@ public final class AdminExamView extends VBox implements AutoCloseable {
         submit(()->AdminExamImport.load(file),prepared->editor(null,prepared.json,prepared),null);
     }
     private void manualEditor(ExamSummary exam,JsonObject source) {
-        if(closed||busy||dialog!=null||!available)return;
+        try{manualEditor(exam,source,new ManualExamFiles());}catch(java.io.IOException failure){status.setText("Không tạo được thư mục tạm cho bản nháp.");}
+    }
+    private void manualEditor(ExamSummary exam,JsonObject source,ManualExamFiles media) {
+        if(closed||busy||dialog!=null){try{media.close();}catch(java.io.IOException ignored){}return;}
         var form=new Dialog<Void>();dialog=form;form.initOwner(getScene().getWindow());style(form);form.setResizable(true);
         form.setTitle(exam==null?"Tạo đề bằng tay":"Tiếp tục soạn đề");form.setHeaderText("TOEIC · 200 câu · 7 Part");
         var code=new TextField(source.get("examId").getAsString());code.setId("admin-exam-code");code.setEditable(exam==null);
@@ -76,7 +89,7 @@ public final class AdminExamView extends VBox implements AutoCloseable {
         var title=new TextField(source.get("title").getAsString());title.setId("admin-exam-title");title.setPrefColumnCount(36);
         var description=new TextArea(source.has("description")&&!source.get("description").isJsonNull()?source.get("description").getAsString():"");
         description.setId("admin-exam-description");description.setPrefRowCount(2);
-        var questions=new ExamQuestionEditor(source,true);var progress=Ui.wrapping("");progress.setId("admin-exam-progress");
+        var questions=new ExamQuestionEditor(source,true);questions.localFiles(media);var progress=Ui.wrapping("");progress.setId("admin-exam-progress");
         var error=Ui.wrapping("");error.setId("admin-exam-form-status");boolean[] dirty={false},saved={false};
         Runnable update=()->{
             int count=JSON.fromJson(questions.document(),ManualExamDraft.class).completedQuestions();
@@ -85,32 +98,47 @@ public final class AdminExamView extends VBox implements AutoCloseable {
         questions.onChange(()->{dirty[0]=true;update.run();});update.run();
         code.textProperty().addListener((o,a,b)->dirty[0]=true);title.textProperty().addListener((o,a,b)->dirty[0]=true);
         description.textProperty().addListener((o,a,b)->dirty[0]=true);
-        var saveType=new ButtonType("Lưu đề",ButtonBar.ButtonData.OK_DONE);var cancelType=new ButtonType("Đóng",ButtonBar.ButtonData.CANCEL_CLOSE);
-        form.getDialogPane().getButtonTypes().setAll(saveType,cancelType);
+        var saveType=new ButtonType("Lưu lên server",ButtonBar.ButtonData.OK_DONE);var cancelType=new ButtonType("Đóng",ButtonBar.ButtonData.CANCEL_CLOSE);
+        var localType=new ButtonType("Lưu nháp vào máy…",ButtonBar.ButtonData.OTHER);
+        form.getDialogPane().getButtonTypes().setAll(localType,saveType,cancelType);
+        var local=(Button)form.getDialogPane().lookupButton(localType);local.setId("admin-exam-save-local");
         var save=(Button)form.getDialogPane().lookupButton(saveType);save.setId("admin-exam-save");save.getStyleClass().add("primary");
         var fields=new VBox(10,new HBox(12,field("Mã đề",code),field("Tên đề thi",title)),field("Mô tả",description),progress,
                 Ui.wrapping("Mỗi câu cần nội dung, các lựa chọn và đáp án đúng; Part 6–7 cần thêm đoạn văn. Bạn có thể hoàn thiện các câu theo thứ tự tùy ý.","muted"),questions,error);
-        fields.setPadding(new Insets(8));fields.setPrefSize(980,660);VBox.setVgrow(questions,Priority.ALWAYS);form.getDialogPane().setContent(fields);
+        HBox.setHgrow(title.getParent(),Priority.ALWAYS);title.setMaxWidth(Double.MAX_VALUE);
+        fields.getStyleClass().add("exam-authoring");fields.setPadding(new Insets(16));fields.setPrefSize(1050,680);VBox.setVgrow(questions,Priority.ALWAYS);form.getDialogPane().setContent(fields);
+        local.addEventFilter(javafx.event.ActionEvent.ACTION,e->{
+            e.consume();if(busy)return;var picker=new FileChooser();picker.setTitle("Lưu bản nháp và âm thanh");
+            picker.setInitialFileName("TOEIC-draft.zip");picker.getExtensionFilters().add(new FileChooser.ExtensionFilter("Bản nháp TOEIC","*.zip"));
+            var target=picker.showSaveDialog(form.getDialogPane().getScene().getWindow());if(target==null)return;
+            var tree=questions.document();tree.addProperty("examId",code.getText().strip());tree.addProperty("title",title.getText());tree.addProperty("description",description.getText());
+            fields.setDisable(true);local.setDisable(true);save.setDisable(true);
+            submit(()->{var zip=media.bundle(tree);try{java.nio.file.Files.copy(zip,target.toPath(),java.nio.file.StandardCopyOption.REPLACE_EXISTING);}finally{java.nio.file.Files.deleteIfExists(zip);}return true;},ok->{
+                dirty[0]=false;fields.setDisable(false);local.setDisable(false);save.setDisable(false);error.setText("Đã lưu nháp trên máy, kèm âm thanh đã chọn. Chưa lưu lên server.");
+            },failure->{fields.setDisable(false);local.setDisable(false);save.setDisable(false);error.setText(failure);});
+        });
         save.addEventFilter(javafx.event.ActionEvent.ACTION,e->{
             e.consume();if(busy)return;
             String payload;
             try{payload=JSON.toJson(importDocument(questions.document(),code.getText(),title.getText(),description.getText()));
                 if(!code.getText().strip().matches("[A-Za-z0-9][A-Za-z0-9_-]{0,127}"))throw new IllegalArgumentException("Mã đề chỉ gồm chữ, số, gạch ngang hoặc gạch dưới (tối đa 128 ký tự).");
             }catch(RuntimeException bad){error.setText(bad.getMessage());return;}
-            fields.setDisable(true);save.setDisable(true);form.getDialogPane().lookupButton(cancelType).setDisable(true);error.setText("Đang lưu đề…");
-            submit(()->api.saveManual(exam==null?null:exam.examId(),payload),result->{saved[0]=true;form.close();load(null);},failure->{
-                fields.setDisable(false);save.setDisable(false);form.getDialogPane().lookupButton(cancelType).setDisable(false);error.setText(failure);
+            fields.setDisable(true);save.setDisable(true);local.setDisable(true);form.getDialogPane().lookupButton(cancelType).setDisable(true);error.setText("Đang lưu đề và âm thanh…");
+            submit(()->{if(media.hasAudio()){var zip=media.bundle(JSON.fromJson(payload,JsonObject.class));try{api.uploadManual(exam==null?null:exam.examId(),zip);}finally{java.nio.file.Files.deleteIfExists(zip);}}
+                else api.saveManual(exam==null?null:exam.examId(),payload);return true;},result->{saved[0]=true;form.close();load(null);},failure->{
+                fields.setDisable(false);save.setDisable(false);local.setDisable(false);form.getDialogPane().lookupButton(cancelType).setDisable(false);error.setText(failure);
             });
         });
         form.setOnCloseRequest(e->{
             if(busy&&!closed){e.consume();return;}
             if(!closed&&!saved[0]&&dirty[0]){
-                var confirm=new Alert(Alert.AlertType.CONFIRMATION,"Thay đổi chưa được lưu. Đóng form và bỏ các thay đổi này?",ButtonType.YES,ButtonType.NO);
-                confirm.initOwner(form.getDialogPane().getScene().getWindow());confirm.setHeaderText("Đề chưa được lưu");
-                if(confirm.showAndWait().orElse(ButtonType.NO)!=ButtonType.YES)e.consume();
+                var discard=new ButtonType("Bỏ thay đổi",ButtonBar.ButtonData.YES);var stay=new ButtonType("Tiếp tục soạn",ButtonBar.ButtonData.CANCEL_CLOSE);
+                var confirm=new Alert(Alert.AlertType.CONFIRMATION,"Thay đổi chưa được lưu. Bạn có thể tiếp tục soạn và lưu nháp vào máy trước khi đóng.",discard,stay);
+                style(confirm);confirm.setTitle("Đề chưa được lưu");confirm.initOwner(form.getDialogPane().getScene().getWindow());confirm.setHeaderText("Đề chưa được lưu");
+                if(confirm.showAndWait().orElse(stay)!=discard)e.consume();
             }
         });
-        form.setOnHidden(e->{if(dialog==form)dialog=null;});form.show();
+        form.setOnHidden(e->{if(dialog==form)dialog=null;try{media.close();}catch(java.io.IOException ignored){}});form.show();
     }
     private void editQuestions(ExamSummary exam,String content) {
         if(closed||dialog!=null)return;
@@ -248,7 +276,7 @@ public final class AdminExamView extends VBox implements AutoCloseable {
                 if(failure==null)status.setText(message);else failure.accept(message);
             });}});
     }
-    private void controls(){find.setDisable(busy);search.setDisable(busy);first.setDisable(busy);next.setDisable(busy||cursor==null);add.setDisable(busy||!available);manualAdd.setDisable(busy||!available);table.setDisable(busy);}
+    private void controls(){find.setDisable(busy);search.setDisable(busy);first.setDisable(busy);next.setDisable(busy||cursor==null);add.setDisable(busy||!available);manualAdd.setDisable(busy);openDraft.setDisable(busy);table.setDisable(busy);}
     private static JsonObject metadata(JsonObject tree){return tree.has("exam")?tree.getAsJsonObject("exam"):tree;}
     private static JsonObject importDocument(JsonObject source,String code,String title,String description) {
         if(code==null||code.isBlank())throw new IllegalArgumentException("Nhập mã đề thi.");

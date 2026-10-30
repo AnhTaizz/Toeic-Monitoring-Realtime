@@ -32,6 +32,9 @@ public final class AdminExamApiClient implements AutoCloseable {
     }
     public String read(String id) throws Exception {return json.toJson(JsonParser.parseString(call("GET","/item?examId="+encode(id),null,200)));}
     public String readManual(String id) throws Exception {return call("GET","/manual?examId="+encode(id),null,200);}
+    public void uploadManual(String id,Path zip) throws Exception {
+        exchange(id==null?"POST":"PUT","/manual/bundle"+(id==null?"":"?examId="+encode(id)),HttpRequest.BodyPublishers.ofFile(zip),"application/zip",id==null?201:200);
+    }
     public ManualExamDraft saveManual(String id,String body) throws Exception {
         return json.fromJson(call(id==null?"POST":"PUT","/manual"+(id==null?"":"?examId="+encode(id)),body,id==null?201:200),ManualExamDraft.class);
     }
@@ -70,7 +73,9 @@ public final class AdminExamApiClient implements AutoCloseable {
                 try {var error=JsonParser.parseString(text).getAsJsonObject().getAsJsonObject("error");
                     if(error!=null && error.has("message"))message=error.get("message").getAsString();
                 }catch(RuntimeException ignored){}
-                if(response.statusCode()==404 && (!path.startsWith("/item") || message.contains("tài nguyên API")))
+                if(response.statusCode()==404 && path.startsWith("/manual"))
+                    message="Server chưa hỗ trợ lưu đề soạn tay hoặc không tìm thấy bản nháp. Dùng ‘Lưu nháp vào máy’ để giữ nội dung và âm thanh, rồi cập nhật server từ cùng bản phát hành với client trước khi lưu lên server.";
+                else if(response.statusCode()==404 && (!path.startsWith("/item") || message.contains("tài nguyên API")))
                     message="Server đang kết nối chưa có API quản lý đề thi. Hãy cập nhật server cùng phiên bản với client hoặc kiểm tra địa chỉ server; thay đổi JSON/DB không sửa được lỗi này.";
                 throw new AdminAccountApiClient.Rejected(response.statusCode(),"Server (HTTP "+response.statusCode()+"): "+message);
             }

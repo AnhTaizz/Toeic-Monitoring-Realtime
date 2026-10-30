@@ -26,6 +26,32 @@ class AdminExamPostgresTest {
     private HttpClient http;
     private String schema,base,admin,proctor,candidate;
     private static final String API="/api/v2/admin/exams";
+    @Test void manualBundlePersistsPendingAudioAndRollsBackOnStaleRevision() throws Exception {
+        var draft=new Gson().toJsonTree(vn.edu.toeic.protocol.admin.ManualExamDraft.empty()).getAsJsonObject();
+        draft.addProperty("examId","manual-audio");draft.addProperty("title","MOCK local audio");
+        Path local=temporary.resolve("âm thanh.wav");Files.write(local,"RIFF1234WAVEtest".getBytes());
+        try(var files=new vn.edu.toeic.client.admin.ManualExamFiles()) {
+            files.select(draft.getAsJsonArray("questions").get(0).getAsJsonObject(),local);
+            var zip=files.bundle(draft);
+            var saved=tree(check(manualBundle("POST",API+"/manual/bundle",zip,admin),201));
+            assertThat(saved.get("revision").getAsInt()).isEqualTo(1);
+            String name=saved.getAsJsonArray("questions").get(0).getAsJsonObject().get("audioFile").getAsString();
+            Path directory=temporary.resolve("audio/manual-audio");assertThat(Files.readAllBytes(directory.resolve(name))).isEqualTo(Files.readAllBytes(local));
+            assertThat(tree(check(call("GET",API+"/manual?examId=manual-audio",null,admin),200))).isEqualTo(saved);
+            assertThat(number("SELECT count(*) FROM exams WHERE authoring_status='PENDING'")).isEqualTo(1);
+            Files.write(local,"RIFF5678WAVEchanged".getBytes());
+            Path stale=files.bundle(draft);
+            check(manualBundle("PUT",API+"/manual/bundle?examId=manual-audio",stale,admin),409);
+            try(var paths=Files.list(directory)){assertThat(paths.count()).isEqualTo(1);}
+            check(manualBundle("POST",API+"/manual/bundle",stale,proctor),403);
+            Files.write(local,"invalid audio payload".getBytes());
+            check(manualBundle("PUT",API+"/manual/bundle?examId=manual-audio",files.bundle(draft),admin),400);
+        }
+    }
+    private HttpResponse<String> manualBundle(String method,String path,Path zip,String token) throws Exception {
+        return http.send(HttpRequest.newBuilder(URI.create(base+path)).header("Authorization","Bearer "+token)
+            .header("Content-Type","application/zip").method(method,HttpRequest.BodyPublishers.ofFile(zip)).build(),HttpResponse.BodyHandlers.ofString());
+    }
     @Test void manualDraftPartialReadyPendingAndUsedLifecycle() throws Exception {
         var draft=new Gson().toJsonTree(vn.edu.toeic.protocol.admin.ManualExamDraft.empty()).getAsJsonObject();
         draft.addProperty("examId","manual-200");draft.addProperty("title","MOCK đề soạn tay");

@@ -9,6 +9,8 @@ import javafx.scene.layout.*;
 import vn.edu.toeic.client.exam.rich.QuestionDisplay;
 import vn.edu.toeic.protocol.exam.rich.CandidateQuestion;
 import vn.edu.toeic.protocol.admin.ManualExamDraft;
+import vn.edu.toeic.client.admin.ManualExamFiles;
+import javafx.stage.FileChooser;
 
 /** Edits a private document; stable question/group/media IDs survive every field change. */
 final class ExamQuestionEditor extends BorderPane {
@@ -19,6 +21,8 @@ final class ExamQuestionEditor extends BorderPane {
     private final TextField search=new TextField();
     private final boolean manual;
     private Runnable changed=()->{};
+    private ManualExamFiles localFiles;
+    void localFiles(ManualExamFiles files){localFiles=files;show(questions.getSelectionModel().getSelectedItem());}
     ExamQuestionEditor(JsonObject source) {
         this(source,false);
     }
@@ -112,8 +116,19 @@ final class ExamQuestionEditor extends BorderPane {
             }
         }else if(!rich) {
             area(q,"passageText","Đoạn văn (bắt buộc với Part 6, 7)","exam-question-passage",4);
-            if(manual && q.get("part").getAsInt()<=4)
-                area(q,"audioFile","Tên tệp âm thanh trên server (tùy chọn)","exam-question-audio",1);
+            if(manual && q.get("part").getAsInt()<=4) {
+                var name=Ui.wrapping(text(q,"audioFile").isBlank()?"Chưa chọn âm thanh":text(q,"audioFile"),"muted");
+                name.setId("exam-question-audio");
+                var choose=new Button("Chọn âm thanh từ máy…");choose.setId("exam-question-audio-choose");
+                var remove=new Button("Bỏ chọn");remove.setId("exam-question-audio-remove");
+                choose.setOnAction(e->{
+                    var picker=new FileChooser();picker.setTitle("Chọn âm thanh cho câu "+q.get("orderIndex"));
+                    picker.getExtensionFilters().add(new FileChooser.ExtensionFilter("Âm thanh (MP3, WAV, M4A)","*.mp3","*.wav","*.m4a","*.MP3","*.WAV","*.M4A"));
+                    var file=picker.showOpenDialog(getScene().getWindow());if(file!=null&&localFiles!=null){localFiles.select(q,file.toPath());name.setText(file.getName());edited();}
+                });
+                remove.setOnAction(e->{if(localFiles!=null)localFiles.remove(q);name.setText("Chưa chọn âm thanh");edited();});
+                fields.getChildren().add(field("Âm thanh · tối đa 64 MiB/tệp",new VBox(8,name,new HBox(8,choose,remove))));
+            }
         }
     }
     private void blocks(JsonObject owner,boolean allowNew,String label,String prefix) {

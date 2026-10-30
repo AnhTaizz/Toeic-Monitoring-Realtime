@@ -24,6 +24,18 @@
 }
 .proctor-redesign.font-large { -fx-font-size: 15px; }
 
+/* Authoring dialogs share the dashboard palette, including confirmation windows. */
+.dialog-pane.proctor-redesign > .header-panel { -fx-background-color: #ffffff; -fx-padding: 18 24; }
+.dialog-pane.proctor-redesign > .header-panel .label { -fx-text-fill: #13254a; -fx-font-size: 1.3em; -fx-font-weight: bold; }
+.dialog-pane.proctor-redesign > .button-bar { -fx-background-color: #ffffff; -fx-padding: 12 20; }
+.proctor-redesign #exam-question-list { -fx-background-color: #ffffff; -fx-background-radius: 10; -fx-border-color: #e3e8ef; -fx-border-radius: 10; -fx-padding: 5; }
+.proctor-redesign #exam-question-list .list-cell { -fx-background-color: #ffffff; -fx-text-fill: #13254a; -fx-padding: 10 12; -fx-background-radius: 6; }
+.proctor-redesign #exam-question-list .list-cell:filled:hover { -fx-background-color: #f4f6fa; }
+.proctor-redesign #exam-question-list .list-cell:filled:selected { -fx-background-color: #fff1e8; -fx-text-fill: #13254a; -fx-font-weight: bold; }
+.proctor-redesign #exam-question-editor > .scroll-pane { -fx-background-color: #ffffff; -fx-border-color: #e3e8ef; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 12; }
+.proctor-redesign #exam-question-editor > .scroll-pane > .viewport { -fx-background-color: #ffffff; }
+.proctor-redesign #admin-exam-form-status { -fx-text-fill: #9a3412; -fx-padding: 6 0; }
+
 .proctor-redesign .label { -fx-text-fill: #13254a; }
 .proctor-redesign .muted { -fx-text-fill: #6b7a90; -fx-font-size: 0.92em; }
 .proctor-redesign .small { -fx-font-size: 0.85em; }

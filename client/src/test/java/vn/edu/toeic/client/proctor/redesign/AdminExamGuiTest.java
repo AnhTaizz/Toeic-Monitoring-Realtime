@@ -78,6 +78,24 @@ class AdminExamGuiTest {
         fxRun(()->{((ComboBox<Integer>)dialog("exam-question-part")).setValue(0);((ListView<?>)dialog("exam-question-list")).getSelectionModel().selectFirst();});
         assertThat(fx(()->((TextArea)dialog("exam-question-prompt")).getText())).isEqualTo("Câu đang nhập dở");
     }
+    @Test void manual404KeepsContentAndOffersLocalSaveThenServerRetrySucceeds() throws Exception {
+        fxRun(()->((Button)view.lookup("#admin-exam-manual-add")).fire());
+        await("manual form",()->dialog("admin-exam-code")!=null);
+        fxRun(()->{
+            ((TextField)dialog("admin-exam-code")).setText("MOCK-pending");
+            ((TextField)dialog("admin-exam-title")).setText("Bản nháp");
+            ((TextArea)dialog("exam-question-prompt")).setText("Nội dung chưa hoàn thiện");
+        });
+        assertThat(fx(()->dialog("exam-question-audio-choose"))).isNotNull();
+        assertThat(fx(()->dialog("admin-exam-save-local"))).isNotNull();
+        status.set(404);fxRun(()->((Button)dialog("admin-exam-save")).fire());
+        await("missing manual endpoint",()->((Label)dialog("admin-exam-form-status")).getText().contains("Lưu nháp vào máy"));
+        assertThat(fx(()->((TextArea)dialog("exam-question-prompt")).getText())).isEqualTo("Nội dung chưa hoàn thiện");
+        assertThat(fx(()->dialog("admin-exam-save-local").isDisabled())).isFalse();
+        status.set(200);fxRun(()->((Button)dialog("admin-exam-save")).fire());
+        await("saved pending draft",()->dialog("admin-exam-code")==null);
+        assertThat(bodies).hasSize(2);
+    }
     @Test void onlyImportAndEditAreOfferedAndPreviewHasNoDummyQuestionForm() throws Exception {
         assertThat(fx(()->((Button)view.lookup("#admin-exam-add")).getText())).isEqualTo("Import JSON");
         assertThat(fx(()->view.lookup("#admin-exam-delete-MOCK-01"))).isNull();
