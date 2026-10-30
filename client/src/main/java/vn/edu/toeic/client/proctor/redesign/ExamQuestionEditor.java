@@ -22,6 +22,8 @@ final class ExamQuestionEditor extends BorderPane {
     private final boolean manual;
     private Runnable changed=()->{};
     private ManualExamFiles localFiles;
+    private java.util.function.Function<String,java.util.concurrent.CompletableFuture<byte[]>> imageLoader;
+    void imageLoader(java.util.function.Function<String,java.util.concurrent.CompletableFuture<byte[]>> loader){imageLoader=loader;show(questions.getSelectionModel().getSelectedItem());}
     void localFiles(ManualExamFiles files){localFiles=files;show(questions.getSelectionModel().getSelectedItem());}
     ExamQuestionEditor(JsonObject source) {
         this(source,false);
@@ -91,14 +93,16 @@ final class ExamQuestionEditor extends BorderPane {
         fields.getChildren().clear();if(q==null)return;
         fields.getChildren().add(Ui.label("Câu "+q.get("orderIndex").getAsInt()+" · Part "+q.get("part").getAsInt(),"section-title"));
         boolean rich=document.has("exam");
+        if(manual)manualMedia(q);
         if(rich) {
             blocks(q,true,"Nội dung câu hỏi","question");
-        }else area(q,"prompt","Nội dung câu hỏi","exam-question-prompt",3);
+        }else area(q,"prompt",manual&&q.get("part").getAsInt()<=2?"Nội dung câu hỏi (tùy chọn)":"Nội dung câu hỏi","exam-question-prompt",3);
         var ids=new ArrayList<String>();
         for(var element:q.getAsJsonArray("options")) {
             var option=element.getAsJsonObject();String id=text(option,"optionId");ids.add(id);
-            area(option,rich?"text":"optionText","Lựa chọn "+id,"exam-question-option-"+id,2);
+            if(!manual||q.get("part").getAsInt()>2)area(option,rich?"text":"optionText","Lựa chọn "+id,"exam-question-option-"+id,2);
         }
+        if(manual&&q.get("part").getAsInt()<=2)fields.getChildren().add(Ui.wrapping("Các lựa chọn được đọc trong âm thanh. Chỉ cần chọn đáp án đúng bên dưới.","muted"));
         var scoring=rich?q.getAsJsonObject("scoring"):q;
         var correct=new ComboBox<String>(FXCollections.observableArrayList(ids));correct.setId("exam-question-correct");
         correct.setPromptText("Chọn đáp án đúng");
@@ -114,22 +118,54 @@ final class ExamQuestionEditor extends BorderPane {
                     blocks(d,false,"Đoạn văn","document-"+text(d,"documentId"));
                 }
             }
-        }else if(!rich) {
-            area(q,"passageText","Đoạn văn (bắt buộc với Part 6, 7)","exam-question-passage",4);
-            if(manual && q.get("part").getAsInt()<=4) {
-                var name=Ui.wrapping(text(q,"audioFile").isBlank()?"Chưa chọn âm thanh":text(q,"audioFile"),"muted");
-                name.setId("exam-question-audio");
-                var choose=new Button("Chọn âm thanh từ máy…");choose.setId("exam-question-audio-choose");
-                var remove=new Button("Bỏ chọn");remove.setId("exam-question-audio-remove");
-                choose.setOnAction(e->{
-                    var picker=new FileChooser();picker.setTitle("Chọn âm thanh cho câu "+q.get("orderIndex"));
-                    picker.getExtensionFilters().add(new FileChooser.ExtensionFilter("Âm thanh (MP3, WAV, M4A)","*.mp3","*.wav","*.m4a","*.MP3","*.WAV","*.M4A"));
-                    var file=picker.showOpenDialog(getScene().getWindow());if(file!=null&&localFiles!=null){localFiles.select(q,file.toPath());name.setText(file.getName());edited();}
-                });
-                remove.setOnAction(e->{if(localFiles!=null)localFiles.remove(q);name.setText("Chưa chọn âm thanh");edited();});
-                fields.getChildren().add(field("Âm thanh · tối đa 64 MiB/tệp",new VBox(8,name,new HBox(8,choose,remove))));
-            }
+        }else if(!rich && !manual) {
+            area(q,"passageText","Đoạn văn","exam-question-passage",4);
         }
+    }
+    private void shared(JsonObject q,java.util.function.Consumer<JsonObject> edit) {
+        int number=q.get("orderIndex").getAsInt(),start=ManualExamDraft.groupStart(number),end=ManualExamDraft.groupEnd(number);
+        for(var item:document.getAsJsonArray("questions")){var other=item.getAsJsonObject();int n=other.get("orderIndex").getAsInt();if(n>=start&&n<=end)edit.accept(other);}
+    }
+    void selectAudio(java.nio.file.Path file) {
+        var q=questions.getSelectionModel().getSelectedItem();shared(q,other->localFiles.select(other,file));edited();show(q);
+    }
+    void selectImages(java.util.List<java.nio.file.Path> files) {
+        var q=questions.getSelectionModel().getSelectedItem();localFiles.selectImages(q,files);edited();show(q);
+    }
+    private void manualMedia(JsonObject q) {
+        int number=q.get("orderIndex").getAsInt(),part=q.get("part").getAsInt();
+        if(ManualExamDraft.groupEnd(number)>ManualExamDraft.groupStart(number))fields.getChildren().add(Ui.wrapping("Dùng chung "+(part<=4?"âm thanh":"đoạn văn")+" cho câu "+ManualExamDraft.groupStart(number)+"–"+ManualExamDraft.groupEnd(number)+".","muted"));
+        if(part<=4) {
+            var name=Ui.wrapping(text(q,"audioFile").isBlank()?"Chưa chọn âm thanh":text(q,"audioFile"),"muted");name.setId("exam-question-audio");
+            var choose=new Button("Chọn âm thanh…");choose.setId("exam-question-audio-choose");var remove=new Button("Bỏ chọn");
+            remove.setDisable(text(q,"audioFile").isBlank());
+            choose.setOnAction(e->{var picker=new FileChooser();picker.setTitle("Chọn âm thanh");picker.getExtensionFilters().add(new FileChooser.ExtensionFilter("Âm thanh MP3, WAV, M4A","*.mp3","*.wav","*.m4a","*.MP3","*.WAV","*.M4A"));var file=picker.showOpenDialog(getScene().getWindow());if(file!=null)selectAudio(file.toPath());});
+            remove.setOnAction(e->{shared(q,other->localFiles.remove(other));edited();show(q);});
+            fields.getChildren().add(field("Âm thanh",new VBox(6,new HBox(8,choose,remove),name)));
+        }
+        var choose=new Button("Chọn ảnh…");choose.setId("exam-question-image-choose");var remove=new Button("Bỏ ảnh");remove.setId("exam-question-image-remove");
+        var previews=new javafx.scene.layout.FlowPane(10,10);previews.setId("exam-question-image-preview");
+        var names=q.has("imageFiles")&&!q.get("imageFiles").isJsonNull()?q.getAsJsonArray("imageFiles"):new JsonArray();
+        remove.setDisable(names.isEmpty());
+        for(int i=0;i<names.size();i++) {
+            String name=names.get(i).getAsString();var box=new VBox(4);var label=Ui.wrapping("Ảnh "+(i+1),"muted");box.getChildren().add(label);previews.getChildren().add(box);
+            var selected=localFiles==null?List.<java.nio.file.Path>of():localFiles.selectedImages(q);
+            if(i<selected.size())addPreview(box,new javafx.scene.image.Image(selected.get(i).toUri().toString(),180,120,true,true,true));
+            else if(imageLoader!=null)imageLoader.apply(name).whenComplete((bytes,error)->javafx.application.Platform.runLater(()->{
+                if(error==null)addPreview(box,new javafx.scene.image.Image(new java.io.ByteArrayInputStream(bytes),180,120,true,true));else label.setText("Không tải được ảnh");
+            }));
+        }
+        choose.setOnAction(e->{
+            var picker=new FileChooser();picker.setTitle("Chọn ảnh PNG hoặc JPEG");picker.getExtensionFilters().add(new FileChooser.ExtensionFilter("Ảnh PNG, JPEG","*.png","*.jpg","*.jpeg","*.PNG","*.JPG","*.JPEG"));
+            if(part==1){var file=picker.showOpenDialog(getScene().getWindow());if(file!=null)selectImages(List.of(file.toPath()));}
+            else{var files=picker.showOpenMultipleDialog(getScene().getWindow());if(files!=null){if(files.size()>10){var error=new Label("Chọn tối đa 10 ảnh mỗi câu.");fields.getChildren().add(error);}else selectImages(files.stream().map(java.io.File::toPath).toList());}}
+        });
+        remove.setOnAction(e->{localFiles.removeImages(q);edited();show(q);});
+        fields.getChildren().add(field(part==1?"Hình ảnh (bắt buộc)":"Hình ảnh (nếu có)",new VBox(6,new HBox(8,choose,remove),previews)));
+        if(part>=6)area(q,"passageText","Đoạn văn","exam-question-passage",4);
+    }
+    private static void addPreview(VBox box,javafx.scene.image.Image image) {
+        var view=new javafx.scene.image.ImageView(image);view.setFitWidth(180);view.setFitHeight(120);view.setPreserveRatio(true);box.getChildren().add(0,view);
     }
     private void blocks(JsonObject owner,boolean allowNew,String label,String prefix) {
         JsonArray blocks=owner.has("blocks")?owner.getAsJsonArray("blocks"):new JsonArray();
@@ -152,7 +188,7 @@ final class ExamQuestionEditor extends BorderPane {
     }
     private void area(JsonObject object,String key,String label,String id,int rows) {
         var input=new TextArea(text(object,key));input.setId(id);input.setWrapText(true);input.setPrefRowCount(rows);
-        input.textProperty().addListener((o,a,b)->{object.addProperty(key,b);edited();});fields.getChildren().add(field(label,input));
+        input.textProperty().addListener((o,a,b)->{if(manual&&key.equals("passageText"))shared(object,q->q.addProperty(key,b));else object.addProperty(key,b);edited();});fields.getChildren().add(field(label,input));
     }
     private static String text(JsonObject o,String key){return o.has(key)&&!o.get(key).isJsonNull()?o.get(key).getAsString():"";}
     private static VBox field(String label,javafx.scene.Node input){return new VBox(5,Ui.label(label,"field-label"),input);}

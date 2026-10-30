@@ -67,7 +67,7 @@ public final class RichExamValidator {
                         && Arrays.stream(s.sourcePath().split("[/\\\\]")).noneMatch(".."::equals), "sourcePath phải tương đối");
                 text(s.copyrightNotice(),4000,true); text(s.permissionNote(),4000,true); text(s.licenseDocument(),4000,true);
                 require(s.permissionStatus() != null && s.permissionStatus() != PermissionStatus.UNKNOWN && s.permissionConfirmedOn() != null, "permission chưa xác minh");
-                if (s.permissionStatus() == PermissionStatus.USER_CONFIRMED) text(s.permissionNote(),4000,false);
+                if (s.permissionStatus() == PermissionStatus.USER_CONFIRMED || s.permissionStatus() == PermissionStatus.AUTHORED) text(s.permissionNote(),4000,false);
                 else text(s.licenseDocument(),4000,false);
                 require(s.answerKeyStatus() == Verification.VERIFIED && s.groupMappingStatus() == Verification.VERIFIED
                         && s.optionContentStatus() == Verification.VERIFIED && "VERIFIED".equals(s.mediaValidationStatus()), "source/options/key/group/media chưa verified");

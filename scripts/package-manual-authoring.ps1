@@ -20,11 +20,15 @@ foreach($name in @('ToeicMonitor.exe','app','runtime','server-runtime','start-re
 Copy-Item -LiteralPath $client -Destination (Join-Path $destination 'app/client-0.1.0-SNAPSHOT-all.jar') -Force
 Copy-Item -LiteralPath $server -Destination (Join-Path $destination 'server.jar')
 Copy-Item -LiteralPath (Join-Path $repo 'docs/manual-authoring-fix.md') -Destination (Join-Path $destination 'HUONG-DAN.md')
+Copy-Item -LiteralPath (Join-Path $repo 'server/Dockerfile') -Destination (Join-Path $destination 'Dockerfile.server')
+$dockerfile=Join-Path $destination 'Dockerfile.server'
+[IO.File]::WriteAllText($dockerfile,([IO.File]::ReadAllText($dockerfile).Replace('COPY target/server-0.1.0-SNAPSHOT.jar','COPY server.jar')),[Text.UTF8Encoding]::new($false))
+Copy-Item -LiteralPath (Join-Path $repo 'docker-compose.server.yml') -Destination $destination
 $metadata=[ordered]@{
     sourceCommit=(& git -C $repo rev-parse HEAD).Trim()
     branch=(& git -C $repo branch --show-current).Trim()
     uncommittedChanges=[bool](& git -C $repo status --porcelain --untracked-files=normal)
-    feature='manual-pending-local-audio-ui'
+    feature='manual-server-save-pending-images'
     launcher='Reused from BaseBundle; client and server JARs rebuilt from sourceCommit'
     clientJarSha256=(Get-FileHash -LiteralPath $client).Hash
     serverJarSha256=(Get-FileHash -LiteralPath $server).Hash

@@ -17,9 +17,10 @@ public class ManualExamService {
     private final JdbcClient jdbc;
     private final AuthorizationService auth;
     private final AdminExamService exams;
+    private final ManualExamMedia media;
     private static final Gson JSON=new Gson();
-    public ManualExamService(JdbcClient jdbc,AuthorizationService auth,AdminExamService exams) {
-        this.jdbc=jdbc;this.auth=auth;this.exams=exams;
+    public ManualExamService(JdbcClient jdbc,AuthorizationService auth,AdminExamService exams,ManualExamMedia media) {
+        this.jdbc=jdbc;this.auth=auth;this.exams=exams;this.media=media;
     }
     @Transactional(readOnly=true)
     public ManualExamDraft read(AuthenticatedUser admin,String id) {
@@ -29,6 +30,13 @@ public class ManualExamService {
                     var d=JSON.fromJson(r.getString(1),ManualExamDraft.class);
                     return new ManualExamDraft(d.examId(),r.getString(2),r.getString(3),d.revision(),d.questions());
                 }).optional().orElseThrow(()->new ExamApiException(HttpStatus.NOT_FOUND,ErrorCode.INVALID_INPUT,"Không tìm thấy đề soạn tay.",null));
+    }
+    public record Image(byte[] bytes,String mimeType) {}
+    @Transactional(readOnly=true)
+    public Image image(AuthenticatedUser admin,String id,String file) {
+        var draft=read(admin,id);
+        if(draft.questions().stream().noneMatch(q->q.imageFiles().contains(file)))throw vn.edu.toeic.server.auth.AccessDeniedException.forbidden();
+        byte[] bytes=media.read(id,file,true);return new Image(bytes,ManualExamMedia.metadata(file,bytes,true).mimeType());
     }
     @Transactional
     public ManualExamDraft save(AuthenticatedUser admin,String replaceId,ManualExamDraft draft) {
@@ -41,10 +49,11 @@ public class ManualExamService {
                     "Đề đã được cập nhật ở nơi khác. Hãy mở lại đề trước khi lưu.",null);
         }else if(draft.revision()!=0)throw ExamApiException.invalidInput("Phiên bản đề mới phải là 0.");
         int completed=draft.completedQuestions();
+        var assets=media.inspect(draft);
         var saved=new ManualExamDraft(draft.examId(),draft.title().strip(),draft.description(),draft.revision()+1,draft.questions());
         if(completed==200) {
-            // Only complete documents may enter the normal exam tables and their strict DTOs.
-            exams.save(admin,replaceId,JSON.fromJson(JSON.toJson(saved),ExamImportRequest.class));
+            // The same rich contract used by imported exams handles images and shared media in the exam UI.
+            exams.save(admin,replaceId,ManualExamContent.ready(saved,assets,admin.userId()));
         }else if(replaceId==null) {
             jdbc.sql("INSERT INTO exams(exam_id,title,description,total_questions,created_by,authoring_status) VALUES(:id,:title,:description,200,:user,'PENDING')")
                     .param("id",saved.examId()).param("title",saved.title()).param("description",saved.description()).param("user",admin.userId()).update();
@@ -77,6 +86,8 @@ public class ManualExamService {
             }
             if(q.audioFile()!=null&&!q.audioFile().isBlank() && (part>4 || !RichExamValidator.safeFile(q.audioFile()) || !q.audioFile().matches("(?i).*\\.(mp3|wav|m4a)")))
                 throw ExamApiException.invalidInput("Tên tệp âm thanh câu "+n+" không hợp lệ.");
+            if(q.imageFiles().size()>(part==1?1:10)||q.imageFiles().stream().anyMatch(file->!RichExamValidator.safeFile(file)||!file.matches("(?i).*\\.(png|jpe?g)")))
+                throw ExamApiException.invalidInput("Ảnh câu "+n+" không hợp lệ.");
         }
     }
 }

@@ -41,6 +41,7 @@ class AdminExamGuiTest {
             calls.add(e.getRequestMethod()+" "+e.getRequestURI());String body=new String(e.getRequestBody().readAllBytes(),StandardCharsets.UTF_8);if(!body.isEmpty())bodies.add(body);
             int code=status.get();String text;
             if(code!=200)text="{\"error\":{\"message\":\"Mã đề đã tồn tại\"}}";
+            else if(e.getRequestURI().getPath().endsWith("/capabilities"))text="{\"authoringVersion\":2,\"images\":true}";
             else if(e.getRequestMethod().equals("POST")){code=201;text="{\"status\":\"CREATED\"}";}
             else if(!e.getRequestMethod().equals("GET"))text="{\"status\":\"UPDATED\"}";
             else if(e.getRequestURI().getPath().endsWith("/item"))text=sample(e.getRequestURI().getQuery().contains("MOCK-02")?"MOCK-02":"MOCK-01");
@@ -78,7 +79,7 @@ class AdminExamGuiTest {
         fxRun(()->{((ComboBox<Integer>)dialog("exam-question-part")).setValue(0);((ListView<?>)dialog("exam-question-list")).getSelectionModel().selectFirst();});
         assertThat(fx(()->((TextArea)dialog("exam-question-prompt")).getText())).isEqualTo("Câu đang nhập dở");
     }
-    @Test void manual404KeepsContentAndOffersLocalSaveThenServerRetrySucceeds() throws Exception {
+    @Test void manual404KeepsContentWithOneServerSaveThenRetrySucceeds() throws Exception {
         fxRun(()->((Button)view.lookup("#admin-exam-manual-add")).fire());
         await("manual form",()->dialog("admin-exam-code")!=null);
         fxRun(()->{
@@ -87,11 +88,13 @@ class AdminExamGuiTest {
             ((TextArea)dialog("exam-question-prompt")).setText("Nội dung chưa hoàn thiện");
         });
         assertThat(fx(()->dialog("exam-question-audio-choose"))).isNotNull();
-        assertThat(fx(()->dialog("admin-exam-save-local"))).isNotNull();
+        assertThat(fx(()->dialog("admin-exam-save-local"))).isNull();
+        assertThat(fx(()->((Button)dialog("admin-exam-save")).getText())).isEqualTo("Lưu đề");
+        assertThat(fx(()->dialog("exam-question-image-choose"))).isNotNull();
         status.set(404);fxRun(()->((Button)dialog("admin-exam-save")).fire());
-        await("missing manual endpoint",()->((Label)dialog("admin-exam-form-status")).getText().contains("Lưu nháp vào máy"));
+        await("missing manual endpoint",()->((Label)dialog("admin-exam-form-status")).getText().contains("chưa được cập nhật"));
         assertThat(fx(()->((TextArea)dialog("exam-question-prompt")).getText())).isEqualTo("Nội dung chưa hoàn thiện");
-        assertThat(fx(()->dialog("admin-exam-save-local").isDisabled())).isFalse();
+        assertThat(fx(()->dialog("admin-exam-save").isDisabled())).isFalse();
         status.set(200);fxRun(()->((Button)dialog("admin-exam-save")).fire());
         await("saved pending draft",()->dialog("admin-exam-code")==null);
         assertThat(bodies).hasSize(2);
@@ -112,6 +115,37 @@ class AdminExamGuiTest {
         await("created",()->dialog("admin-exam-code")==null && calls.stream().anyMatch(c->c.startsWith("POST")));
         assertThat(JsonParser.parseString(bodies.getFirst()).getAsJsonObject().get("title").getAsString()).isEqualTo("Đề vừa import");
         assertThat(JsonParser.parseString(bodies.getFirst()).getAsJsonObject().get("examId").getAsString()).isEqualTo("oicaidjt");
+    }
+    @Test void selectedImagesArePreviewedAndSharedAudioAndPassageNeedOnlyOneEdit() throws Exception {
+        fxRun(()->((Button)view.lookup("#admin-exam-manual-add")).fire());await("manual form",()->dialog("admin-exam-code")!=null);
+        Path png=temporary.resolve("ảnh.png");javax.imageio.ImageIO.write(new java.awt.image.BufferedImage(40,30,java.awt.image.BufferedImage.TYPE_INT_RGB),"png",png.toFile());
+        Path wav=temporary.resolve("conversation.wav");Files.write(wav,"RIFF1234WAVEtest".getBytes());
+        fxRun(()->{
+            var editor=(ExamQuestionEditor)dialog("exam-question-editor");editor.selectImages(List.of(png));
+            assertThat(((javafx.scene.layout.FlowPane)dialog("exam-question-image-preview")).getChildren()).hasSize(1);
+        });
+        await("local image preview decoded",()->{
+            var pane=(javafx.scene.layout.FlowPane)dialog("exam-question-image-preview");
+            var image=(javafx.scene.image.ImageView)((javafx.scene.layout.VBox)pane.getChildren().get(0)).getChildren().get(0);
+            return image.getImage().getProgress()==1&&!image.getImage().isError();
+        });
+        screenshot(fx(()->dialog("admin-exam-code").getScene().getRoot()),"admin-manual-simple-images.png");
+        fxRun(()->{
+            var editor=(ExamQuestionEditor)dialog("exam-question-editor");
+            ((ListView<?>)dialog("exam-question-list")).getSelectionModel().select(31);editor.selectAudio(wav);
+            var tree=editor.document();
+            for(int i=31;i<34;i++)assertThat(tree.getAsJsonArray("questions").get(i).getAsJsonObject().get("audioFile").getAsString()).isEqualTo("conversation.wav");
+            ((ListView<?>)dialog("exam-question-list")).getSelectionModel().select(130);
+            ((TextArea)dialog("exam-question-passage")).setText("Shared paragraph");tree=editor.document();
+            for(int i=130;i<134;i++)assertThat(tree.getAsJsonArray("questions").get(i).getAsJsonObject().get("passageText").getAsString()).isEqualTo("Shared paragraph");
+        });
+        assertThat(fx(()->view.lookup("#admin-exam-open-draft"))).isNull();
+    }
+    @Test void oldServerIsReportedBeforeOpeningAuthoring() throws Exception {
+        status.set(404);fxRun(()->((Button)view.lookup("#admin-exam-manual-add")).fire());
+        await("server upgrade required",()->((Label)view.lookup("#admin-exam-status")).getText().contains("chưa được cập nhật"));
+        assertThat(fx(()->dialog("admin-exam-code"))).isNull();
+        assertThat(calls).contains("GET /api/v2/admin/exams/manual/capabilities");
     }
     @Test void editingQuestionFieldsKeepsAllEditsOnServerRejection() throws Exception {
         fxRun(()->((Button)view.lookup("#admin-exam-edit-MOCK-01")).fire());await("edit form",()->dialog("admin-exam-code")!=null);

@@ -1,25 +1,39 @@
-# Soạn đề thủ công: PENDING và âm thanh từ máy
+# Tạo đề thủ công
 
-Ảnh lỗi HTTP 404 ở `/api/v2/admin/exams/manual` cho thấy server đang kết nối không cung cấp API mà client đang gọi. API này có trên nhánh soạn đề thủ công; sửa JSON hoặc tạo lại database không làm server cũ có thêm API. Cần triển khai **server.jar và client cùng bản**. Chạy một server mới ở máy khác không thay thế server đang phục vụ địa chỉ đăng nhập hiện tại.
+Chỉ có một nút **Lưu đề**. Nội dung, âm thanh và ảnh đều được lưu trên server. Chưa đủ 200 câu theo chuẩn thì đề ở **PENDING**, có thể mở lại từ danh sách để nhập tiếp. Đủ nội dung và media bắt buộc thì đề chuyển **READY** và có thể dùng tạo ca thi. Không có luồng lưu/mở nháp trên máy.
 
-## Cách dùng
+## Nội dung và media
 
-- Chọn **Tạo đề bằng tay**, nhập mã/tên đề và soạn các câu theo thứ tự bất kỳ. **Lưu lên server** giữ đề chưa hoàn thiện ở PENDING; đủ 200 câu hợp lệ mới chuyển READY. PENDING không thể dùng tạo ca thi.
-- Trước đây trường âm thanh chỉ nhận tên file đã nằm trong thư mục âm thanh của đề trên server, không mở hộp chọn file và không tải file từ máy lên.
-- Hiện tại Part 1–4 có **Chọn âm thanh từ máy…** và **Bỏ chọn**. Hỗ trợ MP3, WAV, M4A; tối đa 64 MiB/tệp và 256 MiB/đề. Âm thanh được gửi cùng đề qua `/manual/bundle`; tên file trên server được tạo từ số câu và SHA-256 nên tên có dấu/khoảng trắng trên máy vẫn dùng được. Đây là chức năng âm thanh của form thủ công; import JSON v2 tiếp tục xử lý ảnh và âm thanh qua gói media hiện có.
-- **Lưu nháp vào máy…** lưu nội dung và các âm thanh đã chọn thành ZIP. **Mở nháp từ máy…** cho phép soạn tiếp, kể cả khi server chưa hỗ trợ API. Thông báo phân biệt rõ lưu trên máy và lưu lên server. Các file chỉ có sẵn trên server không tự được tải vào ZIP.
-- Nếu server báo 404 hoặc mất kết nối, form giữ nguyên nội dung và cho lưu nháp trên máy. Không báo thành công giả khi chưa lưu được lên server.
-- Khi tiếp tục một đề đã có trên server, giữ đúng revision. Nếu server đã nhận một lần lưu nhưng kết nối mất trước khi client nhận phản hồi, mở lại đề từ danh sách để lấy revision mới trước khi sửa tiếp.
+- Khung cố định: Part 1 có 6 câu, Part 2 có 25, Part 3 có 39, Part 4 có 30, Part 5 có 30, Part 6 có 16, Part 7 có 54. Mỗi câu có 4 lựa chọn, riêng Part 2 có 3.
+- Part 1 cần một ảnh, âm thanh và đáp án; Part 2 cần âm thanh và đáp án. Không bắt nhập lại lời đọc/lựa chọn của hai Part này.
+- Part 3–4 dùng chung âm thanh theo nhóm 3 câu; chọn một lần trong bất kỳ câu nào của nhóm. Part 6 dùng chung đoạn văn theo nhóm 4 câu. Các Part đọc cần nội dung, lựa chọn, đáp án; Part 6–7 cần đoạn văn.
+- **Chọn âm thanh…** mở file MP3/WAV/M4A từ máy. **Chọn ảnh…** mở PNG/JPEG và hiển thị ảnh xem trước. Part 1 có một ảnh; các câu khác có thể chọn nhiều ảnh nếu cần. Khi mở lại đề từ server, ảnh vẫn được tải lại để xem.
+- Tối đa 64 MiB/tệp âm thanh, 8 MiB/ảnh; tổng 256 MiB âm thanh và 64 MiB ảnh mỗi đề. Server kiểm tra định dạng, kích thước, checksum và quyền truy cập. Media tải lên được hoàn tác nếu lưu đề thất bại.
+- Đề hoàn thiện được lưu theo định dạng rich hiện có của ứng dụng, gồm ảnh và âm thanh trong bài thi. Không chỉ lưu tên ảnh trong form quản trị.
 
-## Cập nhật server
+## Vì sao vẫn có HTTP 404?
 
-1. Dừng server cũ bằng quy trình đang dùng. Giữ nguyên PostgreSQL, cấu hình `server.env`, khóa PIN và thư mục media.
-2. Triển khai JAR server mới trên chính máy/tiến trình phục vụ URL đăng nhập. Với Docker cần build lại image từ nhánh này.
-3. Khởi động server mới; Flyway tự áp dụng migration còn thiếu, bao gồm V22 cho bản nháp. Không sửa/xóa migration đã chạy, không tạo lại DB.
-4. Chạy client mới, đăng nhập ADMIN và thử lưu một đề còn trống. Mở lại từ danh sách và kiểm tra trạng thái PENDING.
+Client trên Windows đang gọi server Docker ở VPS. Đổi EXE hay chạy `Start-Server.bat` ở Windows không cập nhật container trên VPS. Cần thay **server.jar trong image đang phục vụ URL đăng nhập**, rồi tạo lại container server. Client kiểm tra hỗ trợ soạn đề có ảnh trước khi mở form để tránh nhập xong mới gặp lỗi phiên bản.
 
-## Kiểm chứng
+Giữ nguyên database, file cấu hình, khóa PIN và thư mục media đang dùng. Không reset database. Media mounts phải ghi được, không dùng `:ro`. Flyway tự áp dụng các migration còn thiếu, gồm V22 cho PENDING và V23 cho nguồn đề được biên soạn trực tiếp.
 
-Chạy `scripts/verify-manual-authoring.ps1 -PostgresBin '<PostgreSQL>/bin'` trên Windows có JDK 21/Maven và cache phụ thuộc. Runner tạo PostgreSQL riêng trên cổng ngẫu nhiên, dùng dữ liệu MOCK và dừng cluster sau kiểm thử. Không dùng DB ứng dụng.
+Với server Docker hiện có, chép JAR mới vào đường dẫn mà Dockerfile đang `COPY`, rồi chạy từ thư mục compose trên VPS (nếu service có tên `server`):
 
-Kiểm thử bao gồm lưu PENDING rồi READY, chặn PENDING khỏi ca thi, revision conflict, phân quyền, gói âm thanh từ máy, hoàn tác file khi lưu thất bại, ZIP round-trip và chống đường dẫn thoát thư mục, giữ nội dung form khi gặp 404 rồi lưu lại thành công. Các bài cần bộ crawl ngoài được đánh dấu bỏ qua khi thiếu dữ liệu.
+```sh
+docker compose up -d --build --no-deps server
+docker compose logs --tail=80 server
+```
+
+Nếu đang dùng compose chỉ có PostgreSQL của repository này, có thể thêm `docker-compose.server.yml`. Điền `.env` bằng thông số DB, khóa PIN và đường dẫn media **đang dùng**, sau đó:
+
+```sh
+docker compose -f docker-compose.yml -f docker-compose.server.yml up -d --build server
+```
+
+Dockerfile nhận `server/target/server-0.1.0-SNAPSHOT.jar`. JAR đã build trên Windows chạy được với Java 21 trong container Linux. Bộ chạy Windows cũng kèm `server.jar`, `Dockerfile` và ghi chú triển khai để người quản trị VPS dùng đúng bản.
+
+Nếu dùng JAR trong bộ chạy thay vì build từ repository, chép `server.jar` và `Dockerfile.server` vào cùng một thư mục trên VPS, rồi build bằng `docker build -f Dockerfile.server -t toeic-authoring:local .`. Cấu hình service server hiện có dùng image này; giữ nguyên environment, network và volumes đang sử dụng. File compose kèm theo là mẫu cho layout repository, không thay trực tiếp cấu hình VPS chưa được kiểm tra.
+
+## Kiểm thử
+
+`scripts/verify-manual-authoring.ps1 -PostgresBin '<PostgreSQL>/bin'` tạo PostgreSQL riêng, chạy HTTP và JavaFX bằng dữ liệu MOCK, rồi dừng cluster. Bao gồm PENDING/READY theo chuẩn, chọn/upload ảnh và âm thanh, xem lại ảnh, ảnh trong chuẩn bị thi của thí sinh, revision conflict, phân quyền, hoàn tác media, một nút lưu và kiểm tra phiên bản server. Các bài cần bộ crawl ngoài được bỏ qua khi thiếu dữ liệu.

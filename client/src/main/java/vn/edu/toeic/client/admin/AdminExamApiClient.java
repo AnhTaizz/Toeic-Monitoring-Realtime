@@ -32,6 +32,23 @@ public final class AdminExamApiClient implements AutoCloseable {
     }
     public String read(String id) throws Exception {return json.toJson(JsonParser.parseString(call("GET","/item?examId="+encode(id),null,200)));}
     public String readManual(String id) throws Exception {return call("GET","/manual?examId="+encode(id),null,200);}
+    public boolean checkAuthoring() throws Exception {
+        var capabilities=JsonParser.parseString(call("GET","/manual/capabilities",null,200)).getAsJsonObject();
+        if(!capabilities.has("authoringVersion")||capabilities.get("authoringVersion").getAsInt()<2||!capabilities.has("images")||!capabilities.get("images").getAsBoolean())
+            throw new IllegalStateException("Server cần được cập nhật chức năng soạn đề có hình ảnh.");
+        return true;
+    }
+    public byte[] manualImage(String id,String file) throws Exception {
+        var request=HttpRequest.newBuilder(URI.create(base+"/manual/image?examId="+encode(id)+"&file="+encode(file)))
+            .timeout(Duration.ofSeconds(30)).header("Authorization","Bearer "+token).GET().build();
+        var response=http.send(request,HttpResponse.BodyHandlers.ofInputStream());
+        try(var input=response.body()) {
+            if(response.statusCode()!=200)throw new java.io.IOException("Không tải được ảnh của đề.");
+            byte[] bytes=input.readNBytes(8*1024*1024+1);
+            if(bytes.length>8*1024*1024||!java.util.Set.of("image/png","image/jpeg").contains(response.headers().firstValue("Content-Type").orElse("")))throw new java.io.IOException("Ảnh của đề không hợp lệ.");
+            return bytes;
+        }
+    }
     public void uploadManual(String id,Path zip) throws Exception {
         exchange(id==null?"POST":"PUT","/manual/bundle"+(id==null?"":"?examId="+encode(id)),HttpRequest.BodyPublishers.ofFile(zip),"application/zip",id==null?201:200);
     }
@@ -74,7 +91,7 @@ public final class AdminExamApiClient implements AutoCloseable {
                     if(error!=null && error.has("message"))message=error.get("message").getAsString();
                 }catch(RuntimeException ignored){}
                 if(response.statusCode()==404 && path.startsWith("/manual"))
-                    message="Server chưa hỗ trợ lưu đề soạn tay hoặc không tìm thấy bản nháp. Dùng ‘Lưu nháp vào máy’ để giữ nội dung và âm thanh, rồi cập nhật server từ cùng bản phát hành với client trước khi lưu lên server.";
+                    message=path.contains("examId=")?"Server chưa hỗ trợ soạn đề hoặc đề này không còn tồn tại. Kiểm tra server và tải lại danh sách đề.":"Server đang kết nối chưa được cập nhật chức năng soạn đề. Cần cập nhật server tại địa chỉ đăng nhập; nội dung vẫn được giữ trên màn hình.";
                 else if(response.statusCode()==404 && (!path.startsWith("/item") || message.contains("tài nguyên API")))
                     message="Server đang kết nối chưa có API quản lý đề thi. Hãy cập nhật server cùng phiên bản với client hoặc kiểm tra địa chỉ server; thay đổi JSON/DB không sửa được lỗi này.";
                 throw new AdminAccountApiClient.Rejected(response.statusCode(),"Server (HTTP "+response.statusCode()+"): "+message);

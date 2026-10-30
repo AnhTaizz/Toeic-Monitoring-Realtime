@@ -4,7 +4,6 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.zip.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -13,86 +12,81 @@ import vn.edu.toeic.protocol.admin.ManualExamDraft;
 import vn.edu.toeic.server.auth.*;
 import vn.edu.toeic.server.exam.ExamApiException;
 
-/** Publish selected local audio and its draft together; restore files on any database failure. */
+/** Saves audio, images and the authored document in one operation. */
 @Service
 public class ManualExamBundleService {
-    private final Path root;
+    private final ManualExamMedia media;
     private final ManualExamService manual;
     private final AdminExamService exams;
     private final AuthorizationService authorization;
     private final RichExamJson json;
     private final TransactionTemplate transaction;
-    public ManualExamBundleService(@Value("${toeic.audio.root:audio-resources}") String root,
-            ManualExamService manual,AdminExamService exams,AuthorizationService authorization,
-            RichExamJson json,PlatformTransactionManager manager) {
-        this.root=Path.of(root).toAbsolutePath().normalize();this.manual=manual;this.exams=exams;
-        this.authorization=authorization;this.json=json;transaction=new TransactionTemplate(manager);
+    public ManualExamBundleService(ManualExamMedia media,ManualExamService manual,AdminExamService exams,
+            AuthorizationService authorization,RichExamJson json,PlatformTransactionManager manager) {
+        this.media=media;this.manual=manual;this.exams=exams;this.authorization=authorization;this.json=json;transaction=new TransactionTemplate(manager);
     }
     public ManualExamDraft upload(AuthenticatedUser admin,String replaceId,InputStream input) throws IOException {
-        authorization.requireRole(admin,Role.ADMIN);
-        Path temp=Files.createTempDirectory("toeic-manual-upload-");
-        var published=new ArrayList<Path>();Path[] createdDirectory={null};
+        authorization.requireRole(admin,Role.ADMIN);Path temp=Files.createTempDirectory("toeic-manual-upload-");
+        var published=new ArrayList<Path>();var directories=new ArrayList<Path>();
         try {
-            Set<String> names=extract(input,temp);
-            ManualExamDraft draft;
+            Set<String> names=extract(input,temp);ManualExamDraft draft;
             try(var body=Files.newInputStream(temp.resolve("manual-draft.json"))){draft=json.read(body,ManualExamDraft.class);}
-            ManualExamService.validate(draft);
-            var referenced=new HashSet<String>();
-            for(var q:draft.questions())if(q.audioFile()!=null&&!q.audioFile().isBlank())referenced.add(q.audioFile());
-            for(String name:names)if(!referenced.contains(name))throw ExamApiException.invalidInput("Gói nháp chứa âm thanh không được dùng trong đề.");
+            ManualExamService.validate(draft);var referenced=new HashSet<String>();
+            for(var q:draft.questions()) {
+                if(q.audioFile()!=null&&!q.audioFile().isBlank())referenced.add("audio/"+q.audioFile());
+                for(String file:q.imageFiles())referenced.add("images/"+file);
+            }
+            if(!referenced.containsAll(names))throw ExamApiException.invalidInput("Gói đề chứa media không được dùng trong đề.");
             try {
                 return transaction.execute(status->{
                     exams.prepareWrite(admin,replaceId,draft.examId());
                     try {
-                        Files.createDirectories(root);Path realRoot=root.toRealPath();Path directory=realRoot.resolve(draft.examId());
-                        if(!Files.exists(directory,LinkOption.NOFOLLOW_LINKS)){Files.createDirectory(directory);createdDirectory[0]=directory;}
-                        if(Files.isSymbolicLink(directory)||!Files.isDirectory(directory,LinkOption.NOFOLLOW_LINKS))throw ExamApiException.invalidInput("Thư mục âm thanh không hợp lệ.");
                         for(String name:names) {
-                            Path source=temp.resolve(name),target=directory.resolve(name);
+                            Path root=name.startsWith("images/")?media.imageRoot:media.audioRoot;
+                            Files.createDirectories(root);Path directory=root.toRealPath().resolve(draft.examId());
+                            if(!Files.exists(directory,LinkOption.NOFOLLOW_LINKS)){Files.createDirectory(directory);directories.add(directory);}
+                            if(Files.isSymbolicLink(directory)||!Files.isDirectory(directory,LinkOption.NOFOLLOW_LINKS))throw ExamApiException.invalidInput("Thư mục media không hợp lệ.");
+                            Path source=temp.resolve(name),target=directory.resolve(name.substring(name.indexOf('/')+1));
                             if(Files.exists(target,LinkOption.NOFOLLOW_LINKS)) {
-                                if(!Files.isRegularFile(target,LinkOption.NOFOLLOW_LINKS)||Files.mismatch(source,target)!=-1)
-                                    throw ExamApiException.invalidInput("Âm thanh trên server không khớp nội dung tải lên.");
+                                if(!Files.isRegularFile(target,LinkOption.NOFOLLOW_LINKS)||Files.mismatch(source,target)!=-1)throw ExamApiException.invalidInput("Media trên server không khớp nội dung tải lên.");
                             }else {Files.copy(source,target);published.add(target);}
                         }
-                        for(String name:referenced)if(!Files.isRegularFile(directory.resolve(name),LinkOption.NOFOLLOW_LINKS))
-                            throw ExamApiException.invalidInput("Thiếu âm thanh: "+name+". Hãy chọn lại tệp từ máy.");
                         return manual.save(admin,replaceId,draft);
-                    }catch(IOException bad){throw new UncheckedIOException(bad);}
+                    }catch(IOException | RuntimeException bad) {
+                        try{rollback(published,directories);}catch(IOException cleanup){bad.addSuppressed(cleanup);}
+                        if(bad instanceof IOException io)throw new UncheckedIOException(io);throw (RuntimeException)bad;
+                    }
                 });
             }catch(RuntimeException bad) {
-                for(Path path:published)Files.deleteIfExists(path);
-                if(createdDirectory[0]!=null)Files.deleteIfExists(createdDirectory[0]);
-                throw bad;
+                try{rollback(published,directories);}catch(IOException cleanup){bad.addSuppressed(cleanup);}throw bad;
             }
         }finally{try(var paths=Files.walk(temp)){for(Path path:paths.sorted(Comparator.reverseOrder()).toList())Files.deleteIfExists(path);}}
     }
+    private static void rollback(List<Path> published,List<Path> directories) throws IOException {
+        for(Path file:published.reversed())Files.deleteIfExists(file);published.clear();
+        for(Path directory:directories.reversed())Files.deleteIfExists(directory);directories.clear();
+    }
     private static Set<String> extract(InputStream stream,Path temp) throws IOException {
-        Set<String> entries=new HashSet<>(),audio=new LinkedHashSet<>();long total=0;
+        Set<String> entries=new HashSet<>(),files=new LinkedHashSet<>();long[] totals={0,0};int[] counts={0,0};
         try(var input=new ZipInputStream(stream)) {
             for(ZipEntry entry;(entry=input.getNextEntry())!=null;) {
-                String name=entry.getName();boolean manifest=name.equals("manual-draft.json");
-                if(entry.isDirectory()||!entries.add(name)||entries.size()>101
-                        ||!(manifest||name.matches("audio/[0-9]{3}-[a-f0-9]{64}\\.(mp3|wav|m4a)")))
-                    throw ExamApiException.invalidInput("Gói nháp có đường dẫn hoặc số tệp không hợp lệ.");
-                int limit=manifest?RichExamJson.MAX_BYTES:64*1024*1024;
-                byte[] bytes=input.readNBytes(limit+1);total+=bytes.length;
-                if(bytes.length==0||bytes.length>limit||total>258L*1024*1024)throw ExamApiException.invalidInput("Gói nháp vượt giới hạn dung lượng.");
-                String file=manifest?name:name.substring(6);
+                String name=entry.getName();boolean manifest=name.equals("manual-draft.json"),image=name.startsWith("images/");
+                if(entry.isDirectory()||!entries.add(name)||entries.size()>201||!(manifest
+                        ||name.matches("audio/[0-9]{3}-[a-f0-9]{64}\\.(mp3|wav|m4a)")||name.matches("images/[0-9]{3}-[a-f0-9]{64}\\.(png|jpe?g)")))
+                    throw ExamApiException.invalidInput("Đường dẫn media trong gói đề không hợp lệ.");
+                int limit=manifest?RichExamJson.MAX_BYTES:(image?8:64)*1024*1024;
+                byte[] bytes=input.readNBytes(limit+1);
+                if(bytes.length==0||bytes.length>limit)throw ExamApiException.invalidInput("Tệp trong gói đề vượt giới hạn dung lượng.");
                 if(!manifest) {
-                    if(!vn.edu.toeic.server.audio.AudioCatalog.sha256(bytes).equals(file.substring(4,68)))throw ExamApiException.invalidInput("Nội dung âm thanh không khớp checksum.");
-                    if(!audioHeader(file,bytes))throw ExamApiException.invalidInput("Nội dung tệp không phải âm thanh MP3, WAV hoặc M4A hợp lệ.");
-                    audio.add(file);
+                    int index=image?1:0;totals[index]+=bytes.length;counts[index]++;
+                    if(counts[index]>100||totals[index]>(image?64L:256L)*1024*1024)throw ExamApiException.invalidInput("Media của đề vượt giới hạn dung lượng hoặc số tệp.");
+                    String file=name.substring(name.indexOf('/')+1);
+                    if(!vn.edu.toeic.server.audio.AudioCatalog.sha256(bytes).equals(file.substring(4,68)))throw ExamApiException.invalidInput("Nội dung media không khớp checksum.");
+                    ManualExamMedia.metadata(file,bytes,image);files.add(name);
                 }
-                Files.write(temp.resolve(file),bytes,StandardOpenOption.CREATE_NEW);
+                Path target=temp.resolve(name);Files.createDirectories(target.getParent());Files.write(target,bytes,StandardOpenOption.CREATE_NEW);
             }
-        }catch(ZipException bad){throw ExamApiException.invalidInput("Gói nháp ZIP bị hỏng.");}
-        if(!entries.contains("manual-draft.json"))throw ExamApiException.invalidInput("Gói nháp thiếu nội dung đề.");return audio;
+        }catch(ZipException bad){throw ExamApiException.invalidInput("Gói đề tải lên bị hỏng.");}
+        if(!entries.contains("manual-draft.json"))throw ExamApiException.invalidInput("Gói đề thiếu nội dung.");return files;
     }
-    private static boolean audioHeader(String name,byte[] b) {
-        if(b.length<12)return false;
-        if(name.endsWith(".wav"))return ascii(b,0,4).equals("RIFF")&&ascii(b,8,12).equals("WAVE");
-        if(name.endsWith(".m4a"))return ascii(b,4,8).equals("ftyp");
-        return ascii(b,0,3).equals("ID3")||((b[0]&255)==255&&(b[1]&224)==224);
-    }
-    private static String ascii(byte[] b,int start,int end){return new String(b,start,end-start,java.nio.charset.StandardCharsets.US_ASCII);}
 }

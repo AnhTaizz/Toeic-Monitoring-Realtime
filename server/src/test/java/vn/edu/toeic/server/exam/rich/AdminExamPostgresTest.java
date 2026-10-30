@@ -30,13 +30,21 @@ class AdminExamPostgresTest {
         var draft=new Gson().toJsonTree(vn.edu.toeic.protocol.admin.ManualExamDraft.empty()).getAsJsonObject();
         draft.addProperty("examId","manual-audio");draft.addProperty("title","MOCK local audio");
         Path local=temporary.resolve("âm thanh.wav");Files.write(local,"RIFF1234WAVEtest".getBytes());
+        Path image=temporary.resolve("hình.png");javax.imageio.ImageIO.write(new java.awt.image.BufferedImage(32,24,java.awt.image.BufferedImage.TYPE_INT_RGB),"png",image.toFile());
         try(var files=new vn.edu.toeic.client.admin.ManualExamFiles()) {
             files.select(draft.getAsJsonArray("questions").get(0).getAsJsonObject(),local);
+            files.selectImages(draft.getAsJsonArray("questions").get(0).getAsJsonObject(),List.of(image));
             var zip=files.bundle(draft);
             var saved=tree(check(manualBundle("POST",API+"/manual/bundle",zip,admin),201));
             assertThat(saved.get("revision").getAsInt()).isEqualTo(1);
             String name=saved.getAsJsonArray("questions").get(0).getAsJsonObject().get("audioFile").getAsString();
             Path directory=temporary.resolve("audio/manual-audio");assertThat(Files.readAllBytes(directory.resolve(name))).isEqualTo(Files.readAllBytes(local));
+            String imageName=saved.getAsJsonArray("questions").get(0).getAsJsonObject().getAsJsonArray("imageFiles").get(0).getAsString();
+            var imageUrl=URI.create(base+API+"/manual/image?examId=manual-audio&file="+imageName);
+            var downloaded=http.send(HttpRequest.newBuilder(imageUrl).header("Authorization","Bearer "+admin).GET().build(),HttpResponse.BodyHandlers.ofByteArray());
+            assertThat(downloaded.statusCode()).isEqualTo(200);assertThat(downloaded.body()).isEqualTo(Files.readAllBytes(image));
+            check(call("GET",API+"/manual/image?examId=manual-audio&file="+imageName,null,proctor),403);
+            check(call("GET",API+"/manual/image?examId=manual-audio&file=unrelated.png",null,admin),403);
             assertThat(tree(check(call("GET",API+"/manual?examId=manual-audio",null,admin),200))).isEqualTo(saved);
             assertThat(number("SELECT count(*) FROM exams WHERE authoring_status='PENDING'")).isEqualTo(1);
             Files.write(local,"RIFF5678WAVEchanged".getBytes());
@@ -45,6 +53,8 @@ class AdminExamPostgresTest {
             try(var paths=Files.list(directory)){assertThat(paths.count()).isEqualTo(1);}
             check(manualBundle("POST",API+"/manual/bundle",stale,proctor),403);
             Files.write(local,"invalid audio payload".getBytes());
+            check(manualBundle("PUT",API+"/manual/bundle?examId=manual-audio",files.bundle(draft),admin),400);
+            Files.write(local,"RIFF1234WAVEtest".getBytes());Files.write(image,"fake PNG content".getBytes());
             check(manualBundle("PUT",API+"/manual/bundle?examId=manual-audio",files.bundle(draft),admin),400);
         }
     }
@@ -78,19 +88,50 @@ class AdminExamPostgresTest {
         }
         var stale=saved.deepCopy();
         saved=tree(check(call("PUT",API+"/manual?examId=manual-200",saved.toString(),admin),200));
+        list=tree(check(call("GET",API,null,admin),200)).getAsJsonArray("items").get(0).getAsJsonObject();
+        assertThat(list.get("authoringStatus").getAsString()).isEqualTo("PENDING");
+        assertThat(list.get("completedQuestions").getAsInt()).isEqualTo(100);
+        prepareReadyManualMedia(saved);
+        saved=tree(check(call("PUT",API+"/manual?examId=manual-200",saved.toString(),admin),200));
         assertThat(number("SELECT count(*) FROM exam_questions WHERE exam_id='manual-200'")).isEqualTo(200);
         assertThat(number("SELECT count(*) FROM exam_options WHERE exam_id='manual-200'")).isEqualTo(775);
         list=tree(check(call("GET",API,null,admin),200)).getAsJsonArray("items").get(0).getAsJsonObject();
         assertThat(list.get("authoringStatus").getAsString()).isEqualTo("READY");
         assertThat(list.get("completedQuestions").getAsInt()).isEqualTo(200);
+        assertThat(list.get("contentVersion").getAsInt()).isEqualTo(2);
+        var catalog=tree(check(call("GET","/api/v2/exams",null,proctor),200));
+        assertThat(catalog.getAsJsonArray("items").get(0).getAsJsonObject().get("selectable").getAsBoolean()).isTrue();
         check(call("PUT",API+"/manual?examId=manual-200",stale.toString(),admin),409);
         saved.getAsJsonArray("questions").get(199).getAsJsonObject().addProperty("correctOption","");
         saved=tree(check(call("PUT",API+"/manual?examId=manual-200",saved.toString(),admin),200));
         check(call("POST","/api/v1/sessions",session,proctor),400);
         saved.getAsJsonArray("questions").get(199).getAsJsonObject().addProperty("correctOption","C");
         saved=tree(check(call("PUT",API+"/manual?examId=manual-200",saved.toString(),admin),200));
-        check(call("POST","/api/v1/sessions",session,proctor),200);
+        String create=new Gson().toJson(Map.of("examId","manual-200","durationMinutes",120,
+            "candidateUserIds",List.of(number("SELECT id FROM user_accounts WHERE username='candidate1'")),
+            "proctorUserIds",List.of(number("SELECT id FROM user_accounts WHERE username='proctor1'"))));
+        var created=tree(check(call("POST","/api/v2/sessions",create,proctor),201));
+        String attempt=created.getAsJsonArray("attempts").get(0).getAsJsonObject().get("attemptId").getAsString();
+        var preparation=tree(check(call("GET","/api/v2/attempts/"+attempt+"/preparation",null,candidate),200));
+        var visual=preparation.getAsJsonObject("visualManifest");assertThat(visual.getAsJsonArray("slots")).hasSize(6);
+        String imagePath=visual.getAsJsonArray("slots").get(0).getAsJsonObject().get("downloadPath").getAsString();
+        var candidateImage=http.send(HttpRequest.newBuilder(URI.create(base+imagePath)).header("Authorization","Bearer "+candidate).GET().build(),HttpResponse.BodyHandlers.ofByteArray());
+        assertThat(candidateImage.statusCode()).isEqualTo(200);assertThat(javax.imageio.ImageIO.read(new java.io.ByteArrayInputStream(candidateImage.body()))).isNotNull();
         check(call("PUT",API+"/manual?examId=manual-200",saved.toString(),admin),409);
+    }
+    private void prepareReadyManualMedia(JsonObject draft) throws Exception {
+        Path audio=temporary.resolve("audio/manual-200"),images=temporary.resolve("images/manual-200");Files.createDirectories(audio);Files.createDirectories(images);
+        for(var element:draft.getAsJsonArray("questions")) {
+            var q=element.getAsJsonObject();int number=q.get("orderIndex").getAsInt(),part=q.get("part").getAsInt();
+            if(part<=4) {
+                String name=String.format(Locale.ROOT,"%03d-mock.wav",vn.edu.toeic.protocol.admin.ManualExamDraft.groupStart(number));
+                Files.write(audio.resolve(name),"RIFF1234WAVEtest".getBytes());q.addProperty("audioFile",name);
+            }
+            if(part==1) {
+                String name=String.format(Locale.ROOT,"%03d-mock.png",number);javax.imageio.ImageIO.write(new java.awt.image.BufferedImage(32,24,java.awt.image.BufferedImage.TYPE_INT_RGB),"png",images.resolve(name).toFile());
+                var files=new JsonArray();files.add(name);q.add("imageFiles",files);
+            }
+        }
     }
     @Test void manualDraftRejectsChangedTemplateAndProtectsAnswerKeys() throws Exception {
         var draft=new Gson().toJsonTree(vn.edu.toeic.protocol.admin.ManualExamDraft.empty()).getAsJsonObject();

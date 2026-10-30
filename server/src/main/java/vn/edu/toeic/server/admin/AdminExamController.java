@@ -41,6 +41,17 @@ public class AdminExamController {
     public ResponseEntity<ManualExamDraft> readManual(HttpServletRequest request,@RequestParam String examId) {
         return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(manual.read(user(request),examId));
     }
+    @GetMapping("/manual/capabilities")
+    public ResponseEntity<Map<String,Object>> authoringCapabilities(HttpServletRequest request) {
+        user(request);
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(Map.of("authoringVersion",2,"images",true));
+    }
+    @GetMapping("/manual/image")
+    public ResponseEntity<byte[]> manualImage(HttpServletRequest request,@RequestParam String examId,@RequestParam String file) {
+        var image=manual.image(user(request),examId,file);
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).contentType(MediaType.parseMediaType(image.mimeType()))
+            .header("X-Content-Type-Options","nosniff").body(image.bytes());
+    }
     @RequestMapping(value="/manual",method={RequestMethod.POST,RequestMethod.PUT})
     public ResponseEntity<ManualExamDraft> saveManual(HttpServletRequest request,@RequestParam(required=false) String examId) throws IOException {
         var admin=user(request);
