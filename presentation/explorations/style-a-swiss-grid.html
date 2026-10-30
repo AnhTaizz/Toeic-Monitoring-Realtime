@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOEIC Monitor</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="viewport-base.css">
+<style>
+  :root {
+    --stage-bg: #e9e6e1; --slide-bg: #ffffff;
+    --ink: #13254a; --muted: #6b7a90; --line: #e3e8ef; --orange: #f26b1d;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Be Vietnam Pro', sans-serif; color: var(--ink); }
+  /* Visible 12-column grid */
+  .grid { position: absolute; inset: 0 96px; display: grid; grid-template-columns: repeat(12, 1fr); }
+  .grid i { border-left: 1px solid var(--line); }
+  .grid i:last-child { border-right: 1px solid var(--line); }
+  .bar { position: absolute; left: 96px; right: 96px; top: 72px; display: flex; justify-content: space-between;
+         font: 500 22px 'JetBrains Mono', monospace; letter-spacing: .04em; color: var(--muted); }
+  .block { position: absolute; right: 96px; top: 200px; width: 576px; height: 576px; background: var(--orange);
+           transform-origin: 100% 0; transform: scaleY(0); transition: transform 1s var(--ease); }
+  .slide.visible .block { transform: scaleY(1); }
+  .block span { position: absolute; left: 40px; bottom: 32px; font: 800 240px/0.8 'Archivo', sans-serif; color: #fff; }
+  .circle { position: absolute; right: 576px; top: 104px; width: 192px; height: 192px; border-radius: 50%; background: var(--ink); }
+  h1 { position: absolute; left: 96px; top: 430px; font: 800 168px/0.9 'Archivo', sans-serif; letter-spacing: -0.03em; }
+  .sub { position: absolute; left: 96px; top: 770px; width: 860px; font-size: 34px; line-height: 1.4; color: #334155; }
+  .foot { position: absolute; left: 96px; right: 96px; bottom: 64px; display: flex; gap: 64px;
+          font: 400 22px 'JetBrains Mono', monospace; color: var(--muted); border-top: 2px solid var(--ink); padding-top: 20px; }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+  .slide.visible .reveal { opacity: 1; transform: none; }
+  .d1 { transition-delay: .15s } .d2 { transition-delay: .3s } .d3 { transition-delay: .45s }
+</style>
+</head>
+<body>
+<div class="deck-viewport"><main class="deck-stage" id="deckStage">
+  <section class="slide">
+    <div class="grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="bar"><span>BTL LẬP TRÌNH MẠNG</span><span>30 / 10 / 2026</span></div>
+    <div class="block"><span>200</span></div>
+    <div class="circle"></div>
+    <h1 class="reveal d1">TOEIC<br>Monitor</h1>
+    <p class="sub reveal d2">Hệ thống thi TOEIC Client–Server với giám sát máy thí sinh theo thời gian thực.</p>
+    <div class="foot reveal d3"><span>JavaFX</span><span>Spring Boot</span><span>PostgreSQL 18</span><span>REST + WebSocket</span></div>
+  </section>
+</main></div>
+<script src="stage.js"></script>
+</body>
+</html>

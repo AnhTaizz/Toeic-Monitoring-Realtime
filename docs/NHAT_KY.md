@@ -1290,3 +1290,10 @@ Chạy lại `AccountPinFlowPostgresGuiTest` + `RoomFlowPostgresGuiTest` khi má
 - Kiểm thử và bản đóng gói: cập nhật sau khi lượt kiểm chứng cuối hoàn tất.
 
 Kiểm chứng chốt: 23 PASS/3 SKIP/0 FAIL/ERROR (3 case crawl thật thiếu dữ liệu); package PASS. Receipt docs/manual-exam-verification.json; ảnh docs/admin-manual-pending.png. PostgreSQL tạm: 0 schema còn lại, stop exit 0. Lượt đầu có lỗi kỳ vọng/chọn câu trong test, đã sửa và chạy lại; không thay logic để né kiểm thử.
+
+## 30/10/2026 — Slide thuyết trình HTML (`presentation/`)
+
+- Đã làm: bộ slide 29 trang 16:9 theo skill Frontend Slides, Design System V1.0 “Claymoon Flow” (màu lấy từ CSS của app JavaFX). Thử 3 phương án bìa (Swiss Grid, Neo-Grid Orange, Claymoon Flow), chọn Claymoon Flow. Nội dung: bài toán, kiến trúc, envelope/mã lỗi, luồng phòng PIN, autosave một khóa, epoch/sequence, 4 tín hiệu, E1, replay T3-C3, benchmark ACCOUNT_PIN, hồi quy `5173462`, demo, đóng góp, giới hạn. Số liệu chép từ báo cáo trong repo, có dòng nguồn trên từng slide; ảnh là ảnh chụp test có sẵn (MOCK/TEST, có ghi nhãn).
+- Không sửa code ứng dụng; mọi file slide nằm trong `presentation/`.
+- Đã kiểm: chụp 29 slide ở 1920×1080 bằng Playwright, script kiểm tràn/chồng báo 0 lỗi, xem lại từng ảnh và sửa các lỗi chồng chữ/nhãn, ảnh quá nhỏ. Thử khung 1280×720 và 390×844. Chưa trình chiếu thử trên máy chiếu thật.
+- Cần người khác: nhóm đối chiếu “Design System V1.0” chính thức (không tìm thấy file trong repo) và duyệt lời thoại từng phần theo vai A/B/C.
