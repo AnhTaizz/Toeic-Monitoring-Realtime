@@ -31,6 +31,10 @@ public final class AdminExamApiClient implements AutoCloseable {
         return result;
     }
     public String read(String id) throws Exception {return json.toJson(JsonParser.parseString(call("GET","/item?examId="+encode(id),null,200)));}
+    public String readManual(String id) throws Exception {return call("GET","/manual?examId="+encode(id),null,200);}
+    public ManualExamDraft saveManual(String id,String body) throws Exception {
+        return json.fromJson(call(id==null?"POST":"PUT","/manual"+(id==null?"":"?examId="+encode(id)),body,id==null?201:200),ManualExamDraft.class);
+    }
     public void save(String id,String body) throws Exception {
         var tree=AdminExamImport.parse(body);
         if(tree==null)throw new IllegalArgumentException("Nội dung đề phải là một đối tượng JSON.");

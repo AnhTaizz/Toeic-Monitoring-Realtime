@@ -37,6 +37,7 @@ public class RichSessionService {
         return new ExamCatalogPage(2,page.stream().map(this::catalogItem).toList(),more?page.getLast():null);
     }
     private ExamCatalogItem catalogItem(String exam) {
+        String authoring=jdbc.sql("SELECT authoring_status FROM exams WHERE exam_id=:e").param("e",exam).query(String.class).single();
         record Header(String title,int version,int questions) {}
         var h=jdbc.sql("SELECT title,content_version,total_questions FROM exams WHERE exam_id=:e").param("e",exam).query((r,n)->new Header(r.getString(1),r.getInt(2),r.getInt(3))).single();
         boolean content=false,verifiedMedia=false;
@@ -48,12 +49,14 @@ public class RichSessionService {
                 validator.validate(graph);content=true;
             } catch(ExamApiException | IllegalArgumentException invalid) {content=false;}
         }
-        var blocked=new ArrayList<String>();if(h.version()!=2)blocked.add("LEGACY_CONTENT");
+        var blocked=new ArrayList<String>();if(!"READY".equals(authoring))blocked.add("EXAM_PENDING");if(h.version()!=2)blocked.add("LEGACY_CONTENT");
         if(!content)blocked.add("CONTENT_UNVERIFIED");if(!verifiedMedia)blocked.add("MEDIA_UNVERIFIED");
-        return new ExamCatalogItem(exam,h.title(),h.version(),h.version()==2?"TOEIC_200":null,h.questions(),"IMPORTED",
-                content?"VERIFIED":"UNVERIFIED",verifiedMedia?"VERIFIED_AT_IMPORT":"UNVERIFIED",content&&verifiedMedia,true,blocked);
+        return new ExamCatalogItem(exam,h.title(),h.version(),h.version()==2?"TOEIC_200":null,h.questions(),"READY".equals(authoring)?"IMPORTED":"PENDING",
+                content?"VERIFIED":"UNVERIFIED",verifiedMedia?"VERIFIED_AT_IMPORT":"UNVERIFIED",content&&verifiedMedia&&"READY".equals(authoring),true,blocked);
     }
     RichExamImportRequest verifiedResources(String exam) {
+        if(jdbc.sql("SELECT exam_id FROM exams WHERE exam_id=:e AND authoring_status='READY' FOR SHARE").param("e",exam).query(String.class).optional().isEmpty())
+            throw V2SessionPolicy.invalid();
         try {var graph=graphs.validationGraph(exam);validator.validate(graph);media.verify(graph);return graph;}
         catch(ExamApiException | IllegalArgumentException bad){throw V2SessionPolicy.invalid();}
     }

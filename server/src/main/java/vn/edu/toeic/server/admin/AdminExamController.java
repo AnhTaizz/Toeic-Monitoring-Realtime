@@ -10,6 +10,7 @@ import vn.edu.toeic.protocol.Protocol;
 import vn.edu.toeic.protocol.ErrorCode;
 import vn.edu.toeic.protocol.error.ApiErrorResponse;
 import vn.edu.toeic.protocol.admin.ExamPage;
+import vn.edu.toeic.protocol.admin.ManualExamDraft;
 import vn.edu.toeic.protocol.exam.ExamImportRequest;
 import vn.edu.toeic.protocol.exam.rich.RichExamImportRequest;
 import vn.edu.toeic.server.auth.*;
@@ -23,8 +24,21 @@ public class AdminExamController {
     private final AuthorizationService authorization;
     private final RichExamJson json;
     private final AdminExamBundleService bundles;
-    public AdminExamController(AdminExamService service,AuthorizationService authorization,RichExamJson json,AdminExamBundleService bundles) {
-        this.service=service;this.authorization=authorization;this.json=json;this.bundles=bundles;
+    private final ManualExamService manual;
+    public AdminExamController(AdminExamService service,AuthorizationService authorization,RichExamJson json,AdminExamBundleService bundles,ManualExamService manual) {
+        this.service=service;this.authorization=authorization;this.json=json;this.bundles=bundles;this.manual=manual;
+    }
+    @GetMapping("/manual")
+    public ResponseEntity<ManualExamDraft> readManual(HttpServletRequest request,@RequestParam String examId) {
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(manual.read(user(request),examId));
+    }
+    @RequestMapping(value="/manual",method={RequestMethod.POST,RequestMethod.PUT})
+    public ResponseEntity<ManualExamDraft> saveManual(HttpServletRequest request,@RequestParam(required=false) String examId) throws IOException {
+        var admin=user(request);
+        if("PUT".equals(request.getMethod())&&examId==null || "POST".equals(request.getMethod())&&examId!=null)
+            throw ExamApiException.invalidInput("Chọn tạo mới hoặc sửa đề soạn tay.");
+        var saved=manual.save(admin,examId,json.read(request.getInputStream(),ManualExamDraft.class));
+        return ResponseEntity.status(examId==null?HttpStatus.CREATED:HttpStatus.OK).cacheControl(CacheControl.noStore()).body(saved);
     }
     @GetMapping
     public ResponseEntity<ExamPage> list(HttpServletRequest request,@RequestParam(defaultValue="") String search,

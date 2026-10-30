@@ -26,6 +26,63 @@ class AdminExamPostgresTest {
     private HttpClient http;
     private String schema,base,admin,proctor,candidate;
     private static final String API="/api/v2/admin/exams";
+    @Test void manualDraftPartialReadyPendingAndUsedLifecycle() throws Exception {
+        var draft=new Gson().toJsonTree(vn.edu.toeic.protocol.admin.ManualExamDraft.empty()).getAsJsonObject();
+        draft.addProperty("examId","manual-200");draft.addProperty("title","MOCK đề soạn tay");
+        draft.getAsJsonArray("questions").get(0).getAsJsonObject().addProperty("prompt","Partial first question");
+        var saved=tree(check(call("POST",API+"/manual",draft.toString(),admin),201));
+        assertThat(saved.get("revision").getAsLong()).isEqualTo(1);
+        assertThat(saved.getAsJsonArray("questions").size()).isEqualTo(200);
+        var list=tree(check(call("GET",API,null,admin),200)).getAsJsonArray("items").get(0).getAsJsonObject();
+        assertThat(list.get("authoringStatus").getAsString()).isEqualTo("PENDING");
+        assertThat(list.get("completedQuestions").getAsInt()).isZero();
+        assertThat(tree(check(call("GET",API+"/manual?examId=manual-200",null,admin),200))).isEqualTo(saved);
+        var session="""
+                {"sessionId":"manual-session","examId":"manual-200","title":"MOCK ca thi","durationSeconds":120,
+                 "candidateUsernames":["candidate1"],"proctorUsernames":[]}
+                """;
+        check(call("POST","/api/v1/sessions",session,proctor),400);
+        assertThatThrownBy(()->{try(var s=db.createStatement()){
+            s.execute("INSERT INTO exam_sessions(session_id,exam_id,title,duration_seconds,created_by) SELECT 'bypass','manual-200','MOCK',60,id FROM user_accounts WHERE username='proctor1'");
+        }}).isInstanceOf(SQLException.class);
+        for(var element:saved.getAsJsonArray("questions")) {
+            var q=element.getAsJsonObject();q.addProperty("prompt","MOCK question "+q.get("orderIndex"));
+            q.addProperty("correctOption","B");q.addProperty("passageText","MOCK passage");
+            for(var o:q.getAsJsonArray("options"))o.getAsJsonObject().addProperty("optionText","MOCK option "+o.getAsJsonObject().get("optionId"));
+        }
+        var stale=saved.deepCopy();
+        saved=tree(check(call("PUT",API+"/manual?examId=manual-200",saved.toString(),admin),200));
+        assertThat(number("SELECT count(*) FROM exam_questions WHERE exam_id='manual-200'")).isEqualTo(200);
+        assertThat(number("SELECT count(*) FROM exam_options WHERE exam_id='manual-200'")).isEqualTo(775);
+        list=tree(check(call("GET",API,null,admin),200)).getAsJsonArray("items").get(0).getAsJsonObject();
+        assertThat(list.get("authoringStatus").getAsString()).isEqualTo("READY");
+        assertThat(list.get("completedQuestions").getAsInt()).isEqualTo(200);
+        check(call("PUT",API+"/manual?examId=manual-200",stale.toString(),admin),409);
+        saved.getAsJsonArray("questions").get(199).getAsJsonObject().addProperty("correctOption","");
+        saved=tree(check(call("PUT",API+"/manual?examId=manual-200",saved.toString(),admin),200));
+        check(call("POST","/api/v1/sessions",session,proctor),400);
+        saved.getAsJsonArray("questions").get(199).getAsJsonObject().addProperty("correctOption","C");
+        saved=tree(check(call("PUT",API+"/manual?examId=manual-200",saved.toString(),admin),200));
+        check(call("POST","/api/v1/sessions",session,proctor),200);
+        check(call("PUT",API+"/manual?examId=manual-200",saved.toString(),admin),409);
+    }
+    @Test void manualDraftRejectsChangedTemplateAndProtectsAnswerKeys() throws Exception {
+        var draft=new Gson().toJsonTree(vn.edu.toeic.protocol.admin.ManualExamDraft.empty()).getAsJsonObject();
+        draft.addProperty("examId","manual-guard");draft.addProperty("title","MOCK");
+        for(String token:List.of(proctor,candidate)) {
+            check(call("POST",API+"/manual",draft.toString(),token),403);
+            check(call("GET",API+"/manual?examId=manual-guard",null,token),403);
+        }
+        var broken=draft.deepCopy();broken.getAsJsonArray("questions").get(0).getAsJsonObject().addProperty("part",7);
+        check(call("POST",API+"/manual",broken.toString(),admin),400);
+        broken=draft.deepCopy();broken.getAsJsonArray("questions").remove(0);
+        check(call("POST",API+"/manual",broken.toString(),admin),400);
+        assertThat(number("SELECT count(*) FROM exams")).isZero();
+        check(call("POST",API+"/manual",draft.toString(),admin),201);
+        check(call("POST",API+"/manual",draft.toString(),admin),409);
+        check(call("DELETE",item("manual-guard"),null,admin),204);
+        assertThat(number("SELECT count(*) FROM exam_manual_drafts")).isZero();
+    }
     @BeforeEach void start() throws Exception {
         String url="jdbc:postgresql://"+env("DB_HOST")+":"+env("DB_PORT")+"/"+env("DB_NAME");
         schema="admin_exam_"+UUID.randomUUID().toString().replace("-","");

@@ -56,6 +56,28 @@ class AdminExamGuiTest {
         fxRun(()->((ToggleButton)view.lookup("#admin-exam-nav")).fire());await("exams loaded",()->view.lookup("#admin-exam-edit-MOCK-01")!=null && !view.lookup("#admin-exam-find").isDisabled());
     }
     @AfterEach void stop() throws Exception {fxRun(()->{view.close();stage.close();});server.stop(0);}
+    @Test void manualFormHasTwoHundredSlotsAndSavesAnIncompleteQuestion() throws Exception {
+        fxRun(()->((Button)view.lookup("#admin-exam-manual-add")).fire());
+        await("manual form",()->dialog("admin-exam-code")!=null);
+        assertThat(fx(()->((ListView<?>)dialog("exam-question-list")).getItems().size())).isEqualTo(200);
+        fxRun(()->{
+            ((TextField)dialog("admin-exam-code")).setText("MOCK-manual");
+            ((TextField)dialog("admin-exam-title")).setText("MOCK nhập tay");
+            ((TextArea)dialog("exam-question-prompt")).setText("Câu đang nhập dở");
+            ((ComboBox<Integer>)dialog("exam-question-part")).setValue(7);
+        });
+        assertThat(fx(()->((ListView<?>)dialog("exam-question-list")).getItems().size())).isEqualTo(54);
+        assertThat(fx(()->((Label)dialog("admin-exam-progress")).getText())).contains("0 / 200","PENDING");
+        screenshot(fx(()->dialog("admin-exam-code").getScene().getRoot()),"admin-manual-200-pending.png");
+        status.set(409);fxRun(()->((Button)dialog("admin-exam-save")).fire());
+        await("draft request",()->!bodies.isEmpty() && !dialog("admin-exam-save").isDisabled());
+        var body=JsonParser.parseString(bodies.getFirst()).getAsJsonObject();
+        assertThat(body.getAsJsonArray("questions").size()).isEqualTo(200);
+        assertThat(body.getAsJsonArray("questions").get(0).getAsJsonObject().get("prompt").getAsString()).isEqualTo("Câu đang nhập dở");
+        assertThat(calls).anyMatch(c->c.equals("POST /api/v2/admin/exams/manual"));
+        fxRun(()->{((ComboBox<Integer>)dialog("exam-question-part")).setValue(0);((ListView<?>)dialog("exam-question-list")).getSelectionModel().selectFirst();});
+        assertThat(fx(()->((TextArea)dialog("exam-question-prompt")).getText())).isEqualTo("Câu đang nhập dở");
+    }
     @Test void onlyImportAndEditAreOfferedAndPreviewHasNoDummyQuestionForm() throws Exception {
         assertThat(fx(()->((Button)view.lookup("#admin-exam-add")).getText())).isEqualTo("Import JSON");
         assertThat(fx(()->view.lookup("#admin-exam-delete-MOCK-01"))).isNull();

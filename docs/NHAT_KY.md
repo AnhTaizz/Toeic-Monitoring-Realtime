@@ -1281,3 +1281,12 @@ Chạy lại `AccountPinFlowPostgresGuiTest` + `RoomFlowPostgresGuiTest` khi má
 - PIN vào lobby V2 trực tiếp qua thẻ trạng thái kết nối, xác minh scope trước collector/takeover; bỏ dựng màn chọn ca cũ rồi tự bấm nút. Dùng một Scene và đổi root để giữ fullscreen trên Windows; tháo listener close guard khi rời màn thi.
 - Đã kiểm: compile PASS; client focused 72 PASS/1 SKIP; server/legacy 79 PASS. Kết quả và lượt chạy lại E2E PIN ghi trong [báo cáo](../evidence/room-ui-fixes-20261027/REPORT.md), kèm ảnh JavaFX thật với đề/tài khoản/media MOCK. Giữ các kết quả FAIL ban đầu, không cộng dồn suite trùng nhau.
 - Cần người khác: A review quyền đọc kết quả; B/C review luồng khởi động hook collector. Cần chạy lại Server và Client mới; chưa build/phát hành MSI, chưa nghiệm thu LAN hai máy/nghe bằng tai/USB vật lý. Không sửa tracker/DONE/giờ công.
+
+## 30/10/2026 — Soạn đề bằng tay, khung 200 câu và pending
+
+- Theo yêu cầu người dùng, bổ sung tại worktree `.tmp/admin-exam-management` (base `b8c0d62`, nhánh quản lý đề mới nhất), không sửa nhánh monitoring ở thư mục gốc.
+- Form tạo đề bằng tay có 200 vị trí/7 Part; lưu và mở lại các trường nhập dở, tiến độ, cảnh báo đóng khi chưa lưu. Server tính PENDING/READY, kiểm revision, quyền ADMIN và bảo vệ đề đã dùng.
+- V22 lưu draft và trạng thái; trigger cùng API chặn dùng đề pending để tạo ca. Không reset DB. Phạm vi nhập tay hiện là văn bản/schema v1; graph nhóm/media V2 vẫn qua import. Chi tiết: `docs/admin-exam-management.md`.
+- Kiểm thử và bản đóng gói: cập nhật sau khi lượt kiểm chứng cuối hoàn tất.
+
+Kiểm chứng chốt: 23 PASS/3 SKIP/0 FAIL/ERROR (3 case crawl thật thiếu dữ liệu); package PASS. Receipt docs/manual-exam-verification.json; ảnh docs/admin-manual-pending.png. PostgreSQL tạm: 0 schema còn lại, stop exit 0. Lượt đầu có lỗi kỳ vọng/chọn câu trong test, đã sửa và chạy lại; không thay logic để né kiểm thử.

@@ -42,7 +42,27 @@ Lỗi cú pháp JSON có dòng/cột nếu bộ đọc cung cấp vị trí; thi
 
 DB lưu nhiều đề theo `exam_id`; nội dung không bị gắn cứng vào một đề mẫu. Tuy nhiên bộ đọc TOEIC v2 yêu cầu đủ 200 câu, đúng phân bố Part 1–7 (6/25/39/30/30/16/54), nhóm câu, đáp án và media hợp lệ. Có đủ 200 câu trong JSON crawl chưa có nghĩa JSON đó đã là schema import nội bộ. Bộ chuyển STUDY4 xử lý bước này; v1 dành cho đề ngắn vẫn dùng schema v1.
 
-Không cần đổi schema DB, reset DB hoặc xóa lịch sử thi để dùng chức năng mới.
+Import và sửa đề không yêu cầu reset DB hoặc xóa lịch sử thi. Tính năng soạn tay bổ sung migration V22; Flyway tự áp dụng khi khởi động server mới.
+
+## Tạo đề bằng tay và lưu pending
+
+Trong **Quản lý đề thi**, chọn **Tạo đề bằng tay**. Form có sẵn 200 vị trí theo 7 Part, phân bố 6/25/39/30/30/16/54; Part 2 có ba lựa chọn A–C, các Part khác có A–D. Mã câu và Part cố định. Có thể lọc Part, tìm số câu hoặc nội dung và nhập các câu theo thứ tự tùy ý.
+
+Nhập mã đề, tên đề rồi bấm **Lưu đề** bất kỳ lúc nào, kể cả chưa hoàn thiện câu nào. Câu hoàn thiện cần nội dung, tất cả lựa chọn và đáp án đúng; Part 6–7 cần đoạn văn. Danh sách hiển thị số câu hoàn thiện trên 200 và trạng thái **Pending · Đang soạn**. Bấm **Sửa** để tiếp tục, các trường nhập dở được giữ nguyên. Đóng form có thay đổi chưa lưu sẽ yêu cầu xác nhận bỏ thay đổi.
+
+Server tự tính tiến độ và trạng thái, không nhận trạng thái do client gửi. Đủ 200 câu thì lưu thành **READY** và ghi nội dung vào bảng câu hỏi/đáp án thông thường trong cùng transaction. Xóa nội dung bắt buộc ở đề chưa dùng sẽ đưa đề về **PENDING**. Đề pending không tạo được ca thi, được chặn tại API và trigger DB. `revision` ngăn admin ghi đè bản đã được người khác cập nhật. Đề đã dùng vẫn tuân theo quy tắc tạo bản mới khi sửa nội dung.
+
+Phạm vi nhập tay hiện tại là nội dung văn bản theo schema v1, đoạn văn riêng từng câu và tên tệp audio đã có trên server. READY ở đây biểu thị hoàn thiện nội dung. Chức năng này chưa tạo nhóm câu dùng chung, tải ảnh/audio hoặc sinh graph media V2; phòng PIN/PROCTORED_V2 tiếp tục yêu cầu đề rich đã xác minh qua luồng import. Các trường hợp đó vẫn hiện lý do chặn trong catalog.
+
+API bổ sung (ADMIN, `no-store`, JSON tối đa 2 MiB):
+
+| Phương thức | Đường dẫn | Công dụng |
+| --- | --- | --- |
+| POST | `/api/v2/admin/exams/manual` | Tạo đề soạn tay, `revision=0` |
+| GET | `/api/v2/admin/exams/manual?examId=...` | Đọc toàn bộ khung và các trường nhập dở |
+| PUT | `/api/v2/admin/exams/manual?examId=...` | Lưu cùng mã, với `revision` vừa đọc |
+
+Body/response dùng `ManualExamDraft`: `examId`, `title`, `description`, `revision`, `questions` (200 phần tử). Các trường câu hỏi tương ứng v1 nhưng được phép trống; ID bắt buộc `q1`–`q200`, `orderIndex` 1–200, Part/section/lựa chọn theo khung. Response tăng revision sau commit. HTTP 409 nếu mã đã tồn tại, revision cũ hoặc đề đã sử dụng. Danh sách admin có thêm `authoringStatus`, `completedQuestions`, `manual`; đề import cũ mặc định READY.
 
 ## API và tính nhất quán
 

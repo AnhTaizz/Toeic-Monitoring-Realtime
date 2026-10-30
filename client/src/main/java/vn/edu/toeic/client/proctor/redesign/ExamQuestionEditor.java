@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import vn.edu.toeic.client.exam.rich.QuestionDisplay;
 import vn.edu.toeic.protocol.exam.rich.CandidateQuestion;
+import vn.edu.toeic.protocol.admin.ManualExamDraft;
 
 /** Edits a private document; stable question/group/media IDs survive every field change. */
 final class ExamQuestionEditor extends BorderPane {
@@ -16,7 +17,13 @@ final class ExamQuestionEditor extends BorderPane {
     private final VBox fields=new VBox(12);
     private final ComboBox<Integer> part=new ComboBox<>();
     private final TextField search=new TextField();
+    private final boolean manual;
+    private Runnable changed=()->{};
     ExamQuestionEditor(JsonObject source) {
+        this(source,false);
+    }
+    ExamQuestionEditor(JsonObject source,boolean manual) {
+        this.manual=manual;
         document=source.deepCopy();setId("exam-question-editor");
         // Crawl prompts can end in a repeated option list. Remove that exact suffix before choices
         // are edited, otherwise changing an option would make the old list reappear in the exam.
@@ -38,7 +45,8 @@ final class ExamQuestionEditor extends BorderPane {
         questions.setId("exam-question-list");questions.setPrefWidth(235);
         questions.setCellFactory(v->new ListCell<>() {
             protected void updateItem(JsonObject q,boolean empty){super.updateItem(q,empty);
-                setText(empty||q==null?null:"Câu "+q.get("orderIndex").getAsInt()+" · Part "+q.get("part").getAsInt());}
+                setText(empty||q==null?null:"Câu "+q.get("orderIndex").getAsInt()+" · Part "+q.get("part").getAsInt()
+                        +(manual?(ManualExamDraft.complete(new Gson().fromJson(q,ManualExamDraft.Question.class))?" ✓":" · Chưa đủ"):""));}
         });
         questions.getSelectionModel().selectedItemProperty().addListener((o,a,b)->show(b));
         part.valueProperty().addListener((o,a,b)->filter());search.textProperty().addListener((o,a,b)->filter());
@@ -47,6 +55,8 @@ final class ExamQuestionEditor extends BorderPane {
         setLeft(left);setCenter(scroll);setPrefHeight(440);filter();
     }
     JsonObject document(){return document.deepCopy();}
+    void onChange(Runnable listener){changed=listener;}
+    private void edited(){if(manual)questions.refresh();changed.run();}
     void validate() {
         for(var item:document.getAsJsonArray("questions")) {
             var q=item.getAsJsonObject();var options=q.getAsJsonArray("options");
@@ -87,7 +97,8 @@ final class ExamQuestionEditor extends BorderPane {
         }
         var scoring=rich?q.getAsJsonObject("scoring"):q;
         var correct=new ComboBox<String>(FXCollections.observableArrayList(ids));correct.setId("exam-question-correct");
-        correct.setValue(text(scoring,"correctOption"));correct.valueProperty().addListener((o,a,b)->scoring.addProperty("correctOption",b));
+        correct.setPromptText("Chọn đáp án đúng");
+        correct.setValue(text(scoring,"correctOption").isBlank()?null:text(scoring,"correctOption"));correct.valueProperty().addListener((o,a,b)->{scoring.addProperty("correctOption",b);edited();});
         fields.getChildren().add(field("Đáp án đúng",correct));
         if(rich && q.has("groupId")&&!q.get("groupId").isJsonNull()) {
             for(var element:document.getAsJsonArray("groups")) {
@@ -99,7 +110,11 @@ final class ExamQuestionEditor extends BorderPane {
                     blocks(d,false,"Đoạn văn","document-"+text(d,"documentId"));
                 }
             }
-        }else if(!rich)area(q,"passageText","Đoạn văn","exam-question-passage",4);
+        }else if(!rich) {
+            area(q,"passageText","Đoạn văn (bắt buộc với Part 6, 7)","exam-question-passage",4);
+            if(manual && q.get("part").getAsInt()<=4)
+                area(q,"audioFile","Tên tệp âm thanh trên server (tùy chọn)","exam-question-audio",1);
+        }
     }
     private void blocks(JsonObject owner,boolean allowNew,String label,String prefix) {
         JsonArray blocks=owner.has("blocks")?owner.getAsJsonArray("blocks"):new JsonArray();
@@ -122,7 +137,7 @@ final class ExamQuestionEditor extends BorderPane {
     }
     private void area(JsonObject object,String key,String label,String id,int rows) {
         var input=new TextArea(text(object,key));input.setId(id);input.setWrapText(true);input.setPrefRowCount(rows);
-        input.textProperty().addListener((o,a,b)->object.addProperty(key,b));fields.getChildren().add(field(label,input));
+        input.textProperty().addListener((o,a,b)->{object.addProperty(key,b);edited();});fields.getChildren().add(field(label,input));
     }
     private static String text(JsonObject o,String key){return o.has(key)&&!o.get(key).isJsonNull()?o.get(key).getAsString():"";}
     private static VBox field(String label,javafx.scene.Node input){return new VBox(5,Ui.label(label,"field-label"),input);}
