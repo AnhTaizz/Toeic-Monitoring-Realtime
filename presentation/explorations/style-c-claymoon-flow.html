@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOEIC Monitor</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="viewport-base.css">
+<style>
+  :root {
+    --stage-bg: #efe7dd; --slide-bg: #fffaf4;
+    --cream: #fffaf4; --sand: #f6ece1; --orange: #f26b1d; --orange-deep: #c2410c; --peach: #ffd9bf;
+    --navy: #13254a; --muted: #6b7a90;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1); --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Be Vietnam Pro', sans-serif; color: var(--navy); }
+  .slide { background: radial-gradient(1200px 700px at 85% 10%, #ffe9d9 0%, transparent 60%), var(--cream); }
+  /* Clay moon: layered gradients give a soft, sculpted volume */
+  .moon { position: absolute; right: 150px; top: 120px; width: 640px; height: 640px; border-radius: 50%;
+    background: radial-gradient(circle at 34% 30%, #ffb07a 0%, #f7853d 32%, #f26b1d 58%, #d4520f 100%);
+    box-shadow: inset -40px -50px 80px rgba(150, 50, 0, .35), inset 30px 30px 60px rgba(255, 220, 190, .55),
+                0 60px 120px rgba(242, 107, 29, .28);
+    transform: scale(.85); opacity: 0; transition: transform 1.2s var(--spring), opacity .8s var(--ease); }
+  .slide.visible .moon { transform: none; opacity: 1; }
+  .moon::after { content: ''; position: absolute; left: 22%; top: 18%; width: 22%; height: 14%; border-radius: 50%;
+    background: rgba(255, 255, 255, .35); filter: blur(14px); }
+  .pebble { position: absolute; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff 0%, #fbeee2 45%, #ecd9c6 100%);
+    box-shadow: inset -10px -14px 24px rgba(160, 110, 70, .22), 0 24px 48px rgba(120, 70, 30, .14); }
+  .pb1 { width: 150px; height: 150px; right: 720px; top: 640px; }
+  .pb2 { width: 86px; height: 86px; right: 110px; top: 760px; }
+  svg.flow { position: absolute; inset: 0; width: 1920px; height: 1080px; max-width: none; max-height: none; }
+  svg.flow path { fill: none; stroke-linecap: round; stroke-dasharray: 2600; stroke-dashoffset: 2600;
+    transition: stroke-dashoffset 2.2s var(--ease); }
+  .slide.visible svg.flow path { stroke-dashoffset: 0; }
+  .eyebrow { position: absolute; left: 120px; top: 110px; display: flex; gap: 16px; }
+  .pill { padding: 12px 26px; border-radius: 999px; font: 600 22px 'Be Vietnam Pro'; background: #fff;
+    box-shadow: 0 10px 24px rgba(120, 70, 30, .10), inset 0 -3px 0 rgba(0, 0, 0, .04); }
+  .pill.o { background: var(--orange); color: #fff; }
+  h1 { position: absolute; left: 112px; top: 300px; font: 800 196px/0.92 'Bricolage Grotesque', sans-serif;
+    letter-spacing: -0.03em; }
+  h1 em { font-style: normal; color: var(--orange); }
+  .sub { position: absolute; left: 120px; top: 720px; width: 880px; font-size: 36px; line-height: 1.45; color: #3b4a66; }
+  .signals { position: absolute; right: 190px; top: 820px; display: flex; gap: 14px; }
+  .sig { padding: 14px 24px; border-radius: 22px; background: #fff; font: 600 24px 'Be Vietnam Pro';
+    box-shadow: 0 14px 30px rgba(120, 70, 30, .12); display: flex; align-items: center; gap: 12px; }
+  .sig i { width: 14px; height: 14px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 0 6px var(--peach); }
+  .foot { position: absolute; left: 120px; bottom: 80px; font: 500 24px 'JetBrains Mono', monospace; color: var(--muted); }
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+  .slide.visible .reveal { opacity: 1; transform: none; }
+  .d1 { transition-delay: .2s } .d2 { transition-delay: .35s } .d3 { transition-delay: .5s } .d4 { transition-delay: .65s }
+</style>
+</head>
+<body>
+<div class="deck-viewport"><main class="deck-stage" id="deckStage">
+  <section class="slide">
+    <svg class="flow" viewBox="0 0 1920 1080" aria-hidden="true">
+      <defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#f26b1d" stop-opacity="0"/><stop offset=".5" stop-color="#f26b1d" stop-opacity=".55"/><stop offset="1" stop-color="#ffb07a" stop-opacity=".2"/></linearGradient></defs>
+      <path d="M-40 980 C 420 860, 760 1060, 1180 900 S 1760 620, 1990 700" stroke="url(#g1)" stroke-width="10"/>
+      <path d="M-40 1030 C 480 930, 820 1110, 1240 960 S 1780 720, 1990 790" stroke="url(#g1)" stroke-width="4"/>
+    </svg>
+    <div class="moon"></div><div class="pebble pb1"></div><div class="pebble pb2"></div>
+    <div class="eyebrow reveal"><span class="pill o">BTL Lập trình mạng</span><span class="pill">30/10/2026</span></div>
+    <h1 class="reveal d1">TOEIC<br><em>Monitor</em></h1>
+    <p class="sub reveal d2">Thi TOEIC Client–Server và giám sát máy thí sinh theo thời gian thực — quan sát, không phán xét.</p>
+    <div class="signals reveal d3"><span class="sig"><i></i>Process</span><span class="sig"><i></i>USB</span><span class="sig"><i></i>Focus</span><span class="sig"><i></i>Display</span></div>
+    <div class="foot reveal d4">JavaFX · Spring Boot · PostgreSQL 18 · REST + WebSocket</div>
+  </section>
+</main></div>
+<script src="stage.js"></script>
+</body>
+</html>
