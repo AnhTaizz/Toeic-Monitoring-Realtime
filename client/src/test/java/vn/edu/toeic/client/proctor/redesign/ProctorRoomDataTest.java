@@ -49,6 +49,28 @@ class ProctorRoomDataTest {
         return new RoomPresence(null, session, state, members);
     }
 
+    @Test void newestAlertReordersMembersAcrossSourcesWithStableTiesAndNoForeignRoomData() {
+        var presence=room(ROOM_A,"IN_PROGRESS",a(1),a(2),a(3),a(4),a(5));
+        var events=List.of(
+                new vn.edu.toeic.client.dashboard.MonitoringData.Event("MOCK-old-1",a(1),"chrome.exe","COMPLETE","process-policy-v4",NOW.plusSeconds(1000),NOW.plusSeconds(5),"LIVE"),
+                new vn.edu.toeic.client.dashboard.MonitoringData.Event("MOCK-old-2",a(1),"chrome.exe","COMPLETE","process-policy-v4",NOW.plusSeconds(1000),NOW.plusSeconds(10),"LIVE"));
+        var h1=new RoomFeed.AttemptHistory(a(1),events,List.of(),List.of(),false,true,"",false);
+        var h2=new RoomFeed.AttemptHistory(a(2),List.of(),List.of(),List.of(),false,true,"",false,
+                List.of(new vn.edu.toeic.client.dashboard.SignalHistory.Entry(a(2),1,NOW.plusSeconds(20),"LIVE",focus(1,false))),false,false,false);
+        var tie=new vn.edu.toeic.client.dashboard.MonitoringData.Event("MOCK-tie",a(3),"chrome.exe","COMPLETE","process-policy-v4",NOW,NOW.plusSeconds(20),"LIVE");
+        var h3=new RoomFeed.AttemptHistory(a(3),List.of(tie),List.of(),List.of(),false,true,"",false);
+        var foreign=new RoomFeed.AttemptHistory(b(1),List.of(new vn.edu.toeic.client.dashboard.MonitoringData.Event(
+                "MOCK-foreign",b(1),"chrome.exe","COMPLETE","process-policy-v4",NOW,NOW.plusSeconds(500),"LIVE")),List.of(),List.of(),false,true,"",false);
+        var feed=new RoomFeed.Snapshot(List.of(h1,h2,h3,foreign));
+        var in=new ProctorRoomModel.Inputs(presence,null,false,null,null,List.of(),null,false,feed);
+        var first=ProctorRoomModel.room(in);
+        assertThat(first.rows()).extracting(ProctorRoomModel.Row::attemptId).containsExactly(a(2),a(3),a(1),a(4),a(5));
+        var latest=new vn.edu.toeic.client.dashboard.MonitoringData.Event("MOCK-new",a(1),"chrome.exe","COMPLETE","process-policy-v4",NOW,NOW.plusSeconds(30),"LIVE");
+        var updated=new RoomFeed.AttemptHistory(a(1),List.of(latest),List.of(),List.of(),false,true,"",false);
+        var next=ProctorRoomModel.room(new ProctorRoomModel.Inputs(presence,null,false,null,null,List.of(),null,false,new RoomFeed.Snapshot(List.of(updated,h2,h3,foreign))));
+        assertThat(next.rows()).extracting(ProctorRoomModel.Row::attemptId).containsExactly(a(1),a(2),a(3),a(4),a(5));
+    }
+
     // ------------------------------------------------------------------ progress paging
 
     /** Pages handed out by cursor; each read can be completed later to reproduce late answers. */

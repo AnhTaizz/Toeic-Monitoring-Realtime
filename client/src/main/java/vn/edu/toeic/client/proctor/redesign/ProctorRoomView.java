@@ -877,7 +877,14 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
     private void renderTable() {
         renderRoomAlerts();
         empty.setText(session.isEmpty() ? "" : model.sessionId() != null ? ProctorRoomModel.summary(model) : "Đang tải danh sách thí sinh…");
-        if (!members.getItems().equals(model.rows())) members.getItems().setAll(model.rows());
+        if (!members.getItems().equals(model.rows())) {
+            var selected=members.getSelectionModel().getSelectedItem();
+            members.getItems().setAll(model.rows());
+            if(selected!=null) {
+                var current=model.row(selected.attemptId());
+                if(current!=null)members.getSelectionModel().select(current);
+            }
+        }
         else members.refresh();
     }
 
