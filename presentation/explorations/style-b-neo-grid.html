@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOEIC Monitor</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="viewport-base.css">
+<style>
+  :root {
+    --stage-bg: #1a1a1a; --slide-bg: #ecece8;
+    --paper: #f5f4ef; --ink: #0a0a0a; --accent: #f26b1d; --muted: #8a8a85;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Be Vietnam Pro', sans-serif; }
+  /* 12×8 block grid inset 40px, 12px gaps */
+  .frame { position: absolute; inset: 40px; display: grid; grid-template-columns: repeat(12, 1fr);
+           grid-template-rows: repeat(8, 1fr); gap: 12px; }
+  .p { background: var(--paper); padding: 36px; position: relative; overflow: hidden;
+       opacity: 0; transform: scale(.96); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+  .slide.visible .p { opacity: 1; transform: none; }
+  .ink { background: var(--ink); color: var(--paper); }
+  .acc { background: var(--accent); color: var(--ink); }
+  .lbl { font: 400 20px 'JetBrains Mono', monospace; letter-spacing: .1em; text-transform: uppercase; }
+  .title { grid-column: 1 / span 8; grid-row: 1 / span 5; display: flex; flex-direction: column; justify-content: flex-end; }
+  .title h1 { font: 700 188px/0.88 'Space Grotesk', sans-serif; letter-spacing: -0.04em; text-transform: uppercase; color: var(--ink); }
+  .title .lbl { position: absolute; top: 36px; left: 36px; color: var(--muted); }
+  .num { grid-column: 9 / span 4; grid-row: 1 / span 3; display: flex; flex-direction: column; justify-content: space-between; }
+  .num b { font: 700 200px/0.8 'Space Grotesk', sans-serif; letter-spacing: -0.05em; }
+  .sub { grid-column: 9 / span 4; grid-row: 4 / span 2; font-size: 30px; line-height: 1.4; display: flex; align-items: flex-end; }
+  .stack { grid-column: 1 / span 5; grid-row: 6 / span 3; display: flex; flex-direction: column; justify-content: space-between; }
+  .stack p { font: 700 44px/1.15 'Space Grotesk', sans-serif; }
+  .chip { grid-row: 6 / span 3; display: flex; flex-direction: column; justify-content: space-between; }
+  .chip b { font: 700 40px 'Space Grotesk', sans-serif; }
+  .c1 { grid-column: 6 / span 2; } .c2 { grid-column: 8 / span 2; } .c3 { grid-column: 10 / span 3; }
+  .p:nth-child(2) { transition-delay: .08s } .p:nth-child(3) { transition-delay: .16s } .p:nth-child(4) { transition-delay: .24s }
+  .p:nth-child(5) { transition-delay: .32s } .p:nth-child(6) { transition-delay: .4s } .p:nth-child(7) { transition-delay: .48s }
+</style>
+</head>
+<body>
+<div class="deck-viewport"><main class="deck-stage" id="deckStage">
+  <section class="slide"><div class="frame">
+    <div class="p title"><span class="lbl">BTL Lập trình mạng · 30/10/2026</span><h1>TOEIC<br>Monitor</h1></div>
+    <div class="p acc num"><span class="lbl">Câu · 7 Part</span><b>200</b></div>
+    <div class="p ink sub">Thi TOEIC Client–Server, giám sát máy thí sinh theo thời gian thực.</div>
+    <div class="p stack"><span class="lbl">Stack</span><p>JavaFX · Spring Boot<br>PostgreSQL · WebSocket</p></div>
+    <div class="p chip c1"><span class="lbl">Process</span><b>9 tên</b></div>
+    <div class="p ink chip c2"><span class="lbl">USB</span><b>Cắm/rút</b></div>
+    <div class="p chip c3"><span class="lbl">Cửa sổ</span><b>Focus · Display</b></div>
+  </div></section>
+</main></div>
+<script src="stage.js"></script>
+</body>
+</html>
