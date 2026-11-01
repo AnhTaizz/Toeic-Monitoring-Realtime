@@ -19,7 +19,8 @@ import vn.edu.toeic.protocol.exam.rich.SessionReadiness;
 /**
  * What the single "Phòng thi" screen shows for the selected room, derived without JavaFX, I/O or clock reads.
  *
- * <p>The room's members ({@link RoomPresence}) decide who is in the table and in which order; every other source
+ * <p>The room's members ({@link RoomPresence}) decide who is in the table; latest server-recorded alerts
+ * determine the order, with server member order retained for ties. Every other source
  * (progress, listening, connection, signals, alerts) is looked up by those attemptIds only, so data of another
  * room can never appear. Anything the server has not confirmed is shown as missing, never guessed.
  */
@@ -81,6 +82,7 @@ final class ProctorRoomModel {
         if (in.connections() != null) for (Presence item : in.connections()) if (ids.contains(item.attemptId())) connections.put(item.attemptId(), item);
 
         List<Row> rows = new ArrayList<>();
+        Map<String,java.time.Instant> latestAlerts = new HashMap<>();
         Set<String> seen = new HashSet<>();
         int joined = 0, readyCount = 0, active = 0, submitted = 0, timedOut = 0, withProgress = 0;
         for (RoomPresence.Member member : presence.members()) {
@@ -101,6 +103,9 @@ final class ProctorRoomModel {
                 }
             }
             RoomFeed.AttemptHistory history = in.feed() == null ? null : in.feed().of(attempt);
+            var alerts=alerts(history,attempt);
+            for(var alert:alerts)if(alert.serverTime()!=null)
+                latestAlerts.merge(attempt,alert.serverTime(),(a,b)->a.isAfter(b)?a:b);
             CandidateSignals signals = in.signals() == null ? null : in.signals().of(attempt);
             rows.add(new Row(attempt, member.displayName(), member.username(),
                     status(member, started, isReady, row, progress.paginationComplete()),
@@ -108,8 +113,11 @@ final class ProctorRoomModel {
                     sticky(SignalSummaryView.Kind.USB, in.signalsWatched(), signals, history),
                     sticky(SignalSummaryView.Kind.FOCUS, in.signalsWatched(), signals, history),
                     sticky(SignalSummaryView.Kind.WINDOW, in.signalsWatched(), signals, history),
-                    alertCount(history, attempt), history != null && history.loaded(), row));
+                    alerts.size(), history != null && history.loaded(), row));
         }
+        // Stable sort: newest alert first; equal timestamps and candidates without alerts keep member order.
+        rows.sort(java.util.Comparator.comparing((Row r)->latestAlerts.get(r.attemptId()),
+                java.util.Comparator.nullsLast(java.util.Comparator.reverseOrder())));
         boolean complete = progress.paginationComplete() && withProgress == rows.size();
         boolean finished = complete && !rows.isEmpty() && submitted + timedOut == rows.size();
         return new Room(presence.sessionId(), presence.state(), List.copyOf(rows), joined, readyCount, active, submitted,

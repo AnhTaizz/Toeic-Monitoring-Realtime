@@ -168,8 +168,9 @@ class ProctorRoomViewGuiTest {
         open(1366, 768);
         select(ROOM_A);
         await("room A rows", () -> members().getItems().size() == 3);
+        await("room A alerts", () -> view.model().rows().stream().allMatch(ProctorRoomModel.Row::alertsKnown));
         assertThat(fx(() -> members().getItems().stream().map(ProctorRoomModel.Row::attemptId).toList()))
-                .containsExactly(attempt(1), attempt(2), attempt(3));
+                .containsExactly(attempt(2), attempt(1), attempt(3));
         await("READY read", () -> label("proctor-room-summary").startsWith("Đã vào 3 · Sẵn sàng 2/3"));
         assertThat(fx(() -> view.model().row(attempt(2)).status().text())).isEqualTo("Đang chuẩn bị");
 
@@ -274,6 +275,21 @@ class ProctorRoomViewGuiTest {
         fxRun(() -> view.close());
         await("listeners released", () -> transport.listeners() == 0);
         assertThat(roomApi.closes.get()).isEqualTo(1);
+    }
+
+    @Test void newRealtimeAlertMovesCandidateToTopWithoutChangingSelectionOrDrawer() throws Exception {
+        open(1366,768);select(ROOM_A);
+        await("all histories",()->view.model().rows().stream().allMatch(ProctorRoomModel.Row::alertsKnown));
+        fxRun(()->{members().getSelectionModel().select(view.model().row(attempt(3)));view.openCandidate(attempt(3));});
+        transport.push(RedesignFixtures.warning(new vn.edu.toeic.client.dashboard.MonitoringData.Event(
+                "MOCK-sort-1",attempt(1),"chrome.exe","COMPLETE","process-policy-v4",NOW.plusSeconds(1),NOW.plusSeconds(1),"LIVE")));
+        await("first warning sorted",()->members().getItems().getFirst().attemptId().equals(attempt(1)));
+        assertThat(fx(()->members().getSelectionModel().getSelectedItem().attemptId())).isEqualTo(attempt(3));
+        transport.push(RedesignFixtures.warning(new vn.edu.toeic.client.dashboard.MonitoringData.Event(
+                "MOCK-sort-3",attempt(3),"chrome.exe","COMPLETE","process-policy-v4",NOW.plusSeconds(2),NOW.plusSeconds(2),"LIVE")));
+        await("newest warning sorted",()->members().getItems().getFirst().attemptId().equals(attempt(3)));
+        assertThat(fx(()->members().getSelectionModel().getSelectedItem().attemptId())).isEqualTo(attempt(3));
+        assertThat(fx(()->((Label)view.lookup("#proctor-room-drawer-name")).getText())).isEqualTo("MOCK Thí sinh 3");
     }
 
     // ------------------------------------------------------------------ review screenshots

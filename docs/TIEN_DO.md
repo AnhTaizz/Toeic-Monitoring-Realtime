@@ -371,3 +371,5 @@ Theo ủy quyền người dùng: thêm -Desktop vào entrypoint demo hiện có
 01/11/2026 — Chẩn đoán READY: tái hiện lease hết hạn khiến ATTEST bị 409 liên tiếp, client chuẩn bị/báo lại nhưng không INVALIDATE; START gắn NOT_READY_AT_START. 2 diagnostic PASS/0 SKIP, PostgreSQL tạm dừng exit 0/còn 0 schema. Chưa xác nhận nguyên nhân lease hết hạn trên VPS; không sửa runtime. Chi tiết docs/READY_RENEWAL_DIAGNOSIS_20261101.md.
 
 01/11/2026 — READY recovery + strict START: 94 PASS/2 SKIP, package PASS. Bộ mới output/TOEIC-READY-FIX-20261101 tại thư mục gốc, cần cập nhật cả client/server. Xem docs/READY_RECOVERY_FIX_20261101.md; chưa triển khai VPS.
+
+01/11/2026 — Bảng Thí sinh trong phòng tự xếp cảnh báo mới nhất lên đầu theo server timestamp, dùng cùng projection cảnh báo hiện có. Tie/no alert giữ member order; giữ lựa chọn/drawer khi realtime đảo thứ tự. 40 PASS/1 SKIP (ảnh review tùy chọn), package PASS. Client-only, không đổi API/DB. Hướng dẫn docs/PROCTOR_ALERT_SORT_20261101.md; bộ chạy output/TOEIC-ALERT-SORT-20261101 tại thư mục gốc.
