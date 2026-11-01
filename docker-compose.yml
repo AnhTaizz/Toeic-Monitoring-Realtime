@@ -1,9 +1,11 @@
-# Môi trường phát triển: chỉ chứa PostgreSQL.
-# Server Spring Boot và client JavaFX chạy trực tiếp trên máy bằng Maven, không chạy trong container.
+# Mặc định chỉ chạy PostgreSQL; server Spring Boot và client JavaFX chạy trực tiếp bằng Maven khi phát triển.
+# Server chạy trong container (máy chủ demo sau Cloudflare Tunnel) nằm ở profile "server",
+# build và thay bằng scripts/redeploy-server.ps1.
 #
-#   Bật:    docker compose up -d
-#   Tắt:    docker compose down
-#   Reset:  docker compose down -v   (xóa toàn bộ dữ liệu DB)
+#   Bật DB:          docker compose up -d
+#   Bật DB + server: docker compose --profile server up -d   (cần scripts/server-image/server.jar)
+#   Tắt:             docker compose --profile server down
+#   Reset:           docker compose down -v   (xóa toàn bộ dữ liệu DB)
 #
 # Giá trị lấy từ file .env (chép từ .env.example).
 
@@ -26,6 +28,37 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+
+  server:
+    profiles: ["server"]
+    # Context chứa Dockerfile và server.jar do redeploy-server.ps1 chép vào (jar bị .gitignore).
+    build: scripts/server-image
+    image: toeic-server:local
+    container_name: toeic-server
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: ${DB_NAME:-toeic}
+      DB_USER: ${DB_USER:-toeic}
+      DB_PASSWORD: ${DB_PASSWORD:?Chua co DB_PASSWORD - chep .env.example thanh .env}
+      # Biến chỉ server dùng không bắt buộc ở đây (compose đọc cả profile chưa bật, sẽ làm hỏng
+      # "docker compose up -d" chỉ chạy DB); redeploy-server.ps1 kiểm tra chúng trước khi chạy.
+      TOEIC_ROOM_PIN_KEY: ${TOEIC_ROOM_PIN_KEY:-}
+      # Chỉ cần khi DB mới chưa có Admin; để trống thì server bỏ qua.
+      TOEIC_ADMIN_BOOTSTRAP_USERNAME: ${TOEIC_ADMIN_BOOTSTRAP_USERNAME:-}
+      TOEIC_ADMIN_BOOTSTRAP_PASSWORD: ${TOEIC_ADMIN_BOOTSTRAP_PASSWORD:-}
+      TOEIC_AUDIO_ROOT: /data/audio
+      TOEIC_IMAGE_ROOT: /data/images
+    ports:
+      # Chỉ mở trên máy này; Cloudflare Tunnel đi vào qua cổng này.
+      - "127.0.0.1:${SERVER_PORT:-8080}:8080"
+    volumes:
+      - ${TOEIC_AUDIO_ROOT:-./.local/missing-audio-root}:/data/audio
+      - ${TOEIC_IMAGE_ROOT:-./.local/missing-image-root}:/data/images
 
 volumes:
   toeic-pgdata:

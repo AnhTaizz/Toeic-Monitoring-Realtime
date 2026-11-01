@@ -1340,3 +1340,10 @@ Kiểm chứng chốt: 23 PASS/3 SKIP/0 FAIL/ERROR (3 case crawl thật thiếu 
 - PR #122 (`chore/slim-repo-20261101`, commit `a50afbc`) qua CI "Maven tests (Java 21)" success, merge vào `main` thành `8c7cc1b`; nội dung trùng `a50afbc`.
 - Zip client `dist/ToeicMonitor-Client-0.4.7-main.zip` (SHA256 `81e5c5f4ec55cf14df5fc8c0bcdcac7a2bca61a8bb577f3528603ffd66b1abe5`): build-info `main` `8c7cc1b`, `dirty=false`, server mặc định `https://toeic.anhtaizz.id.vn`; gồm READY/START và sắp xếp cảnh báo. Mở exe bằng UI Automation thấy màn đăng nhập; chưa đăng nhập tài khoản thật.
 - Server Docker không build lại: code server/protocol của `8c7cc1b` trùng `30e8d55` đang chạy; login sai trả 401 qua localhost và Internet.
+
+## 02/11/2026 — Server Docker vào docker-compose, script deploy lại
+
+- `docker-compose.yml` thêm service `server` ở profile `server` (container `toeic-server`, image `toeic-server:local`, cấu hình lấy từ `.env`, media mount vào `/data`); `docker compose up -d` không profile vẫn chỉ chạy DB, kể cả khi `.env` thiếu biến của server (đã thử với env tối thiểu).
+- Thêm `scripts/server-image/Dockerfile` (user `toeic`, JRE 21.0.8, tắt delta và tài khoản demo) và `scripts/redeploy-server.ps1`: build jar, build image (bản cũ gắn tag `:prev`), `compose up` DB rồi chỉ tạo lại server, đợi login sai trả 401; không lên thì chạy lại image `:prev`. `-Rollback` chạy lại `:prev`.
+- Chạy thật: chuyển container `toeic-server` tạo bằng `docker run` sang compose (`.env` khớp DB/PIN key của container cũ; Admin bootstrap để trống vì DB đã có Admin). Flyway validate 23 migration, login sai trả 401 qua `127.0.0.1:8080` và `https://toeic.anhtaizz.id.vn`. `-Rollback` chạy thật, container DB không bị tạo lại. Lần chạy đầu bản cũ dùng `--force-recreate` không `--no-deps` đã tạo lại container DB một lần (dữ liệu nằm trong volume, còn nguyên); đã sửa. Nhánh tự quay về khi server mới lỗi chưa chạy thật.
+- Xóa hai container rollback đã dừng (`toeic-server-pre-20261101`, `toeic-server-main-f3ccfd7`); image của chúng vẫn giữ.
