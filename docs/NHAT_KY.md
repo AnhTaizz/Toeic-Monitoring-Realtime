@@ -1314,6 +1314,16 @@ Kiểm chứng chốt: 23 PASS/3 SKIP/0 FAIL/ERROR (3 case crawl thật thiếu 
 - Đã kiểm: chụp 29 slide ở 1920×1080 bằng Playwright, script kiểm tràn/chồng báo 0 lỗi, xem lại từng ảnh và sửa các lỗi chồng chữ/nhãn, ảnh quá nhỏ. Thử khung 1280×720 và 390×844. Chưa trình chiếu thử trên máy chiếu thật.
 - Cần người khác: nhóm đối chiếu “Design System V1.0” chính thức (không tìm thấy file trong repo) và duyệt lời thoại từng phần theo vai A/B/C.
 
+
+## 31/10/2026 — Đối chiếu slide với code `main`, thêm slide Quản lý đề
+
+- Kiểm `main` (`ce94173`; `f3ccfd7` chỉ thêm `presentation/` và docs): mọi nhánh tính năng đã vào `main`, trừ nhánh local `backup/docker-experiment-20261030` (`c757542`, Docker profile `app`). Gộp nhánh này sẽ conflict với `server/Dockerfile` trên `main`; chờ nhóm chọn một cách Docker.
+- `mvn test` toàn repo trên `ce94173`, server chạy vào DB tạm `toeic_verify_main_20261031` (đã xóa; không chạm DB đang dùng): protocol 100, windows-observer 22, monitoring-spike 15, client 1107 (81 SKIP), server 605 (235 SKIP), 0 FAIL. Lượt đầu `CandidateSignalsPendingLimitTest` FAIL (`maximum` 3, chờ 2) khi chạy cả bộ; chạy riêng 6/6 PASS và cả bộ lần hai PASS. Test chập chờn theo thời gian, code không đổi từ 24/10; cần C xem.
+- Đối chiếu từng khẳng định kỹ thuật trên slide với code: envelope, mã lỗi, khóa autosave, policy v4 chín tên, poll 1 000 ms, heartbeat 2 s/timeout 6 s, BCrypt+HMAC PIN, MSFT_Disk, Flyway V1–V23 khớp.
+- Đã sửa slide: 4 và 23 thêm import/soạn tay đề 200 câu; 7 sửa ví dụ `process-policy-v1` thành `v4` (client gửi `ProcessCatalog.CURRENT_POLICY`); 21 thêm kết quả hồi quy `main` mới nhất, giữ số của `5173462`; thêm slide 24 "Quản lý đề thi" (import JSON kèm media, PENDING/READY, chặn ở API + trigger V22, revision) với ảnh JavaFX MOCK `evidence/manual-server-save-20261030`. Deck còn 30 slide, đánh lại số trang 25–29.
+- Không có Playwright nên chưa chạy script audit; chụp các slide đã sửa bằng Edge headless 1920×1080, xem bằng mắt không tràn/chồng. Chưa chụp lại `presentation/screenshots/`. Chưa commit.
+- Phát hiện thêm: đầu `docs/admin-exam-management.md` còn ghi "không có form tạo đề thủ công" nhưng client có nút "Tạo đề bằng tay"; ảnh Admin ở slide 23 là màn cũ chỉ có "Quản lý tài khoản". Chưa sửa.- Theo yêu cầu thầy (khoảng 10 trang): `presentation/index.html` rút còn 11 slide (Bìa, Bài toán, Kiến trúc, Luồng phòng thi, Lưu–nộp, Giám sát, E1, Kiểm thử, Demo, Giới hạn, Cảm ơn), đánh lại số trang 02–10; bản 30 slide giữ nguyên ở `presentation/full.html`. Cả 11 slide chụp bằng Edge headless, không tràn/chồng.
+
 ## 01/11/2026 — Tinh giản repo sau khi hoàn thành (áp lại trên `main` `aa68882`)
 
 - Theo yêu cầu người dùng: gỡ bằng chứng theo task và tài liệu không còn dùng, giữ số liệu thực nghiệm. Bản đầy đủ trước tinh giản: `aa68882` (trước đó `f3ccfd7`, tag cục bộ `archive/pre-slim`).
@@ -1324,3 +1334,9 @@ Kiểm chứng chốt: 23 PASS/3 SKIP/0 FAIL/ERROR (3 case crawl thật thiếu 
 - Raw của các đợt đo mà báo cáo cuối trích (27–28/10) không có trên máy này; cần thành viên giữ dữ liệu bổ sung vào `evidence/`.
 - Server Docker (cả `toeic.anhtaizz.id.vn`) đang chạy code `30e8d55`; phần server của `aa68882` giống hệt. Bản quay lui: container `toeic-server-main-f3ccfd7`, `toeic-server-pre-20261101`. Zip client mới nhất có READY/START: `dist/ToeicMonitor-Client-fix-ready-recovery-start-guard.zip` (0.4.6, `30e8d55`); chưa có zip cho sắp xếp cảnh báo (`f681eee`).
 - Commit cục bộ trên `main`, chưa push.
+
+## 01/11/2026 — Merge bản tinh giản, đóng gói client 0.4.7
+
+- PR #122 (`chore/slim-repo-20261101`, commit `a50afbc`) qua CI "Maven tests (Java 21)" success, merge vào `main` thành `8c7cc1b`; nội dung trùng `a50afbc`.
+- Zip client `dist/ToeicMonitor-Client-0.4.7-main.zip` (SHA256 `81e5c5f4ec55cf14df5fc8c0bcdcac7a2bca61a8bb577f3528603ffd66b1abe5`): build-info `main` `8c7cc1b`, `dirty=false`, server mặc định `https://toeic.anhtaizz.id.vn`; gồm READY/START và sắp xếp cảnh báo. Mở exe bằng UI Automation thấy màn đăng nhập; chưa đăng nhập tài khoản thật.
+- Server Docker không build lại: code server/protocol của `8c7cc1b` trùng `30e8d55` đang chạy; login sai trả 401 qua localhost và Internet.
