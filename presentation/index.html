@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOEIC Monitor</title>
+<!-- Fonts: self-hosted Google Fonts (latin + vietnamese) so the deck works offline -->
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* ===========================================
+   DESIGN TOKENS — Design System V1.0 "Claymoon Flow"
+   Colours come from the JavaFX app (proctor-redesign.css). See DESIGN_SYSTEM.md.
+   =========================================== */
+:root {
+  --stage-bg: #efe7dd;
+  --slide-bg: #fffaf4;
+  --cream: #fffaf4;
+  --sand: #f6ece1;
+  --orange: #f26b1d;
+  --orange-deep: #c2410c;
+  --orange-soft: #fff1e8;
+  --peach: #ffd9bf;
+  --navy: #13254a;
+  --ink-2: #3b4a66;
+  --muted: #6b7a90;
+  --line: #e3e8ef;
+  --good: #16a34a;
+  --warn: #d97706;
+  --bad: #dc2626;
+
+  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-body: 'Be Vietnam Pro', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --pad-x: 120px;
+  --pad-top: 96px;
+  --radius-card: 32px;
+  --shadow-clay: 0 18px 40px rgba(120, 70, 30, .10), inset 0 -4px 0 rgba(0, 0, 0, .03);
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ===========================================
+   FIXED 16:9 STAGE — full contents of frontend-slides viewport-base.css
+   =========================================== */
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--stage-bg, #000); }
+.deck-viewport { position: fixed; inset: 0; overflow: hidden; background: var(--stage-bg, #000); }
+.deck-stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; transform-origin: 0 0; background: var(--slide-bg, #fff); }
+.slide { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; display: block; visibility: hidden; opacity: 0; pointer-events: none; background: var(--slide-bg, #fff); }
+.slide.active, .slide.visible { visibility: visible; opacity: 1; pointer-events: auto; z-index: 1; }
+img, video, canvas, svg { max-width: 100%; max-height: 100%; }
+.deck-controls { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 1000; }
+@media print {
+  html, body { width: 1920px; height: auto; overflow: visible; background: #fff; }
+  .deck-viewport { position: static; overflow: visible; background: #fff; }
+  .deck-stage { position: static; width: auto; height: auto; transform: none !important; background: none; }
+  .slide { position: relative; display: block !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; width: 1920px; height: 1080px; break-after: page; page-break-after: always; }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  .deck-controls { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+}
+
+/* ===========================================
+   BASE
+   =========================================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-body); color: var(--navy); -webkit-font-smoothing: antialiased; }
+.slide { background: radial-gradient(1100px 640px at 92% 4%, #ffeadb 0%, transparent 62%), var(--cream); }
+.slide.active { transition: opacity .45s var(--ease); }
+b, strong { font-weight: 700; }
+.mono { font-family: var(--font-mono); }
+.o { color: var(--orange-deep); }
+
+/* ===========================================
+   SLIDE CHROME — kicker top-left, page number bottom-right, source line
+   =========================================== */
+.kicker { position: absolute; left: var(--pad-x); top: 64px; display: flex; gap: 12px; align-items: center; }
+.pill { display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; border-radius: 999px; background: #fff;
+  font: 600 20px/1 var(--font-body); color: var(--navy); box-shadow: 0 8px 20px rgba(120, 70, 30, .09), inset 0 -3px 0 rgba(0, 0, 0, .04); white-space: nowrap; }
+.pill.fill { background: var(--orange); color: #fff; }
+.pill.ghost { background: transparent; box-shadow: inset 0 0 0 2px var(--line); }
+.pill .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--orange); }
+.pageno { position: absolute; right: var(--pad-x); bottom: 48px; font: 500 20px var(--font-mono); color: var(--muted); }
+.source { position: absolute; left: var(--pad-x); bottom: 48px; max-width: 1400px; font: 400 18px/1.4 var(--font-mono); color: var(--muted); }
+
+/* ===========================================
+   TYPOGRAPHY
+   =========================================== */
+.h2 { position: absolute; left: var(--pad-x); top: 132px; max-width: 1680px; font: 800 72px/1.04 var(--font-display); letter-spacing: -0.03em; }
+.lead { font-size: 30px; line-height: 1.45; color: var(--ink-2); }
+.small { font-size: 22px; line-height: 1.45; color: var(--ink-2); }
+.label { font: 600 18px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+/* ===========================================
+   CLAY COMPONENTS
+   =========================================== */
+.card { background: #fff; border-radius: var(--radius-card); box-shadow: var(--shadow-clay); padding: 40px; position: relative; }
+.card h3 { font: 800 36px/1.12 var(--font-display); letter-spacing: -0.02em; margin-bottom: 14px; }
+.card p, .card li { font-size: 25px; line-height: 1.45; color: var(--ink-2); }
+.card ul { list-style: none; display: grid; gap: 10px; }
+.card li { padding-left: 30px; position: relative; }
+.card li::before { content: ''; position: absolute; left: 4px; top: 13px; width: 12px; height: 12px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 0 5px var(--orange-soft); }
+.card.tint { background: var(--orange-soft); box-shadow: inset 0 0 0 2px #ffe0cc; }
+.card.navy { background: var(--navy); color: #fff; }
+.card.navy p, .card.navy li { color: #d7deea; }
+.icon-orb { width: 72px; height: 72px; border-radius: 50%; margin-bottom: 24px; display: grid; place-items: center;
+  background: radial-gradient(circle at 34% 30%, #ffb07a 0%, #f7853d 38%, #f26b1d 62%, #d4520f 100%);
+  box-shadow: inset -8px -10px 16px rgba(150, 50, 0, .32), inset 6px 6px 12px rgba(255, 220, 190, .5), 0 12px 24px rgba(242, 107, 29, .25);
+  color: #fff; font: 800 30px var(--font-display); }
+.icon-orb svg { width: 36px; height: 36px; }
+
+.moon { position: absolute; border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #ffb07a 0%, #f7853d 32%, #f26b1d 58%, #d4520f 100%);
+  box-shadow: inset -40px -50px 80px rgba(150, 50, 0, .35), inset 30px 30px 60px rgba(255, 220, 190, .55), 0 60px 120px rgba(242, 107, 29, .26);
+  transform: scale(.86); opacity: 0; transition: transform 1.2s var(--spring), opacity .8s var(--ease); }
+.moon::after { content: ''; position: absolute; left: 22%; top: 18%; width: 22%; height: 14%; border-radius: 50%; background: rgba(255, 255, 255, .35); filter: blur(14px); }
+.slide.visible .moon { transform: none; opacity: 1; }
+.pebble { position: absolute; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff 0%, #fbeee2 45%, #ecd9c6 100%);
+  box-shadow: inset -10px -14px 24px rgba(160, 110, 70, .22), 0 24px 48px rgba(120, 70, 30, .14); }
+
+svg.flow { position: absolute; inset: 0; width: 1920px; height: 1080px; max-width: none; max-height: none; pointer-events: none; }
+svg.flow path { fill: none; stroke-linecap: round; stroke-dasharray: 2600; stroke-dashoffset: 2600; transition: stroke-dashoffset 2.2s var(--ease); }
+.slide.visible svg.flow path { stroke-dashoffset: 0; }
+
+.code { background: var(--navy); color: #e8edf6; border-radius: 28px; padding: 36px 40px; font: 400 22px/1.6 var(--font-mono); white-space: pre; box-shadow: 0 24px 50px rgba(19, 37, 74, .22); }
+.code .c { color: #ffb98e; }   /* comment */
+.code .k { color: #8fc1ff; }   /* keyword */
+.code .s { color: #b7e4a8; }   /* string */
+
+.screen { background: #fff; border-radius: 24px; padding: 10px; box-shadow: 0 30px 60px rgba(120, 70, 30, .16); overflow: hidden; }
+.screen img { display: block; width: 100%; height: auto; max-height: none; border-radius: 16px; }
+.caption { margin-top: 14px; font: 400 18px/1.4 var(--font-mono); color: var(--muted); }
+
+.tag { display: inline-block; padding: 4px 14px; border-radius: 999px; font: 700 18px var(--font-mono); }
+.tag.good { background: #e7f6ec; color: #15803d; }
+.tag.warn { background: #fff4e0; color: #b45309; }
+.tag.bad { background: #fde8e8; color: #b91c1c; }
+.tag.plain { background: #eef2f7; color: var(--ink-2); }
+
+/* ===========================================
+   ANIMATION — staggered entrance on the visible slide
+   =========================================== */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+.reveal-scale { opacity: 0; transform: scale(.94); transition: opacity .8s var(--ease), transform .9s var(--spring); }
+.slide.visible .reveal, .slide.visible .reveal-scale { opacity: 1; transform: none; }
+.d1 { transition-delay: .12s !important; } .d2 { transition-delay: .24s !important; } .d3 { transition-delay: .36s !important; }
+.d4 { transition-delay: .48s !important; } .d5 { transition-delay: .6s !important; } .d6 { transition-delay: .72s !important; }
+.bar-grow { transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(0); transition: transform 1s var(--ease); }
+.col-grow { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform 1s var(--ease); }
+.slide.visible .bar-grow, .slide.visible .col-grow { transform: none; }
+
+/* ===========================================
+   LAYOUT HELPERS (absolute regions inside the 1920×1080 stage)
+   =========================================== */
+.region { position: absolute; left: var(--pad-x); right: var(--pad-x); }
+.row { display: flex; gap: 32px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+
+/* ===========================================
+   SLIDE-SPECIFIC STYLES
+   =========================================== */
+/* -- Title -- */
+.title-h1 { position: absolute; left: 112px; top: 296px; font: 800 196px/0.92 var(--font-display); letter-spacing: -0.03em; }
+.title-h1 em { font-style: normal; color: var(--orange); }
+.title-sub { position: absolute; left: 120px; top: 716px; width: 880px; }
+.signals { position: absolute; right: 190px; top: 820px; display: flex; gap: 14px; }
+.sig { padding: 14px 24px; border-radius: 22px; background: #fff; font: 600 24px var(--font-body); box-shadow: 0 14px 30px rgba(120, 70, 30, .12); display: flex; align-items: center; gap: 12px; }
+.sig i { width: 14px; height: 14px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 0 6px var(--peach); }
+
+/* -- Agenda -- */
+.agenda { position: absolute; left: var(--pad-x); top: 330px; width: 1200px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px 32px; }
+.agenda .card { display: flex; align-items: center; gap: 28px; padding: 30px 36px; }
+.agenda .n { font: 800 56px/1 var(--font-display); color: var(--orange); width: 76px; }
+.agenda .t { font: 700 30px/1.2 var(--font-display); }
+.agenda .d { font-size: 21px; color: var(--muted); margin-top: 6px; }
+
+/* -- Section divider -- */
+.sec-num { position: absolute; left: 112px; top: 210px; font: 800 300px/0.8 var(--font-display); letter-spacing: -0.05em; color: var(--orange); }
+.sec-title { position: absolute; left: 120px; top: 530px; width: 1050px; font: 800 120px/1.06 var(--font-display); letter-spacing: -0.035em; }
+.sec-sub { position: absolute; left: 120px; top: 840px; width: 1120px; }
+
+/* -- Architecture -- */
+.arch { position: absolute; left: var(--pad-x); right: var(--pad-x); top: 300px; height: 620px; }
+.arch .col { position: absolute; top: 0; bottom: 0; }
+.arch .mod { background: var(--orange-soft); border-radius: 18px; padding: 14px 20px; font: 600 23px/1.3 var(--font-body); }
+.arch .mod small { display: block; font: 400 18px var(--font-mono); color: var(--muted); margin-top: 4px; }
+.lane { position: absolute; left: 520px; width: 520px; border-radius: 28px; padding: 26px 30px; }
+.lane .label { margin-bottom: 8px; }
+.lane .t { font: 800 34px/1.1 var(--font-display); }
+.lane p { font-size: 21px; line-height: 1.45; color: var(--ink-2); margin-top: 10px; }
+.arrow { position: absolute; height: 4px; background: var(--orange); border-radius: 4px; }
+.arrow::before, .arrow::after { content: ''; position: absolute; top: -8px; border: 10px solid transparent; }
+.arrow::after { right: -14px; border-left: 14px solid var(--orange); }
+.arrow::before { left: -14px; border-right: 14px solid var(--orange); }
+
+/* -- Sequence diagram text -- */
+svg.seq { position: absolute; left: var(--pad-x); top: 268px; width: 1680px; height: 720px; max-width: none; max-height: none; }
+svg.seq text { font-family: var(--font-body); }
+svg.seq .who { font: 800 28px var(--font-display); fill: var(--navy); }
+svg.seq .msg { font-size: 22px; fill: var(--navy); font-weight: 500; }
+svg.seq .ch { font: 600 19px var(--font-mono); }
+
+/* -- Tables -- */
+table.t { width: 100%; border-collapse: collapse; }
+table.t th { text-align: left; font: 600 18px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 16px 14px; border-bottom: 2px solid var(--line); }
+table.t td { padding: 15px 16px; border-bottom: 1px solid var(--line); font-size: 23px; line-height: 1.35; color: var(--ink-2); vertical-align: top; }
+table.t td:first-child { font-weight: 700; color: var(--navy); }
+table.t td.num { font-family: var(--font-mono); text-align: right; white-space: nowrap; }
+table.t th.num { text-align: right; }
+
+/* -- Pipeline -- */
+.pipe { position: absolute; left: var(--pad-x); right: var(--pad-x); top: 300px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
+.step { position: relative; padding: 0 18px; }
+.step .card { padding: 30px 28px; min-height: 300px; }
+.step .card h3 { font-size: 30px; }
+.step .card p { font-size: 22px; }
+.step:not(:last-child)::after { content: ''; position: absolute; right: -11px; top: 140px; width: 22px; height: 22px; border-top: 5px solid var(--orange); border-right: 5px solid var(--orange); transform: rotate(45deg); z-index: 2; }
+
+/* -- Big numbers -- */
+.big { font: 800 128px/0.9 var(--font-display); letter-spacing: -0.04em; }
+.big small { font-size: 40px; letter-spacing: -0.01em; color: var(--muted); }
+
+/* -- Charts -- */
+svg.chart { overflow: visible; max-width: none; max-height: none; }
+svg.chart text { font-family: var(--font-body); }
+svg.chart .ax { font: 500 20px var(--font-mono); fill: var(--muted); }
+svg.chart .val { font: 700 22px var(--font-mono); fill: var(--navy); }
+svg.chart .grid line { stroke: var(--line); stroke-width: 1; }
+svg.chart rect:hover { filter: brightness(1.08); }
+
+/* -- Replay matrix -- */
+.matrix { display: grid; grid-template-columns: 260px repeat(3, 1fr); gap: 8px; }
+.matrix div { font-size: 20px; padding: 7px 12px; border-radius: 12px; }
+.matrix .h { font: 600 17px var(--font-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.matrix .sc { font: 500 20px var(--font-mono); color: var(--navy); background: transparent; }
+.matrix .ok { background: #e7f6ec; color: #15803d; font: 700 18px var(--font-mono); text-align: center; }
+.matrix .ok.miss { background: #fff4e0; color: #b45309; }
+
+/* -- Contributions table -- */
+.contrib table.t td { padding: 24px 16px; font-size: 25px; }
+
+/* -- Limitations -- */
+.limits .card ul { gap: 18px; }
+.limits .card li { font-size: 28px; }
+
+/* -- Closing -- */
+.close-h1 { position: absolute; left: 112px; top: 330px; font: 800 168px/0.95 var(--font-display); letter-spacing: -0.035em; }
+.close-h1 em { font-style: normal; color: var(--orange); }
+
+/* ===========================================
+   DECK UI (outside the slide design: progress + counter + edit button)
+   =========================================== */
+.progress { position: fixed; left: 0; top: 0; height: 4px; background: var(--orange); z-index: 1001; transition: width .4s var(--ease); }
+.notes { display: none; }
+.edit-hotzone { position: fixed; top: 0; left: 0; width: 80px; height: 80px; z-index: 10000; cursor: pointer; }
+.edit-toggle { position: fixed; top: 16px; left: 16px; z-index: 10001; width: 48px; height: 48px; border-radius: 50%; border: none; background: #fff; color: var(--navy);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .15); font-size: 22px; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+.edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+.edit-toggle.active { background: var(--orange); color: #fff; }
+body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .5); outline-offset: 4px; }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="edit-hotzone" aria-hidden="true"></div>
+<button class="edit-toggle" id="editToggle" title="Chế độ sửa chữ (E)" aria-label="Chế độ sửa chữ">✎</button>
+
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<!-- =========================================================
+     01 · TITLE
+     ========================================================= -->
+<section class="slide active" data-title="Bìa">
+  <svg class="flow" viewBox="0 0 1920 1080" aria-hidden="true">
+    <defs><linearGradient id="fl1" x1="0" x2="1"><stop offset="0" stop-color="#f26b1d" stop-opacity="0"/><stop offset=".5" stop-color="#f26b1d" stop-opacity=".55"/><stop offset="1" stop-color="#ffb07a" stop-opacity=".2"/></linearGradient></defs>
+    <path d="M-40 980 C 420 860, 760 1060, 1180 900 S 1760 620, 1990 700" stroke="url(#fl1)" stroke-width="10"/>
+    <path d="M-40 1030 C 480 930, 820 1110, 1240 960 S 1780 720, 1990 790" stroke="url(#fl1)" stroke-width="4"/>
+  </svg>
+  <div class="moon" style="right:150px; top:120px; width:640px; height:640px;"></div>
+  <div class="pebble" style="width:150px; height:150px; right:720px; top:640px;"></div>
+  <div class="pebble" style="width:86px; height:86px; right:110px; top:760px;"></div>
+  <div class="kicker reveal" style="top:110px"><span class="pill fill">BTL Lập trình mạng</span><span class="pill">Nhóm 3 thành viên · vai A · B · C</span></div>
+  <h1 class="title-h1 reveal d1">TOEIC<br><em>Monitor</em></h1>
+  <p class="title-sub lead reveal d2" style="font-size:36px">Thi TOEIC Client–Server và giám sát máy thí sinh theo thời gian thực — quan sát, không phán xét.</p>
+  <div class="signals reveal d3"><span class="sig"><i></i>Process</span><span class="sig"><i></i>USB</span><span class="sig"><i></i>Focus</span><span class="sig"><i></i>Display</span></div>
+  <div class="source reveal d4" style="font-size:22px; bottom:80px">JavaFX · Spring Boot · PostgreSQL 18 · REST + WebSocket</div>
+  <aside class="notes">Giới thiệu đề tài, nhóm 3 người chia vai A (server), B (JavaFX), C (giám sát).</aside>
+</section>
+
+<!-- =========================================================
+     02 · AGENDA
+     ========================================================= -->
+<section class="slide" data-title="Nội dung">
+  <div class="kicker reveal"><span class="pill ghost">Nội dung</span></div>
+  <h2 class="h2 reveal d1">Sáu phần, từ bài toán đến demo</h2>
+  <div class="agenda">
+    <div class="card reveal d1" data-box="a1"><span class="n">01</span><div><div class="t">Bài toán &amp; phạm vi</div><div class="d">Ba yêu cầu của một phòng thi máy tính</div></div></div>
+    <div class="card reveal d2" data-box="a2"><span class="n">02</span><div><div class="t">Kiến trúc &amp; giao thức</div><div class="d">REST + WebSocket, envelope, mã lỗi</div></div></div>
+    <div class="card reveal d3" data-box="a3"><span class="n">03</span><div><div class="t">Lưu – nộp – hết giờ</div><div class="d">Một khóa, một đồng hồ, ACK sau COMMIT</div></div></div>
+    <div class="card reveal d4" data-box="a4"><span class="n">04</span><div><div class="t">Giám sát đa tín hiệu</div><div class="d">Epoch, sequence, full snapshot</div></div></div>
+    <div class="card reveal d5" data-box="a5"><span class="n">05</span><div><div class="t">Thực nghiệm &amp; kiểm thử</div><div class="d">E1 polling, replay lỗi, benchmark</div></div></div>
+    <div class="card reveal d6" data-box="a6"><span class="n">06</span><div><div class="t">Demo &amp; đóng góp</div><div class="d">Phần mềm thật, giới hạn còn lại</div></div></div>
+  </div>
+  <div class="moon" style="right:-120px; top:330px; width:520px; height:520px;"></div>
+  <div class="pebble" style="width:110px; height:110px; right:380px; top:820px;"></div>
+  <div class="pageno">02</div>
+</section>
+
+<!-- =========================================================
+     03 · PROBLEM
+     ========================================================= -->
+<section class="slide" data-title="Bài toán">
+  <div class="kicker reveal"><span class="pill fill">01 · Bài toán</span></div>
+  <h2 class="h2 reveal d1">Một phòng thi máy tính cần ba điều cùng lúc</h2>
+  <div class="region grid3" style="top:330px">
+    <div class="card reveal d1" data-box="p1">
+      <div class="icon-orb">1</div>
+      <h3>Bài làm không mất</h3>
+      <p>Mạng chập chờn, app bị đóng, hai cửa sổ cùng ghi một lượt thi — đáp án đã báo “đã lưu” phải thật sự nằm trong DB.</p>
+    </div>
+    <div class="card reveal d2" data-box="p2">
+      <div class="icon-orb">2</div>
+      <h3>Giờ do Server quyết</h3>
+      <p>Deadline chung cho cả phòng, không tin đồng hồ máy thí sinh. Phần Listening chỉ phát một lần, không tua, không phát bù.</p>
+    </div>
+    <div class="card reveal d3" data-box="p3">
+      <div class="icon-orb">3</div>
+      <h3>Giám thị nhìn thấy</h3>
+      <p>Process, USB, focus, cửa sổ trên máy thí sinh hiện gần thời gian thực — là sự kiện <b>“quan sát thấy”</b>, không phải kết luận gian lận.</p>
+    </div>
+  </div>
+  <div class="region reveal d4" style="top:800px">
+    <div class="card tint" style="padding:26px 36px; display:flex; gap:40px; align-items:center" data-box="p4">
+      <span class="label" style="color:var(--orange-deep)">Ràng buộc</span>
+      <span class="small"><b>Nhiều client đồng thời</b> · chạy qua <b>LAN</b> hoặc <b>Internet</b> (Cloudflare Tunnel) · mất kết nối là chuyện thường, không phải ngoại lệ</span>
+    </div>
+  </div>
+  <div class="pageno">03</div>
+</section>
+
+<!-- =========================================================
+     04 · SCOPE V2: exam + roles
+     ========================================================= -->
+<section class="slide" data-title="Phạm vi">
+  <div class="kicker reveal"><span class="pill fill">01 · Phạm vi V2</span></div>
+  <h2 class="h2 reveal d1">Một đề TOEIC 200 câu, ba vai trò trong một app</h2>
+  <!-- Composition of the 200-question exam (EX-08 STUDY4 verification) -->
+  <div class="region reveal d2" style="top:320px">
+    <div class="label" style="margin-bottom:16px">Số câu theo Part · Listening 100 · Reading 100</div>
+    <svg class="chart" viewBox="0 0 1680 140" width="1680" height="140" role="img" aria-label="Phân bố 200 câu theo 7 Part: 6, 25, 39, 30, 30, 16, 54">
+      <!-- width per question = 1680-12 gaps / 200; 2px surface gaps between segments -->
+      <g>
+        <rect class="bar-grow" x="0"    y="0" width="48.4"  height="64" rx="4" fill="#f26b1d"><title>Part 1: 6 câu</title></rect>
+        <rect class="bar-grow" x="50.4" y="0" width="206.8" height="64" rx="4" fill="#f26b1d"><title>Part 2: 25 câu</title></rect>
+        <rect class="bar-grow" x="259.2" y="0" width="323.3" height="64" rx="4" fill="#f26b1d"><title>Part 3: 39 câu</title></rect>
+        <rect class="bar-grow" x="584.5" y="0" width="248.6" height="64" rx="4" fill="#f26b1d"><title>Part 4: 30 câu</title></rect>
+        <rect class="bar-grow" x="835.1" y="0" width="248.6" height="64" rx="4" fill="#13254a"><title>Part 5: 30 câu</title></rect>
+        <rect class="bar-grow" x="1085.7" y="0" width="131.6" height="64" rx="4" fill="#13254a"><title>Part 6: 16 câu</title></rect>
+        <rect class="bar-grow" x="1219.3" y="0" width="460.7" height="64" rx="4" fill="#13254a"><title>Part 7: 54 câu</title></rect>
+      </g>
+      <g class="ax">
+        <text x="0" y="128">P1 · 6</text><text x="58" y="100">P2 · 25</text><text x="267" y="100">P3 · 39</text><text x="592" y="100">P4 · 30</text>
+        <text x="843" y="100">P5 · 30</text><text x="1094" y="100">P6 · 16</text><text x="1227" y="100">P7 · 54</text>
+      </g>
+    </svg>
+  </div>
+  <div class="region grid3" style="top:520px">
+    <div class="card reveal d3" data-box="r1">
+      <span class="label">Admin</span>
+      <h3 style="margin-top:10px">Tài khoản &amp; đề thi</h3>
+      <p>Tạo Giám thị/Thí sinh, khóa/mở khóa; import đề JSON kèm media, sửa từng câu.</p>
+    </div>
+    <div class="card reveal d4" data-box="r2">
+      <span class="label">Giám thị</span>
+      <h3 style="margin-top:10px">Mở phòng, bấm START</h3>
+      <p>Tạo phòng → PIN 5 số chung → xem ai “Sẵn sàng” → bắt đầu, theo dõi cảnh báo.</p>
+    </div>
+    <div class="card reveal d5" data-box="r3">
+      <span class="label">Thí sinh</span>
+      <h3 style="margin-top:10px">PIN → nghe → đọc → nộp</h3>
+      <p>Phòng chờ tải âm thanh, thử loa; Listening một lần, Reading, đáp án tự lưu.</p>
+    </div>
+  </div>
+  <div class="source">Role do Server quyết định; client chỉ chọn màn hình. Cấu trúc đề: kiểm chứng EX-08 (200 câu, 73 nhóm, 54 audio, 11 ảnh) — docs/plan-v2/EX08_STUDY4_ACCEPTANCE_20261023.md</div>
+  <div class="pageno">04</div>
+</section>
+
+<!-- =========================================================
+     05 · SECTION 02
+     ========================================================= -->
+<section class="slide" data-title="Kiến trúc">
+  <svg class="flow" viewBox="0 0 1920 1080" aria-hidden="true">
+    <defs><linearGradient id="fl2" x1="0" x2="1"><stop offset="0" stop-color="#f26b1d" stop-opacity="0"/><stop offset=".6" stop-color="#f26b1d" stop-opacity=".5"/><stop offset="1" stop-color="#ffb07a" stop-opacity=".1"/></linearGradient></defs>
+    <path d="M-40 1010 C 520 930, 900 1070, 1340 900 S 1800 620, 1990 660" stroke="url(#fl2)" stroke-width="8"/>
+  </svg>
+  <div class="moon" style="right:140px; top:180px; width:520px; height:520px;"></div>
+  <div class="pebble" style="width:120px; height:120px; right:640px; top:620px;"></div>
+  <div class="sec-num reveal">02</div>
+  <h2 class="sec-title reveal d1">Kiến trúc &amp; giao thức</h2>
+  <p class="sec-sub lead reveal d2">Một Server, một app desktop cho ba vai trò, hai kênh mạng với hai nhiệm vụ khác nhau.</p>
+</section>
+
+<!-- =========================================================
+     06 · ARCHITECTURE
+     ========================================================= -->
+<section class="slide" data-title="Kiến trúc tổng thể">
+  <div class="kicker reveal"><span class="pill fill">02 · Kiến trúc</span></div>
+  <h2 class="h2 reveal d1">REST cho dữ liệu, WebSocket cho thời gian thực</h2>
+  <div class="arch">
+    <!-- Client column -->
+    <div class="col card reveal d1" style="left:0; width:440px; padding:32px" data-box="client">
+      <span class="label">Client · JavaFX 21 · một JAR</span>
+      <h3 style="margin:8px 0 18px">Desktop app</h3>
+      <div style="display:grid; gap:12px">
+        <div class="mod">Admin <small>tài khoản, đề thi</small></div>
+        <div class="mod">Giám thị <small>phòng PIN, START, dashboard</small></div>
+        <div class="mod">Thí sinh <small>phòng chờ, 7 Part, audio</small></div>
+        <div class="mod" style="background:#fff; box-shadow: inset 0 0 0 2px var(--peach)">Collector <small>ProcessHandle · CIM · cửa sổ</small></div>
+      </div>
+    </div>
+    <!-- Two lanes -->
+    <div class="lane card reveal d2" style="top:20px" data-box="rest">
+      <span class="label">HTTP / REST · /api/v1, /api/v2</span>
+      <div class="t">Yêu cầu – trả lời</div>
+      <p>Đăng nhập, đề, audio &amp; ảnh có xác thực, lưu đáp án, nộp bài, đọc trạng thái, timeline.</p>
+    </div>
+    <div class="lane card navy reveal d3" style="top:330px" data-box="ws">
+      <span class="label" style="color:#ffb98e">WebSocket + JSON · /ws/v1/realtime</span>
+      <div class="t">Đẩy hai chiều</div>
+      <p>Heartbeat, snapshot &amp; event giám sát, lệnh phát Listening, cảnh báo tới giám thị.</p>
+    </div>
+    <div class="arrow reveal d2" style="left:458px; width:44px; top:140px"></div>
+    <div class="arrow reveal d2" style="left:1058px; width:44px; top:140px"></div>
+    <div class="arrow reveal d3" style="left:458px; width:44px; top:450px"></div>
+    <div class="arrow reveal d3" style="left:1058px; width:44px; top:450px"></div>
+    <!-- Server column -->
+    <div class="col card reveal d4" style="left:1120px; width:560px; padding:32px" data-box="server">
+      <span class="label">Server · Spring Boot 4.1</span>
+      <h3 style="margin:8px 0 18px">Một ứng dụng, chia module</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+        <div class="mod">auth</div><div class="mod">admin</div>
+        <div class="mod">exam <small>phòng, attempt</small></div><div class="mod">audio</div>
+        <div class="mod">monitoring <small>reducer, signal</small></div><div class="mod">realtime</div>
+      </div>
+      <div class="mod" style="margin-top:18px; background:var(--navy); color:#fff">PostgreSQL 18 <small style="color:#c9d3e3">Flyway V1–V23 · JDBC tường minh</small></div>
+    </div>
+  </div>
+  <div class="source">Raw WebSocket — không STOMP/SockJS/broker. Nguồn: docs/ARCHITECTURE.md, README “Thư viện ngoài”, server/src/main/resources/db/migration.</div>
+  <div class="pageno">06</div>
+</section>
+
+<!-- =========================================================
+     07 · ENVELOPE + ACK
+     ========================================================= -->
+<section class="slide" data-title="Envelope">
+  <div class="kicker reveal"><span class="pill fill">02 · Giao thức</span></div>
+  <h2 class="h2 reveal d1">Mỗi message một envelope, ACK chỉ sau COMMIT</h2>
+  <div class="region" style="top:320px; display:grid; grid-template-columns: 700px 1fr; gap:48px">
+    <div class="card reveal d1" style="padding:32px 36px" data-box="env">
+      <table class="t">
+        <tr><th>Trường</th><th>Ý nghĩa</th></tr>
+        <tr><td class="mono" style="font-size:21px">protocolVersion</td><td>Phiên bản (v0)</td></tr>
+        <tr><td class="mono" style="font-size:21px">type</td><td>Loại message</td></tr>
+        <tr><td class="mono" style="font-size:21px">messageId</td><td>Giữ nguyên qua retry</td></tr>
+        <tr><td class="mono" style="font-size:21px">requestId</td><td>Nối ACK với request</td></tr>
+        <tr><td class="mono" style="font-size:21px">attemptId</td><td>Lượt thi — kiểm scope</td></tr>
+        <tr><td class="mono" style="font-size:21px">traceId</td><td>Nối request, ACK, log</td></tr>
+        <tr><td class="mono" style="font-size:21px">payload</td><td>Dữ liệu theo type</td></tr>
+      </table>
+    </div>
+    <div class="reveal d2">
+<div class="code" data-box="json"><span class="c">// thí sinh → server</span>
+{ <span class="s">"type"</span>: <span class="s">"PROCESS_OBSERVED"</span>,
+  <span class="s">"messageId"</span>: <span class="s">"…event-001"</span>, <span class="s">"attemptId"</span>: <span class="s">"…A"</span>,
+  <span class="s">"payload"</span>: { <span class="s">"eventId"</span>: <span class="s">"…001"</span>, <span class="s">"pid"</span>: 4242,
+    <span class="s">"processName"</span>: <span class="s">"msedge.exe"</span>,
+    <span class="s">"policyVersion"</span>: <span class="s">"process-policy-v1"</span> } }
+
+<span class="c">// server → thí sinh, SAU khi event đã commit vào DB</span>
+{ <span class="s">"type"</span>: <span class="s">"ACK"</span>, <span class="s">"requestId"</span>: <span class="s">"…event-001"</span>,
+  <span class="s">"payload"</span>: { <span class="s">"status"</span>: <span class="s">"ACCEPTED"</span> } }</div>
+      <div class="caption">Rút gọn từ mẫu MOCK trong docs/PROTOCOL.md (“Mẫu message v0”).</div>
+    </div>
+  </div>
+  <div class="pageno">07</div>
+</section>
+
+<!-- =========================================================
+     08 · SEQUENCE — one exam room
+     ========================================================= -->
+<section class="slide" data-title="Luồng phòng thi">
+  <div class="kicker reveal"><span class="pill fill">02 · Luồng message</span></div>
+  <h2 class="h2 reveal d1">Một phòng thi, từ PIN đến nộp bài</h2>
+  <svg class="seq reveal d2" viewBox="0 0 1680 720" role="img" aria-label="Sơ đồ tuần tự phòng thi giữa Thí sinh, Server và Giám thị">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#f26b1d"/></marker>
+      <marker id="ahn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#13254a"/></marker>
+    </defs>
+    <!-- lifelines -->
+    <g>
+      <rect x="160" y="0" width="240" height="56" rx="28" fill="#fff1e8"/><text class="who" x="280" y="38" text-anchor="middle">Thí sinh</text>
+      <rect x="720" y="0" width="240" height="56" rx="28" fill="#13254a"/><text class="who" x="840" y="38" text-anchor="middle" style="fill:#fff">Server</text>
+      <rect x="1280" y="0" width="240" height="56" rx="28" fill="#fff1e8"/><text class="who" x="1400" y="38" text-anchor="middle">Giám thị</text>
+      <line x1="280" y1="56" x2="280" y2="716" stroke="#e3e8ef" stroke-width="3"/>
+      <line x1="840" y1="56" x2="840" y2="716" stroke="#c9d3e3" stroke-width="3"/>
+      <line x1="1400" y1="56" x2="1400" y2="716" stroke="#e3e8ef" stroke-width="3"/>
+    </g>
+    <!-- legend for channel colour -->
+    <g transform="translate(0,20)"><rect x="0" y="0" width="16" height="16" rx="4" fill="#13254a"/><text class="ch" x="24" y="14" fill="#6b7a90">HTTP</text>
+      <rect x="0" y="28" width="16" height="16" rx="4" fill="#f26b1d"/><text class="ch" x="24" y="42" fill="#6b7a90">WebSocket</text></g>
+    <!-- messages: navy = HTTP, orange = WebSocket -->
+    <g stroke-width="3" fill="none">
+      <line x1="1396" y1="112" x2="846" y2="112" stroke="#13254a" marker-end="url(#ahn)"/>
+      <line x1="284" y1="184" x2="834" y2="184" stroke="#13254a" marker-end="url(#ahn)"/>
+      <line x1="284" y1="256" x2="834" y2="256" stroke="#13254a" marker-end="url(#ahn)"/>
+      <line x1="1396" y1="328" x2="846" y2="328" stroke="#13254a" marker-end="url(#ahn)"/>
+      <line x1="836" y1="400" x2="286" y2="400" stroke="#f26b1d" marker-end="url(#ah)"/>
+      <line x1="284" y1="472" x2="834" y2="472" stroke="#13254a" marker-end="url(#ahn)"/>
+      <line x1="284" y1="544" x2="834" y2="544" stroke="#f26b1d" marker-end="url(#ah)"/>
+      <line x1="846" y1="616" x2="1394" y2="616" stroke="#f26b1d" marker-end="url(#ah)"/>
+      <line x1="284" y1="688" x2="834" y2="688" stroke="#13254a" marker-end="url(#ahn)"/>
+    </g>
+    <g class="msg">
+      <text x="1120" y="100" text-anchor="middle">Tạo phòng → PIN 5 số (lưu BCrypt + HMAC)</text>
+      <text x="560" y="172" text-anchor="middle">JOIN: token tài khoản + PIN → đúng 1 Attempt</text>
+      <text x="560" y="244" text-anchor="middle">Kiểm checksum audio, thử loa → READY</text>
+      <text x="1120" y="316" text-anchor="middle">START: khóa Session, deadline chung</text>
+      <text x="560" y="388" text-anchor="middle">LISTENING_START — gửi sau COMMIT</text>
+      <text x="560" y="460" text-anchor="middle">Autosave toàn bộ đáp án → ACK sau commit</text>
+      <text x="560" y="532" text-anchor="middle">HEARTBEAT 2 s · MONITORING_FULL · event</text>
+      <text x="1120" y="604" text-anchor="middle">MONITOR_STATE · MONITOR_WARNING</text>
+      <text x="560" y="676" text-anchor="middle">Nộp bài / hết giờ → chốt, chấm một lần</text>
+    </g>
+  </svg>
+  <div class="card tint reveal d3" style="position:absolute; right:var(--pad-x); top:560px; width:250px; padding:24px" data-box="seqnote">
+    <p style="font-size:21px">Start trùng ID <b>không phát lại</b>. Reconnect <b>không</b> reset deadline.</p>
+  </div>
+  <div class="pageno">08</div>
+</section>
+
+<!-- =========================================================
+     09 · ERROR CODES
+     ========================================================= -->
+<section class="slide" data-title="Mã lỗi">
+  <div class="kicker reveal"><span class="pill fill">02 · Xử lý lỗi</span></div>
+  <h2 class="h2 reveal d1">Lỗi là một phần của giao thức</h2>
+  <p class="region lead reveal d2" style="top:236px">Client quyết định theo <span class="mono o">error.code</span> ổn định, không đọc câu thông báo tiếng Việt.</p>
+  <div class="region grid4" style="top:350px">
+    <div class="card reveal d1" data-box="e1"><span class="tag bad">UNAUTHORIZED</span><p style="margin-top:16px">Sai/thiếu credential → đăng nhập lại</p></div>
+    <div class="card reveal d1" data-box="e2"><span class="tag bad">FORBIDDEN</span><p style="margin-top:16px">Sai role/scope → khóa thao tác, không retry</p></div>
+    <div class="card reveal d2" data-box="e3"><span class="tag warn">STALE</span><p style="margin-top:16px">Revision/writer/epoch cũ → đồng bộ lại state</p></div>
+    <div class="card reveal d2" data-box="e4"><span class="tag warn">CONFLICT</span><p style="margin-top:16px">Cùng ID/revision, khác nội dung → dừng retry</p></div>
+    <div class="card reveal d3" data-box="e5"><span class="tag plain">INVALID_INPUT</span><p style="margin-top:16px">JSON/trường sai → sửa request</p></div>
+    <div class="card reveal d3" data-box="e6"><span class="tag plain">INVALID_STATE</span><p style="margin-top:16px">Sai phase → nạp lại state Server</p></div>
+    <div class="card reveal d4" data-box="e7"><span class="tag plain">EXPIRED</span><p style="margin-top:16px">Quá deadline → khóa, đọc trạng thái chốt</p></div>
+    <div class="card reveal d4" data-box="e8"><span class="tag good">RETRYABLE_…</span><p style="margin-top:16px">Lỗi tạm → retry cùng ID, có backoff</p></div>
+  </div>
+  <div class="source">Nguồn: docs/PROTOCOL.md “Mã lỗi”. Password/token không vào log hay URL query.</div>
+  <div class="pageno">09</div>
+</section>
+
+<!-- =========================================================
+     10 · SECTION 03
+     ========================================================= -->
+<section class="slide" data-title="Lưu – nộp">
+  <svg class="flow" viewBox="0 0 1920 1080" aria-hidden="true">
+    <path d="M-40 1010 C 520 930, 900 1070, 1340 900 S 1800 620, 1990 660" stroke="url(#fl2)" stroke-width="8"/>
+  </svg>
+  <div class="moon" style="right:140px; top:180px; width:520px; height:520px;"></div>
+  <div class="pebble" style="width:96px; height:96px; right:120px; top:700px;"></div>
+  <div class="sec-num reveal">03</div>
+  <h2 class="sec-title reveal d1">Lưu – nộp – hết giờ</h2>
+  <p class="sec-sub lead reveal d2">Save, submit, timeout và takeover tranh nhau cùng một lượt thi. Nhóm chọn một khóa duy nhất.</p>
+</section>
+
+<!-- =========================================================
+     11 · AUTOSAVE ALGORITHM
+     ========================================================= -->
+<section class="slide" data-title="Autosave">
+  <div class="kicker reveal"><span class="pill fill">03 · Tính đúng</span></div>
+  <h2 class="h2 reveal d1">Một khóa, một đồng hồ, ACK sau COMMIT</h2>
+  <div class="region" style="top:310px; display:grid; grid-template-columns: 640px 1fr; gap:48px">
+    <div style="display:grid; gap:16px">
+      <div class="card reveal d1" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s1"><span class="big o" style="font-size:52px; width:48px">1</span><p style="font-size:23px"><b>Khóa bản ghi attempt</b> — save, submit, timeout, takeover dùng chung</p></div>
+      <div class="card reveal d2" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s2"><span class="big o" style="font-size:52px; width:48px">2</span><p style="font-size:23px"><b>Kiểm writerEpoch sau khóa</b> — cửa sổ cũ bị takeover → STALE</p></div>
+      <div class="card reveal d3" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s3"><span class="big o" style="font-size:52px; width:48px">3</span><p style="font-size:23px"><b>Đọc clock_timestamp() một lần</b> — không dùng now() của đầu transaction</p></div>
+      <div class="card reveal d4" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s4"><span class="big o" style="font-size:52px; width:48px">4</span><p style="font-size:23px"><b>So revision</b>: thấp hơn → STALE; bằng nhau mà nội dung khác (dạng chuẩn hóa) → CONFLICT</p></div>
+      <div class="card reveal d5" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s5"><span class="big o" style="font-size:52px; width:48px">5</span><p style="font-size:23px"><b>COMMIT rồi mới ACK</b> — rollback không bao giờ báo “đã lưu”</p></div>
+    </div>
+    <div class="reveal d3">
+<div class="code" style="font-size:21px" data-box="code"><span class="c">-- ExamService.java · autosave</span>
+<span class="k">SELECT</span> a.writer_epoch, a.saved_revision, a.state, …
+<span class="k">FROM</span> monitoring_attempts a
+<span class="k">WHERE</span> a.attempt_id = :attemptId
+<span class="k">FOR UPDATE OF</span> a                       <span class="c">-- ①</span>
+
+<span class="k">if</span> (request.writerEpoch() != attempt.writerEpoch())
+    <span class="k">throw</span> … ErrorCode.STALE               <span class="c">-- ②</span>
+
+Instant decisionAt = jdbc.sql(
+    <span class="s">"SELECT clock_timestamp()"</span>)…single(); <span class="c">-- ③</span>
+<span class="k">if</span> (!decisionAt.isBefore(deadlineAt))
+    <span class="k">throw</span> … ErrorCode.EXPIRED</div>
+      <div class="caption">Trích server/src/main/java/vn/edu/toeic/server/exam/ExamService.java (rút gọn).</div>
+    </div>
+  </div>
+  <div class="pageno">11</div>
+</section>
+
+<!-- =========================================================
+     12 · START + LISTENING
+     ========================================================= -->
+<section class="slide" data-title="START &amp; Listening">
+  <div class="kicker reveal"><span class="pill fill">03 · START &amp; Listening</span></div>
+  <h2 class="h2 reveal d1">Bắt đầu một lần, nghe một lần</h2>
+  <div class="region" style="top:310px; display:grid; grid-template-columns: 560px 1fr; gap:48px">
+    <div style="display:grid; gap:20px">
+      <div class="card reveal d1" style="padding:28px 32px" data-box="l1"><h3 style="font-size:30px">START có khóa Session</h3><p style="font-size:23px">Chụp danh sách READY, ghi deadline chung bằng giờ DB. Start trùng ID trả kết quả cũ, không phát lại audio.</p></div>
+      <div class="card reveal d2" style="padding:28px 32px" data-box="l2"><h3 style="font-size:30px">Thiếu file → không READY</h3><p style="font-size:23px">Audio tải trước và kiểm checksum. Gián đoạn khi nghe: dừng, khóa phần nghe, ghi cờ — không tự resume.</p></div>
+      <div class="card tint reveal d3" style="padding:28px 32px" data-box="l3"><h3 style="font-size:30px">Vào muộn → chỉ Reading</h3><p style="font-size:23px">START khi chưa đủ READY cần giám thị xác nhận; người chưa sẵn sàng làm Reading trong thời gian còn lại.</p></div>
+    </div>
+    <div class="reveal-scale d2">
+      <div class="screen" data-box="shot"><img src="assets/screens/candidate-listening.webp" alt="Màn thi của thí sinh đang phát phần nghe Part 2, đồng hồ 1:59:48"></div>
+      <div class="caption">Màn thí sinh khi đang phát Listening. Chụp tự động bởi AccountPinFlowPostgresGuiTest (Server + PostgreSQL thật, đề MOCK).</div>
+    </div>
+  </div>
+  <div class="pageno">12</div>
+</section>
+
+<!-- =========================================================
+     13 · SECTION 04
+     ========================================================= -->
+<section class="slide" data-title="Giám sát">
+  <svg class="flow" viewBox="0 0 1920 1080" aria-hidden="true">
+    <path d="M-40 1010 C 520 930, 900 1070, 1340 900 S 1800 620, 1990 660" stroke="url(#fl2)" stroke-width="8"/>
+  </svg>
+  <div class="moon" style="right:140px; top:180px; width:520px; height:520px;"></div>
+  <div class="pebble" style="width:130px; height:130px; right:620px; top:600px;"></div>
+  <div class="sec-num reveal">04</div>
+  <h2 class="sec-title reveal d1">Giám sát đa tín hiệu</h2>
+  <p class="sec-sub lead reveal d2">Trạng thái hiện tại và lịch sử sự kiện là hai luồng tách biệt — snapshot mới không xóa những gì đã ghi.</p>
+</section>
+
+<!-- =========================================================
+     14 · MONITORING PIPELINE
+     ========================================================= -->
+<section class="slide" data-title="Pipeline giám sát">
+  <div class="kicker reveal"><span class="pill fill">04 · Pipeline</span></div>
+  <h2 class="h2 reveal d1">Từ ProcessHandle tới màn hình giám thị</h2>
+  <div class="pipe">
+    <div class="step reveal d1"><div class="card" data-box="k1"><span class="label">Thí sinh</span><h3 style="margin-top:8px">Poll</h3><p><span class="mono">ProcessHandle</span> mỗi 1 000 ms, ngoài luồng JavaFX</p></div></div>
+    <div class="step reveal d2"><div class="card" data-box="k2"><span class="label">Policy v4</span><h3 style="margin-top:8px">Lọc 9 tên</h3><p>Không đọc tham số, không đóng process</p></div></div>
+    <div class="step reveal d3"><div class="card" data-box="k3"><span class="label">Identity</span><h3 style="margin-top:8px">Định danh</h3><p class="mono" style="font-size:19px">(collectorSessionId, pid, startInstant)</p></div></div>
+    <div class="step reveal d4"><div class="card navy" data-box="k4"><span class="label" style="color:#ffb98e">WebSocket</span><h3 style="margin-top:8px">Gửi</h3><p>FULL làm mới 2 s · event có <span class="mono">eventId</span> ổn định qua retry</p></div></div>
+    <div class="step reveal d5"><div class="card" data-box="k5"><span class="label">Server</span><h3 style="margin-top:8px">Hai luồng</h3><p>State: reducer trong RAM · History: commit DB rồi ACK</p></div></div>
+  </div>
+  <div class="region grid2" style="top:690px">
+    <div class="card tint reveal d4" style="padding:28px 34px" data-box="hb"><h3 style="font-size:30px">Heartbeat 2 s · timeout 6 s</h3><p style="font-size:23px">Mất heartbeat → <b>UNKNOWN</b>. Đó là mất liên lạc, không phải bằng chứng gian lận.</p></div>
+    <div class="card reveal d5" style="padding:28px 34px" data-box="once"><h3 style="font-size:30px">Một lần xuất hiện = một event</h3><p style="font-size:23px">Không lặp event ở mỗi poll. Collector chỉ chạy ở role thí sinh.</p></div>
+  </div>
+  <div class="source">Tham số mặc định: docs/PROTOCOL.md (T2-C5). Chín tên: chrome, msedge, firefox, zalo, teams, ms-teams, discord, anydesk, teamviewer (.exe).</div>
+  <div class="pageno">14</div>
+</section>
+
+<!-- =========================================================
+     15 · EPOCH / SEQUENCE RULE
+     ========================================================= -->
+<section class="slide" data-title="Epoch &amp; sequence">
+  <div class="kicker reveal"><span class="pill fill">04 · Đồng bộ trạng thái</span></div>
+  <h2 class="h2 reveal d1">Thiếu chuỗi thì xin full, không đoán</h2>
+  <div class="region card navy reveal d2" style="top:300px; padding:44px 56px" data-box="rule">
+    <span class="label" style="color:#ffb98e">Delta chỉ hợp lệ khi</span>
+    <div style="font:600 46px/1.35 var(--font-mono); color:#fff; margin-top:14px">baseSequence == currentSequence<br><span style="color:#ffb98e">&amp;&amp;</span> sequence == currentSequence + 1</div>
+    <p style="font-size:24px; margin-top:16px">Ngược lại → <b style="color:#fff">RESYNC</b>: giữ tập last-known, đánh dấu UNSYNCED, chờ full snapshot mới. <span class="mono" style="font-size:19px">MonitoringStateReducer.java</span></p>
+  </div>
+  <div class="region grid3" style="top:690px">
+    <div class="card reveal d3" style="padding:30px" data-box="ep1"><h3 style="font-size:28px">Epoch mới = full #1</h3><p style="font-size:22px">Reconnect mở epoch mới; message của epoch cũ bị từ chối.</p></div>
+    <div class="card reveal d4" style="padding:30px" data-box="ep2"><h3 style="font-size:28px">Trùng → ACK lại</h3><p style="font-size:22px">Cùng ID cùng nội dung: DUPLICATE. Khác nội dung: CONFLICT.</p></div>
+    <div class="card tint reveal d5" style="padding:30px" data-box="ep3"><h3 style="font-size:28px">Bản phát hành: FULL</h3><p style="font-size:22px">Delta là thử nghiệm, cần cờ server + capability; mặc định tắt.</p></div>
+  </div>
+  <div class="pageno">15</div>
+</section>
+
+<!-- =========================================================
+     16 · MULTI-SIGNAL
+     ========================================================= -->
+<section class="slide" data-title="Tín hiệu V2">
+  <div class="kicker reveal"><span class="pill fill">04 · Phạm vi V2</span></div>
+  <h2 class="h2 reveal d1">Bốn tín hiệu, cùng một làn gửi đã cấp quyền</h2>
+  <div class="region grid4" style="top:320px">
+    <div class="card reveal d1" data-box="g1"><div class="icon-orb"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 8h18"/></svg></div><h3>Process</h3><p>9 tên ứng dụng qua <span class="mono" style="font-size:21px">ProcessHandle</span>; lịch sử theo đợt 30 s cho UI, raw vẫn giữ.</p></div>
+    <div class="card reveal d2" data-box="g2"><div class="icon-orb"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v14M8 7l4-4 4 4M7 13v3a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-3"/><circle cx="12" cy="20" r="1.5"/></svg></div><h3>USB lưu trữ</h3><p>CIM (<span class="mono" style="font-size:21px">MSFT_Disk</span>): có mặt lúc bắt đầu, cắm, rút.</p></div>
+    <div class="card reveal d3" data-box="g3"><div class="icon-orb"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><h3>Focus &amp; cửa sổ</h3><p>JavaFX báo mất focus, thu nhỏ, thoát toàn màn hình.</p></div>
+    <div class="card reveal d4" data-box="g4"><div class="icon-orb"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="5" width="13" height="10" rx="1.5"/><rect x="11" y="9" width="11" height="9" rx="1.5"/></svg></div><h3>Màn hình</h3><p>Số màn hình do JavaFX báo cáo khi thay đổi.</p></div>
+  </div>
+  <div class="region reveal d5" style="top:770px">
+    <div class="card tint" style="padding:26px 36px" data-box="privacy">
+      <span class="label" style="color:var(--orange-deep)">Ranh giới quyền riêng tư</span>
+      <p class="small" style="margin-top:8px">Thí sinh được thông báo · chỉ chạy trên máy thí sinh · <b>không</b> chặn thiết bị, <b>không</b> đọc nội dung hay serial USB, <b>không</b> chụp màn hình · polling có thể bỏ sót thao tác quá nhanh giữa hai lần quét.</p>
+    </div>
+  </div>
+  <div class="pageno">16</div>
+</section>
+
+<!-- =========================================================
+     17 · SECTION 05
+     ========================================================= -->
+<section class="slide" data-title="Thực nghiệm">
+  <svg class="flow" viewBox="0 0 1920 1080" aria-hidden="true">
+    <path d="M-40 1010 C 520 930, 900 1070, 1340 900 S 1800 620, 1990 660" stroke="url(#fl2)" stroke-width="8"/>
+  </svg>
+  <div class="moon" style="right:140px; top:180px; width:520px; height:520px;"></div>
+  <div class="pebble" style="width:100px; height:100px; right:110px; top:720px;"></div>
+  <div class="sec-num reveal">05</div>
+  <h2 class="sec-title reveal d1">Thực nghiệm<br>&amp; kiểm thử</h2>
+  <p class="sec-sub lead reveal d2">Mọi số liệu sau đây lấy nguyên từ báo cáo trong repo; raw không sửa tay, summary do script sinh.</p>
+</section>
+
+<!-- =========================================================
+     18 · E1 POLLING
+     ========================================================= -->
+<section class="slide" data-title="E1 polling">
+  <div class="kicker reveal"><span class="pill fill">05 · E1</span><span class="pill">Chu kỳ polling</span></div>
+  <h2 class="h2 reveal d1">Poll nhanh bắt được nhiều hơn, nhưng tốn CPU hơn</h2>
+  <div class="region" style="top:300px; display:grid; grid-template-columns: 1fr 1fr 420px; gap:40px">
+    <!-- Chart A: miss rate, target hold 200 ms (single series, labelled) -->
+    <div class="card reveal d1" style="padding:32px" data-box="c1">
+      <div class="label">Tỉ lệ bỏ sót · process sống ~200 ms</div>
+      <div class="small" style="margin:6px 0 18px">N = 30 / chu kỳ · khoảng = có lượt chưa kết luận</div>
+      <svg class="chart" viewBox="0 0 520 330" width="100%" height="330" role="img" aria-label="Tỉ lệ bỏ sót theo chu kỳ poll: 250ms 0-3.33%, 500ms 46.67%, 1000ms 86.67%, 2000ms 73.33-76.67%">
+        <g class="grid"><line x1="110" y1="10" x2="110" y2="300"/><line x1="235" y1="10" x2="235" y2="300"/><line x1="360" y1="10" x2="360" y2="300"/></g>
+        <!-- x scale: 0..100% → 110..360 (2.5 px / %) -->
+        <g class="ax"><text x="100" y="58" text-anchor="end">250 ms</text><text x="100" y="128" text-anchor="end">500 ms</text><text x="100" y="198" text-anchor="end">1000 ms</text><text x="100" y="268" text-anchor="end">2000 ms</text>
+          <text x="110" y="326" text-anchor="middle">0%</text><text x="235" y="326" text-anchor="middle">50%</text><text x="360" y="326" text-anchor="middle">100%</text></g>
+        <rect class="bar-grow" x="110" y="36" width="8.3" height="30" rx="4" fill="#f9b48a"><title>250 ms: 0–3,33% (29 thấy / 0 sót / 1 chưa kết luận)</title></rect>
+        <rect class="bar-grow" x="110" y="106" width="116.7" height="30" rx="4" fill="#f26b1d"><title>500 ms: 46,67% (16 / 14 / 0)</title></rect>
+        <rect class="bar-grow" x="110" y="176" width="216.7" height="30" rx="4" fill="#f26b1d"><title>1000 ms: 86,67% (4 / 26 / 0)</title></rect>
+        <rect class="bar-grow" x="110" y="246" width="183.3" height="30" rx="4" fill="#f26b1d"><title>2000 ms: 73,33% (7 / 22 / 1)</title></rect>
+        <rect class="bar-grow" x="295.3" y="246" width="8.3" height="30" rx="4" fill="#f9b48a"><title>tới 76,67% nếu lượt chưa kết luận là sót</title></rect>
+        <g class="val"><text x="128" y="58">0–3,3%</text><text x="236" y="128">46,7%</text><text x="336" y="198">86,7%</text><text x="312" y="268">73,3–76,7%</text></g>
+      </svg>
+    </div>
+    <!-- Chart B: collector CPU (separate chart: different unit, no dual axis) -->
+    <div class="card reveal d2" style="padding:32px" data-box="c2">
+      <div class="label">CPU collector · % một lõi</div>
+      <div class="small" style="margin:6px 0 18px">Trung bình 3 lượt, mỗi lượt OK</div>
+      <svg class="chart" viewBox="0 0 520 330" width="100%" height="330" role="img" aria-label="CPU collector theo chu kỳ poll: 250ms 17.01%, 500ms 9.02%, 1000ms 4.94%, 2000ms 2.57%">
+        <g class="grid"><line x1="110" y1="10" x2="110" y2="300"/><line x1="235" y1="10" x2="235" y2="300"/><line x1="360" y1="10" x2="360" y2="300"/></g>
+        <!-- x scale: 0..20% → 110..360 (12.5 px / %) -->
+        <g class="ax"><text x="100" y="58" text-anchor="end">250 ms</text><text x="100" y="128" text-anchor="end">500 ms</text><text x="100" y="198" text-anchor="end">1000 ms</text><text x="100" y="268" text-anchor="end">2000 ms</text>
+          <text x="110" y="326" text-anchor="middle">0%</text><text x="235" y="326" text-anchor="middle">10%</text><text x="360" y="326" text-anchor="middle">20%</text></g>
+        <rect class="bar-grow" x="110" y="36" width="212.6" height="30" rx="4" fill="#13254a"><title>250 ms: 17,01 ± 0,60%</title></rect>
+        <rect class="bar-grow" x="110" y="106" width="112.8" height="30" rx="4" fill="#13254a"><title>500 ms: 9,02 ± 0,38%</title></rect>
+        <rect class="bar-grow" x="110" y="176" width="61.8" height="30" rx="4" fill="#13254a"><title>1000 ms: 4,94 ± 0,20%</title></rect>
+        <rect class="bar-grow" x="110" y="246" width="32.1" height="30" rx="4" fill="#13254a"><title>2000 ms: 2,57 ± 0,22%</title></rect>
+        <g class="val"><text x="334" y="58">17,01</text><text x="234" y="128">9,02</text><text x="183" y="198">4,94</text><text x="154" y="268">2,57</text></g>
+      </svg>
+    </div>
+    <div class="reveal d3" style="display:grid; gap:20px; align-content:start">
+      <div class="card tint" style="padding:28px" data-box="e1sum"><div class="big" style="font-size:72px">360</div><p style="font-size:22px">process con có kiểm soát: <b>273</b> thấy · <b>84</b> sót · <b>3</b> chưa kết luận</p></div>
+      <div class="card" style="padding:28px" data-box="e1setup"><p style="font-size:20px">12 lượt (4 chu kỳ × 3), seed 1234 · Intel Core Ultra 5 125H, Windows 11 · ProcessHandle thật, client giả lập, không qua mạng</p></div>
+    </div>
+  </div>
+  <div class="source">evidence/qa05-e1-20261021/REPORT.md · Một máy, mẫu nhỏ: 1000 ms vs 2000 ms không đơn điệu — không suy rộng. Process ≥ 3 s: 30/30 thấy ở mọi chu kỳ.</div>
+  <div class="pageno">18</div>
+</section>
+
+<!-- =========================================================
+     19 · E2 REPLAY
+     ========================================================= -->
+<section class="slide" data-title="Replay full/delta">
+  <div class="kicker reveal"><span class="pill fill">05 · Replay lỗi mạng</span><span class="pill">T3-C3</span></div>
+  <h2 class="h2 reveal d1">Full và delta đều đúng dưới 12 kịch bản lỗi</h2>
+  <div class="region" style="top:300px; display:grid; grid-template-columns: 1fr 520px; gap:48px">
+    <div class="card reveal d1" style="padding:30px 34px" data-box="mx">
+      <div class="matrix">
+        <div class="h">Kịch bản</div><div class="h">low-change</div><div class="h">high-change</div><div class="h">reconnect</div>
+        <div class="sc">clean</div><div class="ok">PASS · PASS</div><div class="ok">PASS · PASS</div><div class="ok">PASS · PASS</div>
+        <div class="sc">duplicate</div><div class="ok">PASS · PASS</div><div class="ok">PASS · PASS</div><div class="ok">PASS · PASS</div>
+        <div class="sc">drop-first / drop-state</div><div class="ok">PASS · PASS</div><div class="ok">PASS · PASS</div><div class="ok">PASS · PASS</div>
+        <div class="sc">reorder / late-after-full</div><div class="ok">PASS · PASS</div><div class="ok">PASS · PASS</div><div class="ok">PASS · PASS</div>
+        <div class="sc">reconnect-old</div><div class="ok">PASS · PASS</div><div class="ok">PASS · PASS</div><div class="ok">PASS · PASS</div>
+        <div class="sc">retry-resync</div><div class="ok">PASS · PASS</div><div class="ok">PASS · PASS</div><div class="ok">PASS · PASS</div>
+        <div class="sc">conflict-id / -sequence</div><div class="ok">PASS · PASS</div><div class="ok">PASS · PASS</div><div class="ok">PASS · PASS</div>
+        <div class="sc">event-drop · seeded</div><div class="ok miss">PASS · thiếu 1</div><div class="ok miss">PASS · thiếu 1</div><div class="ok miss">PASS · thiếu 1</div>
+      </div>
+      <div class="caption" style="margin-top:16px">Mỗi ô: full · delta. “Thiếu 1” = event bị drop được liệt kê chính xác; full không khôi phục lịch sử.</div>
+    </div>
+    <div class="reveal d2" style="display:grid; gap:20px; align-content:start">
+      <div class="card tint" style="padding:30px" data-box="r72"><div class="big" style="font-size:96px">72<small> PASS</small></div><p style="font-size:22px">3 workload × 12 kịch bản × 2 mode · 4 ca âm cố ý sai đều bị bắt (exit 1)</p></div>
+      <div class="card" style="padding:30px" data-box="rbyte"><h3 style="font-size:28px">Tái lập byte-identical</h3><p style="font-size:22px">Chạy lại toàn bộ chiến dịch: 77 file report/summary giống từng byte (seed 20261012).</p></div>
+      <div class="card navy" style="padding:30px" data-box="rdec"><h3 style="font-size:28px">Quyết định</h3><p style="font-size:22px">Replay chứng minh <b style="color:#fff">tính đúng</b>, chưa đo tiết kiệm byte, LAN chưa chạy → giữ <b style="color:#fff">FULL mặc định</b>.</p></div>
+    </div>
+  </div>
+  <div class="source">evidence/t3-c3/campaign-final/matrix.md · docs/MONITORING_DELTA_FAULT_REPLAY.md · nguồn dữ liệu MOCK, fault REPLAY/SIMULATED.</div>
+  <div class="pageno">19</div>
+</section>
+
+<!-- =========================================================
+     20 · ACCOUNT_PIN BENCHMARK
+     ========================================================= -->
+<section class="slide" data-title="Benchmark phòng PIN">
+  <div class="kicker reveal"><span class="pill fill">05 · Benchmark</span><span class="pill">ACCOUNT_PIN</span></div>
+  <h2 class="h2 reveal d1">1 → 20 thí sinh giả lập, không thao tác nào lỗi</h2>
+  <div class="region" style="top:300px; display:grid; grid-template-columns: 760px 1fr; gap:48px">
+    <div class="card reveal d1" style="padding:32px 36px" data-box="bm">
+      <div class="label">HTTP p95 (ms) theo số thí sinh đồng thời</div>
+      <svg class="chart" viewBox="0 0 680 400" width="100%" height="400" role="img" aria-label="HTTP p95: 1 client 69.00 ms, 2: 41.85, 5: 70.43, 10: 96.80, 20: 137.55">
+        <!-- y scale: 0..150 ms → 340..40 (2 px / ms) -->
+        <g class="grid"><line x1="60" y1="340" x2="680" y2="340"/><line x1="60" y1="240" x2="680" y2="240"/><line x1="60" y1="140" x2="680" y2="140"/><line x1="60" y1="40" x2="680" y2="40"/></g>
+        <g class="ax"><text x="48" y="346" text-anchor="end">0</text><text x="48" y="246" text-anchor="end">50</text><text x="48" y="146" text-anchor="end">100</text><text x="48" y="46" text-anchor="end">150</text>
+          <text x="124" y="380" text-anchor="middle">1</text><text x="244" y="380" text-anchor="middle">2</text><text x="364" y="380" text-anchor="middle">5</text><text x="484" y="380" text-anchor="middle">10</text><text x="604" y="380" text-anchor="middle">20</text></g>
+        <rect class="col-grow" x="108" y="202.0" width="32" height="138.0" rx="4" fill="#f26b1d"><title>1 client: 69,00 ms (567 mẫu)</title></rect>
+        <rect class="col-grow" x="228" y="256.3" width="32" height="83.7" rx="4" fill="#f26b1d"><title>2 clients: 41,85 ms (1 142 mẫu)</title></rect>
+        <rect class="col-grow" x="348" y="199.1" width="32" height="140.9" rx="4" fill="#f26b1d"><title>5 clients: 70,43 ms (2 777 mẫu)</title></rect>
+        <rect class="col-grow" x="468" y="146.4" width="32" height="193.6" rx="4" fill="#f26b1d"><title>10 clients: 96,80 ms (5 819 mẫu)</title></rect>
+        <rect class="col-grow" x="588" y="64.9" width="32" height="275.1" rx="4" fill="#f26b1d"><title>20 clients: 137,55 ms (10 927 mẫu)</title></rect>
+        <g class="val" text-anchor="middle"><text x="124" y="190">69,0</text><text x="244" y="244">41,9</text><text x="364" y="187">70,4</text><text x="484" y="134">96,8</text><text x="604" y="53">137,6</text></g>
+      </svg>
+    </div>
+    <div class="reveal d2" style="display:grid; gap:20px; align-content:start">
+      <div class="card" style="padding:28px 32px" data-box="bmt">
+        <table class="t">
+          <tr><th>Thí sinh</th><th class="num">Monitoring p95</th><th class="num">Phát hiện ngắt p95</th></tr>
+          <tr><td>1</td><td class="num">51,82 ms</td><td class="num">6 539,59 ms</td></tr>
+          <tr><td>5</td><td class="num">59,05 ms</td><td class="num">6 461,55 ms</td></tr>
+          <tr><td>20</td><td class="num">171,26 ms</td><td class="num">6 688,34 ms</td></tr>
+        </table>
+      </div>
+      <div class="card tint" style="padding:28px 32px" data-box="bmc"><p style="font-size:22px"><b>114</b> JOIN · <b>114</b> Submit · <b>15</b> START · <b>342</b> lần gửi monitoring — tất cả thành công. Phát hiện ngắt ≈ 6,5 s khớp timeout heartbeat 6 s.</p></div>
+    </div>
+  </div>
+  <div class="source">docs/account-pin/IMPLEMENTATION-REPORT.md · loopback một máy Windows, client giao thức giả lập, 3 vòng/mức — không phải năng lực phòng 20 máy thật.</div>
+  <div class="pageno">20</div>
+</section>
+
+<!-- =========================================================
+     21 · REGRESSION
+     ========================================================= -->
+<section class="slide" data-title="Kiểm thử hồi quy">
+  <div class="kicker reveal"><span class="pill fill">05 · Kiểm thử</span><span class="pill mono" style="font-family:var(--font-mono)">commit 5173462</span></div>
+  <h2 class="h2 reveal d1">Bộ hồi quy đầy đủ: không lỗi nào còn mở</h2>
+  <div class="region grid3" style="top:320px">
+    <div class="card tint reveal d1" data-box="t1"><div class="big">1797</div><p style="margin-top:12px"><span class="tag good">PASS</span> &nbsp;0 FAIL · 0 ERROR · 23 SKIP — protocol, client, server, monitoring-spike, gồm GUI JavaFX thật</p></div>
+    <div class="card reveal d2" data-box="t2"><div class="big">22</div><p style="margin-top:12px"><span class="tag good">PASS</span> &nbsp;windows-observer (CIM/USB) trong cùng lượt Maven</p></div>
+    <div class="card reveal d3" data-box="t3"><div class="big">3<small>/3</small></div><p style="margin-top:12px"><span class="tag good">PASS</span> &nbsp;E2E ACCOUNT_PIN: Admin → Giám thị → 2 thí sinh → START → nộp</p></div>
+  </div>
+  <div class="region grid2" style="top:690px">
+    <div class="card reveal d4" style="padding:28px 34px" data-box="t4"><h3 style="font-size:28px">Lỗi tìm ra khi review cuối</h3><p style="font-size:22px">Sau SUBMIT/TIMEOUT, kênh tín hiệu vẫn chạy. Dưới tải CPU: code cũ <span class="tag bad">3/6 FAIL</span>, bản sửa <span class="tag good">6/6 PASS</span>.</p></div>
+    <div class="card navy reveal d5" style="padding:28px 34px" data-box="t5"><h3 style="font-size:28px">Chưa kiểm — ghi đúng là chưa</h3><p style="font-size:22px">LAN hai máy vật lý · người nghe audio thật · cắm/rút USB vật lý trên commit tích hợp: <b style="color:#ffb98e">NOT TESTED</b>.</p></div>
+  </div>
+  <div class="source">docs/release/RELEASE-REPORT.md §2, §5 · PostgreSQL 18.1 cụm cô lập tự dựng/tự dọn, Windows 11, JDK 21.0.8.</div>
+  <div class="pageno">21</div>
+</section>
+
+<!-- =========================================================
+     22 · SECTION 06
+     ========================================================= -->
+<section class="slide" data-title="Demo">
+  <svg class="flow" viewBox="0 0 1920 1080" aria-hidden="true">
+    <path d="M-40 1010 C 520 930, 900 1070, 1340 900 S 1800 620, 1990 660" stroke="url(#fl2)" stroke-width="8"/>
+  </svg>
+  <div class="moon" style="right:140px; top:180px; width:520px; height:520px;"></div>
+  <div class="pebble" style="width:140px; height:140px; right:600px; top:640px;"></div>
+  <div class="sec-num reveal">06</div>
+  <h2 class="sec-title reveal d1">Demo phần mềm</h2>
+  <p class="sec-sub lead reveal d2">Một Server, ba cửa sổ: Admin, Giám thị, Thí sinh — chạy cùng một bộ cài.</p>
+</section>
+
+<!-- =========================================================
+     23 · DEMO SCRIPT
+     ========================================================= -->
+<section class="slide" data-title="Kịch bản demo">
+  <div class="kicker reveal"><span class="pill fill">06 · Kịch bản demo</span></div>
+  <h2 class="h2 reveal d1">Năm bước thử nhanh</h2>
+  <div class="region" style="top:290px; display:grid; grid-template-columns: 1fr 780px; gap:48px">
+    <div style="display:grid; gap:16px">
+      <div class="card reveal d1" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm1"><span class="pill fill" style="min-width:150px; justify-content:center">Admin</span><p style="font-size:23px">Tạo một Giám thị và một Thí sinh, tự đặt mật khẩu</p></div>
+      <div class="card reveal d2" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm2"><span class="pill" style="min-width:150px; justify-content:center">Giám thị</span><p style="font-size:23px">“+ Tạo phòng” → chọn đề → đọc PIN cho thí sinh</p></div>
+      <div class="card reveal d3" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm3"><span class="pill" style="min-width:150px; justify-content:center">Thí sinh</span><p style="font-size:23px">Nhập PIN → tải âm thanh, thử loa, xác nhận → hàng chuyển “Sẵn sàng”</p></div>
+      <div class="card reveal d4" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm4"><span class="pill" style="min-width:150px; justify-content:center">Giám thị</span><p style="font-size:23px">Bắt đầu phòng thi → Listening phát, chân trang “✓ Đã lưu” → Nộp bài</p></div>
+      <div class="card tint reveal d5" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm5"><span class="pill fill" style="min-width:150px; justify-content:center">Thử</span><p style="font-size:23px">Mở Chrome/Zalo, rời cửa sổ, cắm/rút USB → cảnh báo hiện bên Giám thị</p></div>
+    </div>
+    <div class="reveal-scale d3">
+      <div class="screen" data-box="admin"><img src="assets/screens/admin-accounts.webp" alt="Màn Quản lý tài khoản của Admin với danh sách giám thị và thí sinh"></div>
+      <div class="caption">Màn Admin. Chụp từ lượt GUI thật của ACCOUNT_PIN, tài khoản MOCK do test tạo.</div>
+    </div>
+  </div>
+  <div class="source">README.md “Luồng thử nhanh”. Server: Cloudflare Tunnel hoặc http://IP_MAY_CHU:8080 trong LAN.</div>
+  <div class="pageno">23</div>
+</section>
+
+<!-- =========================================================
+     24 · SCREENS — candidate
+     ========================================================= -->
+<section class="slide" data-title="Màn thí sinh">
+  <div class="kicker reveal"><span class="pill fill">06 · Thí sinh</span></div>
+  <h2 class="h2 reveal d1">Phòng chờ kiểm sẵn sàng, bài thi tự lưu</h2>
+  <div class="region" style="top:300px; display:grid; grid-template-columns: 1fr 1fr; gap:40px">
+    <div class="reveal-scale d1">
+      <div class="screen" data-box="lobby"><img src="assets/screens/candidate-lobby.webp" alt="Phòng chờ: chuẩn bị phần nghe 3 bước và danh sách kiểm tra đã sẵn sàng"></div>
+      <div class="caption">Phòng chờ: tải audio → thử loa → xác nhận. Đồng hồ chỉ chạy khi giám thị bắt đầu.</div>
+    </div>
+    <div class="reveal-scale d2">
+      <div class="screen" data-box="part3"><img src="assets/screens/candidate-part3.webp" alt="Màn Part 3 với nhóm câu 32–34 và bốn lựa chọn"></div>
+      <div class="caption">Part 3 — nhóm câu, điều hướng theo Part, đếm “Đã làm x/200”.</div>
+    </div>
+  </div>
+  <div class="source">evidence/ui-ux-20261026/candidate — AccountPinFlowPostgresGuiTest / RichExamViewGuiTest, đề MOCK EX-02 200 câu.</div>
+  <div class="pageno">24</div>
+</section>
+
+<!-- =========================================================
+     25 · SCREENS — proctor room
+     ========================================================= -->
+<section class="slide" data-title="Màn giám thị">
+  <div class="kicker reveal"><span class="pill fill">06 · Giám thị</span></div>
+  <h2 class="h2 reveal d1">Một bảng cho cả phòng thi</h2>
+  <div class="region reveal-scale d1" style="top:270px; left:200px; right:200px">
+    <div class="screen" data-box="room"><img src="assets/screens/proctor-room-ready.webp" alt="Phòng thi chờ bắt đầu: 2 thí sinh đã vào, 1 sẵn sàng, cột Focus báo quan sát thấy rời cửa sổ thi"></div>
+  </div>
+  <div class="region row reveal d3" style="top:808px; justify-content:center">
+    <span class="pill"><span class="dot"></span>Đã vào 2 · Sẵn sàng 1/2 → nút “Bắt đầu phòng thi”</span>
+    <span class="pill"><span class="dot"></span>Focus: “Quan sát thấy rời cửa sổ thi”</span>
+    <span class="pill"><span class="dot"></span>Bấm một hàng → chi tiết &amp; lịch sử</span>
+  </div>
+  <div class="source">evidence/ui-ux-20261026/proctor/real-p2 — AccountPinFlowPostgresGuiTest: Server + PostgreSQL + 2 app thí sinh thật, dữ liệu MOCK.</div>
+  <div class="pageno">25</div>
+</section>
+
+<!-- =========================================================
+     26 · SCREENS — proctor alerts
+     ========================================================= -->
+<section class="slide" data-title="Cảnh báo">
+  <div class="kicker reveal"><span class="pill fill">06 · Giám thị</span></div>
+  <h2 class="h2 reveal d1">Cảnh báo ghi “quan sát thấy”, giám thị kết luận</h2>
+  <div class="region" style="top:290px; display:grid; grid-template-columns: 1180px 1fr; gap:40px">
+    <div class="reveal-scale d1">
+      <div class="screen" data-box="alerts"><img src="assets/screens/proctor-alerts.webp" alt="Màn Quản lý cảnh báo với sự kiện trạng thái cửa sổ thay đổi và thông báo nổi"></div>
+      <div class="caption">Lượt REAL: CIM / WebSocket / HTTP / PostgreSQL / JavaFX, tài khoản TEST.</div>
+    </div>
+    <div style="display:grid; gap:20px; align-content:start">
+      <div class="card reveal d2" style="padding:28px 30px" data-box="al1"><h3 style="font-size:28px">Lọc theo nguồn</h3><p style="font-size:22px">Process · USB · Focus · Cửa sổ · Gián đoạn kết nối · Khoảng trống dữ liệu.</p></div>
+      <div class="card reveal d3" style="padding:28px 30px" data-box="al2"><h3 style="font-size:28px">Hai mốc giờ</h3><p style="font-size:22px">Giờ client báo và giờ server nhận đặt cạnh nhau, không trừ lẫn nhau.</p></div>
+      <div class="card tint reveal d4" style="padding:28px 30px" data-box="al3"><p style="font-size:22px">Mất kết nối không phải bằng chứng gian lận — giao diện nói rõ điều này.</p></div>
+    </div>
+  </div>
+  <div class="source">evidence/proctor-feed-20261025/feed-alerts-real.png · docs/PROCTOR_SIGNAL_SUMMARY.md</div>
+  <div class="pageno">26</div>
+</section>
+
+<!-- =========================================================
+     27 · CONTRIBUTIONS
+     ========================================================= -->
+<section class="slide" data-title="Đóng góp">
+  <div class="kicker reveal"><span class="pill fill">06 · Đóng góp</span></div>
+  <h2 class="h2 reveal d1">Khác cách làm thông thường ở đâu</h2>
+  <div class="region card reveal d2 contrib" style="top:290px; padding:34px 44px" data-box="contrib">
+    <table class="t">
+      <tr><th style="width:420px">Đóng góp</th><th>Mô tả</th><th style="width:470px">Bằng chứng</th></tr>
+      <tr><td>Lưu/nộp đúng khi tranh chấp</td><td>Một khóa attempt cho save/submit/timeout/takeover; epoch sau khóa; giờ DB; ACK sau COMMIT</td><td>Test PostgreSQL thật; E2E ACCOUNT_PIN 3/3</td></tr>
+      <tr><td>Giám thị thấy gần thời gian thực</td><td>Full snapshot + epoch/sequence; state và history tách riêng; UNKNOWN thay vì đoán</td><td>Replay 72 PASS + 4 ca âm bị bắt</td></tr>
+      <tr><td>Đo đánh đổi polling</td><td>Bỏ sót vs CPU trên process con có kiểm soát; raw không sửa, có checksum</td><td>E1: 12 lượt, 360 process</td></tr>
+      <tr><td>Đa tín hiệu có giới hạn</td><td>USB/focus/cửa sổ/màn hình chung một làn đã cấp quyền; không đọc nội dung</td><td>Runner USB 14/14; CIM thật PASS</td></tr>
+      <tr><td>Phòng PIN chung</td><td>START khi chưa đủ READY, người muộn chỉ làm Reading; PIN không lưu plaintext</td><td>Benchmark 1–20 client, 0 lỗi</td></tr>
+    </table>
+  </div>
+  <div class="pageno">27</div>
+</section>
+
+<!-- =========================================================
+     28 · LIMITATIONS + FUTURE
+     ========================================================= -->
+<section class="slide" data-title="Giới hạn">
+  <div class="kicker reveal"><span class="pill fill">06 · Giới hạn &amp; hướng tới</span></div>
+  <h2 class="h2 reveal d1">Những gì còn chưa làm được</h2>
+  <div class="region grid2 limits" style="top:300px">
+    <div class="card reveal d1" style="padding:40px 44px" data-box="lim">
+      <span class="label">Giới hạn</span>
+      <ul style="margin-top:18px">
+        <li>Thi đầy đủ qua Internet / LAN hai máy vật lý chưa chạy xong</li>
+        <li>Chưa có người nghe audio thật qua loa/tai nghe</li>
+        <li>Polling bỏ sót process sống ngắn hơn chu kỳ</li>
+        <li>Restart Server mất trạng thái hiện tại (lịch sử vẫn giữ)</li>
+        <li>Bộ cài MSI chưa ký số; delta chưa qua gate nên tắt</li>
+      </ul>
+    </div>
+    <div class="card tint reveal d2" style="padding:40px 44px" data-box="fut">
+      <span class="label" style="color:var(--orange-deep)">Hướng phát triển</span>
+      <ul style="margin-top:18px">
+        <li>Chạy checklist hai máy khác mạng đã soạn sẵn</li>
+        <li>Đo byte thật của full và delta (E2) trước khi bật delta</li>
+        <li>Đánh giá nguồn sự kiện OS thay cho polling (cần review riêng)</li>
+        <li>Ký số bộ cài, nghiệm thu âm thanh với người thật</li>
+      </ul>
+    </div>
+  </div>
+  <div class="source">README.md “Giới hạn đã biết” · docs/release/RELEASE-REPORT.md §5.6, §7.</div>
+  <div class="pageno">28</div>
+</section>
+
+<!-- =========================================================
+     29 · CLOSING
+     ========================================================= -->
+<section class="slide" data-title="Kết">
+  <svg class="flow" viewBox="0 0 1920 1080" aria-hidden="true">
+    <path d="M-40 980 C 420 860, 760 1060, 1180 900 S 1760 620, 1990 700" stroke="url(#fl1)" stroke-width="10"/>
+    <path d="M-40 1030 C 480 930, 820 1110, 1240 960 S 1780 720, 1990 790" stroke="url(#fl1)" stroke-width="4"/>
+  </svg>
+  <div class="moon" style="right:180px; top:150px; width:560px; height:560px;"></div>
+  <div class="pebble" style="width:130px; height:130px; right:700px; top:600px;"></div>
+  <div class="kicker reveal" style="top:110px"><span class="pill fill">Hỏi &amp; đáp</span></div>
+  <h2 class="close-h1 reveal d1">Cảm ơn<br><em>thầy cô</em><br>&amp; các bạn</h2>
+  <p class="reveal d2 lead" style="position:absolute; left:120px; top:860px; width:1300px">Mã nguồn, tài liệu và bằng chứng<br><span class="mono o" style="font-size:28px">github.com/AnhTaizz/Toeic-Monitoring-Realtime</span></p>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   Fixed stage scale + keyboard / wheel / touch navigation + progress + hash.
+   =========================================== */
+class SlidePresentation {
+  constructor() {
+    this.slides = [...document.querySelectorAll('.slide')];
+    this.stage = document.getElementById('deckStage');
+    this.progress = document.getElementById('progress');
+    this.current = 0;
+    this.lock = false;
+    this.setupStageScale();
+    this.setupKeyboardNav();
+    this.setupWheelNav();
+    this.setupTouchNav();
+    const fromHash = parseInt(location.hash.replace('#', ''), 10);
+    this.go(Number.isFinite(fromHash) ? fromHash - 1 : 0);
+  }
+  setupStageScale() {
+    const scale = () => {
+      const f = Math.min(innerWidth / 1920, innerHeight / 1080);
+      this.stage.style.transform = `translate(${(innerWidth - 1920 * f) / 2}px, ${(innerHeight - 1080 * f) / 2}px) scale(${f})`;
+    };
+    scale();
+    addEventListener('resize', scale);
+  }
+  setupKeyboardNav() {
+    document.addEventListener('keydown', (e) => {
+      if (e.target.isContentEditable) return;
+      if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); this.next(); }
+      else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); this.prev(); }
+      else if (e.key === 'Home') this.go(0);
+      else if (e.key === 'End') this.go(this.slides.length - 1);
+      else if (e.key === 'f' || e.key === 'F') document.documentElement.requestFullscreen?.();
+    });
+  }
+  setupWheelNav() {
+    addEventListener('wheel', (e) => {
+      if (this.lock || Math.abs(e.deltaY) < 30) return;
+      this.lock = true; setTimeout(() => (this.lock = false), 700);
+      e.deltaY > 0 ? this.next() : this.prev();
+    }, { passive: true });
+  }
+  setupTouchNav() {
+    let x0 = null;
+    addEventListener('touchstart', (e) => (x0 = e.touches[0].clientX), { passive: true });
+    addEventListener('touchend', (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 50) dx < 0 ? this.next() : this.prev();
+      x0 = null;
+    });
+  }
+  next() { this.go(this.current + 1); }
+  prev() { this.go(this.current - 1); }
+  go(index) {
+    this.current = Math.max(0, Math.min(index, this.slides.length - 1));
+    this.slides.forEach((s, i) => {
+      const on = i === this.current;
+      s.classList.toggle('active', on);
+      // Re-trigger entrance animations each time a slide is shown
+      if (on) requestAnimationFrame(() => requestAnimationFrame(() => s.classList.add('visible')));
+      else s.classList.remove('visible');
+    });
+    this.progress.style.width = `${((this.current + 1) / this.slides.length) * 100}%`;
+    history.replaceState(null, '', `#${this.current + 1}`);
+  }
+}
+
+/* ===========================================
+   INLINE EDITING (press E or hover top-left corner)
+   Text edits are kept in localStorage; Ctrl+S downloads the edited HTML.
+   =========================================== */
+class InlineEditor {
+  constructor() {
+    this.isActive = false;
+    this.key = 'toeic-monitor-deck-edits-v1';
+    this.button = document.getElementById('editToggle');
+    this.targets = () => document.querySelectorAll('.slide h1, .slide h2, .slide h3, .slide p, .slide li, .slide td, .slide .pill, .slide .caption, .slide .source');
+    this.restore();
+  }
+  toggleEditMode() {
+    this.isActive = !this.isActive;
+    document.body.classList.toggle('editing', this.isActive);
+    this.button.classList.toggle('active', this.isActive);
+    this.targets().forEach((el) => (el.contentEditable = this.isActive ? 'true' : 'false'));
+    if (!this.isActive) this.save();
+  }
+  save() {
+    const data = [...this.targets()].map((el) => el.innerHTML);
+    try { localStorage.setItem(this.key, JSON.stringify(data)); } catch (e) { /* storage unavailable: edits stay in page only */ }
+  }
+  restore() {
+    let data = null;
+    try { data = JSON.parse(localStorage.getItem(this.key) || 'null'); } catch (e) { data = null; }
+    const els = [...this.targets()];
+    if (Array.isArray(data) && data.length === els.length) els.forEach((el, i) => (el.innerHTML = data[i]));
+  }
+  download() {
+    const wasActive = this.isActive;
+    if (wasActive) this.toggleEditMode();
+    const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+    a.download = 'index.html';
+    a.click();
+    if (wasActive) this.toggleEditMode();
+  }
+}
+
+window.deck = new SlidePresentation();
+const editor = new InlineEditor();
+const editToggle = document.getElementById('editToggle');
+const hotzone = document.querySelector('.edit-hotzone');
+let hideTimeout = null;
+editToggle.addEventListener('click', () => editor.toggleEditMode());
+hotzone.addEventListener('click', () => editor.toggleEditMode());
+hotzone.addEventListener('mouseenter', () => { clearTimeout(hideTimeout); editToggle.classList.add('show'); });
+hotzone.addEventListener('mouseleave', () => { hideTimeout = setTimeout(() => { if (!editor.isActive) editToggle.classList.remove('show'); }, 400); });
+editToggle.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+editToggle.addEventListener('mouseleave', () => { hideTimeout = setTimeout(() => { if (!editor.isActive) editToggle.classList.remove('show'); }, 400); });
+document.addEventListener('keydown', (e) => {
+  if ((e.key === 'e' || e.key === 'E') && !e.target.isContentEditable) editor.toggleEditMode();
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); editor.save(); editor.download(); }
+});
+</script>
+</body>
+</html>
