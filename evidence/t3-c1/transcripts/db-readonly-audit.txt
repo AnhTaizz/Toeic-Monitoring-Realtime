@@ -1,2 +1,0 @@
-test_schemas=0
-public_version=7

@@ -1313,3 +1313,14 @@ Kiểm chứng chốt: 23 PASS/3 SKIP/0 FAIL/ERROR (3 case crawl thật thiếu 
 - Không sửa code ứng dụng; mọi file slide nằm trong `presentation/`.
 - Đã kiểm: chụp 29 slide ở 1920×1080 bằng Playwright, script kiểm tràn/chồng báo 0 lỗi, xem lại từng ảnh và sửa các lỗi chồng chữ/nhãn, ảnh quá nhỏ. Thử khung 1280×720 và 390×844. Chưa trình chiếu thử trên máy chiếu thật.
 - Cần người khác: nhóm đối chiếu “Design System V1.0” chính thức (không tìm thấy file trong repo) và duyệt lời thoại từng phần theo vai A/B/C.
+
+## 01/11/2026 — Tinh giản repo sau khi hoàn thành (áp lại trên `main` `aa68882`)
+
+- Theo yêu cầu người dùng: gỡ bằng chứng theo task và tài liệu không còn dùng, giữ số liệu thực nghiệm. Bản đầy đủ trước tinh giản: `aa68882` (trước đó `f3ccfd7`, tag cục bộ `archive/pre-slim`).
+- `evidence/`: chỉ còn E1 (`qa05-e1-20261021`, `c-e1-derived-20261020`, `t4-c1`, `overnight-20261015/phase-02`), E2 (`t3-c3`), `t1-c4`, `t3-a5` và `evidence/README.md` mới.
+- `docs/`: giữ tài liệu thiết kế/giao thức/runbook, `plan-v1`, nhật ký/tiến độ/kiểm thử/quyết định, tài liệu và số liệu thực nghiệm, `account-pin/benchmark`, `release-acceptance/benchmark`, cùng các file mà test, CI hoặc bundle đọc (`mon07-proposal/*.json`, `plan-v2/fixtures/ex02`, `templates/t3c4-lan`, `manual-authoring-fix.md`, `T3_C4_PHYSICAL_LAN_ACCEPTANCE.md`, `phase4/`, `phase45/ADMIN-DEMO.txt`, `release/`). Gỡ thêm ghi chú theo task mới của 01/11 (`READY_RENEWAL_DIAGNOSIS`, `PROCTOR_ALERT_SORT`, các JSON kiểm chứng/chẩn đoán và ảnh `admin-manual-answers.png`); nội dung chính đã có trong mục nhật ký ở trên. Giữ `READY_RECOVERY_FIX_20261101.md` vì `PROTOCOL.md`/`QUYET_DINH.md` trỏ tới và nó có hướng dẫn nâng cấp cho thay đổi `requireAllReady` đang chờ owner review.
+- `scripts/`: gỡ 51 script smoke/verify/demo theo task; giữ launcher, đóng gói, `reset-db`, `build-exam-seed`, `verify-room-ux`, USB probe, `lan-t3c4` và `benchmarks/e1` (CI).
+- Gỡ `PLAN_V2_START_HERE.md`. File untracked đã gỡ (`report/` LaTeX, `task.txt`, `scripts/build-report.ps1`, phần còn lại của `docs/release-acceptance/`) có bản dự phòng `E:\Project\Toeic-untracked-backup-20261101.zip`.
+- Raw của các đợt đo mà báo cáo cuối trích (27–28/10) không có trên máy này; cần thành viên giữ dữ liệu bổ sung vào `evidence/`.
+- Server Docker (cả `toeic.anhtaizz.id.vn`) đang chạy code `30e8d55`; phần server của `aa68882` giống hệt. Bản quay lui: container `toeic-server-main-f3ccfd7`, `toeic-server-pre-20261101`. Zip client mới nhất có READY/START: `dist/ToeicMonitor-Client-fix-ready-recovery-start-guard.zip` (0.4.6, `30e8d55`); chưa có zip cho sắp xếp cảnh báo (`f681eee`).
+- Commit cục bộ trên `main`, chưa push.

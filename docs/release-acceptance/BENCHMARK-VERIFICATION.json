@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "scope": "recomputed historical Phase 4 raw counts and nearest-rank p95; no new performance run of Phase 4.5",
+  "rows": 22532,
+  "join": 114,
+  "start": 15,
+  "submit": 114,
+  "monitoringEvents": 342,
+  "historicalServerSha256": "f33966259c68f9c07a1ef7c9a345fd8ec653bace894b864954b77cdb84f63969",
+  "files": [
+    {
+      "path": "docs/release-acceptance/benchmark/raw.csv",
+      "sha256": "1905690ba4a87cdf1402f1cd04e2df32b02545b33792af9f022b389b4173bc21",
+      "bytes": 1807517,
+      "origin": "target/phase4/benchmark/phase4-benchmark-20261023T141707Z-d505df2e/raw.csv"
+    },
+    {
+      "path": "docs/release-acceptance/benchmark/resources.csv",
+      "sha256": "3d205f55f9e8c17016f7a2b9d7492d5d5f76c706b3fe6df12d3c779ed1eda8b2",
+      "bytes": 909,
+      "origin": "target/phase4/benchmark/phase4-benchmark-20261023T141707Z-d505df2e/resources.csv"
+    },
+    {
+      "path": "docs/release-acceptance/benchmark/operations.csv",
+      "sha256": "edda05aa82a85e870e462ef27821c889ac6a48b93c24e747ae27c4e8bbfac5fd",
+      "bytes": 3250,
+      "origin": "target/phase4/benchmark/phase4-benchmark-20261023T141707Z-d505df2e/operations.csv"
+    },
+    {
+      "path": "docs/release-acceptance/benchmark/summary.csv",
+      "sha256": "141425374522977c66003f98a4bdbcc850ccdbea69a5eb9e5ea3ff75bc8e26f4",
+      "bytes": 967,
+      "origin": "target/phase4/benchmark/phase4-benchmark-20261023T141707Z-d505df2e/summary.csv"
+    },
+    {
+      "path": "docs/release-acceptance/benchmark/summary.json",
+      "sha256": "be187355205a4b0aaf0bd1841c102b545303bc76998f65b9294a1138dd9e9411",
+      "bytes": 6510,
+      "origin": "target/phase4/benchmark/phase4-benchmark-20261023T141707Z-d505df2e/summary.json"
+    },
+    {
+      "path": "docs/release-acceptance/benchmark/environment.json",
+      "sha256": "240d00e750d85d8e28b09d37d396685c6967fadda3cf36cfbf3a9318b3f0a19a",
+      "bytes": 724,
+      "origin": "target/phase4/benchmark/phase4-benchmark-20261023T141707Z-d505df2e/environment.json"
+    }
+  ]
+}

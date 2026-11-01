@@ -1,6 +1,6 @@
 # EX-02 — fixtures MOCK và Visual Readiness Option A
 
-**MOCK — design approval TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE.** [Nguồn phê duyệt19/10](../../EX02_TEAM_APPROVAL_20261019.md): “User-provided confirmation from the project team representative, 2026-10-19.” Đây không phải dữ liệu thi thật, GitHub Approving Review hoặc GUI/runtime PASS. [Contract](../../../EX02_RICH_EXAM_CONTRACT_V1.md), [ADR](../../ADR-V2-03_SESSION_START_DEADLINE.md).
+**MOCK — design approval TEAM_APPROVED_AS_REPORTED_BY_PROJECT_REPRESENTATIVE.** Nguồn phê duyệt 19/10 (`docs/plan-v2/EX02_TEAM_APPROVAL_20261019.md`): “User-provided confirmation from the project team representative, 2026-10-19.” Đây không phải dữ liệu thi thật, GitHub Approving Review hoặc GUI/runtime PASS. Contract `docs/EX02_RICH_EXAM_CONTRACT_V1.md`, ADR `docs/plan-v2/ADR-V2-03_SESSION_START_DEADLINE.md`; ba file này đã lưu trữ tại commit `f3ccfd7`.
 
 Prompts/options/keys, bitmap bàn cờ8×8 và WAV PCM mono8kHz im lặng10ms được tự tạo bằng script ở đây, không lấy từ Zenlish. Nội dung fixture tự tạo theo **CC0-1.0**; không áp license này cho dataset khác. Hai PNG Part4/7-only là bản sao cùng PNG MOCK với mediaId/basename riêng để kiểm graph-derived allowlist, không khẳng định pixels khác nhau. Không dùng WAV im lặng để nghiệm thu hearing/READY production.
 

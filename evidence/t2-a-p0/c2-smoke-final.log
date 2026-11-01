@@ -1,2 +1,0 @@
-Error: Could not find or load main class vn.edu.toeic.server.monitoring.LateEventsAndGapsSmoke
-Caused by: java.lang.ClassNotFoundException: vn.edu.toeic.server.monitoring.LateEventsAndGapsSmoke
