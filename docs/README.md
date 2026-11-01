@@ -28,6 +28,7 @@ Hệ thống đã hoàn thành. Thư mục này chỉ còn tài liệu cần đ�
 | [deploy/CLOUDFLARE-TUNNEL.md](deploy/CLOUDFLARE-TUNNEL.md) | Chạy qua Internet bằng Cloudflare Tunnel |
 | [account-pin/RUNBOOK.md](account-pin/RUNBOOK.md) | Luồng ACCOUNT_PIN, phòng thi và runner kiểm thử |
 | [phase4/](phase4/), [phase45/ADMIN-DEMO.txt](phase45/ADMIN-DEMO.txt) | Runbook bản portable và khởi tạo Admin |
+| [admin-exam-management.md](admin-exam-management.md) | Quản lý đề của Admin (được trích trên slide) |
 | [manual-authoring-fix.md](manual-authoring-fix.md) | Tạo đề thủ công (được đóng vào bundle) |
 | [READY_RECOVERY_FIX_20261101.md](READY_RECOVERY_FIX_20261101.md) | Phục hồi READY, START với `requireAllReady` và cách nâng cấp server/client |
 | [T3_C4_PHYSICAL_LAN_ACCEPTANCE.md](T3_C4_PHYSICAL_LAN_ACCEPTANCE.md) | Nghiệm thu LAN hai máy (được đóng vào LAN kit) |
