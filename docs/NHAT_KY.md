@@ -1340,3 +1340,9 @@ Kiểm chứng chốt: 23 PASS/3 SKIP/0 FAIL/ERROR (3 case crawl thật thiếu 
 - PR #122 (`chore/slim-repo-20261101`, commit `a50afbc`) qua CI "Maven tests (Java 21)" success, merge vào `main` thành `8c7cc1b`; nội dung trùng `a50afbc`.
 - Zip client `dist/ToeicMonitor-Client-0.4.7-main.zip` (SHA256 `81e5c5f4ec55cf14df5fc8c0bcdcac7a2bca61a8bb577f3528603ffd66b1abe5`): build-info `main` `8c7cc1b`, `dirty=false`, server mặc định `https://toeic.anhtaizz.id.vn`; gồm READY/START và sắp xếp cảnh báo. Mở exe bằng UI Automation thấy màn đăng nhập; chưa đăng nhập tài khoản thật.
 - Server Docker không build lại: code server/protocol của `8c7cc1b` trùng `30e8d55` đang chạy; login sai trả 401 qua localhost và Internet.
+
+## 02/11/2026 — Script deploy lại server Docker
+
+- Thêm `scripts/redeploy-server.ps1` và `scripts/server-image/Dockerfile` (image chạy user `toeic`, JRE 21.0.8, tắt delta và tài khoản demo). Script build jar, build image `toeic-server:local` (bản cũ gắn tag `:prev`), chép biến `DB_*`/`TOEIC_*` và thư mục media từ container đang chạy, tạo lại container rồi đợi login sai trả 401; không lên thì chạy lại container cũ. `-Rollback` chạy lại `:prev`.
+- Chạy thật trên commit `5556f1e` (code server trùng `main` `8c7cc1b`): Flyway validate 23 migration, server start 10,1 s, login sai trả 401 qua `127.0.0.1:8080` và `https://toeic.anhtaizz.id.vn`. Nhánh rollback và `-Rollback` chưa chạy thật.
+- Xóa hai container rollback đã dừng (`toeic-server-pre-20261101`, `toeic-server-main-f3ccfd7`); image của chúng vẫn giữ.
