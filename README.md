@@ -106,10 +106,12 @@ Trạng thái từng test case AT/MT/LT/IT: [docs/KIEM_THU.md](docs/KIEM_THU.md)
 | Khóa PIN, nạp đề STUDY4 | [docs/DEMO-RUNBOOK.md](docs/DEMO-RUNBOOK.md) mục 1–2 |
 | Kiến trúc và module | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
 | Endpoint REST và message WebSocket | [docs/PROTOCOL.md](docs/PROTOCOL.md), [docs/BACKEND_API.md](docs/BACKEND_API.md), [docs/DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md) |
-| Thực nghiệm và kết quả đo | [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md) |
 | Quy tắc lưu/nộp/hết giờ, monitoring, Listening | [docs/plan-v1/02_HOP_DONG.md](docs/plan-v1/02_HOP_DONG.md) |
 | Quyết định kỹ thuật, tiến độ, nhật ký | [docs/QUYET_DINH.md](docs/QUYET_DINH.md), [docs/TIEN_DO.md](docs/TIEN_DO.md), [docs/NHAT_KY.md](docs/NHAT_KY.md) |
-| Kế hoạch V1/V2, bằng chứng theo task | [docs/plan-v1/README.md](docs/plan-v1/README.md), [docs/plan-v2/README.md](docs/plan-v2/README.md), [evidence/README.md](evidence/README.md) |
+| Thực nghiệm và kết quả đo | [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md), raw ở [evidence/README.md](evidence/README.md) |
+| Mục lục tài liệu còn giữ | [docs/README.md](docs/README.md) |
+| Kế hoạch V1 | [docs/plan-v1/README.md](docs/plan-v1/README.md) |
+| Bằng chứng theo task, Plan V2 (đã lưu trữ) | Lịch sử git tại commit `f3ccfd7` (tag `archive/pre-slim`): `git show f3ccfd7:evidence/README.md` |
 
 ## Thư viện ngoài và lý do sử dụng
 

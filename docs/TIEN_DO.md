@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+01/11/2026 — Tinh giản repo trên `main` (`aa68882` + commit cục bộ, chưa push): gỡ bằng chứng theo task, Plan V2, script smoke/verify, ghi chú theo task; giữ số liệu E1/E2, benchmark và tài liệu thiết kế/vận hành. Bản đầy đủ: `aa68882`. Server Docker (cả Internet) chạy code server giống `aa68882`. Raw đợt đo 27–28/10 của báo cáo cuối chưa có trong repo, cần thành viên giữ dữ liệu bổ sung.
+
 30/10/2026 — Thêm bộ slide bảo vệ HTML 16:9 (29 slide) ở `presentation/`, mở `presentation/index.html`; không đổi code ứng dụng. Số liệu trích từ báo cáo có sẵn, LAN/nghe thật/USB vật lý vẫn ghi NOT TESTED. Chờ nhóm duyệt nội dung và thử trên máy chiếu.
 
 27/10/2026 — Sửa UI chọn câu/xác nhận START, lịch sử bài vừa nộp, bỏ màn chọn ca cũ sau PIN và giữ fullscreen khi chuyển màn trên nhánh local `codex/fix-room-ui-history-fullscreen` từ `1187f0d`. Client 72 PASS/1 SKIP; server/legacy 79 PASS + E2E PIN 3 PASS trong các lượt cuối không trùng suite; cluster test cleanup sạch. Quyền đọc kết quả tài khoản tách riêng khỏi admission làm bài — cần A review. [Báo cáo và ảnh](../evidence/room-ui-fixes-20261027/REPORT.md). Chỉ commit local theo yêu cầu; không đổi tracker, chưa build MSI.

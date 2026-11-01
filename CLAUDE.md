@@ -4,14 +4,14 @@ Hệ thống thi TOEIC rút gọn theo mô hình Client–Server, có giám sát
 
 Trả lời và viết tài liệu bằng tiếng Việt; tên định danh trong code bằng tiếng Anh.
 
-> **Phạm vi V2 được nhóm thông qua** (người đại diện xác nhận ngày 19/10/2026 về buổi tối 18/10): mục tiêu 1 đề TOEIC **200 câu/7 Part** với media được phép sử dụng và monitoring đa tín hiệu **process + USB mass-storage presence/connect/disconnect + focus/minimize/fullscreen + display changes**. Không xem đây là tính năng đã làm xong. Xem [V2 kickoff](docs/plan-v2/V2_EXECUTION_KICKOFF_20261019.md), [36 task](docs/plan-v2/03_TASK_CARDS.md) và [phụ lục V2 của hợp đồng](docs/plan-v1/02_HOP_DONG.md). Giữ những bất biến đã chốt; API/wire schema, QD-21 START/deadline, và OS-observer approach phải review riêng trước khi thay đổi code tương ứng.
+> **Phạm vi V2 được nhóm thông qua** (người đại diện xác nhận ngày 19/10/2026 về buổi tối 18/10): mục tiêu 1 đề TOEIC **200 câu/7 Part** với media được phép sử dụng và monitoring đa tín hiệu **process + USB mass-storage presence/connect/disconnect + focus/minimize/fullscreen + display changes**. Xem [phụ lục V2 của hợp đồng](docs/plan-v1/02_HOP_DONG.md); Plan V2 (kickoff, 36 task, BACKLOG) và bằng chứng theo task trong `evidence/` (trừ số liệu thực nghiệm E1/E2) đã gỡ khỏi cây làm việc ngày 01/11/2026, đọc lại bằng `git show f3ccfd7:<đường dẫn>` (tag `archive/pre-slim`). Giữ những bất biến đã chốt; API/wire schema, QD-21 START/deadline, và OS-observer approach phải review riêng trước khi thay đổi code tương ứng.
 
 
 ## Tài liệu nguồn — đọc trước khi làm task
 
 | Cần gì | Đọc ở đâu |
 |---|---|
-| Task, owner, phụ thuộc, tiêu chí nghiệm thu | **V2:** `docs/plan-v2/03_TASK_CARDS.md`, `docs/plan-v2/BACKLOG.json`, [kickoff](docs/plan-v2/V2_EXECUTION_KICKOFF_20261019.md); **legacy:** `docs/plan-v1/01_KE_HOACH.md` hoặc `TRACKER.json` (lịch sử/đối chiếu) |
+| Task, owner, phụ thuộc, tiêu chí nghiệm thu | **V2:** `git show f3ccfd7:docs/plan-v2/03_TASK_CARDS.md` (đã lưu trữ); **legacy:** `docs/plan-v1/01_KE_HOACH.md` hoặc `TRACKER.json` (lịch sử/đối chiếu) |
 | Quy tắc lưu/nộp/hết giờ, monitoring, Listening | `docs/plan-v1/02_HOP_DONG.md` |
 | Test case (AT/MT/LT/IT) và hai thực nghiệm E1, E2 | `docs/plan-v1/03_KIEM_THU_VA_THUC_NGHIEM.md` |
 | Yêu cầu môn học, cấu trúc báo cáo, rubric | `docs/plan-v1/nguon/Instruction.md` |
@@ -101,15 +101,17 @@ Chi tiết ở `02_HOP_DONG.md`; đây là danh sách để tự kiểm mỗi l�
 | `docs/QUYET_DINH.md` | Quyết định kỹ thuật đã chốt và đang chờ (mã QD-xx) |
 | `docs/PROTOCOL.md` | Endpoint và message đang dùng thật |
 | `docs/KIEM_THU.md` | Trạng thái 27 test case và nơi lưu bằng chứng |
-| `docs/thanh-vien/VAI_A.md`, `VAI_B.md`, `VAI_C.md` | Hướng dẫn từng task của mỗi vai, kèm "Ghi chú làm dở" |
+| `docs/README.md` | Mục lục tài liệu còn giữ và các fixture test nằm trong `docs/` (không xóa) |
 
-**Đầu phiên:** đọc `docs/TIEN_DO.md` và mục cuối của `docs/NHAT_KY.md`. Khi nhận một task, đọc phần hướng dẫn của task đó trong file vai tương ứng, kể cả "Ghi chú làm dở".
+Hướng dẫn theo vai (`docs/thanh-vien/`) và bằng chứng theo task đã lưu trữ tại `f3ccfd7`; `evidence/` hiện chỉ còn raw/summary thực nghiệm. Link `../evidence/...` trong các file lịch sử ở trên được giữ nguyên.
 
-**Cuối phiên có thay đổi code hoặc tài liệu:** thêm một mục vào `docs/NHAT_KY.md` theo mẫu trong file, sửa dòng tương ứng trong `docs/TIEN_DO.md`, và ghi "Ghi chú làm dở" nếu task chưa xong. Thêm hoặc đổi message thì sửa `docs/PROTOCOL.md`. Chốt một lựa chọn kỹ thuật thì ghi vào `docs/QUYET_DINH.md`. Chạy test thì cập nhật `docs/KIEM_THU.md` với kết quả thật.
+**Đầu phiên:** đọc `docs/TIEN_DO.md` và mục cuối của `docs/NHAT_KY.md`.
+
+**Cuối phiên có thay đổi code hoặc tài liệu:** thêm một mục vào `docs/NHAT_KY.md` theo mẫu trong file, sửa dòng tương ứng trong `docs/TIEN_DO.md`. Thêm hoặc đổi message thì sửa `docs/PROTOCOL.md`. Chốt một lựa chọn kỹ thuật thì ghi vào `docs/QUYET_DINH.md`. Chạy test thì cập nhật `docs/KIEM_THU.md` với kết quả thật.
 
 ## Tracker
 
-`docs/plan-v1/TRACKER.json` là nguồn theo dõi tiến độ. Chỉ cập nhật `status`, `actual_hours`, `evidence` khi người dùng xác nhận, và `evidence` phải trỏ tới thứ có thật (commit SHA, tên test đã chạy, file log). V2 `BACKLOG.json` đang mang placeholder `TO_AUDIT`; duyệt kế hoạch **không đồng nghĩa** đánh dấu 36 task DONE hoặc xác nhận giờ công. Không tự đánh dấu hoàn thành một task chỉ vì code đã viết xong.
+`docs/plan-v1/TRACKER.json` là nguồn theo dõi tiến độ. Chỉ cập nhật `status`, `actual_hours`, `evidence` khi người dùng xác nhận, và `evidence` phải trỏ tới thứ có thật (commit SHA, tên test đã chạy, file log). Không tự đánh dấu hoàn thành một task chỉ vì code đã viết xong.
 
 ## Mốc cần nhớ
 
