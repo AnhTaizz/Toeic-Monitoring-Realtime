@@ -199,6 +199,8 @@ public class AudioService {
         if (!"SCHEDULED".equals(session.state())) throw error(ErrorCode.INVALID_STATE, "Ca thi không ở bước chuẩn bị.", request.requestId());
         var rows = rich?List.<ReadinessRow>of():roster(session, true);
         var verified=rich?visual.verifyStart(user,vn.edu.toeic.server.exam.rich.V2SessionPolicy.currentTokenHash(),sessionId,manifest.manifestId()):null;
+        if(rich && Boolean.TRUE.equals(request.requireAllReady()) && !verified.interruptedAttempts().isEmpty())
+            throw error(ErrorCode.INVALID_STATE,"Trạng thái sẵn sàng vừa thay đổi. Phòng chưa bắt đầu; hãy chờ xác nhận lại rồi bấm Bắt đầu.",request.requestId());
         Instant decisionAt = rich?verified.decisionAt():now();
         if (!rich && (rows.isEmpty() || rows.stream().anyMatch(row -> !isReady(row, manifest.manifestId(), decisionAt))))
             throw error(ErrorCode.INVALID_STATE, "Ca thi chưa đủ READY hợp lệ; không thể start Listening.", request.requestId());

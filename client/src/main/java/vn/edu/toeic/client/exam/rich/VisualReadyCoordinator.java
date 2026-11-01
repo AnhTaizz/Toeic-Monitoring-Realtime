@@ -12,7 +12,7 @@ import vn.edu.toeic.protocol.exam.rich.*;
 
 /**
  * Visual READY trước START (contract §7.1, Option A). Một worker duy nhất làm mọi HTTP/hash/decode;
- * UI chỉ nhận Snapshot. Mỗi nhịp (mặc định 2000ms, nhỏ hơn nửa lease 6000ms):
+ * UI chỉ nhận Snapshot. Mỗi nhịp (mặc định 2000ms, nhỏ hơn nửa lease mặc định 30000ms):
  * <ol>
  *   <li>GET preparation. IN_PROGRESS → STARTED (dừng). Writer khác → bị thay thế (dừng).</li>
  *   <li>Manifest/epoch đổi (takeover, audio withdraw, restart server) → tải, kiểm, decode lại ảnh Part 1
@@ -172,7 +172,7 @@ public final class VisualReadyCoordinator<T> implements AutoCloseable {
             api.visualReady(attemptId, new VisualReadyRequest(requestIds.get(), attemptId, writerEpoch, manifest.preparationEpoch(),
                     manifest.manifestId(), VisualReadyAction.INVALIDATE, null, List.of()));
         } catch (Exception ignored) {
-            // Server đã xoay epoch hoặc không liên lạc được: lease 6s vẫn giới hạn READY cũ, và nhịp sau chuẩn bị lại.
+            // Server đã xoay epoch hoặc không liên lạc được: lease giới hạn READY cũ, nhịp sau chuẩn bị lại.
         }
     }
 
@@ -186,7 +186,8 @@ public final class VisualReadyCoordinator<T> implements AutoCloseable {
                 case "STALE" -> { stop(Phase.FAILED, "Lượt thi đã được mở ở máy khác (phiên ghi đã đổi).", preparation, true, false); return; }
                 case "CONFLICT" -> { preparedKey = null; prepared = null; publish(Phase.NOT_PREPARED, "Ngữ cảnh chuẩn bị đã đổi trên server; đang chuẩn bị lại.", preparation); return; }
                 case "INVALID_STATE" -> {
-                    preparedKey = null; prepared = null;
+                    // Retain verified local images for the same scope. The next GET detects changed
+                    // epoch/manifest and rebuilds them when needed; the next ATTEST uses a fresh ID.
                     publish(Phase.UNVERIFIED, "Server chưa nhận READY ở trạng thái hiện tại (audio chưa READY, ảnh lỗi hoặc ca đã đổi); đang kiểm lại.", preparation);
                     return;
                 }

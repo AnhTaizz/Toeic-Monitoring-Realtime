@@ -1,0 +1,301 @@
+{
+    "sourceSha":  "040340bd0aeee032ee90eecaabe57ca8cefdf057",
+    "runId":  "manual-exams-20261101T122520Z-6140891c",
+    "mode":  "Targeted",
+    "os":  "Microsoft Windows NT 10.0.26300.0",
+    "java":  "openjdk version \"21.0.12.1\" 2026-08-18 LTS",
+    "maven":  "Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)",
+    "postgres":  "PostgreSQL 18.1 on x86_64-windows, compiled by msvc-19.44.35221, 64-bit",
+    "database":  "toeic_manual_exams_test",
+    "host":  "127.0.0.1",
+    "port":  65016,
+    "fixture":  "MOCK self-authored exam content; real PostgreSQL/Flyway/HTTP",
+    "command":  "mvn -o -Dmaven.repo.local=\"$MavenRepository\" --batch-mode --no-transfer-progress -pl server -am -Dtest=AdminExamPostgresTest,AdminExamGuiTest,AdminExamImportTest,ManualExamFilesTest -Dsurefire.failIfNoSpecifiedTests=false test",
+    "startUtc":  "2026-11-01T12:25:34.3681286Z",
+    "endUtc":  "2026-11-01T12:26:48.8365243Z",
+    "exitCode":  0,
+    "runnerErrorType":  null,
+    "totals":  {
+                   "failures":  0,
+                   "passed":  38,
+                   "errors":  0,
+                   "tests":  41,
+                   "skipped":  3
+               },
+    "cases":  [
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.749",
+                      "name":  "renamedExamRepackagesEveryMediaUnderTheNewIdWithoutChangingItsBytes",
+                      "class":  "vn.edu.toeic.client.admin.AdminExamImportTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.405",
+                      "name":  "crawlWithLocalMediaIsConvertedWithoutACompanionClientExport",
+                      "class":  "vn.edu.toeic.client.admin.AdminExamImportTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.007",
+                      "name":  "malformedJsonAndMissingFieldsHaveDifferentMessages",
+                      "class":  "vn.edu.toeic.client.admin.AdminExamImportTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.324",
+                      "name":  "changingAMediaFilenameFailsBeforeUploadingWithTheMissingName",
+                      "class":  "vn.edu.toeic.client.admin.AdminExamImportTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.069",
+                      "name":  "missingLocalMediaAndInvalidJsonHaveActionableErrors",
+                      "class":  "vn.edu.toeic.client.admin.AdminExamImportTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.045",
+                      "name":  "uploadContainsAudioAndImagesWithoutLeakingLocalPathsOrMutatingEditor",
+                      "class":  "vn.edu.toeic.client.admin.ManualExamFilesTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.022",
+                      "name":  "aSharedConversationUploadsOnlyOneAudioFile",
+                      "class":  "vn.edu.toeic.client.admin.ManualExamFilesTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.009",
+                      "name":  "disallowsUnsupportedTypesAndMultiplePartOneImages",
+                      "class":  "vn.edu.toeic.client.admin.ManualExamFilesTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "2.542",
+                      "name":  "manual404KeepsContentWithOneServerSaveThenRetrySucceeds",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.65",
+                      "name":  "editingQuestionFieldsKeepsAllEditsOnServerRejection",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.713",
+                      "name":  "selectedImagesArePreviewedAndSharedAudioAndPassageNeedOnlyOneEdit",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.358",
+                      "name":  "usedExamCanSaveEditedQuestionsAndAnswerAsANewExam",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.27",
+                      "name":  "richEditorSharesPassageEditsAndPreservesMediaIdsAndOriginalDocument",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.208",
+                      "name":  "missingServerApiIsExplainedAndImportIsDisabledUntilReloadSucceeds",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "SKIP",
+                      "seconds":  "0.0",
+                      "name":  "actualCrawlOpensAValidImportPreviewWithoutEditingAnything(String)",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.497",
+                      "name":  "manualFormHasTwoHundredSlotsAndSavesAnIncompleteQuestion",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.144",
+                      "name":  "oldServerIsReportedBeforeOpeningAuthoring",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.29",
+                      "name":  "usedExamsAllowMetadataEditsWithoutChangingTheirQuestions",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.443",
+                      "name":  "onlyImportAndEditAreOfferedAndPreviewHasNoDummyQuestionForm",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.489",
+                      "name":  "manualChoicesAndAnswerKeyCanBeEnteredInEveryPart(int)[1]",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.355",
+                      "name":  "manualChoicesAndAnswerKeyCanBeEnteredInEveryPart(int)[2]",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.36",
+                      "name":  "manualChoicesAndAnswerKeyCanBeEnteredInEveryPart(int)[3]",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.302",
+                      "name":  "manualChoicesAndAnswerKeyCanBeEnteredInEveryPart(int)[4]",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.334",
+                      "name":  "manualChoicesAndAnswerKeyCanBeEnteredInEveryPart(int)[5]",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.316",
+                      "name":  "manualChoicesAndAnswerKeyCanBeEnteredInEveryPart(int)[6]",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "0.322",
+                      "name":  "manualChoicesAndAnswerKeyCanBeEnteredInEveryPart(int)[7]",
+                      "class":  "vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "11.039",
+                      "name":  "manualDraftPartialReadyPendingAndUsedLifecycle",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "2.134",
+                      "name":  "legacyCrudRoundTripAndValidationRollback",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.888",
+                      "name":  "paginationLiteralSearchAndStrictBodyErrors",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "3.694",
+                      "name":  "revisionCopiesVerifiedMediaAndEditsWithoutTouchingUsedSource",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.738",
+                      "name":  "manualAnswerChoicesAndKeysSurviveSaveReadAndUpdate",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.785",
+                      "name":  "simultaneousCreatesReturnOneSuccessAndOneConflict",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "2.159",
+                      "name":  "manualDraftRejectsChangedTemplateAndProtectsAnswerKeys",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "4.265",
+                      "name":  "bundleUploadsMediaAndRollsBackBothFilesAndDatabaseOnBadReplacement",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "3.138",
+                      "name":  "richGraphCanBeReadEditedAndDeletedWithoutLosingBlocksOrKeys",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  },
+                  {
+                      "status":  "SKIP",
+                      "seconds":  "0.0",
+                      "name":  "actualStudy4JsonAndDesktopMediaReachTheServerThroughTheUploadEndpoint",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.772",
+                      "name":  "usedExamMetadataCanBeEditedWhileItsQuestionGraphRemainsProtected",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.826",
+                      "name":  "manualBundlePersistsPendingAudioAndRollsBackOnStaleRevision",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  },
+                  {
+                      "status":  "SKIP",
+                      "seconds":  "0.0",
+                      "name":  "actualAdminFormCanRenameAndImportTheCrawlIntoTheRealServer",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.854",
+                      "name":  "bundleRejectsTraversalAndNonAdminBeforeWritingAnyMedia",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  },
+                  {
+                      "status":  "PASS",
+                      "seconds":  "1.725",
+                      "name":  "usedExamIsViewOnlyAndOtherRolesCannotAccessAdminKeysOrMutations",
+                      "class":  "vn.edu.toeic.server.exam.rich.AdminExamPostgresTest"
+                  }
+              ],
+    "xmlHashes":  [
+                      {
+                          "module":  "client",
+                          "sha256":  "2b632f5dac3b623cd0a129860c94cffd1757c22c952e26a4abf676f0243ab2b4",
+                          "file":  "TEST-vn.edu.toeic.client.admin.AdminExamImportTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "1b1550f6cf1bac4ad71451087336c742b877684fcdc1f36f695e69887306a1bc",
+                          "file":  "TEST-vn.edu.toeic.client.admin.ManualExamFilesTest.xml"
+                      },
+                      {
+                          "module":  "client",
+                          "sha256":  "684537dd166fa96331770faab3b7961a9fd60d2628976ff7a22e7d4f9283a3c9",
+                          "file":  "TEST-vn.edu.toeic.client.proctor.redesign.AdminExamGuiTest.xml"
+                      },
+                      {
+                          "module":  "server",
+                          "sha256":  "f01716234cf064590807b2da109a8228b4bd30319689dd0a625bf6a88695f5ad",
+                          "file":  "TEST-vn.edu.toeic.server.exam.rich.AdminExamPostgresTest.xml"
+                      }
+                  ],
+    "cleanup":  {
+                    "clusterStopExit":  0,
+                    "ownedSchemasRemaining":  0
+                },
+    "manualGuiLanHearing":  "NOT RUN",
+    "sourceState":  "Working changes for manual answer entry on base 040340b"
+}

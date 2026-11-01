@@ -586,6 +586,11 @@ final class ProctorV2Controller implements AutoCloseable {
 
     /** Called after the proctor confirmed the dialog; re-checks the snapshot under the lock. */
     synchronized void start() {
+        start(false);
+    }
+
+    /** Partial readiness is allowed only when the proctor explicitly confirmed that warning. */
+    synchronized void start(boolean allowNotReady) {
         if (closed || starting) return;
         final String id = session;
         ListeningStartRequest pending = pendingStarts.get(id);
@@ -600,6 +605,7 @@ final class ProctorV2Controller implements AutoCloseable {
             return;
         }
         starting = true;
+        final boolean requireAllReady = !allowNotReady;
         notice = accountPin ? (pending == null ? "Đang gửi lệnh bắt đầu…" : "Đang gửi lại đúng lệnh bắt đầu cũ…")
                 : pending == null ? "Đang lấy manifest audio và gửi START…" : "Đang gửi lại START với requestId cũ…";
         publish();
@@ -608,7 +614,7 @@ final class ProctorV2Controller implements AutoCloseable {
             if (request == null) {
                 // Manifest comes from the server; requestId is fixed before the first send and reused on retry.
                 String manifest = api.audioManifest(id);
-                request = new ListeningStartRequest(UUID.randomUUID().toString(), manifest);
+                request = new ListeningStartRequest(UUID.randomUUID().toString(), manifest,requireAllReady);
                 synchronized (this) { if (!closed) pendingStarts.put(id, request); }
             }
             return api.start(id, request);

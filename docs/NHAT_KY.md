@@ -959,7 +959,8 @@ Source05cc694 clean verify1127PASS/6SKIP/0FAIL/0ERROR, PG18.1/HTTP thật, đề
 ## 2026-10-20 · Release Integration Engineer · Hoàn tất nghiệm thu chuỗi V2 & tích hợp main
 
 - Worktree riêng \E:\Project\toeic-v2-release-integration\, branch elease/v2-main-integration-20261020\ (HEAD aa830b\).
-- Hợp nhất hoàn chỉnh nhánh QA Windows \qa/windows-v2-mon07-20261020\ (commit 8006f\) với \origin/main\ mới nhất (bbeaf2\ và sync 9954b\ PR #81).
+- Hợp nhất hoàn chỉnh nhánh QA Windows \qa/windows-v2-mon07-20261020\ (commit 8006f\) với \origin/main\ mới nhất (bbeaf2\ và sync 
+9954b\ PR #81).
 - Flyway V1–V15 áp dụng tuần tự không lỗi, 0 out-of-order, 0 checksum mismatch trên PostgreSQL 18.6 độc lập (cổng 55434).
 - Maven build & test: \mvn test\ BUILD SUCCESS 1264 tests (0 failures, 0 errors).
 - PostgreSQL 18.6 Integration: 159/159 tests PASS 100% (gồm 43/43 Flyway migration scenarios, 28/28 V2 rich/image/session, 70/70 runtime/audio/history bounds, 18/18 MON-07 signal pipeline & disabled check).
@@ -1291,6 +1292,19 @@ Chạy lại `AccountPinFlowPostgresGuiTest` + `RoomFlowPostgresGuiTest` khi má
 
 Kiểm chứng chốt: 23 PASS/3 SKIP/0 FAIL/ERROR (3 case crawl thật thiếu dữ liệu); package PASS. Receipt docs/manual-exam-verification.json; ảnh docs/admin-manual-pending.png. PostgreSQL tạm: 0 schema còn lại, stop exit 0. Lượt đầu có lỗi kỳ vọng/chọn câu trong test, đã sửa và chạy lại; không thay logic để né kiểm thử.
 
+## 01/11/2026 — Sửa nhập lựa chọn và đáp án trong form soạn đề
+
+- Hiện ô lựa chọn ở mọi Part, gồm Part 1–2 trước đó bị ẩn. Part 2 có A–C, các Part khác A–D; nội dung lựa chọn Part 1–2 vẫn tùy chọn khi đã có trong âm thanh.
+- Đưa ô đáp án đúng lên phần đầu cố định của khung câu hỏi, bên ngoài vùng cuộn media/nội dung. Giữ giá trị khi chuyển câu, lọc Part và lưu; không đổi API, schema hoặc quy tắc PENDING/READY.
+- Kiểm chứng: 38 PASS/3 SKIP/0 FAIL/ERROR, gồm GUI nhập lựa chọn/chọn đáp án/lưu ở cả 7 Part và PostgreSQL thật lưu/đọc/cập nhật đáp án Part 1, 2, 5. Các case crawl thật thiếu dữ liệu được bỏ qua. PostgreSQL tạm được dừng, còn 0 schema. Receipt: docs/manual-answer-verification.json; ảnh MOCK: docs/admin-manual-answers.png.
+
+01/11/2026 — Chẩn đoán READY: tái hiện lease hết hạn khiến ATTEST bị 409 liên tiếp, client chuẩn bị/báo lại nhưng không INVALIDATE; START gắn NOT_READY_AT_START. 2 diagnostic PASS/0 SKIP, PostgreSQL tạm dừng exit 0/còn 0 schema. Chưa xác nhận nguyên nhân lease hết hạn trên VPS; không sửa runtime. Chi tiết docs/READY_RENEWAL_DIAGNOSIS_20261101.md.
+
+## 01/11/2026 — Sửa phục hồi READY và strict START
+
+- Lease mặc định 30 giây; ATTEST mới được tái xác minh đầy đủ sau expiry, receipt cũ không renew. Client không dựng lại ảnh cùng scope khi gặp INVALID_STATE; UI ghi đang xác nhận, không quy kết vào muộn.
+- START mới mặc định requireAllReady=true, giữ ý định từ hộp thoại kể cả snapshot đổi; chỉ partial sau cảnh báo được xác nhận. Server 409 trước mọi mutation nếu READY đổi, retry sau đã START giữ nguyên startId/deadline. Readiness ACCOUNT_PIN kiểm token admission cùng điều kiện START.
+- Kết quả chốt theo suite không cộng trùng lượt chạy: 94 PASS/2 SKIP/0 FAIL/ERROR, package PASS. Hai SKIP: acceptance crawl thật thiếu dữ liệu và ảnh review GUI tùy chọn. PostgreSQL tạm dừng exit 0/còn 0 schema; không triển khai VPS hoặc đổi DB thật. Receipt docs/ready-recovery-verification.json, hướng dẫn docs/READY_RECOVERY_FIX_20261101.md.
 ## 30/10/2026 — Slide thuyết trình HTML (`presentation/`)
 
 - Đã làm: bộ slide 29 trang 16:9 theo skill Frontend Slides, Design System V1.0 “Claymoon Flow” (màu lấy từ CSS của app JavaFX). Thử 3 phương án bìa (Swiss Grid, Neo-Grid Orange, Claymoon Flow), chọn Claymoon Flow. Nội dung: bài toán, kiến trúc, envelope/mã lỗi, luồng phòng PIN, autosave một khóa, epoch/sequence, 4 tín hiệu, E1, replay T3-C3, benchmark ACCOUNT_PIN, hồi quy `5173462`, demo, đóng góp, giới hạn. Số liệu chép từ báo cáo trong repo, có dòng nguồn trên từng slide; ảnh là ảnh chụp test có sẵn (MOCK/TEST, có ghi nhãn).

@@ -82,6 +82,15 @@ class RichLobbyPaneGuiTest {
         assertThat(shown).contains("Hình ảnh: tải chưa được", "Chưa chuẩn bị được hình ảnh của đề. Hãy báo giám thị.");
     }
 
+    @Test void reportingShowsConfirmationInProgressRatherThanNotReady() throws Exception {
+        String shown=fx(()->{
+            var lobby=new RichLobbyPane();lobby.visual(state(VisualReadyCoordinator.Phase.READY),0);
+            lobby.visual(state(VisualReadyCoordinator.Phase.REPORTING),SECOND);return texts(lobby);
+        });
+        assertThat(shown).contains("Hình ảnh: đã tải","Đang xác nhận với máy chủ…")
+                .doesNotContain("Chưa sẵn sàng","Sẵn sàng — đang chờ");
+    }
+
     private static <T> T fx(Callable<T> work) throws Exception {
         FutureTask<T> task = new FutureTask<>(work);
         Platform.runLater(task);

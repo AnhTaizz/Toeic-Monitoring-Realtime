@@ -42,7 +42,8 @@ class ProctorV2ControllerTest {
         assertThat(api.pinCreates).hasSize(1);assertThat(api.creates).isEmpty();assertThat(c.snapshot().created().attempts()).isEmpty();
         assertThat(c.snapshot().readiness().allReady()).isFalse();assertThat(c.snapshot().canStart()).isTrue();
         assertThat(c.snapshot().toString()).doesNotContain("58321");c.forgetPins();assertThat(c.snapshot().sharedPin()).isNull();
-        c.start();assertThat(api.starts).hasSize(1);
+        c.start(true);assertThat(api.starts).hasSize(1);
+        assertThat(api.starts.getFirst().requireAllReady()).isFalse();
     }
     @Test void accountPinCreationTimeoutNeverAutomaticallyCreatesAnotherSession() {
         var c=direct();c.enableAccountPin();c.loadCatalog(false);c.select("mock-a");
@@ -50,6 +51,16 @@ class ProctorV2ControllerTest {
         c.createSelectedRoom("120",3,"");c.createSelectedRoom("120",3,"");
         assertThat(api.pinCreates).hasSize(1);assertThat(c.snapshot().canCreate()).isFalse();
         assertThat(c.snapshot().createError()).contains("Tìm lại phòng");assertThat(api.starts).isEmpty();
+    }
+
+    @Test void startWithoutPartialConfirmationRemainsStrictWhenReadinessChangedDuringDialog() {
+        var c=direct();c.enableAccountPin();c.loadCatalog(false);c.select("mock-a");
+        c.createSelectedRoom("120",3,"");
+        api.readiness=()->new vn.edu.toeic.protocol.exam.rich.SessionReadiness(2,V2Fixtures.SESSION,java.time.Instant.now(),false,
+                List.of(V2Fixtures.attempt("MOCK-attempt-1",true,false)),"ACCOUNT_PIN",true);
+        c.refresh();c.start();
+        assertThat(api.starts).hasSize(1);
+        assertThat(api.starts.getFirst().requireAllReady()).isTrue();
     }
 
     @Test void roomCreationTimeoutBlocksBlindRecreationUntilExistingRoomIsOpened() throws Exception {
@@ -204,6 +215,7 @@ class ProctorV2ControllerTest {
         var pending = c.snapshot().pendingStart();
         assertThat(pending).isNotNull();
         assertThat(pending.manifestId()).isEqualTo(V2Fixtures.MANIFEST);
+        assertThat(pending.requireAllReady()).isTrue();
         assertThat(c.snapshot().notice()).contains(pending.requestId());
 
         // Even with a stale READY the retry is allowed: it settles the same request, not a new decision.

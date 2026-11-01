@@ -57,6 +57,33 @@ class AdminExamGuiTest {
         fxRun(()->((ToggleButton)view.lookup("#admin-exam-nav")).fire());await("exams loaded",()->view.lookup("#admin-exam-edit-MOCK-01")!=null && !view.lookup("#admin-exam-find").isDisabled());
     }
     @AfterEach void stop() throws Exception {fxRun(()->{view.close();stage.close();});server.stop(0);}
+    @ParameterizedTest @ValueSource(ints={1,2,3,4,5,6,7})
+    void manualChoicesAndAnswerKeyCanBeEnteredInEveryPart(int selectedPart) throws Exception {
+        fxRun(()->((Button)view.lookup("#admin-exam-manual-add")).fire());
+        await("manual form",()->dialog("admin-exam-code")!=null);
+        fxRun(()->{
+            ((TextField)dialog("admin-exam-code")).setText("MOCK-answers-"+selectedPart);
+            ((TextField)dialog("admin-exam-title")).setText("MOCK nhập đáp án");
+            ((ComboBox<Integer>)dialog("exam-question-part")).setValue(selectedPart);
+            for(String id:selectedPart==2?List.of("A","B","C"):List.of("A","B","C","D"))
+                ((TextArea)dialog("exam-question-option-"+id)).setText("MOCK lựa chọn "+id);
+            ((ComboBox<String>)dialog("exam-question-correct")).getSelectionModel().select("C");
+        });
+        double answerY=fx(()->dialog("exam-question-correct").localToScene(dialog("exam-question-correct").getBoundsInLocal()).getMinY());
+        fxRun(()->((ScrollPane)dialog("exam-question-content")).setVvalue(1));
+        assertThat(fx(()->dialog("exam-question-correct").localToScene(dialog("exam-question-correct").getBoundsInLocal()).getMinY())).isEqualTo(answerY);
+        fxRun(()->{var list=(ListView<?>)dialog("exam-question-list");list.getSelectionModel().select(1);list.getSelectionModel().selectFirst();});
+        assertThat(fx(()->((ComboBox<?>)dialog("exam-question-correct")).getValue())).isEqualTo("C");
+        assertThat(fx(()->((TextArea)dialog("exam-question-option-A")).getText())).isEqualTo("MOCK lựa chọn A");
+        if(selectedPart==1)screenshot(fx(()->dialog("admin-exam-code").getScene().getRoot()),"admin-manual-answers.png");
+        fxRun(()->((Button)dialog("admin-exam-save")).fire());await("saved answers",()->dialog("admin-exam-code")==null);
+        var payload=JsonParser.parseString(bodies.getFirst()).getAsJsonObject();
+        var question=java.util.stream.StreamSupport.stream(payload.getAsJsonArray("questions").spliterator(),false)
+                .map(JsonElement::getAsJsonObject).filter(q->q.get("part").getAsInt()==selectedPart).findFirst().orElseThrow();
+        assertThat(question.get("correctOption").getAsString()).isEqualTo("C");
+        assertThat(question.getAsJsonArray("options").size()).isEqualTo(selectedPart==2?3:4);
+        assertThat(question.getAsJsonArray("options").get(0).getAsJsonObject().get("optionText").getAsString()).isEqualTo("MOCK lựa chọn A");
+    }
     @Test void manualFormHasTwoHundredSlotsAndSavesAnIncompleteQuestion() throws Exception {
         fxRun(()->((Button)view.lookup("#admin-exam-manual-add")).fire());
         await("manual form",()->dialog("admin-exam-code")!=null);

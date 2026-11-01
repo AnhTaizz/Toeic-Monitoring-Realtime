@@ -68,6 +68,38 @@ class AccountPinPostgresTest {
 
 
     private static final String ACCOUNTS="/api/v2/admin/accounts";
+    @Test void expiredReadyRecoversWithFreshAttestationAndStrictStartDoesNotDowngradeListening() throws Exception {
+        var room=pinRoom();var joined=pinJoin(room,owner);String attempt=aid(joined),token=scoped(joined),session=sid(room);
+        long writer=takeover(attempt,token);audioReady(attempt,token,writer);attestOk(attempt,token,writer,"MOCK-first-ready");
+        var before=json(check(get("/api/v2/sessions/"+session+"/readiness",proctor),200,null));
+        assertThat(before.get("allReady").getAsBoolean()).isTrue();
+        sql("UPDATE attempt_visual_readiness SET ready_at=clock_timestamp()-INTERVAL '3 seconds', last_seen_at=clock_timestamp()-INTERVAL '2 seconds', lease_expires_at=clock_timestamp()-INTERVAL '1 second' WHERE attempt_id='"+attempt+"'");
+        var expired=json(check(get("/api/v2/sessions/"+session+"/readiness",proctor),200,null));
+        assertThat(expired.get("allReady").getAsBoolean()).isFalse();
+        // An old receipt cannot renew the lease; a fresh, fully verified attestation can.
+        check(post(visualPath(attempt),attest(attempt,writer,preparation(attempt,token),"MOCK-first-ready"),token),409,"INVALID_STATE");
+        for(int i=0;i<3;i++) {
+            var prep=preparation(attempt,token);
+            check(post(visualPath(attempt),attest(attempt,writer,prep,"MOCK-expired-renew-"+i),token),200,null);
+        }
+        assertThat(number("SELECT count(*) FROM attempt_audio_readiness WHERE attempt_id='"+attempt+"'")).isEqualTo(1);
+        var after=json(check(get("/api/v2/sessions/"+session+"/readiness",proctor),200,null));
+        assertThat(after.get("allReady").getAsBoolean()).isTrue();
+        var readiness=after.getAsJsonArray("attempts").get(0).getAsJsonObject();
+        assertThat(readiness.get("audioReady").getAsBoolean()).isTrue();
+        assertThat(readiness.get("visualReady").getAsBoolean()).isTrue();
+        // The proctor saw READY; it expires before START arrives. No start/deadline/interruption is committed.
+        sql("UPDATE attempt_visual_readiness SET ready_at=clock_timestamp()-INTERVAL '3 seconds', last_seen_at=clock_timestamp()-INTERVAL '2 seconds', lease_expires_at=clock_timestamp()-INTERVAL '1 second' WHERE attempt_id='"+attempt+"'");
+        String manifest=json(check(get("/api/v1/sessions/"+session+"/audio/readiness",proctor),200,null)).get("manifestId").getAsString();
+        var command=JsonParser.parseString(start("MOCK-strict-start",manifest)).getAsJsonObject();command.addProperty("requireAllReady",true);
+        check(post(startPath(session),command.toString(),proctor),409,"INVALID_STATE");
+        assertNotStarted(session);
+        assertThat(number("SELECT count(*) FROM monitoring_attempts WHERE attempt_id='"+attempt+"' AND listening_interrupted")).isZero();
+        attestOk(attempt,token,writer,"MOCK-recover-after-blocked-start");
+        var started=json(check(post(startPath(session),command.toString(),proctor),200,null));
+        assertThat(json(check(post(startPath(session),command.toString(),proctor),200,null))).isEqualTo(started);
+        assertThat(number("SELECT count(*) FROM monitoring_attempts WHERE attempt_id='"+attempt+"' AND listening_interrupted")).isZero();
+    }
     private JsonObject pinRoom() throws Exception { return json(check(post("/api/v2/pin-rooms","{\"examId\":\"mock-ex02-200\"}",proctor),201,null)); }
     private static String pinJoinBody(String pin) {return RichExamFixtures.JSON.toJson(Map.of("pin",pin,"requestId",UUID.randomUUID().toString()));}
     private JsonObject pinJoin(JsonObject room,String token) throws Exception {return json(check(post("/api/v2/pin-rooms/join",pinJoinBody(room.get("pin").getAsString()),token),200,null));}

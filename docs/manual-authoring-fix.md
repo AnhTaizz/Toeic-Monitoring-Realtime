@@ -6,6 +6,7 @@ Chỉ có một nút **Lưu đề**. Nội dung, âm thanh và ảnh đều đư
 
 - Khung cố định: Part 1 có 6 câu, Part 2 có 25, Part 3 có 39, Part 4 có 30, Part 5 có 30, Part 6 có 16, Part 7 có 54. Mỗi câu có 4 lựa chọn, riêng Part 2 có 3.
 - Part 1 cần một ảnh, âm thanh và đáp án; Part 2 cần âm thanh và đáp án. Không bắt nhập lại lời đọc/lựa chọn của hai Part này.
+- Mọi Part đều có ô nhập nội dung lựa chọn A–D (Part 2: A–C). Nội dung lựa chọn ở Part 1–2 là tùy chọn khi đã được đọc trong âm thanh. **Đáp án đúng** luôn nằm ở đầu khung câu hỏi, phía trên vùng cuộn nội dung/media; chọn A/B/C/D rồi bấm **Lưu đề**. Chuyển câu hoặc đổi bộ lọc Part giữ nguyên các lựa chọn và đáp án đã nhập.
 - Part 3–4 dùng chung âm thanh theo nhóm 3 câu; chọn một lần trong bất kỳ câu nào của nhóm. Part 6 dùng chung đoạn văn theo nhóm 4 câu. Các Part đọc cần nội dung, lựa chọn, đáp án; Part 6–7 cần đoạn văn.
 - **Chọn âm thanh…** mở file MP3/WAV/M4A từ máy. **Chọn ảnh…** mở PNG/JPEG và hiển thị ảnh xem trước. Part 1 có một ảnh; các câu khác có thể chọn nhiều ảnh nếu cần. Khi mở lại đề từ server, ảnh vẫn được tải lại để xem.
 - Tối đa 64 MiB/tệp âm thanh, 8 MiB/ảnh; tổng 256 MiB âm thanh và 64 MiB ảnh mỗi đề. Server kiểm tra định dạng, kích thước, checksum và quyền truy cập. Media tải lên được hoàn tác nếu lưu đề thất bại.

@@ -171,6 +171,22 @@ class VisualReadyCoordinatorTest {
         c.close();
     }
 
+    @Test void temporaryInvalidStateAfterReadyReattestsWithoutRebuildingImagesAndRecovers() throws Exception {
+        Server server=new Server();audio.set(true);
+        var c=coordinator(server,Executors.newSingleThreadScheduledExecutor());
+        try {
+            c.tickOnce();assertThat(c.snapshot().phase()).isEqualTo(VisualReadyCoordinator.Phase.READY);
+            server.readyFailure=new ExamApiException(409,"INVALID_STATE",false);
+            for(int i=0;i<3;i++){c.tickOnce();assertThat(c.snapshot().phase()).isEqualTo(VisualReadyCoordinator.Phase.UNVERIFIED);}
+            assertThat(uiPrepared).hasSize(1);
+            assertThat(server.readyRequests).hasSize(4).allMatch(r->r.action()==VisualReadyAction.ATTEST);
+            assertThat(seen.stream().filter(s->s.phase()==VisualReadyCoordinator.Phase.READY).count()).isEqualTo(1);
+            server.readyFailure=null;c.tickOnce();
+            assertThat(c.snapshot().phase()).isEqualTo(VisualReadyCoordinator.Phase.READY);
+            assertThat(uiPrepared).hasSize(1);assertThat(server.downloads).hasValue(1);
+        }finally{c.close();}
+    }
+
     @Test void uiThatCannotShowImageNeverAttests() throws Exception {
         Server server = new Server();
         audio.set(true);

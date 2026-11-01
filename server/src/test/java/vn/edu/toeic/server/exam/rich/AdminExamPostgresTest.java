@@ -62,6 +62,25 @@ class AdminExamPostgresTest {
         return http.send(HttpRequest.newBuilder(URI.create(base+path)).header("Authorization","Bearer "+token)
             .header("Content-Type","application/zip").method(method,HttpRequest.BodyPublishers.ofFile(zip)).build(),HttpResponse.BodyHandlers.ofString());
     }
+    @Test void manualAnswerChoicesAndKeysSurviveSaveReadAndUpdate() throws Exception {
+        var draft=new Gson().toJsonTree(vn.edu.toeic.protocol.admin.ManualExamDraft.empty()).getAsJsonObject();
+        draft.addProperty("examId","manual-answers");draft.addProperty("title","MOCK answers");
+        for(int index:new int[]{0,6,100}) {
+            var q=draft.getAsJsonArray("questions").get(index).getAsJsonObject();q.addProperty("correctOption","C");
+            for(var o:q.getAsJsonArray("options"))o.getAsJsonObject().addProperty("optionText","MOCK choice "+o.getAsJsonObject().get("optionId").getAsString());
+        }
+        var saved=tree(check(call("POST",API+"/manual",draft.toString(),admin),201));
+        var loaded=tree(check(call("GET",API+"/manual?examId=manual-answers",null,admin),200));
+        assertThat(loaded).isEqualTo(saved);
+        for(int index:new int[]{0,6,100}) {
+            var q=loaded.getAsJsonArray("questions").get(index).getAsJsonObject();
+            assertThat(q.get("correctOption").getAsString()).isEqualTo("C");
+            assertThat(q.getAsJsonArray("options").get(0).getAsJsonObject().get("optionText").getAsString()).isEqualTo("MOCK choice A");
+            q.addProperty("correctOption","B");
+        }
+        saved=tree(check(call("PUT",API+"/manual?examId=manual-answers",loaded.toString(),admin),200));
+        assertThat(tree(check(call("GET",API+"/manual?examId=manual-answers",null,admin),200))).isEqualTo(saved);
+    }
     @Test void manualDraftPartialReadyPendingAndUsedLifecycle() throws Exception {
         var draft=new Gson().toJsonTree(vn.edu.toeic.protocol.admin.ManualExamDraft.empty()).getAsJsonObject();
         draft.addProperty("examId","manual-200");draft.addProperty("title","MOCK đề soạn tay");
