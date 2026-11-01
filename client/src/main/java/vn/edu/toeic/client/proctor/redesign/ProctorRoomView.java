@@ -486,7 +486,7 @@ public final class ProctorRoomView extends BorderPane implements AutoCloseable {
         String warning = ProctorRoomModel.startWarning(model);
         String question = warning != null ? warning : "Bắt đầu phòng thi cho " + model.rows().size()
                 + " thí sinh? Phần nghe phát ngay trên máy thí sinh và không phát lại.";
-        if (confirm.test(question)) room.start();
+        if (confirm.test(question)) room.start(warning != null);
     }
 
     void openCandidate(String attemptId) {

@@ -156,7 +156,8 @@ final class RichLobbyPane extends VBox {
         row(visualRow, imagesPrepared, failed && !imagesPrepared,
                 "Hình ảnh: " + (imagesPrepared ? "đã tải" : failed ? "tải chưa được" : "đang tải…"));
         row(serverRow, ready, failed || stuck, ready ? "Sẵn sàng — đang chờ giám thị bắt đầu"
-                : unconfirmed ? "Đang xác nhận lại với máy chủ…" : "Chưa sẵn sàng");
+                : unconfirmed ? "Đang xác nhận lại với máy chủ…"
+                : phase == VisualReadyCoordinator.Phase.REPORTING ? "Đang xác nhận với máy chủ…" : "Chưa sẵn sàng");
         // Only problems need the candidate's attention; routine progress is already in the rows above.
         waiting.setText(failed ? "Chưa chuẩn bị được hình ảnh của đề. Hãy báo giám thị."
                 : stuck ? "Chưa xác nhận được với máy chủ. Kiểm tra kết nối mạng; nếu vẫn vậy, hãy báo giám thị." : "");

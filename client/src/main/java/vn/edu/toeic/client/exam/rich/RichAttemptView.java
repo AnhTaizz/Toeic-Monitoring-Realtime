@@ -152,7 +152,7 @@ public final class RichAttemptView extends BorderPane implements AutoCloseable {
                 && Boolean.FALSE.equals(state.preparation().readyForExam())) {
             readingOnly=true;if(audio!=null)audio.allowLatePreparation(true);
             header.deadline(state.preparation().deadlineAt(),java.time.Instant.now());
-            status.setText("Phòng đã bắt đầu. Bạn vào muộn nên không có phần nghe. Hoàn tất chuẩn bị để làm phần Reading; thời gian vẫn tính theo phòng.");
+            status.setText("Phòng đã bắt đầu khi bạn chưa có xác nhận sẵn sàng hợp lệ nên không có phần nghe. Hoàn tất chuẩn bị để làm phần Reading; thời gian vẫn tính theo phòng.");
         }
         if (state.sessionExpired()) { close(); onSessionExpired.run(); return; }
         if (state.phase() == VisualReadyCoordinator.Phase.STARTED) enterExam();

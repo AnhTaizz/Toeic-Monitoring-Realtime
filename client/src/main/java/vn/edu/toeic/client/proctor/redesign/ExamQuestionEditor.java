@@ -17,6 +17,7 @@ final class ExamQuestionEditor extends BorderPane {
     private final JsonObject document;
     private final ListView<JsonObject> questions=new ListView<>();
     private final VBox fields=new VBox(12);
+    private final VBox questionHeader=new VBox(8);
     private final ComboBox<Integer> part=new ComboBox<>();
     private final TextField search=new TextField();
     private final boolean manual;
@@ -57,8 +58,10 @@ final class ExamQuestionEditor extends BorderPane {
         questions.getSelectionModel().selectedItemProperty().addListener((o,a,b)->show(b));
         part.valueProperty().addListener((o,a,b)->filter());search.textProperty().addListener((o,a,b)->filter());
         var left=new VBox(10,part,search,questions);left.setPadding(new Insets(0,16,0,0));VBox.setVgrow(questions,Priority.ALWAYS);
-        fields.setPadding(new Insets(4,12,12,4));var scroll=new ScrollPane(fields);scroll.setFitToWidth(true);
-        setLeft(left);setCenter(scroll);setPrefHeight(440);filter();
+        fields.setPadding(new Insets(4,12,12,4));var scroll=new ScrollPane(fields);scroll.setId("exam-question-content");scroll.setFitToWidth(true);
+        questionHeader.setPadding(new Insets(4,12,10,4));
+        var right=new VBox(questionHeader,scroll);VBox.setVgrow(scroll,Priority.ALWAYS);
+        setLeft(left);setCenter(right);setPrefHeight(440);filter();
     }
     JsonObject document(){return document.deepCopy();}
     void onChange(Runnable listener){changed=listener;}
@@ -87,11 +90,11 @@ final class ExamQuestionEditor extends BorderPane {
         rows.sort(Comparator.comparingInt(q->q.get("orderIndex").getAsInt()));
         questions.setItems(FXCollections.observableArrayList(rows));
         if(rows.contains(selected))questions.getSelectionModel().select(selected);else if(!rows.isEmpty())questions.getSelectionModel().selectFirst();
-        else fields.getChildren().setAll(Ui.wrapping("Không có câu phù hợp."));
+        else {questionHeader.getChildren().clear();fields.getChildren().setAll(Ui.wrapping("Không có câu phù hợp."));}
     }
     private void show(JsonObject q) {
-        fields.getChildren().clear();if(q==null)return;
-        fields.getChildren().add(Ui.label("Câu "+q.get("orderIndex").getAsInt()+" · Part "+q.get("part").getAsInt(),"section-title"));
+        fields.getChildren().clear();questionHeader.getChildren().clear();if(q==null)return;
+        questionHeader.getChildren().add(Ui.label("Câu "+q.get("orderIndex").getAsInt()+" · Part "+q.get("part").getAsInt(),"section-title"));
         boolean rich=document.has("exam");
         if(manual)manualMedia(q);
         if(rich) {
@@ -100,14 +103,15 @@ final class ExamQuestionEditor extends BorderPane {
         var ids=new ArrayList<String>();
         for(var element:q.getAsJsonArray("options")) {
             var option=element.getAsJsonObject();String id=text(option,"optionId");ids.add(id);
-            if(!manual||q.get("part").getAsInt()>2)area(option,rich?"text":"optionText","Lựa chọn "+id,"exam-question-option-"+id,2);
+            area(option,rich?"text":"optionText","Lựa chọn "+id+(manual&&q.get("part").getAsInt()<=2?" (tùy chọn khi đã có trong âm thanh)":""),"exam-question-option-"+id,2);
         }
-        if(manual&&q.get("part").getAsInt()<=2)fields.getChildren().add(Ui.wrapping("Các lựa chọn được đọc trong âm thanh. Chỉ cần chọn đáp án đúng bên dưới.","muted"));
+        if(manual&&q.get("part").getAsInt()<=2)fields.getChildren().add(Ui.wrapping("Bạn có thể nhập nội dung lựa chọn hoặc để trống nếu lựa chọn đã được đọc trong âm thanh.","muted"));
         var scoring=rich?q.getAsJsonObject("scoring"):q;
         var correct=new ComboBox<String>(FXCollections.observableArrayList(ids));correct.setId("exam-question-correct");
         correct.setPromptText("Chọn đáp án đúng");
+        correct.setPrefWidth(200);correct.setMaxWidth(200);
         correct.setValue(text(scoring,"correctOption").isBlank()?null:text(scoring,"correctOption"));correct.valueProperty().addListener((o,a,b)->{scoring.addProperty("correctOption",b);edited();});
-        fields.getChildren().add(field("Đáp án đúng",correct));
+        questionHeader.getChildren().add(field("Đáp án đúng",correct));
         if(rich && q.has("groupId")&&!q.get("groupId").isJsonNull()) {
             for(var element:document.getAsJsonArray("groups")) {
                 var group=element.getAsJsonObject();if(!text(group,"groupId").equals(text(q,"groupId")))continue;

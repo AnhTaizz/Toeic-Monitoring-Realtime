@@ -1156,3 +1156,6 @@ Summary, danh sách chung và số đếm chỉ hiện chín tên kể cả khi 
 
 ## 30/10/2026 — Admin manual authoring
 POST/GET/PUT /api/v2/admin/exams/manual (GET/PUT có examId), chỉ ADMIN. DTO ManualExamDraft cho phép trường nhập dở trong khung cố định 200 câu, revision chống ghi đè. List admin thêm authoringStatus/completedQuestions/manual. PENDING bị chặn tạo ca tại API và DB. Xem docs/admin-exam-management.md; API thi và DTO thí sinh giữ nguyên.
+
+## 01/11/2026 — READY recovery và strict START
+ListeningStartRequest bổ sung Boolean tùy chọn requireAllReady. true: nếu có attempt không READY tại quyết định START, trả HTTP 409 INVALID_STATE trước mọi mutation START/deadline/interruption. false/null: giữ hành vi cũ của ACCOUNT_PIN (giám thị mới chỉ gửi false sau xác nhận cảnh báo). Retry giữ nguyên request. ATTEST mới có thể cấp lease mới sau expiry khi toàn bộ kiểm tra vẫn hợp lệ; replay receipt hết hạn không renew. Default VISUAL_LEASE_MS=30000, client renew 2000ms. Chi tiết docs/READY_RECOVERY_FIX_20261101.md.

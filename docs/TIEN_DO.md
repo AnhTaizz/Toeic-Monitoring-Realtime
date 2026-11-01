@@ -365,3 +365,9 @@ Theo ủy quyền người dùng: thêm -Desktop vào entrypoint demo hiện có
 30/10/2026 — Bổ sung soạn đề bằng tay 200 câu/PENDING tại worktree admin; xem docs/admin-exam-management.md. Đang kiểm chứng lượt cuối, chưa triển khai server từ xa.
 
 30/10/2026 — Kiểm chứng soạn tay/PENDING: 23 PASS/3 SKIP/0 lỗi, package PASS; xem docs/manual-exam-verification.json. Bản chạy mới ở output/TOEIC-MANUAL-20261030 (thư mục gốc); server từ xa chưa cập nhật.
+
+01/11/2026 — Sửa nhập lựa chọn/đáp án trong editor, kiểm thử 38 PASS/3 SKIP/0 lỗi. Xem docs/manual-answer-verification.json. Không thay API/DB; chưa triển khai server từ xa.
+
+01/11/2026 — Chẩn đoán READY: tái hiện lease hết hạn khiến ATTEST bị 409 liên tiếp, client chuẩn bị/báo lại nhưng không INVALIDATE; START gắn NOT_READY_AT_START. 2 diagnostic PASS/0 SKIP, PostgreSQL tạm dừng exit 0/còn 0 schema. Chưa xác nhận nguyên nhân lease hết hạn trên VPS; không sửa runtime. Chi tiết docs/READY_RENEWAL_DIAGNOSIS_20261101.md.
+
+01/11/2026 — READY recovery + strict START: 94 PASS/2 SKIP, package PASS. Bộ mới output/TOEIC-READY-FIX-20261101 tại thư mục gốc, cần cập nhật cả client/server. Xem docs/READY_RECOVERY_FIX_20261101.md; chưa triển khai VPS.

@@ -29,7 +29,7 @@ public class VisualReadinessService {
     private final AudioCatalog audio;
     private final long leaseMillis;
     public VisualReadinessService(JdbcClient jdbc,V2SessionPolicy policy,AuthorizationService auth,PartOneVisualManifest manifests,
-            RichSessionService sessions,AudioCatalog audio,@Value("${toeic.visual.lease-ms:6000}") long leaseMillis) {
+            RichSessionService sessions,AudioCatalog audio,@Value("${toeic.visual.lease-ms:30000}") long leaseMillis) {
         if(leaseMillis<1000 || leaseMillis>60000)throw new IllegalArgumentException("Visual lease không hợp lệ");
         this.jdbc=jdbc;this.policy=policy;this.auth=auth;this.manifests=manifests;this.sessions=sessions;this.audio=audio;this.leaseMillis=leaseMillis;
     }
@@ -115,8 +115,10 @@ public class VisualReadinessService {
             var audioManifest=audioManifest(s);if(!audioReady(s,audioManifest.manifestId()))throw V2SessionPolicy.invalid();
             sessions.verifiedResources(s.examId());
             var login=lockLogin(tokenHash);Instant at=policy.now();if(!valid(login,user.userId(),at))throw AccessDeniedException.unauthorized();
-            if(current!=null && (!current.epoch().equals(s.epoch()) || !at.isBefore(current.lease())) && !late)throw V2SessionPolicy.invalid();
-            Instant readyAt=current==null?at:current.at(),lease=at.plusMillis(leaseMillis);
+            if(current!=null && !current.epoch().equals(s.epoch()) && !late)throw V2SessionPolicy.invalid();
+            // A fresh request has just reverified assets, audio, writer, epoch and token. Expiry of the
+            // old attestation does not prevent a new one. Expired requestId replays remain rejected above.
+            Instant readyAt=current==null||!at.isBefore(current.lease())?at:current.at(),lease=at.plusMillis(leaseMillis);
             jdbc.sql("""
                     INSERT INTO attempt_visual_readiness(attempt_id,writer_epoch,preparation_epoch,manifest_id,attested_token_hash,asset_digest,ready_at,last_seen_at,lease_expires_at)
                     VALUES(:a,:w,:e,:m,:t,:d,:ready,:at,:lease)
@@ -221,7 +223,7 @@ public class VisualReadinessService {
         assigned(proctor,session);
         jdbc.sql("SELECT session_id FROM exam_sessions WHERE session_id=:s AND contract_version='PROCTORED_V2' FOR UPDATE").param("s",session).query(String.class).optional().orElseThrow(V2SessionPolicy::invalid);
         var states=lockRoster(session);var rows=new LinkedHashMap<String,Ready>();for(var s:states)rows.put(s.attemptId(),row(s.attemptId()));
-        Instant at=policy.now();var attempts=new ArrayList<AttemptReadiness>();
+        Instant at=policy.now();var attempts=new ArrayList<AttemptReadiness>();boolean accountPin=policy.isAccountPin(session);
         for(var s:states) {
             var reasons=new ArrayList<String>();String visual=null;boolean audioReady=false,visualReady=false;var r=rows.get(s.attemptId());
             if("IN_PROGRESS".equals(s.sessionState()) && policy.isAccountPin(session) && s.committedManifest()!=null) {
@@ -237,14 +239,14 @@ public class VisualReadinessService {
                 else if(!r.epoch().equals(s.epoch()) || !r.manifest().equals(visual))reasons.add("STALE_MANIFEST");
                 else if(!at.isBefore(r.lease()))reasons.add("VISUAL_EXPIRED");
                 else {
-                    boolean login=jdbc.sql("SELECT count(*) FROM login_sessions l JOIN user_accounts u ON u.id=l.user_id WHERE l.token_hash=:t AND l.user_id=:u AND l.revoked_at IS NULL AND l.expires_at>:at AND u.enabled")
-                            .param("t",r.token()).param("u",s.candidateId()).param("at",java.sql.Timestamp.from(at)).query(Long.class).single()==1;
+                    boolean login=jdbc.sql("SELECT count(*) FROM login_sessions l JOIN user_accounts u ON u.id=l.user_id WHERE l.token_hash=:t AND l.user_id=:u AND l.revoked_at IS NULL AND l.expires_at>:at AND u.enabled AND (:pin=FALSE OR l.room_attempt_id=:attempt)")
+                            .param("t",r.token()).param("u",s.candidateId()).param("at",java.sql.Timestamp.from(at))
+                            .param("pin",accountPin).param("attempt",s.attemptId()).query(Long.class).single()==1;
                     visualReady=login&&audioReady;if(!visualReady)reasons.add("VISUAL_NOT_READY");
                 }
             }
             attempts.add(new AttemptReadiness(s.attemptId(),s.writerEpoch(),s.epoch(),audioReady,visualReady,visual,r==null?null:r.lease(),reasons));
         }
-        boolean accountPin=policy.isAccountPin(session);
         boolean scheduled=jdbc.sql("SELECT state FROM exam_sessions WHERE session_id=:s").param("s",session).query(String.class).single().equals("SCHEDULED");
         boolean all=!attempts.isEmpty()&&attempts.stream().allMatch(a->a.audioReady()&&a.visualReady());
         return new SessionReadiness(2,session,at,all,attempts,policy.roomMode(session),accountPin?scheduled&&!attempts.isEmpty():scheduled&&all);

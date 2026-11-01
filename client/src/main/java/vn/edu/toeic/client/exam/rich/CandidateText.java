@@ -46,7 +46,7 @@ final class CandidateText {
             case COMPLETING -> "Đang hoàn tất phần nghe…";
             case COMPLETED -> "Phần nghe đã kết thúc. Mời bạn chuyển sang phần Reading.";
             case BLOCKED -> state.readingOnly()
-                    ? "Bạn vào phòng sau khi bài thi bắt đầu nên không có phần nghe. Hãy làm phần Reading."
+                    ? "Bạn không có phần nghe vì chưa có xác nhận sẵn sàng hợp lệ lúc ca thi bắt đầu. Hãy làm phần Reading."
                     : "Phần nghe đã dừng do sự cố. Hãy báo giám thị."
                     // Only after the server confirmed the interruption and the session really lets Reading be edited.
                     + (view != null && view.listeningInterruptedConfirmed() && view.canContinueReading()

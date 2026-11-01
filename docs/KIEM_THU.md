@@ -854,3 +854,17 @@ Chi tiết, nguyên nhân và lượt FAIL: [release/RELEASE-REPORT.md](release/
 
 ## 30/10/2026 — Admin manual 200/PENDING
 AdminExamImportTest 5 PASS; AdminExamGuiTest 7 PASS/1 SKIP; AdminExamPostgresTest 11 PASS/2 SKIP. Tổng 23 PASS, 3 SKIP, 0 FAIL/ERROR; 3 case bộ crawl thật không chạy vì thiếu TOEIC_STUDY4_SOURCE. Hai case mới PostgreSQL kiểm draft roundtrip, PENDING→READY→PENDING, 775 lựa chọn, revision cũ, chặn ca tại API/DB, bảo vệ đề đã dùng, quyền và khung cố định. JavaFX kiểm 200 vị trí, Part 7 có 54 câu, lưu câu nhập dở và giữ form khi HTTP 409. Build package PASS. DB kiểm thử tạm riêng dừng exit 0, còn 0 schema. Receipt: docs/manual-exam-verification.json; ảnh MOCK: docs/admin-manual-pending.png. Không triển khai server từ xa.
+
+## 01/11/2026 — Sửa nhập lựa chọn và đáp án trong form soạn đề
+
+- Hiện ô lựa chọn ở mọi Part, gồm Part 1–2 trước đó bị ẩn. Part 2 có A–C, các Part khác A–D; nội dung lựa chọn Part 1–2 vẫn tùy chọn khi đã có trong âm thanh.
+- Đưa ô đáp án đúng lên phần đầu cố định của khung câu hỏi, bên ngoài vùng cuộn media/nội dung. Giữ giá trị khi chuyển câu, lọc Part và lưu; không đổi API, schema hoặc quy tắc PENDING/READY.
+- Kiểm chứng: 38 PASS/3 SKIP/0 FAIL/ERROR, gồm GUI nhập lựa chọn/chọn đáp án/lưu ở cả 7 Part và PostgreSQL thật lưu/đọc/cập nhật đáp án Part 1, 2, 5. Các case crawl thật thiếu dữ liệu được bỏ qua. PostgreSQL tạm được dừng, còn 0 schema. Receipt: docs/manual-answer-verification.json; ảnh MOCK: docs/admin-manual-answers.png.
+
+01/11/2026 — Chẩn đoán READY: tái hiện lease hết hạn khiến ATTEST bị 409 liên tiếp, client chuẩn bị/báo lại nhưng không INVALIDATE; START gắn NOT_READY_AT_START. 2 diagnostic PASS/0 SKIP, PostgreSQL tạm dừng exit 0/còn 0 schema. Chưa xác nhận nguyên nhân lease hết hạn trên VPS; không sửa runtime. Chi tiết docs/READY_RENEWAL_DIAGNOSIS_20261101.md.
+
+## 01/11/2026 — Sửa phục hồi READY và strict START
+
+- Lease mặc định 30 giây; ATTEST mới được tái xác minh đầy đủ sau expiry, receipt cũ không renew. Client không dựng lại ảnh cùng scope khi gặp INVALID_STATE; UI ghi đang xác nhận, không quy kết vào muộn.
+- START mới mặc định requireAllReady=true, giữ ý định từ hộp thoại kể cả snapshot đổi; chỉ partial sau cảnh báo được xác nhận. Server 409 trước mọi mutation nếu READY đổi, retry sau đã START giữ nguyên startId/deadline. Readiness ACCOUNT_PIN kiểm token admission cùng điều kiện START.
+- Kết quả chốt theo suite không cộng trùng lượt chạy: 94 PASS/2 SKIP/0 FAIL/ERROR, package PASS. Hai SKIP: acceptance crawl thật thiếu dữ liệu và ảnh review GUI tùy chọn. PostgreSQL tạm dừng exit 0/còn 0 schema; không triển khai VPS hoặc đổi DB thật. Receipt docs/ready-recovery-verification.json, hướng dẫn docs/READY_RECOVERY_FIX_20261101.md.
