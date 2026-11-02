@@ -264,151 +264,6 @@ svg.chart rect:hover { filter: brightness(1.08); }
 .edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
 .edit-toggle.active { background: var(--orange); color: #fff; }
 body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .5); outline-offset: 4px; }
-
-/* Source-aligned 10-slide edition. Retains ORIGINAL Claymoon typography & tokens. */
-.qslide .h2 { max-width:1680px; font-size:72px; }
-.qslide { font-family:var(--font-body); }
-.qslide .source { font-size:19px; max-width:1520px; }
-.qslide .qicon { width:92px; height:92px; border-radius:28px; display:grid; place-items:center; background:var(--orange-soft); color:var(--orange); }
-.qslide .qicon svg { width:52px; height:52px; }
-.qcover { position:absolute; left:120px; right:120px; top:235px; display:grid; grid-template-columns:800px minmax(0,1fr); align-items:center; gap:60px; }
-.qcover-title { font:800 174px/.95 var(--font-display); letter-spacing:-.055em; color:var(--navy); }
-.qcover-title em { color:var(--orange); font-style:normal; }
-.qcover-sub { font:500 36px/1.35 var(--font-body); margin-top:36px; color:var(--ink-2); }
-.qcover-chips { margin-top:40px; display:flex; gap:14px; }
-.qcover-chips span { padding:15px 24px; border-radius:999px; color:var(--navy); background:#fff; font:600 19px var(--font-mono); box-shadow:var(--shadow-clay); }
-.qcover-screen { padding:14px; max-height:540px; transform:rotate(-2deg); }
-.qcover-screen img { max-height:510px; object-fit:contain; }
-.qthree { position:absolute; left:120px; right:120px; top:335px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:30px; }
-.qfeature { height:390px; padding:36px; }
-.qfeature .qicon { margin-bottom:28px; }
-.qfeature h3 { font:800 46px/1.1 var(--font-display); }
-.qfeature p { margin-top:17px; font-size:28px; line-height:1.42; }
-.qstrip { position:absolute; left:120px; right:120px; top:775px; background:var(--orange-soft); border-radius:26px; display:flex; align-items:center; gap:36px; padding:28px 36px; }
-.qstrip span { font:700 21px var(--font-mono); color:var(--orange-deep); flex:none; }
-.qstrip strong { font:700 29px var(--font-body); color:var(--navy); }
-.qarch { position:absolute; left:120px; right:120px; top:305px; display:grid; grid-template-columns:1fr 88px 1fr 88px 1fr; gap:10px; align-items:center; }
-.qarch-card { height:365px; padding:36px; }
-.qarch-card h3 { font:800 44px var(--font-display); margin:20px 0 4px; }
-.qarch-card p { font-size:25px; }
-.qarch-primary { background:var(--navy); color:#fff; }
-.qarch-primary p { color:#d7deea; }
-.qarch-primary .qicon { background:#344361; color:#ffb98e; }
-.qchipline { display:flex; flex-wrap:wrap; gap:10px; margin-top:24px; }
-.qchipline span { font:600 17px var(--font-body); color:var(--orange-deep); background:var(--orange-soft); padding:8px 15px; border-radius:999px; }
-.qarch-primary .qchipline span { color:#fff; background:#405173; }
-.qconnection { color:var(--orange); font:800 72px var(--font-display); text-align:center; }
-.qprotocol { position:absolute; left:120px; right:120px; top:725px; display:grid; grid-template-columns:1fr 1fr; gap:30px; }
-.qprotocol .card { display:flex; gap:24px; align-items:center; padding:28px 36px; }
-.qprotocol h4 { font:800 32px var(--font-display); }
-.qprotocol p { font-size:23px; margin-top:7px; }
-.qdot { display:block; width:20px; height:20px; border-radius:50%; flex:none; }
-.qdot.orange { background:var(--orange); box-shadow:0 0 0 8px var(--orange-soft); }
-.qdot.navy { background:var(--navy); box-shadow:0 0 0 8px #ecf0f5; }
-.qfive { position:absolute; left:120px; right:120px; top:310px; display:flex; align-items:center; gap:0; }
-.qflow-item { padding:26px 22px; flex:1; height:292px; min-width:0; }
-.qflow-item .qicon { width:68px; height:68px; border-radius:20px; margin:12px 0; }
-.qflow-item .qicon svg { width:38px; height:38px; }
-.qflow-item .qstep { font:700 19px var(--font-mono); color:var(--orange-deep); }
-.qflow-item h3 { font:800 28px var(--font-display); margin-top:8px; }
-.qflow-item p { font-size:21px; line-height:1.33; margin-top:8px; }
-.qflow-arrow { color:var(--orange); font-size:44px; padding:0 4px; flex:none; z-index:1; }
-.qflow-bottom { position:absolute; left:120px; right:120px; top:650px; display:grid; grid-template-columns:735px 1fr; gap:40px; align-items:center; }
-.qmini-screen { padding:8px; height:267px; display:flex; justify-content:center; }
-.qmini-screen img { height:100%; width:100%; object-fit:contain; }
-.qflow-note { padding:28px; }
-.qnote-n span { font:700 20px var(--font-mono); color:var(--orange-deep); }
-.qnote-n strong { display:block; font:800 43px/1.14 var(--font-display); margin-top:14px; }
-.qflow-note p { font-size:27px; margin-top:20px; }
-.qsave { position:absolute; left:120px; right:120px; top:347px; display:grid; grid-template-columns:1fr 76px 1fr 76px 1fr; align-items:center; }
-.qsave-item { height:395px; padding:38px; }
-.qsave-item .qicon { width:88px; height:88px; }
-.qsave-item > span { display:block; margin-top:23px; font:700 18px var(--font-mono); color:var(--orange-deep); }
-.qsave-item h3 { font:800 39px/1.1 var(--font-display); margin-top:10px; }
-.qsave-item p { font-size:25px; line-height:1.4; margin-top:15px; }
-.qsave-main { background:var(--navy); color:#fff; }
-.qsave-main .qicon { background:#344361; color:#ffb98e; }
-.qsave-main p { color:#d7deea; }
-.qsave-main > span { color:#ffb98e; }
-.qsave-arrow { font:800 62px var(--font-display); text-align:center; color:var(--orange); }
-.qsave-bottom { position:absolute; left:120px; right:120px; top:800px; display:flex; justify-content:space-between; gap:22px; }
-.qsave-bottom span { font:600 23px var(--font-body); background:var(--orange-soft); color:var(--orange-deep); padding:20px 24px; border-radius:999px; }
-.qmonitor-layout { position:absolute; left:120px; right:120px; top:300px; display:grid; grid-template-columns:800px 1fr; gap:44px; }
-.qsignal-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-.qsignal { display:flex; gap:18px; height:135px; padding:22px; align-items:center; }
-.qsignal .qicon { width:66px; height:66px; border-radius:18px; flex:none; }
-.qsignal .qicon svg { width:34px; height:34px; }
-.qsignal span { font:700 25px var(--font-body); }
-.qmonitor-channel { margin-top:28px; padding:26px 32px; background:var(--navy); border-radius:22px; color:#fff; font:600 27px var(--font-body); text-align:center; }
-.qmonitor-channel b { color:#ffb98e; }
-.qstate-bars { display:flex; gap:17px; margin-top:28px; }
-.qstate-bars span { flex:1; background:var(--orange-soft); border-radius:999px; padding:15px; font:700 22px var(--font-body); color:var(--orange-deep); text-align:center; }
-.qmonitor-right .screen { padding:10px; height:465px; display:flex; justify-content:center; }
-.qmonitor-right .screen img { width:100%; height:100%; object-fit:contain; }
-.qmonitor-right > p { font:500 19px var(--font-mono); color:var(--muted); margin-top:15px; text-align:center; }
-.qmonitor-bottom { position:absolute; left:120px; right:120px; top:895px; color:var(--ink-2); font-size:26px; text-align:center; }
-.qmonitor-bottom b { color:var(--orange-deep); }
-.qtest-cols { position:absolute; left:120px; right:120px; top:319px; display:grid; grid-template-columns:repeat(3,1fr); gap:32px; }
-.qtest-card { height:399px; padding:34px 42px; position:relative; }
-.qtest-name { font:800 34px var(--font-display); }
-.qtest-suite { display:block; font:500 20px var(--font-mono); color:var(--muted); height:30px; margin-top:7px; }
-.qtest-big { font:800 140px/.95 var(--font-display); letter-spacing:-.04em; margin-top:36px; }
-.qtest-pass { font:700 20px var(--font-mono); color:#15803d; background:#e7f6ec; border-radius:999px; width:max-content; padding:7px 19px; margin-top:20px; }
-.qtest-skip { position:absolute; right:34px; bottom:40px; font:600 22px var(--font-body); color:var(--muted); }
-.qtest-bottom { position:absolute; left:120px; right:120px; top:765px; display:grid; grid-template-columns:1.25fr 1fr; gap:30px; align-items:center; }
-.qtest-flag { display:flex; gap:28px; align-items:center; padding:26px 38px; }
-.qtest-zero { font:800 88px/1 var(--font-display); color:var(--orange); }
-.qtest-flag strong { font-size:24px; }
-.qtest-flag p { font-size:21px; margin-top:7px; }
-.qtest-side { padding:22px 30px; font:600 24px var(--font-body); color:var(--ink-2); }
-.qpoll-card { position:absolute; left:120px; right:120px; top:310px; height:516px; padding:42px 50px; }
-.qpoll-head { display:grid; grid-template-columns:240px 1fr 240px; padding:0 0 18px; border-bottom:2px solid var(--line); font:600 19px var(--font-mono); color:var(--muted); }
-.qpoll-head span:last-child { text-align:right; }
-.qpoll-row { display:grid; grid-template-columns:240px 1fr 130px 180px; gap:22px; align-items:center; height:108px; border-bottom:1px solid var(--line); }
-.qpoll-row strong { font:800 32px var(--font-display); }
-.qpoll-track { height:36px; border-radius:6px; overflow:hidden; background:#f3f4f6; }
-.qpoll-fill { height:100%; background:var(--orange); border-radius:6px; }
-.qpoll-result { font:700 27px var(--font-mono); white-space:nowrap; }
-.qpoll-cpu { font:700 26px var(--font-mono); text-align:right; }
-.qpoll-punch { position:absolute; left:120px; right:120px; top:852px; display:flex; align-items:center; gap:30px; }
-.qpoll-stat { font:800 66px var(--font-display); color:var(--orange); }
-.qpoll-punch strong { font:700 26px var(--font-body); }
-.qpoll-punch p { font:500 20px var(--font-body); margin-top:4px; color:var(--muted); }
-.qnet { position:absolute; left:120px; right:120px; top:303px; display:grid; grid-template-columns:760px 1fr; gap:34px; }
-.qnet-left { display:flex; flex-direction:column; gap:20px; }
-.qnet-hero { padding:32px 38px; min-height:292px; }
-.qnet-subhead { font:700 23px var(--font-body); }
-.qnet-hero strong { display:block; font:800 126px/.95 var(--font-display); color:var(--orange); margin-top:18px; }
-.qnet-hero p { font-size:26px; margin-top:6px; }
-.qnet-hero > span { display:block; font:500 18px var(--font-mono); color:var(--muted); margin-top:14px; }
-.qnet-mini { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
-.qnet-mini > div { padding:23px 30px; background:#fff; border-radius:26px; box-shadow:var(--shadow-clay); }
-.qnet-mini strong { display:block; font:800 50px var(--font-display); }
-.qnet-mini span { font-size:22px; color:var(--ink-2); }
-.qnet-latency { padding:25px 30px; }
-.qnet-latency > span { font:600 18px var(--font-mono); color:var(--muted); }
-.qnet-latency p { font-size:24px; margin-top:12px; }
-.qnet-right { padding:34px 36px; min-height:674px; }
-.qnet-right .qnet-subhead { font:800 32px/1.16 var(--font-display); margin-bottom:43px; }
-.qdelta-row { margin-bottom:42px; }
-.qdelta-row > div:first-child { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; font-size:24px; }
-.qdelta-row strong { font:800 30px var(--font-display); }
-.qdelta-track { width:100%; height:23px; border-radius:7px; background:var(--sand); overflow:hidden; }
-.qdelta-track > div { height:100%; background:var(--orange); border-radius:7px; }
-.qdelta-foot { margin-top:30px; padding:22px; background:var(--orange-soft); color:var(--orange-deep); border-radius:20px; font:700 22px var(--font-body); }
-.qend { position:absolute; left:120px; right:120px; top:316px; display:grid; grid-template-columns:1fr 1fr; gap:36px; }
-.qend-card { height:445px; padding:40px 42px; }
-.qend-label { font:700 21px var(--font-mono); color:var(--orange-deep); }
-.qend-list { display:grid; gap:28px; margin-top:36px; }
-.qend-list > div { display:flex; gap:19px; align-items:flex-start; font:600 27px/1.37 var(--font-body); }
-.qend-list span { flex:none; font:800 34px/1 var(--font-display); color:var(--orange); }
-.qthank { position:absolute; left:120px; right:120px; top:810px; display:flex; gap:54px; align-items:baseline; }
-.qthank strong { font:800 90px/1 var(--font-display); color:var(--orange); }
-.qthank span { font:700 37px var(--font-body); color:var(--navy); }
-/* Ensure slideshow typography stays in the original self-hosted fonts. */
-.qslide h1, .qslide h2, .qslide h3, .qslide .qtest-big, .qslide .qthank strong { font-family:var(--font-display); }
-.qslide p, .qslide .qfeature, .qslide .qsignal, .qslide .qstrip { font-family:var(--font-body); }
-
 </style>
 </head>
 <body>
@@ -422,129 +277,341 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
 <!-- =========================================================
      01 · Bìa
      ========================================================= -->
-<section class="slide qslide" data-title="Giới thiệu"><svg class="flow" viewBox="0 0 1920 1080" aria-hidden="true"><path d="M-40 997 C380 890 790 1030 1190 904 S1640 790 1960 840" stroke="#f26b1d" opacity=".18" stroke-width="8"/></svg>
-<div class="kicker reveal"><span class="pill fill">BTL Lập trình mạng</span><span class="pill">Nhóm 3 thành viên</span></div>
-<div class="qcover">
-  <div class="reveal d1"><h1 class="qcover-title">TOEIC<br><em>Monitor</em></h1>
-    <p class="qcover-sub">Thi TOEIC trên máy tính<br>và giám sát thời gian thực</p>
-    <div class="qcover-chips"><span>JavaFX</span><span>Spring Boot</span><span>PostgreSQL</span></div>
+<section class="slide active" data-title="Bìa">
+  <svg class="flow" viewBox="0 0 1920 1080" aria-hidden="true">
+    <defs><linearGradient id="fl1" x1="0" x2="1"><stop offset="0" stop-color="#f26b1d" stop-opacity="0"/><stop offset=".5" stop-color="#f26b1d" stop-opacity=".55"/><stop offset="1" stop-color="#ffb07a" stop-opacity=".2"/></linearGradient></defs>
+    <path d="M-40 980 C 420 860, 760 1060, 1180 900 S 1760 620, 1990 700" stroke="url(#fl1)" stroke-width="10"/>
+    <path d="M-40 1030 C 480 930, 820 1110, 1240 960 S 1780 720, 1990 790" stroke="url(#fl1)" stroke-width="4"/>
+  </svg>
+  <div class="moon" style="right:150px; top:120px; width:640px; height:640px;"></div>
+  <div class="pebble" style="width:150px; height:150px; right:720px; top:640px;"></div>
+  <div class="pebble" style="width:86px; height:86px; right:110px; top:760px;"></div>
+  <div class="kicker reveal" style="top:110px"><span class="pill fill">BTL Lập trình mạng</span><span class="pill">Nhóm 3 thành viên</span></div>
+  <h1 class="title-h1 reveal d1">TOEIC<br><em>Monitor</em></h1>
+  <p class="title-sub lead reveal d2" style="font-size:36px">Thi TOEIC trên máy tính · Giám sát thí sinh theo thời gian thực</p>
+  <div class="signals reveal d3"><span class="sig"><i></i>Process</span><span class="sig"><i></i>USB</span><span class="sig"><i></i>Focus</span><span class="sig"><i></i>Display</span></div>
+  <div class="source reveal d4" style="font-size:22px; bottom:80px">Bài tập lớn môn Lập trình mạng · Ứng dụng desktop Client–Server</div>
+  <aside class="notes">Giới thiệu đề tài TOEIC Monitor, bài tập lớn Lập trình mạng của nhóm ba người. Ứng dụng desktop có ba vai trò: quản trị viên, giám thị và thí sinh. Nhấn mạnh tổ chức thi và giám sát tín hiệu trên máy, không phải AI hoặc camera.</aside>
+</section>
+
+<section class="slide" data-title="Bài toán">
+  <div class="kicker reveal"><span class="pill fill">01 · Bài toán</span></div>
+  <h2 class="h2 reveal d1">Một ca thi cần cả bài làm và giám sát</h2>
+  <div class="region grid3" style="top:335px">
+    <div class="card reveal d1" data-box="p1"><div class="icon-orb">1</div>
+      <h3>Thí sinh làm bài</h3><p>Vào phòng · nghe đề<br>Làm bài · nộp bài</p></div>
+    <div class="card reveal d2" data-box="p2"><div class="icon-orb">2</div>
+      <h3>Server kiểm soát</h3><p>Thời gian, quyền truy cập<br>và đáp án đã lưu</p></div>
+    <div class="card reveal d3" data-box="p3"><div class="icon-orb">3</div>
+      <h3>Giám thị theo dõi</h3><p>Trạng thái thí sinh<br>và tín hiệu bất thường</p></div>
   </div>
-  <div class="qcover-screen screen reveal-scale d2"><img src="assets/screens/proctor-alerts.webp" alt="Giao diện giám thị TOEIC Monitor"></div>
-</div>
-<div class="source">Ứng dụng desktop · 3 vai trò: quản trị viên, giám thị, thí sinh.</div><div class="pageno">01</div>
-<aside class="notes">Giới thiệu đề tài BTL Lập trình mạng, ba thành viên và ba vai trò trong hệ thống desktop. Nhấn mạnh thi TOEIC trên máy tính kết hợp giám sát tín hiệu thí sinh theo thời gian thực. Ảnh giao diện chỉ minh họa phần mềm thật; không nói toàn bộ công nghệ trên trang bìa.</aside></section>
-
-<section class="slide qslide" data-title="Bài toán"><div class="kicker reveal"><span class="pill fill">02 · Bài toán</span></div><h2 class="h2 reveal d1">Thi TOEIC cần quản lý cả bài làm và diễn biến</h2>
-<div class="qthree">
-  <div class="card qfeature reveal d1"><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 36V31a21 21 0 0 1 42 0v5M11 34v14c0 8 9 9 11 3V35c-4-6-11-3-11-1M53 34v14c0 8-9 9-11 3V35c4-6 11-3 11-1"/></svg></div><h3>Thí sinh</h3><p>Vào phòng · nghe đề<br>Làm bài · nộp bài</p></div>
-  <div class="card qfeature reveal d2"><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="46" height="14" rx="4"/><rect x="9" y="26" width="46" height="14" rx="4"/><rect x="9" y="43" width="46" height="14" rx="4"/><path d="M16 16h18M16 33h18M16 50h18"/><circle cx="46" cy="16" r="1"/><circle cx="46" cy="33" r="1"/><circle cx="46" cy="50" r="1"/></svg></div><h3>Server</h3><p>Thời gian · quyền truy cập<br>Đáp án đã lưu</p></div>
-  <div class="card qfeature reveal d3"><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="10" width="52" height="38" rx="6"/><path d="M21 56h22M32 48v8M15 22h13M15 31h13M36 23h11M36 32h11"/></svg></div><h3>Giám thị</h3><p>Theo dõi trạng thái<br>và tín hiệu bất thường</p></div>
-</div>
-<div class="qstrip reveal d4"><span>Giải pháp</span><strong>Ứng dụng desktop kết hợp thi TOEIC và giám sát tập trung</strong></div>
-<div class="source">Ba yêu cầu của một ca thi có giám thị.</div><div class="pageno">02</div>
-<aside class="notes">Tổ chức ca thi không chỉ là làm trắc nghiệm. Thí sinh cần vào phòng, nghe đề, làm và nộp. Server phải quản lý thời gian, quyền truy cập và đáp án lưu. Giám thị cần theo dõi trạng thái máy thí sinh và tín hiệu bất thường. Điểm khác biệt là tổ chức ca thi có giám thị, không khẳng định mọi website luyện thi đều thiếu tính năng này.</aside></section>
-
-<section class="slide qslide" data-title="Kiến trúc Client–Server"><div class="kicker reveal"><span class="pill fill">03 · Kiến trúc</span></div><h2 class="h2 reveal d1">Một hệ thống, ba thành phần</h2>
-<div class="qarch">
-  <div class="card qarch-card reveal d1"><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="10" width="52" height="38" rx="6"/><path d="M21 56h22M32 48v8M15 22h13M15 31h13M36 23h11M36 32h11"/></svg></div><h3>JavaFX</h3><p>Client desktop</p><div class="qchipline"><span>Thi TOEIC</span><span>Thu thập tín hiệu</span></div></div>
-  <div class="qconnection reveal d2"><span>↔</span></div>
-  <div class="card qarch-card qarch-primary reveal d3"><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="46" height="14" rx="4"/><rect x="9" y="26" width="46" height="14" rx="4"/><rect x="9" y="43" width="46" height="14" rx="4"/><path d="M16 16h18M16 33h18M16 50h18"/><circle cx="46" cy="16" r="1"/><circle cx="46" cy="33" r="1"/><circle cx="46" cy="50" r="1"/></svg></div><h3>Spring Boot</h3><p>Server nghiệp vụ</p><div class="qchipline"><span>Xác thực</span><span>Phòng thi</span></div></div>
-  <div class="qconnection reveal d4"><span>↔</span></div>
-  <div class="card qarch-card reveal d5"><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="32" cy="12" rx="23" ry="8"/><path d="M9 12v38c0 11 46 11 46 0V12M9 25c0 11 46 11 46 0M9 38c0 11 46 11 46 0"/></svg></div><h3>PostgreSQL</h3><p>Lưu dữ liệu</p><div class="qchipline"><span>Bài làm</span><span>Lịch sử</span></div></div>
-</div>
-<div class="qprotocol">
-  <div class="card reveal d3"><span class="qdot orange"></span><div><h4>HTTP / REST</h4><p>Đăng nhập · đề thi · lưu và nộp</p></div></div>
-  <div class="card reveal d4"><span class="qdot navy"></span><div><h4>WebSocket</h4><p>Trạng thái · sự kiện · điều khiển ca thi</p></div></div>
-</div>
-<div class="source">Client không truy cập trực tiếp cơ sở dữ liệu.</div><div class="pageno">03</div>
-<aside class="notes">Theo file Word: Client JavaFX hiển thị đề, gửi đáp án và thu thập tín hiệu; Spring Boot xác thực, quản lý phòng và xử lý bài làm/giám sát; PostgreSQL lưu tài khoản, bài thi, kết quả, sự kiện. HTTP/REST cho đăng nhập, lấy đề/media, lưu nộp; WebSocket cho trạng thái, sự kiện và thông báo điều khiển. Không đưa danh sách package, phiên bản thư viện hoặc migration lên slide.</aside></section>
-
-<section class="slide qslide" data-title="Quy trình thi"><div class="kicker reveal"><span class="pill fill">04 · Quy trình</span></div><h2 class="h2 reveal d1">Một ca thi: từ chuẩn bị đến nộp bài</h2>
-<div class="qfive"><div class="card qflow-item reveal d1"><span class="qstep">01</span><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8h20l10 10v38H18zM38 8v12h10M24 33h18M24 43h12"/></svg></div><h3>Chuẩn bị đề</h3><p>Admin</p></div><span class="qflow-arrow">→</span><div class="card qflow-item reveal d2"><span class="qstep">02</span><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="21" cy="22" r="7"/><circle cx="44" cy="22" r="7"/><path d="M7 50c0-10 5-16 14-16s14 6 14 16M32 41c3-5 7-7 12-7 9 0 14 6 14 16"/></svg></div><h3>Tạo phòng</h3><p>Giám thị · PIN</p></div><span class="qflow-arrow">→</span><div class="card qflow-item reveal d3"><span class="qstep">03</span><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 36V31a21 21 0 0 1 42 0v5M11 34v14c0 8 9 9 11 3V35c-4-6-11-3-11-1M53 34v14c0 8-9 9-11 3V35c4-6 11-3 11-1"/></svg></div><h3>Vào phòng</h3><p>Tải audio · thử loa</p></div><span class="qflow-arrow">→</span><div class="card qflow-item reveal d4"><span class="qstep">04</span><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="10" width="52" height="38" rx="6"/><path d="M21 56h22M32 48v8M15 22h13M15 31h13M36 23h11M36 32h11"/></svg></div><h3>Làm bài</h3><p>Listening · Reading</p></div><span class="qflow-arrow">→</span><div class="card qflow-item reveal d5"><span class="qstep">05</span><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 34l14 14 28-31"/></svg></div><h3>Nộp bài</h3><p>Lưu · chốt lượt thi</p></div></div>
-<div class="qflow-bottom">
-  <div class="qmini-screen screen reveal d3"><img src="assets/screens/candidate-lobby.webp" alt="Giao diện phòng chờ thí sinh"></div>
-  <div class="qflow-note reveal d4"><div class="qnote-n"><span>SERVER</span><strong>Quản lý thời gian làm bài</strong></div><p>Kết nối lại không đặt lại deadline</p></div>
-</div>
-<div class="source">Luồng năm bước theo tài liệu Slide - TOEIC Monitor.</div><div class="pageno">04</div>
-<aside class="notes">Quản trị viên chuẩn bị tài khoản và đề. Giám thị tạo phòng, cấp mã PIN. Thí sinh vào phòng, tải âm thanh, thử loa và xác nhận sẵn sàng. Giám thị START; thí sinh làm Listening và Reading; đáp án tự lưu, nộp hoặc hết giờ thì chốt. Server quản lý deadline, reconnect không reset. Khi trình bày có thể mở màn phòng chờ, đồng thời chú ý hành vi START khi chưa đủ READY của bản code hiện tại.</aside></section>
-
-<section class="slide qslide" data-title="Lưu bài"><div class="kicker reveal"><span class="pill fill">05 · Lưu bài</span></div><h2 class="h2 reveal d1">Chỉ báo “Đã lưu” sau khi ghi DB thành công</h2>
-<div class="qsave">
- <div class="card qsave-item reveal d1"><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8h20l10 10v38H18zM38 8v12h10M24 33h18M24 43h12"/></svg></div><span>01</span><h3>Nhận yêu cầu</h3><p>Đáp án từ client</p></div>
- <span class="qsave-arrow reveal d2">→</span>
- <div class="card qsave-item qsave-main reveal d3"><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="32" cy="12" rx="23" ry="8"/><path d="M9 12v38c0 11 46 11 46 0V12M9 25c0 11 46 11 46 0M9 38c0 11 46 11 46 0"/></svg></div><span>02</span><h3>Kiểm tra &amp; lưu</h3><p>Khóa lượt thi · kiểm phiên ghi</p></div>
- <span class="qsave-arrow reveal d4">→</span>
- <div class="card qsave-item reveal d5"><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 34l14 14 28-31"/></svg></div><span>03</span><h3>Xác nhận</h3><p>Giao dịch đã hoàn tất</p></div>
-</div>
-<div class="qsave-bottom reveal d5"><span>Server giữ deadline</span><span>Tránh ghi đè đáp án mới</span><span>Nộp lại không tạo kết quả mới</span></div>
-<div class="source">Nguồn kỹ thuật: ExamService.java · ghi chú chi tiết để ở phần hỏi đáp.</div><div class="pageno">05</div>
-<aside class="notes">Server khóa bản ghi lượt thi khi save/submit/timeout; kiểm tra phiên ghi và phiên bản đáp án để chặn dữ liệu cũ ghi đè. Deadline theo đồng hồ server. Nếu client gửi lại cùng yêu cầu nộp thì trả kết quả đã chốt, không tạo thêm. Chỉ hiện Đã lưu sau khi giao dịch commit thành công. Không đưa SQL lên slide; khi hỏi mới giải thích hàng khóa, revision và writer epoch.</aside></section>
-
-<section class="slide qslide" data-title="Giám sát"><div class="kicker reveal"><span class="pill fill">06 · Giám sát</span></div><h2 class="h2 reveal d1">Giám thị nhìn thấy tín hiệu từ máy thí sinh</h2>
-<div class="qmonitor-layout">
- <div class="qmonitor-left">
-  <div class="qsignal-grid">
-   <div class="card qsignal reveal d1"><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="11" y="9" width="42" height="46" rx="6"/><path d="M20 21h24M20 32h24M20 43h24"/></svg></div><span>Tiến trình</span></div>
-   <div class="card qsignal reveal d2"><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M32 56V10M32 10l-9 9M32 10l9 9M24 30l8 8 9-9M24 30h-8V19M41 29h7v-8M26 56h12"/></svg></div><span>USB lưu trữ</span></div>
-   <div class="card qsignal reveal d3"><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="10" width="52" height="38" rx="6"/><path d="M21 56h22M32 48v8M15 22h13M15 31h13M36 23h11M36 32h11"/></svg></div><span>Focus · cửa sổ</span></div>
-   <div class="card qsignal reveal d4"><div class="qicon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="46" height="14" rx="4"/><rect x="9" y="26" width="46" height="14" rx="4"/><rect x="9" y="43" width="46" height="14" rx="4"/><path d="M16 16h18M16 33h18M16 50h18"/><circle cx="46" cy="16" r="1"/><circle cx="46" cy="33" r="1"/><circle cx="46" cy="50" r="1"/></svg></div><span>Số màn hình</span></div>
+  <div class="region reveal d4" style="top:814px">
+    <div class="card tint" style="padding:30px 38px; display:flex; gap:36px; align-items:center">
+      <span class="label" style="color:var(--orange-deep)">Giải pháp</span>
+      <span class="small" style="font-weight:600">Desktop TOEIC + thu thập tín hiệu tại client + giám sát tập trung</span>
+    </div>
   </div>
-  <div class="qmonitor-channel reveal d4">Client <b>→ WebSocket →</b> Server</div>
-  <div class="qstate-bars reveal d5"><span>Trạng thái hiện tại</span><span>Lịch sử sự kiện</span></div>
- </div>
- <div class="qmonitor-right reveal-scale d3">
-  <div class="screen"><img src="assets/screens/proctor-alerts.webp" alt="Bảng trạng thái và cảnh báo trên màn hình giám thị"></div>
-  <p>Ảnh giao diện giám thị thật</p>
- </div>
-</div>
-<div class="qmonitor-bottom reveal d5">Cảnh báo giúp giám thị xem xét — <b>không tự kết luận gian lận</b></div>
-<div class="source">Nguồn: ảnh ứng dụng và luồng monitoring của nhóm.</div><div class="pageno">06</div>
-<aside class="notes">Client thu thập process trong danh sách theo dõi, USB lưu trữ, trạng thái focus/cửa sổ và số màn hình do nguồn quan sát báo cáo; gửi thông tin qua WebSocket để giám thị xem trạng thái hiện tại và lịch sử. Cảnh báo chỉ hỗ trợ đánh giá, không phải kết luận gian lận. Các tên class, tuple định danh, retry để ở phần hỏi đáp. Không mô tả việc quay màn hình, đọc tệp, camera hoặc AI.</aside></section>
+  <div class="source">Mục tiêu: tổ chức ca thi có giám thị, không chỉ luyện đề trắc nghiệm.</div><div class="pageno">02</div>
+  <aside class="notes">Thí sinh cần vào phòng, nghe đề, làm và nộp. Server quản lý thời gian, quyền và đáp án đã lưu. Giám thị theo dõi trạng thái và tín hiệu bất thường. Giải pháp của nhóm là ứng dụng desktop tích hợp hai luồng thi và giám sát. Không nói rằng mọi website luyện TOEIC đều thiếu giám sát.</aside>
+</section>
 
-<section class="slide qslide" data-title="Kiểm thử chức năng"><div class="kicker reveal"><span class="pill fill">07 · Kiểm thử</span></div><h2 class="h2 reveal d1">Các nhóm chức năng đã được kiểm tra</h2>
-<div class="qtest-cols">
- <div class="card qtest-card reveal d1"><div class="qtest-name">Server</div><span class="qtest-suite">20 suite</span><div class="qtest-big">363</div><div class="qtest-pass">ĐẠT</div><div class="qtest-skip">4 bỏ qua</div></div><div class="card qtest-card reveal d2"><div class="qtest-name">Client / protocol</div><span class="qtest-suite">9 suite</span><div class="qtest-big">144</div><div class="qtest-pass">ĐẠT</div><div class="qtest-skip">0 bỏ qua</div></div><div class="card qtest-card reveal d3"><div class="qtest-name">Phân tích E1</div><span class="qtest-suite"></span><div class="qtest-big">30</div><div class="qtest-pass">ĐẠT</div><div class="qtest-skip">0 bỏ qua</div></div>
-</div>
-<div class="qtest-bottom">
-  <div class="qtest-flag card tint reveal d4"><span class="qtest-zero">0</span><div><strong>Thất bại trong các lượt được báo cáo</strong><p>PASS và SKIP được thống kê riêng</p></div></div>
-  <div class="qtest-side reveal d5">Phân quyền · lưu–nộp · đồng bộ · xử lý lỗi</div>
-</div>
-<div class="source">Kết quả kiểm thử ngày 28/10 theo Slide - TOEIC Monitor.docx; không khẳng định hệ thống hết lỗi.</div><div class="pageno">07</div>
-<aside class="notes">Theo file Word: ngày 28/10, server 20 suite 363 đạt/4 bỏ qua; client/protocol 9 suite 144 đạt/0 bỏ qua; bộ phân tích E1 30 đạt/0 bỏ qua. Các lượt này ghi nhận 0 thất bại/0 lỗi thực thi, có cả giả lập và tích hợp PostgreSQL/mạng thật. Không đánh đồng 4 SKIP với PASS; đây là mốc lịch sử trong điều kiện kiểm thử cụ thể.</aside></section>
+<section class="slide" data-title="Kiến trúc tổng thể">
+  <div class="kicker reveal"><span class="pill fill">02 · Kiến trúc</span></div>
+  <h2 class="h2 reveal d1">REST cho bài thi, WebSocket cho giám sát</h2>
+  <div class="arch">
+    <!-- Client column -->
+    <div class="col card reveal d1" style="left:0; width:440px; padding:32px" data-box="client">
+      <span class="label">Client · JavaFX</span>
+      <h3 style="margin:8px 0 18px">Desktop app</h3>
+      <div style="display:grid; gap:12px">
+        <div class="mod">Admin <small>tài khoản, đề thi</small></div>
+        <div class="mod">Giám thị <small>phòng PIN, START, dashboard</small></div>
+        <div class="mod">Thí sinh <small>vào phòng, làm bài, audio</small></div>
+        <div class="mod" style="background:#fff; box-shadow: inset 0 0 0 2px var(--peach)">Collector <small>process, USB, focus</small></div>
+      </div>
+    </div>
+    <!-- Two lanes -->
+    <div class="lane card reveal d2" style="top:20px" data-box="rest">
+      <span class="label">HTTP / REST</span>
+      <div class="t">Yêu cầu – trả lời</div>
+      <p>Đăng nhập · đề/media · lưu và nộp bài</p>
+    </div>
+    <div class="lane card navy reveal d3" style="top:330px" data-box="ws">
+      <span class="label" style="color:#ffb98e">WebSocket</span>
+      <div class="t">Đẩy hai chiều</div>
+      <p>Trạng thái · sự kiện giám sát · thông báo ca thi</p>
+    </div>
+    <div class="arrow reveal d2" style="left:458px; width:44px; top:140px"></div>
+    <div class="arrow reveal d2" style="left:1058px; width:44px; top:140px"></div>
+    <div class="arrow reveal d3" style="left:458px; width:44px; top:450px"></div>
+    <div class="arrow reveal d3" style="left:1058px; width:44px; top:450px"></div>
+    <!-- Server column -->
+    <div class="col card reveal d4" style="left:1120px; width:560px; padding:32px" data-box="server">
+      <span class="label">Server · Spring Boot</span>
+      <h3 style="margin:8px 0 18px">Một ứng dụng, chia module</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+        <div class="mod">auth</div><div class="mod">admin</div>
+        <div class="mod">exam <small>phòng, attempt</small></div><div class="mod">audio</div>
+        <div class="mod">monitoring <small>reducer, signal</small></div><div class="mod">realtime</div>
+      </div>
+      <div class="mod" style="margin-top:18px; background:var(--navy); color:#fff">PostgreSQL <small style="color:#c9d3e3">Tài khoản · bài làm · lịch sử</small></div>
+    </div>
+  </div>
+  <div class="source">Client ↔ Server ↔ Database · HTTP/REST và WebSocket được tách theo mục đích.</div>
+  <div class="pageno">03</div>
+  <aside class="notes">Client JavaFX hiển thị bài thi, gửi đáp án và tín hiệu quan sát; Spring Boot xử lý xác thực, phòng thi, bài làm và monitoring; PostgreSQL lưu dữ liệu thi/kết quả/lịch sử. HTTP/REST dùng lấy đề/media, lưu nộp; WebSocket đẩy trạng thái, sự kiện và thông báo ca thi. Client không kết nối thẳng cơ sở dữ liệu.</aside>
+</section>
 
-<section class="slide qslide" data-title="Polling"><div class="kicker reveal"><span class="pill fill">08 · Thực nghiệm E1</span></div><h2 class="h2 reveal d1">Quét nhanh thấy nhiều hơn — nhưng tăng CPU</h2>
-<div class="qpoll-card card reveal d2">
- <div class="qpoll-head"><span>Chu kỳ quét</span><span>Quan sát được / 30</span><span>CPU collector</span></div>
- <div class="qpoll-row"><strong>250 ms</strong><div class="qpoll-track"><div class="qpoll-fill" style="width:90%"></div></div><b class="qpoll-result">27/30</b><span class="qpoll-cpu">19,01%</span></div><div class="qpoll-row"><strong>500 ms</strong><div class="qpoll-track"><div class="qpoll-fill" style="width:46.667%"></div></div><b class="qpoll-result">14/30</b><span class="qpoll-cpu">10,44%</span></div><div class="qpoll-row"><strong>1.000 ms</strong><div class="qpoll-track"><div class="qpoll-fill" style="width:20%"></div></div><b class="qpoll-result">6/30</b><span class="qpoll-cpu">5,57%</span></div><div class="qpoll-row"><strong>2.000 ms</strong><div class="qpoll-track"><div class="qpoll-fill" style="width:13.334%"></div></div><b class="qpoll-result">4/30</b><span class="qpoll-cpu">3,03%</span></div>
-</div>
-<div class="qpoll-punch reveal d4"><span class="qpoll-stat">360</span><div><strong>lần tạo tiến trình có kiểm soát</strong><p>12 lượt · hold mục tiêu 200 ms</p></div></div>
-<div class="source">CPU tính theo % một lõi. Phép thử collector, không phải hiệu năng toàn ứng dụng.</div><div class="pageno">08</div>
-<aside class="notes">E1: 12 lượt, tổng 360 process con có kiểm soát. Với nhóm hold mục tiêu 200 ms, lần lượt chu kỳ 250/500/1000/2000 ms quan sát được 27/14/6/4 trên 30, CPU collector trung bình 19,01/10,44/5,57/3,03% một lõi. Ba lượt mỗi mức. Hold 200 ms là mục tiêu chứ không phải tuổi thọ thực tế đúng 200 ms. Không suy rộng ra toàn bộ ứng dụng.</aside></section>
+<section class="slide" data-title="Luồng phòng thi">
+  <div class="kicker reveal"><span class="pill fill">02 · Luồng phòng thi</span></div>
+  <h2 class="h2 reveal d1">Từ chuẩn bị đề đến nộp bài</h2>
+  <div class="pipe" style="top:315px">
+    <div class="step reveal d1">
+      <div class="card" style="padding:30px 28px; min-height:294px">
+        <div class="icon-orb">1</div>
+        <span class="label">Admin</span><h3 style="font-size:30px; margin:12px 0">Chuẩn bị đề</h3>
+        <p style="font-size:22px">Tài khoản · đề thi</p>
+      </div>
+    </div>
+  <div class="step reveal d2">
+      <div class="card" style="padding:30px 28px; min-height:294px">
+        <div class="icon-orb">2</div>
+        <span class="label">Giám thị</span><h3 style="font-size:30px; margin:12px 0">Tạo phòng</h3>
+        <p style="font-size:22px">Cấp mã PIN</p>
+      </div>
+    </div>
+  <div class="step reveal d3">
+      <div class="card" style="padding:30px 28px; min-height:294px">
+        <div class="icon-orb">3</div>
+        <span class="label">Thí sinh</span><h3 style="font-size:30px; margin:12px 0">Vào phòng</h3>
+        <p style="font-size:22px">Tải audio · thử loa</p>
+      </div>
+    </div>
+  <div class="step reveal d4">
+      <div class="card" style="padding:30px 28px; min-height:294px">
+        <div class="icon-orb">4</div>
+        <span class="label">Ca thi</span><h3 style="font-size:30px; margin:12px 0">Làm bài</h3>
+        <p style="font-size:22px">Listening · Reading</p>
+      </div>
+    </div>
+  <div class="step reveal d5">
+      <div class="card" style="padding:30px 28px; min-height:294px">
+        <div class="icon-orb">5</div>
+        <span class="label">Kết thúc</span><h3 style="font-size:30px; margin:12px 0">Nộp bài</h3>
+        <p style="font-size:22px">Lưu và chốt kết quả</p>
+      </div>
+    </div>
+  </div>
+  <div class="region" style="top:677px; display:grid;grid-template-columns: 750px 1fr; gap:44px; align-items:center">
+    <div class="screen reveal d4" style="height:254px; display:flex;justify-content:center;align-items:center;padding:10px" data-box="lobby">
+      <img src="assets/screens/candidate-lobby.webp" alt="Ảnh giao diện thí sinh trong phòng chờ" style="width:100%;height:100%;object-fit:contain">
+    </div>
+    <div class="card tint reveal d5" style="padding:30px 42px">
+      <h3>Deadline do Server quản lý</h3>
+      <p>Kết nối lại không đặt lại thời gian thi.</p>
+    </div>
+  </div>
+  <div class="source">Luồng ca thi: READY → START → Listening/Reading → Autosave → Nộp hoặc hết giờ.</div><div class="pageno">04</div>
+  <aside class="notes">Bước 1 Admin chuẩn bị tài khoản và đề. Bước 2 giám thị tạo phòng, cấp PIN. Bước 3 thí sinh tải âm thanh, thử loa, xác nhận READY. Bước 4 giám thị START; thí sinh làm Listening và Reading. Bước 5 autosave; submit hoặc hết giờ thì chốt bài. Deadline tính phía server, reconnect không reset. Khi được hỏi, giải thích cách xử lý START khi phòng chưa đủ READY.</aside>
+</section>
 
-<section class="slide qslide" data-title="Truyền thông thử nghiệm"><div class="kicker reveal"><span class="pill fill">09 · Truyền thông</span></div><h2 class="h2 reveal d1">Tải giả lập và đồng bộ trạng thái</h2>
-<div class="qnet">
- <div class="qnet-left">
-  <div class="card qnet-hero reveal d1"><div class="qnet-subhead">Tải đồng thời · loopback</div><strong>20</strong><p>phiên thí sinh giao thức giả lập</p><span>Kiểm thử các mức 1 · 2 · 5 · 10 · 20</span></div>
-  <div class="qnet-mini reveal d2"><div><strong>25.227</strong><span>HTTP requests</span></div><div><strong>342</strong><span>mẫu sự kiện</span></div></div>
-  <div class="qnet-latency card reveal d3"><span>p95 khi tải mức 20</span><p>Vào phòng <b>1,19 s</b> · Nhận sự kiện <b>34,46 ms</b></p></div>
- </div>
- <div class="card qnet-right reveal d3">
-  <div class="qnet-subhead">DELTA giảm payload WebSocket so với FULL</div>
-  <div class="qdelta-row"><div><span>Ít thay đổi</span><strong>68,34%</strong></div><div class="qdelta-track"><div style="width:68.34%"></div></div></div><div class="qdelta-row"><div><span>Nhiều thay đổi</span><strong>15,60%</strong></div><div class="qdelta-track"><div style="width:15.6%"></div></div></div><div class="qdelta-row"><div><span>Có reconnect</span><strong>65,20%</strong></div><div class="qdelta-track"><div style="width:65.2%"></div></div></div>
-  <div class="qdelta-foot">FULL vẫn là chế độ mặc định</div>
- </div>
-</div>
-<div class="source">Môi trường giả lập trên một máy · kết quả không xác định sức chứa 20 máy vật lý.</div><div class="pageno">09</div>
-<aside class="notes">Thử 1,2,5,10,20 phiên giả lập trên một máy, ba lượt/mức. 25.227 HTTP và 342 mẫu event không có mẫu thất bại trong đợt báo cáo. Ở 20 phiên: p95 vào phòng khoảng 1,19 giây, p95 event 34,46 ms. Loopback, lượt chạy khoảng 7–12 giây và hơn 91% HTTP là presence polling. DELTA giảm payload: ít thay đổi 68,34%, nhiều thay đổi 15,60%, reconnect 65,20%; E2 chỉ một lượt cho mỗi mode/workload. Giảm payload không đồng nghĩa giảm CPU; FULL vẫn mặc định. Không quảng bá là chạy 20 máy thật.</aside></section>
+<section class="slide" data-title="Autosave">
+  <div class="kicker reveal"><span class="pill fill">03 · Lưu bài</span></div>
+  <h2 class="h2 reveal d1">Chỉ báo “Đã lưu” sau khi lưu thành công</h2>
+  <div class="region grid3" style="top:339px">
+    <div class="card reveal d1" style="min-height:370px; padding:40px 38px">
+      <div class="icon-orb">1</div><h3>Nhận yêu cầu</h3><p>Đáp án từ client</p>
+    </div>
+    <div class="card navy reveal d2" style="min-height:370px; padding:40px 38px">
+      <div class="icon-orb">2</div><h3>Kiểm tra &amp; ghi DB</h3><p>Khóa lượt thi · phiên ghi<br>Phiên bản đáp án · deadline</p>
+    </div>
+    <div class="card reveal d3" style="min-height:370px; padding:40px 38px">
+      <div class="icon-orb">3</div><h3>Xác nhận</h3><p>Chỉ sau khi giao dịch hoàn tất</p>
+    </div>
+  </div>
+  <div class="region" style="top:790px">
+    <div class="card tint reveal d4" style="padding:28px 36px; display:flex;align-items:center;gap:38px">
+      <span class="label" style="color:var(--orange-deep)">An toàn dữ liệu</span>
+      <span class="small" style="font-weight:600">Không ghi đè đáp án mới · Nộp lại không tạo kết quả mới</span>
+    </div>
+  </div>
+  <div class="source">Chi tiết xử lý đồng thời: server/.../exam/ExamService.java.</div><div class="pageno">05</div>
+  <aside class="notes">Khi lưu hoặc nộp, server khóa bản ghi lượt thi, kiểm tra phiên ghi writerEpoch và phiên bản đáp án, deadline đọc theo thời gian server. Gửi trùng yêu cầu nộp trả kết quả đã chốt, không tạo kết quả mới. Client chỉ báo 'Đã lưu' khi giao dịch DB thành công. Không cần trình chiếu SQL, nhưng nhóm phải hiểu cơ chế FOR UPDATE, STALE và CONFLICT.</aside>
+</section>
 
-<section class="slide qslide" data-title="Kết luận"><div class="kicker reveal"><span class="pill fill">10 · Kết luận</span></div><h2 class="h2 reveal d1">Thi TOEIC và giám sát trong cùng hệ thống</h2>
-<div class="qend">
- <div class="card qend-card reveal d1"><div class="qend-label">ĐÃ GHI NHẬN</div><div class="qend-list"><div><span>✓</span> Tích hợp thi và giám sát</div><div><span>✓</span> Hai máy qua HTTPS, thử loa nghe rõ</div><div><span>✓</span> Giám thị thấy 3 lần cắm / 3 lần rút USB</div></div></div>
- <div class="card tint qend-card reveal d2"><div class="qend-label">CẦN ĐÁNH GIÁ TIẾP</div><div class="qend-list"><div><span>→</span> Ca thi dài trên nhiều máy thật</div><div><span>→</span> Nghe toàn bộ Listening</div><div><span>→</span> Độ trễ, lưu bền USB và hiệu năng mới</div></div></div>
-</div>
-<div class="qthank reveal d4"><strong>Cảm ơn!</strong><span>Hỏi &amp; đáp</span></div>
-<div class="source">USB được xác nhận bởi người thao tác; chưa có log độc lập tại máy giám thị.</div><div class="pageno">10</div>
-<aside class="notes">Đóng góp: tích hợp thi TOEIC trên desktop với thu thập tín hiệu tại máy thí sinh và giám sát tập trung. Theo file Word, thử hai máy qua HTTPS ngày 28/10: client vào bài, người dùng xác nhận thử loa nghe rõ; giám thị xác nhận thấy 3 lần cắm và 3 lần rút USB. Chưa có log độc lập tại máy giám thị. Cần đánh giá ca dài/nhiều máy, nghe toàn bộ Listening, độ trễ và lưu bền USB, hiệu năng bản mới. Kết thúc bằng cảm ơn và mời hỏi đáp.</aside></section>
+<section class="slide" data-title="Pipeline giám sát">
+  <div class="kicker reveal"><span class="pill fill">04 · Giám sát</span></div>
+  <h2 class="h2 reveal d1">Tín hiệu quan sát đến màn hình giám thị</h2>
+  <div class="pipe" style="top:322px; grid-template-columns:repeat(3,1fr)">
+    <div class="step reveal d1"><div class="card" style="min-height:280px; padding:32px">
+      <span class="label">Client</span><h3 style="margin-top:13px">Thu thập</h3>
+      <p>Process · USB<br>Focus · cửa sổ · màn hình</p>
+    </div></div>
+    <div class="step reveal d2"><div class="card navy" style="min-height:280px; padding:32px">
+      <span class="label" style="color:#ffb98e">WebSocket</span><h3 style="margin-top:13px">Truyền tín hiệu</h3>
+      <p>Trạng thái và sự kiện</p>
+    </div></div>
+    <div class="step reveal d3"><div class="card" style="min-height:280px; padding:32px">
+      <span class="label">Giám thị</span><h3 style="margin-top:13px">Theo dõi</h3>
+      <p>Trạng thái hiện tại<br>và lịch sử sự kiện</p>
+    </div></div>
+  </div>
+  <div class="region" style="top:657px; display:grid;grid-template-columns:800px 1fr;gap:42px;align-items:center">
+    <div class="screen reveal d3" style="height:280px;display:flex;align-items:center;justify-content:center" data-box="proctor">
+      <img src="assets/screens/proctor-alerts.webp" alt="Bảng giám sát và cảnh báo thực tế" style="width:100%;height:100%;object-fit:contain">
+    </div>
+    <div class="card tint reveal d4" style="padding:38px">
+      <h3>Quan sát, không phán xét</h3>
+      <p>Giám thị xem xét cảnh báo; phần mềm không tự kết luận gian lận.</p>
+    </div>
+  </div>
+  <div class="source">Ảnh giao diện giám thị từ chính ứng dụng; số liệu/ảnh test được phân biệt khi trình bày.</div><div class="pageno">06</div>
+  <aside class="notes">Các nguồn tín hiệu gồm tiến trình theo dõi, USB, focus/trạng thái cửa sổ và số màn hình. Client báo cáo qua WebSocket; server quản lý trạng thái hiện tại và lịch sử sự kiện. Giám thị tự xem xét tình huống. Không nói hệ thống quay màn hình, đọc tệp hoặc AI phát hiện gian lận. Đối với sự kiện có ghi DB, cơ chế ACK khác snapshot vào RAM.</aside>
+</section>
+
+<section class="slide" data-title="Kiểm thử chức năng">
+  <div class="kicker reveal"><span class="pill fill">05 · Kiểm thử chức năng</span></div>
+  <h2 class="h2 reveal d1">Các chức năng chính đã được kiểm thử</h2>
+  <div class="region grid3" style="top:323px">
+    <div class="card tint reveal d1" style="min-height:402px" data-box="ts1">
+      <span class="label">Server · 20 suite</span>
+      <div class="big" style="font-size:119px; margin:29px 0 18px">363</div>
+      <p style="font-size:27px"><span class="tag good">PASS</span> <span class="mono" style="font-size:24px">4 SKIP</span></p>
+    </div>
+    <div class="card reveal d2" style="min-height:402px" data-box="ts2">
+      <span class="label">Client / protocol · 9 suite</span>
+      <div class="big" style="font-size:119px; margin:29px 0 18px">144</div>
+      <p style="font-size:27px"><span class="tag good">PASS</span> <span class="mono" style="font-size:24px">0 SKIP</span></p>
+    </div>
+    <div class="card reveal d3" style="min-height:402px" data-box="ts3">
+      <span class="label">Bộ phân tích E1</span>
+      <div class="big" style="font-size:119px; margin:29px 0 18px">30</div>
+      <p style="font-size:27px"><span class="tag good">PASS</span> <span class="mono" style="font-size:24px">0 SKIP</span></p>
+    </div>
+  </div>
+  <div class="region grid2" style="top:796px">
+    <div class="card reveal d4" style="padding:24px 36px">
+      <h3 style="font-size:31px">0 FAIL · 0 ERROR</h3>
+      <p style="font-size:23px">Trong các lượt kiểm thử được báo cáo</p>
+    </div>
+    <div class="card navy reveal d5" style="padding:24px 36px">
+      <h3 style="font-size:31px">Giả lập + tích hợp</h3>
+      <p style="font-size:23px">Kiểm thử cả PostgreSQL và mạng thật</p>
+    </div>
+  </div>
+  <div class="source">Bộ kiểm thử ngày 28/10 trong tài liệu Slide - TOEIC Monitor; SKIP không tính là PASS.</div><div class="pageno">07</div>
+  <aside class="notes">Server 20 suite: 363 PASS, 4 SKIP; client/protocol 9 suite: 144 PASS, 0 SKIP; E1 analyzer 30 PASS. Kết quả được nêu cho những lượt kiểm thử ngày 28/10, không phải khẳng định mọi lỗi đã được xử lý trên HEAD hiện tại. Có cả ca giả lập và tích hợp PostgreSQL/mạng thật. Cần giải thích rõ tại sao ca SKIP không được tính đạt.</aside>
+</section>
+
+<section class="slide" data-title="E1 polling">
+  <div class="kicker reveal"><span class="pill fill">06 · Thực nghiệm E1</span></div>
+  <h2 class="h2 reveal d1">Quét nhanh hơn: phát hiện tốt hơn, tốn CPU hơn</h2>
+  <div class="region" style="top:300px;display:grid;grid-template-columns:1fr 1fr 395px;gap:28px">
+    <div class="card reveal d1" style="padding:32px" data-box="detect">
+ <div class="label">Quan sát process · mục tiêu 200 ms</div><div class="small" style="margin:6px 0 15px">Tìm thấy / 30 · 3 lượt ở mỗi chu kỳ</div>
+ <svg class="chart" viewBox="0 0 520 332" width="100%" height="342" role="img" aria-label="Số tiến trình quan sát được theo chu kỳ: 27,14,6,4 trên 30">
+   <g class="grid"><line x1="110" y1="7" x2="110" y2="299"/><line x1="238" y1="7" x2="238" y2="299"/><line x1="366" y1="7" x2="366" y2="299"/></g>
+   <g class="ax"><text x="101" y="58" text-anchor="end">250 ms</text><text x="101" y="127" text-anchor="end">500 ms</text><text x="101" y="196" text-anchor="end">1.000 ms</text><text x="101" y="265" text-anchor="end">2.000 ms</text>
+   <text x="110" y="325" text-anchor="middle">0%</text><text x="238" y="325" text-anchor="middle">50%</text><text x="366" y="325" text-anchor="middle">100%</text></g>
+   <rect class="bar-grow" x="110" y="35" width="230.4" height="30" rx="4" fill="#f26b1d"><title>250 ms: 27/30</title></rect><text class="val" x="349" y="58">27/30</text><rect class="bar-grow" x="110" y="104" width="119.5" height="30" rx="4" fill="#f26b1d"><title>500 ms: 14/30</title></rect><text class="val" x="238" y="127">14/30</text><rect class="bar-grow" x="110" y="173" width="51.2" height="30" rx="4" fill="#f26b1d"><title>1.000 ms: 6/30</title></rect><text class="val" x="170" y="196">6/30</text><rect class="bar-grow" x="110" y="242" width="34.1" height="30" rx="4" fill="#f26b1d"><title>2.000 ms: 4/30</title></rect><text class="val" x="153" y="265">4/30</text>
+ </svg></div>
+    <div class="card reveal d2" style="padding:32px" data-box="cpu">
+ <div class="label">CPU collector · một lõi</div><div class="small" style="margin:6px 0 15px">Trung bình theo chu kỳ</div>
+ <svg class="chart" viewBox="0 0 520 332" width="100%" height="342" role="img" aria-label="CPU collector: 19,01%, 10,44%, 5,57%, 3,03%">
+   <g class="grid"><line x1="110" y1="7" x2="110" y2="299"/><line x1="238" y1="7" x2="238" y2="299"/><line x1="366" y1="7" x2="366" y2="299"/></g>
+   <g class="ax"><text x="101" y="58" text-anchor="end">250 ms</text><text x="101" y="127" text-anchor="end">500 ms</text><text x="101" y="196" text-anchor="end">1.000 ms</text><text x="101" y="265" text-anchor="end">2.000 ms</text>
+   <text x="110" y="325" text-anchor="middle">0%</text><text x="238" y="325" text-anchor="middle">10%</text><text x="366" y="325" text-anchor="middle">20%</text></g>
+   <rect class="bar-grow" x="110" y="35" width="243.3" height="30" rx="4" fill="#13254a"><title>250 ms: 19,01%</title></rect><text class="val" x="362" y="58">19,01%</text><rect class="bar-grow" x="110" y="104" width="133.6" height="30" rx="4" fill="#13254a"><title>500 ms: 10,44%</title></rect><text class="val" x="253" y="127">10,44%</text><rect class="bar-grow" x="110" y="173" width="71.3" height="30" rx="4" fill="#13254a"><title>1.000 ms: 5,57%</title></rect><text class="val" x="190" y="196">5,57%</text><rect class="bar-grow" x="110" y="242" width="38.8" height="30" rx="4" fill="#13254a"><title>2.000 ms: 3,03%</title></rect><text class="val" x="158" y="265">3,03%</text>
+ </svg></div>
+    <div class="reveal d3" style="display:grid;gap:22px;align-content:start">
+      <div class="card tint" style="padding:28px" data-box="e1stat"><div class="big" style="font-size:79px">360</div><p style="font-size:23px">lần tạo tiến trình có kiểm soát</p></div>
+      <div class="card" style="padding:28px" data-box="e1scope"><h3 style="font-size:30px">12 lượt</h3><p style="font-size:22px">4 mức quét × 3 lượt<br>Hold mục tiêu 200 ms</p></div>
+    </div>
+  </div>
+  <div class="source">CPU theo % một lõi. E1 chỉ đo collector; tuổi thọ process thực tế có thể khác 200 ms.</div><div class="pageno">08</div>
+  <aside class="notes">Theo số liệu trong file Word: 250 ms quan sát 27/30, CPU 19,01%; 500 ms: 14/30, CPU 10,44%; 1.000 ms: 6/30, CPU 5,57%; 2.000 ms: 4/30, CPU 3,03%. 12 lượt, tổng 360 lần sinh process có kiểm soát. Chu kỳ ngắn tăng xác suất bắt process ngắn nhưng tốn CPU. Đơn vị % một lõi; đây là collector, chưa phải benchmark toàn ứng dụng. Lưu ý các số này là theo tài liệu Word được cung cấp, khác mốc E1 trong báo cáo repository cũ.</aside>
+</section>
+
+<section class="slide" data-title="Truyền thông">
+  <div class="kicker reveal"><span class="pill fill">07 · Kết quả truyền thông</span></div>
+  <h2 class="h2 reveal d1">Tải giả lập và so sánh FULL / DELTA</h2>
+  <div class="region" style="top:306px;display:grid;grid-template-columns:690px 1fr;gap:36px">
+    <div class="card reveal d1" style="padding:36px" data-box="load">
+      <div class="label">Tải đồng thời · loopback một máy</div>
+      <div class="big" style="font-size:124px; margin:22px 0 16px">20<small style="font-size:34px"> phiên</small></div>
+      <p style="font-size:23px">Thí sinh giao thức <b>giả lập</b><br>1 · 2 · 5 · 10 · 20 phiên, mỗi mức 3 lượt</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:17px;margin-top:29px">
+        <div class="card tint" style="padding:18px 21px;box-shadow:none"><div style="font:800 45px var(--font-display)">25.227</div><p style="font-size:19px">yêu cầu HTTP</p></div>
+        <div class="card tint" style="padding:18px 21px;box-shadow:none"><div style="font:800 45px var(--font-display)">342</div><p style="font-size:19px">mẫu sự kiện</p></div>
+      </div>
+      <p style="font-size:23px;margin-top:23px"><b>p95:</b> vào phòng <b>1,19 s</b> · nhận sự kiện <b>34,46 ms</b></p>
+    </div>
+    <div class="card reveal d2" style="padding:36px 40px" data-box="delta">
+      <div class="label">DELTA · mức giảm payload WebSocket</div>
+      <p style="font-size:23px;margin:8px 0 6px">So với truyền FULL</p>
+      <svg class="chart" viewBox="0 0 780 392" width="100%" height="395" role="img" aria-label="Mức giảm payload WebSocket DELTA so với FULL: ít thay đổi 68,34%, nhiều thay đổi 15,60%, reconnect 65,20%">
+<g class="grid"><line x1="235" y1="12" x2="235" y2="315"/><line x1="487" y1="12" x2="487" y2="315"/><line x1="739" y1="12" x2="739" y2="315"/></g>
+<text class="ax" x="220" y="69" text-anchor="end">Ít thay đổi</text>
+<rect x="235" y="45" width="504" height="32" rx="4" fill="#f6ece1"/>
+<rect class="bar-grow" x="235" y="45" width="344.4" height="32" rx="4" fill="#f26b1d"/>
+<text class="val" x="594.4336000000001" y="69">68,34%</text><text class="ax" x="220" y="163" text-anchor="end">Nhiều thay đổi</text>
+<rect x="235" y="139" width="504" height="32" rx="4" fill="#f6ece1"/>
+<rect class="bar-grow" x="235" y="139" width="78.6" height="32" rx="4" fill="#f26b1d"/>
+<text class="val" x="328.624" y="163">15,60%</text><text class="ax" x="220" y="257" text-anchor="end">Có reconnect</text>
+<rect x="235" y="233" width="504" height="32" rx="4" fill="#f6ece1"/>
+<rect class="bar-grow" x="235" y="233" width="328.6" height="32" rx="4" fill="#f26b1d"/>
+<text class="val" x="578.608" y="257">65,20%</text>
+<g class="ax"><text x="235" y="350" text-anchor="middle">0%</text><text x="487" y="350" text-anchor="middle">50%</text><text x="739" y="350" text-anchor="middle">100%</text></g>
+</svg>
+      <div class="card tint" style="box-shadow:none;padding:18px 25px"><p style="font-size:22px"><b>FULL vẫn là chế độ mặc định.</b> DELTA chưa kết luận về CPU.</p></div>
+    </div>
+  </div>
+  <div class="source">Mức tải 20 là phiên giả lập, không phải 20 máy vật lý. E2: 1 lượt/mode/workload; HTTP chủ yếu là presence polling.</div><div class="pageno">09</div>
+  <aside class="notes">Theo Word: 1/2/5/10/20 phiên thí sinh giao thức giả lập trên cùng một máy, ba lượt/mức. Tổng 25.227 HTTP request và 342 mẫu giám sát, không có mẫu thất bại. Ở mức 20: p95 vào phòng khoảng 1,19 giây, p95 nhận sự kiện 34,46ms. Ảnh tải là loopback, mỗi lượt khoảng 7–12 giây, hơn 91% HTTP là presence polling. FULL/DELTA giảm payload ba kịch bản: 68,34%, 15,60%, 65,20%. E2 chỉ một lượt/mode/workload, giảm payload không đồng nghĩa CPU giảm, FULL vẫn mặc định. Không khẳng định hệ thống đáp ứng 20 máy thật.</aside>
+</section>
+
+<section class="slide" data-title="Kết quả và phạm vi">
+  <div class="kicker reveal"><span class="pill fill">08 · Kết quả &amp; phạm vi</span></div>
+  <h2 class="h2 reveal d1">Đã có kết quả thật — vẫn còn giới hạn</h2>
+  <div class="region grid2 limits" style="top:315px">
+    <div class="card reveal d1" style="min-height:545px;padding:40px 44px" data-box="achieved">
+      <span class="label" style="color:var(--orange-deep)">Đã ghi nhận</span>
+      <ul style="margin-top:25px">
+        <li>Thi TOEIC + giám sát tập trung</li>
+        <li>Hai máy qua HTTPS ngày 28/10: vào bài, thử loa nghe rõ</li>
+        <li>Giám thị xác nhận thấy <b>3 cắm / 3 rút USB</b></li>
+      </ul>
+    </div>
+    <div class="card tint reveal d2" style="min-height:545px;padding:40px 44px" data-box="remaining">
+      <span class="label" style="color:var(--orange-deep)">Cần đánh giá tiếp</span>
+      <ul style="margin-top:25px">
+        <li>Ca thi dài, nhiều máy thí sinh thật</li>
+        <li>Nghe toàn bộ Listening</li>
+        <li>Độ trễ, lưu bền USB và hiệu năng phiên bản mới</li>
+      </ul>
+    </div>
+  </div>
+  <div class="region reveal d4" style="top:890px">
+    <div class="card" style="padding:20px 32px;display:flex;align-items:center;gap:35px">
+      <span class="label" style="color:var(--orange-deep)">Đóng góp</span>
+      <span class="small" style="font-size:24px;font-weight:600">Desktop TOEIC kết hợp thu thập tín hiệu và theo dõi giám thị</span>
+    </div>
+  </div>
+  <div class="source">USB là xác nhận của người thao tác; chưa có log độc lập tại máy giám thị.</div><div class="pageno">10</div>
+  <aside class="notes">Theo tài liệu Word: nhóm tích hợp luồng thi TOEIC + giám sát tập trung. Lượt hai máy qua HTTPS 28/10 client vào bài, người dùng xác nhận nghe rõ khi thử loa; giám thị xác nhận ba lần cắm và ba lần rút USB. Chưa có log độc lập tại máy giám thị. Phạm vi còn lại: ca thi kéo dài và nhiều máy thật, nghe hết Listening, đánh giá độ trễ và lưu bền sự kiện USB, hiệu năng bản triển khai mới.</aside>
+</section>
+
+<section class="slide" data-title="Kết">
+  <svg class="flow" viewBox="0 0 1920 1080" aria-hidden="true">
+    <path d="M-40 980 C 420 860, 760 1060, 1180 900 S 1760 620, 1990 700" stroke="url(#fl1)" stroke-width="10"/>
+    <path d="M-40 1030 C 480 930, 820 1110, 1240 960 S 1780 720, 1990 790" stroke="url(#fl1)" stroke-width="4"/>
+  </svg>
+  <div class="moon" style="right:180px; top:150px; width:560px; height:560px;"></div>
+  <div class="pebble" style="width:130px; height:130px; right:700px; top:600px;"></div>
+  <div class="kicker reveal" style="top:110px"><span class="pill fill">Hỏi &amp; đáp</span></div>
+  <h2 class="close-h1 reveal d1">Cảm ơn<br><em>thầy cô</em><br>&amp; các bạn</h2>
+  <p class="reveal d2 lead" style="position:absolute; left:120px; top:860px; width:1300px">Mã nguồn, tài liệu và bằng chứng<br><span class="mono o" style="font-size:28px">github.com/AnhTaizz/Toeic-Monitoring-Realtime</span></p>
+</section>
 
 </main>
 </div>
@@ -626,7 +693,7 @@ class SlidePresentation {
 class InlineEditor {
   constructor() {
     this.isActive = false;
-    this.key = 'toeic-monitor-deck-edits-docx-v2';
+    this.key = 'toeic-monitor-deck-edits-word-v3';
     this.button = document.getElementById('editToggle');
     this.targets = () => document.querySelectorAll('.slide h1, .slide h2, .slide h3, .slide p, .slide li, .slide td, .slide .pill, .slide .caption, .slide .source');
     this.restore();
