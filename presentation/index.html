@@ -8,32 +8,31 @@
 <link rel="stylesheet" href="assets/fonts/fonts.css">
 <style>
 /* ===========================================
-   DESIGN TOKENS — Design System V1.0 "Claymoon Flow"
-   Colours come from the JavaFX app (proctor-redesign.css). See DESIGN_SYSTEM.md.
+   DESIGN TOKENS — Claymoon Flow (DESIGN_SYSTEM.md) + Visual Kit 11 slide
+   Kit palette: navy #13254A · ice blue #DDEEF9 · orange #F26B1D · coral #F57B62 · slate #405573
    =========================================== */
 :root {
   --stage-bg: #efe7dd;
   --slide-bg: #fffaf4;
   --cream: #fffaf4;
-  --sand: #f6ece1;
   --orange: #f26b1d;
   --orange-deep: #c2410c;
   --orange-soft: #fff1e8;
   --peach: #ffd9bf;
+  --coral: #f57b62;
+  --ice: #ddeef9;
+  --slate: #405573;
   --navy: #13254a;
   --ink-2: #3b4a66;
   --muted: #6b7a90;
   --line: #e3e8ef;
-  --good: #16a34a;
-  --warn: #d97706;
-  --bad: #dc2626;
+  --good: #169b67;
 
   --font-display: 'Bricolage Grotesque', sans-serif;
   --font-body: 'Be Vietnam Pro', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   --pad-x: 120px;
-  --pad-top: 96px;
   --radius-card: 32px;
   --shadow-clay: 0 18px 40px rgba(120, 70, 30, .10), inset 0 -4px 0 rgba(0, 0, 0, .03);
 
@@ -42,7 +41,7 @@
 }
 
 /* ===========================================
-   FIXED 16:9 STAGE — full contents of frontend-slides viewport-base.css
+   FIXED 16:9 STAGE — frontend-slides viewport-base.css
    =========================================== */
 html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--stage-bg, #000); }
 .deck-viewport { position: fixed; inset: 0; overflow: hidden; background: var(--stage-bg, #000); }
@@ -50,14 +49,13 @@ html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background:
 .slide { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; display: block; visibility: hidden; opacity: 0; pointer-events: none; background: var(--slide-bg, #fff); }
 .slide.active, .slide.visible { visibility: visible; opacity: 1; pointer-events: auto; z-index: 1; }
 img, video, canvas, svg { max-width: 100%; max-height: 100%; }
-.deck-controls { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 1000; }
 @media print {
   html, body { width: 1920px; height: auto; overflow: visible; background: #fff; }
   .deck-viewport { position: static; overflow: visible; background: #fff; }
   .deck-stage { position: static; width: auto; height: auto; transform: none !important; background: none; }
   .slide { position: relative; display: block !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; width: 1920px; height: 1080px; break-after: page; page-break-after: always; }
   .slide:last-child { break-after: auto; page-break-after: auto; }
-  .deck-controls { display: none !important; }
+  .slide .reveal, .slide .reveal-scale { opacity: 1 !important; transform: none !important; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
@@ -72,189 +70,79 @@ body { font-family: var(--font-body); color: var(--navy); -webkit-font-smoothing
 .slide.active { transition: opacity .45s var(--ease); }
 b, strong { font-weight: 700; }
 .mono { font-family: var(--font-mono); }
-.o { color: var(--orange-deep); }
 
-/* ===========================================
-   SLIDE CHROME — kicker top-left, page number bottom-right, source line
-   =========================================== */
-.kicker { position: absolute; left: var(--pad-x); top: 64px; display: flex; gap: 12px; align-items: center; }
+/* Slide chrome: kicker, short title, source line, page number */
+.kicker { position: absolute; left: var(--pad-x); top: 52px; display: flex; gap: 12px; align-items: center; }
 .pill { display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; border-radius: 999px; background: #fff;
   font: 600 20px/1 var(--font-body); color: var(--navy); box-shadow: 0 8px 20px rgba(120, 70, 30, .09), inset 0 -3px 0 rgba(0, 0, 0, .04); white-space: nowrap; }
 .pill.fill { background: var(--orange); color: #fff; }
-.pill.ghost { background: transparent; box-shadow: inset 0 0 0 2px var(--line); }
-.pill .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--orange); }
-.pageno { position: absolute; right: var(--pad-x); bottom: 48px; font: 500 20px var(--font-mono); color: var(--muted); }
-.source { position: absolute; left: var(--pad-x); bottom: 48px; max-width: 1400px; font: 400 18px/1.4 var(--font-mono); color: var(--muted); }
+.h2 { position: absolute; left: var(--pad-x); top: 108px; max-width: 1680px; font: 800 64px/1.04 var(--font-display); letter-spacing: -0.03em; }
+.source { position: absolute; left: var(--pad-x); bottom: 36px; max-width: 1500px; font: 400 18px/1.4 var(--font-mono); color: var(--muted); }
+.pageno { position: absolute; right: var(--pad-x); bottom: 36px; font: 500 20px var(--font-mono); color: var(--muted); }
 
-/* ===========================================
-   TYPOGRAPHY
-   =========================================== */
-.h2 { position: absolute; left: var(--pad-x); top: 132px; max-width: 1680px; font: 800 72px/1.04 var(--font-display); letter-spacing: -0.03em; }
-.lead { font-size: 30px; line-height: 1.45; color: var(--ink-2); }
-.small { font-size: 22px; line-height: 1.45; color: var(--ink-2); }
-.label { font: 600 18px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+/* Figure card: white plate for kit diagrams (kit assets are drawn on white) */
+.figure { position: absolute; background: #fff; border-radius: var(--radius-card); box-shadow: var(--shadow-clay); padding: 20px; }
+.figure img, .figure svg { display: block; max-width: none; max-height: none; }
 
-/* ===========================================
-   CLAY COMPONENTS
-   =========================================== */
-.card { background: #fff; border-radius: var(--radius-card); box-shadow: var(--shadow-clay); padding: 40px; position: relative; }
-.card h3 { font: 800 36px/1.12 var(--font-display); letter-spacing: -0.02em; margin-bottom: 14px; }
-.card p, .card li { font-size: 25px; line-height: 1.45; color: var(--ink-2); }
-.card ul { list-style: none; display: grid; gap: 10px; }
-.card li { padding-left: 30px; position: relative; }
-.card li::before { content: ''; position: absolute; left: 4px; top: 13px; width: 12px; height: 12px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 0 5px var(--orange-soft); }
-.card.tint { background: var(--orange-soft); box-shadow: inset 0 0 0 2px #ffe0cc; }
-.card.navy { background: var(--navy); color: #fff; }
-.card.navy p, .card.navy li { color: #d7deea; }
-.icon-orb { width: 72px; height: 72px; border-radius: 50%; margin-bottom: 24px; display: grid; place-items: center;
-  background: radial-gradient(circle at 34% 30%, #ffb07a 0%, #f7853d 38%, #f26b1d 62%, #d4520f 100%);
-  box-shadow: inset -8px -10px 16px rgba(150, 50, 0, .32), inset 6px 6px 12px rgba(255, 220, 190, .5), 0 12px 24px rgba(242, 107, 29, .25);
-  color: #fff; font: 800 30px var(--font-display); }
-.icon-orb svg { width: 36px; height: 36px; }
+/* Screenshot frame: real app images, white 24px-radius frame, cropped by overflow */
+.shot { position: absolute; background: #fff; border-radius: 24px; padding: 10px; box-shadow: 0 30px 60px rgba(120, 70, 30, .16); }
+.shot .crop { position: relative; overflow: hidden; border-radius: 16px; width: 100%; height: 100%; }
+.shot .crop img { position: absolute; left: 0; top: 0; max-width: none; max-height: none; display: block; }
+.shot .tagline { position: absolute; left: 26px; top: -22px; z-index: 2; }
+.role-label { position: absolute; text-align: center; font: 800 40px/1 var(--font-display); letter-spacing: .01em; }
+.badge-test { position: absolute; right: 26px; top: 26px; z-index: 2; padding: 6px 14px; border-radius: 999px; background: rgba(19, 37, 74, .82); color: #fff; font: 600 16px var(--font-mono); letter-spacing: .06em; }
 
+/* Kit icon cards (slide 2) */
+.icon-card { position: absolute; background: #fff; border-radius: var(--radius-card); box-shadow: var(--shadow-clay); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; }
+.icon-card svg { width: 400px; height: 360px; }
+.icon-card .lbl { font: 800 40px/1.1 var(--font-display); letter-spacing: -0.01em; text-align: center; }
+
+/* KPI tiles (slide 8) */
+.kpi { position: absolute; background: #fff; border-radius: var(--radius-card); box-shadow: var(--shadow-clay); padding: 26px 34px; display: flex; flex-direction: column; justify-content: center; }
+.kpi .num { font: 800 96px/0.95 var(--font-display); letter-spacing: -0.04em; }
+.kpi .num small { font-size: 56px; }
+.kpi .cap { margin-top: 10px; font: 800 26px/1.15 var(--font-display); letter-spacing: .02em; }
+.kpi .sub { margin-top: 6px; font: 400 18px/1.35 var(--font-mono); color: var(--muted); }
+.kpi.tint { background: var(--orange-soft); box-shadow: inset 0 0 0 2px #ffe0cc; }
+
+/* Code card (slide 11) */
+.code { background: var(--navy); color: #e8edf6; border-radius: 28px; padding: 30px 36px 34px; box-shadow: 0 24px 50px rgba(19, 37, 74, .22); }
+.code .file { display: inline-block; padding: 8px 16px; border-radius: 12px; background: rgba(255, 255, 255, .08); font: 500 22px var(--font-mono); color: #fff; margin-bottom: 26px; }
+.code pre { font: 400 23px/1.75 var(--font-mono); white-space: pre; font-variant-ligatures: none; }
+.code .ln { color: #7d8db0; display: inline-block; width: 46px; }
+.code .k { color: #ffb98e; }
+.code .note { margin-top: 24px; font: 400 18px/1.5 var(--font-body); color: #b9c4d8; }
+
+/* Vertical pipeline (slide 11) */
+.flow-v { position: absolute; display: grid; gap: 26px; }
+.flow-v .stp { position: relative; display: flex; align-items: center; gap: 26px; background: #fff; border-radius: 26px; padding: 14px 28px; box-shadow: var(--shadow-clay); height: 112px; }
+.flow-v .stp.hl { background: var(--orange-soft); box-shadow: inset 0 0 0 3px var(--orange); }
+.flow-v .stp svg { width: 84px; height: 84px; flex: none; }
+.flow-v .nm { font: 800 32px/1.1 var(--font-display); }
+.flow-v .ds { font: 400 19px/1.35 var(--font-mono); color: var(--muted); margin-top: 4px; }
+.flow-v .stp:not(:last-child)::after { content: ''; position: absolute; left: 66px; bottom: -24px; width: 0; height: 0; border-left: 11px solid transparent; border-right: 11px solid transparent; border-top: 16px solid var(--orange); }
+
+/* Cover */
+.title-h1 { position: absolute; left: 112px; top: 250px; font: 800 176px/0.92 var(--font-display); letter-spacing: -0.03em; }
+.title-h1 em { font-style: normal; color: var(--orange); }
+
+/* Decorative clay orb (max one per slide) */
 .moon { position: absolute; border-radius: 50%;
   background: radial-gradient(circle at 34% 30%, #ffb07a 0%, #f7853d 32%, #f26b1d 58%, #d4520f 100%);
-  box-shadow: inset -40px -50px 80px rgba(150, 50, 0, .35), inset 30px 30px 60px rgba(255, 220, 190, .55), 0 60px 120px rgba(242, 107, 29, .26);
-  transform: scale(.86); opacity: 0; transition: transform 1.2s var(--spring), opacity .8s var(--ease); }
-.moon::after { content: ''; position: absolute; left: 22%; top: 18%; width: 22%; height: 14%; border-radius: 50%; background: rgba(255, 255, 255, .35); filter: blur(14px); }
-.slide.visible .moon { transform: none; opacity: 1; }
-.pebble { position: absolute; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff 0%, #fbeee2 45%, #ecd9c6 100%);
-  box-shadow: inset -10px -14px 24px rgba(160, 110, 70, .22), 0 24px 48px rgba(120, 70, 30, .14); }
-
-svg.flow { position: absolute; inset: 0; width: 1920px; height: 1080px; max-width: none; max-height: none; pointer-events: none; }
-svg.flow path { fill: none; stroke-linecap: round; stroke-dasharray: 2600; stroke-dashoffset: 2600; transition: stroke-dashoffset 2.2s var(--ease); }
-.slide.visible svg.flow path { stroke-dashoffset: 0; }
-
-.code { background: var(--navy); color: #e8edf6; border-radius: 28px; padding: 36px 40px; font: 400 22px/1.6 var(--font-mono); white-space: pre; box-shadow: 0 24px 50px rgba(19, 37, 74, .22); }
-.code .c { color: #ffb98e; }   /* comment */
-.code .k { color: #8fc1ff; }   /* keyword */
-.code .s { color: #b7e4a8; }   /* string */
-
-.screen { background: #fff; border-radius: 24px; padding: 10px; box-shadow: 0 30px 60px rgba(120, 70, 30, .16); overflow: hidden; }
-.screen img { display: block; width: 100%; height: auto; max-height: none; border-radius: 16px; }
-.caption { margin-top: 14px; font: 400 18px/1.4 var(--font-mono); color: var(--muted); }
-
-.tag { display: inline-block; padding: 4px 14px; border-radius: 999px; font: 700 18px var(--font-mono); }
-.tag.good { background: #e7f6ec; color: #15803d; }
-.tag.warn { background: #fff4e0; color: #b45309; }
-.tag.bad { background: #fde8e8; color: #b91c1c; }
-.tag.plain { background: #eef2f7; color: var(--ink-2); }
+  box-shadow: inset -40px -50px 80px rgba(150, 50, 0, .35), inset 30px 30px 60px rgba(255, 220, 190, .55), 0 60px 120px rgba(242, 107, 29, .26); }
 
 /* ===========================================
    ANIMATION — staggered entrance on the visible slide
    =========================================== */
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
-.reveal-scale { opacity: 0; transform: scale(.94); transition: opacity .8s var(--ease), transform .9s var(--spring); }
+.reveal-scale { opacity: 0; transform: scale(.95); transition: opacity .8s var(--ease), transform .9s var(--spring); }
 .slide.visible .reveal, .slide.visible .reveal-scale { opacity: 1; transform: none; }
 .d1 { transition-delay: .12s !important; } .d2 { transition-delay: .24s !important; } .d3 { transition-delay: .36s !important; }
 .d4 { transition-delay: .48s !important; } .d5 { transition-delay: .6s !important; } .d6 { transition-delay: .72s !important; }
-.bar-grow { transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(0); transition: transform 1s var(--ease); }
-.col-grow { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform 1s var(--ease); }
-.slide.visible .bar-grow, .slide.visible .col-grow { transform: none; }
+svg .sig { stroke-dasharray: 0 16; stroke-linecap: round; }
 
 /* ===========================================
-   LAYOUT HELPERS (absolute regions inside the 1920×1080 stage)
-   =========================================== */
-.region { position: absolute; left: var(--pad-x); right: var(--pad-x); }
-.row { display: flex; gap: 32px; }
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
-
-/* ===========================================
-   SLIDE-SPECIFIC STYLES
-   =========================================== */
-/* -- Title -- */
-.title-h1 { position: absolute; left: 112px; top: 296px; font: 800 196px/0.92 var(--font-display); letter-spacing: -0.03em; }
-.title-h1 em { font-style: normal; color: var(--orange); }
-.title-sub { position: absolute; left: 120px; top: 716px; width: 880px; }
-.signals { position: absolute; right: 190px; top: 820px; display: flex; gap: 14px; }
-.sig { padding: 14px 24px; border-radius: 22px; background: #fff; font: 600 24px var(--font-body); box-shadow: 0 14px 30px rgba(120, 70, 30, .12); display: flex; align-items: center; gap: 12px; }
-.sig i { width: 14px; height: 14px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 0 6px var(--peach); }
-
-/* -- Agenda -- */
-.agenda { position: absolute; left: var(--pad-x); top: 330px; width: 1200px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px 32px; }
-.agenda .card { display: flex; align-items: center; gap: 28px; padding: 30px 36px; }
-.agenda .n { font: 800 56px/1 var(--font-display); color: var(--orange); width: 76px; }
-.agenda .t { font: 700 30px/1.2 var(--font-display); }
-.agenda .d { font-size: 21px; color: var(--muted); margin-top: 6px; }
-
-/* -- Section divider -- */
-.sec-num { position: absolute; left: 112px; top: 210px; font: 800 300px/0.8 var(--font-display); letter-spacing: -0.05em; color: var(--orange); }
-.sec-title { position: absolute; left: 120px; top: 530px; width: 1050px; font: 800 120px/1.06 var(--font-display); letter-spacing: -0.035em; }
-.sec-sub { position: absolute; left: 120px; top: 840px; width: 1120px; }
-
-/* -- Architecture -- */
-.arch { position: absolute; left: var(--pad-x); right: var(--pad-x); top: 300px; height: 620px; }
-.arch .col { position: absolute; top: 0; bottom: 0; }
-.arch .mod { background: var(--orange-soft); border-radius: 18px; padding: 14px 20px; font: 600 23px/1.3 var(--font-body); }
-.arch .mod small { display: block; font: 400 18px var(--font-mono); color: var(--muted); margin-top: 4px; }
-.lane { position: absolute; left: 520px; width: 520px; border-radius: 28px; padding: 26px 30px; }
-.lane .label { margin-bottom: 8px; }
-.lane .t { font: 800 34px/1.1 var(--font-display); }
-.lane p { font-size: 21px; line-height: 1.45; color: var(--ink-2); margin-top: 10px; }
-.arrow { position: absolute; height: 4px; background: var(--orange); border-radius: 4px; }
-.arrow::before, .arrow::after { content: ''; position: absolute; top: -8px; border: 10px solid transparent; }
-.arrow::after { right: -14px; border-left: 14px solid var(--orange); }
-.arrow::before { left: -14px; border-right: 14px solid var(--orange); }
-
-/* -- Sequence diagram text -- */
-svg.seq { position: absolute; left: var(--pad-x); top: 268px; width: 1680px; height: 720px; max-width: none; max-height: none; }
-svg.seq text { font-family: var(--font-body); }
-svg.seq .who { font: 800 28px var(--font-display); fill: var(--navy); }
-svg.seq .msg { font-size: 22px; fill: var(--navy); font-weight: 500; }
-svg.seq .ch { font: 600 19px var(--font-mono); }
-
-/* -- Tables -- */
-table.t { width: 100%; border-collapse: collapse; }
-table.t th { text-align: left; font: 600 18px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 16px 14px; border-bottom: 2px solid var(--line); }
-table.t td { padding: 15px 16px; border-bottom: 1px solid var(--line); font-size: 23px; line-height: 1.35; color: var(--ink-2); vertical-align: top; }
-table.t td:first-child { font-weight: 700; color: var(--navy); }
-table.t td.num { font-family: var(--font-mono); text-align: right; white-space: nowrap; }
-table.t th.num { text-align: right; }
-
-/* -- Pipeline -- */
-.pipe { position: absolute; left: var(--pad-x); right: var(--pad-x); top: 300px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
-.step { position: relative; padding: 0 18px; }
-.step .card { padding: 30px 28px; min-height: 300px; }
-.step .card h3 { font-size: 30px; }
-.step .card p { font-size: 22px; }
-.step:not(:last-child)::after { content: ''; position: absolute; right: -11px; top: 140px; width: 22px; height: 22px; border-top: 5px solid var(--orange); border-right: 5px solid var(--orange); transform: rotate(45deg); z-index: 2; }
-
-/* -- Big numbers -- */
-.big { font: 800 128px/0.9 var(--font-display); letter-spacing: -0.04em; }
-.big small { font-size: 40px; letter-spacing: -0.01em; color: var(--muted); }
-
-/* -- Charts -- */
-svg.chart { overflow: visible; max-width: none; max-height: none; }
-svg.chart text { font-family: var(--font-body); }
-svg.chart .ax { font: 500 20px var(--font-mono); fill: var(--muted); }
-svg.chart .val { font: 700 22px var(--font-mono); fill: var(--navy); }
-svg.chart .grid line { stroke: var(--line); stroke-width: 1; }
-svg.chart rect:hover { filter: brightness(1.08); }
-
-/* -- Replay matrix -- */
-.matrix { display: grid; grid-template-columns: 260px repeat(3, 1fr); gap: 8px; }
-.matrix div { font-size: 20px; padding: 7px 12px; border-radius: 12px; }
-.matrix .h { font: 600 17px var(--font-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
-.matrix .sc { font: 500 20px var(--font-mono); color: var(--navy); background: transparent; }
-.matrix .ok { background: #e7f6ec; color: #15803d; font: 700 18px var(--font-mono); text-align: center; }
-.matrix .ok.miss { background: #fff4e0; color: #b45309; }
-
-/* -- Contributions table -- */
-.contrib table.t td { padding: 24px 16px; font-size: 25px; }
-
-/* -- Limitations -- */
-.limits .card ul { gap: 18px; }
-.limits .card li { font-size: 28px; }
-
-/* -- Closing -- */
-.close-h1 { position: absolute; left: 112px; top: 330px; font: 800 168px/0.95 var(--font-display); letter-spacing: -0.035em; }
-.close-h1 em { font-style: normal; color: var(--orange); }
-
-/* ===========================================
-   DECK UI (outside the slide design: progress + counter + edit button)
+   DECK UI (outside the slide design)
    =========================================== */
 .progress { position: fixed; left: 0; top: 0; height: 4px; background: var(--orange); z-index: 1001; transition: width .4s var(--ease); }
 .notes { display: none; }
@@ -271,353 +159,342 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
 <div class="edit-hotzone" aria-hidden="true"></div>
 <button class="edit-toggle" id="editToggle" title="Chế độ sửa chữ (E)" aria-label="Chế độ sửa chữ">✎</button>
 
+<!-- ===========================================================
+     Kit illustration symbols. Style: 01_QUY_CHUAN_HINH_ANH.txt —
+     monoline slate outline, ice-blue surfaces, coral signals, no text.
+     =========================================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="s-monitor" viewBox="0 0 160 140">
+      <rect x="8" y="8" width="144" height="96" rx="14" fill="#DDEEF9" stroke="#405573" stroke-width="6"/>
+      <rect x="22" y="22" width="116" height="68" rx="6" fill="#fff" stroke="#405573" stroke-width="3"/>
+      <path d="M66 104 L61 126 M94 104 L99 126" stroke="#405573" stroke-width="6" stroke-linecap="round"/>
+      <path d="M48 128 H112" stroke="#405573" stroke-width="7" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="s-scr-exam" viewBox="0 0 160 140">
+      <circle cx="38" cy="40" r="5" fill="none" stroke="#405573" stroke-width="2.5"/>
+      <circle cx="38" cy="56" r="5" fill="#F26B1D" stroke="#405573" stroke-width="2.5"/>
+      <circle cx="38" cy="72" r="5" fill="none" stroke="#405573" stroke-width="2.5"/>
+      <path d="M50 40 H120 M50 56 H108 M50 72 H116" stroke="#B9CCE0" stroke-width="5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="s-scr-dash" viewBox="0 0 160 140">
+      <circle cx="36" cy="38" r="5" fill="#169B67"/><circle cx="36" cy="56" r="5" fill="#F26B1D"/><circle cx="36" cy="74" r="5" fill="#169B67"/>
+      <path d="M48 38 H92 M48 56 H86 M48 74 H94" stroke="#B9CCE0" stroke-width="5" stroke-linecap="round"/>
+      <rect x="100" y="51" width="26" height="10" rx="5" fill="#FFD9BF"/>
+      <rect x="100" y="33" width="26" height="10" rx="5" fill="#DDEEF9"/><rect x="100" y="69" width="26" height="10" rx="5" fill="#DDEEF9"/>
+    </symbol>
+    <symbol id="s-server" viewBox="0 0 120 140">
+      <rect x="10" y="8" width="100" height="36" rx="9" fill="#DDEEF9" stroke="#405573" stroke-width="6"/>
+      <rect x="10" y="52" width="100" height="36" rx="9" fill="#DDEEF9" stroke="#405573" stroke-width="6"/>
+      <rect x="10" y="96" width="100" height="36" rx="9" fill="#DDEEF9" stroke="#405573" stroke-width="6"/>
+      <circle cx="28" cy="26" r="5" fill="#F26B1D"/><circle cx="28" cy="70" r="5" fill="#405573"/><circle cx="28" cy="114" r="5" fill="#405573"/>
+      <path d="M48 26 H92 M48 70 H92 M48 114 H92" stroke="#405573" stroke-width="5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="s-db" viewBox="0 0 120 140">
+      <path d="M14 26 V112 A46 16 0 0 0 106 112 V26" fill="#DDEEF9" stroke="#405573" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M14 69 A46 16 0 0 0 106 69" fill="none" stroke="#405573" stroke-width="5"/>
+      <ellipse cx="60" cy="26" rx="46" ry="16" fill="#fff" stroke="#405573" stroke-width="6"/>
+    </symbol>
+    <symbol id="s-clock" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="38" fill="#fff" stroke="#405573" stroke-width="6"/>
+      <path d="M50 28 V50 L66 60" fill="none" stroke="#F26B1D" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="s-doc" viewBox="0 0 120 150">
+      <path d="M14 10 H78 L106 38 V140 H14 Z" fill="#fff" stroke="#405573" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M78 10 V38 H106" fill="#DDEEF9" stroke="#405573" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M32 64 H88 M32 84 H80 M32 104 H88 M32 124 H70" stroke="#B9CCE0" stroke-width="6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="s-lock" viewBox="0 0 100 120">
+      <path d="M30 54 V38 A20 20 0 0 1 70 38 V54" fill="none" stroke="#405573" stroke-width="7" stroke-linecap="round"/>
+      <rect x="16" y="52" width="68" height="58" rx="12" fill="#F26B1D" stroke="#405573" stroke-width="6"/>
+      <circle cx="50" cy="76" r="7" fill="#fff"/><rect x="47" y="80" width="6" height="14" rx="3" fill="#fff"/>
+    </symbol>
+    <symbol id="s-check" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="40" fill="#E7F6EC" stroke="#169B67" stroke-width="6"/>
+      <path d="M32 52 L45 65 L70 38" fill="none" stroke="#169B67" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="s-dot" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="18" fill="#F57B62" opacity=".22"/><circle cx="20" cy="20" r="8" fill="#F57B62"/>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="deck-viewport">
 <main class="deck-stage" id="deckStage">
 
 <!-- =========================================================
-     01 · Bìa
+     01 · Giới thiệu  (kit: chữ trái 45–50%, hình phải 50–55%)
      ========================================================= -->
-<section class="slide active" data-title="Bìa">
-  <svg class="flow" viewBox="0 0 1920 1080" aria-hidden="true">
-    <defs><linearGradient id="fl1" x1="0" x2="1"><stop offset="0" stop-color="#f26b1d" stop-opacity="0"/><stop offset=".5" stop-color="#f26b1d" stop-opacity=".55"/><stop offset="1" stop-color="#ffb07a" stop-opacity=".2"/></linearGradient></defs>
-    <path d="M-40 980 C 420 860, 760 1060, 1180 900 S 1760 620, 1990 700" stroke="url(#fl1)" stroke-width="10"/>
-    <path d="M-40 1030 C 480 930, 820 1110, 1240 960 S 1780 720, 1990 790" stroke="url(#fl1)" stroke-width="4"/>
-  </svg>
-  <div class="moon" style="right:150px; top:120px; width:640px; height:640px;"></div>
-  <div class="pebble" style="width:150px; height:150px; right:720px; top:640px;"></div>
-  <div class="pebble" style="width:86px; height:86px; right:110px; top:760px;"></div>
-  <div class="kicker reveal" style="top:110px"><span class="pill fill">BTL Lập trình mạng</span><span class="pill">Nhóm 3 thành viên · vai A · B · C</span></div>
-  <h1 class="title-h1 reveal d1">TOEIC<br><em>Monitor</em></h1>
-  <p class="title-sub lead reveal d2" style="font-size:36px">Thi TOEIC Client–Server và giám sát máy thí sinh theo thời gian thực — quan sát, không phán xét.</p>
-  <div class="signals reveal d3"><span class="sig"><i></i>Process</span><span class="sig"><i></i>USB</span><span class="sig"><i></i>Focus</span><span class="sig"><i></i>Display</span></div>
-  <div class="source reveal d4" style="font-size:22px; bottom:80px">JavaFX · Spring Boot · PostgreSQL 18 · REST + WebSocket</div>
-  <aside class="notes">Giới thiệu đề tài, nhóm 3 người chia vai A (server), B (JavaFX), C (giám sát).</aside>
+<section class="slide active" data-title="Giới thiệu">
+  <div class="kicker reveal" style="top:110px"><span class="pill fill">BTL Lập trình mạng</span><span class="pill">Nhóm 03</span></div>
+  <h1 class="title-h1 reveal d1">TOEIC<br><em>MONITOR</em></h1>
+  <p class="reveal d2" style="position:absolute; left:120px; top:620px; width:760px; font:600 40px/1.3 var(--font-body); color:var(--ink-2)">Thi TOEIC Client–Server &amp; giám sát thời gian thực</p>
+  <p class="reveal d3" style="position:absolute; left:120px; top:880px; width:780px; font:400 24px/1.5 var(--font-body); color:var(--muted)">Nhóm 03 · 3 thành viên · vai A (Server) · B (JavaFX) · C (Giám sát)</p>
+  <div class="moon" style="right:70px; top:70px; width:220px; height:220px;"></div>
+  <div class="figure reveal-scale d2" style="left:960px; top:160px; width:860px; padding:24px">
+    <svg viewBox="0 0 900 760" width="812" height="686" role="img" aria-label="Ba máy thí sinh nối tới máy chủ; máy chủ nối tới máy giám thị và cơ sở dữ liệu">
+      <!-- candidate → server, server → proctor, server → database -->
+      <g class="sig" fill="none" stroke="#F57B62" stroke-width="7">
+        <path d="M222 122 C 320 122, 320 300, 404 318"/>
+        <path d="M222 362 C 300 362, 330 356, 404 356"/>
+        <path d="M222 602 C 320 602, 320 410, 404 394"/>
+        <path d="M472 262 C 472 190, 744 250, 744 222"/>
+        <path d="M554 412 C 620 412, 610 544, 664 544"/>
+      </g>
+      <use href="#s-dot" x="300" y="196" width="40" height="40"/>
+      <use href="#s-dot" x="300" y="338" width="40" height="40"/>
+      <use href="#s-dot" x="300" y="484" width="40" height="40"/>
+      <use href="#s-dot" x="590" y="210" width="40" height="40"/>
+      <!-- candidates -->
+      <use href="#s-monitor" x="40" y="60" width="176" height="154"/><use href="#s-scr-exam" x="40" y="60" width="176" height="154"/>
+      <use href="#s-monitor" x="40" y="300" width="176" height="154"/><use href="#s-scr-exam" x="40" y="300" width="176" height="154"/>
+      <use href="#s-monitor" x="40" y="540" width="176" height="154"/><use href="#s-scr-exam" x="40" y="540" width="176" height="154"/>
+      <!-- server, proctor, database -->
+      <use href="#s-server" x="390" y="262" width="168" height="196"/>
+      <use href="#s-monitor" x="640" y="36" width="208" height="182"/><use href="#s-scr-dash" x="640" y="36" width="208" height="182"/>
+      <use href="#s-db" x="650" y="470" width="132" height="154"/>
+    </svg>
+  </div>
+  <aside class="notes">Bài toán tổ chức thi TOEIC trên ứng dụng desktop và giám sát máy thí sinh — không dùng camera.</aside>
 </section>
 
 <!-- =========================================================
-     02 · Bài toán
+     02 · Bài toán — 3 nhu cầu (kit: 3 cột, icon 60–65% chiều cao cột)
      ========================================================= -->
 <section class="slide" data-title="Bài toán">
-  <div class="kicker reveal"><span class="pill fill">01 · Bài toán</span></div>
-  <h2 class="h2 reveal d1">Một phòng thi máy tính cần ba điều cùng lúc</h2>
-  <div class="region grid3" style="top:330px">
-    <div class="card reveal d1" data-box="p1">
-      <div class="icon-orb">1</div>
-      <h3>Bài làm không mất</h3>
-      <p>Mạng chập chờn, app bị đóng, hai cửa sổ cùng ghi một lượt thi — đáp án đã báo “đã lưu” phải thật sự nằm trong DB.</p>
-    </div>
-    <div class="card reveal d2" data-box="p2">
-      <div class="icon-orb">2</div>
-      <h3>Giờ do Server quyết</h3>
-      <p>Deadline chung cho cả phòng, không tin đồng hồ máy thí sinh. Phần Listening chỉ phát một lần, không tua, không phát bù.</p>
-    </div>
-    <div class="card reveal d3" data-box="p3">
-      <div class="icon-orb">3</div>
-      <h3>Giám thị nhìn thấy</h3>
-      <p>Process, USB, focus, cửa sổ trên máy thí sinh hiện gần thời gian thực — là sự kiện <b>“quan sát thấy”</b>, không phải kết luận gian lận.</p>
-    </div>
+  <div class="kicker reveal"><span class="pill fill">02 · Bài toán</span></div>
+  <h2 class="h2 reveal d1">Ba nhu cầu của một phòng thi máy tính</h2>
+  <div class="icon-card reveal d1" style="left:120px; top:250px; width:536px; height:700px">
+    <svg viewBox="0 0 400 360" role="img" aria-label="Màn hình bài thi và đồng hồ">
+      <use href="#s-monitor" x="50" y="90" width="260" height="228"/><use href="#s-scr-exam" x="50" y="90" width="260" height="228"/>
+      <use href="#s-clock" x="250" y="34" width="116" height="116"/>
+    </svg>
+    <div class="lbl">TỔ CHỨC THI</div>
   </div>
-  <div class="region reveal d4" style="top:800px">
-    <div class="card tint" style="padding:26px 36px; display:flex; gap:40px; align-items:center" data-box="p4">
-      <span class="label" style="color:var(--orange-deep)">Ràng buộc</span>
-      <span class="small"><b>Nhiều client đồng thời</b> · chạy qua <b>LAN</b> hoặc <b>Internet</b> (Cloudflare Tunnel) · mất kết nối là chuyện thường, không phải ngoại lệ</span>
-    </div>
+  <div class="icon-card reveal d2" style="left:692px; top:250px; width:536px; height:700px">
+    <svg viewBox="0 0 400 360" role="img" aria-label="Bài làm được lưu và khóa">
+      <use href="#s-doc" x="86" y="40" width="190" height="238"/>
+      <use href="#s-check" x="232" y="30" width="108" height="108"/>
+      <use href="#s-lock" x="228" y="196" width="112" height="134"/>
+    </svg>
+    <div class="lbl">BẢO TOÀN BÀI LÀM</div>
+  </div>
+  <div class="icon-card reveal d3" style="left:1264px; top:250px; width:536px; height:700px">
+    <svg viewBox="0 0 400 360" role="img" aria-label="Ba máy thí sinh gửi tín hiệu về một bảng giám thị">
+      <g class="sig" fill="none" stroke="#F57B62" stroke-width="6">
+        <path d="M84 118 C 84 160, 200 150, 200 186"/><path d="M200 118 V186"/><path d="M316 118 C 316 160, 200 150, 200 186"/>
+      </g>
+      <use href="#s-monitor" x="34" y="24" width="100" height="88"/><use href="#s-scr-exam" x="34" y="24" width="100" height="88"/>
+      <use href="#s-monitor" x="150" y="24" width="100" height="88"/><use href="#s-scr-exam" x="150" y="24" width="100" height="88"/>
+      <use href="#s-monitor" x="266" y="24" width="100" height="88"/><use href="#s-scr-exam" x="266" y="24" width="100" height="88"/>
+      <use href="#s-monitor" x="80" y="176" width="240" height="210"/><use href="#s-scr-dash" x="80" y="176" width="240" height="210"/>
+    </svg>
+    <div class="lbl">GIÁM SÁT TẬP TRUNG</div>
   </div>
   <div class="pageno">02</div>
+  <aside class="notes">Phòng thi có nhiều client; save/submit có thể tranh chấp nhau; giám thị cần dữ liệu quan sát và biết khi mất kết nối.</aside>
 </section>
 
 <!-- =========================================================
-     03 · Kiến trúc tổng thể
+     03 · Chức năng — 3 vai trò (ảnh thật, 1 nhãn mỗi ảnh)
      ========================================================= -->
-<section class="slide" data-title="Kiến trúc tổng thể">
-  <div class="kicker reveal"><span class="pill fill">02 · Kiến trúc</span></div>
-  <h2 class="h2 reveal d1">REST cho dữ liệu, WebSocket cho thời gian thực</h2>
-  <div class="arch">
-    <!-- Client column -->
-    <div class="col card reveal d1" style="left:0; width:440px; padding:32px" data-box="client">
-      <span class="label">Client · JavaFX 21 · một JAR</span>
-      <h3 style="margin:8px 0 18px">Desktop app</h3>
-      <div style="display:grid; gap:12px">
-        <div class="mod">Admin <small>tài khoản, đề thi</small></div>
-        <div class="mod">Giám thị <small>phòng PIN, START, dashboard</small></div>
-        <div class="mod">Thí sinh <small>phòng chờ, 7 Part, audio</small></div>
-        <div class="mod" style="background:#fff; box-shadow: inset 0 0 0 2px var(--peach)">Collector <small>ProcessHandle · CIM · cửa sổ</small></div>
-      </div>
-    </div>
-    <!-- Two lanes -->
-    <div class="lane card reveal d2" style="top:20px" data-box="rest">
-      <span class="label">HTTP / REST · /api/v1, /api/v2</span>
-      <div class="t">Yêu cầu – trả lời</div>
-      <p>Đăng nhập, đề, audio &amp; ảnh có xác thực, lưu đáp án, nộp bài, đọc trạng thái, timeline.</p>
-    </div>
-    <div class="lane card navy reveal d3" style="top:330px" data-box="ws">
-      <span class="label" style="color:#ffb98e">WebSocket + JSON · /ws/v1/realtime</span>
-      <div class="t">Đẩy hai chiều</div>
-      <p>Heartbeat, snapshot &amp; event giám sát, lệnh phát Listening, cảnh báo tới giám thị.</p>
-    </div>
-    <div class="arrow reveal d2" style="left:458px; width:44px; top:140px"></div>
-    <div class="arrow reveal d2" style="left:1058px; width:44px; top:140px"></div>
-    <div class="arrow reveal d3" style="left:458px; width:44px; top:450px"></div>
-    <div class="arrow reveal d3" style="left:1058px; width:44px; top:450px"></div>
-    <!-- Server column -->
-    <div class="col card reveal d4" style="left:1120px; width:560px; padding:32px" data-box="server">
-      <span class="label">Server · Spring Boot 4.1</span>
-      <h3 style="margin:8px 0 18px">Một ứng dụng, chia module</h3>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
-        <div class="mod">auth</div><div class="mod">admin</div>
-        <div class="mod">exam <small>phòng, attempt</small></div><div class="mod">audio</div>
-        <div class="mod">monitoring <small>reducer, signal</small></div><div class="mod">realtime</div>
-      </div>
-      <div class="mod" style="margin-top:18px; background:var(--navy); color:#fff">PostgreSQL 18 <small style="color:#c9d3e3">Flyway V1–V23 · JDBC tường minh</small></div>
-    </div>
+<section class="slide" data-title="Ba vai trò">
+  <div class="kicker reveal"><span class="pill fill">03 · Chức năng</span></div>
+  <h2 class="h2 reveal d1">Một ứng dụng, ba vai trò</h2>
+  <div class="shot reveal-scale d1" style="left:120px; top:236px; width:536px; height:640px">
+    <div class="crop"><img src="assets/screens/role-admin.png" style="width:1280px" alt="Màn Quản lý tài khoản của Admin"></div>
   </div>
-  <div class="source">Raw WebSocket — không STOMP/SockJS/broker. Nguồn: docs/ARCHITECTURE.md, README “Thư viện ngoài”, server/src/main/resources/db/migration.</div>
+  <div class="shot reveal-scale d2" style="left:692px; top:236px; width:536px; height:640px">
+    <div class="crop"><img src="assets/screens/role-proctor.png" style="width:1280px; left:-228px; top:-75px" alt="Màn phòng thi của Giám thị với PIN và danh sách thí sinh"></div>
+  </div>
+  <div class="shot reveal-scale d3" style="left:1264px; top:236px; width:536px; height:640px">
+    <div class="crop"><img src="assets/screens/role-candidate.png" style="width:1280px; left:-763px" alt="Màn làm bài Listening của Thí sinh: câu hỏi, lựa chọn và đồng hồ đếm ngược"></div>
+  </div>
+  <div class="role-label reveal d2" style="left:120px; top:906px; width:536px">ADMIN</div>
+  <div class="role-label reveal d3" style="left:692px; top:906px; width:536px">GIÁM THỊ</div>
+  <div class="role-label reveal d4" style="left:1264px; top:906px; width:536px">THÍ SINH</div>
+  <div class="source">Ảnh chụp phần mềm thật, 02/11/2026 · tài khoản và dữ liệu kiểm thử</div>
   <div class="pageno">03</div>
+  <aside class="notes">Đi theo luồng sử dụng: Admin tạo tài khoản và đề; Giám thị mở phòng, cấp PIN, bắt đầu; Thí sinh vào bằng PIN và làm bài. Một ứng dụng JavaFX cho cả ba vai trò; role do server xác thực và phân quyền, không dựa vào việc ẩn/hiện giao diện.</aside>
 </section>
 
 <!-- =========================================================
-     04 · Luồng phòng thi
+     04 · Kiến trúc Client–Server (sơ đồ 85–90% thân slide)
      ========================================================= -->
-<section class="slide" data-title="Luồng phòng thi">
-  <div class="kicker reveal"><span class="pill fill">02 · Luồng message</span></div>
-  <h2 class="h2 reveal d1">Một phòng thi, từ PIN đến nộp bài</h2>
-  <svg class="seq reveal d2" viewBox="0 0 1680 720" role="img" aria-label="Sơ đồ tuần tự phòng thi giữa Thí sinh, Server và Giám thị">
-    <defs>
-      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#f26b1d"/></marker>
-      <marker id="ahn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#13254a"/></marker>
-    </defs>
-    <!-- lifelines -->
-    <g>
-      <rect x="160" y="0" width="240" height="56" rx="28" fill="#fff1e8"/><text class="who" x="280" y="38" text-anchor="middle">Thí sinh</text>
-      <rect x="720" y="0" width="240" height="56" rx="28" fill="#13254a"/><text class="who" x="840" y="38" text-anchor="middle" style="fill:#fff">Server</text>
-      <rect x="1280" y="0" width="240" height="56" rx="28" fill="#fff1e8"/><text class="who" x="1400" y="38" text-anchor="middle">Giám thị</text>
-      <line x1="280" y1="56" x2="280" y2="716" stroke="#e3e8ef" stroke-width="3"/>
-      <line x1="840" y1="56" x2="840" y2="716" stroke="#c9d3e3" stroke-width="3"/>
-      <line x1="1400" y1="56" x2="1400" y2="716" stroke="#e3e8ef" stroke-width="3"/>
-    </g>
-    <!-- legend for channel colour -->
-    <g transform="translate(0,20)"><rect x="0" y="0" width="16" height="16" rx="4" fill="#13254a"/><text class="ch" x="24" y="14" fill="#6b7a90">HTTP</text>
-      <rect x="0" y="28" width="16" height="16" rx="4" fill="#f26b1d"/><text class="ch" x="24" y="42" fill="#6b7a90">WebSocket</text></g>
-    <!-- messages: navy = HTTP, orange = WebSocket -->
-    <g stroke-width="3" fill="none">
-      <line x1="1396" y1="112" x2="846" y2="112" stroke="#13254a" marker-end="url(#ahn)"/>
-      <line x1="284" y1="184" x2="834" y2="184" stroke="#13254a" marker-end="url(#ahn)"/>
-      <line x1="284" y1="256" x2="834" y2="256" stroke="#13254a" marker-end="url(#ahn)"/>
-      <line x1="1396" y1="328" x2="846" y2="328" stroke="#13254a" marker-end="url(#ahn)"/>
-      <line x1="836" y1="400" x2="286" y2="400" stroke="#f26b1d" marker-end="url(#ah)"/>
-      <line x1="284" y1="472" x2="834" y2="472" stroke="#13254a" marker-end="url(#ahn)"/>
-      <line x1="284" y1="544" x2="834" y2="544" stroke="#f26b1d" marker-end="url(#ah)"/>
-      <line x1="846" y1="616" x2="1394" y2="616" stroke="#f26b1d" marker-end="url(#ah)"/>
-      <line x1="284" y1="688" x2="834" y2="688" stroke="#13254a" marker-end="url(#ahn)"/>
-    </g>
-    <g class="msg">
-      <text x="1120" y="100" text-anchor="middle">Tạo phòng → PIN 5 số (lưu BCrypt + HMAC)</text>
-      <text x="560" y="172" text-anchor="middle">JOIN: token tài khoản + PIN → đúng 1 Attempt</text>
-      <text x="560" y="244" text-anchor="middle">Kiểm checksum audio, thử loa → READY</text>
-      <text x="1120" y="316" text-anchor="middle">START: khóa Session, deadline chung</text>
-      <text x="560" y="388" text-anchor="middle">LISTENING_START — gửi sau COMMIT</text>
-      <text x="560" y="460" text-anchor="middle">Autosave toàn bộ đáp án → ACK sau commit</text>
-      <text x="560" y="532" text-anchor="middle">HEARTBEAT 2 s · MONITORING_FULL · event</text>
-      <text x="1120" y="604" text-anchor="middle">MONITOR_STATE · MONITOR_WARNING</text>
-      <text x="560" y="676" text-anchor="middle">Nộp bài / hết giờ → chốt, chấm một lần</text>
-    </g>
-  </svg>
-  <div class="card tint reveal d3" style="position:absolute; right:var(--pad-x); top:560px; width:250px; padding:24px" data-box="seqnote">
-    <p style="font-size:21px">Start trùng ID <b>không phát lại</b>. Reconnect <b>không</b> reset deadline.</p>
+<section class="slide" data-title="Kiến trúc">
+  <div class="kicker reveal"><span class="pill fill">04 · Kiến trúc</span></div>
+  <h2 class="h2 reveal d1">Kiến trúc Client–Server</h2>
+  <div class="figure reveal-scale d1" style="left:200px; top:228px; width:1520px; height:744px">
+    <img src="assets/kit/04_KIEN_TRUC_CLIENT_SERVER.svg" width="1480" height="700" alt="Admin, Giám thị, Thí sinh nối tới Spring Boot Server qua REST và WebSocket; server dùng PostgreSQL và kho media">
   </div>
+  <div class="source">Sơ đồ dựng từ Hình 4.1 báo cáo · JavaFX · Spring Boot · PostgreSQL</div>
   <div class="pageno">04</div>
+  <aside class="notes">HTTP/REST là yêu cầu–đáp ứng: đăng nhập, tải đề, audio, lưu/nộp. WebSocket là kênh hai chiều để server đẩy: heartbeat, monitoring, START, cảnh báo. Server quyết định dữ liệu và deadline; client không tự tính giờ kết thúc.</aside>
 </section>
 
 <!-- =========================================================
-     05 · Autosave
+     05 · Quy trình thi (timeline 6 bước ~80%)
      ========================================================= -->
-<section class="slide" data-title="Autosave">
-  <div class="kicker reveal"><span class="pill fill">03 · Tính đúng</span></div>
-  <h2 class="h2 reveal d1">Một khóa, một đồng hồ, ACK sau COMMIT</h2>
-  <div class="region" style="top:310px; display:grid; grid-template-columns: 640px 1fr; gap:48px">
-    <div style="display:grid; gap:16px">
-      <div class="card reveal d1" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s1"><span class="big o" style="font-size:52px; width:48px">1</span><p style="font-size:23px"><b>Khóa bản ghi attempt</b> — save, submit, timeout, takeover dùng chung</p></div>
-      <div class="card reveal d2" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s2"><span class="big o" style="font-size:52px; width:48px">2</span><p style="font-size:23px"><b>Kiểm writerEpoch sau khóa</b> — cửa sổ cũ bị takeover → STALE</p></div>
-      <div class="card reveal d3" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s3"><span class="big o" style="font-size:52px; width:48px">3</span><p style="font-size:23px"><b>Đọc clock_timestamp() một lần</b> — không dùng now() của đầu transaction</p></div>
-      <div class="card reveal d4" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s4"><span class="big o" style="font-size:52px; width:48px">4</span><p style="font-size:23px"><b>So revision</b>: thấp hơn → STALE; bằng nhau mà nội dung khác (dạng chuẩn hóa) → CONFLICT</p></div>
-      <div class="card reveal d5" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s5"><span class="big o" style="font-size:52px; width:48px">5</span><p style="font-size:23px"><b>COMMIT rồi mới ACK</b> — rollback không bao giờ báo “đã lưu”</p></div>
-    </div>
-    <div class="reveal d3">
-<div class="code" style="font-size:21px" data-box="code"><span class="c">-- ExamService.java · autosave</span>
-<span class="k">SELECT</span> a.writer_epoch, a.saved_revision, a.state, …
-<span class="k">FROM</span> monitoring_attempts a
-<span class="k">WHERE</span> a.attempt_id = :attemptId
-<span class="k">FOR UPDATE OF</span> a                       <span class="c">-- ①</span>
-
-<span class="k">if</span> (request.writerEpoch() != attempt.writerEpoch())
-    <span class="k">throw</span> … ErrorCode.STALE               <span class="c">-- ②</span>
-
-Instant decisionAt = jdbc.sql(
-    <span class="s">"SELECT clock_timestamp()"</span>)…single(); <span class="c">-- ③</span>
-<span class="k">if</span> (!decisionAt.isBefore(deadlineAt))
-    <span class="k">throw</span> … ErrorCode.EXPIRED</div>
-      <div class="caption">Trích server/src/main/java/vn/edu/toeic/server/exam/ExamService.java (rút gọn).</div>
-    </div>
+<section class="slide" data-title="Quy trình thi">
+  <div class="kicker reveal"><span class="pill fill">05 · Quy trình</span></div>
+  <h2 class="h2 reveal d1">Từ nhập PIN đến nộp bài</h2>
+  <div class="figure reveal-scale d1" style="left:120px; top:236px; width:1680px; height:718px">
+    <img src="assets/kit/05_QUY_TRINH_THI.svg" width="1640" height="678" alt="Sáu bước: Tạo phòng, Nhập PIN, Ready, Start, Làm bài, Nộp bài">
   </div>
   <div class="pageno">05</div>
+  <aside class="notes">READY chỉ khi đủ file audio đúng checksum và thí sinh đã thử loa. Listening phát một lần, START trùng không phát lại. Deadline do server quyết định. Autosave gửi toàn bộ đáp án; submit chốt lượt thi.</aside>
 </section>
 
 <!-- =========================================================
-     06 · Pipeline giám sát
+     06 · Lưu/nộp bài an toàn (sơ đồ 2 làn)
      ========================================================= -->
-<section class="slide" data-title="Pipeline giám sát">
-  <div class="kicker reveal"><span class="pill fill">04 · Pipeline</span></div>
-  <h2 class="h2 reveal d1">Từ ProcessHandle tới màn hình giám thị</h2>
-  <div class="pipe">
-    <div class="step reveal d1"><div class="card" data-box="k1"><span class="label">Thí sinh</span><h3 style="margin-top:8px">Poll</h3><p><span class="mono">ProcessHandle</span> mỗi 1 000 ms, ngoài luồng JavaFX</p></div></div>
-    <div class="step reveal d2"><div class="card" data-box="k2"><span class="label">Policy v4</span><h3 style="margin-top:8px">Lọc 9 tên</h3><p>Không đọc tham số, không đóng process</p></div></div>
-    <div class="step reveal d3"><div class="card" data-box="k3"><span class="label">Identity</span><h3 style="margin-top:8px">Định danh</h3><p class="mono" style="font-size:19px">(collectorSessionId, pid, startInstant)</p></div></div>
-    <div class="step reveal d4"><div class="card navy" data-box="k4"><span class="label" style="color:#ffb98e">WebSocket</span><h3 style="margin-top:8px">Gửi</h3><p>FULL làm mới 2 s · event có <span class="mono">eventId</span> ổn định qua retry</p></div></div>
-    <div class="step reveal d5"><div class="card" data-box="k5"><span class="label">Server</span><h3 style="margin-top:8px">Hai luồng</h3><p>State: reducer trong RAM · History: commit DB rồi ACK</p></div></div>
+<section class="slide" data-title="Lưu và nộp">
+  <div class="kicker reveal"><span class="pill fill">06 · Lưu / nộp</span></div>
+  <h2 class="h2 reveal d1">Bản mới được lưu, bản cũ bị chặn</h2>
+  <div class="figure reveal-scale d1" style="left:120px; top:226px; width:1680px; height:652px">
+    <img src="assets/kit/06_NHAT_QUAN_BAI_LAM.svg" width="1640" height="612" alt="Revision 12 được chấp nhận, revision 11 đến muộn bị từ chối; sau khi nộp bài bị khóa">
   </div>
-  <div class="region grid2" style="top:690px">
-    <div class="card tint reveal d4" style="padding:28px 34px" data-box="hb"><h3 style="font-size:30px">Heartbeat 2 s · timeout 6 s</h3><p style="font-size:23px">Mất heartbeat → <b>UNKNOWN</b>. Đó là mất liên lạc, không phải bằng chứng gian lận.</p></div>
-    <div class="card reveal d5" style="padding:28px 34px" data-box="once"><h3 style="font-size:30px">Một lần xuất hiện = một event</h3><p style="font-size:23px">Không lặp event ở mỗi poll. Collector chỉ chạy ở role thí sinh.</p></div>
+  <div class="reveal d3" style="position:absolute; left:120px; top:906px; display:flex; gap:20px">
+    <span class="pill" style="font:700 24px var(--font-mono); color:var(--good)">REVISION 12 ✓</span>
+    <span class="pill" style="font:700 24px var(--font-mono); color:#b91c1c">REVISION 11 ✕</span>
+    <span class="pill fill" style="font:700 24px var(--font-mono)">SUBMITTED
+      <svg viewBox="0 0 100 120" width="20" height="24" aria-hidden="true"><path d="M30 54 V38 A20 20 0 0 1 70 38 V54" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><rect x="16" y="52" width="68" height="58" rx="12" fill="#fff"/></svg></span>
   </div>
-  <div class="source">Tham số mặc định: docs/PROTOCOL.md (T2-C5). Chín tên: chrome, msedge, firefox, zalo, teams, ms-teams, discord, anydesk, teamviewer (.exe).</div>
   <div class="pageno">06</div>
+  <aside class="notes">Mỗi lần lưu mang requestId (chống gửi trùng), writerEpoch (chống phiên cũ sau takeover) và answerRevision (chống ghi đè bằng bản cũ). Save, submit, timeout và takeover dùng chung một khóa dòng attempt trong transaction; writerEpoch kiểm sau khi lấy khóa. Server chỉ ACK sau COMMIT. Đã nộp thì khóa, không đổi đáp án hay điểm.</aside>
 </section>
 
 <!-- =========================================================
-     07 · E1 polling
+     07 · Giám sát realtime (sơ đồ pipeline + dashboard giám thị)
      ========================================================= -->
-<section class="slide" data-title="E1 polling">
-  <div class="kicker reveal"><span class="pill fill">05 · E1</span><span class="pill">Chu kỳ polling</span></div>
-  <h2 class="h2 reveal d1">Poll nhanh bắt được nhiều hơn, nhưng tốn CPU hơn</h2>
-  <div class="region" style="top:300px; display:grid; grid-template-columns: 1fr 1fr 420px; gap:40px">
-    <!-- Chart A: miss rate, target hold 200 ms (single series, labelled) -->
-    <div class="card reveal d1" style="padding:32px" data-box="c1">
-      <div class="label">Tỉ lệ bỏ sót · process sống ~200 ms</div>
-      <div class="small" style="margin:6px 0 18px">N = 30 / chu kỳ · khoảng = có lượt chưa kết luận</div>
-      <svg class="chart" viewBox="0 0 520 330" width="100%" height="330" role="img" aria-label="Tỉ lệ bỏ sót theo chu kỳ poll: 250ms 0-3.33%, 500ms 46.67%, 1000ms 86.67%, 2000ms 73.33-76.67%">
-        <g class="grid"><line x1="110" y1="10" x2="110" y2="300"/><line x1="235" y1="10" x2="235" y2="300"/><line x1="360" y1="10" x2="360" y2="300"/></g>
-        <!-- x scale: 0..100% → 110..360 (2.5 px / %) -->
-        <g class="ax"><text x="100" y="58" text-anchor="end">250 ms</text><text x="100" y="128" text-anchor="end">500 ms</text><text x="100" y="198" text-anchor="end">1000 ms</text><text x="100" y="268" text-anchor="end">2000 ms</text>
-          <text x="110" y="326" text-anchor="middle">0%</text><text x="235" y="326" text-anchor="middle">50%</text><text x="360" y="326" text-anchor="middle">100%</text></g>
-        <rect class="bar-grow" x="110" y="36" width="8.3" height="30" rx="4" fill="#f9b48a"><title>250 ms: 0–3,33% (29 thấy / 0 sót / 1 chưa kết luận)</title></rect>
-        <rect class="bar-grow" x="110" y="106" width="116.7" height="30" rx="4" fill="#f26b1d"><title>500 ms: 46,67% (16 / 14 / 0)</title></rect>
-        <rect class="bar-grow" x="110" y="176" width="216.7" height="30" rx="4" fill="#f26b1d"><title>1000 ms: 86,67% (4 / 26 / 0)</title></rect>
-        <rect class="bar-grow" x="110" y="246" width="183.3" height="30" rx="4" fill="#f26b1d"><title>2000 ms: 73,33% (7 / 22 / 1)</title></rect>
-        <rect class="bar-grow" x="295.3" y="246" width="8.3" height="30" rx="4" fill="#f9b48a"><title>tới 76,67% nếu lượt chưa kết luận là sót</title></rect>
-        <g class="val"><text x="128" y="58">0–3,3%</text><text x="236" y="128">46,7%</text><text x="336" y="198">86,7%</text><text x="312" y="268">73,3–76,7%</text></g>
-      </svg>
-    </div>
-    <!-- Chart B: collector CPU (separate chart: different unit, no dual axis) -->
-    <div class="card reveal d2" style="padding:32px" data-box="c2">
-      <div class="label">CPU collector · % một lõi</div>
-      <div class="small" style="margin:6px 0 18px">Trung bình 3 lượt, mỗi lượt OK</div>
-      <svg class="chart" viewBox="0 0 520 330" width="100%" height="330" role="img" aria-label="CPU collector theo chu kỳ poll: 250ms 17.01%, 500ms 9.02%, 1000ms 4.94%, 2000ms 2.57%">
-        <g class="grid"><line x1="110" y1="10" x2="110" y2="300"/><line x1="235" y1="10" x2="235" y2="300"/><line x1="360" y1="10" x2="360" y2="300"/></g>
-        <!-- x scale: 0..20% → 110..360 (12.5 px / %) -->
-        <g class="ax"><text x="100" y="58" text-anchor="end">250 ms</text><text x="100" y="128" text-anchor="end">500 ms</text><text x="100" y="198" text-anchor="end">1000 ms</text><text x="100" y="268" text-anchor="end">2000 ms</text>
-          <text x="110" y="326" text-anchor="middle">0%</text><text x="235" y="326" text-anchor="middle">10%</text><text x="360" y="326" text-anchor="middle">20%</text></g>
-        <rect class="bar-grow" x="110" y="36" width="212.6" height="30" rx="4" fill="#13254a"><title>250 ms: 17,01 ± 0,60%</title></rect>
-        <rect class="bar-grow" x="110" y="106" width="112.8" height="30" rx="4" fill="#13254a"><title>500 ms: 9,02 ± 0,38%</title></rect>
-        <rect class="bar-grow" x="110" y="176" width="61.8" height="30" rx="4" fill="#13254a"><title>1000 ms: 4,94 ± 0,20%</title></rect>
-        <rect class="bar-grow" x="110" y="246" width="32.1" height="30" rx="4" fill="#13254a"><title>2000 ms: 2,57 ± 0,22%</title></rect>
-        <g class="val"><text x="334" y="58">17,01</text><text x="234" y="128">9,02</text><text x="183" y="198">4,94</text><text x="154" y="268">2,57</text></g>
-      </svg>
-    </div>
-    <div class="reveal d3" style="display:grid; gap:20px; align-content:start">
-      <div class="card tint" style="padding:28px" data-box="e1sum"><div class="big" style="font-size:72px">360</div><p style="font-size:22px">process con có kiểm soát: <b>273</b> thấy · <b>84</b> sót · <b>3</b> chưa kết luận</p></div>
-      <div class="card" style="padding:28px" data-box="e1setup"><p style="font-size:20px">12 lượt (4 chu kỳ × 3), seed 1234 · Intel Core Ultra 5 125H, Windows 11 · ProcessHandle thật, client giả lập, không qua mạng</p></div>
-    </div>
+<section class="slide" data-title="Giám sát">
+  <div class="kicker reveal"><span class="pill fill">07 · Giám sát</span></div>
+  <h2 class="h2 reveal d1">Giám sát theo thời gian thực</h2>
+  <div class="figure reveal-scale d1" style="left:448px; top:214px; width:1024px; height:460px">
+    <img src="assets/kit/07_GIAM_SAT_PIPELINE.svg" width="984" height="420" alt="Process, USB, Focus, Window đi qua Collector, WebSocket tới Server; Server lưu lịch sử PostgreSQL, trạng thái RAM và đẩy lên dashboard giám thị">
   </div>
-  <div class="source">evidence/qa05-e1-20261021/REPORT.md · Một máy, mẫu nhỏ: 1000 ms vs 2000 ms không đơn điệu — không suy rộng. Process ≥ 3 s: 30/30 thấy ở mọi chu kỳ.</div>
+  <div class="shot reveal d3" style="left:120px; top:700px; width:1680px; height:276px">
+    <div class="crop"><img src="assets/screens/proctor-alerts.webp" style="width:1691px; top:-230px" alt="Bảng Quản lý cảnh báo của giám thị: tab Process, USB, Focus, Cửa sổ và một sự kiện trạng thái cửa sổ"></div>
+    <span class="badge-test">DATA TEST</span>
+  </div>
+  <div class="source">Tín hiệu chỉ phản ánh những gì ứng dụng quan sát thấy; UNKNOWN không phải kết luận gian lận.</div>
   <div class="pageno">07</div>
+  <aside class="notes">Collector chạy cục bộ trên máy thí sinh, quét process bằng ProcessHandle; các adapter tín hiệu báo USB lưu trữ, focus và trạng thái cửa sổ. Tất cả đi qua WebSocket. Server giữ trạng thái hiện tại trong RAM và lịch sử sự kiện trong DB — hai luồng tách biệt. Mất heartbeat thì UNKNOWN.</aside>
 </section>
 
 <!-- =========================================================
-     08 · Kiểm thử hồi quy
+     08 · Kiểm thử và thực nghiệm (3 KPI + 1 biểu đồ 2 màu)
      ========================================================= -->
-<section class="slide" data-title="Kiểm thử hồi quy">
-  <div class="kicker reveal"><span class="pill fill">05 · Kiểm thử</span><span class="pill mono" style="font-family:var(--font-mono)">main ce94173 · 5173462</span></div>
-  <h2 class="h2 reveal d1">Bộ hồi quy đầy đủ: không lỗi nào còn mở</h2>
-  <div class="region grid3" style="top:320px">
-    <div class="card tint reveal d1" data-box="t1"><div class="big">1533</div><p style="margin-top:12px"><span class="tag good">PASS</span> &nbsp;0 FAIL · 316 SKIP — <b>main mới nhất</b>, mvn test 7 module, server trên PostgreSQL thật; GUI/tùy chọn bị bỏ qua</p></div>
-    <div class="card reveal d2" data-box="t2"><div class="big">1797</div><p style="margin-top:12px"><span class="tag good">PASS</span> &nbsp;0 FAIL · 23 SKIP — bản phát hành 5173462, gồm GUI JavaFX thật; + 22 windows-observer</p></div>
-    <div class="card reveal d3" data-box="t3"><div class="big">3<small>/3</small></div><p style="margin-top:12px"><span class="tag good">PASS</span> &nbsp;E2E ACCOUNT_PIN: Admin → Giám thị → 2 thí sinh → START → nộp</p></div>
+<section class="slide" data-title="Kiểm thử">
+  <div class="kicker reveal"><span class="pill fill">08 · Kiểm thử</span></div>
+  <h2 class="h2 reveal d1">Kiểm thử và thực nghiệm</h2>
+  <div class="kpi tint reveal d1" style="left:120px; top:236px; width:440px; height:224px">
+    <div class="num">363</div><div class="cap">CA ĐẠT</div><div class="sub">Server · 4 SKIP</div>
   </div>
-  <div class="region grid2" style="top:690px">
-    <div class="card reveal d4" style="padding:28px 34px" data-box="t4"><h3 style="font-size:28px">Lỗi tìm ra khi review cuối</h3><p style="font-size:22px">Sau SUBMIT/TIMEOUT, kênh tín hiệu vẫn chạy. Dưới tải CPU: code cũ <span class="tag bad">3/6 FAIL</span>, bản sửa <span class="tag good">6/6 PASS</span>.</p></div>
-    <div class="card navy reveal d5" style="padding:28px 34px" data-box="t5"><h3 style="font-size:28px">Chưa kiểm — ghi đúng là chưa</h3><p style="font-size:22px">LAN hai máy vật lý · người nghe audio thật · cắm/rút USB vật lý trên commit tích hợp: <b style="color:#ffb98e">NOT TESTED</b>.</p></div>
+  <div class="kpi reveal d2" style="left:120px; top:484px; width:440px; height:224px">
+    <div class="num" style="color:var(--orange-deep)">68,34<small>%*</small></div><div class="cap">BYTE WEBSOCKET GIẢM</div><div class="sub">DELTA so với FULL</div>
   </div>
-  <div class="source">main ce94173, 31/10: Windows 11, JDK 21.0.8, PostgreSQL 18.6 DB tạm đã xóa; lượt đầu 1 test chập chờn (CandidateSignalsPendingLimitTest), chạy lại PASS. 5173462: docs/release/RELEASE-REPORT.md §2, §5.</div>
+  <div class="kpi reveal d3" style="left:120px; top:732px; width:440px; height:224px">
+    <div class="num">20</div><div class="cap">CLIENT GIẢ LẬP</div><div class="sub">Benchmark trên một máy</div>
+  </div>
+  <div class="figure reveal-scale d2" style="left:592px; top:329px; width:1208px; height:534px">
+    <img src="assets/kit/08_FULL_VS_DELTA.svg" width="1168" height="494" alt="Byte WebSocket FULL và DELTA: ít thay đổi 3,69 MB và 1,17 MB (−68,34%); nhiều thay đổi 6,46 MB và 5,45 MB (−15,60%); kết nối lại 3,43 MB và 1,19 MB (−65,20%)">
+  </div>
+  <div class="source">Báo cáo nhóm 03, Bảng 5.3–5.5 (đo 27–28/10/2026) · * kịch bản ít thay đổi · byte nội dung bản tin WebSocket</div>
   <div class="pageno">08</div>
+  <aside class="notes">363 test server PASS, 4 SKIP. E2: kịch bản ít thay đổi, delta giảm 68,34% byte WebSocket; nhiều thay đổi chỉ giảm 15,60%. Benchmark 20 client giả lập — không phải 20 máy vật lý.</aside>
 </section>
 
 <!-- =========================================================
-     09 · Kịch bản demo
+     09 · Demo phần mềm (giám thị 60% trái, thí sinh 40% phải)
      ========================================================= -->
-<section class="slide" data-title="Kịch bản demo">
-  <div class="kicker reveal"><span class="pill fill">06 · Kịch bản demo</span></div>
-  <h2 class="h2 reveal d1">Năm bước thử nhanh</h2>
-  <div class="region" style="top:290px; display:grid; grid-template-columns: 1fr 780px; gap:48px">
-    <div style="display:grid; gap:16px">
-      <div class="card reveal d1" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm1"><span class="pill fill" style="min-width:150px; justify-content:center">Admin</span><p style="font-size:23px">Tạo Giám thị, Thí sinh; import đề JSON hoặc soạn tay đủ 200 câu</p></div>
-      <div class="card reveal d2" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm2"><span class="pill" style="min-width:150px; justify-content:center">Giám thị</span><p style="font-size:23px">“+ Tạo phòng” → chọn đề → đọc PIN cho thí sinh</p></div>
-      <div class="card reveal d3" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm3"><span class="pill" style="min-width:150px; justify-content:center">Thí sinh</span><p style="font-size:23px">Nhập PIN → tải âm thanh, thử loa, xác nhận → hàng chuyển “Sẵn sàng”</p></div>
-      <div class="card reveal d4" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm4"><span class="pill" style="min-width:150px; justify-content:center">Giám thị</span><p style="font-size:23px">Bắt đầu phòng thi → Listening phát, chân trang “✓ Đã lưu” → Nộp bài</p></div>
-      <div class="card tint reveal d5" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm5"><span class="pill fill" style="min-width:150px; justify-content:center">Thử</span><p style="font-size:23px">Mở Chrome/Zalo, rời cửa sổ, cắm/rút USB → cảnh báo hiện bên Giám thị</p></div>
-    </div>
-    <div class="reveal-scale d3">
-      <div class="screen" data-box="admin"><img src="assets/screens/admin-accounts.webp" alt="Màn Quản lý tài khoản của Admin với danh sách giám thị và thí sinh"></div>
-      <div class="caption">Màn Admin. Chụp từ lượt GUI thật của ACCOUNT_PIN, tài khoản MOCK do test tạo.</div>
-    </div>
+<section class="slide" data-title="Demo">
+  <div class="kicker reveal"><span class="pill fill">09 · Demo</span></div>
+  <h2 class="h2 reveal d1">Demo phần mềm</h2>
+  <div class="shot reveal-scale d1" style="left:120px; top:236px; width:1040px; height:336px">
+    <div class="crop"><img src="assets/screens/proctor-room-ready.webp" style="width:1020px" alt="Giám thị: danh sách thí sinh trong phòng với cột Focus và Cảnh báo"></div>
+    <span class="pill fill tagline">CẢNH BÁO</span>
   </div>
-  <div class="source">README.md “Luồng thử nhanh”. Server: Cloudflare Tunnel hoặc http://IP_MAY_CHU:8080 trong LAN.</div>
+  <div class="shot reveal-scale d2" style="left:120px; top:604px; width:1040px; height:341px">
+    <div class="crop"><img src="assets/screens/proctor-alerts.webp" style="width:1020px" alt="Giám thị: bảng Quản lý cảnh báo"></div>
+  </div>
+  <div class="shot reveal-scale d3" style="left:1192px; top:236px; width:608px; height:339px">
+    <div class="crop"><img src="assets/screens/candidate-lobby.webp" style="width:588px" alt="Thí sinh: phòng chờ, tải âm thanh, thử loa, xác nhận sẵn sàng"></div>
+    <span class="pill fill tagline">PHÒNG CHỜ</span>
+  </div>
+  <div class="shot reveal-scale d4" style="left:1192px; top:607px; width:608px; height:371px">
+    <div class="crop"><img src="assets/screens/candidate-part3.webp" style="width:588px" alt="Thí sinh: làm bài Part 3"></div>
+    <span class="pill fill tagline">LÀM BÀI</span>
+  </div>
+  <div class="source">DATA TEST — ảnh chụp phần mềm thật với dữ liệu kiểm thử (MOCK)</div>
   <div class="pageno">09</div>
+  <aside class="notes">Demo nhanh: tạo phòng → PIN → thí sinh READY → START → autosave (“✓ Đã lưu”) → mở process/cắm USB/rời cửa sổ → cảnh báo hiện bên giám thị → nộp bài.</aside>
 </section>
 
 <!-- =========================================================
-     10 · Giới hạn
+     10 · Kết luận và hướng phát triển (2 cực trái–phải)
      ========================================================= -->
-<section class="slide" data-title="Giới hạn">
-  <div class="kicker reveal"><span class="pill fill">06 · Giới hạn &amp; hướng tới</span></div>
-  <h2 class="h2 reveal d1">Những gì còn chưa làm được</h2>
-  <div class="region grid2 limits" style="top:300px">
-    <div class="card reveal d1" style="padding:40px 44px" data-box="lim">
-      <span class="label">Giới hạn</span>
-      <ul style="margin-top:18px">
-        <li>Thi đầy đủ qua Internet / LAN hai máy vật lý chưa chạy xong</li>
-        <li>Chưa có người nghe audio thật qua loa/tai nghe</li>
-        <li>Polling bỏ sót process sống ngắn hơn chu kỳ</li>
-        <li>Restart Server mất trạng thái hiện tại (lịch sử vẫn giữ)</li>
-        <li>Bộ cài MSI chưa ký số; delta chưa qua gate nên tắt</li>
-      </ul>
-    </div>
-    <div class="card tint reveal d2" style="padding:40px 44px" data-box="fut">
-      <span class="label" style="color:var(--orange-deep)">Hướng phát triển</span>
-      <ul style="margin-top:18px">
-        <li>Chạy checklist hai máy khác mạng đã soạn sẵn</li>
-        <li>Đo byte thật của full và delta (E2) trước khi bật delta</li>
-        <li>Đánh giá nguồn sự kiện OS thay cho polling (cần review riêng)</li>
-        <li>Ký số bộ cài, nghiệm thu âm thanh với người thật</li>
-      </ul>
-    </div>
+<section class="slide" data-title="Kết luận">
+  <div class="kicker reveal"><span class="pill fill">10 · Kết luận</span></div>
+  <h2 class="h2 reveal d1">Kết luận và hướng phát triển</h2>
+  <div class="figure reveal-scale d1" style="left:120px; top:236px; width:1680px; height:600px; padding:40px">
+    <svg viewBox="0 0 1680 560" width="1600" height="520" role="img" aria-label="Bên trái: ba máy thí sinh và một máy chủ đã xây dựng. Bên phải: nhiều máy thí sinh hơn, phiên thi dài hơn, cần tiếp tục đánh giá">
+      <!-- built: 3 clients → server -->
+      <g class="sig" fill="none" stroke="#F57B62" stroke-width="7">
+        <path d="M196 80 C 300 80, 300 210, 404 226"/><path d="M196 262 H404"/><path d="M196 444 C 300 444, 300 314, 404 298"/>
+      </g>
+      <use href="#s-monitor" x="40" y="10" width="160" height="140"/><use href="#s-scr-exam" x="40" y="10" width="160" height="140"/>
+      <use href="#s-monitor" x="40" y="192" width="160" height="140"/><use href="#s-scr-exam" x="40" y="192" width="160" height="140"/>
+      <use href="#s-monitor" x="40" y="374" width="160" height="140"/><use href="#s-scr-exam" x="40" y="374" width="160" height="140"/>
+      <use href="#s-server" x="392" y="160" width="150" height="175"/>
+      <!-- arrow -->
+      <path d="M640 262 H880" stroke="#F26B1D" stroke-width="12" stroke-linecap="round"/>
+      <path d="M872 230 L926 262 L872 294 Z" fill="#F26B1D"/>
+      <!-- next: many clients, long sessions — dashed frame marks "not yet evaluated" -->
+      <rect x="990" y="6" width="680" height="548" rx="36" fill="none" stroke="#F57B62" stroke-width="4" stroke-dasharray="14 12"/>
+      <g class="sig" fill="none" stroke="#F57B62" stroke-width="5" opacity=".75">
+        <path d="M1070 112 C 1070 180, 1240 200, 1262 232"/><path d="M1190 112 C 1190 170, 1260 190, 1280 224"/><path d="M1310 112 V224"/><path d="M1430 112 C 1430 170, 1360 190, 1340 224"/><path d="M1550 112 C 1550 180, 1380 200, 1358 232"/>
+        <path d="M1070 448 C 1070 380, 1240 360, 1262 330"/><path d="M1190 448 C 1190 390, 1260 370, 1280 340"/><path d="M1310 448 V340"/><path d="M1430 448 C 1430 390, 1360 370, 1340 340"/><path d="M1550 448 C 1550 380, 1380 360, 1358 330"/>
+      </g>
+      <use href="#s-monitor" x="1020" y="24" width="100" height="88"/><use href="#s-monitor" x="1140" y="24" width="100" height="88"/><use href="#s-monitor" x="1260" y="24" width="100" height="88"/><use href="#s-monitor" x="1380" y="24" width="100" height="88"/><use href="#s-monitor" x="1500" y="24" width="100" height="88"/>
+      <use href="#s-monitor" x="1020" y="448" width="100" height="88"/><use href="#s-monitor" x="1140" y="448" width="100" height="88"/><use href="#s-monitor" x="1260" y="448" width="100" height="88"/><use href="#s-monitor" x="1380" y="448" width="100" height="88"/><use href="#s-monitor" x="1500" y="448" width="100" height="88"/>
+      <use href="#s-server" x="1250" y="200" width="120" height="140"/>
+      <use href="#s-clock" x="1500" y="220" width="100" height="100"/>
+      <use href="#s-db" x="1060" y="216" width="92" height="108"/>
+    </svg>
   </div>
-  <div class="source">README.md “Giới hạn đã biết” · docs/release/RELEASE-REPORT.md §5.6, §7.</div>
+  <div class="role-label reveal d2" style="left:160px; top:870px; width:620px; color:var(--navy)">ĐÃ XÂY DỰNG</div>
+  <div class="role-label reveal d3" style="left:820px; top:870px; width:120px; color:var(--orange)">→</div>
+  <div class="role-label reveal d4" style="left:1110px; top:870px; width:680px; color:var(--orange-deep)">TIẾP TỤC ĐÁNH GIÁ</div>
+  <div class="source">Bên phải là định hướng, chưa phải kết quả đã đạt.</div>
   <div class="pageno">10</div>
+  <aside class="notes">Đã xây dựng: hệ thống thi Client–Server có giám sát. Cần tiếp tục: kiểm thử nhiều máy vật lý và phiên thi dài, xử lý event khi offline, so sánh FULL/DELTA thêm trước khi bật delta mặc định.</aside>
 </section>
 
 <!-- =========================================================
-     11 · Kết
+     11 · Code trọng tâm — Monitoring (code trái 35–40%, sơ đồ phải)
      ========================================================= -->
-<section class="slide" data-title="Kết">
-  <svg class="flow" viewBox="0 0 1920 1080" aria-hidden="true">
-    <path d="M-40 980 C 420 860, 760 1060, 1180 900 S 1760 620, 1990 700" stroke="url(#fl1)" stroke-width="10"/>
-    <path d="M-40 1030 C 480 930, 820 1110, 1240 960 S 1780 720, 1990 790" stroke="url(#fl1)" stroke-width="4"/>
-  </svg>
-  <div class="moon" style="right:180px; top:150px; width:560px; height:560px;"></div>
-  <div class="pebble" style="width:130px; height:130px; right:700px; top:600px;"></div>
-  <div class="kicker reveal" style="top:110px"><span class="pill fill">Hỏi &amp; đáp</span></div>
-  <h2 class="close-h1 reveal d1">Cảm ơn<br><em>thầy cô</em><br>&amp; các bạn</h2>
-  <p class="reveal d2 lead" style="position:absolute; left:120px; top:860px; width:1300px">Mã nguồn, tài liệu và bằng chứng<br><span class="mono o" style="font-size:28px">github.com/AnhTaizz/Toeic-Monitoring-Realtime</span></p>
+<section class="slide" data-title="Code monitoring">
+  <div class="kicker reveal"><span class="pill fill">11 · Code</span></div>
+  <h2 class="h2 reveal d1">Từ code thu thập đến dashboard</h2>
+  <div class="code reveal d1" style="position:absolute; left:120px; top:300px; width:800px">
+    <div class="file">ProcessCollector.java · start()</div>
+<pre><span class="ln">01</span>run.task = run.worker.<span class="k">scheduleWithFixedDelay</span>(
+<span class="ln">02</span>    () -&gt; <span class="k">poll</span>(run),
+<span class="ln">03</span>    0, interval.toMillis(), TimeUnit.MILLISECONDS
+<span class="ln">04</span>);</pre>
+    <p class="note">Trích nguyên văn — lịch quét chạy trên worker riêng, không trên luồng giao diện JavaFX.</p>
+  </div>
+  <div class="flow-v" style="left:956px; top:236px; width:844px">
+    <div class="stp reveal d1"><svg viewBox="0 0 160 140" aria-hidden="true"><use href="#s-monitor"/></svg><div><div class="nm">ProcessHandle</div><div class="ds">Đọc tiến trình · ProcessHandleSnapshotSource</div></div></div>
+    <div class="stp hl reveal d2"><svg viewBox="0 0 120 140" aria-hidden="true"><use href="#s-server"/></svg><div><div class="nm">ProcessCollector</div><div class="ds">Worker riêng · snapshot</div></div></div>
+    <div class="stp reveal d3"><svg viewBox="0 0 120 140" aria-hidden="true"><use href="#s-server"/></svg><div><div class="nm">Delivery + WebSocket</div><div class="ds">Gửi &amp; ACK · FullSnapshotDelivery, RealtimeClient</div></div></div>
+    <div class="stp reveal d4"><svg viewBox="0 0 120 140" aria-hidden="true"><use href="#s-db"/></svg><div><div class="nm">MonitoringState</div><div class="ds">Server cập nhật · MonitoringStateService</div></div></div>
+    <div class="stp reveal d5"><svg viewBox="0 0 160 140" aria-hidden="true"><use href="#s-monitor"/><use href="#s-scr-dash"/></svg><div><div class="nm">Dashboard</div><div class="ds">Giám thị xem</div></div></div>
+  </div>
+  <div class="source">github.com/AnhTaizz/Toeic-Monitoring-Realtime · client/…/monitoring/ProcessCollector.java:86</div>
+  <div class="pageno">11</div>
+  <aside class="notes">scheduleWithFixedDelay: lần quét sau bắt đầu sau khi lần trước xong cộng interval, nên không chồng lần quét. Worker riêng chạy scan rồi gọi callback với snapshot. Collector không giữ kết nối mạng: Delivery/RealtimeClient gửi qua WebSocket và chờ ACK; server cập nhật MonitoringState rồi đẩy lên dashboard.</aside>
 </section>
 
 </main>
@@ -700,9 +577,9 @@ class SlidePresentation {
 class InlineEditor {
   constructor() {
     this.isActive = false;
-    this.key = 'toeic-monitor-deck-edits-v1';
+    this.key = 'toeic-monitor-deck-edits-kit11-v1';
     this.button = document.getElementById('editToggle');
-    this.targets = () => document.querySelectorAll('.slide h1, .slide h2, .slide h3, .slide p, .slide li, .slide td, .slide .pill, .slide .caption, .slide .source');
+    this.targets = () => document.querySelectorAll('.slide h1, .slide h2, .slide p, .slide .pill, .slide .lbl, .slide .role-label, .slide .cap, .slide .sub, .slide .nm, .slide .ds, .slide .source');
     this.restore();
   }
   toggleEditMode() {

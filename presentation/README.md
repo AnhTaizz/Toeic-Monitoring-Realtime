@@ -20,11 +20,13 @@ URL giữ số slide (`index.html#18`). Sân khấu luôn là 1920×1080 và đ�
 
 | Đường dẫn | Nội dung |
 |---|---|
-| `index.html` | Bản trình chiếu 11 slide: Bìa · Bài toán · Kiến trúc · Luồng phòng thi · Lưu–nộp · Giám sát · E1 · Kiểm thử · Demo · Giới hạn · Cảm ơn (slide, CSS, JS trong một file) |
+| `index.html` | Bản trình chiếu 11 slide dựng theo Visual Kit (`sliddeee/`, 02/11): Giới thiệu · Bài toán · 3 vai trò · Kiến trúc · Quy trình thi · Lưu/nộp · Giám sát · Kiểm thử · Demo · Kết luận · Code monitoring. Hình minh họa vẽ bằng SVG inline theo quy chuẩn của kit (không có ảnh AI); slide 8 dùng số liệu báo cáo 27–28/10 theo kit, raw chưa có trong repo. Bản 11 slide trước đó: `git show 583f798:presentation/index.html` |
+| `sliddeee/` | Visual Kit 11 slide (quy tắc, prompt AI, sơ đồ) và ảnh giao diện 3 vai trò, dạng zip |
+| `assets/kit/` | Sơ đồ SVG lấy từ kit, đã bỏ tiêu đề/chú thích riêng và cắt khung |
 | `full.html` | Bản đầy đủ 30 slide (thêm mục lục, envelope, mã lỗi, START/Listening, epoch, tín hiệu V2, replay, benchmark, quản lý đề, màn hình, đóng góp) |
 | `DESIGN_SYSTEM.md` | Token màu/chữ/khoảng cách/chuyển động của Design System V1.0 |
 | `assets/fonts/` | Bricolage Grotesque, Be Vietnam Pro, JetBrains Mono (+ Archivo, Space Grotesk cho bản phác) — Google Fonts, SIL OFL 1.1, subset latin + vietnamese |
-| `assets/screens/` | Ảnh chụp phần mềm, cắt từ `evidence/` và `docs/` (không chỉnh nội dung) |
+| `assets/screens/` | Ảnh chụp phần mềm, cắt từ `evidence/` và `docs/` (không chỉnh nội dung); `role-*.png` là ảnh 3 vai trò chụp 02/11 |
 | `explorations/` | 3 phương án thiết kế slide bìa và ảnh chụp của chúng |
 | `screenshots/` | Ảnh chụp kiểm tra của bản 29 slide ở 1920×1080 (chưa chụp lại sau cập nhật 31/10) |
 | `tools/screenshot.js` | Chụp từng slide + kiểm tra tràn chữ/chồng khối |
