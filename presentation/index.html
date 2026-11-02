@@ -264,6 +264,28 @@ svg.chart rect:hover { filter: brightness(1.08); }
 .edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
 .edit-toggle.active { background: var(--orange); color: #fff; }
 body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .5); outline-offset: 4px; }
+
+/* Concise deck — 02 Nov 2026: keep Claymoon Flow, reduce prose, no AI imagery */
+.visual3 { position:absolute; left:120px; right:120px; top:332px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:32px; }
+.visual3 .vcard { min-height:398px; padding:38px 40px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; }
+.visual3 .ico-frame { width:104px; height:104px; padding:22px; border-radius:28px; background:var(--orange-soft); color:var(--orange); margin-bottom:30px; box-shadow:inset 0 -3px 0 rgba(242,107,29,.08); }
+.visual3 .ico-frame svg { width:100%; height:100%; }
+.visual3 h3 { font:800 42px/1.12 var(--font-display); margin-bottom:14px; letter-spacing:-.02em; }
+.visual3 p { font-size:25px; color:var(--ink-2); line-height:1.4; }
+.brief-strip { position:absolute; top:795px; left:120px; right:120px; display:flex; align-items:center; justify-content:space-between; padding:26px 36px; }
+.brief-strip .short { font-size:26px; font-weight:600; color:var(--navy); }
+.brief-strip .micro { font:500 20px var(--font-mono); color:var(--orange-deep); }
+.save-visual { position:absolute; left:120px; right:120px; top:326px; display:grid; grid-template-columns:1fr 80px 1fr 80px 1fr; align-items:center; }
+.save-visual .save-card { height:378px; padding:44px 40px; }
+.save-visual .save-card .stepno { font:800 52px var(--font-display); color:var(--orange); }
+.save-visual .save-card h3 { font:800 46px/1.08 var(--font-display); margin:24px 0 14px; }
+.save-visual .save-card p { font-size:27px; line-height:1.4; }
+.save-visual .save-arrow { text-align:center; font-size:58px; color:var(--orange); font-weight:800; }
+.save-tags { position:absolute; left:120px; top:776px; right:120px; display:flex; gap:24px; justify-content:center; }
+.save-tags span { padding:22px 34px; font:600 24px var(--font-mono); background:#fff; color:var(--navy); border-radius:999px; box-shadow:var(--shadow-clay); }
+.save-tags span b { color:var(--orange-deep); }
+.proof-note { position:absolute; left:120px; right:120px; top:918px; font-size:25px; font-weight:600; color:var(--ink-2); text-align:center; }
+
 </style>
 </head>
 <body>
@@ -288,10 +310,11 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
   <div class="pebble" style="width:86px; height:86px; right:110px; top:760px;"></div>
   <div class="kicker reveal" style="top:110px"><span class="pill fill">BTL Lập trình mạng</span><span class="pill">Nhóm 3 thành viên · vai A · B · C</span></div>
   <h1 class="title-h1 reveal d1">TOEIC<br><em>Monitor</em></h1>
-  <p class="title-sub lead reveal d2" style="font-size:36px">Thi TOEIC Client–Server và giám sát máy thí sinh theo thời gian thực — quan sát, không phán xét.</p>
+  <p class="title-sub lead reveal d2" style="font-size:36px">Thi TOEIC trên desktop · giám sát thời gian thực.</p>
   <div class="signals reveal d3"><span class="sig"><i></i>Process</span><span class="sig"><i></i>USB</span><span class="sig"><i></i>Focus</span><span class="sig"><i></i>Display</span></div>
   <div class="source reveal d4" style="font-size:22px; bottom:80px">JavaFX · Spring Boot · PostgreSQL 18 · REST + WebSocket</div>
-  <aside class="notes">Giới thiệu đề tài, nhóm 3 người chia vai A (server), B (JavaFX), C (giám sát).</aside>
+  
+<aside class="notes">Giới thiệu đây là hệ thống thi TOEIC desktop theo mô hình Client–Server, có giám sát tại máy thí sinh. Ba vai: Admin, giám thị, thí sinh. Không dùng camera hay AI để kết luận gian lận.</aside>
 </section>
 
 <!-- =========================================================
@@ -299,31 +322,15 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
      ========================================================= -->
 <section class="slide" data-title="Bài toán">
   <div class="kicker reveal"><span class="pill fill">01 · Bài toán</span></div>
-  <h2 class="h2 reveal d1">Một phòng thi máy tính cần ba điều cùng lúc</h2>
-  <div class="region grid3" style="top:330px">
-    <div class="card reveal d1" data-box="p1">
-      <div class="icon-orb">1</div>
-      <h3>Bài làm không mất</h3>
-      <p>Mạng chập chờn, app bị đóng, hai cửa sổ cùng ghi một lượt thi — đáp án đã báo “đã lưu” phải thật sự nằm trong DB.</p>
-    </div>
-    <div class="card reveal d2" data-box="p2">
-      <div class="icon-orb">2</div>
-      <h3>Giờ do Server quyết</h3>
-      <p>Deadline chung cho cả phòng, không tin đồng hồ máy thí sinh. Phần Listening chỉ phát một lần, không tua, không phát bù.</p>
-    </div>
-    <div class="card reveal d3" data-box="p3">
-      <div class="icon-orb">3</div>
-      <h3>Giám thị nhìn thấy</h3>
-      <p>Process, USB, focus, cửa sổ trên máy thí sinh hiện gần thời gian thực — là sự kiện <b>“quan sát thấy”</b>, không phải kết luận gian lận.</p>
-    </div>
+  <h2 class="h2 reveal d1">Một phòng thi cần ba điều cùng lúc</h2>
+  <div class="visual3">
+    <div class="card vcard reveal d1"><div class="ico-frame"><svg viewBox="0 0 64 64" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="13" y="10" width="38" height="44" rx="5"/><path d="M21 10v14h22V10M22 43l7 7 14-16"/></svg></div><h3>Lưu bài an toàn</h3><p>Không mất đáp án</p></div>
+    <div class="card vcard reveal d2"><div class="ico-frame"><svg viewBox="0 0 64 64" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="34" r="20"/><path d="M32 20v14l10 7M25 7h14M32 7v6"/></svg></div><h3>Thời gian chung</h3><p>Server quyết định</p></div>
+    <div class="card vcard reveal d3"><div class="ico-frame"><svg viewBox="0 0 64 64" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="10" width="48" height="35" rx="5"/><path d="M22 55h20M32 45v10M17 21h10M17 30h10M35 21h11M35 30h11"/></svg></div><h3>Giám sát tập trung</h3><p>Process · USB · Focus</p></div>
   </div>
-  <div class="region reveal d4" style="top:800px">
-    <div class="card tint" style="padding:26px 36px; display:flex; gap:40px; align-items:center" data-box="p4">
-      <span class="label" style="color:var(--orange-deep)">Ràng buộc</span>
-      <span class="small"><b>Nhiều client đồng thời</b> · chạy qua <b>LAN</b> hoặc <b>Internet</b> (Cloudflare Tunnel) · mất kết nối là chuyện thường, không phải ngoại lệ</span>
-    </div>
-  </div>
+  <div class="card tint brief-strip reveal d4"><span class="short">Mạng có thể chập chờn. Dữ liệu và thời gian vẫn phải nhất quán.</span><span class="micro">CLIENT–SERVER</span></div>
   <div class="pageno">02</div>
+<aside class="notes">Diễn giải ba yêu cầu: autosave không báo thành công khi chưa thực sự ghi DB; cùng một deadline từ server; giám thị nhận tín hiệu process/USB/focus/display và tự xem xét. Ví dụ mất mạng giữa ca thi.</aside>
 </section>
 
 <!-- =========================================================
@@ -331,29 +338,29 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
      ========================================================= -->
 <section class="slide" data-title="Kiến trúc tổng thể">
   <div class="kicker reveal"><span class="pill fill">02 · Kiến trúc</span></div>
-  <h2 class="h2 reveal d1">REST cho dữ liệu, WebSocket cho thời gian thực</h2>
+  <h2 class="h2 reveal d1">Hai luồng truyền trong một hệ thống</h2>
   <div class="arch">
     <!-- Client column -->
     <div class="col card reveal d1" style="left:0; width:440px; padding:32px" data-box="client">
-      <span class="label">Client · JavaFX 21 · một JAR</span>
+      <span class="label">Client · JavaFX</span>
       <h3 style="margin:8px 0 18px">Desktop app</h3>
       <div style="display:grid; gap:12px">
-        <div class="mod">Admin <small>tài khoản, đề thi</small></div>
-        <div class="mod">Giám thị <small>phòng PIN, START, dashboard</small></div>
-        <div class="mod">Thí sinh <small>phòng chờ, 7 Part, audio</small></div>
-        <div class="mod" style="background:#fff; box-shadow: inset 0 0 0 2px var(--peach)">Collector <small>ProcessHandle · CIM · cửa sổ</small></div>
+        <div class="mod">Admin <small>Quản lý đề, tài khoản</small></div>
+        <div class="mod">Giám thị <small>Điều hành phòng thi</small></div>
+        <div class="mod">Thí sinh <small>Làm bài TOEIC</small></div>
+        <div class="mod" style="background:#fff; box-shadow: inset 0 0 0 2px var(--peach)">Collector <small>Tín hiệu trên máy</small></div>
       </div>
     </div>
     <!-- Two lanes -->
     <div class="lane card reveal d2" style="top:20px" data-box="rest">
-      <span class="label">HTTP / REST · /api/v1, /api/v2</span>
+      <span class="label">HTTP / REST</span>
       <div class="t">Yêu cầu – trả lời</div>
-      <p>Đăng nhập, đề, audio &amp; ảnh có xác thực, lưu đáp án, nộp bài, đọc trạng thái, timeline.</p>
+      <p>Đề thi · lưu bài · nộp bài</p>
     </div>
     <div class="lane card navy reveal d3" style="top:330px" data-box="ws">
-      <span class="label" style="color:#ffb98e">WebSocket + JSON · /ws/v1/realtime</span>
+      <span class="label" style="color:#ffb98e">WebSocket</span>
       <div class="t">Đẩy hai chiều</div>
-      <p>Heartbeat, snapshot &amp; event giám sát, lệnh phát Listening, cảnh báo tới giám thị.</p>
+      <p>Heartbeat · sự kiện · cảnh báo</p>
     </div>
     <div class="arrow reveal d2" style="left:458px; width:44px; top:140px"></div>
     <div class="arrow reveal d2" style="left:1058px; width:44px; top:140px"></div>
@@ -361,18 +368,19 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
     <div class="arrow reveal d3" style="left:1058px; width:44px; top:450px"></div>
     <!-- Server column -->
     <div class="col card reveal d4" style="left:1120px; width:560px; padding:32px" data-box="server">
-      <span class="label">Server · Spring Boot 4.1</span>
+      <span class="label">Server · Spring Boot</span>
       <h3 style="margin:8px 0 18px">Một ứng dụng, chia module</h3>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
         <div class="mod">auth</div><div class="mod">admin</div>
         <div class="mod">exam <small>phòng, attempt</small></div><div class="mod">audio</div>
         <div class="mod">monitoring <small>reducer, signal</small></div><div class="mod">realtime</div>
       </div>
-      <div class="mod" style="margin-top:18px; background:var(--navy); color:#fff">PostgreSQL 18 <small style="color:#c9d3e3">Flyway V1–V23 · JDBC tường minh</small></div>
+      <div class="mod" style="margin-top:18px; background:var(--navy); color:#fff">PostgreSQL <small style="color:#c9d3e3">Flyway V1–V23 · JDBC tường minh</small></div>
     </div>
   </div>
   <div class="source">Raw WebSocket — không STOMP/SockJS/broker. Nguồn: docs/ARCHITECTURE.md, README “Thư viện ngoài”, server/src/main/resources/db/migration.</div>
   <div class="pageno">03</div>
+<aside class="notes">Giải thích kiến trúc: JavaFX là client, Spring Boot cung cấp nghiệp vụ, PostgreSQL lưu bền. HTTP/REST cho yêu cầu/trả lời (lấy đề, save/submit), WebSocket cho realtime (heartbeat, snapshot, event, cảnh báo). Client không truy cập thẳng DB.</aside>
 </section>
 
 <!-- =========================================================
@@ -380,7 +388,7 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
      ========================================================= -->
 <section class="slide" data-title="Luồng phòng thi">
   <div class="kicker reveal"><span class="pill fill">02 · Luồng message</span></div>
-  <h2 class="h2 reveal d1">Một phòng thi, từ PIN đến nộp bài</h2>
+  <h2 class="h2 reveal d1">Từ mã PIN đến nộp bài</h2>
   <svg class="seq reveal d2" viewBox="0 0 1680 720" role="img" aria-label="Sơ đồ tuần tự phòng thi giữa Thí sinh, Server và Giám thị">
     <defs>
       <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#f26b1d"/></marker>
@@ -411,55 +419,42 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
       <line x1="284" y1="688" x2="834" y2="688" stroke="#13254a" marker-end="url(#ahn)"/>
     </g>
     <g class="msg">
-      <text x="1120" y="100" text-anchor="middle">Tạo phòng → PIN 5 số (lưu BCrypt + HMAC)</text>
-      <text x="560" y="172" text-anchor="middle">JOIN: token tài khoản + PIN → đúng 1 Attempt</text>
-      <text x="560" y="244" text-anchor="middle">Kiểm checksum audio, thử loa → READY</text>
-      <text x="1120" y="316" text-anchor="middle">START: khóa Session, deadline chung</text>
-      <text x="560" y="388" text-anchor="middle">LISTENING_START — gửi sau COMMIT</text>
-      <text x="560" y="460" text-anchor="middle">Autosave toàn bộ đáp án → ACK sau commit</text>
-      <text x="560" y="532" text-anchor="middle">HEARTBEAT 2 s · MONITORING_FULL · event</text>
-      <text x="1120" y="604" text-anchor="middle">MONITOR_STATE · MONITOR_WARNING</text>
-      <text x="560" y="676" text-anchor="middle">Nộp bài / hết giờ → chốt, chấm một lần</text>
+      <text x="1120" y="100" text-anchor="middle">Tạo phòng · cấp PIN</text>
+      <text x="560" y="172" text-anchor="middle">Nhập PIN · vào phòng</text>
+      <text x="560" y="244" text-anchor="middle">Thử âm thanh · READY</text>
+      <text x="1120" y="316" text-anchor="middle">START · giờ thi chung</text>
+      <text x="560" y="388" text-anchor="middle">Phát Listening</text>
+      <text x="560" y="460" text-anchor="middle">Lưu đáp án</text>
+      <text x="560" y="532" text-anchor="middle">Heartbeat · sự kiện</text>
+      <text x="1120" y="604" text-anchor="middle">Trạng thái · cảnh báo</text>
+      <text x="560" y="676" text-anchor="middle">Nộp bài · kết thúc</text>
     </g>
   </svg>
   <div class="card tint reveal d3" style="position:absolute; right:var(--pad-x); top:560px; width:250px; padding:24px" data-box="seqnote">
     <p style="font-size:21px">Start trùng ID <b>không phát lại</b>. Reconnect <b>không</b> reset deadline.</p>
   </div>
   <div class="pageno">04</div>
+<aside class="notes">Luồng phòng thi: Admin chuẩn bị đề, giám thị tạo phòng/PIN, thí sinh JOIN và tải audio/test loa rồi READY; giám thị START để server xác lập deadline; Listening và autosave; giám thị xem monitoring; thí sinh submit hoặc timeout. Cần phân biệt HTTP với WS. Trùng START không phát lại, reconnect không reset deadline. Với requireAllReady, START thiếu READY có thể trả 409 và cần xác nhận có chủ ý để bắt đầu một phần.</aside>
 </section>
 
 <!-- =========================================================
      05 · Autosave
      ========================================================= -->
 <section class="slide" data-title="Autosave">
-  <div class="kicker reveal"><span class="pill fill">03 · Tính đúng</span></div>
-  <h2 class="h2 reveal d1">Một khóa, một đồng hồ, ACK sau COMMIT</h2>
-  <div class="region" style="top:310px; display:grid; grid-template-columns: 640px 1fr; gap:48px">
-    <div style="display:grid; gap:16px">
-      <div class="card reveal d1" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s1"><span class="big o" style="font-size:52px; width:48px">1</span><p style="font-size:23px"><b>Khóa bản ghi attempt</b> — save, submit, timeout, takeover dùng chung</p></div>
-      <div class="card reveal d2" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s2"><span class="big o" style="font-size:52px; width:48px">2</span><p style="font-size:23px"><b>Kiểm writerEpoch sau khóa</b> — cửa sổ cũ bị takeover → STALE</p></div>
-      <div class="card reveal d3" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s3"><span class="big o" style="font-size:52px; width:48px">3</span><p style="font-size:23px"><b>Đọc clock_timestamp() một lần</b> — không dùng now() của đầu transaction</p></div>
-      <div class="card reveal d4" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s4"><span class="big o" style="font-size:52px; width:48px">4</span><p style="font-size:23px"><b>So revision</b>: thấp hơn → STALE; bằng nhau mà nội dung khác (dạng chuẩn hóa) → CONFLICT</p></div>
-      <div class="card reveal d5" style="padding:22px 30px; display:flex; gap:22px; align-items:center" data-box="s5"><span class="big o" style="font-size:52px; width:48px">5</span><p style="font-size:23px"><b>COMMIT rồi mới ACK</b> — rollback không bao giờ báo “đã lưu”</p></div>
-    </div>
-    <div class="reveal d3">
-<div class="code" style="font-size:21px" data-box="code"><span class="c">-- ExamService.java · autosave</span>
-<span class="k">SELECT</span> a.writer_epoch, a.saved_revision, a.state, …
-<span class="k">FROM</span> monitoring_attempts a
-<span class="k">WHERE</span> a.attempt_id = :attemptId
-<span class="k">FOR UPDATE OF</span> a                       <span class="c">-- ①</span>
-
-<span class="k">if</span> (request.writerEpoch() != attempt.writerEpoch())
-    <span class="k">throw</span> … ErrorCode.STALE               <span class="c">-- ②</span>
-
-Instant decisionAt = jdbc.sql(
-    <span class="s">"SELECT clock_timestamp()"</span>)…single(); <span class="c">-- ③</span>
-<span class="k">if</span> (!decisionAt.isBefore(deadlineAt))
-    <span class="k">throw</span> … ErrorCode.EXPIRED</div>
-      <div class="caption">Trích server/src/main/java/vn/edu/toeic/server/exam/ExamService.java (rút gọn).</div>
-    </div>
+  <div class="kicker reveal"><span class="pill fill">03 · Lưu bài</span></div>
+  <h2 class="h2 reveal d1">Lưu xong mới báo “Đã lưu”</h2>
+  <div class="save-visual">
+    <div class="card save-card reveal d1"><span class="stepno">01</span><h3>Nhận đáp án</h3><p>Client gửi yêu cầu lưu</p></div>
+    <div class="save-arrow reveal d2">→</div>
+    <div class="card navy save-card reveal d3"><span class="stepno" style="color:#ffb98e">02</span><h3>Kiểm tra &amp; ghi DB</h3><p>Khóa · phiên ghi · deadline</p></div>
+    <div class="save-arrow reveal d4">→</div>
+    <div class="card save-card reveal d5"><span class="stepno">03</span><h3>Xác nhận</h3><p>Chỉ sau COMMIT thành công</p></div>
   </div>
+  <div class="save-tags reveal d5"><span><b>FOR UPDATE</b></span><span><b>writerEpoch</b></span><span><b>revision</b></span><span><b>clock_timestamp()</b></span></div>
+  <div class="proof-note reveal d6">Không để dữ liệu cũ ghi đè · Không xác nhận khi giao dịch thất bại</div>
+  <div class="source">Chi tiết: server/.../exam/ExamService.java</div>
   <div class="pageno">05</div>
+<aside class="notes">Autosave: server khóa attempt khi xử lý save/submit/timeout/takeover; kiểm tra writerEpoch, revision, deadline bằng clock_timestamp() rồi commit. Client chỉ báo Đã lưu sau HTTP response thành công. Với yêu cầu nộp lặp, trả lại kết quả đã chốt; không tạo thêm lượt nộp. Đừng gọi autosave HTTP response là ACK WebSocket.</aside>
 </section>
 
 <!-- =========================================================
@@ -467,20 +462,21 @@ Instant decisionAt = jdbc.sql(
      ========================================================= -->
 <section class="slide" data-title="Pipeline giám sát">
   <div class="kicker reveal"><span class="pill fill">04 · Pipeline</span></div>
-  <h2 class="h2 reveal d1">Từ ProcessHandle tới màn hình giám thị</h2>
+  <h2 class="h2 reveal d1">Từ máy thí sinh đến giám thị</h2>
   <div class="pipe">
-    <div class="step reveal d1"><div class="card" data-box="k1"><span class="label">Thí sinh</span><h3 style="margin-top:8px">Poll</h3><p><span class="mono">ProcessHandle</span> mỗi 1 000 ms, ngoài luồng JavaFX</p></div></div>
-    <div class="step reveal d2"><div class="card" data-box="k2"><span class="label">Policy v4</span><h3 style="margin-top:8px">Lọc 9 tên</h3><p>Không đọc tham số, không đóng process</p></div></div>
-    <div class="step reveal d3"><div class="card" data-box="k3"><span class="label">Identity</span><h3 style="margin-top:8px">Định danh</h3><p class="mono" style="font-size:19px">(collectorSessionId, pid, startInstant)</p></div></div>
-    <div class="step reveal d4"><div class="card navy" data-box="k4"><span class="label" style="color:#ffb98e">WebSocket</span><h3 style="margin-top:8px">Gửi</h3><p>FULL làm mới 2 s · event có <span class="mono">eventId</span> ổn định qua retry</p></div></div>
-    <div class="step reveal d5"><div class="card" data-box="k5"><span class="label">Server</span><h3 style="margin-top:8px">Hai luồng</h3><p>State: reducer trong RAM · History: commit DB rồi ACK</p></div></div>
+    <div class="step reveal d1"><div class="card" data-box="k1"><span class="label">Thí sinh</span><h3 style="margin-top:8px">Poll</h3><p><span class="mono">ProcessHandle</span> theo chu kỳ</p></div></div>
+    <div class="step reveal d2"><div class="card" data-box="k2"><span class="label">Policy v4</span><h3 style="margin-top:8px">Lọc 9 tên</h3><p>Chỉ tên nằm trong policy</p></div></div>
+    <div class="step reveal d3"><div class="card" data-box="k3"><span class="label">Identity</span><h3 style="margin-top:8px">Định danh</h3><p style="font-size:23px">Một tiến trình = một định danh</p></div></div>
+    <div class="step reveal d4"><div class="card navy" data-box="k4"><span class="label" style="color:#ffb98e">WebSocket</span><h3 style="margin-top:8px">Gửi</h3><p>Snapshot · sự kiện</p></div></div>
+    <div class="step reveal d5"><div class="card" data-box="k5"><span class="label">Server</span><h3 style="margin-top:8px">Hai luồng</h3><p>Trạng thái RAM · lịch sử DB</p></div></div>
   </div>
   <div class="region grid2" style="top:690px">
-    <div class="card tint reveal d4" style="padding:28px 34px" data-box="hb"><h3 style="font-size:30px">Heartbeat 2 s · timeout 6 s</h3><p style="font-size:23px">Mất heartbeat → <b>UNKNOWN</b>. Đó là mất liên lạc, không phải bằng chứng gian lận.</p></div>
-    <div class="card reveal d5" style="padding:28px 34px" data-box="once"><h3 style="font-size:30px">Một lần xuất hiện = một event</h3><p style="font-size:23px">Không lặp event ở mỗi poll. Collector chỉ chạy ở role thí sinh.</p></div>
+    <div class="card tint reveal d4" style="padding:28px 34px" data-box="hb"><h3 style="font-size:30px">Mất kết nối → UNKNOWN</h3><p style="font-size:23px">UNKNOWN chỉ là mất liên lạc.</p></div>
+    <div class="card reveal d5" style="padding:28px 34px" data-box="once"><h3 style="font-size:30px">Quan sát, không kết luận</h3><p style="font-size:23px">Giám thị đánh giá sự kiện.</p></div>
   </div>
-  <div class="source">Tham số mặc định: docs/PROTOCOL.md (T2-C5). Chín tên: chrome, msedge, firefox, zalo, teams, ms-teams, discord, anydesk, teamviewer (.exe).</div>
+  <div class="source">Nguồn: docs/PROTOCOL.md · client monitoring · server monitoring.</div>
   <div class="pageno">06</div>
+<aside class="notes">Collector tại máy thí sinh đọc các process trong policy được theo dõi; tách luồng JavaFX. Dữ liệu hiện tại về RAM server, event lịch sử ghi DB, ACK tùy loại. USB/focus/display có nguồn quan sát riêng; UNKNOWN khi mất heartbeat không phải kết luận gian lận. Giám thị xem và đánh giá sự kiện.</aside>
 </section>
 
 <!-- =========================================================
@@ -488,7 +484,7 @@ Instant decisionAt = jdbc.sql(
      ========================================================= -->
 <section class="slide" data-title="E1 polling">
   <div class="kicker reveal"><span class="pill fill">05 · E1</span><span class="pill">Chu kỳ polling</span></div>
-  <h2 class="h2 reveal d1">Poll nhanh bắt được nhiều hơn, nhưng tốn CPU hơn</h2>
+  <h2 class="h2 reveal d1">Quét nhanh: thấy nhiều hơn, tốn CPU hơn</h2>
   <div class="region" style="top:300px; display:grid; grid-template-columns: 1fr 1fr 420px; gap:40px">
     <!-- Chart A: miss rate, target hold 200 ms (single series, labelled) -->
     <div class="card reveal d1" style="padding:32px" data-box="c1">
@@ -528,27 +524,29 @@ Instant decisionAt = jdbc.sql(
       <div class="card" style="padding:28px" data-box="e1setup"><p style="font-size:20px">12 lượt (4 chu kỳ × 3), seed 1234 · Intel Core Ultra 5 125H, Windows 11 · ProcessHandle thật, client giả lập, không qua mạng</p></div>
     </div>
   </div>
-  <div class="source">evidence/qa05-e1-20261021/REPORT.md · Một máy, mẫu nhỏ: 1000 ms vs 2000 ms không đơn điệu — không suy rộng. Process ≥ 3 s: 30/30 thấy ở mọi chu kỳ.</div>
+  <div class="source">E1 · 12 lượt, 360 process con có kiểm soát · evidence/qa05-e1-20261021/REPORT.md.</div>
   <div class="pageno">07</div>
+<aside class="notes">Đây là thử nghiệm E1 với process con tạo có kiểm soát, không phải benchmark toàn ứng dụng. Poll quá chậm có thể bỏ sót process ngắn. Nêu rõ N=30 mỗi chu kỳ, số lượt chưa kết luận và CPU theo % một lõi; kết quả 1000 ms và 2000 ms không đơn điệu.</aside>
 </section>
 
 <!-- =========================================================
      08 · Kiểm thử hồi quy
      ========================================================= -->
 <section class="slide" data-title="Kiểm thử hồi quy">
-  <div class="kicker reveal"><span class="pill fill">05 · Kiểm thử</span><span class="pill mono" style="font-family:var(--font-mono)">main ce94173 · 5173462</span></div>
-  <h2 class="h2 reveal d1">Bộ hồi quy đầy đủ: không lỗi nào còn mở</h2>
+  <div class="kicker reveal"><span class="pill fill">05 · Kiểm thử</span><span class="pill mono" style="font-family:var(--font-mono)">Mốc 31/10 · release</span></div>
+  <h2 class="h2 reveal d1">Kết quả kiểm thử ở các mốc đã xác minh</h2>
   <div class="region grid3" style="top:320px">
-    <div class="card tint reveal d1" data-box="t1"><div class="big">1533</div><p style="margin-top:12px"><span class="tag good">PASS</span> &nbsp;0 FAIL · 316 SKIP — <b>main mới nhất</b>, mvn test 7 module, server trên PostgreSQL thật; GUI/tùy chọn bị bỏ qua</p></div>
-    <div class="card reveal d2" data-box="t2"><div class="big">1797</div><p style="margin-top:12px"><span class="tag good">PASS</span> &nbsp;0 FAIL · 23 SKIP — bản phát hành 5173462, gồm GUI JavaFX thật; + 22 windows-observer</p></div>
-    <div class="card reveal d3" data-box="t3"><div class="big">3<small>/3</small></div><p style="margin-top:12px"><span class="tag good">PASS</span> &nbsp;E2E ACCOUNT_PIN: Admin → Giám thị → 2 thí sinh → START → nộp</p></div>
+    <div class="card tint reveal d1" data-box="t1"><div class="big">1533</div><p style="margin-top:12px"><span class="tag good">PASS</span> · 0 FAIL · 316 SKIP <br><small>ce94173 · hồi quy server/client</small></p></div>
+    <div class="card reveal d2" data-box="t2"><div class="big">1797</div><p style="margin-top:12px"><span class="tag good">PASS</span> · 0 FAIL · 23 SKIP <br><small>5173462 · bản phát hành</small></p></div>
+    <div class="card reveal d3" data-box="t3"><div class="big">3<small>/3</small></div><p style="margin-top:12px"><span class="tag good">PASS</span> · ACCOUNT_PIN E2E<br><small>Admin → giám thị → thí sinh</small></p></div>
   </div>
   <div class="region grid2" style="top:690px">
-    <div class="card reveal d4" style="padding:28px 34px" data-box="t4"><h3 style="font-size:28px">Lỗi tìm ra khi review cuối</h3><p style="font-size:22px">Sau SUBMIT/TIMEOUT, kênh tín hiệu vẫn chạy. Dưới tải CPU: code cũ <span class="tag bad">3/6 FAIL</span>, bản sửa <span class="tag good">6/6 PASS</span>.</p></div>
-    <div class="card navy reveal d5" style="padding:28px 34px" data-box="t5"><h3 style="font-size:28px">Chưa kiểm — ghi đúng là chưa</h3><p style="font-size:22px">LAN hai máy vật lý · người nghe audio thật · cắm/rút USB vật lý trên commit tích hợp: <b style="color:#ffb98e">NOT TESTED</b>.</p></div>
+    <div class="card reveal d4" style="padding:28px 34px" data-box="t4"><h3 style="font-size:28px">Đã kiểm tra lại</h3><p style="font-size:22px">Dưới tải CPU: <span class="tag bad">3/6 FAIL</span> → <span class="tag good">6/6 PASS</span></p></div>
+    <div class="card navy reveal d5" style="padding:28px 34px" data-box="t5"><h3 style="font-size:28px">Giới hạn kiểm thử</h3><p style="font-size:22px">LAN hai máy · audio/USB thật <b style="color:#ffb98e">NOT TESTED</b></p></div>
   </div>
-  <div class="source">main ce94173, 31/10: Windows 11, JDK 21.0.8, PostgreSQL 18.6 DB tạm đã xóa; lượt đầu 1 test chập chờn (CandidateSignalsPendingLimitTest), chạy lại PASS. 5173462: docs/release/RELEASE-REPORT.md §2, §5.</div>
+  <div class="source">Số liệu lịch sử theo commit: docs/NHAT_KY.md · docs/release/RELEASE-REPORT.md. Không phải trạng thái HEAD mới nhất.</div>
   <div class="pageno">08</div>
+<aside class="notes">Đây là các MỐC kiểm thử lịch sử tại commit cụ thể, không phải tuyên bố HEAD mới nhất không lỗi. 1533 PASS/316 SKIP ở ce94173 và 1797 PASS/23 SKIP ở 5173462; 3/3 ACCOUNT_PIN E2E. Kết quả fail=0 thuộc các lượt đã chạy. Các case NOT TESTED vẫn còn và có ca GUI từng fail dưới tải CPU cao được kiểm tra lại.</aside>
 </section>
 
 <!-- =========================================================
@@ -556,22 +554,23 @@ Instant decisionAt = jdbc.sql(
      ========================================================= -->
 <section class="slide" data-title="Kịch bản demo">
   <div class="kicker reveal"><span class="pill fill">06 · Kịch bản demo</span></div>
-  <h2 class="h2 reveal d1">Năm bước thử nhanh</h2>
+  <h2 class="h2 reveal d1">Demo luồng thi và giám sát</h2>
   <div class="region" style="top:290px; display:grid; grid-template-columns: 1fr 780px; gap:48px">
     <div style="display:grid; gap:16px">
-      <div class="card reveal d1" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm1"><span class="pill fill" style="min-width:150px; justify-content:center">Admin</span><p style="font-size:23px">Tạo Giám thị, Thí sinh; import đề JSON hoặc soạn tay đủ 200 câu</p></div>
-      <div class="card reveal d2" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm2"><span class="pill" style="min-width:150px; justify-content:center">Giám thị</span><p style="font-size:23px">“+ Tạo phòng” → chọn đề → đọc PIN cho thí sinh</p></div>
-      <div class="card reveal d3" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm3"><span class="pill" style="min-width:150px; justify-content:center">Thí sinh</span><p style="font-size:23px">Nhập PIN → tải âm thanh, thử loa, xác nhận → hàng chuyển “Sẵn sàng”</p></div>
-      <div class="card reveal d4" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm4"><span class="pill" style="min-width:150px; justify-content:center">Giám thị</span><p style="font-size:23px">Bắt đầu phòng thi → Listening phát, chân trang “✓ Đã lưu” → Nộp bài</p></div>
-      <div class="card tint reveal d5" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm5"><span class="pill fill" style="min-width:150px; justify-content:center">Thử</span><p style="font-size:23px">Mở Chrome/Zalo, rời cửa sổ, cắm/rút USB → cảnh báo hiện bên Giám thị</p></div>
+      <div class="card reveal d1" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm1"><span class="pill fill" style="min-width:150px; justify-content:center">Admin</span><p style="font-size:23px">Chuẩn bị đề, tài khoản</p></div>
+      <div class="card reveal d2" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm2"><span class="pill" style="min-width:150px; justify-content:center">Giám thị</span><p style="font-size:23px">Tạo phòng · cấp PIN</p></div>
+      <div class="card reveal d3" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm3"><span class="pill" style="min-width:150px; justify-content:center">Thí sinh</span><p style="font-size:23px">Vào phòng · kiểm tra loa · READY</p></div>
+      <div class="card reveal d4" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm4"><span class="pill" style="min-width:150px; justify-content:center">Giám thị</span><p style="font-size:23px">START · làm bài · nộp bài</p></div>
+      <div class="card tint reveal d5" style="padding:22px 30px; display:flex; gap:24px; align-items:center" data-box="dm5"><span class="pill fill" style="min-width:150px; justify-content:center">Thử</span><p style="font-size:23px">Process · Focus · USB → cảnh báo</p></div>
     </div>
     <div class="reveal-scale d3">
-      <div class="screen" data-box="admin"><img src="assets/screens/admin-accounts.webp" alt="Màn Quản lý tài khoản của Admin với danh sách giám thị và thí sinh"></div>
-      <div class="caption">Màn Admin. Chụp từ lượt GUI thật của ACCOUNT_PIN, tài khoản MOCK do test tạo.</div>
+      <div class="screen" data-box="admin"><img src="assets/screens/proctor-alerts.webp" alt="Giao diện giám thị hiển thị trạng thái và sự kiện quan sát"></div>
+      <div class="caption">Giao diện giám thị (ảnh từ bộ bằng chứng của nhóm).</div>
     </div>
   </div>
-  <div class="source">README.md “Luồng thử nhanh”. Server: Cloudflare Tunnel hoặc http://IP_MAY_CHU:8080 trong LAN.</div>
+  <div class="source">Ảnh ứng dụng: presentation/assets/screens/proctor-alerts.webp · Dữ liệu demo/test.</div>
   <div class="pageno">09</div>
+<aside class="notes">Demo theo vai: Admin tạo tài khoản/đề, giám thị tạo phòng, thí sinh JOIN–READY, giám thị START, client lưu/nộp, rồi quan sát các event. Chỉ trình bày chức năng và kết quả thực sự có bằng chứng; USB thật chưa kiểm trên mọi commit tích hợp. Nên lấy ảnh giám thị thật để nhấn mạnh Monitoring.</aside>
 </section>
 
 <!-- =========================================================
@@ -579,30 +578,31 @@ Instant decisionAt = jdbc.sql(
      ========================================================= -->
 <section class="slide" data-title="Giới hạn">
   <div class="kicker reveal"><span class="pill fill">06 · Giới hạn &amp; hướng tới</span></div>
-  <h2 class="h2 reveal d1">Những gì còn chưa làm được</h2>
+  <h2 class="h2 reveal d1">Hệ thống còn giới hạn gì?</h2>
   <div class="region grid2 limits" style="top:300px">
     <div class="card reveal d1" style="padding:40px 44px" data-box="lim">
       <span class="label">Giới hạn</span>
       <ul style="margin-top:18px">
-        <li>Thi đầy đủ qua Internet / LAN hai máy vật lý chưa chạy xong</li>
-        <li>Chưa có người nghe audio thật qua loa/tai nghe</li>
-        <li>Polling bỏ sót process sống ngắn hơn chu kỳ</li>
-        <li>Restart Server mất trạng thái hiện tại (lịch sử vẫn giữ)</li>
-        <li>Bộ cài MSI chưa ký số; delta chưa qua gate nên tắt</li>
+        <li>Chưa nghiệm thu ca thi nhiều máy thật</li>
+        <li>Chưa nghiệm thu Listening đầy đủ</li>
+        <li>Polling có thể bỏ sót process ngắn</li>
+        <li>Restart làm mất trạng thái RAM</li>
+        <li>DELTA chưa bật mặc định</li>
       </ul>
     </div>
     <div class="card tint reveal d2" style="padding:40px 44px" data-box="fut">
       <span class="label" style="color:var(--orange-deep)">Hướng phát triển</span>
       <ul style="margin-top:18px">
-        <li>Chạy checklist hai máy khác mạng đã soạn sẵn</li>
-        <li>Đo byte thật của full và delta (E2) trước khi bật delta</li>
-        <li>Đánh giá nguồn sự kiện OS thay cho polling (cần review riêng)</li>
-        <li>Ký số bộ cài, nghiệm thu âm thanh với người thật</li>
+        <li>Kiểm thử ca thi hai máy</li>
+        <li>Đánh giá FULL / DELTA</li>
+        <li>Cải thiện thu thập tín hiệu OS</li>
+        <li>Nghiệm thu audio và USB thật</li>
       </ul>
     </div>
   </div>
   <div class="source">README.md “Giới hạn đã biết” · docs/release/RELEASE-REPORT.md §5.6, §7.</div>
   <div class="pageno">10</div>
+<aside class="notes">Giới hạn thực tế: chưa có ca thi nhiều máy vật lý và nghe Listening đầy đủ được nghiệm thu, polling không đảm bảo bắt mọi process rất ngắn, RAM state mất khi server restart nhưng history còn; DELTA chưa được bật mặc định. Phương hướng: test E2E hai máy, đo performance, nghiệm thu audio/USB, cải tiến thu thập OS nếu phù hợp.</aside>
 </section>
 
 <!-- =========================================================
@@ -618,6 +618,7 @@ Instant decisionAt = jdbc.sql(
   <div class="kicker reveal" style="top:110px"><span class="pill fill">Hỏi &amp; đáp</span></div>
   <h2 class="close-h1 reveal d1">Cảm ơn<br><em>thầy cô</em><br>&amp; các bạn</h2>
   <p class="reveal d2 lead" style="position:absolute; left:120px; top:860px; width:1300px">Mã nguồn, tài liệu và bằng chứng<br><span class="mono o" style="font-size:28px">github.com/AnhTaizz/Toeic-Monitoring-Realtime</span></p>
+<aside class="notes">Cảm ơn, mời đặt câu hỏi. Nếu hỏi sâu, mở full.html 30 slide và mã nguồn làm bằng chứng.</aside>
 </section>
 
 </main>
