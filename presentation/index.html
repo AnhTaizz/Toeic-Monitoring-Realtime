@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="assets/fonts/fonts.css">
 <style>
 /* ===========================================
-   DESIGN TOKENS — Claymoon Flow (DESIGN_SYSTEM.md) + Visual Kit 11 slide
+   DESIGN TOKENS — Claymoon Flow (DESIGN_SYSTEM.md) + Visual Kit 12 slide
    Kit palette: navy #13254A · ice blue #DDEEF9 · orange #F26B1D · coral #F57B62 · slate #405573
    =========================================== */
 :root {
@@ -104,8 +104,18 @@ b, strong { font-weight: 700; }
 .kpi .cap { margin-top: 10px; font: 800 26px/1.15 var(--font-display); letter-spacing: .02em; }
 .kpi .sub { margin-top: 6px; font: 400 18px/1.35 var(--font-mono); color: var(--muted); }
 .kpi.tint { background: var(--orange-soft); box-shadow: inset 0 0 0 2px #ffe0cc; }
+/* ERD (slide 05) */
+.erd .bd { fill: #fff; stroke: #DDE5EF; stroke-width: 2; filter: drop-shadow(0 10px 18px rgba(120,70,30,.10)); }
+.erd .hd { fill: var(--navy); }
+.erd .hot .bd { fill: var(--orange-soft); stroke: var(--orange); stroke-width: 3; }
+.erd .hot .hd { fill: var(--orange); }
+.erd .tn { font: 700 21px var(--font-mono); fill: #fff; }
+.erd .tg { font: 700 17px var(--font-mono); fill: var(--orange-deep); }
+.erd .cl { font: 400 20px var(--font-mono); fill: var(--ink-2); }
+.erd .cl.k { font-weight: 600; fill: var(--navy); }
+.erd .rel { fill: none; stroke: #8A97AB; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
-/* Code card (slide 11) */
+/* Code card (slide 12) */
 .code { background: var(--navy); color: #e8edf6; border-radius: 28px; padding: 30px 36px 34px; box-shadow: 0 24px 50px rgba(19, 37, 74, .22); }
 .code .file { display: inline-block; padding: 8px 16px; border-radius: 12px; background: rgba(255, 255, 255, .08); font: 500 22px var(--font-mono); color: #fff; margin-bottom: 26px; }
 .code pre { font: 400 23px/1.75 var(--font-mono); white-space: pre; font-variant-ligatures: none; }
@@ -113,7 +123,7 @@ b, strong { font-weight: 700; }
 .code .k { color: #ffb98e; }
 .code .note { margin-top: 24px; font: 400 18px/1.5 var(--font-body); color: #b9c4d8; }
 
-/* Vertical pipeline (slide 11) */
+/* Vertical pipeline (slide 12) */
 .flow-v { position: absolute; display: grid; gap: 26px; }
 .flow-v .stp { position: relative; display: flex; align-items: center; gap: 26px; background: #fff; border-radius: 26px; padding: 14px 28px; box-shadow: var(--shadow-clay); height: 112px; }
 .flow-v .stp.hl { background: var(--orange-soft); box-shadow: inset 0 0 0 3px var(--orange); }
@@ -313,9 +323,8 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
   <div class="role-label reveal d2" style="left:120px; top:906px; width:536px">ADMIN</div>
   <div class="role-label reveal d3" style="left:692px; top:906px; width:536px">GIÁM THỊ</div>
   <div class="role-label reveal d4" style="left:1264px; top:906px; width:536px">THÍ SINH</div>
-  <div class="source">Ảnh chụp phần mềm thật, 02/11/2026 · tài khoản và dữ liệu kiểm thử</div>
   <div class="pageno">03</div>
-  <aside class="notes">Đi theo luồng sử dụng: Admin tạo tài khoản và đề; Giám thị mở phòng, cấp PIN, bắt đầu; Thí sinh vào bằng PIN và làm bài. Một ứng dụng JavaFX cho cả ba vai trò; role do server xác thực và phân quyền, không dựa vào việc ẩn/hiện giao diện.</aside>
+  <aside class="notes">Đi theo luồng sử dụng: Admin tạo tài khoản và đề; Giám thị mở phòng, cấp PIN, bắt đầu; Thí sinh vào bằng PIN và làm bài. Một ứng dụng JavaFX cho cả ba vai trò; role do server xác thực và phân quyền, không dựa vào việc ẩn/hiện giao diện. Chú thích nguồn (đã bỏ khỏi slide): Ảnh chụp phần mềm thật, 02/11/2026 · tài khoản và dữ liệu kiểm thử</aside>
 </section>
 
 <!-- =========================================================
@@ -327,29 +336,171 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
   <div class="figure reveal-scale d1" style="left:200px; top:228px; width:1520px; height:744px">
     <img src="assets/kit/04_KIEN_TRUC_CLIENT_SERVER.svg" width="1480" height="700" alt="Admin, Giám thị, Thí sinh nối tới Spring Boot Server qua REST và WebSocket; server dùng PostgreSQL và kho media">
   </div>
-  <div class="source">Sơ đồ dựng từ Hình 4.1 báo cáo · JavaFX · Spring Boot · PostgreSQL</div>
   <div class="pageno">04</div>
-  <aside class="notes">HTTP/REST là yêu cầu–đáp ứng: đăng nhập, tải đề, audio, lưu/nộp. WebSocket là kênh hai chiều để server đẩy: heartbeat, monitoring, START, cảnh báo. Server quyết định dữ liệu và deadline; client không tự tính giờ kết thúc.</aside>
+  <aside class="notes">HTTP/REST là yêu cầu–đáp ứng: đăng nhập, tải đề, audio, lưu/nộp; giám thị cũng dùng REST để tạo phòng PIN và bắt đầu Listening. WebSocket là kênh hai chiều: thí sinh gửi heartbeat, monitoring; server đẩy ACK, START, cảnh báo và cập nhật dashboard cho giám thị. Admin chỉ dùng REST. Chỉ trạng thái giám sát realtime nằm trong RAM; bài làm, deadline, Listening nằm trong PostgreSQL. Server quyết định dữ liệu và deadline; client không tự tính giờ kết thúc. Chú thích nguồn (đã bỏ khỏi slide): Sơ đồ dựng từ Hình 4.1 báo cáo · JavaFX · Spring Boot · PostgreSQL</aside>
 </section>
 
 <!-- =========================================================
-     05 · Quy trình thi (timeline 6 bước ~80%)
+     05 · Dữ liệu (nhóm 29 bảng PostgreSQL quanh lượt thi)
+     ========================================================= -->
+<section class="slide" data-title="Dữ liệu">
+  <div class="kicker reveal"><span class="pill fill">05 · Dữ liệu</span></div>
+  <h2 class="h2 reveal d1">Mọi dữ liệu xoay quanh một lượt thi</h2>
+  <svg class="erd reveal-scale d1" style="position:absolute; left:0; top:0" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-label="ERD: monitoring_attempts ở trung tâm, nối user_accounts, exam_sessions và các bảng lưu, nộp, giám sát">
+<g class="rel"><path d="M504 296 H552"/><path d="M540 285 V307"/><path d="M522 296 L504 285 M522 296 L504 296 M522 296 L504 307"/><path d="M936 296 H984"/><path d="M948 285 V307"/><path d="M966 296 L984 285 M966 296 L984 296 M966 296 L984 307"/><path d="M1368 296 H1416"/><path d="M1380 285 V307"/><path d="M1398 296 L1416 285 M1398 296 L1416 296 M1398 296 L1416 307"/><path d="M804 394 V448"/><path d="M793 406 H815"/><path d="M804 430 L793 448 M804 430 L804 448 M804 430 L815 448"/><path d="M1176 366 V448"/><path d="M1165 378 H1187"/><path d="M1176 430 L1165 448 M1176 430 L1176 448 M1176 430 L1187 448"/><path d="M984 540 H936"/><path d="M972 529 V551"/><path d="M954 540 L936 529 M954 540 L936 540 M954 540 L936 551"/><path d="M552 540 H504"/><path d="M540 529 V551"/><path d="M522 540 L504 529 M522 540 L504 540 M522 540 L504 551"/><path d="M1368 508 H1416"/><path d="M1380 497 V519"/><path d="M1404 497 V519"/><path d="M744 732 V772"/><path d="M733 744 H755"/><path d="M312 772 H1608"/><path d="M312 772 V800"/><path d="M312 782 L301 800 M312 782 L312 800 M312 782 L323 800"/><path d="M744 772 V800"/><path d="M744 782 L733 800 M744 782 L744 800 M744 782 L755 800"/><path d="M1176 772 V800"/><path d="M1176 782 L1165 800 M1176 782 L1176 800 M1176 782 L1187 800"/><path d="M1608 772 V800"/><path d="M1597 788 H1619"/></g>
+<g class="ent">
+<rect x="120" y="222" width="384" height="200" rx="16" class="bd"/>
+<path d="M120 268 V238 Q120 222 136 222 H488 Q504 222 504 238 V268 Z" class="hd"/>
+<text x="138" y="253" class="tn">login_sessions</text>
+<text x="138" y="294" class="tg">PK</text>
+<text x="212" y="294" class="cl k">id</text>
+<text x="138" y="322" class="tg">FK</text>
+<text x="212" y="322" class="cl k">user_id</text>
+<text x="138" y="350" class="tg">FK</text>
+<text x="212" y="350" class="cl k">room_attempt_id</text>
+<text x="212" y="378" class="cl">token_hash</text>
+<text x="212" y="406" class="cl">expires_at</text>
+</g>
+<g class="ent">
+<rect x="552" y="222" width="384" height="172" rx="16" class="bd"/>
+<path d="M552 268 V238 Q552 222 568 222 H920 Q936 222 936 238 V268 Z" class="hd"/>
+<text x="570" y="253" class="tn">user_accounts</text>
+<text x="570" y="294" class="tg">PK</text>
+<text x="644" y="294" class="cl k">id</text>
+<text x="644" y="322" class="cl">username</text>
+<text x="644" y="350" class="cl">role</text>
+<text x="644" y="378" class="cl">password_hash</text>
+</g>
+<g class="ent">
+<rect x="984" y="222" width="384" height="144" rx="16" class="bd"/>
+<path d="M984 268 V238 Q984 222 1000 222 H1352 Q1368 222 1368 238 V268 Z" class="hd"/>
+<text x="1002" y="253" class="tn">exams</text>
+<text x="1002" y="294" class="tg">PK</text>
+<text x="1076" y="294" class="cl k">exam_id</text>
+<text x="1076" y="322" class="cl">title</text>
+<text x="1002" y="350" class="tg">FK</text>
+<text x="1076" y="350" class="cl k">created_by</text>
+</g>
+<g class="ent">
+<rect x="1416" y="222" width="384" height="172" rx="16" class="bd"/>
+<path d="M1416 268 V238 Q1416 222 1432 222 H1784 Q1800 222 1800 238 V268 Z" class="hd"/>
+<text x="1434" y="253" class="tn">exam_questions</text>
+<text x="1434" y="294" class="tg">PK</text>
+<text x="1508" y="294" class="cl k">id</text>
+<text x="1434" y="322" class="tg">FK</text>
+<text x="1508" y="322" class="cl k">exam_id</text>
+<text x="1508" y="350" class="cl">part</text>
+<text x="1508" y="378" class="cl">correct_option</text>
+</g>
+<g class="ent">
+<rect x="120" y="448" width="384" height="144" rx="16" class="bd"/>
+<path d="M120 494 V464 Q120 448 136 448 H488 Q504 448 504 464 V494 Z" class="hd"/>
+<text x="138" y="479" class="tn">monitoring_signal_events</text>
+<text x="138" y="520" class="tg">PK FK</text>
+<text x="212" y="520" class="cl k">attempt_id</text>
+<text x="138" y="548" class="tg">PK</text>
+<text x="212" y="548" class="cl k">event_id</text>
+<text x="212" y="576" class="cl">event_type</text>
+</g>
+<g class="ent hot">
+<rect x="552" y="448" width="384" height="284" rx="16" class="bd"/>
+<path d="M552 494 V464 Q552 448 568 448 H920 Q936 448 936 464 V494 Z" class="hd"/>
+<text x="570" y="479" class="tn">monitoring_attempts</text>
+<text x="570" y="520" class="tg">PK</text>
+<text x="644" y="520" class="cl k">attempt_id</text>
+<text x="570" y="548" class="tg">FK</text>
+<text x="644" y="548" class="cl k">candidate_user_id</text>
+<text x="570" y="576" class="tg">FK</text>
+<text x="644" y="576" class="cl k">session_id</text>
+<text x="570" y="604" class="tg">FK</text>
+<text x="644" y="604" class="cl k">exam_id</text>
+<text x="644" y="632" class="cl">state, deadline_at</text>
+<text x="644" y="660" class="cl">writer_epoch</text>
+<text x="644" y="688" class="cl">saved_revision</text>
+<text x="644" y="716" class="cl">answers_json, score</text>
+</g>
+<g class="ent">
+<rect x="984" y="448" width="384" height="172" rx="16" class="bd"/>
+<path d="M984 494 V464 Q984 448 1000 448 H1352 Q1368 448 1368 464 V494 Z" class="hd"/>
+<text x="1002" y="479" class="tn">exam_sessions</text>
+<text x="1002" y="520" class="tg">PK</text>
+<text x="1076" y="520" class="cl k">session_id</text>
+<text x="1002" y="548" class="tg">FK</text>
+<text x="1076" y="548" class="cl k">exam_id</text>
+<text x="1076" y="576" class="cl">state</text>
+<text x="1076" y="604" class="cl">duration_seconds</text>
+</g>
+<g class="ent">
+<rect x="1416" y="448" width="384" height="116" rx="16" class="bd"/>
+<path d="M1416 494 V464 Q1416 448 1432 448 H1784 Q1800 448 1800 464 V494 Z" class="hd"/>
+<text x="1434" y="479" class="tn">exam_rooms</text>
+<text x="1434" y="520" class="tg">PK FK</text>
+<text x="1508" y="520" class="cl k">session_id</text>
+<text x="1508" y="548" class="cl">room_code</text>
+</g>
+<g class="ent">
+<rect x="120" y="800" width="384" height="144" rx="16" class="bd"/>
+<path d="M120 846 V816 Q120 800 136 800 H488 Q504 800 504 816 V846 Z" class="hd"/>
+<text x="138" y="831" class="tn">exam_autosave_requests</text>
+<text x="138" y="872" class="tg">PK FK</text>
+<text x="212" y="872" class="cl k">attempt_id</text>
+<text x="138" y="900" class="tg">PK</text>
+<text x="212" y="900" class="cl k">request_id</text>
+<text x="212" y="928" class="cl">answer_revision</text>
+</g>
+<g class="ent">
+<rect x="552" y="800" width="384" height="144" rx="16" class="bd"/>
+<path d="M552 846 V816 Q552 800 568 800 H920 Q936 800 936 816 V846 Z" class="hd"/>
+<text x="570" y="831" class="tn">exam_submit_requests</text>
+<text x="570" y="872" class="tg">PK FK</text>
+<text x="644" y="872" class="cl k">attempt_id</text>
+<text x="570" y="900" class="tg">PK</text>
+<text x="644" y="900" class="cl k">request_id</text>
+<text x="644" y="928" class="cl">score</text>
+</g>
+<g class="ent">
+<rect x="984" y="800" width="384" height="172" rx="16" class="bd"/>
+<path d="M984 846 V816 Q984 800 1000 800 H1352 Q1368 800 1368 816 V846 Z" class="hd"/>
+<text x="1002" y="831" class="tn">monitoring_events</text>
+<text x="1002" y="872" class="tg">PK</text>
+<text x="1076" y="872" class="cl k">id</text>
+<text x="1002" y="900" class="tg">FK</text>
+<text x="1076" y="900" class="cl k">attempt_id</text>
+<text x="1076" y="928" class="cl">event_id</text>
+<text x="1076" y="956" class="cl">process_name</text>
+</g>
+<g class="ent">
+<rect x="1416" y="800" width="384" height="144" rx="16" class="bd"/>
+<path d="M1416 846 V816 Q1416 800 1432 800 H1784 Q1800 800 1800 816 V846 Z" class="hd"/>
+<text x="1434" y="831" class="tn">monitoring_presence</text>
+<text x="1434" y="872" class="tg">PK FK</text>
+<text x="1508" y="872" class="cl k">attempt_id</text>
+<text x="1508" y="900" class="cl">status</text>
+<text x="1508" y="928" class="cl">last_seen_at</text>
+</g>
+</svg>
+  <div class="pageno">05</div>
+  <aside class="notes">Đọc ERD: vạch ngang là phía "một", chân chim là phía "nhiều"; PK FK trên cùng một cột nghĩa là khóa chính cũng là khóa ngoại (quan hệ 1–1 như exam_rooms, monitoring_presence). Bảng trung tâm là monitoring_attempts: tạo ở V2 khi chỉ dùng cho giám sát, đến V5 được thêm session_id, deadline_at, writer_epoch, saved_revision, answers_json, score nên trở thành bảng lượt thi; tên bảng giữ lại vì lịch sử migration. Các bảng khác trỏ khóa ngoại về nó: exam_autosave_requests, exam_submit_requests, monitoring_events, monitoring_presence, monitoring_signal_events, exam_room_members… Lưu, nộp, hết giờ và takeover dùng SELECT … FOR UPDATE OF a trên dòng lượt thi, lấy giờ quyết định bằng clock_timestamp() sau khóa. Token đăng nhập chỉ lưu SHA-256 nên lộ DB không lộ token. Trạng thái giám sát hiện tại (full snapshot) nằm trong RAM của server, không trong bảng; lịch sử event thì nằm trong DB. Tổng 29 bảng từ 23 migration Flyway V1–V23.</aside>
+</section>
+
+<!-- =========================================================
+     06 · Quy trình thi (timeline 6 bước ~80%)
      ========================================================= -->
 <section class="slide" data-title="Quy trình thi">
-  <div class="kicker reveal"><span class="pill fill">05 · Quy trình</span></div>
+  <div class="kicker reveal"><span class="pill fill">06 · Quy trình</span></div>
   <h2 class="h2 reveal d1">Từ nhập PIN đến nộp bài</h2>
   <div class="figure reveal-scale d1" style="left:120px; top:236px; width:1680px; height:718px">
     <img src="assets/kit/05_QUY_TRINH_THI.svg" width="1640" height="678" alt="Sáu bước: Tạo phòng, Nhập PIN, Ready, Start, Làm bài, Nộp bài">
   </div>
-  <div class="pageno">05</div>
+  <div class="pageno">06</div>
   <aside class="notes">READY chỉ khi đủ file audio đúng checksum và thí sinh đã thử loa. Listening phát một lần, START trùng không phát lại. Deadline do server quyết định. Autosave gửi toàn bộ đáp án; submit chốt lượt thi.</aside>
 </section>
 
 <!-- =========================================================
-     06 · Lưu/nộp bài an toàn (sơ đồ 2 làn)
+     07 · Lưu/nộp bài an toàn (sơ đồ 2 làn)
      ========================================================= -->
 <section class="slide" data-title="Lưu và nộp">
-  <div class="kicker reveal"><span class="pill fill">06 · Lưu / nộp</span></div>
+  <div class="kicker reveal"><span class="pill fill">07 · Lưu / nộp</span></div>
   <h2 class="h2 reveal d1">Bản mới được lưu, bản cũ bị chặn</h2>
   <div class="figure reveal-scale d1" style="left:120px; top:226px; width:1680px; height:652px">
     <img src="assets/kit/06_NHAT_QUAN_BAI_LAM.svg" width="1640" height="612" alt="Revision 12 được chấp nhận, revision 11 đến muộn bị từ chối; sau khi nộp bài bị khóa">
@@ -360,15 +511,15 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
     <span class="pill fill" style="font:700 24px var(--font-mono)">SUBMITTED
       <svg viewBox="0 0 100 120" width="20" height="24" aria-hidden="true"><path d="M30 54 V38 A20 20 0 0 1 70 38 V54" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><rect x="16" y="52" width="68" height="58" rx="12" fill="#fff"/></svg></span>
   </div>
-  <div class="pageno">06</div>
+  <div class="pageno">07</div>
   <aside class="notes">Mỗi lần lưu mang requestId (chống gửi trùng), writerEpoch (chống phiên cũ sau takeover) và answerRevision (chống ghi đè bằng bản cũ). Save, submit, timeout và takeover dùng chung một khóa dòng attempt trong transaction; writerEpoch kiểm sau khi lấy khóa. Server chỉ ACK sau COMMIT. Đã nộp thì khóa, không đổi đáp án hay điểm.</aside>
 </section>
 
 <!-- =========================================================
-     07 · Giám sát realtime (sơ đồ pipeline + dashboard giám thị)
+     08 · Giám sát realtime (sơ đồ pipeline + dashboard giám thị)
      ========================================================= -->
 <section class="slide" data-title="Giám sát">
-  <div class="kicker reveal"><span class="pill fill">07 · Giám sát</span></div>
+  <div class="kicker reveal"><span class="pill fill">08 · Giám sát</span></div>
   <h2 class="h2 reveal d1">Giám sát theo thời gian thực</h2>
   <div class="figure reveal-scale d1" style="left:448px; top:214px; width:1024px; height:460px">
     <img src="assets/kit/07_GIAM_SAT_PIPELINE.svg" width="984" height="420" alt="Process, USB, Focus, Window đi qua Collector, WebSocket tới Server; Server lưu lịch sử PostgreSQL, trạng thái RAM và đẩy lên dashboard giám thị">
@@ -377,22 +528,21 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
     <div class="crop"><img src="assets/screens/proctor-alerts.webp" style="width:1691px; top:-230px" alt="Bảng Quản lý cảnh báo của giám thị: tab Process, USB, Focus, Cửa sổ và một sự kiện trạng thái cửa sổ"></div>
     <span class="badge-test">DATA TEST</span>
   </div>
-  <div class="source">Tín hiệu chỉ phản ánh những gì ứng dụng quan sát thấy; UNKNOWN không phải kết luận gian lận.</div>
-  <div class="pageno">07</div>
-  <aside class="notes">Collector chạy cục bộ trên máy thí sinh, quét process bằng ProcessHandle; các adapter tín hiệu báo USB lưu trữ, focus và trạng thái cửa sổ. Tất cả đi qua WebSocket. Server giữ trạng thái hiện tại trong RAM và lịch sử sự kiện trong DB — hai luồng tách biệt. Mất heartbeat thì UNKNOWN.</aside>
+  <div class="pageno">08</div>
+  <aside class="notes">Collector chạy cục bộ trên máy thí sinh, quét process bằng ProcessHandle; các adapter tín hiệu riêng (không qua ProcessCollector) báo USB lưu trữ, focus và trạng thái cửa sổ. Tất cả đi qua WebSocket. Server giữ trạng thái hiện tại trong RAM và lịch sử sự kiện trong DB — hai luồng tách biệt. Mất heartbeat thì UNKNOWN. Chú thích nguồn (đã bỏ khỏi slide): Tín hiệu chỉ phản ánh những gì ứng dụng quan sát thấy; UNKNOWN không phải kết luận gian lận.</aside>
 </section>
 
 <!-- =========================================================
-     08 · Kiểm thử và thực nghiệm (3 KPI + 1 biểu đồ 2 màu)
+     09 · Kiểm thử và thực nghiệm (3 KPI + 1 biểu đồ 2 màu)
      ========================================================= -->
 <section class="slide" data-title="Kiểm thử">
-  <div class="kicker reveal"><span class="pill fill">08 · Kiểm thử</span></div>
+  <div class="kicker reveal"><span class="pill fill">09 · Kiểm thử</span></div>
   <h2 class="h2 reveal d1">Kiểm thử và thực nghiệm</h2>
   <div class="kpi tint reveal d1" style="left:120px; top:236px; width:440px; height:224px">
-    <div class="num">363</div><div class="cap">CA ĐẠT</div><div class="sub">Server · 4 SKIP</div>
+    <div class="num">363</div><div class="cap">CA ĐẠT</div><div class="sub">367 ca server · 4 SKIP · 0 lỗi</div>
   </div>
   <div class="kpi reveal d2" style="left:120px; top:484px; width:440px; height:224px">
-    <div class="num" style="color:var(--orange-deep)">68,34<small>%*</small></div><div class="cap">BYTE WEBSOCKET GIẢM</div><div class="sub">DELTA so với FULL</div>
+    <div class="num" style="color:var(--orange-deep)">68,34<small>%</small></div><div class="cap">BYTE WEBSOCKET GIẢM</div><div class="sub">DELTA so với FULL · ít thay đổi</div>
   </div>
   <div class="kpi reveal d3" style="left:120px; top:732px; width:440px; height:224px">
     <div class="num">20</div><div class="cap">CLIENT GIẢ LẬP</div><div class="sub">Benchmark trên một máy</div>
@@ -400,16 +550,15 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
   <div class="figure reveal-scale d2" style="left:592px; top:329px; width:1208px; height:534px">
     <img src="assets/kit/08_FULL_VS_DELTA.svg" width="1168" height="494" alt="Byte WebSocket FULL và DELTA: ít thay đổi 3,69 MB và 1,17 MB (−68,34%); nhiều thay đổi 6,46 MB và 5,45 MB (−15,60%); kết nối lại 3,43 MB và 1,19 MB (−65,20%)">
   </div>
-  <div class="source">Báo cáo nhóm 03, Bảng 5.3–5.5 (đo 27–28/10/2026) · * kịch bản ít thay đổi · byte nội dung bản tin WebSocket</div>
-  <div class="pageno">08</div>
-  <aside class="notes">363 test server PASS, 4 SKIP. E2: kịch bản ít thay đổi, delta giảm 68,34% byte WebSocket; nhiều thay đổi chỉ giảm 15,60%. Benchmark 20 client giả lập — không phải 20 máy vật lý.</aside>
+  <div class="pageno">09</div>
+  <aside class="notes">363 test server PASS, 4 SKIP. E2: kịch bản ít thay đổi, delta giảm 68,34% byte WebSocket; nhiều thay đổi chỉ giảm 15,60%. Benchmark 20 client giả lập — không phải 20 máy vật lý. E2 đo ngày 27/10/2026 trên một máy (loopback), dữ liệu tiến trình giả lập, mỗi kịch bản một lượt cho mỗi cấu hình. FULL gửi mỗi giây; DELTA gửi khi có thay đổi hoặc sau 2 giây, kèm FULL lúc đầu, sau reconnect và mỗi 30 giây, nên con số phản ánh cả cách biểu diễn lẫn lịch gửi. Delta vẫn là ứng viên, FULL là mặc định. Chú thích nguồn (đã bỏ khỏi slide): Báo cáo nhóm 03, Bảng 5.3–5.5 (đo 27–28/10/2026) · * kịch bản ít thay đổi · byte nội dung bản tin WebSocket</aside>
 </section>
 
 <!-- =========================================================
-     09 · Demo phần mềm (giám thị 60% trái, thí sinh 40% phải)
+     10 · Demo phần mềm (giám thị 60% trái, thí sinh 40% phải)
      ========================================================= -->
 <section class="slide" data-title="Demo">
-  <div class="kicker reveal"><span class="pill fill">09 · Demo</span></div>
+  <div class="kicker reveal"><span class="pill fill">10 · Demo</span></div>
   <h2 class="h2 reveal d1">Demo phần mềm</h2>
   <div class="shot reveal-scale d1" style="left:120px; top:236px; width:1040px; height:336px">
     <div class="crop"><img src="assets/screens/proctor-room-ready.webp" style="width:1020px" alt="Giám thị: danh sách thí sinh trong phòng với cột Focus và Cảnh báo"></div>
@@ -426,16 +575,15 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
     <div class="crop"><img src="assets/screens/candidate-part3.webp" style="width:588px" alt="Thí sinh: làm bài Part 3"></div>
     <span class="pill fill tagline">LÀM BÀI</span>
   </div>
-  <div class="source">DATA TEST — ảnh chụp phần mềm thật với dữ liệu kiểm thử (MOCK)</div>
-  <div class="pageno">09</div>
-  <aside class="notes">Demo nhanh: tạo phòng → PIN → thí sinh READY → START → autosave (“✓ Đã lưu”) → mở process/cắm USB/rời cửa sổ → cảnh báo hiện bên giám thị → nộp bài.</aside>
+  <div class="pageno">10</div>
+  <aside class="notes">Demo nhanh: tạo phòng → PIN → thí sinh READY → START → autosave (“✓ Đã lưu”) → mở process/cắm USB/rời cửa sổ → cảnh báo hiện bên giám thị → nộp bài. Chú thích nguồn (đã bỏ khỏi slide): DATA TEST — ảnh chụp phần mềm thật với dữ liệu kiểm thử (MOCK)</aside>
 </section>
 
 <!-- =========================================================
-     10 · Kết luận và hướng phát triển (2 cực trái–phải)
+     11 · Kết luận và hướng phát triển (2 cực trái–phải)
      ========================================================= -->
 <section class="slide" data-title="Kết luận">
-  <div class="kicker reveal"><span class="pill fill">10 · Kết luận</span></div>
+  <div class="kicker reveal"><span class="pill fill">11 · Kết luận</span></div>
   <h2 class="h2 reveal d1">Kết luận và hướng phát triển</h2>
   <div class="figure reveal-scale d1" style="left:120px; top:236px; width:1680px; height:600px; padding:40px">
     <svg viewBox="0 0 1680 560" width="1600" height="520" role="img" aria-label="Bên trái: ba máy thí sinh và một máy chủ đã xây dựng. Bên phải: nhiều máy thí sinh hơn, phiên thi dài hơn, cần tiếp tục đánh giá">
@@ -466,16 +614,15 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
   <div class="role-label reveal d2" style="left:160px; top:870px; width:620px; color:var(--navy)">ĐÃ XÂY DỰNG</div>
   <div class="role-label reveal d3" style="left:820px; top:870px; width:120px; color:var(--orange)">→</div>
   <div class="role-label reveal d4" style="left:1110px; top:870px; width:680px; color:var(--orange-deep)">TIẾP TỤC ĐÁNH GIÁ</div>
-  <div class="source">Bên phải là định hướng, chưa phải kết quả đã đạt.</div>
-  <div class="pageno">10</div>
-  <aside class="notes">Đã xây dựng: hệ thống thi Client–Server có giám sát. Cần tiếp tục: kiểm thử nhiều máy vật lý và phiên thi dài, xử lý event khi offline, so sánh FULL/DELTA thêm trước khi bật delta mặc định.</aside>
+  <div class="pageno">11</div>
+  <aside class="notes">Đã xây dựng: hệ thống thi Client–Server có giám sát. Cần tiếp tục: kiểm thử nhiều máy vật lý và phiên thi dài, xử lý event khi offline, so sánh FULL/DELTA thêm trước khi bật delta mặc định. Chú thích nguồn (đã bỏ khỏi slide): Bên phải là định hướng, chưa phải kết quả đã đạt.</aside>
 </section>
 
 <!-- =========================================================
-     11 · Code trọng tâm — Monitoring (code trái 35–40%, sơ đồ phải)
+     12 · Code trọng tâm — Monitoring (code trái 35–40%, sơ đồ phải)
      ========================================================= -->
 <section class="slide" data-title="Code monitoring">
-  <div class="kicker reveal"><span class="pill fill">11 · Code</span></div>
+  <div class="kicker reveal"><span class="pill fill">12 · Code</span></div>
   <h2 class="h2 reveal d1">Từ code thu thập đến dashboard</h2>
   <div class="code reveal d1" style="position:absolute; left:120px; top:300px; width:800px">
     <div class="file">ProcessCollector.java · start()</div>
@@ -492,9 +639,8 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
     <div class="stp reveal d4"><svg viewBox="0 0 120 140" aria-hidden="true"><use href="#s-db"/></svg><div><div class="nm">MonitoringState</div><div class="ds">Server cập nhật · MonitoringStateService</div></div></div>
     <div class="stp reveal d5"><svg viewBox="0 0 160 140" aria-hidden="true"><use href="#s-monitor"/><use href="#s-scr-dash"/></svg><div><div class="nm">Dashboard</div><div class="ds">Giám thị xem</div></div></div>
   </div>
-  <div class="source">github.com/AnhTaizz/Toeic-Monitoring-Realtime · client/…/monitoring/ProcessCollector.java:86</div>
-  <div class="pageno">11</div>
-  <aside class="notes">scheduleWithFixedDelay: lần quét sau bắt đầu sau khi lần trước xong cộng interval, nên không chồng lần quét. Worker riêng chạy scan rồi gọi callback với snapshot. Collector không giữ kết nối mạng: Delivery/RealtimeClient gửi qua WebSocket và chờ ACK; server cập nhật MonitoringState rồi đẩy lên dashboard.</aside>
+  <div class="pageno">12</div>
+  <aside class="notes">scheduleWithFixedDelay: lần quét sau bắt đầu sau khi lần trước xong cộng interval, nên không chồng lần quét. Worker riêng chạy scan rồi gọi callback với snapshot. Collector không giữ kết nối mạng: Delivery/RealtimeClient gửi qua WebSocket và chờ ACK; server cập nhật MonitoringState rồi đẩy lên dashboard. Chú thích nguồn (đã bỏ khỏi slide): github.com/AnhTaizz/Toeic-Monitoring-Realtime · client/…/monitoring/ProcessCollector.java:86</aside>
 </section>
 
 </main>
