@@ -1,5 +1,7 @@
 # Tiến độ hiện tại
 
+04/11/2026 — `presentation/index.html` còn 17 slide: phần thực nghiệm tách thành 6 slide (thiết lập, kiểm thử chức năng, E1, E2, tải đồng thời, hai máy + USB) với số liệu Bảng 5.1–5.6 của báo cáo Word; raw đợt đo 27–28/10 vẫn chưa có trong repo. Trên nhánh `claude/tender-brown-is1tql`.
+
 02/11/2026 — `presentation/index.html` dựng lại 11 slide theo Visual Kit trong `presentation/sliddeee/`; slide 8 dùng số liệu báo cáo 27–28/10 theo kit (raw chưa có trong repo). Đã push lên `main` (`df4b0fb`); nhánh `presentation/toeic-monitor-it-chu-20261102` của Lâm cũng sửa `index.html`, chưa merge. Người dùng chốt 02/11: giữ bản theo kit trên `main`; không merge `index.html` của nhánh đó.
 
 01/11/2026 — Tinh giản repo trên `main` (`aa68882` + commit cục bộ, chưa push): gỡ bằng chứng theo task, Plan V2, script smoke/verify, ghi chú theo task; giữ số liệu E1/E2, benchmark và tài liệu thiết kế/vận hành. Bản đầy đủ: `aa68882`. Server Docker (cả Internet) chạy code server giống `aa68882`. Raw đợt đo 27–28/10 của báo cáo cuối chưa có trong repo, cần thành viên giữ dữ liệu bổ sung.
