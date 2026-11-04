@@ -1370,4 +1370,4 @@ Kiểm chứng chốt: 23 PASS/3 SKIP/0 FAIL/ERROR (3 case crawl thật thiếu 
 ## 04/11/2026 — Slide: đưa lên main, thêm slide Thank you
 
 - Theo yêu cầu người dùng, fast-forward `main` lên `ac14ac5` (deck 14 slide, 3 bảng thực nghiệm).
-- Thêm slide 15 "THANK YOU" cuối deck, bố cục như bìa (pill BTL/Nhóm 03, chữ lớn trái, orb cam phải), dòng "Cảm ơn thầy và các bạn đã lắng nghe" và pill "Hỏi & đáp". `screenshot.js --audit` 15 slide: chỉ còn cảnh báo crop có chủ ý ở slide 3 và 8; xem bằng mắt slide 15 không tràn/chồng.
+- Thêm slide 15 cuối deck, theo mẫu người dùng gửi: chỉ "THANK" (navy) / "YOU" (cam) và dòng "Cảm ơn thầy và các bạn đã lắng nghe", căn giữa màn hình, không thêm chữ khác. `screenshot.js --audit` 15 slide: chỉ còn cảnh báo crop có chủ ý ở slide 3 và 8; xem bằng mắt slide 15 không tràn/chồng.
