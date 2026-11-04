@@ -1,6 +1,6 @@
 # Slide thuyết trình — TOEIC Monitor
 
-Bộ slide HTML 16:9 rút gọn **14 slide** (`index.html`, theo yêu cầu của thầy khoảng 10 trang); bản đầy đủ 30 slide giữ ở `full.html` để dùng khi hỏi đáp cho buổi bảo vệ BTL Lập trình mạng, dựng theo skill [Frontend Slides](https://github.com/zarazhangrui/frontend-slides) và [Design System V1.0 — Claymoon Flow](DESIGN_SYSTEM.md). Không phụ thuộc thư viện JS; font tự host nên chạy được khi không có mạng.
+Bộ slide HTML 16:9 rút gọn **15 slide** (`index.html`, theo yêu cầu của thầy khoảng 10 trang); bản đầy đủ 30 slide giữ ở `full.html` để dùng khi hỏi đáp cho buổi bảo vệ BTL Lập trình mạng, dựng theo skill [Frontend Slides](https://github.com/zarazhangrui/frontend-slides) và [Design System V1.0 — Claymoon Flow](DESIGN_SYSTEM.md). Không phụ thuộc thư viện JS; font tự host nên chạy được khi không có mạng.
 
 ## Mở và trình chiếu
 
@@ -20,7 +20,7 @@ URL giữ số slide (`index.html#18`). Sân khấu luôn là 1920×1080 và đ�
 
 | Đường dẫn | Nội dung |
 |---|---|
-| `index.html` | Bản trình chiếu 14 slide dựng theo Visual Kit (`sliddeee/`, 02/11; slide 05 Dữ liệu thêm 04/11; slide 10–11 thêm 04/11): Giới thiệu · Bài toán · 3 vai trò · Kiến trúc · Dữ liệu · Quy trình thi · Lưu/nộp · Giám sát · Kiểm thử · E1 chu kỳ quét · Tải đồng thời · Demo · Kết luận · Code monitoring. Hình minh họa vẽ bằng SVG inline theo quy chuẩn của kit (không có ảnh AI); slide 9 dùng số liệu báo cáo 27–28/10 theo kit, slide 10–11 vẽ lại Bảng 5.3 và 5.5 của `report/Nhom03_ToeicMonitoring_Report.docx` bằng SVG inline; raw các đợt đo này chưa có trong repo. Bản 11 slide trước đó: `git show 583f798:presentation/index.html` |
+| `index.html` | Bản trình chiếu 15 slide dựng theo Visual Kit (`sliddeee/`, 02/11; slide 05 Dữ liệu thêm 04/11; slide 10–11 thêm 04/11): Giới thiệu · Bài toán · 3 vai trò · Kiến trúc · Dữ liệu · Quy trình thi · Lưu/nộp · Giám sát · Kiểm thử · E1 chu kỳ quét · Tải đồng thời · Demo · Kết luận · Code monitoring · Cảm ơn. Hình minh họa vẽ bằng SVG inline theo quy chuẩn của kit (không có ảnh AI); slide 9 dùng số liệu báo cáo 27–28/10 theo kit, slide 10–11 vẽ lại Bảng 5.3 và 5.5 của `report/Nhom03_ToeicMonitoring_Report.docx` bằng SVG inline; raw các đợt đo này chưa có trong repo. Bản 11 slide trước đó: `git show 583f798:presentation/index.html` |
 | `sliddeee/` | Visual Kit 11 slide (quy tắc, prompt AI, sơ đồ) và ảnh giao diện 3 vai trò, dạng zip |
 | `assets/kit/` | Sơ đồ SVG lấy từ kit, đã bỏ tiêu đề/chú thích riêng và cắt khung |
 | `full.html` | Bản đầy đủ 30 slide (thêm mục lục, envelope, mã lỗi, START/Listening, epoch, tín hiệu V2, replay, benchmark, quản lý đề, màn hình, đóng góp) |

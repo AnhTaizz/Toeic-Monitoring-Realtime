@@ -1366,3 +1366,8 @@ Kiểm chứng chốt: 23 PASS/3 SKIP/0 FAIL/ERROR (3 case crawl thật thiếu 
 
 - Người dùng chỉ cần 3 bảng đã gửi, không thêm nội dung khác: khôi phục nguyên slide 09 Kiểm thử theo kit; giữ slide 10 E1 (Bảng 5.3: n/30 theo khoảng quét × thời gian giữ, CPU ± độ lệch chuẩn) và slide 11 tải đồng thời (Bảng 5.5: p95 tham gia phòng, lưu, nộp). Bỏ các slide Thiết lập, Kiểm thử chức năng, E2 mới, Hai máy + USB và các pill số liệu ngoài hai bảng. Demo, Kết luận, Code thành 12–14; deck còn 14 slide.
 - Đã kiểm: `screenshot.js --audit` 14 slide ở 1920×1080, chỉ còn cảnh báo crop ảnh có chủ ý ở slide 3 và 8; xem bằng mắt slide 09–12 không tràn/chồng.
+
+## 04/11/2026 — Slide: đưa lên main, thêm slide Thank you
+
+- Theo yêu cầu người dùng, fast-forward `main` lên `ac14ac5` (deck 14 slide, 3 bảng thực nghiệm).
+- Thêm slide 15 "THANK YOU" cuối deck, bố cục như bìa (pill BTL/Nhóm 03, chữ lớn trái, orb cam phải), dòng "Cảm ơn thầy và các bạn đã lắng nghe" và pill "Hỏi & đáp". `screenshot.js --audit` 15 slide: chỉ còn cảnh báo crop có chủ ý ở slide 3 và 8; xem bằng mắt slide 15 không tràn/chồng.

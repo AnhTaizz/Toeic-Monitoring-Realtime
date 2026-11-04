@@ -1,6 +1,6 @@
 # Tiến độ hiện tại
 
-04/11/2026 — `presentation/index.html` có 14 slide: giữ slide 09 Kiểm thử theo kit, thêm slide 10 E1 chu kỳ quét (Bảng 5.3) và slide 11 độ trễ p95 theo số thí sinh (Bảng 5.5) của báo cáo Word; raw đợt đo 27–28/10 vẫn chưa có trong repo. Trên nhánh `claude/tender-brown-is1tql`.
+04/11/2026 — `presentation/index.html` có 15 slide (thêm slide cuối Thank you): giữ slide 09 Kiểm thử theo kit, thêm slide 10 E1 chu kỳ quét (Bảng 5.3) và slide 11 độ trễ p95 theo số thí sinh (Bảng 5.5) của báo cáo Word; raw đợt đo 27–28/10 vẫn chưa có trong repo. Đã fast-forward lên `main` (`ac14ac5`); slide Thank you trên nhánh `claude/tender-brown-is1tql`.
 
 02/11/2026 — `presentation/index.html` dựng lại 11 slide theo Visual Kit trong `presentation/sliddeee/`; slide 8 dùng số liệu báo cáo 27–28/10 theo kit (raw chưa có trong repo). Đã push lên `main` (`df4b0fb`); nhánh `presentation/toeic-monitor-it-chu-20261102` của Lâm cũng sửa `index.html`, chưa merge. Người dùng chốt 02/11: giữ bản theo kit trên `main`; không merge `index.html` của nhánh đó.
 
