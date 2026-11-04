@@ -115,7 +115,7 @@ b, strong { font-weight: 700; }
 .erd .cl.k { font-weight: 600; fill: var(--navy); }
 .erd .rel { fill: none; stroke: #8A97AB; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
-/* Experiment slides 09–14: white panels with inline SVG charts (data: báo cáo nhóm, Bảng 5.1–5.6) */
+/* Experiment slides 10–11: white panels with inline SVG charts (data: báo cáo nhóm, Bảng 5.3 và 5.5) */
 .panel { position: absolute; background: #fff; border-radius: var(--radius-card); box-shadow: var(--shadow-clay); padding: 26px 32px; }
 .panel .ptitle { font: 800 28px/1.15 var(--font-display); letter-spacing: -0.01em; margin-bottom: 14px; }
 .panel .chart { display: block; max-width: 100%; height: auto; }
@@ -127,31 +127,14 @@ b, strong { font-weight: 700; }
 .chart .val { font: 700 22px var(--font-mono); fill: var(--navy); }
 .chart .valsm { font: 600 16px var(--font-mono); fill: var(--navy); }
 .chart .pm { font-weight: 400; fill: var(--muted); }
-.chart .skip { font: 600 18px var(--font-mono); fill: var(--orange-deep); }
 .chart .cell { font: 800 40px var(--font-display); }
 .chart .cellsub { font: 500 20px var(--font-mono); opacity: .8; }
-.env { display: grid; grid-template-columns: 150px 1fr; }
-.env dt, .env dd { padding: 17px 0; border-bottom: 1.5px solid var(--line); font: 400 23px/1.3 var(--font-body); }
-.env dt { font: 600 19px/1.6 var(--font-mono); color: var(--orange-deep); text-transform: uppercase; letter-spacing: .04em; }
-.env dt:last-of-type, .env dd:last-of-type { border-bottom: none; }
-.metric-grid { position: absolute; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.metric { background: #fff; border-radius: 26px; box-shadow: var(--shadow-clay); padding: 26px; height: 248px; display: flex; flex-direction: column; gap: 14px; }
-.metric svg { width: 64px; height: 64px; flex: none; }
-.metric .nm { font: 800 30px/1.1 var(--font-display); }
-.metric .ds { font: 400 19px/1.4 var(--font-mono); color: var(--muted); margin-top: 6px; }
-.stack { display: flex; gap: 3px; height: 56px; border-radius: 12px; overflow: hidden; margin: 8px 0 26px; }
-.legend { list-style: none; display: grid; gap: 18px; }
-.legend li, .keys span { display: flex; align-items: center; gap: 14px; font: 400 22px/1.2 var(--font-body); }
-.legend b { font: 700 24px var(--font-mono); min-width: 54px; }
-.legend i, .keys i { width: 22px; height: 22px; border-radius: 6px; flex: none; }
 .keys { display: flex; gap: 26px; }
+.keys span { display: flex; align-items: center; }
+.keys i { width: 22px; height: 22px; border-radius: 6px; flex: none; }
 .keys span { font: 500 20px var(--font-body); gap: 10px; }
-.facts { list-style: none; display: grid; gap: 18px; }
-.facts li { position: relative; padding-left: 34px; font: 400 23px/1.35 var(--font-body); }
-.facts li::before { content: ''; position: absolute; left: 4px; top: 10px; width: 14px; height: 14px; border-radius: 50%; background: var(--good); }
-.facts li.warn::before { background: var(--orange); }
 
-/* Code card (slide 17) */
+/* Code card (slide 14) */
 .code { background: var(--navy); color: #e8edf6; border-radius: 28px; padding: 30px 36px 34px; box-shadow: 0 24px 50px rgba(19, 37, 74, .22); }
 .code .file { display: inline-block; padding: 8px 16px; border-radius: 12px; background: rgba(255, 255, 255, .08); font: 500 22px var(--font-mono); color: #fff; margin-bottom: 26px; }
 .code pre { font: 400 23px/1.75 var(--font-mono); white-space: pre; font-variant-ligatures: none; }
@@ -159,7 +142,7 @@ b, strong { font-weight: 700; }
 .code .k { color: #ffb98e; }
 .code .note { margin-top: 24px; font: 400 18px/1.5 var(--font-body); color: #b9c4d8; }
 
-/* Vertical pipeline (slides 14, 17) */
+/* Vertical pipeline (slide 14) */
 .flow-v { position: absolute; display: grid; gap: 26px; }
 .flow-v .stp { position: relative; display: flex; align-items: center; gap: 26px; background: #fff; border-radius: 26px; padding: 14px 28px; box-shadow: var(--shadow-clay); height: 112px; }
 .flow-v .stp.hl { background: var(--orange-soft); box-shadow: inset 0 0 0 3px var(--orange); }
@@ -211,9 +194,6 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
      =========================================================== -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <pattern id="hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-      <rect width="10" height="10" fill="#FFF1E8"/><path d="M0 0 V10" stroke="#F26B1D" stroke-width="3"/>
-    </pattern>
     <symbol id="s-monitor" viewBox="0 0 160 140">
       <rect x="8" y="8" width="144" height="96" rx="14" fill="#DDEEF9" stroke="#405573" stroke-width="6"/>
       <rect x="22" y="22" width="116" height="68" rx="6" fill="#fff" stroke="#405573" stroke-width="3"/>
@@ -572,108 +552,32 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
 </section>
 
 <!-- =========================================================
-     09 · Thiết lập thực nghiệm (Bảng 5.1 + 5.1.2 chỉ số)
+     09 · Kiểm thử và thực nghiệm (3 KPI + 1 biểu đồ 2 màu)
      ========================================================= -->
-<section class="slide" data-title="Thiết lập đo">
-  <div class="kicker reveal"><span class="pill fill">09 · Thực nghiệm</span><span class="pill">Thiết lập</span></div>
-  <h2 class="h2 reveal d1">Đo gì, đo trên máy nào</h2>
-  <div class="panel reveal-scale d1" style="left:120px; top:236px; width:780px; height:640px">
-    <div class="ptitle">Môi trường đo tự động · 27/10/2026</div>
-    <dl class="env">
-      <dt>CPU</dt><dd>Intel Core Ultra 5 125H · 14 lõi / 18 luồng</dd>
-      <dt>RAM</dt><dd>≈ 15,61 GiB</dd>
-      <dt>OS</dt><dd>Windows 11 Pro 26200 · x64</dd>
-      <dt>Java</dt><dd>Temurin OpenJDK 21.0.10 · Maven 3.9.15</dd>
-      <dt>App</dt><dd>JavaFX 21.0.12 · Spring Boot 4.1.1</dd>
-      <dt>DB</dt><dd>PostgreSQL 18.3</dd>
-      <dt>Phân tích</dt><dd>Python 3.12.14</dd>
-      <dt>Mạng</dt><dd>Client giả lập + server + DB cùng một máy (loopback)</dd>
-    </dl>
+<section class="slide" data-title="Kiểm thử">
+  <div class="kicker reveal"><span class="pill fill">09 · Kiểm thử</span></div>
+  <h2 class="h2 reveal d1">Kiểm thử và thực nghiệm</h2>
+  <div class="kpi tint reveal d1" style="left:120px; top:236px; width:440px; height:224px">
+    <div class="num">363</div><div class="cap">CA ĐẠT</div><div class="sub">367 ca server · 4 SKIP · 0 lỗi</div>
   </div>
-  <div class="metric-grid" style="left:936px; top:236px; width:864px">
-    <div class="metric reveal d2"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#s-check"/></svg><div><div class="nm">Tính đúng</div><div class="ds">Đạt · thất bại · lỗi · SKIP tính riêng</div></div></div>
-    <div class="metric reveal d3"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#s-clock"/></svg><div><div class="nm">Độ trễ p95</div><div class="ds">95% mẫu thành công không vượt quá giá trị này</div></div></div>
-    <div class="metric reveal d4"><svg viewBox="0 0 120 140" aria-hidden="true"><use href="#s-server"/></svg><div><div class="nm">CPU % một lõi</div><div class="ds">100% = trọn một lõi; trung bình ± độ lệch chuẩn</div></div></div>
-    <div class="metric reveal d5"><svg viewBox="0 0 120 150" aria-hidden="true"><use href="#s-doc"/></svg><div><div class="nm">Byte WebSocket</div><div class="ds">UTF-8 nội dung bản tin; không tính HTTP, media</div></div></div>
+  <div class="kpi reveal d2" style="left:120px; top:484px; width:440px; height:224px">
+    <div class="num" style="color:var(--orange-deep)">68,34<small>%</small></div><div class="cap">BYTE WEBSOCKET GIẢM</div><div class="sub">DELTA so với FULL · ít thay đổi</div>
   </div>
-  <div class="reveal d6" style="position:absolute; left:936px; top:812px; width:864px; display:flex; flex-wrap:wrap; gap:14px">
-    <span class="pill">Đề, tiến trình: giả lập</span>
-    <span class="pill">HTTP/WS + DB: thật</span>
-    <span class="pill fill">Hai máy thật: 28/10</span>
+  <div class="kpi reveal d3" style="left:120px; top:732px; width:440px; height:224px">
+    <div class="num">20</div><div class="cap">CLIENT GIẢ LẬP</div><div class="sub">Benchmark trên một máy</div>
+  </div>
+  <div class="figure reveal-scale d2" style="left:592px; top:329px; width:1208px; height:534px">
+    <img src="assets/kit/08_FULL_VS_DELTA.svg" width="1168" height="494" alt="Byte WebSocket FULL và DELTA: ít thay đổi 3,69 MB và 1,17 MB (−68,34%); nhiều thay đổi 6,46 MB và 5,45 MB (−15,60%); kết nối lại 3,43 MB và 1,19 MB (−65,20%)">
   </div>
   <div class="pageno">09</div>
-  <aside class="notes">Mọi phép đo tự động chạy trên cùng một máy Windows 11, client giả lập, server và PostgreSQL giao tiếp qua loopback — không phải nhiều máy vật lý. Dữ liệu đề, tài nguyên và danh sách tiến trình được giả lập để kiểm soát đầu vào, nhưng request vẫn đi qua HTTP/WebSocket thật tới server và DB thật. Lượt hai máy vật lý ngày 28/10 được báo riêng. Nguồn: Báo cáo nhóm 03, Bảng 5.1 và mục 5.1.2. Raw các đợt đo 27–28/10 chưa có trong repo.</aside>
+  <aside class="notes">363 test server PASS, 4 SKIP. E2: kịch bản ít thay đổi, delta giảm 68,34% byte WebSocket; nhiều thay đổi chỉ giảm 15,60%. Benchmark 20 client giả lập — không phải 20 máy vật lý. E2 đo ngày 27/10/2026 trên một máy (loopback), dữ liệu tiến trình giả lập, mỗi kịch bản một lượt cho mỗi cấu hình. FULL gửi mỗi giây; DELTA gửi khi có thay đổi hoặc sau 2 giây, kèm FULL lúc đầu, sau reconnect và mỗi 30 giây, nên con số phản ánh cả cách biểu diễn lẫn lịch gửi. Delta vẫn là ứng viên, FULL là mặc định. Chú thích nguồn (đã bỏ khỏi slide): Báo cáo nhóm 03, Bảng 5.3–5.5 (đo 27–28/10/2026) · * kịch bản ít thay đổi · byte nội dung bản tin WebSocket</aside>
 </section>
 
 <!-- =========================================================
-     10 · Kiểm thử chức năng (Bảng 5.2)
-     ========================================================= -->
-<section class="slide" data-title="Kiểm thử chức năng">
-  <div class="kicker reveal"><span class="pill fill">10 · Thực nghiệm</span><span class="pill">Kiểm thử chức năng</span></div>
-  <h2 class="h2 reveal d1">363/367 ca server đạt, 0 lỗi</h2>
-  <div class="kpi tint reveal d1" style="left:120px; top:236px; width:520px; height:236px">
-    <div class="num">363<small style="color:var(--muted)">/367</small></div><div class="cap">CA SERVER ĐẠT</div><div class="sub">4 SKIP · 0 thất bại · 0 lỗi thực thi</div>
-  </div>
-  <div class="panel reveal d2" style="left:120px; top:496px; width:520px; height:356px">
-    <div class="ptitle">Cách chạy 363 ca đạt</div>
-    <div class="stack" aria-label="152 PostgreSQL thật, 36 HTTP/WebSocket thật, 175 đơn vị">
-      <span style="flex:152; background:#13254A"></span><span style="flex:36; background:#F26B1D"></span><span style="flex:175; background:#B9CCE0"></span>
-    </div>
-    <ul class="legend">
-      <li><i style="background:#13254A"></i><b>152</b> PostgreSQL thật</li>
-      <li><i style="background:#F26B1D"></i><b>36</b> HTTP/WS thật · lưu trữ giả lập</li>
-      <li><i style="background:#B9CCE0"></i><b>175</b> thành phần / đơn vị</li>
-    </ul>
-  </div>
-  <div class="panel reveal-scale d2" style="left:672px; top:236px; width:1128px; height:620px">
-    <div class="ptitle">Ca đạt theo nhóm · phía server</div>
-    <svg viewBox="0 0 1088 560" width="1088" height="560" class="chart" role="img" aria-label="Số ca đạt theo nhóm kiểm thử phía server">
-    <line x1="330.0" y1="28" x2="330.0" y2="542" class="grid"/>
-    <text x="330.0" y="574" class="tick" text-anchor="middle">0</text>
-    <line x1="490.0" y1="28" x2="490.0" y2="542" class="grid"/>
-    <text x="490.0" y="574" class="tick" text-anchor="middle">30</text>
-    <line x1="650.0" y1="28" x2="650.0" y2="542" class="grid"/>
-    <text x="650.0" y="574" class="tick" text-anchor="middle">60</text>
-    <line x1="810.0" y1="28" x2="810.0" y2="542" class="grid"/>
-    <text x="810.0" y="574" class="tick" text-anchor="middle">90</text>
-    <line x1="970.0" y1="28" x2="970.0" y2="542" class="grid"/>
-    <text x="970.0" y="574" class="tick" text-anchor="middle">120</text>
-    <text x="306" y="80.0" class="lbl" text-anchor="end">Nhập đề, tài nguyên</text>
-    <path d="M330 40 H900.0 Q906.0 40 906.0 46 V98 Q906.0 104 900.0 104 H330 Z" fill="#13254A"><title>Nhập đề, tài nguyên: 108 đạt, 0 SKIP</title></path>
-    <text x="920.0" y="82.0" class="val">108</text>
-    <text x="306" y="166.0" class="lbl" text-anchor="end">Giám sát</text>
-    <path d="M330 126 H809.3333333333333 Q815.3333333333333 126 815.3333333333333 132 V184 Q815.3333333333333 190 809.3333333333333 190 H330 Z" fill="#13254A"><title>Giám sát: 91 đạt, 0 SKIP</title></path>
-    <text x="829.3" y="168.0" class="val">91</text>
-    <text x="306" y="252.0" class="lbl" text-anchor="end">Xác thực, phân quyền</text>
-    <path d="M330 212 H702.6666666666666 Q708.6666666666666 212 708.6666666666666 218 V270 Q708.6666666666666 276 702.6666666666666 276 H330 Z" fill="#13254A"><title>Xác thực, phân quyền: 71 đạt, 0 SKIP</title></path>
-    <text x="722.7" y="254.0" class="val">71</text>
-    <text x="306" y="338.0" class="lbl" text-anchor="end">Lưu, nộp, hết giờ</text>
-    <path d="M330 298 H526.6666666666666 Q532.6666666666666 298 532.6666666666666 304 V356 Q532.6666666666666 362 526.6666666666666 362 H330 Z" fill="#13254A"><title>Lưu, nộp, hết giờ: 38 đạt, 0 SKIP</title></path>
-    <text x="546.7" y="340.0" class="val">38</text>
-    <text x="306" y="424.0" class="lbl" text-anchor="end">Phòng thi, vòng đời</text>
-    <path d="M330 384 H473.3333333333333 Q479.3333333333333 384 479.3333333333333 390 V442 Q479.3333333333333 448 473.3333333333333 448 H330 Z" fill="#13254A"><title>Phòng thi, vòng đời: 28 đạt, 1 SKIP</title></path>
-    <rect x="481.3333333333333" y="384" width="5.3" height="64" rx="4" fill="url(#hatch)" stroke="#F26B1D" stroke-width="2"/>
-    <text x="500.7" y="426.0" class="val">28  <tspan class="skip">+1 SKIP</tspan></text>
-    <text x="306" y="510.0" class="lbl" text-anchor="end">Âm thanh, phần nghe</text>
-    <path d="M330 470 H468.0 Q474.0 470 474.0 476 V528 Q474.0 534 468.0 534 H330 Z" fill="#13254A"><title>Âm thanh, phần nghe: 27 đạt, 3 SKIP</title></path>
-    <rect x="476.0" y="470" width="16.0" height="64" rx="4" fill="url(#hatch)" stroke="#F26B1D" stroke-width="2"/>
-    <text x="506.0" y="512.0" class="val">27  <tspan class="skip">+3 SKIP</tspan></text>
-    </svg>
-  </div>
-  <div class="reveal d4" style="position:absolute; left:672px; top:880px; display:flex; gap:14px">
-    <span class="pill"><span><b>144/144</b> client + protocol</span></span>
-    <span class="pill"><span><b>30/30</b> phân tích tiến trình</span></span>
-    <span class="pill"><span><b>72/72</b> replay FULL/DELTA</span></span>
-  </div>
-  <div class="pageno">10</div>
-  <aside class="notes">367 ca phía server: 363 đạt, 4 SKIP (3 ở âm thanh/phần nghe, 1 ở phòng thi), không thất bại, không lỗi. SKIP giữ riêng, không tính là đạt. Trong 363 ca đạt: 152 ca chạy trên PostgreSQL thật, 36 ca HTTP/WebSocket thật với lưu trữ giả lập, 175 ca đơn vị. Client và protocol 144/144 (99 giám sát, 45 âm thanh/phần nghe); bộ phân tích tiến trình 30/30; replay FULL/DELTA 72/72, 4 sai lệch cố ý đều bị phát hiện. Ví dụ: nộp hộ lượt thi người khác bị từ chối; gửi lại submit không tạo bản ghi mới; save/submit/timeout tranh khóa vẫn chốt theo dữ liệu hợp lệ; message epoch cũ bị từ chối. Nguồn: Báo cáo nhóm 03, Bảng 5.2 (28/10/2026) và mục 5.3.2.</aside>
-</section>
-
-<!-- =========================================================
-     11 · E1 — chu kỳ quét tiến trình (Bảng 5.3)
+     10 · E1 — chu kỳ quét tiến trình (Bảng 5.3)
      ========================================================= -->
 <section class="slide" data-title="E1 chu kỳ quét">
-  <div class="kicker reveal"><span class="pill fill">11 · Thực nghiệm E1</span><span class="pill">Chu kỳ quét</span></div>
+  <div class="kicker reveal"><span class="pill fill">10 · Thực nghiệm E1</span><span class="pill">Chu kỳ quét</span></div>
   <h2 class="h2 reveal d1">Quét dày thấy nhiều hơn, tốn CPU hơn</h2>
   <div class="panel reveal-scale d1" style="left:120px; top:236px; width:960px; height:640px">
     <div class="ptitle">Quan sát được / 30 lần tạo tiến trình</div>
@@ -745,47 +649,16 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
   <div class="reveal d4" style="position:absolute; left:120px; top:904px; display:flex; gap:14px">
     <span class="pill">12 lượt · 15 s warmup + 120 s đo</span>
     <span class="pill">360 lần tạo tiến trình</span>
-    <span class="pill"><span><b style="color:var(--good)">274</b> thấy · <b>82</b> bỏ lỡ · <b>4</b> chưa xác định</span></span>
   </div>
-  <div class="pageno">11</div>
+  <div class="pageno">10</div>
   <aside class="notes">Chương trình thử tạo tiến trình Java con có thời gian giữ 200, 800, 3.000 ms; collector đọc tiến trình thật qua ProcessHandle. Bốn khoảng quét 250/500/1.000/2.000 ms, mỗi khoảng 3 lượt (15 s warmup + 120 s đo), mỗi ô tổng hợp 30 lần tạo. Quét 250 → 2.000 ms: CPU giảm 19,01% → 3,03% một lõi, nhưng tiến trình giữ 200 ms chỉ còn 4/30 thay vì 27/30. Mức giữ 3.000 ms: mọi cấu hình đều 30/30. Mặc định 1.000 ms: 29/30 ở mức 800 ms với 5,57% CPU. 4 trường hợp chưa xác định danh tính đều ở mức 200 ms (2 ở 250 ms, 2 ở 2.000 ms) nên không tính hết phần còn lại là bỏ lỡ. Tiến trình sống giữa hai lần quét có thể không được thấy — giới hạn của polling. Nguồn: Báo cáo nhóm 03, Bảng 5.3 (27/10/2026). Khác với số E1 qa05 21/10 trong evidence/.</aside>
 </section>
 
 <!-- =========================================================
-     12 · E2 — FULL vs DELTA (Bảng 5.4)
-     ========================================================= -->
-<section class="slide" data-title="E2 FULL và DELTA">
-  <div class="kicker reveal"><span class="pill fill">12 · Thực nghiệm E2</span><span class="pill">FULL vs DELTA</span></div>
-  <h2 class="h2 reveal d1">DELTA giảm byte khi tiến trình ít đổi</h2>
-  <div class="figure reveal-scale d1" style="left:120px; top:236px; width:1208px; height:534px">
-    <img src="assets/kit/08_FULL_VS_DELTA.svg" width="1168" height="494" alt="Byte WebSocket FULL và DELTA: ít thay đổi 3,69 MB và 1,17 MB (−68,34%); nhiều thay đổi 6,46 MB và 5,45 MB (−15,60%); kết nối lại 3,43 MB và 1,19 MB (−65,20%)">
-  </div>
-  <div class="kpi tint reveal d2" style="left:1360px; top:236px; width:440px; height:254px">
-    <div class="num">700</div><div class="cap">ĐIỂM ĐỐI CHIẾU</div><div class="sub">0 sai lệch trạng thái server</div>
-  </div>
-  <div class="kpi reveal d3" style="left:1360px; top:516px; width:440px; height:254px">
-    <div class="num" style="font-size:72px">4,21<small style="font-size:40px">%</small> <span style="color:var(--orange-deep)">6,15<small style="font-size:40px">%</small></span></div>
-    <div class="cap">CPU SERVER · NHIỀU ĐỔI</div><div class="sub">FULL · DELTA · mới 1 lượt</div>
-  </div>
-  <div class="reveal d4" style="position:absolute; left:120px; top:800px; width:1680px; display:flex; flex-wrap:wrap; gap:14px">
-    <span class="pill">120 s · 120 trạng thái × 128 tiến trình</span>
-    <span class="pill">Ít đổi: thay 1 / 10 s</span>
-    <span class="pill">Nhiều đổi: thay 32 / s</span>
-    <span class="pill">Kết nối lại: ngắt WS 2 × 5 s</span>
-  </div>
-  <div class="reveal d5" style="position:absolute; left:120px; top:876px; width:1680px; display:flex; flex-wrap:wrap; gap:14px">
-    <span class="pill">Sự kiện ghi đủ: 139 · 3.936 · 139</span>
-    <span class="pill fill">FULL vẫn là mặc định</span>
-  </div>
-  <div class="pageno">12</div>
-  <aside class="notes">E2 ngày 27/10/2026 trên một máy (loopback), dữ liệu tiến trình giả lập, HTTP/WebSocket và server thật. Mỗi lượt 120 s, 120 trạng thái, mỗi trạng thái 128 tiến trình; mỗi kịch bản 1 lượt FULL + 1 lượt DELTA. Byte là nội dung bản tin WebSocket hai chiều (trạng thái, sự kiện, ACK, điều khiển), không gồm HTTP, media và header giao thức. Ít đổi 3.688.562 → 1.167.940 byte (−68,34%); nhiều đổi 6.455.155 → 5.448.042 (−15,60%); kết nối lại 3.426.183 → 1.192.306 (−65,20%). FULL gửi mỗi giây; DELTA gửi khi có thay đổi hoặc sau 2 s, kèm FULL lúc đầu, sau reconnect và mỗi 30 s — con số phản ánh cả cách biểu diễn lẫn lịch gửi. 700 điểm đối chiếu không sai lệch; số sự kiện đủ 139 / 3.936 / 139 cho mỗi cấu hình. Ít byte hơn không có nghĩa ít CPU hơn: kịch bản nhiều đổi CPU server FULL 4,21%, DELTA 6,15% (1 lượt, chưa đủ để kết luận). Bộ gửi giả lập giữ quan sát khi mất kết nối; chưa xác minh hàng đợi offline của client thật. Nguồn: Báo cáo nhóm 03, Bảng 5.4 và mục 5.3.2.</aside>
-</section>
-
-<!-- =========================================================
-     13 · Tải đồng thời (Bảng 5.5)
+     11 · Tải đồng thời (Bảng 5.5)
      ========================================================= -->
 <section class="slide" data-title="Tải đồng thời">
-  <div class="kicker reveal"><span class="pill fill">13 · Thực nghiệm tải</span><span class="pill">p95 theo thao tác</span></div>
+  <div class="kicker reveal"><span class="pill fill">11 · Thực nghiệm tải</span><span class="pill">p95 theo thao tác</span></div>
   <h2 class="h2 reveal d1">Tải đồng thời: 1 → 20 thí sinh giả lập</h2>
   <div class="panel reveal-scale d1" style="left:120px; top:236px; width:824px; height:656px">
     <div class="ptitle">Tham gia phòng · p95 (ms)</div>
@@ -864,56 +737,15 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
     <text x="421.0" y="550" class="axis" text-anchor="middle">Số thí sinh giả lập đồng thời</text>
     </svg>
   </div>
-  <div class="reveal d4" style="position:absolute; left:120px; top:916px; display:flex; gap:14px">
-    <span class="pill">15 lượt · 3 lượt mỗi mức</span>
-    <span class="pill"><span><b>25.227</b> mẫu HTTP · <b style="color:var(--good)">0</b> thất bại</span></span>
-    <span class="pill"><span><b>342</b> mẫu truyền sự kiện</span></span>
-    <span class="pill">Trục hai biểu đồ khác thang</span>
-  </div>
-  <div class="pageno">13</div>
+  <div class="pageno">11</div>
   <aside class="notes">Mỗi mức 1, 2, 5, 10, 20 thí sinh giả lập chạy 3 lượt; mỗi lượt tạo tài khoản và phòng riêng rồi đi chuỗi tham gia → chuẩn bị → bắt đầu → lấy đề → lưu → kết nối lại → nộp. Client giả lập, server, PostgreSQL cùng một máy; lượt 7–12 s. 15 lượt: 25.227 mẫu HTTP, 342 mẫu truyền sự kiện, không mẫu HTTP thất bại. p95 tham gia phòng tăng theo tải: 74,68 → 1.189,87 ms (≈1,19 s ở 20 thí sinh). Lưu/nộp không tăng đều: lưu 143,08 ms ở 10 nhưng 43,70 ms ở 20; nộp 71,89 ms ở 10, 40,72 ms ở 20 — lượt ngắn, chung tài nguyên một máy, chưa đủ để giải thích dao động. Mẫu: tham gia và nộp 3N, lưu 9N. Request hỏi trạng thái liên lạc chiếm 91–93% tổng HTTP nên đọc theo thao tác, không gộp. Đây là 20 client giao thức giả lập, không phải 20 máy JavaFX. Nguồn: Báo cáo nhóm 03, Bảng 5.5 (27/10/2026).</aside>
 </section>
 
 <!-- =========================================================
-     14 · Kiểm tra hai máy thật + USB (Bảng 5.6)
-     ========================================================= -->
-<section class="slide" data-title="Hai máy và USB">
-  <div class="kicker reveal"><span class="pill fill">14 · Thiết bị thật</span><span class="pill">28/10/2026</span></div>
-  <h2 class="h2 reveal d1">Hai máy thật, USB cắm/rút 3/3</h2>
-  <div class="flow-v" style="left:120px; top:236px; width:760px">
-    <div class="stp reveal d1"><svg viewBox="0 0 160 140" aria-hidden="true"><use href="#s-monitor"/></svg><div><div class="nm">Tham gia phòng</div><div class="ds">Client 0.4.3 · HTTPS</div></div></div>
-    <div class="stp reveal d2"><svg viewBox="0 0 120 150" aria-hidden="true"><use href="#s-doc"/></svg><div><div class="nm">Chuẩn bị tài nguyên</div><div class="ds">Hiển thị đã chuẩn bị</div></div></div>
-    <div class="stp reveal d3"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#s-clock"/></svg><div><div class="nm">Thử loa</div><div class="ds">Người nghe xác nhận rõ</div></div></div>
-    <div class="stp reveal d4"><svg viewBox="0 0 160 140" aria-hidden="true"><use href="#s-monitor"/><use href="#s-scr-exam"/></svg><div><div class="nm">Vào bài</div><div class="ds">Phần đọc · 200 câu · đồng hồ</div></div></div>
-  </div>
-  <div class="kpi tint reveal d2" style="left:936px; top:236px; width:416px; height:240px">
-    <div class="num">3<small>/3</small></div><div class="cap">CẮM USB</div><div class="sub">3 sự kiện / 3 thao tác</div>
-  </div>
-  <div class="kpi tint reveal d3" style="left:1384px; top:236px; width:416px; height:240px">
-    <div class="num">3<small>/3</small></div><div class="cap">RÚT USB</div><div class="sub">3 sự kiện / 3 thao tác</div>
-  </div>
-  <div class="panel reveal d4" style="left:936px; top:508px; width:864px; height:252px">
-    <div class="ptitle">Căn cứ và giới hạn</div>
-    <ul class="facts">
-      <li>Máy thí sinh + máy server/giám thị, qua <span class="mono">toeic.anhtaizz.id.vn</span></li>
-      <li>Kết quả theo quan sát và xác nhận của người thao tác</li>
-      <li class="warn">Chưa có log độc lập phía giám thị → chưa đo độ trễ USB</li>
-    </ul>
-  </div>
-  <div class="reveal d5" style="position:absolute; left:120px; top:812px; display:flex; gap:14px">
-    <span class="pill">Chỉ quan sát hiện diện, cắm, rút</span>
-    <span class="pill">Không đọc nội dung USB</span>
-    <span class="pill fill">HTTPS qua tên miền thật</span>
-  </div>
-  <div class="pageno">14</div>
-  <aside class="notes">Lượt kiểm tra 28/10/2026: một máy chạy ứng dụng thí sinh bản 0.4.3, một máy chạy server và giao diện giám thị; client kết nối qua HTTPS toeic.anhtaizz.id.vn. Ghi nhận: tham gia phòng, chuẩn bị tài nguyên, thử loa (người nghe xác nhận rõ), vào bài thấy phần đọc, 200 câu và đồng hồ. Ba lần cắm, ba lần rút USB lưu trữ; giám thị thấy 3/3 sự kiện mỗi loại. Căn cứ là quan sát trực tiếp và xác nhận của người thao tác; không có mốc thời gian/log độc lập phía giám thị nên chưa tính được độ trễ truyền USB. Chỉ quan sát hiện diện/cắm/rút, không đọc nội dung USB. Nguồn: Báo cáo nhóm 03, Bảng 5.6 (biên bản 28/10/2026).</aside>
-</section>
-
-<!-- =========================================================
-     15 · Demo phần mềm (giám thị 60% trái, thí sinh 40% phải)
+     12 · Demo phần mềm (giám thị 60% trái, thí sinh 40% phải)
      ========================================================= -->
 <section class="slide" data-title="Demo">
-  <div class="kicker reveal"><span class="pill fill">15 · Demo</span></div>
+  <div class="kicker reveal"><span class="pill fill">12 · Demo</span></div>
   <h2 class="h2 reveal d1">Demo phần mềm</h2>
   <div class="shot reveal-scale d1" style="left:120px; top:236px; width:1040px; height:336px">
     <div class="crop"><img src="assets/screens/proctor-room-ready.webp" style="width:1020px" alt="Giám thị: danh sách thí sinh trong phòng với cột Focus và Cảnh báo"></div>
@@ -930,15 +762,15 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
     <div class="crop"><img src="assets/screens/candidate-part3.webp" style="width:588px" alt="Thí sinh: làm bài Part 3"></div>
     <span class="pill fill tagline">LÀM BÀI</span>
   </div>
-  <div class="pageno">15</div>
+  <div class="pageno">12</div>
   <aside class="notes">Demo nhanh: tạo phòng → PIN → thí sinh READY → START → autosave (“✓ Đã lưu”) → mở process/cắm USB/rời cửa sổ → cảnh báo hiện bên giám thị → nộp bài. Chú thích nguồn (đã bỏ khỏi slide): DATA TEST — ảnh chụp phần mềm thật với dữ liệu kiểm thử (MOCK)</aside>
 </section>
 
 <!-- =========================================================
-     16 · Kết luận và hướng phát triển (2 cực trái–phải)
+     13 · Kết luận và hướng phát triển (2 cực trái–phải)
      ========================================================= -->
 <section class="slide" data-title="Kết luận">
-  <div class="kicker reveal"><span class="pill fill">16 · Kết luận</span></div>
+  <div class="kicker reveal"><span class="pill fill">13 · Kết luận</span></div>
   <h2 class="h2 reveal d1">Kết luận và hướng phát triển</h2>
   <div class="figure reveal-scale d1" style="left:120px; top:236px; width:1680px; height:600px; padding:40px">
     <svg viewBox="0 0 1680 560" width="1600" height="520" role="img" aria-label="Bên trái: ba máy thí sinh và một máy chủ đã xây dựng. Bên phải: nhiều máy thí sinh hơn, phiên thi dài hơn, cần tiếp tục đánh giá">
@@ -969,15 +801,15 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
   <div class="role-label reveal d2" style="left:160px; top:870px; width:620px; color:var(--navy)">ĐÃ XÂY DỰNG</div>
   <div class="role-label reveal d3" style="left:820px; top:870px; width:120px; color:var(--orange)">→</div>
   <div class="role-label reveal d4" style="left:1110px; top:870px; width:680px; color:var(--orange-deep)">TIẾP TỤC ĐÁNH GIÁ</div>
-  <div class="pageno">16</div>
+  <div class="pageno">13</div>
   <aside class="notes">Đã xây dựng: hệ thống thi Client–Server có giám sát. Cần tiếp tục: kiểm thử nhiều máy vật lý và phiên thi dài, xử lý event khi offline, so sánh FULL/DELTA thêm trước khi bật delta mặc định. Chú thích nguồn (đã bỏ khỏi slide): Bên phải là định hướng, chưa phải kết quả đã đạt.</aside>
 </section>
 
 <!-- =========================================================
-     17 · Code trọng tâm — Monitoring (code trái 35–40%, sơ đồ phải)
+     14 · Code trọng tâm — Monitoring (code trái 35–40%, sơ đồ phải)
      ========================================================= -->
 <section class="slide" data-title="Code monitoring">
-  <div class="kicker reveal"><span class="pill fill">17 · Code</span></div>
+  <div class="kicker reveal"><span class="pill fill">14 · Code</span></div>
   <h2 class="h2 reveal d1">Từ code thu thập đến dashboard</h2>
   <div class="code reveal d1" style="position:absolute; left:120px; top:300px; width:800px">
     <div class="file">ProcessCollector.java · start()</div>
@@ -994,7 +826,7 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(242, 107, 29, .
     <div class="stp reveal d4"><svg viewBox="0 0 120 140" aria-hidden="true"><use href="#s-db"/></svg><div><div class="nm">MonitoringState</div><div class="ds">Server cập nhật · MonitoringStateService</div></div></div>
     <div class="stp reveal d5"><svg viewBox="0 0 160 140" aria-hidden="true"><use href="#s-monitor"/><use href="#s-scr-dash"/></svg><div><div class="nm">Dashboard</div><div class="ds">Giám thị xem</div></div></div>
   </div>
-  <div class="pageno">17</div>
+  <div class="pageno">14</div>
   <aside class="notes">scheduleWithFixedDelay: lần quét sau bắt đầu sau khi lần trước xong cộng interval, nên không chồng lần quét. Worker riêng chạy scan rồi gọi callback với snapshot. Collector không giữ kết nối mạng: Delivery/RealtimeClient gửi qua WebSocket và chờ ACK; server cập nhật MonitoringState rồi đẩy lên dashboard. Chú thích nguồn (đã bỏ khỏi slide): github.com/AnhTaizz/Toeic-Monitoring-Realtime · client/…/monitoring/ProcessCollector.java:86</aside>
 </section>
 
@@ -1078,7 +910,7 @@ class SlidePresentation {
 class InlineEditor {
   constructor() {
     this.isActive = false;
-    this.key = 'toeic-monitor-deck-edits-kit17-v1';
+    this.key = 'toeic-monitor-deck-edits-kit14-v1';
     this.button = document.getElementById('editToggle');
     this.targets = () => document.querySelectorAll('.slide h1, .slide h2, .slide p, .slide .pill, .slide .ptitle, .slide .lbl, .slide .role-label, .slide .cap, .slide .sub, .slide .nm, .slide .ds, .slide .source');
     this.restore();
